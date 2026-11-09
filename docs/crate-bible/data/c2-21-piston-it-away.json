@@ -1,0 +1,3593 @@
+{
+ "id": "c2-21-piston-it-away",
+ "game": "Crash 2",
+ "stage": 21,
+ "name": "Piston It Away",
+ "nameJa": "ピストンはつでんしょ",
+ "sources": [
+  "F2 p077-p080L",
+  "F2 p100R",
+  "F2 p015",
+  "D2 p069-p071"
+ ],
+ "camera": "side-scroll catwalk strips with short into-screen corridors",
+ "totalBoxes": 69,
+ "totalSource": "F2 p077L header (superscript 36 off-course)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 33,
+   "basis": "header 69 - 36",
+   "mapped": 31,
+   "unlocated": 2
+  },
+  {
+   "id": "bonus",
+   "boxes": 26,
+   "basis": "36 - 10 death-route boxes (derived); 23 identified in D2"
+  },
+  {
+   "id": "death",
+   "boxes": 10,
+   "basis": "counted from D2 shots 44-50"
+  }
+ ],
+ "specialCounts": {
+  "life": {
+   "total": 2,
+   "offCourse": 2,
+   "where": "bonus outlines"
+  },
+  "aku": {
+   "total": 2,
+   "offCourse": 0
+  },
+  "checkpoint": {
+   "total": 4,
+   "offCourse": 1,
+   "where": "death route D2 48"
+  },
+  "nitro": {
+   "main": 10,
+   "bonus": 6,
+   "death": 4
+  },
+  "tnt": 0,
+  "switches": "! at the bonus far end (fills outlines); green ! only at the death-route end"
+ },
+ "gems": [
+  {
+   "kind": "clear",
+   "condition": "all 69 boxes; order normal -> bonus -> normal to just before the goal -> back to the death route -> green ! last"
+  },
+  {
+   "kind": "clear",
+   "condition": "finish the death route; skull pad requires a deathless arrival"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "cumulative": null,
+   "notes": "Aku start, arrow puzzle",
+   "boxes": 12
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "cumulative": null,
+   "notes": "ISGN drill, staggered ? column with hidden Nitros",
+   "boxes": 7
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "cumulative": null,
+   "notes": "second Aku, skull pad, beam plates, bonus door",
+   "boxes": 3
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "cumulative": null,
+   "notes": "shield researchers, 8-Nitro dare, last main box",
+   "boxes": 9
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S3 bonus panel",
+   "to": "S3",
+   "cumulative": null,
+   "notes": "~26 by subtraction (23 identified + 3 placeholder)",
+   "boxes": 26
+  },
+  {
+   "id": "DEATH",
+   "route": "death",
+   "from": "S3 skull pad",
+   "to": "green ! exit",
+   "cumulative": null,
+   "notes": "~10 from D2; contains the only green ! and the off-course C",
+   "boxes": 10
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "catwalk right after the start",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "before-slide-only-robots"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU",
+    "TEACH"
+   ],
+   "why": "mask before the first slide-only walkers",
+   "evidence": "F2 p077R zoom; D2 p069 shot 1",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "beside the Aku box",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "L-shaped stack: 1 low in front, 2-high column behind",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first payout; break the base and the top drops",
+   "evidence": "F2 p077R zoom; D2 shot 1",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "start of strip A beside a flat-armed ISGN (POINT5)",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "isgn-stomp"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "SINGLE"
+   ],
+   "why": "stand by the crate to read the robot's arm cycle, then stomp it",
+   "evidence": "F2 p078L strip A; D2 shot 5",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "arrow puzzle (POINT6)",
+   "composition": {
+    "arrowWood": 2,
+    "striped": 1,
+    "wood": 2,
+    "question": 1
+   },
+   "count": 6,
+   "arrangement": "left arrow + floating striped; right arrow on a step under a floating 3-crate column (? on top) with a gap",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "arrow-elevator",
+    "column-settles"
+   ],
+   "tags": [
+    "TOOL",
+    "HIGH",
+    "SANDWICH",
+    "COLUMN-BOUNCE",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "left arrow first to break the floating striped crate, then bounce up through the column from the gap above the right arrow",
+   "evidence": "F2 p078L POINT6 + zoom; D2 shot 7",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "start of strip C round a corner",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-arrow-puzzle"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save after the puzzle",
+   "evidence": "F2 p078R; D2 shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "strip B catwalk ahead of a YTYT and an ISGN",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "slide",
+    "timed"
+   ],
+   "relations": [
+    "walker-approaching"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "TIMED",
+    "SINGLE"
+   ],
+   "why": "breaking it costs time while the walker approaches; then slide to kill it and clear the pipe",
+   "evidence": "F2 p078L strip B zoom; D2 shots 13-14",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "end of strip B by a fan",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "staggered 3-high column",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "hidden-nitro-behind"
+   ],
+   "tags": [
+    "STACK",
+    "EDGE-BAIT",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "the far crate leads your jump toward hidden Nitros",
+   "evidence": "F2 p078L zoom; D2 shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "directly behind the staggered column (F2 green bubble)",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "hidden pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "overshoot-trap",
+    "death-route-green-switch"
+   ],
+   "tags": [
+    "HIDDEN",
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "COUNT-TRAP"
+   ],
+   "why": "punishes overshoot; counted only when the death-route green ! fires",
+   "evidence": "F2 p078R bubble; D2 shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "into-screen catwalk beside the level crystal",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-death-gate"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the skull pad",
+   "evidence": "D2 shots 19-20; F2 p079L",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "catwalk after C2 among cones and YTYTs",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-plates-and-pad"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU"
+   ],
+   "why": "second mask before the beam plates, skull pad and bonus",
+   "evidence": "F2 p079L zoom (mask icon)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "pedestal next to a beam-switch plate (POINT13)",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "shrink-ray-line"
+   ],
+   "tags": [
+    "TIMED",
+    "SINGLE"
+   ],
+   "why": "stopping to break it is the delay the shrink ray punishes; the ray can be spun away",
+   "evidence": "F2 p079R zoom; D2 shot 26",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "after the four beam plates (POINT16)",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-plate-run"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save after the plate gauntlet (the return-trip crux)",
+   "evidence": "F2 p079L bottom; D2 shot 34",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "upper catwalk by a piston",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "last-main-box",
+    "start-of-backtrack"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BACKTRACK"
+   ],
+   "why": "last main-route box on a box-gem run; walk back to the skull pad from here",
+   "evidence": "F2 p080L zoom; D2 shot 40",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "flanking a floating life item on the upper catwalk",
+   "composition": {
+    "nitro": 8
+   },
+   "count": 8,
+   "arrangement": "two 4-high Nitro columns with the life between",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "double-jump",
+    "switch"
+   ],
+   "relations": [
+    "life-item-dare"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "REWARD",
+    "HIGH",
+    "NITRO-SWITCH"
+   ],
+   "why": "a dare for a life item; all 8 Nitros count and need the death-route green !",
+   "evidence": "F2 p080L bubble; D2 shot 40",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "bonus entry",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "outline frames that become 1UP, 1UP, ?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "switch",
+    "backtrack"
+   ],
+   "relations": [
+    "far-end-switch"
+   ],
+   "tags": [
+    "BONUS",
+    "OUTLINE",
+    "SWITCH",
+    "LIFE",
+    "BACKTRACK",
+    "COUNT-TRAP"
+   ],
+   "why": "both life boxes of the stage are locked behind the ! at the far end of the bonus",
+   "evidence": "D2 shot 28; F2 p100R bonus 1",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "beside the outlines",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "entry"
+   ],
+   "tags": [
+    "BONUS",
+    "SINGLE",
+    "ON-PATH"
+   ],
+   "why": "early payout",
+   "evidence": "D2 shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "first platform",
+   "composition": {
+    "question": 4,
+    "wood": 3
+   },
+   "count": 7,
+   "arrangement": "two 3-high towers (2 wide) + 1 more to reach counter 8",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "counter-0-to-8"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK"
+   ],
+   "why": "payout; counter 0 to 8",
+   "evidence": "D2 shots 29-30",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "before the Nitro mountain",
+   "composition": {
+    "striped": 3
+   },
+   "count": 3,
+   "arrangement": "small staircase",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "backtrack"
+   ],
+   "relations": [
+    "return-bridge"
+   ],
+   "tags": [
+    "BONUS",
+    "TOOL",
+    "SUPPORT-ORDER",
+    "STEPPING"
+   ],
+   "why": "footing to keep for the return; break on the way back",
+   "evidence": "D2 shot 30; F2 p100R bonus 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "the Nitro mountain",
+   "composition": {
+    "nitro": 6
+   },
+   "count": 6,
+   "arrangement": "3-stack, 2-stack and a single by the !",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump",
+    "switch"
+   ],
+   "relations": [
+    "crossed-twice"
+   ],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "the obstacle crossed twice; counted via the death-route green !",
+   "evidence": "D2 shots 30-31; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "far end beside the ! switch",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single next to the !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "switch"
+   ],
+   "tags": [
+    "BONUS",
+    "SWITCH"
+   ],
+   "why": "marks the switch that fills the entry outlines",
+   "evidence": "D2 shot 31",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-g",
+   "section": "BONUS",
+   "order": 7,
+   "where": "before the exit lift",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "piston-long-jump"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK"
+   ],
+   "why": "final payout before the piston long jump",
+   "evidence": "D2 shot 32",
+   "confidence": "medium-low"
+  },
+  {
+   "id": "B-x",
+   "section": "BONUS",
+   "order": 8,
+   "where": "unidentified",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "placeholder for the remainder of the 26 derived bonus boxes",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "needed to reach 36 off-course minus 10 death-route boxes",
+   "evidence": "derived",
+   "confidence": "low"
+  },
+  {
+   "id": "D-a",
+   "section": "DEATH",
+   "order": 1,
+   "where": "first platform after the skull pad",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "piston-timing"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "PAIR",
+    "TIMED"
+   ],
+   "why": "payout under piston timing",
+   "evidence": "D2 shot 44",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-b",
+   "section": "DEATH",
+   "order": 2,
+   "where": "blue-lit corridor",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "pair on the floor",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST"
+   ],
+   "why": "avoidance",
+   "evidence": "D2 shot 45",
+   "confidence": "high"
+  },
+  {
+   "id": "D-c",
+   "section": "DEATH",
+   "order": 3,
+   "where": "with a shield researcher",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin"
+   ],
+   "relations": [
+    "enemy-into-nitro"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ENEMY-LINK",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "spin the researcher back into it",
+   "evidence": "D2 shot 46",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-d",
+   "section": "DEATH",
+   "order": 4,
+   "where": "between two walkers",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "slide",
+    "jump"
+   ],
+   "relations": [
+    "slide-jump-slide"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST"
+   ],
+   "why": "rhythm test",
+   "evidence": "D2 shot 47",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-e",
+   "section": "DEATH",
+   "order": 5,
+   "where": "after bouncing off three robots",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "walk"
+   ],
+   "relations": [
+    "off-course-checkpoint"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "CHECKPOINT"
+   ],
+   "why": "the header's off-course C",
+   "evidence": "D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "D-f",
+   "section": "DEATH",
+   "order": 6,
+   "where": "past the ISGN step",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "stepped stair",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "shrink-ray"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STEPPING",
+    "TIMED"
+   ],
+   "why": "last crates before the bounce chain to the gem",
+   "evidence": "D2 shots 49-50",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "YTYT walker",
+   "count": 3,
+   "where": "start strip",
+   "role": "slide-only kills"
+  },
+  {
+   "section": "S1",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "strip A",
+   "role": "stomp when arms flat"
+  },
+  {
+   "section": "S2",
+   "kind": "ISGN",
+   "count": 7,
+   "where": "strips C and D",
+   "role": "arm-state drill"
+  },
+  {
+   "section": "S2",
+   "kind": "YTYT walker",
+   "count": 2,
+   "where": "strip B",
+   "role": "slide under pistons/pipes"
+  },
+  {
+   "section": "S3",
+   "kind": "YTYT walker",
+   "count": 4,
+   "where": "after C2 and the plates",
+   "role": "slide"
+  },
+  {
+   "section": "S3",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "before the turret",
+   "role": "keep one alive as the return step"
+  },
+  {
+   "section": "S4",
+   "kind": "shield researcher",
+   "count": 3,
+   "where": "catwalks",
+   "role": "spin while the shield is still"
+  },
+  {
+   "section": "S4",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "piston catwalks",
+   "role": "slide when piston and arms are up"
+  },
+  {
+   "section": "S4",
+   "kind": "YTYT walker",
+   "count": 1,
+   "where": "before the goal",
+   "role": "slide"
+  },
+  {
+   "section": "DEATH",
+   "kind": "ISGN",
+   "count": 4,
+   "where": "bounce chains",
+   "role": "bounce steps (stomp just before arms close)"
+  },
+  {
+   "section": "DEATH",
+   "kind": "YTYT walker",
+   "count": 4,
+   "where": "throughout",
+   "role": "slide"
+  },
+  {
+   "section": "DEATH",
+   "kind": "shield researcher",
+   "count": 1,
+   "where": "by D-c",
+   "role": "spin into the Nitro"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pistons over catwalk gaps",
+   "where": "start strip (POINT3-4)",
+   "crates": []
+  },
+  {
+   "section": "S1",
+   "kind": "arrow climb",
+   "where": "POINT6",
+   "crates": [
+    "S1-d"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "hot pillar",
+   "where": "strip D (POINT11)",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "beam-switch plates",
+   "where": "POINT13-16",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "piston gaps and ramp",
+   "where": "p080L",
+   "crates": [
+    "S4-a",
+    "S4-b"
+   ]
+  },
+  {
+   "section": "BONUS",
+   "kind": "Nitro mountain between pistons",
+   "where": "mid-bonus",
+   "crates": [
+    "B-d",
+    "B-e"
+   ]
+  },
+  {
+   "section": "DEATH",
+   "kind": "sequenced pistons, ISGN bounce chains",
+   "where": "whole route",
+   "crates": [
+    "D-a",
+    "D-f"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-d"
+   ],
+   "summary": "arrow-gap column",
+   "solution": "left arrow to the floating striped crate, then bounce up through the column from the gap above the right arrow",
+   "wrongOrder": "spinning an arrow first",
+   "loss": "up to 4 boxes"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "B-a",
+    "B-d",
+    "B-e",
+    "B-f"
+   ],
+   "summary": "bonus reverse trip",
+   "solution": "keep the striped steps, hit the far !, return for the two lives and ?, then break the steps",
+   "wrongOrder": "breaking the steps on the way out",
+   "loss": "must thread the Nitros twice; lives at risk"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-a",
+    "S3-b"
+   ],
+   "summary": "whole-level reverse run to the death route (only green ! is at its end)",
+   "solution": "deathless main route and bonus, skip the pad, break S4-a, walk back, use the surviving ISGN to climb the turret, take the pad",
+   "wrongOrder": "killing the return-step ISGN or dying anywhere",
+   "loss": "box gem and death-route gem"
+  }
+ ],
+ "observations": [
+  "Main-route crates are few (33) and sit where a robot pattern or beam makes collecting them a timing decision.",
+  "Hidden Nitros punish overshoot directly behind a staggered stack.",
+  "The only green ! is at the end of the death route, which forces the perfect order and a deathless reverse run.",
+  "Both life boxes are bonus outlines filled from the far end of the bonus, so collecting them requires a reverse trip over Nitros.",
+  "A crate can be both tool and reward: striped steps must survive until the return.",
+  "Main route: 31 of 33 boxes located."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "side-scroll (short into-screen start)",
+   "notes": "a grated catwalk runs into the screen from the start pipe (D2 1), then turns into left-to-right strips (F2 p077R, p078L strip A)."
+  },
+  {
+   "section": "S2",
+   "mode": "side-scroll",
+   "notes": "left-to-right strips C, B and D (F2 p078R, p078L, p078R). C1 and C2 sit where the catwalk turns a corner."
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen, then side-scroll",
+   "notes": "a red/white checker catwalk runs into the screen after C2 (D2 21), then left to right (F2 p079L top, p079R top, p079L bottom)."
+  },
+  {
+   "section": "S4",
+   "mode": "side-scroll",
+   "notes": "left to right (F2 p079R bottom, p080L top and bottom); a ramp up to the goal."
+  },
+  {
+   "section": "BONUS",
+   "mode": "side-scroll",
+   "notes": "one machine room crossed out and back (D2 28–32)."
+  },
+  {
+   "section": "DEATH",
+   "mode": "side-scroll",
+   "notes": "blue-tinted machine corridors (D2 45–48), then normal lighting to the green ! (D2 49–55)."
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "corridor (into-screen grated catwalk)",
+   "size": "≈2-2.5 wide",
+   "heightDelta": "+1 step at the end (\"hop up\")",
+   "edges": "open on the left; pipes on the right",
+   "behaviour": "static; one ceiling piston overhead before the step",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk; run under the piston; hop up",
+   "why": "A wide, safe start for the Aku box and the first crates, with one piston as a preview.",
+   "evidence": "D2 p069 shot 1; F2 p077R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "catwalk (raised, side view)",
+   "size": "≈5 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a YTYT walks it under one ceiling piston",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "walk; slide",
+   "why": "Long enough to slide the walker from a distance (POINT1).",
+   "evidence": "F2 p077R POINT1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "short pad (rounded end)",
+   "size": "≈3",
+   "heightDelta": "−2",
+   "edges": "open",
+   "behaviour": "static; a YTYT walks it; a piston stands at its right end",
+   "roles": [
+    "ARENA",
+    "CHOKE"
+   ],
+   "move": "drop straight down; slide from the far-left edge",
+   "why": "Too short for a careless slide: overshoot ends under the piston (POINT3).",
+   "evidence": "F2 p077R POINT2–3; D2 p069 shot 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "moving platform (floor piston used as a lift)",
+   "size": "≈1.5 cap",
+   "heightDelta": "+2 to +3",
+   "edges": "open",
+   "behaviour": "rises and falls; ride it up (D2 4)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "step on, ride, jump off at the top",
+   "why": "The machine is the elevator.",
+   "evidence": "F2 p077R; D2 p069 shots 3–4",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "catwalk under four ceiling pistons",
+   "size": "≈5-8 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a YTYT plus 4 pistons in a row",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide the walker, run under the wave",
+   "why": "A wave of pistons you pass by holding right when the first rises (POINT4).",
+   "evidence": "F2 p077R POINT4; D2 p069 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "catwalk (short, strip A)",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; ? + a flat-armed ISGN",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "walk; stomp the ISGN",
+   "why": "A small stage for the ISGN's first and safest state (POINT5).",
+   "evidence": "F2 p078L strip A POINT5; D2 p069 shot 5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-g",
+   "section": "S1",
+   "shape": "moving platforms (two floor pistons standing in a void)",
+   "size": "≈1.5 caps; ≈2-3 apart",
+   "heightDelta": "cap level ≈ next catwalk at full extension",
+   "edges": "open",
+   "behaviour": "extend and retract; jump when yours is at full extension (D2 6)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump cap to cap",
+   "why": "Stepping stones that exist at the right height only part of the time.",
+   "evidence": "F2 p078L; D2 p069 shot 6",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-h",
+   "section": "S1",
+   "shape": "catwalk (≈2 deep) with two wooden arrows on steps",
+   "size": "≈6",
+   "heightDelta": "arrow bounces reach ≈+3-4",
+   "edges": "open; a fan behind",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": "arrow bounces",
+   "why": "The level's one crate-climbing puzzle sits on a quiet catwalk with no enemies on it.",
+   "evidence": "F2 p078L POINT6; D2 p069 shot 7",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-i",
+   "section": "S1",
+   "shape": "catwalk (long) with two ceiling pistons, a YTYT and two ISGNs",
+   "size": "≈8-10",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide, run under, stomp",
+   "why": "The strip's exam: walker plus pistons plus robots on one catwalk (D2 8).",
+   "evidence": "F2 p078L strip A; D2 p069 shot 8",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-j",
+   "section": "S1",
+   "shape": "catwalk corner (C1)",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk round the corner",
+   "why": "Save where the catwalk turns.",
+   "evidence": "F2 p078R strip C; D2 p069 shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "catwalk segments at alternating heights (strip C)",
+   "size": "≈2-4 each; ±1 steps",
+   "heightDelta": "±1",
+   "edges": "open",
+   "behaviour": "static; an ISGN on most segments",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "jump up or down; spin, slide or stomp",
+   "why": "A robot drill: each step up or down meets a robot in a different arm state (POINT7–8).",
+   "evidence": "F2 p078R strip C; D2 p069 shots 9–11",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "short pads ×2 under two slow ceiling pistons (strip B)",
+   "size": "≈2 each; gap ≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "stand under the raised first piston until the next rises (D2 12)",
+   "roles": [
+    "PERCH"
+   ],
+   "move": "wait under a raised piston",
+   "why": "A safe spot under a crusher: it teaches that a raised piston is a shelter.",
+   "evidence": "D2 p069 shot 12; F2 p078L strip B",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "catwalk with a low pipe across it (slide-only)",
+   "size": "≈8",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide under the pipe",
+   "why": "A gap you can pass only by sliding, aimed at an approaching walker (POINT10).",
+   "evidence": "F2 p078L POINT10; D2 p069 shots 14–15",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "wide plate catwalk (≈2.5 deep), one step down",
+   "size": "≈5",
+   "heightDelta": "−1",
+   "edges": "open; hot pillars at the right edge",
+   "behaviour": "static; the staggered ?x3 with 2 hidden Nitros behind",
+   "roles": [
+    "LANDING"
+   ],
+   "move": "short jump down",
+   "why": "The landing is the crate stack; the space behind it is mined.",
+   "evidence": "F2 p078L; D2 p069 shot 16",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "catwalk with four hot pillars in two pairs (strip D)",
+   "size": "pens ≈4-5 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; an ISGN patrols inside each pair",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "jump the pillar when the robot is away; wait; spin",
+   "why": "Fenced arenas: the pillars pen the robot in (POINT11).",
+   "evidence": "F2 p078R POINT11; D2 p069 shot 17, p070 18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-f",
+   "section": "S2",
+   "shape": "short pads ×2 under two ceiling pistons that rise together",
+   "size": "≈2 each; gap ≈2-3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "run under both in one go",
+   "why": "D2 19: wait for both pistons to rise at the same time and run under them.",
+   "evidence": "D2 p070 shot 19",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-g",
+   "section": "S2",
+   "shape": "catwalk (into-screen, C2 + crystal)",
+   "size": "≈2 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "Save before the death-route gate.",
+   "evidence": "D2 p070 shot 20; F2 p079L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "corridor (into-screen red/white checker catwalk)",
+   "size": "≈2 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; two YTYTs walk it",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "slide",
+   "why": "D2 21: the perspective can be deceiving, so slide distances toward the camera are hard to judge.",
+   "evidence": "D2 p070 shot 21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "catwalk pen (hot pillars flanking a walker's pad; Aku box near)",
+   "size": "≈4-5 between pillars",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "jump in when the walker is far; slide",
+   "why": "D2 22: wait until the walker is on the far side, then jump and slide.",
+   "evidence": "D2 p070 shot 22; F2 p079L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "moving platform (skull pad set into the catwalk)",
+   "size": "≈2",
+   "heightDelta": "+ (elevator)",
+   "edges": "open",
+   "behaviour": "works only if you arrive without dying (D2 23)",
+   "roles": [],
+   "move": "step on",
+   "why": "The death-route gate is a piece of floor you pass on every run.",
+   "evidence": "D2 p070 shot 23; F2 p079L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "catwalk end with a low pipe and an ISGN",
+   "size": "≈3-4",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide under the pipe as the ISGN comes with arms raised",
+   "why": "POINT12: slide under the pipe and kill the robot at the same time.",
+   "evidence": "F2 p079L POINT12; D2 p070 shot 24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "raised ledge (turret pedestal) above a lower catwalk",
+   "size": "catwalk ≈4",
+   "heightDelta": "−2 to −3 down; +2 to +3 back up",
+   "edges": "open",
+   "behaviour": "static; the \"important\" ISGN patrols the lower catwalk",
+   "roles": [
+    "LANDING"
+   ],
+   "move": "drop down; on the return, stomp the ISGN and high-jump up",
+   "why": "A one-way drop unless an enemy is kept alive as the step back.",
+   "evidence": "D2 p070 shot 25; F2 p079L; p100R normal ①–②",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-f",
+   "section": "S3",
+   "shape": "pedestal pads (≈1.5-2 tops) with an arrow plate",
+   "size": "≈1.5-2 tops",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "stepping on the plate fires a small beam from behind (POINT13)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "land and leave at once",
+   "why": "The ? on the pedestal asks you to stop exactly where stopping is punished.",
+   "evidence": "F2 p079L POINT13 + screenshot; D2 p070 shot 26",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-g",
+   "section": "S3",
+   "shape": "short catwalk pads with a plate, a ceiling nozzle and a turret (F2 p079R top)",
+   "size": "≈2 each; gaps ≈1-2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "dash-jump; slide the walker",
+   "why": "D2 27: dash-jump to the next platform, run off the trigger and slide into the walker.",
+   "evidence": "F2 p079R top; D2 p070 shot 27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-h",
+   "section": "S3",
+   "shape": "catwalk with four contiguous arrow plates",
+   "size": "≈1 each, ≈4 in a row",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "each plate pressed fires the beam",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide-jump so you touch one plate",
+   "why": "POINT16 スライディングジャンプ: four switches in a row; a slide-jump presses only one.",
+   "evidence": "F2 p079L bottom POINT15–16; D2 p070 shots 33–34",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-i",
+   "section": "S3",
+   "shape": "catwalk (C3)",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "Save right after the plate run.",
+   "evidence": "F2 p079L; D2 p070 shot 34",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "short pads (≈2) separated by gaps",
+   "size": "≈2 each; gaps ≈1.5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a shield researcher on each",
+   "roles": [
+    "ARENA",
+    "CHOKE"
+   ],
+   "move": "jump; spin",
+   "why": "D2 38: not a whole lot of breathing room on this platform. Tiny pads make a push lethal.",
+   "evidence": "F2 p079R bottom POINT17; D2 p070 shots 35–36, p071 38",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "catwalk with a ceiling piston and an ISGN",
+   "size": "≈5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "slide when the piston and the arms are up",
+   "why": "POINT18: the piston rises with the robot's arms, so one slide passes both.",
+   "evidence": "F2 p079R POINT18; D2 p071 shot 37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "moving platform (floor piston)",
+   "size": "≈1.5 cap",
+   "heightDelta": "+2",
+   "edges": "open",
+   "behaviour": "rise and fall",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "ride up",
+   "why": "D2 39: ride up the piston, wait for the robot to lift its arms, slide into it.",
+   "evidence": "D2 p071 shot 39; F2 p080L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "catwalk then a ramp up",
+   "size": "≈8 + ramp",
+   "heightDelta": "+2 to +3",
+   "edges": "open",
+   "behaviour": "static; an ISGN on the catwalk",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk",
+   "why": "A long flat run before the Nitro dare.",
+   "evidence": "F2 p080L top",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "upper catwalk (≈2.5 deep) with a ceiling piston, a ? and two 4-high Nitro columns around a life item",
+   "size": "≈6",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": "walk; optional straight-up jump between the columns",
+   "why": "D2 40: a test of nerve, and on a box-gem run the last box before you turn back.",
+   "evidence": "D2 p071 shot 40; F2 p080L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-f",
+   "section": "S4",
+   "shape": "short pads ×2 under ceiling pistons, with a researcher",
+   "size": "≈2-3 each",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "walk under the piston, knock him off",
+   "why": "POINT20: kill the researcher in one hit or he knocks you back into the piston behind.",
+   "evidence": "F2 p080L bottom POINT20; D2 p071 shots 41–42",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-g",
+   "section": "S4",
+   "shape": "catwalk with an arrow plate under a ceiling nozzle, a YTYT, and a ramp up to the goal",
+   "size": "≈5 + ramp",
+   "heightDelta": "+2 (ramp)",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump to the plate when the piston rises and the YTYT comes left, then slide from there (POINT21)",
+   "why": "Three systems (piston, beam plate, walker) combined one last time.",
+   "evidence": "F2 p080L POINT21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "BONUS",
+   "shape": "wide floor (machine room) with outlines and towers",
+   "size": "≈6-8",
+   "heightDelta": 0,
+   "edges": "room walls",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "walk",
+   "why": "Entry floor with the switch-locked lives (D2 28) and two crate towers (D2 29).",
+   "evidence": "D2 p070 shots 28–29",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-b",
+   "section": "BONUS",
+   "shape": "moving platforms (floor pistons with striped caps)",
+   "size": "≈1.5 caps",
+   "heightDelta": "varies",
+   "edges": "open",
+   "behaviour": "extend and retract",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "ride; jump from the top",
+   "why": "Pistons are the bonus's lifts and launch points.",
+   "evidence": "D2 p070 shots 28–32",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "BONUS",
+   "shape": "stepping stones (striped crates: 2 low + 1 high)",
+   "size": "1x1",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "bounce crates; keep them unbroken until the return (D2 30)",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "crate-bounce",
+   "why": "Crates as the only safe footing over the Nitros, so a tool with a planned expiry.",
+   "evidence": "D2 p070 shot 30; F2 p100R bonus ①",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-D-a",
+   "section": "DEATH",
+   "shape": "pads under sequenced pistons",
+   "size": "≈2 each",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "pistons follow one another",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "wait for one to retract, go as the next lifts",
+   "why": "p100R death ①: where pistons follow one another, check the next piston too.",
+   "evidence": "D2 p071 shot 44; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-D-b",
+   "section": "DEATH",
+   "shape": "corridors (blue-tinted machine floor) with Nitros",
+   "size": "long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "leap, slide, spin",
+   "why": "Pure avoidance and enemy-into-Nitro tricks (D2 45–47).",
+   "evidence": "D2 p071 shots 45–47",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-D-c",
+   "section": "DEATH",
+   "shape": "catwalk (C4 inside the route)",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "The header's off-course checkpoint, halfway through.",
+   "evidence": "D2 p071 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "P-D-d",
+   "section": "DEATH",
+   "shape": "pad with a 3-crate stair (2 low + 1 high), a walker and a shrink ray",
+   "size": "≈3",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "break the boxes; jump when the walker is right; slide out of the ray",
+   "why": "D2 49–50: the robot with lowered arms is the step to this pad.",
+   "evidence": "D2 p071 shots 49–50",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "drop-down onto a lower pad",
+   "width": "≈1-2",
+   "heightDelta": "≈−2",
+   "landing": "≈3-u pad shared with a YTYT and a piston",
+   "lethal": "probably (void below)",
+   "runUp": "0",
+   "move": [
+    "plain (straight drop)"
+   ],
+   "coupling": "drop when the YTYT walks right (POINT2)",
+   "failure": "landing on the walker, or falling",
+   "nearby": [
+    "E-S1-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT2 垂直に降りる: drop vertically so you land behind the walker.",
+   "evidence": "F2 p077R POINT2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "moving-platform crossing (piston caps over a void)",
+   "width": "≈3-4 per hop",
+   "heightDelta": "varies; level at full extension",
+   "landing": "≈1.5 cap",
+   "lethal": true,
+   "runUp": "0-1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "piston extension cycle",
+   "failure": "death",
+   "nearby": [
+    "P-S1-g"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "Wide hops for this level, made fair by small, readable caps.",
+   "evidence": "D2 p069 shot 6; F2 p078L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "height gate via an enemy bounce (ISGN to the arrow-puzzle catwalk)",
+   "width": "-",
+   "heightDelta": "+2 to +3 (estimate)",
+   "landing": "arrow-puzzle catwalk",
+   "lethal": "not visible",
+   "runUp": "-",
+   "move": [
+    "enemy-bounce"
+   ],
+   "coupling": "ISGN arm state",
+   "failure": "not visible",
+   "nearby": [
+    "E-S1-e"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "D2 7: \"after bouncing off the octopus robot\": the robot is the step up.",
+   "evidence": "D2 p069 shot 7; F2 p078L",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "gaps and steps between catwalk segments",
+   "width": "≈1-2",
+   "heightDelta": "±1",
+   "landing": "segment with an ISGN",
+   "lethal": "probably",
+   "runUp": "≈1-2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "ISGN arm state (spin or slide when raised, stomp when flat)",
+   "failure": "hit by the robot, or fall",
+   "nearby": [
+    "E-S2-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 10–11: jump up and slide when the robot reaches the right side; drop down, wait for it to approach and raise its arms, then slide.",
+   "evidence": "D2 p069 shots 10–11",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "gap between pads under pistons",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "≈2 pad",
+   "lethal": "probably",
+   "runUp": "0",
+   "move": [
+    "plain"
+   ],
+   "coupling": "the second piston's slow rise",
+   "failure": "crushed, or fall",
+   "nearby": [
+    "P-S2-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "Slow pistons make the first wait-under easy.",
+   "evidence": "D2 p069 shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "drop-down onto a crate stack's catwalk; overshoot = hidden Nitros",
+   "width": "≈1-2",
+   "heightDelta": "−1",
+   "landing": "plate with the staggered ?x3 and 2 Nitros behind",
+   "lethal": true,
+   "runUp": "≈1-2",
+   "move": [
+    "plain (short)"
+   ],
+   "coupling": "none",
+   "failure": "death if you overshoot into the Nitros (D2 16: be very careful on the far one)",
+   "nearby": [
+    "S2-b",
+    "S2-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The crates pull your jump toward the far side, where the Nitros wait.",
+   "evidence": "D2 p069 shot 16; F2 p078R bubble",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-d",
+   "section": "S2",
+   "kind": "gap between pads under paired pistons",
+   "width": "≈2-3",
+   "heightDelta": 0,
+   "landing": "≈2 pad",
+   "lethal": "probably",
+   "runUp": "0-1",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "both pistons rise in phase",
+   "failure": "crushed",
+   "nearby": [
+    "P-S2-f"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "One window for two crushers: in-phase pistons read as a single gate.",
+   "evidence": "D2 p070 shot 19",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "height gate on the return trip (turret ledge)",
+   "width": "-",
+   "heightDelta": "+2 to +3",
+   "landing": "turret ledge",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "enemy-bounce",
+    "held/high"
+   ],
+   "coupling": "the ISGN must still be alive (p100R normal ①–②: stomp it and high-jump onto the small-beam turret)",
+   "failure": "the box-gem return becomes nearly impossible (D2 25)",
+   "nearby": [
+    "E-S3-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "An enemy-conservation puzzle that spans the whole level.",
+   "evidence": "D2 p070 shot 25; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "bottomless gaps between pedestals, chased by a beam",
+   "width": "≈1-2",
+   "heightDelta": 0,
+   "landing": "≈1.5-2 pedestal",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pressing the plate fires the beam from behind (POINT13); spin or slide deflects it (POINT14)",
+   "failure": "zapped, or fall",
+   "nearby": [
+    "S3-b",
+    "O-S3-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Small gaps under pursuit: the hazard is behind you, not in front.",
+   "evidence": "F2 p079L POINT13; D2 p070 shot 26",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "dash-jump gap",
+   "width": "≈2-3",
+   "heightDelta": 0,
+   "landing": "≈2 pad with a walker",
+   "lethal": true,
+   "runUp": "≈2",
+   "move": [
+    "running"
+   ],
+   "coupling": "beam behind; walker ahead",
+   "failure": "death",
+   "nearby": [
+    "E-S3-f"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The widest plain gap on the main route (estimate), met under pressure.",
+   "evidence": "D2 p070 shot 27",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "drop-down (bonus entry)",
+   "width": "-",
+   "heightDelta": "down",
+   "landing": "bonus room",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "none",
+   "nearby": [
+    "BONUS"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "D2 27: drop down on the right into the bonus area.",
+   "evidence": "D2 p070 shot 27; F2 p079R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-e",
+   "section": "S3",
+   "kind": "switch-plate run",
+   "width": "≈4",
+   "heightDelta": 0,
+   "landing": "C3 catwalk",
+   "lethal": true,
+   "runUp": "≈2",
+   "move": [
+    "slide-jump",
+    "running"
+   ],
+   "coupling": "each plate fires the beam; a YTYT waits on the right of the landing plate (POINT15)",
+   "failure": "zapped",
+   "nearby": [
+    "S3-c",
+    "E-S3-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "p100R normal ③: on the return trip this is the biggest hurdle; aim at the third plate from the right and slide-jump on landing.",
+   "evidence": "F2 p079L POINT15–16; D2 p070 shots 33–34; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "bottomless gaps between short pads",
+   "width": "≈1.5",
+   "heightDelta": 0,
+   "landing": "≈2 pad with a shield researcher",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "the researcher pushes his shield forward periodically (POINT17)",
+   "failure": "knocked off (death)",
+   "nearby": [
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 36: jump over and spin him off the side.",
+   "evidence": "D2 p070 shots 35–36",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "gap between pads under pistons",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "≈2-3 pad",
+   "lethal": "probably",
+   "runUp": "0-1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "piston timing (D2 42: wait until the timing is just right and jump across)",
+   "failure": "crushed, or fall",
+   "nearby": [
+    "P-S4-f"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "The last piston gate before the goal.",
+   "evidence": "D2 p071 shot 42",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-a",
+   "section": "BONUS",
+   "kind": "Nitro field crossing between pistons (\"mountain of Nitro\")",
+   "width": "not visible (≈4-6?)",
+   "heightDelta": "varies",
+   "landing": "striped steps / far piston",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "crate-bounce",
+    "plain"
+   ],
+   "coupling": "piston heights; the striped steps must survive for the return",
+   "failure": "death (Nitro)",
+   "nearby": [
+    "B-d",
+    "B-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "F2 p100R bonus ①: keep the striped boxes as footing, or pass beside the Nitros.",
+   "evidence": "D2 p070 shots 30–31; F2 p100R",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "G-B-b",
+   "section": "BONUS",
+   "kind": "long jump from a piston at full extension to the exit lift",
+   "width": "not visible (across a fruit line)",
+   "heightDelta": "down",
+   "landing": "exit lift pad",
+   "lethal": "not visible",
+   "runUp": "dash",
+   "move": [
+    "running"
+   ],
+   "coupling": "piston extension (D2 32: jump when it is at its highest extension)",
+   "failure": "not visible",
+   "nearby": [
+    "B-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "p100R bonus ②: finally, long-jump from the top of the piston.",
+   "evidence": "D2 p070 shot 32; F2 p100R",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "G-D-a",
+   "section": "DEATH",
+   "kind": "gaps under sequenced pistons",
+   "width": "≈1.5-2",
+   "heightDelta": 0,
+   "landing": "≈2 pad",
+   "lethal": "probably",
+   "runUp": "0",
+   "move": [
+    "plain"
+   ],
+   "coupling": "wait for the first piston to retract, jump as the second lifts (D2 44)",
+   "failure": "crushed",
+   "nearby": [
+    "D-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Sequenced crushers remove the single safe window.",
+   "evidence": "D2 p071 shot 44",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-D-b",
+   "section": "DEATH",
+   "kind": "chasm crossed by bouncing on three ISGNs",
+   "width": "≈3-4 per robot",
+   "heightDelta": 0,
+   "landing": "next robot / the C4 pad",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "enemy-bounce"
+   ],
+   "coupling": "arm state: stomp just before the arms close (p100R death ②)",
+   "failure": "death",
+   "nearby": [
+    "E-D-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 48: bounce off the three robots, collecting fruit; hit the checkpoint at the end.",
+   "evidence": "D2 p071 shot 48; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-D-c",
+   "section": "DEATH",
+   "kind": "chasm crossed robot to robot to the gem platform",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "gem platform",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "enemy-bounce",
+    "running"
+   ],
+   "coupling": "wait until the first robot is about to close its arms, bounce to the second, then to the gem platform (D2 52); one ISGN is reachable only by a long jump (p100R death ③)",
+   "failure": "death",
+   "nearby": [
+    "E-D-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Enemies as moving stepping stones with an arm-state window.",
+   "evidence": "D2 p071 shot 52; F2 p100R",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "wait for full extension, jump; repeat",
+   "maxGap": "≈3-4",
+   "rest": "P-S1-h arrow catwalk",
+   "noStop": false,
+   "why": "You can ride a cap, but only full extension lines the next hop up.",
+   "evidence": "D2 p069 shot 6; F2 p078L"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 5,
+   "moves": [
+    "arrow"
+   ],
+   "rhythm": "repeated vertical bounces",
+   "maxGap": "-",
+   "rest": "the arrow step",
+   "noStop": false,
+   "why": "F2 POINT6 order: left arrow first, then the gap above the right arrow.",
+   "evidence": "F2 p078L POINT6; D2 p069 shot 7"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 4,
+   "moves": [
+    "plain",
+    "slide",
+    "stomp"
+   ],
+   "rhythm": "syncopated (each robot's arm state)",
+   "maxGap": "≈2",
+   "rest": "between robots",
+   "noStop": false,
+   "why": "Each hop meets a robot; the arm state chooses the next move.",
+   "evidence": "F2 p078R strip C; D2 p069 shots 9–11"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "even and immediate (beam behind)",
+   "maxGap": "≈2-3",
+   "rest": "after the walker pad",
+   "noStop": true,
+   "why": "Once you press a plate you keep moving until you are clear of the beam.",
+   "evidence": "F2 p079L POINT13; D2 p070 shots 26–27"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 1,
+   "moves": [
+    "slide-jump"
+   ],
+   "rhythm": "one long move (plus a landing slide)",
+   "maxGap": "≈4 of plates",
+   "rest": "P-S3-i C3",
+   "noStop": true,
+   "why": "POINT16: touch only one plate.",
+   "evidence": "F2 p079L POINT16; D2 p070 shots 33–34"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 3,
+   "moves": [
+    "plain",
+    "spin"
+   ],
+   "rhythm": "wait for the grunt, spin, jump",
+   "maxGap": "≈1.5",
+   "rest": "P-S4-b piston catwalk",
+   "noStop": false,
+   "why": "Short pads force a stop-and-fight rhythm (D2 35–36).",
+   "evidence": "D2 p070 shots 35–36"
+  },
+  {
+   "id": "J-B-a",
+   "section": "BONUS",
+   "count": 3,
+   "moves": [
+    "plain",
+    "crate-bounce"
+   ],
+   "rhythm": "timed to piston heights",
+   "maxGap": "not visible",
+   "rest": "far piston",
+   "noStop": false,
+   "why": "D2 30: jump from the top of this piston to the far right; bounce once from the boxes to the piston on the right, but don't break them yet.",
+   "evidence": "D2 p070 shot 30"
+  },
+  {
+   "id": "J-D-a",
+   "section": "DEATH",
+   "count": 3,
+   "moves": [
+    "enemy-bounce"
+   ],
+   "rhythm": "even, timed to the arms",
+   "maxGap": "≈3-4",
+   "rest": "P-D-c C4",
+   "noStop": true,
+   "why": "A bounce chain cannot stop in mid-air.",
+   "evidence": "D2 p071 shot 48"
+  },
+  {
+   "id": "J-D-b",
+   "section": "DEATH",
+   "count": 3,
+   "moves": [
+    "enemy-bounce",
+    "running"
+   ],
+   "rhythm": "wait for the arms to start closing, then bounce, bounce, long jump",
+   "maxGap": "not visible",
+   "rest": "gem platform",
+   "noStop": true,
+   "why": "p100R death ②–③.",
+   "evidence": "D2 p071 shot 52; F2 p100R"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "ceiling piston, single",
+   "placement": "overhead",
+   "timing": "rises and slams; pass while it is up (D2 1)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S1-a start catwalk"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "First piston, on a wide catwalk with no enemy.",
+   "evidence": "D2 p069 shot 1; F2 p077R"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "piston at the short pad's right end",
+   "placement": "edge of a short pad",
+   "timing": "not stated",
+   "counter": [
+    "slide from the far-left edge so the slide stops short"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S1-b YTYT"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT3 左端で待とう: a slide from the wrong spot carries you under the piston.",
+   "evidence": "F2 p077R POINT3"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1",
+   "kind": "four ceiling pistons in a row",
+   "placement": "overhead",
+   "timing": "they lift in sequence from the left; when the leftmost rises, hold right and you pass under all four (POINT4; D2 4: they raise one at a time)",
+   "counter": [
+    "wait-and-go",
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S1-c YTYT"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TEACH"
+   ],
+   "why": "A wave that rewards entering on cue and not stopping.",
+   "evidence": "F2 p077R POINT4; D2 p069 shot 4"
+  },
+  {
+   "id": "O-S1-d",
+   "section": "S1",
+   "kind": "two floor pistons as moving stepping stones",
+   "placement": "in the void",
+   "timing": "extend and retract; jump at full extension (D2 6)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S1-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "The same machine as the crusher, now as footing.",
+   "evidence": "D2 p069 shot 6; F2 p078L"
+  },
+  {
+   "id": "O-S1-e",
+   "section": "S1",
+   "kind": "two ceiling pistons on the long catwalk with a YTYT and ISGNs",
+   "placement": "overhead",
+   "timing": "as the walker reaches the piston, jump up and slide into it; run under the piston (D2 8)",
+   "counter": [
+    "slide under",
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S1-f",
+    "E-S1-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Strip A's exam combines both systems.",
+   "evidence": "D2 p069 shot 8; F2 p078L"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "ceiling pistons side by side over a catwalk joint (strip C)",
+   "placement": "overhead",
+   "timing": "not described",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-a ISGNs"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "Drawn on the map without a POINT.",
+   "evidence": "F2 p078R strip C"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "two slow ceiling pistons over short pads",
+   "placement": "overhead",
+   "timing": "D2 12: wait under the first piston until the next one rises; they move rather slowly here",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S2-b pads"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "Teaches the raised piston as a shelter at a forgiving speed.",
+   "evidence": "D2 p069 shot 12"
+  },
+  {
+   "id": "O-S2-c",
+   "section": "S2",
+   "kind": "ceiling piston with a YTYT under it",
+   "placement": "overhead",
+   "timing": "slide under the piston and kill the YTYT in one move (POINT9)",
+   "counter": [
+    "slide under"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT9 スライディング大活躍: one slide answers both.",
+   "evidence": "F2 p078L POINT9; D2 p069 shot 13"
+  },
+  {
+   "id": "O-S2-d",
+   "section": "S2",
+   "kind": "low pipe (slide-only obstruction)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "slide under"
+   ],
+   "lethal": "blocks only",
+   "combinedWith": [
+    "E-S2-c YTYT",
+    "E-S2-d ISGN"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "POINT10 引きつけてから: let the walker come, then slide through the pipe into it.",
+   "evidence": "F2 p078L POINT10; D2 p069 shots 14–15"
+  },
+  {
+   "id": "O-S2-e",
+   "section": "S2",
+   "kind": "hot pillars (熱い柱), ≈1 u tall: 2 by the stack, 4 in strip D",
+   "placement": "on path, in pairs",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": "harms on touch (inferred)",
+   "combinedWith": [
+    "E-S2-e ISGNs patrolling between"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Pairs ≈4–5 u apart make pens for the robots.",
+   "evidence": "F2 p078R POINT11; D2 p069 shot 17, p070 18"
+  },
+  {
+   "id": "O-S2-f",
+   "section": "S2",
+   "kind": "two hidden Nitros behind the staggered stack",
+   "placement": "behind the landing",
+   "timing": "static",
+   "counter": [
+    "jump short"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The overshoot mine.",
+   "evidence": "F2 p078R bubble; D2 p069 shot 16"
+  },
+  {
+   "id": "O-S2-g",
+   "section": "S2",
+   "kind": "two ceiling pistons that rise together",
+   "placement": "overhead",
+   "timing": "both rise at the same time: run under them in one go (D2 19)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-f ISGN before them"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "In-phase pistons read as a single gate.",
+   "evidence": "D2 p070 shot 19"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "hot pillars around a YTYT after C2",
+   "placement": "on path, in a pair",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": "harms on touch (inferred)",
+   "combinedWith": [
+    "E-S3-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Pen module reused with a walker inside.",
+   "evidence": "D2 p070 shot 22; F2 p079L"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "low pipe with an ISGN",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "slide under"
+   ],
+   "lethal": "blocks only",
+   "combinedWith": [
+    "E-S3-d"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "POINT12 スライディングが有効.",
+   "evidence": "F2 p079L POINT12; D2 p070 shot 24"
+  },
+  {
+   "id": "O-S3-c",
+   "section": "S3",
+   "kind": "beam turret fired by an arrow plate (small electric beam)",
+   "placement": "pursuer (fires along the catwalk from behind)",
+   "timing": "triggered when you step on the plate; the plate itself is the telegraph (POINT13)",
+   "counter": [
+    "outrun (jump off at once)",
+    "destroy/deflect (spin or slide, POINT14)"
+   ],
+   "lethal": "zaps you (D2 26: shrink ray)",
+   "combinedWith": [
+    "S3-b ? on a pedestal beside the plate"
+   ],
+   "roles": [
+    "PURSUIT",
+    "TEACH"
+   ],
+   "why": "Every plate is a \"don't stop here\" marker.",
+   "evidence": "F2 p079L POINT13, p079R POINT14; D2 p070 shot 26"
+  },
+  {
+   "id": "O-S3-d",
+   "section": "S3",
+   "kind": "ceiling nozzles with a vertical discharge onto a plate",
+   "placement": "overhead, above a plate",
+   "timing": "not described by any POINT",
+   "counter": [
+    "-"
+   ],
+   "lethal": "not visible",
+   "combinedWith": [
+    "O-S3-c plates"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "F2 draws them at the start of the plate run (p079L), over the p079R plate and before the goal (p080L).",
+   "evidence": "F2 p079L bottom, p079R top, p080L bottom (zoom)"
+  },
+  {
+   "id": "O-S3-e",
+   "section": "S3",
+   "kind": "four-plate run",
+   "placement": "on path",
+   "timing": "each plate pressed fires the beam",
+   "counter": [
+    "slide-jump (touch one plate)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S3-g YTYT at the landing (POINT15)"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The plate lesson compressed into one move.",
+   "evidence": "F2 p079L POINT15–16; D2 p070 shots 33–34"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "ceiling piston synchronised with an ISGN's arms",
+   "placement": "overhead + on path",
+   "timing": "the piston rises with the robot's arms (D2 37): one slide passes both when both are up (POINT18)",
+   "counter": [
+    "slide under"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "Machine and enemy share one cycle.",
+   "evidence": "F2 p079R POINT18; D2 p071 shot 37"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "ceiling piston behind a shield researcher",
+   "placement": "overhead, behind the enemy",
+   "timing": "not stated",
+   "counter": [
+    "kill in one hit"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-f"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT20 速効一撃必殺: or be knocked back into the piston's jaws.",
+   "evidence": "F2 p080L POINT20; D2 p071 shot 41"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "two 4-high Nitro columns flanking a floating life",
+   "placement": "on platform",
+   "timing": "static",
+   "counter": [
+    "jump straight up between them, or leave the life"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 40: a dare.",
+   "evidence": "F2 p080L bubble; D2 p071 shot 40"
+  },
+  {
+   "id": "O-S4-d",
+   "section": "S4",
+   "kind": "piston + arrow plate + YTYT",
+   "placement": "overhead + on path",
+   "timing": "when the piston rises and the YTYT comes left, jump onto the plate and slide from there (POINT21)",
+   "counter": [
+    "wait-and-go",
+    "slide"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Final combination of all three systems.",
+   "evidence": "F2 p080L POINT21"
+  },
+  {
+   "id": "O-B-a",
+   "section": "BONUS",
+   "kind": "floor pistons and the Nitro mountain",
+   "placement": "on path",
+   "timing": "pistons extend and retract",
+   "counter": [
+    "wait-and-go",
+    "crate-bounce"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "B-d striped steps",
+    "B-e Nitros"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "The bonus is crossed twice, so its hazards are designed for both directions.",
+   "evidence": "D2 p070 shots 30–32; F2 p100R"
+  },
+  {
+   "id": "O-D-a",
+   "section": "DEATH",
+   "kind": "sequenced pistons",
+   "placement": "overhead",
+   "timing": "follow one another; check the next piston too (p100R death ①)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "D-a crates under them"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "No single safe window.",
+   "evidence": "D2 p071 shots 44, 54; F2 p100R"
+  },
+  {
+   "id": "O-D-b",
+   "section": "DEATH",
+   "kind": "shrink ray",
+   "placement": "pursuer",
+   "timing": "fires as you pass (D2 50: slide into the walker to get out of its way)",
+   "counter": [
+    "slide"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "D-f stair"
+   ],
+   "roles": [
+    "PURSUIT"
+   ],
+   "why": "The plate beam reused without the plate.",
+   "evidence": "D2 p071 shot 50"
+  },
+  {
+   "id": "O-D-c",
+   "section": "DEATH",
+   "kind": "Nitros in the corridors",
+   "placement": "on path",
+   "timing": "static",
+   "counter": [
+    "jump over",
+    "fling into (spin a researcher into one)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-D-b walkers",
+    "E-D-c researcher"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 45–47: leap the pair, spin the researcher back into the Nitro, slide–jump–slide between walkers.",
+   "evidence": "D2 p071 shots 45–47"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "YTYT (lamp-headed walker)",
+   "archetype": "shielded/armored (patrol-1D)",
+   "behaviour": "walks the length of its catwalk and back",
+   "counter": [
+    "slide"
+   ],
+   "fails": [
+    "spin",
+    "stomp (only a slide kills it)"
+   ],
+   "placement": "on line (catwalk under a piston)",
+   "roles": [
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "POINT1: slide it as it comes toward you. Met alone on a long catwalk.",
+   "evidence": "F2 p077R POINT1; D2 p069 shot 2",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "YTYT on the short pad",
+   "archetype": "shielded/armored (patrol-1D)",
+   "behaviour": "walks a ≈3-u pad with a piston at its end",
+   "counter": [
+    "slide (from the far-left edge)"
+   ],
+   "fails": [
+    "sliding into the piston"
+   ],
+   "placement": "landing platform",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT2–3: drop behind it, then slide from the left edge.",
+   "evidence": "F2 p077R POINT2–3; D2 p069 shot 3",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-c",
+   "section": "S1",
+   "kind": "YTYT under the four pistons",
+   "archetype": "shielded/armored (patrol-1D)",
+   "behaviour": "walks under the piston row",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "on line under crushers",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 4: slide into the walker, then run under the pistons.",
+   "evidence": "D2 p069 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-d",
+   "section": "S1",
+   "kind": "ISGN (hovering robot with arms)",
+   "archetype": "flier (patrols its catwalk; arm-state cycle)",
+   "behaviour": "moves with its arms spread flat",
+   "counter": [
+    "stomp (arms flat)"
+   ],
+   "fails": [
+    "touching the sparkling tips (D2 5)"
+   ],
+   "placement": "guarding crate",
+   "roles": [
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "POINT5 平べったいときは踏む: its safest state comes first, next to a crate.",
+   "evidence": "F2 p078L POINT5; D2 p069 shot 5",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-e",
+   "section": "S1",
+   "kind": "ISGN used as a step",
+   "archetype": "flier",
+   "behaviour": "hovers below the arrow-puzzle catwalk",
+   "counter": [
+    "stomp (bounce)"
+   ],
+   "fails": [],
+   "placement": "below a ledge (step)",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "D2 7: after bouncing off the octopus robot, run to this area.",
+   "evidence": "D2 p069 shot 7",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-f",
+   "section": "S1",
+   "kind": "YTYT on the long catwalk",
+   "archetype": "shielded/armored (patrol-1D)",
+   "behaviour": "walks toward the pistons",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "on line under crushers",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 8: as the walker reaches the piston, jump up and slide into it.",
+   "evidence": "D2 p069 shot 8",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-g",
+   "section": "S1",
+   "kind": "ISGN ×2 on the long catwalk",
+   "archetype": "flier",
+   "behaviour": "move along the catwalk (\"moving robot\")",
+   "counter": [
+    "stomp",
+    "spin",
+    "slide (by arm state)"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 8: run under the piston, then jump onto the moving robot.",
+   "evidence": "D2 p069 shot 8; F2 p078L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "ISGN ×4 (strip C)",
+   "archetype": "flier (arm-state cycle)",
+   "behaviour": "arms raised, or raising and lowering at fixed intervals (POINT7–8)",
+   "counter": [
+    "spin",
+    "slide (arms raised)",
+    "stomp (arms flat)"
+   ],
+   "fails": [
+    "stomping raised arms (inferred)"
+   ],
+   "placement": "landing platforms (catwalk segments)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "A drill of the three ISGN states, one robot per segment.",
+   "evidence": "F2 p078R POINT7–8; D2 p069 shots 9–11",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "YTYT under a piston",
+   "archetype": "shielded/armored",
+   "behaviour": "walks under a ceiling piston",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "under a crusher",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT9.",
+   "evidence": "F2 p078L POINT9; D2 p069 shot 13",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "YTYT beyond a pipe",
+   "archetype": "shielded/armored",
+   "behaviour": "walks toward you on the far side of a low pipe",
+   "counter": [
+    "slide (through the pipe)"
+   ],
+   "fails": [],
+   "placement": "on line (behind a pipe)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT10: draw it in, then slide through the pipe into it.",
+   "evidence": "F2 p078L POINT10; D2 p069 shot 14",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-d",
+   "section": "S2",
+   "kind": "ISGN by an obstacle",
+   "archetype": "flier",
+   "behaviour": "hovers near a low obstacle",
+   "counter": [
+    "slide (under the obstacle into him)"
+   ],
+   "fails": [],
+   "placement": "behind an obstacle",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 15.",
+   "evidence": "D2 p069 shot 15",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-e",
+   "section": "S2",
+   "kind": "ISGN ×2-3 inside hot-pillar pens (strip D)",
+   "archetype": "flier (patrol between two pillars)",
+   "behaviour": "patrols between two hot pillars",
+   "counter": [
+    "spin as it returns",
+    "jump onto it when it is closest"
+   ],
+   "fails": [
+    "jumping in while it is near"
+   ],
+   "placement": "between hazards",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "POINT11 左側で待つ: jump the pillar while it is away, wait on the left, spin it as it comes back.",
+   "evidence": "F2 p078R POINT11; D2 p069 shot 17, p070 18",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-f",
+   "section": "S2",
+   "kind": "ISGN before the paired pistons",
+   "archetype": "flier",
+   "behaviour": "hovers on a raised catwalk end",
+   "counter": [
+    "spin",
+    "stomp"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "D2 19: jump up and hit the robot.",
+   "evidence": "D2 p070 shot 19",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "YTYT ×2 on the into-screen checker catwalk",
+   "archetype": "shielded/armored",
+   "behaviour": "walk toward and away from the camera",
+   "counter": [
+    "slide"
+   ],
+   "fails": [
+    "misjudging the slide distance"
+   ],
+   "placement": "on line (toward the camera)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 21: the perspective can be deceiving.",
+   "evidence": "D2 p070 shot 21; F2 p079L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "YTYT in a hot-pillar pen",
+   "archetype": "shielded/armored",
+   "behaviour": "walks between two hot pillars",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "between hazards",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "D2 22: wait until it is on the far side, then jump in and slide.",
+   "evidence": "D2 p070 shot 22",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-c",
+   "section": "S3",
+   "kind": "YTYT before the skull pad",
+   "archetype": "shielded/armored",
+   "behaviour": "walks the catwalk",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Drawn on F2 p079L.",
+   "evidence": "F2 p079L",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "E-S3-d",
+   "section": "S3",
+   "kind": "ISGN at the pipe",
+   "archetype": "flier",
+   "behaviour": "comes toward you with arms raised",
+   "counter": [
+    "slide (under the pipe)"
+   ],
+   "fails": [],
+   "placement": "behind an obstacle",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT12; D2 24.",
+   "evidence": "F2 p079L POINT12; D2 p070 shot 24",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-e",
+   "section": "S3",
+   "kind": "ISGN below the turret ledge (the \"important\" robot)",
+   "archetype": "flier",
+   "behaviour": "patrols the lower catwalk",
+   "counter": [
+    "leave it alive; stomp it on the return as a step"
+   ],
+   "fails": [
+    "killing it on the way out"
+   ],
+   "placement": "below a ledge (step)",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "D2 25 and p100R ①–②: the box-gem return depends on it.",
+   "evidence": "D2 p070 shot 25; F2 p100R",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-f",
+   "section": "S3",
+   "kind": "YTYT after the plate (p079R top)",
+   "archetype": "shielded/armored",
+   "behaviour": "walks the pad beyond a plate",
+   "counter": [
+    "slide (off the trigger into its legs)"
+   ],
+   "fails": [],
+   "placement": "landing platform after a plate",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 27: run off the trigger and slide into the walker.",
+   "evidence": "D2 p070 shot 27; F2 p079R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-g",
+   "section": "S3",
+   "kind": "YTYT at the plate run before C3",
+   "archetype": "shielded/armored",
+   "behaviour": "stands right of the landing plate (POINT15)",
+   "counter": [
+    "slide (off the plate into its legs)"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT15 スライディングで突破: slide away at once and you are safe.",
+   "evidence": "F2 p079L POINT15; D2 p070 shot 33",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "shield researcher (シールド研究員) ×2",
+   "archetype": "shielded/armored",
+   "behaviour": "pushes his shield forward periodically and grunts first",
+   "counter": [
+    "spin when the shield stops, then spin him off the side"
+   ],
+   "fails": [
+    "approaching while the shield moves (knocked off)"
+   ],
+   "placement": "short pads",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "POINT17 やられる前にやれ: kill them fast while they are stopped.",
+   "evidence": "F2 p079R POINT17; D2 p070 shots 35–36",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "ISGN with the synchronised piston",
+   "archetype": "flier",
+   "behaviour": "arms rise with the piston",
+   "counter": [
+    "slide (when both are up)"
+   ],
+   "fails": [],
+   "placement": "under a crusher",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "POINT18 同時に狙っちゃおう.",
+   "evidence": "F2 p079R POINT18; D2 p071 shot 37",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "shield researcher on a tight pad",
+   "archetype": "shielded/armored",
+   "behaviour": "as E-S4-a",
+   "counter": [
+    "spin after the grunt"
+   ],
+   "fails": [
+    "approaching while the shield moves"
+   ],
+   "placement": "short pad",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "POINT19 止まるのを待て: approach only when the shield stops, then spin repeatedly.",
+   "evidence": "F2 p080L POINT19; D2 p071 shot 38",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-d",
+   "section": "S4",
+   "kind": "ISGN after the floor piston",
+   "archetype": "flier",
+   "behaviour": "lifts its arms periodically",
+   "counter": [
+    "slide (when the arms lift)"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 39.",
+   "evidence": "D2 p071 shot 39",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-e",
+   "section": "S4",
+   "kind": "ISGN on the long catwalk before the ramp",
+   "archetype": "flier",
+   "behaviour": "patrols the catwalk",
+   "counter": [
+    "stomp",
+    "spin",
+    "slide (by arm state)"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Drawn on F2 p080L.",
+   "evidence": "F2 p080L top",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "E-S4-f",
+   "section": "S4",
+   "kind": "shield researcher with a piston behind him",
+   "archetype": "shielded/armored",
+   "behaviour": "pushes you back toward the piston",
+   "counter": [
+    "kill in one hit; walk under the piston and knock him off"
+   ],
+   "fails": [
+    "being knocked back into the piston"
+   ],
+   "placement": "between hazards",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT20.",
+   "evidence": "F2 p080L POINT20; D2 p071 shot 41",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-g",
+   "section": "S4",
+   "kind": "YTYT at the goal ramp",
+   "archetype": "shielded/armored",
+   "behaviour": "comes left along the catwalk",
+   "counter": [
+    "slide (from the plate)"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "POINT21 YTYTとピストンを見ろ.",
+   "evidence": "F2 p080L POINT21",
+   "confidence": "high"
+  },
+  {
+   "id": "E-D-a",
+   "section": "DEATH",
+   "kind": "ISGNs as bounce chains (≥5)",
+   "archetype": "flier",
+   "behaviour": "hover over voids, opening and closing their arms",
+   "counter": [
+    "stomp just before the arms close"
+   ],
+   "fails": [
+    "riding as soon as the arms open (p100R ②)"
+   ],
+   "placement": "over a pit (stepping stones)",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "Enemies as moving platforms.",
+   "evidence": "D2 p071 shots 48–49, 52–54; F2 p100R",
+   "confidence": "high"
+  },
+  {
+   "id": "E-D-b",
+   "section": "DEATH",
+   "kind": "YTYTs (≥4)",
+   "archetype": "shielded/armored",
+   "behaviour": "walk the corridors",
+   "counter": [
+    "slide"
+   ],
+   "fails": [],
+   "placement": "on line, between Nitros",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "D2 47: slide, jump the Nitro, slide again.",
+   "evidence": "D2 p071 shots 47, 50–51, 53",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-D-c",
+   "section": "DEATH",
+   "kind": "shield researcher next to a Nitro",
+   "archetype": "shielded/armored",
+   "behaviour": "pushes forward",
+   "counter": [
+    "fling into (spin him back into the Nitro)"
+   ],
+   "fails": [],
+   "placement": "beside a Nitro",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "D2 46.",
+   "evidence": "D2 p071 shot 46",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "into-screen catwalk: Aku + W stack",
+    "ceiling piston (run under, hop up)",
+    "YTYT on a catwalk under a piston (slide)",
+    "drop to a short pad: YTYT + piston (slide from the left edge)",
+    "ride a floor piston up",
+    "YTYT + 4 ceiling pistons in a wave",
+    "? + flat-armed ISGN (stomp)",
+    "2 floor pistons over the void (jump at full extension)",
+    "ISGN bounce up to the arrow puzzle",
+    "arrow puzzle",
+    "long catwalk: YTYT + 2 pistons + 2 ISGNs",
+    "C1 round the corner"
+   ],
+   "gaps": 3,
+   "enemies": 8,
+   "hazards": 5
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "4 ISGNs on stepped segments (arm states)",
+    "pistons over a joint",
+    "2 slow pistons over short pads (wait under the first)",
+    "piston + YTYT (one slide)",
+    "? + pipe + YTYT + ISGN (slide through)",
+    "step down to the staggered ?x3 (2 hidden Nitros behind)",
+    "4 hot pillars in 2 pens with ISGNs",
+    "ISGN + 2 pistons rising together",
+    "C2 + crystal"
+   ],
+   "gaps": 4,
+   "enemies": 11,
+   "hazards": 7
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "into-screen checker catwalk: 2 YTYTs",
+    "Aku box",
+    "hot-pillar pen with a YTYT",
+    "skull pad (deathless gate)",
+    "pipe + ISGN (slide)",
+    "turret ledge; ISGN below (keep it alive)",
+    "plate → beam; ? on a pedestal",
+    "pads + walker; dash-jump",
+    "drop into the bonus",
+    "4-plate run (slide-jump) + YTYT",
+    "C3"
+   ],
+   "gaps": 5,
+   "enemies": 8,
+   "hazards": 5
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "2 shield researchers on short pads",
+    "piston synced with ISGN arms (one slide)",
+    "researcher on a tight pad",
+    "ride a floor piston; ISGN",
+    "ISGN; ramp up",
+    "? under a piston; two 4-high Nitro columns around a life",
+    "2 pistons + researcher (piston behind him)",
+    "plate under a nozzle + YTYT",
+    "ramp → goal"
+   ],
+   "gaps": 2,
+   "enemies": 8,
+   "hazards": 4
+  },
+  {
+   "section": "BONUS",
+   "beats": [
+    "outlines (2 lives + ?) + ?",
+    "two 2x3 towers",
+    "pistons + striped steps (keep them)",
+    "Nitro mountain",
+    "! at the far end",
+    "back over the steps; collect the lives",
+    "back again; break the steps",
+    "piston long-jump to the exit lift"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "DEATH",
+   "beats": [
+    "skull elevator",
+    "2 boxes under sequenced pistons",
+    "2 Nitros",
+    "researcher spun into a Nitro",
+    "walker – Nitro – walker",
+    "3-robot bounce chain",
+    "C4",
+    "ISGN step; 3-crate stair; walker; shrink ray",
+    "walker",
+    "robot–robot bounce to the gem platform",
+    "robot + piston",
+    "green ! (exit)"
+   ],
+   "gaps": 3,
+   "enemies": 10,
+   "hazards": 3
+  }
+ ],
+ "geometryObservations": [
+  "There are three robots, each with one correct answer, and the geometry is built for that answer. YTYTs (slide only) meet you on flat catwalks long enough to slide. ISGNs (answer chosen by arm state) hover at landings and over voids. Shield researchers stand on tiny pads where a push is death.",
+  "The piston has three jobs. It is a ceiling crusher you pass while it is up, a floor lift you ride and leave at full extension, and an enemy partner (it rises with the ISGN's arms in POINT18 and stands behind a researcher in POINT20). The level walks through: single (O-S1-a) → row of four as a wave (O-S1-c) → slow pair you shelter under (O-S2-b) → in-phase pair (O-S2-g) → synchronised with an enemy (O-S4-a) → behind a pusher (O-S4-b) → sequenced in the death route (O-D-a).",
+  "Slide is the master verb. It kills YTYTs, passes pipes (a gap only a slide fits), goes under pistons and over plate rows as a slide-jump, and escapes beams. The start strip's Aku tip warns you to think about footing width and the distance to traps when sliding, and POINT3 shows why: a long slide on a short pad ends under a piston.",
+  "Catwalks are short and segmented. Gaps are 1–3 u almost everywhere (the piston caps at ≈3–4 u are the exception), and the danger is vertical (pistons, nozzles) or comes from behind (beams), not jump length.",
+  "Hot pillars build pens. Two pillars ≈4–5 u apart with a robot patrolling between them make a reusable fenced-enemy module: wait outside, jump in while the robot is far away, kill it (POINT11; D2 22).",
+  "Plates turn stopping into the hazard. Each plate fires a beam from behind, so every plate means \"don't stop here\". The ? on a pedestal next to a plate (S3-b) tempts exactly that stop, and the four-plate row compresses the lesson into one slide-jump (G-S3-e).",
+  "Enemies placed before obstacles teach combined timing. A walker behind a pipe, a walker under a piston and an ISGN beside an obstacle each have one move that clears both (POINT9, POINT10, D2 15). This \"one input, two problems\" design recurs in every strip.",
+  "Rest lives at corners and after gauntlets. C1 and C2 sit where the catwalk turns; C3 comes immediately after the plate run. The short researcher pads in S4 are deliberately the opposite: no rest, nowhere to retreat.",
+  "Geometry creates a level-wide enemy-conservation puzzle. The turret ledge can be climbed on the way back only by bouncing on one ISGN (G-S3-a). Killing it on the way out breaks the box-gem run, so an enemy's survival becomes part of the route (D2 25; p100R).",
+  "The death route turns robots into platforms. ISGN bounce chains cross voids (G-D-b, G-D-c), and the timing window is the arms closing (\"stomp just before\"), so the enemy pattern is the platform cycle.",
+  "One new element per strip, then combinations. The start strip introduces YTYTs and pistons, strip A ISGNs and floor pistons, strip C the ISGN arm drill, strip B pipes with walkers under pistons, and strip D hot pillars. S3 adds beams and plates, S4 shield researchers, and the goal strip combines piston, plate and walker.",
+  "Crates as tools in the bonus. The striped steps are the only safe footing over the Nitros and must survive until the return (D2 30). The bonus also ends with the level's signature move, a long jump from a piston at full extension (G-B-b)."
+ ],
+ "geometryTransfer": [
+  "Crusher wave: four `crusher`s ≈1.5 crates (≈1.7 m) apart with `phase` stepping ≈0.2 s each, so a 9 m/s run that starts as the first one lifts passes all four (POINT4). For skaters at 12 m/s, widen the spacing to ≈2 crates (≈2.3 m) to keep the same timing.",
+  "Floor-piston stepping stones: use `mover` pads on `axis: \"y\"` (1.5-crate caps, ≈1.7 m) rising to the next catwalk height, ≈3 crates (≈3.5 m) apart. At full extension the hop is an easy full jump (≈5.6 m reach); at the bottom of the cycle the next cap is out of reach. That teaches \"jump at full extension\".",
+  "Fenced enemy pen: two one-crate posts ≈4–5 crates (≈4.6–5.8 m) apart, with a `grunt` (or a `charger` for the test version) patrolling between them on `range` ≈2 crates. The player waits outside and hops in when it is far. On the board, a full-charge ollie (≈1.7 m) clears a one-crate post (1.15 m), so the pen also works on a skate line.",
+  "Slide-only gaps: a low bar across a catwalk at ≈0.8 m clearance forces a slide. Put a stompable `grunt` approaching from the far side so the slide also kills it (POINT10). Keep such bars off skate lines unless they are built as grindable rails.",
+  "Plate pursuit with existing kinds: there is no plate-triggered turret. Approximate it with a `sentry` aimed down a catwalk from behind a crate pedestal, so stopping to break the crate gets you shot, and give the player a slide or spin answer.",
+  "Enemy as the step back: put a stompable enemy below a ledge 5+ crates high (≥5.8 m, above the double-jump reach of ≈4.6 m). Only a stomp bounce (≈3 m) plus a double jump reaches it, so a player who kills the enemy early loses the way back. Use it only for an optional return route, as Crash does."
+ ]
+}

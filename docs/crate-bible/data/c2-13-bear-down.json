@@ -1,0 +1,1021 @@
+{
+ "id": "c2-13-bear-down",
+ "game": "Crash 2",
+ "stage": 13,
+ "name": "Bear Down",
+ "nameJa": "しろくまだいジャンプ",
+ "sources": [
+  "F2 p052L (header)",
+  "F2 p052R-p055L (map)",
+  "F2 p097L (perfect page)",
+  "D2 p040L-p042L",
+  "gamepressure N. Sane Bear Down (42)"
+ ],
+ "camera": "vehicle: forced scroll into the screen (polar-bear cub ride)",
+ "totalBoxes": 42,
+ "totalSource": "F2 p052L header (superscript 0); reconciles exactly (green ! excluded); N. Sane 42",
+ "compositionTotals": {
+  "question": 18,
+  "wood": 14,
+  "striped": 3,
+  "checkpoint": 3,
+  "tnt": 2,
+  "nitro": 2
+ },
+ "uncountedSwitches": {
+  "switchGreen": 1
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 42,
+   "basis": "all mapped boxes; no bonus/gem/death route; the live warp icon is a hidden exit with no boxes of this stage"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 10,
+   "cumulative": 10,
+   "notes": "2x2 opening block, landing boxes, totem slalom/gate, orca holes, double narrow pond"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 15,
+   "cumulative": 25,
+   "notes": "ice pair 1, worker gates, big hole into a 10-box two-line field with 2 TNT and 2 seals"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 8,
+   "cumulative": 33,
+   "notes": "left-edge payouts, worker gate + orca, crystal strip, round foothold, totem forest hiding a ? and C3"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 9,
+   "cumulative": 42,
+   "notes": "double worker gate, diagonal trio, ice pair 2, Nitro hurdle, dash-jump landing box, green ! (uncounted)"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "directly ahead of Polar at the mount point, centre",
+   "composition": {
+    "question": 2,
+    "wood": 2
+   },
+   "count": 4,
+   "arrangement": "2x2 block (? top-left, W top-right, W bottom-left, ? bottom-right)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "TEACH",
+    "SPEED-LINE"
+   ],
+   "why": "opening ram: banks four boxes before any hazard and re-teaches bear = battering ram",
+   "evidence": "F2 p052R (single large icon with two ?); D2 p040L shot 1 + zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "far bank of the first pond, centre-right",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (landing marker)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "vehicle"
+   ],
+   "relations": [
+    "next (wide) pond immediately after"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "landing box that chains straight into the next jump",
+   "evidence": "F2 p052R; D2 p040L shot 2",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "end of the totem slalom, right lane, just before an orca hole whose safe side is the left",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "orca hole after; jump over the LEFT orca"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE",
+    "TEST"
+   ],
+   "why": "collecting it commits to a right-side take-off; break it, then drift left in the air",
+   "evidence": "F2 p052R POINT 3; D2 shots 3-4",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "far bank of that orca hole, right third",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair, one behind the other",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "vehicle"
+   ],
+   "relations": [
+    "double narrow pond follows"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE"
+   ],
+   "why": "two boxes in one lane; the second is the cue for the light-hop rhythm",
+   "evidence": "F2 p053L zoom; D2 shots 5-6",
+   "confidence": "high (wood type medium)"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "centre gap of a totem gate (two left, three right)",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "threaded through totems"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "the only safe path through the gate is also the box line",
+   "evidence": "F2 p053L zoom; D2 shot 7 ('bouncy box')",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-C1",
+   "section": "S1",
+   "order": 6,
+   "where": "after the second orca hole and a pond, centre-right",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save after the first orca/narrow-pond combination",
+   "evidence": "F2 p053L; D2 shot 8",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "ice patch right after a fallen totem: W left, ? right",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "diagonal pair on ice",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "line up LEFT before jumping the fallen totem"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "hard box #1: enter on the diagonal from the left and let the slide take you right",
+   "evidence": "F2 p053L POINT 6 + Aku tip; F2 p097L (1); D2 p040R shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "just after the first worker pair, centre",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair, one behind the other",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "reward after the worker gate"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "REWARD"
+   ],
+   "why": "payout for jumping the first lowered slab, in the landing lane",
+   "evidence": "F2 p053R; D2 shot 11",
+   "confidence": "high (types medium)"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "far bank of the big hole: two parallel lines",
+   "composition": {
+    "wood": 2,
+    "question": 4,
+    "tnt": 1
+   },
+   "count": 7,
+   "arrangement": "left line W, ?, ?; right line TNT, ?, W, ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "vehicle"
+   ],
+   "relations": [
+    "landing box W on the left",
+    "TNT heads the right line"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "SPEED-LINE",
+    "EXPLOSIVE-MIX",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "hard box #2: jump angled left onto W, sweep the left line, cross right behind the TNT; only a fast zig-zag gets all six",
+   "evidence": "F2 p053R POINT 9 zoom; F2 p097L (2); D2 shots 12-13",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "after the two seals: W right, TNT left-centre about level, striped further right",
+   "composition": {
+    "wood": 1,
+    "tnt": 1,
+    "striped": 1
+   },
+   "count": 3,
+   "arrangement": "loose trio",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "seal jump lands on the W"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "SPEED-LINE"
+   ],
+   "why": "land on W, jump the TNT, take the striped box just past it",
+   "evidence": "F2 p053R zoom; D2 shot 14",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-C2",
+   "section": "S2",
+   "order": 5,
+   "where": "beside the worker pair after a pond (pass under the raised slab)",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "worker gate"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ENEMY-LINK"
+   ],
+   "why": "reached by passing under the raised slab right after a pond jump (land early)",
+   "evidence": "F2 p053R POINT 10; D2 shot 15",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "start of S3, left edge",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "single then a 2-stack, one behind the other",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "before the big pond"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "ROW",
+    "SPEED-LINE"
+   ],
+   "why": "three-box payout in one lane after the checkpoint; ramming the stack takes both",
+   "evidence": "F2 p054L zoom (tall icon); D2 p040R shot 16",
+   "confidence": "high (types medium)"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "left, just before a worker pair",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair, one behind the other",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "worker gate, then jump the right-hand orca"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TIMED"
+   ],
+   "why": "sets the approach lane to a timed gate followed by an orca",
+   "evidence": "F2 p054L POINT 12; D2 p041L shot 17",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "after the orca hole, left of centre (fruit leads right around totems)",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "fruit trail is a decoy"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "the box asks for a cut back left against the fruit line",
+   "evidence": "F2 p054L; D2 shot 18",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "inside the dense totem forest, behind a totem, left-centre",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "hidden by totems"
+   ],
+   "tags": [
+    "HIDDEN",
+    "SINGLE",
+    "COUNT-TRAP",
+    "SPEED-LINE"
+   ],
+   "why": "hard box #3: camera occlusion as a count trap",
+   "evidence": "F2 p054R POINT 15; F2 p097L (3); D2 shot 21",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-C3",
+   "section": "S3",
+   "order": 5,
+   "where": "inside the same forest, centre",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "hidden by totems"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "HIDDEN"
+   ],
+   "why": "also hidden; after the third set of totems",
+   "evidence": "F2 p054R POINT 15; D2 shot 21",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "after the double worker gate, right of centre",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "diagonal line ?, W, ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "reward after jump-then-under gate"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "SPEED-LINE",
+    "REWARD"
+   ],
+   "why": "reward for the double gate; ends with a jump right that lines up the ice pair",
+   "evidence": "F2 p054R zoom; D2 shots 22-23",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "ice patch after the orca hole: striped, then ? to its right",
+   "composition": {
+    "striped": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "diagonal pair on ice",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "enter at an angle from the middle; hold right"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "hard box #4: hold right the instant the striped breaks",
+   "evidence": "F2 p054R POINT 17; F2 p097L (4); D2 p041R shot 24",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "far bank of the next orca hole, centre",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (landing marker)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "vehicle"
+   ],
+   "relations": [
+    "jump the orcas on the left side"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "landing reward",
+   "evidence": "F2 p054R; D2 shot 25",
+   "confidence": "high (lane medium)"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "across a narrow strip between ponds",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "two side by side spanning the strip",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "no way round"
+   ],
+   "tags": [
+    "SPEED-LINE",
+    "TEST",
+    "NITRO-SWITCH"
+   ],
+   "why": "Nitro used as a hurdle; jump early; counted via the green !",
+   "evidence": "F2 p055L POINT 18; D2 shots 26-27",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "landing after the next break (dash-jump), before the last worker gate",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (landing marker)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "vehicle"
+   ],
+   "relations": [
+    "worker gate after"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "landing marker after a dash-jump",
+   "evidence": "F2 p055L; D2 shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "after the ride, before the exit",
+   "composition": {
+    "switchGreen": 1
+   },
+   "count": 0,
+   "arrangement": "single (uncounted metal box)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "detonates the two Nitros"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "hard 'box' #5: must not be forgotten",
+   "evidence": "F2 p055L; F2 p097L (5); D2 shot 29",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S2",
+   "kind": "lab workers with steel slab",
+   "count": 3,
+   "where": "POINT 7, 8 (hole right behind), 10 (C2)",
+   "role": "timed gate: jump when lowered, pass under when raised"
+  },
+  {
+   "section": "S3",
+   "kind": "lab workers with steel slab",
+   "count": 2,
+   "where": "POINT 12 (then the right-hand orca), POINT 14 (right after an orca)",
+   "role": "timed gate"
+  },
+  {
+   "section": "S4",
+   "kind": "lab workers with steel slab",
+   "count": 3,
+   "where": "POINT 16 (two in a row: jump, then under), POINT 19",
+   "role": "timed gate"
+  },
+  {
+   "section": "S1-S4",
+   "kind": "orca",
+   "count": 14,
+   "where": "about 7 holes, two orcas each",
+   "role": "timed jumps; set take-off side"
+  },
+  {
+   "section": "S2",
+   "kind": "seal",
+   "count": 2,
+   "where": "inside the S2 box field",
+   "role": "jumped; the jump lands on S2-d's W"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pond",
+   "where": "after S1-a",
+   "crates": [
+    "S1-b"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "wide pond (needs the speed burst)",
+   "where": "after S1-b",
+   "crates": []
+  },
+  {
+   "section": "S1",
+   "kind": "orca hole",
+   "where": "after S1-c",
+   "crates": [
+    "S1-c",
+    "S1-d"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "double narrow pond",
+   "where": "after S1-d",
+   "crates": [
+    "S1-d"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "orca hole + hole",
+   "where": "after S1-e",
+   "crates": []
+  },
+  {
+   "section": "S2",
+   "kind": "hole behind workers",
+   "where": "POINT 8",
+   "crates": []
+  },
+  {
+   "section": "S2",
+   "kind": "big hole (needs the speed burst)",
+   "where": "before S2-c",
+   "crates": [
+    "S2-c"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "pond",
+   "where": "before C2",
+   "crates": [
+    "S2-C2"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "big pond",
+   "where": "after S3-a",
+   "crates": [
+    "S3-a"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "orca hole",
+   "where": "after S3-b",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "ponds with a crystal strip and round foothold",
+   "where": "POINT 13",
+   "crates": []
+  },
+  {
+   "section": "S4",
+   "kind": "orca hole",
+   "where": "after S4-a",
+   "crates": [
+    "S4-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "orca hole",
+   "where": "after S4-b",
+   "crates": [
+    "S4-c"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "narrow strip + breaks",
+   "where": "S4-d to S4-e",
+   "crates": [
+    "S4-d",
+    "S4-e"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "ice pair 1",
+   "solution": "round the fallen totem on the left, jump, skid right through both",
+   "wrongOrder": "arriving centred / steering on ice",
+   "loss": "all-box; replay from C1"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "ice pair 2 (striped first)",
+   "solution": "enter from the middle at an angle, hold right as the striped breaks",
+   "wrongOrder": "late input",
+   "loss": "the ?"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S2-c",
+    "S2-d"
+   ],
+   "summary": "big-hole landing field",
+   "solution": "burst, jump angled left onto W, sweep left line, cross right behind the TNT, jump seals, land on W, jump TNT, take striped",
+   "wrongOrder": "landing centred/right",
+   "loss": "up to six boxes or a life"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S3-d",
+    "S3-C3"
+   ],
+   "summary": "hidden ? and C3 in the totem forest",
+   "solution": "weave right-left-right and take the ? behind the totem",
+   "wrongOrder": "riding the obvious gaps blind",
+   "loss": "one ? (all-box)"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S4-f",
+    "S4-d"
+   ],
+   "summary": "green ! at the goal",
+   "solution": "hit it after the ride",
+   "wrongOrder": "exiting first",
+   "loss": "two Nitros uncounted"
+  }
+ ],
+ "observations": [
+  "Bear It's rules plus a timed worker gate; rewards follow gates (S2-b, S4-a) or set the approach lane (S3-b).",
+  "Single landing boxes become a 10-box landing field after the big hole; its first box is where an angled-left jump lands.",
+  "Only 4 explosives in 42 boxes, each a key: TNT heading a line dictates order, a TNT forces a jump, a Nitro pair is a strip-wide hurdle.",
+  "Ice pairs return escalated (W+? from the left, then striped+? from the middle with instant hold-right).",
+  "Occlusion behind totems hides a ? and C3, the only hidden placement in the bear stages, flagged on the perfect page.",
+  "A 2x2 opening block banks 10% of the boxes before any hazard.",
+  "Density peaks in S2 (15); S3 is a deliberate calm (POINT 11) before the hidden-box forest.",
+  "The fruit trail can lead away from the box line (S3-c).",
+  "Checkpoint spacing tightens: 10/25/33 of 42.",
+  "The live warp icon is a box-less hidden exit."
+ ],
+ "openQuestions": [
+  "Plain icons identified only as non-?/non-striped are wood? (could be striped).",
+  "S1-a and S4-c lanes medium confidence."
+ ],
+ "cameraSections": [
+  {"section": "S1", "mode": "vehicle", "notes": "forced into-screen scroll on Polar; road ≈ 5-7 u between ice cliff and rock; water jumps, totem slalom and gate, two orca holes"},
+  {"section": "S2", "mode": "vehicle", "notes": "forced scroll; fallen totems, first ice patch, three worker slab gates, big hole into a two-line crate field"},
+  {"section": "S3", "mode": "vehicle", "notes": "forced scroll; calm stretch (POINT 11), flank water channel, island pond, totem forest that hides a crate and C3"},
+  {"section": "S4", "mode": "vehicle", "notes": "forced scroll; double gate, ice pair, road narrows to a ≈ 2-3 u strip between ponds (breaks + Nitro hurdle); dismount on foot at the end pond (green !, secret-warp foothold)"}
+ ],
+ "platforms": [
+  {"id": "P-S1-a", "section": "S1", "shape": "vehicle lane", "size": "5-7 wide", "heightDelta": 0, "edges": "walled (ice cliff / rock)", "behaviour": "forced scroll", "roles": ["ARENA"], "why": "Three-plus lanes wide: every crate, totem and orca is a lane instruction. The 2×2 block at the mount shows the full width once before any hazard", "evidence": "D2 p040L s1 (2×2 block as ruler); F2 p052R", "confidence": "medium"},
+  {"id": "P-S1-b", "section": "S1", "shape": "slalom (static posts)", "size": "totems ≈ 1.5-2 wide, ≈ 3 tall; gaps ≈ 2-3", "heightDelta": 0, "edges": "walled", "behaviour": "static", "roles": ["CHOKE"], "why": "Lateral precision is taught before the first orca; the last cut ends at S1-c, on the side the orca hole punishes", "evidence": "F2 p052R; D2 p040L s3", "confidence": "medium"},
+  {"id": "P-S1-c", "section": "S1", "shape": "gate (static posts)", "size": "gap ≈ 2 (the striped crate fills it)", "heightDelta": 0, "edges": "walled", "behaviour": "static", "roles": ["CHOKE"], "why": "The only way through is the crate line: the gap and the striped box (S1-e) coincide", "evidence": "F2 p053L; D2 p040L s7", "confidence": "medium"},
+  {"id": "P-S1-d", "section": "S1", "shape": "wide floor", "size": "5-7 wide", "heightDelta": 0, "edges": "walled", "behaviour": "forced scroll", "roles": ["CHECKPOINT-PAD"], "why": "Saves after the first orca + light-hop combination", "evidence": "F2 p053L; D2 p040L s8", "confidence": "medium"},
+  {"id": "P-S2-a", "section": "S2", "shape": "ice", "size": "road width × ≈ 3-4; crates ≈ 2 apart laterally", "heightDelta": 0, "edges": "walled", "behaviour": "low traction (turning on ice is impossible, F2 p097L)", "roles": ["TEST"], "why": "Ice removes steering, so the crate pair tests planning one input ahead; a miss costs only the box", "evidence": "F2 p053L POINT 6; F2 p097L; D2 p040R s9", "confidence": "medium"},
+  {"id": "P-S2-b", "section": "S2", "shape": "wide floor (crate field)", "size": "5-7 wide × ≈ 10-12 long", "heightDelta": 0, "edges": "walled", "behaviour": "forced scroll", "roles": ["LANDING", "ARENA"], "why": "After the hardest jump the floor becomes a crate slalom whose order is dictated by the explosive", "evidence": "F2 p053R zoom; D2 p040R s13-s14", "confidence": "medium"},
+  {"id": "P-S2-c", "section": "S2", "shape": "wide floor", "size": "5-7 wide", "heightDelta": 0, "edges": "walled", "behaviour": "forced scroll", "roles": ["CHECKPOINT-PAD"], "why": "The checkpoint is collected by passing under the slab: the save point is also the section's last gate", "evidence": "F2 p053R; D2 p040R s15", "confidence": "medium"},
+  {"id": "P-S3-a", "section": "S3", "shape": "ice", "size": "road width × ≈ 3-4", "heightDelta": 0, "edges": "walled", "behaviour": "low traction", "roles": ["LANDING"], "why": "A stakes-free repeat of the ice slide between the two crate ice pairs: rehearsal without punishment", "evidence": "D2 p040R s16 (not drawn on F2)", "confidence": "low"},
+  {"id": "P-S3-b", "section": "S3", "shape": "wide floor", "size": "5-7 wide", "heightDelta": 0, "edges": "walled", "behaviour": "forced scroll", "roles": ["REST"], "why": "F2 says it outright: no real traps here, relax. A declared rest after the S2 peak", "evidence": "F2 p054L POINT 11", "confidence": "high"},
+  {"id": "P-S3-c", "section": "S3", "shape": "corridor (flank water)", "size": "usable ≈ 3-4; strip ≈ 2", "heightDelta": 0, "edges": "open (right: water)", "behaviour": "forced scroll", "roles": ["CHOKE"], "why": "The fruit line and the crate line disagree beside a lethal flank", "evidence": "F2 p054L; D2 p041L s18-s19", "confidence": "medium"},
+  {"id": "P-S3-d", "section": "S3", "shape": "slalom (static posts)", "size": "totems ≈ 2 wide, ≈ 3 tall; gaps ≈ 2-3", "heightDelta": 0, "edges": "walled", "behaviour": "static", "roles": ["CHOKE", "CHECKPOINT-PAD"], "why": "Tall props on a fast line hide a crate and the checkpoint: the camera's own occlusion becomes the hazard", "evidence": "F2 p054R POINT 15; D2 p041L s21", "confidence": "medium"},
+  {"id": "P-S4-a", "section": "S4", "shape": "vehicle lane", "size": "5-7 wide", "heightDelta": 0, "edges": "walled", "behaviour": "forced scroll", "roles": ["CHOKE"], "why": "The double gate needs two different answers within a few lengths", "evidence": "F2 p054R POINT 16; D2 p041L s22", "confidence": "medium"},
+  {"id": "P-S4-b", "section": "S4", "shape": "ice", "size": "road width × ≈ 3-4", "heightDelta": 0, "edges": "walled", "behaviour": "low traction", "roles": ["TEST"], "why": "The stricter ice pair: entry angle plus an immediate hold", "evidence": "F2 p054R POINT 17; F2 p097L (4); D2 p041R s24", "confidence": "medium"},
+  {"id": "P-S4-c", "section": "S4", "shape": "narrow ledge (vehicle strip)", "size": "≈ 2-3 wide", "heightDelta": 0, "edges": "open (water both sides)", "behaviour": "forced scroll", "roles": ["CHOKE"], "why": "The road shrinks from ≈ 5-7 to ≈ 2-3 for the finale, so only vertical answers remain", "evidence": "F2 p055L POINT 18; D2 p041R s26-s27", "confidence": "medium"},
+  {"id": "P-S4-d", "section": "S4", "shape": "stepping stones", "size": "discs ≈ 1; foothold ≈ 3-4 round", "heightDelta": 0, "edges": "open (water)", "behaviour": "static (floating)", "roles": ["BONUS-PAD"], "why": "A secret that needs the on-foot verbs right after a ride that had none of them", "evidence": "F2 p055L Aku tip; D2 p041R s29, p042L s31-s33", "confidence": "low"}
+ ],
+ "gapsDetailed": [
+  {"id": "G-S1-a", "section": "S1", "kind": "pond across the whole road (water)", "width": "2-3", "heightDelta": 0, "landing": "bank with the S1-b ? (then the next pond at once)", "lethal": true, "runUp": "forced (≈ 6-10 from the mount)", "move": ["ride jump"], "coupling": "none", "failure": "death (freeze, F2 p052L)", "nearby": ["S1-a", "S1-b", "G-S1-b"], "why": "The first jump follows the opening block and has a crate on its landing as the target", "evidence": "F2 p052R; D2 p040L s2", "confidence": "medium"},
+  {"id": "G-S1-b", "section": "S1", "kind": "wide pond (POINT 2 ダッシュジャンプ)", "width": "4-6", "heightDelta": 0, "landing": "road before the totem slalom", "lethal": true, "runUp": "≈ 1-2 (take-off right after touching down on S1-b)", "move": ["ride jump", "speed burst (dash-jump)"], "coupling": "chained to G-S1-a with a one-box touchdown", "failure": "death (freeze, F2 p052L)", "nearby": ["S1-b"], "why": "The title move. F2 says accelerate before the jump; the perfect page adds that a normal jump from the very edge reaches. The burst buys take-off forgiveness, not new range", "evidence": "F2 p052R POINT 2; F2 p097L ちゅういてん; D2 p040L s2", "confidence": "medium"},
+  {"id": "G-S1-c", "section": "S1", "kind": "orca hole 1: water across the road, two orcas leaping (POINT 3)", "width": "3-4", "heightDelta": 0, "landing": "bank, right third (S1-d pair)", "lethal": true, "runUp": "≈ 2-4 after S1-c", "move": ["ride jump", "air steer left"], "coupling": "the right orca is up as you arrive (D2 s4)", "failure": "death (orca contact or water)", "nearby": ["S1-c", "S1-d", "E-S1-a"], "why": "F2 names the safe side (over the LEFT orca), but the ? before it sits on the right: break it, then drift left in the air", "evidence": "F2 p052R POINT 3; D2 p040L s4-s5", "confidence": "medium"},
+  {"id": "G-S1-d", "section": "S1", "kind": "double narrow pond: two ponds with a short snow strip between (POINT 4 連続ジャンプ)", "width": "each ≈ 1.5-2; strip ≈ 2-3", "heightDelta": 0, "landing": "≈ 2-3 snow strip, then the totem-gate approach", "lethal": true, "runUp": "≈ 2-3 after S1-d", "move": ["light (tap) jump", "light (tap) jump"], "coupling": "none; the strip is the only footing", "failure": "over-jumping the first pond lands in the second (death)", "nearby": ["S1-d", "J-S1-b"], "why": "First test of jump HEIGHT: F2 says don't over-jump the first, use a light jump. A full jump overshoots the strip", "evidence": "F2 p053L POINT 4; D2 p040L s6", "confidence": "medium"},
+  {"id": "G-S1-e", "section": "S1", "kind": "orca hole 2 (POINT 5 また左をジャンプ)", "width": "3-4", "heightDelta": 0, "landing": "bank, then the pond before C1", "lethal": true, "runUp": "≈ 2-3 out of the gate (turn left first)", "move": ["ride jump (left half)"], "coupling": "orca on the right half", "failure": "death", "nearby": ["S1-e", "E-S1-b"], "why": "Same safe side as hole 1: repetition builds the habit S3 will break", "evidence": "F2 p053L POINT 5; D2 p040L s8", "confidence": "medium"},
+  {"id": "G-S1-f", "section": "S1", "kind": "pond before C1 (jump on the right side)", "width": "≈ 3", "heightDelta": 0, "landing": "C1 bank", "lethal": true, "runUp": "short (right after hole 2)", "move": ["ride jump (right side)"], "coupling": "chained to G-S1-e with a lane switch", "failure": "death", "nearby": ["C1"], "why": "Two water jumps back to back close the section; the checkpoint is the reward on the far bank", "evidence": "F2 p053L; D2 p040L s8", "confidence": "low"},
+  {"id": "G-S2-a", "section": "S2", "kind": "fallen totem lying across the road (hurdle)", "width": "≈ 1 deep", "heightDelta": "+1 (hurdle)", "landing": "ice patch 1 (P-S2-a)", "lethal": true, "runUp": "≈ 3-5 after C1, already in the LEFT lane", "move": ["ride jump from the left lane"], "coupling": "the take-off lane decides the ice slide", "failure": "crash (assumed death); wrong lane = misses the ice pair", "nearby": ["S2-a", "P-S2-a"], "why": "A hurdle placed so that the jump itself is the line-up: D2 says come round it on the left so the jump skids you across the ice into both boxes", "evidence": "F2 p053L; D2 p040R s9", "confidence": "medium"},
+  {"id": "G-S2-b", "section": "S2", "kind": "fallen totem 2 (hurdle) after the W-W pair", "width": "≈ 1 deep", "heightDelta": "+1 (hurdle)", "landing": "road before worker gate 2", "lethal": true, "runUp": "short", "move": ["ride jump"], "coupling": "precedes gate 2 by a few lengths", "failure": "crash (assumed death)", "nearby": ["S2-b", "E-S2-b"], "why": "Sets a jump rhythm right before a gate that must NOT be jumped", "evidence": "D2 p040R s11 ('over another statue')", "confidence": "low"},
+  {"id": "G-S2-c", "section": "S2", "kind": "hole A right behind worker gate 2 (POINT 8)", "width": "2-3", "heightDelta": 0, "landing": "short snow strip with a fruit line", "lethal": true, "runUp": "≈ 1-2 (the slab sits on the take-off)", "move": ["ride under the raised slab", "ride jump at once"], "coupling": "slab cycle: lifted just as you arrive (D2 s11)", "failure": "jump early = hit the slab; late = water (death)", "nearby": ["E-S2-b", "G-S2-d"], "why": "First duck-then-jump: the gate occupies the take-off, so the jump is timed after passing under", "evidence": "F2 p053R POINT 8; D2 p040R s11", "confidence": "medium"},
+  {"id": "G-S2-d", "section": "S2", "kind": "big hole (POINT 9 大きな穴を跳び越えろ)", "width": "5-7", "heightDelta": 0, "landing": "two-line crate field (P-S2-b); first W at the left landing point", "lethal": true, "runUp": "≈ 4-6 strip; take off on the last fruit (D2 s12)", "move": ["speed burst", "ride jump angled left"], "coupling": "chained to hole A; landing lane fixed by the crate field", "failure": "short = death; landing centred/right = TNT line or lost crates", "nearby": ["S2-c", "G-S2-c"], "why": "The widest water jump in the level, and it is aimed: F2 says accelerate and jump toward the left because a wooden box sits right after the landing", "evidence": "F2 p053R POINT 9; D2 p040R s12", "confidence": "medium"},
+  {"id": "G-S2-e", "section": "S2", "kind": "pond before worker gate 3 (POINT 10 早めに着地)", "width": "≈ 3", "heightDelta": 0, "landing": "road with gate 3 right after (C2 beside it)", "lethal": true, "runUp": "short", "move": ["short ride jump (land early)"], "coupling": "gate 3 is raised just after the landing", "failure": "a big jump crashes into the slab (death); short = water", "nearby": ["E-S2-d", "C2"], "why": "The second height test: the landing is shortened by the gate, so a full jump is wrong", "evidence": "F2 p053R POINT 10; D2 p040R s15", "confidence": "medium"},
+  {"id": "G-S3-a", "section": "S3", "kind": "big pond after the S3-a crates", "width": "4-5", "heightDelta": 0, "landing": "ice patch 2 (P-S3-a)", "lethal": true, "runUp": "≈ 3-5 after the crates", "move": ["ride jump"], "coupling": "none", "failure": "death", "nearby": ["S3-a", "P-S3-a"], "why": "A plain wide jump right after the checkpoint, landing on ice", "evidence": "F2 p054L; D2 p040R s16", "confidence": "medium"},
+  {"id": "G-S3-b", "section": "S3", "kind": "orca hole right after worker gate 4 (POINT 12 正確に着地)", "width": "3-4", "heightDelta": 0, "landing": "bank, then the fruit trail", "lethal": true, "runUp": "≈ 1-2 after landing from the slab jump", "move": ["ride jump over the slab", "ride jump on the RIGHT side"], "coupling": "the slab jump lands at the hole's lip", "failure": "death", "nearby": ["S3-b", "E-S3-a", "E-S3-b"], "why": "Two jumps with almost no touchdown, and the safe side flips to the right", "evidence": "F2 p054L POINT 12; D2 p041L s17", "confidence": "medium"},
+  {"id": "G-S3-c", "section": "S3", "kind": "pond with an oval island in the middle (POINT 13 跳べ跳べクラッシュ)", "width": "two gaps ≈ 2-3; island ≈ 2-3 long", "heightDelta": 0, "landing": "oval snow island, then the far bank", "lethal": true, "runUp": "crystal strip", "move": ["ride jump", "ride jump on touchdown"], "coupling": "none (static); rhythm only", "failure": "death", "nearby": ["P-S3-c", "J-S3-b"], "why": "A stepping-stone island at bear speed: jump again as soon as you land (D2 s19)", "evidence": "F2 p054L POINT 13; D2 p041L s19", "confidence": "medium"},
+  {"id": "G-S3-d", "section": "S3", "kind": "orca hole right before worker gate 5 (POINT 14 連続ジャンプ)", "width": "≈ 3", "heightDelta": 0, "landing": "road with the lowered slab right after", "lethal": true, "runUp": "short", "move": ["small ride jump (left side)", "ride jump over the slab"], "coupling": "orca and slab at a very short interval", "failure": "a big jump bangs your shins on the slab (death); short = water", "nearby": ["E-S3-c"], "why": "The inverse of POINT 12: orca first, slab second, and the orca jump must be SMALL", "evidence": "F2 p054R POINT 14; D2 p041L s20", "confidence": "medium"},
+  {"id": "G-S4-a", "section": "S4", "kind": "orca hole after the S4-a diagonal (jump to the right first)", "width": "3-4", "heightDelta": 0, "landing": "road before ice patch 3", "lethal": true, "runUp": "≈ 2-3 after S4-a", "move": ["ride jump"], "coupling": "orcas", "failure": "death", "nearby": ["S4-a", "E-S4-b"], "why": "A routine orca jump that sets up the ice approach", "evidence": "F2 p054R; D2 p041L s23", "confidence": "low"},
+  {"id": "G-S4-b", "section": "S4", "kind": "orca hole after ice patch 3", "width": "3-4", "heightDelta": 0, "landing": "bank with S4-c", "lethal": true, "runUp": "≈ 2-3 off the ice", "move": ["ride jump (left side)"], "coupling": "orcas; the ice exit lane is the take-off lane", "failure": "death", "nearby": ["S4-c", "E-S4-b"], "why": "Taken straight off the ice: the lane you leave the ice in is the lane you jump from", "evidence": "F2 p054R; D2 p041R s25", "confidence": "medium"},
+  {"id": "G-S4-c", "section": "S4", "kind": "break 1 in the strip", "width": "≈ 2-3", "heightDelta": 0, "landing": "strip (≈ 2-3 wide) with the Nitro pair ahead", "lethal": true, "runUp": "strip", "move": ["ride jump (normal)"], "coupling": "chained to the Nitro hurdle", "failure": "death", "nearby": ["S4-d", "J-S4-c"], "why": "Opens the final triple with a plain jump (D2: 'jump over this first break normally')", "evidence": "D2 p041R s26", "confidence": "medium"},
+  {"id": "G-S4-d", "section": "S4", "kind": "Nitro pair spanning the strip (hurdle)", "width": "1 deep; fills the strip width", "heightDelta": "+1 (hurdle)", "landing": "strip", "lethal": true, "runUp": "short (after break 1)", "move": ["early ride jump"], "coupling": "chained between two breaks", "failure": "touch = death (Nitro)", "nearby": ["S4-d", "G-S4-c", "G-S4-e"], "why": "Explosives as a hurdle with no way round: F2 says jump early", "evidence": "F2 p055L POINT 18; D2 p041R s27", "confidence": "high"},
+  {"id": "G-S4-e", "section": "S4", "kind": "break 2 (wider)", "width": "≈ 3-5", "heightDelta": 0, "landing": "strip with the S4-e ? on the landing, then the raised gate", "lethal": true, "runUp": "short", "move": ["speed burst", "ride jump"], "coupling": "raised slab right after the landing", "failure": "short = death", "nearby": ["S4-e", "E-S4-c"], "why": "The triple escalates (plain, early, dash-jump) and ends at a gate that wants no jump at all", "evidence": "D2 p041R s28", "confidence": "medium"},
+  {"id": "G-S4-f", "section": "S4", "kind": "on-foot jumps from the shore to the floating discs and the round foothold (secret warp)", "width": "≈ 2-4 (the last a dash-jump into the screen)", "heightDelta": 0, "landing": "round snow foothold ≈ 3-4", "lethal": true, "runUp": "shore", "move": ["running jump", "running jump"], "coupling": "none", "failure": "death (water)", "nearby": ["P-S4-d"], "why": "Optional route without crates; the header's warp icon is live while its superscript stays 0", "evidence": "F2 p055L Aku; D2 p042L s31-s33", "confidence": "low"}
+ ],
+ "jumpSequences": [
+  {"id": "J-S1-a", "section": "S1", "count": 2, "moves": ["ride jump", "burst + ride jump"], "rhythm": "accelerating", "maxGap": "4-6 (wide pond)", "rest": "totem-slalom road", "noStop": true, "why": "Pond, one-box touchdown on S1-b, wide pond: the first chain already asks for the burst", "evidence": "F2 p052R POINT 2; D2 p040L s2"},
+  {"id": "J-S1-b", "section": "S1", "count": 2, "moves": ["tap jump", "tap jump"], "rhythm": "even (short-short)", "maxGap": "1.5-2", "rest": "totem-gate approach", "noStop": true, "why": "The light-hop pair: rhythm and height, not length", "evidence": "F2 p053L POINT 4; D2 p040L s6"},
+  {"id": "J-S1-c", "section": "S1", "count": 2, "moves": ["ride jump (left half)", "ride jump (right side)"], "rhythm": "even, with a lane switch", "maxGap": "3-4", "rest": "C1 bank", "noStop": true, "why": "Orca hole 2, then the pond on the other side (D2 s8)", "evidence": "F2 p053L POINT 5; D2 p040L s8"},
+  {"id": "J-S2-a", "section": "S2", "count": 2, "moves": ["ride under the raised slab (no jump)", "ride jump (hole A)", "burst + ride jump angled left (big hole)"], "rhythm": "syncopated (duck, jump, short strip, long jump)", "maxGap": "5-7 (big hole)", "rest": "landing crate field", "noStop": true, "why": "The S2 peak: the duck delays the first jump, then the fruit line times the long one", "evidence": "F2 p053R POINT 8-9; D2 p040R s11-s12"},
+  {"id": "J-S2-b", "section": "S2", "count": 2, "moves": ["ride jump over the seals", "ride jump over the TNT"], "rhythm": "even, short", "maxGap": "hurdles ≈ 1 high", "rest": "pond approach", "noStop": true, "why": "Two hurdles inside the crate field, each followed by a crate on the landing (D2 s14)", "evidence": "D2 p040R s14; F2 p053R"},
+  {"id": "J-S2-c", "section": "S2", "count": 1, "moves": ["short ride jump (land early)", "ride under the raised slab"], "rhythm": "jump-then-duck", "maxGap": "≈ 3", "rest": "C2 bank", "noStop": true, "why": "The gate sits on the landing, so the jump before it must be short", "evidence": "F2 p053R POINT 10; D2 p040R s15"},
+  {"id": "J-S3-a", "section": "S3", "count": 2, "moves": ["ride jump over the lowered slab", "ride jump (right side) over the orca hole"], "rhythm": "back-to-back", "maxGap": "3-4", "rest": "fruit-trail stretch", "noStop": true, "why": "POINT 12: the slab landing is the orca take-off", "evidence": "F2 p054L POINT 12; D2 p041L s17"},
+  {"id": "J-S3-b", "section": "S3", "count": 2, "moves": ["ride jump", "ride jump on touchdown"], "rhythm": "even", "maxGap": "2-3", "rest": "short road before the next orca hole", "noStop": true, "why": "Island hop: jump again as soon as you land", "evidence": "F2 p054L POINT 13; D2 p041L s19"},
+  {"id": "J-S3-c", "section": "S3", "count": 2, "moves": ["small ride jump (orca hole)", "ride jump (lowered slab)"], "rhythm": "short-short (small hops)", "maxGap": "≈ 3", "rest": "totem forest", "noStop": true, "why": "POINT 14: a big first jump hits the slab", "evidence": "F2 p054R POINT 14; D2 p041L s20"},
+  {"id": "J-S4-a", "section": "S4", "count": 1, "moves": ["ride jump (first slab, held low)", "ride under (second slab)"], "rhythm": "jump-then-duck", "maxGap": "slab ≈ 1 high", "rest": "S4-a diagonal", "noStop": true, "why": "POINT 16 'jump only once'; the first pair holds the slab down so long it looks about to rise (D2 s22)", "evidence": "F2 p054R POINT 16; D2 p041L s22"},
+  {"id": "J-S4-b", "section": "S4", "count": 2, "moves": ["ride jump (orca hole)", "ice slide", "ride jump (orca hole, left)"], "rhythm": "syncopated (jump, coast on ice, jump)", "maxGap": "3-4", "rest": "S4-c bank", "noStop": true, "why": "The ice pair sits between two orca holes, so the ice exit lane is the next take-off lane", "evidence": "F2 p054R; D2 p041R s23-s25"},
+  {"id": "J-S4-c", "section": "S4", "count": 3, "moves": ["ride jump (break 1)", "early ride jump (Nitro pair)", "burst + ride jump (break 2)", "ride under the raised slab"], "rhythm": "accelerating", "maxGap": "3-5 (break 2)", "rest": "end pond (dismount)", "noStop": true, "why": "The final exam: four different answers in a row on a strip with no lateral escape", "evidence": "F2 p055L POINT 18-19; D2 p041R s26-s28"}
+ ],
+ "obstacles": [
+  {"id": "O-S1-a", "section": "S1-S4", "kind": "water: ponds, orca holes, a flank channel, the sides of the final strip", "placement": "across path (flank in S3-S4)", "timing": "static", "counter": ["jump over", "go around (flank)"], "lethal": true, "combinedWith": ["E-S1-a", "E-S2-b", "O-S2-c"], "roles": ["AREA-DENIAL"], "why": "The only pit type: every gap in the level is water, and later water also borders the lane", "evidence": "F2 p052L header ('fall in the pond and you freeze'); D2 p040L-p041R"},
+  {"id": "O-S1-b", "section": "S1, S3", "kind": "standing polar-bear totems (シロクマ柱)", "placement": "slalom pairs (S1), a gate round a crate (S1), centre posts and a forest (S3)", "timing": "static; tall enough (≈ 3) to hide crates", "counter": ["go around"], "lethal": true, "combinedWith": ["S1-c", "S1-e", "S3-d", "C3"], "roles": ["LANE-BLOCK", "AREA-DENIAL"], "why": "Lateral posts that draw the line; in the forest they hide a crate and the checkpoint (lethal contact assumed)", "evidence": "F2 p052R, p053L, p054L, p054R POINT 15; D2 p040L s3, s7; p041L s21"},
+  {"id": "O-S2-a", "section": "S2", "kind": "fallen totems lying across the road (×2)", "placement": "across path", "timing": "static", "counter": ["jump over"], "lethal": true, "combinedWith": ["P-S2-a", "E-S2-b"], "roles": ["RHYTHM"], "why": "Hurdles that time the next beat: the first is the take-off for the ice pair, the second leads into the raised gate", "evidence": "F2 p053L-R; D2 p040R s9, s11"},
+  {"id": "O-S2-b", "section": "S2-S4", "kind": "ice patches (×3: with crates, empty, with crates)", "placement": "on platform (full road width)", "timing": "static; steering disabled", "counter": ["choose the lane before entering", "hold toward the next crate"], "lethal": false, "combinedWith": ["S2-a", "S4-b"], "roles": ["TEACH", "TEST"], "why": "Teach with crates (soft fail), rehearse empty, test with a stricter pair", "evidence": "F2 p053L POINT 6, p054R POINT 17, p097L; D2 s9, s16, s24"},
+  {"id": "O-S2-c", "section": "S2-S4", "kind": "steel slab carried by a worker pair (timed barrier; 8 pairs)", "placement": "across path, often on a hole's take-off or landing", "timing": "fixed repeating lift/lower pattern (Aku: 'always the same motion'); lowered top ≈ 1 u = jump, raised underside ≈ 2-2.5 u = ride under; the first S4 pair holds it low unusually long", "counter": ["jump over (lowered)", "slide under (ride under, raised)"], "lethal": true, "combinedWith": ["G-S2-c", "G-S2-e", "G-S3-b", "G-S3-d", "S2-b", "S4-a", "C2"], "roles": ["TIMING-GATE", "TEACH", "TEST"], "why": "A two-state gate readable from far away; taught alone, then with holes before and after, then doubled", "evidence": "F2 p053R POINT 7-8, 10; p054L POINT 12; p054R POINT 14, 16; p055L POINT 19; D2 s10-s11, s15, s17, s20, s22, s28"},
+  {"id": "O-S2-d", "section": "S2", "kind": "TNT crates in the landing field (not pre-lit)", "placement": "on platform (head of the right line) and across path (the second TNT)", "timing": "static", "counter": ["go around (sweep the left line first)", "jump over"], "lethal": true, "combinedWith": ["S2-c", "S2-d", "E-S2-c"], "roles": ["LANE-BLOCK"], "why": "The explosive dictates the sweep order and supplies the second hurdle", "evidence": "F2 p053R POINT 9; D2 p040R s13-s14"},
+  {"id": "O-S3-a", "section": "S3", "kind": "water channel along the right edge", "placement": "flank", "timing": "static", "counter": ["go around (keep left)"], "lethal": true, "combinedWith": ["S3-c", "crystal"], "roles": ["LANE-BLOCK"], "why": "Makes the fruit trail's rightward bend risky and the crate's leftward cut correct", "evidence": "D2 p041L s18-s19; F2 p054L"},
+  {"id": "O-S4-a", "section": "S4", "kind": "Nitro pair across the narrow strip", "placement": "across path", "timing": "static", "counter": ["jump over (early)"], "lethal": true, "combinedWith": ["G-S4-c", "G-S4-e", "S4-d"], "roles": ["TEST"], "why": "A hurdle with no way round and death on contact; paid for only by the green ! at the goal", "evidence": "F2 p055L POINT 18; D2 p041R s27"}
+ ],
+ "enemiesDetailed": [
+  {"id": "E-S1-a", "section": "S1", "kind": "orcas (オルカ) ×2, hole 1", "archetype": "burrower/ambusher (leaps from the water)", "behaviour": "the pair leap vertically out of the hole, one on each half; the right one is up as you arrive (D2 s4)", "counter": ["avoid: jump over the left half"], "fails": ["spin (no attack on the bear)", "jumping on the right half"], "placement": "in pit", "roles": ["TIMING-GATE", "TEACH"], "firstAlone": true, "why": "F2 tells the safe side; the crate on the wrong side makes the first orca a two-input problem", "evidence": "F2 p052R POINT 3; D2 p040L s4-s5", "confidence": "medium"},
+  {"id": "E-S1-b", "section": "S1", "kind": "orcas ×2, hole 2", "archetype": "burrower/ambusher (leaps from the water)", "behaviour": "same pattern; safe side again left (POINT 5)", "counter": ["avoid: jump over the left half"], "fails": ["spin"], "placement": "in pit, right after the totem gate", "roles": ["TIMING-GATE"], "firstAlone": false, "why": "Repetition on the same side builds the habit S3 will break", "evidence": "F2 p053L POINT 5; D2 p040L s8", "confidence": "medium"},
+  {"id": "E-S2-a", "section": "S2", "kind": "lab workers (さむがり作業員), pair 1, slab LOWERED (POINT 7)", "archetype": "static (timed gate)", "behaviour": "stand at the road edges holding a riveted slab ≈ 3-4 u long; lift and lower it on a fixed pattern", "counter": ["jump over"], "fails": ["spin (no attack on the bear)", "riding into the slab"], "placement": "on line, after the ice pair, before the W-W reward", "roles": ["TIMING-GATE", "TEACH"], "firstAlone": true, "why": "The new obstacle appears in its easy state on open road, with crates as the reward after it", "evidence": "F2 p053R POINT 7; D2 p040R s10", "confidence": "high"},
+  {"id": "E-S2-b", "section": "S2", "kind": "worker pair 2, slab RAISED, hole right behind (POINT 8)", "archetype": "static (timed gate)", "behaviour": "lift the slab just as you arrive", "counter": ["ride under, then jump the hole at once"], "fails": ["jumping the slab"], "placement": "take-off edge of hole A", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "The second appearance flips the state and couples it to a gap ('the timing is hard')", "evidence": "F2 p053R POINT 8; D2 p040R s11", "confidence": "high"},
+  {"id": "E-S2-c", "section": "S2", "kind": "seals (ジョー) ×2", "archetype": "static (hurdle; motion not visible)", "behaviour": "lie on the road between the crate lines and the last W/TNT/striped", "counter": ["jump over"], "fails": ["spin (no attack on the bear)"], "placement": "inside the landing field, on line", "roles": ["HURDLE"], "firstAlone": false, "why": "Split the crate field: the jump over them lands on the right-side W", "evidence": "F2 p053R; D2 p040R s14", "confidence": "medium"},
+  {"id": "E-S2-d", "section": "S2", "kind": "worker pair 3, slab RAISED after a pond (POINT 10)", "archetype": "static (timed gate)", "behaviour": "raised as you land", "counter": ["short jump over the pond, land early, ride under"], "fails": ["a full jump (crashes into the slab)"], "placement": "landing edge of the last S2 pond; C2 beside it", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "Puts the gate on the landing: the jump before it must be short", "evidence": "F2 p053R POINT 10; D2 p040R s15", "confidence": "high"},
+  {"id": "E-S3-a", "section": "S3", "kind": "worker pair 4, slab LOWERED, orca hole right after (POINT 12)", "archetype": "static (timed gate)", "behaviour": "held low", "counter": ["jump over"], "fails": ["landing long into the hole's orca side"], "placement": "take-off edge of an orca hole", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "Gate then gap with no touchdown between", "evidence": "F2 p054L POINT 12; D2 p041L s17", "confidence": "medium"},
+  {"id": "E-S3-b", "section": "S3", "kind": "orcas ×2 (POINT 12 hole)", "archetype": "burrower/ambusher (leaps from the water)", "behaviour": "leap alternately; the safe side is now the RIGHT", "counter": ["avoid: jump on the right side"], "fails": ["the S1 habit (left)"], "placement": "in pit, right after gate 4", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "The side flips once the left habit has formed", "evidence": "F2 p054L POINT 12; D2 p041L s17", "confidence": "medium"},
+  {"id": "E-S3-c", "section": "S3", "kind": "orcas ×2 + worker pair 5 (lowered) at a very short interval (POINT 14)", "archetype": "burrower/ambusher + static (timed gate)", "behaviour": "orca hole, then the lowered slab a few lengths later", "counter": ["small jump over the orca hole (left)", "jump the slab"], "fails": ["a big jump (shins hit the slab)"], "placement": "in pit / on the next landing", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "Tests jump height under pressure: the orca hole must be cleared low", "evidence": "F2 p054R POINT 14; D2 p041L s20", "confidence": "medium"},
+  {"id": "E-S4-a", "section": "S4", "kind": "worker pairs 6-7 back to back (POINT 16)", "archetype": "static (timed gate)", "behaviour": "the first holds its slab down so long it seems about to rise; the second is raised", "counter": ["jump the first", "ride under the second"], "fails": ["waiting for the first to rise", "jumping both"], "placement": "on line right after the totem forest (C3)", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "A fake-out telegraph: the long hold baits the wrong answer (D2: 'sneaky')", "evidence": "F2 p054R POINT 16; D2 p041L s22", "confidence": "high"},
+  {"id": "E-S4-b", "section": "S4", "kind": "orcas ×4 (two holes around ice patch 3)", "archetype": "burrower/ambusher (leaps from the water)", "behaviour": "standard leaps; take the left side at the second (D2 s25)", "counter": ["avoid: jump the indicated side"], "fails": ["spin"], "placement": "in pit, before and after the ice pair", "roles": ["TIMING-GATE"], "firstAlone": false, "why": "They frame the ice test so the ice exit decides the take-off lane", "evidence": "F2 p054R; D2 p041R s23-s25", "confidence": "medium"},
+  {"id": "E-S4-c", "section": "S4", "kind": "worker pair 8, slab RAISED (POINT 19)", "archetype": "static (timed gate)", "behaviour": "raised as you arrive after the dash-jump", "counter": ["ride under (no jump)"], "fails": ["jumping out of habit after three jumps"], "placement": "landing of break 2, the last obstacle before the goal", "roles": ["TIMING-GATE", "TEST"], "firstAlone": false, "why": "Ends the jump triple with the only correct non-jump", "evidence": "F2 p055L POINT 19; D2 p041R s28", "confidence": "high"}
+ ],
+ "sectionBeats": [
+  {"section": "S1", "beats": ["mount", "2×2 block", "pond", "? on the landing", "wide pond (burst, or a plain jump from the lip)", "totem slalom (left, right, left)", "? on the right", "orca hole 1 (jump left)", "? + W on the right", "double narrow pond (two light hops)", "totem gate with the striped crate", "orca hole 2 (left)", "pond (right)", "C1"], "gaps": 7, "enemies": 4, "hazards": 2},
+  {"section": "S2", "beats": ["fallen totem (jump from the left lane)", "ice pair", "worker gate 1 (jump)", "W W", "fallen totem", "worker gate 2 (ride under) + hole A (jump at once)", "fruit line", "big hole (burst, angled left)", "two-line crate field (left first, cross behind the TNT)", "seals (jump)", "W, TNT (jump), striped", "pond (short jump, land early)", "worker gate 3 (ride under)", "C2"], "gaps": 5, "enemies": 5, "hazards": 4},
+  {"section": "S3", "beats": ["W + 2-stack", "big pond", "ice (no crates)", "calm stretch (POINT 11)", "two totems", "? + W (left)", "worker gate 4 (jump)", "orca hole (right, at once)", "fruit trail right round totems, cut back left to the ?", "flank water channel", "crystal strip", "island pond (bank, island, bank)", "orca hole (small hop)", "worker gate 5 (jump)", "totem forest (right, left, right; hidden ? and C3)"], "gaps": 5, "enemies": 6, "hazards": 4},
+  {"section": "S4", "beats": ["worker gates 6-7 (jump, then under)", "?, W, ?", "jump right", "orca hole", "ice pair (striped then ?, hold right)", "orca hole (left)", "?", "narrow strip: break 1 (plain)", "Nitro pair (early jump)", "break 2 (dash-jump)", "?", "worker gate 8 (ride under)", "end pond: dismount, green !, optional hops to the round foothold (secret warp)"], "gaps": 5, "enemies": 7, "hazards": 3}
+ ],
+ "geometryObservations": [
+  "The title is the escalation axis, but tuned to the plain jump. Wide ponds (S1 POINT 2, S2 POINT 9) ask for the speed burst, yet F2 p097L says a normal jump from the very edge reaches. A 'big jump' sits at the plain jump's maximum range from the lip; the burst only widens the take-off window.",
+  "Almost every gap lands on something that matters: a ? (S1-b), a crate pair in one lane (S1-d), a crate field whose first box sits on the angled-left landing (S2-c), an island (POINT 13), the crystal strip, or the next slab gate (POINT 10, 14). The landing, not the width, is the design.",
+  "The new obstacle is a two-state gate read at speed. The worker slab is lowered (≈ 1 u, jump) or raised (≈ 2-2.5 u, ride under). Its seven appearances each add one coupling: alone and lowered (P7) → raised with a hole behind (P8) → raised on a pond's landing (P10) → lowered then an orca hole (P12) → orca hole then lowered (P14) → a double gate with a fake-out hold (P16) → raised as the final gate (P19).",
+  "Jump height becomes the advanced skill. Bear It always wanted full jumps; here POINT 4 (double narrow pond), POINT 10 (land early) and POINT 14 (small hops or 'bang your shins on the slab') make the SHORT jump correct. The gaps are shortened on purpose so a full jump overshoots into the next hazard.",
+  "Orca holes are deterministic side gates whose side is named and then flipped: left at holes 1-2 (teach by repetition), right at POINT 12 (flip), left again in S4. F2 states the side each time.",
+  "Ice patches return three times with rising stakes: with a W + ? pair entered from the left (S2), empty (S3, rehearsal with nothing to lose), and with a striped + ? pair entered at an angle with an instant hold (S4). The empty middle patch teaches without punishing.",
+  "Rest is declared, and density alternates. S1 opens with abundance (the 2×2 block) before any gap; POINT 11 tells the player to relax after the S2 peak; S2 and S4 are dense, S1 and S3 calmer.",
+  "Width is a difficulty dial. The road is ≈ 5-7 u through S3 and becomes a ≈ 2-3 u strip between ponds in S4, where two Nitro fill the whole width: lateral escape is removed exactly when the final jump chain starts.",
+  "The finale recombines every verb on one strip: plain break → Nitro hurdle (early jump) → wider break (dash-jump) → raised slab (no jump). Four different answers in a row (D2 s26-s28).",
+  "No enemy can be attacked on the bear. Workers, orcas and seals are gates and hurdles placed where a jump is already needed: in pits (orcas), across the road on a take-off or landing (workers), inside a crate field (seals).",
+  "Fruit lines time and mislead. D2 s12: take off as you pick up the last fruit before the big hole. At S3-c the fruit trail bends right round totems beside a water channel while the crate asks for a cut back left.",
+  "Totems change role four times: slalom posts (S1), a gate round a crate (S1-e), lying hurdles (S2), and an occluding forest that hides a crate and the checkpoint (S3).",
+  "Checkpoints sit on safe banks right before a new combination: C1 after the S1 pond, C2 beside the raised gate that ends S2, C3 inside the forest just before the double gate. The last section is short (9 crates) but holds the hardest chain."
+ ],
+ "geometryTransfer": [
+  "Two-state bar gate. A horizontal `mover` bar that alternates between low (top ≈ 1.0 m: a full-charge ollie, apex ≈ 1.7 m, clears it) and high (underside ≥ 2.3 m: ride under). Teach it alone in the low state, then raised with a 3-4 m pit right behind it (duck, then ollie), then raised on the landing of a short pit (land short), then a low-high double with a long first hold.",
+  "'Big jump' tuned to lip range. At cruise (12 m/s) a full ollie carries ≈ 6.6 m; make the wide pit ≈ 6-6.5 m lip to lip so a lip ollie at cruise just makes it, and put a `speedpad` or a ≥ 20 m charge run-up before it for margin. Put the first crate of a two-line field 1-2 m past the landing lip, with a TNT heading the other line so the sweep order is fixed.",
+  "Short-jump traps. Two pits ≈ 2.3-3 m long with a ≈ 3 m strip between: a charged ollie (≥ 6.6 m) overshoots into the second pit, so a tap ollie (apex ≈ 0.56 m) or an uncharged hop is the answer. Measure the tap-ollie distance in the probe before relying on it.",
+  "Narrow-strip finale. A 2.3-3.5 m strip between pits holding: pit 1 (plain ollie), a Nitro pair spanning the strip (full-charge ollie clears one crate, 1.15 m, by ≈ 0.5 m; touch = death), pit 2 (needs charge), then a raised `mover` bar to ride under. Space the beats ≥ 6-7 m apart at cruise so each touchdown lasts ≈ 0.5 s.",
+  "Alternating side gate. A pit split into left and right halves with two `crusher` or `firetiki` hazards firing in alternation. Repeat the same safe side twice in the first section, flip it in the third, and put a crate on the take-off of the wrong side once the rule is known."
+ ]
+}

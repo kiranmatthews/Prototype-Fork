@@ -1,0 +1,1714 @@
+{
+ "id": "c3-05-makin-waves",
+ "game": "Crash 3",
+ "stage": 5,
+ "name": "Makin' Waves",
+ "japaneseTitle": "かいぞくじまを めざせ!",
+ "sources": [
+  "F3 p042",
+  "F3 p103L",
+  "F3 p006L",
+  "F3 p005R",
+  "F3 p011",
+  "P3 p010R-p011L",
+  "gamepressure N. Sane Makin' Waves page"
+ ],
+ "camera": "vehicle (jet ski on semi-open water, chase camera, guide arrow to the exit)",
+ "totalBoxes": 37,
+ "totalSource": "F3 map cluster sum; reproduces F3 C1 14 and C2 27; gamepressure 'destroy all 37 crates'",
+ "countingRule": "F3 cumulative counts include the checkpoint crate (F3 p005R). S1-h (deck crate) and the position of the 3-stack after C1 are inferred so that 14 and 27 both hold",
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = Aku crate in time trial (F3 p005R legend). Drawn icon = normal-mode type. Keys 'question?' / 'wood?' = counted crates whose type is unclear (page fold)",
+ "timeTrial": {
+  "crates": {
+   "1s": 10,
+   "2s": 6,
+   "3s": 3,
+   "aku": 2
+  },
+  "freezeSeconds": 31,
+  "staffRecord": "0:50:63 (F3 p103L; F3 p006L prints 0:50:53)",
+  "sapphire": "1:15:00",
+  "gold": "1:00:20"
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 37,
+   "basis": "single loop route around the central island to the goal cavern"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 14,
+   "cumulative": 14,
+   "notes": "start channel, far-left channel ramps, pirate-ship cannon lane, crates round the stern"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 13,
+   "cumulative": 27,
+   "notes": "3-stack in the east cannon lane, top channel sailor, right channel mine rows + crystal, flip pair, hidden crate behind a ramp, drifting-mine bait"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "goal",
+   "boxes": 10,
+   "cumulative": 37,
+   "notes": "ramp pair between mines, fold corner crates, dense mine channel, rising triple after the final ramp, run into the skull-rock cavern"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "start channel past the first ramp and a mine, mid-channel",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TEACH",
+    "SPEED-LINE"
+   ],
+   "why": "touch crates with the ski to break them (P3 s76): two easy targets teach steering onto crates",
+   "evidence": "F3 p042L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "after the two side-by-side ramps at the S-bend",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:ramps"
+   ],
+   "tags": [
+    "DETOUR",
+    "SINGLE",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "slightly off the racing line; TA1 says skip it rather than detour - a deliberate time-trial choice",
+   "evidence": "F3 p042L zoom; F3 TA1",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "entry of the far-left channel (page fold)",
+   "composition": {
+    "question": 1,
+    "question?": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "fold"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "pick-ups at the turn north",
+   "evidence": "F3 p042 fold zoom",
+   "confidence": "low",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "just past a ramp in the far-left channel",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "ramp-landing"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TOOL",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "first ramp-then-crate pair: the ramp aims the ski at the crate (gamepressure: a crate hangs above the first ramp)",
+   "evidence": "F3 p042R zoom; gamepressure MW",
+   "confidence": "medium",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "after the second ramp, among three mines",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mines"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIMED",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "first crate inside a mine group",
+   "evidence": "F3 p042R zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "pink cannon lane west of the pirate ship",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "timed"
+   ],
+   "relations": [
+    "cannon-lane"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "crate inside the broadside lane: collect between three-shot volleys (advice 1); at record pace you beat the cannons (TA2, target 0:20:00)",
+   "evidence": "F3 p042R zoom; F3 callout 1; F3 TA2",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "round the ship's stern beside a rowing sailor",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "grid",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "enemy:sailor",
+    "tight-corner"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "ENEMY-LINK",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "tight corner: time crate with a quick turn, always take the A crate (TT fr.10-11); jump high over the sailor (P3 s77)",
+   "evidence": "F3 p042R zoom; F3 p103L fr.10-11; P3 p011L s77",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 2,
+    "A": 1
+   }
+  },
+  {
+   "id": "S1-h",
+   "section": "S1",
+   "order": 8,
+   "where": "on the ship's stern deck beside the sail",
+   "composition": {
+    "wood?": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "on-ship"
+   ],
+   "tags": [
+    "HIGH",
+    "SINGLE"
+   ],
+   "why": "brown crate-textured block on the ship; counted because C1 = 14 requires it",
+   "evidence": "F3 p042R zoom x2.6; arithmetic",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-C",
+   "section": "S1",
+   "order": 9,
+   "where": "top bend just past the stern",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C1, cumulative 14",
+   "evidence": "F3 p042R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "pink cannon lane east of the ship, next to the central island",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "stack",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "cannon-lane"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "3-stack in the second fire lane; the time crate is the top one",
+   "evidence": "F3 p042R zoom x2.6",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "top channel just past a ramp",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "ramp-landing",
+    "sailor-behind-ramp"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TOOL",
+    "TIME-TRIAL"
+   ],
+   "why": "ramp-then-crate; a sailor waits right after (gamepressure: ramps hide boats behind them)",
+   "evidence": "F3 p042R zoom; gamepressure MW",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "past the rowing sailor near the top-right corner",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:sailor"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "ENEMY-LINK"
+   ],
+   "why": "reward for clearing the sailor",
+   "evidence": "F3 p042R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "corner exit into the right channel, beside a mine",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mine"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "turning crate",
+   "evidence": "F3 p042R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "right channel, past the double mine row and a ramp",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "float-line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "ramp-flight-path",
+    "crystal-nearby"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "TOOL",
+    "TEST",
+    "TIME-TRIAL"
+   ],
+   "why": "flip or roll on this ramp to take both in one jump (P3 s79); target 0:38:00",
+   "evidence": "F3 p042R zoom; P3 p011L s79",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1,
+    "3": 1
+   }
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 6,
+   "where": "right behind the lip of a ramp after a cannon post",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "behind-ramp-lip"
+   ],
+   "tags": [
+    "HIDDEN",
+    "SINGLE",
+    "AKU",
+    "COUNT-TRAP",
+    "TIME-TRIAL"
+   ],
+   "why": "tucked behind the ramp: launching sails over it (gamepressure: ramps hide things)",
+   "evidence": "F3 p042R zoom x2; gamepressure MW",
+   "confidence": "medium",
+   "ttBadges": {
+    "A": 1
+   }
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 7,
+   "where": "between two drifting mines",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "timed"
+   ],
+   "relations": [
+    "drifting-mines"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIMED",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "bait in the middle of a left/right decision (advice 2)",
+   "evidence": "F3 p042R zoom; F3 callout 2",
+   "confidence": "high",
+   "ttBadges": {
+    "3": 1
+   }
+  },
+  {
+   "id": "S2-h",
+   "section": "S2",
+   "order": 8,
+   "where": "after the drifting mines",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "exit crate before C2",
+   "evidence": "F3 p042R zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 9,
+   "where": "bottom channel past S2-h",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2, cumulative 27",
+   "evidence": "F3 p042R",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "bottom channel just past a ramp, mines on both sides",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "ramp-landing",
+    "mines"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TOOL",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "landing zone flanked by mines; at record pace a back-flip may be needed for the time crate (TT fr.22, location medium)",
+   "evidence": "F3 p042R zoom x2; F3 p103L fr.22",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "bottom-left corner after a ramp (page fold)",
+   "composition": {
+    "wood?": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "fold"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "corner crate; badge blurred (blue, 2-s?)",
+   "evidence": "F3 p042 fold zoom",
+   "confidence": "low",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "dense mine channel at the far left (page fold)",
+   "composition": {
+    "wood?": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mines",
+    "fold"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "inside the mine zone: hug the right islet or ram through with a mask (TA3, target 0:47:00)",
+   "evidence": "F3 p042 fold zoom; F3 TA3",
+   "confidence": "low",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "start of the middle channel among two mine pairs",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mines"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIMED"
+   ],
+   "why": "approach to the final ramp lined with mines (TT fr.24-26)",
+   "evidence": "F3 p042R zoom; F3 p103L fr.24-26",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "right after the final ramp",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "float-line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "ramp-flight-path"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "TOOL",
+    "TEST",
+    "TIME-TRIAL"
+   ],
+   "why": "rising diagonal: the third is high, a spin acrobatic takes it (advice 3; P3 p010R); back-flip for all three time crates (TT fr.27)",
+   "evidence": "F3 p042R zoom; F3 callout 3; P3 p010R; F3 p103L fr.27",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1,
+    "2": 1,
+    "3": 1
+   }
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "end of the middle channel at the central island",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "before:goal"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE"
+   ],
+   "why": "last pick-ups on the straight run into the cavern (TT fr.28-29)",
+   "evidence": "F3 p042R zoom",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "floating skull mines",
+   "count": 6,
+   "approx": true,
+   "where": "start channel and far-left channel",
+   "role": "first crate inside a mine group is S1-e"
+  },
+  {
+   "section": "S1",
+   "kind": "pirate ship broadside (three-shot volleys)",
+   "count": 1,
+   "where": "top-left; fire lanes both sides of the ship",
+   "role": "timed lanes holding S1-f and S2-a"
+  },
+  {
+   "section": "S1",
+   "kind": "rowing sailor",
+   "count": 1,
+   "where": "at the ship's stern",
+   "role": "jump high over (P3 s77)"
+  },
+  {
+   "section": "S2",
+   "kind": "rowing sailor",
+   "count": 1,
+   "where": "right after the S2-b ramp",
+   "role": "hidden behind a ramp"
+  },
+  {
+   "section": "S2",
+   "kind": "floating skull mines",
+   "count": 9,
+   "approx": true,
+   "where": "top channel, double staggered row (3+3) beside the crystal, right channel",
+   "role": "pure steering; no crate in the double row"
+  },
+  {
+   "section": "S2",
+   "kind": "drifting mines",
+   "count": 2,
+   "where": "around S2-g",
+   "role": "left/right decision with a 3-s crate in the middle"
+  },
+  {
+   "section": "S3",
+   "kind": "floating skull mines",
+   "count": 10,
+   "approx": true,
+   "where": "bottom channel, mine channel (TA3), middle channel pairs and after the final ramp",
+   "role": "line the approach to the last ramp"
+  },
+  {
+   "section": "S3",
+   "kind": "rowing sailor",
+   "count": 1,
+   "where": "after the final ramp",
+   "role": "hidden behind a ramp"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "ramp (launch)",
+   "where": "start channel x3, far-left channel x2",
+   "crates": [
+    "S1-b",
+    "S1-d",
+    "S1-e"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "ramp (launch)",
+   "where": "top channel, right channel x2",
+   "crates": [
+    "S2-b",
+    "S2-e",
+    "S2-f"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "ramp (launch)",
+   "where": "bottom channel, bottom-left corner, middle channel",
+   "crates": [
+    "S3-a",
+    "S3-b",
+    "S3-e"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-e",
+    "S3-e"
+   ],
+   "summary": "crates strung along a ramp's flight path, the last one higher",
+   "solution": "full speed off the ramp plus a flip/roll or back-flip",
+   "wrongOrder": "plain straight jump",
+   "loss": "the high crate; open water allows a loop-back retry"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-f"
+   ],
+   "summary": "crate tucked behind a ramp lip",
+   "solution": "pass low or round the ramp",
+   "wrongOrder": "launch off the ramp",
+   "loss": "1 box"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S1-f",
+    "S2-a"
+   ],
+   "summary": "crates inside cannon fire lanes",
+   "solution": "wait for the three-shot volley, then go",
+   "wrongOrder": "full throttle into the volley",
+   "loss": "a life"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S2-g"
+   ],
+   "summary": "3-s crate between two drifting mines",
+   "solution": "commit to one side early and clip the crate",
+   "wrongOrder": "hesitate",
+   "loss": "a life"
+  }
+ ],
+ "observations": [
+  "Open water but a single counted loop: crates, fruit lines and the guide arrow lay the route; 14/13/10.",
+  "Ramps are the crate-delivery device: crates at landings, in-line pairs and a rising triple needing flips, one crate hidden behind a lip.",
+  "Danger shares the crate's lane (cannon lanes, mines, drifting mines); the double mine row by the crystal is crate-free pure steering.",
+  "All-box is gentle (F3 intro); the risks are fold-side corner singles, the hidden S2-f and the high third crate of S3-e.",
+  "The goal island is visible from the start and the route circles it before entering its cavern.",
+  "Time crates total 31 s; TT craft = skipping ramps, telling ridable buoys from bouncing ones, holding the nose down on swells, flips for high time crates."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "vehicle",
+   "notes": "jet ski, chase camera; start funnel, narrow far-left channel, ship basin with a fire lane and a tight corner"
+  },
+  {
+   "section": "S2",
+   "mode": "vehicle",
+   "notes": "strait by the ship, top channel east, right channel south through mine rows and three ramps"
+  },
+  {
+   "section": "S3",
+   "mode": "vehicle",
+   "notes": "bottom channel, corner, mine channel north, middle channel to the skull-rock cavern"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "vehicle lane: open-water start channel between sandy islets",
+   "size": "a funnel ≥10 crate widths wide at the start, narrowing to ≈5–6 (map; screenshots show wide open water)",
+   "heightDelta": "0 (the swell lifts and lowers everything)",
+   "edges": "open: islets and sand bars bounce the ski (TT 08)",
+   "behaviour": "water surface; the swell moves ramps and mines up and down (F3 p041L tip 3); move: ride (steer)",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "The widest water comes first: two crates side by side between single mines teach steering the jet ski onto crates (P3 s76: just touch them)",
+   "evidence": "F3 p042L (start crop); P3 p010R s72–s76; F3 p103L fr.01–05",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "vehicle lane: narrow far-left channel in the page fold, running north, with ramps and crates alternating",
+   "size": "≈half the start channel (map)",
+   "heightDelta": "0",
+   "edges": "open: islets",
+   "behaviour": "water surface; move: ride",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "A narrower lane where each ramp is followed by a crate: ramp, crate, ramp, crate",
+   "evidence": "F3 p042 fold crop",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "wide floor (open water): pirate-ship basin with a pink broadside lane crossing it west–east through the moored ship",
+   "size": "basin ≈1.5 channel widths; the fire lane ≈1–1.5 crate widths deep (map)",
+   "heightDelta": "0",
+   "edges": "open: islets, the ship’s hull",
+   "behaviour": "water surface; the lane is swept by three-shot volleys; move: ride, wait for a volley to pass",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "Crates stand inside the fire lane (W2 in the west part, the 3-stack against the ship’s east side), so collecting them means timing the broadside (callout 1)",
+   "evidence": "F3 p042R top crop + callout 1; F3 p103L fr.10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "corridor: tight turn round the ship’s end (four pickups and a rowboat)",
+   "size": "≈2–3 crate widths between hull and bank (map)",
+   "heightDelta": "0",
+   "edges": "open: ship hull and islet",
+   "behaviour": "water surface; move: quick turn",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "TT 11: the corner by the stern is tight — take the time crate with a quick turn; the crates, a boat and the fire lane share the bend",
+   "evidence": "F3 p042R top crop; F3 p103L fr./cap. 10–11",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "deck platform: the ship’s deck by the sails (one pickup, inferred)",
+   "size": "not visible",
+   "heightDelta": "not visible (raised above the water)",
+   "edges": "ship rails",
+   "behaviour": "static; move: not visible",
+   "roles": [],
+   "why": "Drawn as a crate on the deck; how the ski reaches it is not shown",
+   "evidence": "F3 p042R top crop",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "corridor: strait between the ship’s east side and the central island, inside the fire lane, with two mines",
+   "size": "≈2–3 crate widths (map)",
+   "heightDelta": "0",
+   "edges": "open: hull and island",
+   "behaviour": "water surface; broadside lane; move: ride, time the volley",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "The 3-stack stands against the hull in the fire lane and two mines narrow the exit: crates, cannon fire and mines in one strait",
+   "evidence": "F3 p042R top crop",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "vehicle lane: right channel entered past two staggered rows of three mines (crystal beside them)",
+   "size": "channel ≈4–5 crate widths; rows offset diagonally (map)",
+   "heightDelta": "0",
+   "edges": "open: islets",
+   "behaviour": "water surface; move: slalom",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "A pure steering field with no crate inside it (P3 s78: a clear path to the crystal if you steer clear of the mines)",
+   "evidence": "F3 p042R right crop; P3 p011L s78",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "corridor: passage between two drifting mines with the ?3 in the middle",
+   "size": "≈3 crate widths (≈1 crate gap each side of the crate)",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "water surface; the mines wander; move: commit to one side",
+   "roles": [
+    "CHOKE",
+    "TIMING-STEP"
+   ],
+   "why": "Callout 2: two bombs wander here — decide quickly whether to pass left or right; the 3-s crate is the bait in the middle of the decision",
+   "evidence": "F3 p042R right crop + callout 2",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "vehicle lane: far-left mine channel running north, mines down the middle",
+   "size": "≈half a channel either side of the mines (map)",
+   "heightDelta": "0",
+   "edges": "open: islets",
+   "behaviour": "water surface; move: hug the islet",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "TA3: skim the right-hand islet to avoid the mines, or with a mask accept one hit and go through the centre; TT 24 squeezes between two mines beside a sand bar",
+   "evidence": "F3 p042 fold crop + TA3; F3 p103L fr.24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "corridor: middle-channel gate — mine pairs at both edges with the ? between them",
+   "size": "≈1/3 of the channel (map)",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "water surface; move: thread the gate",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "A gate that centres the line on the ? before the final ramp; TT 24–26 cuts inside and destroys only the inner mines with a mask",
+   "evidence": "F3 p042 middle-channel crop; F3 p103L cap. 24–26",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "vehicle lane: run-in along the central island to the skull-rock cavern",
+   "size": "≈4–5 crate widths (map)",
+   "heightDelta": "0",
+   "edges": "open: island and buoys",
+   "behaviour": "water surface; move: straight line",
+   "roles": [],
+   "why": "TT 28–29: minimal input, run right along the inside of the island and the buoys — a straight finish with two last crates",
+   "evidence": "F3 p042 crop; F3 p103L fr./cap. 28",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "launch ramp: red wedge with a yellow arrow, left of centre in the start channel (no gap below)",
+   "width": "ramp ≈2–3 jet-ski widths wide × ≈3–4 long (TT frame six)",
+   "heightDelta": "+ (launch; height not measured)",
+   "landing": "open water",
+   "lethal": false,
+   "runUp": "start funnel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "not a failure (optional)",
+   "nearby": [],
+   "why": "P3 s72: follow the fruit line to the first jump — the ramp is shown before anything depends on it. TT 02 skips it and cuts inside",
+   "evidence": "F3 p042L start crop; P3 p010R s72, s74; F3 p103L fr./cap. 02, 06",
+   "confidence": "medium",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "twin launch ramps side by side across the channel at the S-bend (north and south lanes), the W1 crate just past the south ramp",
+   "width": "two ramps ≈1.5–2 crate widths each (map)",
+   "heightDelta": "+ (launch)",
+   "landing": "open water; the W1 crate behind the south ramp",
+   "lethal": false,
+   "runUp": "start channel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "a mine at the north bank on the bend",
+   "failure": "boxes lost (the off-line crate)",
+   "nearby": [
+    "S1-b"
+   ],
+   "why": "Two lanes, one with a crate behind its ramp: the first \"which ramp\" choice. TA1 (first-wave reading) says drive the S-bend straight and skip the off-line crate",
+   "evidence": "F3 p042L start crop; F3 TA1 (first-wave reading)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "launch ramp with the ?1 crate on its flight line or landing",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (crate above the ramp: gamepressure)",
+   "landing": "open water past the crate",
+   "lethal": false,
+   "runUp": "far-left channel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "boxes lost unless you loop back (open water)",
+   "nearby": [
+    "S1-d"
+   ],
+   "why": "The first ramp that delivers a crate: the ramp aims the ski at it",
+   "evidence": "F3 p042 fold crop; gamepressure (first-wave reading)",
+   "confidence": "medium",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S1-d",
+   "section": "S1",
+   "kind": "launch ramp landing among three mines, with the W2 crate between them",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (launch)",
+   "landing": "water between three mines, with the W2 crate",
+   "lethal": false,
+   "runUp": "far-left channel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "three mines around the landing (lethal on contact)",
+   "failure": "death if you land on a mine",
+   "nearby": [
+    "S1-e",
+    "O-S1-a"
+   ],
+   "why": "The first crate inside a mine group sits at a ramp’s landing, so the jump must be aimed",
+   "evidence": "F3 p042 fold crop",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "launch ramp with the ?2 crate just beyond it and a rowboat circling an islet right after",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (launch)",
+   "landing": "water near the ?2 crate and the rowboat",
+   "lethal": false,
+   "runUp": "top channel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "rowboat at the landing (E-S2-a)",
+   "failure": "death if you land beside the boat (paddle whack)",
+   "nearby": [
+    "S2-b",
+    "E-S2-a"
+   ],
+   "why": "Gamepressure: after the checkpoint ramps start hiding boats or bombs behind them. The landing is shared by a crate and an enemy",
+   "evidence": "F3 p042R top crop; gamepressure (first-wave reading)",
+   "confidence": "medium",
+   "roles": [
+    "TEST"
+   ]
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "launch ramp with two crates in line on its flight path (W1 right behind the lip, W3 a crate-length beyond), a mine just after",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (the second crate higher; TT 18 shows them one above the other in the air)",
+   "landing": "open water, a mine just beyond",
+   "lethal": false,
+   "runUp": "right channel",
+   "move": [
+    "ride",
+    "trick spin (flip or roll)"
+   ],
+   "coupling": "mine just past the landing",
+   "failure": "boxes lost (second crate missed)",
+   "nearby": [
+    "S2-e"
+   ],
+   "why": "P3 s79: flip or roll off this ramp to take both boxes in one jump — the trick button extends the reach through the air",
+   "evidence": "F3 p042R right crop; P3 p011L s79; F3 p103L fr.18",
+   "confidence": "high",
+   "moveNote": "flip or roll in the air",
+   "roles": [
+    "TEST"
+   ]
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "launch ramp with the W(A) crate tucked directly behind its far lip",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (launch passes over the crate)",
+   "landing": "water beyond the hidden crate",
+   "lethal": false,
+   "runUp": "after a grey post at the bend",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "boxes lost if you launch",
+   "nearby": [
+    "S2-f"
+   ],
+   "why": "A ramp that should not be used: launching sails over the crate behind its lip; pass low or round it",
+   "evidence": "F3 p042R right crop",
+   "confidence": "medium",
+   "moveNote": "pass beside or low over the lip",
+   "roles": [
+    "TEST"
+   ]
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "launch ramp toward a crate standing on a dark post ≈2 above the surface, with mines on both sides",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+≈2 (the crate on the post; TT 21)",
+   "landing": "water between two mines",
+   "lethal": false,
+   "runUp": "bottom channel",
+   "move": [
+    "ride",
+    "trick spin (back-flip)"
+   ],
+   "coupling": "mines on both sides of the landing; the swell (TT 22)",
+   "failure": "boxes lost (crate missed); death on a mine",
+   "nearby": [
+    "S3-a"
+   ],
+   "why": "A raised target: TT 22 — at record pace the wave is low when you reach the ramp and the time crate is out of reach, so use the back-rotation acrobatics",
+   "evidence": "F3 p042 bottom crop (badge on a pole); F3 p103L fr./cap. 21–22",
+   "confidence": "medium",
+   "moveNote": "full speed on a high wave, or a back-flip"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "launch ramp at the bottom-left corner, a mine and a crate after it (page fold)",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (launch)",
+   "landing": "corner water",
+   "lethal": false,
+   "runUp": "bottom channel",
+   "move": [
+    "ride"
+   ],
+   "coupling": "a mine beside the landing",
+   "failure": "boxes lost (crate missed)",
+   "nearby": [
+    "S3-b"
+   ],
+   "why": "The corner turn is marked by a ramp and a crate",
+   "evidence": "F3 p042 fold crop",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "final launch ramp with a rising line of three crates beyond it (W1 low, ?2, W3 high); a grey post on the islet beside it, a rowboat further on",
+   "width": "≈1.5–2 crate widths (map)",
+   "heightDelta": "+ (rising; the third crate is \"a little high\")",
+   "landing": "open water, a rowboat beyond",
+   "lethal": false,
+   "runUp": "middle channel",
+   "move": [
+    "ride",
+    "trick spin (back-flip)"
+   ],
+   "coupling": "rowboat past the landing (E-S3-a)",
+   "failure": "boxes lost (third crate missed)",
+   "nearby": [
+    "S3-e",
+    "E-S3-a"
+   ],
+   "why": "Callout 3: the third box is high — a straight jump struggles, a spinning acrobatic gets it easily; TT 27: all three time crates with a back-flip. The level’s last test is its hardest ramp",
+   "evidence": "F3 p042 middle-channel crop + callout 3; P3 p010R intro; F3 p103L fr./cap. 25–27",
+   "confidence": "high",
+   "moveNote": "back-flip off the ramp",
+   "roles": [
+    "TEST"
+   ]
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 2,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "— (launch; water below)",
+   "rest": "open water",
+   "noStop": false,
+   "why": "The first ramp is optional and the twin ramps offer two lanes: jumping is shown before it delivers anything",
+   "evidence": "F3 p042L start crop; P3 p010R s72; F3 p103L cap. 02"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 2,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "— (launch; water below)",
+   "rest": "ship basin",
+   "noStop": false,
+   "why": "Ramp, crate, ramp, crate among mines up the narrow channel: one jump per crate",
+   "evidence": "F3 p042 fold crop"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "ride",
+    "trick spin (flip or roll)"
+   ],
+   "rhythm": "even",
+   "maxGap": "— (launch; water below)",
+   "rest": "C2",
+   "noStop": false,
+   "why": "Ramp with an in-line pair (flip or roll), then a ramp that must not be used (crate under its lip), then the drifting-mine gate",
+   "evidence": "F3 p042R right crop; P3 p011L s79"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "ride",
+    "trick spin (back-flip)"
+   ],
+   "rhythm": "accelerating (taller targets each time)",
+   "maxGap": "— (launch; water below)",
+   "rest": "goal cavern",
+   "noStop": false,
+   "why": "Pole crate (back-flip on a low wave), corner ramp, final ramp with the rising triple (back-flip): the trick button becomes necessary as the targets rise",
+   "evidence": "F3 p042 crops; callout 3; F3 p103L cap. 22, 27"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1, S2, S3",
+   "kind": "floating skull mines (rising and falling with the swell)",
+   "placement": "flank and across path: singles at channel edges, three around a crate, staggered double rows, pairs at both edges with a crate between, a dense mid-channel field",
+   "timing": "static, bobbing up and down with the waves (F3 p041L tip 3)",
+   "counter": [
+    "steer around",
+    "quick turn (F3 p041L tip 1)",
+    "with a mask, ram through (TT 15; TT 24–26 destroy only the inner mines)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "crates (S1-e, S2-g, S3-a, S3-d)",
+    "ramp landings",
+    "buoys and sand bars"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "LANE-BLOCK",
+    "TEST"
+   ],
+   "why": "Mines draw the lanes on open water: they narrow the channel, ring a crate, build a slalom, frame a gate and finally fill a channel so that route choice (hug the islet or use the mask) is the test",
+   "evidence": "F3 p042 crops; TA3; P3 p010R s75, p011L s78; F3 p103L fr.03, 07, 12, 15–16, 19–20, 24 + cap. 07, 12–17, 24–26"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1, S2",
+   "kind": "pirate-ship broadside: cannon volleys into the pink fire lane on both sides of the ship",
+   "placement": "across path: a lane crossing the ship basin west–east",
+   "timing": "three shots in a row from the side (callout 1); readable from afar (TT 10)",
+   "counter": [
+    "wait for the volley to pass, then go",
+    "pass at full throttle before the cannons fire (TA2)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "W2 crate (S1-f)",
+    "3-stack against the hull (S2-a)",
+    "tight corner with a rowboat"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "A turret lane with crates inside it, placed where the route must turn tightly round the ship",
+   "evidence": "F3 p042R top crop + callout 1; TA2 (first-wave reading); F3 p103L fr./cap. 10"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1, S2, S3",
+   "kind": "swell: waves lift and lower the water, ramps and mines",
+   "placement": "everywhere",
+   "timing": "continuous; easier to read from far away (F3 p041L tip 3)",
+   "counter": [
+    "read the waves ahead",
+    "hit a ramp on a high wave",
+    "press up to hold the nose down before a crate (TT 20)",
+    "back-flip when the ramp is low (TT 22)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "ramps with high crates",
+    "crates at water level"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TEST"
+   ],
+   "why": "Moving geometry without moving parts: the same ramp is a different jump on each wave",
+   "evidence": "F3 p041L tip 3; F3 p103L cap. 20, 22"
+  },
+  {
+   "id": "O-S1-d",
+   "section": "S1, S2, S3",
+   "kind": "buoys (green chains, red domes) and sand bars (soft blockers)",
+   "placement": "flank: lane markers along the channels and at corners",
+   "timing": "static; some buoys can be driven over, others bounce the ski; islets bounce it too",
+   "counter": [
+    "steer",
+    "drive over the ridable ones (TT 03, 08, 17)",
+    "swing wide of the bouncing ones (TT 04)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "mines",
+    "corner crates"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Soft walls that code the fastest line for the time trial",
+   "evidence": "F3 p103L intro, fr.05, 08, 16, 23, cap. 03–05, 08, 16–17"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "drifting (wandering) mines ×2 around the ?3 crate",
+   "placement": "across path: one each side of the crate",
+   "timing": "wander back and forth; hesitate and one explodes on you (callout 2)",
+   "counter": [
+    "commit early to one side"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "?3 crate S2-g"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "The only moving mines guard the most valuable time crate: a timing decision instead of a steering one",
+   "evidence": "F3 p042R right crop + callout 2"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "boat pirate (ボートの海賊作業員; rowboat)",
+   "archetype": "patrol-1D (shuttles in place)",
+   "behaviour": "goes back and forth in one place (F3 also lists circling an islet); whacks with the paddle",
+   "counter": [
+    "avoid",
+    "jump high over it (P3 s77)",
+    "body-hit it from above off a ramp (F3: a reward)"
+   ],
+   "fails": [
+    "passing beside it at water level (paddle whack)"
+   ],
+   "placement": "flank: at the tight corner round the ship’s end, beside four crates",
+   "roles": [
+    "HURDLE",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "The first enemy shares a tight turn with crates and the fire lane, where the quick turn is needed",
+   "evidence": "F3 p041R; F3 p042R top crop; P3 p011L s77",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "boat pirate",
+   "archetype": "patrol-loop (circles an islet)",
+   "behaviour": "circles a small islet right past the top-channel ramp",
+   "counter": [
+    "avoid",
+    "body-hit it from above off the ramp (F3)"
+   ],
+   "fails": [
+    "landing beside it (paddle whack)"
+   ],
+   "placement": "landing platform: right behind the ramp",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": false,
+   "why": "Gamepressure: after the checkpoint, ramps hide boats behind them; the ramp is also the tool that beats it",
+   "evidence": "F3 p041R; F3 p042R top crop",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "seagull Jonathan (ジョナタン)",
+   "archetype": "flier (perches on a crate, flies up)",
+   "behaviour": "perches on a box; approaching while it is perched is dangerous; when it flies up the box can be taken",
+   "counter": [
+    "wait until it flies up, then take the box",
+    "pass in one go without hesitating"
+   ],
+   "fails": [
+    "approaching while it is perched",
+    "hesitating just before it"
+   ],
+   "placement": "guarding crate: over the ? + W pair in the top channel",
+   "roles": [
+    "GUARD",
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "why": "The only flier, and it is literally a crate guard with a timing window",
+   "evidence": "F3 p041R; F3 p042R top crop",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "boat pirate",
+   "archetype": "patrol-1D (shuttles in place)",
+   "behaviour": "as E-S1-a, past the final ramp in the middle channel",
+   "counter": [
+    "jump high over it (P3 s77)",
+    "avoid"
+   ],
+   "fails": [
+    "passing beside it at water level"
+   ],
+   "placement": "landing platform: beyond the final ramp",
+   "roles": [
+    "AMBUSH",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "A last boat placed after the hardest ramp, where the player is looking up at the high crate",
+   "evidence": "F3 p042 middle-channel crop; P3 p011L s77",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start funnel",
+    "optional ramp",
+    "mine",
+    "W W side by side",
+    "mine",
+    "twin ramps (W1 behind the south one)",
+    "mine on the bend",
+    "narrow channel: ramp → ?1, ramp → W2 among three mines",
+    "ship basin: W2 in the fire lane",
+    "tight corner round the ship: four crates + rowboat",
+    "deck crate",
+    "C1"
+   ],
+   "gaps": 4,
+   "enemies": 1,
+   "hazards": 4
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "strait: 3-stack in the fire lane + two mines",
+    "ramp → ?2 → rowboat circling an islet",
+    "seagull over ? + W",
+    "?",
+    "mine",
+    "two staggered rows of three mines (crystal)",
+    "ramp → two crates in line (flip or roll)",
+    "mine",
+    "ramp with a crate under its lip",
+    "?3 between two drifting mines",
+    "?1",
+    "C2"
+   ],
+   "gaps": 3,
+   "enemies": 2,
+   "hazards": 5
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "mines",
+    "ramp → crate on a post (mines both sides)",
+    "corner ramp + mine + crate",
+    "mine channel (hug the islet or ram with the mask)",
+    "mine-pair gate with a ?",
+    "final ramp → rising triple (back-flip)",
+    "rowboat",
+    "mines",
+    "W, W along the island",
+    "skull-rock cavern"
+   ],
+   "gaps": 3,
+   "enemies": 1,
+   "hazards": 3
+  }
+ ],
+ "geometryObservations": [
+  "**No lethal gaps.** Water is the floor everywhere; the danger is on the surface (mines, cannon fire, boats) and in reading the swell. Ramps are optional launches that deliver crates.",
+  "**Ramps escalate as crate delivery:** an optional ramp → twin ramps with a crate behind one → a crate at the landing → a landing among mines → a boat behind the ramp → two crates in line (flip or roll) → a crate under the lip (do not launch) → a crate on a post (back-flip on a low wave) → a rising triple (back-flip).",
+  "**Mines draw the lanes.** Edge singles narrow a channel, three mines ring a crate, staggered double rows make a slalom, pairs at both edges make a gate with a crate in it, a drifting pair adds timing, and a dense mine channel forces a route choice (hug the islet, or ram through with the mask).",
+  "**Timing hazards are readable from afar:** the broadside fires three-shot volleys into marked lanes, and the swell raises and lowers ramps and mines (F3 tip 3: read the waves from far away).",
+  "**Few enemies, each at a decision point:** a boat at the tight turn round the ship, a boat right behind a ramp, a seagull perched on a crate, a boat after the final ramp.",
+  "**Waiting replaces attacking.** The jet ski can hardly attack (F3 tip 2): slow down and let monsters move; a boat can be beaten only from above via a ramp, so the geometry is the only weapon and beating it is rewarded.",
+  "**Generous recovery.** Open water allows looping back for a missed crate, and F3 calls the crate layout kind; the hard parts are optional (time crates, the high crates on the trick ramps).",
+  "**The goal is always in view.** The route circles the skull-rock island clockwise and enters it last, so the guide arrow and the island orient the player in open water.",
+  "**Corners carry crates and hazards together.** The tight turn round the ship combines four crates, a boat and the fire lane; other corners have a ramp and a crate (P3 s76: easy does it round corners).",
+  "**Buoys and islets are soft walls.** Some buoys can be ridden over and some bounce the ski; islets bounce it. They code the fastest line without killing.",
+  "**Teaching order:** crates on open water → an optional ramp → a ramp with a crate → crates among mines → a fire lane → boats → the seagull → a mine slalom → a crate hidden by a ramp → drifting mines → a crate on a post → a dense mine channel → the rising triple."
+ ],
+ "geometryTransfer": [
+  "**Kicker field without pits.** In a plaza or bowl with no lethal gaps, let `ramp` kickers deliver floating crates: one at the landing about 1.2 m up; an in-line pair at 1.2 m and 1.7 m (a full ollie peaks at 1.78 m); a rising triple at lip height +0.6, +1.2 and +1.7 m, the last only on a charged launch. Leave room to pass beside every kicker.",
+  "**Mines as lane geometry.** Use TNT or `minefields` spots as edge singles, a pair at both edges with a crate between them (a ≈3.5 m gate), and a staggered double row of three as a slalom. TNT touched at ≥ 13 m/s on the board kills, so the slalom is a real speed test.",
+  "**Fire lane with a crate in it.** A `sentry` firing across a lane (one orb per ≈ 2.7 s, range 32 m, only with a clear line of fire) with a crate inside the lane: the rider waits for a shot to pass or charges through between shots. Put the lane at a corner, as the ship’s broadside is.",
+  "**A kicker that must not be used.** Tuck a crate tight against the far side of a kicker so that launching skips it, and place an enemy (a `grunt`) 3–5 m past another kicker’s landing, visible from the approach — each once per level.",
+  "**Perched guard over a crate.** A `floater` hovering over a crate (it swoops every 2.6 s when you are within 12 m along and 6 m across): take the crate as it swoops away, which is the seagull’s timing window."
+ ]
+}

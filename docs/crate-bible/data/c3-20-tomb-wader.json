@@ -1,0 +1,3087 @@
+{
+  "id": "c3-20-tomb-wader",
+  "game": "Crash 3",
+  "stage": 20,
+  "name": "Tomb Wader",
+  "japaneseTitle": "きょうふ! ナイルがわはんらん",
+  "sources": [
+    "F3 p074-p076",
+    "F3 p080L",
+    "F3 p110R",
+    "F3 p006",
+    "F3 p005R",
+    "F3 p011",
+    "P3 p037L-p039R (shots 85-117, Time Trial note)",
+    "gamepressure N. Sane Trilogy Tomb Wader (summary)"
+  ],
+  "camera": "into-screen corridor of water channels and short staircases turning at right angles",
+  "totalBoxes": 88,
+  "totalSource": "gamepressure 'smash all 88 crates'; reproduced by the map: F3 goal 66 (incl. 25-box bonus) + 12 main-course Nitros (F3 bracket 78) + 10 skull-course Nitros; F3 printed C1 8(9), C2 44(48), C3 52(56) all reproduced",
+  "countingRule": "count = in-game counter (Nitros included). F3 cumulative: C box included; bracket adds main-course Nitros cleared by the green !; the bonus HUD total (25, incl. 4 Nitros + 1 TNT from outlines) is added whole to both numbers. Steel/green ! blocks and the bonus's 8-outline footing bridge are count 0",
+  "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = Aku box in time trial (F3 p005R legend). Drawn icon = normal-mode type",
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 53,
+      "basis": "S1 9 + S2 14 + S3 8 + S4 22 = 41 boxes + 12 Nitros"
+    },
+    {
+      "id": "bonus",
+      "boxes": 25,
+      "basis": "F3 p080L header boxes x25 (1UP x1); P3 HUD x/25; 10 ? + 7 W + 2 striped + 1 1UP + 4 Nitro + 1 TNT"
+    },
+    {
+      "id": "death",
+      "boxes": 10,
+      "basis": "skull course F3 p076: Nitros only (4 + 1 + 5); detonated by the main-route green !"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 9,
+      "boxesF3": 8,
+      "nitro": 1,
+      "cumulative": 8,
+      "cumulativeWithNitro": 9,
+      "cumulativePrinted": true,
+      "notes": "teaching strip: first wet crates, first Nitro, TNT stepping stones in water"
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "C2",
+      "boxes": 14,
+      "boxesF3": 11,
+      "nitro": 3,
+      "cumulative": 44,
+      "cumulativeWithNitro": 48,
+      "cumulativePrinted": true,
+      "notes": "cumulative includes the 25-box bonus entered after C1; refuges carry the Aku and the 1UP"
+    },
+    {
+      "id": "BONUS",
+      "route": "bonus",
+      "from": "after C1",
+      "to": "after C1",
+      "boxes": 25,
+      "boxesF3": 25,
+      "nitro": 4,
+      "cumulative": null,
+      "cumulativeWithNitro": null,
+      "cumulativePrinted": false,
+      "notes": "switch 1 builds an 8-outline footing bridge (uncounted); switch 2 turns 5 outlines into 4 Nitros + 1 TNT (counted)"
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "C2",
+      "to": "C3",
+      "boxes": 8,
+      "boxesF3": 8,
+      "nitro": 0,
+      "cumulative": 52,
+      "cumulativeWithNitro": 56,
+      "cumulativePrinted": true,
+      "notes": "optional steel ! rests, two stacks on a landing, crystal, TT third mask at C3"
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "C3",
+      "to": "goal",
+      "boxes": 22,
+      "boxesF3": 14,
+      "nitro": 8,
+      "cumulative": 66,
+      "cumulativeWithNitro": 78,
+      "cumulativePrinted": false,
+      "notes": "longest, densest section; Nitro fences, backtrack after a refuge, TNT count trap, green ! at the goal stairs"
+    },
+    {
+      "id": "SKULL",
+      "route": "death",
+      "from": "after C2 (skull pad, no deaths)",
+      "to": "blue-gem goal pad",
+      "boxes": 10,
+      "boxesF3": 0,
+      "nitro": 10,
+      "cumulative": null,
+      "cumulativeWithNitro": null,
+      "cumulativePrinted": false,
+      "notes": "no collectible crates; 10 Nitros counted via the main-route green !; 2 steel ! build safe zones"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "first water channel beside the red floating disc",
+      "composition": {
+        "question": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "diagonal pair in the water",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "red-disc-safe-island"
+      ],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "TIMED",
+        "TEACH",
+        "TIME-TRIAL"
+      ],
+      "why": "first crates sit in the water so the first pickup already obeys the flood cycle; the disc beside them is the first safe island; TT stomps the 1-s crate with a held big jump from the water's edge",
+      "evidence": "F3 p074L zoom; F3 p110R fr. 02-03",
+      "confidence": "high",
+      "ttBadges": "? = 1"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "raised path after the first stairs",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "diagonal pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "dry-land"
+      ],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "dry-land pay-off right after the first wet crossing",
+      "evidence": "F3 p074L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "right of the path before the second door",
+      "composition": {
+        "question": 1,
+        "nitro": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "first-nitro"
+      ],
+      "tags": [
+        "EDGE-BAIT",
+        "PAIR",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "first Nitro paired with a reward so a lazy spin into the pair kills; the only Nitro before C1 (bracket +1)",
+      "evidence": "F3 p074L zoom; C1 bracket 9",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "second water channel",
+      "composition": {
+        "tnt": 2
+      },
+      "count": 2,
+      "arrangement": "two singles in the channel",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "water-cycle",
+        "fuse-3s"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STEPPING",
+        "TIMED",
+        "EXPLOSIVE-MIX",
+        "TOOL"
+      ],
+      "why": "TNTs as stepping stones in the flood: hop on them at low water and retreat (P3); two clocks at once; TA2 uses the right TNT as a footing even at full water",
+      "evidence": "F3 p074L zoom; P3 p037L s87; F3 TA2",
+      "confidence": "high"
+    },
+    {
+      "id": "C1",
+      "section": "S1",
+      "order": 5,
+      "where": "top of the stairs past the shield researcher",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "bonus-pad-follows"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "8 boxes in; the bonus follows",
+      "evidence": "F3 p074R '8コ(9コ)'",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "on top of a steel block in the channel (safe zone)",
+      "composition": {
+        "aku": 1
+      },
+      "count": 1,
+      "arrangement": "single on a steel block",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "double-jump",
+        "timed"
+      ],
+      "relations": [
+        "refuge",
+        "callout-3"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "AKU",
+        "TIMED",
+        "TIME-TRIAL"
+      ],
+      "why": "the first mask sits on the first refuge: reaching safety and gaining protection are the same move; TT takes it with a double jump without touching the block",
+      "evidence": "F3 p074R zoom; callout 3; TA3; F3 p110R fr. 10; P3 p037R s90",
+      "confidence": "high",
+      "ttBadges": "A"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "in the channel just before the stairs",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "diagonal pair in the water",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "timed"
+      ],
+      "relations": [
+        "beside-dry-stairs"
+      ],
+      "tags": [
+        "LOW",
+        "PAIR",
+        "TIMED"
+      ],
+      "why": "a wet pair beside a dry staircase: step back down into the low-water window to take them",
+      "evidence": "F3 p074R zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "stair landing",
+      "composition": {
+        "striped": 2
+      },
+      "count": 2,
+      "arrangement": "sandwich: one on the floor, one floating above",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "bounce",
+        "striped"
+      ],
+      "relations": [
+        "dry-land"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SANDWICH",
+        "REWARD",
+        "TOOL"
+      ],
+      "why": "bounce-payout crates on dry land: a safe place to spend time while the water cycles",
+      "evidence": "F3 p074R zoom (vertical-slat texture)",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "next stairs",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "rhythm crate before the spiked mummy",
+      "evidence": "F3 p074R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-e",
+      "section": "S2",
+      "order": 5,
+      "where": "after the spiked mummy, up-left of the path",
+      "composition": {
+        "wood": 1,
+        "question": 2
+      },
+      "count": 3,
+      "arrangement": "triangle of three",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "shield-researcher-beyond"
+      ],
+      "tags": [
+        "ON-PATH",
+        "TIMED",
+        "TIME-TRIAL",
+        "ENEMY-LINK"
+      ],
+      "why": "in TT the W becomes the second mask beside the 1-s crate: land on the mask from the water's edge, carry into the time crate, tornado-spin over the shield researcher (the hardest TT move)",
+      "evidence": "F3 p074R zoom; F3 p110R fr. 12-14",
+      "confidence": "high",
+      "ttBadges": "W = A, one ? = 1"
+    },
+    {
+      "id": "S2-f",
+      "section": "S2",
+      "order": 6,
+      "where": "right of the hole, above a stack of steel blocks",
+      "composition": {
+        "life": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "double-jump",
+        "timed"
+      ],
+      "relations": [
+        "refuge-below"
+      ],
+      "tags": [
+        "HIDDEN",
+        "HIGH",
+        "SINGLE",
+        "LIFE",
+        "TIMED",
+        "TIME-TRIAL"
+      ],
+      "why": "rewards finding the steel refuge (P3 'discover another hidden box'); TT 2-s crate taken with high jump -> double jump before the water rises",
+      "evidence": "F3 p074R zoom; P3 p037R s92; TA4",
+      "confidence": "high",
+      "ttBadges": "2"
+    },
+    {
+      "id": "S2-g",
+      "section": "S2",
+      "order": 7,
+      "where": "channel with a scarab before the C2 stairs",
+      "composition": {
+        "nitro": 3
+      },
+      "count": 3,
+      "arrangement": "vertical column",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [
+        "water-cycle"
+      ],
+      "tags": [
+        "WALL",
+        "EXPLOSIVE-MIX",
+        "TIMED"
+      ],
+      "why": "an explosive wall in the water; the cycle decides when you can step around it; cleared later by the green ! (bracket +3)",
+      "evidence": "F3 p074R zoom; C2 bracket",
+      "confidence": "high"
+    },
+    {
+      "id": "C2",
+      "section": "S2",
+      "order": 8,
+      "where": "top of the stairs",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "skull-pad-after"
+      ],
+      "tags": [
+        "CHECKPOINT",
+        "ROUTE-SPLIT"
+      ],
+      "why": "the skull pad (death route) sits right after this checkpoint",
+      "evidence": "F3 p074R '44コ(48コ)'",
+      "confidence": "high"
+    },
+    {
+      "id": "B-a",
+      "section": "BONUS",
+      "order": 1,
+      "where": "high above the start",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single steel !",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "double-jump",
+        "bounce"
+      ],
+      "relations": [
+        "materialises-bridge"
+      ],
+      "tags": [
+        "SWITCH",
+        "HIGH",
+        "TOOL",
+        "BONUS"
+      ],
+      "why": "materialises the 8-outline bridge; reached with a crouch high-jump / double jump from the low ? (F3 hint)",
+      "evidence": "F3 p080L zoom; P3 p039L s112-113",
+      "confidence": "high"
+    },
+    {
+      "id": "B-b",
+      "section": "BONUS",
+      "order": 2,
+      "where": "the outline bridge over the first gap",
+      "composition": {
+        "question": 3,
+        "outline": 8
+      },
+      "count": 3,
+      "arrangement": "two ? resting on outline positions, one ? hanging below the row; 8 outlines (footing, not counted)",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "bounce",
+        "switch",
+        "jump"
+      ],
+      "relations": [
+        "low-?-is-first-step"
+      ],
+      "tags": [
+        "BRIDGE",
+        "OUTLINE",
+        "SWITCH",
+        "TOOL",
+        "BONUS"
+      ],
+      "why": "the low ? under the outlines is the first stepping stone; the bridge carries the other two",
+      "evidence": "F3 p080L zoom; P3 p039L s112-113",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "BONUS",
+      "order": 3,
+      "where": "platform after the bridge",
+      "composition": {
+        "wood": 2,
+        "question": 1
+      },
+      "count": 3,
+      "arrangement": "W W with a ? on the left W",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID",
+        "BONUS"
+      ],
+      "why": "safe deposit after the bridge",
+      "evidence": "F3 p080L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-d",
+      "section": "BONUS",
+      "order": 4,
+      "where": "floating over the gap between raised steps",
+      "composition": {
+        "wood": 2,
+        "question": 2
+      },
+      "count": 4,
+      "arrangement": "2x2: W W over ? ?",
+      "stackHeight": 2,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "stepping-stones"
+      ],
+      "tags": [
+        "HIGH",
+        "GRID",
+        "STEPPING",
+        "BONUS"
+      ],
+      "why": "floating crates used as stepping stones; adjust each jump with left/right (F3 hint)",
+      "evidence": "F3 p080L zoom; F3 bonus hint",
+      "confidence": "high"
+    },
+    {
+      "id": "B-e",
+      "section": "BONUS",
+      "order": 5,
+      "where": "two floating ? and a high steel !",
+      "composition": {
+        "question": 2,
+        "switch": 1
+      },
+      "count": 2,
+      "arrangement": "diagonal pair + switch above",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "double-jump",
+        "backtrack"
+      ],
+      "relations": [
+        "switch-2"
+      ],
+      "tags": [
+        "FLOAT-LINE",
+        "SWITCH",
+        "BONUS"
+      ],
+      "why": "jump box to box to the far side, return and high-jump the ! (P3 s115); the ! fills the B-g/B-h outlines",
+      "evidence": "F3 p080L zoom; P3 p039R s115",
+      "confidence": "high"
+    },
+    {
+      "id": "B-f",
+      "section": "BONUS",
+      "order": 6,
+      "where": "below platform level",
+      "composition": {
+        "question": 2,
+        "striped": 2
+      },
+      "count": 4,
+      "arrangement": "2x2: ? ? over striped striped",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "bounce",
+        "striped"
+      ],
+      "relations": [],
+      "tags": [
+        "LOW",
+        "STACK",
+        "REWARD",
+        "BONUS"
+      ],
+      "why": "striped crates pay per bounce and break on the fifth ('count to five' in P3)",
+      "evidence": "F3 p080L zoom; P3 p039R s114 (HUD 13/25)",
+      "confidence": "high"
+    },
+    {
+      "id": "B-g",
+      "section": "BONUS",
+      "order": 7,
+      "where": "over the last gap",
+      "composition": {
+        "wood": 3,
+        "life": 1,
+        "nitro": 4
+      },
+      "count": 8,
+      "arrangement": "W, W, 1UP, W each under an outline that becomes a Nitro",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "double-jump",
+        "spin"
+      ],
+      "relations": [
+        "explosive-lid",
+        "cleared-by-B-h"
+      ],
+      "tags": [
+        "OUTLINE",
+        "EXPLOSIVE-MIX",
+        "CHAIN",
+        "SUPPORT-ORDER",
+        "LIFE",
+        "BONUS"
+      ],
+      "why": "switch 2 turns the outlines into Nitros sitting on the reward crates: the rewards are sealed under explosives; jump over (double jump + tornado spin)",
+      "evidence": "F3 p080L zoom; P3 p039R s116 (HUD 20/25)",
+      "confidence": "high"
+    },
+    {
+      "id": "B-h",
+      "section": "BONUS",
+      "order": 8,
+      "where": "final platform",
+      "composition": {
+        "tnt": 1
+      },
+      "count": 1,
+      "arrangement": "single (from an outline)",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "key-to-B-g"
+      ],
+      "tags": [
+        "CHAIN",
+        "TOOL",
+        "BONUS"
+      ],
+      "why": "stomp it and step off: the blast chains through the Nitros and breaks the crates under them",
+      "evidence": "F3 p080L zoom; P3 p039R s117",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "right side of the first channel",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single steel !",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "materialises-rest-blocks"
+      ],
+      "tags": [
+        "SWITCH",
+        "TOOL"
+      ],
+      "why": "materialises blocks ahead so you can rest mid-channel (callout 5); TT skips it (TA5)",
+      "evidence": "F3 p075L zoom; callout 5",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "stair landing",
+      "composition": {
+        "question": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "2-stack: ? on W",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "dry-land"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "TIME-TRIAL"
+      ],
+      "why": "dry reward after the long channel; TT target 1:10:00",
+      "evidence": "F3 p075L zoom",
+      "confidence": "high",
+      "ttBadges": "1, 1"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "same landing, lower bubble",
+      "composition": {
+        "wood": 1,
+        "question": 1
+      },
+      "count": 2,
+      "arrangement": "2-stack: W on ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "dry-land"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "TIME-TRIAL"
+      ],
+      "why": "mirror of S3-b",
+      "evidence": "F3 p075L zoom; P3 p038L s96",
+      "confidence": "high",
+      "ttBadges": "? = 1"
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "the C3 stairs",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "row of three",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "TT-third-mask"
+      ],
+      "tags": [
+        "ON-PATH",
+        "ROW",
+        "TIME-TRIAL",
+        "AKU"
+      ],
+      "why": "in TT the middle crate is the third mask, timed so the water is lowest when you turn invincible",
+      "evidence": "F3 p075R zoom; P3 p038L s98; F3 p110R fr. 24",
+      "confidence": "high",
+      "ttBadges": "middle W = A"
+    },
+    {
+      "id": "C3",
+      "section": "S3",
+      "order": 5,
+      "where": "top of the C3 stairs",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "start of the longest section",
+      "evidence": "F3 p075R '52コ(56コ)'",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "low in the channel at the red disc",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single steel !",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "builds-refuge"
+      ],
+      "tags": [
+        "SWITCH",
+        "TOOL"
+      ],
+      "why": "builds the steel refuge used before S4-c (P3 s99 'already triggered the ! above')",
+      "evidence": "F3 p075R zoom; P3 p038R s99",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "right of the shield researcher",
+      "composition": {
+        "nitro": 2
+      },
+      "count": 2,
+      "arrangement": "pair side by side",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "slide"
+      ],
+      "relations": [
+        "shield-researcher"
+      ],
+      "tags": [
+        "PAIR",
+        "EXPLOSIVE-MIX",
+        "ENEMY-LINK"
+      ],
+      "why": "lure the researcher to the left wall and slide him so a chain explosion can't reach you (callout 7)",
+      "evidence": "F3 p075R zoom; callout 7; P3 s99",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "floating right, beside the steel refuge",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "after-refuge"
+      ],
+      "tags": [
+        "BACKTRACK",
+        "HIGH",
+        "SINGLE",
+        "TIME-TRIAL"
+      ],
+      "why": "placed past the refuge so the safe play is reach safety, then return (P3 s100)",
+      "evidence": "F3 p075R zoom; P3 p038R s100",
+      "confidence": "high",
+      "ttBadges": "1"
+    },
+    {
+      "id": "S4-d",
+      "section": "S4",
+      "order": 4,
+      "where": "channel bend with a steel block, upper left",
+      "composition": {
+        "question": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "timed"
+      ],
+      "relations": [
+        "refuge-beside"
+      ],
+      "tags": [
+        "DETOUR",
+        "PAIR",
+        "TIMED"
+      ],
+      "why": "off-line pair at the corner",
+      "evidence": "F3 p075R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-e",
+      "section": "S4",
+      "order": 5,
+      "where": "spiked-mummy channel",
+      "composition": {
+        "nitro": 4
+      },
+      "count": 4,
+      "arrangement": "diagonal line",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [
+        "mummy-patrol"
+      ],
+      "tags": [
+        "WALL",
+        "EXPLOSIVE-MIX",
+        "TIMED",
+        "ENEMY-LINK"
+      ],
+      "why": "a Nitro fence with a patrolling mummy",
+      "evidence": "F3 p075R zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-f",
+      "section": "S4",
+      "order": 6,
+      "where": "right of the mummy",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "beyond-nitro-fence"
+      ],
+      "tags": [
+        "DETOUR",
+        "PAIR"
+      ],
+      "why": "reward on the far side of the Nitro fence",
+      "evidence": "F3 p075R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-g",
+      "section": "S4",
+      "order": 7,
+      "where": "top of the next stairs",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "dry pair",
+      "evidence": "F3 p075R zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-h",
+      "section": "S4",
+      "order": 8,
+      "where": "channel with a brown block, right",
+      "composition": {
+        "question": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "TIMED"
+      ],
+      "why": "wet pair",
+      "evidence": "F3 p075R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-i",
+      "section": "S4",
+      "order": 9,
+      "where": "bend before the floating discs, left",
+      "composition": {
+        "question": 1,
+        "tnt": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "last-bend"
+      ],
+      "tags": [
+        "EDGE-BAIT",
+        "PAIR",
+        "EXPLOSIVE-MIX",
+        "COUNT-TRAP"
+      ],
+      "why": "the classic last-minute miss (P3: make sure to jump on the TNT before moving on); TT uses its blast as the cue to big-jump the hole",
+      "evidence": "F3 p075R zoom; P3 p038R s102; F3 p110R fr. 30",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-j",
+      "section": "S4",
+      "order": 10,
+      "where": "scarab + block area",
+      "composition": {
+        "nitro": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "PAIR",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "last Nitros before the switch",
+      "evidence": "F3 p075R zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-k",
+      "section": "S4",
+      "order": 11,
+      "where": "right of the path near the goal stairs",
+      "composition": {
+        "question": 1,
+        "wood": 2
+      },
+      "count": 3,
+      "arrangement": "trio",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "ROW",
+        "TIME-TRIAL"
+      ],
+      "why": "final deposit",
+      "evidence": "F3 p075R zoom",
+      "confidence": "medium",
+      "ttBadges": "? = 2"
+    },
+    {
+      "id": "S4-l",
+      "section": "S4",
+      "order": 12,
+      "where": "beside the goal stairs",
+      "composition": {
+        "switchGreen": 1
+      },
+      "count": 0,
+      "arrangement": "single block",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "detonates-22-nitros"
+      ],
+      "tags": [
+        "NITRO-SWITCH",
+        "COUNT-TRAP"
+      ],
+      "why": "detonates all 22 non-bonus Nitros, including the skull course's 10",
+      "evidence": "F3 p075R zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "D-a",
+      "section": "SKULL",
+      "order": 1,
+      "where": "first red disc, low",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single steel !",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "death-route"
+      ],
+      "relations": [
+        "builds-safe-zone"
+      ],
+      "tags": [
+        "SWITCH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "each ! builds a safe zone ahead; press them in order (callout A)",
+      "evidence": "F3 p076L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "D-b",
+      "section": "SKULL",
+      "order": 2,
+      "where": "channel after the first disc",
+      "composition": {
+        "nitro": 4
+      },
+      "count": 4,
+      "arrangement": "3 in a row + 1 above-right",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "death-route"
+      ],
+      "relations": [
+        "no-death-run"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "ROUTE-SPLIT",
+        "BLUE-GEM"
+      ],
+      "why": "Nitro walls in water threaded on the water cycle; trivial with the bazooka on a return visit",
+      "evidence": "F3 p076L zoom; P3 p038R s104-105",
+      "confidence": "high"
+    },
+    {
+      "id": "D-c",
+      "section": "SKULL",
+      "order": 3,
+      "where": "second red disc, high",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single steel !",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "death-route"
+      ],
+      "relations": [
+        "builds-safe-zone"
+      ],
+      "tags": [
+        "SWITCH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "second safe zone",
+      "evidence": "F3 p076L zoom; P3 s104",
+      "confidence": "high"
+    },
+    {
+      "id": "D-d",
+      "section": "SKULL",
+      "order": 4,
+      "where": "above the path before the wall footholds",
+      "composition": {
+        "nitro": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "death-route"
+      ],
+      "relations": [
+        "before-wall-footholds"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "ROUTE-SPLIT"
+      ],
+      "why": "a lone Nitro before the foothold climb (keep to the left wall, callout C)",
+      "evidence": "F3 p076L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "D-e",
+      "section": "SKULL",
+      "order": 5,
+      "where": "last channel before the gear door",
+      "composition": {
+        "nitro": 5
+      },
+      "count": 5,
+      "arrangement": "quincunx across the channel",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "death-route"
+      ],
+      "relations": [
+        "wall-gaps"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "CHAIN",
+        "ROUTE-SPLIT"
+      ],
+      "why": "one Nitro sets off the bunch (P3 s107); the gaps by both walls are the intended line (callout D)",
+      "evidence": "F3 p076R zoom; P3 p039L s107",
+      "confidence": "high"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "start",
+      "kind": "scarab beetle",
+      "count": 1,
+      "where": "start platform",
+      "role": "telegraphs the water cycle; time-trial cue (TA1)"
+    },
+    {
+      "section": "S1",
+      "kind": "spiked mummy",
+      "count": 1,
+      "where": "raised path after S1-b",
+      "role": "patrols beside S1-c"
+    },
+    {
+      "section": "S1",
+      "kind": "shield researcher",
+      "count": 1,
+      "where": "stairs before C1",
+      "role": "cannot be spun; slide on land, double jump + spin in water (P3 s89)"
+    },
+    {
+      "section": "S2",
+      "kind": "spiked mummy + shield researcher",
+      "count": 2,
+      "where": "before S2-e and at the hole",
+      "role": "callout 4: a double jump at the shield bounces you into the hole"
+    },
+    {
+      "section": "S4",
+      "kind": "shield researcher",
+      "count": 1,
+      "where": "beside S4-b's Nitros",
+      "role": "lure him to the left wall (callout 7)"
+    },
+    {
+      "section": "S4",
+      "kind": "spiked mummy",
+      "count": 1,
+      "where": "S4-e Nitro line",
+      "role": "patrols the Nitro fence"
+    },
+    {
+      "section": "SKULL",
+      "kind": "spiked mummy + shield researcher",
+      "count": 2,
+      "where": "mid course",
+      "role": "ignore the mummies, slide the researcher (callout B)"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "all",
+      "kind": "rising/falling water (lethal above head height)",
+      "where": "every channel",
+      "crates": [
+        "S1-a",
+        "S1-d",
+        "S2-b",
+        "S2-g",
+        "S4-d",
+        "S4-h"
+      ]
+    },
+    {
+      "section": "S2",
+      "kind": "hole guarded by a shield researcher",
+      "where": "before S2-f",
+      "crates": [
+        "S2-e",
+        "S2-f"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "sliding wall footholds over water",
+      "where": "after the gear door",
+      "crates": []
+    },
+    {
+      "section": "S4",
+      "kind": "long flood zone with floating discs",
+      "where": "before the goal",
+      "crates": [
+        "S4-i",
+        "S4-j",
+        "S4-k"
+      ]
+    },
+    {
+      "section": "BONUS",
+      "kind": "pits bridged by outlines and floating crates",
+      "where": "whole room",
+      "crates": [
+        "B-b",
+        "B-d",
+        "B-g"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-d"
+      ],
+      "summary": "TNT stepping stones in a flooding channel",
+      "solution": "at low water stomp, use the bounce, retreat to dry ground before 3 s",
+      "wrongOrder": "standing on a lit TNT while waiting for the water",
+      "loss": "a life (and the blue-gem run)"
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S2-a",
+        "S2-f"
+      ],
+      "summary": "protection and lives placed on the two steel refuges",
+      "solution": "climb the refuge at the right moment of the cycle",
+      "wrongOrder": "wading past at high water",
+      "loss": "the Aku / 1UP and possibly a life"
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "B-e",
+        "B-g",
+        "B-h"
+      ],
+      "summary": "switch turns outlines into Nitros on top of reward crates",
+      "solution": "hit the high !, jump over the Nitros, stomp the end TNT and wait",
+      "wrongOrder": "attacking the reward crates under the Nitros",
+      "loss": "a life and the bonus count"
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "S4-a",
+        "S4-c"
+      ],
+      "summary": "crate placed past a refuge",
+      "solution": "reach the steel refuge, then come back for the W",
+      "wrongOrder": "grabbing it during the rise",
+      "loss": "1 box or a life"
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S4-i",
+        "S4-l"
+      ],
+      "summary": "exit count traps: ?+TNT at the last bend, green ! by the stairs",
+      "solution": "stomp the TNT, spin the green !",
+      "wrongOrder": "running for the exit",
+      "loss": "2 boxes + 22 Nitros"
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "D-a",
+        "D-b",
+        "D-c",
+        "D-d",
+        "D-e"
+      ],
+      "summary": "blue gem: no deaths to the skull pad, then a crate-less Nitro gauntlet",
+      "solution": "press both ! in order, thread the Nitros by the walls; bazooka on a return visit",
+      "wrongOrder": "dying before C2 (the pad never appears)",
+      "loss": "the blue gem; the all-box gem does not need this route"
+    }
+  ],
+  "observations": [
+    "The flood is the metronome: wet clusters are never more than 2 crates, so one low-water window buys one cluster; dry crates are free.",
+    "Refuges carry rewards: the Aku crate stands on a steel block, a 1UP floats above a steel stack, a W[1] waits past a later refuge.",
+    "TNT appears as footing (stepping stones in water) and as a count trap, never as a path blocker.",
+    "Nitros form walls in the water and partner with enemies (column, diagonal line with a mummy, pair beside a shield researcher).",
+    "The death route holds no collectible crates, only 10 Nitros that still count via the main-route green !: the all-box goal never forces the hard route.",
+    "Checkpoint spacing: short teaching section (8), bonus-heavy C2 (44), close C3 (52), then the longest and densest section without a checkpoint.",
+    "The bonus holds 25 of 88 boxes and teaches two outline uses: footing bridge (switch 1) and explosive lid (switch 2).",
+    "Time-trial masks freeze the hazard: invincibility stops the water rising (TT fr. 24).",
+    "The level is built for two passes: the crystal without the bazooka, the skull course easy with it."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen",
+      "notes": "zig-zag of walled water channels and tile stairs, right-angle turns"
+    },
+    {
+      "section": "S2",
+      "mode": "into-screen",
+      "notes": "as S1; refuges in the channels; a guarded hole"
+    },
+    {
+      "section": "S3",
+      "mode": "into-screen",
+      "notes": "switch-built rest blocks and sliding wall footholds"
+    },
+    {
+      "section": "S4",
+      "mode": "into-screen",
+      "notes": "the longest flood zone, floating discs to the goal stairs"
+    },
+    {
+      "section": "SKULL",
+      "mode": "into-screen",
+      "notes": "death route after C2: same channel grammar with Nitros and sliding footholds"
+    },
+    {
+      "section": "BONUS",
+      "mode": "side-scroll",
+      "notes": "side view: outline bridge, floating-crate stepping stones, explosive lid"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "start tile path (stopwatch) with a scarab",
+      "size": "≈3 wide",
+      "heightDelta": "0",
+      "edges": "low side walls",
+      "behaviour": "static",
+      "roles": [
+        "PERCH",
+        "TEACH"
+      ],
+      "why": "The first thing shown is the gauge: watch the scarab before stepping into water (TA1, P3 s86)",
+      "evidence": "F3 p074L; TA1; P3 s86",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "gear handle switch and door (two tall blocks)",
+      "size": "door ≈2 wide",
+      "heightDelta": "0",
+      "edges": "walled",
+      "behaviour": "door opens when the handle is spun, then closes again (callout 1); move: spin the handle, pass at once",
+      "roles": [
+        "CHOKE",
+        "TIMING-STEP"
+      ],
+      "why": "A second timer stacked on the water: open the door as the water starts falling (TA5 logic; TT 01)",
+      "evidence": "F3 p074L callout 1; F3 p110R 01",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "floating red octagon disc",
+      "size": "≈1.5–2",
+      "heightDelta": "+0.5 (rides the water)",
+      "edges": "open",
+      "behaviour": "floats on the water",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "Callout 2: floating footholds are safe zones on the water — climb on when it rises",
+      "evidence": "F3 p074L callout 2",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "stairs (3 steps) to a raised dry tile path",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static; move: three small hops (TT 06: every staircase)",
+      "roles": [
+        "REST"
+      ],
+      "why": "Dry ground after every channel: crates here cost no window",
+      "evidence": "F3 p074L; F3 p110R 06",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "stairs to the C1 landing (bonus pad here, shield researcher at the top)",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "BONUS-PAD"
+      ],
+      "why": "A gatekeeper at the top of the stairs guards the checkpoint",
+      "evidence": "F3 p074R",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "steel block (refuge) in the channel, Aku on top",
+      "size": "≈1.5 × 1.5, ≈1 high",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static; move: climb at low water, or double jump without touching it (TT 10); TA3: rebound off the Aku box while the water is high",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "Callout 3: also a safe zone; protection sits on the refuge",
+      "evidence": "F3 p074R callout 3; P3 s90",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "stairs with a landing (S2-c striped sandwich, S2-d)",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "A safe place to spend time bouncing while the water cycles",
+      "evidence": "F3 p074R",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "steel-crate stack (refuge) right of the hole, 1UP floating above",
+      "size": "≈2 × 2, ≈1–2 high",
+      "heightDelta": "+1 to +2",
+      "edges": "open",
+      "behaviour": "static; move: TT 16–17: high jump → double jump from the foothold for the 2-s crate, landing at the stairs before the water rises",
+      "roles": [
+        "SAFE-ISLAND",
+        "PERCH"
+      ],
+      "why": "P3 s92: \"take refuge on this stack … and discover another hidden box\" — the refuge pays for being found",
+      "evidence": "F3 p074R; P3 s92; F3 p110R 16–17",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "stairs to the C2 landing; the skull pad follows",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "The death route's entrance sits right after the checkpoint",
+      "evidence": "F3 p074R; P3 s93",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "channel head with a handle switch (left wall) and a steel ! block (right)",
+      "size": "≈3–4 wide",
+      "heightDelta": "0",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "Callout 5: the right-hand ! materialises blocks ahead so you can rest midway; TA5 skips it and uses the left handle on the falling water",
+      "evidence": "F3 p075L callout 5, TA5",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "switch-built steel blocks (3–4) in the channel",
+      "size": "≈1–1.5 each",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "appear after the ! is pressed",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "P3 s94: \"a good place to study the next puzzle\" — a rest stop placed in view of the sliding blocks",
+      "evidence": "F3 p075L; P3 s94",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-c",
+      "section": "S3",
+      "shape": "stairs with a landing (S3-b, S3-c); crystal to the right",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "Dry pay-off after the long channel",
+      "evidence": "F3 p075L; P3 s96",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S3-d",
+      "section": "S3",
+      "shape": "sliding wall footholds (brown blocks) in the second channel",
+      "size": "≈1.5 each",
+      "heightDelta": "+1 when out",
+      "edges": "from the walls",
+      "behaviour": "slide out of and back into the walls on a cycle; move: TT 21–23: as the footholds start retracting, double jump + tornado spin (three presses) along the right wall; a foothold appears at the landing",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "A second clock coupled to the water: the footholds are usable only in some water phases",
+      "evidence": "F3 p075L; P3 s95–s97; F3 p110R 21–23",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-e",
+      "section": "S3",
+      "shape": "stairs to the C3 landing",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "C3 right after the sliding-foothold test",
+      "evidence": "F3 p075R; P3 s98",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "switch-built steel refuge (from S4-a's !)",
+      "size": "≈2 × 2",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "appears after the ! is pressed",
+      "roles": [
+        "SAFE-ISLAND",
+        "PERCH"
+      ],
+      "why": "P3 s100: \"after catching your breath on the steel crates, come back for the remaining boxes\"",
+      "evidence": "F3 p075R; P3 s100",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-b",
+      "section": "S4",
+      "shape": "channel bend with a steel block (S4-d)",
+      "size": "≈3–4 wide",
+      "heightDelta": "0",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "A refuge at the corner",
+      "evidence": "F3 p075R",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-c",
+      "section": "S4",
+      "shape": "spiked-mummy channel with the diagonal Nitro line (S4-e)",
+      "size": "≈3–4 wide × ≈6",
+      "heightDelta": "0",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "A Nitro fence with a patrolling mummy narrows the window's lane",
+      "evidence": "F3 p075R",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-d",
+      "section": "S4",
+      "shape": "stairs (S4-g) and a channel with a sliding brown block (S4-h)",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST",
+        "TIMING-STEP"
+      ],
+      "why": "Dry stairs, then a foothold channel",
+      "evidence": "F3 p075R",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-e",
+      "section": "S4",
+      "shape": "floating red discs (≈3) across the final flood",
+      "size": "≈1.5–2 each",
+      "heightDelta": "+0.5 (ride the water)",
+      "edges": "open",
+      "behaviour": "floats on the water",
+      "roles": [
+        "SAFE-ISLAND",
+        "STEPPING"
+      ],
+      "why": "Disc-to-disc with waits: the level's last exam of patience",
+      "evidence": "F3 p075R callout 8",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S4-f",
+      "section": "S4",
+      "shape": "goal stairs and pad (green ! beside)",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "Exit on dry ground",
+      "evidence": "F3 p075R",
+      "confidence": "high"
+    },
+    {
+      "id": "P-D-a",
+      "section": "SKULL",
+      "shape": "skull pad (appears only if you reached it without dying)",
+      "size": "≈1.5",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "conditional",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "P3 s93: \"you must have died somewhere back there; otherwise this would be filled in\"",
+      "evidence": "F3 p074L; P3 s93",
+      "confidence": "high"
+    },
+    {
+      "id": "P-D-b",
+      "section": "SKULL",
+      "shape": "zig-zag channel with blocks and a red disc; the last door opens by a handle near the left wall",
+      "size": "≈3 wide",
+      "heightDelta": "0",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "Callout E: the last door also needs a handle switch; P3 s110: \"dead end? look for the gear on the floor\"",
+      "evidence": "F3 p076R callout E; P3 s110",
+      "confidence": "high"
+    },
+    {
+      "id": "P-D-c",
+      "section": "SKULL",
+      "shape": "stairs to the gem pad (own goal)",
+      "size": "≈3 wide",
+      "heightDelta": "≈+1.5",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "The skill route ends with the blue gem",
+      "evidence": "F3 p076R",
+      "confidence": "high"
+    },
+    {
+      "id": "P-B-a",
+      "section": "BONUS",
+      "shape": "start pad; high steel ! above it",
+      "size": "≈2",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "F3 hint: a high ! is reached with a crouch (high) jump",
+      "evidence": "F3 p080L",
+      "confidence": "high"
+    },
+    {
+      "id": "P-B-b",
+      "section": "BONUS",
+      "shape": "platform with B-c, then a raised step",
+      "size": "≈4",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "—",
+      "evidence": "F3 p080L",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-c",
+      "section": "BONUS",
+      "shape": "platform with the floating diagonal pair B-e and a high !; B-f sits below platform level",
+      "size": "≈5",
+      "heightDelta": "0 / −1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "Box-to-box, back, then a high jump to the ! (P3 s115)",
+      "evidence": "F3 p080L; P3 s115",
+      "confidence": "high"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "lethal water (cyclic): first channel, ≈3–4 u across",
+      "width": "≈6–8 long (waded in the low window, not jumped)",
+      "heightDelta": "0 (floor) / water level varies",
+      "landing": "stairs",
+      "lethal": true,
+      "runUp": "door threshold",
+      "move": [
+        "plain"
+      ],
+      "coupling": "water cycle (scarab cue)",
+      "failure": "death if the water is over your head; otherwise wade",
+      "nearby": [
+        "S1-a",
+        "P-S1-c"
+      ],
+      "why": "The first channel teaches the window with one island and two wet crates",
+      "evidence": "F3 p074L; callout 2; F3 p110R 02–04",
+      "confidence": "high"
+    },
+    {
+      "id": "G-S1-b",
+      "section": "S1",
+      "kind": "lethal water (cyclic): second channel with two TNT stepping stones (S1-d)",
+      "width": "channel ≈5–6 long; hops ≈2–3 (bank → TNT → TNT → stairs)",
+      "heightDelta": "0",
+      "landing": "stairs to C1",
+      "lethal": true,
+      "runUp": "door threshold",
+      "move": [
+        "crate-bounce",
+        "double",
+        "spin-extended"
+      ],
+      "coupling": "water cycle and the TNT 3-s fuse",
+      "failure": "death (water or blast)",
+      "nearby": [
+        "S1-d",
+        "E-S1-c"
+      ],
+      "why": "Two clocks at once: hop the TNTs at low water and retreat (P3 s87), or chain through at high water (TA2)",
+      "evidence": "F3 p074L; P3 s87; F3 p074R TA2",
+      "confidence": "high"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "lethal water (cyclic): channel with a scarab and a steel refuge",
+      "width": "≈6–8 long (waded; steel refuge mid-way)",
+      "heightDelta": "0",
+      "landing": "steel block / stairs",
+      "lethal": true,
+      "runUp": "door threshold",
+      "move": [
+        "plain",
+        "double"
+      ],
+      "coupling": "water cycle",
+      "failure": "death",
+      "nearby": [
+        "S2-a",
+        "S2-b"
+      ],
+      "why": "A refuge mid-channel makes the window two short halves",
+      "evidence": "F3 p074R",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S2-b",
+      "section": "S2",
+      "kind": "floor hole with a shield researcher on its far side (callout 4)",
+      "width": "≈1–2 (\"a small jump over the hole\")",
+      "heightDelta": "0",
+      "landing": "narrow ground in front of the researcher",
+      "lethal": true,
+      "runUp": "≈2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "shield researcher bounces a high approach back into the hole",
+      "failure": "death",
+      "nearby": [
+        "S2-e",
+        "E-S2-c"
+      ],
+      "why": "Callout 4: double-jumping at him gets you bounced into the hole; hop small, then slide him",
+      "evidence": "F3 p074R callout 4; P3 s91",
+      "confidence": "high"
+    },
+    {
+      "id": "G-S2-c",
+      "section": "S2",
+      "kind": "lethal water (cyclic): channel with a scarab and a three-Nitro column (S2-g)",
+      "width": "≈5–6 long (waded)",
+      "heightDelta": "0",
+      "landing": "stairs to C2",
+      "lethal": true,
+      "runUp": "stack",
+      "move": [
+        "plain"
+      ],
+      "coupling": "water cycle; Nitro column fixes where you can wade",
+      "failure": "death (water or Nitro)",
+      "nearby": [
+        "S2-g"
+      ],
+      "why": "An explosive wall decides your line inside the window",
+      "evidence": "F3 p074R",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "lethal water (cyclic): long channel with switch-built steel blocks and a sliding wall block",
+      "width": "≈8–10 long (waded; built blocks split it)",
+      "heightDelta": "0",
+      "landing": "stairs",
+      "lethal": true,
+      "runUp": "door threshold",
+      "move": [
+        "plain",
+        "plain"
+      ],
+      "coupling": "water cycle; foothold cycle",
+      "failure": "death",
+      "nearby": [
+        "S3-a"
+      ],
+      "why": "The longest channel so far, split by blocks you build yourself",
+      "evidence": "F3 p075L; P3 s94–s95",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-b",
+      "section": "S3",
+      "kind": "deep channel crossed on the sliding footholds, shield researcher at the far end",
+      "width": "≈5–6",
+      "heightDelta": "0",
+      "landing": "red disc / stairs",
+      "lethal": true,
+      "runUp": "stairs",
+      "move": [
+        "double",
+        "spin-extended",
+        "enemy-bounce"
+      ],
+      "coupling": "foothold cycle and water cycle; researcher at the end",
+      "failure": "death",
+      "nearby": [
+        "E-S3-a"
+      ],
+      "why": "Callout 6: once the water starts falling, keep going to the researcher's spot without stopping",
+      "evidence": "F3 p075L callout 6; P3 s96–s97; F3 p110R 21–23",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "lethal water (cyclic): channel with a red disc, a low steel ! and two Nitros beside a shield researcher",
+      "width": "≈6 long (waded)",
+      "heightDelta": "0",
+      "landing": "switch-built steel refuge",
+      "lethal": true,
+      "runUp": "stairs",
+      "move": [
+        "plain",
+        "held/high"
+      ],
+      "coupling": "water cycle; the researcher's charge can set off the Nitros",
+      "failure": "death",
+      "nearby": [
+        "S4-a",
+        "S4-b",
+        "E-S4-a"
+      ],
+      "why": "Callout 7: lure him to the left wall and slide him so a Nitro chain cannot reach you",
+      "evidence": "F3 p075R callout 7; P3 s99",
+      "confidence": "high"
+    },
+    {
+      "id": "G-S4-b",
+      "section": "S4",
+      "kind": "floor hole at the S4-i bend",
+      "width": "≈2–3",
+      "heightDelta": "0",
+      "landing": "flood zone",
+      "lethal": true,
+      "runUp": "bend",
+      "move": [
+        "held/high"
+      ],
+      "coupling": "TNT S4-i beside it",
+      "failure": "death",
+      "nearby": [
+        "S4-i"
+      ],
+      "why": "TT 30: when the TNT breaks, big-jump right and shortcut the hole — the blast doubles as a start signal",
+      "evidence": "F3 p110R 30; F3 p075R",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-c",
+      "section": "S4",
+      "kind": "lethal water (cyclic): the long final flood zone with ≈3 floating red discs",
+      "width": "zone ≈12–15 long; disc-to-disc jumps ≈3–4",
+      "heightDelta": "0",
+      "landing": "goal stairs",
+      "lethal": true,
+      "runUp": "bend",
+      "move": [
+        "plain",
+        "double",
+        "spin-extended"
+      ],
+      "coupling": "water cycle; discs as islands",
+      "failure": "death",
+      "nearby": [
+        "S4-j",
+        "S4-k"
+      ],
+      "why": "Callout 8: a very long rise-and-fall zone before the goal; don't force it — move to the next disc after the water drops",
+      "evidence": "F3 p075R callout 8, TA6; P3 s102",
+      "confidence": "high"
+    },
+    {
+      "id": "G-D-a",
+      "section": "SKULL",
+      "kind": "lethal water (cyclic): channel with two red discs, two steel ! (low then high) and four Nitros",
+      "width": "≈8 long (waded; discs and built blocks)",
+      "heightDelta": "0",
+      "landing": "switch-built safe zones",
+      "lethal": true,
+      "runUp": "pad",
+      "move": [
+        "plain",
+        "held/high"
+      ],
+      "coupling": "water cycle; switches in order",
+      "failure": "death",
+      "nearby": [
+        "D-a",
+        "D-b",
+        "D-c"
+      ],
+      "why": "Callout A: press the ! blocks in order, building safe zones as you go; P3 s104: usually time to reach both discs and both switches without waiting",
+      "evidence": "F3 p076L callout A; P3 s104",
+      "confidence": "high"
+    },
+    {
+      "id": "G-D-b",
+      "section": "SKULL",
+      "kind": "holes crossed on three sliding wall footholds",
+      "width": "≈4–5",
+      "heightDelta": "0",
+      "landing": "stairs",
+      "lethal": true,
+      "runUp": "steel block",
+      "move": [
+        "plain",
+        "plain",
+        "plain"
+      ],
+      "coupling": "foothold cycle",
+      "failure": "death",
+      "nearby": [
+        "D-d"
+      ],
+      "why": "Callout C: keep to the left wall and you will rarely fall into a hole; P3 s109: land on the first block just as it slides out",
+      "evidence": "F3 p076L callout C; P3 s108–s109",
+      "confidence": "high"
+    },
+    {
+      "id": "G-D-c",
+      "section": "SKULL",
+      "kind": "lethal water (cyclic): channel with a five-Nitro quincunx",
+      "width": "≈5 long (waded along a wall)",
+      "heightDelta": "0",
+      "landing": "blocks",
+      "lethal": true,
+      "runUp": "stairs",
+      "move": [
+        "plain"
+      ],
+      "coupling": "water cycle",
+      "failure": "death (water or chain blast)",
+      "nearby": [
+        "D-e"
+      ],
+      "why": "Callout D: there are gaps near both walls — the safe line hugs a wall; P3 s107: one Nitro sets off the bunch",
+      "evidence": "F3 p076R callout D; P3 s107",
+      "confidence": "high"
+    },
+    {
+      "id": "G-B-a",
+      "section": "BONUS",
+      "kind": "pit bridged by eight outline crates (materialised by the high !); a low ? hangs under the row",
+      "width": "≈8",
+      "heightDelta": "0",
+      "landing": "platform",
+      "lethal": false,
+      "runUp": "pad",
+      "move": [
+        "held/high",
+        "crate-bounce"
+      ],
+      "coupling": "bridge exists only after the !",
+      "failure": "bonus ends",
+      "nearby": [
+        "B-a",
+        "B-b"
+      ],
+      "why": "P3 s112: first jump on the lower ? under the shadow boxes — a crate as the first stepping stone",
+      "evidence": "F3 p080L; P3 s112–s113",
+      "confidence": "high"
+    },
+    {
+      "id": "G-B-b",
+      "section": "BONUS",
+      "kind": "gap between raised steps crossed on the floating 2×2 (B-d)",
+      "width": "≈3",
+      "heightDelta": "0",
+      "landing": "raised step",
+      "lethal": false,
+      "runUp": "step",
+      "move": [
+        "crate-bounce",
+        "plain"
+      ],
+      "coupling": "breaking a crate removes your footing",
+      "failure": "bonus ends",
+      "nearby": [
+        "B-d"
+      ],
+      "why": "F3 hint: on consecutive floating-crate jumps, adjust the distance with left/right",
+      "evidence": "F3 p080L hint",
+      "confidence": "high"
+    },
+    {
+      "id": "G-B-c",
+      "section": "BONUS",
+      "kind": "gap over the explosive-lidded crates (B-g)",
+      "width": "≈4",
+      "heightDelta": "0",
+      "landing": "final platform with the TNT outline",
+      "lethal": false,
+      "runUp": "platform",
+      "move": [
+        "double",
+        "spin-extended"
+      ],
+      "coupling": "Nitros on top of the reward crates",
+      "failure": "bonus ends",
+      "nearby": [
+        "B-g",
+        "B-h"
+      ],
+      "why": "P3 s116: double jump + tornado spin over the Nitros, then stomp the TNT",
+      "evidence": "F3 p080L; P3 s116–s117",
+      "confidence": "high"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": 2,
+      "moves": [
+        "held/high",
+        "plain"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "not visible",
+      "rest": "P-S1-d stairs",
+      "noStop": false,
+      "why": "TT: a held big jump from the water's edge stomps the 1-s crate, then one small hop reaches the stairs (02–03)",
+      "evidence": "F3 p110R 02–03"
+    },
+    {
+      "id": "J-S1-b",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "double",
+        "crate-bounce",
+        "spin-extended"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "≈2–3",
+      "rest": "P-S1-e stairs",
+      "noStop": true,
+      "why": "TA2: double jump to the right-hand TNT, bounce, tornado-spin on — the fuse forbids waiting",
+      "evidence": "F3 p074R TA2; P3 s87"
+    },
+    {
+      "id": "J-ALL-a",
+      "section": "S1, S2, S3, S4",
+      "count": 3,
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "—",
+      "rest": "top of each stair",
+      "noStop": false,
+      "why": "TT 06: every staircase in the stage is three small hops — a fixed rhythm between channels",
+      "evidence": "F3 p110R 06"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": 3,
+      "moves": [
+        "held/high",
+        "crate-bounce",
+        "spin-extended"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "not visible",
+      "rest": "beyond the shield researcher",
+      "noStop": true,
+      "why": "TT 12–14 (\"the hardest\"): big jump from the water's edge onto the masked crate, carry into the 1-s crate, tornado-spin left over the researcher",
+      "evidence": "F3 p110R 12–14"
+    },
+    {
+      "id": "J-S2-b",
+      "section": "S2",
+      "count": 2,
+      "moves": [
+        "held/high",
+        "double"
+      ],
+      "rhythm": "even",
+      "maxGap": "not visible",
+      "rest": "P-S2-d stairs",
+      "noStop": true,
+      "why": "TA4 / TT 16–17: high jump then double jump from the steel stack, landing at the stairs before the water rises",
+      "evidence": "F3 p074R TA4; F3 p110R 16–17"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": 3,
+      "moves": [
+        "double",
+        "spin-extended",
+        "enemy-bounce"
+      ],
+      "rhythm": "syncopated (foothold timing)",
+      "maxGap": "≈5–6",
+      "rest": "P-S3-e stairs",
+      "noStop": true,
+      "why": "TT 21–23: double jump + three tornado presses along the right wall onto a foothold as it appears, then bounce off the researcher",
+      "evidence": "F3 p110R 21–23"
+    },
+    {
+      "id": "J-S4-a",
+      "section": "S4",
+      "count": 3,
+      "moves": [
+        "running",
+        "double",
+        "spin-extended"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "disc gap ≈3–4",
+      "rest": "goal stairs",
+      "noStop": false,
+      "why": "TA6: dash to the 2nd disc, then a long double jump + tornado spin; the ordinary line waits on each disc (callout 8)",
+      "evidence": "F3 p075R TA6, callout 8"
+    },
+    {
+      "id": "J-D-a",
+      "section": "SKULL",
+      "count": 5,
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "syncopated (switches, footholds)",
+      "maxGap": "≈1.5",
+      "rest": "steel blocks",
+      "noStop": false,
+      "why": "Discs and switches in order (callout A), then footholds along the left wall (callout C)",
+      "evidence": "F3 p076L callouts A, C; P3 s104, s109"
+    },
+    {
+      "id": "J-B-a",
+      "section": "BONUS",
+      "count": 4,
+      "moves": [
+        "crate-bounce",
+        "plain",
+        "double",
+        "spin-extended"
+      ],
+      "rhythm": "even",
+      "maxGap": "≈4",
+      "rest": "final platform",
+      "noStop": false,
+      "why": "Floating crates as stepping stones (adjust with left/right), then a double jump + tornado over the Nitro lid",
+      "evidence": "F3 p080L hint; P3 s112–s117"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-ALL-a",
+      "section": "S1, S2, S3, S4, SKULL",
+      "kind": "rising and falling water",
+      "placement": "every channel (full width)",
+      "timing": "fixed cycle from the start (TT intro, TA1); visible level; scarabs crawl at low water and fly when it rises (F3 p067); invincibility stops the rise (TT 24)",
+      "counter": [
+        "wait-and-go on dry ground or refuges",
+        "move on the falling edge (callout 6)",
+        "invincibility (TT 24)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "refuges",
+        "discs",
+        "Nitros",
+        "TNT stepping stones"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "RHYTHM"
+      ],
+      "why": "The level-wide metronome: every channel is a gap one window wide",
+      "evidence": "F3 p074L header; F3 p110R intro, 24; F3 p067"
+    },
+    {
+      "id": "O-S1-a",
+      "section": "S1, S3, SKULL",
+      "kind": "gear handle switches + doors",
+      "placement": "before channels",
+      "timing": "door opens when the handle is spun and closes again soon (callout 1)",
+      "counter": [
+        "spin the handle as the water starts falling, then dash (TA5)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "water cycle"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "A door you open yourself, so you choose the phase",
+      "evidence": "F3 p074L callout 1; F3 p075L TA5; F3 p076R callout E"
+    },
+    {
+      "id": "O-S1-b",
+      "section": "S1",
+      "kind": "TNT stepping stones (3-s fuse)",
+      "placement": "on path, in the second channel",
+      "timing": "3 s after a stomp",
+      "counter": [
+        "stomp, use the bounce, retreat (P3 s87)",
+        "chain through (TA2)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "water cycle"
+      ],
+      "roles": [
+        "TEACH",
+        "TOOL"
+      ],
+      "why": "Two clocks taught at once",
+      "evidence": "P3 s87; F3 p074R TA2"
+    },
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "three-Nitro column in the water",
+      "placement": "on path (channel)",
+      "timing": "static; any touch detonates",
+      "counter": [
+        "go around at low water"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "water cycle",
+        "scarab"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "Fixes the wading line inside the window",
+      "evidence": "F3 p074R"
+    },
+    {
+      "id": "O-S3-a",
+      "section": "S3, S4, SKULL",
+      "kind": "sliding wall footholds (brown blocks)",
+      "placement": "from both walls, over deep water or holes",
+      "timing": "slide out and back on a cycle; coupled to the water (P3 s95)",
+      "counter": [
+        "wait-and-go",
+        "land as a block slides out (P3 s109)",
+        "keep to the left wall (callout C)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "water cycle",
+        "shield researcher"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEST"
+      ],
+      "why": "A second clock layered on the first",
+      "evidence": "P3 s95–s97, s108–s109; F3 p076L callout C; F3 p110R 21–23"
+    },
+    {
+      "id": "O-S4-a",
+      "section": "S4",
+      "kind": "Nitro pair beside a shield researcher",
+      "placement": "flank",
+      "timing": "static; his charge can set them off",
+      "counter": [
+        "lure him to the left wall and slide (callout 7)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "shield researcher",
+        "water cycle"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "Enemy and explosive coupled: the knock-back or the charge triggers the chain",
+      "evidence": "F3 p075R callout 7; P3 s99"
+    },
+    {
+      "id": "O-S4-b",
+      "section": "S4",
+      "kind": "diagonal line of four Nitros with a patrolling spiked mummy",
+      "placement": "across path (channel)",
+      "timing": "static Nitros; the mummy patrols",
+      "counter": [
+        "step through at low water",
+        "jump the mummy (head)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "spiked mummy",
+        "water cycle"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "A Nitro fence with a moving guard",
+      "evidence": "F3 p075R"
+    },
+    {
+      "id": "O-D-a",
+      "section": "SKULL",
+      "kind": "Nitro groups: row of 3 + 1, a single, a five-Nitro quincunx",
+      "placement": "across the channels",
+      "timing": "static; one detonates the bunch (P3 s107)",
+      "counter": [
+        "pass by the walls (callout D)",
+        "bazooka on a return visit"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "water cycle",
+        "discs",
+        "switch-built safe zones"
+      ],
+      "roles": [
+        "AREA-DENIAL",
+        "TEST"
+      ],
+      "why": "Skill route made of explosives that the all-box route never needs to touch",
+      "evidence": "F3 p076L–R; P3 s104–s107"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S1-a",
+      "section": "S1",
+      "kind": "scarab (スカラブーン)",
+      "archetype": "patrol-1D",
+      "behaviour": "walks a fixed beat on the start platform; at low water it crawls, when the water rises it flies up (F3 p067)",
+      "counter": [
+        "jump",
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "fails": [],
+      "placement": "start platform",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": true,
+      "why": "A living water gauge and the time-trial cue (TA1; TT 01: fire when it reaches the left edge and turns)",
+      "evidence": "F3 p067; F3 p074L TA1; F3 p110R 01; P3 s86",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S1-b",
+      "section": "S1",
+      "kind": "spiked mummy worker (トゲトゲミイラ作業員)",
+      "archetype": "patrol-1D",
+      "behaviour": "quick walker in a spiked coffin; attacks on its lower body fail (F3 p067)",
+      "counter": [
+        "double jump onto its head",
+        "fake it out and run past (P3 s88)"
+      ],
+      "fails": [
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "placement": "raised dry path after the first stairs",
+      "roles": [
+        "HURDLE",
+        "TEST"
+      ],
+      "firstAlone": true,
+      "why": "First met alone on dry ground, away from the water clock",
+      "evidence": "F3 p067; F3 p074L map; P3 s88",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S1-c",
+      "section": "S1",
+      "kind": "shield researcher (シールド研究員)",
+      "archetype": "shielded/armored",
+      "behaviour": "fast; attacking his upper body knocks Crash back toward the camera; he side-steps to block attempts to pass (F3 p067)",
+      "counter": [
+        "slide (then long-jump on at once, TT 07–08)"
+      ],
+      "fails": [
+        "spin",
+        "jump attacks",
+        "trying to slip past"
+      ],
+      "placement": "top of the stairs before C1",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": true,
+      "why": "Taught on dry stairs with nothing behind you, before he is paired with holes and Nitros",
+      "evidence": "F3 p067; F3 p074R; P3 s89; F3 p110R 07–08",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "scarab",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-a, in a channel",
+      "counter": [
+        "jump",
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "fails": [],
+      "placement": "channel with the steel refuge",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": false,
+      "why": "The gauge is repeated wherever the water matters",
+      "evidence": "F3 p074R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-b",
+      "section": "S2",
+      "kind": "spiked mummy worker",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-b",
+      "counter": [
+        "double jump onto its head",
+        "run past"
+      ],
+      "fails": [
+        "spin",
+        "slide"
+      ],
+      "placement": "on the stairs beside S2-e",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Guards a crate cluster on dry ground",
+      "evidence": "F3 p074R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-c",
+      "section": "S2",
+      "kind": "shield researcher",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-c, standing on the far side of a hole",
+      "counter": [
+        "small hop over the hole, then slide (callout 4)"
+      ],
+      "fails": [
+        "double-jumping at him (bounced into the hole)"
+      ],
+      "placement": "far side of the hole",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "The knock-back is turned into a fall",
+      "evidence": "F3 p074R callout 4; P3 s91",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S2-d",
+      "section": "S2",
+      "kind": "scarab",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "jump",
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "fails": [],
+      "placement": "Nitro-column channel",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": false,
+      "why": "Gauge beside the Nitro wall",
+      "evidence": "F3 p074R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-a",
+      "section": "S3",
+      "kind": "shield researcher",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-c, at the end of the sliding-foothold channel",
+      "counter": [
+        "jump over him (P3 s96)",
+        "slide",
+        "TT 23: bounce off him"
+      ],
+      "fails": [
+        "frontal attacks"
+      ],
+      "placement": "landing of the foothold run",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "Callout 6: keep moving until his spot once the water falls",
+      "evidence": "F3 p075L callout 6; P3 s96; F3 p110R 23",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-b",
+      "section": "S3",
+      "kind": "scarab",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "jump",
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "fails": [],
+      "placement": "channel before the C3 stairs",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": false,
+      "why": "Gauge before the checkpoint",
+      "evidence": "F3 p075L map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-a",
+      "section": "S4",
+      "kind": "shield researcher",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-c, beside two Nitros",
+      "counter": [
+        "lure to the left wall and slide (callout 7)",
+        "leap over (P3 s99)"
+      ],
+      "fails": [
+        "fighting next to the Nitros"
+      ],
+      "placement": "first S4 channel, flank of the Nitro pair",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "His charge becomes the detonator",
+      "evidence": "F3 p075R callout 7; P3 s99",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S4-b",
+      "section": "S4",
+      "kind": "spiked mummy worker",
+      "archetype": "patrol-1D",
+      "behaviour": "patrols along the diagonal Nitro line",
+      "counter": [
+        "double jump onto its head",
+        "time the pass"
+      ],
+      "fails": [
+        "spin",
+        "slide"
+      ],
+      "placement": "between hazards (Nitro line)",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "A moving guard on an explosive fence",
+      "evidence": "F3 p075R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-c",
+      "section": "S4",
+      "kind": "scarab",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "jump",
+        "spin",
+        "slide",
+        "body slam"
+      ],
+      "fails": [],
+      "placement": "near the last Nitro pair",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": false,
+      "why": "Gauge for the final flood",
+      "evidence": "F3 p075R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-D-a",
+      "section": "SKULL",
+      "kind": "spiked mummy worker",
+      "archetype": "patrol-1D",
+      "behaviour": "as E-S1-b",
+      "counter": [
+        "ignore it (callout B)"
+      ],
+      "fails": [
+        "stopping to fight"
+      ],
+      "placement": "channel after the second switch",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "On the no-death run the fight is not worth the water",
+      "evidence": "F3 p076L map; F3 p076R callout B",
+      "confidence": "high"
+    },
+    {
+      "id": "E-D-b",
+      "section": "SKULL",
+      "kind": "shield researcher",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-c",
+      "counter": [
+        "approach and slide; hurry or the water rises (callout B)"
+      ],
+      "fails": [
+        "frontal attacks"
+      ],
+      "placement": "channel before the wall footholds",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "Same gatekeeper, now on the clock",
+      "evidence": "F3 p076R callout B",
+      "confidence": "high"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "scarab gauge",
+        "handle + door",
+        "channel 1 with a disc and 2 wet crates",
+        "stairs",
+        "dry path (crates)",
+        "spiked mummy (alone)",
+        "?+Nitro",
+        "door",
+        "channel 2 with TNT stepping stones",
+        "stairs",
+        "shield researcher (alone, dry)",
+        "C1 (bonus pad)"
+      ],
+      "gaps": 2,
+      "enemies": 3,
+      "hazards": 3
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "door",
+        "channel + scarab",
+        "steel refuge with Aku",
+        "wet pair",
+        "stairs (striped sandwich)",
+        "spiked mummy",
+        "crate trio",
+        "hole guarded by a shield researcher",
+        "steel stack refuge with a 1UP",
+        "channel + scarab + Nitro column",
+        "stairs",
+        "C2"
+      ],
+      "gaps": 3,
+      "enemies": 4,
+      "hazards": 2
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "handle (left) and ! (right)",
+        "door",
+        "long channel with switch-built blocks and a sliding block",
+        "stairs (crates, crystal)",
+        "foothold channel",
+        "shield researcher",
+        "red disc",
+        "scarab",
+        "stairs (crate row)",
+        "C3"
+      ],
+      "gaps": 2,
+      "enemies": 2,
+      "hazards": 3
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "channel + disc + low !",
+        "shield researcher beside 2 Nitros",
+        "switch-built refuge (come back for W[1])",
+        "bend with a steel block",
+        "mummy on a diagonal Nitro line",
+        "stairs",
+        "foothold channel",
+        "bend with ?+TNT and a hole",
+        "long flood with ≈3 discs",
+        "scarab + Nitro pair",
+        "crate trio",
+        "green !",
+        "goal stairs"
+      ],
+      "gaps": 3,
+      "enemies": 3,
+      "hazards": 4
+    },
+    {
+      "section": "SKULL",
+      "beats": [
+        "skull pad (no deaths)",
+        "disc + low !",
+        "Nitro group",
+        "disc + high !",
+        "steel block",
+        "spiked mummy (ignore)",
+        "shield researcher (slide)",
+        "Nitro",
+        "three wall footholds over holes (left wall)",
+        "stairs",
+        "Nitro quincunx (wall gaps)",
+        "zig-zag channel",
+        "handle near the left wall",
+        "door",
+        "gem pad"
+      ],
+      "gaps": 3,
+      "enemies": 2,
+      "hazards": 4
+    },
+    {
+      "section": "BONUS",
+      "beats": [
+        "high !",
+        "outline bridge (low ? first)",
+        "pyramid",
+        "floating 2×2 stepping stones",
+        "diagonal pair + high !",
+        "striped 2×2 below",
+        "Nitro-lidded crates",
+        "TNT",
+        "exit"
+      ],
+      "gaps": 3,
+      "enemies": 0,
+      "hazards": 0
+    }
+  ],
+  "geometryObservations": [
+    "**The water is the level's metronome and its gap.** Each channel is a lethal gap one low-water window long; the cycle is fixed from the start (TT intro, TA1), so the whole route is one rhythm.",
+    "**A living gauge.** The scarab crawls at low water and flies when it rises (F3 p067) and stands at the start and beside the key channels: the telegraph is an enemy you can read before you are in danger.",
+    "**Channel → stairs → dry landing.** Walled channels about 3–4 u wide alternate with three-step stairs (TT 06) and dry landings; crates on dry ground cost no window, wet crates cost one. With no side falls, everything is vertical timing.",
+    "**Three kinds of safe island:** floating red discs that ride the water (callout 2), steel blocks and stacks (callout 3), and blocks the player builds with a ! (callout 5; skull callout A). Rewards sit on them: Aku on the block, a 1UP over the stack, a crate just past the switch-built refuge.",
+    "**Switch-built refuges scale the difficulty.** In S3 the ! is optional (TA5 skips it for time); on the skull course the switches must be pressed in order to build the safe zones ahead (callout A).",
+    "**Coupled clocks.** The sliding wall footholds run their own cycle and are usable only in some water phases (P3 s95: move when the water starts receding and sits at the top edge of the block); the guide's lane (left wall, callout C; right wall in TT 21–23) turns the double timing into a line choice.",
+    "**The shield researcher is a gatekeeper with a knock-back.** Slide only; an upper-body hit throws Crash back toward the camera and he side-steps to block (F3 p067). He is taught alone at the top of dry stairs, then placed beyond a hole (callout 4) and beside Nitros (callout 7), where the knock-back or his charge is the real danger.",
+    "**The spiked mummy is a jump-only hurdle** (spiked lower body): double-jump onto its head or fake it out (P3 s88). It is met alone on dry ground first, later patrols a Nitro line, and on the skull course should simply be ignored (callout B).",
+    "**Few true gaps.** One hole guarded by a researcher (S2), one hole at the S4 bend (TT 30) and the holes under the skull footholds (callout C); everything else is water, which kills only at its peak.",
+    "**Explosives shape standing room in the water:** TNT stepping stones (S1), a Nitro column (S2), a Nitro pair beside the researcher and a diagonal Nitro fence with a mummy (S4), and skull groups with gaps at both walls (callout D).",
+    "**Escalation:** S1 teaches (one disc, two TNT steps, each enemy alone), S2 adds refuges and the guarded hole, S3 adds built blocks and sliding footholds, S4 is the longest flood with discs and no checkpoint after C3, and the skull course combines everything with no deaths allowed.",
+    "**Patience is the skill.** Callout 8 (\"don't force it\") and the TT intro (\"accuracy over speed\") say the same thing: the level punishes impatience more than imprecision, because waiting on dry ground is always possible.",
+    "**The hazard has a reward-based off switch.** Three masks give invincibility timed for the lowest water, and while invincible the water does not rise (TT 24).",
+    "**Bonus without water:** an outline bridge from a high ! (crouch high jump), floating crates used as stepping stones that vanish when broken, and an explosive lid over the rewards."
+  ],
+  "geometryTransfer": [
+    "**A global flood with phasepads.** Model a flood channel as a 3.5–4.6 m (3–4 u) wide walled `pit` floored with `phasepad`s on one global cycle (solid = low water), 7–9 m long, with three-step dry stairs (≈1.7 m rise) between channels; put a visible gauge (a slow `hopper` or a bobbing marker) at each channel head.",
+    "**Islands every window.** Inside each channel place one unbreakable island (a 1.15–2.3 m steel block or a floating pad) so a window can be split in two halves; put the Aku or life crate on top of it.",
+    "**Gatekeeper beyond a hole.** A `charger` (frontal attacks fail, telegraphed dash) on the far side of a 1.2–2.3 m hole: approaching high gets you knocked back into the hole; the counter is a short hop then a slide or ram.",
+    "**Coupled-timer footholds.** A 5–7 m deep gap crossed on three `mover` blocks sliding out of one wall on their own cycle, usable only when the global cycle is in its safe phase; keep one wall-hugging line where the timing is forgiving (the left-wall rule of callout C).",
+    "**Explosive fence with a guard.** A diagonal line of four Nitros across a channel with a patrolling `spiker` (no stomp — it must be jumped), and on the optional hard line a five-Nitro quincunx with 1.2 m gaps along both walls.",
+    "**TNT stepping stones in a timed channel.** Two TNTs 2.3 m apart in a 5.8–6.9 m channel: a double jump (+1.74 m) from a TNT top reaches the far stairs, so the chain works even in the unsafe phase, while the safe line waits for the window."
+  ]
+}

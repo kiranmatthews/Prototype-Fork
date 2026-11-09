@@ -1,0 +1,2981 @@
+{
+ "id": "c2-19-ruination",
+ "game": "Crash 2",
+ "stage": 19,
+ "name": "Ruination",
+ "nameJa": "からくりのはいきょ",
+ "sources": [
+  "F2 p071-p072",
+  "F2 p099R",
+  "F2 p015",
+  "D2 p062-p064"
+ ],
+ "camera": "into-screen (bonus side-scroll)",
+ "totalBoxes": 84,
+ "totalSource": "F2 p071L header (superscript 49 off-course)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 35,
+   "basis": "header 84 - 49; every cluster located"
+  },
+  {
+   "id": "bonus",
+   "boxes": 49,
+   "basis": "all off-course boxes; D2 HUD counters 1/16/17/22/28/36"
+  },
+  {
+   "id": "gem",
+   "boxes": 0,
+   "basis": "F2 p099R: the gem course has no boxes"
+  }
+ ],
+ "specialCounts": {
+  "life": {
+   "total": 0,
+   "offCourse": 0
+  },
+  "aku": {
+   "total": 1,
+   "offCourse": 0,
+   "note": "loose masks above the steel arrow, in the gem course and after the green ! are not boxes"
+  },
+  "checkpoint": {
+   "total": 4,
+   "offCourse": 0,
+   "note": "F2 p072R '?/C' is ?/? (D2 30, 52)"
+  },
+  "tnt": {
+   "main": 7,
+   "bonus": 3
+  },
+  "nitro": {
+   "main": 12,
+   "bonus": 0
+  },
+  "ironBound": {
+   "bonus": 29
+  },
+  "switches": "! in the Nitro room (arms 6 outline Nitros); ! in the bonus (fills footing frames); green ! after C4 reached by rat bounce"
+ },
+ "gems": [
+  {
+   "kind": "clear",
+   "condition": "all 84 boxes"
+  },
+  {
+   "kind": "clear",
+   "condition": "finish the gem course from the green-gem platform at C2 (needs the Stage 10 green gem)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "cumulative": null,
+   "notes": "hidden-Nitro pile, rat/lizard pillars",
+   "boxes": 7
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "cumulative": null,
+   "notes": "TNT-stack ledge, crumbling Nitro ledge, steel arrow, ! Nitro room",
+   "boxes": 15
+  },
+  {
+   "id": "GEM",
+   "route": "gem",
+   "from": "C2 green-gem platform",
+   "to": "S4-d return pad",
+   "cumulative": null,
+   "notes": "0 boxes (F2 p099R)",
+   "boxes": 0
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "cumulative": null,
+   "notes": "fire statues, rotating platforms (bonus pad), crumbling platforms, Aku box",
+   "boxes": 4
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "C4",
+   "cumulative": null,
+   "notes": "Nitro-rat walkway, lizard TNT ledge, tilting pillars",
+   "boxes": 9
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C4",
+   "to": "goal",
+   "cumulative": null,
+   "notes": "green ! via rat bounce, log gorilla; 0 boxes",
+   "boxes": 0
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S3 bonus pad",
+   "to": "S3",
+   "cumulative": null,
+   "notes": "iron-bound demolition; counters 1/16/17/22/28/36 -> 49",
+   "boxes": 49
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first platform after the opening fire statue",
+   "composition": {
+    "wood": 4,
+    "nitro": 1
+   },
+   "count": 5,
+   "arrangement": "2x2 wood pile with a Nitro tucked behind",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "hidden-nitro",
+    "no-body-slam"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "HIDDEN",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "the wanted boxes sit against a hidden Nitro; spin from the front, never body-slam",
+   "evidence": "F2 p071R POINT1 + screenshot; D2 p062 shot 2",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "pillar beside a rat; lizards on the next pillars",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "rat-guard",
+    "killing-rat-frees-lizard"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "SINGLE",
+    "ON-PATH"
+   ],
+   "why": "tempts a fight; killing the rat sets the lizard pacing",
+   "evidence": "F2 p071R; D2 shots 3-4",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "walled platform after the second fire statue",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-fire-statue"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "first save",
+   "evidence": "F2 p071R; D2 shot 6",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "long ledge either side of a patrolling monkey",
+   "composition": {
+    "tnt": 4
+   },
+   "count": 4,
+   "arrangement": "two 2-high TNT stacks used as footing",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "enemy-bounce",
+    "timed"
+   ],
+   "relations": [
+    "monkey-patrol-between"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "STACK",
+    "TIMED"
+   ],
+   "why": "each stack is a 3-count step; stomp the monkey from a stack, light the next and leave",
+   "evidence": "F2 p071R; D2 shots 7-8",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "crumbling ledge",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "two spaced singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "crumbling-floor"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "TEST"
+   ],
+   "why": "no time to line up jumps; punishes panic",
+   "evidence": "F2 p071R; D2 shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "platform beside a steel arrow with a loose Aku mask floating above",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single next to the arrow",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "arrow"
+   ],
+   "relations": [
+    "steel-arrow",
+    "floating-mask"
+   ],
+   "tags": [
+    "TOOL",
+    "EXPLOSIVE-MIX",
+    "AKU"
+   ],
+   "why": "arrow reaches the mask; the adjacent TNT forbids lingering",
+   "evidence": "F2 p071R zoom; D2 shot 10 (calls it the box)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "the ! room (POINT3)",
+   "composition": {
+    "nitro": 7
+   },
+   "count": 7,
+   "arrangement": "1 solid Nitro + 6 outlines around a ! that turns them into Nitro",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "switch-arms-trap",
+    "green-switch-clears"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "NITRO-SWITCH",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "pressing the ! makes the room deadlier; required only for the perfect, cleared by the green ! after C4",
+   "evidence": "F2 p071R POINT3 + screenshot; D2 shot 11",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "end of the monkey ledge beside the green-gem platform",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "gem-course-entrance"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "save at the gem-course entrance",
+   "evidence": "F2 p071R; D2 shot 13; F2 p099R screenshot",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "pillar next to the bonus pad, guarded by a hopping monkey",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "monkey-route"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "STACK",
+    "ON-PATH"
+   ],
+   "why": "the monkey uses the crate pillar; kill it first",
+   "evidence": "F2 p072L; D2 shot 45",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "small platform between two pairs of fire statues",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "fire-gap"
+   ],
+   "tags": [
+    "AKU",
+    "TIMED",
+    "ON-PATH"
+   ],
+   "why": "only mask box, inside the fire run",
+   "evidence": "F2 p072L zoom; D2 shot 47",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "walled platform after the statue lanes",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-nitro-rat"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the Nitro/rat walkway",
+   "evidence": "F2 p072L; D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "either side of a rat right after C3",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "Nitro - rat - Nitro on a narrow walkway",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "rat-as-step"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "STEPPING",
+    "EXPLOSIVE-MIX",
+    "TEST"
+   ],
+   "why": "jump the Nitro, stomp the rat as a step, jump the next",
+   "evidence": "F2 p072L/R POINT7; D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "narrow ledge with a pacing lizard",
+   "composition": {
+    "tnt": 2
+   },
+   "count": 2,
+   "arrangement": "one TNT at each end of the lizard's beat",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "timed"
+   ],
+   "relations": [
+    "lizard-trap"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "TIMED",
+    "CHAIN"
+   ],
+   "why": "light the near TNT as the lizard reaches the far end so the blast kills it",
+   "evidence": "F2 p072R; D2 shot 49",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "platform before the tilting pillars",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "two singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-perspective-test"
+   ],
+   "tags": [
+    "PAIR",
+    "ON-PATH",
+    "REWARD"
+   ],
+   "why": "breather payout",
+   "evidence": "F2 p072R; D2 shot 50",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "platform after the tilting pillars beside the gem-course return pad",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "gem-course-rejoin"
+   ],
+   "tags": [
+    "STACK",
+    "ON-PATH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "marks where the optional route rejoins",
+   "evidence": "D2 shots 30, 52; F2 p072R (misdrawn as ?/C)",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "platform beside the floating green !",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "green-switch"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "NITRO-SWITCH"
+   ],
+   "why": "save beside the rat-bounce switch",
+   "evidence": "D2 shot 31; F2 p072R",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "bonus entry",
+   "composition": {
+    "ironBound": 15,
+    "wood": 1
+   },
+   "count": 16,
+   "arrangement": "4x4 block; the wood box fills one top notch",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "body-slam"
+   ],
+   "relations": [
+    "slam-order"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "GRID",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "spin the wood box, climb into the notch, body-slam down the middle; never slam the bottom row first",
+   "evidence": "D2 p064 shot 39 (counted at zoom), counter 16 at shot 40; F2 p099R caution 1",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 2,
+   "where": "steel slab after the outline steps",
+   "composition": {
+    "question": 1,
+    "ironBound": 3
+   },
+   "count": 4,
+   "arrangement": "? on top of 3 iron-bound",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "body-slam"
+   ],
+   "relations": [
+    "cap-then-slam"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "STACK",
+    "SUPPORT-ORDER"
+   ],
+   "why": "spin the ? cap, then slam down",
+   "evidence": "D2 shot 41 (counter 17)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 3,
+   "where": "tower with a TNT pair at its foot",
+   "composition": {
+    "tnt": 2,
+    "ironBound": 6
+   },
+   "count": 8,
+   "arrangement": "iron tower + 2-high TNT stack (split estimated)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "body-slam"
+   ],
+   "relations": [
+    "stand-on-target"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "TOOL"
+   ],
+   "why": "high-jump off the TNT onto the iron boxes and wait for the blast; slam the rest",
+   "evidence": "D2 shot 42 (counter 22); F2 p099R caution 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 4,
+   "where": "tall tower and wood steps",
+   "composition": {
+    "tnt": 1,
+    "ironBound": 5,
+    "wood": 2
+   },
+   "count": 8,
+   "arrangement": "5-high iron column with TNT at the foot, then wood steps",
+   "stackHeight": 5,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "body-slam"
+   ],
+   "relations": [
+    "must-be-on-top"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "bounce up from the TNT and wait on top or the way is blocked",
+   "evidence": "D2 shot 43 (counter 28) to shot 44 (36)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 5,
+   "where": "exit pyramid",
+   "composition": {
+    "striped": 2,
+    "question": 2,
+    "wood": 9
+   },
+   "count": 13,
+   "arrangement": "6-wide bar on two feet with 2 striped on top",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "exit"
+   ],
+   "tags": [
+    "BONUS",
+    "PYRAMID",
+    "ROW",
+    "REWARD"
+   ],
+   "why": "plain payout; 49 - 36 = 13 remaining at shot 44",
+   "evidence": "D2 shot 44",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "rat",
+   "count": 1,
+   "where": "pillar beside the ?",
+   "role": "guard; killing it frees a lizard"
+  },
+  {
+   "section": "S1",
+   "kind": "frilled lizard",
+   "count": 2,
+   "where": "narrow pillars",
+   "role": "slide lengthwise (POINT2)"
+  },
+  {
+   "section": "S2",
+   "kind": "monkey",
+   "count": 2,
+   "where": "between TNT stacks; ledge before C2",
+   "role": "patrol; stomp from a stack"
+  },
+  {
+   "section": "S3",
+   "kind": "monkey",
+   "count": 1,
+   "where": "?/? pillar",
+   "role": "hops pillar to pillar"
+  },
+  {
+   "section": "S4",
+   "kind": "rat",
+   "count": 1,
+   "where": "between two Nitros",
+   "role": "stepping stone"
+  },
+  {
+   "section": "S4",
+   "kind": "frilled lizard",
+   "count": 1,
+   "where": "TNT ledge",
+   "role": "TNT trap target"
+  },
+  {
+   "section": "S5",
+   "kind": "rat",
+   "count": 4,
+   "where": "circling the floating green !",
+   "role": "bounce launcher"
+  },
+  {
+   "section": "S5",
+   "kind": "gorilla (log thrower)",
+   "count": 1,
+   "where": "final stretch",
+   "role": "logs; jump-spin to beat"
+  },
+  {
+   "section": "GEM",
+   "kind": "gorilla (log thrower)",
+   "count": 3,
+   "where": "gem course",
+   "role": "logs across platforms"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "fire-statue gaps between platforms",
+   "where": "start and before C1",
+   "crates": [
+    "S1-a"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "crumbling ledge",
+   "where": "after the TNT ledge",
+   "crates": [
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "rotating platforms (POINT5)",
+   "where": "to the bonus pad",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "crumbling platforms between fire-statue pairs (POINT6)",
+   "where": "before C3",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "tilting pillars (POINT8)",
+   "where": "between S4-c and S4-d",
+   "crates": []
+  },
+  {
+   "section": "S5",
+   "kind": "open space under the floating green !",
+   "where": "after C4",
+   "crates": []
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-a"
+   ],
+   "summary": "2x2 wood pile with a Nitro hidden behind",
+   "solution": "spin from the front",
+   "wrongOrder": "body slam or angled spin into the back",
+   "loss": "life"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-d"
+   ],
+   "summary": "! that turns six outlines into Nitro",
+   "solution": "press it only for the perfect, walk out cleanly, detonate with the green ! after C4",
+   "wrongOrder": "pressing it on a clear run, or touching the new Nitros",
+   "loss": "6 boxes on the all-box count / a life"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-e"
+   ],
+   "summary": "green ! floats out of jump reach above rats",
+   "solution": "bounce off a circling rat and steer onto the switch",
+   "wrongOrder": "plain jumps",
+   "loss": "all 12 Nitros stay uncounted"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "lizard paces between two TNTs",
+   "solution": "light the near TNT as it reaches the far end",
+   "wrongOrder": "lighting early or spinning a TNT",
+   "loss": "life"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "B-a",
+    "B-c",
+    "B-d",
+    "B-e"
+   ],
+   "summary": "iron-bound demolition chain",
+   "solution": "wood notch first, slam down the middle; spin ? caps then slam; light TNT and wait on top",
+   "wrongOrder": "slamming the bottom row first",
+   "loss": "stranded iron boxes; must die to retry"
+  }
+ ],
+ "observations": [
+  "Main route has only 35 boxes, 19 of them explosives; the bonus holds 49 (29 iron-bound).",
+  "Every enemy is paired with an explosive or a box.",
+  "The only Aku box is inside the hardest fire-timing stretch.",
+  "A ! that arms Nitros and a green ! reachable only by enemy bounce make the perfect a behavioural count trap.",
+  "The optional gem course has zero boxes, separating completionist and gem goals.",
+  "Bonus is a slam-order puzzle: notch entry, ? caps, TNT lit from the top of what it clears."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "diagonal climb from the start pipe (bottom-left) to the top-right (F2 p071R lower half): a chain of pillar tops, hex pads and a narrow walkway over a void."
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "continues up and right (F2 p071R upper half) along ledges on columns to the ! room, then a narrow walkway straight into the screen to C2."
+  },
+  {
+   "section": "GEM",
+   "mode": "into-screen",
+   "notes": "gorilla log alleys along chains of platforms (D2 p062 shots 14–17, p063 18–30); logs come toward the camera."
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "single-lane walkways, a rotating ring and pillar clusters climbing to C3 (F2 p072L)."
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "the route doubles back up and to the left (F2 p072R lower half, つづき← then つづく↑)."
+  },
+  {
+   "section": "S5",
+   "mode": "into-screen",
+   "notes": "turns right along the top strip (F2 p072R): the rat ring, then a stepped pillar line down to the gorilla and the goal."
+  },
+  {
+   "section": "BONUS",
+   "mode": "side-scroll",
+   "notes": "a flat room left to right (D2 p064 shots 39–44)."
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "square pad (start ledge at the pipe)",
+   "size": "≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": "stand",
+   "why": "A safe place to stand and read the first statue's cycle before the first jump.",
+   "evidence": "D2 p062 shot 1; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "wide floor (raised square block)",
+   "size": "≈4x4",
+   "heightDelta": "+0-1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "LANDING"
+   ],
+   "move": "land",
+   "why": "Big landing that carries the hidden-Nitro pile (POINT1). Room to stop, but the pile itself is the danger.",
+   "evidence": "F2 p071R POINT1; D2 p062 shot 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "pad described as \"unsteady\" (behaviour not shown)",
+   "size": "≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "unsteady per the caption (sinks or wobbles?)",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "plain jump",
+   "why": "A one-word caption only: recorded so the pad is not mistaken for safe ground.",
+   "evidence": "D2 p062 shot 2",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "square pillar top",
+   "size": "≈2.5-3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a rat stands by the ?",
+   "roles": [
+    "LANDING"
+   ],
+   "move": "plain jump",
+   "why": "First enemy, met on a roomy pad next to a crate.",
+   "evidence": "D2 p062 shot 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "hex pads ×3 joined in a row",
+   "size": "≈2-2.5 each (≈6-7 across in all)",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a rat and a lizard stand on it",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "plain jump",
+   "why": "A small arena where two enemies interact: killing the rat sets the lizard pacing (D2 4).",
+   "evidence": "D2 p062 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "corridor (long narrow walkway, 縦長)",
+   "size": "≈1.5 wide × ≈6 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; a lizard paces its length",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "walk; slide lengthwise",
+   "why": "Shaped for one move: a slide along the length reaches the lizard (POINT2).",
+   "evidence": "F2 p071R POINT2 + screenshot",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-g",
+   "section": "S1",
+   "shape": "stepping stones (small square pillar tops)",
+   "size": "≈1.5-2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; beside the second fire statue",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "plain jumps",
+   "why": "Stepping stones inside a flame line: now the statue must be timed while hopping.",
+   "evidence": "D2 p062 shot 5; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-h",
+   "section": "S1",
+   "shape": "square pad (walled; parapets on the far sides)",
+   "size": "≈4x4",
+   "heightDelta": 0,
+   "edges": "walled on the far sides",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD",
+    "REST"
+   ],
+   "move": "walk",
+   "why": "Walls appear only around saves: the one place you cannot fall off.",
+   "evidence": "F2 p071R; D2 p062 shot 6",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "square pad (a lizard on it)",
+   "size": "≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "jump past the lizard",
+   "why": "A guarded take-off for the TNT ledge.",
+   "evidence": "D2 p062 shot 7",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "narrow ledge (long, on columns) with two 2-high TNT stacks",
+   "size": "≈1.5-2 wide × ≈8 long; stacks ≈5 apart",
+   "heightDelta": "+2 (stack tops)",
+   "edges": "open",
+   "behaviour": "the stacks fill most of the ledge width, so you cross them by landing on them, which starts their 3-count",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump onto stack 1, stomp the monkey, onto stack 2, off",
+   "why": "Crates as platforms with a timer: each stack is a step that expires.",
+   "evidence": "F2 p071R; D2 p062 shot 8",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "crumbling ledge (one tile wide)",
+   "size": "≈1.5 wide × 5-6 tiles (≈8)",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "tiles disappear if you wait (D2 9)",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "run and jump",
+   "why": "A floor that forbids waiting, carrying two Nitros that forbid hurrying.",
+   "evidence": "D2 p062 shot 9; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "square pad (walled) with a steel arrow",
+   "size": "≈3",
+   "heightDelta": "arrow reaches ≈+3-4 (loose mask above)",
+   "edges": "walled at the back",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "PERCH"
+   ],
+   "move": "walk; arrow bounce",
+   "why": "A rest pad with a vertical bonus: the mask is reached only by the arrow.",
+   "evidence": "F2 p071R; D2 p062 shot 10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "corridor (raised causeway with high walls, the ! room)",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "walled (ornate)",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "walk",
+   "why": "The widest floor of the route, with walls for once: a room in which to choose whether to arm the trap.",
+   "evidence": "D2 p062 shot 11; F2 p071R POINT3",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-f",
+   "section": "S2",
+   "shape": "corridor (one-tile walkway rising into the screen)",
+   "size": "≈1.5 × ≈8",
+   "heightDelta": "rising",
+   "edges": "open",
+   "behaviour": "static; a monkey walks away along it",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "walk; jump over the monkey",
+   "why": "One lane with an enemy in it: you must deal with it from behind (D2 12).",
+   "evidence": "D2 p062 shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-g",
+   "section": "S2",
+   "shape": "square pad (C2 + round green-gem pad)",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "The save is at the optional route's door.",
+   "evidence": "D2 p062 shot 13",
+   "confidence": "high"
+  },
+  {
+   "id": "P-GEM-a",
+   "section": "GEM",
+   "shape": "stepping stones (square pads in log alleys)",
+   "size": "≈2",
+   "heightDelta": "stepped ±0.5-1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "plain jumps",
+   "why": "Stable pads where you wait for the next log.",
+   "evidence": "D2 p062 shots 14–15; p063 27–28, 32–34 (same pattern on the main route)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-GEM-b",
+   "section": "GEM",
+   "shape": "crumbling tile rows",
+   "size": "≈5 tiles",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "collapse behind you",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "run",
+   "why": "D2 16 and 24: run across before the floor vanishes.",
+   "evidence": "D2 p062 shot 16; p063 shot 24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-GEM-c",
+   "section": "GEM",
+   "shape": "collapsing hex pads ×2",
+   "size": "≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "collapse",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "plain jumps",
+   "why": "Crumble in hex form.",
+   "evidence": "D2 p063 shot 18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-GEM-d",
+   "section": "GEM",
+   "shape": "tilting pillars (hex tops) ×2",
+   "size": "≈2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "bend toward and away from you",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump when it bends closest",
+   "why": "D2 21–22: jump onto the tilting platform as it bends closest.",
+   "evidence": "D2 p063 shots 21–22",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-GEM-e",
+   "section": "GEM",
+   "shape": "secure platforms (named as breathers)",
+   "size": "≈2-3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "move": "land",
+   "why": "D2 23 and 25: a secure platform for a quick breather after a crumble run.",
+   "evidence": "D2 p063 shots 23, 25",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-GEM-f",
+   "section": "GEM",
+   "shape": "wide floor (ape-faced room)",
+   "size": "≈4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk",
+   "why": "Fruit and a loose mask: a reward room mid-course.",
+   "evidence": "D2 p063 shot 26",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "corridor (single-lane walkway between a statue pair)",
+   "size": "≈1.5 × ≈8-10",
+   "heightDelta": "rising",
+   "edges": "open",
+   "behaviour": "static; statues on raised blocks either side",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "wait, then run",
+   "why": "The lane is the flame line: there is no side step.",
+   "evidence": "F2 p072L POINT4; D2 p064 shot 37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "rotating platforms (4 hex pads on a ring)",
+   "size": "≈2.5-3 each; gaps ≈1.5-2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "rotate around a centre; the ride carries you to the bonus pad (D2 38)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump on when a pad swings to the front, ride",
+   "why": "A moving platform used as transport to the bonus.",
+   "evidence": "F2 p072L POINT5; D2 p064 shot 38",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "round/octagonal pillar tops (bonus pad among them)",
+   "size": "≈2",
+   "heightDelta": "±0.5",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "BONUS-PAD"
+   ],
+   "move": "plain jumps",
+   "why": "A pillar cluster shared with a hopping monkey.",
+   "evidence": "F2 p072L; D2 p064 shot 45",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "crumbling lane (single-lane walkway) between statue pairs",
+   "size": "≈1.5 wide; ≈8-10 long in two halves",
+   "heightDelta": "rising",
+   "edges": "open",
+   "behaviour": "tiles crumble (POINT6)",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "consecutive jumps",
+   "why": "The fire says wait; the floor says go. POINT6: hesitate and you are burnt.",
+   "evidence": "F2 p072L POINT6; D2 p064 shot 46",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "square pad (walled, mid-lane, carrying the Aku box)",
+   "size": "≈2.5",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "move": "jump in during a gap in the fire",
+   "why": "A safe island with the level's only mask box, between the two statue pairs.",
+   "evidence": "F2 p072L; D2 p064 shot 47",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-f",
+   "section": "S3",
+   "shape": "square pad (walled, C3)",
+   "size": "≈4x4",
+   "heightDelta": 0,
+   "edges": "walled; a Nitro at the outer corner",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "Save after the statue gauntlet.",
+   "evidence": "F2 p072L; D2 p064 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "corridor (walkway) with Nitro – rat – Nitro",
+   "size": "≈2 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "jump, bounce off the rat, jump",
+   "why": "Explosive hurdles with an enemy as the stepping stone between them.",
+   "evidence": "F2 p072R POINT7; D2 p064 shot 48",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "narrow ledge (single lane, diagonal) with a TNT at each end",
+   "size": "≈1-1.5 × ≈6",
+   "heightDelta": "rising",
+   "edges": "open",
+   "behaviour": "static; a lizard paces between the TNTs",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": "stomp the near TNT when the lizard reaches the far end",
+   "why": "A lane that turns the lizard's own patrol into a bomb delivery.",
+   "evidence": "F2 p072R; D2 p064 shot 49",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "square pad (walled) with ? ?",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk",
+   "why": "Payout before the perspective test.",
+   "evidence": "F2 p072R; D2 p064 shot 50",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "tilting pillars ×2 (hex tops)",
+   "size": "≈1.5-2 tops",
+   "heightDelta": "0 to +1",
+   "edges": "open",
+   "behaviour": "lean toward each other and back; once on, steer so you don't slide off (POINT8)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump at the closest approach",
+   "why": "Depth judgement and timing on a moving top.",
+   "evidence": "F2 p072R POINT8; D2 p064 shots 50–51",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "square pad with ?/? and the gem-course return pad",
+   "size": "≈3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk",
+   "why": "Where the optional route rejoins.",
+   "evidence": "D2 p063 shot 30; p064 52",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-f",
+   "section": "S4",
+   "shape": "square pad (walled, C4)",
+   "size": "≈4x4",
+   "heightDelta": 0,
+   "edges": "walled on 3 sides",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": "walk",
+   "why": "Save beside the rat ring and the green !.",
+   "evidence": "F2 p072R; D2 p063 shot 31",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S5-a",
+   "section": "S5",
+   "shape": "rotating platforms (hex) circling the floating green !",
+   "size": "≈2 each",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "rotate round the green !; a rat rides each",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": "jump on when one is closest to the C4 room",
+   "why": "Moving pads that bring the enemy launcher to you.",
+   "evidence": "D2 p063 shot 31; F2 p072R top",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-b",
+   "section": "S5",
+   "shape": "stepping stones (five small square pillars)",
+   "size": "≈1.5 tops; gaps ≈1-2",
+   "heightDelta": "descending",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "plain jumps in pairs",
+   "why": "Stable pillars where you wait for the gorilla's logs.",
+   "evidence": "F2 p072R; D2 p063 shots 32–34",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-c",
+   "section": "S5",
+   "shape": "wide floor (walled goal platform with a grid floor)",
+   "size": "≈5x5",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": "walk",
+   "why": "Finish on the biggest walled floor in the level.",
+   "evidence": "F2 p072R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "BONUS",
+   "shape": "crate structure as terrain (4x4 iron-bound block)",
+   "size": "4x4",
+   "heightDelta": "+4",
+   "edges": "open",
+   "behaviour": "breakable only by body slam",
+   "roles": [
+    "ARENA"
+   ],
+   "move": "climb into the notch, slam",
+   "why": "The bonus's first floor is made of crates.",
+   "evidence": "D2 p064 shot 39",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-b",
+   "section": "BONUS",
+   "shape": "phase bridge (4 outline frames) plus a 2-step pair",
+   "size": "4 frames wide; 2 steps",
+   "heightDelta": "0 / +1-2",
+   "edges": "open",
+   "behaviour": "materialised by the floating !",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": "hit the !, run across",
+   "why": "Switch-made footing, not loot (the counter does not rise when the frames fill).",
+   "evidence": "D2 p064 shot 40",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "BONUS",
+   "shape": "crate towers as perches (3-5 iron-bound high)",
+   "size": "1 wide",
+   "heightDelta": "+3 to +5",
+   "edges": "open",
+   "behaviour": "blown up by the TNT at their foot",
+   "roles": [
+    "PERCH"
+   ],
+   "move": "bounce up from the TNT, wait on top, slam down",
+   "why": "D2 43: you must be on top of the pile when it blows.",
+   "evidence": "D2 p064 shots 41–43",
+   "confidence": "high"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "bottomless gap across a flame line",
+   "width": "≈1-2",
+   "heightDelta": "0 to +1",
+   "landing": "big square platform ≈4x4 (the S1-a pile)",
+   "lethal": true,
+   "runUp": "≈1-2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "fire statue beside the jump: wait until it stops breathing (D2 1)",
+   "failure": "death (burn or fall)",
+   "nearby": [
+    "O-S1-a",
+    "S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "The first gap of the level is also the first statue. It is short, and the player starts from a standstill, so only the timing is new.",
+   "evidence": "D2 p062 shot 1; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "bottomless gaps (pillar to pillar)",
+   "width": "≈1-2",
+   "heightDelta": 0,
+   "landing": "≈2.5-3 pad with a rat and a ?",
+   "lethal": true,
+   "runUp": "≈1-2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "rat on the landing",
+   "failure": "death",
+   "nearby": [
+    "S1-b",
+    "E-S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "Short gaps; the landing carries the enemy lesson.",
+   "evidence": "D2 p062 shot 3; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "bottomless gap onto the hex row",
+   "width": "≈1-2",
+   "heightDelta": 0,
+   "landing": "hex row with a rat and a lizard",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "enemy coupling: killing the rat frees the lizard to pace (D2 4)",
+   "failure": "death",
+   "nearby": [
+    "E-S1-b",
+    "E-S1-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The safe line is to jump over the rat rather than kill it.",
+   "evidence": "D2 p062 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-d",
+   "section": "S1",
+   "kind": "bottomless gaps through a flame line",
+   "width": "≈1-2 each",
+   "heightDelta": 0,
+   "landing": "≈1.5-2 pillar tops, then the C1 platform",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "second statue: jump as the fire burns out (D2 5)",
+   "failure": "death",
+   "nearby": [
+    "O-S1-b",
+    "S1-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The S1 statue lesson repeated with no standing start.",
+   "evidence": "D2 p062 shot 5; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "bottomless gap",
+   "width": "≈1-2",
+   "heightDelta": 0,
+   "landing": "TNT ledge",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "lizard on the take-off pad (D2 7: jump past it)",
+   "failure": "death",
+   "nearby": [
+    "E-S2-a"
+   ],
+   "roles": [
+    "HURDLE"
+   ],
+   "why": "Jump past the lizard rather than fight on a small pad.",
+   "evidence": "D2 p062 shot 7",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "lit-TNT hurdles on a narrow ledge",
+   "width": "≈5 of floor between the stacks",
+   "heightDelta": "+2 / −2",
+   "landing": "TNT top (2-high)",
+   "lethal": true,
+   "runUp": "≈2",
+   "move": [
+    "plain",
+    "enemy-bounce"
+   ],
+   "coupling": "TNT 3-count once landed on; the monkey patrols between the stacks",
+   "failure": "death (blast) or fall",
+   "nearby": [
+    "S2-a",
+    "E-S2-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "D2 8: stand on the TNT, stomp and spin the monkey when it returns, then hit the next stack and jump before it blows.",
+   "evidence": "D2 p062 shot 8 (a stack counting 3)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "crumble run with two Nitros on the centre line",
+   "width": "hops ≈1-1.5 (over each Nitro); run ≈8 long; Nitros ≈3 apart",
+   "heightDelta": 0,
+   "landing": "tile after each Nitro",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running",
+    "plain"
+   ],
+   "coupling": "collapsing tiles",
+   "failure": "death",
+   "nearby": [
+    "S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Two pressures in opposite directions on one-tile footing.",
+   "evidence": "D2 p062 shot 9",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-GEM-a",
+   "section": "GEM",
+   "kind": "bottomless gaps with incoming logs",
+   "width": "≈2",
+   "heightDelta": "±0.5",
+   "landing": "≈2 pad",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "logs from an off-screen gorilla bounce along the pads toward you: wait for one to pass, then jump two platforms (D2 14–15, 19); at one pad jump straight up to dodge (D2 27)",
+   "failure": "death (knocked off or fall)",
+   "nearby": [
+    "E-GEM-a"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "The projectile sets a two-jumps-then-wait cadence.",
+   "evidence": "D2 p062 shots 14–15; p063 19, 27",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-GEM-b",
+   "section": "GEM",
+   "kind": "crumble runs (one beside a fire statue)",
+   "width": "no jump inside the row; run ≈7 long (five tiles)",
+   "heightDelta": 0,
+   "landing": "next pad",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running"
+   ],
+   "coupling": "tiles collapse; D2 17: keep running and you'll make it past the fire",
+   "failure": "death",
+   "nearby": [
+    "O-GEM-b",
+    "O-GEM-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Statue plus crumble without stopping: the S3 recipe in advance.",
+   "evidence": "D2 p062 shots 16–17; p063 24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-GEM-c",
+   "section": "GEM",
+   "kind": "moving-platform crossing (tilting pillars)",
+   "width": "≈1.5-2.5 (varies with the lean)",
+   "heightDelta": 0,
+   "landing": "≈2 tilting top",
+   "lethal": true,
+   "runUp": "0",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pillar lean",
+   "failure": "death",
+   "nearby": [
+    "P-GEM-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Same device as POINT8 on the main route.",
+   "evidence": "D2 p063 shots 21–22",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-GEM-d",
+   "section": "GEM",
+   "kind": "drop-down (three platforms down to the return pad)",
+   "width": "-",
+   "heightDelta": "down ≈3 steps",
+   "landing": "return green-gem pad beside the S4-d ?/?",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "none",
+   "nearby": [
+    "S4-d"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "The exit drops you onto the main route beside a crate stack you cannot miss.",
+   "evidence": "D2 p063 shot 30",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "moving-platform crossing (rotating ring)",
+   "width": "≈1.5-2",
+   "heightDelta": 0,
+   "landing": "moving hex ≈2.5-3",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain",
+    "ride"
+   ],
+   "coupling": "ring rotation: jump when a pad is in front (POINT5)",
+   "failure": "death",
+   "nearby": [
+    "P-S3-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "Wait-and-board timing with a generous landing.",
+   "evidence": "F2 p072L POINT5; D2 p064 shot 38",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "bottomless gaps (pillar to pillar)",
+   "width": "≈1-2",
+   "heightDelta": "±0.5",
+   "landing": "≈2 pillar tops; the monkey hops ahead",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "the monkey hops the same line",
+   "failure": "death (or knocked off)",
+   "nearby": [
+    "S3-a",
+    "E-S3-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 45: follow behind the monkey and spin it when you can.",
+   "evidence": "D2 p064 shot 45",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "crumble run through two statue pairs",
+   "width": "hops ≈1-1.5; run ≈4-5 long per half",
+   "heightDelta": "rising",
+   "landing": "Aku pad, then the C3 platform",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running",
+    "plain"
+   ],
+   "coupling": "statue breath: start as the fire is dying and keep jumping (POINT6)",
+   "failure": "death (burn or fall)",
+   "nearby": [
+    "S3-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 47: grab the Aku, then jump before the statues end their cycle.",
+   "evidence": "F2 p072L POINT6; D2 p064 shots 46–47",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "Nitro hurdles with an enemy step",
+   "width": "≈3-4 in all",
+   "heightDelta": 0,
+   "landing": "the rat, then floor",
+   "lethal": true,
+   "runUp": "≈1-2",
+   "move": [
+    "plain",
+    "enemy-bounce"
+   ],
+   "coupling": "none (or one dash-jump over everything, D2 48)",
+   "failure": "death",
+   "nearby": [
+    "S4-a",
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT7 チュールを足場に: use the rat as footing between two Nitros.",
+   "evidence": "F2 p072R POINT7; D2 p064 shot 48",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "moving-platform crossing (tilting pillars)",
+   "width": "≈1.5-2.5 (varies with the lean)",
+   "heightDelta": "0 to +1",
+   "landing": "≈1.5-2 tilted top",
+   "lethal": true,
+   "runUp": "0",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pillar lean (D2 51: jump when the two are closest)",
+   "failure": "death (slide off or fall)",
+   "nearby": [
+    "S4-c",
+    "S4-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The gap width itself is the timing signal.",
+   "evidence": "F2 p072R POINT8; D2 p064 shots 50–51",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-a",
+   "section": "S5",
+   "kind": "void with an enemy bounce to a floating switch",
+   "width": "not visible (several u)",
+   "heightDelta": "up to the floating ! (not visible)",
+   "landing": "green ! block (1x1), then back to a pad",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "ride",
+    "enemy-bounce"
+   ],
+   "coupling": "pads rotate; the rats ride them",
+   "failure": "death (fall)",
+   "nearby": [
+    "E-S5-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 31: bounce off the rat, take aim, launch onto the switch floating in space, jump back to a platform.",
+   "evidence": "D2 p063 shot 31",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-b",
+   "section": "S5",
+   "kind": "bottomless gaps with rolling logs",
+   "width": "≈1.5-2",
+   "heightDelta": "descending",
+   "landing": "≈1.5 pillar tops",
+   "lethal": true,
+   "runUp": "≈1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "Don-chan's logs: wait for a log to pass, jump two platforms, wait (D2 32–33)",
+   "failure": "death (knocked off or fall)",
+   "nearby": [
+    "E-S5-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "The gem course's cadence, given to every player at the end.",
+   "evidence": "D2 p063 shots 32–34; F2 p072R POINT9",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-a",
+   "section": "BONUS",
+   "kind": "gap bridged by switch-made frames (depth below not visible)",
+   "width": "≈4",
+   "heightDelta": 0,
+   "landing": "raised slab beyond",
+   "lethal": "not visible",
+   "runUp": "≈2",
+   "move": [
+    "running"
+   ],
+   "coupling": "! must be hit first",
+   "failure": "not visible",
+   "nearby": [
+    "P-B-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "A switch that builds the route rather than paying a reward.",
+   "evidence": "D2 p064 shot 40",
+   "confidence": "low-medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 4,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "syncopated (enemies on two landings)",
+   "maxGap": "≈2",
+   "rest": "P-S1-e hex row",
+   "noStop": false,
+   "why": "Pillar chain broken up by enemy pads.",
+   "evidence": "D2 p062 shots 3–4; F2 p071R"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even, timed to the end of a burst (≈2-3 hops)",
+   "maxGap": "≈2",
+   "rest": "P-S1-h C1",
+   "noStop": true,
+   "why": "Once the fire stops you must hop all the pillars before it returns.",
+   "evidence": "D2 p062 shot 5"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 4,
+   "moves": [
+    "plain",
+    "enemy-bounce"
+   ],
+   "rhythm": "syncopated: stack 1, monkey, stack 2, off (wait for the monkey, then beat the fuse)",
+   "maxGap": "≈2-3",
+   "rest": "not visible (end of the ledge)",
+   "noStop": true,
+   "why": "A lit stack cannot be stood on for long, so the chain runs on the fuse. The stacks stand ≈5 u apart, with the monkey's floor between them.",
+   "evidence": "D2 p062 shot 8"
+  },
+  {
+   "id": "J-S2-b",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "running",
+    "plain"
+   ],
+   "rhythm": "even (Nitros ≈3 apart)",
+   "maxGap": "≈3",
+   "rest": "P-S2-d arrow pad",
+   "noStop": true,
+   "why": "The floor collapses, so the Nitro hops cannot be lined up at leisure.",
+   "evidence": "D2 p062 shot 9"
+  },
+  {
+   "id": "J-GEM-a",
+   "section": "GEM",
+   "count": 2,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "syncopated: two jumps, wait for the log, repeat (2 + 2 + 2…)",
+   "maxGap": "≈2",
+   "rest": "each stable pad",
+   "noStop": false,
+   "why": "The log sets the beat.",
+   "evidence": "D2 p062 shots 14–15; p063 19–20, 27–28"
+  },
+  {
+   "id": "J-GEM-b",
+   "section": "GEM",
+   "count": 6,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "timed (tilt), then no-stop (crumble)",
+   "maxGap": "≈2",
+   "rest": "P-GEM-e secure platform",
+   "noStop": "partly",
+   "why": "D2 21–25: tilting pillars, a crumbling pad, a secure platform, a crumble row, three jumps to a secure platform.",
+   "evidence": "D2 p063 shots 21–25"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "plain",
+    "ride"
+   ],
+   "rhythm": "wait for the pad, board, ride (2-3 jumps)",
+   "maxGap": "≈2",
+   "rest": "P-S3-c pillar cluster",
+   "noStop": false,
+   "why": "The ring removes the need to jump far: the timing is the boarding.",
+   "evidence": "F2 p072L POINT5; D2 p064 shot 38"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "follow the monkey's hops",
+   "maxGap": "≈2",
+   "rest": "P-S3-c (the ?/? pillar)",
+   "noStop": false,
+   "why": "The enemy leads the line you take.",
+   "evidence": "D2 p064 shot 45"
+  },
+  {
+   "id": "J-S3-c",
+   "section": "S3",
+   "count": 5,
+   "moves": [
+    "running",
+    "plain"
+   ],
+   "rhythm": "even, no hesitation (≈4-6 consecutive jumps)",
+   "maxGap": "≈1-2",
+   "rest": "P-S3-e Aku pad, then P-S3-f C3",
+   "noStop": true,
+   "why": "POINT6 迷いは禁物: consecutive jumps through crumbling footing while the fire dies.",
+   "evidence": "F2 p072L POINT6; D2 p064 shots 46–47"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 3,
+   "moves": [
+    "plain",
+    "enemy-bounce"
+   ],
+   "rhythm": "even (or one dash-jump over everything)",
+   "maxGap": "≈1.5",
+   "rest": "P-S4-b ledge start",
+   "noStop": true,
+   "why": "Nitro, rat, Nitro as one motion (POINT7).",
+   "evidence": "F2 p072R POINT7; D2 p064 shot 48"
+  },
+  {
+   "id": "J-S4-b",
+   "section": "S4",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "wait for the lean, jump",
+   "maxGap": "≈2.5 at the widest",
+   "rest": "P-S4-e ?/? pad",
+   "noStop": false,
+   "why": "You may stand on a tilting top if you steer (POINT8).",
+   "evidence": "F2 p072R POINT8; D2 p064 shots 50–51"
+  },
+  {
+   "id": "J-S5-a",
+   "section": "S5",
+   "count": 3,
+   "moves": [
+    "ride",
+    "enemy-bounce",
+    "plain"
+   ],
+   "rhythm": "timed to the rotation: onto a pad, off the rat onto the !, back to a pad",
+   "maxGap": "not visible",
+   "rest": "a rotating pad / C4",
+   "noStop": false,
+   "why": "The switch is out of reach except by an enemy bounce.",
+   "evidence": "D2 p063 shot 31"
+  },
+  {
+   "id": "J-S5-b",
+   "section": "S5",
+   "count": 2,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "2-and-wait, three times (≈6 jumps over 5 pillars)",
+   "maxGap": "≈2",
+   "rest": "P-S5-c goal platform",
+   "noStop": false,
+   "why": "D2 32–34: wait for the log, jump two platforms.",
+   "evidence": "D2 p063 shots 32–34"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "fire statue (ボワボワ石像), single, at the start",
+   "placement": "flank (beside the first jump)",
+   "timing": "breathes flame across the jump in bursts; wait until it stops (D2 1). No cycle length stated",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S1-a pile on the landing"
+   ],
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "why": "Taught from a standstill on a safe start pad.",
+   "evidence": "D2 p062 shot 1; F2 p071R"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "fire statue, single, before C1",
+   "placement": "flank (beside the pillar hops)",
+   "timing": "jump the platforms as the fire burns out (D2 5)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "J-S1-b pillar hops"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Same statue, now while hopping.",
+   "evidence": "D2 p062 shot 5; F2 p071R"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "TNT stacks used as lit hurdles",
+   "placement": "on path (fill the ledge)",
+   "timing": "3-count once you land on one",
+   "counter": [
+    "use as a step, leave before the blast"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-b monkey"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "A crate whose timer turns a platform into a countdown.",
+   "evidence": "D2 p062 shot 8; F2 p071R"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "crumbling ledge",
+   "placement": "on path",
+   "timing": "disappears if you wait (D2 9)",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-b Nitros"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "No-wait floor with no-touch crates.",
+   "evidence": "D2 p062 shot 9"
+  },
+  {
+   "id": "O-S2-c",
+   "section": "S2",
+   "kind": "switch-armed Nitros (outlines become Nitro)",
+   "placement": "on path around the !",
+   "timing": "appear only if the ! is hit",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-d"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "An opt-in hazard: the all-box player arms it; the clear player never sees it.",
+   "evidence": "F2 p071R POINT3; D2 p062 shot 11"
+  },
+  {
+   "id": "O-GEM-a",
+   "section": "GEM",
+   "kind": "rolling logs thrown by gorillas (≥3)",
+   "placement": "across path (rolling toward you along the platform chain)",
+   "timing": "periodic throws (not stated); logs bounce along the pads; at one point jump straight up to dodge (D2 27)",
+   "counter": [
+    "wait-and-go",
+    "jump over",
+    "destroy (spin, F2 p099R)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-GEM-a pads"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TIMING-GATE"
+   ],
+   "why": "F2 p099R: stop on non-crumbling footing and spin the logs away; deeper in they are hard to see.",
+   "evidence": "D2 p062 shots 14–15; p063 19–20, 27–28; F2 p099R"
+  },
+  {
+   "id": "O-GEM-b",
+   "section": "GEM",
+   "kind": "crumbling tiles and collapsing hexes",
+   "placement": "on path",
+   "timing": "collapse when stood on",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-GEM-a logs"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Crumble replaces safe pads between log waves.",
+   "evidence": "D2 p062 shot 16; p063 18, 23–24, 29"
+  },
+  {
+   "id": "O-GEM-c",
+   "section": "GEM",
+   "kind": "fire statue beside a crumble row",
+   "placement": "flank",
+   "timing": "D2 17: keep running and you'll make it past the fire",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-GEM-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The statue cannot be waited out because the floor will not wait.",
+   "evidence": "D2 p062 shot 17"
+  },
+  {
+   "id": "O-GEM-d",
+   "section": "GEM",
+   "kind": "tilting pillars",
+   "placement": "on path",
+   "timing": "bend toward and away from you",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-GEM-e secure pad after"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "POINT8 device, harder.",
+   "evidence": "D2 p063 shots 21–22"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "fire statue pair (both sides of a lane)",
+   "placement": "flank, both sides",
+   "timing": "both breathe; hold still until they finish (POINT4). D2 37: wait for the moving heads to stop belching flames, then jump over and run through",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S3-a single lane"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "First pair, with a safe floor to wait on.",
+   "evidence": "F2 p072L POINT4 ダブルファイヤー; D2 p064 shot 37"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "rotating ring of four hex pads",
+   "placement": "on path",
+   "timing": "continuous rotation; jump on when a pad comes to the front",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "bonus pad at the end of the ride"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "Moving platform as a gate and as transport.",
+   "evidence": "F2 p072L POINT5 動く足場; D2 p064 shot 38"
+  },
+  {
+   "id": "O-S3-c",
+   "section": "S3",
+   "kind": "fire statue pairs ×2 over a crumbling lane",
+   "placement": "flank, both sides",
+   "timing": "start as the fire is about to die; consecutive jumps; any hesitation burns you (POINT6)",
+   "counter": [
+    "wait-and-go",
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-b Aku pad mid-lane"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The pair lesson with the waiting floor removed.",
+   "evidence": "F2 p072L POINT6 迷いは禁物; D2 p064 shots 46–47"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "Nitro pair around a rat",
+   "placement": "on path",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-a rat"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Explosives as hurdles with an enemy step.",
+   "evidence": "F2 p072R POINT7; D2 p064 shot 48"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "TNT pair at the ends of a narrow ledge",
+   "placement": "on path",
+   "timing": "3-count once stomped",
+   "counter": [
+    "destroy (light it as the lizard arrives)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-b lizard"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "D2 49: hop on the near TNT as the lizard reaches the far box; the explosion kills it.",
+   "evidence": "F2 p072R; D2 p064 shot 49"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "tilting stone pillars",
+   "placement": "on path",
+   "timing": "lean toward each other and back; jump at the closest approach (POINT8)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-c ? ? pad"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Perspective plus motion.",
+   "evidence": "F2 p072R POINT8 遠近感をつかめ; D2 p064 shots 50–51"
+  },
+  {
+   "id": "O-S5-a",
+   "section": "S5",
+   "kind": "rotating pads with rats circling the floating green !",
+   "placement": "around the switch",
+   "timing": "continuous rotation",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S5-a rats"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "The switch is surrounded by moving enemies you must use.",
+   "evidence": "D2 p063 shot 31; F2 p072R"
+  },
+  {
+   "id": "O-S5-b",
+   "section": "S5",
+   "kind": "rolling logs thrown by Don-chan",
+   "placement": "across path (along the pillar line toward you)",
+   "timing": "periodic (not stated): wait for a log, jump two platforms (D2 32–33)",
+   "counter": [
+    "destroy (spin)",
+    "jump over",
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S5-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "POINT9: move while spinning the logs away; beat Don-chan with a jump-spin.",
+   "evidence": "F2 p072R POINT9 丸太が飛んでくる; D2 p063 shots 32–34"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "rat (チュール)",
+   "archetype": "static",
+   "behaviour": "stands beside the ? on a roomy pad",
+   "counter": [
+    "spin",
+    "stomp"
+   ],
+   "fails": [],
+   "placement": "guarding crate",
+   "roles": [
+    "TEACH",
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "The first enemy, met on a wide pad (only the void is dangerous). D2 3: smash the rat, break the box.",
+   "evidence": "D2 p062 shot 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "rat on the hex row",
+   "archetype": "static",
+   "behaviour": "stands on the hex row next to a lizard",
+   "counter": [
+    "jump over (recommended)",
+    "spin",
+    "stomp"
+   ],
+   "fails": [
+    "killing it frees the lizard to pace"
+   ],
+   "placement": "landing platform",
+   "roles": [
+    "BAIT"
+   ],
+   "firstAlone": false,
+   "why": "D2 4: jump over the rat; killing it sets the lizard pacing. An enemy you should not kill.",
+   "evidence": "D2 p062 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-c",
+   "section": "S1",
+   "kind": "frilled lizard (トゲック) on the hex row",
+   "archetype": "patrol-1D",
+   "behaviour": "starts pacing once the rat is gone",
+   "counter": [
+    "slide",
+    "spin"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "Coupled to E-S1-b.",
+   "evidence": "D2 p062 shot 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-d",
+   "section": "S1",
+   "kind": "frilled lizard on the long narrow walkway",
+   "archetype": "patrol-1D",
+   "behaviour": "paces the length of the walkway",
+   "counter": [
+    "slide (lengthwise)"
+   ],
+   "fails": [],
+   "placement": "on line (narrow walkway)",
+   "roles": [
+    "TEACH",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "POINT2 足場が縦長: on long narrow footing, slide it lengthwise.",
+   "evidence": "F2 p071R POINT2",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "frilled lizard on the pad before the TNT ledge",
+   "archetype": "patrol-1D",
+   "behaviour": "paces a small pad",
+   "counter": [
+    "jump over"
+   ],
+   "fails": [],
+   "placement": "take-off pad",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "D2 7: jump past the lizard.",
+   "evidence": "D2 p062 shot 7",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "monkey (モンプー) between the TNT stacks",
+   "archetype": "patrol-1D",
+   "behaviour": "paces the ≈5-u floor between the stacks",
+   "counter": [
+    "stomp then spin (from a stack)"
+   ],
+   "fails": [],
+   "placement": "between hazards (TNT stacks)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "Its return sets the moment to leave the lit stack.",
+   "evidence": "D2 p062 shot 8; F2 p071R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "monkey walking away up the C2 walkway",
+   "archetype": "patrol-1D",
+   "behaviour": "walks away from you along a one-tile lane",
+   "counter": [
+    "jump over, run it down, spin from behind"
+   ],
+   "fails": [],
+   "placement": "on line (one-tile walkway)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "D2 12: wait for it to head away, jump over, run it down and spin it.",
+   "evidence": "D2 p062 shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-GEM-a",
+   "section": "GEM",
+   "kind": "gorilla (ドンちゃん) ×≥3, log thrower",
+   "archetype": "projectile",
+   "behaviour": "stands on a pad at the end of a platform chain and throws logs along it",
+   "counter": [
+    "jump-spin",
+    "tag after bouncing in (D2 20)"
+   ],
+   "fails": [],
+   "placement": "landing platform at the far end of a chain",
+   "roles": [
+    "PROJECTILE",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "Every alley ends at its thrower.",
+   "evidence": "D2 p062 shots 14–15; p063 20, 28; F2 p099R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "monkey hopping pillar to pillar",
+   "archetype": "hopper",
+   "behaviour": "hops along the pillar cluster ahead of you",
+   "counter": [
+    "spin (from behind when you catch it)"
+   ],
+   "fails": [
+    "letting it knock you off"
+   ],
+   "placement": "on the stepping-stone line, guarding the ?/?",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "D2 45: follow behind it and spin it when you can.",
+   "evidence": "D2 p064 shot 45; F2 p072L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "rat between two Nitros",
+   "archetype": "static",
+   "behaviour": "stands between the Nitros",
+   "counter": [
+    "stomp (use as footing)"
+   ],
+   "fails": [],
+   "placement": "between hazards",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "POINT7. D2 48: you can also dash-jump over everything; there is no need to waste a life on the rat.",
+   "evidence": "F2 p072R POINT7; D2 p064 shot 48",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "frilled lizard on the TNT ledge",
+   "archetype": "patrol-1D",
+   "behaviour": "paces between the two TNTs",
+   "counter": [
+    "TNT/blast (light the near TNT as it reaches the far end)",
+    "slide"
+   ],
+   "fails": [
+    "lighting the TNT while it is beside you"
+   ],
+   "placement": "between hazards",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "The lizard's patrol delivers it to the blast.",
+   "evidence": "D2 p064 shot 49; F2 p072R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S5-a",
+   "section": "S5",
+   "kind": "rats ×4 on rotating pads around the green !",
+   "archetype": "patrol-loop",
+   "behaviour": "carried round the switch on rotating pads",
+   "counter": [
+    "stomp (bounce)"
+   ],
+   "fails": [],
+   "placement": "moving platform",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "The only way up to the switch is an enemy bounce.",
+   "evidence": "D2 p063 shot 31; F2 p072R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S5-b",
+   "section": "S5",
+   "kind": "Don-chan (gorilla) at the end of the pillar line",
+   "archetype": "projectile",
+   "behaviour": "throws logs along the pillars",
+   "counter": [
+    "jump-spin"
+   ],
+   "fails": [],
+   "placement": "landing platform (last pad before the goal)",
+   "roles": [
+    "GATEKEEPER",
+    "PROJECTILE"
+   ],
+   "firstAlone": false,
+   "why": "POINT9: beat Don-chan with a jump-spin.",
+   "evidence": "F2 p072R POINT9; D2 p063 shot 34",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start pad (pipe)",
+    "statue 1 → jump to the big platform",
+    "2x2 pile + hidden Nitro",
+    "unsteady pad",
+    "pillar: rat + ?",
+    "hex row: rat + lizard (jump the rat)",
+    "narrow walkway: lizard (slide lengthwise)",
+    "statue 2 → pillar hops",
+    "C1 (walled)"
+   ],
+   "gaps": 4,
+   "enemies": 4,
+   "hazards": 2
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "pad with a lizard (jump past)",
+    "TNT ledge: two lit stacks + monkey",
+    "crumbling ledge + 2 Nitros",
+    "arrow pad (TNT; loose mask above)",
+    "! room (don't press it for a clear)",
+    "one-tile walkway: monkey walking away",
+    "C2 + gem pad"
+   ],
+   "gaps": 3,
+   "enemies": 3,
+   "hazards": 3
+  },
+  {
+   "section": "GEM",
+   "beats": [
+    "log alley: wait, jump 2, wait; tag gorilla 1",
+    "crumble row",
+    "crumble row past a fire statue",
+    "2 collapsing hexes",
+    "log alley; tag gorilla 2",
+    "2 tilting pillars",
+    "crumbling pad → secure pad (breather)",
+    "crumble row",
+    "3 jumps to a secure pad",
+    "ape room (fruit + mask)",
+    "log alley: pause and jump straight up",
+    "gorilla 3",
+    "crumbling hex → clear gem",
+    "drop 3 platforms to the return pad"
+   ],
+   "gaps": 4,
+   "enemies": 3,
+   "hazards": 4
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "statue pair 1 over a one-lane walkway (wait)",
+    "rotating 4-hex ring (ride to the bonus pad)",
+    "bonus pad",
+    "pillar line with a hopping monkey (?/?)",
+    "statue pair 2 + crumbling lane (consecutive jumps)",
+    "Aku pad (safe island)",
+    "statue pair 3 + crumbling lane",
+    "C3 (+ Nitro)"
+   ],
+   "gaps": 3,
+   "enemies": 1,
+   "hazards": 3
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "Nitro – rat – Nitro (rat as step)",
+    "narrow TNT ledge with a pacing lizard (TNT trap)",
+    "? ? pad (rest)",
+    "2 tilting pillars (jump at the lean)",
+    "?/? pad (gem return)",
+    "C4"
+   ],
+   "gaps": 2,
+   "enemies": 2,
+   "hazards": 3
+  },
+  {
+   "section": "S5",
+   "beats": [
+    "rotating pads + 4 rats around the floating green ! (rat bounce)",
+    "steps down",
+    "5 pillars + Don-chan's logs (wait, jump 2)",
+    "Don-chan (jump-spin)",
+    "goal"
+   ],
+   "gaps": 2,
+   "enemies": 5,
+   "hazards": 2
+  },
+  {
+   "section": "BONUS",
+   "beats": [
+    "iron block (notch, slam)",
+    "! → outline bridge over a gap + steps",
+    "? on an iron tower",
+    "TNT + iron tower (stand on top)",
+    "TNT + 5-iron tower",
+    "wood steps",
+    "exit pyramid"
+   ],
+   "gaps": 1,
+   "enemies": 0,
+   "hazards": 0
+  }
+ ],
+ "geometryObservations": [
+  "The level runs on two opposite pressures. Fire statues say \"wait\" and the floors say \"don't\": crumbling tiles, a crumbling ledge, tilting pillars and a rotating ring. Its hardest beats put both on one lane (O-S3-c), and POINT6 sums it up: hesitate and you are burnt.",
+  "The statue lesson is ordered. First comes a single statue beside a standing start (O-S1-a), then a single statue beside a hop chain (O-S1-b). Next is a pair flanking a lane with a solid floor (O-S3-a: wait for both), and finally pairs over crumbling tiles with a safe pad between them (O-S3-c). There are 8 statues on the main route: 2 singles and 3 pairs.",
+  "Walls mark rest. Every checkpoint sits on a walled square platform (parapets on three sides), and these are almost the only edges you cannot fall off. Everything else is open-edged over a void, so rest is readable from the geometry alone.",
+  "Lanes are one tile wide (≈1.5 u) wherever enemies patrol: the lizard walkway, the monkey walkway and the TNT ledge. The lane makes the enemy unavoidable and makes the lengthwise slide the right tool (POINT2).",
+  "Enemies are tools or triggers more often than obstacles. A rat is a stepping stone between Nitros (E-S4-a), and a monkey's return times your exit from a lit TNT (E-S2-b). A lizard walks into its own TNT (E-S4-b), rats carry you up to the green ! (E-S5-a), and one rat should not be killed because it releases a lizard (E-S1-b).",
+  "Perspective is a deliberate test. The into-screen camera looks along pillar chains, and D2 19 says the jumps only look long. POINT8 asks the player to grasp the depth on tilted pillars, and F2 p099R warns that the gem course's diagonal jumps are hard to judge. Gaps stay ≈1–2 u wide so that a plain jump is nearly always enough, once trusted.",
+  "Moving platforms serve as both transport and gate. The rotating hex ring carries you to the bonus pad (P-S3-b). The rotating rat ring around the floating green ! is the climax, because there the moving platform delivers the enemy you must bounce on (P-S5-a).",
+  "Explosives are geometry. TNT stacks fill a narrow ledge, so you must land on them and race their fuse (G-S2-b). Nitros on a crumbling ledge combine a floor you cannot wait on with crates you cannot touch (G-S2-c). Nitros bracket a rat so that the enemy becomes the bridge (G-S4-a).",
+  "The gorilla alleys use a projectile to set the rhythm: wait for the log, jump two platforms, wait again (G-GEM-a, G-S5-b). The same cadence opens the gem course and closes the main route, so every player meets it once.",
+  "The gem course remixes the theme at its hardest. It has crumble rows, collapsing hexes, tilting pillars, a statue beside a crumble row and three gorillas, but it names its breather platforms explicitly (D2 23, 25) and holds no boxes. It is a pure skill route.",
+  "Recovery is ungenerous in geometry (nearly every gap is bottomless) and generous in rests and help. Each checkpoint is walled, the Aku pad sits inside the statue gauntlet, and loose masks wait above the steel arrow and beside the green !.",
+  "Difficulty comes from timing couplings rather than from gap length or enemy count. Fire, crumble, tilt, rotation, logs and fuses each modulate gaps that rarely exceed 2 u. A designer can build every section from one short gap plus one timer."
+ ],
+ "geometryTransfer": [
+  "Fire lane: put a pair of `firetiki` heads (cycle/phase offset so their windows overlap briefly) on either side of a one-crate-wide walkway (≈1.2–1.7 m). Floor it with `crumble` tiles (short `shake`, ≈0.3 s) in two halves, and place a walled 2–3-crate safe pad (≈2.3–3.5 m) between the halves with a mask on it. On foot the lane is ≈8–10 crates (≈9–12 m), roughly 1–1.3 s of running at 9 m/s, so the shared fire window must be at least that long.",
+  "Tilting-pillar crossing: there is no tilt primitive, so use two `mover` pads (≈1.7–2.3 m tops) oscillating on `axis: \"x\"` toward each other. The gap should open and close between ≈1.7 and ≈2.9 m (1.5–2.5 crates): always inside a full jump (≈5.6 m), but only comfortable for a tap jump at the narrowest point. That teaches \"jump when they are closest\".",
+  "Log alley: line up five 1.5-crate pillars (≈1.7 m) with ≈2-crate gaps (≈2.3 m) and roll a `stone` along the line toward the player (default axis Z), with its speed and range tuned so one boulder passes every two jumps. Put a `sentry` or a `charger` on the last pad as the thrower or gatekeeper.",
+  "Walled checkpoints in open levels: in a level built on open-edged pillars over a `pit`, give every checkpoint pad a one-crate parapet on three sides, so rest is visible at a glance. For skaters, the parapet tops are ledges that grind by default.",
+  "Enemy-bounce switch: float a green ! about 4–5 m up over a `pit`, beyond the double-jump reach (≈4.6 m). Circle it with stompable `grunt`s riding `mover` pads, because a stomp bounce (≈3 m) plus a double jump reaches it. Put the checkpoint on the boarding pad, as Crash does at C4."
+ ]
+}

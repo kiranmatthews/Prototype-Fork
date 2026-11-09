@@ -9,6 +9,7 @@ against the equivalent Unity greybox workflow.
 - [All labs, tuning panels & tools](https://kiranmatthews.github.io/Prototype-Fork/labs/)
 - [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
+- [Gameplay design bible](docs/GAMEPLAY_DESIGN_BIBLE.md): crates, platforms, gaps, jumps, hazards and enemies, from 36 mapped Crash 2–4 levels (maps and evidence in [`docs/crate-bible/`](docs/crate-bible/README.md))
 - [Unity-backport level primitives](docs/UNITY_BACKPORT_PRIMITIVES.md)
 - [Level-editor round-trip contract](docs/EDITOR_ROUNDTRIP.md)
 - [Universal ground-query acceleration](docs/GROUND_QUERY_ACCELERATION.md)

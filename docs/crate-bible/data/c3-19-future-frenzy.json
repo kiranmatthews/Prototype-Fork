@@ -1,0 +1,2804 @@
+{
+  "id": "c3-19-future-frenzy",
+  "game": "Crash 3",
+  "stage": 19,
+  "name": "Future Frenzy",
+  "japaneseTitle": "まてんロードの ベルトウェイ",
+  "sources": [
+    "F3 p087-p088",
+    "F3 p094L",
+    "F3 p110L",
+    "F3 p092-p093 (stage 29 counts)",
+    "F3 p006",
+    "F3 p005R",
+    "F3 p011",
+    "P3 p034R-p037L (shots 55-84)",
+    "gamepressure N. Sane Trilogy Future Frenzy (summary)"
+  ],
+  "camera": "into-screen pads and belts (S1), then left-to-right side-scroll after a transfer pod (S2-S4)",
+  "totalBoxes": 87,
+  "totalSource": "map icon count: 82 boxes + 5 Nitros (green !); F3 prints no counts for stage 19. Section deltas verified against F3 stage-29 checkpoints 47(56)->72(85) = 25(29) [S1+C1] and 72->111 = 39 [S3 20 + bonus 19]; stage-29 total 119(133) matches gamepressure's 133",
+  "countingRule": "count = in-game counter (Nitros included). boxesF3 = F3 convention (C box included, green-!-cleared Nitros only in the bracketed figure, bonus HUD total added whole). Steel/green ! blocks are clusters with count 0",
+  "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = Aku box in time trial (F3 p005R legend). Drawn icon = normal-mode type",
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 68,
+      "basis": "S1 29 (25+4N) + S2 10 + S3 20 + S4 9 (8+1N); 63 boxes + 5 Nitros"
+    },
+    {
+      "id": "bonus",
+      "boxes": 19,
+      "basis": "F3 p094L header boxes x19 (1UP x2) and drawing (10 W, 7 ?, 2 1UP); P3 HUD x/19"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 29,
+      "boxesF3": 25,
+      "nitro": 4,
+      "cumulative": 25,
+      "cumulativeWithNitro": 29,
+      "cumulativePrinted": false,
+      "notes": "into-screen belts and beam fences; explosive escalation (TNT lid, Nitro corner, Nitro ring); 8-box iron cube. Count equals F3 stage-29 C47->C72 delta 25 (29)"
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "C2",
+      "boxes": 10,
+      "boxesF3": 10,
+      "nitro": 0,
+      "cumulative": 35,
+      "cumulativeWithNitro": 39,
+      "cumulativePrinted": false,
+      "notes": "side-scroll; sparse platforming (flip discs, saucers); C2 is where Future Tense joins (its C72)"
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "C2",
+      "to": "C3",
+      "boxes": 20,
+      "boxesF3": 20,
+      "nitro": 0,
+      "cumulative": 74,
+      "cumulativeWithNitro": 78,
+      "cumulativePrinted": false,
+      "notes": "cumulative includes the 19-box bonus entered from the S3-f platform; S3 + bonus = stage-29 C72->C111 delta 39"
+    },
+    {
+      "id": "BONUS",
+      "route": "bonus",
+      "from": "S3-f platform",
+      "to": "S3-f platform",
+      "boxes": 19,
+      "boxesF3": 19,
+      "nitro": 0,
+      "cumulative": null,
+      "cumulativeWithNitro": null,
+      "cumulativePrinted": false,
+      "notes": "side-view room: pillar + stack, floating columns, airborne finale (double jump + tornado spin)"
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "C3",
+      "to": "goal",
+      "boxes": 9,
+      "boxesF3": 8,
+      "nitro": 1,
+      "cumulative": 82,
+      "cumulativeWithNitro": 87,
+      "cumulativePrinted": false,
+      "notes": "Nitro-foundation stack, floating descent, hidden green ! under the last platform"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "first stationary bend pad after the first beam fence",
+      "composition": {
+        "wood": 3,
+        "question": 1
+      },
+      "count": 4,
+      "arrangement": "2x2 on the floor",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "after-first-fence",
+        "before-treadmill"
+      ],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "TOOL",
+        "TIME-TRIAL"
+      ],
+      "why": "first crates on a pad that does not move, so the player can stop between fence cycles; in time trial a wood box is the step for a high jump + tornado spin to the floating 1-s crates over the treadmill",
+      "evidence": "F3 p087L zoom; F3 p093R (stage-29 drawing, same 3 W + 1 ?); F3 p110L fr. 02-04",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "floating over the middle of the green treadmill",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "over-moving-belt"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "TIMED",
+        "TIME-TRIAL"
+      ],
+      "why": "must be led against belt drift: a straight-up jump from the belt carries you past it",
+      "evidence": "F3 p087L zoom (shadow drawn)",
+      "confidence": "high",
+      "ttBadges": "1"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "near-camera edge of the treadmill",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single on the belt edge",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin",
+        "timed"
+      ],
+      "relations": [
+        "belt-edge",
+        "drop-beside"
+      ],
+      "tags": [
+        "EDGE-BAIT",
+        "SINGLE",
+        "TIMED",
+        "TIME-TRIAL"
+      ],
+      "why": "the belt keeps pushing the player toward the drop while lining up the spin",
+      "evidence": "F3 p087L zoom (no shadow)",
+      "confidence": "medium",
+      "ttBadges": "1"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "floating over the far end of the treadmill",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "over-moving-belt"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "TIMED",
+        "TIME-TRIAL"
+      ],
+      "why": "third beat of a three-crate rhythm along the belt; TT takes it with a jump-spin on landing",
+      "evidence": "F3 p087L zoom; F3 p110L fr. 04",
+      "confidence": "high",
+      "ttBadges": "1"
+    },
+    {
+      "id": "S1-e",
+      "section": "S1",
+      "order": 5,
+      "where": "ring pad at the treadmill's end",
+      "composition": {
+        "tnt": 1,
+        "question": 1,
+        "wood": 1
+      },
+      "count": 3,
+      "arrangement": "3-stack: TNT top, ? middle, wood bottom",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "first-tnt",
+        "read-from-both-directions (Future Tense reverse run)"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER",
+        "TEACH"
+      ],
+      "why": "first TNT, used as a lid: the bounce-down-the-stack habit lights the fuse at the top; stomp and step off (blast takes all three) or spin the base. P3 tells the player to memorise it for the reverse run in stage 29",
+      "evidence": "F3 p087 gutter zoom; P3 p034R s57",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-f",
+      "section": "S1",
+      "order": 6,
+      "where": "bend pad after S1-e",
+      "composition": {
+        "wood": 2,
+        "question": 1,
+        "nitro": 1
+      },
+      "count": 4,
+      "arrangement": "2x2: W + ? at the back, Nitro + W at the front",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "nitro-adjacent-time-crate"
+      ],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "EXPLOSIVE-MIX",
+        "TEST",
+        "TIME-TRIAL"
+      ],
+      "why": "a Nitro planted in a 2x2 punishes spin-everything; in TT the W beside the Nitro is the 3-s crate, grazed with a spin while passing on its right (TA2)",
+      "evidence": "F3 p087R zoom; F3 TA2; P3 p036R s80",
+      "confidence": "high",
+      "ttBadges": "front W = 3"
+    },
+    {
+      "id": "S1-g",
+      "section": "S1",
+      "order": 7,
+      "where": "pad after the first BKBK hoverbot",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "two singles, spaced",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "after-BKBK",
+        "before-fence"
+      ],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "TIMED"
+      ],
+      "why": "breather pickups between the hoverbot (pass beside it) and the next beam fence; taking them costs part of a fence cycle",
+      "evidence": "F3 p087R zoom; callout 2",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-h",
+      "section": "S1",
+      "order": 8,
+      "where": "curved pad just past a beam fence",
+      "composition": {
+        "question": 1,
+        "nitro": 3
+      },
+      "count": 4,
+      "arrangement": "single ? ringed by 3 Nitros (top, left, bottom-right)",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "bounce"
+      ],
+      "relations": [
+        "after-fence",
+        "nitro-ring"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "EXPLOSIVE-MIX",
+        "TEST",
+        "TIME-TRIAL"
+      ],
+      "why": "the stage's explosive test: the player arrives with fence-dodging momentum and must stop short and take the ? from the open side; callout 3 warns any touch detonates; TT target 0:13:00 here",
+      "evidence": "F3 p087R zoom; callout 3",
+      "confidence": "high",
+      "ttBadges": "? = 1"
+    },
+    {
+      "id": "S1-i",
+      "section": "S1",
+      "order": 9,
+      "where": "ring pad before the last two fences",
+      "composition": {
+        "ironBound": 8
+      },
+      "count": 8,
+      "arrangement": "2x2x2 cube",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "body-slam"
+      ],
+      "relations": [
+        "stationary-pad"
+      ],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "REINFORCED",
+        "REWARD"
+      ],
+      "why": "a third of S1's boxes in one reinforced deposit on safe ground between belt sections; P3 'get ready for the body slam'",
+      "evidence": "F3 p087R zoom; F3 p093R zoom; count forced by stage-29 C47->C72 delta; P3 p035L s62",
+      "confidence": "medium"
+    },
+    {
+      "id": "C1",
+      "section": "S1",
+      "order": 10,
+      "where": "side-scroll start, a few steps right of the transfer pod",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "after-camera-switch"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint right after the camera switch; Future Tense reaches it from the right (its C47)",
+      "evidence": "F3 p088L; P3 p035R s66",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "first stretch, under two floating rows of 3 steel blocks",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "pair side by side in a low slot",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "slide",
+        "body-slam"
+      ],
+      "relations": [
+        "under-steel-ceiling"
+      ],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "ROW",
+        "TIME-TRIAL"
+      ],
+      "why": "the steel rows form a ceiling so the pair cannot be jumped: break to pass; TT body-slams both time crates then slides under the steel",
+      "evidence": "F3 p088L zoom; F3 TA4; F3 p110L fr. 10; P3 p036R s81",
+      "confidence": "high",
+      "ttBadges": "1, 2"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "below the lip of the step down after the saucers",
+      "composition": {
+        "aku": 1
+      },
+      "count": 1,
+      "arrangement": "single, low",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "before-flip-discs",
+        "saucer-above"
+      ],
+      "tags": [
+        "LOW",
+        "SINGLE",
+        "AKU",
+        "TOOL",
+        "ENEMY-LINK",
+        "TIME-TRIAL"
+      ],
+      "why": "first mask just before the flipping discs and saucer gauntlet; TT uses it as a footing to double-jump onto a saucer",
+      "evidence": "F3 p088L zoom; F3 p110L fr. 11-14; P3 p036R s81",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "below the ladder-and-spike-mine pad after the rotating disc",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single under the platform edge",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "under-ledge"
+      ],
+      "tags": [
+        "LOW",
+        "HIDDEN",
+        "SINGLE",
+        "EDGE-BAIT",
+        "COUNT-TRAP"
+      ],
+      "why": "out of the line of travel in a side view; easy to run over the pad and never see it",
+      "evidence": "F3 p088L zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "next pad",
+      "composition": {
+        "question": 1,
+        "wood": 3
+      },
+      "count": 4,
+      "arrangement": "2x2 face: ? W over W W",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "after-disc-crossing"
+      ],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "TIME-TRIAL"
+      ],
+      "why": "solid reward block after the disc crossing; in TT two boxes become the second Aku and a 2-s crate; target 0:45:00",
+      "evidence": "F3 p088L zoom",
+      "confidence": "medium",
+      "ttBadges": "A, 2 (positions uncertain)"
+    },
+    {
+      "id": "S2-e",
+      "section": "S2",
+      "order": 5,
+      "where": "floating above the pad before the saucer-over-treadmill",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "before-spin-jump-disc"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "TIME-TRIAL"
+      ],
+      "why": "a jump-height pickup right before a hazard you must not jump into (TA5)",
+      "evidence": "F3 p088L zoom",
+      "confidence": "high",
+      "ttBadges": "1"
+    },
+    {
+      "id": "C2",
+      "section": "S2",
+      "order": 6,
+      "where": "cross-shaped pad after spike + laser posts",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "future-tense-merge"
+      ],
+      "tags": [
+        "CHECKPOINT",
+        "ROUTE-SPLIT"
+      ],
+      "why": "Future Tense enters the map here (its C72(85)); crates on both sides are counted by stage 29 in different passes",
+      "evidence": "F3 p088L; F3 p093L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "on the C2 pad",
+      "composition": {
+        "wood": 1,
+        "question": 1
+      },
+      "count": 2,
+      "arrangement": "2-stack: W on ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "on-checkpoint-pad"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "TIME-TRIAL",
+        "AKU"
+      ],
+      "why": "in TT this is the third mask: with every Aku so far you turn invincible and can dash the gaps (TA6)",
+      "evidence": "F3 p088L zoom; F3 TA6; F3 p110L fr. 21-22",
+      "confidence": "high",
+      "ttBadges": "W = 1, ? = A"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "below the second rolling robot's pad",
+      "composition": {
+        "tnt": 1
+      },
+      "count": 1,
+      "arrangement": "single, low",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "robot-above"
+      ],
+      "tags": [
+        "LOW",
+        "SINGLE",
+        "ENEMY-LINK",
+        "TOOL"
+      ],
+      "why": "placed to blow up the rolling robot next to it (P3 'this TNT box will detonate this pest')",
+      "evidence": "F3 p088L zoom; P3 p035R s68",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "right end by the pole",
+      "composition": {
+        "wood": 3,
+        "question": 1
+      },
+      "count": 4,
+      "arrangement": "T-shape: W ? W row with a W on the ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID"
+      ],
+      "why": "ordinary deposit before the climb to the ladder pad",
+      "evidence": "F3 p088L zoom",
+      "confidence": "high",
+      "ttBadges": "? = 2"
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "below the ladder-frame + spike-mine pad",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, low",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "under-ledge"
+      ],
+      "tags": [
+        "LOW",
+        "HIDDEN",
+        "SINGLE",
+        "COUNT-TRAP"
+      ],
+      "why": "same under-the-ledge trick as S2-c",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-e",
+      "section": "S3",
+      "order": 5,
+      "where": "floating above the ladder pad",
+      "composition": {
+        "question": 1,
+        "wood": 2
+      },
+      "count": 3,
+      "arrangement": "3-stack in the air: ? top, W, W",
+      "stackHeight": 3,
+      "floating": true,
+      "access": [
+        "jump",
+        "double-jump"
+      ],
+      "relations": [
+        "floating-column"
+      ],
+      "tags": [
+        "HIGH",
+        "STACK",
+        "TIME-TRIAL"
+      ],
+      "why": "a floating column: bonking the bottom crate drops the others; the 3-s crate sits on top",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium",
+      "ttBadges": "? = 3"
+    },
+    {
+      "id": "S3-f",
+      "section": "S3",
+      "order": 6,
+      "where": "long platform after the green discs; spin-jump stand at its left end",
+      "composition": {
+        "tnt": 6
+      },
+      "count": 6,
+      "arrangement": "stepped wall: single, 2-stack, 2-stack, single",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "bounce",
+        "jump"
+      ],
+      "relations": [
+        "spin-jump-stand-before",
+        "bonus-pad-on-platform"
+      ],
+      "tags": [
+        "ON-PATH",
+        "WALL",
+        "CHAIN",
+        "TOOL",
+        "TEACH"
+      ],
+      "why": "teaches the spin-jump stand (it alone clears the TNT group in one leap); the all-box player lights one TNT and the chain removes and counts all six",
+      "evidence": "F3 p088R zoom; callout 5; P3 p035R s69",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-g",
+      "section": "S3",
+      "order": 7,
+      "where": "below the C3 pad after the 3-fence belt",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "2-stack, low",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "under-checkpoint-pad"
+      ],
+      "tags": [
+        "LOW",
+        "STACK",
+        "COUNT-TRAP"
+      ],
+      "why": "a pair under the checkpoint pad, out of sight after the long belt crossing; TT target 1:08:00",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium",
+      "ttBadges": "lower W = 1"
+    },
+    {
+      "id": "C3",
+      "section": "S3",
+      "order": 8,
+      "where": "pad after the right-moving belt with three beam fences",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "after-fence-trio"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "closes the hardest stretch (callout 6: ride the belt crouched under three fences)",
+      "evidence": "F3 p088R",
+      "confidence": "high"
+    },
+    {
+      "id": "B-a",
+      "section": "BONUS",
+      "order": 1,
+      "where": "top of a tall steel pillar",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "stack-beside-is-stair"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "TOOL",
+        "BONUS"
+      ],
+      "why": "the stack next to the pillar is the stair: break it first and this ? is out of reach",
+      "evidence": "F3 p094L zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "B-b",
+      "section": "BONUS",
+      "order": 2,
+      "where": "against the pillar",
+      "composition": {
+        "wood": 2,
+        "question": 2
+      },
+      "count": 4,
+      "arrangement": "3-stack (W, ?, ?) + one W on the floor beside",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "stair-to-B-a"
+      ],
+      "tags": [
+        "STACK",
+        "SUPPORT-ORDER",
+        "BONUS"
+      ],
+      "why": "use as a step to B-a, then break it",
+      "evidence": "F3 p094L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "BONUS",
+      "order": 3,
+      "where": "floating over the first gap",
+      "composition": {
+        "wood": 1,
+        "life": 1
+      },
+      "count": 2,
+      "arrangement": "2-stack: W over 1UP",
+      "stackHeight": 2,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "over-pit"
+      ],
+      "tags": [
+        "HIGH",
+        "STACK",
+        "LIFE",
+        "BONUS"
+      ],
+      "why": "a life over a pit; the bonus room's only risk is falling, which just ends the bonus",
+      "evidence": "F3 p094L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-d",
+      "section": "BONUS",
+      "order": 4,
+      "where": "floating column mid-room",
+      "composition": {
+        "wood": 2,
+        "question": 2
+      },
+      "count": 4,
+      "arrangement": "4-column: W, ?, ?, W",
+      "stackHeight": 4,
+      "floating": true,
+      "access": [
+        "jump",
+        "bounce"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "STACK",
+        "COLUMN-BOUNCE",
+        "BONUS"
+      ],
+      "why": "bounce chain up a floating column",
+      "evidence": "F3 p094L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-e",
+      "section": "BONUS",
+      "order": 5,
+      "where": "floating single after the column",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "BONUS"
+      ],
+      "why": "stepping beat between the column and the low platform",
+      "evidence": "F3 p094L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-f",
+      "section": "BONUS",
+      "order": 6,
+      "where": "low platform",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "pyramid (2 + 1)",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID",
+        "BONUS"
+      ],
+      "why": "safe deposit before the airborne finale",
+      "evidence": "F3 p094L zoom",
+      "confidence": "high"
+    },
+    {
+      "id": "B-g",
+      "section": "BONUS",
+      "order": 7,
+      "where": "highest point of the room",
+      "composition": {
+        "life": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "double-jump",
+        "spin"
+      ],
+      "relations": [
+        "airborne-finale"
+      ],
+      "tags": [
+        "HIGH",
+        "SINGLE",
+        "LIFE",
+        "BONUS"
+      ],
+      "why": "signature move: double jump at the peak then tornado spin to extend airtime (P3)",
+      "evidence": "F3 p094L zoom; P3 p036L s73, p036R s77",
+      "confidence": "high"
+    },
+    {
+      "id": "B-h",
+      "section": "BONUS",
+      "order": 8,
+      "where": "high floating row before the exit",
+      "composition": {
+        "wood": 2,
+        "question": 1
+      },
+      "count": 3,
+      "arrangement": "row: W W ?",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "double-jump",
+        "spin"
+      ],
+      "relations": [
+        "airborne-finale"
+      ],
+      "tags": [
+        "HIGH",
+        "ROW",
+        "FLOAT-LINE",
+        "BONUS"
+      ],
+      "why": "airborne row taken in one extended jump (P3 HUD 16/19 here)",
+      "evidence": "F3 p094L zoom; P3 p036R s77",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "first pad after C3",
+      "composition": {
+        "question": 1,
+        "wood": 1,
+        "nitro": 1
+      },
+      "count": 3,
+      "arrangement": "3-stack on a Nitro base: ? top, W, Nitro bottom",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "bounce",
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "nitro-foundation"
+      ],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER",
+        "TEST"
+      ],
+      "why": "inverse of S1-e: the explosive is the foundation, so bouncing down the stack ends on a Nitro; bounce the ?, jump-spin the W, never land on the base",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium",
+      "ttBadges": "? = 2"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "below the robot + green-disc pad",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, low",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "under-ledge"
+      ],
+      "tags": [
+        "LOW",
+        "HIDDEN",
+        "SINGLE",
+        "COUNT-TRAP"
+      ],
+      "why": "sixth under-the-ledge placement of the side-scroll (after S2-b, S2-c, S3-b, S3-d, S3-g)",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "over the gap after that pad",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "floating, descending diagonal",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "bounce"
+      ],
+      "relations": [
+        "over-pit"
+      ],
+      "tags": [
+        "FLOAT-LINE",
+        "STEPPING",
+        "EDGE-BAIT"
+      ],
+      "why": "a stair of crates over a pit: bouncing breaks your own footing, so they are a one-way descent",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-d",
+      "section": "S4",
+      "order": 4,
+      "where": "floating above the saucer/metalnic stretch near the end",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "two floating singles",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "spin",
+        "enemy-bounce"
+      ],
+      "relations": [
+        "saucer-as-step"
+      ],
+      "tags": [
+        "HIGH",
+        "PAIR",
+        "ENEMY-LINK",
+        "TIME-TRIAL"
+      ],
+      "why": "TT takes both with small jump-spins and accepts a metalnic hit; the saucer is the footing across the hole (callout 7); target 1:25:00",
+      "evidence": "F3 p088R zoom; F3 p110L fr. 26-30",
+      "confidence": "high",
+      "ttBadges": "1, 1"
+    },
+    {
+      "id": "S4-e",
+      "section": "S4",
+      "order": 5,
+      "where": "under the last platform before the goal",
+      "composition": {
+        "switchGreen": 1
+      },
+      "count": 0,
+      "arrangement": "single block, low",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "backtrack"
+      ],
+      "relations": [
+        "detonates S1-f, S1-h, S4-a Nitros"
+      ],
+      "tags": [
+        "NITRO-SWITCH",
+        "HIDDEN",
+        "LOW",
+        "COUNT-TRAP"
+      ],
+      "why": "detonates all five Nitros; hidden below the final pad so a player running for the goal misses it",
+      "evidence": "F3 p088R zoom",
+      "confidence": "high"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S1",
+      "kind": "beam fence (laser gate)",
+      "count": 8,
+      "where": "singles, pairs and diagonals across the path (approximate count)",
+      "role": "timing gate; crates sit where you stop for a cycle (S1-g, S1-h)"
+    },
+    {
+      "section": "S1",
+      "kind": "BKBK hoverbot",
+      "count": 2,
+      "where": "before S1-g and before S1-i",
+      "role": "invulnerable while lit; pass beside it (callout 2)"
+    },
+    {
+      "section": "S2",
+      "kind": "saucer lab assistant",
+      "count": 4,
+      "where": "over the side-scroll gaps and the treadmill",
+      "role": "moving foothold; S2-b is the TT step onto one"
+    },
+    {
+      "section": "S2",
+      "kind": "metalnic spike robot",
+      "count": 2,
+      "where": "ladder pads",
+      "role": "S2-c sits below one"
+    },
+    {
+      "section": "S3",
+      "kind": "rolling robot",
+      "count": 2,
+      "where": "pads after C2",
+      "role": "S3-b TNT kills one"
+    },
+    {
+      "section": "S3",
+      "kind": "beam fence",
+      "count": 3,
+      "where": "over the right-moving belt before C3",
+      "role": "ride crouched (callout 6)"
+    },
+    {
+      "section": "S4",
+      "kind": "saucer lab assistant + metalnic",
+      "count": 3,
+      "where": "final gaps",
+      "role": "saucer as a double-jump footing over the spikes (callout 7); S4-d above"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S1",
+      "kind": "open drops between belt pads",
+      "where": "both sides of every treadmill",
+      "crates": [
+        "S1-b",
+        "S1-c",
+        "S1-d"
+      ]
+    },
+    {
+      "section": "S2",
+      "kind": "pits under flipping green discs",
+      "where": "after S2-b",
+      "crates": [
+        "S2-b",
+        "S2-c"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "gap crossed with the spin-jump stand",
+      "where": "TNT platform",
+      "crates": [
+        "S3-f"
+      ]
+    },
+    {
+      "section": "S4",
+      "kind": "pit with a floating crate descent",
+      "where": "after the green-disc pad",
+      "crates": [
+        "S4-c"
+      ]
+    },
+    {
+      "section": "S4",
+      "kind": "spike belt / metalnic hole",
+      "where": "before the goal",
+      "crates": [
+        "S4-d",
+        "S4-e"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-h"
+      ],
+      "summary": "? ringed by three Nitros just past a beam fence",
+      "solution": "stop short, approach from the open side, spin or bounce the ?",
+      "wrongOrder": "arriving at fence-dodging speed and spinning into the cluster",
+      "loss": "a life"
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S1-e"
+      ],
+      "summary": "TNT lid on ? on wood",
+      "solution": "stomp the TNT and step off, or spin the base",
+      "wrongOrder": "bounce-chain down from the top",
+      "loss": "a life if you stay; count preserved either way"
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "S1-i"
+      ],
+      "summary": "2x2x2 iron-bound cube",
+      "solution": "body slams layer by layer on the stationary pad",
+      "wrongOrder": "spin/jump and move on",
+      "loss": "8 boxes"
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "S3-f"
+      ],
+      "summary": "six-TNT wall with a spin-jump stand in front",
+      "solution": "clear goal: ride the stand over; all-box goal: light one TNT and retreat (chain counts all six)",
+      "wrongOrder": "standing near the wall after lighting it",
+      "loss": "a life / 6 boxes"
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S4-a"
+      ],
+      "summary": "? on W on a Nitro base",
+      "solution": "bounce the ?, jump-spin the W at its own height",
+      "wrongOrder": "bouncing on the W and landing on the Nitro",
+      "loss": "a life"
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "S4-e",
+        "S1-f",
+        "S1-h",
+        "S4-a"
+      ],
+      "summary": "green ! hidden under the last platform",
+      "solution": "drop below the final pad before the goal",
+      "wrongOrder": "running straight to the goal",
+      "loss": "5 boxes (all Nitros)"
+    },
+    {
+      "id": "P7",
+      "clusters": [
+        "S1-a",
+        "S1-e",
+        "S1-f",
+        "S1-i",
+        "C2"
+      ],
+      "summary": "two-direction design: Future Tense enters at C2 and runs S2 and S1 backwards, then forwards",
+      "solution": "memorise S1/S2 (P3 shots 57, 61, 63, 64)",
+      "wrongOrder": "n/a",
+      "loss": "the all-box diamond lives in stage 29, not here"
+    }
+  ],
+  "observations": [
+    "No gem in this stage, yet 87 boxes and a hidden green !: the crates are built for their second life in Future Tense, whose printed checkpoints count them pass by pass.",
+    "Crates price the timing hazard: each cluster sits where a stop already happens (before/after a beam fence, on a stationary pad), so the all-box run roughly doubles the fence encounters.",
+    "Crates over moving belts need a lead; the belt-edge crate is bait because the belt keeps pushing toward the drop.",
+    "Explosive escalation: TNT lid (S1-e) -> Nitro corner in a 2x2 (S1-f) -> Nitro ring (S1-h) -> Nitro foundation (S4-a).",
+    "TNT as tool, wall and weapon: it kills a robot (S3-b) and forms a wall a spring clears (S3-f).",
+    "Side-scroll hiding is vertical: six clusters (S2-b, S2-c, S3-b, S3-d, S3-g, S4-b) and the green ! sit below platform lips.",
+    "One big reinforced deposit (8 of S1's 25 boxes) gives a slow beat after the belt-and-fence rush.",
+    "Time trial converts two crates into masks so a flawless run is invincible through the three-fence belt.",
+    "Density: S1 25+4N in 9 clusters, S2 10, S3 20 + bonus 19, S4 8+1N.",
+    "Checkpoints follow camera changes and the stage-29 merge point."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen",
+      "notes": "open-edged walkways, ring pads and treadmills over a city void; ends at a transfer pod with a very small ledge (P3 s64). Future Tense (stage 29) runs this section backwards toward the camera"
+    },
+    {
+      "section": "S2",
+      "mode": "side-scroll",
+      "notes": "left-to-right after the pod; C1 right after the camera switch; Future Tense also runs S2 right-to-left"
+    },
+    {
+      "section": "S3",
+      "mode": "side-scroll",
+      "notes": "left-to-right; bonus entered from the TNT platform"
+    },
+    {
+      "section": "S4",
+      "mode": "side-scroll",
+      "notes": "left-to-right run-out to the goal"
+    },
+    {
+      "section": "BONUS",
+      "mode": "side-scroll",
+      "notes": "side view; signs instruct the double jump + tornado spin (P3 s73, s75)"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "start ring pad + walkway with small steps",
+      "size": "walkway ≈3 wide (three floor lanes, P3 s56)",
+      "heightDelta": "small steps, +≈0.5 each",
+      "edges": "open edges",
+      "behaviour": "static; move: run through without jumping (TA1); coupling: first beam fence (O-S1-a)",
+      "roles": [
+        "REST",
+        "TEACH"
+      ],
+      "why": "The first fence is met on a plain walkway, so the cycle is learned with nothing else to do",
+      "evidence": "F3 p087L; TA1; P3 s56",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "ring bend pad (stationary) with S1-a",
+      "size": "≈3 × 3",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "A still pad between a fence and a belt: the place to stop",
+      "evidence": "F3 p087L",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "green treadmill (belt) with three floating/edge crates",
+      "size": "≈3 wide × ≈8–10 long",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "conveyor (direction not stated; F3 p086 point 2: belts carry you forward or backward, into monsters or off the end); move: lead every jump; TT: high jump from an S1-a crate + tornado spin for the two floating crates (TT 02–04)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "A moving floor under floating crates: a straight-up jump drifts, so every pickup needs a lead",
+      "evidence": "F3 p087L; P3 s58; F3 p086 point 2; F3 p087L header",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "round pad at the treadmill end with the TNT-lid stack S1-e",
+      "size": "≈2.5 round",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "The belt delivers you onto a TNT lid",
+      "evidence": "F3 p087L; P3 s57",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "bend pad with the Nitro-corner 2×2 (S1-f)",
+      "size": "≈3 × 3",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "A small pad where the Nitro corner must be read before spinning",
+      "evidence": "F3 p087R; P3 s80",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-f",
+      "section": "S1",
+      "shape": "walkway with a BKBK, then a pad with two singles (S1-g)",
+      "size": "≈3 wide",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static; coupling: BKBK E-S1-a; saucer E-S1-c",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "Hoverbot timing on a lane wide enough to pass beside it (callout 2)",
+      "evidence": "F3 p087R; callout 2; P3 s59",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-g",
+      "section": "S1",
+      "shape": "curved pad just past a fence, with the Nitro ring S1-h",
+      "size": "≈3 × 2",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "The fence before it makes you hurry exactly where you must stop short",
+      "evidence": "F3 p087R; callout 3",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-h",
+      "section": "S1",
+      "shape": "ring pad (stationary) with the iron cube S1-i",
+      "size": "≈3 × 3",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "Safe ground for repeated body slams between fence groups",
+      "evidence": "F3 p087R; P3 s62",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-i",
+      "section": "S1",
+      "shape": "transfer-pod ledge",
+      "size": "small (≈1.5)",
+      "heightDelta": "0",
+      "edges": "open edges",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "\"This ledge is very small\" (P3 s64): a tight landing after two fences and a treadmill; C1 follows the camera switch",
+      "evidence": "P3 s63–s64; F3 p087R",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "long walkway (C1) under a steel-block ceiling slot, then a jog (step down, step up)",
+      "size": "≈10–12 long",
+      "heightDelta": "−0.5 / +0.5 (jog); ceiling ≈1 u above the floor over S2-a",
+      "edges": "open front/back",
+      "behaviour": "static; move: slide under the steel blocks (TT 10); coupling: two low saucers over the jog; a beam fence on the next step",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "Hanging spikes overhead at the Future-Tense entry (P3 s65) and a steel ceiling over S2-a: the side-scroll opens by limiting jump height",
+      "evidence": "F3 p088L; P3 s65–s66; F3 p110L 10",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "arch pad with a metalnic (S2-c hangs below its edge)",
+      "size": "≈3",
+      "heightDelta": "+0.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "The disc lands you next to a spike robot: one high jump clears it (TT 16)",
+      "evidence": "F3 p088L; F3 p110L 16",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "pad with the S2-d 2×2",
+      "size": "≈3",
+      "heightDelta": "+0.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "Rest beat after the disc and the metalnic",
+      "evidence": "F3 p088L",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "green treadmill pad under hanging ceiling spikes, a saucer above it, a beam fence and a spin-jump disc at its end",
+      "size": "≈5–6 long",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "conveyor (direction not stated); coupling: TA5: never ride the spin-jump disc in time trial (a long detour)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "Belt + overhead spikes + saucer: a high bounce off the saucer is capped by the spikes (TT 17–18)",
+      "evidence": "F3 p088L; F3 p110L 17–18",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-e",
+      "section": "S2",
+      "shape": "bouncy (spin-jump stand) at the treadmill end",
+      "size": "≈1.5",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "launches higher and longer",
+      "roles": [],
+      "why": "An optional launcher that the time trial must ignore (TA5) — the object is introduced as a trap for speed",
+      "evidence": "F3 p088L TA5",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-f",
+      "section": "S2",
+      "shape": "cross-shaped pad with C2",
+      "size": "≈3 × 3",
+      "heightDelta": "+0.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "Future Tense enters here",
+      "evidence": "F3 p088L; F3 p093L",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "two pads with a BKBK each (the second a raised step with the S3-b TNT below)",
+      "size": "≈3 each",
+      "heightDelta": "+1 (step)",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "Hoverbots on small pads: wait for the light (P3 s67) or blow one up with the TNT (P3 s68)",
+      "evidence": "F3 p088L; P3 s67–s68",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "arch pad with a metalnic; S3-d below its edge, S3-e floating above",
+      "size": "≈3",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "Spike robot under a floating column: jump timing doubles as crate timing",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-c",
+      "section": "S3",
+      "shape": "long platform: spin-jump stand at its left end, the 6-TNT stepped wall, the bonus pad",
+      "size": "≈12 long",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static; move: ride the stand over the wall, or detonate the wall",
+      "roles": [
+        "BONUS-PAD",
+        "CHOKE"
+      ],
+      "why": "The wall blocks the platform; the stand is the intended way over (callout 5)",
+      "evidence": "F3 p088R; callout 5; P3 s69–s70",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S3-d",
+      "section": "S3",
+      "shape": "walkway end at a belt junction: a beam fence, a metalnic, then (per F3's pointer) C3",
+      "size": "≈3",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "PERCH"
+      ],
+      "why": "A checkpoint right before the hardest timing test (see open questions for the C3 position)",
+      "evidence": "F3 p088R zoom",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-e",
+      "section": "S3",
+      "shape": "green belt (right-moving) under three beam fences",
+      "size": "≈6 long",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "conveyor toward travel; move: crouch while riding (callout 6); TT slides the third fence after invincibility ends (22)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "Callout 6: ride the belt and stay crouched — the answer becomes posture, not timing",
+      "evidence": "F3 p088R callout 6; F3 p110L 22",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "pad with S4-a; the crystal sits on a lower pad below-right; a black post (function not stated)",
+      "size": "≈3",
+      "heightDelta": "0 / −1 (crystal pad)",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "A detour down to the crystal",
+      "evidence": "F3 p088R; P3 s71",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-b",
+      "section": "S4",
+      "shape": "bouncy (spin-jump stand) on a pad with a BKBK",
+      "size": "≈3 pad, stand ≈1.5",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "launches over the next gap; move: hold right while riding the stand (TT 25)",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "The third stand is the required launcher: it carries you over a gap past S4-c (P3 s72: \"spin over to the other side\")",
+      "evidence": "F3 p088R; P3 s72; F3 p110L 24–25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-c",
+      "section": "S4",
+      "shape": "green belt with a metalnic at its end; S4-d floats above",
+      "size": "≈5 long",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "conveyor (direction not stated)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "TT takes the floating pair with small jump-spins and accepts a metalnic hit (26–27)",
+      "evidence": "F3 p088R zoom; F3 p110L 26–27",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-d",
+      "section": "S4",
+      "shape": "last pad with a metalnic; the green ! hangs below it; goal beyond",
+      "size": "≈3",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "Final landing with one more spike robot",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-a",
+      "section": "BONUS",
+      "shape": "start slab",
+      "size": "≈2",
+      "heightDelta": "0",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "—",
+      "evidence": "F3 p094L strip",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "BONUS",
+      "shape": "slab with a tall steel pillar (top ≈5 high) and the B-b stack beside it",
+      "size": "≈6",
+      "heightDelta": "pillar +5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "The crate stack is the stair to the pillar top",
+      "evidence": "F3 p094L strip",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-c",
+      "section": "BONUS",
+      "shape": "Z-shaped steel ledges (high-low) and a low slab; B-d column and B-e float above, B-f pyramid on the low part",
+      "size": "≈3 + ≈5",
+      "heightDelta": "+1 / −1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "Height changes set up the column bounce and the final jump",
+      "evidence": "F3 p094L strip",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "open side drops along every walkway, pad and belt (no gap on the line)",
+      "width": "n/a (edges)",
+      "heightDelta": "drop into the void",
+      "landing": "—",
+      "lethal": true,
+      "runUp": "—",
+      "move": [
+        "plain"
+      ],
+      "coupling": "belts push along the lane; fences and BKBKs make you dodge sideways",
+      "failure": "death",
+      "nearby": [
+        "S1-c"
+      ],
+      "why": "TA1: no jump is needed, so the open edge is the only fall risk; the edge crate S1-c sits right on it",
+      "evidence": "F3 p087; TA1; F3 p086 point 1; P3 s56–s58",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "pit crossed on a flip disc (callout 4)",
+      "width": "≈4–5 overall; disc ≈1.5",
+      "heightDelta": "0",
+      "landing": "arch pad ≈3",
+      "lethal": true,
+      "runUp": "walkway end",
+      "move": [
+        "plain",
+        "plain"
+      ],
+      "coupling": "the disc turns vertical and horizontal at fixed intervals; green = safe, red flashing = about to flip",
+      "failure": "death",
+      "nearby": [
+        "S2-b",
+        "E-S2-c"
+      ],
+      "why": "A phase platform with a colour telegraph, first met alone over a pit",
+      "evidence": "F3 p088L callout 4; F3 p110L 15",
+      "confidence": "high"
+    },
+    {
+      "id": "G-S2-b",
+      "section": "S2",
+      "kind": "two gaps around a small stepping block, then a pad with a metalnic and a beam fence",
+      "width": "gap ≈1.5 · block ≈1.5 · gap ≈1.5",
+      "heightDelta": "0",
+      "landing": "metalnic pad ≈3",
+      "lethal": true,
+      "runUp": "treadmill",
+      "move": [
+        "plain",
+        "held/high"
+      ],
+      "coupling": "metalnic at the hole edge; fence on the landing pad",
+      "failure": "death",
+      "nearby": [
+        "E-S2-f"
+      ],
+      "why": "TT 19–20: run to the very edge of the hole and high-jump, clearing hole and metalnic together",
+      "evidence": "F3 p088L; F3 p110L 19–20",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "pit crossed on three small green discs (same icon as callout 4's flip disc)",
+      "width": "≈5–6 overall; discs ≈1",
+      "heightDelta": "0",
+      "landing": "long TNT platform",
+      "lethal": true,
+      "runUp": "arch pad ≈3",
+      "move": [
+        "plain",
+        "plain",
+        "plain",
+        "plain"
+      ],
+      "coupling": "disc phase (if they flip like callout 4's)",
+      "failure": "death",
+      "nearby": [
+        "S3-f"
+      ],
+      "why": "The flip disc returns as a three-step chain",
+      "evidence": "F3 p088R zoom",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "gap crossed by the spin-jump launch, past three descending floating crates (S4-c)",
+      "width": "≈5–7 (map)",
+      "heightDelta": "≈0 to −1",
+      "landing": "green belt",
+      "lethal": true,
+      "runUp": "stand",
+      "move": [
+        "arrow"
+      ],
+      "coupling": "BKBK on the launch pad (TT 24)",
+      "failure": "death",
+      "nearby": [
+        "S4-c",
+        "E-S4-a"
+      ],
+      "why": "A forced launch: the crates are a stair for anyone who misses the arc",
+      "evidence": "F3 p088R zoom; P3 s72; F3 p110L 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S4-b",
+      "section": "S4",
+      "kind": "hole bridged by a saucer researcher (callout 7)",
+      "width": "≈3–4",
+      "heightDelta": "0",
+      "landing": "last pad (metalnic)",
+      "lethal": true,
+      "runUp": "belt end",
+      "move": [
+        "enemy-bounce",
+        "double"
+      ],
+      "coupling": "saucer drifts over the hole; metalnic on the landing",
+      "failure": "death",
+      "nearby": [
+        "S4-d",
+        "E-S4-c",
+        "E-S4-d"
+      ],
+      "why": "The enemy is the bridge; the double jump off it clears the landing metalnic's spikes (callout 7)",
+      "evidence": "F3 p088R callout 7; F3 p110L 28–30",
+      "confidence": "high"
+    },
+    {
+      "id": "G-B-a",
+      "section": "BONUS",
+      "kind": "pit with B-c (W over 1UP) floating in it",
+      "width": "≈1.5–2",
+      "heightDelta": "0",
+      "landing": "Z-shaped steel ledge",
+      "lethal": false,
+      "runUp": "slab",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "bonus ends",
+      "nearby": [
+        "B-c"
+      ],
+      "why": "A life floats over the gap: the risk is only the bonus",
+      "evidence": "F3 p094L strip",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-B-b",
+      "section": "BONUS",
+      "kind": "long final gap under the floating row (B-h) and the 1UP at the peak (B-g)",
+      "width": "≈6 (map)",
+      "heightDelta": "≈0",
+      "landing": "exit slab ≈2.5",
+      "lethal": false,
+      "runUp": "ledge top",
+      "move": [
+        "double",
+        "spin-extended"
+      ],
+      "coupling": "none",
+      "failure": "bonus ends",
+      "nearby": [
+        "B-g",
+        "B-h"
+      ],
+      "why": "Signed double jump + tornado spin (P3 s73, s75, s77): the widest gap of the level, used as an airborne pickup line",
+      "evidence": "F3 p094L strip; P3 s73–s77",
+      "confidence": "medium"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "crate-bounce",
+        "held/high",
+        "spin-extended",
+        "plain"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "— (crates float ≈2 high over the belt)",
+      "rest": "P-S1-d",
+      "noStop": false,
+      "why": "TT uses an S1-a crate as a step to reach the floating crates over the treadmill; ordinary play has no forced jump in S1 (TA1)",
+      "evidence": "F3 p110L 02–04; TA1"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": 3,
+      "moves": [
+        "plain",
+        "enemy-bounce",
+        "double"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "step lip",
+      "rest": "P-S2-a jog",
+      "noStop": false,
+      "why": "TT 11–14: big jump to the Aku box below the step, use it as footing, double jump to stomp the saucer",
+      "evidence": "F3 p110L 11–14"
+    },
+    {
+      "id": "J-S2-b",
+      "section": "S2",
+      "count": 2,
+      "moves": [
+        "plain",
+        "plain"
+      ],
+      "rhythm": "syncopated (wait for the disc)",
+      "maxGap": "≈4–5 overall",
+      "rest": "P-S2-b",
+      "noStop": false,
+      "why": "Board the disc only when horizontal and leave at once (TT 15)",
+      "evidence": "F3 p088L callout 4; F3 p110L 15"
+    },
+    {
+      "id": "J-S2-c",
+      "section": "S2",
+      "count": 3,
+      "moves": [
+        "plain",
+        "plain",
+        "held/high"
+      ],
+      "rhythm": "even",
+      "maxGap": "≈1.5",
+      "rest": "P-S2-f (C2)",
+      "noStop": false,
+      "why": "Two hops around the stepping block, then a high jump over the hole-edge metalnic (TT 19–20)",
+      "evidence": "F3 p088L; F3 p110L 19–20"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": 4,
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even (if the discs flip, syncopated)",
+      "maxGap": "≈1–1.5",
+      "rest": "P-S3-c",
+      "noStop": false,
+      "why": "Three small discs over a pit to the long platform",
+      "evidence": "F3 p088R zoom"
+    },
+    {
+      "id": "J-S3-b",
+      "section": "S3",
+      "count": 1,
+      "moves": [
+        "arrow"
+      ],
+      "rhythm": "single launch",
+      "maxGap": "— (TNT wall one to two crates high)",
+      "rest": "far end of P-S3-c",
+      "noStop": false,
+      "why": "Standing on the stand alone gives a higher, longer jump that clears the whole TNT group (callout 5)",
+      "evidence": "F3 p088R callout 5; P3 s69"
+    },
+    {
+      "id": "J-S4-a",
+      "section": "S4",
+      "count": 3,
+      "moves": [
+        "arrow",
+        "plain",
+        "plain"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "≈5–7",
+      "rest": "P-S4-c belt",
+      "noStop": true,
+      "why": "Launch over the gap, land on the belt, small jump-spins for the floating pair (TT 25–27)",
+      "evidence": "F3 p110L 25–27"
+    },
+    {
+      "id": "J-S4-b",
+      "section": "S4",
+      "count": 2,
+      "moves": [
+        "enemy-bounce",
+        "double"
+      ],
+      "rhythm": "even",
+      "maxGap": "≈3–4",
+      "rest": "P-S4-d",
+      "noStop": true,
+      "why": "Saucer bounce then double jump over the landing metalnic (callout 7)",
+      "evidence": "F3 p088R callout 7; F3 p110L 28–30"
+    },
+    {
+      "id": "J-B-a",
+      "section": "BONUS",
+      "count": 5,
+      "moves": [
+        "plain",
+        "crate-bounce",
+        "double",
+        "spin-extended"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "≈6",
+      "rest": "exit slab",
+      "noStop": true,
+      "why": "Stack-climb, column bounce, then the signed double jump + tornado spin through the high row",
+      "evidence": "F3 p094L; P3 s73–s77"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S1-a",
+      "section": "S1",
+      "kind": "beam fences (laser gates), ≈8 in S1: two beams (low and high) between posts on both sides of the walkway",
+      "placement": "across path (singles, a diagonal pair, two in a row)",
+      "timing": "fire at fixed intervals (callout 1); all synchronised from the start — the timing at the first fence carries to the later ones (TT intro); TT 01 starts the run right after the first fence has fired three times",
+      "counter": [
+        "wait-and-go",
+        "jump in from the side edge and twist through at the apex (TA3, TT 07)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "crates before/after fences (S1-g, S1-h)",
+        "BKBKs"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "RHYTHM"
+      ],
+      "why": "The fence is the metronome of the into-screen half; crates sit where a stop already happens",
+      "evidence": "F3 p087L callout 1, TA3; F3 p110L intro, 01, 07; P3 s56, s61"
+    },
+    {
+      "id": "O-S1-b",
+      "section": "S1, S2, S3, S4",
+      "kind": "treadmills (belt-ways)",
+      "placement": "on path",
+      "timing": "continuous; direction varies (F3 p086 point 2: they carry you forward or backward, into monsters or off the end)",
+      "counter": [
+        "lead jumps",
+        "ride (callout 6)"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "floating crates S1-b/c/d",
+        "saucer and hanging spikes (S2)",
+        "three fences (S3)"
+      ],
+      "roles": [
+        "TEACH",
+        "TEST"
+      ],
+      "why": "Moving floors make depth hard to read (F3 p087L header) and turn every pickup into a lead",
+      "evidence": "F3 p086 point 2; F3 p087L header; P3 s58"
+    },
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "steel-block ceiling (two floating rows of three)",
+      "placement": "overhead, over S2-a",
+      "timing": "—",
+      "counter": [
+        "slide under",
+        "break the crates below and slide"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S2-a time crates"
+      ],
+      "roles": [
+        "TEACH"
+      ],
+      "why": "Opens the side-scroll by taking the jump away",
+      "evidence": "F3 p088L; F3 p110L 10"
+    },
+    {
+      "id": "O-S2-b",
+      "section": "S2, S3",
+      "kind": "flip discs (vertical/horizontal on a cycle)",
+      "placement": "on path, over pits",
+      "timing": "fixed interval; green = safe, red flashing = about to turn vertical (callout 4)",
+      "counter": [
+        "wait-and-go",
+        "board only when horizontal"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "pit",
+        "metalnic on the landing (S2)"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEACH"
+      ],
+      "why": "A telegraphed phase platform, met alone first",
+      "evidence": "F3 p088L callout 4; F3 p110L 15"
+    },
+    {
+      "id": "O-S2-c",
+      "section": "S2",
+      "kind": "hanging ceiling spikes",
+      "placement": "overhead: at the C1 entry and over the saucer treadmill",
+      "timing": "static",
+      "counter": [
+        "keep jumps low",
+        "avoid over-high saucer bounces"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "saucer E-S2-e",
+        "treadmill"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "Caps the jump height exactly where an enemy bounce would launch you high",
+      "evidence": "P3 s65; F3 p110L 17–18"
+    },
+    {
+      "id": "O-S2-d",
+      "section": "S2, S3",
+      "kind": "beam fences on side-scroll pads (≈3: on the step before S2-b, at the treadmill end, on the metalnic pad before C2, plus one before the S3 junction)",
+      "placement": "across the walkway depth",
+      "timing": "periodic (cycle not stated)",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "metalnics",
+        "treadmill"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "The fence returns in side view as a pad hazard",
+      "evidence": "F3 p088L–R map"
+    },
+    {
+      "id": "O-S3-a",
+      "section": "S3",
+      "kind": "TNT wall (six TNT stepped 1-2-2-1)",
+      "placement": "across path on the long platform",
+      "timing": "3-s fuse when stomped",
+      "counter": [
+        "jump over with the spin-jump stand (callout 5)",
+        "stomp one and retreat (chains all six)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "spin-jump stand",
+        "bonus pad"
+      ],
+      "roles": [
+        "LANE-BLOCK",
+        "TEACH"
+      ],
+      "why": "One object, two answers: clear it with the new device, or blow it up for the count",
+      "evidence": "F3 p088R callout 5; P3 s69"
+    },
+    {
+      "id": "O-S3-b",
+      "section": "S3",
+      "kind": "three beam fences in a row over a right-moving belt",
+      "placement": "across path",
+      "timing": "periodic; the belt sets your speed",
+      "counter": [
+        "stay crouched while riding (callout 6)",
+        "slide (TT 22)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "metalnic at the junction",
+        "C3"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "The fence finale: belt + fences, answered by posture",
+      "evidence": "F3 p088R callout 6; F3 p110L 22"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S1-a",
+      "section": "S1",
+      "kind": "BKBK (ビカビカ) hoverbot",
+      "archetype": "shielded/armored",
+      "behaviour": "hovers on the path and lights up periodically; while lit only the bazooka or super body slam hurt it; in into-screen areas a left-right pair swaps places periodically (F3 p086)",
+      "counter": [
+        "jump",
+        "spin",
+        "body slam while unlit",
+        "pass beside it (callout 2)"
+      ],
+      "fails": [
+        "attacking while lit (no bazooka on the first visit)"
+      ],
+      "placement": "on line, on a 3-wide walkway",
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "A blocker you are told not to fight: the lesson is to read its light and pass",
+      "evidence": "F3 p087R callout 2; F3 p086; P3 s59",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S1-b",
+      "section": "S1",
+      "kind": "BKBK hoverbot",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "as E-S1-a"
+      ],
+      "fails": [
+        "attacking while lit"
+      ],
+      "placement": "on line before the iron cube, among diagonal fences",
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "firstAlone": false,
+      "why": "Second meeting, now coupled with fences",
+      "evidence": "F3 p087R map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S1-c",
+      "section": "S1",
+      "kind": "saucer researcher (円盤研究員)",
+      "archetype": "flier",
+      "behaviour": "hovers over the walkway; two kinds: a low one (high jump to stomp) and a high one that drifts left and right firing a beam (double-jump stomp only) — F3 p086",
+      "counter": [
+        "stomp (jump)"
+      ],
+      "fails": [
+        "spin",
+        "slide"
+      ],
+      "placement": "on line near the fences",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": true,
+      "why": "P3 s60: \"you can jump on this thing or pass it by\" — optional, a preview of the side-scroll's footholds",
+      "evidence": "P3 s60; F3 p086",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "saucer researchers ×2 (low)",
+      "archetype": "flier",
+      "behaviour": "float over the C1 walkway jog",
+      "counter": [
+        "stomp (high jump)"
+      ],
+      "fails": [
+        "spin",
+        "slide"
+      ],
+      "placement": "on line",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Two hovering hurdles on the first side-scroll walkway",
+      "evidence": "F3 p088L map",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-c",
+      "section": "S2",
+      "kind": "saucer researcher",
+      "archetype": "flier",
+      "behaviour": "hovers at the walkway end before the flip disc",
+      "counter": [
+        "double-jump stomp (TT 13–14)"
+      ],
+      "fails": [
+        "spin"
+      ],
+      "placement": "take-off edge of G-S2-a",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": false,
+      "why": "TT bounces from the Aku box onto it: enemy as footing",
+      "evidence": "F3 p088L; F3 p110L 13–14",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-d",
+      "section": "S2",
+      "kind": "metalnic (メタルニック)",
+      "archetype": "static",
+      "behaviour": "spike robot that shows and hides its spikes; dangerous while the spikes are out; a bazooka hit only stuns it (F3 p086)",
+      "counter": [
+        "high jump over it (TT 16)",
+        "spin or jump when the spikes are in"
+      ],
+      "fails": [
+        "touching it while the spikes are out"
+      ],
+      "placement": "landing pad of the flip disc",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Spike robot placed exactly where the disc lands you",
+      "evidence": "F3 p086; F3 p088L; F3 p110L 16",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S2-e",
+      "section": "S2",
+      "kind": "saucer researcher",
+      "archetype": "flier",
+      "behaviour": "hovers over the treadmill under hanging spikes",
+      "counter": [
+        "stomp"
+      ],
+      "fails": [
+        "bouncing too high (spikes)"
+      ],
+      "placement": "above a moving belt",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": false,
+      "why": "The bounce is capped by the ceiling spikes",
+      "evidence": "F3 p088L; F3 p110L 17–18",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-f",
+      "section": "S2",
+      "kind": "metalnic",
+      "archetype": "static",
+      "behaviour": "as E-S2-d",
+      "counter": [
+        "high jump from the hole's edge (TT 19–20)"
+      ],
+      "fails": [
+        "touching it while the spikes are out"
+      ],
+      "placement": "at a hole edge, on the pad before C2",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Hole and enemy cleared in one jump",
+      "evidence": "F3 p088L; F3 p110L 19–20",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-a",
+      "section": "S3",
+      "kind": "BKBK",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-a, now in side view",
+      "counter": [
+        "wait for the light to go out, then jump or spin"
+      ],
+      "fails": [
+        "attacking while lit"
+      ],
+      "placement": "on the pad after C2",
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "firstAlone": false,
+      "why": "P3 s67: \"wait and check out his movement pattern before taking him on\"",
+      "evidence": "F3 p088L; P3 s67",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-b",
+      "section": "S3",
+      "kind": "BKBK",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "TNT/blast (S3-b TNT below its pad)",
+        "unlit spin"
+      ],
+      "fails": [
+        "attacking while lit"
+      ],
+      "placement": "raised step pad above the S3-b TNT",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "Before the bazooka exists the TNT is the tool for an invulnerable enemy (P3 s68)",
+      "evidence": "F3 p088L; P3 s68",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S3-c",
+      "section": "S3",
+      "kind": "metalnic",
+      "archetype": "static",
+      "behaviour": "as E-S2-d",
+      "counter": [
+        "jump over",
+        "spin when the spikes are in"
+      ],
+      "fails": [
+        "touching it while the spikes are out"
+      ],
+      "placement": "arch pad under S3-e",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Crate timing and spike timing coincide",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-d",
+      "section": "S3",
+      "kind": "saucer researcher",
+      "archetype": "flier",
+      "behaviour": "hovers over the right end of the TNT platform",
+      "counter": [
+        "stomp"
+      ],
+      "fails": [
+        "spin"
+      ],
+      "placement": "above the platform before the fence belt",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "A last hovering hurdle before the fence finale",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-e",
+      "section": "S3",
+      "kind": "metalnic",
+      "archetype": "static",
+      "behaviour": "as E-S2-d",
+      "counter": [
+        "jump over",
+        "spin when the spikes are in"
+      ],
+      "fails": [
+        "touching it while the spikes are out"
+      ],
+      "placement": "walkway/belt junction at C3",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "Guards the entry to the three-fence belt",
+      "evidence": "F3 p088R zoom",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-a",
+      "section": "S4",
+      "kind": "BKBK",
+      "archetype": "shielded/armored",
+      "behaviour": "as E-S1-a",
+      "counter": [
+        "unlit spin or jump (TT 24 arrives just as it can be beaten)"
+      ],
+      "fails": [
+        "attacking while lit"
+      ],
+      "placement": "on the spin-jump launch pad",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "Guards the required launcher",
+      "evidence": "F3 p088R; F3 p110L 24",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-b",
+      "section": "S4",
+      "kind": "metalnic",
+      "archetype": "static",
+      "behaviour": "as E-S2-d",
+      "counter": [
+        "jump over",
+        "with an Aku mask, ram it (TT 26–27)"
+      ],
+      "fails": [
+        "touching it unmasked while the spikes are out"
+      ],
+      "placement": "end of the green belt",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Belt delivers you onto it",
+      "evidence": "F3 p088R; F3 p110L 26–27",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-c",
+      "section": "S4",
+      "kind": "saucer researcher",
+      "archetype": "flier",
+      "behaviour": "drifts over the last hole",
+      "counter": [
+        "stomp, then double jump (callout 7)"
+      ],
+      "fails": [
+        "spin"
+      ],
+      "placement": "in the hole (as a bridge)",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": false,
+      "why": "The enemy is the bridge",
+      "evidence": "F3 p088R callout 7; F3 p110L 28–30",
+      "confidence": "high"
+    },
+    {
+      "id": "E-S4-d",
+      "section": "S4",
+      "kind": "metalnic",
+      "archetype": "static",
+      "behaviour": "as E-S2-d",
+      "counter": [
+        "double jump over it from the saucer (callout 7)",
+        "masked: ram it (TT 30)"
+      ],
+      "fails": [
+        "touching it unmasked while the spikes are out"
+      ],
+      "placement": "landing pad of the last hole",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "Spike robot on the landing",
+      "evidence": "F3 p088R callout 7",
+      "confidence": "high"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "start pad",
+        "beam fence (2 beams)",
+        "2×2 on a still pad",
+        "treadmill with 3 floating/edge crates",
+        "TNT lid on a round pad",
+        "Nitro-corner 2×2",
+        "BKBK (pass beside)",
+        "saucer (optional)",
+        "pad pair",
+        "fence",
+        "Nitro ring on a curved pad",
+        "BKBK + diagonal fences",
+        "iron cube on a still pad",
+        "two fences",
+        "treadmill",
+        "small pod ledge"
+      ],
+      "gaps": 1,
+      "enemies": 3,
+      "hazards": 2
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "C1 under a steel ceiling (slide)",
+        "two low saucers over a jog",
+        "fence on a step (Aku below)",
+        "saucer at the edge",
+        "flip disc over a pit",
+        "metalnic on the landing",
+        "2×2 pad",
+        "treadmill under hanging spikes with a saucer, fence and spin-jump disc",
+        "stepping block",
+        "metalnic at the hole edge + fence",
+        "C2"
+      ],
+      "gaps": 2,
+      "enemies": 6,
+      "hazards": 5
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "S3-a on the C2 pad",
+        "BKBK",
+        "BKBK above a TNT",
+        "post",
+        "pyramid",
+        "metalnic under a floating column",
+        "three discs over a pit",
+        "spin-jump stand → TNT wall (bonus pad)",
+        "saucer",
+        "fence",
+        "metalnic at the junction",
+        "C3 (per F3 pointer)",
+        "three fences over a right-moving belt (crouch)"
+      ],
+      "gaps": 1,
+      "enemies": 5,
+      "hazards": 5
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "Nitro-base stack",
+        "crystal below",
+        "BKBK on the launch pad",
+        "spin-jump launch over a gap past 3 floating crates",
+        "belt with a floating pair",
+        "metalnic",
+        "saucer bridge over a hole",
+        "metalnic on the last pad",
+        "green ! below",
+        "goal"
+      ],
+      "gaps": 2,
+      "enemies": 4,
+      "hazards": 1
+    },
+    {
+      "section": "BONUS",
+      "beats": [
+        "start slab",
+        "stack-stair to a pillar-top crate",
+        "life over a gap",
+        "Z-ledges",
+        "floating column bounce",
+        "pyramid",
+        "signed double jump + tornado over a ≈6 u gap through a high row and a 1UP",
+        "exit"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 0
+    }
+  ],
+  "geometryObservations": [
+    "**Two halves, two problem types.** The into-screen S1 has no forced jump (TA1): its content is timing (fences, belts, BKBKs) on open-edged ≈3 u walkways. The side-scroll S2–S4 is platforming: flip discs, holes with metalnics, saucer bridges, launchers. The pod and C1 mark the switch.",
+    "**The beam fence is the metronome.** About eight fences in S1 fire on one schedule from the start (TT intro: the first fence's timing carries to the rest). They escalate from a single fence to a diagonal pair to two in a row, then return in side view on pads, and end as three in a row over a moving belt, where the answer changes from waiting to crouching (callout 6).",
+    "**Open edges replace gaps in S1.** With no gap on the line, the only fall is sideways off a walkway or belt, which is exactly where dodging a fence or a BKBK pushes you; the edge crate S1-c sits on that line.",
+    "**Belts make depth unreadable.** F3 warns that belt-ways running both ways confuse depth (p087L) and carry you into monsters or off the end (p086). Crates float over the first belt so that every pickup needs a lead.",
+    "**Periodic enemies, not chasers.** BKBKs are invulnerable while lit (pass beside, or wait for the light — callout 2, P3 s67), metalnics are dangerous while their spikes are out, saucers drift. Every enemy has a cycle to read, matching the fence rhythm; none chases.",
+    "**Before the bazooka, explosives kill the invulnerable.** On the first visit the player has no bazooka (it comes from N. Gin after stage 20), so a lit BKBK can only be removed by a blast: the S3-b TNT sits under its pad (P3 s68).",
+    "**Metalnics on hole edges and landings.** The disc lands you beside one (TT 16), another stands at a hole edge (TT 19–20: run to the edge and high-jump both), another on the last landing (callout 7). One high jump clears hole and enemy together.",
+    "**Enemies as footing.** The side-scroll's saucers are platforms: TT bounces from the Aku box onto one (13–14), and callout 7 crosses the last hole by stomping a saucer and double-jumping over a metalnic. Hanging spikes over the treadmill cap the height of that bounce.",
+    "**A telegraphed phase platform, introduced alone.** The first flip disc (callout 4: board only when horizontal; green safe, red flashing danger) sits over a plain pit; it returns later as a chain of three small discs.",
+    "**One device, three meanings.** The spin-jump stand is first an optional detour that the time trial must refuse (TA5), then the tool that clears a TNT wall (callout 5), then the required launcher over a gap (P3 s72, TT 25).",
+    "**Ceilings shape the jump.** A steel-block ceiling forces the slide at the start of S2 (TT 10), hanging spikes cap bounces over the treadmill, and the last fence trio is passed crouching.",
+    "**Checkpoint placement follows the camera and the hardest test:** C1 right after the pod, C2 at the Future-Tense merge pad, and C3 (by F3's pointer) at the start of the three-fence belt.",
+    "**Bonus as a signposted long jump.** Signs show the double jump + tornado spin (P3 s73), and the room ends with the widest gap of the stage (≈6 u) crossed through a floating row with a 1UP at the peak."
+  ],
+  "geometryTransfer": [
+    "**Fence corridor without gaps.** An into-screen run of open-edged walkways ≈3.5 m (3 u) wide with a timed gate every 8–12 m (a `crusher` or `firetiki` across the lane plays the beam fence), all on one global clock and no jump needed; place crate pairs where riders stop for a cycle.",
+    "**Telegraphed phase platform.** A `phasepad` over a 4.6–5.8 m (4–5 u) pit, first alone, then as a chain of three 1.2 m pads; give it a colour telegraph (green = solid, flashing red = about to drop) like callout 4's disc.",
+    "**Spike robot at the hole edge.** A `spinner` on the take-off or landing edge of a 1.7–2.3 m gap, so one full jump (≈2.85 m high, ≈5.6 m long at 9 m/s) or one ollie clears both; a second `spinner` on the landing of the final gap.",
+    "**Enemy bridge.** Over a 3.5–4.6 m hole, a stompable hover enemy on a `mover` (a `grunt` on a moving pad — not a `floater`, which cannot be stomped) as the footing, with a `spinner` on the far pad; cap the bounce with an overhead hazard so only a double jump (+1.74 m), not an extra-high bounce, is safe.",
+    "**Launcher with three meanings.** Use a `trampoline` three times: an optional detour early (a slower line), a tool that clears a 1-2-2-1 TNT wall (1.15/2.3 m tops), and finally the only way over a 6–8 m gap.",
+    "**Fence trio over a speed strip.** End the fence half with three gates over a `speedpad` strip whose answer is the slide or a low tuck rather than timing — the posture twist of callout 6."
+  ]
+}

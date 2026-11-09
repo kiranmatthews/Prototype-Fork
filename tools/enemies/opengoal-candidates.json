@@ -1,978 +1,1696 @@
 [
   {
     "id": "babak",
-    "name": "Babak \u00b7 baseline chaser",
+    "name": "Babak",
     "game": "jak1",
-    "model": "beach/babak-lod0",
     "sources": [
       "jak1/engine/common-obs/babak.gc"
     ],
     "role": "Chase",
-    "pair": "charger",
     "priority": 1,
     "pattern": "Patrol, recognise the player, chase, turn and visibly give up.",
     "adaptation": "Give Russet Bull and our ground enemies a complete notice \u2192 pursuit \u2192 failed attack \u2192 recovery vocabulary.",
-    "rigNotes": "47 source skin joints; body, head and limbs carry distinct motion. Compare turn and give-up clips before redesigning the silhouette.",
-    "caveat": "Navigation and inherited enemy states are outside the clips; a new local controller must own travel and collision."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "babak-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "lurkercrab",
-    "name": "Lurker Crab \u00b7 exposure window",
+    "name": "Lurker Crab",
     "game": "jak1",
-    "model": "beach/lurkercrab-lod0",
     "sources": [
       "jak1/levels/beach/lurkercrab.gc"
     ],
     "role": "Armour",
-    "pair": "grunt",
     "priority": 1,
     "pattern": "Alternates protected movement with an exposed peek; snip and kickback supply readable combat punctuation.",
     "adaptation": "Turn Coral Crab into a defensive sideways patrol with a deliberate opening and a visible recoil.",
-    "rigNotes": "Separate claws, legs and body; inspect peek, idle-to-walk and peek-to-walk as well as the walking loop.",
-    "caveat": "Our current crab is an ordinary patrol target. Changing its vulnerability is a future gameplay decision, not part of this audit."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "lurkercrab-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "aphid",
-    "name": "Aphid Lurker \u00b7 deployable spikes",
+    "name": "Aphid Lurker",
     "game": "jak1",
-    "model": "jungleb/aphid-lurker-lod0",
     "sources": [
       "jak1/levels/jungleb/aphid.gc"
     ],
     "role": "Armour",
-    "pair": "spiker",
     "priority": 1,
     "pattern": "Normal and deadly walks are separate clips; spikes deploy and the enemy gives up.",
     "adaptation": "Replace always-on spike danger with an unmistakable raised/lowered threat state.",
-    "rigNotes": "Spine/spike articulation must preserve the silhouette and show the dangerous surface before it becomes active.",
-    "caveat": "The export plays the motion; it does not import invulnerability flags or their timing."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "aphid-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "hopper",
-    "name": "Jungle Hopper \u00b7 distinct jump sizes",
+    "name": "Jungle Hopper",
     "game": "jak1",
-    "model": "jungle/hopper-lod0",
     "sources": [
       "jak1/levels/jungle/hopper.gc"
     ],
     "role": "Hop",
-    "pair": "hopper",
     "priority": 1,
     "pattern": "Short and long jumps have separate landing clips, with idle and burp personality beats.",
     "adaptation": "Give Spring Frog an anticipatory short hop, a committed long leap and a weighty finite landing.",
-    "rigNotes": "39 skin joints. Assess pelvis compression, hind-leg extension, foreleg landing and mouth motion separately.",
-    "caveat": "Jump arcs and ground selection come from the controller; an in-place clip does not prove reachable landings."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "hopper-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "quicksandlurker",
-    "name": "Quicksand Lurker \u00b7 pop-up shooter",
+    "name": "Quicksand Lurker",
     "game": "jak1",
-    "model": "misty/quicksandlurker-lod0",
     "sources": [
       "jak1/levels/misty/quicksandlurker.gc"
     ],
     "role": "Ranged",
-    "pair": "sentry",
     "priority": 1,
     "pattern": "Hides when approached, rises to track, then spits a projectile from its animated mouth.",
     "adaptation": "Develop an organic sentry with hide \u2192 emerge \u2192 aim \u2192 fire \u2192 recoil, preserving a safe approach opportunity.",
-    "rigNotes": "49 joints and eight clips, including hide, popup and spit. Mouth/socket alignment is essential.",
-    "caveat": "The projectile, hiding translation and aim logic are separate from this mesh. No projectile or damage is simulated in the viewer."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "quicksandlurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "swamp-bat",
-    "name": "Swamp Bat \u00b7 swoop and return",
+    "name": "Swamp Bat",
     "game": "jak1",
-    "model": "swamp/swamp-bat-lod0",
     "sources": [
       "jak1/levels/swamp/swamp-bat.gc"
     ],
     "role": "Flying",
-    "pair": "floater",
     "priority": 1,
     "pattern": "Launches from an idle group into swoop, strafe and return phases.",
     "adaptation": "Give Violet Watcher a visible launch cue, committed attack pass and distinct recovery path.",
-    "rigNotes": "A compact 16-joint wing rig and six clips; preserve the complete wing silhouettes.",
-    "caveat": "The source uses a group/path host. The clip viewer does not reconstruct that host or its flight paths."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "swamp-bat-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "driller",
-    "name": "Driller Lurker \u00b7 attack and jam",
+    "name": "Driller Lurker",
     "game": "jak1",
-    "model": "robocave/driller-lurker-lod0",
     "sources": [
       "jak1/levels/maincave/driller-lurker.gc"
     ],
     "role": "Heavy",
-    "pair": "charger",
     "priority": 1,
     "pattern": "Path patrol and chase lead into a drill attack, followed by a jammed standing state.",
     "adaptation": "Create a heavy lane blocker whose attack exhausts into an obvious punishable jam.",
-    "rigNotes": "67 joints; paired level/up walk, run and attack clips offer a useful slope/aim blending study.",
-    "caveat": "The 12-clip Robocave export is chosen deliberately; the historical Maincave export had no clips. Aim blending and path motion remain unimplemented."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "driller-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "bully",
-    "name": "Bully \u00b7 spin and dizziness",
+    "name": "Bully",
     "game": "jak1",
-    "model": "sunken/bully-lod0",
     "sources": [
       "jak1/levels/sunken/bully.gc"
     ],
     "role": "Spin",
-    "pair": "spinner",
     "priority": 1,
     "pattern": "Starts spinning, reacts to collisions and slows into a dizzy pause.",
     "adaptation": "Evolve Brass Whirler into windup \u2192 dangerous sweep \u2192 deceleration \u2192 vulnerable recovery.",
-    "rigNotes": "44 joints with spin-start, spin, bounce and dizzy poses; body/root rotation is also controller-driven.",
-    "caveat": "A spin clip alone is not the complete rotating attack. The audit does not import travel, bounce or combat rules."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "bully-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "kermit",
-    "name": "Kermit \u00b7 tongue attacker",
+    "name": "Kermit",
     "game": "jak1",
-    "model": "swamp/kermit-lod0",
     "sources": [
       "jak1/levels/swamp/kermit.gc"
     ],
     "role": "Reach",
-    "pair": "hopper",
     "priority": 2,
     "pattern": "Hops into range, lashes a tongue, then holds or retracts after a hit/miss decision.",
     "adaptation": "A new reach attacker could punish a predictable line while offering escape and a long recovery.",
-    "rigNotes": "28 joints; eight authored clips. The tongue uses additional runtime control beyond the stored skeleton animation.",
-    "caveat": "Higher effort: tongue targeting, stretch, clearance, attachment and release require original implementation. The source clip alone is incomplete."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "kermit-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "baby-spider",
-    "name": "Baby Spider \u00b7 spawned pursuer",
+    "name": "Baby Spider",
     "game": "jak1",
-    "model": "darkcave/baby-spider-lod0",
     "sources": [
       "jak1/levels/maincave/baby-spider.gc"
     ],
     "role": "Swarm",
-    "pair": "grunt",
     "priority": 2,
     "pattern": "Birth, notice, walk/run, jump/land and death form a useful small pursuer vocabulary.",
     "adaptation": "Prototype a few readable ground pursuers before increasing swarm density.",
-    "rigNotes": "21 joints; nine clips with separate jump/landing and appearance motion.",
-    "caveat": "Leg contact and multiple-agent spacing need new tests; more instances are not a substitute for readable attacks."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "baby-spider-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "mother-spider",
-    "name": "Mother Spider \u00b7 spawner and spitter",
+    "name": "Mother Spider",
     "game": "jak1",
-    "model": "darkcave/mother-spider-lod0",
     "sources": [
       "jak1/levels/maincave/mother-spider.gc"
     ],
     "role": "Spawner",
-    "pair": "sentry",
     "priority": 2,
     "pattern": "Lowers into an encounter, produces offspring, spits and reacts to hits.",
     "adaptation": "A later encounter anchor can alternate spawning, ranged pressure and an exposed recovery.",
-    "rigNotes": "29 joints; ten clips include birth, lowering, spit and multiple death/leg variants.",
-    "caveat": "Eggs, children, detached legs and uppercut-specific death need additional hosts/parts. Not a one-mesh drop-in."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "mother-spider-lod0",
+        "label": "Whole spider"
+      },
+      {
+        "name": "mother-spider-leg-lod0",
+        "label": "Detached leg"
+      }
+    ]
   },
   {
     "id": "snake",
-    "name": "Jungle Snake \u00b7 short/long strike",
+    "name": "Jungle Snake",
     "game": "jak1",
-    "model": "jungle/junglesnake-lod0",
     "sources": [
       "jak1/levels/jungle/junglesnake.gc"
     ],
     "role": "Reach",
-    "pair": "moa",
     "priority": 2,
     "pattern": "Coiled idle, close/far strikes, drop-down and give-up communicate reach.",
     "adaptation": "Use the close/far strike distinction to improve Moa anticipation, or make a new stationary reach enemy.",
-    "rigNotes": "26 joints. Evaluate the coiled animated pose; the unposed chain is much longer.",
-    "caveat": "The bind pose is not a useful size reference. Strike reach and hit volumes must be authored separately."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "junglesnake-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "worm",
-    "name": "Lurker Worm \u00b7 ground ambush",
+    "name": "Lurker Worm",
     "game": "jak1",
-    "model": "beach/lurkerworm-lod0",
     "sources": [
       "jak1/levels/beach/lurkerworm.gc"
     ],
     "role": "Ambush",
-    "pair": "hopper",
     "priority": 2,
     "pattern": "Idle, rise, chomp and sink form an emergence ambush.",
     "adaptation": "Add a visible ground tell followed by one committed bite and retreat.",
-    "rigNotes": "15 joints and five clips; a small rig for a strong silhouette change.",
-    "caveat": "Ground concealment, damage window and emergence trigger are controller responsibilities."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "lurkerworm-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "bonelurker",
-    "name": "Bone Lurker \u00b7 directional charge",
+    "name": "Bone Lurker",
     "game": "jak1",
-    "model": "misty/bonelurker-lod0",
     "sources": [
       "jak1/levels/misty/bonelurker.gc"
     ],
     "role": "Chase",
-    "pair": "charger",
     "priority": 2,
     "pattern": "Chase vocabulary adds left/right charge variants and a stun.",
     "adaptation": "Study curved pursuit presentation and a readable stunned state for a future biped enemy.",
-    "rigNotes": "58 joints; 14 clips. Check carried attachments and directional body lean.",
-    "caveat": "Do not retarget directly to the bull: anatomy and joint meaning differ."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "bonelurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "puppy",
-    "name": "Lurker Puppy \u00b7 small runner",
+    "name": "Lurker Puppy",
     "game": "jak1",
-    "model": "beach/lurkerpuppy-lod0",
     "sources": [
       "jak1/levels/beach/lurkerpuppy.gc"
     ],
     "role": "Chase",
-    "pair": "grunt",
     "priority": 2,
     "pattern": "Walk, run, jump, landing and celebration provide a compact animated pursuer.",
     "adaptation": "An alternative small quadruped direction with stronger run/stop variety than a single gait.",
-    "rigNotes": "31 joints and seven clips; compare gait and takeoff contacts.",
-    "caveat": "Requires new contact mapping and a controller; current source mesh is only a placeholder."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "lurkerpuppy-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "gnawer",
-    "name": "Gnawer \u00b7 task-driven creature",
+    "name": "Gnawer",
     "game": "jak1",
-    "model": "maincave/gnawer-lod0",
     "sources": [
       "jak1/levels/maincave/gnawer.gc"
     ],
     "role": "Objective",
-    "pair": "grunt",
     "priority": 2,
     "pattern": "Moves between idle, run, notice, chewing/tugging and hit responses.",
     "adaptation": "A creature attacking scenery could create an objective beyond touching the player.",
-    "rigNotes": "36 joints, 12 clips, including chewing transitions and separate segment motion.",
-    "caveat": "Segment pieces and interaction targets are not assembled by the clip player."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "gnawer-lod0",
+        "label": "Whole creature"
+      },
+      {
+        "name": "gnawer-segment-lod0",
+        "label": "Detached segment"
+      }
+    ]
   },
   {
     "id": "snow-bunny",
-    "name": "Snow Bunny \u00b7 hopping attacker",
+    "name": "Snow Bunny",
     "game": "jak1",
-    "model": "snow/snow-bunny-lod0",
     "sources": [
       "jak1/levels/snow/snow-bunny.gc"
     ],
     "role": "Hop",
-    "pair": "hopper",
     "priority": 2,
     "pattern": "Small/big hops, spotting/landing, attack and death create a compact hop-based opponent.",
     "adaptation": "Alternative hop proportions and a clear notice beat for Spring Frog studies.",
-    "rigNotes": "21 joints; seven clips. Full exported mesh is only 332 triangles, not a distance-generated substitute.",
-    "caveat": "Frog anatomy needs a new rig and weight pass even if timing is adopted."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "snow-bunny-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "citb-bunny",
-    "name": "Citadel Bunny \u00b7 hop variant",
+    "name": "Citadel Bunny",
     "game": "jak1",
-    "model": "citadel/citb-bunny-lod0",
     "sources": [
       "jak1/levels/citadel/citb-bunny.gc"
     ],
     "role": "Hop",
-    "pair": "hopper",
     "priority": 3,
     "pattern": "Citadel variation on idle, big/small hop, notice, attack and death.",
     "adaptation": "Compare timing and silhouette with Snow Bunny before counting it as a new role.",
-    "rigNotes": "21 joints and seven clips; distinct source mesh/animation names.",
-    "caveat": "An art/variant study, not evidence of a wholly different enemy archetype."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "citb-bunny-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "yeti",
-    "name": "Yeti \u00b7 heavy chaser",
+    "name": "Yeti",
     "game": "jak1",
-    "model": "snow/yeti-lod0",
     "sources": [
       "jak1/levels/snow/yeti.gc"
     ],
     "role": "Heavy",
-    "pair": "charger",
     "priority": 2,
     "pattern": "Idle/walk, spot, charge, give-up, turn and land sell a heavier chaser.",
     "adaptation": "Study body mass, slower anticipation and recovery in a new heavy silhouette.",
-    "rigNotes": "47 joints and 11 clips; compare with Babak without assuming identical weights.",
-    "caveat": "Similar chase vocabulary; avoid spending a roster slot on only a larger reskin."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "yeti-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "green-eco-lurker",
-    "name": "Green Eco Lurker \u00b7 arena chaser",
+    "name": "Green Eco Lurker",
     "game": "jak1",
-    "model": "finalboss/green-eco-lurker-lod0",
     "sources": [
       "jak1/levels/finalboss/green-eco-lurker.gc"
     ],
     "role": "Chase",
-    "pair": "charger",
     "priority": 3,
     "pattern": "Boss-arena chaser vocabulary includes spot, charge, turn and flip-jump.",
     "adaptation": "Useful athletic takeoff/landing reference after the baseline chaser is sound.",
-    "rigNotes": "49 joints and nine clips.",
-    "caveat": "Its arena host and spawn logic are not part of the clip set."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "green-eco-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "swamp-rat",
-    "name": "Swamp Rat \u00b7 nest runner",
+    "name": "Swamp Rat",
     "game": "jak1",
-    "model": "swamp/swamp-rat-lod0",
     "sources": [
       "jak1/levels/swamp/swamp-rat.gc"
     ],
     "role": "Swarm",
-    "pair": "grunt",
     "priority": 2,
     "pattern": "Fall/bounce, walk/run, notice and eating give a nest-launched runner personality.",
     "adaptation": "Study a burst of small enemies with clear arrival motion and limited simultaneous attacks.",
-    "rigNotes": "16 joints, nine clips; economical body/leg/tail motion.",
-    "caveat": "Nest emission and objective interactions require a separate encounter host."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "swamp-rat-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "double-lurker",
-    "name": "Double Lurker \u00b7 stacked pair",
+    "name": "Double Lurker",
     "game": "jak1",
-    "model": "sunken/double-lurker-lod0",
     "sources": [
       "jak1/levels/sunken/double-lurker.gc"
     ],
     "role": "Composite",
-    "pair": "grunt",
     "priority": 3,
     "pattern": "A stacked duo can take hits, break apart and resume as separate participants.",
     "adaptation": "A later two-stage enemy with a readable first-hit transformation.",
-    "rigNotes": "32-joint lower model and a separate 30-joint upper model; both have 14 clips.",
-    "caveat": "Requires two actor lifecycles, attachment sockets, split collision and synchronised clips; preview shows one mesh at a time."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "double-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "double-lurker-top",
-    "name": "Double Lurker \u00b7 upper partner",
+    "name": "Double Lurker",
     "game": "jak1",
-    "model": "sunken/double-lurker-top-lod0",
     "sources": [
       "jak1/levels/sunken/double-lurker.gc"
     ],
     "role": "Composite",
-    "pair": "grunt",
     "priority": 3,
     "pattern": "Upper partner supplies on-shoulders, hit, split and solo motion.",
     "adaptation": "Companion rig study for the stacked-pair candidate.",
-    "rigNotes": "30 skin joints and 14 clips; not an extra independent roster proposal.",
-    "caveat": "Must be paired with the lower actor before claiming assembled fidelity."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "double-lurker-top-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "ram-boss",
-    "name": "Ram Boss \u00b7 directional shield",
+    "name": "Ram Boss",
     "game": "jak1",
-    "model": "snow/ram-boss-lod0",
     "sources": [
       "jak1/levels/snow/snow-ram-boss.gc"
     ],
     "role": "Armour",
-    "pair": "turtle",
     "priority": 2,
     "pattern": "Forward/up defence, block, throw and shield-loss states support directional counterplay.",
     "adaptation": "Adapt only the directional guard and shield-break pattern for a manageable armoured enemy.",
-    "rigNotes": "44 joints and 21 clips; shield/no-shield and dismount variants need semantic selection.",
-    "caveat": "A multi-phase encounter rather than a simple turtle swap; mounts and projectiles are additional dependencies."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Bosses",
+    "variants": [
+      {
+        "name": "ram-boss-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "balloonlurker",
-    "name": "Balloon Lurker \u00b7 mounted flyer",
+    "name": "Balloon Lurker",
     "game": "jak1",
-    "model": "misty/balloonlurker-lod0",
     "sources": [
       "jak1/levels/misty/balloonlurker.gc"
     ],
     "role": "Flying",
-    "pair": "floater",
     "priority": 3,
     "pattern": "Mounted flying target with rider and vehicle idle/death variants.",
     "adaptation": "Useful for vehicle-like enemies and separately animated riders.",
-    "rigNotes": "20 joints and four clips; the clip set is small because movement is host-driven.",
-    "caveat": "The pilot and flight path are separate dependencies; not a rich standalone flight set."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "balloonlurker-lod0",
+        "label": "Balloon"
+      },
+      {
+        "name": "balloonlurker-pilot-lod0",
+        "label": "Pilot"
+      }
+    ]
   },
   {
     "id": "plunger-lurker",
-    "name": "Plunger Lurker \u00b7 encounter operator",
+    "name": "Plunger Lurker",
     "game": "jak1",
-    "model": "ogre/plunger-lurker-lod0",
     "sources": [
       "jak1/levels/ogre/ogreboss.gc"
     ],
     "role": "Objective",
-    "pair": "sentry",
     "priority": 3,
     "pattern": "Encounter-side operator has idle, notice and death clips.",
     "adaptation": "Potential interactable enemy silhouette for a machinery or bomb encounter.",
-    "rigNotes": "65 joints but only three clips: joint count alone does not measure behavioural richness.",
-    "caveat": "Needs the surrounding encounter. Low priority for general-purpose roster improvement."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "plunger-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "robber",
-    "name": "Rolling Robber \u00b7 fleeing flyer",
+    "name": "Rolling Robber",
     "game": "jak1",
-    "model": "rolling/robber-lod0",
     "sources": [
       "jak1/levels/rolling/rolling-robber.gc"
     ],
     "role": "Objective",
-    "pair": "floater",
     "priority": 2,
     "pattern": "Spot, fly, taunt, hover and ambient-look clips support a theft/chase encounter.",
     "adaptation": "A future enemy that steals or carries an objective could vary the encounter goals.",
-    "rigNotes": "59 joints, seven clips; inspect wing/body and carried-object attachments.",
-    "caveat": "Flee routes, objective ownership and pickup/drop handling need original systems."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "robber-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "darkvine",
     "name": "Dark Vine",
     "game": "jak1",
-    "model": "jungle/darkvine-lod0",
     "sources": [
       "jak1/levels/jungle/darkvine.gc"
     ],
     "role": "Ambush",
-    "pair": "hopper",
     "priority": 3,
     "pattern": "Emerging plant hazard with idle, retreat, pushup and dead clips.",
     "adaptation": "A retracting plant makes danger readable through silhouette.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "Recover the selected mesh from the supplied disc before rig validation."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "darkvine-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "lightning-mole",
     "name": "Lightning Mole",
     "game": "jak1",
-    "model": "rolling/lightning-mole-lod0",
     "sources": [
       "jak1/levels/rolling/rolling-lightning-mole.gc"
     ],
     "role": "Objective",
-    "pair": "grunt",
     "priority": 3,
     "pattern": "Run direction variants, yelp, run-to-idle, dive and peep support a chase objective.",
     "adaptation": "Strong locomotion-transition study even if the task creature is not a combat enemy.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "Historical inventory only; model bytes are not in the active pack."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "lightning-mole-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "snow-ram",
     "name": "Snow Ram",
     "game": "jak1",
-    "model": "snow/ram-lod0",
     "sources": [
       "jak1/levels/snow/snow-ram.gc"
     ],
     "role": "Heavy",
-    "pair": "charger",
     "priority": 3,
     "pattern": "Cock/release/idle describe a loaded spring-like attack.",
     "adaptation": "Study mechanical anticipation and a single committed launch.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "Only three historical clips; the controller supplies much of the motion."
-  },
-  {
-    "id": "shover",
-    "name": "Shover \u00b7 pushing obstacle",
-    "game": "jak1",
-    "model": "sunken/shover-lod0",
-    "sources": [
-      "jak1/levels/sunken/shover.gc"
-    ],
-    "role": "Heavy",
-    "pair": "charger",
-    "priority": 3,
-    "pattern": "A pushing obstacle with a very small stored clip set.",
-    "adaptation": "Treat as a moving hazard study, not a replacement for a full animated creature.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "One historical idle clip; important movement is procedural."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "ram-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "puffer",
     "name": "Puffer",
     "game": "jak1",
-    "model": "sunken/puffer-main-lod0",
     "sources": [
       "jak1/levels/sunken/puffer.gc"
     ],
     "role": "Armour",
-    "pair": "spiker",
     "priority": 3,
     "pattern": "Expansion/contraction hazard uses multiple geometry parts.",
     "adaptation": "Potential timed dangerous-volume pattern.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "No clips in the historical main model; procedural host reconstruction required."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "puffer-main-lod0",
+        "label": "Calm"
+      },
+      {
+        "name": "puffer-mean-lod0",
+        "label": "Angry"
+      }
+    ]
   },
   {
     "id": "plant-boss",
     "name": "Plant Boss",
     "game": "jak1",
-    "model": "jungleb/plant-boss-main-lod0",
     "sources": [
       "jak1/levels/jungleb/plant-boss.gc"
     ],
     "role": "Boss",
-    "pair": "sentry",
     "priority": 3,
     "pattern": "Plant encounter assembled from main, root, vine, arms and leaf parts.",
     "adaptation": "Study phase tells only after ordinary enemy behaviour is improved.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "No standalone clips in the main mesh; procedural multipart assembly."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Bosses",
+    "variants": [
+      {
+        "name": "plant-boss-main-lod0",
+        "label": "Body"
+      },
+      {
+        "name": "plant-boss-arms-lod0",
+        "label": "Arms"
+      },
+      {
+        "name": "plant-boss-back-arms-lod0",
+        "label": "Back arms"
+      },
+      {
+        "name": "plant-boss-leaf-lod0",
+        "label": "Leaves"
+      },
+      {
+        "name": "plant-boss-vine-lod0",
+        "label": "Vine"
+      },
+      {
+        "name": "plant-boss-root-lod0",
+        "label": "Root"
+      }
+    ]
   },
   {
     "id": "ogreboss",
     "name": "Klaww / Ogre Boss",
     "game": "jak1",
-    "model": "ogre/ogreboss-lod0",
     "sources": [
       "jak1/levels/ogre/ogreboss.gc"
     ],
     "role": "Boss",
-    "pair": "charger",
     "priority": 3,
     "pattern": "Large authored vocabulary includes attack start/loop/end, hits, recovery and shuffle transitions.",
     "adaptation": "Excellent later heavy-animation study; expensive as a complete encounter.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "34 historical clip names; mesh and rig need recovery and measurement."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Bosses",
+    "variants": [
+      {
+        "name": "ogreboss-lod0",
+        "label": "Boss encounter"
+      },
+      {
+        "name": "ogreboss-village2-lod0",
+        "label": "Rock Village"
+      }
+    ]
   },
   {
     "id": "robotboss",
     "name": "Final Robot Boss",
     "game": "jak1",
-    "model": "finalboss/robotboss-basic-lod0",
     "sources": [
       "jak1/levels/finalboss/robotboss.gc"
     ],
     "role": "Boss",
-    "pair": "sentry",
     "priority": 3,
     "pattern": "Multiple weapon/eco phase models and encounter-specific controls.",
     "adaptation": "Phase orchestration reference, not an ordinary enemy template.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "Basic mesh has no clips; phase models and host assembly are separate."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Bosses",
+    "variants": [
+      {
+        "name": "robotboss-basic-lod0",
+        "label": "Battle body"
+      },
+      {
+        "name": "robotboss-blueeco-lod0",
+        "label": "Blue eco attachment"
+      },
+      {
+        "name": "robotboss-redeco-lod0",
+        "label": "Red eco attachment"
+      },
+      {
+        "name": "robotboss-yelloweco-lod0",
+        "label": "Yellow eco attachment"
+      },
+      {
+        "name": "robotboss-cinematic-lod0",
+        "label": "Cinematic"
+      },
+      {
+        "name": "citb-robotboss-lod0",
+        "label": "Citadel construction"
+      }
+    ]
   },
   {
     "id": "flying-lurker",
     "name": "Flying Lurker",
     "game": "jak1",
-    "model": "ogre/flying-lurker-lod0",
     "sources": [
       "jak1/levels/ogre/flying-lurker.gc"
     ],
     "role": "Flying",
-    "pair": "floater",
     "priority": 3,
     "pattern": "Fly and look clips support an encounter flyer.",
     "adaptation": "Secondary airborne silhouette reference.",
-    "rigNotes": "Measure the recovered rig before choosing an adaptation.",
-    "caveat": "Only two historical clips; travel must be reconstructed."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "flying-lurker-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
     "id": "junglefish",
     "name": "Jungle Fish",
     "game": "jak1",
-    "model": "jungle/junglefish-lod0",
     "sources": [
       "jak1/levels/jungle/junglefish.gc"
     ],
     "role": "Aquatic",
-    "pair": "floater",
     "priority": 3,
     "pattern": "Swim, chomp and death offer a compact aquatic threat.",
     "adaptation": "Reserve for swimming encounters with clear attack approach and escape.",
-    "rigNotes": "14 joints and three clips; compact fin/body/jaw study.",
-    "caveat": "Water movement and chomp targeting require a separate host."
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "junglefish-lod0",
+        "label": "Original"
+      }
+    ]
   },
   {
-    "id": "jak2-grunt",
-    "name": "Metal Head Grunt",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/grunt.gc"
+    "id": "keira",
+    "name": "Keira",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "assistant-lod0",
+        "label": "Sandover Village",
+        "frameExcludeBones": [
+          "torch"
+        ]
+      },
+      {
+        "name": "assistant-firecanyon-lod0",
+        "label": "Fire Canyon"
+      },
+      {
+        "name": "assistant-village2-lod0",
+        "label": "Rock Village",
+        "frameExcludeBones": [
+          "torch"
+        ]
+      },
+      {
+        "name": "assistant-village3-lod0",
+        "label": "Volcanic Crater",
+        "frameExcludeBones": [
+          "torch"
+        ]
+      },
+      {
+        "name": "assistant-lavatube-start-lod0",
+        "label": "Lava Tube entrance"
+      },
+      {
+        "name": "assistant-lavatube-end-lod0",
+        "label": "Lava Tube exit"
+      }
     ],
-    "role": "Chase",
-    "pair": "charger",
-    "priority": 3,
-    "pattern": "Ambush, circling, pacing and melee/spin attack states.",
-    "adaptation": "Useful pursuit variety; navigation and group pressure exceed a lane-patrol swap.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-amphibian",
-    "name": "Amphibian",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/amphibian/amphibian.gc"
+      "jak1/levels/village1/assistant.gc",
+      "jak1/levels/firecanyon/assistant-firecanyon.gc",
+      "jak1/levels/village2/assistant-village2.gc",
+      "jak1/levels/village3/assistant-village3.gc",
+      "jak1/levels/lavatube/assistant-lavatube.gc",
+      "jak1/levels/citadel/assistant-citadel.gc"
     ],
-    "role": "Reach",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Forward lunges, side/spin attacks and a tongue attack.",
-    "adaptation": "Later multi-attack frog direction; start with one readable attack.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Leaning, examining, welding, looking and relaxed idle transitions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-centurion",
-    "name": "Centurion",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/centurion.gc"
+    "id": "samos",
+    "name": "Samos \u00b7 Green Sage",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "sage-lod0",
+        "label": "Sandover Village"
+      },
+      {
+        "name": "sage-bluehut-lod0",
+        "label": "Blue Sage\u2019s hut"
+      },
+      {
+        "name": "sage-village3-lod0",
+        "label": "Volcanic Crater"
+      }
     ],
-    "role": "Ranged",
-    "pair": "sentry",
-    "priority": 3,
-    "pattern": "Shooting start/loop/end and melee attack vocabulary.",
-    "adaptation": "Study separating firing commitment from locomotion.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-flitter",
-    "name": "Flitter",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/flitter.gc"
+      "jak1/levels/village1/sage.gc",
+      "jak1/levels/village2/sage-bluehut.gc",
+      "jak1/levels/village3/sage-village3.gc"
     ],
-    "role": "Ambush",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Ambush jump/land, circling and different attack heights.",
-    "adaptation": "Useful aerial arrival and attack-height tells.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Distinctive staff, hair, facial rig and expressive idle posture.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-fodder",
-    "name": "Fodder",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/fodder/fodder.gc"
+    "id": "bluesage",
+    "name": "Blue Sage",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "bluesage-lod0",
+        "label": "Original"
+      }
     ],
-    "role": "Swarm",
-    "pair": "grunt",
-    "priority": 3,
-    "pattern": "Notice, hostile, circling and bite/jump clip references.",
-    "adaptation": "Small melee crowd direction after spacing and attack ownership exist.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-grenadier",
-    "name": "Grenadier",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/grenadier.gc"
+      "jak1/levels/citadel/citadel-sages.gc"
     ],
-    "role": "Ranged",
-    "pair": "sentry",
-    "priority": 3,
-    "pattern": "Backs up, throws, spin-kicks and reacts to hits.",
-    "adaptation": "Strong ranged spacing and throw-preparation study.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Idle, attack start and sustained channeling actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-guard",
-    "name": "Crimson Guard",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/guards/crimson-guard-level.gc"
+    "id": "redsage",
+    "name": "Red Sage",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "redsage-lod0",
+        "label": "Original"
+      }
     ],
-    "role": "Ranged",
-    "pair": "sentry",
-    "priority": 3,
-    "pattern": "Gun, close attack, grenade, rolls, knockdown and front/back get-up states.",
-    "adaptation": "Broad biped reaction vocabulary; a large retargeting and controller job.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-hopper",
-    "name": "Metal Head Hopper",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/hopper.gc"
+      "jak1/levels/citadel/citadel-sages.gc"
     ],
-    "role": "Hop",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Jump, notice, stare and ambush states.",
-    "adaptation": "Compare more reactive hopping after the Jak 1 baseline.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Idle, attack start and sustained channeling actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-hover-guard",
-    "name": "Hover Guard",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/hover/crimson-guard-hover.gc"
+    "id": "yellowsage",
+    "name": "Yellow Sage",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "yellowsage-lod0",
+        "label": "Original"
+      }
     ],
-    "role": "Flying",
-    "pair": "floater",
-    "priority": 3,
-    "pattern": "Ambush flight, kick, attack, knockback and recovery.",
-    "adaptation": "Aerial combat state vocabulary with clear recovery.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-flamer",
-    "name": "Flamer",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/hover/flamer.gc"
+      "jak1/levels/citadel/citadel-sages.gc"
     ],
-    "role": "Flying",
-    "pair": "floater",
-    "priority": 3,
-    "pattern": "Formation wait, dormant, ambush, attack and knockback.",
-    "adaptation": "Flying encounter coordination is a later system, not an initial roster patch.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Idle, attack start and sustained channeling actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-wasp",
-    "name": "Wasp",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/hover/wasp.gc"
+    "id": "bird-lady",
+    "name": "Bird Lady",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "bird-lady-lod0",
+        "label": "Village"
+      },
+      {
+        "name": "bird-lady-beach-lod0",
+        "label": "Beach"
+      }
     ],
-    "role": "Flying",
-    "pair": "floater",
-    "priority": 3,
-    "pattern": "Ambush, shooting encounter phases and knockback recovery.",
-    "adaptation": "Study aerial ranged telegraphs; host-dependent flight is substantial.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-metalmonk",
-    "name": "Metal Monk",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/common/enemy/metalmonk.gc"
+      "jak1/levels/beach/bird-lady.gc",
+      "jak1/levels/beach/bird-lady-beach.gc"
     ],
-    "role": "Chase",
-    "pair": "grunt",
-    "priority": 3,
-    "pattern": "Notice, attack, circling, pacing and ambush.",
-    "adaptation": "An alternative biped melee structure rather than a model-only variation.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Expressive bystander posture and full facial rig.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-spyder",
-    "name": "Spyder",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/common/enemy/spyder.gc"
+    "id": "mayor",
+    "name": "Mayor",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "mayor-lod0",
+        "label": "Original"
+      }
     ],
-    "role": "Ranged",
-    "pair": "sentry",
-    "priority": 3,
-    "pattern": "Backs up, attacks and recovers from knockback; high/low shooting references.",
-    "adaptation": "Useful ranged stance/height variation.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak2-predator",
-    "name": "Predator",
-    "game": "jak2",
-    "model": null,
     "sources": [
-      "jak2/levels/forest/predator.gc"
+      "jak1/levels/beach/mayor.gc"
     ],
-    "role": "Chase",
-    "pair": "charger",
-    "priority": 3,
-    "pattern": "Forest predator behaviour has dedicated state and graph sources.",
-    "adaptation": "A later chase/navigation study; extraction and detailed review required.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "pattern": "Recognisable silhouette and animated conversational idle.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak2-mantis",
-    "name": "Mantis",
-    "game": "jak2",
-    "model": null,
-    "sources": [
-      "jak2/levels/nest/mantis.gc"
+    "id": "explorer",
+    "name": "Explorer \u00b7 Uncle",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "explorer-lod0",
+        "label": "Original"
+      }
     ],
-    "role": "Ambush",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Dedicated nest enemy with its own attack/ambush source.",
-    "adaptation": "Compare with the expanded Jak 3 version before choosing a rig.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "sources": [
+      "jak1/levels/village1/explorer.gc"
+    ],
+    "pattern": "Standing, turning and expressive idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
   },
   {
-    "id": "jak3-dp-bipedal",
-    "name": "Dark Maker Biped",
-    "game": "jak3",
-    "model": null,
+    "id": "farmer",
+    "name": "Farmer",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "farmer-lod0",
+        "label": "Original"
+      }
+    ],
     "sources": [
-      "jak3/levels/common/enemy/darkprec/dp-bipedal.gc"
+      "jak1/levels/village1/farmer.gc"
+    ],
+    "pattern": "Relaxed rural body language and idle variants.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "fisher",
+    "name": "Fisherman",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "fisher-lod0",
+        "label": "Original",
+        "frameExcludeBones": [
+          "mainA",
+          "mainB",
+          "top",
+          "hold"
+        ]
+      }
+    ],
+    "sources": [
+      "jak1/levels/jungle/fisher.gc"
+    ],
+    "pattern": "Working and resting body poses with articulated face and hands.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "sculptor",
+    "name": "Sculptor",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "sculptor-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/beach/sculptor.gc"
+    ],
+    "pattern": "Thirteen connected striking, looking, sighing and size-gesture actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "gambler",
+    "name": "Gambler",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "gambler-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village2/gambler.gc"
+    ],
+    "pattern": "Personality conveyed by several expressive idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "geologist",
+    "name": "Geologist",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "geologist-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village2/geologist.gc"
+    ],
+    "pattern": "Bystander anatomy, facial animation and a distinctive idle.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "warrior",
+    "name": "Warrior",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "warrior-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village2/warrior.gc"
+    ],
+    "pattern": "Heavy proportions, held pose and full facial rig.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "minershort",
+    "name": "Short Miner",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "minershort-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village3/miners.gc"
+    ],
+    "pattern": "Exaggerated short-body proportions and bystander idle.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "minertall",
+    "name": "Tall Miner",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "minertall-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village3/miners.gc"
+    ],
+    "pattern": "Contrasting tall-body proportions and bystander idle.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "billy",
+    "name": "Boggy Billy",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "billy-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/swamp/billy.gc"
+    ],
+    "pattern": "Breathing, shooing and conversation animation.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "oracle-lod0",
+        "label": "Statue and attachment rig",
+        "backgroundAssembly": {
+          "level": "village1",
+          "entity": "oracle",
+          "nodes": [
+            "oracle-glass-eyes",
+            "oracle-base.mb",
+            "oracle-foot.mb",
+            "oracle-spine.mb",
+            "oracle-bump.mb"
+          ]
+        }
+      }
+    ],
+    "sources": [
+      "jak1/levels/village_common/oracle.gc"
+    ],
+    "pattern": "A stationary speaking statue with reward attachments at its eyes. The visible body comes from five complete named background meshes; the character rig supplies attachment points and a single source pose.",
+    "adaptation": "Useful for an original stationary quest character. This source body is static; speech staging and reward effects are separate systems.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "gol",
+    "name": "Gol",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Antagonist",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "evilbro-lod0",
+        "label": "Opening"
+      },
+      {
+        "name": "evilbro-village3-lod0",
+        "label": "Volcanic Crater"
+      },
+      {
+        "name": "evilbro-citadel-lod0",
+        "label": "Citadel"
+      }
+    ],
+    "sources": [
+      "jak1/levels/intro/evilbro.gc"
+    ],
+    "pattern": "Antagonist character rigs and scene-specific idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "maia",
+    "name": "Maia",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Antagonist",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "evilsis-lod0",
+        "label": "Opening"
+      },
+      {
+        "name": "evilsis-village3-lod0",
+        "label": "Volcanic Crater"
+      },
+      {
+        "name": "evilsis-citadel-lod0",
+        "label": "Citadel"
+      }
+    ],
+    "sources": [
+      "jak1/levels/intro/evilbro.gc"
+    ],
+    "pattern": "Antagonist silhouette, face and scene-specific idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "daxter",
+    "name": "Daxter",
+    "game": "jak1",
+    "category": "Bystanders",
+    "role": "Companion",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "sidekick-lod0",
+        "label": "Ottsel",
+        "defaultAction": "sidekick-stance-loop"
+      },
+      {
+        "name": "sidekick-human-lod0",
+        "label": "Human"
+      }
+    ],
+    "sources": [
+      "jak1/levels/misty/sidekick-human.gc"
+    ],
+    "pattern": "Companion body language, reactions and a broad action library.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "flutflut",
+    "name": "Flut Flut",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Mount",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "flut-saddle-lod0",
+        "label": "Rideable adult"
+      },
+      {
+        "name": "flutflut-lod0",
+        "label": "Chick"
+      },
+      {
+        "name": "flutflut-bluehut-lod0",
+        "label": "Blue hut"
+      },
+      {
+        "name": "flutflutegg-lod0",
+        "label": "Egg"
+      }
+    ],
+    "sources": [
+      "jak1/levels/flut_common/flutflut.gc",
+      "jak1/levels/village2/flutflut-bluehut.gc"
+    ],
+    "pattern": "Jumping, running, landing and life-stage variants.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "muse",
+    "name": "Muse",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Companion",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "muse-lod0",
+        "label": "Misty Island"
+      },
+      {
+        "name": "sculptor-muse-lod0",
+        "label": "With Sculptor"
+      }
+    ],
+    "sources": [
+      "jak1/levels/misty/muse.gc"
+    ],
+    "pattern": "A fleeing companion with movement and resting actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "yakow",
+    "name": "Yakow",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "yakow-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/village1/yakow.gc"
+    ],
+    "pattern": "Grazing, running, left/right walks and kicked reactions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "pelican",
+    "name": "Pelican",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "pelican-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/beach/pelican.gc"
+    ],
+    "pattern": "Flight and grounded action vocabulary.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "seagull",
+    "name": "Seagull",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "seagull-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/beach/seagull.gc"
+    ],
+    "pattern": "Eight flight, landing and idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "sharkey",
+    "name": "Lurker Shark",
+    "game": "jak1",
+    "category": "Enemies",
+    "role": "Aquatic",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "sharkey-lod0",
+        "label": "Water threat"
+      }
+    ],
+    "sources": [],
+    "pattern": "A swimming threat with an attack action.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "billy-sidekick",
+    "name": "Farthy",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "billy-sidekick-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/swamp/billy.gc"
+    ],
+    "pattern": "Boggy Billy\u2019s animal companion and its idle actions.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "snack",
+    "name": "Swamp Snack",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "farthy-snack-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [
+      "jak1/levels/swamp/billy.gc"
+    ],
+    "pattern": "Small animated creature used in the swamp encounter.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "catch-fish",
+    "name": "Fishing River Fish",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "catch-fisha-lod0",
+        "label": "Fish A"
+      },
+      {
+        "name": "catch-fishb-lod0",
+        "label": "Fish B"
+      },
+      {
+        "name": "catch-fishc-lod0",
+        "label": "Fish C"
+      }
+    ],
+    "sources": [
+      "jak1/levels/jungle/fisher.gc"
+    ],
+    "pattern": "All three fish variants and their original swim animation.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "sunken-fish",
+    "name": "Underwater Fish",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "sunkenfisha-red-yellow-lod0",
+        "label": "Red / yellow"
+      },
+      {
+        "name": "sunkenfisha-yellow-blue-lod0",
+        "label": "Yellow / blue"
+      },
+      {
+        "name": "sunkenfisha-yellow-eye-lod0",
+        "label": "Yellow eye"
+      }
+    ],
+    "sources": [
+      "jak1/levels/sunken/sunken-fish.gc"
+    ],
+    "pattern": "Three colour variants sharing the original animated fish rig.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "starfish",
+    "name": "Starfish",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "villa-starfish-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [],
+    "pattern": "Small ambient creature and its original idle action.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "scout-fly",
+    "name": "Scout Fly",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "buzzer-lod0",
+        "label": "Original"
+      }
+    ],
+    "sources": [],
+    "pattern": "Small hovering collectible creature and wing/body rig.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "plants",
+    "name": "Animated Plants",
+    "game": "jak1",
+    "category": "Wildlife",
+    "role": "Bystander",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "dark-plant-lod0",
+        "label": "Dark plant"
+      },
+      {
+        "name": "happy-plant-lod0",
+        "label": "Happy plant"
+      },
+      {
+        "name": "evilplant-lod0",
+        "label": "Samos\u2019s plant"
+      }
+    ],
+    "sources": [],
+    "pattern": "Idle, reaction and transformed plant silhouettes.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "scarecrows",
+    "name": "Training Scarecrows",
+    "game": "jak1",
+    "category": "Enemies",
+    "role": "Training target",
+    "priority": 2,
+    "variants": [
+      {
+        "name": "scarecrow-a-lod0",
+        "label": "Scarecrow A"
+      },
+      {
+        "name": "scarecrow-b-lod0",
+        "label": "Scarecrow B"
+      }
+    ],
+    "sources": [],
+    "pattern": "Four reaction actions for each training target.",
+    "adaptation": "Study the character\u2019s silhouette, attention, body language and transitions before designing an original counterpart.",
+    "rigNotes": "Original skinned model and all matching exported actions, including facial animation where present.",
+    "caveat": "Playback preserves the source clips. Scene dialogue, navigation and gameplay interactions are separate from the model."
+  },
+  {
+    "id": "ice-cube",
+    "name": "Ice Lurker",
+    "game": "jak1",
+    "sources": [
+      "jak1/levels/snow/ice-cube.gc"
     ],
     "role": "Armour",
-    "pair": "turtle",
-    "priority": 3,
-    "pattern": "Shield deploy/hold/retract, close/throw attacks, get-up and turret mounting.",
-    "adaptation": "Valuable shield-state and attack-phase vocabulary, with many dependencies.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-mantis",
-    "name": "Mantis",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/mantis.gc"
-    ],
-    "role": "Ambush",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Crawl/jump ambush, two staged attacks, rolls and hop-away states.",
-    "adaptation": "Strong later candidate for evasive melee once the basic jump enemy is solid.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-roboguard",
-    "name": "Robo Guard",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/roboguard.gc"
-    ],
-    "role": "Heavy",
-    "pair": "charger",
-    "priority": 3,
-    "pattern": "Notice jump/land, close/shoot attacks and knockback recovery.",
-    "adaptation": "Study heavy intent, held windups and committed strikes.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-spydroid",
-    "name": "Spydroid",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/spydroid.gc"
-    ],
-    "role": "Armour",
-    "pair": "turtle",
-    "priority": 3,
-    "pattern": "Scan/search/hunt, flip and vulnerable-wait states.",
-    "adaptation": "Useful reconnaissance-to-threat transitions and exposed state changes.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-spydroid-orig",
-    "name": "Spydroid original variant",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/spydroid-orig.gc"
-    ],
-    "role": "Hop",
-    "pair": "hopper",
-    "priority": 3,
-    "pattern": "Jump/land attack and circling/pacing vocabulary.",
-    "adaptation": "Compare with the final Spydroid rather than counting both as separate needs.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-kg-grunt",
-    "name": "KG Grunt",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/kg-grunt.gc"
-    ],
-    "role": "Chase",
-    "pair": "grunt",
-    "priority": 3,
-    "pattern": "Falling/jumping ambush, attack, spin attack and circling.",
-    "adaptation": "A variant family to evaluate after the baseline ground pursuer.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-neo-wasp",
-    "name": "Neo Wasp",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/darkprec/neo-wasp.gc"
-    ],
-    "role": "Flying",
-    "pair": "floater",
-    "priority": 3,
-    "pattern": "Flying ambush, attack and knockback recovery.",
-    "adaptation": "Later ranged flyer direction; requires extracted assets.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-robo-hover",
-    "name": "Robo Hover",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/hover/robo-hover.gc"
-    ],
-    "role": "Flying",
-    "pair": "floater",
-    "priority": 3,
-    "pattern": "Ambush flight, close kick, attack and recovery.",
-    "adaptation": "A second aerial biped option; compare, do not duplicate the roster role.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
-  },
-  {
-    "id": "jak3-eco-creature",
-    "name": "Prebot Eco Creature",
-    "game": "jak3",
-    "model": null,
-    "sources": [
-      "jak3/levels/common/enemy/prebot-eco-creature.gc"
-    ],
-    "role": "Composite",
-    "pair": "grunt",
-    "priority": 3,
-    "pattern": "Unfold, wait-for-children, flight and recovery states.",
-    "adaptation": "Interesting transformation/spawn encounter, well beyond an ordinary enemy swap.",
-    "rigNotes": "Source references only. No local extracted mesh, skin, joint count or playable clips verified.",
-    "caveat": "Requires the corresponding user-supplied game assets and extraction. Referenced animation names are not proof of complete or usable exported clips."
+    "priority": 2,
+    "pattern": "Thirteen actions cover vulnerable walking, emergence, spike extension, committed running, stopping and recovery.",
+    "adaptation": "Study the readable change from vulnerable walking to an armoured charge, with a deliberate recovery.",
+    "rigNotes": "Inspect each available action on the original rig. Full source geometry, skin weights and animation keys are retained.",
+    "caveat": "Source animation playback shows the character\u2019s authored poses. Travel, targeting, damage and encounter effects belong to its gameplay controller.",
+    "category": "Enemies",
+    "variants": [
+      {
+        "name": "ice-cube-lod0",
+        "label": "Original"
+      }
+    ]
   }
 ]

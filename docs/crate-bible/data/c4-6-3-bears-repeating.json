@@ -1,0 +1,4314 @@
+{
+  "id": "c4-6-3-bears-repeating",
+  "game": "Crash 4",
+  "stage": "6-3",
+  "name": "Bears Repeating",
+  "sources": [
+    "GR 6-3 (gameranx.com features id 210744)",
+    "LP1 3:31:08-3:36:40 (archive.org PS4 longplay Part 1; frames every 1-2 s at 854x480; HUD crops; exit crate sign)",
+    "gamepressure.com Bears Repeating walkthrough (enemy/hazard corroboration; its '137 boxes' is wrong, the HUD shows /227)"
+  ],
+  "camera": "mixed: into-screen snowfield, toward-camera rope-bridge run, side-view cavern/slow-mo area and bonus, chase camera behind the bear",
+  "totalBoxes": 227,
+  "totalSource": "HUD 1/227 (LP1 3:31:18); bonus 0/27 -> 27/27 and main 163/227 (3:34:59); 205/227 (3:36:06); exit sign 214/227 (3:36:27); ALL gem at 3:36:39",
+  "typesNote": "Crash 4 keys: wood, question, bounceWumpa (crate with a gold wumpa emblem), arrowWood, reinforced (metal-banded strong crate), tnt, nitro (counted when exploded; the exit Nitro switch pays any still standing), checkpoint, unknown. Not counted: metal ! boxes (including the bonus's floating timed !), iron arrow crates (the 6-wide wall on the ride and 3 on the bonus tower), outline/iron lid blocks.",
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 200,
+      "basis": "227 minus bonus 27; includes 36 + 8 slow-mo Nitro and 13 Nitro paid by the exit switch"
+    },
+    {
+      "id": "bonus",
+      "boxes": 27,
+      "basis": "bonus HUD n/27"
+    },
+    {
+      "id": "gem",
+      "boxes": 0,
+      "basis": "yellow-gem path (needs a gem from another level) not taken in the LP; the ALL gem was still awarded"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 46,
+      "cumulative": 46,
+      "notes": "GR 46; HUD 1/227 (LP1 3:31:18) and 3/227 (3:31:21). Snowfield with robot drones, plank lake, cable-car platforms carrying crate columns."
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "arrow crate by the red lantern",
+      "boxes": 16,
+      "cumulative": 62,
+      "notes": "GR 62. TNT stacks on hanging platforms, scaffold towers; the hidden-gem drop is beside the arrow crate."
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "red lantern",
+      "to": "gem-path plate",
+      "boxes": 8,
+      "cumulative": 70,
+      "notes": "GR 70 (GR calls it a 'yellow gem bonus room'; the LP shows ordinary main-route crates on the spinning discs, a toward-camera rope bridge, bumper pads and a cave)."
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "gem-path plate",
+      "to": "slow-mo mask",
+      "boxes": 10,
+      "cumulative": 80,
+      "notes": "GR 80; C2 at LP1 3:33:18; side-view scaffold room with a TNT under two crates."
+    },
+    {
+      "id": "S5",
+      "route": "main",
+      "from": "slow-mo mask",
+      "to": "end of slow-mo area",
+      "boxes": 53,
+      "cumulative": 133,
+      "notes": "GR 82/97/133. Side-view ice cavern; a Nitro row ending in one crate; a giant Nitro block detonated in slow-mo (+36)."
+    },
+    {
+      "id": "S6",
+      "route": "main",
+      "from": "end of slow-mo area",
+      "to": "bonus pad",
+      "boxes": 3,
+      "cumulative": 136,
+      "notes": "GR 136: C3 (LP1 3:34:14) + 2 crates by the pad."
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "bonus pad",
+      "to": "bonus exit",
+      "boxes": 27,
+      "cumulative": 163,
+      "notes": "HUD 0/27 (LP1 3:34:20) -> 27/27 (3:34:55); main 163/227 (3:34:59-3:35:04). Timed ! closes an outline lid over the crate row."
+    },
+    {
+      "id": "S7",
+      "route": "main",
+      "from": "bear mount",
+      "to": "bear checkpoint",
+      "boxes": 42,
+      "cumulative": 205,
+      "notes": "GR 204 before the checkpoint; HUD 205/227 at LP1 3:36:06 just after it. Forced-speed polar-bear ride, toward the camera's back."
+    },
+    {
+      "id": "S8",
+      "route": "main",
+      "from": "bear checkpoint",
+      "to": "end platform",
+      "boxes": 9,
+      "cumulative": 214,
+      "notes": "Exit crate sign 214/227 (LP1 3:36:27). Lighter half, seeded with Nitro."
+    },
+    {
+      "id": "S9",
+      "route": "main",
+      "from": "end platform",
+      "to": "exit",
+      "boxes": 13,
+      "cumulative": 227,
+      "notes": "Nitro switch in front of the sign pays 13 Nitro (214 -> 227)."
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "a wood crate beside Crash at the spawn",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "TEACH"
+      ],
+      "why": "first input; HUD 1/227",
+      "evidence": "LP1 3:31:16-3:31:18",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "right foreground of the opening view: two ? on top of two wood",
+      "composition": {
+        "question": 2,
+        "wood": 2
+      },
+      "count": 4,
+      "arrangement": "2 x 2 block",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "SUPPORT-ORDER"
+      ],
+      "why": "first stacked block: break the base and the ?s drop to hand height",
+      "evidence": "LP1 3:31:12-3:31:14",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "snow below the first ledge: TNT next to crates that float beside it",
+      "composition": {
+        "tnt": 1,
+        "unknown": 2
+      },
+      "count": 3,
+      "arrangement": "TNT + 2 floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX",
+        "TOOL",
+        "TEACH"
+      ],
+      "why": "GR: jump on the TNT and step back, and its blast takes the 2 floating crates. The first TNT is a tool",
+      "evidence": "LP1 3:31:14-3:31:22 (HUD 1 -> 3; fuse at 3:31:22); GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "around the first lab assistant and his two robot drones (fruit bursts right)",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "group",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "ENEMY-LINK"
+      ],
+      "why": "crates beside the first enemy pair; the robots can only be stopped by beating their owner",
+      "evidence": "LP1 3:31:24-3:31:26",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-e",
+      "section": "S1",
+      "order": 5,
+      "where": "wood crate on a ledge to the left",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "SINGLE"
+      ],
+      "why": "a small off-line pickup that rewards a glance left between the drone fights",
+      "evidence": "LP1 3:31:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-f",
+      "section": "S1",
+      "order": 6,
+      "where": "bottom left: a crate beside a TNT",
+      "composition": {
+        "unknown": 1,
+        "tnt": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "second TNT, this time next to a crate: break the crate first or let the fuse take it",
+      "evidence": "LP1 3:31:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-g",
+      "section": "S1",
+      "order": 7,
+      "where": "left side of the fenced snow path: wood on top of a ?",
+      "composition": {
+        "wood": 1,
+        "question": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK"
+      ],
+      "why": "stack beside the fence: spin the base, the top drops into reach",
+      "evidence": "LP1 3:31:32-3:31:34",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-h",
+      "section": "S1",
+      "order": 8,
+      "where": "far shore of the plank-raft lake, with a lab assistant and two drones",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "ENEMY-LINK"
+      ],
+      "why": "reward on the far shore, guarded by the drones' laser bolts",
+      "evidence": "LP1 3:31:36-3:31:38",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-i",
+      "section": "S1",
+      "order": 9,
+      "where": "ice-cave mouth: TNT and wood at floor level, a ? used as a step",
+      "composition": {
+        "tnt": 1,
+        "wood": 1,
+        "question": 1
+      },
+      "count": 3,
+      "arrangement": "pair + single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "TNT at the cave mouth beside a ? that doubles as a step to the higher ground",
+      "evidence": "LP1 3:31:40",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-j",
+      "section": "S1",
+      "order": 10,
+      "where": "first cable-car platform (hazard-striped, swinging) carrying two tall crate columns",
+      "composition": {
+        "unknown": 7
+      },
+      "count": 7,
+      "arrangement": "two columns (3 and 4 high)",
+      "stackHeight": 4,
+      "floating": false,
+      "access": [
+        "bounce",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "COLUMN-BOUNCE",
+        "TIMED"
+      ],
+      "why": "a column is a stomp chain: one entry, several crates; on a moving platform the player must commit (fruit 61 -> 93)",
+      "evidence": "LP1 3:31:46-3:31:48",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-k",
+      "section": "S1",
+      "order": 11,
+      "where": "second cable-car platform: block 3 wide x 2 high of ? and wood",
+      "composition": {
+        "question": 3,
+        "wood": 3
+      },
+      "count": 6,
+      "arrangement": "3 x 2 block",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "bounce"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "REWARD"
+      ],
+      "why": "dense block right under the checkpoint",
+      "evidence": "LP1 3:31:50-3:31:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-l",
+      "section": "S1",
+      "order": 12,
+      "where": "snow ledge above the block: checkpoint with a wood crate beside it",
+      "composition": {
+        "checkpoint": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT",
+        "PAIR"
+      ],
+      "why": "the checkpoint sits above the densest block, so a fall during the block costs nothing after it",
+      "evidence": "LP1 3:31:52; GR 46",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-m",
+      "section": "S1",
+      "order": 13,
+      "where": "unresolved crates of the snowfield and cable-car stretch",
+      "composition": {
+        "unknown": 10
+      },
+      "count": 10,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR's 46",
+      "evidence": "GR 46 minus mapped",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "snow platform after C1",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "one easy crate to restart the rhythm after the checkpoint",
+      "evidence": "LP1 3:31:54",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "TNT standing on top of a wood crate",
+      "composition": {
+        "tnt": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER"
+      ],
+      "why": "spin the base and the TNT drops, lit: step away",
+      "evidence": "LP1 3:31:56",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "cable-car platform: dark metal-banded strong crate on top of a TNT",
+      "composition": {
+        "reinforced": 1,
+        "tnt": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "timed",
+        "body-slam"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "REINFORCED",
+        "SUPPORT-ORDER"
+      ],
+      "why": "the TNT under it is the key to the strong crate: light it and leave the moving platform",
+      "evidence": "LP1 3:31:58-3:32:00",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "left of the route: ? on a wooden scaffold; a crate on an X-trestle (a metal ! on a post nearby, not counted)",
+      "composition": {
+        "question": 1,
+        "unknown": 1
+      },
+      "count": 2,
+      "arrangement": "singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "SWITCH"
+      ],
+      "why": "scaffold pickups off the line, next to a metal ! whose purpose the frames do not show",
+      "evidence": "LP1 3:32:00-3:32:06",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-e",
+      "section": "S2",
+      "order": 5,
+      "where": "top level of a scaffold tower",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "pair, high",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "double-jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "PAIR"
+      ],
+      "why": "height check on a scaffold: the pair is only reachable from the tower's top deck",
+      "evidence": "LP1 3:32:10",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-f",
+      "section": "S2",
+      "order": 6,
+      "where": "scaffold platform: 2 x 2 block of ?",
+      "composition": {
+        "question": 4
+      },
+      "count": 4,
+      "arrangement": "2 x 2 block",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "bounce"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "GRID"
+      ],
+      "why": "a dense 4-block on a platform: one stomp-and-spin sequence for four crates",
+      "evidence": "LP1 3:32:12",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-g",
+      "section": "S2",
+      "order": 7,
+      "where": "chemical-tank yard: a crate by a lab assistant and robot; TNT high on a pole",
+      "composition": {
+        "tnt": 1,
+        "unknown": 1
+      },
+      "count": 2,
+      "arrangement": "singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ENEMY-LINK",
+        "EXPLOSIVE-MIX",
+        "HIGH"
+      ],
+      "why": "the TNT high on a pole is out of jump reach: a hazard placed where a careless jump would hit it",
+      "evidence": "LP1 3:32:14",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-h",
+      "section": "S2",
+      "order": 8,
+      "where": "walkway: wooden arrow crate, with a red lantern on the left rail",
+      "composition": {
+        "arrowWood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "TOOL",
+        "SINGLE",
+        "ROUTE-SPLIT"
+      ],
+      "why": "GR's 'bounce crate before the spinning platforms'; the red light beside it marks the hidden-gem drop",
+      "evidence": "LP1 3:32:16-3:32:20 (HIDDEN GEM FOUND 3:32:20); GR 62",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "side alcove right of the spinning discs: wood crate on the snow beside a lab assistant",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "ENEMY-LINK"
+      ],
+      "why": "off-line pocket while the discs rotate",
+      "evidence": "LP1 3:32:26-3:32:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "long rope suspension bridge run toward the camera: ? crates on bridge posts",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "singles on posts",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "CHASE"
+      ],
+      "why": "crates on the bridge line while drones flank it; camera faces the runner",
+      "evidence": "LP1 3:32:40-3:32:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "bridge deck crate spun mid-run",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "a bridge-deck crate taken mid-run while the camera faces the runner",
+      "evidence": "LP1 3:32:48",
+      "confidence": "low"
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "crate on a post flanked by two pink drones",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "ENEMY-LINK"
+      ],
+      "why": "the crate sits between the two drones' beams",
+      "evidence": "LP1 3:32:58-3:33:00",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-e",
+      "section": "S3",
+      "order": 5,
+      "where": "crate on a post among the yellow bumper pads",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "bounce"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SINGLE"
+      ],
+      "why": "collected on the way up the bumper chain",
+      "evidence": "LP1 3:33:04-3:33:06",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-f",
+      "section": "S3",
+      "order": 6,
+      "where": "dark cave: wood crate on the snow shelf above a lab assistant",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SINGLE"
+      ],
+      "why": "a shelf crate above an enemy: stomp the enemy, then jump",
+      "evidence": "LP1 3:33:12-3:33:14",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-g",
+      "section": "S3",
+      "order": 7,
+      "where": "unresolved",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR 70",
+      "evidence": "GR 70 minus mapped",
+      "confidence": "low"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "snow path at the yellow-gem plate: wood on wood beside the checkpoint",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "CHECKPOINT"
+      ],
+      "why": "pacing pair beside the checkpoint, so the checkpoint area always rewards the player",
+      "evidence": "LP1 3:33:16-3:33:18",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "checkpoint on the snow path",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint before the mask and the explosives room",
+      "evidence": "LP1 3:33:18 (CHECKPOINT text)",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "machinery walkway: crate spun beside a TNT on a scaffold",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "crate beside a TNT on a scaffold: spin the crate, not the TNT",
+      "evidence": "LP1 3:33:26",
+      "confidence": "low"
+    },
+    {
+      "id": "S4-d",
+      "section": "S4",
+      "order": 4,
+      "where": "side-view scaffold room: ? hanging high on a beam, top left",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, high",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "double-jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SINGLE"
+      ],
+      "why": "height check: the ? hangs on a beam above the scaffold route",
+      "evidence": "LP1 3:33:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-e",
+      "section": "S4",
+      "order": 5,
+      "where": "snowy ledge: TNT with two crates above it",
+      "composition": {
+        "tnt": 1,
+        "unknown": 2
+      },
+      "count": 3,
+      "arrangement": "TNT under a pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "SANDWICH",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER",
+        "COUNT-TRAP"
+      ],
+      "why": "GR's 'don't miss the 2 crates above the TNT': take them from above before lighting the TNT, or let the blast take them",
+      "evidence": "LP1 3:33:28-3:33:30; GR 80",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-f",
+      "section": "S4",
+      "order": 6,
+      "where": "wood crate on a post (a metal ! crate on another post nearby, not counted)",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "post crate on the way to the mask",
+      "evidence": "LP1 3:33:30-3:33:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-g",
+      "section": "S4",
+      "order": 7,
+      "where": "unresolved",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR 80",
+      "evidence": "GR 80 minus mapped",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-a",
+      "section": "S5",
+      "order": 1,
+      "where": "right after the slow-mo mask",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "TEACH"
+      ],
+      "why": "first crate under the new power",
+      "evidence": "GR 81",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-b",
+      "section": "S5",
+      "order": 2,
+      "where": "past the see-saw platforms, far right",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "SINGLE",
+        "COUNT-TRAP"
+      ],
+      "why": "GR's 'go all the way right' crate",
+      "evidence": "GR 82",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-c",
+      "section": "S5",
+      "order": 3,
+      "where": "side-view ice cavern: crates on wooden scaffold rests between rope-hung swinging platforms",
+      "composition": {
+        "unknown": 6
+      },
+      "count": 6,
+      "arrangement": "singles on rests",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "TIMED"
+      ],
+      "why": "rests between swings carry the pacing crates",
+      "evidence": "LP1 3:33:34-3:33:50",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-d",
+      "section": "S5",
+      "order": 4,
+      "where": "walkway on the left: a row of Nitro ending in one regular crate",
+      "composition": {
+        "nitro": 8,
+        "unknown": 1
+      },
+      "count": 9,
+      "arrangement": "row",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "EXPLOSIVE-MIX",
+        "CHAIN"
+      ],
+      "why": "GR: the crate at the end of the row is the trigger: break it in slow-mo, get clear, and the row chain-detonates for credit (row length ≈ 8 inferred from GR 82 -> 97)",
+      "evidence": "LP1 3:33:52-3:33:54; GR 97",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-e",
+      "section": "S5",
+      "order": 5,
+      "where": "a giant block of Nitro on a low platform between two hazard-striped ledges",
+      "composition": {
+        "nitro": 36
+      },
+      "count": 36,
+      "arrangement": "block (several deep, ~7 wide, ~4 high)",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "GRID",
+        "EXPLOSIVE-MIX",
+        "CHAIN",
+        "TIMED",
+        "REWARD"
+      ],
+      "why": "set it off in slow-mo, cancel slow-mo as it explodes, and land clear; 36 crates of credit in one blast (GR 97 -> 133)",
+      "evidence": "LP1 3:34:00-3:34:08; GR 133",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-a",
+      "section": "S6",
+      "order": 1,
+      "where": "walkway past the chemical vents",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint right after the slow-mo explosives, before the bonus pad",
+      "evidence": "LP1 3:34:14 (CHECKPOINT text)",
+      "confidence": "high"
+    },
+    {
+      "id": "S6-b",
+      "section": "S6",
+      "order": 2,
+      "where": "boardwalk by the bonus pad",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "two crates by the bonus pad so its approach carries a small reward",
+      "evidence": "LP1 3:34:16 (fruit 470 -> 481); GR 136",
+      "confidence": "medium"
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "tower base (a floating metal timed ! above the entry pad starts the timer; a white outline column on the tower leg did not count)",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "SWITCH",
+        "TIMED"
+      ],
+      "why": "the first credit comes as the timer starts",
+      "evidence": "LP1 3:34:21-3:34:29 (HUD 0 -> 1/27)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "row of 6 Nitro bridging from the scaffold tower to the next platform (3 iron arrow crates on the tower ledge beside it, not counted)",
+      "composition": {
+        "nitro": 6
+      },
+      "count": 6,
+      "arrangement": "row (bridge)",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "BRIDGE",
+        "EXPLOSIVE-MIX",
+        "CHAIN"
+      ],
+      "why": "the Nitro bridge must be detonated, not crossed; the iron arrows launch Crash over it",
+      "evidence": "LP1 3:34:27-3:34:33 (HUD 1 -> 7)",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "dock level: a long row of crates (wood, ?, ?, wumpa crate ...) under a ~16-long row of outline blocks",
+      "composition": {
+        "question": 3,
+        "bounceWumpa": 1,
+        "wood": 2,
+        "unknown": 8
+      },
+      "count": 14,
+      "arrangement": "row under an outline lid",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "OUTLINE",
+        "TIMED",
+        "SWITCH",
+        "TEST"
+      ],
+      "why": "the timed ! turns the outline row into solid iron after a delay; the crates below must be broken before the lid closes (slow-mo extends the window)",
+      "evidence": "LP1 3:34:33-3:34:43 (HUD 7 -> 10 -> 13 -> 15 -> 18 -> 21)",
+      "confidence": "medium"
+    },
+    {
+      "id": "B-d",
+      "section": "B",
+      "order": 4,
+      "where": "crates past the end of the dock row",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "crates past the dock row so the sweep does not end exactly at the lid",
+      "evidence": "LP1 3:34:43-3:34:45 (HUD 21 -> 23)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-e",
+      "section": "B",
+      "order": 5,
+      "where": "a floating pair over open water: metal ! on top of a Nitro, with crates",
+      "composition": {
+        "nitro": 1,
+        "unknown": 2
+      },
+      "count": 3,
+      "arrangement": "floating pair + singles",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "FLOAT-LINE",
+        "SWITCH",
+        "EXPLOSIVE-MIX",
+        "TIMED",
+        "HIGH"
+      ],
+      "why": "GR: set off the Nitro under slow-mo, hop over the invisible blocks, cancel slow-mo as it explodes",
+      "evidence": "LP1 3:34:45-3:34:51 (HUD 23 -> 26)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-f",
+      "section": "B",
+      "order": 6,
+      "where": "last crate before the exit pad (the outline row is solid iron by now)",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "the final crate sits on the far side of the now-solid iron row: it is collected by running on the lid",
+      "evidence": "LP1 3:34:53-3:34:55 (HUD 26 -> 27)",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-a",
+      "section": "S7",
+      "order": 1,
+      "where": "first metres of the ride: crate near a tree (left), 2-stack in the centre",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "single + stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "ON-PATH",
+        "STACK",
+        "TEACH"
+      ],
+      "why": "first lane choice: left single or centre stack",
+      "evidence": "LP1 3:35:09-3:35:13",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-b",
+      "section": "S7",
+      "order": 2,
+      "where": "under an ice arch on the fruit line",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "ON-PATH"
+      ],
+      "why": "arch crate on the fruit line: the fruit trail points the lane",
+      "evidence": "LP1 3:35:14-3:35:16",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-c",
+      "section": "S7",
+      "order": 3,
+      "where": "2-stack on the left behind rocks, single on the right, skier ahead",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "stack + single",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "STACK",
+        "EDGE-BAIT",
+        "ENEMY-LINK"
+      ],
+      "why": "both sides of the lane in one beat: only one can be taken per pass",
+      "evidence": "LP1 3:35:18",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-d",
+      "section": "S7",
+      "order": 4,
+      "where": "2-stack dead centre on a snow lip, JUMP prompt on screen",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "STACK",
+        "TEST"
+      ],
+      "why": "jump into the stack at the lip to take both; running into the base drops the top behind the bear",
+      "evidence": "LP1 3:35:21-3:35:23",
+      "confidence": "high"
+    },
+    {
+      "id": "S7-e",
+      "section": "S7",
+      "order": 5,
+      "where": "beside a tree on the right",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "EDGE-BAIT"
+      ],
+      "why": "crate beside a tree: a hazard and a crate share the beat",
+      "evidence": "LP1 3:35:27-3:35:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-f",
+      "section": "S7",
+      "order": 6,
+      "where": "ice cave after the bear smashes an ice wall: crate on the left",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "HIDDEN"
+      ],
+      "why": "placed just after a visual burst (the ice wall)",
+      "evidence": "LP1 3:35:29-3:35:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-g",
+      "section": "S7",
+      "order": 7,
+      "where": "on the rise before the arrow wall",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "ON-PATH"
+      ],
+      "why": "the last centre-lane crate before the launch, timed to the rise",
+      "evidence": "LP1 3:35:34",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-h",
+      "section": "S7",
+      "order": 8,
+      "where": "right edge beside a fallen pine, just below a full-width wall of 6 iron arrow crates (not counted)",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "STACK",
+        "EDGE-BAIT"
+      ],
+      "why": "the arrow wall launches the bear; the stack beside the fallen pine is the last pickup before the launch",
+      "evidence": "LP1 3:35:34-3:35:36",
+      "confidence": "high"
+    },
+    {
+      "id": "S7-i",
+      "section": "S7",
+      "order": 9,
+      "where": "ice channel between two pillars, head-on",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "ON-PATH"
+      ],
+      "why": "head-on crate in a channel too narrow to steer around",
+      "evidence": "LP1 3:35:38-3:35:40",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-j",
+      "section": "S7",
+      "order": 10,
+      "where": "between tall falling ice pillars",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "TIMED"
+      ],
+      "why": "crate between falling ice pillars: a timing hazard beside a pickup",
+      "evidence": "LP1 3:35:41-3:35:42",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-k",
+      "section": "S7",
+      "order": 11,
+      "where": "left side after a ridge jump",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE"
+      ],
+      "why": "left-lane crate just after a ridge: steer during the landing",
+      "evidence": "LP1 3:35:43",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-l",
+      "section": "S7",
+      "order": 12,
+      "where": "at the base of a tree beside a hole in the snow",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "EDGE-BAIT"
+      ],
+      "why": "pickup next to a pit",
+      "evidence": "LP1 3:35:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-m",
+      "section": "S7",
+      "order": 13,
+      "where": "one left, one right",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "pair split across lanes",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE"
+      ],
+      "why": "a split beat: one lane each side, so both can only be taken with a hard steer",
+      "evidence": "LP1 3:35:45-3:35:48",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-n",
+      "section": "S7",
+      "order": 14,
+      "where": "cavern: two crates far left behind the ice pillars (GR: hug the left wall after the second ice block)",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "pair against the wall",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "HIDDEN",
+        "COUNT-TRAP"
+      ],
+      "why": "the camera swings while the line stays straight: the pocket is behind the pillars",
+      "evidence": "LP1 3:35:50; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-o",
+      "section": "S7",
+      "order": 15,
+      "where": "dead centre of the corridor among skiers",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "ENEMY-LINK"
+      ],
+      "why": "centre crates among skiers: collect while dodging moving blockers",
+      "evidence": "LP1 3:35:52-3:35:54",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-p",
+      "section": "S7",
+      "order": 16,
+      "where": "unresolved crates of the first half (fruit bursts at 1 fps)",
+      "composition": {
+        "unknown": 17
+      },
+      "count": 17,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE"
+      ],
+      "why": "balance of GR 204",
+      "evidence": "GR 204 minus mapped",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-q",
+      "section": "S7",
+      "order": 17,
+      "where": "bear checkpoint near the tape jump",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "locks in the hardest all-box stretch",
+      "evidence": "LP1 3:36:03-3:36:07 (HUD 205/227)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-a",
+      "section": "S8",
+      "order": 1,
+      "where": "right side of a slope beside two Nitro",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "EXPLOSIVE-MIX",
+        "EDGE-BAIT"
+      ],
+      "why": "a crate on the far side of two Nitro: commit to the lane past the Nitro",
+      "evidence": "LP1 3:36:13-3:36:17",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-b",
+      "section": "S8",
+      "order": 2,
+      "where": "diagonal line across the run: wood, Nitro, Nitro, wood",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "weave line",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "EXPLOSIVE-MIX",
+        "TEST"
+      ],
+      "why": "steer through the gaps: take the crates, miss the Nitros",
+      "evidence": "LP1 3:36:21",
+      "confidence": "high"
+    },
+    {
+      "id": "S8-c",
+      "section": "S8",
+      "order": 3,
+      "where": "3-stack dead centre before the end",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "stack",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "STACK",
+        "TEST"
+      ],
+      "why": "the tallest stack of the ride, hit with a jump",
+      "evidence": "LP1 3:36:23",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-d",
+      "section": "S8",
+      "order": 4,
+      "where": "2-stack on the upper-left path",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "STACK",
+        "DETOUR"
+      ],
+      "why": "an optional upper-left path carries its own stack",
+      "evidence": "LP1 3:36:23",
+      "confidence": "low"
+    },
+    {
+      "id": "S8-e",
+      "section": "S8",
+      "order": 5,
+      "where": "by the fence on the left before the end platform",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [],
+      "tags": [
+        "SPEED-LINE",
+        "EDGE-BAIT"
+      ],
+      "why": "fence-line crate before the end platform",
+      "evidence": "LP1 3:36:23-3:36:25",
+      "confidence": "low"
+    },
+    {
+      "id": "S9-a",
+      "section": "S9",
+      "order": 1,
+      "where": "Nitro switch (green !) in front of the exit crate sign: pays the Nitro dodged on the ride",
+      "composition": {
+        "nitro": 13
+      },
+      "count": 13,
+      "arrangement": "switch payout",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [],
+      "tags": [
+        "NITRO-SWITCH",
+        "SPEED-LINE"
+      ],
+      "why": "13 Nitro credited at the exit (214 -> 227); 6 were seen on the ride",
+      "evidence": "LP1 3:36:27-3:36:29",
+      "confidence": "high"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S1-S4",
+      "kind": "lab assistants in parkas with remote-controlled robot drones",
+      "count": 6,
+      "where": "snowfield, lake shore, chemical yard, bridges",
+      "role": "drones fire red laser bolts and cannot be hurt directly; beat the owner. Several crates sit between drones (S1-h, S3-d)"
+    },
+    {
+      "section": "S7-S8",
+      "kind": "skiing lab assistants",
+      "count": 6,
+      "where": "bear-ride lanes and the dark ice tunnel",
+      "role": "moving lane blockers next to crates (S7-c, S7-o)"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S1",
+      "kind": "chasm crossed on swinging cable-car platforms",
+      "where": "before C1",
+      "crates": [
+        "S1-j",
+        "S1-k"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "spinning discs, swinging platforms, rope bridges, bumper pads",
+      "where": "after the hidden-gem drop",
+      "crates": [
+        "S3-a",
+        "S3-e"
+      ]
+    },
+    {
+      "section": "S5",
+      "kind": "side-view cavern of rope-hung swinging platforms and see-saws over a drop",
+      "where": "slow-mo area",
+      "crates": [
+        "S5-c",
+        "S5-d",
+        "S5-e"
+      ]
+    },
+    {
+      "section": "S7",
+      "kind": "snow lips, ravines, holes, falling ice pillars on the bear ride",
+      "where": "first half",
+      "crates": [
+        "S7-d",
+        "S7-l",
+        "S7-j"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-c"
+      ],
+      "summary": "TNT beside two floating crates at the start.",
+      "solution": "Stomp the TNT and back off; the blast breaks the two floating crates.",
+      "wrongOrder": "Standing next to it, or trying to jump for the floating pair first.",
+      "loss": "A life, or 2 crates if the TNT is set off from too far away."
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S2-b",
+        "S2-c",
+        "S4-e"
+      ],
+      "summary": "Three TNT stacks in two minutes: TNT on top of wood, strong crate on top of TNT on a moving platform, TNT under two crates.",
+      "solution": "S2-b: spin the base, step back. S2-c: light the TNT and leave the platform, so the blast opens the strong crate. S4-e: take the upper pair first.",
+      "wrongOrder": "Body-slamming onto S2-c's strong crate with the TNT below; lighting S4-e before the pair is taken (the blast still takes them, but on a ledge you may be caught).",
+      "loss": "A life (on hanging platforms the safe zone is small)."
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "S5-d",
+        "S5-e"
+      ],
+      "summary": "Slow-mo explosives: a Nitro row ending in a crate, then a giant Nitro block.",
+      "solution": "Break the end crate in slow-mo and get clear. For the block, set it off in slow-mo, jump past, cancel slow-mo as it goes.",
+      "wrongOrder": "Running past without detonating (the Nitros stay standing).",
+      "loss": "Not lost: Nitros left standing appear to be paid by the exit switch only if still present. LP: the row and block were detonated (+44 by GR)."
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "B-a",
+        "B-c",
+        "B-e"
+      ],
+      "summary": "Bonus: a floating timed ! starts a countdown after which a long outline row over the dock crates turns to iron.",
+      "solution": "Hit the ! with slow-mo active, detonate the Nitro bridge, sweep the dock row under the lid, then take the floating pair (Nitro under slow-mo).",
+      "wrongOrder": "Hitting the ! without slow-mo, or crossing the Nitro bridge.",
+      "loss": "Bonus crates: once the lid is iron the remaining dock crates are sealed (the round restarts on death)."
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S7-a",
+        "S7-p",
+        "S7-q"
+      ],
+      "summary": "Bear ride first half: 41 crates before the bear checkpoint with no counter on screen.",
+      "solution": "Memorise lanes: hit 2-stacks with a jump at the lip, hug the left wall in the cavern, don't over-steer while the camera swings.",
+      "wrongOrder": "Steering at every crate (over-correction drops the next lane), passing the checkpoint after a miss.",
+      "loss": "All-box only: a missed crate means dying and retrying before the checkpoint (GR)."
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "S9-a"
+      ],
+      "summary": "Exit sign and Nitro switch.",
+      "solution": "Press the green ! in front of the sign (214/227).",
+      "wrongOrder": "Skipping it.",
+      "loss": "13 crates of the all-box gem."
+    }
+  ],
+  "observations": [
+    "Four acts: on-foot snowfield and caverns (80 crates in about 2 min), a slow-mo explosives set piece (53, of which 44 are Nitro), a 27-crate bonus, and the bear ride (51 crates plus 13 Nitro credited at the exit).",
+    "Hazards are box credit: about 64 of the 227 boxes are Nitro (row 8, block 36, bonus 7, exit switch 13), plus at least 7 TNT. One slow-mo detonation of the giant block is worth 36 crates, 16 % of the level.",
+    "Cable-car platforms carry tall columns and blocks (S1-j, S1-k): many crates per landing, on a footing that is moving, so the player commits to a stomp chain.",
+    "TNT stacking is varied rather than repeated: TNT next to floating crates (tool), TNT on top of wood, a strong crate on top of TNT, TNT under a crate pair. Four variants in three minutes.",
+    "The bear ride's first half holds 41 crates and the HUD never shows; it is designed for memorisation (GR: die and retry before the checkpoint). Crates sit in left/centre/right lanes, 2-stacks are centred on lips where a JUMP prompt appears, and two crates hide behind ice pillars against the left wall.",
+    "The second half is light (9 crates) and seeded with Nitro: the ride turns from collecting to dodging, and the dodged Nitro are paid by the exit switch, so dodging never costs the box gem.",
+    "A full-width wall of 6 iron arrow crates on a rise is terrain, not a collectible: a forced launch gate on a vehicle section.",
+    "Rope-bridge and bumper stretches use one crate per post (S3), spacing pickups to the rhythm of the posts rather than clustering them.",
+    "The yellow-gem plate shows a hint banner without the key; the run had no yellow gem yet earned ALL, so that path carries no counted crates.",
+    "Checkpoints sit at 46, ≈ 71, 134 and 205: the front-loaded C1 follows the densest on-foot stretch, and the bear checkpoint locks in the hardest all-box segment.",
+    "The hidden gem is marked by a red lantern beside the arrow crate: a light as a visual tell for a drop."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen",
+      "notes": "Snowy canyon from the spawn, fenced downhill path and plank lake (LP1 3:31:12–3:31:40); ice cave with hanging platforms up to C1 (3:31:41–3:31:54)."
+    },
+    {
+      "section": "S2",
+      "mode": "into-screen",
+      "notes": "Ice cave with hanging pads, a hand-over-hand pipe frame and steel scaffolds to the arrow-crate walkway (3:31:54–3:32:20)."
+    },
+    {
+      "section": "S3",
+      "mode": "into-screen → toward-camera → into-screen",
+      "notes": "Chasm with rod-hung pads and lift discs (3:32:22–3:32:30); a disc lowers Crash from the drill tower and the camera turns to face him for the rope-bridge run back toward the camera (3:32:32–3:33:00); a disc lifts him into a dark cave (3:33:02–3:33:14)."
+    },
+    {
+      "section": "S4",
+      "mode": "into-screen → side view",
+      "notes": "Snow path with C2 and machinery walkways (3:33:16–3:33:26); side-view scaffold room (3:33:28–3:33:32)."
+    },
+    {
+      "section": "S5",
+      "mode": "side view",
+      "notes": "Side-scrolling ice cavern: hanging pads, rope-strung ice slabs, tipping pads, the Nitro row and the giant Nitro block (3:33:33–3:34:08)."
+    },
+    {
+      "section": "S6",
+      "mode": "oblique / into-screen",
+      "notes": "Steel blocks over gas vents to C3 and the bonus pad (3:34:10–3:34:18)."
+    },
+    {
+      "section": "B",
+      "mode": "side view",
+      "notes": "Side-scrolling harbour at dusk (3:34:20–3:34:55)."
+    },
+    {
+      "section": "S7",
+      "mode": "vehicle (chase camera behind the bear)",
+      "notes": "Forced downhill run; the camera swings at bends while the line stays fairly straight (GR); BOOST and JUMP prompts (3:35:07–3:36:07)."
+    },
+    {
+      "section": "S8",
+      "mode": "vehicle (chase camera)",
+      "notes": "Second half after the bear checkpoint, with Cortex's blimp overhead (3:36:07–3:36:25)."
+    },
+    {
+      "section": "S9",
+      "mode": "into-screen (on foot)",
+      "notes": "End platform with the crate sign and the Nitro switch (3:36:27–3:36:29)."
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "wide floor (snowy canyon terraces)",
+      "size": "10-12 wide; risers ~1",
+      "heightDelta": "+1 per terrace",
+      "edges": "walled (canyon sides)",
+      "behaviour": "static",
+      "roles": [
+        "ARENA",
+        "TEACH"
+      ],
+      "why": "an open floor for the first drone group: room to circle the drones and reach their owner",
+      "evidence": "LP1 3:31:12-3:31:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "corridor (fenced downhill snow path)",
+      "size": "~6 wide",
+      "heightDelta": "downhill",
+      "edges": "fenced on the left",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "a breather carrying a stack by the fence",
+      "evidence": "LP1 3:31:30-3:31:34",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "stepping stones (floating plank rafts on a dark lake)",
+      "size": "~2x1.5",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "floating (bob not measurable)",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "raft hops while the far-shore drones fire across",
+      "evidence": "LP1 3:31:36-3:31:38",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "narrow ledge (far-shore snow ledge)",
+      "size": "~6x2",
+      "heightDelta": "+1 to +1.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING",
+        "ARENA"
+      ],
+      "why": "a landing held by an owner and two drones",
+      "evidence": "LP1 3:31:36-3:31:38",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "square pad (snow-topped pads hung on rods over icy water)",
+      "size": "~1.5x1.5; spacing 2-3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung; possibly the \"unstable\" pads that drop if you linger (gamepressure)",
+      "roles": [
+        "STEPPING",
+        "TIMING-STEP"
+      ],
+      "why": "a line of small pads leading into the cave: keep moving",
+      "evidence": "LP1 3:31:41-3:31:43; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-f",
+      "section": "S1",
+      "shape": "moving platform (hanging gondola deck with spiked lamp posts at two corners)",
+      "size": "~3x4",
+      "heightDelta": 0,
+      "edges": "open, spiked lamps at the corners",
+      "behaviour": "hung (sway not measurable)",
+      "roles": [
+        "REST",
+        "STEPPING"
+      ],
+      "why": "the first larger hanging deck, its edges marked by spiked lamps",
+      "evidence": "LP1 3:31:44-3:31:45",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-g",
+      "section": "S1",
+      "shape": "moving platform (icy, hazard-striped hanging deck carrying two crate columns)",
+      "size": "~4x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung; icy top",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the columns fill the deck, so the player stomps down them on a hanging footing",
+      "evidence": "LP1 3:31:46-3:31:48",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-h",
+      "section": "S1",
+      "shape": "moving platform (hanging deck with the 3x2 crate block)",
+      "size": "~4x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a dense block on the last hanging deck",
+      "evidence": "LP1 3:31:49-3:31:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-i",
+      "section": "S1",
+      "shape": "wide floor (snow ledge with C1)",
+      "size": "~6x4",
+      "heightDelta": "+1.5 to +2",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the checkpoint is on solid ground above the hanging decks",
+      "evidence": "LP1 3:31:52-3:31:54",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "square pad (snow ledge with the TNT-on-wood stack)",
+      "size": "~3x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "a restart pad after C1",
+      "evidence": "LP1 3:31:54-3:31:56",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "moving platform (icy hanging deck with a strong crate on a TNT)",
+      "size": "~3x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the TNT key sits on a footing you must leave before it blows",
+      "evidence": "LP1 3:31:58-3:32:00",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "square pad (pair of small hanging pads, left and right)",
+      "size": "~1.5x1.5, ~3 apart",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a fork of small pads around a metal ! on a post",
+      "evidence": "LP1 3:32:00-3:32:02",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "rope (overhead pipe frame traversed hand over hand)",
+      "size": "~4-6 long",
+      "heightDelta": "hanging ~2 below the frame",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "swing"
+      ],
+      "why": "a hang traverse over the chasm: a different input between pad hops",
+      "evidence": "LP1 3:32:04",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-e",
+      "section": "S2",
+      "shape": "narrow ledge (X-trestle scaffold with a ?)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "an off-line pickup on a scaffold",
+      "evidence": "LP1 3:32:06",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-f",
+      "section": "S2",
+      "shape": "stepped steel scaffold tower",
+      "size": "~3-4 wide; risers ~2",
+      "heightDelta": "+4 to +6 in total",
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "ARENA"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "a vertical climb whose top deck holds the ? pair and the 2x2 ? block",
+      "evidence": "LP1 3:32:08-3:32:12",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-g",
+      "section": "S2",
+      "shape": "corridor (railed steel walkway by the chemical tanks)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "the walkway ends at the arrow crate and the red lantern",
+      "evidence": "LP1 3:32:14-3:32:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-h",
+      "section": "S2",
+      "shape": "narrow ledge (hidden ledge below the walkway)",
+      "size": "~2 wide (not fully visible)",
+      "heightDelta": "-2 to -3",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "move": [
+        "plain"
+      ],
+      "why": "the hidden gem; the red lantern is the only tell",
+      "evidence": "LP1 3:32:16-3:32:20; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "square pad (rod-hung snow pads over the chasm)",
+      "size": "~2x2; gaps 2-3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "pads with drones hovering in the gaps between them",
+      "evidence": "LP1 3:32:22-3:32:25",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "moving platform (spinning yellow-black lift disc on a vertical pole)",
+      "size": "~2 across",
+      "heightDelta": "travels several u up or down",
+      "edges": "open",
+      "behaviour": "spins while riding up or down its pole",
+      "roles": [
+        "STEPPING",
+        "TIMING-STEP"
+      ],
+      "move": [
+        "plain",
+        "ride"
+      ],
+      "why": "GR's \"spinning platforms\": vertical transport that also turns the rider",
+      "evidence": "LP1 3:32:26-3:32:35, 3:33:08-3:33:13; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-c",
+      "section": "S3",
+      "shape": "narrow ledge (alcove steel platform with a lab assistant)",
+      "size": "~3x2",
+      "heightDelta": "+1",
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a side pocket with an enemy and a crate",
+      "evidence": "LP1 3:32:28-3:32:30",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-d",
+      "section": "S3",
+      "shape": "bridge/plank (rope suspension bridge between hazard-striped post platforms)",
+      "size": "~2.5 wide; spans ~6-8 between posts",
+      "heightDelta": "sags ~0.5",
+      "edges": "railed (rope)",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "CHOKE"
+      ],
+      "why": "a narrow run toward the camera, flanked by drone pairs",
+      "evidence": "LP1 3:32:36-3:33:00",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-e",
+      "section": "S3",
+      "shape": "square pad (hazard-striped steel post platforms on the bridge)",
+      "size": "~3x3",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "posts carry the ? crates and break the bridge into short runs",
+      "evidence": "LP1 3:32:40-3:32:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-f",
+      "section": "S3",
+      "shape": "narrow ledge (steel platform in the dark cave, snow shelf above)",
+      "size": "~3x2; shelf ~2 higher",
+      "heightDelta": "+2 (shelf)",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "the arrival from the lift, with an enemy and a shelf crate",
+      "evidence": "LP1 3:33:12-3:33:14",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "corridor (snow path with the yellow-gem plate and C2)",
+      "size": "~4 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the checkpoint sits next to the locked gem plate",
+      "evidence": "LP1 3:33:16-3:33:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-b",
+      "section": "S4",
+      "shape": "square pad (snow-topped hanging pads over dark water among the machinery)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a short pad hop guarded by an owner and a drone",
+      "evidence": "LP1 3:33:22",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S4-c",
+      "section": "S4",
+      "shape": "corridor (hazard-striped walkway)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "the walkway holding the crate beside a TNT on a scaffold",
+      "evidence": "LP1 3:33:24-3:33:26",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S4-d",
+      "section": "S4",
+      "shape": "stepped scaffold decks (side view)",
+      "size": "decks ~3 wide; risers ~2",
+      "heightDelta": "+2 per deck",
+      "edges": "railed in part",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "a vertical climb with fruit columns marking the double jumps; the ? hangs on a beam above",
+      "evidence": "LP1 3:33:28-3:33:32",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-a",
+      "section": "S5",
+      "shape": "square pad (rod-hung red-plank pads)",
+      "size": "~2x1.5",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "the entry into the cavern",
+      "evidence": "LP1 3:33:33-3:33:34",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-b",
+      "section": "S5",
+      "shape": "narrow ledge (railed scaffold rests)",
+      "size": "~3x2",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST",
+        "SAFE-ISLAND"
+      ],
+      "why": "rests between moving-footing sets carry the pacing crates",
+      "evidence": "LP1 3:33:35-3:33:36, 3:33:45-3:33:46, 3:33:50",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-c",
+      "section": "S5",
+      "shape": "crumbling (thin ice slabs strung on sagging ropes)",
+      "size": "~2x1",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "fall shortly after landing (gamepressure: jump across before they fall)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "move": [
+        "running"
+      ],
+      "why": "the first slow-mo use is on a crumble run",
+      "evidence": "LP1 3:33:37-3:33:40; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-d",
+      "section": "S5",
+      "shape": "rotating/tilting (hinged rod-hung tipping pads, GR's see-saws)",
+      "size": "~2x1.5",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "tip under Crash's weight",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "a footing that tips you off if you stand on the wrong side for too long",
+      "evidence": "LP1 3:33:41-3:33:44, 3:33:47-3:33:49; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-e",
+      "section": "S5",
+      "shape": "corridor (walkway carrying the Nitro row)",
+      "size": "~10 long x 1",
+      "heightDelta": "-1 below the scaffold",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "the row is set off remotely from the scaffold beside it",
+      "evidence": "LP1 3:33:51-3:33:54",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-f",
+      "section": "S5",
+      "shape": "corridor (railed walkway over green chemical vats)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "a rest between the two Nitro set pieces",
+      "evidence": "LP1 3:33:56-3:33:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-g",
+      "section": "S5",
+      "shape": "stepping stones (hazard-striped steel blocks on rock pillars beside the giant Nitro block)",
+      "size": "~2-3 wide; gaps ~2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "PERCH"
+      ],
+      "why": "the only route runs beside the block, so the block must be set off and outrun",
+      "evidence": "LP1 3:34:00-3:34:08",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S6-a",
+      "section": "S6",
+      "shape": "stepping stones (hazard-striped steel blocks over gas vents)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "the last hops to C3",
+      "evidence": "LP1 3:34:10-3:34:12",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S6-b",
+      "section": "S6",
+      "shape": "corridor (walkway with C3, then a boardwalk to the bonus pad)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "BONUS-PAD"
+      ],
+      "why": "checkpoint and bonus pad back to back",
+      "evidence": "LP1 3:34:14-3:34:18",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "wide floor (entry dock)",
+      "size": "~6",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "the start pad; the timed ! hangs in front of it",
+      "evidence": "LP1 3:34:21-3:34:25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "stepped scaffold tower with 3 steel arrow crates on a ledge between its legs",
+      "size": "legs ~3 apart; arrow ledge 3x1",
+      "heightDelta": "+3 to +5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "move": [
+        "plain",
+        "arrow"
+      ],
+      "why": "the arrows launch Crash over the Nitro bridge",
+      "evidence": "LP1 3:34:27-3:34:31",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-c",
+      "section": "B",
+      "shape": "narrow ledge (long low pier under the outline lid)",
+      "size": "~16 long; slot 1 crate high",
+      "heightDelta": 0,
+      "edges": "open (water both sides)",
+      "behaviour": "timed: the outline row above turns to iron when the timer ends",
+      "roles": [
+        "ARENA",
+        "CHOKE"
+      ],
+      "move": [
+        "crate-bounce",
+        "plain"
+      ],
+      "why": "the 14 crates fill a one-crate slot under a closing ceiling: sweep before it closes",
+      "evidence": "LP1 3:34:33-3:34:43",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-d",
+      "section": "B",
+      "shape": "phase/timed (outline row turned to solid iron)",
+      "size": "~16x1",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "see-through until the timer ends, then a permanent iron bridge",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "the lid becomes the walkway to the exit",
+      "evidence": "LP1 3:34:53-3:34:55",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S7-a",
+      "section": "S7",
+      "shape": "vehicle lane (downhill snow valley in three lanes)",
+      "size": "10-14 wide, narrowing to ~6 in corridors",
+      "heightDelta": "downhill",
+      "edges": "walled (rock and ice)",
+      "behaviour": "forced forward run",
+      "roles": [
+        "CHOKE"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "lanes L/C/R: each hazard takes one lane and a crate sits in another",
+      "evidence": "LP1 3:35:07-3:36:07",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S7-b",
+      "section": "S7",
+      "shape": "vehicle lane (ice channel with translucent ice pillars)",
+      "size": "~6 wide",
+      "heightDelta": "downhill",
+      "edges": "walled",
+      "behaviour": "forced; pillars stand in or fall into the lane",
+      "roles": [
+        "CHOKE"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "a narrow channel where pillars occupy lanes",
+      "evidence": "LP1 3:35:38-3:35:42",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-c",
+      "section": "S7",
+      "shape": "vehicle lane (dark ice tunnel)",
+      "size": "~5 wide",
+      "heightDelta": "downhill",
+      "edges": "walled",
+      "behaviour": "forced",
+      "roles": [
+        "CHOKE"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "two skiers side by side fill two of the three lanes",
+      "evidence": "LP1 3:35:57-3:35:59",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S8-a",
+      "section": "S8",
+      "shape": "vehicle lane (open slope ending in fences)",
+      "size": "8-12 wide",
+      "heightDelta": "downhill",
+      "edges": "open to the ravine on one side",
+      "behaviour": "forced",
+      "roles": [
+        "CHOKE"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "Nitro mines and a weave on an open slope",
+      "evidence": "LP1 3:36:09-3:36:25",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S9-a",
+      "section": "S9",
+      "shape": "wide floor (end platform on foot)",
+      "size": "~6x6",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "dismount, crate sign and Nitro switch",
+      "evidence": "LP1 3:36:27-3:36:29",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "lethal water (plank-raft lake)",
+      "width": "2-3",
+      "heightDelta": "0; +1 to +1.5 onto the far shore",
+      "landing": "~2x1.5 rafts, then a ~6x2 shore ledge",
+      "lethal": true,
+      "runUp": "3-5",
+      "move": [
+        "plain"
+      ],
+      "coupling": "drone laser bolts from the far shore",
+      "failure": "death (assumed; not shown)",
+      "nearby": [
+        "S1-h",
+        "E-S1-b"
+      ],
+      "why": "gap plus projectile: the first combined test",
+      "evidence": "LP1 3:31:36-3:31:38",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S1-b",
+      "section": "S1",
+      "kind": "lethal water (icy pool under the hanging pads and decks)",
+      "width": "2-3",
+      "heightDelta": 0,
+      "landing": "~1.5x1.5 pads, then 3x4 and 4x3 decks",
+      "lethal": true,
+      "runUp": "2-3",
+      "move": [
+        "plain"
+      ],
+      "coupling": "pads hang (and may drop if you linger, gamepressure)",
+      "failure": "death",
+      "nearby": [
+        "S1-j",
+        "S1-k"
+      ],
+      "why": "pad hops leading to crate-laden decks",
+      "evidence": "LP1 3:31:41-3:31:52",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "chasm (ledge to the hanging deck with the strong crate on TNT)",
+      "width": "~2",
+      "heightDelta": 0,
+      "landing": "~3x2 deck",
+      "lethal": true,
+      "runUp": "2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "a TNT you will light on the landing",
+      "failure": "death",
+      "nearby": [
+        "S2-c"
+      ],
+      "why": "you land on a deck whose explosive you must light and then leave",
+      "evidence": "LP1 3:31:58-3:32:00",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-b",
+      "section": "S2",
+      "kind": "chasm crossed hand over hand on the pipe frame",
+      "width": "4-6",
+      "heightDelta": 0,
+      "landing": "scaffold",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "swing"
+      ],
+      "coupling": "none",
+      "failure": "death (drop)",
+      "nearby": [
+        "S2-d"
+      ],
+      "why": "a hang traverse instead of a jump",
+      "evidence": "LP1 3:32:04",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-c",
+      "section": "S2",
+      "kind": "drop-down (walkway edge to the hidden ledge)",
+      "width": "0 (drop)",
+      "heightDelta": "-2 to -3",
+      "landing": "~2-wide ledge",
+      "lethal": null,
+      "runUp": "0",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "probably death if the ledge is missed (not shown)",
+      "nearby": [
+        "S2-h"
+      ],
+      "why": "a deliberate step into the unknown, marked only by the red lantern",
+      "evidence": "LP1 3:32:16-3:32:20; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "bottomless pit (chasm between rod-hung pads)",
+      "width": "2-3",
+      "heightDelta": 0,
+      "landing": "~2x2 pads",
+      "lethal": true,
+      "runUp": "1-2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "drones hover in the gaps",
+      "failure": "death",
+      "nearby": [
+        "E-S3-a"
+      ],
+      "why": "the enemy occupies the gap itself",
+      "evidence": "LP1 3:32:22-3:32:25",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-b",
+      "section": "S3",
+      "kind": "moving-platform crossing (lift discs)",
+      "width": "vertical",
+      "heightDelta": "several u down (drill tower) or up (to the cave)",
+      "landing": "~2-across disc",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "ride"
+      ],
+      "coupling": "disc position on its pole",
+      "failure": "death if the step-on is mistimed",
+      "nearby": [
+        "S3-a"
+      ],
+      "why": "the discs move the player between levels; stepping on is the jump",
+      "evidence": "LP1 3:32:26-3:32:35, 3:33:02-3:33:13",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-c",
+      "section": "S3",
+      "kind": "bottomless pit (gaps in the rope-bridge deck)",
+      "width": "~1 where planks are missing",
+      "heightDelta": 0,
+      "landing": "~2.5-wide deck",
+      "lethal": true,
+      "runUp": "running",
+      "move": [
+        "running"
+      ],
+      "coupling": "drone pairs on the deck",
+      "failure": "death",
+      "nearby": [
+        "S3-b",
+        "S3-c",
+        "S3-d"
+      ],
+      "why": "the toward-camera view hides depth, so gaps and drones are read late",
+      "evidence": "LP1 3:32:40-3:33:00",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "chasm (scaffold risers in the side-view room)",
+      "width": "2-3",
+      "heightDelta": "+2 per deck",
+      "landing": "~3-wide decks",
+      "lethal": null,
+      "runUp": "1-2",
+      "move": [
+        "double"
+      ],
+      "coupling": "none",
+      "failure": "fall to a lower deck",
+      "nearby": [
+        "S4-d"
+      ],
+      "why": "vertical gaps marked by fruit columns",
+      "evidence": "LP1 3:33:28-3:33:32",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-b",
+      "section": "S4",
+      "kind": "chasm (the longest on-foot gap, just before the mask)",
+      "width": "not measured",
+      "heightDelta": "not visible",
+      "landing": "a platform",
+      "lethal": null,
+      "runUp": "not visible",
+      "move": [
+        "slide-jump",
+        "double"
+      ],
+      "coupling": "none reported",
+      "failure": "not visible",
+      "nearby": [],
+      "why": "gamepressure: \"jump onto one platform, then slide and double jump to proceed\" before the mask; the combined move gives the most distance on foot",
+      "evidence": "gamepressure only",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S5-a",
+      "section": "S5",
+      "kind": "crumble run (ice slabs on ropes)",
+      "width": "2-3",
+      "heightDelta": 0,
+      "landing": "~2x1 slabs",
+      "lethal": true,
+      "runUp": "1-2",
+      "move": [
+        "running"
+      ],
+      "coupling": "slabs fall after landing; slow-mo",
+      "failure": "death",
+      "nearby": [
+        "S5-c"
+      ],
+      "why": "the mask's first job is the archetypal timing gap",
+      "evidence": "LP1 3:33:37-3:33:40; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S5-b",
+      "section": "S5",
+      "kind": "bottomless pit (between tipping pads)",
+      "width": "~3",
+      "heightDelta": 0,
+      "landing": "~2x1.5 tipping pads",
+      "lethal": true,
+      "runUp": "1",
+      "move": [
+        "plain"
+      ],
+      "coupling": "pad tilt",
+      "failure": "death",
+      "nearby": [
+        "S5-c"
+      ],
+      "why": "a footing that rotates under you",
+      "evidence": "LP1 3:33:41-3:33:49",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S5-c",
+      "section": "S5",
+      "kind": "chasm (steel blocks beside the giant Nitro block)",
+      "width": "~2",
+      "heightDelta": 0,
+      "landing": "~2-3-wide blocks",
+      "lethal": true,
+      "runUp": "1",
+      "move": [
+        "plain"
+      ],
+      "coupling": "the block's chain blast; slow-mo, then cancel",
+      "failure": "death (blast or fall)",
+      "nearby": [
+        "S5-e"
+      ],
+      "why": "short hops made dangerous by the explosion beside them",
+      "evidence": "LP1 3:34:00-3:34:08",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S6-a",
+      "section": "S6",
+      "kind": "chasm over gas vents (steel blocks)",
+      "width": "~2",
+      "heightDelta": 0,
+      "landing": "~2x2 blocks",
+      "lethal": null,
+      "runUp": "1",
+      "move": [
+        "plain"
+      ],
+      "coupling": "vent gas (cycle not measured)",
+      "failure": "not visible",
+      "nearby": [],
+      "why": "calm hops before C3",
+      "evidence": "LP1 3:34:10-3:34:12",
+      "confidence": "low"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "chasm spanned by a Nitro bridge (tower to the right platform)",
+      "width": "~6",
+      "heightDelta": "0 (launched from +1)",
+      "landing": "~4-wide platform",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "arrow"
+      ],
+      "coupling": "the Nitro bridge must be detonated; the timer is running",
+      "failure": "death",
+      "nearby": [
+        "B-b"
+      ],
+      "why": "the bridge is crate credit, so it is destroyed and the arrows replace it",
+      "evidence": "LP1 3:34:27-3:34:33",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-B-b",
+      "section": "B",
+      "kind": "lethal water (to the floating ! over a Nitro)",
+      "width": "3-5",
+      "heightDelta": "+2 to +3",
+      "landing": "floating ! (on a Nitro) and invisible blocks",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "double"
+      ],
+      "coupling": "the Nitro is set off under slow-mo; invisible blocks serve as steps (GR)",
+      "failure": "death",
+      "nearby": [
+        "B-e"
+      ],
+      "why": "the last jump uses blocks you cannot see until the timer ends",
+      "evidence": "LP1 3:34:45-3:34:51; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-a",
+      "section": "S7",
+      "kind": "chasm (ravine jump off a snow lip, JUMP prompt)",
+      "width": "~8-12 (estimate)",
+      "heightDelta": "-3 to -5",
+      "landing": "wide snowfield",
+      "lethal": true,
+      "runUp": "forced",
+      "move": [
+        "ride",
+        "plain"
+      ],
+      "coupling": "bear JUMP on the lip",
+      "failure": "death",
+      "nearby": [
+        "S7-d"
+      ],
+      "why": "a prompted jump whose take-off lip carries a 2-stack",
+      "evidence": "LP1 3:35:21-3:35:23",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-b",
+      "section": "S7",
+      "kind": "chasm with bounce (iron arrow wall at the top of a rise)",
+      "width": "~6-10 (over a cave mouth)",
+      "heightDelta": "launch, then -3 to -4",
+      "landing": "ice channel",
+      "lethal": false,
+      "runUp": "forced",
+      "move": [
+        "arrow",
+        "ride"
+      ],
+      "coupling": "forced launch",
+      "failure": "none (the wall always launches)",
+      "nearby": [
+        "S7-h"
+      ],
+      "why": "terrain as a launcher: no input needed, but the landing lane matters",
+      "evidence": "LP1 3:35:34-3:35:37",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S7-c",
+      "section": "S7",
+      "kind": "chasm (ridge jump)",
+      "width": "~4-6",
+      "heightDelta": "-2 to -3",
+      "landing": "slope",
+      "lethal": null,
+      "runUp": "forced",
+      "move": [
+        "ride",
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "not visible",
+      "nearby": [
+        "S7-k"
+      ],
+      "why": "a crest that throws the bear into the air before a left-lane crate",
+      "evidence": "LP1 3:35:43",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-d",
+      "section": "S7",
+      "kind": "floor hole (round hole in the snow, centre lane)",
+      "width": "~1.5",
+      "heightDelta": "pit",
+      "landing": "n/a",
+      "lethal": true,
+      "runUp": "forced",
+      "move": [
+        "ride"
+      ],
+      "coupling": "forced speed",
+      "failure": "death",
+      "nearby": [
+        "S7-l"
+      ],
+      "why": "a pit in the lane with a crate beside it",
+      "evidence": "LP1 3:35:44",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-e",
+      "section": "S7",
+      "kind": "chasm (optional tape jump to the right)",
+      "width": "not measured",
+      "heightDelta": "not visible",
+      "landing": "tape ledge",
+      "lethal": null,
+      "runUp": "forced",
+      "move": [
+        "ride",
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "not visible",
+      "nearby": [
+        "S7-q"
+      ],
+      "why": "a side jump for the tape just before the bear checkpoint",
+      "evidence": "LP1 3:36:03-3:36:05; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S8-a",
+      "section": "S8",
+      "kind": "chasm (ravine jump)",
+      "width": "~6-10",
+      "heightDelta": "-2 to -4",
+      "landing": "slope",
+      "lethal": true,
+      "runUp": "forced",
+      "move": [
+        "ride",
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "death",
+      "nearby": [
+        "S8-b"
+      ],
+      "why": "one ravine in the light second half",
+      "evidence": "LP1 3:36:19",
+      "confidence": "low"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "3",
+      "rest": "P-S1-d",
+      "noStop": false,
+      "why": "raft hops under laser fire",
+      "evidence": "LP1 3:31:36-3:31:38"
+    },
+    {
+      "id": "J-S1-b",
+      "section": "S1",
+      "count": "6-7",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "short-short-long (pads, then decks)",
+      "maxGap": "3",
+      "rest": "P-S1-f and P-S1-g decks; P-S1-i (C1)",
+      "noStop": "no-stop on the pads; stops on the decks",
+      "why": "small pads lead to crate-laden decks",
+      "evidence": "LP1 3:31:41-3:31:54"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": "5-6",
+      "moves": [
+        "plain",
+        "swing",
+        "double"
+      ],
+      "rhythm": "syncopated (jump, jump, hang, climb)",
+      "maxGap": "4-6 (hang)",
+      "rest": "P-S2-g walkway",
+      "noStop": false,
+      "why": "mixed inputs: pads, a hang traverse, then a scaffold climb",
+      "evidence": "LP1 3:31:58-3:32:14"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": "3-4 plus a ride",
+      "moves": [
+        "plain",
+        "ride"
+      ],
+      "rhythm": "even",
+      "maxGap": "3",
+      "rest": "the lift discs",
+      "noStop": false,
+      "why": "pad hops between hovering drones, then the disc",
+      "evidence": "LP1 3:32:22-3:32:35"
+    },
+    {
+      "id": "J-S3-b",
+      "section": "S3",
+      "count": "4-6",
+      "moves": [
+        "running",
+        "plain"
+      ],
+      "rhythm": "even (one drone pair per span)",
+      "maxGap": "~1",
+      "rest": "P-S3-e posts",
+      "noStop": false,
+      "why": "a run toward the camera, hurdling drones",
+      "evidence": "LP1 3:32:36-3:33:00"
+    },
+    {
+      "id": "J-S4-a",
+      "section": "S4",
+      "count": "3-4",
+      "moves": [
+        "double"
+      ],
+      "rhythm": "even (one deck per jump)",
+      "maxGap": "2 (up)",
+      "rest": "scaffold decks",
+      "noStop": false,
+      "why": "fruit columns mark each vertical double jump",
+      "evidence": "LP1 3:33:28-3:33:32"
+    },
+    {
+      "id": "J-S5-a",
+      "section": "S5",
+      "count": 4,
+      "moves": [
+        "running"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "3",
+      "rest": "P-S5-b",
+      "noStop": true,
+      "why": "the slabs fall behind you; slow-mo is first used here",
+      "evidence": "LP1 3:33:37-3:33:40"
+    },
+    {
+      "id": "J-S5-b",
+      "section": "S5",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "syncopated (tilt timing)",
+      "maxGap": "3",
+      "rest": "P-S5-b",
+      "noStop": true,
+      "why": "tipping pads",
+      "evidence": "LP1 3:33:41-3:33:49"
+    },
+    {
+      "id": "J-S5-c",
+      "section": "S5",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "2",
+      "rest": "P-S6-a",
+      "noStop": true,
+      "why": "hops past the giant Nitro block while it chains (slow-mo, then cancel)",
+      "evidence": "LP1 3:34:00-3:34:08"
+    },
+    {
+      "id": "J-B-a",
+      "section": "B",
+      "count": "~10",
+      "moves": [
+        "plain",
+        "arrow",
+        "crate-bounce",
+        "double"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "6 (arrow)",
+      "rest": "none until the iron bridge",
+      "noStop": true,
+      "why": "the whole bonus runs on one timer",
+      "evidence": "LP1 3:34:21-3:34:55"
+    },
+    {
+      "id": "J-S7-a",
+      "section": "S7",
+      "count": "3 prompted jumps plus the launch",
+      "moves": [
+        "ride",
+        "plain",
+        "arrow"
+      ],
+      "rhythm": "track-driven",
+      "maxGap": "8-12",
+      "rest": "none until the bear checkpoint",
+      "noStop": true,
+      "why": "forced speed; jumps at lips, ravines and the arrow wall",
+      "evidence": "LP1 3:35:21-3:35:43"
+    },
+    {
+      "id": "J-S8-a",
+      "section": "S8",
+      "count": "1-2",
+      "moves": [
+        "ride",
+        "plain"
+      ],
+      "rhythm": "track-driven",
+      "maxGap": "6-10",
+      "rest": "P-S9-a",
+      "noStop": true,
+      "why": "second half: one ravine and a weave",
+      "evidence": "LP1 3:36:19-3:36:25"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S1-a",
+      "section": "S1",
+      "kind": "spike trap: spiked lamp posts at the corners of the hanging gondola deck",
+      "placement": "on platform (edges)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": null,
+      "combinedWith": [
+        "P-S1-f"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "they mark the deck edges and narrow the landing; their damage was not shown",
+      "evidence": "LP1 3:31:44-3:31:45",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S5-a",
+      "section": "S5",
+      "kind": "crumbling ice slabs strung on ropes",
+      "placement": "on platform",
+      "timing": "fall shortly after landing",
+      "counter": [
+        "outrun"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-c crates on the rests"
+      ],
+      "roles": [
+        "TEACH",
+        "TIMING-GATE"
+      ],
+      "why": "the mask is introduced on the archetypal crumble run",
+      "evidence": "LP1 3:33:37-3:33:40; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S5-b",
+      "section": "S5",
+      "kind": "tilting pads (GR's see-saws)",
+      "placement": "on platform",
+      "timing": "tip under weight",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "moving footing that punishes standing still on one side",
+      "evidence": "LP1 3:33:41-3:33:49; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S5-c",
+      "section": "S5",
+      "kind": "explosive chain: a Nitro row ending in a regular crate",
+      "placement": "flank (walkway beside the scaffold route)",
+      "timing": "chains from the end crate",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-d"
+      ],
+      "roles": [
+        "TEACH",
+        "AREA-DENIAL"
+      ],
+      "why": "GR: break the end crate in slow-mo and get clear; the first remote detonation",
+      "evidence": "LP1 3:33:51-3:33:54; GR 97",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S5-d",
+      "section": "S5",
+      "kind": "explosive chain: the giant Nitro block (~3 deep x 7 wide x 3-4 high)",
+      "placement": "flank (beside the steel-block route)",
+      "timing": "set off by the player; slow-mo, then cancel as it blows (GR)",
+      "counter": [
+        "destroy",
+        "outrun"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-e",
+        "G-S5-c"
+      ],
+      "roles": [
+        "TEST",
+        "AREA-DENIAL"
+      ],
+      "why": "the deadliest object is also 36 crates of credit: the player must trigger it and survive beside it",
+      "evidence": "LP1 3:34:00-3:34:08; GR 133",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S6-a",
+      "section": "S6",
+      "kind": "rising gas: green chemical vats and vents below the walkways",
+      "placement": "in pit",
+      "timing": "vents puff (cycle not measured)",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": null,
+      "combinedWith": [
+        "P-S5-f",
+        "P-S6-a"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "set dressing that may also hurt; not shown either way",
+      "evidence": "LP1 3:33:56, 3:34:10-3:34:12",
+      "confidence": "low"
+    },
+    {
+      "id": "O-B-a",
+      "section": "B",
+      "kind": "closing lid: the outline row turns to solid iron when the timer ends",
+      "placement": "overhead (one crate above the crate row)",
+      "timing": "timer from the floating !; slow-mo stretches it (GR)",
+      "counter": [
+        "outrun"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "B-c"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEST"
+      ],
+      "why": "a timed ceiling that seals the crates beneath it",
+      "evidence": "LP1 3:34:33-3:34:55; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-b",
+      "section": "B",
+      "kind": "Nitro bridge (6 in a row)",
+      "placement": "across path",
+      "timing": "static until detonated",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "steel arrows",
+        "B-b"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "a bridge you must destroy for credit and then fly over",
+      "evidence": "LP1 3:34:27-3:34:33",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-c",
+      "section": "B",
+      "kind": "floating Nitro under a metal !",
+      "placement": "on path (over water)",
+      "timing": "set off under slow-mo, hop over the invisible blocks, cancel slow-mo as it explodes (GR)",
+      "counter": [
+        "destroy",
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "B-e"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "switch and explosive stacked, over water",
+      "evidence": "LP1 3:34:45-3:34:51; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S7-a",
+      "section": "S7",
+      "kind": "trees in the lanes",
+      "placement": "across path (one lane at a time)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S7-e",
+        "S7-l"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "every tree takes a lane, and a crate usually sits in a neighbouring one (gamepressure: avoid trees, rocks and glacier chunks)",
+      "evidence": "LP1 3:35:19, 3:35:27, 3:35:33-3:35:34; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S7-b",
+      "section": "S7",
+      "kind": "rocks and a rock column in the ice cave",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S7-f"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "centre-lane block in a cave",
+      "evidence": "LP1 3:35:17, 3:35:30-3:35:31",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S7-c",
+      "section": "S7",
+      "kind": "breakable ice wall (the bear smashes through)",
+      "placement": "across path",
+      "timing": "scripted",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S7-f"
+      ],
+      "roles": [
+        "RHYTHM"
+      ],
+      "why": "a burst of debris that hides the crate right behind it",
+      "evidence": "LP1 3:35:29",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S7-d",
+      "section": "S7",
+      "kind": "falling object: translucent ice pillars standing in and falling into the lane",
+      "placement": "across path",
+      "timing": "fall as the bear approaches; warning not visible at 1 s",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S7-i",
+        "S7-j",
+        "S7-n"
+      ],
+      "roles": [
+        "LANE-BLOCK",
+        "TIMING-GATE"
+      ],
+      "why": "lane blocks that appear late",
+      "evidence": "LP1 3:35:38-3:35:42, 3:35:49-3:35:50",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S7-e",
+      "section": "S7",
+      "kind": "pit: a round hole in the snow",
+      "placement": "across path (centre lane)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S7-l"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "a hole in the lane with a crate beside it",
+      "evidence": "LP1 3:35:44",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S7-f",
+      "section": "S7",
+      "kind": "falling object: icicles at the tunnel exit",
+      "placement": "overhead",
+      "timing": "fall as you exit",
+      "counter": [
+        "go around"
+      ],
+      "lethal": null,
+      "combinedWith": [
+        "G-S7-e"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "a last scare before the tape jump",
+      "evidence": "LP1 3:36:01",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S7-g",
+      "section": "S7",
+      "kind": "launch wall: 6 iron arrow crates across the lane at the top of a rise",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "none (forced launch)"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S7-h"
+      ],
+      "roles": [
+        "RHYTHM"
+      ],
+      "why": "terrain that launches the bear over a cave mouth",
+      "evidence": "LP1 3:35:34-3:35:37",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S8-a",
+      "section": "S8",
+      "kind": "mines: Nitro pairs on the slope",
+      "placement": "on path (left lanes)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S8-a"
+      ],
+      "roles": [
+        "LANE-BLOCK",
+        "AREA-DENIAL"
+      ],
+      "why": "the second half turns from collecting to dodging",
+      "evidence": "LP1 3:36:13-3:36:17",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S8-b",
+      "section": "S8",
+      "kind": "mines: a diagonal wood-Nitro-Nitro-wood weave",
+      "placement": "across path (diagonal)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S8-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a steering test that pays crates between the mines",
+      "evidence": "LP1 3:36:21",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S8-c",
+      "section": "S8",
+      "kind": "fences across the end of the run",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S8-e"
+      ],
+      "roles": [
+        "RHYTHM"
+      ],
+      "why": "smashed on the way to the end platform",
+      "evidence": "LP1 3:36:23-3:36:25",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S8-d",
+      "section": "S8",
+      "kind": "pursuer overhead: Cortex's blimp, with explosions and snow bursts along the track (possibly bombs)",
+      "placement": "overhead",
+      "timing": "not measured",
+      "counter": [
+        "go around"
+      ],
+      "lethal": null,
+      "combinedWith": [],
+      "roles": [
+        "PURSUIT"
+      ],
+      "why": "a chase framing for the second half; whether the bursts hurt was not shown",
+      "evidence": "LP1 3:35:48 (explosion), 3:36:09-3:36:27 (blimp)",
+      "confidence": "low"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S1-a",
+      "section": "S1",
+      "kind": "lab assistant (blue parka) with two remote-controlled robot drones",
+      "archetype": "flier",
+      "behaviour": "the drones hover about 2 u either side of their owner and fire red laser bolts; the owner stands behind them",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [
+        "attacking the drones (they cannot be hurt)"
+      ],
+      "placement": "on line (open canyon floor)",
+      "roles": [
+        "TEACH",
+        "GATEKEEPER",
+        "PROJECTILE"
+      ],
+      "firstAlone": true,
+      "why": "a protected projectile: beat the owner and the drones stop (gamepressure)",
+      "evidence": "LP1 3:31:12-3:31:28; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S1-b",
+      "section": "S1",
+      "kind": "lab assistant with two drones on the far shore of the plank lake",
+      "archetype": "flier",
+      "behaviour": "the drones fire across the rafts",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [
+        "attacking the drones"
+      ],
+      "placement": "landing platform (far shore)",
+      "roles": [
+        "TEST",
+        "PROJECTILE"
+      ],
+      "firstAlone": false,
+      "why": "projectile pressure on a gap: you jump while being shot at, and land beside the owner",
+      "evidence": "LP1 3:31:36-3:31:38",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "lab assistant with a drone on a hanging pad ahead of the chemical walkway",
+      "archetype": "flier",
+      "behaviour": "stands on a pad in the route",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [
+        "attacking the drone"
+      ],
+      "placement": "moving platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "an owner on a hanging footing guards the walkway approach",
+      "evidence": "LP1 3:32:14",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S3-a",
+      "section": "S3",
+      "kind": "robot drones hovering between the rod-hung pads",
+      "archetype": "flier",
+      "behaviour": "hover in the gaps and fire across",
+      "counter": [
+        "avoid"
+      ],
+      "fails": [
+        "jumping into a drone"
+      ],
+      "placement": "in pit (between platforms)",
+      "roles": [
+        "HURDLE",
+        "AREA-DENIAL"
+      ],
+      "firstAlone": false,
+      "why": "the enemy occupies the gap you have to jump",
+      "evidence": "LP1 3:32:22-3:32:25",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S3-b",
+      "section": "S3",
+      "kind": "lab assistant (blue parka) in the lift-disc alcove",
+      "archetype": "static",
+      "behaviour": "stands on the alcove platform beside a crate",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [],
+      "placement": "guarding crate",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "makes the alcove crate a small fight",
+      "evidence": "LP1 3:32:26-3:32:30",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S3-c",
+      "section": "S3",
+      "kind": "drone pairs with owners on the rope bridge",
+      "archetype": "flier",
+      "behaviour": "pairs flank the deck at the post platforms; the run jumps over them while running toward the camera",
+      "counter": [
+        "avoid",
+        "spin"
+      ],
+      "fails": [
+        "running into a pair"
+      ],
+      "placement": "on line (bridge deck)",
+      "roles": [
+        "HURDLE",
+        "PROJECTILE"
+      ],
+      "firstAlone": false,
+      "why": "hurdles on a narrow deck seen from the front",
+      "evidence": "LP1 3:32:40-3:33:00",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-d",
+      "section": "S3",
+      "kind": "lab assistant on the steel platform in the dark cave",
+      "archetype": "static",
+      "behaviour": "stands under the snow-shelf crate",
+      "counter": [
+        "stomp",
+        "spin"
+      ],
+      "fails": [],
+      "placement": "landing platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "clear him, then jump to the shelf",
+      "evidence": "LP1 3:33:12-3:33:14",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S4-a",
+      "section": "S4",
+      "kind": "lab assistant with a drone among the machinery pads",
+      "archetype": "flier",
+      "behaviour": "covers the pad hop",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [
+        "attacking the drone"
+      ],
+      "placement": "on a hanging pad",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "the last drone owner, guarding a short pad hop",
+      "evidence": "LP1 3:33:22",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S4-b",
+      "section": "S4",
+      "kind": "lab assistant on the hazard-striped walkway",
+      "archetype": "static",
+      "behaviour": "stands in the walkway",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "a simple obstacle before the scaffold room",
+      "evidence": "LP1 3:33:24",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S7-a",
+      "section": "S7",
+      "kind": "skiing lab assistants",
+      "archetype": "patrol-1D",
+      "behaviour": "ski down a lane ahead of the bear, slower than it",
+      "counter": [
+        "avoid"
+      ],
+      "fails": [
+        "colliding (the outcome was not shown in the no-death run)"
+      ],
+      "placement": "on line (lanes)",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": true,
+      "why": "moving lane blockers that crates are placed around",
+      "evidence": "LP1 3:35:11-3:35:55; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S7-b",
+      "section": "S7",
+      "kind": "two skiing lab assistants side by side (pink lights) in the dark ice tunnel",
+      "archetype": "patrol-1D",
+      "behaviour": "fill two of the three lanes",
+      "counter": [
+        "avoid"
+      ],
+      "fails": [
+        "colliding"
+      ],
+      "placement": "on line",
+      "roles": [
+        "TEST",
+        "HURDLE"
+      ],
+      "firstAlone": false,
+      "why": "a two-lane block in the darkest stretch",
+      "evidence": "LP1 3:35:57-3:35:59",
+      "confidence": "low"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "spawn crate + 2x2 block",
+        "TNT as a tool (2 floating crates)",
+        "drone group (owner) on the open canyon floor",
+        "terraces + crates",
+        "fenced path + stack",
+        "plank-raft lake under laser fire (3-4 hops)",
+        "far-shore owner + drones",
+        "cave mouth: TNT + ? step",
+        "hanging-pad line (3 pads)",
+        "gondola deck",
+        "deck with two columns",
+        "deck with the 3x2 block",
+        "C1 above"
+      ],
+      "gaps": 2,
+      "enemies": 2,
+      "hazards": 1
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "TNT on wood",
+        "hanging deck: strong crate on TNT",
+        "pad fork + metal !",
+        "pipe-frame hang traverse",
+        "trestle ?",
+        "scaffold climb (2 u risers)",
+        "2x2 ? block",
+        "walkway: owner + drone, TNT high on a sign",
+        "arrow crate + red lantern",
+        "hidden drop (gem)"
+      ],
+      "gaps": 3,
+      "enemies": 1,
+      "hazards": 0
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "rod-hung pads, drones in the gaps",
+        "lift-disc alcove (lab assistant + crate)",
+        "disc down the drill tower",
+        "toward-camera rope bridge: ? on posts, drone pairs",
+        "lift disc up",
+        "cave: lab assistant + shelf crate"
+      ],
+      "gaps": 3,
+      "enemies": 4,
+      "hazards": 0
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "yellow-gem plate (locked) + C2 + stack",
+        "machinery pads, owner + drone",
+        "walkway lab assistant",
+        "TNT by a scaffold",
+        "side-view scaffold climb (fruit columns)",
+        "? on a beam",
+        "TNT under a pair",
+        "slide + double jump gap (gamepressure)",
+        "slow-mo mask"
+      ],
+      "gaps": 2,
+      "enemies": 2,
+      "hazards": 0
+    },
+    {
+      "section": "S5",
+      "beats": [
+        "hanging pads",
+        "scaffold rest + crate",
+        "slow-mo: ice-slab crumble run",
+        "tipping pads",
+        "rest + crate",
+        "tipping pads",
+        "Nitro row (remote chain)",
+        "walkway over vats",
+        "giant Nitro block: trigger, then outrun along steel blocks"
+      ],
+      "gaps": 3,
+      "enemies": 0,
+      "hazards": 4
+    },
+    {
+      "section": "S6",
+      "beats": [
+        "steel blocks over vents",
+        "C3",
+        "boardwalk crates",
+        "bonus pad"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 1
+    },
+    {
+      "section": "B",
+      "beats": [
+        "entry dock",
+        "floating timed !",
+        "tower + steel arrows",
+        "Nitro bridge detonated",
+        "arrow launch",
+        "sweep the slot under the lid (14 crates)",
+        "floating ! over a Nitro + invisible blocks",
+        "iron bridge to the exit"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 3
+    },
+    {
+      "section": "S7",
+      "beats": [
+        "mount the bear + BOOST prompt",
+        "first skier",
+        "ice arch",
+        "rocks + split crates",
+        "JUMP lip 2-stack + ravine",
+        "tree + crate",
+        "ice-wall burst + cave crate",
+        "rock column",
+        "tree slalom",
+        "arrow-wall launch",
+        "ice channel pillars",
+        "ridge jump",
+        "hole + crate",
+        "falling pillars; hug the left wall (2 crates)",
+        "skiers + centre crates",
+        "dark tunnel (2 skiers abreast)",
+        "icicles",
+        "tape jump",
+        "bear checkpoint"
+      ],
+      "gaps": 5,
+      "enemies": 2,
+      "hazards": 7
+    },
+    {
+      "section": "S8",
+      "beats": [
+        "blimp overhead",
+        "Nitro pair + crate beyond it",
+        "ravine jump",
+        "W-N-N-W weave",
+        "3-stack + upper-left stack",
+        "fences",
+        "end platform"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 4
+    },
+    {
+      "section": "S9",
+      "beats": [
+        "crate sign + Nitro switch"
+      ],
+      "gaps": 0,
+      "enemies": 0,
+      "hazards": 0
+    }
+  ],
+  "geometryObservations": [
+    "Four camera grammars carry four platform grammars. On foot, into-screen: small gaps over water and chasms. Slow-mo cavern, side view: moving footing hung from the ceiling. Bonus, side view: a timed slot. Bear, chase camera: lanes, with almost no gaps.",
+    "Hanging footing is the on-foot theme, in strict escalation. Static rafts (P-S1-c), then hung pads and decks (S1-S2), then lift discs that carry you vertically (S3), then crumbling slabs and tipping pads under slow-mo (S5), then the bear, where the footing is forced.",
+    "Decks carry crates; pads carry none. The 1.5-2 u pads are pure stepping stones; every crate group sits on a 3x3 u or larger deck (columns, 3x2 block, 2x2 ? block). Collecting never happens on the smallest footing.",
+    "The drone owner is a protected-projectile archetype, taught in four steps. Open floor (E-S1-a), then across a raft gap (E-S1-b), then hovering inside the gaps between pads (E-S3-a), then hurdles on a narrow toward-camera bridge (E-S3-c). The counter (hit the owner) never changes; the geometry around it does.",
+    "Camera reversal is used as difficulty. The rope bridge is run toward the camera on a 2.5 u deck with drone pairs, so depth (gap and drone distance) is read late. That is why the bridge has railed rope sides and posts every 6-8 u as rests.",
+    "The mask arrives exactly at the crumble run. Slow-mo is first used on rope-strung ice slabs (3:33:37), the archetypal timing gap, and only later on the Nitro set pieces. The tool is taught on footing before it is used on explosives.",
+    "Explosive set pieces are built as gaps. The giant Nitro block sits beside 2-3 u steel blocks with ~2 u gaps (P-S5-g), so the explosion is a moving hazard you traverse beside, not a wall in front of you.",
+    "Rest spacing on foot: a railed scaffold rest or wide deck every 3-4 jumps in the cavern (P-S5-b), and checkpoints on solid ground above or after each hanging stretch (C1 above the block deck, C2 on a snow path, C3 after the steel blocks).",
+    "The bonus is a geometry timer. The crate row fills a slot exactly one crate high under an outline row that turns to iron. The sweep is run along the crate tops inside that slot, and the closed lid becomes the bridge to the exit.",
+    "Bear-lane grammar: the valley is 10-14 u wide, with corridors and tunnels of ~5-6 u. Hazards (trees, rocks, pillars, a hole, skiers) take one lane at a time and alternate sides, and the crates sit in the free lane, often right beside the hazard.",
+    "Bear jumps are few and announced. Two ravines and a ridge (with a JUMP prompt and a 2-stack on the lip), plus one forced launch off a full-width wall of iron arrow crates. Everything else is steering.",
+    "The second half swaps enemies for mines. Nitro pairs, a diagonal weave and fences replace skiers, and the dodged Nitro are paid at the exit, so the geometry tests steering without costing the box gem.",
+    "Height on foot is double-jump scale. Scaffold risers are ~2 u with fruit columns marking the jumps (P-S2-f, P-S4-d); the hand-over-hand pipe frame (P-S2-d) and the lift discs are the only non-jump traversals."
+  ],
+  "geometryTransfer": [
+    "Protected projectile: pair a `sentry` (or two `floater`s) with a `grunt` owner and switch them off when the owner dies. Teach it on a 10-12 u (11-14 m) open floor first, then put the same pair across a 2-3 u water `pit`, then hover `floater`s in the 2.3-3.5 m gaps between `mover` pads.",
+    "Lift discs map to vertical `mover` platforms about 2 u (2.3 m) across. Use them to move between a lower walkway and a raised grind line, since a skater cannot climb 4-6 m any other way. A slow spin is cosmetic; keep the rider's facing stable.",
+    "Crumble run without slow-mo: four `crumble` slabs about 2x1 u (2.3x1.2 m), 2-3 u (2.3-3.5 m) apart, which a 9 m/s runner crosses at about one slab per 0.35 s, with a ≥ 0.5 s collapse delay and a railed scaffold `platform` rest after them. Follow it with `spinbridge` tipping pads at the same spacing.",
+    "Bear lanes as a skate downhill: a 12-16 m wide `terrain` slope with three lanes. Put one lane hazard (a tree prop, a `stone`, or a 1.7 m `pit` hole) every 25-35 m, alternating lanes, with a crate in the free lane beside it. Use a full-width `trampoline` row on a rise as the forced launch, and prompt only two ravine ollies.",
+    "Giant Nitro block as a traversal hazard: place a 7x3x3 Nitro block beside a line of 2-3 u `platform` blocks with ~2 u gaps, and start the chain from a TNT at the near end (3 s fuse). The blast front (≈ 7.9 m/s) is slower than a 9 m/s runner, so a player who lights it and keeps hopping outruns it.",
+    "One-crate slot under a ceiling: a crate row on a pier under a solid ceiling one crate (1.15 m) above it. The board cannot ollie over the row (1.7 m apex hits the ceiling), so the only clean line is grinding the row, which breaks it (≥ 6.5 m/s if TNT is mixed in)."
+  ]
+}

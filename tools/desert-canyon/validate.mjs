@@ -39,7 +39,7 @@ for(const plant of planting){
 }
 console.log(JSON.stringify({desertPlantInstances:planting.length,minimumPlantClearance:plantClearance,species:plants.assets.map(a=>({id:a.id,triangles:a.triangles})),allPreviousTreesAndShrubsReplaced:true}));
 if(process.argv.includes('--plants-only'))process.exit(0);
-assert.ok(!data.components.some(c=>c.grp>=60&&c.grp<=64&&(c.outOfBounds||c.lethal)), 'The freeride landscape must not contain boundary traps or lethal catch planes');
+assert.deepEqual(data.desertHeat,[],'Heat bands have been removed');
 const vistaLength=m.DESERT_LENGTH-m.DESERT_VISTA_START;
 assert.ok(vistaLength>1700,'The exposed rim must add a substantial chapter after the old finish');
 assert.ok(m.desertPoint(m.DESERT_VISTA_START)[1]-m.desertPoint(m.DESERT_LENGTH)[1]>330,'The new chapter must keep descending');
@@ -129,7 +129,7 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   // Cross a real road edge with native controls. No teleport/recovery shortcut
   // may masquerade as successful support on the visible shoulder.
   const shoulderS=m.DESERT_CHECKPOINTS[15]+25,shoulderStart=new THREE.Vector3(...m.desertPoint(shoulderS));shoulderStart.y+=.4;
-  p.respawn(level,true,false,{position:shoulderStart,heading:new THREE.Vector3(0,0,-1)});
+  p.respawn(level,false,false,{position:shoulderStart,heading:new THREE.Vector3(0,0,-1)});
   for(let i=0;i<40;i++)step(makeInput());
   const shoulderTarget=m.desertPoint(shoulderS,12);let shoulderDistance=Infinity;
   for(let i=0;i<420;i++){
@@ -141,36 +141,36 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
     assert.ok(Math.hypot(p.pos.x-shoulderStart.x,p.pos.z-shoulderStart.z)<45,'Shoulder contact must not warp to a checkpoint');
   }
   assert.ok(shoulderDistance<1.5,`Visible shoulder must be freely reachable: ${shoulderDistance}`);
-  // A fall from the rim lands in the same physical landscape seen below.
+  // The user now wants the right-hand valley descent to be fatal. The
+  // supported shoulder and the post-finish yellow-gem side remain reachable.
   const cliff=m.desertPoint(m.DESERT_CHECKPOINTS[15],120);
-  p.respawn(level,true,false,{position:new THREE.Vector3(cliff[0],cliff[1]+2,cliff[2]),heading:new THREE.Vector3(0,0,-1)});
+  p.respawn(level,false,false,{position:new THREE.Vector3(cliff[0],cliff[1]+2,cliff[2]),heading:new THREE.Vector3(0,0,-1)});
   p.state='air';p.grounded=false;p.vVel=-1;
-  let landed=false,landingFrames=0;
-  for(;landingFrames<1200;landingFrames++){
-    step(makeInput());
-    assert.ok(!['dead','gameover'].includes(p.state),'The visible valley slopes must receive falls without an invisible kill plane');
-    if(p.grounded){landed=true;break;}
-  }
-  assert.ok(landed,'Cliff fall must land on the actual slope');
-  assert.ok(Math.hypot(p.pos.x-vistaCheckpoint.spawnPos.x,p.pos.z-vistaCheckpoint.spawnPos.z)>70,'Landing must not be a hidden checkpoint warp');
+  let landingFrames=0;
+  for(;landingFrames<240&&p.state!=='dead';landingFrames++)step(makeInput());
+  assert.equal(p.state,'dead','Descending the right-hand valley slope must kill the rider');
+  p.respawn(level);for(let i=0;i<60;i++)step(makeInput());
+  assert.ok(p.grounded&&p.pos.distanceTo(vistaCheckpoint.spawnPos)<1,`Valley death returns to the banked rim checkpoint: ${p.pos.toArray()} vs ${vistaCheckpoint.spawnPos.toArray()}`);
   const materialApi=await server.ssrLoadModule('/src/desertMaterials.ts');
   const a=materialApi.createDesertMaterial('sandstone'),b=materialApi.createDesertMaterial('trail'),sa={...THREE.ShaderLib.standard,uniforms:{}},sb={...THREE.ShaderLib.standard,uniforms:{}};
   a.onBeforeCompile(sa);b.onBeforeCompile(sb);assert.equal(sa.uniforms.desertColour.value,sb.uniforms.desertColour.value);
   let releases=0;sa.uniforms.desertColour.value.addEventListener('dispose',()=>releases++);
   a.dispose();b.dispose();assert.equal(releases,0,'Live course retains the shared texture');
   level.dispose();assert.equal(releases,1,'Last material owner releases texture exactly once');
-  console.log(JSON.stringify({supportProbes:probes,fromVista,vistaProbes,vistaLength,freerideShoulder:true,valleyLanding:true,landingFrames,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
+  console.log(JSON.stringify({supportProbes:probes,fromVista,vistaProbes,vistaLength,freerideShoulder:true,valleyDeath:true,landingFrames,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
 },{levelEntry:{id:'bryce-canyon',name:data.name,data},prepareRuntime(){
   globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
+  globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
+  const nativeFetch=globalThis.fetch;
   globalThis.self=globalThis;navigator.userAgent='Headless canyon validation';
   const NativeRequest=globalThis.Request;
   globalThis.Request=class extends NativeRequest{constructor(input,init){super(typeof input==='string'?new URL(input,'http://headless.invalid'):input,init);}};
   // Exercise the production GLTF loader, asset transforms and surface binding
   // against real native terrain files. Unrelated art remains headless.
   globalThis.fetch=async input=>{
+    const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);
     const path=new URL(typeof input==='string'?input:input.url,'http://headless.invalid').pathname;
-    const match=path.match(/\/desert-canyon\/vista\/(terrain-\d+\.glb)$/);
-    return match?new Response(await readFile(new URL('../../public/desert-canyon/vista/'+match[1],import.meta.url))):new Response('',{status:404});
+    return path.startsWith('/desert-canyon/')&&path.endsWith('.glb')?new Response(await readFile(new URL('../../public'+path,import.meta.url))):new Response('',{status:404});
   };
 }});
 const manifest=JSON.parse(await readFile(new URL('../../public/desert-canyon/manifest.json',import.meta.url),'utf8'));

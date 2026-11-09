@@ -624,7 +624,7 @@ const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
 export class Player {
   /** Local comparison opt-in. A selection takes effect at the next foot launch. */
   onFootJumpStudy: Readonly<OnFootJumpStudy> | null = null;
-  private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
+  private footJumpStudyLaunch: Readonly<OnFootJumpStudy & {takeoffSpeed: number; flipMinSpeed: number}> | null = null;
   private footStudyFrame = 0;
   private footStudyCharge = 0;
   private footStudyImpact = 0;
@@ -2452,6 +2452,8 @@ export class Player {
           jakJumpCharge: this.footStudyCharge,
           jakUprightLaunch: this.footJumpStudyLaunch?.direct && !this.footJumpStudyLaunch.flip ? 1 : 0,
           jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
+          jakTakeoffSpeed: this.footJumpStudyLaunch?.takeoffSpeed ?? 0,
+          jakFlipMinSpeed: this.footJumpStudyLaunch?.flipMinSpeed ?? 0,
           jakRollLaunch: this.footJumpStudyFlight?.flip ? 1 : 0,
           jakFlipProgress: this.footStudyFlipProgress,
           jakDescentProgress: Math.sqrt(THREE.MathUtils.clamp(
@@ -6246,12 +6248,17 @@ export class Player {
     // springs, kite and special-launch routes keep their authored rules.
     if (this.onFootJumpStudy && !this.freeSkate && !fromSlide && !wasCrawling &&
         !this.trampolineAir && !this.kiteTowing && !this.kiteReleased) {
-      // Commit the presentation at takeoff. Vertical/precision hops stay
-      // upright; only a running launch earns the source roll. Air steering
-      // must not start a flip halfway through an otherwise upright jump.
+      // Snapshot physical horizontal momentum at the release that launches
+      // the jump. This includes sideways travel and release coast, without
+      // mistaking a held stick, vertical pop or run-speed setting for motion.
+      // The vector is also valid for coyote releases before air displacement.
+      const takeoffSpeed = Math.hypot(this.walkVelocity.x, this.walkVelocity.z);
+      const flipMinSpeed = TUNING.jumpFlipMinSpeed;
       this.footJumpStudyLaunch = {...this.onFootJumpStudy,
-        flip: this.onFootJumpStudy.flip && spd > TUNING.walkSpeed * .45 &&
-          Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > .45};
+        takeoffSpeed, flipMinSpeed,
+        // Commit once: steering or tuning edits in the air cannot start or
+        // cancel an already chosen roll.
+        flip: this.onFootJumpStudy.flip && takeoffSpeed >= flipMinSpeed};
       this.footStudyCharge = t;
       const study = this.footJumpStudyLaunch;
       if (!study.nativePhysics)
@@ -14621,6 +14628,11 @@ export class Player {
       }
     }
 
+    // Exact canyon cactus contact and the exposed valley drop are fatal even
+    // during a spin/grind or temporary protection. Soft dry weeds stay soft.
+    if(level.desertContacts?.fatal(this.prevPos,this.pos,this.hitboxHalf)){
+      this.die('contact');return;
+    }
     // Swinging blades and other touch-kill hazards: same rules as stones.
     // Death pits use the body box WITHOUT the grind reach-down — grinding a
     // rail strung over lava is a THPS staple, only real feet contact burns.
@@ -14697,11 +14709,19 @@ export class Player {
         this.ledgeEnvelope,
       );
       const meshContactX = this.pos.x, meshContactY = this.pos.y, meshContactZ = this.pos.z;
+      if(this.state!=='hang'&&level.desertContacts?.resolve(this.prevPos,this.pos,this.hitboxHalf,ROCK_CONTACT,this.grounded)){
+        const inward=this.walkVelocity.dot(ROCK_CONTACT);
+        if(inward<0)this.walkVelocity.addScaledVector(ROCK_CONTACT,-inward);
+        if(this.freeSkate&&this.axisF.dot(ROCK_CONTACT)<-.25)this.speed=0;
+        if(ROCK_CONTACT.y<-.65&&this.vVel>0)this.vVel=0;
+        this.translateCollisionBoxes(this.pos.x-meshContactX,this.pos.y-meshContactY,this.pos.z-meshContactZ);
+      }
+      const sideContactX=this.pos.x,sideContactY=this.pos.y,sideContactZ=this.pos.z;
       if (this.state !== 'hang' && level.meshSideCollisions?.resolve(this.prevPos, this.pos, this.hitboxHalf, ROCK_CONTACT)) {
         const inward = this.walkVelocity.dot(ROCK_CONTACT);
         if (inward < 0) this.walkVelocity.addScaledVector(ROCK_CONTACT, -inward);
         if (this.freeSkate && this.axisF.dot(ROCK_CONTACT) < -.25) this.speed = 0;
-        this.translateCollisionBoxes(this.pos.x - meshContactX, this.pos.y - meshContactY, this.pos.z - meshContactZ);
+        this.translateCollisionBoxes(this.pos.x - sideContactX, this.pos.y - sideContactY, this.pos.z - sideContactZ);
       }
       for (const w of level.walls) {
         if (this.passesTripObstacle(w)) continue;
@@ -17336,6 +17356,7 @@ export class Player {
   // of you; bare-handed, it's a death like any other. Returns true if the
   // hang ended (dead or knocked off).
   private hangHazards(level: Level): boolean {
+    if(level.desertContacts?.fatal(this.prevPos,this.pos,this.hitboxHalf)){this.die('contact');return true;}
     const cx = this.pos.x;
     const cy = this.pos.y + this.hitboxHalf.y;
     const cz = this.pos.z;

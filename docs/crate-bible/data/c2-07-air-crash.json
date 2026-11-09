@@ -1,0 +1,2646 @@
+{
+ "id": "c2-07-air-crash",
+ "game": "Crash 2",
+ "stage": 7,
+ "name": "Air Crash",
+ "nameJa": "ぶっとびサーフィン",
+ "sources": [
+  "F2 p036R (header)",
+  "F2 p037L-p038L (map, POINT 1-12)",
+  "F2 p094R (perfect order, alternate entrance, bonus, death course)",
+  "D2 p022-p024L (shots 1-43)",
+  "D2 p042 (shots 31-46, alternate entrance)",
+  "gamepressure N. Sane Air Crash (summary)"
+ ],
+ "camera": "into-screen (foot and jet board); bonus side-scroll",
+ "totalBoxes": 102,
+ "totalSource": "F2 p036R header (superscript 43 = bonus 8 + alternate entrance 35)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 59,
+   "basis": "counted from F2 icons; equals header split 102-43 exactly"
+  },
+  {
+   "id": "bonus",
+   "boxes": 8,
+   "basis": "gamepressure 8; D2 bonus counter ends at 8; D2 s24 transfer 24+6 = 22+8"
+  },
+  {
+   "id": "secret",
+   "boxes": 35,
+   "basis": "alternate entrance from Bear Down's secret warp; subtraction 43-8-0; 24 seen in D2 p042"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "D2 s28: no boxes on the alternate path"
+  }
+ ],
+ "sections": [
+  {
+   "id": "AE",
+   "route": "secret",
+   "from": "secret warp pier (from Bear Down)",
+   "to": "green ! pier, warp to the normal start",
+   "boxes": 24,
+   "cumulative": null,
+   "notes": "24 seen of 35; 11 unseen; green ! here detonates every Nitro in the stage"
+  },
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1 pier",
+   "boxes": 7,
+   "cumulative": 7,
+   "notes": "on foot"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2 pier",
+   "boxes": 21,
+   "cumulative": 28,
+   "notes": "jet board; stepping line doubles as on-foot route to the Snow Go secret warp"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "? tile after C2",
+   "to": "back to the causeway",
+   "boxes": 8,
+   "cumulative": null,
+   "notes": "side-scroll treetops; switch chain"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3 pier",
+   "boxes": 12,
+   "cumulative": 40,
+   "notes": "on foot; death-route fork (0 boxes)"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 19,
+   "cumulative": 59,
+   "notes": "on-foot detour (6) before boarding, board (10), final causeway on foot (3)"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "causeway after the first plant and moving platform",
+   "composition": {
+    "wood": 1,
+    "question": 2,
+    "aku": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block (W on ?, Aku and ?)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "piranha run and plant follow (POINT 2)"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "AKU",
+    "REWARD"
+   ],
+   "why": "mask before the densest on-foot enemy stretch",
+   "evidence": "F2 p037L bubble zoom; D2 p022L s4",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "end of the causeway, on C1's pier",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 1,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "crate floating over a wooden arrow crate, C beside",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce",
+    "walk"
+   ],
+   "relations": [
+    "breaking the arrow first strands the floating crate"
+   ],
+   "tags": [
+    "SANDWICH",
+    "TOOL",
+    "HIGH",
+    "CHECKPOINT",
+    "TEACH",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first arrow-to-crate bounce on a safe pier",
+   "evidence": "F2 p037L; D2 s7",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 3,
+   "where": "on the water right after C1's pier, leading to a small square platform",
+   "composition": {
+    "wood": 5
+   },
+   "count": 5,
+   "arrangement": "stepping line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump",
+    "bounce",
+    "secret"
+   ],
+   "relations": [
+    "on-foot route to the Snow Go secret warp",
+    "consumed as crossed"
+   ],
+   "tags": [
+    "STEPPING",
+    "BRIDGE",
+    "ROUTE-SPLIT",
+    "HIDDEN",
+    "TOOL",
+    "SUPPORT-ORDER",
+    "COUNT-TRAP"
+   ],
+   "why": "five easy crates for a rider, the only bridge to the secret warp for a walker; board through them and the bridge is gone",
+   "evidence": "F2 p037L + Aku tip; D2 p022R s8, p024L s40-s43",
+   "confidence": "high",
+   "mode": "board/foot"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 4,
+   "where": "maze of three alternating gate fences",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "singles in the fence gaps",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "gate fences"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE",
+    "SINGLE"
+   ],
+   "why": "crates mark the racing line through the maze",
+   "evidence": "F2 p037L zoom; D2 s10",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 5,
+   "where": "after the maze, beside a mine",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mine"
+   ],
+   "tags": [
+    "PAIR",
+    "SPEED-LINE",
+    "ON-PATH"
+   ],
+   "why": "rhythm crates between hazards",
+   "evidence": "F2 p037L zoom; D2 s12",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 6,
+   "where": "above two yellow water ramps",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "floating singles beyond each ramp",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "ramps are the board's only vertical tool"
+   ],
+   "tags": [
+    "HIGH",
+    "SPEED-LINE",
+    "BACKTRACK",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "crates hang where only a ramp launch reaches; a miss costs a loop",
+   "evidence": "F2 p037L; D2 s12",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 7,
+   "where": "beside the ramps near a whirlpool",
+   "composition": {
+    "wood": 1,
+    "aku": 1
+   },
+   "count": 2,
+   "arrangement": "2-high column, mask below",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "moving mines and Nitro gate ahead"
+   ],
+   "tags": [
+    "STACK",
+    "AKU",
+    "DETOUR"
+   ],
+   "why": "mask before the moving mines and the Nitro gate",
+   "evidence": "F2 p037L zoom (mask icon)",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 8,
+   "where": "before C2's pier after two moving mines",
+   "composition": {
+    "nitro": 6
+   },
+   "count": 6,
+   "arrangement": "two converging diagonal lines forming a gate",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "cleared only by the green ! in the alternate entrance"
+   ],
+   "tags": [
+    "ROW",
+    "EXPLOSIVE-MIX",
+    "SPEED-LINE",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "lethal funnel at board speed; counted crates keyed to another stage's secret",
+   "evidence": "F2 p037R POINT 4 zoom; D2 s14",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 9,
+   "where": "on C2's pier",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "board to foot change"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "mode change",
+   "evidence": "F2 p037R; D2 s15",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 10,
+   "where": "on the bonus steel walkway",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "walkway assembles from switch blocks"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BONUS"
+   ],
+   "why": "first crate while the walkway builds itself",
+   "evidence": "D2 p023L s18",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 11,
+   "where": "beside a switch on the walkway",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump"
+   ],
+   "relations": [
+    "blast trips the switch"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "SWITCH",
+    "BONUS",
+    "TEACH"
+   ],
+   "why": "TNT used as the key to a switch",
+   "evidence": "D2 s19; GP",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 12,
+   "where": "on top of a switch",
+   "composition": {
+    "ironBound": 1
+   },
+   "count": 1,
+   "arrangement": "single sitting on a steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "body-slam"
+   ],
+   "relations": [
+    "body slam also presses the switch below"
+   ],
+   "tags": [
+    "REINFORCED",
+    "SWITCH",
+    "SUPPORT-ORDER",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "reinforced crate as a lid on a switch",
+   "evidence": "D2 s20; GP",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 13,
+   "where": "over the chasm after B-c",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "rising stair of outline crates that become wood",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "materialised by B-c"
+   ],
+   "tags": [
+    "OUTLINE",
+    "STEPPING",
+    "FLOAT-LINE",
+    "BONUS"
+   ],
+   "why": "the switch builds the bridge; the crates are route and count",
+   "evidence": "D2 s20 -> s21",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 14,
+   "where": "hanging over the drop",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "floating singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "jump"
+   ],
+   "relations": [
+    "fall risk"
+   ],
+   "tags": [
+    "HIGH",
+    "EDGE-BAIT",
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "greed vs falling",
+   "evidence": "D2 s22-s23 counters",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 15,
+   "where": "end of the crystal causeway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "jump-off point for S3-b"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "marks the jump-off",
+   "evidence": "F2 p037R zoom",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 16,
+   "where": "floating on the water beside the causeway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single, no footing",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [
+    "its bounce is the only way back"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "HIGH",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "one-shot trampoline crate",
+   "evidence": "F2 p037R POINT 6; D2 p023R s26",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 17,
+   "where": "beside the skull platform",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "death route fork (no-death only)"
+   ],
+   "tags": [
+    "AKU",
+    "ROUTE-SPLIT"
+   ],
+   "why": "mask at the death-route fork",
+   "evidence": "F2 p037R zoom (mask icon)",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 18,
+   "where": "causeway before C3",
+   "composition": {
+    "life": 1,
+    "tnt": 4,
+    "striped": 1,
+    "wood": 2
+   },
+   "count": 8,
+   "arrangement": "flat pile: 1UP centre, TNT on four sides, striped at the back right",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "striped",
+    "bounce"
+   ],
+   "relations": [
+    "spinning sets off a TNT",
+    "TNT blast kills the plant ahead"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "LIFE",
+    "TOOL",
+    "TEST",
+    "REWARD"
+   ],
+   "why": "enter via the bouncy crate and stomp the life; never spin",
+   "evidence": "F2 p037R POINT 8 bubble zoom; D2 s29",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 19,
+   "where": "on C3's pier",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "foot to board change"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "mode change; saves the TNT pile",
+   "evidence": "F2 p037R; D2 s30",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 20,
+   "where": "small tiles left of C3's pier",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "singles beside the stepping tiles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "on-foot detour"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "EDGE-BAIT"
+   ],
+   "why": "punishes sloppy tile landings",
+   "evidence": "F2 p038L zoom",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 21,
+   "where": "stone pad beyond the tiles",
+   "composition": {
+    "question": 4
+   },
+   "count": 4,
+   "arrangement": "2x2 block",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "unreachable once boarded"
+   ],
+   "tags": [
+    "DETOUR",
+    "BACKTRACK",
+    "STACK",
+    "REWARD",
+    "COUNT-TRAP"
+   ],
+   "why": "must be read and taken before boarding",
+   "evidence": "F2 p038L bubble zoom + POINT + p094R; D2 s31-s32",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 22,
+   "where": "open water after the moving mines",
+   "composition": {
+    "wood": 5,
+    "question": 2,
+    "nitro": 1
+   },
+   "count": 8,
+   "arrangement": "loose field, ? beside a ramp",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "one Nitro hidden in the field"
+   ],
+   "tags": [
+    "GRID",
+    "EXPLOSIVE-MIX",
+    "SPEED-LINE",
+    "COUNT-TRAP"
+   ],
+   "why": "density lowers the guard; the single Nitro is the test",
+   "evidence": "F2 p038L POINT 11 zoom; D2 p024L s35",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 23,
+   "where": "before the last ramp",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "sweeping mines after"
+   ],
+   "tags": [
+    "PAIR",
+    "SPEED-LINE"
+   ],
+   "why": "last board crates",
+   "evidence": "F2 p038L; D2 s38",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 24,
+   "where": "final causeway on foot",
+   "composition": {
+    "question": 1,
+    "nitro": 2
+   },
+   "count": 3,
+   "arrangement": "? and Nitro at the start, Nitro at the far end, piranhas between",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "piranha timing"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "TIMED",
+    "TEST"
+   ],
+   "why": "Nitro timed with leaping piranhas",
+   "evidence": "F2 p038L POINT 10 zoom; D2 s39",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "AE-a",
+   "section": "AE",
+   "order": 25,
+   "where": "off the alternate-entrance arrival pier",
+   "composition": {
+    "striped": 3
+   },
+   "count": 3,
+   "arrangement": "line on the water, 3 floating lives above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "jump",
+    "striped",
+    "vehicle"
+   ],
+   "relations": [
+    "collecting the lives costs a death"
+   ],
+   "tags": [
+    "STEPPING",
+    "HIGH",
+    "LIFE",
+    "TOOL",
+    "ROUTE-SPLIT"
+   ],
+   "why": "lose one life to gain three; footing on foot, targets on the board",
+   "evidence": "F2 p094R caution 2; D2 p042 s38; GP",
+   "confidence": "high",
+   "mode": "foot/board"
+  },
+  {
+   "id": "AE-b",
+   "section": "AE",
+   "order": 26,
+   "where": "wall maze",
+   "composition": {
+    "wood": 2,
+    "nitro": 1
+   },
+   "count": 3,
+   "arrangement": "singles between walls",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "racing line through walls",
+   "evidence": "D2 p042 s39",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-c",
+   "section": "AE",
+   "order": 27,
+   "where": "next turn",
+   "composition": {
+    "wood": 1,
+    "nitro": 1
+   },
+   "count": 2,
+   "arrangement": "Nitro in the lane, crate beside",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "go left around the Nitro",
+   "evidence": "D2 s40",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-d",
+   "section": "AE",
+   "order": 28,
+   "where": "at a moving mine",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle",
+    "timed"
+   ],
+   "relations": [
+    "moving mine"
+   ],
+   "tags": [
+    "TIMED",
+    "ROUTE-SPLIT"
+   ],
+   "why": "break then dodge",
+   "evidence": "D2 s41",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-e",
+   "section": "AE",
+   "order": 29,
+   "where": "behind a mine",
+   "composition": {
+    "wood": 2,
+    "nitro": 2
+   },
+   "count": 4,
+   "arrangement": "pair beyond the mine, Nitro stacked ahead",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle",
+    "backtrack"
+   ],
+   "relations": [
+    "go back round the wall"
+   ],
+   "tags": [
+    "BACKTRACK",
+    "ROUTE-SPLIT",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "crates placed behind a hazard you pass",
+   "evidence": "D2 s42",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-f",
+   "section": "AE",
+   "order": 30,
+   "where": "right bank",
+   "composition": {
+    "wood": 3,
+    "nitro": 4
+   },
+   "count": 7,
+   "arrangement": "crates threaded between Nitro",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "stay right through the Nitro",
+   "evidence": "D2 s43",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-g",
+   "section": "AE",
+   "order": 31,
+   "where": "after the Nitro cluster",
+   "composition": {
+    "wood": 1,
+    "nitro": 1
+   },
+   "count": 2,
+   "arrangement": "crate behind the last Nitro",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "cut round the Nitro to smash the crate",
+   "evidence": "D2 s44",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-h",
+   "section": "AE",
+   "order": 32,
+   "where": "edge of a whirlpool before the final pier",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [
+    "whirlpool"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "threading between whirlpool and Nitro",
+   "evidence": "D2 s45",
+   "confidence": "medium",
+   "mode": "board"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "gokkun (snapping plant)",
+   "count": 2,
+   "where": "first tile; end of the piranha run",
+   "role": "spin before landing"
+  },
+  {
+   "section": "S1",
+   "kind": "mecha-piranha",
+   "count": 3,
+   "where": "leaping across the causeway (POINT 2)",
+   "role": "chain spins; mask S1-a precedes them"
+  },
+  {
+   "section": "S3",
+   "kind": "hippo",
+   "count": 1,
+   "where": "water after C2",
+   "role": "stepping stone that dunks you"
+  },
+  {
+   "section": "S3",
+   "kind": "gokkun",
+   "count": 2,
+   "where": "crystal causeway; beyond the TNT pile",
+   "role": "TNT blast can kill the second"
+  },
+  {
+   "section": "S4",
+   "kind": "mecha-piranha",
+   "count": 3,
+   "where": "final causeway",
+   "role": "Nitro jumps timed with them"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S2",
+   "kind": "open water (board)",
+   "where": "whole section",
+   "crates": [
+    "S2-a",
+    "S2-b",
+    "S2-c",
+    "S2-d",
+    "S2-e",
+    "S2-f"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "water with bobbing/sinking pillars",
+   "where": "after C2 and after the crystal",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "water tiles before boarding",
+   "where": "left of C3's pier",
+   "crates": [
+    "S4-a",
+    "S4-b"
+   ]
+  }
+ ],
+ "hazards": [
+  {
+   "section": "S2/S4/AE",
+   "kind": "sea mines (static, sweeping, circling)",
+   "role": "crates sit just past them on the safe line"
+  },
+  {
+   "section": "S2",
+   "kind": "gate fences (maze)",
+   "role": "crates mark the gaps"
+  },
+  {
+   "section": "S2/S4",
+   "kind": "yellow water ramps",
+   "role": "only vertical tool on the board"
+  },
+  {
+   "section": "S2/S4/AE",
+   "kind": "whirlpools",
+   "role": "border crate lines"
+  },
+  {
+   "section": "S3",
+   "kind": "bobbing and sinking stone pillars",
+   "role": "timed footing"
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "stepping crates vs the secret warp",
+   "solution": "cross on foot (crates break under you) to the platform",
+   "wrongOrder": "board through them first",
+   "loss": "route to Snow Go's red gem until restart"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-f",
+    "S4-a",
+    "S4-c",
+    "S4-e"
+   ],
+   "summary": "11 normal-course Nitro keyed to the green ! in the alternate entrance",
+   "solution": "enter via Bear Down's secret warp and hit the green ! first",
+   "wrongOrder": "playing the normal course first",
+   "loss": "box gem for that run"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S3-d"
+   ],
+   "summary": "1UP ringed by 4 TNT with a striped entry crate",
+   "solution": "hop on the striped crate, stomp the 1UP, clear the rest from range",
+   "wrongOrder": "spinning into the pile",
+   "loss": "life or death (crates still count)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "2x2 ? block reachable only on foot before boarding",
+   "solution": "detour on foot, return, board",
+   "wrongOrder": "board immediately",
+   "loss": "4 crates"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "B-b",
+    "B-c",
+    "B-d"
+   ],
+   "summary": "bonus switch chain",
+   "solution": "TNT blast trips switch 1; body slam the iron-bound crate on switch 2 to build the outline stair",
+   "wrongOrder": "spinning the iron-bound crate",
+   "loss": "bonus crates"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "S3-b"
+   ],
+   "summary": "floating ? as a one-way trampoline",
+   "solution": "land and hold jump for the bounce back",
+   "wrongOrder": "tap jump",
+   "loss": "death"
+  },
+  {
+   "id": "P7",
+   "clusters": [
+    "AE-a"
+   ],
+   "summary": "three lives over striped crates cost one death",
+   "solution": "bounce along, accept the death, then break the crates from the board",
+   "wrongOrder": "n/a",
+   "loss": "one life"
+  }
+ ],
+ "observations": [
+  "crates follow the vehicle: board crates are singles, pairs and loose fields on the racing line; vertical crates only above ramps; on foot crates form blocks and puzzles",
+  "all three checkpoints stand on piers where the mode changes",
+  "on-foot detours before boarding guard count traps because the board cannot backtrack far",
+  "crates as bridges: stepping line to the secret warp, outline stair in the bonus, striped line under lives",
+  "Nitro is used as a gate, a pair, one hidden in a dense field and two timed with piranhas",
+  "inter-stage locks: the box gem needs Bear Down's secret warp; the stepping crates open the warp to Snow Go's red gem",
+  "masks before dense stretches (piranha run, Nitro gate, death fork)",
+  "lives cost risk (TNT ring, a death for three lives)",
+  "main crates per section 7/21/12/19"
+ ],
+ "openQuestions": [
+  "header 1UP 2 / Aku 2 / C 4 vs map 1 / 3 / 3 on the normal course",
+  "11 unseen alternate-entrance crates",
+  "bonus crate types",
+  "TNT pile exact footprint"
+ ],
+ "observedTotal": 91,
+ "unobservedRemainder": {
+  "boxes": 11,
+  "section": "AE",
+  "note": "alternate-entrance crates between D2 screenshots"
+ },
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "on foot along the river: tiles, moving disc, stairs, floating discs, one-tile causeway to C1's pier"
+  },
+  {
+   "section": "S2",
+   "mode": "vehicle",
+   "notes": "jet board, into-screen river; mines, fence maze, kickers, Nitro gate; ends on C2's pier"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "treetop bonus; switch-built steel walkway, floating crate stair"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "on foot: hippo, bobbing pillars, causeways, floating-? trampoline, skull platform, TNT pile"
+  },
+  {
+   "section": "D",
+   "mode": "vehicle",
+   "notes": "death route (no-death runs only): board plus appearing moving pillars; no crates; not mapped"
+  },
+  {
+   "section": "S4",
+   "mode": "vehicle",
+   "notes": "on-foot detour from C3's pier, then board (circling mines, crate field, barrier ramp), final causeway on foot"
+  },
+  {
+   "section": "AE",
+   "mode": "vehicle",
+   "notes": "alternate entrance from Bear Down's warp: board course of walls, mines, Nitro, whirlpool to the green ! pier"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "square pad (stone stepping tiles)",
+   "size": "2-2.5 square",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "LANDING"
+   ],
+   "why": "first landing already holds a snapping plant",
+   "evidence": "D2 s1; F2 p037L POINT 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "moving platform (round stone disc)",
+   "size": "~2 across",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "lateral shuttle",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "first moving footing: wait, ride, drift to the stairs",
+   "evidence": "D2 s2",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "stair of stone tiles",
+   "size": "2-2.5 wide",
+   "heightDelta": "+1 per step",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "small rise back to the causeway",
+   "evidence": "D2 s2",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "stepping stones (floating round discs)",
+   "size": "~2 across, gaps 1.5-2",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static (floating)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "round footing teaches air steering",
+   "evidence": "D2 s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "corridor (one-tile causeway)",
+   "size": "2-2.5 wide, long",
+   "heightDelta": 0,
+   "edges": "open (water both sides)",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "no side-step: crate block fills it, piranhas leap across",
+   "evidence": "D2 s4, s6; F2 POINT 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "wooden pier",
+   "size": "4-5 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "board pickup; arrow lesson on safe planks",
+   "evidence": "D2 s7",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "vehicle lane (open river)",
+   "size": "8-12 wide",
+   "heightDelta": 0,
+   "edges": "banks",
+   "behaviour": "flowing water",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "wide lane narrowed by placed hazards",
+   "evidence": "D2 s8-s14",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "square pad (secret warp tile)",
+   "size": "~2",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "secret goal reached only over the crate bridge",
+   "evidence": "F2 p037L; D2 s42",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "fence maze walls",
+   "size": "walls 4-6 long, gaps 3-4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "S-line through the river marked by crates",
+   "evidence": "D2 s10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "kicker ramps x2-3",
+   "size": "~2 wide",
+   "heightDelta": "launch 2-3",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "board's only height tool, for floating ? crates",
+   "evidence": "D2 s12-s13",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "wooden pier (C2)",
+   "size": "5-6 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "board to foot",
+   "evidence": "D2 s15",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "bridge/plank (steel walkway assembled by switches)",
+   "size": "1 deep, sections 3-4",
+   "heightDelta": 0,
+   "edges": "open (drop)",
+   "behaviour": "phase/timed (appears per switch)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the floor is the reward of each switch",
+   "evidence": "D2 s18-s19",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "floating crate stair (outline -> wood)",
+   "size": "1x1 x3, rising",
+   "heightDelta": "+1 per crate",
+   "edges": "open (drop)",
+   "behaviour": "materialised by switch",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "body-slammed switch builds the bridge",
+   "evidence": "D2 s20-s21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "sinking/floating pillars (bobbing)",
+   "size": "1.5-2 across",
+   "heightDelta": "0 (rise/sink)",
+   "edges": "open (water)",
+   "behaviour": "vertical bob",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "F2 warns they fool you into stepping on at the wrong time",
+   "evidence": "F2 POINT 5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "stone causeway with bonus tile",
+   "size": "~2.5 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "bonus elevator on the main line",
+   "evidence": "F2 p037R; D2 s17",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "T-shaped causeway",
+   "size": "stem 2.5, crossbar 7-8",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING",
+    "PERCH"
+   ],
+   "why": "crossbar end is the take-off for the floating ?",
+   "evidence": "D2 s26-s27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "sinking/floating pillars (pair)",
+   "size": "1.5-2 across, gaps 1-2",
+   "heightDelta": "0 (sink/rise)",
+   "edges": "open (water)",
+   "behaviour": "vertical bob",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "pair after the single bobbing pillar",
+   "evidence": "F2 POINT 7; D2 s27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "stone ledge with skull platform",
+   "size": "4-5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static (skull appears only with no deaths)",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "hidden-gem branch offered only to no-death players",
+   "evidence": "D2 s28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-f",
+   "section": "S3",
+   "shape": "cross-shaped stone platform (TNT pile)",
+   "size": "~3 tiles across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "pile fills the platform: no room to spin safely",
+   "evidence": "D2 s29",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-g",
+   "section": "S3",
+   "shape": "wooden pier (C3)",
+   "size": "~5 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "foot to board",
+   "evidence": "D2 s30",
+   "confidence": "high"
+  },
+  {
+   "id": "P-D-a",
+   "section": "D",
+   "shape": "moving platforms (appearing pillars)",
+   "size": "not visible",
+   "heightDelta": "not visible",
+   "edges": "open (water)",
+   "behaviour": "appear in sequence",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "no-stop pillar run for the hidden gem",
+   "evidence": "F2 p094R",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "square pads to a stone pad (2x2 ?)",
+   "size": "tiles ~2, pad ~3",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "detour before boarding; the board cannot return",
+   "evidence": "D2 s31-s32; F2 p038L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "vehicle lane with a stone platform circled by mines",
+   "size": "8-12",
+   "heightDelta": 0,
+   "edges": "banks",
+   "behaviour": "flowing water",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "lane narrowed by moving hazards",
+   "evidence": "D2 s33-s34",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "corridor (final causeway)",
+   "size": "~2.5 wide",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "S1 aisle reprised with Nitro at both ends",
+   "evidence": "D2 s39; F2 POINT 10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-AE-a",
+   "section": "AE",
+   "shape": "wall slalom (vehicle lane)",
+   "size": "gaps 3-4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "denser S2 maze",
+   "evidence": "D2 p042 s39-s42",
+   "confidence": "low"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "lethal water",
+   "width": "1.5-2",
+   "heightDelta": 0,
+   "landing": "tile 2-2.5 with a plant",
+   "lethal": true,
+   "runUp": "1 tile",
+   "move": [
+    "plain"
+   ],
+   "coupling": "plant lunges on landing",
+   "failure": "death",
+   "nearby": [
+    "E-S1-a"
+   ],
+   "why": "threat on the landing, not in the distance",
+   "evidence": "D2 s1, s3",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "moving-platform crossing",
+   "width": "~2 each side",
+   "heightDelta": 0,
+   "landing": "disc ~2",
+   "lethal": true,
+   "runUp": "1 tile",
+   "move": [
+    "ride"
+   ],
+   "coupling": "lateral disc: jump when in front",
+   "failure": "death",
+   "nearby": [],
+   "why": "first moving footing",
+   "evidence": "D2 s2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "lethal water (floating discs)",
+   "width": "1.5-2",
+   "heightDelta": 0,
+   "landing": "disc ~2",
+   "lethal": true,
+   "runUp": "disc",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none (air steering)",
+   "failure": "death",
+   "nearby": [],
+   "why": "round targets teach air control",
+   "evidence": "D2 s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "lethal water (crate-bounce bridge, on foot)",
+   "width": "2-4 between crates",
+   "heightDelta": 0,
+   "landing": "crate 1x1 / warp tile ~2",
+   "lethal": true,
+   "runUp": "pier pylon",
+   "move": [
+    "crate-bounce"
+   ],
+   "coupling": "crates break as used",
+   "failure": "death; bridge consumed",
+   "nearby": [
+    "S2-a"
+   ],
+   "why": "on-foot reading of the five water crates",
+   "evidence": "F2 p037L; D2 s8, s40-s42",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "Nitro lane (board)",
+   "width": "lane 2.5-3, ~5 long",
+   "heightDelta": 0,
+   "landing": "C2 pier",
+   "lethal": true,
+   "runUp": "board",
+   "move": [
+    "ride"
+   ],
+   "coupling": "two moving mines just before",
+   "failure": "death on Nitro touch",
+   "nearby": [
+    "S2-e",
+    "S2-f",
+    "O-S2-e"
+   ],
+   "why": "precision lane after a timing test",
+   "evidence": "D2 s14; F2 POINT 4",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "chasm under floating crates",
+   "width": "not visible",
+   "heightDelta": "+1 per crate",
+   "landing": "crate 1x1",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "held/high"
+   ],
+   "coupling": "crates must first be materialised",
+   "failure": "bonus ends (series rule)",
+   "nearby": [
+    "B-c",
+    "B-d",
+    "B-e"
+   ],
+   "why": "held jumps line up the landings",
+   "evidence": "D2 s20-s22",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "lethal water via the hippo",
+   "width": "~2 each side",
+   "heightDelta": 0,
+   "landing": "hippo, then bobbing pillar",
+   "lethal": true,
+   "runUp": "pier",
+   "move": [
+    "enemy-bounce"
+   ],
+   "coupling": "hippo sinks if you stay; pillar bobs",
+   "failure": "death",
+   "nearby": [
+    "E-S3-a",
+    "P-S3-a"
+   ],
+   "why": "enemy as the only bridge",
+   "evidence": "D2 s16",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "lethal water to a floating ? and back",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "the ? crate (breaks)",
+   "lethal": true,
+   "runUp": "T-causeway crossbar",
+   "move": [
+    "crate-bounce",
+    "held/high"
+   ],
+   "coupling": "crate breaks on landing; held bounce is the return",
+   "failure": "death",
+   "nearby": [
+    "S3-a",
+    "S3-b"
+   ],
+   "why": "one-shot trampoline",
+   "evidence": "F2 POINT 6; D2 s26",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "lethal water between submerging pillars",
+   "width": "1-2",
+   "heightDelta": 0,
+   "landing": "pillar 1.5-2",
+   "lethal": true,
+   "runUp": "causeway",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pillars sink and rise",
+   "failure": "death",
+   "nearby": [],
+   "why": "pair after the single bobbing pillar",
+   "evidence": "F2 POINT 7; D2 s27",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-D-a",
+   "section": "D",
+   "kind": "Nitro + whirlpool choke (board)",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "not visible",
+   "lethal": true,
+   "runUp": "board",
+   "move": [
+    "ride"
+   ],
+   "coupling": "whirlpool",
+   "failure": "death",
+   "nearby": [],
+   "why": "speed on the correct side",
+   "evidence": "F2 p094R",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "lethal water (pier pylon to far-left tile)",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "tile ~2",
+   "lethal": true,
+   "runUp": "pier",
+   "move": [
+    "running"
+   ],
+   "coupling": "Nitro beside the tiles",
+   "failure": "death",
+   "nearby": [
+    "S4-a",
+    "S4-b"
+   ],
+   "why": "only on-foot running jump of the main course guards the 4-crate pad",
+   "evidence": "D2 s31",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "barrier cleared by ramp (board)",
+   "width": "barrier",
+   "heightDelta": "launch 2-3",
+   "landing": "river",
+   "lethal": true,
+   "runUp": "board",
+   "move": [
+    "ride"
+   ],
+   "coupling": "mine wandering at the landing",
+   "failure": "mine contact = death",
+   "nearby": [
+    "O-S4-b"
+   ],
+   "why": "announced blind landing",
+   "evidence": "D2 s36; F2 POINT 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-c",
+   "section": "S4",
+   "kind": "Nitro on a one-tile causeway",
+   "width": "Nitro 1x1",
+   "heightDelta": 0,
+   "landing": "causeway",
+   "lethal": true,
+   "runUp": "short",
+   "move": [
+    "running"
+   ],
+   "coupling": "piranhas leaping across",
+   "failure": "death",
+   "nearby": [
+    "S4-e",
+    "E-S4-a"
+   ],
+   "why": "fish timing plus explosives",
+   "evidence": "D2 s39",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-AE-a",
+   "section": "AE",
+   "kind": "lethal water (striped-crate line under lives)",
+   "width": "2-3 between crates",
+   "heightDelta": 0,
+   "landing": "striped crates",
+   "lethal": true,
+   "runUp": "warp pier",
+   "move": [
+    "crate-bounce"
+   ],
+   "coupling": "no return",
+   "failure": "death (deliberate)",
+   "nearby": [
+    "AE-a"
+   ],
+   "why": "one life traded for three",
+   "evidence": "D2 p042 s38; F2 p094R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-AE-b",
+   "section": "AE",
+   "kind": "whirlpool edge vs Nitro squeeze",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "final pier",
+   "lethal": true,
+   "runUp": "board",
+   "move": [
+    "ride"
+   ],
+   "coupling": "whirlpool",
+   "failure": "death",
+   "nearby": [
+    "AE-h"
+   ],
+   "why": "last squeeze before the green !",
+   "evidence": "D2 s45",
+   "confidence": "low"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 7,
+   "moves": [
+    "plain",
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "2",
+   "rest": "P-S1-e",
+   "noStop": false,
+   "why": "short level hops onto small footing",
+   "evidence": "D2 s1-s5"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 5,
+   "moves": [
+    "crate-bounce"
+   ],
+   "rhythm": "even",
+   "maxGap": "3-4",
+   "rest": "P-S2-b",
+   "noStop": true,
+   "why": "bounce chain that is a disappearing bridge",
+   "evidence": "D2 s40-s42"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": 4,
+   "moves": [
+    "held/high"
+   ],
+   "rhythm": "even",
+   "maxGap": "2",
+   "rest": "exit platform",
+   "noStop": true,
+   "why": "held jumps give air time to line up",
+   "evidence": "D2 s21-s22"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 6,
+   "moves": [
+    "enemy-bounce",
+    "plain"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "2",
+   "rest": "P-S3-b",
+   "noStop": false,
+   "why": "footing moves vertically; rhythm set by the water",
+   "evidence": "D2 s16, s27; F2 POINT 5, 7"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "plain",
+    "held/high"
+   ],
+   "rhythm": "even",
+   "maxGap": "2-3",
+   "rest": "P-S3-c",
+   "noStop": true,
+   "why": "one-shot trampoline return",
+   "evidence": "D2 s26; F2 POINT 6"
+  },
+  {
+   "id": "J-D-a",
+   "section": "D",
+   "count": "not visible",
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "not visible",
+   "rest": "not visible",
+   "noStop": true,
+   "why": "hidden-gem no-stop pillar run (count not visible)",
+   "evidence": "F2 p094R"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "running",
+    "plain"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "3-4",
+   "rest": "P-S4-a",
+   "noStop": false,
+   "why": "detour priced with one running jump",
+   "evidence": "D2 s31-s32"
+  },
+  {
+   "id": "J-S4-b",
+   "section": "S4",
+   "count": 2,
+   "moves": [
+    "running"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "2",
+   "rest": "goal",
+   "noStop": false,
+   "why": "wait for the first fish, then two dash-jumps past Nitro",
+   "evidence": "D2 s39"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "lethal water",
+   "placement": "flank",
+   "timing": "none",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "all footing"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "the level's only pit type",
+   "evidence": "D2 s1-s39"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "mine (static pack of 4)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-a"
+   ],
+   "roles": [
+    "LANE-BLOCK",
+    "TEACH"
+   ],
+   "why": "steering taught on still mines",
+   "evidence": "F2 POINT 3; D2 s9"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "wall maze (wooden fences)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "crates mark the line through",
+   "evidence": "D2 s10"
+  },
+  {
+   "id": "O-S2-c",
+   "section": "S2",
+   "kind": "mine (moving left-right)",
+   "placement": "across path",
+   "timing": "regular sweep; watch then boost",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-d"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "first moving mine after static ones",
+   "evidence": "D2 s11"
+  },
+  {
+   "id": "O-S2-d",
+   "section": "S2",
+   "kind": "whirlpool",
+   "placement": "flank",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-e"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "borders a crate detour",
+   "evidence": "F2 p037L"
+  },
+  {
+   "id": "O-S2-e",
+   "section": "S2",
+   "kind": "two moving mines then the Nitro gate",
+   "placement": "across path",
+   "timing": "sweep, then static lane",
+   "counter": [
+    "wait-and-go",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-e",
+    "S2-f"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "timing then precision back to back",
+   "evidence": "D2 s14; F2 POINT 4"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "bobbing/submerging pillars",
+   "placement": "on platform",
+   "timing": "regular rise and sink",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S3-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the footing is the hazard",
+   "evidence": "F2 POINT 5, 7; D2 s16, s27"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "TNT pile on the path",
+   "placement": "on platform",
+   "timing": "3-count after a stomp",
+   "counter": [
+    "destroy"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-d",
+    "E-S3-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "spin forbidden; enter from the striped crate",
+   "evidence": "F2 POINT 8; D2 s29"
+  },
+  {
+   "id": "O-D-a",
+   "section": "D",
+   "kind": "appearing moving pillars; Nitro + whirlpool choke",
+   "placement": "on platform / across path",
+   "timing": "sequential",
+   "counter": [
+    "jump over",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [],
+   "roles": [
+    "TEST"
+   ],
+   "why": "hidden-gem test",
+   "evidence": "F2 p094R"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "mines circling a platform",
+   "placement": "across path",
+   "timing": "come toward you, then sweep left",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "fake-out: the learned dodge fails",
+   "evidence": "D2 s33-s34; F2 POINT 9"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "barrier + ramp, mine at the landing",
+   "placement": "across path",
+   "timing": "watch the mine beyond the barrier",
+   "counter": [
+    "wait-and-go",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S4-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "announced blind landing",
+   "evidence": "D2 s36; F2 POINT 12"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "whirlpool + mine",
+   "placement": "flank",
+   "timing": "none",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "boost up the middle",
+   "evidence": "D2 s37"
+  },
+  {
+   "id": "O-S4-d",
+   "section": "S4",
+   "kind": "two mines sweeping apart after a ramp",
+   "placement": "across path",
+   "timing": "left lane clears first",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-d"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "boost when the left lane is clear",
+   "evidence": "D2 s38"
+  },
+  {
+   "id": "O-AE-a",
+   "section": "AE",
+   "kind": "walls, moving mine, Nitro clusters, whirlpool",
+   "placement": "across path",
+   "timing": "mine sweep",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "AE-b",
+    "AE-h"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "denser remix of S2",
+   "evidence": "D2 p042 s39-s45; F2 p094R"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "snapping plant (Gokkun)",
+   "archetype": "burrower/ambusher",
+   "behaviour": "lunges from its footing as you arrive",
+   "counter": [
+    "spin"
+   ],
+   "fails": [
+    "landing beside it without spinning"
+   ],
+   "placement": "landing platform",
+   "roles": [
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "teaches spin-on-arrival at once (alone, but on a small landing over water)",
+   "evidence": "F2 POINT 1; D2 s1",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "mecha-piranha school (x3)",
+   "archetype": "projectile",
+   "behaviour": "leap across the causeway from water to water",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "flank",
+   "roles": [
+    "TEST",
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "denies the one-tile aisle in a rhythm",
+   "evidence": "F2 POINT 2; D2 s3, s6",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-c",
+   "section": "S1",
+   "kind": "snapping plant",
+   "archetype": "burrower/ambusher",
+   "behaviour": "as above",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "caps the aisle",
+   "evidence": "D2 s6",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "hippo (Tamasu)",
+   "archetype": "swimmer",
+   "behaviour": "floats; sinks and dunks you if you stay",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "standing on it too long"
+   ],
+   "placement": "in pit",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": true,
+   "why": "an enemy that is a platform",
+   "evidence": "F2 p036R, p037R; D2 s16",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "snapping plant (x2)",
+   "archetype": "burrower/ambusher",
+   "behaviour": "as above",
+   "counter": [
+    "spin",
+    "TNT/blast"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "guards the floating-? take-off and the C3 approach",
+   "evidence": "F2 p037R; D2 s25, s29",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "mecha-piranhas (x3)",
+   "archetype": "projectile",
+   "behaviour": "leap across the final causeway",
+   "counter": [
+    "avoid",
+    "spin"
+   ],
+   "fails": [
+    "jumping before the first fish lands"
+   ],
+   "placement": "between hazards (two Nitro)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "fish timing combined with explosives",
+   "evidence": "F2 POINT 10; D2 s39",
+   "confidence": "high"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "tile + plant (spin on landing)",
+    "tiles",
+    "moving disc",
+    "stairs",
+    "piranha + plant",
+    "floating discs",
+    "causeway with 2x2 crate block",
+    "piranhas x3 across the aisle",
+    "plant",
+    "pier: arrow + floating crate + C1"
+   ],
+   "gaps": 8,
+   "enemies": 6,
+   "hazards": 1
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "board on",
+    "five crates / on-foot crate bridge to warp tile",
+    "static mine pack",
+    "fence maze + crates",
+    "moving mine",
+    "crate pair",
+    "two kickers under floating ?",
+    "W/Aku column by whirlpool",
+    "two moving mines",
+    "Nitro gate",
+    "C2 pier"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 6
+  },
+  {
+   "section": "B",
+   "beats": [
+    "switch walkway",
+    "TNT beside a switch",
+    "iron-bound on a switch",
+    "floating crate stair",
+    "hanging crates over the drop",
+    "fruit arc + life"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "hippo",
+    "bobbing pillar",
+    "causeway with bonus tile",
+    "bobbing pillar",
+    "T-causeway + floating ?",
+    "two submerging pillars",
+    "skull platform + Aku",
+    "TNT pile",
+    "plant",
+    "C3 pier"
+   ],
+   "gaps": 6,
+   "enemies": 3,
+   "hazards": 3
+  },
+  {
+   "section": "D",
+   "beats": [
+    "board",
+    "appearing pillars",
+    "Nitro/whirlpool choke",
+    "gem"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "dash-jump to tiles (Nitro beside)",
+    "2x2 ? pad",
+    "back to pier",
+    "board",
+    "left-right mine",
+    "circling mines (fake-out)",
+    "crate field with one Nitro",
+    "barrier ramp (mine at landing)",
+    "whirlpool + mine",
+    "crates + ramp",
+    "parting mines",
+    "causeway: ? + Nitro, piranhas x3, Nitro",
+    "goal"
+   ],
+   "gaps": 5,
+   "enemies": 3,
+   "hazards": 9
+  },
+  {
+   "section": "AE",
+   "beats": [
+    "warp pier",
+    "striped crates under lives (costs a life)",
+    "wall slalom + crates + Nitro",
+    "moving mine",
+    "crates behind a mine (backtrack)",
+    "Nitro clusters",
+    "whirlpool squeeze",
+    "green ! pier"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 8
+  }
+ ],
+ "geometryObservations": [
+  "water is the only pit, so on-foot gaps stay short (1.5-2 u) and the footing does the talking: enemy on it, lateral motion, vertical motion, one-shot bounce",
+  "the first landing already carries the first enemy: spin just before landing is the opening lesson (POINT 1)",
+  "moving footing escalates by axis: lateral disc, floating discs with air steering, sinking hippo, one bobbing pillar, a submerging pair, the death route's no-stop pillars",
+  "the one-tile aisle is used twice: piranhas plus a crate block in S1, piranhas plus Nitro at both ends in the final causeway",
+  "mines teach by subversion: static pack, left-right sweeper, a pair of moving mines, then circling mines that punish the learned dodge",
+  "board hazards narrow a wide lane four ways (walls, mines, whirlpools, Nitro lane); crates lie on the safe line",
+  "board height comes only from kickers; the course loops so a missed ramp crate costs a lap, not a life",
+  "the board cannot backtrack, so on-foot detours sit at the boarding piers",
+  "crates are disappearing bridges: water crates to the warp tile, striped crates under lives, the bonus outline stair",
+  "enemies are stationary or rhythmic, never chasers: plants guard landings, piranhas pulse across lanes, the hippo is footing",
+  "a checkpoint sits on every pier where the mode changes; the death route is offered only to no-death players"
+ ],
+ "geometryTransfer": [
+  "spin-on-landing pad: 2-2.5 m pads over a pit, a grunt on the first landing, 2.3 m gap so the landing is the test",
+  "disappearing crate bridge: five crates 3-4 m apart over a pit to a secret ledge (stomp chain on foot; touching crate row = one-way grind bridge on the board), placed before the board pickup",
+  "patroller fake-out: two floaters sweeping left-right (enemies patrol along X), then an out-of-phase pair covering the learned dodge side so it fails; keep a clear centre line for a boosting rider",
+  "kicker crates on a looping lane, floating 1.5-2.5 m above each kicker arc, no pit under the landing",
+  "phasepad stepping posts 1.5-2 m spaced 2 m apart: one alone, then a pair; keep them off board lines",
+  "Nitro lane (two lines of 3, 3 m lane) right after a gate of two patrolling floaters on a 20-30 m straight"
+ ]
+}

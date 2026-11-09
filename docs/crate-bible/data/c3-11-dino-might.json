@@ -1,0 +1,3079 @@
+{
+ "id": "c3-11-dino-might",
+ "game": "Crash 3",
+ "stage": 11,
+ "name": "Dino Might!",
+ "japaneseTitle": "ベイビーTで つっぱしれ!",
+ "sources": [
+  "F3 p036-p038",
+  "F3 p040L",
+  "F3 p106L",
+  "F3 p011",
+  "F3 p005R",
+  "P3 p021R-p023L",
+  "gamepressure Dino Might! (N. Sane total)"
+ ],
+ "camera": "into-screen jungle; side-scroll lava area; toward-camera triceratops chase",
+ "totalBoxes": 112,
+ "totalSource": "F3 map cluster sum with the 6 J-b outline cells excluded (they materialise as steel: P3 p021R s6); equals gamepressure 112",
+ "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box, bracket adds Nitro; no brackets here because the green ! precedes C2 on F3 route so all 10 Nitro are counted; steel !, green !, steel arrow and steel outlines are listed with count 0",
+ "compositionKeysAdded": {
+  "outlineSteel": "outline cell that materialises as an unbreakable steel block (not a box)"
+ },
+ "badgeConvention": "F3 p005R legend: red 1 / blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial; drawn icon = normal-mode type",
+ "checkpointsPrinted": {
+  "C1": 10,
+  "yellowC": 30,
+  "C2": 54,
+  "C3": 99
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 61,
+   "basis": "S1+S2+S3+S4; includes 4 Nitro that only the yellow-course green ! clears"
+  },
+  {
+   "id": "bonus",
+   "boxes": 25,
+   "basis": "F3 p040L header x25, counted"
+  },
+  {
+   "id": "gem-yellow",
+   "boxes": 26,
+   "basis": "F3 p037; 19 + C + 6 Nitro"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "none"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 10,
+   "cumulative": 10,
+   "notes": "Aku, life on a block, three TT time crates, one binding-hidden crate"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 10,
+   "cumulative": null,
+   "notes": "Baby T stretch; 2 Nitro; F3's C2 54 is reached in reverse after the yellow course"
+  },
+  {
+   "id": "YELLOW",
+   "route": "gem-yellow",
+   "from": "C1 yellow platform",
+   "to": "lava area",
+   "boxes": 26,
+   "cumulative": 30,
+   "notes": "cumulative 30 printed at the yellow-course C; iron+TNT stacks, Nitro, secret gem, green !, stage-32 warp"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 30,
+   "cumulative": 99,
+   "notes": "jungle 13 + lava area 10 (incl. 2 Nitro) + C3 cluster 4; printed 99 not reproducible (94 or 101)"
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "lava area, before C3",
+   "to": "lava area",
+   "boxes": 25,
+   "cumulative": null,
+   "notes": "17 iron crates; slam-radius lessons"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 11,
+   "cumulative": null,
+   "notes": "triceratops chase; the chaser breaks crates you leave"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "just past the start, left edge",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "slide"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "mask before the first Crafish, lava and geysers; also a mask in time trial",
+   "evidence": "F3 p036L zoom; P3 p023L s19",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "on top of a raised white block at the left edge",
+   "composition": {
+    "life": 1
+   },
+   "count": 1,
+   "arrangement": "single on a pedestal (g3)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "raised-block"
+   ],
+   "tags": [
+    "HIGH",
+    "LIFE",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "life on a plinth reached with one deliberate jump; TT first 3-s crate (slide for the mask, long-jump to the block)",
+   "evidence": "F3 p036L zoom; F3 p106L frame 02",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "after the second geyser",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single (r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "hazard:geyser"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "pacing box between geyser and lava",
+   "evidence": "F3 p036L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "just beyond S1-c",
+   "composition": {
+    "striped": 1,
+    "wood": 1,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "stack of 3 bottom->top striped, wood, ? (b2)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "TOOL",
+    "TIME-TRIAL"
+   ],
+   "why": "striped base pays per bounce and lifts you to the ? on top",
+   "evidence": "F3 p036L zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "beside S1-d",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? bottom, wood r1 top)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "third of the three TT time crates broken with one small jump-spin",
+   "evidence": "F3 p036L zoom; F3 p106L frame 05",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "near the next Crafish, cut by the page binding",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single (type unreadable; wood assumed)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:crafish"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "needed for C1 = 10",
+   "evidence": "F3 p036L edge",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-C",
+   "section": "S1",
+   "order": 7,
+   "where": "at the yellow-gem platform",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "yellow-platform"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C1 = 10 where the yellow course leaves",
+   "evidence": "F3 p036R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "beside the Baby T nest",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "baby-t-nest"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "marks the egg to hatch",
+   "evidence": "F3 p036R zoom; P3 p021R s3",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "just after the nest",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "three loose crates in a triangle (all r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "vehicle"
+   ],
+   "relations": [
+    "baby-t"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "Baby T smashes them; TT one spin before the middle crate breaks all three",
+   "evidence": "F3 p036R zoom; F3 p106L frame 13",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "left of the path among geysers",
+   "composition": {
+    "wood": 2,
+    "striped": 1
+   },
+   "count": 3,
+   "arrangement": "stack of 3 bottom->top wood r1, striped, wood r1",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "hazard:geyser"
+   ],
+   "tags": [
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "TT one jump-spin takes tiers 1 and 3",
+   "evidence": "F3 p036R zoom (descreened); F3 p106L frame 14",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "right of the path",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "pair, staggered",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "needs:Y-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "COUNT-TRAP"
+   ],
+   "why": "main-route Nitro clearable only by the green ! on the yellow course",
+   "evidence": "F3 p036R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 5,
+   "where": "after a fallen log and a lab assistant",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2 (54 on F3's yellow-first route)",
+   "evidence": "F3 p036R",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-a",
+   "section": "YELLOW",
+   "order": 1,
+   "where": "first stretch of the yellow course, by a lab assistant",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "pair, staggered heights",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "gem-path"
+   ],
+   "relations": [
+    "enemy:lab-assistant",
+    "enemy:crafish"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "PAIR"
+   ],
+   "why": "reward right after boarding; Crafish ahead (POINT A)",
+   "evidence": "F3 p037L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-b",
+   "section": "YELLOW",
+   "order": 2,
+   "where": "sand strip start, below the path",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "SINGLE"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p037R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-c",
+   "section": "YELLOW",
+   "order": 3,
+   "where": "above the path",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "HIGH"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p037R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-d",
+   "section": "YELLOW",
+   "order": 4,
+   "where": "sand strip",
+   "composition": {
+    "ironBound": 1,
+    "wood": 1,
+    "tnt": 2
+   },
+   "count": 4,
+   "arrangement": "stack of 3 bottom->top iron, wood, TNT + TNT beside",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first iron-plus-TNT stack; TNT pair chains, iron base needs the slam",
+   "evidence": "F3 p037R zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-e",
+   "section": "YELLOW",
+   "order": 5,
+   "where": "sand strip",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT"
+   ],
+   "why": "breather",
+   "evidence": "F3 p037R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-f",
+   "section": "YELLOW",
+   "order": 6,
+   "where": "sand strip",
+   "composition": {
+    "question": 1,
+    "wood": 2,
+    "tnt": 1,
+    "life": 1
+   },
+   "count": 5,
+   "arrangement": "stack of 4 bottom->top ?, wood, TNT, 1UP + wood beside",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "jump",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "LIFE",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "take the life from the top before the TNT can drop and blow it away",
+   "evidence": "F3 p037R zoom (descreened); F3 p080L hint",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-g",
+   "section": "YELLOW",
+   "order": 7,
+   "where": "end of the sand strip",
+   "composition": {
+    "ironBound": 4,
+    "tnt": 1
+   },
+   "count": 5,
+   "arrangement": "stack of 4 bottom->top iron, iron, TNT, iron + iron beside",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "POINT B: slam in front, bottom two break, TNT drops and lights, step back",
+   "evidence": "F3 p037R POINT B; P3 p022L s12",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-C",
+   "section": "YELLOW",
+   "order": 8,
+   "where": "after the stacks",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "yellow-course C = 30",
+   "evidence": "F3 p037R",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-h",
+   "section": "YELLOW",
+   "order": 9,
+   "where": "next corridor, left then right of the path with tall grass between",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "two singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "gem-path"
+   ],
+   "relations": [
+    "needs:Y-G",
+    "tall-grass"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "Nitro flank the grass you tornado-spin through",
+   "evidence": "F3 p037R zoom; P3 p022R s13",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-i",
+   "section": "YELLOW",
+   "order": 10,
+   "where": "at the last pterodactyl",
+   "composition": {
+    "nitro": 4
+   },
+   "count": 4,
+   "arrangement": "two left + two right of the path (diamond)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "gem-path"
+   ],
+   "relations": [
+    "enemy:pterodactyl",
+    "needs:Y-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "TIMED"
+   ],
+   "why": "POINT C: walk the gap, jump-spin the last ptera",
+   "evidence": "F3 p037L POINT C",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-G",
+   "section": "YELLOW",
+   "order": 11,
+   "where": "after the secret gem, before the exit platform",
+   "composition": {
+    "switchGreen": 1
+   },
+   "count": 0,
+   "arrangement": "single green ! (not counted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "clears:S2-d,S3-f,Y-h,Y-i"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "detonates all ten Nitro in the level; they count",
+   "evidence": "F3 p037L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "first clearing after C2",
+   "composition": {
+    "wood": 6,
+    "question": 2,
+    "striped": 1
+   },
+   "count": 9,
+   "arrangement": "wall 3x3: top W ?(b2) W / mid W(b2) S ?(b2) / bottom W W W",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "WALL",
+    "GRID",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "9-crate fruit wall; TT one jump-spin at the centre breaks it all",
+   "evidence": "F3 p038L zoom (descreened); F3 p106L frame 17",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "next bend",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "pair (? r1 higher/behind)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p038L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "before the lava area",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? bottom, wood r1 top)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "backtrack-on-F3-route"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "pacing; F3 route collects S3-a..c walking back from the lava area (POINT 4)",
+   "evidence": "F3 p038R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "first ledge of the lava area (side view)",
+   "composition": {
+    "wood": 5,
+    "striped": 2
+   },
+   "count": 7,
+   "arrangement": "stepped pyramid 3-2-1 (g3 on base right) with striped floating above the top striped",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce",
+    "spin"
+   ],
+   "relations": [
+    "yellow-course-arrival"
+   ],
+   "tags": [
+    "PYRAMID",
+    "STEPPING",
+    "SANDWICH",
+    "TIME-TRIAL"
+   ],
+   "why": "steps up the lava bank; TT slide front crate, spin the 3-s crate in passing",
+   "evidence": "F3 p038R zoom (descreened); P3 p023L s21",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "over the lava, side view",
+   "composition": {
+    "wood": 3,
+    "switch": 1,
+    "arrowSteel": 1
+   },
+   "count": 3,
+   "arrangement": "floating column bottom->top W, W, W(b2), steel ! ; steel arrow on the ground beneath",
+   "stackHeight": 4,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "outline:S3-f"
+   ],
+   "tags": [
+    "COLUMN-BOUNCE",
+    "TOOL",
+    "SWITCH",
+    "TIME-TRIAL"
+   ],
+   "why": "arrow is the elevator: each bounce breaks the lowest crate until the ! is hit; TT slide + double jump to the 2-s crate",
+   "evidence": "F3 p038R TA3; P3 p021R s6; P3 p023L s22",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "same room, right side",
+   "composition": {
+    "outlineSteel": 6,
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "row of 6 outlines that materialise as a steel bar; a Nitro under each end",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "needs:S3-e",
+    "needs:Y-G"
+   ],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "the ! builds a steel walkway over Nitro to the floating ?; the 6 cells are not boxes",
+   "evidence": "P3 p021R s6 (steel bar); F3 p038R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-g",
+   "section": "S3",
+   "order": 7,
+   "where": "high to the right of the column",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating (g3)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "arrow"
+   ],
+   "relations": [
+    "needs:S3-f"
+   ],
+   "tags": [
+    "HIGH",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "pay-off for the column; TT big jump right off the arrow",
+   "evidence": "F3 p038R zoom; P3 p023L s22",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-C",
+   "section": "S3",
+   "order": 8,
+   "where": "grass band past the bonus entrance",
+   "composition": {
+    "checkpoint": 1,
+    "wood": 2,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "loose cluster around the C (? has A badge, one W r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-chase"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "checkpoint right before the chase; TT mask",
+   "evidence": "F3 p038R zoom; P3 p022L s8; P3 p023L s23",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "first platform",
+   "composition": {
+    "wood": 1,
+    "ironBound": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (wood on iron)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "TEACH"
+   ],
+   "why": "first iron crate under a plain one",
+   "evidence": "F3 p040L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "second platform",
+   "composition": {
+    "ironBound": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "stack of 3 iron, ?, iron",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "SUPPORT-ORDER"
+   ],
+   "why": "iron caps a ?",
+   "evidence": "F3 p040L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "third platform",
+   "composition": {
+    "ironBound": 5,
+    "wood": 1,
+    "question": 2
+   },
+   "count": 8,
+   "arrangement": "block 2 high x 4 wide (top iron W ? iron / bottom iron ? iron iron)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "GRID"
+   ],
+   "why": "one slam clears a block",
+   "evidence": "F3 p040L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "fourth platform",
+   "composition": {
+    "ironBound": 3,
+    "life": 1
+   },
+   "count": 4,
+   "arrangement": "pyramid: base iron, LIFE, iron; iron on top",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "LIFE"
+   ],
+   "why": "life locked inside iron",
+   "evidence": "F3 p040L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "high above the next platform",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [
+    "needs:B-f-as-step"
+   ],
+   "tags": [
+    "BONUS",
+    "HIGH",
+    "SUPPORT-ORDER"
+   ],
+   "why": "don't slam B-f until you've used it to reach this",
+   "evidence": "F3 p040L; P3 p022R s16",
+   "confidence": "high"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "next platform",
+   "composition": {
+    "ironBound": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block (top iron iron / bottom ? iron)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "step for B-e, then slam",
+   "evidence": "F3 p040L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-g",
+   "section": "BONUS",
+   "order": 7,
+   "where": "platform edge and over the last gap",
+   "composition": {
+    "ironBound": 3
+   },
+   "count": 3,
+   "arrangement": "iron on the edge + two floating staggered over the gap",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "EDGE-BAIT"
+   ],
+   "why": "slam from the edge; the shock reaches floating crates",
+   "evidence": "F3 p040L hint; P3 p022R s18",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "chase start below C3",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "timed"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "CHASE",
+    "SPEED-LINE"
+   ],
+   "why": "chaser breaks what you leave",
+   "evidence": "F3 p038R zoom; P3 p022L s9",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "by a ptera on lava",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "CHASE"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p038R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "after a geyser",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "CHASE",
+    "TIME-TRIAL"
+   ],
+   "why": "target 1:14:00 printed here",
+   "evidence": "F3 p038R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "lower slope by a ptera",
+   "composition": {
+    "striped": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "CHASE"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p038L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "high over the lava band",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating (g3)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "HIGH",
+    "CHASE",
+    "TIME-TRIAL"
+   ],
+   "why": "chaser breaks it; TT advice conflicts (break it yourself early vs leave it)",
+   "evidence": "F3 p038L POINT 5, TA4; F3 p106L frame 29; P3 p023L s24",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "just before the goal",
+   "composition": {
+    "wood": 3,
+    "striped": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block (top W W / bottom W r1, S)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "chaser:triceratops"
+   ],
+   "tags": [
+    "CHASE"
+   ],
+   "why": "last pickups",
+   "evidence": "F3 p038L zoom (descreened)",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "Crafish (spinner fish)",
+   "count": 3,
+   "where": "lava steps before C1",
+   "role": "invincible while spinning; wait then attack (POINT 1)"
+  },
+  {
+   "section": "S2",
+   "kind": "Crafish",
+   "count": 2,
+   "where": "alternating lava patches after C1",
+   "role": "obstacle"
+  },
+  {
+   "section": "S2",
+   "kind": "Baby T (ally)",
+   "count": 1,
+   "where": "nest after C1",
+   "role": "rideable; smashes crates and grass; slower than running in TT"
+  },
+  {
+   "section": "S2",
+   "kind": "lab assistant popping out of a hole",
+   "count": 2,
+   "where": "by C1 and before C2",
+   "role": "dodge with a dash"
+  },
+  {
+   "section": "YELLOW",
+   "kind": "Crafish",
+   "count": 2,
+   "where": "first stretch",
+   "role": "POINT A: spinning into it bounces you into the fire"
+  },
+  {
+   "section": "YELLOW",
+   "kind": "pterodactyl",
+   "count": 2,
+   "where": "stage-32 warp and Nitro diamond",
+   "role": "carries you to stage 32; last one at POINT C"
+  },
+  {
+   "section": "S4",
+   "kind": "triceratops",
+   "count": 1,
+   "where": "C3 to goal",
+   "role": "chaser; breaks every crate behind you"
+  },
+  {
+   "section": "S4",
+   "kind": "pterodactyl",
+   "count": 2,
+   "where": "chase slope",
+   "role": "obstacle"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "lava pools and geysers",
+   "where": "start to C1",
+   "crates": [
+    "S1-c",
+    "S1-d",
+    "S1-e"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "lava (side view)",
+   "where": "lava area",
+   "crates": [
+    "S3-d",
+    "S3-e",
+    "S3-f",
+    "S3-g"
+   ]
+  },
+  {
+   "section": "BONUS",
+   "kind": "gaps between floating platforms",
+   "where": "bonus",
+   "crates": [
+    "B-g"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "spreading magma",
+   "where": "chase",
+   "crates": [
+    "S4-e"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-d",
+    "S3-f",
+    "Y-h",
+    "Y-i",
+    "Y-G"
+   ],
+   "summary": "ten Nitro, four on the main path, cleared only by the green ! at the end of the yellow course",
+   "solution": "run the yellow course and hit the green !",
+   "wrongOrder": "n/a",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "Y-d",
+    "Y-f",
+    "Y-g"
+   ],
+   "summary": "iron/TNT stacks, one with a 1UP on top of a TNT",
+   "solution": "take the 1UP from the top first; slam in front of Y-g and step back while the dropped TNT burns",
+   "wrongOrder": "slamming on a TNT stack; letting the TNT drop under the life",
+   "loss": "a life or a death"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S3-e",
+    "S3-f",
+    "S3-g"
+   ],
+   "summary": "steel arrow under a floating 3-crate column capped by a !, which builds a steel bar over two Nitro to a floating ?",
+   "solution": "bounce until the ! is hit, walk the steel bar to the ?",
+   "wrongOrder": "dropping onto the Nitro beneath the bar",
+   "loss": "a death"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S2-a",
+    "S2-b",
+    "S2-c",
+    "S3-a",
+    "S3-b",
+    "S3-c"
+   ],
+   "summary": "yellow course exits past the Baby T stretch and jungle",
+   "solution": "P3: main path to the lava area first, then back for the yellow platform; F3: yellow first, then walk back from the lava area",
+   "wrongOrder": "riding the yellow platform first and continuing forward",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "B-e",
+    "B-f",
+    "B-g"
+   ],
+   "summary": "bonus: step before slam; slam reach over a gap",
+   "solution": "use the 2x2 iron block as a step to the floating ? before slamming; slam from the edge for the floating irons",
+   "wrongOrder": "slamming B-f first",
+   "loss": "bonus box (bonus can be replayed)"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "S4-a",
+    "S4-b",
+    "S4-c",
+    "S4-d",
+    "S4-e",
+    "S4-f"
+   ],
+   "summary": "chase crates are broken by the triceratops and still count",
+   "solution": "just run",
+   "wrongOrder": "stopping for crates",
+   "loss": "a death"
+  }
+ ],
+ "observations": [
+  "two-visit level: a 26-box yellow-gem course holds the green ! that clears main-path Nitro",
+  "the previous boss's power (super body slam) is the lesson of the yellow course and the bonus (22 iron crates)",
+  "stack grammar escalates from striped-based 3-stacks to iron/TNT 4-stacks with a life on top to a floating column over an arrow",
+  "fruit walls (3x3) and a stepped pyramid open sections",
+  "the only steel ! builds a steel walkway, not boxes: F3 outline drawings over-count by 6 if read naively",
+  "C1 sits on the yellow platform so both routes restart there",
+  "chase crates are collected by the chaser; they pace the run and matter only for the time trial",
+  "crates sit in the gaps between geysers, lava and Crafish, never on the lava"
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "jungle path from the stopwatch: pedestal with the 1UP, lava patches at the edges, grass, two Crafish, a wave researcher; C1 on the yellow platform"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "lava slalom with two Crafish, Baby T nest (optional ride), geysers and grass, a Nitro pair, a fallen tree, two wave researchers; C2"
+  },
+  {
+   "section": "YELLOW",
+   "mode": "into-screen",
+   "notes": "lava patches and water streams, a U-turn onto a sand strip above lava with iron/TNT stacks, its own checkpoint, grass bands flanked by Nitros, two pterodactyls; ends on a platform ride to the lava area"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen, then side-scroll in the lava area",
+   "notes": "clearing with the 3×3 wall, lava patches, then a side-view earth ledge above lava: stepped pyramid, arrow column, steel bar over two Nitros; descent to the bonus entrance and C3"
+  },
+  {
+   "section": "BONUS",
+   "mode": "side-scroll",
+   "notes": "left → right over thin earth slabs with 1–2 u gaps; iron-crate slam lessons"
+  },
+  {
+   "section": "S4",
+   "mode": "toward-camera chase",
+   "notes": "downhill path run toward the camera with the triceratops behind: water patches, grass, geysers, pterodactyls, lava bands, a spreading lava band, then a drop into the goal"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "corridor (jungle path)",
+   "kind": "start with the stopwatch, a geyser vent and the Aku crate on the left",
+   "size": "≈3–4 wide",
+   "heightDelta": 0,
+   "edges": "jungle sides (no drop visible in TT frames)",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a flat start before the first lava and Crafish",
+   "evidence": "F3 p036L; F3 p106L 01",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "pillar (white pedestal block at the left edge)",
+   "kind": "the 1UP sits on top (a 3-s box in time trial)",
+   "size": "≈1×1 top",
+   "heightDelta": "+1 to +2 (estimate; TT frames show a tall white block)",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "jump onto it (TT: long jump to the box on top)",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "a single deliberate jump to a displayed reward, beside the first lava",
+   "evidence": "F3 p036L; F3 p106L 01–03",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "square pad (yellow-gem platform)",
+   "kind": "C1 on the platform where the yellow course leaves",
+   "size": "≈3×3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static (rides to the yellow course when you hold the gem)",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "both routes restart from the same save",
+   "evidence": "F3 p036R (\"10コ\"); P3 p022L shot 10",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "vehicle lane (Baby T ride, optional)",
+   "kind": "nest at the left edge; a second Baby T comes later; the ride ends where P3 shot 4 says Baby T goes no further",
+   "size": "≈3–4 wide path",
+   "heightDelta": 0,
+   "edges": "jungle sides",
+   "behaviour": "ride: Baby T jumps high (clears geysers) and smashes crates and grass; O dismounts",
+   "move": "ride (TT: dash on foot instead, faster)",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the ally's jump is matched to the stretch's hazard (geysers); riding is safe, walking is fast",
+   "evidence": "F3 p036R POINT 3, TA2; P3 p021R shots 3–4; F3 p106L 12, 16",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "corridor (path before C2)",
+   "kind": "Nitro pair on the right, a fallen tree, two wave researchers, then C2",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "jungle sides",
+   "behaviour": "static",
+   "move": "walk; jump the tree",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "three different blockers just before the save",
+   "evidence": "F3 p036R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-YELLOW-a",
+   "section": "YELLOW",
+   "shape": "square pad (yellow-gem platform ride)",
+   "kind": "carries Crash from C1 to the yellow course",
+   "size": "≈3×3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "moving (platform ride)",
+   "move": "ride",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a one-way entry to the return-visit route",
+   "evidence": "F3 p036R; P3 p022L shot 10",
+   "confidence": "high"
+  },
+  {
+   "id": "P-YELLOW-b",
+   "section": "YELLOW",
+   "shape": "narrow ledge (sand strip above lava)",
+   "kind": "beige strip with grassy edges after a U-turn; iron/TNT stacks on it",
+   "size": "≈3 wide × ≈12 long",
+   "heightDelta": 0,
+   "edges": "open to lava (POINT B screenshot)",
+   "behaviour": "static",
+   "move": "walk; slam the stacks from a distance",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the slam lesson happens on a strip with little room to back away from the blast",
+   "evidence": "F3 p037R POINT B; P3 p022L shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-YELLOW-c",
+   "section": "YELLOW",
+   "shape": "corridor (path past the yellow-course checkpoint)",
+   "kind": "checkpoint (30) with a wave researcher beside it, grass rows, Nitro singles",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "jungle sides",
+   "behaviour": "static",
+   "move": "walk; tornado-spin through the grass",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the course's own save comes after its hardest stacks",
+   "evidence": "F3 p037R (\"30コ\"); P3 p022R shot 13",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-YELLOW-d",
+   "section": "YELLOW",
+   "shape": "square pad (exit platform)",
+   "kind": "after the secret gem, the green ! and five loose lives; rides to the lava area",
+   "size": "≈3×3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "moving (platform ride)",
+   "move": "ride",
+   "roles": [
+    "REST"
+   ],
+   "why": "drops the player at the lava area, past S2 and S3's jungle (P3 NOTE)",
+   "evidence": "F3 p037L; P3 p022R shot 14",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "wide floor (clearing with the 3×3 wall)",
+   "kind": "clearing after fallen trees and two wave researchers",
+   "size": "≈4×5",
+   "heightDelta": 0,
+   "edges": "jungle sides",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a big crate deposit in an open space before the lava area",
+   "evidence": "F3 p038L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "narrow ledge (earth ledge above lava, side view)",
+   "kind": "grass-topped ledge running left → right; the yellow course arrives here",
+   "size": "≈2–3 deep; long",
+   "heightDelta": 0,
+   "edges": "open to lava in front and behind",
+   "behaviour": "static",
+   "move": "walk (side-scroll)",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the side view turns the lava from patches into a floor you must not leave",
+   "evidence": "F3 p038R; P3 p021R shot 6; F3 p106L 20–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "crate-built stairs (stepped pyramid 3-2-1 used as steps up the bank)",
+   "kind": "striped crate floating above the top step",
+   "size": "3 wide at the base",
+   "heightDelta": "+1 per step",
+   "edges": "open",
+   "behaviour": "breakable (crates)",
+   "move": "climb, bounce, spin",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "crates as the staircase: climbing and collecting are one action",
+   "evidence": "F3 p038R; P3 p023L shot 21; F3 p106L 20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "bridge (steel bar made from the outline row)",
+   "kind": "six outline cells become a grey steel bar over two Nitros, leading to a floating ?",
+   "size": "≈6 long",
+   "heightDelta": "+2 to +3 above the ledge (estimate)",
+   "edges": "open",
+   "behaviour": "switch-made (outline → steel)",
+   "move": "walk across from the column top",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the switch builds terrain, not crates: a raised path over a mine pair",
+   "evidence": "P3 p021R shot 6; F3 p038R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "corridor (descending path to C3)",
+   "kind": "power stone, bonus entrance, a gully between two jagged rock jaws where the triceratops waits, C3 on grass",
+   "size": "≈3 wide",
+   "heightDelta": "−2 (descent; estimate)",
+   "edges": "jungle sides",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the pursuer is shown waiting before the save that starts the chase",
+   "evidence": "F3 p038R (\"99コ\"); P3 p022L shot 8",
+   "confidence": "high"
+  },
+  {
+   "id": "P-BONUS-a",
+   "section": "BONUS",
+   "shape": "square pad (earth slab, wood on iron)",
+   "kind": "first slab after the stump",
+   "size": "≈5 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk; slam",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first iron crate is met on a wide slab",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-BONUS-b",
+   "section": "BONUS",
+   "shape": "square pad (short slab with the iron 3-stack)",
+   "kind": "iron / ? / iron",
+   "size": "≈3 long",
+   "heightDelta": "−0.5",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "slam",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a single stack per slab",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-BONUS-c",
+   "section": "BONUS",
+   "shape": "square pad (stepped double slab with the 2×4 iron group)",
+   "kind": "iron block with a wood and two ?",
+   "size": "≈5 long",
+   "heightDelta": "+0.5",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "slam (one slam clears the block)",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the widest slab holds the biggest block",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-BONUS-d",
+   "section": "BONUS",
+   "shape": "square pad (slab with the iron pyramid and the life)",
+   "kind": "iron pyramid with the 1UP in the base",
+   "size": "≈5 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "slam",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the life is locked inside iron",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-BONUS-e",
+   "section": "BONUS",
+   "shape": "square pad (short slab with the 2×2 iron block)",
+   "kind": "a ? floats high above it",
+   "size": "≈3 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "use the block as a step to the floating ?, then slam it (P3 shot 16)",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "the step must be used before it is destroyed",
+   "evidence": "F3 p040L; P3 p022R shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "slope (downhill chase path toward the camera)",
+   "kind": "path with water patches, grass, geysers, lava bands; ends in a drop into the goal",
+   "size": "≈3–4 wide",
+   "heightDelta": "−4 to −6 over the chase (estimate)",
+   "edges": "jungle sides",
+   "behaviour": "forced: pursuer behind",
+   "move": "run; jump the lava",
+   "roles": [
+    "TEST"
+   ],
+   "why": "the camera faces the player, so hazards appear late: a chase built on short, readable obstacles",
+   "evidence": "F3 p038L–p038R; P3 p022L shot 9; F3 p106L 25–31",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "lava patch on the right half of the path",
+   "width": "≈2×1.5",
+   "heightDelta": 0,
+   "landing": "path (the left half stays dry)",
+   "lethal": true,
+   "runUp": "from the start",
+   "move": [
+    "walk (keep left)"
+   ],
+   "coupling": "none",
+   "failure": "death (lava)",
+   "nearby": [
+    "S1-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first lava is a lane hazard to walk past, not a jump",
+   "evidence": "F3 p036L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "lava band along the right side of the path",
+   "width": "≈1.5 wide × 4–5 long",
+   "heightDelta": 0,
+   "landing": "dry left side with the crates",
+   "lethal": true,
+   "runUp": "path",
+   "move": [
+    "walk (keep left)",
+    "plain"
+   ],
+   "coupling": "a Crafish and a geyser stand just before it",
+   "failure": "death (lava)",
+   "nearby": [
+    "S1-c",
+    "S1-d",
+    "S1-e",
+    "E-S1-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "narrows the dry path to ≈2 u exactly where the crates and the first Crafish are",
+   "evidence": "F3 p036L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "lava patches alternating left and right",
+   "width": "≈1.5–2 each",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": true,
+   "runUp": "from C1",
+   "move": [
+    "walk (weave)",
+    "plain"
+   ],
+   "coupling": "two Crafish stand between the patches; a spin into a spinning Crafish throws you far (F3 p032R)",
+   "failure": "death (lava)",
+   "nearby": [
+    "E-S2-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a slalom where the enemy's knock-back points at the lava",
+   "evidence": "F3 p036R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "lava patches after the nest (alternating)",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": true,
+   "runUp": "path",
+   "move": [
+    "ride (Baby T jump)",
+    "plain"
+   ],
+   "coupling": "a geyser vent and a grass bush sit between them",
+   "failure": "death (lava)",
+   "nearby": [
+    "S2-b",
+    "S2-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "lava, geyser and grass in one stretch, which the Baby T clears",
+   "evidence": "F3 p036R; P3 p021R shot 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-YELLOW-a",
+   "section": "YELLOW",
+   "kind": "lava patches on the first stretch",
+   "where": "blue streams run between the patches (effect not stated)",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": true,
+   "runUp": "from the platform",
+   "move": [
+    "plain",
+    "walk (weave)"
+   ],
+   "coupling": "a Crafish stands on a lava patch (POINT A)",
+   "failure": "death (lava)",
+   "nearby": [
+    "Y-a",
+    "E-YELLOW-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "P3: the first stretch is the hardest, the nearest checkpoint is far and there is no mask",
+   "evidence": "F3 p037L POINT A; P3 p022L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-YELLOW-b",
+   "section": "YELLOW",
+   "kind": "lava patches on the final strip",
+   "where": "grass clumps and blue streams between the patches",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": true,
+   "runUp": "path",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pterodactyls swoop over the strip",
+   "failure": "death (lava)",
+   "nearby": [
+    "Y-i",
+    "E-YELLOW-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the last stretch mixes every hazard of the course before the green !",
+   "evidence": "F3 p037L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "lava patches before the lava area",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": true,
+   "runUp": "path",
+   "move": [
+    "plain",
+    "walk (weave)"
+   ],
+   "coupling": "none",
+   "failure": "death (lava)",
+   "nearby": [
+    "S3-b",
+    "S3-c"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "pacing hazards between the clearing and the junction",
+   "evidence": "F3 p038L–p038R",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "chasm with bounce (vertical: arrow block under a floating crate column)",
+   "width": "n/a (vertical)",
+   "heightDelta": "+3 to +4 (estimate)",
+   "landing": "steel bar built by the ! at the top",
+   "lethal": false,
+   "runUp": "ledge",
+   "move": [
+    "arrow",
+    "held/high",
+    "double (TT 21–22)"
+   ],
+   "coupling": "each bounce breaks the lowest crate; the last bounce hits the ! (TA3)",
+   "failure": "drops back onto the ledge (climb or walk back; mines sit under the bar's ends)",
+   "nearby": [
+    "S3-e",
+    "S3-f",
+    "S3-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a height gap climbed by consuming the crates that block it",
+   "evidence": "F3 p038R TA3; P3 p021R shot 6; F3 p106L 21–24",
+   "confidence": "high"
+  },
+  {
+   "id": "G-BONUS-a",
+   "section": "BONUS",
+   "kind": "bottomless pit (bonus gaps between earth slabs)",
+   "width": "≈1–2",
+   "heightDelta": "−0.5 to +0.5",
+   "landing": "earth slabs ≈3–5 long",
+   "lethal": true,
+   "runUp": "short",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-a",
+    "B-b",
+    "B-c",
+    "B-d"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "small gaps between slam stations: the room is about the slam, not the jumps",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-BONUS-b",
+   "section": "BONUS",
+   "kind": "bottomless pit (last gap) with two iron crates floating over it",
+   "width": "≈2",
+   "heightDelta": "+0.5 (exit slab)",
+   "landing": "raised exit slab with the stump",
+   "lethal": true,
+   "runUp": "end of the short slab",
+   "move": [
+    "body-slam drop (slam from the edge: the radius reaches the floating irons)",
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "teaches the slam's reach: you need not be above the crates (P3 shot 18, F3 hint)",
+   "evidence": "F3 p040L hint; P3 p022R shot 18",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "lava band across the chase path",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "path beyond",
+   "lethal": true,
+   "runUp": "running",
+   "move": [
+    "running"
+   ],
+   "coupling": "the triceratops behind leaves no time to stop",
+   "failure": "death (lava or caught)",
+   "nearby": [
+    "S4-d",
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a full-width lava band appears only in the chase, where the run-up is guaranteed",
+   "evidence": "F3 p038L; F3 p106L 29",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "spreading lava band (grows across the path)",
+   "width": "≈2–3 and growing",
+   "heightDelta": 0,
+   "landing": "path near the goal",
+   "lethal": true,
+   "runUp": "running",
+   "move": [
+    "running (big jump, early)"
+   ],
+   "coupling": "spreads as the player arrives; pursuer behind (TA4)",
+   "failure": "death (lava or caught)",
+   "nearby": [
+    "S4-e",
+    "O-S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the last gap moves: the player must commit before it widens",
+   "evidence": "F3 p038L POINT 5 screenshot; F3 p038R TA4",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 4,
+   "moves": [
+    "running (long jump to the pedestal top, TT)",
+    "plain (off the block, left side)",
+    "plain (small hop over the grass)",
+    "spin-extended (jump-spin the three crates)"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "≈2",
+   "rest": "P-S1-c (C1)",
+   "noStop": false,
+   "why": "the opening mixes a height jump, a hazard hop and a jump-spin: the stage's verbs in order",
+   "evidence": "F3 p106L 02–05"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "walk (weave)",
+    "plain",
+    "plain"
+   ],
+   "rhythm": "stop-and-go (wait for each Crafish to stop spinning)",
+   "maxGap": "≈1.5–2",
+   "rest": "Baby T nest",
+   "noStop": false,
+   "why": "the lava slalom is paced by the enemies, not by the gaps",
+   "evidence": "F3 p036R; F3 p032R"
+  },
+  {
+   "id": "J-S2-b",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "ride (Baby T jump over a geyser)",
+    "ride",
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈2",
+   "rest": "P-S2-b",
+   "noStop": false,
+   "why": "the ride turns the hazard stretch into evenly spaced jumps",
+   "evidence": "P3 p021R shot 3; F3 p036R POINT 3"
+  },
+  {
+   "id": "J-YELLOW-a",
+   "section": "YELLOW",
+   "count": 4,
+   "moves": [
+    "plain",
+    "plain",
+    "walk (wait for the Crafish)",
+    "plain"
+   ],
+   "rhythm": "stop-and-go",
+   "maxGap": "≈2",
+   "rest": "P-YELLOW-c (yellow checkpoint, far)",
+   "noStop": false,
+   "why": "the first stretch has no mask and a distant checkpoint (P3), so each hop is a full-risk decision",
+   "evidence": "F3 p037L POINT A; P3 p022L"
+  },
+  {
+   "id": "J-YELLOW-b",
+   "section": "YELLOW",
+   "count": 4,
+   "moves": [
+    "spin-extended (tornado spin through the grass)",
+    "plain",
+    "spin-extended (jump-spin over the ptera)",
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈2",
+   "rest": "P-YELLOW-d (exit platform)",
+   "noStop": false,
+   "why": "grass bands and fliers between Nitros: the course's exam",
+   "evidence": "F3 p037L POINT C; P3 p022R shot 13"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 5,
+   "moves": [
+    "plain (pyramid step)",
+    "plain (pyramid step)",
+    "arrow",
+    "arrow",
+    "arrow (last bounce hits the !)"
+   ],
+   "rhythm": "vertical (repeated bounces)",
+   "maxGap": "+3 to +4 (column height)",
+   "rest": "P-S3-e",
+   "noStop": false,
+   "why": "the lava area converts jumping into climbing: steps up, then bounces up (TT skips with a double jump)",
+   "evidence": "F3 p038R TA3; F3 p106L 20–24"
+  },
+  {
+   "id": "J-BONUS-a",
+   "section": "BONUS",
+   "count": 5,
+   "moves": [
+    "plain",
+    "plain",
+    "plain",
+    "plain",
+    "body-slam drop (reach slam from the edge)"
+   ],
+   "rhythm": "stop-and-go (slam at each slab)",
+   "maxGap": "≈2",
+   "rest": "exit slab",
+   "noStop": false,
+   "why": "every slab is a slam station; jumps only connect them",
+   "evidence": "F3 p040L; P3 p022R shots 16–18"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "running (lava band)",
+    "plain (over a crate snag)",
+    "spin-extended (big-jump tornado spin for the high ?)",
+    "running (big jump over the spreading lava)"
+   ],
+   "rhythm": "accelerating (pursuer behind)",
+   "maxGap": "≈2–3",
+   "rest": "goal",
+   "noStop": true,
+   "why": "a chase: every jump is taken at full speed with the chaser behind",
+   "evidence": "F3 p038R TA4; F3 p106L 25–31"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "clinging grass (slows Crash; mown by the tornado spin or the bazooka)",
+   "placement": "across path",
+   "timing": "static; the bush is visible ahead",
+   "counter": [
+    "jump over (small hop, TT 03)",
+    "destroy (tornado spin, bazooka)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "S1-b pedestal"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the slowing surface is met first where slowness costs nothing",
+   "evidence": "F3 p036L; F3 p032L tip 1; F3 p106L 03",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "steam geyser vents on the line",
+   "placement": "across path (red discs on the floor)",
+   "timing": "erupt periodically; the steam is the warning (TT 01: fire when the right-hand geyser steams)",
+   "counter": [
+    "wait-and-go",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S1-b lava band",
+    "S1-c"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a timed hazard placed on the dry lane next to the lava band",
+   "evidence": "F3 p036L; F3 p106L 01; P3 p021R shot 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "Nitro pair at the right edge",
+   "placement": "flank (right side of the path)",
+   "timing": "static",
+   "counter": [
+    "avoid"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-d",
+    "green ! on the yellow course"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "narrows the path and stays as a visible unfinished count until the yellow course",
+   "evidence": "F3 p036R",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "fallen tree across the path (static blocker)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "E-S2-b wave researchers"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "a hurdle that snags runners (TT2: avoid crates and fallen trees)",
+   "evidence": "F3 p036R; F3 p036R TA2",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-YELLOW-a",
+   "section": "YELLOW",
+   "kind": "iron/TNT stacks on the sand strip (TNT falls and lights when the iron below breaks)",
+   "placement": "on platform (narrow strip)",
+   "timing": "3 s fuse once the TNT drops; the count is the warning",
+   "counter": [
+    "destroy (super body slam from a distance, then step away — POINT B)",
+    "jump (take the 1UP from the top first)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "Y-d",
+    "Y-f",
+    "Y-g",
+    "P-YELLOW-b"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "explosive stacks on a narrow strip make retreat distance part of the puzzle",
+   "evidence": "F3 p037R POINT B; P3 p022L shot 12",
+   "confidence": "high"
+  },
+  {
+   "id": "O-YELLOW-b",
+   "section": "YELLOW",
+   "kind": "Nitro singles flanking a band of tall grass",
+   "placement": "flank (left and right of the grass)",
+   "timing": "static",
+   "counter": [
+    "destroy (tornado-spin through the grass)",
+    "avoid (stay centred)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "Y-h",
+    "clinging grass"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "the slow band cannot be bypassed sideways",
+   "evidence": "F3 p037R; P3 p022R shot 13",
+   "confidence": "high"
+  },
+  {
+   "id": "O-YELLOW-c",
+   "section": "YELLOW",
+   "kind": "Nitro diamond (two left, two right) at the last pterodactyl",
+   "placement": "flank (both sides of the path)",
+   "timing": "static",
+   "counter": [
+    "go around (walk the gap between them, POINT C)",
+    "jump over (jump-spin over and take out the ptera)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "Y-i",
+    "E-YELLOW-e"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "a flier that pushes you sideways, with mines on both sides",
+   "evidence": "F3 p037L POINT C",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "fallen trees across the path after C2 (static blockers)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "E-S3-a wave researchers"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "hurdles next to ambushers: a jump at the wrong moment meets a rising researcher",
+   "evidence": "F3 p036R–p038L",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "Nitro pair on the ledge under the ends of the metal bar",
+   "placement": "on platform (ledge), below the bar",
+   "timing": "static",
+   "counter": [
+    "avoid (use the bar above them)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-f",
+    "P-S3-d"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "makes the switch-built bar the safe route instead of a shortcut",
+   "evidence": "F3 p038R; P3 p021R shot 6",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "steam geyser vent on the chase path",
+   "placement": "across path",
+   "timing": "erupts periodically; steam warns",
+   "counter": [
+    "outrun (pass between eruptions)",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-a triceratops"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a timed gate inside a no-stop section: timing must be read from a distance",
+   "evidence": "F3 p038R",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "clinging grass in the chase (caught = caught up instantly)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over (in one go)",
+    "destroy (tornado spin)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "E-S4-a triceratops"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the harmless S1 surface becomes deadly when a pursuer is behind (F3 p032L tip 1)",
+   "evidence": "F3 p038R; F3 p032L",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "spreading lava band (grows across the path)",
+   "placement": "across path",
+   "timing": "grows as the player arrives (TA4); the glow is visible",
+   "counter": [
+    "jump over (big jump early)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-a triceratops",
+    "S4-e floating ?"
+   ],
+   "roles": [
+    "PURSUIT",
+    "TEST"
+   ],
+   "why": "the only moving gap of the stage is kept for the chase finale",
+   "evidence": "F3 p038L POINT 5; F3 p038R TA4",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-d",
+   "section": "S4",
+   "kind": "crates on the line that snag Crash (snag)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "destroy (spin through)",
+    "jump over"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "E-S4-a triceratops (breaks what you leave)"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "F3 p032L tip 2: crates on the path stop you; in a chase a stop is a catch",
+   "evidence": "F3 p032L tip 2",
+   "confidence": "medium"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "Crafish (クラフィッシュ)",
+   "count": 1,
+   "archetype": "shielded/armored (invulnerable while spinning; open when it flops)",
+   "behaviour": "spins in place; its clumsy hit throws Crash far toward the screen (F3 p032R); POINT 1: wait, then attack",
+   "counter": [
+    "spin (after it stops)",
+    "stomp (jump on, after it stops)",
+    "shoot (bazooka)",
+    "avoid (double jump past, TT)"
+   ],
+   "fails": [
+    "spinning into it while it spins (you are thrown — into the lava on the yellow course, POINT A)"
+   ],
+   "placement": "on line beside a lava patch",
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "a lava patch lies right beside it",
+   "why": "the stage's own enemy is taught next to the hazard its knock-back aims at",
+   "evidence": "F3 p036L POINT 1; F3 p032R; F3 p106L 04",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "Crafish (クラフィッシュ)",
+   "count": 1,
+   "archetype": "shielded/armored",
+   "behaviour": "at the right edge beside a lava patch, after the crates",
+   "counter": [
+    "spin (after it stops)",
+    "avoid"
+   ],
+   "fails": [
+    "spinning into it while it spins"
+   ],
+   "placement": "flank, beside lava",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "the second Crafish stands at the edge of the dry lane",
+   "evidence": "F3 p036L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-c",
+   "section": "S1",
+   "kind": "wave researcher (ウェーブ研究員)",
+   "count": 1,
+   "archetype": "burrower/ambusher (comes with only its head above ground, then rears up and covers Crash)",
+   "behaviour": "rises from a ground hole as Crash passes",
+   "counter": [
+    "spin (when the head comes near)",
+    "avoid (dash past, tap left just before — TT 09)"
+   ],
+   "fails": [
+    "walking into it as it rears up"
+   ],
+   "placement": "on line just before C1",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "flat path by the save, no lava beside it",
+   "why": "the ambusher sits on the approach to the checkpoint, where players hurry",
+   "evidence": "F3 p036R; F3 p032R; F3 p106L 09",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "Crafish (クラフィッシュ)",
+   "count": 2,
+   "archetype": "shielded/armored",
+   "behaviour": "stand between alternating lava patches",
+   "counter": [
+    "spin (after it stops)",
+    "avoid (TT 08: bump one on purpose to get past)"
+   ],
+   "fails": [
+    "spinning into a spinning Crafish beside the lava"
+   ],
+   "placement": "between hazards (lava patches)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "two invulnerable phases to wait out inside a lava slalom",
+   "evidence": "F3 p036R; F3 p106L 08",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "wave researcher (ウェーブ研究員)",
+   "count": 2,
+   "archetype": "burrower/ambusher",
+   "behaviour": "two holes on the path just before C2",
+   "counter": [
+    "spin",
+    "avoid (dash past)"
+   ],
+   "fails": [],
+   "placement": "on line before the checkpoint",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": null,
+   "why": "again guards the run-in to a save",
+   "evidence": "F3 p036R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-YELLOW-a",
+   "section": "YELLOW",
+   "kind": "wave researcher (ウェーブ研究員)",
+   "count": 1,
+   "archetype": "burrower/ambusher",
+   "behaviour": "by the first crate pair of the course",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": null,
+   "why": "greets the player right off the platform",
+   "evidence": "F3 p037L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-YELLOW-b",
+   "section": "YELLOW",
+   "kind": "Crafish (クラフィッシュ)",
+   "count": 1,
+   "archetype": "shielded/armored",
+   "behaviour": "on a lava patch",
+   "counter": [
+    "shoot (bazooka, POINT A)",
+    "avoid (wait until it stops)"
+   ],
+   "fails": [
+    "spinning into it while it spins (thrown into the fire, POINT A)"
+   ],
+   "placement": "in the lava stretch (between hazards)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "the knock-back lesson of S1 is now lethal",
+   "evidence": "F3 p037L POINT A",
+   "confidence": "high"
+  },
+  {
+   "id": "E-YELLOW-c",
+   "section": "YELLOW",
+   "kind": "wave researcher (ウェーブ研究員)",
+   "count": 1,
+   "archetype": "burrower/ambusher",
+   "behaviour": "beside the yellow-course checkpoint",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line by the checkpoint",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": null,
+   "why": "the save is guarded as in S1 and S2",
+   "evidence": "F3 p037R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-YELLOW-d",
+   "section": "YELLOW",
+   "kind": "pterodactyl (バサバサプテラ)",
+   "count": 1,
+   "archetype": "flier (swoops low; touch = carried off)",
+   "behaviour": "perches at the path edge; letting it carry Crash off warps to stage 32",
+   "counter": [
+    "spin (jump-spin)",
+    "avoid (dodge left or right)"
+   ],
+   "fails": [
+    "being touched (carried off — a miss elsewhere, the warp here)"
+   ],
+   "placement": "flank (path edge)",
+   "roles": [
+    "BAIT"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "just past the grass band flanked by Nitros",
+   "why": "the same enemy is a hazard in the chase and a secret exit here",
+   "evidence": "F3 p037R (stage-32 arrow); F3 p032R; P3 p022R shot 13",
+   "confidence": "high"
+  },
+  {
+   "id": "E-YELLOW-e",
+   "section": "YELLOW",
+   "kind": "pterodactyl (バサバサプテラ)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "the last one, among four Nitros",
+   "counter": [
+    "spin (jump-spin over the Nitros and take it out, POINT C)",
+    "avoid"
+   ],
+   "fails": [
+    "dodging sideways into a Nitro"
+   ],
+   "placement": "between hazards (Nitro diamond)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "a flier whose dodge direction is blocked by mines",
+   "evidence": "F3 p037L POINT C",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "wave researcher (ウェーブ研究員)",
+   "count": 2,
+   "archetype": "burrower/ambusher",
+   "behaviour": "among fallen trees after C2",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line between hurdles",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": null,
+   "why": "ambush plus hurdles",
+   "evidence": "F3 p036R–p038L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "triceratops (ドタバタトプス)",
+   "count": 1,
+   "archetype": "pursuer (chases from behind; invincible)",
+   "behaviour": "waits in a rock gully before C3, then chases down the path; smashes every crate the player leaves, floating ones too",
+   "counter": [
+    "avoid (outrun; never stop)"
+   ],
+   "fails": [
+    "stopping",
+    "getting slowed by grass (caught at once)"
+   ],
+   "placement": "on line behind the player (pursuer)",
+   "roles": [
+    "PURSUER"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "shown waiting in its gully while the player stands safely before C3",
+   "why": "a telegraphed pursuer that also collects the crates, so the chase tests movement, not counting",
+   "evidence": "F3 p038R; F3 p032L tip 2; F3 p032R; P3 p022L shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "pterodactyl (バサバサプテラ)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "perched on a lava rock beside the chase path",
+   "counter": [
+    "avoid (dodge left or right)",
+    "spin (jump-spin)"
+   ],
+   "fails": [
+    "being touched"
+   ],
+   "placement": "flank (lava rock)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "first main-route pterodactyl, met inside the chase beside lava",
+   "why": "a side threat in a no-stop run",
+   "evidence": "F3 p038R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "pterodactyl (バサバサプテラ)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "on the lower slope by the striped pair",
+   "counter": [
+    "avoid",
+    "spin (jump-spin)"
+   ],
+   "fails": [
+    "being touched"
+   ],
+   "placement": "flank",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "the second flier keeps the lane choice alive",
+   "evidence": "F3 p038L",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start (stopwatch, geyser)",
+    "Aku",
+    "pedestal + 1UP (lava patch on the right)",
+    "clinging grass",
+    "Crafish beside lava (POINT 1)",
+    "geyser",
+    "lava band (right)",
+    "W, S/W/?, ?/W",
+    "Crafish (right edge, lava)",
+    "gutter crate",
+    "wave researcher",
+    "C1 on the yellow platform"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 2
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "lava patches L/R + 2 Crafish",
+    "? + Baby T nest (ride)",
+    "three 1-s crates",
+    "lava + geyser (Baby T jumps it)",
+    "grass",
+    "W/S/W",
+    "second Baby T",
+    "Nitro pair (right)",
+    "fallen tree",
+    "two wave researchers",
+    "C2"
+   ],
+   "gaps": 2,
+   "enemies": 4,
+   "hazards": 2
+  },
+  {
+   "section": "YELLOW",
+   "beats": [
+    "platform ride",
+    "wave researcher + ??",
+    "lava patches + water streams + Crafish (POINT A)",
+    "U-turn onto the sand strip above lava",
+    "W, ?",
+    "iron/W/TNT + TNT",
+    "W",
+    "?/W/TNT/1UP + W",
+    "iron/iron/TNT/iron + iron (POINT B)",
+    "checkpoint (30) + wave researcher",
+    "Nitro pair flanking grass",
+    "stage-32 pterodactyl",
+    "lava, grass, water strip",
+    "Nitro diamond + last pterodactyl (POINT C)",
+    "secret gem",
+    "green !",
+    "five lives",
+    "platform ride to the lava area"
+   ],
+   "gaps": 2,
+   "enemies": 5,
+   "hazards": 3
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "fallen trees + two wave researchers",
+    "3×3 wall clearing",
+    "W, ?",
+    "?/W",
+    "lava patches",
+    "junction (yellow course arrives)",
+    "side-view ledge above lava",
+    "stepped pyramid 3-2-1 + floating S",
+    "arrow column (3 W) + !",
+    "steel bar over two Nitros",
+    "floating ?",
+    "power stone",
+    "descent",
+    "bonus entrance",
+    "triceratops waiting in the gully",
+    "C3 (+3 crates)"
+   ],
+   "gaps": 2,
+   "enemies": 2,
+   "hazards": 2
+  },
+  {
+   "section": "BONUS",
+   "beats": [
+    "stump",
+    "W on iron",
+    "gap",
+    "iron/?/iron",
+    "step",
+    "2×4 iron block",
+    "gap",
+    "iron pyramid + life",
+    "gap",
+    "2×2 iron block (step to the floating ?, then slam)",
+    "edge iron",
+    "two floating irons over the last gap (slam from the edge)",
+    "exit slab"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "triceratops chase starts",
+    "W W",
+    "water patches",
+    "grass",
+    "pterodactyl on a lava rock",
+    "S",
+    "geyser",
+    "? (1:14 target)",
+    "S S + pterodactyl",
+    "lava band",
+    "floating ? over lava",
+    "spreading lava band",
+    "2×2",
+    "drop into the goal"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 4
+  }
+ ],
+ "geometryObservations": [
+  "No bottomless pits on the jungle path: every gap is lava on part of the path (G-S1-a, G-S1-b, G-S2-a, G-S2-b, G-S3-a) or, only in the chase, a full band (G-S4-a, G-S4-b). The path stays continuous, so lava acts as lane denial and death comes from being pushed or hurried into it.",
+  "Enemy and lava are paired on purpose: Crafish stand beside lava patches and their counter-hit throws Crash far (F3 p032R); POINT 1 teaches waiting next to lava in S1, and POINT A on the yellow course spells out that a wrong spin ends in the fire (E-S1-a → E-YELLOW-b).",
+  "Timed vents (geysers) sit on the dry lane next to the lava (O-S1-b), so the safe lane is also the timed lane; the Baby T's high jump is designed for exactly that stretch, and its ride ends where the hazard mix changes (P-S2-a, P3 shot 4).",
+  "Clinging grass is a speed gate whose cost depends on context: free in S1 (O-S1-a), unavoidable between Nitros on the yellow course (O-YELLOW-b), and deadly in the chase (O-S4-b) — one surface, three difficulty levels.",
+  "Ambushers guard checkpoints: wave researchers rise from holes just before C1, before C2, after C2 and beside the yellow checkpoint (E-S1-c, E-S2-b, E-S3-a, E-YELLOW-c), punishing a sprint to the save.",
+  "Explosive stacks are placed on the narrowest footing (the sand strip above lava, P-YELLOW-b): the super body slam's reach and the retreat distance from the TNT become part of the geometry (POINT B: slam from a distance, step away).",
+  "The side-view lava area replaces horizontal gaps with vertical ones: a crate staircase (P-S3-c), an arrow column that is eaten bounce by bounce (G-S3-b), and a switch-built steel bar over a mine pair (P-S3-d).",
+  "The chase is run toward the camera, so obstacles appear late; it uses short, readable hazards (lava bands, a geyser, grass, two fliers) and saves the only moving gap — the spreading lava band — for the end (O-S4-c).",
+  "The pursuer is telegraphed: the triceratops waits in a gully before C3 (E-S4-a), the save sits between the reveal and the chase, and the chaser breaks every crate left behind, so the chase tests movement and never the box count.",
+  "Pterodactyls carry two roles: a secret exit when they pick you up on the yellow course (E-YELLOW-d) and a side hazard in the chase (E-S4-b/c); the same touch rule reads as reward or punishment depending on placement.",
+  "Rest spaces are clearings with big crate structures (the 3×3 wall clearing, the lava-area pyramid); the narrow corridors between them carry the lava, enemies and grass.",
+  "The bonus uses thin slabs with 1–2 u gaps purely as slam stations, and ends with the slam's reach over a gap (G-BONUS-b): the geometry exists to demonstrate the move's radius."
+ ],
+ "geometryTransfer": [
+  "Lava as lane denial: on a 4–5 m path, `pit` patches (lava look) 2–3 m long covering half the width, alternating sides every 6–10 m; skaters weave at cruise, walkers keep to the dry half. Put a `spinner` beside each patch so a careless spin or knock-back leads into it.",
+  "Clinging grass with `groundSpeedLimit` (≈2.4 m/s) patches across the path: harmless early, flanked by Nitros later so it cannot be bypassed, and inside a pursuit last; a full jump (≈5.6 m) clears a 2.3–3.5 m patch and gives the speed-keeping answer.",
+  "Geyser stand-in: no vent primitive exists, so use a short-cycle `crusher` or `firetiki` placed on the dry lane next to a lava patch, and give a rideable/ally section (or the skateboard) the jump that clears it.",
+  "Chase toward the camera: a `zone` with dir N and a `stone` pursuer; lava `pit` bands 2–2.5 m every 12–18 m (inside the 5.6 m running jump), one grass patch, and crates kept off the racing line (on the board they trip the rider below 12.5 m/s); end with the widest band.",
+  "Side-view ledge above lava: `zone` E over a `pit`, a 2.3 m-deep earth ledge, a crate pyramid as stairs, a steel arrow under three floating crates with a `bang` on top that materialises a steel ledge over two Nitros (arrow 3.77 m, held 5.92 m above its lid).",
+  "Explosive stack on narrow footing: a 3 m strip with an iron/TNT stack; our slam radius is 3.4 m and the blast 2.75 m, so leave at least 4 m of strip behind the slam point for the retreat, and never put the stack on the only lane of a board line."
+ ]
+}

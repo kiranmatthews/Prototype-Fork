@@ -1,0 +1,3355 @@
+{
+ "id": "c3-09-tomb-time",
+ "game": "Crash 3",
+ "stage": 9,
+ "name": "Tomb Time",
+ "japaneseTitle": "ピラミッド けんせつちゅう",
+ "sources": [
+  "F3 p068-p070",
+  "F3 p080L",
+  "F3 p105L",
+  "F3 p011",
+  "F3 p005R",
+  "P3 p017-p018",
+  "gamepressure Tomb Time (N. Sane total 95)"
+ ],
+ "camera": "into-screen (right-angle zig-zag corridor)",
+ "totalBoxes": 98,
+ "totalSource": "F3 map cluster sum; reproduces F3 checkpoint counts C1 17, C2 52 (incl. 19 bonus), C3 82 (F3 purple-first route)",
+ "totalConflict": {
+  "value": 95,
+  "source": "P3 p017L shot 49 HUD 75/95; P3 text: 20 boxes missed until the purple gem; gamepressure (N. Sane) 95",
+  "note": "unresolved; map gives 25 behind the fork (21 if P-a stands before the door); possible regional build difference"
+ },
+ "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box (bracket would add Nitro; none here); C2 includes the 19 bonus boxes; steel ! blocks are listed as clusters with count 0 (not boxes)",
+ "badgeConvention": "F3 p005R legend: red 1 / blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial; drawn icon = normal-mode type",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 54,
+   "basis": "S1+S2+left-fork Aku+right course S3+S4"
+  },
+  {
+   "id": "bonus",
+   "boxes": 19,
+   "basis": "F3 p080L header boxes x19"
+  },
+  {
+   "id": "gem-purple",
+   "boxes": 25,
+   "basis": "F3 p069 map; 19 crates + 6 outline (2x3 inferred)"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "none"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 17,
+   "cumulative": 17,
+   "notes": "12-crate wall dominates; tar slide-dash and floor-button door taught"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 16,
+   "cumulative": 52,
+   "notes": "cumulative includes the 19 bonus boxes; scarab drop-floor, ! pad, pot enemies, light beams, double doors"
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S2-b tile",
+   "to": "S2",
+   "boxes": 19,
+   "cumulative": null,
+   "notes": "TNT starter, ? stepping row, 4-stack TNT drop puzzle, life ledge"
+  },
+  {
+   "id": "FORK",
+   "route": "main",
+   "from": "C2",
+   "to": "purple door",
+   "boxes": 1,
+   "cumulative": null,
+   "notes": "Aku crate on the left fork, reachable without the gem"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 16,
+   "cumulative": 82,
+   "notes": "forward cumulative would be 68/69; F3's 82 is on its purple-first route"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 4,
+   "cumulative": null,
+   "notes": "two floating ? over the tar slide, crystal, junction, final ! pads"
+  },
+  {
+   "id": "PURPLE",
+   "route": "gem-purple",
+   "from": "purple door",
+   "to": "junction before S4-d",
+   "boxes": 25,
+   "cumulative": null,
+   "notes": "needs purple gem; ! #1 outline bridge; ! #2 exit pads; secret clear gem near the end"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "just past the start and the time-trial stopwatch, beside the path",
+   "composition": {
+    "wood": 10,
+    "question": 2
+   },
+   "count": 12,
+   "arrangement": "wall/grid, front face 4 wide x 3 high, two ? on the top row",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "near-start",
+    "before-stopwatch"
+   ],
+   "tags": [
+    "ON-PATH",
+    "WALL",
+    "GRID",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "free 12-crate deposit at the start; in time trial break it before touching the stopwatch and start the clock with the bazooka from beyond",
+   "evidence": "F3 p068L zoom (descreened); count = C1 17 - 5; P3 p018R s68",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "far side of the first tar floor, beside the green guard",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:green-guard",
+    "after-tar"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK"
+   ],
+   "why": "spin guard and box together; checks the tar slide-dash taught by POINT 1",
+   "evidence": "F3 p068L",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "raised path after the floor button and the two pillars (door)",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "spread triangle (two W above, ? below); r1 on a W, A on the ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [
+    "after-floor-switch-door"
+   ],
+   "tags": [
+    "ON-PATH",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "pay-off for the first floor-button door; TT first 1-s crate and first mask (target 0:10:00)",
+   "evidence": "F3 p068L zoom; P3 p018R s69",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-C",
+   "section": "S1",
+   "order": 4,
+   "where": "junction after two tall blocks, before the scarab floor",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C1, cumulative 17",
+   "evidence": "F3 p068R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "first framed (solid) tile at the start of the scarab drop-floor",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair side by side",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "safe-tile",
+    "drop-tiles"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TEACH",
+    "TIMED"
+   ],
+   "why": "marks the framed tiles as safe standing spots before the red scarab tiles that drop",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "framed corner tile mid scarab floor, sharing the tile with the bonus entrance",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "safe-tile",
+    "bonus-entrance"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TIMED",
+    "BONUS"
+   ],
+   "why": "second rest stop; whoever pauses for crates finds the bonus pad",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "end framed tile of the scarab floor beside a green pad",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH",
+    "TEACH"
+   ],
+   "why": "first Egypt ! that moves machinery (starts the pad to the stairs); steel, not counted",
+   "evidence": "F3 p068R zoom; P3 p017L s54",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "top of the stairs past four lab assistants in pots",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:pot-assistants"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK"
+   ],
+   "why": "reward for clearing the pot enemies",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "after the switch operator's block beside the tar pit",
+   "composition": {
+    "striped": 2,
+    "aku": 1
+   },
+   "count": 3,
+   "arrangement": "sandwich: striped floating above striped, Aku beside",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "bounce",
+    "walk"
+   ],
+   "relations": [
+    "before-light-corridor"
+   ],
+   "tags": [
+    "SANDWICH",
+    "AKU",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "mask before the dart/crusher corridor; striped pair pays per bounce; TT second mask",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 6,
+   "where": "ceiling-light (poison dart) corridor",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "spread triangle, r1 on one",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [
+    "hazard:light-beams"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "the one cluster inside a hazard's firing line: move between beams or slide under them (TT3)",
+   "evidence": "F3 p068R zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 7,
+   "where": "upper corridor before the double doors",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "row running diagonally; A on the first, b2 on the last",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "tar-long-jump-landing"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "TIME-TRIAL"
+   ],
+   "why": "normal: pacing row; TT: land a tar long jump on the A crate (third mask) and the invincible hitbox also breaks the 2-s crate",
+   "evidence": "F3 p068R zoom; F3 p105L frames 16,19; P3 s71",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-h",
+   "section": "S2",
+   "order": 8,
+   "where": "just before C2, after the two consecutive doors",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-double-doors"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "reward for the double-door timing (POINT 4)",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 9,
+   "where": "route branch",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "branch"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2 at the fork, cumulative 52 incl. bonus",
+   "evidence": "F3 p068R",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "first platform",
+   "composition": {
+    "tnt": 3
+   },
+   "count": 3,
+   "arrangement": "single + pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "TEACH"
+   ],
+   "why": "starter TNT: stomp and move away",
+   "evidence": "F3 p080L; P3 p018L s65",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "second platform / gap",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "row used as stepping stones",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "ROW",
+    "STEPPING"
+   ],
+   "why": "one-two-three bounces across",
+   "evidence": "F3 p080L; P3 s66",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "third platform",
+   "composition": {
+    "tnt": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "TNT row before the climb",
+   "evidence": "F3 p080L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "first step",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "pyramid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "PYRAMID"
+   ],
+   "why": "simple stack on the way up",
+   "evidence": "F3 p080L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "top step below the high ledge",
+   "composition": {
+    "question": 1,
+    "wood": 2,
+    "tnt": 1
+   },
+   "count": 4,
+   "arrangement": "stack of 4 (bottom->top ?, W, TNT, W)",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "bonus"
+   ],
+   "relations": [
+    "ledge-with-life"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "TOOL"
+   ],
+   "why": "spin the bottom two; the falling TNT lights; jump from the top W to the ledge before it blows",
+   "evidence": "F3 p080L hint; P3 s67",
+   "confidence": "high"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "high ledge and beneath it",
+   "composition": {
+    "life": 1,
+    "striped": 2
+   },
+   "count": 3,
+   "arrangement": "life on the ledge; striped floating above striped underneath",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce",
+    "bonus"
+   ],
+   "relations": [
+    "needs-B-e"
+   ],
+   "tags": [
+    "BONUS",
+    "LIFE",
+    "SANDWICH",
+    "REWARD"
+   ],
+   "why": "life reachable only through the B-e timing trick",
+   "evidence": "F3 p080L",
+   "confidence": "high"
+  },
+  {
+   "id": "F-a",
+   "section": "FORK",
+   "order": 1,
+   "where": "left fork just past C2, before the chasm and purple-gem door",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "purple-door"
+   ],
+   "tags": [
+    "DETOUR",
+    "AKU",
+    "COUNT-TRAP"
+   ],
+   "why": "bait toward the locked door; TT advice: ignore it, right fork is faster",
+   "evidence": "F3 p068R zoom; P3 p018R",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "start of the right fork",
+   "composition": {
+    "question": 1,
+    "wood": 1,
+    "striped": 2
+   },
+   "count": 4,
+   "arrangement": "loose diamond: striped above striped, ? (r1) left, W low",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "opens the right course; striped pair doubles as a bounce perch",
+   "evidence": "F3 p068R zoom (descreened)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "after the first timed door / extending floor",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-floor-switch-door"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TIMED"
+   ],
+   "why": "reward behind the door + floor-button puzzle (POINT 5)",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "same corridor a little further",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing box before the second button",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "beyond the second button, near the falling pillars and moving platforms",
+   "composition": {
+    "wood": 1,
+    "life": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2, 1UP on top (b2)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "after-moving-platforms",
+    "after-falling-pillars"
+   ],
+   "tags": [
+    "STACK",
+    "LIFE",
+    "REWARD",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "only main-route life, after the hardest timing section",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "floor at the foot of the stairs",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "row side by side (one r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "ROW"
+   ],
+   "why": "pacing row; target 0:50:00 printed here",
+   "evidence": "F3 p070R zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "top of the stairs before C3",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? on W)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "last pair before the checkpoint",
+   "evidence": "F3 p070R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-C",
+   "section": "S3",
+   "order": 7,
+   "where": "top of the stairs",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C3, printed 82 (F3 purple-first route)",
+   "evidence": "F3 p070R",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "high above the tar slide, against the ceiling",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "backtrack",
+    "bounce"
+   ],
+   "relations": [
+    "tar-slide",
+    "switch-operator",
+    "moving-stone-blocks"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "COUNT-TRAP",
+    "TOOL"
+   ],
+   "why": "slope momentum carries you past; kill the operator then come back (P3 s63); gamepressure: bounce off the moving stone blocks and spin in mid-air",
+   "evidence": "F3 p070R zoom; P3 p018L s63; gamepressure Tomb Time",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "further up the slide",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating (g3)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "tar-slide"
+   ],
+   "tags": [
+    "HIGH",
+    "COUNT-TRAP",
+    "TIME-TRIAL"
+   ],
+   "why": "TT: out of reach except with the invincible hitbox on a long jump (TT5)",
+   "evidence": "F3 p070R; F3 p105L frame 25",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "corridor after the switch operators",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:red-cobra"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "TT: jump the red cobra and land on it",
+   "evidence": "F3 p070R zoom; F3 p105L frame 28",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "framed tile at the cobra junction",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "route-junction"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "last box before the crystal and final !",
+   "evidence": "F3 p070R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "after the crystal, before the goal pads",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH"
+   ],
+   "why": "starts three pads (right, left, far) to the goal stairs (POINT 8); not counted",
+   "evidence": "F3 p070R; F3 p105L frames 29-31",
+   "confidence": "high"
+  },
+  {
+   "id": "P-a",
+   "section": "PURPLE",
+   "order": 1,
+   "where": "first corridor behind the purple door",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "two 2-stacks side by side, staggered (b2 on one)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "gem-path"
+   ],
+   "relations": [
+    "purple-door"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STACK",
+    "BLUE-GEM"
+   ],
+   "why": "immediate pay-off for bringing the gem",
+   "evidence": "F3 p069L zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "P-b",
+   "section": "PURPLE",
+   "order": 2,
+   "where": "poison-light pit (POINT A)",
+   "composition": {
+    "question": 4
+   },
+   "count": 4,
+   "arrangement": "grid 2x2",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [
+    "hazard:light-beams"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "GRID",
+    "TIMED"
+   ],
+   "why": "inside the dart hazard zone; don't stop",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-c",
+   "section": "PURPLE",
+   "order": 3,
+   "where": "below the stair top",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ROW"
+   ],
+   "why": "pacing after spears + tar",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-d",
+   "section": "PURPLE",
+   "order": 4,
+   "where": "above the path at the stair top by the flamethrower worker",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "stepped row (two r1)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "gem-path"
+   ],
+   "relations": [
+    "enemy:flamethrower-worker"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ENEMY-LINK",
+    "HIGH"
+   ],
+   "why": "taken while dodging the flamethrower (POINT C)",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-e",
+   "section": "PURPLE",
+   "order": 5,
+   "where": "further along the upper corridor",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "PAIR"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p069L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-f",
+   "section": "PURPLE",
+   "order": 6,
+   "where": "end of the raised walkway",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "outline:P-g"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE"
+   ],
+   "why": "materialises the outline bridge; not counted",
+   "evidence": "F3 p069R; P3 p018L CAUTION",
+   "confidence": "high"
+  },
+  {
+   "id": "P-g",
+   "section": "PURPLE",
+   "order": 7,
+   "where": "gap between the walkway and the paddle platform (spikes drawn through it)",
+   "composition": {
+    "outline": 6
+   },
+   "count": 6,
+   "arrangement": "2x3 bridge of outline crates",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch",
+    "walk",
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "needs-P-f"
+   ],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "BRIDGE",
+    "SUPPORT-ORDER"
+   ],
+   "why": "the crossing is made of crates that must also be broken",
+   "evidence": "F3 p069R zoom (descreened); P3 p017R s60",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-h",
+   "section": "PURPLE",
+   "order": 8,
+   "where": "paddle platform",
+   "composition": {
+    "question": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "stack of 3 (? on W on W)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STACK"
+   ],
+   "why": "P3: get the three wooden boxes before leaving",
+   "evidence": "F3 p069R zoom; P3 p018L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-i",
+   "section": "PURPLE",
+   "order": 9,
+   "where": "paddle platform",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH"
+   ],
+   "why": "starts pads that exit to the junction near the goal; not counted",
+   "evidence": "F3 p069R; P3 p018L",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "coiled cobra",
+   "count": 1,
+   "where": "near the start before the stopwatch",
+   "role": "first obstacle"
+  },
+  {
+   "section": "S1",
+   "kind": "green lizard-like guard",
+   "count": 1,
+   "where": "beside S1-b after the tar",
+   "role": "spin together with the box"
+  },
+  {
+   "section": "S2",
+   "kind": "lab assistants in pots",
+   "count": 4,
+   "where": "stairs after the ! pad ride",
+   "role": "gate before S2-d"
+  },
+  {
+   "section": "S2",
+   "kind": "switch operator",
+   "count": 1,
+   "where": "raised block beside the tar pit",
+   "role": "drops crushing blocks; POINT 3 target"
+  },
+  {
+   "section": "PURPLE",
+   "kind": "lab assistants in pots",
+   "count": 4,
+   "where": "after the tar hole",
+   "role": "obstacle"
+  },
+  {
+   "section": "PURPLE",
+   "kind": "flamethrower worker",
+   "count": 1,
+   "where": "stair top next to P-d",
+   "role": "guards P-d; attack from behind"
+  },
+  {
+   "section": "S4",
+   "kind": "switch operator / flamethrower worker",
+   "count": 2,
+   "where": "top of the tar slide",
+   "role": "P3: kill first, then return for S4-a/b"
+  },
+  {
+   "section": "S4",
+   "kind": "red cobra",
+   "count": 1,
+   "where": "route junction",
+   "role": "jumped onto S4-c in TT"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "hole before stairs",
+   "where": "after the wall",
+   "crates": []
+  },
+  {
+   "section": "S2",
+   "kind": "scarab drop-tiles",
+   "where": "C1 to the ! pad",
+   "crates": [
+    "S2-a",
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "tar pit",
+   "where": "switch operator block",
+   "crates": [
+    "S2-e"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "holes with moving platforms and falling pillars",
+   "where": "right course middle",
+   "crates": [
+    "S3-d"
+   ]
+  },
+  {
+   "section": "PURPLE",
+   "kind": "poison-dart pit",
+   "where": "corner",
+   "crates": [
+    "P-b"
+   ]
+  },
+  {
+   "section": "PURPLE",
+   "kind": "gap (spikes drawn) bridged by outline crates",
+   "where": "walkway end",
+   "crates": [
+    "P-g"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "B-e",
+    "B-f"
+   ],
+   "summary": "4-stack with TNT under a ledge holding a life",
+   "solution": "spin the bottom two, ride the drop, jump from the top W to the ledge before the TNT blows",
+   "wrongOrder": "stomp from the top or break the top first",
+   "loss": "bonus life (route unaffected)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "P-f",
+    "P-g",
+    "P-h",
+    "P-i"
+   ],
+   "summary": "! #1 materialises a 2x3 outline bridge; ! #2 starts exit pads",
+   "solution": "! #1, cross, break the 3-stack and the bridge cells from an edge, then walk back (P3) or ride ! #2 pads and run the right course backwards (F3)",
+   "wrongOrder": "riding the ! #2 pads before breaking the bridge/stack",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-a",
+    "S4-b"
+   ],
+   "summary": "two ? floating high over a tar slide",
+   "solution": "clear the switch operator, walk back and jump for them",
+   "wrongOrder": "sliding straight through",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S3-a",
+    "S3-b",
+    "S3-c",
+    "S3-d",
+    "S3-e",
+    "S3-f",
+    "S4-a",
+    "S4-b",
+    "S4-c",
+    "S4-d"
+   ],
+   "summary": "F3 perfect route runs the right course backwards after the purple course",
+   "solution": "purple course -> pads -> junction -> reverse to the branch (go slowly at moving platforms, POINT 6) -> forward to the goal",
+   "wrongOrder": "n/a",
+   "loss": "time only"
+  }
+ ],
+ "observations": [
+  "12 of the first 17 boxes are one wall at the start: count is front-loaded and safe",
+  "on the scarab floor every crate sits on a framed solid tile: crates teach where it is safe to stand",
+  "each floor-button door or ! ride is followed within a few metres by a small reward cluster",
+  "only two clusters sit inside a hazard's firing line (S2-f light beams, P-b dart pit) - deliberate tests",
+  "three of four ! blocks move platforms; no main-route crate depends on a switch",
+  "the purple-gem course holds about a quarter of the boxes plus a secret clear gem; a visible Aku crate on the fork baits the locked door",
+  "the tar slide's momentum carries the player past two floating ? crates (return-trip count trap)",
+  "the only main-route 1UP follows the hardest timing section (pillars, moving platforms)",
+  "time trial re-reads the layout: A crates become masks so invincibility arrives exactly where a floating 3-s crate needs the big hitbox"
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "start corridor, hole + staircase, first tar strip, button + pit + doors, raised path, C1"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "scarab walkway over darkness, green pad ride, stairs with pot monkeys, tar lane with a sliding pillar, dart-light corridor, double doors, C2 at the fork"
+  },
+  {
+   "section": "BONUS",
+   "mode": "side-scroll",
+   "notes": "left → right over three slabs and a stepped finish under a high ledge"
+  },
+  {
+   "section": "FORK",
+   "mode": "into-screen",
+   "notes": "left branch: Aku crate, chasm, purple-gem door"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen (run in reverse on F3's perfect route)",
+   "notes": "reverse run faces the camera; right branch: tar, button + extending floor + pillar + timed doors (twice), falling pillars and a moving floor over a hole, stairs to C3"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "tar slide downhill, operator and flamethrower corridor, single-file tile path with the red cobra, junction, ! and three pads, stairs to the goal"
+  },
+  {
+   "section": "PURPLE",
+   "mode": "into-screen",
+   "notes": "gem course: dart-light hole, tar + spears, stairs with a flamethrower, tar + hole, tar pool with pot monkeys, spear corridor, crushers, outline bridge over spikes, pads to the junction"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "corridor (tiled, walled)",
+   "kind": "start corridor with a coiled snake and the stopwatch; the 12-crate block sits below the path edge",
+   "size": "≈3–4 wide",
+   "heightDelta": 0,
+   "edges": "walled (low parapets)",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "the free crate deposit and the first enemy come before any machine",
+   "evidence": "F3 p068L; F3 p105L 01",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "stairs (≈7 steps)",
+   "kind": "wide stone staircase",
+   "size": "≈4 wide",
+   "heightDelta": "+3 (≈0.5 per step; estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "small hop – big jump – small hop (TT 02–03)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a staircase sized so three jumps of different length climb it: rhythm as geometry",
+   "evidence": "F3 p105L 02–03 (frames show the steps)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "wide floor (tar band)",
+   "kind": "black tar across the corridor (slippery like ice: hard to stop, no dash; a slide on it is a dash)",
+   "size": "≈4 wide × 4–6 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar)",
+   "move": "slide to dash (POINT 1: practise here)",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the stage's movement verb is taught on a flat, walled strip with nothing at stake",
+   "evidence": "F3 p068L POINT 1; F3 p067L tip 1; F3 p105L 05",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "corridor (raised path after the doors)",
+   "kind": "triangle of three crates, a second tar strip, a second button with door blocks, C1",
+   "size": "≈3–4 wide",
+   "heightDelta": "+1 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "each machine is followed by a crate receipt; the save comes after the second door",
+   "evidence": "F3 p068L–p068R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "narrow walkway (tiled, crumbling)",
+   "kind": "scarab floor: single-file large tiles over darkness — framed tiles (solid rests), pink scarab tiles (drop the moment you step), green cobra tiles (safe)",
+   "size": "≈2 wide; tiles ≈2×2",
+   "heightDelta": 0,
+   "edges": "open (void on both sides)",
+   "behaviour": "crumbling (pink tiles drop at once)",
+   "move": "hop tile to tile; stand only on framed or green tiles",
+   "roles": [
+    "TEST",
+    "REST"
+   ],
+   "why": "colour is the rule: the walkway is narrow, so reading pink/green/framed is the skill; crates mark the framed rests",
+   "evidence": "F3 p068R POINT 2; F3 p105L 10–12; P3 p017L shot 53",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "square pad (framed corner tile)",
+   "kind": "corner rest tile with ?+W; the bonus platform starts here",
+   "size": "≈2×2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "stand",
+   "roles": [
+    "BONUS-PAD",
+    "REST"
+   ],
+   "why": "the player who pauses for crates is the one who finds the bonus",
+   "evidence": "F3 p068R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "stairs (with pot monkeys)",
+   "kind": "four pots in a 2×2 on the stairs",
+   "size": "≈3 wide; ≈4–5 steps",
+   "heightDelta": "+2 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "climb, spinning into the pots",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "an ambush on solid ground after the pad ride",
+   "evidence": "F3 p068R; P3 p017R shot 55",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "wide floor (tar floor)",
+   "kind": "tar lane where a pillar slides back and forth, worked by a switch operator standing on a tall block beside it",
+   "size": "≈3 wide × ≈6 long; block ≈2 high",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar); a pillar slides along it",
+   "move": "slide-dash and long jump over the pillar, then reach the operator (POINT 3)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "the tar lesson of S1 is now required to clear a moving crusher",
+   "evidence": "F3 p068R POINT 3; F3 p067R; P3 p017R shot 56",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "corridor (dart-light corridor)",
+   "kind": "lit patches on the floor under ceiling lights; darts fly from the walls; crates stand among the patches",
+   "size": "≈3–4 wide × ≈8 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static (trap)",
+   "move": "slide under the lights or jump diagonally between them (TT3)",
+   "roles": [
+    "TEST"
+   ],
+   "why": "the one corridor where crates sit inside the trap's line",
+   "evidence": "F3 p068R TA3; P3 p017R shot 57; F3 p105L 17–18",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-f",
+   "section": "S2",
+   "shape": "corridor (double-door pocket)",
+   "kind": "two doors in a row (four tall blocks) with a small pocket between them",
+   "size": "pocket ≈2 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "timed doors",
+   "move": "enter when the near door opens, wait, jump when the far one opens (POINT 4)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "a safe pocket inside the timing gate turns one hard window into two easy ones",
+   "evidence": "F3 p068R POINT 4",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-g",
+   "section": "S2",
+   "shape": "corridor (fork)",
+   "kind": "C2 at the branch point",
+   "size": "≈3–4 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "both branches restart from the same save",
+   "evidence": "F3 p068R (\"52コ\")",
+   "confidence": "high"
+  },
+  {
+   "id": "P-BONUS-a",
+   "section": "BONUS",
+   "shape": "wide floor (long slab)",
+   "kind": "three TNT on it (one, then a pair)",
+   "size": "≈9 long",
+   "heightDelta": 0,
+   "edges": "open (pit below)",
+   "behaviour": "static",
+   "move": "stomp each TNT lightly and move on (P3 shot 65)",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "a long safe slab for the TNT lesson",
+   "evidence": "F3 p080L; P3 p018L shot 65",
+   "confidence": "high"
+  },
+  {
+   "id": "P-BONUS-b",
+   "section": "BONUS",
+   "shape": "square pad (slab with three ? in a row)",
+   "kind": "the crates are hopped across (\"one, two, three\", P3 shot 66)",
+   "size": "≈6 long",
+   "heightDelta": "+0.5",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "crate-bounce across the three",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "crates as stepping stones that are also the reward",
+   "evidence": "F3 p080L; P3 p018L shot 66",
+   "confidence": "high"
+  },
+  {
+   "id": "P-BONUS-c",
+   "section": "BONUS",
+   "shape": "stairs (low slab, two steps up, one step down)",
+   "kind": "TNT row, then the ?/W pyramid, then the 4-stack ?/W/TNT/W",
+   "size": "≈10 long; steps ≈1",
+   "heightDelta": "+1, +1, then −1",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "climb",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "height is added one step per crate puzzle",
+   "evidence": "F3 p080L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-BONUS-d",
+   "section": "BONUS",
+   "shape": "narrow ledge (high ledge with the 1UP)",
+   "kind": "floating ledge above the low floor; striped sandwich beneath it",
+   "size": "≈3 long",
+   "heightDelta": "+3 to +4 above the floor (≈ the 4-stack top)",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "jump from the top crate of the falling 4-stack before the TNT blows (P3 shot 67)",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "the only way up is a crate stack that is also a timer",
+   "evidence": "F3 p080L hint; P3 p018L shot 67",
+   "confidence": "high"
+  },
+  {
+   "id": "P-FORK-a",
+   "section": "FORK",
+   "shape": "corridor (left branch)",
+   "kind": "Aku crate just past C2, then the chasm and the purple-gem door",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "visible bait for the locked branch",
+   "evidence": "F3 p068R; P3 p018R (TT caption)",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "wide floor (tar band at the right branch)",
+   "kind": "dark tar with the four-crate diamond at its start",
+   "size": "≈3–4 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar)",
+   "move": "walk / slide",
+   "roles": [
+    "REST"
+   ],
+   "why": "opens the default branch with a crate group",
+   "evidence": "F3 p068R (diamond); notes of the first wave",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "square pad (extending floor)",
+   "kind": "slab that slides out forward over the pit after the button",
+   "size": "≈2×3 (estimate)",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "moving (slides out; reaches full length on a cycle)",
+   "move": "small jump at full extension (TT 21)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "the bridge exists only for part of the cycle",
+   "evidence": "F3 p070L; F3 p105L 21; P3 p018L shot 62",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "pillar (round, standing in the pit)",
+   "kind": "stepping pillar beside the extending floor",
+   "size": "≈1.5 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "hop on, hop off",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a small fixed island inside a moving crossing",
+   "evidence": "F3 p105L 23 (frame: Crash on the pillar)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "stairs (≈6 steps to C3)",
+   "kind": "four-crate row at the foot, ?/W at the top, C3",
+   "size": "≈4 wide",
+   "heightDelta": "+3 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "climb",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "a calm climb and the save after the hardest timing stretch",
+   "evidence": "F3 p070R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "slope (tar slide)",
+   "kind": "long slippery downhill corridor; two ? float high against the ceiling; stone pillars slide along it",
+   "size": "≈3 wide × ≈10–12 long",
+   "heightDelta": "−3 to −4 (estimate)",
+   "edges": "walled",
+   "behaviour": "slippery downhill (tar); sliding pillars",
+   "move": "slide; slide-jump at the bottom (TT 25–26)",
+   "roles": [
+    "TEST"
+   ],
+   "why": "momentum carries the player past the ceiling crates; the operator must be taken out before coming back (P3 shot 63)",
+   "evidence": "F3 p070R; P3 p018L shot 63; F3 p105L 25–26",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "corridor (operator and flamethrower corridor)",
+   "kind": "switch operator and flamethrower worker, then W and ?",
+   "size": "≈3–4 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; attack from the side away from the flame",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "two machine-workers in one corridor",
+   "evidence": "F3 p070R; F3 p105L 26–27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "narrow walkway (single-file tiled path over darkness)",
+   "kind": "pink and green tiles as on the scarab floor; the crystal and the red cobra sit on it",
+   "size": "≈2 wide",
+   "heightDelta": 0,
+   "edges": "open (void on both sides)",
+   "behaviour": "static (pink tiles assumed to drop as in S2)",
+   "move": "walk; big jump over the cobra (TT 28)",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "the S2 walkway returns as the approach to the junction, now with an enemy on it",
+   "evidence": "F3 p070R; F3 p105L 28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "wide floor (junction)",
+   "kind": "the purple course arrives here; power stone; the final !",
+   "size": "≈4×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; push the ! from its left (TT 29)",
+   "roles": [
+    "REST"
+   ],
+   "why": "both branches meet before the finale",
+   "evidence": "F3 p070R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "stairs (to the goal)",
+   "kind": "staircase after the pads",
+   "size": "≈4 wide",
+   "heightDelta": "+3 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "climb",
+   "roles": [
+    "REST"
+   ],
+   "why": "a calm run-out after the last timing test",
+   "evidence": "F3 p105L 29–31",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-a",
+   "section": "PURPLE",
+   "shape": "corridor (behind the purple door)",
+   "kind": "four wood crates, then a right-angle corner",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a free deposit for bringing the gem",
+   "evidence": "F3 p069L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-PURPLE-b",
+   "section": "PURPLE",
+   "shape": "wide floor (tar band ending at a spear row)",
+   "kind": "tar corridor; spears thrust from the floor at its far end",
+   "size": "≈3 wide × ≈6 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar)",
+   "move": "small hops on the tar stop you dead (POINT B)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "the stopping technique is taught exactly where sliding into the spears would kill",
+   "evidence": "F3 p069L POINT B; P3 p017R shot 59",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-c",
+   "section": "PURPLE",
+   "shape": "stairs (≈7 steps)",
+   "kind": "??? below the top; ?1 ? ?1 above the path beside the flamethrower worker",
+   "size": "≈4 wide",
+   "heightDelta": "+3 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "climb; land on the side away from the flame (POINT C)",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the flamethrower guards the top of a climb, where you arrive in the air",
+   "evidence": "F3 p069L POINT C",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-d",
+   "section": "PURPLE",
+   "shape": "wide floor (tar band before a hole)",
+   "kind": "tar run-up ending at a hole",
+   "size": "≈3 wide × ≈5 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar)",
+   "move": "slide, then jump; after landing do not press a direction until you stop (POINT D)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "tar used as a launcher: the slide-jump is required, and the landing is slippery too",
+   "evidence": "F3 p069R POINT D",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-e",
+   "section": "PURPLE",
+   "shape": "wide floor (tar pool with pot monkeys)",
+   "kind": "four pots in a row on a wide tar floor; a red disc on the floor",
+   "size": "≈4×6",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "slippery (tar)",
+   "move": "spin into each pot",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "an ambush on a floor where stopping is hard",
+   "evidence": "F3 p069R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-f",
+   "section": "PURPLE",
+   "shape": "corridor (spear corridor, then two tall crusher blocks)",
+   "kind": "two rows of three spears; two tall blocks at a narrowing",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static (traps)",
+   "move": "wait until the spears are up overhead, then pass (P3 shot 59)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "timing gates in series before the switch puzzle",
+   "evidence": "F3 p069R; P3 p017R shot 59",
+   "confidence": "low"
+  },
+  {
+   "id": "P-PURPLE-g",
+   "section": "PURPLE",
+   "shape": "narrow ledge (raised walkway)",
+   "kind": "! #1 at its end",
+   "size": "≈2 wide",
+   "heightDelta": "+1 (estimate)",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "the switch is placed where the bridge it builds can be seen",
+   "evidence": "F3 p069R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-h",
+   "section": "PURPLE",
+   "shape": "crate-built bridge (2×3 outline crates)",
+   "kind": "materialised over the spikes by ! #1",
+   "size": "≈2×3 cells",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "switch-made (outline → solid)",
+   "move": "walk across, then break from an edge",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "footing and reward in one object",
+   "evidence": "F3 p069R; P3 p017R shot 60",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-PURPLE-i",
+   "section": "PURPLE",
+   "shape": "square pad (paddle-shaped platform)",
+   "kind": "round end with the ?/W/W stack and ! #2",
+   "size": "≈3×3 + handle",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "the gem and the exit switch on one island",
+   "evidence": "F3 p069R; P3 p018L",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "floor hole in front of the staircase",
+   "width": "≈1–2 (a small hop clears it from its very edge)",
+   "heightDelta": "+0.5 (onto step 1)",
+   "landing": "step 1 of the stairs",
+   "lethal": true,
+   "runUp": "corridor",
+   "move": [
+    "plain (small hop from the very edge)"
+   ],
+   "coupling": "none",
+   "failure": "death (fall)",
+   "nearby": [
+    "S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first gap is tiny and fused with the stairs: it starts a jump rhythm rather than testing distance",
+   "evidence": "F3 p105L 02–03",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "bottomless pit behind a floor button (doors on its far side)",
+   "width": "≈2–3 (estimate)",
+   "heightDelta": 0,
+   "landing": "doorway between two tall door blocks, then the raised path",
+   "lethal": true,
+   "runUp": "button tile (TT 05–06 long-jumps off the tar onto it)",
+   "move": [
+    "running",
+    "slide-jump (TT)"
+   ],
+   "coupling": "the button opens the doors at the end of the pit (P3 shot 50)",
+   "failure": "death (fall); a shut door blocks the landing (inferred)",
+   "nearby": [
+    "S1-b",
+    "S1-c"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first machine: press, then cross while the doors are open — the grammar of the whole stage",
+   "evidence": "F3 p068L (button, two tall blocks); P3 p017L shot 50; F3 p105L 05–06",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "crumble run (pink scarab tiles between framed tiles)",
+   "width": "≈2 per tile; ≈2–3 tiles between rests",
+   "heightDelta": 0,
+   "landing": "framed tile ≈2×2",
+   "lethal": true,
+   "runUp": "framed tile",
+   "move": [
+    "plain"
+   ],
+   "coupling": "tiles drop the moment they are touched",
+   "failure": "death (fall into the dark)",
+   "nearby": [
+    "S2-a",
+    "S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a no-stop run between rests, with rests marked by crates",
+   "evidence": "F3 p068R POINT 2; P3 p017L shot 53",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "moving-platform crossing (green pad started by the end-tile !)",
+   "width": "≈3–5 (estimate)",
+   "heightDelta": 0,
+   "landing": "stairs with the pot monkeys",
+   "lethal": true,
+   "runUp": "end framed tile",
+   "move": [
+    "ride (green pad)",
+    "double (TT 12–14 skips the pad)"
+   ],
+   "coupling": "the ! starts the pad (P3 shot 54)",
+   "failure": "death (fall)",
+   "nearby": [
+    "S2-c"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the Egypt ! moves machinery: the switch is a lift button, not a crate trigger",
+   "evidence": "F3 p068R; P3 p017L shot 54; F3 p105L 12–14",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-BONUS-a",
+   "section": "BONUS",
+   "kind": "bottomless pit (bonus gap)",
+   "width": "≈0.5–1",
+   "heightDelta": "+0.5",
+   "landing": "slab with three ? (≈6 long)",
+   "lethal": true,
+   "runUp": "end of the slab",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-a",
+    "B-b"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a token gap between lessons",
+   "evidence": "F3 p080L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-BONUS-b",
+   "section": "BONUS",
+   "kind": "bottomless pit (bonus gap)",
+   "width": "≈1.5",
+   "heightDelta": "−0.5",
+   "landing": "low slab with three TNT",
+   "lethal": true,
+   "runUp": "from the crates",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-c"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the second gap lands on a TNT row",
+   "evidence": "F3 p080L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-FORK-a",
+   "section": "FORK",
+   "kind": "bottomless pit (chasm before the purple-gem door)",
+   "width": "≈3–4 (needs a slide-jump; estimate)",
+   "heightDelta": 0,
+   "landing": "door ledge",
+   "lethal": true,
+   "runUp": "corridor",
+   "move": [
+    "slide-jump"
+   ],
+   "coupling": "the door opens only with the purple gem",
+   "failure": "death (fall)",
+   "nearby": [
+    "F-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the gem course demands the long jump before it even opens: the hard route is gated twice",
+   "evidence": "P3 p017R shot 58; F3 p068L intro",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "moving-platform crossing (button-extended floor and a round pillar)",
+   "width": "≈4–6 in total (estimate)",
+   "heightDelta": 0,
+   "landing": "doorway between two tall door blocks",
+   "lethal": true,
+   "runUp": "button tile",
+   "move": [
+    "plain (small hops)",
+    "ride (extending floor)"
+   ],
+   "coupling": "a floor button makes a platform slide out over the pit; doors open and close on a fixed cycle — step on the button in time with them (POINT 5)",
+   "failure": "death (fall); caught in a door = miss (F3 p067L tip 2)",
+   "nearby": [
+    "S3-b",
+    "P-S3-b",
+    "P-S3-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "three timings in one crossing: button, extension, doors",
+   "evidence": "F3 p070L POINT 5, TA4; P3 p018L shot 62; F3 p105L 21, 23",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "moving-platform crossing (second button-extended floor)",
+   "width": "not visible (≈4)",
+   "heightDelta": 0,
+   "landing": "corridor",
+   "lethal": true,
+   "runUp": "button tile",
+   "move": [
+    "plain",
+    "ride (extending floor)"
+   ],
+   "coupling": "button + extension",
+   "failure": "death (fall)",
+   "nearby": [
+    "S3-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the machine is repeated once without the doors: recognition",
+   "evidence": "F3 p070L (second button, slab and pillar)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "moving-platform crossing (hole with a sliding floor)",
+   "width": "≈3–4 (estimate)",
+   "heightDelta": 0,
+   "landing": "floor before the stairs",
+   "lethal": true,
+   "runUp": "hole edge",
+   "move": [
+    "plain",
+    "ride (left-right floor)"
+   ],
+   "coupling": "stone pillars fall at two places on a cycle (POINT 7)",
+   "failure": "death (fall or crushed)",
+   "nearby": [
+    "S3-d",
+    "O-S3-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a moving floor and falling pillars share one stretch; the 1UP waits right after",
+   "evidence": "F3 p070L POINT 6–7; F3 p105L 22–23",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "hurdle (red-eyed cobra on the single-file tile path)",
+   "width": "≈1–2 (the cobra)",
+   "heightDelta": 0,
+   "landing": "wood crate beyond (TT 28)",
+   "lethal": true,
+   "runUp": "tile path",
+   "move": [
+    "running (big jump over the cobra)",
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "death (bitten, or a fall from the narrow path)",
+   "nearby": [
+    "S4-c",
+    "E-S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "an enemy that is a jump obstacle on a path with no room to walk round it",
+   "evidence": "F3 p105L 28; F3 p067R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "moving-platform crossing (three pads started by the !)",
+   "width": "≈2 per pad with ≈1–2 gaps",
+   "heightDelta": 0,
+   "landing": "stairs to the goal",
+   "lethal": true,
+   "runUp": "junction",
+   "move": [
+    "ride (pads)",
+    "plain",
+    "running (big jump to the stairs, TT 31)"
+   ],
+   "coupling": "pads arrive right, left, far, in that order (POINT 8)",
+   "failure": "death (fall)",
+   "nearby": [
+    "S4-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a final rhythm test with an announced order; only the last jump is big",
+   "evidence": "F3 p070R POINT 8; F3 p105L 29–31",
+   "confidence": "high"
+  },
+  {
+   "id": "G-PURPLE-a",
+   "section": "PURPLE",
+   "kind": "floor hole with dart lights at the corner",
+   "width": "≈2–3 (estimate)",
+   "heightDelta": 0,
+   "landing": "corridor with the 2×2 ?",
+   "lethal": true,
+   "runUp": "corridor",
+   "move": [
+    "running (jump from the hole edge without stopping)"
+   ],
+   "coupling": "two lit patches fire darts from the front and back (POINT A)",
+   "failure": "death (fall or darts)",
+   "nearby": [
+    "P-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the dart lights of S2 are combined with a hole: stopping is the mistake",
+   "evidence": "F3 p069L POINT A",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-PURPLE-b",
+   "section": "PURPLE",
+   "kind": "floor hole at the end of the tar",
+   "width": "≈3 (estimate)",
+   "heightDelta": 0,
+   "landing": "tar beyond",
+   "lethal": true,
+   "runUp": "tar strip",
+   "move": [
+    "slide-jump"
+   ],
+   "coupling": "none",
+   "failure": "death (fall)",
+   "nearby": [
+    "P-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the longest required jump of the course, set up by tar",
+   "evidence": "F3 p069R POINT D",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-PURPLE-c",
+   "section": "PURPLE",
+   "kind": "spikes under the outline bridge",
+   "width": "≈2–3 (2×3 cells)",
+   "heightDelta": 0,
+   "landing": "paddle platform",
+   "lethal": true,
+   "runUp": "raised walkway",
+   "move": [
+    "walk (on the materialised bridge)"
+   ],
+   "coupling": "! #1 materialises the bridge",
+   "failure": "death (spikes)",
+   "nearby": [
+    "P-f",
+    "P-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the bridge is made of crates that must also be broken for the count",
+   "evidence": "F3 p069R (spikes drawn through the wireframe); P3 p017R shot 60",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-PURPLE-d",
+   "section": "PURPLE",
+   "kind": "moving-platform crossing (two green pads to the junction)",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "junction (S4)",
+   "lethal": true,
+   "runUp": "paddle platform",
+   "move": [
+    "ride (pads)"
+   ],
+   "coupling": "! #2 starts the pads",
+   "failure": "death (fall)",
+   "nearby": [
+    "P-i"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the gem course exits by the same pad grammar as the goal",
+   "evidence": "F3 p069R; P3 p018L CAUTION",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain (small hop from the hole edge)",
+    "plain (big)",
+    "plain (small)"
+   ],
+   "rhythm": "syncopated (small – big – small)",
+   "maxGap": "≈1–2",
+   "rest": "top of the stairs",
+   "noStop": false,
+   "why": "the hole and the staircase are one figure built for a three-beat rhythm",
+   "evidence": "F3 p105L 02–03"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 2,
+   "moves": [
+    "slide-jump (onto the button)",
+    "running (across the pit when the doors open)"
+   ],
+   "rhythm": "stop-and-go (press, wait, go)",
+   "maxGap": "≈2–3",
+   "rest": "P-S1-d",
+   "noStop": false,
+   "why": "the first machine introduces the press–wait–cross pattern",
+   "evidence": "F3 p105L 05–06; P3 p017L shot 50"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 5,
+   "moves": [
+    "plain",
+    "plain",
+    "plain",
+    "plain",
+    "ride (green pad)"
+   ],
+   "rhythm": "even between rests",
+   "maxGap": "≈2",
+   "rest": "framed tiles (S2-a, S2-b), end tile",
+   "noStop": true,
+   "why": "pink tiles drop at once, so each run between framed tiles is a no-stop sequence",
+   "evidence": "F3 p068R POINT 2; F3 p105L 10–14"
+  },
+  {
+   "id": "J-S2-b",
+   "section": "S2",
+   "count": 1,
+   "moves": [
+    "slide-jump (over the sliding pillar)"
+   ],
+   "rhythm": "timed",
+   "maxGap": "≈2 (pillar)",
+   "rest": "operator's block",
+   "noStop": false,
+   "why": "tar as a launcher over a crusher",
+   "evidence": "F3 p068R POINT 3"
+  },
+  {
+   "id": "J-S2-c",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "walk (into the pocket)",
+    "plain (through the far door)"
+   ],
+   "rhythm": "stop-and-go",
+   "maxGap": "≈2",
+   "rest": "P-S2-g (C2)",
+   "noStop": false,
+   "why": "the pocket between the doors splits one timing into two",
+   "evidence": "F3 p068R POINT 4"
+  },
+  {
+   "id": "J-FORK-a",
+   "section": "FORK",
+   "count": 1,
+   "moves": [
+    "slide-jump"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "≈3–4",
+   "rest": "door ledge",
+   "noStop": false,
+   "why": "the gem branch is gated by a long jump as well as the gem",
+   "evidence": "P3 p017R shot 58"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 4,
+   "moves": [
+    "plain (small hops)",
+    "plain",
+    "plain",
+    "plain"
+   ],
+   "rhythm": "even small hops timed to the extension and the doors",
+   "maxGap": "≈1–2",
+   "rest": "corridor after the doors",
+   "noStop": false,
+   "why": "TT4: consecutive small jumps on the extending and sliding floors; a double jump only loses time",
+   "evidence": "F3 p070L TA4; F3 p105L 21–23"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "plain",
+    "ride (sliding floor)"
+   ],
+   "rhythm": "timed",
+   "maxGap": "≈3–4",
+   "rest": "P-S3-d (stairs, C3)",
+   "noStop": false,
+   "why": "read the floor's position from the hole edge, then go between the pillar drops",
+   "evidence": "F3 p070L POINT 6–7; F3 p105L 22"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 2,
+   "moves": [
+    "slide-jump",
+    "slide-jump"
+   ],
+   "rhythm": "accelerating (downhill)",
+   "maxGap": "not visible",
+   "rest": "P-S4-b",
+   "noStop": true,
+   "why": "the tar slide carries the player; the long jumps are taken at its end",
+   "evidence": "F3 p105L 25–26"
+  },
+  {
+   "id": "J-S4-b",
+   "section": "S4",
+   "count": 2,
+   "moves": [
+    "running (big jump over the cobra)",
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈1–2",
+   "rest": "P-S4-d (junction)",
+   "noStop": false,
+   "why": "an enemy hurdle on a single-file path",
+   "evidence": "F3 p105L 28"
+  },
+  {
+   "id": "J-S4-c",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "plain (onto a pad)",
+    "ride (wait)",
+    "plain (small, to the far pad)",
+    "running (big jump to the stairs)"
+   ],
+   "rhythm": "stop-and-go, one big jump last",
+   "maxGap": "≈2–3",
+   "rest": "P-S4-e (stairs)",
+   "noStop": false,
+   "why": "the finale announces its order (right, left, far) and saves the only big jump for the stairs",
+   "evidence": "F3 p070R POINT 8; F3 p105L 29–31"
+  },
+  {
+   "id": "J-PURPLE-a",
+   "section": "PURPLE",
+   "count": 1,
+   "moves": [
+    "running (jump from the hole edge)"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "≈2–3",
+   "rest": "corridor with the 2×2",
+   "noStop": true,
+   "why": "POINT A: do not stop — the darts come from both ends",
+   "evidence": "F3 p069L POINT A"
+  },
+  {
+   "id": "J-PURPLE-b",
+   "section": "PURPLE",
+   "count": 3,
+   "moves": [
+    "plain (small hops on tar)",
+    "plain",
+    "plain"
+   ],
+   "rhythm": "stop-and-go",
+   "maxGap": "n/a",
+   "rest": "stairs",
+   "noStop": false,
+   "why": "small hops are the brake on tar, used in front of the spears",
+   "evidence": "F3 p069L POINT B"
+  },
+  {
+   "id": "J-PURPLE-c",
+   "section": "PURPLE",
+   "count": 1,
+   "moves": [
+    "slide-jump"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "≈3",
+   "rest": "tar pool",
+   "noStop": false,
+   "why": "tar used as the run-up for the course's longest jump",
+   "evidence": "F3 p069R POINT D"
+  },
+  {
+   "id": "J-BONUS-a",
+   "section": "BONUS",
+   "count": 8,
+   "moves": [
+    "plain",
+    "plain",
+    "crate-bounce (three ?)",
+    "plain",
+    "plain",
+    "plain",
+    "plain (ride the falling stack)",
+    "plain (to the life ledge)"
+   ],
+   "rhythm": "even, then timed at the end",
+   "maxGap": "≈1.5",
+   "rest": "exit pad",
+   "noStop": false,
+   "why": "a simple hop room whose only hard beat is the jump off the dropping TNT stack",
+   "evidence": "F3 p080L; P3 p018L shots 65–67"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "tar floor (slippery surface)",
+   "placement": "across path (full width)",
+   "timing": "constant; the black floor is visible ahead",
+   "counter": [
+    "approach slowly",
+    "slide (dash) across",
+    "jump (small hops stop you)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "G-S1-b",
+    "E-S1-b Tobigator"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "tar is taught first as a speed-up, then paired with holes, pillars and spears",
+   "evidence": "F3 p068L POINT 1; F3 p067L tip 1",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "button-operated door pair (timed blocker)",
+   "placement": "across path (far side of the pit)",
+   "timing": "opened by the floor button; Egypt traps are timed from the start point (F3 p067L); the open door is visible",
+   "counter": [
+    "wait-and-go",
+    "jump over the pit while open"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S1-b"
+   ],
+   "roles": [
+    "TIMING-GATE",
+    "TEACH"
+   ],
+   "why": "first instance of the stage's door grammar, in its easiest form",
+   "evidence": "P3 p017L shot 50; F3 p067L tip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "sliding pillar on the tar (crusher worked by a switch operator)",
+   "placement": "across path (tar lane)",
+   "timing": "moves when the operator works his lever; the pillar is visible",
+   "counter": [
+    "jump over (slide-dash + long jump)",
+    "destroy (reach the operator's lever)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-b",
+    "P-S2-d"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the hazard and the enemy who drives it are one unit: beat the pillar to beat the man",
+   "evidence": "F3 p068R POINT 3; F3 p067R; P3 p017R shot 56",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "poison-dart trap triggered by lit floor patches",
+   "placement": "across path (lit patches on the floor; darts from the walls)",
+   "timing": "fires when Crash steps into a light (inferred); the lights glow visibly",
+   "counter": [
+    "slide under (the darts miss a sliding Crash, TT3)",
+    "jump (diagonally between the lights)",
+    "go around (walk between the patches)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-f crates"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the crates are placed inside the trap, so collecting them is the test",
+   "evidence": "F3 p068R TA3; P3 p017R shot 57",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-c",
+   "section": "S2",
+   "kind": "double door (two timed blockers in a row)",
+   "placement": "across path",
+   "timing": "each door opens and closes on its own cycle, visible as it moves",
+   "counter": [
+    "wait-and-go (pocket between the doors)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S2-f",
+    "S2-h"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "two cycles with a safe pocket between: a readable compound timing",
+   "evidence": "F3 p068R POINT 4",
+   "confidence": "high"
+  },
+  {
+   "id": "O-FORK-a",
+   "section": "FORK",
+   "kind": "purple-gem door (locked blocker)",
+   "placement": "across path (end of the chasm)",
+   "timing": "static",
+   "counter": [
+    "avoid (return with the purple gem)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "G-FORK-a",
+    "F-a Aku crate"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "a visible locked route that promises a return visit",
+   "evidence": "F3 p068L intro; P3 p017R shot 58",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "timed door pair with a floor button and an extending floor (blocker)",
+   "placement": "across path",
+   "timing": "doors open and close at fixed intervals; the floor extends after the button — both visible",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S3-a",
+    "P-S3-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the S1 door returns combined with a bridge that exists only part of the time",
+   "evidence": "F3 p070L POINT 5",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "falling stone pillars at two places (crusher from above)",
+   "placement": "overhead (across path)",
+   "timing": "periodic, linked from the start; the hole edge gives a view of the moving floor (POINT 6)",
+   "counter": [
+    "wait-and-go",
+    "outrun (cross the hole early, ride the tar and start sliding — POINT 7)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S3-c"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the hardest timing stretch of the main route, followed by the only main-route 1UP",
+   "evidence": "F3 p070L POINT 6–7",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "tar slide with sliding stone pillars (slippery surface, worked by an operator)",
+   "placement": "across path (downhill tar)",
+   "timing": "constant downhill pull; pillars move with the operator's lever",
+   "counter": [
+    "destroy (take out the operator first, P3 shot 63)",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-a",
+    "S4-b",
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a forced fast section whose crates must be fetched on a second pass",
+   "evidence": "F3 p070R; P3 p018L shot 63",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PURPLE-a",
+   "section": "PURPLE",
+   "kind": "dart trap at the corner hole (lit patches)",
+   "placement": "across path (front and back of the hole)",
+   "timing": "darts from both directions when you enter the lights (POINT A); lights visible",
+   "counter": [
+    "outrun (do not stop; jump from the hole edge)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-PURPLE-a",
+    "P-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a hole and a projectile trap on one tile",
+   "evidence": "F3 p069L POINT A",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PURPLE-b",
+   "section": "PURPLE",
+   "kind": "spear trap (spikes) at the end of a tar strip",
+   "placement": "across path",
+   "timing": "spears thrust out on a cycle; most dangerous right after they emerge (POINT B)",
+   "counter": [
+    "wait-and-go (small hops stop you dead on tar)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-PURPLE-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "tar slides you into the trap unless you know the hop-brake",
+   "evidence": "F3 p069L POINT B; F3 p067L tip 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PURPLE-c",
+   "section": "PURPLE",
+   "kind": "spear corridor (spikes, two rows of three)",
+   "placement": "across path",
+   "timing": "only the tips hurt; pass when they are raised overhead (P3 shot 59)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-PURPLE-f"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "two gates in series before the switch puzzle",
+   "evidence": "F3 p069R; P3 p017R shot 59",
+   "confidence": "low"
+  },
+  {
+   "id": "O-PURPLE-d",
+   "section": "PURPLE",
+   "kind": "two tall crusher blocks at a narrowing",
+   "placement": "across path",
+   "timing": "not stated",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-PURPLE-g"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "last gate before the raised walkway and the switch",
+   "evidence": "F3 p069R (two tall blocks)",
+   "confidence": "low"
+  },
+  {
+   "id": "O-BONUS-a",
+   "section": "BONUS",
+   "kind": "TNT crates (fuse also lit by the fall when the crates below break)",
+   "placement": "on platform",
+   "timing": "3 s fuse after a stomp or a fall (F3 p080L hint); the count is the warning",
+   "counter": [
+    "destroy (stomp lightly, move on)",
+    "jump (leave the falling stack before the blast)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "B-a",
+    "B-c",
+    "B-e"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "the bonus teaches that a TNT lower in a stack is a timer started by breaking what is under it",
+   "evidence": "F3 p080L hint; P3 p018L shots 65–67",
+   "confidence": "high"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "coiled snake (start)",
+   "count": 1,
+   "archetype": "static",
+   "behaviour": "coiled near the start before the stopwatch",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line (start corridor)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": true,
+   "why": "a harmless-looking first enemy before any trap",
+   "evidence": "F3 p068L (coiled figure); F3 p105L 01",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "Tobigator (トビゲーター)",
+   "count": 1,
+   "archetype": "burrower/ambusher (leaps alternately left and right out of a hole)",
+   "behaviour": "attacks anyone trying to jump over its hole (F3 p067R)",
+   "counter": [
+    "avoid (jump past on the side opposite to where it went down)",
+    "spin",
+    "slide"
+   ],
+   "fails": [
+    "jumping over on the side it comes up"
+   ],
+   "placement": "flank, beside the path just after the first tar strip, next to a ?",
+   "roles": [
+    "AMBUSH",
+    "TEACH"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "met right after the first tar strip, so the player may arrive sliding",
+   "why": "the ambusher teaches reading a pattern (left, right) before passing",
+   "evidence": "F3 p068L; F3 p067R; F3 p105L 04",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "pot monkey (ペンキー)",
+   "count": 4,
+   "archetype": "burrower/ambusher (pops out of a hidden pot with paint when Crash comes near)",
+   "behaviour": "four pots in a 2×2 on the stairs (F3 p067R: approach spinning and break the pot; stomp a straggler's head for fruit)",
+   "counter": [
+    "spin (break the pot)",
+    "stomp (jump on the head)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "walking up to a pot without attacking"
+   ],
+   "placement": "on line (stairs)",
+   "roles": [
+    "AMBUSH",
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "four together, but on solid stairs with nothing lethal near",
+   "why": "the pop-up enemy is learned where only the enemy itself can hurt",
+   "evidence": "F3 p068R; F3 p067R; P3 p017R shot 55",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "switch operator (ギアガチャ作業員)",
+   "count": 1,
+   "archetype": "static (works the lever that slides the pillar along the tar; does not attack)",
+   "behaviour": "reach the lever and he is yours (F3 p067R)",
+   "counter": [
+    "spin",
+    "stomp (jump on)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [],
+   "placement": "above (on a tall block beside the tar lane)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "his sliding pillar is the hazard on the way to him",
+   "why": "an enemy whose danger is the machine he runs",
+   "evidence": "F3 p068R POINT 3; F3 p067R; P3 p017R shot 56",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "switch operator (ギアガチャ作業員)",
+   "count": 1,
+   "archetype": "static (works the tar-slide pillars)",
+   "behaviour": "drives the pillars on the tar slide",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line at the end of the tar slide",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": null,
+   "why": "P3 shot 63: take him out, then go back up for the ceiling crates",
+   "evidence": "F3 p070R; P3 p018L shot 63",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "flamethrower worker (ボワボワ作業員)",
+   "count": 1,
+   "archetype": "static (sweeps a flame jet left and right across the corridor)",
+   "behaviour": "attack from the far side when the flame points to one end (F3 p067R)",
+   "counter": [
+    "spin",
+    "stomp (jump on)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "approaching on the flame's side",
+    "passing during the sweep"
+   ],
+   "placement": "on line in the corridor after the tar slide",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "shares the corridor with a switch operator",
+   "why": "a sweeping hazard carried by an enemy: timing and side choice",
+   "evidence": "F3 p070R; F3 p067R; F3 p105L 26–27",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "red-eyed cobra (アカメコブラ)",
+   "count": 1,
+   "archetype": "static (very large; strikes anyone passing close)",
+   "behaviour": "sits on the single-file tile path at the junction",
+   "counter": [
+    "spin (approach spinning)",
+    "stomp (jump on)",
+    "avoid (big jump over it, TT 28)"
+   ],
+   "fails": [
+    "walking right past it"
+   ],
+   "placement": "on line on the narrow path",
+   "roles": [
+    "HURDLE",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "on a narrow path over a void",
+   "why": "a blocker that must be beaten or jumped where there is no room to go round",
+   "evidence": "F3 p070R; F3 p067R; F3 p105L 28",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-PURPLE-a",
+   "section": "PURPLE",
+   "kind": "pot monkey (ペンキー)",
+   "count": 4,
+   "archetype": "burrower/ambusher",
+   "behaviour": "four pots in a row on a wide tar floor",
+   "counter": [
+    "spin (break the pot)",
+    "stomp (jump on the head)"
+   ],
+   "fails": [
+    "sliding into them on the tar"
+   ],
+   "placement": "on line on a wide tar floor",
+   "roles": [
+    "AMBUSH",
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "the S2 ambush returns on a floor where you cannot stop",
+   "evidence": "F3 p069R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-PURPLE-b",
+   "section": "PURPLE",
+   "kind": "flamethrower worker (ボワボワ作業員)",
+   "count": 1,
+   "archetype": "static (flame sweep)",
+   "behaviour": "at the top of the stairs beside three high crates",
+   "counter": [
+    "spin (from behind)",
+    "avoid (land on the side away from the flame, POINT C)"
+   ],
+   "fails": [
+    "landing on the flame side"
+   ],
+   "placement": "on line at the stair top (landing)",
+   "roles": [
+    "TIMING-GATE",
+    "GUARD"
+   ],
+   "firstAlone": null,
+   "why": "guards the crates the player jumps up to",
+   "evidence": "F3 p069L POINT C",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start corridor (snake, stopwatch)",
+    "12-crate block",
+    "hole + staircase (small–big–small)",
+    "tar strip (slide-dash lesson)",
+    "Tobigator + ?",
+    "floor button",
+    "pit + doors",
+    "triangle (3)",
+    "tar",
+    "button + door",
+    "C1"
+   ],
+   "gaps": 2,
+   "enemies": 2,
+   "hazards": 2
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "scarab walkway: framed tile W W",
+    "pink tiles",
+    "corner tile ?W + bonus pad",
+    "pink tiles",
+    "end tile !",
+    "green pad ride",
+    "stairs: four pot monkeys",
+    "?",
+    "tar lane + sliding pillar (operator on a block)",
+    "S/S + Aku",
+    "dart-light corridor (W W W among the lights)",
+    "W A W W row",
+    "double doors",
+    "?",
+    "C2 (fork)"
+   ],
+   "gaps": 2,
+   "enemies": 5,
+   "hazards": 3
+  },
+  {
+   "section": "BONUS",
+   "beats": [
+    "slab: three TNT",
+    "gap",
+    "slab: three ? (hop across)",
+    "gap",
+    "three TNT",
+    "step: ?/W/? pyramid",
+    "step: 4-stack ?/W/TNT/W (ride the falling stack)",
+    "life ledge",
+    "striped sandwich below",
+    "exit"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "FORK",
+   "beats": [
+    "Aku crate",
+    "chasm (slide-jump)",
+    "purple-gem door"
+   ],
+   "gaps": 1,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "tar + four-crate diamond",
+    "button + extending floor + pillar",
+    "timed doors",
+    "??",
+    "?",
+    "second button + extending floor",
+    "falling pillars + hole with a sliding floor",
+    "W + 1UP",
+    "four-crate row",
+    "stairs",
+    "?/W",
+    "C3"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "tar slide (two ? against the ceiling, sliding pillars)",
+    "switch operator + flamethrower worker",
+    "W",
+    "?",
+    "single-file tile path + crystal",
+    "red-eyed cobra (jump over)",
+    "junction",
+    "power stone",
+    "!",
+    "three pads (right, left, far)",
+    "stairs",
+    "goal"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 1
+  },
+  {
+   "section": "PURPLE",
+   "beats": [
+    "four W",
+    "corner hole with dart lights (do not stop)",
+    "????",
+    "tar + spears (hop-brake)",
+    "stairs",
+    "???",
+    "?1 ? ?1 + flamethrower",
+    "W W",
+    "tar + hole (slide-jump)",
+    "tar pool: four pot monkeys",
+    "spear corridor",
+    "crusher blocks",
+    "raised walkway: ! #1",
+    "outline bridge over spikes",
+    "paddle platform: ?/W/W + ! #2",
+    "two pads",
+    "junction"
+   ],
+   "gaps": 4,
+   "enemies": 5,
+   "hazards": 4
+  }
+ ],
+ "geometryObservations": [
+  "A machine stage: every stretch is built around one device — button doors, scarab tiles, a pad lift, an operator's pillar, dart lights, double doors, an extending floor, falling pillars, a tar slide, pad finales — and each is followed by a small crate receipt.",
+  "Tar is the movement verb and it is a surface, not a gap: slippery like ice (hard to stop, no dash, F3 p067L) but a slide on it is a dash and a slide-jump off it is the longest jump (TT intro). It is taught flat and walled (O-S1-a), then placed right before a pit, a pillar, spears or a hole (G-S1-b, P-S2-d, O-PURPLE-b, G-PURPLE-b).",
+  "Gaps are short (1–3 u) but almost never plain: each is coupled to a mechanism — doors (G-S1-b), a lift (G-S2-b), an extending floor (G-S3-a), a sliding floor under falling pillars (G-S3-c), dart lights (G-PURPLE-a), a switch-made bridge (G-PURPLE-c), pads (G-S4-b).",
+  "All periodic traps are timed from the start point (F3 p067L): the course is one clock, so a player who learns the cycles can flow through, and the time trial says to pass every door at its earliest opening.",
+  "Crumbling floors are read by colour: pink drops at once, green holds, framed tiles are rests — and crates sit only on framed tiles, so the crates teach the tile language (P-S2-a).",
+  "Enemies are machine operators and ambushers, not patrols: operators run the pillars and never attack, Tobigators and pot monkeys pop out of holes and pots, flamethrower workers sweep a jet, the red-eyed cobra blocks a narrow path. There is no chaser.",
+  "Ambushers debut on solid ground (pot monkeys on stairs, E-S2-a) and return on tar (E-PURPLE-a), where stopping to fight is hard: same enemy, worse footing.",
+  "Every timing gate offers a safe split: the pocket between the double doors (P-S2-f), the round pillar inside the extending-floor pit (P-S3-c), the hole edge from which the moving floor can be seen (POINT 6).",
+  "The default branch is easier than the gem branch: the purple course stacks dart lights, two tar launches, spears twice, crushers and a bridge over spikes (4 gaps, 4 hazards, 5 enemies) against the right course's machine set (3 gaps, 2 hazards, no enemies).",
+  "Both routes end with a ! that starts moving pads (G-S4-b, G-PURPLE-d), with the order announced (right, left, far) and the only big jump kept for the stairs.",
+  "The right course is built to be run both ways: F3's perfect route runs it backwards, toward the camera, where the moving floor can only be seen from the hole edge (POINT 6, POINT E) — the same geometry becomes a blind test.",
+  "Height is used sparingly and as a reward: the tar slide carries the player under two ceiling crates that need a return trip, and the bonus life ledge is reachable only from the top of a falling TNT stack (P-S4-a, P-BONUS-d)."
+ ],
+ "geometryTransfer": [
+  "Tar as a `slip` surface: a 6–8 m `slip` strip ending 1–2 m before a 2.3–3 m `pit`, walled on both sides, first shown with no pit at all; a slip slope (`slipGravity`) for the tar slide, with crates floating 3–4 m above it that need a walk back up. Verify how our slide and jump behave on slip floors before relying on extra distance.",
+  "Scarab walkway: a single-file 2.3 m-wide line of tiles over a `pit` — `crumble` pads with a very short `shake` (≈0.2 s) for the \"pink\" tiles, plain platforms of another colour for the safe ones, and a framed rest tile every 2–3 crumbles carrying the crates.",
+  "Door grammar with our primitives: the extending floor is a `mover` (axis along the route, amp ≈2 m) over a 4–6 m pit with a fixed 1.5 m pillar `platform` inside it; doors become a pair of `crusher`s on one cycle with a ≥2 m safe pocket between them; keep all cycles phased from level start so the course can be learned as one clock.",
+  "Pad finale: after the last checkpoint, three `mover` pads (2.3 m) phased to arrive right, left, far over a pit, then one 3 m jump onto stairs — the only long jump of the finale.",
+  "Light-pool trap: `firetiki` heads (or `sentry`s) covering lit floor zones across a corridor, with crates inside the zones; the counter is a slide or a diagonal path between zones. Check that our slide actually passes under the jet before using the slide-under answer.",
+  "Two-way course: build the machine stretch so it works in both directions and add `camnode`s for the reverse run; a toward-camera reverse run (`zone` N) makes a known stretch a fresh test without new geometry."
+ ]
+}
