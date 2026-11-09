@@ -197,7 +197,7 @@ START: mount Polar; a 2x2 block straight ahead
 3. **Diagonal ice pair.** On a low-traction pad, two crates one lane apart laterally and ~2 crate lengths apart along the route, entered from the opposite edge (S2-a). Repeat it later with a mask or ? second and a stricter entry (S4-b). Edge grinding stays at its default.
 4. **Nitro hurdle across a narrow strip.** Two Nitros side by side spanning a ~2.5 m strip between water. With a full-charge ollie (1.7 m) the rider clears one crate height (1.15 m) with ~0.5 m to spare. Make it the only obstacle in that stretch and put a landing crate 6–8 m after it (S4-d → S4-e).
 5. **Occluded crate in a pillar forest.** In a dense prop cluster on a fast lane, put one crate behind a pillar, 1 lane off the obvious line, plus the checkpoint nearby (S3-d + C3). Signpost it with a fruit/coin trail that briefly bends toward it.
-6. **Opening crate block.** A 2×2 wood/? block at the board pickup that a charged rider plows (S1-a). Note it is 2 crates tall, so the top row only breaks if the plow rule covers stacked crates, or if the rider jumps into it.
+6. **Opening crate block.** A 2×2 wood/? block at the board pickup that a charged rider plows (S1-a). It is 2 crates tall: plowing the bottom row lets the top crates settle onto the column below (crate support rule), so a second pass or a grind along the settled row collects them.
 
 ## Open questions / uncertainties
 - `wood?`: 11 of the 14 plain icons are identified only as non-?, non-striped by elimination (S1-a's two Ws are visible as wood in D2 shot 1). Any could be striped.
