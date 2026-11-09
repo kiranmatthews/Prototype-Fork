@@ -166,6 +166,49 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       apexAboveLid: Number.isFinite(apex) ? +(apex - lid).toFixed(3) : null, ...summary(name, deaths0) });
   }
 
+  // 4b. Real-input reach: a held full jump from the floor (release-to-jump),
+  // and each launch above followed by a double jump pressed at the apex.
+  // Records the highest feet height above the take-off surface.
+  const reach = (setup, { holdFrames = 0, doubleAtApex = false, held = false } = {}) => {
+    reset();
+    const { lid, pos } = setup();
+    p.respawn(level, true, true, { position: pos, heading: fwd });
+    p.pos.copy(pos); p.prevPos.copy(pos); p.freeSkate = false; p.airFromSkate = false; p.speed = 0;
+    if (holdFrames) { p.state = 'ride'; p.grounded = true; p.vVel = 0; } else { p.state = 'air'; p.grounded = false; p.vVel = -3; }
+    // This controller jumps on RELEASE: the double jump is a fresh press held
+    // briefly, then released, near the apex.
+    let apex = -Infinity, rising = false, doubled = false, frame = 0, releaseAt = -1;
+    for (let i = 0; i < 240 && p.state !== 'dead'; i++, frame++) {
+      let input;
+      if (holdFrames && i < holdFrames) input = makeInput({ jumpHeld: true, jumpPressed: i === 0 });
+      else if (holdFrames && i === holdFrames) input = makeInput({ jumpReleased: true });
+      else if (doubleAtApex && rising && !doubled && p.vVel <= 2.5) { input = makeInput({ jumpPressed: true, jumpHeld: true }); doubled = true; releaseAt = i + 3; }
+      else if (i === releaseAt) input = makeInput({ jumpReleased: true });
+      else if (doubled && i < releaseAt) input = makeInput({ jumpHeld: true });
+      else input = makeInput({ jumpHeld: held && !doubled });
+      step(input);
+      if (p.vVel > 0) rising = true;
+      if (rising) apex = Math.max(apex, p.pos.y);
+      if (rising && p.grounded && i > holdFrames + 2) break;
+    }
+    return { apexAboveSurface: Number.isFinite(apex) ? +(apex - lid).toFixed(3) : null, doubled };
+  };
+  const floorAt = name => () => {
+    const c = near(name)[0];
+    return { lid: 0, pos: new THREE.Vector3(c.mesh.position.x + 4, 0.02, c.mesh.position.z) };
+  };
+  const lidOf = name => () => {
+    const c = near(name)[0], lid = c.box.max.y;
+    return { lid, pos: new THREE.Vector3(c.mesh.position.x, lid + 0.6, c.mesh.position.z) };
+  };
+  for (const [label, setup, opts] of [
+    ['floor-full-jump', floorAt('launch-wood'), { holdFrames: 26 }],
+    ['floor-full-plus-double', floorAt('launch-wood'), { holdFrames: 26, doubleAtApex: true }],
+    ['wood-stomp-plus-double', lidOf('launch-wood'), { doubleAtApex: true }],
+    ['arrow-plus-double', lidOf('launch-arrow'), { doubleAtApex: true }],
+    ['held-arrow-plus-double', lidOf('launch-arrow'), { doubleAtApex: true, held: true }],
+  ]) results.push({ scenario: 'reach', lane: label, speed: 0, ...reach(setup, opts) });
+
   // 5. On the board, come down onto a crate lid from a board air while rolling
   // forward: does it count as a stomp (break + crate bounce / arrow launch)?
   for (const name of ['board-stomp-wood', 'board-stomp-arrow']) for (const speed of [6, 12]) {

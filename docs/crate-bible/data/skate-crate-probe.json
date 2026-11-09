@@ -1098,6 +1098,41 @@
     "speedAfter": 0
   },
   {
+    "scenario": "reach",
+    "lane": "floor-full-jump",
+    "speed": 0,
+    "apexAboveSurface": 2.854,
+    "doubled": false
+  },
+  {
+    "scenario": "reach",
+    "lane": "floor-full-plus-double",
+    "speed": 0,
+    "apexAboveSurface": 4.592,
+    "doubled": true
+  },
+  {
+    "scenario": "reach",
+    "lane": "wood-stomp-plus-double",
+    "speed": 0,
+    "apexAboveSurface": 4.612,
+    "doubled": true
+  },
+  {
+    "scenario": "reach",
+    "lane": "arrow-plus-double",
+    "speed": 0,
+    "apexAboveSurface": 5.507,
+    "doubled": true
+  },
+  {
+    "scenario": "reach",
+    "lane": "held-arrow-plus-double",
+    "speed": 0,
+    "apexAboveSurface": 7.653,
+    "doubled": true
+  },
+  {
     "scenario": "board-land-on-lid",
     "lane": "board-stomp-wood",
     "speed": 6,
