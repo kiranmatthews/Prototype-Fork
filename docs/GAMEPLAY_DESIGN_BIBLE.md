@@ -185,8 +185,8 @@ seven.
 
 A second pass re-read the same sources for every level's ground and threats and extended each level
 map with a "Geometry, obstacles and enemies" block and matching JSON records (schema in the folder
-[README](crate-bible/README.md)): **968 platforms, 517 gaps, 275 jump sequences, 379 obstacles
-and 375 enemy records in 236 sections**, each with an observation, a reason and a citation. They are
+[README](crate-bible/README.md)): **1,035 platforms, 571 gaps, 296 jump sequences, 401 obstacles
+and 416 enemy records in 254 sections**, each with an observation, a reason and a citation. They are
 aggregated in [`GEOMETRY_STATS.md`](crate-bible/GEOMETRY_STATS.md) (`node tools/crate-bible-geometry-stats.mjs`).
 
 - Sizes and widths are estimated in crates against crates visible in the same drawing or screenshot
@@ -942,16 +942,16 @@ platform follows from its role, not from the jump in front of it:
 
 | Role | What it is for | Typical size (smaller × larger side) |
 |---|---|---|
-| `STEPPING` | a stone in a jump run | ≈ 2 × 2 u (quartiles 1.5–2.25 u) |
-| `TIMING-STEP` | a step that moves, sinks, flips or is crossed by a hazard | ≈ 2 × 2 u |
+| `STEPPING` | a stone in a jump run | ≈ 2 × 2.5 u (smaller side 1.5–2.5 u) |
+| `TIMING-STEP` | a step that moves, sinks, flips or is crossed by a hazard | ≈ 2 × 2.5 u |
 | `LANDING` | where a committed jump ends | ≈ 2.5 × 3 u |
 | `PERCH` | a stable spot to watch a hazard or line up a jump | ≈ 2.5 × 3 u |
 | `SAFE-ISLAND` | a pocket of safety inside a hazard field | ≈ 2.5 × 3 u |
 | `BONUS-PAD` | a crate deck or bonus entrance | ≈ 2.5 × 3 u |
-| `CHOKE` | a narrow lane that forces one line | ≈ 3 u wide (2–4) |
+| `CHOKE` | a narrow lane that forces one line | ≈ 3 u wide (2–3.5) |
 | `REST` | a fixed floor between tests | ≈ 3.5 × 4 u |
 | `CHECKPOINT-PAD` | the floor a checkpoint stands on | ≈ 4 × 4 u |
-| `ARENA` | a room for enemies or a crate puzzle | ≈ 4.5 × 5 u, often much larger |
+| `ARENA` | a room for enemies or a crate puzzle | ≈ 4 × 5 u, often much larger |
 
 Three rules fall out of the table and recur in almost every level file:
 
@@ -1083,10 +1083,11 @@ aggregated in [`GEOMETRY_STATS.md`](crate-bible/GEOMETRY_STATS.md).
 
 ### X.1 What a gap is made of
 
-Bottomless pits and lethal water make up about half of all recorded gaps; the rest are hurdles and
-barriers that act like gaps (Nitro lanes, fallen totems, low walls), drop-downs, floor holes,
-moving-platform crossings, crumble runs, bounce chasms, stepping-stone runs, swings and a few lethal
-floors (red-hot, shark sand). About three quarters are lethal. The remainder fail softly: the
+Bottomless pits and lethal water make up a little under half of all recorded gaps; the rest are
+hurdles and barriers that act like gaps (Nitro lanes, fallen totems, low walls), floor holes,
+drop-downs, stepping-stone runs, moving-platform crossings, lava patches, bounce chasms, safe water or
+mud, crumble runs, launches, height gates, swings and a few lethal floors (red-hot, shark sand).
+Nearly three quarters are lethal. The remainder fail softly: the
 player falls out of a bonus, drops to a lower route and loses its crates, is trapped until a pit's
 enemies are dead, or is slowed by mud. **Soft failures are concentrated where a lesson is new**
 (Turtle Woods: two mud swamps and three rat pits turn failure into delay; Snow Biz: missed float-line
@@ -1096,24 +1097,25 @@ costs nothing (Rude Awakening, Snow Biz).
 
 ### X.2 Widths stay short
 
-Recorded gap widths have a median of **2.5 u** (quartiles 1.8–3.5 u; 90th percentile 5.5 u), and the
+Recorded gap widths have a median of **2.5 u** (quartiles 1.8–3 u; 90th percentile 5 u), and the
 lethal main-route gaps crossed on foot have the same median. The width barely changes within a level:
 Rude Awakening keeps 1.5–3 u from start to finish, Cold Hard Crash, Ruination and Piston It Away
 stay at about 1–3 u (median 1.5–2), and Snow Way Out keeps its static gaps at 1–4 u.
 
-Width does depend on the move the gap asks for, and the ladder is consistent:
+Width depends only a little on the move the gap asks for. Every jump type has a median between 2 and
+4 u; only device crossings go further:
 
 | Required move | Median width | Quartiles | Reading |
 |---|---|---|---|
 | plain jump | 2 u | 1.5–2.5 | the default lethal gap |
-| running jump | 2.5 u | 2.5–3.5 | announced by a ramp or run-up |
-| slide-jump | 2.5 u | 2.5–3 | a technique gate more than a distance |
-| crate bounce | 3 u | 2.5–6 | tool gaps; widest 8.5 u |
-| double jump (Crash 4) | 3.5 u | 2.5–5 | the double jump buys height and margin more than length |
-| held / high jump | 4.5 u | 2.5–6.5 | late, often with air steering |
-| spin-extended jump | 5 u | 2.9–5.1 | Crash 3/4's longest on-foot crossings |
-| swing, wall-run | 6.5–7 u | — | device crossings |
-| ride (vehicle, raft, disc) | 3.5 u | 2.5–4.4 | the vehicle sets the speed |
+| running jump | 2.5 u | 2.4–3.5 | announced by a ramp or run-up |
+| slide-jump | 2.8 u | 2.5–3.1 | a technique gate more than a distance |
+| crate bounce | 2.8 u | 2.5–5.6 | tool gaps; widest 8.5 u |
+| spin-extended jump (Crash 3/4) | 3 u | 2–5 | widest 6 u |
+| double jump (Crash 4) | 3 u | 2.4–4 | the double jump buys height and margin more than length |
+| held / high jump | 3.8 u | 1.8–4.5 | late, often with air steering |
+| wall-run, swing | 5–6.5 u | 3–7 | device crossings |
+| ride (vehicle, raft, disc) | 3 u | 2.5–4 | the vehicle sets the speed |
 
 Long crossings use a device rather than a longer jump. Off-Balance keeps plain jumps at 1–4 u and
 crosses wider gaps by swing, raft, lift or mask hover (5–6 u); every long crossing in Snow Way Out is
@@ -1239,7 +1241,7 @@ player reads a cadence instead of individual hazards.
 
 ### XI.3 No-stop comes from footing or a pursuer, never from width
 
-Nearly half of all recorded runs forbid stopping, and in every case the reason is the floor or a
+About two in five recorded runs forbid stopping, and in every case the reason is the floor or a
 chaser, not the size of the gaps: sinking blocks and shark sand (Rude Awakening, A Real Grind),
 crumbling ice (Bears Repeating), falling cubes (Snow Way Out), sinking pads in an eel pool (The Eel
 Deal), recovering stumps and lit TNT steps (Cold Hard Crash, Ruination), a boulder (Crash Dash), a
@@ -1314,17 +1316,18 @@ timing and telegraph, counter, what it is combined with and its role.
 
 ### XII.1 The hazard palette
 
-Explosive crates used as geometry (≈ 21 % of obstacle records) and static blockers (walls, fences,
-totems, trees; ≈ 20 %) are the most common, followed by crushers and pistons (≈ 12 %), fire (≈ 11 %),
-electricity and lasers (≈ 9 %), falling objects, mines, rolling objects, water hazards, collapsing
-scenery, slippery surfaces and spikes (6–8 % each), with blades, turrets, closing doors, sweeping fliers,
-pendulums, conveyors and wind making up the tail. About four in five are lethal on contact.
+Explosive crates used as geometry (≈ 23 % of obstacle records) and static blockers (walls, fences,
+totems, trees; ≈ 21 %) are the most common, followed by crushers and pistons (≈ 11 %), fire (≈ 11 %),
+mines, falling objects and electricity or lasers (≈ 7 % each), and water hazards, rolling objects,
+spikes and slippery surfaces (≈ 5–6 % each), with floor holes, collapsing scenery, blades, turrets,
+closing doors, sweeping fliers, pendulums, conveyors and wind making up the tail. About four in five are
+lethal on contact.
 
-Placement is overwhelmingly **across the path** (about half), then **on a platform** (about a fifth),
-on the **flank** and **overhead** (about a sixth each); pursuers are rare and concentrated in chase
-levels. Counters split into **wait-and-go** (≈ 40 %), **jump over** and **go around / steer** (≈ 25 %
-each), with destroy, outrun and slide under making up the rest. Roles: `TEST` and `TIMING-GATE` (about a
-third each), then `AREA-DENIAL`, `TEACH`, `LANE-BLOCK` and `RHYTHM`.
+Placement is mostly **across the path** (over half), then **on the flank** and **on a platform** (about a
+fifth each) and **overhead** (about an eighth); pursuers are rare and concentrated in chase levels.
+Counters split into **wait-and-go** (over a third), **jump over** (≈ 30 %) and **go around / steer**
+(about a quarter), with destroy, outrun and slide under making up the rest. Roles: `TEST` and
+`TIMING-GATE` (about a third each), then `AREA-DENIAL`, `TEACH`, `LANE-BLOCK` and `RHYTHM`.
 
 ### XII.2 Debut, repeat, invert, combine
 
@@ -1444,12 +1447,12 @@ placement, role and whether it first appears alone on safe ground.
 
 Archetypes split roughly into fifths: static or rooted enemies, 1-D patrollers, shielded or armoured
 enemies that need a specific counter, and fliers plus projectile throwers, with burrowers and
-ambushers, chasers, loop patrollers, swimmers, hoppers and a few chargers and mini-bosses making up the
-rest. **Spin** defeats more than half of all enemies; **avoid** is the answer for a quarter (vehicles,
-indestructible mines, pursuers); **stomp** and **slide** work on about a fifth each; body slam, shooting
-(Crash 3's bazooka), explosives and flinging cover the rest. What fails is most often **the wrong phase**
-(attacking while blades are out, during a dash or a discharge), then **spinning** an enemy that punishes
-spins (spiked rats, flame helmets), then **contact from the front** (shields).
+ambushers, chasers, hoppers, loop patrollers, swimmers and a few chargers and mini-bosses making up the
+rest. **Spin** defeats three enemies in five; **avoid** is the answer for a third (vehicles,
+indestructible mines, pursuers); **stomp** works on a quarter and **slide** on a fifth; body slam,
+shooting (Crash 3's bazooka), explosives and flinging cover the rest. What fails is most often **the
+wrong phase** (attacking while blades are out, during a dash or a discharge), then **contact from the
+front** (shields) and **spinning** an enemy that punishes spins (spiked rats, flame helmets).
 
 The geometry pass says the same thing in every game: **an enemy's placement matters more than its
 behaviour.** Snow Biz makes its hedgehog harder four times without changing it: first on a long flat
@@ -1459,22 +1462,23 @@ they sit above posts 1–1.5 u wide. Ruination narrows the lane to one tile wher
 
 | Placement | Share of records | What it asks |
 |---|---|---|
-| On the line | ≈ 25 % | engage or pass; the default and the teaching position |
-| On the landing | ≈ 18 % | attack while landing (spin in the air), the side-scroll signature |
-| Between hazards | ≈ 8 % | one input must clear both, or the waiting spot is taken |
+| On the line | ≈ 30 % | engage or pass; the default and the teaching position |
+| On the landing | ≈ 15 % | attack while landing (spin in the air), the side-scroll signature |
+| Between hazards | ≈ 9 % | one input must clear both, or the waiting spot is taken |
+| Flank | ≈ 9 % | lateral pressure on a narrow line |
 | In the pit or water | ≈ 6 % | a timed gap (piranhas, eels, sharks, orcas) |
 | Above | ≈ 6 % | a sniper, a dropper or a hovering drone |
-| Flank | ≈ 6 % | lateral pressure on a narrow line |
-| Guarding a crate | ≈ 6 % | the deck guard occupies the only standing space beside the crate |
+| Guarding a crate | ≈ 5 % | the deck guard occupies the only standing space beside the crate |
 | Take-off edge | ≈ 4 % | the run-up must be cleared first |
 
-Roles are spread evenly: `TEST`, `TIMING-GATE`, `HURDLE`, `GUARD` and `GATEKEEPER` each cover about a
-fifth of enemies, `TEACH` an eighth, and `TOOL/STEP` and `PROJECTILE` the rest.
+Roles are spread evenly: `HURDLE`, `TEST`, `TIMING-GATE` and `GUARD` each cover about a fifth of enemies,
+`GATEKEEPER` and `TEACH` an eighth each, and `TOOL/STEP`, `PROJECTILE` and `AMBUSH` the rest.
 
 ### XIII.2 Debuts are forgiving, but rarely alone
 
 Most level files describe a new enemy kind's first appearance as forgiving. The strict test, alone on
-safe ground, holds for only about a quarter to a third of recorded debuts. The usual forms are:
+safe ground, holds for about a third of recorded debuts overall: a fifth in Crash 2, a third in Crash 4
+and half in Crash 3. The usual forms are:
 
 - **alone on a wide floor**: Turtle Woods' turtle after C1; Draggin' On's first gong monk with a wall
   behind it; Jetboard Jetty's lone pirate on a wide dock; Rude Awakening's hub crab;
@@ -1589,12 +1593,12 @@ closes, how the camera changes the grammar and where the level spends its rests.
 | Game | Median gaps per section | Enemies | Hazards | Beats |
 |---|---|---|---|---|
 | Crash 2 | 3 | 4 | 3 | 10 |
-| Crash 3 | 2 | 3 | 2 | 10 |
+| Crash 3 | 2 | 3 | 2 | 12 |
 | Crash 4 | 2 | 1 | 1 | 6 |
-| All | 3 | 2 | 2 | 8 |
+| All | 3 | 2 | 2 | 9 |
 
-A Crash section between checkpoints holds about eight to ten beats, and roughly one new element (VI.2
-for crates). Crash 4's sections are shorter and sparser per section but more numerous: its checkpoints
+A Crash section between checkpoints holds about nine beats (six in Crash 4, ten to twelve in Crash 2
+and 3), and roughly one new element (VI.2 for crates). Crash 4's sections are shorter and sparser per section but more numerous: its checkpoints
 are closer together (Snow Way Out's late checkpoints come close because the falling-ice stretches kill
 most).
 
@@ -1626,8 +1630,8 @@ Three sample sequences show the shape (abridged from the level files):
 
 ### XIV.3 Camera modes carry grammars
 
-Sections are into-screen about half the time, side-scroll about two fifths, and vehicle or
-toward-camera chases the rest. The level files agree that each camera has its own grammar (IX.6 for
+Sections are into-screen about half the time, side-scroll about a third, and vehicle or
+toward-camera chases about a sixth. The level files agree that each camera has its own grammar (IX.6 for
 footing):
 
 | Camera | What it is used for | Typical beats |
@@ -1650,19 +1654,20 @@ a switch above the camera frame.
 Along the main route (0 = first section, 1 = last), median over the levels that use it:
 
 - **Enemies**: patrollers, throwers and fliers debut in the first section (0); shielded enemies early
-  (0.2); static and loop patrollers around 0.3; chasers mid-level (0.5); hoppers 0.6; mini-bosses (0.8)
-  and burrowers or ambushers (0.9) late.
-- **Obstacles**: pendulums, leaping creatures, sweeping fliers and closing doors are first-section ideas
-  when a level is built around them; crushers, spikes, explosive crates and static blockers arrive around
-  0.3; fire 0.4; electricity, collapsing scenery and slippery surfaces 0.5; mines 0.6; rolling objects and
-  hidden holes late (0.7).
-- **Gaps**: pits, lethal water, mud and lethal floors at once (0); swings and stepping stones early
-  (0.1–0.2); timed lethal water 0.3; moving-platform crossings 0.4; floor holes, crumble runs and height
-  gates mid-level (0.5); launches 0.6; timed hazard crossings 0.7; bounce chasms late (0.8).
+  (0.1); static enemies, swimmers and chargers around 0.3; burrowers and ambushers, loop patrollers and
+  hoppers mid-level (0.5); chasers 0.6; mini-bosses late (0.8).
+- **Obstacles**: pendulums, closing doors, leaping creatures and sweeping fliers are first-section ideas
+  when a level is built around them; slippery surfaces 0.2; turrets, fire, crushers, explosive crates,
+  spikes, water and static blockers around 0.3; collapsing scenery 0.4; falling objects, mines, low
+  barriers and tilting footing mid-level (0.5); blades and wind 0.6; rolling objects, electricity and
+  hidden holes late (0.7); sliding walls 0.8.
+- **Gaps**: pits, lethal and timed water, lava, mud and lethal floors at once (0); swings, floor holes and
+  stepping stones early (0.1–0.2); hurdles and drop-downs 0.3; moving-platform crossings, crumble runs and
+  launches 0.4; height gates mid-level (0.5); bounce chasms and timed hazard crossings late (0.7).
 
 The order follows the teaching rule: the plain version of an idea first, the coupled and hidden
-versions later. Ambushers and hidden holes come last because they punish a player who has stopped
-reading the level.
+versions later. Rolling objects, electricity, hidden holes, chasers and bounce chasms come late because
+they combine a clock or a tool with something the player has already learned.
 
 ### XIV.5 Route shape and enforcement
 
@@ -1679,8 +1684,8 @@ reading the level.
   lines hold the hardest recombinations (VI.4; Future Tense's rework kept the critical path smooth and the
   skill ceiling in the death route and time trials).
 
-**In this game:** a section of 8–10 beats at one beat per 1.5–3 s is 12–30 s of play: roughly 110–270 m
-on foot and 145–360 m at board cruise (XV.12). For comparison, the median current course's longest
+**In this game:** a section of about 9 beats (6–12) at one beat per 1.5–3 s is roughly 10–35 s of play:
+about 80–320 m on foot and 110–430 m at board cruise (XV.12). For comparison, the median current course's longest
 stretch with no beat at all is 130 m (XVIII). Change camera mode only at a one-way transition with a checkpoint (`camnode` and
 `zone` components carry the camera); keep each section to one new element.
 
@@ -1966,8 +1971,8 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 | Crash relationship (measured in the maps) | In this engine |
 |---|---|
 | Plain lethal pit ≈ 2 u (two in five gaps) | plain band 2.5–4 m on foot, 3.5–8 m on the board; difficulty from coupling, not width |
-| Held/high jump gaps ≈ 4–5 u | committed band 4–4.8 m on foot, or a double-jump gap 5–8 m once taught |
-| Gaps crossed by crate bounce ≈ 4.5 u (widest 7) | tool gaps > 8 m on foot: a crate or arrow bounce, a turtle shell or `trampoline` |
+| Held, spin-extended or double-jump gaps: medians 3–4 u, widest 6–8 u | committed band 4–4.8 m on foot, or a double-jump gap 5–8 m once taught |
+| Gaps crossed by a crate or enemy bounce: median ≈ 3 u, widest 8.5 u | tool gaps > 8 m on foot: a crate or arrow bounce, a turtle shell or `trampoline` |
 | Teaching jumps isolated, ≥ 4–6 u of flat floor between | ≥ 5–7 m of flat floor between teaching jumps; more on the board (one beat, XV.12) |
 | Coupled landings small (2–4 u), teaching landings wide | landing pads 2.5–4.5 m deep when coupled; ≥ 6 m deep when a lesson is new (coyote and edge catch forgive the take-off, nothing forgives a short landing on the board) |
 | Rest after 3–5 coupled jumps | same count; a rest is a fixed floor at least one beat long with nothing timed on it |
@@ -2699,7 +2704,7 @@ before it goes dark.
 | Test | the element coupled to the hardest gap or enemy, 3–5 jumps | 30–50 m | 40–70 m |
 | Checkpoint | a floor ≥ 6 m deep, crates beside it | — | — |
 
-Medians across the Crash maps (XIV.1) put about 3–4 gaps, 3 enemies and 2 hazards in one section;
+Medians across the Crash maps (XIV.1) put about 3 gaps, 2 enemies and 2 hazards in one section;
 keep a section to one new element.
 
 **RG6 · Shelter chase leg (XVII.9).** A boulder pursuit cut into legs by shelters.
@@ -2816,7 +2821,7 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
   soft-locks the route.
 
 **Per section (geometry)**
-- [ ] One new element and 8–10 beats; no main-line stretch longer than one beat (13.5–18 m on foot,
+- [ ] One new element and about 9 beats (6–12); no main-line stretch longer than one beat (13.5–18 m on foot,
   24–36 m at cruise) without a beat, unless it is a declared breather.
 - [ ] Jump runs of 3–5 with a rest one beat long; no-stop runs only from footing or a pursuer; every timed
   run has a fast line.
@@ -2899,6 +2904,10 @@ Geometry records per level (Part I.4; the "Geometry, obstacles and enemies" bloc
 | Crash 2 | [Cold Hard Crash](crate-bible/levels/c2-18-cold-hard-crash.md) | 57 | 34 | 10 | 21 | 23 | 8 |
 | Crash 2 | [Ruination](crate-bible/levels/c2-19-ruination.md) | 39 | 19 | 13 | 17 | 13 | 7 |
 | Crash 2 | [Piston It Away](crate-bible/levels/c2-21-piston-it-away.md) | 40 | 19 | 9 | 25 | 30 | 6 |
+| Crash 3 | [Toad Village](crate-bible/levels/c3-01-toad-village.md) | 18 | 14 | 5 | 4 | 10 | 4 |
+| Crash 3 | [Orient Express](crate-bible/levels/c3-03-orient-express.md) | 15 | 9 | 5 | 6 | 17 | 4 |
+| Crash 3 | [Bone Yard](crate-bible/levels/c3-04-bone-yard.md) | 23 | 21 | 7 | 7 | 10 | 7 |
+| Crash 3 | [Makin' Waves](crate-bible/levels/c3-05-makin-waves.md) | 11 | 10 | 4 | 5 | 4 | 3 |
 | Crash 3 | [Gee Wiz](crate-bible/levels/c3-06-gee-wiz.md) | 24 | 15 | 5 | 9 | 19 | 5 |
 | Crash 3 | [Hang 'em High](crate-bible/levels/c3-07-hang-em-high.md) | 29 | 16 | 7 | 5 | 13 | 6 |
 | Crash 3 | [Tomb Time](crate-bible/levels/c3-09-tomb-time.md) | 34 | 16 | 15 | 14 | 9 | 7 |
@@ -2916,7 +2925,7 @@ Geometry records per level (Part I.4; the "Geometry, obstacles and enemies" bloc
 | Crash 4 | [Snow Way Out](crate-bible/levels/c4-6-1-snow-way-out.md) | 58 | 22 | 15 | 14 | 10 | 11 |
 | Crash 4 | [Bears Repeating](crate-bible/levels/c4-6-3-bears-repeating.md) | 45 | 22 | 12 | 20 | 11 | 10 |
 | Crash 4 | [Stowing Away](crate-bible/levels/c4-8-2-stowing-away.md) | 33 | 7 | 6 | 15 | 5 | 9 |
-| **All** | **32 levels** | **968** | **517** | **275** | **379** | **375** | **236** |
+| **All** | **36 levels** | **1035** | **571** | **296** | **401** | **416** | **254** |
 
 ## Appendix B — Design-function tags
 
