@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {FlameHeatSamples} from './flameHeatSource';
 import { puffs, type PuffPreset } from './puffs';
 import {createTempleFlameGeometry,createTempleFlameMaterial,createTempleFlameSample,sampleTempleFlame,writeTempleFlame,TEMPLE_FLAME_STEP} from './templeFlame';
 
@@ -45,6 +46,7 @@ export class TempleBreath extends THREE.Group {
   private orange=new THREE.Color('#f36509');
   private color=new THREE.Color();
   private flameSample=createTempleFlameSample();
+  private readonly heat=new FlameHeatSamples(COUNT);
   private point=new THREE.Vector3();
   private half=new THREE.Vector3();
   private smokePoint=new THREE.Vector3();
@@ -60,6 +62,7 @@ export class TempleBreath extends THREE.Group {
     this.flames=new THREE.Mesh(geometry,createTempleFlameMaterial());
     this.flames.name='Gouraud flame tongues: hot centres / orange body / transparent torn rim';
     this.flames.renderOrder=5;this.add(this.flames);
+    this.heat.attach(this.flames);
     // Cache the previous rendered view in local space. The two loose layers
     // face that view instead of exposing an obvious cross-shaped card.
     this.flames.onBeforeRender=(_renderer,_scene,camera)=>{
@@ -80,7 +83,7 @@ export class TempleBreath extends THREE.Group {
     if(time<start)start-=this.cycle;
     const duration=this.cycle*.23*.77,elapsed=time-start;
     const last=Math.floor(elapsed/STEP),positions=this.flames.geometry.getAttribute('position'),colors=this.flames.geometry.getAttribute('color');
-    colors.array.fill(0);this.diagnostics.flames=0;this.diagnostics.hotContacts=0;
+    colors.array.fill(0);this.diagnostics.flames=0;this.diagnostics.hotContacts=0;this.heat.clear();
     for(let slot=0;slot<COUNT;slot++){
       this.boxes[slot].makeEmpty();
       const ordinal=last-slot,seed=ordinal+Math.floor(start/this.cycle)*131+this.phase*17;
@@ -90,6 +93,7 @@ export class TempleBreath extends THREE.Group {
       const {heat,radius,length,x,y,z}=this.flameSample;
       const yaw=templeTikiPhase(start+born,this.cycle,this.phase,this.arc).yaw+(hash(seed+15)-.5)*.035;
       const sn=Math.sin(yaw),cs=Math.cos(yaw);
+      this.heat.add(x*cs+z*sn,y+.15,z*cs-x*sn,radius*1.5,radius*1.9,heat*1.8,seed);
       this.diagnostics.flames++;
       writeTempleFlame(this.flameSample,this.viewPoint,positions as THREE.BufferAttribute,colors as THREE.BufferAttribute,slot,yaw);
       if(state.phase==='fire'&&heat>.22&&age>.012){

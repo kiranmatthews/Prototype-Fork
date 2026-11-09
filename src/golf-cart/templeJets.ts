@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {FlameHeatSamples} from '../flameHeatSource';
 import {createTempleFlameGeometry,createTempleFlameMaterial,createTempleFlameSample,sampleTempleFlame,writeTempleFlame,TEMPLE_FLAME_INDICES} from '../templeFlame';
 
 interface JetPacket {born:number;seed:number;strength:number;matrix:THREE.Matrix4;velocity:THREE.Vector3}
@@ -15,10 +16,13 @@ export class CartTempleJets extends THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
   private packetRotation=new THREE.Quaternion();private scaleVector=new THREE.Vector3();
   private viewPoint=new THREE.Vector3(8,5,10);private packetView=new THREE.Vector3();
   private sample=createTempleFlameSample();
+  private readonly heat:FlameHeatSamples;
+  private readonly heatPoint=new THREE.Vector3();
   readonly diagnostics={emitted:0,active:0,capacity:0,source:'Temple of Embers'};
   get count(){return this.diagnostics.active;}
   constructor(capacity:number){
     super(createTempleFlameGeometry(capacity),createTempleFlameMaterial());
+    this.heat=new FlameHeatSamples(capacity);this.heat.attach(this);
     this.name='Six kart nozzles · Temple of Embers fire';this.visible=false;this.frustumCulled=false;this.renderOrder=5;
     this.geometry.setDrawRange(0,0);this.diagnostics.capacity=capacity;
     this.packets=Array.from({length:capacity},()=>({born:-Infinity,seed:0,strength:0,matrix:new THREE.Matrix4(),velocity:new THREE.Vector3()}));
@@ -38,12 +42,15 @@ export class CartTempleJets extends THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
   present(time:number){
     if(time===this.lastTime)return;this.lastTime=time;
     const positions=this.geometry.getAttribute('position') as THREE.BufferAttribute,colors=this.geometry.getAttribute('color') as THREE.BufferAttribute;
-    let count=0;
+    let count=0;this.heat.clear();
     for(const p of this.packets){
       const age=time-p.born;if(!sampleTempleFlame(age,p.seed,7.1,this.sample))continue;
       this.packetMatrix.copy(p.matrix);const m=this.packetMatrix.elements,travel=(1-Math.exp(-.65*age))/.65;
       m[12]+=p.velocity.x*travel;m[13]+=p.velocity.y*travel;m[14]+=p.velocity.z*travel;
       this.packetView.copy(this.viewPoint).applyMatrix4(this.inverse.copy(this.packetMatrix).invert());
+      this.heatPoint.set(this.sample.x,this.sample.y+.15,this.sample.z).applyMatrix4(this.packetMatrix);
+      const heatRadius=this.sample.radius*this.packetMatrix.getMaxScaleOnAxis();
+      this.heat.add(this.heatPoint.x,this.heatPoint.y,this.heatPoint.z,heatRadius*1.5,heatRadius*1.9,this.sample.heat*p.strength*1.8,p.seed);
       writeTempleFlame(this.sample,this.packetView,positions,colors,count,0,this.packetMatrix,p.strength);count++;
     }
     this.diagnostics.active=count;this.visible=count>0;this.geometry.setDrawRange(0,count*TEMPLE_FLAME_INDICES);
