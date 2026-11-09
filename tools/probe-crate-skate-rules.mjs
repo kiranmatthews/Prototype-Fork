@@ -1,5 +1,5 @@
 // Measures how the real Player/Level treat crates on the skateboard, so the
-// crate design bible (docs/CRATE_DESIGN_BIBLE.md) states engine facts, not
+// design bible (docs/GAMEPLAY_DESIGN_BIBLE.md) states engine facts, not
 // guesses. Read-only: builds a throwaway flat test level, changes no tuning.
 //
 //   node tools/probe-crate-skate-rules.mjs [out.json]

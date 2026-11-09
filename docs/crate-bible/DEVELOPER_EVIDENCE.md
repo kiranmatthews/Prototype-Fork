@@ -419,7 +419,7 @@ posts (controls, camera, enemy budget, testing) and everything else below.
 
 These are design principles that the sources above support. Each lists the claims it rests on. Where a principle
 says how to apply it to this game, that part is our inference and is checked against the engine facts in
-[CRATE_DESIGN_BIBLE.md Part IX](../CRATE_DESIGN_BIBLE.md#part-ix--translating-crash-geometry-into-this-game),
+[GAMEPLAY_DESIGN_BIBLE.md Part XV](../GAMEPLAY_DESIGN_BIBLE.md#part-xv--translating-crash-geometry-into-this-game),
 not something the developers said.
 
 1. **Channel the route, and keep the immediate goal obvious.** Naughty Dog cut its first two levels

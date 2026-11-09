@@ -48,7 +48,7 @@ const T = {
   wide: 10,          // when the corridor finds no landing, look this far either side of the walker's line
   contDown: 1.5,     // continuous ground may fall this much between two samples (slopes, kerbs, small steps)
   contUp: 1.0,       // ... and rise this much; higher steps are recorded as climbs
-  climbMax: 5.2,     // highest step-up still taken as a climb (full-jump ledge-grab lip, bible IX.2)
+  climbMax: 5.2,     // highest step-up still taken as a climb (full-jump ledge-grab lip, bible XV.2)
   jumpScan: 15,      // a landing at take-off height within this distance makes a floor end a gap
   scan: 60,          // furthest look-ahead for any landing
   transit: 120,      // a lane segment longer than this crossing a void is a portal / teleport transit, not route

@@ -1,5 +1,5 @@
 // Aggregates the per-level Crash crate maps in docs/crate-bible/data/*.json
-// into cross-level statistics for docs/CRATE_DESIGN_BIBLE.md.
+// into cross-level statistics for docs/GAMEPLAY_DESIGN_BIBLE.md.
 //
 //   node tools/crate-bible-stats.mjs            -> writes docs/crate-bible/STATS.md
 //   node tools/crate-bible-stats.mjs --json     -> also prints the raw aggregate
