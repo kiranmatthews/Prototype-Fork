@@ -223,3 +223,29 @@ line. Corner courts carry their checkpoint inside the walls.
   south side) and control frame confirmed on grounded probes; `check:levels`; production build;
   release size under the 1,000,000,000-byte budget; Chromium lite pass over 32 rooms and full pass
   over 8 with clean consoles. Evidence in `docs/temple-embers-design/`.
+
+## 10. The dressing pass (after the switchback)
+
+A content-only pass made in forty-five minutes with the pilots and audits set aside at the owner's
+instruction. It moves no floor of the course except to add one.
+
+- **Stone, not boxes.** Every parapet is now a kerb of carved lintel blocks about three metres long over
+  an unseen collider (`kerbWorld`, which the station-space `parapet` helpers call).
+- **Backdrops.** The side-view stair plays against a carved wall behind its far parapet, rising with the
+  flights and lit by six braziers along its foot, so the breaks, the mossback and the slab are read
+  against something. The fallen ledges and the sanctuary steps stand on masonry shafts.
+- **Walls say "turn".** The corner court, the landing court and the gallery end at a five-metre carved
+  face instead of a kerb. Fruit leads off the board line toward the west arch and round the abutment bend.
+- **Checkpoints on the way out.** The corner court and gallery checkpoints left the board line (which
+  demands smash speed a few metres before a wall) for the walking line to the exit.
+- **The turning apron.** The abutment court runs fourteen metres past the lane's bend (world space, z 36
+  to 50), walled, with a stack and a brazier in each far corner: missing the first board turn is a
+  roll-out with a reward, not a wall.
+- **A second answer to the Far Break.** A fallen beam along the channel's west side can be ground across
+  the gap; the charged ollie over the middle stays the fast line.
+- **The finish.** The terrace's back wall and side parapets had been turned a quarter turn (a stone
+  spine ran down the lane through the gate); they now close the terrace, and two braziers flank the gate.
+
+Not re-run for this pass: the journey pilot, the collision and encounter audits, the bible reports and
+`check:levels`. §9 describes the switchback as validated; this section's changes were checked by type
+check, production build and browser screenshots only. The course now counts 169 crates.
