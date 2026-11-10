@@ -1,7 +1,6 @@
 import {COLOURED_GEMS,colouredGemCollection,isColouredGemColour,type ColouredGemColour} from './colouredGems';
 import {createDesertMaterial} from './desertMaterials';
 import {attachFlameHeat} from './flameHeatSource';
-import {JakTorchFire} from './jakTorchFire';
 import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
@@ -501,8 +500,7 @@ const PUFF_TORCH_RATE: [number, number] = Array.isArray(PUFF_TORCH.rate)
 
 interface Torch {
   group: THREE.Group; // post + bowl + flame, parked at the torch's base
-  flames: THREE.Mesh[]; // source flame/cooling batches, also excluded from the heat mask
-  fire: JakTorchFire;
+  flames: THREE.Mesh[]; // the licking cones, scaled + spun on their own phase
   lightAt: THREE.Vector3; // world point the pooled light sits at (the flame's heart)
   seed: number; // per-torch offset so no two flicker in step
   burn: number; // 0..1 — eased; a phase pad's torch dies as the pad goes ghost
@@ -10541,7 +10539,15 @@ export class Level {
     // whichever ones are nearest the skater.
     for (const t of this.torches) {
       t.burn += (t.wantBurn - t.burn) * Math.min(1, 9 * dt);
-      t.fire.update(dt,t.burn);
+      const lick = 0.82 + 0.18 * Math.sin(this.time * 11 + t.seed * 3.1);
+      const sway = Math.sin(this.time * 7 + t.seed) * 0.12;
+      for (let i = 0; i < t.flames.length; i++) {
+        const f = t.flames[i];
+        const k = t.burn * (lick + i * 0.04);
+        f.scale.set(0.85 + 0.15 * k, Math.max(0.02, k), 0.85 + 0.15 * k);
+        f.rotation.z = sway * (i + 1) * 0.5;
+        f.visible = t.burn > 0.03;
+      }
     }
     if (this.torchLights.length > 0) {
       // nearest-N by squared distance: a partial selection sort over a handful
@@ -15374,9 +15380,10 @@ export class Level {
 
   // ------------------------------------------------------- fire and phase --
 
-  // A TORCH. Post, iron bowl, and Jak's unlit Gouraud particle flame.
-  // The warm pool it casts on the deck around it comes from the shared
-  // point-light pool. `h` is post height, `scale`
+  // A TORCH. Post, iron bowl, and three licking flames. The flames are
+  // MeshBasic — unlit — so a fire stays the brightest thing on screen however
+  // black the level's lighting is; the warm pool it casts on the deck around
+  // it comes from the shared point-light pool. `h` is post height, `scale`
   // sizes the fire. Returns it so a phase pad can douse its own.
   private torch(
     x: number,
@@ -15402,16 +15409,37 @@ export class Level {
       bowl.position.y = h + 0.1 * scale;
       group.add(bowl);
     }
-    // Every shared torch path (including phase pads, ferries and tiki crowns)
-    // uses the ported Jak particle graph with texture-free Gouraud puffs.
-    const fire=new JakTorchFire(scale,cool,this.torches.length+1),flames=fire.meshes;
-    fire.root.position.y=h+.2*scale;group.add(fire.root);
+    // Three nested cones, hot core outward to a smoky tip. Basic material: a
+    // fire is not lit BY the scene, it IS the light in it.
+    const coneCols = cool
+      ? [0xe4f4ff, 0x5cc8ff, 0x1a63d8] // cold-burning: the metronome's blue team
+      : [0xfff0b0, 0xffa32c, 0xd8410e];
+    const flames: THREE.Mesh[] = [];
+    for (let i = 0; i < 3; i++) {
+      const r = (0.3 - i * 0.07) * scale;
+      const fh = (0.55 + i * 0.42) * scale;
+      const f = new THREE.Mesh(
+        new THREE.ConeGeometry(r, fh, 6),
+        new THREE.MeshBasicMaterial({
+          color: coneCols[i],
+          transparent: true,
+          opacity: i === 0 ? 1 : 0.55 - i * 0.12,
+          depthWrite: i === 0,
+          // fires DO fog: a flame two sections over dims into the black
+          // instead of drawing a torch-line to the horizon. Near fires (the
+          // ones you play by) sit inside fogNear and stay bright.
+        }),
+      );
+      f.position.y = h + 0.2 * scale + fh * 0.42;
+      f.renderOrder = 4 + i;
+      group.add(f);
+      flames.push(f);
+    }
     group.userData.torchSpec = { h, scale }; // capture: position is read live off the group
     this.root.add(group);
     const t: Torch = {
       group,
       flames,
-      fire,
       lightAt: new THREE.Vector3(x, baseY + h + 0.55 * scale, z),
       seed: this.torches.length * 1.7,
       burn: 1,

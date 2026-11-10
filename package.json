@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "check:torch-fire": "node tools/build-jak-torch-source.mjs && node tools/test-jak-torch-fire.mjs && node tools/flame-heat/test.mjs",
+    "check:flame-heat": "node tools/flame-heat/test.mjs",
     "check:motion-assets": "node tools/test-motion-study-assets.mjs && node tools/test-gameplay-animation-lifecycle.mjs",
     "check:animation-d": "node tools/check-d-animation.mjs",
     "check:cave-collapse": "node tools/test-cave-collapse-state.mjs && node tools/test-cave-collapse.mjs",

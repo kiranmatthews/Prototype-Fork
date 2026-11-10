@@ -74,8 +74,6 @@ buttons[6].onclick=async()=>{
 g.renderQualitySettings.setRegularResolution(720);
 function report(){
   output.textContent=JSON.stringify({level:g.getCurrentLevel().id,heat:g.flameHeat.diagnostics,measure,benchmark,
-    loading:g.getLoadingDiagnostics().phase,player:g.player.state,torches:g.getLevel().torches.length,
-    jakTorches:g.getLevel().torches.filter((t:any)=>t.fire?.diagnostics.source==='group-part-maincave-torch').length,
-    torch:g.getLevel().torches[0]?.fire?.diagnostics,tikis:g.getLevel().fireTikis.length,
+    loading:g.getLoadingDiagnostics().phase,player:g.player.state,torches:g.getLevel().torches.length,tikis:g.getLevel().fireTikis.length,
     resolution:g.getRenderQualitySizes(),render:g.getRenderFrameStats()});requestAnimationFrame(report);
 }requestAnimationFrame(report);

@@ -11680,6 +11680,10 @@ Verification:
 
 ## 2026-11-11 — Integrate completed work without replacing Claude's animation, and put Jak flames in torches
 
+**Corrected by the heatwave recovery below:** the requested effect was the
+existing transparent heat distortion, not new torch particles. The particle
+portion of this entry was a mistaken interpretation and has been removed.
+
 Brief: treat Claude's latest movement/animation commit as authoritative, reconcile
 the older worktrees, and make the Jak flame effect appear in all torches on main.
 Prompt-to-playable: approximately 25 minutes, including the branch audit and
@@ -11716,3 +11720,38 @@ Real in-app browser: lite and full-render Nightworks, normal 720 and MAX/native
 (2560×1440 heat framebuffer), animated flames and character visible together;
 no new console errors after the two startup fixes. Local server restored at
 `http://127.0.0.1:5189/`.
+
+
+## 2026-11-11 — Recover the original transparent heatwaves and audit orphaned work
+
+Brief: find the already completed transparent Jak heat distortion, including kart
+blasters, undo the mistaken new torch-particle implementation, and find other
+orphaned work. Approximately 15 minutes from the correction to the verified
+local original effect; expanded object audit and release checks followed.
+
+Located the original work in **Recreate the course desert section**:
+`afb40ace`, **Add Jak-style heat distortion to all gameplay flames**, on
+`codex/flame-heat-distortion`. It was already on main and its shader, source
+registry, kart jets/wreck fire, tiki breath and fireball code remain byte-identical.
+Removed only the new torch-particle replacement from `d281ae70`; the shared torch
+factory and green-eco module are exactly back to `91fe4413`, retaining the original
+heat hookup. Kept the valid body-rig adapter, motion HTTP-decoding and local review
+path fixes. Claude's authored animation, movement and tuning are unchanged.
+
+Audited 268 branch refs, 41 divergent lineages and 44 otherwise-unreachable
+commits. Rebased/cherry-picked feature work is already published. Preserved the
+actual Temple v6/Ember Reliquary branch for a separate pass at the user's explicit
+request (`codex/preserved-temple-embers-v6`). Jak progress-HUD and Roo studies remain
+unfinished; historical screenshot/diagnostic remnants are catalogued. Protected
+the 44 old revisions/stashes under local archive refs. Findings and counterpart
+commits: `WORKTREE_INTEGRATION_2026-11-11.md` and `ORPHAN_WORK_2026-11-11.json`.
+The shared dirty checkout and the published level pack are untouched.
+
+Validation: original shared heat checks, green-eco regression, ten original GPU
+configurations (byte/HDR, 360/720/native, fractional DPR and split viewport), real
+Nightworks in lite and full/native, and kart blaster/wreck heat in the actual rally.
+The isolated GPU cases leave foreground objects, flames and outside regions
+unchanged. Actual Nightworks heat changes 1,927 pixels at 720 and 8,845 at native
+2560×1440 while disabled controls are identical; kart modes show 92/75 heat packets
+with none dropped. No console or WebGL errors. Production build and hosting-size
+check pass at 935,100,007 bytes. No full suite run.

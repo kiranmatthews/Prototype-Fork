@@ -1,80 +1,138 @@
-# Worktree integration — 11 November 2026
+# Worktree integration and orphan audit — 11 November 2026
 
-The user designated Claude's latest character movement/animation work as
-authoritative. At audit time `origin/main` was `91fe4413`, already containing
-Claude's newer idle, charge, skid, slide, low-pose, slam and ledge work. This
-integration starts there. It does not replay the older jump/skate/slam edits
-over that baseline.
+## Correction: the requested effect was heat distortion
 
-## Completed work
+The requested Jak effect is the **transparent framebuffer heatwave**, already
+completed by the chat **Recreate the course desert section** in commit
+`afb40ace3064a9c0d9c323de4e546c675dd1b883` (9 November), on
+`codex/flame-heat-distortion`. That commit was already an ancestor of main.
+The previous integration (`d281ae70`) incorrectly interpreted the request as
+replacing torch artwork with new particles. This recovery removes that particle
+implementation and restores the torch factory and green-eco module exactly to
+`91fe4413`, including their original heatwave attachment.
 
-| Active branch at audit | Tip | Mainline status |
+The original `flameHeatDistortion.ts`, `flameHeatSource.ts`, kart `templeJets.ts`
+and `gouraudFire.ts`, `templeBreath.ts` and fireball integration are byte-identical
+to `afb40ace`. No replacement shader or new visual tuning is introduced.
+
+Original coverage:
+
+- Every shared torch, including phase flames, moving braziers and tiki crowns.
+- Kart blaster/boost jets and burning wrecks, following the travelling packets.
+- Tiki breath and enemy fireballs.
+- TNT/nitro explosion fire, excluding cold smoke.
+
+The original pass copies the world framebuffer, refracts it through the Jak
+11-slice distortion geometry, then draws the flame meshes. It depth-tests against
+foreground geometry, uses one instanced distortion draw, and skips cold, hidden
+or culled sources. The original implementation and its focused tests remain the
+authority. `npm run check:flame-heat` now exposes that existing test directly.
+
+`fa688e9d` also added Dusty Road heat coverage. Later, `db001d61` deliberately
+removed those desert heat bands at the user's request. Their absence is intended;
+this recovery does not restore them.
+
+## Character authority and valid startup fixes
+
+Claude's latest character movement/animation was explicitly designated as
+authoritative. The integration started from main `91fe4413`, containing Claude's
+idle, charge, skid, slide, low-pose, slam and ledge work. All authored movement,
+animation and tuning files remain unchanged by this recovery.
+
+Two valid ordinary-game startup fixes from `d281ae70` are retained:
+
+- The gameplay document adapter passes the body skeleton to the existing D
+  generator, while retaining the full editable board-authoring rig in the
+  document. Its regression compares all generated clips with the comparison
+  lab for exact equality.
+- The motion loader accepts raw gzip and JSON/GLB already decoded by HTTP gzip
+  handling, with explicit HTTP error reporting.
+
+The flame-review asset base and its Labs fixture link also remain fixed.
+
+## Audit scope and findings
+
+The expanded audit examined **268 local/remote branch refs**, not just the ten
+active worktrees. There were 274 non-merge commits outside main's ancestry and
+41 maximal divergent lineages. Patch equivalence, matching published commits,
+file/blob comparisons and later replacements distinguish missing work from
+rebased or cherry-picked history. A further object-database scan found 44 commits outside branch/tag reachability.
+These are published revisions, discarded alternatives or historical stashes. They
+are now protected by local `refs/archive/orphan-audit-20261111/<commit>` refs.
+Notable examples: the vector-prompt experiment `94369e43` was replaced by the
+corrected Retina-canvas fix `ccabb205`; Splat Valley was published then deliberately
+retired by `fccf04e9`; Carlisle beacon, camera-distance and board-test stash changes
+are present on main. The per-lineage and unreachable-commit inventory is
+[`ORPHAN_WORK_2026-11-11.json`](ORPHAN_WORK_2026-11-11.json).
+
+### Actual work outside main
+
+| Work | Preserved location | Disposition |
 | --- | --- | --- |
-| `codex/jump-reference-motion` | `91fe4413` | Current main; earlier jump/skate/ledge/eco work already integrated |
-| `codex/dusty-road-collision` | `db001d61` | Ancestor of main |
-| `codex/dusty-road-heat-coverage` | `fa688e9d` | Ancestor of main |
-| `codex/flame-heat-distortion` | `afb40ace` | Ancestor of main; integrated heat distortion, but did not replace torch flame artwork |
-| `codex/jak-rope-bridge` | `84fdb6b7` | Ancestor of main |
-| `codex/jump-skate-release-20261108` | `39788711` | Ancestor of main |
-| `codex/opengoal-enemy-audit` | `06efc419` | Ancestor of main |
-| `codex/skate-boneman-motion-lab` | `c00bc86e` | `b967f838`/`c00bc86e` adopted by the playable study (`9357fd78`), then refined on main; documented in `SKATE_PLAYTEST.md` |
-| `codex/jak-whole-game-lab` | `8de60c29` | Completed effect catalogue/eco/sage cage/first-person work integrated; only unfinished progress-HUD checkpoint remains |
+| Temple of Embers v6 and Ember Reliquary redesign | `codex/preserved-temple-embers-v6` and `origin/claude/gifted-clarke-d9w70q`, tip `060f0c69`; content `634caa3c` | **Preserve for a separate pass**, explicitly requested by the user during this audit. Its v6 dressing pass has build/browser evidence; gameplay checks still describe v5. No Temple content is merged here. |
+| Jak progress-menu HUD particle port | `codex/jak-whole-game-lab`, `8de60c29` | Explicitly **not READY for release** in its own document: seven new source/test files remain on the checkpoint, with sampling, placement, extractor thresholds and browser review unfinished. |
+| Roo character/texture studies | `drafts/roo-character-studies`, `706925c2` / `646a2dbc` | Explicitly unfinished local study and generated-artifact snapshot; preserved. |
+| Beach kite public verification evidence | `codex/beach-kite-release`, `a1f1d729` | Fourteen historical evidence files absent from main; gameplay already published. Retain the evidence branch rather than replay its older runtime. |
+| Slipstream review screenshots | October rescue refs, including `6bf0266b` and `1ee86618` | Historical screenshot-only leftovers; completed scenery is on main via `ce5986d6` and earlier integration. Retain rescue refs. |
+| Jungle release-race diagnostic | Rescue refs `2fa61b63` / `6fe3cc61` | Temporary diagnostic script, not a completed gameplay feature. Retain rescue refs. |
 
-The three missing files from the old Skate branch are its obsolete private-only
-Vite configuration, private-only instructions, and original retarget test.
-Main contains the published source viewer, the 218-clip dataset, the evolved
-retargeter, and playable-motion checks. Restoring that old packaging would undo
-the subsequently authorized publication and motion corrections.
+No other missing completed runtime feature was found among the divergent branch
+lineages. The archived Skate packaging is superseded by the published playable
+study (`9357fd78`); restoring its private-only configuration would undo later
+publication and movement corrections. The older D live-tuning note is historical
+validation, not an unmerged animation implementation.
 
-The Jak lab's last commit explicitly says **not READY for release** in
-`docs/JAK_ASSET_LAB.md`: progress-HUD sampling/placement validation, remaining
-extractor thresholds, candidate refresh and browser review are unfinished.
-Its seven progress-HUD-only source/test files stay on that checkpoint branch.
-They are not silently promoted by this audit.
+### Completed work already integrated
 
-The shared Documents checkout is dirty and still based on `4e1a78b0`. Its edits
-are preserved; it must not be staged or reset wholesale. Publish from the
-validated task branch against current `origin/main`. Clean completed worktrees
-can fast-forward; divergent reference/checkpoint branches remain recoverable
-when their worktrees switch to new branches based on current main.
+| Original branch/work | Main evidence |
+| --- | --- |
+| Heatwaves / Dusty Road / rope bridge / enemy audit | `afb40ace`, `fa688e9d`, `db001d61`, `84fdb6b7`, `06efc419` are main ancestors |
+| Jump/skate release | `39788711` is a main ancestor; subsequent Claude motion remains authoritative |
+| Ancient Gates marathon | `b7ef2149`, `f614fcb8`, `d8bea1a2`, `ca668910` |
+| Beach Street kite and course refinements | `48a89b22`, `422bb01b`, `0f892239`, `076b9a96` |
+| Banana Bay and surface verification | `a1cd3fd0`, `783e6cfe` |
+| Bone Head HUD | `6e70570c` |
+| Crate artwork and fractures | `fc4f5723` |
+| Jak eco beams / first-person HUD | `7bc3fdd2`, `1abfe4ed` |
+| Jungle Ruins | `4f5639b2`, `e47c9c71`, `df6e5c77` |
+| Kart loaners, skating and engine fixes | `6eaa70d7`, `8e699c7d`, `fa7ae069` |
+| Motu festival / structure / palm refinements | `257daf57`, `db455c1a`, `54e191a5`, `5efce981` |
+| Treehouse swimming, trunk collision and flow | `8dd3f98d`, `f03df4a0`, `a6105697` |
+| Spaghetti decision-platform camera | `7d9e2556`, followed by newer course work |
+| Tribal Run / Resonance Vault | `976133f4`, `470c4ce3`, followed by newer Tribal Run work |
+| Waterfall Climb / Hidden Spillway | `ec1549ed`, `1c88cb4e`, `65ddf28a` |
+| Haunted Hassle | `0d476fec` |
+| Wumpa validation | `3f16b020` |
+| Earlier renderer-roundoff and race-test fixes | Superseded by `4e02a961` and `5144d576` (later refined by `f814b1e3`); current tests retain the relevant protections |
+| Preserved rail opt-out test | Main contains the original test plus later geometry-capture coverage |
 
-## Missing torch integration
+The shared Documents checkout remains dirty and based on `4e1a78b0`. It is
+preserved, not reset or staged. Clean task worktrees can follow the corrected
+mainline; original checkpoint/rescue refs remain recoverable. No historical
+branch is merged wholesale over Claude's current movement files or the current
+published level pack.
 
-Every call to the shared `Level.torch` factory now uses Jak's original
-`group-part-maincave-torch` launcher graph (group 318, particles 706–713), drawn
-with the existing texture-free Gouraud bigpuffs. The generated source is checked
-against the published catalogue. Warm flames retain the source colour/timing;
-phase-pad blue flames retain their gameplay cue. Static torches, ferry braziers
-and tiki crown torches share this path. Pooled lights, heat distortion,
-phase-pad warning/extinction and moving mounts retain their existing ownership.
-The green-eco vents remain their distinct green-eco effect.
+## Recovery validation
 
-Each torch has a fixed 256-particle pool and two instanced draws for the original
-normal cooling/additive flame layers. The deterministic 12-second sweep peaks
-at 111 visible particles, with no drops, identical at 30/60/120 Hz. Rendering
-uses actual-camera billboards, depth testing, fog retirement and bounded culling.
+- Existing shared heat tests pass: source motion, cold/hidden retirement,
+  bounded buffers, depth/render order, HDR/resize and resource cleanup.
+- All ten original real-GPU configurations pass: byte/HDR targets, 360/720/1440,
+  fractional DPR and split viewport. Foreground, flame and outside-region errors
+  are zero; zero-strength identity differs by at most one byte step.
+- Actual Nightworks: 92 torch objects, ten visible heat sources in the reviewed
+  view; on/off comparison changes 1,927 pixels at 720 and 8,845 at native
+  2560×1440, with identical disabled control frames. Full renderer and lite have
+  no console errors; WebGL error zero. The effect remains animated.
 
-## Main-game animation setup fixes
+- Actual kart blasters and wrecks: 92 and 75 visible distortion packets in the
+  respective reviewed frames, no dropped packets, one extra draw, zero WebGL or
+  console errors. Kart scenery has independent animation, so its disabled-frame
+  pixel count is not an identity test; the isolated GPU harness supplies that.
+- Green-eco source/lifecycle checks, production build and release-size check pass
+  (935,100,007 bytes / 1,000,000,000). No full suite was requested or run.
 
-Browser review found two integration errors which headless comparison tests
-had not covered:
-
-- Main's editable rig wraps the body in `skateBody`. D's new idle expects the
-  actual skeletal `root`. `gameplayAnimationDocument` now supplies the body rig
-  to the existing D generator while retaining the full editable rig in the
-  document. The regression compares all resulting clips against the comparison
-  lab: exact equality. No authored animation or controller file is changed.
-- Vite serves `.gz` motion assets with HTTP gzip encoding, which fetch already
-  decodes. The loader now inspects the payload before decompressing, accepting
-  both raw gzip and decoded JSON/GLB. It retains explicit HTTP error reporting.
-
-Focused checks: `check:torch-fire`, `test-green-eco-fire`, `check:motion-assets`,
-production build and release-size check. The shared-factory fixture exercises
-all 92 Nightworks torches, blue/orange phase cycles, ferry transforms, pooled
-lights and teardown. The lifecycle check also covers both local players and
-29 native animation owners. Full-suite work is outside this integration.
-
-Local browser review: `/tools/flame-heat/review.html?playtest&level=dark&launchReview&nocrt&lite`;
-the same entry without `lite`/`nocrt` exercises the full renderer, with Normal
-720 and MAX/native controls. `/labs/` now links this review with its required
-fixture parameters. The local server is restored at port 5189.
+The local original-effect review remains available at
+`http://127.0.0.1:5189/tools/flame-heat/review.html?playtest&level=dark&launchReview&nocrt&lite`.
+It is correctly marked as a local authoring review in Labs. The heat effect itself
+is part of the ordinary published game. Deployment verification follows in the
+release handoff.
