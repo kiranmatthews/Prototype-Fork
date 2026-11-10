@@ -1,8 +1,9 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { MathUtils } from 'three';
 import { JakAirPoseSpring } from './jakAirMotion';
-import { PoseInertia } from './animation/poseInertia';
+import { PoseInertia, WeightInertia } from './animation/poseInertia';
 import type { InertiaShape } from './animation/poseInertia';
+import type { JakLowCuts } from './animation/jakLowMotion';
 import { ledgeRebound } from './animation/ledgeMotion';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animation/elasticity';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
@@ -12,6 +13,7 @@ import { LAUNCH_CLIPS, isLaunchClip, tuneLaunchBackLean } from './animation/laun
 import { TUNING } from './tuning';
 import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
+import { jakSkidSize } from './animation/jakSkid';
 import {
   RigBinding,
   UNITY_CRAWL_CONTACT_ADAPTATION,
@@ -19,6 +21,7 @@ import {
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
   CROUCH_CLIP_IDS,
+  CRAWL_STRIDE_METRES,
   QUATERNIUS_CRAWL_PALMS,
   QUATERNIUS_LOW_POSE_OWNERSHIP,
   LOCOMOTION_WALK_BLEND_INPUT,
@@ -74,7 +77,7 @@ export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
 export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
 export const LOCOMOTION_BLEND_SECONDS = 0.14;
 
-type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit' | 'run-stop';
+type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit' | 'run-stop' | 'crawl-rise';
 
 interface RuntimeTransient {
   readonly kind: RuntimeTransientKind;
@@ -323,12 +326,29 @@ export class CharacterAnimationRuntime {
   private previousFootSpeed = 0;
   private runStopStartSpeed = 1;
   private runStopSettleElapsed = 0;
+  // A keyed skid's own clocks: seconds since the stick was let go, and into
+  // its second part, which starts a set time before the feet will stop. That
+  // is told from the speed he has left and how fast he is losing it.
+  private skidSeconds = 0;
+  private skidCatchSeconds = -1;
+  private skidSpeed = 0;
+  private skidSlowing = 0;
+  // A keyed jump charge's: seconds it has been held at full.
+  private chargeHeldSeconds = 0;
+  // The carried cut in play is the one that brought the body into a keyed clip.
+  private keyedEntry = false;
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
   private readonly jakAirSpring = new JakAirPoseSpring();
   // Cuts into, inside and out of a keyed clip that asks for it keep the
   // body's position and speed; see PoseInertia.
   private readonly inertia = new PoseInertia();
+  private readonly restInertia = new WeightInertia();
+  private readonly palmInertia = new WeightInertia();
+  private lowCarry = false;
+  private leaping = false;
+  private lowCarrySerial = 0;
+  private crawlRiseSeconds = 0;
   private inertiaCut: InertiaShape | null = null;
   private inertiaExit: Record<string, InertiaShape> | null = null;
   private inertiaSegment = -1;
@@ -536,6 +556,7 @@ export class CharacterAnimationRuntime {
     this.previousMoveIntent = moveIntent;
     this.previousFootSpeed = intent.motion.normalizedSpeed;
     const wasLow = this.previousHint === CROUCH_CLIP_IDS.idle || this.previousHint === CROUCH_CLIP_IDS.move;
+    const wasCrawling = this.previousHint === CROUCH_CLIP_IDS.move;
     const isLow = hint === CROUCH_CLIP_IDS.idle || hint === CROUCH_CLIP_IDS.move;
     this.previousHint = hint;
 
@@ -583,7 +604,25 @@ export class CharacterAnimationRuntime {
           this.cancelTransient();
         }
       }
-      if (hint === CROUCH_CLIP_IDS.idle && !wasLow &&
+      // Where the suite carries the body between standing and the low poses,
+      // the five-frame transition clips have nothing left to do.
+      const lowCuts = this.lowCuts();
+      if (lowCuts) {
+        if (this.transient?.kind === 'crouch-enter' || this.transient?.kind === 'crouch-exit') this.cancelTransient();
+        // Prone and standing are the same straight body a quarter turn apart,
+        // and carried straight from one to the other he comes up like a
+        // plank. So up off all fours the crouch is the pose he is carried
+        // toward for a moment first: the knees come under him, then he stands.
+        const afoot = hint === 'player.idle' || hint === 'player.run';
+        if (this.transient?.kind === 'crawl-rise') {
+          this.crawlRiseSeconds += dt;
+          if (!grounded || !afoot || this.crawlRiseSeconds >= lowCuts.gatherSeconds) this.cancelTransient(false);
+        } else if (!this.transient && grounded && afoot && wasCrawling && this.currentClipId === CROUCH_CLIP_IDS.move &&
+            this.findPlayableClip(CROUCH_CLIP_IDS.idle)) {
+          this.transient = this.makeTransient('crawl-rise', CROUCH_CLIP_IDS.idle);
+          this.crawlRiseSeconds = 0;
+        }
+      } else if (hint === CROUCH_CLIP_IDS.idle && !wasLow &&
           this.findPlayableClip(hint)?.metadata?.outerPoseOwnership === QUATERNIUS_LOW_POSE_OWNERSHIP &&
           this.findPlayableClip(CROUCH_CLIP_IDS.enter)) {
         this.cancelTransient();
@@ -595,10 +634,12 @@ export class CharacterAnimationRuntime {
         this.cancelTransient();
         this.transient = this.makeTransient('crouch-exit', CROUCH_CLIP_IDS.exit);
       }
-      if (!justLanded && !this.transient && canSkid && releasedRun && this.findPlayableClip(RUN_STOP_CLIP_ID)) {
+      // Nobody skids to a halt out of a crawl.
+      if (!justLanded && !this.transient && canSkid && releasedRun && !(lowCuts && wasLow) && this.findPlayableClip(RUN_STOP_CLIP_ID)) {
         this.transient = this.makeTransient('run-stop', RUN_STOP_CLIP_ID);
         this.runStopStartSpeed = Math.max(.001, releasedSpeed);
         this.runStopSettleElapsed = 0;
+        this.skidSeconds = 0; this.skidCatchSeconds = -1; this.skidSpeed = -1; this.skidSlowing = 0;
       }
     } else {
       this.cancelTransient();
@@ -729,13 +770,50 @@ export class CharacterAnimationRuntime {
         (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect)
         ? this.pendingIdleHandoffOffset : null;
       const keyed = inertiaOf(clip), keyedBefore = inertiaOf(previousClip);
-      const inertial = this.manualClipId === null && !this.restartPending && !!previousClipId && !!this.lastSampledPose &&
-        (!!keyed || !!keyedBefore || this.inertia.active);
+      // Between standing, the crouch and the crawl the suite may say how the body is carried.
+      const lowCuts = this.lowCuts(), lowClip = (id: ClipId | null) => id === CROUCH_CLIP_IDS.idle || id === CROUCH_CLIP_IDS.move;
+      // Down into them from anything on the ground, and up out of them onto
+      // the feet. A jump, a slam or a fall out of a settled crouch stays as
+      // sharp as it was; out of the crawl, see `leap` below.
+      const afoot = clip.id === 'player.idle' || clip.id === 'player.run';
+      const lowCut = !lowCuts || keyed || keyedBefore ? null
+        : clip.id === CROUCH_CLIP_IDS.move ? lowCuts.crawl
+        : clip.id === CROUCH_CLIP_IDS.idle ? previousClipId !== CROUCH_CLIP_IDS.move ? lowCuts.crouch
+          : this.transient?.kind === 'crawl-rise' ? lowCuts.gather : lowCuts.rest
+        : afoot && lowClip(previousClipId) ? previousClipId === CROUCH_CLIP_IDS.move ? lowCuts.rise : lowCuts.stand
+        : null;
+      // A keyed clip met with nothing of the runtime's own on screen (the
+      // frame an older presentation lets go, just after a respawn) is carried
+      // in from the pose that is on screen, read off the rig.
+      const fromScreen = this.manualClipId === null && !!keyed && !previousClipId && !this.lastSampledPose;
+      if (fromScreen) {
+        this.lastSampledPose = this.binding.capturePose(new Set(clip.tracks.filter(track => track.kind !== 'scalar').map(track => track.target)));
+        this.poseBeforeLast = null;
+      }
+      const carried = this.manualClipId === null && (fromScreen || !this.restartPending && !!previousClipId) && !!this.lastSampledPose;
       if (keyedBefore) this.inertiaExit = keyedBefore.out;
-      this.inertiaCut = !inertial ? null
+      else if (lowCut && lowCuts) this.inertiaExit =
+        {'player.idle': lowCuts.onward, 'player.run': lowCuts.onward, [RUN_STOP_CLIP_ID]: lowCuts.onward};
+      const exits = keyedBefore || this.inertia.active ? this.inertiaExit : null;
+      // A jump or a fall out of the crawl, or while a crawl has only just
+      // begun or stopped, is carried on from where the body is, and so is
+      // what follows it (the charge, then the jump) until the pelvis has
+      // all but arrived.
+      const leaps = clip.id === JUMP_CHARGE_CLIP_ID || clip.id === 'player.jump' || clip.id === 'player.fall';
+      const midway = this.lowCarry ? this.inertia.feet : null;
+      const leap = lowCuts && leaps && !keyed && !keyedBefore && !lowCut && (previousClipId === CROUCH_CLIP_IDS.move ||
+        midway && midway[0] > lowCuts.leapFrom ||
+        this.leaping && this.inertia.active && Math.abs(this.inertia.rootLeft) > .1) ? lowCuts.leap : null;
+      this.inertiaCut = !carried ? null
         : keyed ? keyed.segments[Math.max(0, Math.round(intent.motion.inputs?.jakSlideSegment ?? 0))] ?? keyed.segments[0]
-        : this.inertiaExit?.[clip.id] ?? this.inertiaExit?.default ?? null;
-      if (!inertial) this.inertia.reset();
+        : lowCut ?? exits?.[clip.id] ?? exits?.default ?? leap;
+      const inertial = this.inertiaCut !== null;
+      this.keyedEntry = !!keyed && inertial;
+      this.leaping = leap !== null && this.inertiaCut === leap;
+      if (!inertial) {this.inertia.reset(); this.restInertia.reset(); this.palmInertia.reset();}
+      // The foot seating follows the pelvis through these cuts and no others.
+      if (!inertial || keyed || keyedBefore || this.leaping) this.lowCarry = false;
+      else if (lowCut) this.lowCarry = true;
       const switchBlendDuration = this.inertiaCut ? 0 : this.manualClipId === null
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
@@ -828,13 +906,56 @@ export class CharacterAnimationRuntime {
       this.timelineTime=MathUtils.clamp(motion.inputs?.pancakeSlamTime??0,clip.range.start,clip.range.end);
     const keyedClip = this.manualClipId === null ? inertiaOf(clip) : null;
     if (keyedClip) {
-      this.timelineTime=MathUtils.clamp((clip.metadata!.jakSlide?motion.inputs?.jakSlideTime:motion.inputs?.jakSlideJumpTime)??0,
+      // A skid has no gameplay clock of its own. It skids for as long as the
+      // feet have ground to cover, its wobble looping. Its second part starts
+      // `catch` seconds before they will stop, so that the feet do their
+      // travelling while the ground still moves under them, and until they
+      // have stopped it keeps time with the speed he has left.
+      let skid: [time: number, segment: number] | null = null;
+      if (clip.metadata!.jakSkid) {
+        const sway = Number(clip.metadata!.jakSkidSway), hold = Number(clip.metadata!.jakSkidHold), rise = Number(clip.metadata!.jakSkidRise);
+        const span = Number(clip.metadata!.jakSkidCatch), step = dt * this.runtimeSpeed;
+        const speed = motion.inputs?.footSpeed ?? motion.normalizedSpeed * TUNING.walkSpeed;
+        const stopped = motion.normalizedSpeed <= .005;
+        // How fast he slows: the ordinary stop's rate until a frame or two have shown this one's.
+        const usual = TUNING.walkSpeed / Math.max(.05, TUNING.walkSlowdownTime);
+        const measured = this.skidSpeed >= 0 && step > 0 ? Math.max(0, this.skidSpeed - speed) / step : usual;
+        this.skidSlowing = this.skidSlowing > 0 ? MathUtils.lerp(this.skidSlowing, measured, 1 - Math.exp(-step / .05)) : usual;
+        this.skidSpeed = speed;
+        const left = stopped ? 0 : speed / Math.max(this.skidSlowing, usual * .25);
+        if (!switched) this.skidSeconds += step;
+        if (this.skidCatchSeconds < 0) {
+          if (left <= span) this.skidCatchSeconds = span - left;
+        } else if (this.skidCatchSeconds < span) {
+          // Never backward, never frozen, and caught up at once if he is stopped short.
+          this.skidCatchSeconds = Math.min(span, MathUtils.clamp(span - left, this.skidCatchSeconds + step * .3, this.skidCatchSeconds + step * 2.5));
+        } else this.skidCatchSeconds += step;
+        skid = this.skidCatchSeconds >= 0 ? [rise + this.skidCatchSeconds, 1]
+          : [this.skidSeconds < hold ? this.skidSeconds : sway + (this.skidSeconds - sway) % (hold - sway), 0];
+      }
+      // A jump charge follows the charge as it fills, and at full charge
+      // runs on by itself: a dip past the bottom and back, then its bounce,
+      // looped for as long as it is held.
+      let charge: number | null = null;
+      if (clip.metadata!.jakCharge) {
+        const sink = Number(clip.metadata!.jakChargeSink), coil = Number(clip.metadata!.jakChargeCoil), full = .985;
+        const progress = MathUtils.clamp(motion.actionProgress, 0, 1);
+        if (progress < full) {this.chargeHeldSeconds = 0; charge = progress / full * sink;}
+        else {
+          if (!switched) this.chargeHeldSeconds += dt * this.runtimeSpeed;
+          const once = coil - sink, held = this.chargeHeldSeconds;
+          charge = held < once ? sink + held : coil + (held - once) % (clip.range.end - coil);
+        }
+      }
+      this.timelineTime=MathUtils.clamp(skid?skid[0]:charge??(clip.metadata!.jakSlide?motion.inputs?.jakSlideTime:motion.inputs?.jakSlideJumpTime)??0,
         clip.range.start,clip.range.end);
       // Each part of a keyed clip runs on its own clock. Where the timeline
       // jumps from one part to the next, the pose is carried across.
-      const segment = Math.max(0, Math.round(motion.inputs?.jakSlideSegment ?? 0));
-      if (!switched && (segment !== this.inertiaSegment || Math.abs(this.timelineTime - this.inertiaTime) > .12) && this.lastSampledPose)
+      const segment = skid ? skid[1] : Math.max(0, Math.round(motion.inputs?.jakSlideSegment ?? 0));
+      if (!switched && (segment !== this.inertiaSegment || Math.abs(this.timelineTime - this.inertiaTime) > .12) && this.lastSampledPose) {
         this.inertiaCut = keyedClip.segments[segment] ?? keyedClip.segments[0];
+        this.keyedEntry = false;
+      }
       this.inertiaSegment = segment;
       this.inertiaTime = this.timelineTime;
     } else this.inertiaSegment = -1;
@@ -859,6 +980,12 @@ export class CharacterAnimationRuntime {
       : null;
     this.authoredPlaybackSpeed = clip.playbackSpeed;
     let pose = this.samplePoseAt(clip, this.timelineTime, motion, this.manualClipId === null);
+    // A keyed skid is baked at a few sizes. The one for the pace he let go
+    // at is sampled in its place, on its clock, for the whole of this stop.
+    if (this.manualClipId === null && clip.metadata?.jakSkidSizes) {
+      const sized = this.findPlayableClip(`${clip.id}-${jakSkidSize(this.runStopStartSpeed)}`);
+      if (sized) pose = this.samplePoseAt(sized, this.timelineTime, motion, true);
+    }
     let landingRunBlendWeight = 0;
     let landingRunBlendInFlight = false;
     if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID && !clip.metadata?.jakDirect) {
@@ -1021,10 +1148,17 @@ export class CharacterAnimationRuntime {
     }
     // Source idles own their shoulder angles. Native idles also use the
     // editable neutral-arm layer; recoveries fade that layer with the pose.
-    const sourceOwnsIdleArms = this.findPlayableClip('player.idle')?.metadata?.jakDirect;
+    const idleMetadata = this.findPlayableClip('player.idle')?.metadata;
+    const sourceOwnsIdleArms = idleMetadata?.jakDirect || idleMetadata?.ownsIdleArms;
     const incomingRestWeight = sourceOwnsIdleArms ? 0 : clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
-    this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
+    const restWeight = this.transitionBlendWeight === null ? incomingRestWeight
       : this.switchOutgoingUpperArmRestWeight * (1 - this.transitionBlendWeight) + incomingRestWeight * this.transitionBlendWeight;
+    // A carried cut has no fade for these layers to ride on. They are let go
+    // with the arms instead, so the shoulders and palms never switch in a frame.
+    if (this.manualClipId !== null) {this.restInertia.reset(); this.palmInertia.reset();}
+    const layerCut = this.manualClipId === null ? this.inertiaCut : null;
+    if (layerCut) this.restInertia.cut(this.upperArmRestWeight, restWeight, layerCut.arms);
+    this.upperArmRestWeight = this.restInertia.apply(restWeight, dt);
     this.player.setCharacterUpperArmRestAngleWeight(this.upperArmRestWeight);
     const incomingCrawlContactOwnership = ownsCrawlContacts ? 1 : 0;
     this.crawlContactOwnership = contactTransitionWeight === null
@@ -1040,8 +1174,10 @@ export class CharacterAnimationRuntime {
     );
     const incomingPalmWeight = clip.id === CROUCH_CLIP_IDS.move &&
       clip.metadata?.palmOrientation === QUATERNIUS_CRAWL_PALMS ? 1 : 0;
-    this.crawlPalmWeight = contactTransitionWeight === null ? incomingPalmWeight
+    const palmWeight = contactTransitionWeight === null ? incomingPalmWeight
       : this.switchOutgoingCrawlPalmWeight * (1 - contactTransitionWeight) + incomingPalmWeight * contactTransitionWeight;
+    if (layerCut) this.palmInertia.cut(this.crawlPalmWeight, palmWeight, layerCut.arms);
+    this.crawlPalmWeight = this.palmInertia.apply(palmWeight, dt);
     this.player.setAuthoredCrawlPalmWeight(this.crawlPalmWeight);
     if (contactTransitionWeight !== null && contactTransitionWeight >= 1) {
       this.switchOutgoingCrawlContactPhase = null;
@@ -1079,11 +1215,26 @@ export class CharacterAnimationRuntime {
       const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
       pose = canonical(pose);
       const travel = [motion.inputs?.jakTravelX ?? 0, motion.inputs?.jakTravelY ?? 0, motion.inputs?.jakTravelZ ?? 0];
-      if (this.inertiaCut) this.inertia.cut(pose, this.lastSampledPose ? canonical(this.lastSampledPose) : null,
-        this.poseBeforeLast ? canonical(this.poseBeforeLast) : null, this.lastFrameSeconds, this.inertiaCut, travel, this.travel);
+      if (this.inertiaCut) {
+        // Feet that are still being carried across the floor go on being
+        // carried, whatever the next cut is: its legs alone would start from
+        // where the motion had them and not from where they are.
+        const feet = this.lowCarry ? this.inertia.feet : null;
+        const shape = !this.inertiaCut.feet && feet && Math.abs(feet[0]) > .02
+          ? {...this.inertiaCut, feet: [this.inertiaCut.legs[0], 1] as [number, number]} : this.inertiaCut;
+        this.inertia.cut(pose, this.lastSampledPose ? canonical(this.lastSampledPose) : null,
+          this.poseBeforeLast ? canonical(this.poseBeforeLast) : null, this.lastFrameSeconds, shape, travel, this.travel);
+        if (this.lowCarry) this.lowCarrySerial++;
+      }
       this.inertiaCut = null;
       pose = this.inertia.apply(pose, dt, travel);
     }
+    this.player.setLowPoseCarry(this.lowCarry && this.inertia.active ? this.inertia.rootLeft : null, this.lowCarrySerial,
+      this.transient?.kind === 'crawl-rise', this.lowCarry && this.inertia.active ? this.inertia.feet : null);
+    this.player.setKeyedSoleFit(this.manualClipId === null && !!clip.metadata?.jakSoleFit);
+    // (With how much is left of the pelvis's carry into the clip, which the floor fit hands over along.)
+    this.player.setKeyedSoleHold(this.manualClipId !== null ? null : clip.metadata?.jakSkid ? 'skid' : clip.metadata?.jakSoleHold ? 'stand' : null,
+      this.timelineTime, this.keyedEntry && this.inertia.active ? this.inertia.rootLeft : 0);
     this.travel = [motion.inputs?.jakTravelX ?? 0, motion.inputs?.jakTravelY ?? 0, motion.inputs?.jakTravelZ ?? 0];
     this.poseBeforeLast = this.lastSampledPose;
     this.lastFrameSeconds = dt;
@@ -1305,6 +1456,11 @@ export class CharacterAnimationRuntime {
     return bestOffset;
   }
 
+  /** The suite's own rules for carrying the body between standing and the low poses, if it has any. */
+  private lowCuts(): JakLowCuts | null {
+    return (this.animationDocument.metadata?.jakLowCuts as unknown as JakLowCuts | undefined) ?? null;
+  }
+
   private findPlayableClip(id: ClipId): AnimationClip | null {
     const clip = this.animationDocument.clips.find((candidate) => candidate.id === id);
     if (!clip || clip.rigId !== this.binding.definition.id || !clipTimingIsUsable(clip)) return null;
@@ -1416,11 +1572,12 @@ export class CharacterAnimationRuntime {
         (clip.id === 'player.jak-run-land' || clip.id === 'player.jak-run-land-weak'))
       return this.playbackSeconds < .05 ? 1 : Math.max(5, motion.normalizedSpeed * TUNING.walkSpeed) / 5;
     if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
-      // One complete left/right crawl cycle covers 1.8 m. Integrate distance
-      // into the existing clock so analog speed changes never restart a pose;
-      // the saved clip speed remains an editable multiplier, as in Studio.
+      // One complete left/right crawl cycle covers CRAWL_STRIDE_METRES.
+      // Integrate distance into the existing clock so analog speed changes
+      // never restart a pose; the saved clip speed remains an editable
+      // multiplier, as in Studio.
       const metresPerSecond = motion.inputs?.crawlSpeed ?? 0;
-      return Math.max(0, metresPerSecond) * (clip.range.end - clip.range.start) / 1.8;
+      return Math.max(0, metresPerSecond) * (clip.range.end - clip.range.start) / CRAWL_STRIDE_METRES;
     }
     if (this.manualClipId === null && clip.id === ICE_WALK_CLIP_ID)
       return .55 + .55 * motion.normalizedSpeed + .3 * (motion.inputs?.iceEffort ?? 0);
@@ -1506,6 +1663,12 @@ export class CharacterAnimationRuntime {
     this.poseBeforeLast = null;
     this.travel = null;
     this.inertia.reset();
+    this.restInertia.reset();
+    this.palmInertia.reset();
+    this.lowCarry = false;
+    this.player.setLowPoseCarry(null, this.lowCarrySerial, false);
+    this.player.setKeyedSoleFit(false);
+    this.player.setKeyedSoleHold(null);
     this.inertiaCut = null;
     this.inertiaSegment = -1;
     this.jakAirSpring.reset();

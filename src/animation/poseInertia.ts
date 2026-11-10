@@ -10,7 +10,12 @@ export type InertiaGroup='root'|'legs'|'spine'|'head'|'arms'|'lengths';
 /** `carry` is how much of a jump in the body's own travel, per axis (left, up,
  * forward), the pelvis is left behind by: a burst of speed pulls out from
  * under it, and a dead stop lets it run on. */
-export type InertiaShape=Record<InertiaGroup,InertiaSpring>&{carry:[number,number,number]};
+export type InertiaShape=Record<InertiaGroup,InertiaSpring>&{carry:[number,number,number];
+  /** Set where the legs cannot be let go joint by joint: half way between a
+   * crouch and a crawl that takes a shin straight down through the floor.
+   * The legs then take the new motion at once, and whoever poses the body
+   * carries each foot across to it instead, at this rate (`feet`). */
+  feet?:InertiaSpring};
 
 const groupOf=(id:string):InertiaGroup=>id==='root'||id==='hips'||id==='torsoRoot'?'root'
   :/^(hip|knee|ankle|toe)/.test(id)?'legs':id==='spine'||id==='chest'?'spine':id==='neck'||id==='head'?'head':'arms';
@@ -69,6 +74,7 @@ function offsetRate(offset:number[],spin:number[]):number[] {
 export class PoseInertia {
   private readonly parts=new Map<string,Part>();
   private responses:Record<InertiaGroup,Response>|null=null;
+  private feetResponse:Response|null=null;
   private carry:[number,number,number]=[0,0,0];
   /** The new motion's first frame, kept one frame to learn its own speed. */
   private first:PoseBuffer|null=null;
@@ -77,7 +83,15 @@ export class PoseInertia {
   private time=0;
   private end=0;
   get active():boolean {return this.parts.size>0;}
-  reset():void {this.parts.clear();this.first=null;this.travel=null;}
+  /** How much of the pelvis's offset at the last cut is still in play: 1 on
+   * the cut, 0 once it has run out, under 0 while it swings past. */
+  get rootLeft():number {return this.parts.size&&this.responses?this.responses.root.offset(this.time):0;}
+  /** For a cut that carries the feet: how much of each foot's way to the new
+   * motion is left, and how far a speed of 1 at the cut has coasted since. */
+  get feet():[left:number,coast:number]|null {
+    return this.parts.size&&this.feetResponse?[this.feetResponse.offset(this.time),this.feetResponse.coast(this.time)]:null;
+  }
+  reset():void {this.parts.clear();this.first=null;this.travel=null;this.feetResponse=null;}
 
   /** `previous` and `before` are the last two poses shown, `before` the
    * older. `travel` is the body's own velocity over the frame now ending and
@@ -89,6 +103,7 @@ export class PoseInertia {
     const rate=before&&dt>1e-5?1/dt:0;
     for(const id of new Set([...Object.keys(target.joints),...Object.keys(previous.joints)])){
       const to=target.joints[id]??{},from=previous.joints[id]??{},old=before?.joints[id]??from,group=groupOf(id);
+      if(shape.feet&&group==='legs')continue;
       if(to.quaternion||from.quaternion){
         const x=turn(from.quaternion,to.quaternion);
         this.parts.set(`${id}:q`,{x,v:offsetRate(x,turn(from.quaternion,old.quaternion).map(value=>value*rate)),c:[0,0,0],group});
@@ -105,7 +120,8 @@ export class PoseInertia {
     }
     this.responses={root:response(shape.root),legs:response(shape.legs),spine:response(shape.spine),head:response(shape.head),
       arms:response(shape.arms),lengths:response(shape.lengths)};
-    this.end=Math.max(...Object.values(this.responses).map(r=>r.end));
+    this.feetResponse=shape.feet?response(shape.feet):null;
+    this.end=Math.max(this.feetResponse?.end??0,...Object.values(this.responses).map(r=>r.end));
     this.carry=shape.carry;
     const pelvis=this.parts.get('root:p');
     if(pelvis&&travel&&travelBefore)for(let i=0;i<3;i++)pelvis.v[i]+=this.carry[i]*bounded(travelBefore[i]-travel[i]);
@@ -157,6 +173,26 @@ export class PoseInertia {
       result.joints[id]=joint;
     }
     return result;
+  }
+}
+
+/** A layer's weight outside the pose (the resting arm angle, the flat crawl
+ * palms) that a cut would otherwise switch in a single frame. What is left of
+ * the change is let go at a part's own rate, without swinging past: a weight
+ * has ends. */
+export class WeightInertia {
+  private offset=0;
+  private time=0;
+  private omega=1;
+  reset():void {this.offset=0;}
+  /** `shown` is the weight on screen, `target` the one the new motion asks for. */
+  cut(shown:number,target:number,[omega]:InertiaSpring):void {this.offset=shown-target;this.time=0;this.omega=omega;}
+  apply(target:number,dt:number):number {
+    if(!this.offset)return target;
+    this.time+=Math.max(0,dt);
+    const u=this.omega*this.time;
+    if(u>14){this.offset=0;return target;}
+    return target+this.offset*Math.exp(-u)*(1+u+u*u/2);
   }
 }
 

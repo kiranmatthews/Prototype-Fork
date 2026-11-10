@@ -36,7 +36,10 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,TUNING})=>{
     const world=id=>joint(id).getWorldPosition(new THREE.Vector3());
     const q=id=>joint(id).quaternion.clone();
     const soles=()=>['left','right'].flatMap(side=>['foot','heel'].map(part=>p.group.getObjectByName(`socket-${part}-${side}`).getWorldPosition(new THREE.Vector3())));
-    const dt=1/fps,idle=Math.round(fps*1.6),slideAt=idle+Math.round(fps*.7),hop=slideAt+Math.round(fps*.2);
+    // How hard the cut into the skid is on a wrist depends on where the run's
+    // arms are (7 to 18 m/s in a frame across a stride, with either idle to
+    // start from). The run-in puts it where they are passing his sides.
+    const dt=1/fps,idle=Math.round(fps*1.6),slideAt=idle+Math.round(fps*.86),hop=slideAt+Math.round(fps*.2);
     const jump=mode.startsWith('jump'),low=mode==='crouch'||mode==='crawl',keep=mode==='run'||mode==='crawl'||mode.endsWith('-run');
     // "jump2" taps again in the air: the double jump out of the slide jump.
     const again=mode.startsWith('jump2')?hop+Math.round(fps*.3):-1,tap=Math.round(fps*.06);

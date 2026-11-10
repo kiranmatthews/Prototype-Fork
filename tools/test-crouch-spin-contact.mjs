@@ -4,6 +4,7 @@ import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) => {
   const a = await server.ssrLoadModule('/src/animation/index.ts');
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+  const { CRAWL_STRIDE_METRES } = await server.ssrLoadModule('/src/animation/crouch.ts');
   const fixtures = [];
   const create = (kinds = [], y = 0) => {
     const l = new Level(new THREE.Scene(), { id: 'crouch-spin-contact', name: 'Crouch spin', data: {
@@ -59,7 +60,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
         metres += p.pos.distanceTo(before); previousTime = next;
       }
       assert.ok(Math.abs(metres - Math.hypot(moveX, moveY) * TUNING.crawlSpeed) < 1e-5, 'animation changed movement');
-      assert.ok(Math.abs(phaseTravel * 1.8 - metres * clip.playbackSpeed) < 1e-5, 'crawl cadence does not match distance');
+      assert.ok(Math.abs(phaseTravel * CRAWL_STRIDE_METRES - metres * clip.playbackSpeed) < 1e-5, 'crawl cadence does not match distance');
     }
     for (let f = 0; f < 30; f++) {
       tick({ grabHeld: true, moveX: .5, spinPressed: f === 0 });

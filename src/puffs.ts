@@ -342,6 +342,24 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     alpha: [0.34, 0.48], fadeIn: 0.06, outerAlpha: 0,
     count: [1, 2], surfaceTint: 0.85, spacing: [0.4, 0.65],
   },
+  // A shoe braking flat on the ground: the slide's grit, smaller and laid
+  // closer together, because a sole covers a metre where a body covers five.
+  dustFootSkid: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.13, 0.21], aspect: [1.0, 1.25],
+    grow: [1.9, 2.6], growY: [1.5, 2.1], growCurve: 0.38, stretch: 0.03,
+    wobble: [0.18, 0.28], swirl: [0.06, 0.14], wobbleRate: [0.3, 0.6],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.5, 0.5],
+    speed: [0.7, 1.5], spread: 1.2, up: [0.35, 0.8], gravity: [0.8, 1.5],
+    inherit: 0.16, drag: [2.8, 4.2], wind: 0.4,
+    turbulence: [0.1, 0.22], turbRate: [0.7, 1.2],
+    ground: true, flatten: 0.5, spreadOnGround: 0.4, friction: 3.8,
+    life: [0.38, 0.62],
+    centre: 0xe0d4bc, inner: 0xb8ac95, outer: 0x423b31,
+    alpha: [0.4, 0.55], fadeIn: 0.06, outerAlpha: 0,
+    count: [1, 1], surfaceTint: 0.85, spacing: [0.07, 0.12],
+  },
   dustLand: {
     blend: 'alpha', orient: 'billboard',
     ring: [5, 7], multiCentre: 0, halo: 0,

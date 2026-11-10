@@ -119,6 +119,7 @@ try {
     reconcilePlayerStarterAnimationSuite,
     sampleForwardRollPresentation,
   } = await server.ssrLoadModule("/src/animation/index.ts");
+  const { CRAWL_STRIDE_METRES } = await server.ssrLoadModule("/src/animation/crouch.ts");
   // This suite keeps coverage of saved Unity drafts and their palm/torso IK.
   // New source routes and one-shots are checked by test-quaternius-crouch.
   const createPlayerStarterAnimationSuite = (rig) => {
@@ -398,7 +399,7 @@ try {
     lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 0);
     for (let frame = 0; frame < 15; frame++)
       tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
-    const expectedTime = (15 * CONST.fixedStep * TUNING.crawlSpeed / 1.8 * playbackSpeed) % 1;
+    const expectedTime = (15 * CONST.fixedStep * TUNING.crawlSpeed / CRAWL_STRIDE_METRES * playbackSpeed) % 1;
     closeTo(lowPoseRuntime.diagnostics.timelineTime, expectedTime,
       `live Crawl ignored saved playback speed ${playbackSpeed}`);
     closeTo(lowPosePlayer.authoredCrawlContactPhase, expectedTime,

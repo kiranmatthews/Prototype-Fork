@@ -5,6 +5,12 @@ import type { OnFootJumpStudy } from '../onFootJumpStudy';
 import { JAK_LEDGE_MOTION, ledgeRebound } from './ledgeMotion';
 import {createPancakeSlamClip} from './pancakeSlam';
 import {createJakSlideClip,createJakSlideJumpClip} from './jakSlide';
+import {createJakSkidClip,JAK_SKID_SIZES} from './jakSkid';
+import {createJakIdleClip} from './jakIdle';
+import {createJakChargeClip} from './jakCharge';
+import {JUMP_CHARGE_CLIP_ID} from './jumpCharge';
+import {RUN_STOP_CLIP_ID} from './runStop';
+import {JAK_LOW_CUTS} from './jakLowMotion';
 
 type JointSample = {p: Vec3Tuple; q: QuaternionTuple};
 type Frame = Record<string, JointSample>;
@@ -161,8 +167,9 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
   const specs:[string,string,boolean][]=[
     // Idle stays identical to A/B/C, including its native neutral-arm layer.
     ['player.run','run',true],['player.walk','walk',true],
-    // Keep Bone Man's momentum-driven brake and finite settle. Jak's eight
-    // second pacing sequence fights this controller's short coast/restart.
+    // The stop is neither Jak's (an eight second pacing sequence that fights
+    // this controller's short coast and restart) nor the native brake pose:
+    // D keys its own skid below, on the native momentum-driven timing.
     ['player.jump','jump',false],
     ['player.double-jump','jump',false],['player.fall','jump-loop',true],
     ['player.land','jump-land',false],['player.jak-run-land','run-squash',false],
@@ -287,8 +294,16 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     }
     const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
   }
+  // The crouch and the crawl stay the native clips; D only carries the body
+  // between them and standing.
+  suite.metadata={...suite.metadata,jakLowCuts:JAK_LOW_CUTS};
   const landing=suite.clips.find(clip=>clip.id==='player.land');
   suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig,landing)
-    :clip.id==='player.slide'?createJakSlideClip(clip,rig):clip.id==='player.slide-jump'?createJakSlideJumpClip(clip,rig):clip);
+    :clip.id==='player.slide'?createJakSlideClip(clip,rig):clip.id==='player.slide-jump'?createJakSlideJumpClip(clip,rig)
+    :clip.id===RUN_STOP_CLIP_ID?createJakSkidClip(clip,rig):clip.id==='player.idle'?createJakIdleClip(clip,rig)
+    :clip.id===JUMP_CHARGE_CLIP_ID?createJakChargeClip(clip,rig):clip);
+  // The skid is baked at a few sizes; the runtime samples the one for the pace he stops from.
+  const stop=base.clips.find(clip=>clip.id===RUN_STOP_CLIP_ID);
+  if(stop)for(let size=0;size<JAK_SKID_SIZES-1;size++)suite.clips.push(createJakSkidClip(stop,rig,size));
   return suite;
 }

@@ -63,10 +63,14 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   const [native,adapted]=traces;
   assert.deepEqual(adapted.map(r=>[r.pos,r.yaw,r.speed,r.turn]),native.map(r=>[r.pos,r.yaw,r.speed,r.turn]),
     'D changed native movement or facing');
-  let runFrames=0,turnFrames=0,maxCadenceError=0,maxHandoffHeadStep=0;
+  let runFrames=0,turnFrames=0,maxCadenceError=0,maxHandoffHeadStep=0,settling=0;
   for(let f=1;f<adapted.length;f++) {
     const d=adapted[f],n=native[f],prev=adapted[f-1],prevN=native[f-1];
-    assert.equal(d.clip,n.clip,`D delayed a native animation transition at ${f}`);
+    // D's skid is its own clip and settles for longer than the source one,
+    // over a body that is already standing still. Nothing else may differ,
+    // and it has to give way the frame anything else is asked for.
+    if(d.clip==='player.run-stop'&&n.clip==='player.idle')settling++;
+    else assert.equal(d.clip,n.clip,`D delayed a native animation transition at ${f}`);
     if(d.clip==='player.run'&&prev.clip===d.clip&&prevN.clip===n.clip) {
       const advance=(d.phase-prev.phase+1)%1,nativeAdvance=(n.phase-prevN.phase+1)%1;
       maxCadenceError=Math.max(maxCadenceError,Math.abs(advance-nativeAdvance));runFrames++;
@@ -83,7 +87,9 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   assert.ok(maxHandoffHeadStep<.065,`start/stop handoff snapped ${maxHandoffHeadStep}m`);
   assert.equal(adapted[350].clip,'player.run-stop','release failed to brake');
   assert.equal(adapted[370].clip,'player.run','renewed intent failed to interrupt braking');
-  assert.equal(adapted[500].clip,'player.idle','D kept pacing after the native settle');
+  const skid=direct.clips.find(c=>c.id==='player.run-stop');
+  assert.ok(skid.metadata.jakSkid&&settling>0&&settling<skid.duration*60,`D's skid did not settle in its own time: ${settling} frames past the source's`);
+  assert.equal(adapted[450+Math.ceil(skid.duration*60)].clip,'player.idle','D kept skidding after its own settle');
   assert.ok(adapted[600].walk>.99,'analog walking still blends in a full run');
   assert.ok(adapted.some(r=>r.recovery>0&&r.recovery<1),'stop never recovered into the idle pose');
   runtime.dispose();

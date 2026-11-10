@@ -184,6 +184,9 @@ try {
       crawlContactWeight = phase === null ? 0 : weight;
     },
     setAuthoredCrawlPalmWeight() {},
+    setLowPoseCarry() {},
+    setKeyedSoleFit() {},
+    setKeyedSoleHold() {},
     setCharacterUpperArmRestAngleWeight(weight) {
       upperArmRestAngleWeight = weight;
     },

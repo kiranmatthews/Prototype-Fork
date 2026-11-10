@@ -76,6 +76,22 @@ g.puffs.update = (dt: number, camera: THREE.Camera) => {
 };
 let reviewLevel: Level | null = null, savedCoursePosition: THREE.Vector3 | null = null;
 let mode = 'Full jump', frame = 0, frozen = false, slow = false, skips = 0, stepFrame=false;
+// Standing, crouching and crawling: the frames Circle and the stick are held over, each [from, to).
+// Each is frames [from, to); a stick span may add its own direction (right, forward), forward when it has none.
+// `jump` lists the frames X is pressed on, held for five.
+const LOW_MOTIONS: Record<string,{circle:number[][];stick:number[][];end:number;jump?:number[]}> = {
+  'Crouch and stand': {circle:[[40,130]],stick:[],end:270},
+  'Crouch taps': {circle:[[40,50],[95,113],[170,176]],stick:[],end:290},
+  'Crouch, crawl, crouch': {circle:[[40,300]],stick:[[110,200]],end:420},
+  'Crawl and stand': {circle:[[40,210]],stick:[[100,210]],end:340},
+  'Crawl and run': {circle:[[40,210]],stick:[[100,330]],end:400},
+  'Crawl stops and starts': {circle:[[40,330]],stick:[[90,130],[160,175],[215,290]],end:440},
+  'Crawl': {circle:[[30,600]],stick:[[70,600]],end:600},
+  'Crawl all ways': {circle:[[40,520]],stick:[[90,150],[150,215,1,0],[215,285,0,-1],[285,350,-1,0],[380,440,.71,.71],[440,500,-.71,-.71]],end:620},
+  'Crawl sideways and stand': {circle:[[40,210]],stick:[[100,210,1,0]],end:340},
+  'Crawl, stop and jump': {circle:[[40,206]],stick:[[100,200]],jump:[206],end:330},
+  'Crawl, hop, crawl on': {circle:[[40,400]],stick:[[100,400]],jump:[190],end:470},
+};
 let angle = Math.PI / 2, stopAt = 'None', hadAir = false, landFrame = 0, doubleFrame = 0;
 let lastSwitch = {positionDelta: 0, verticalVelocityDelta: 0, speedDelta: 0};
 let sourceModel: THREE.Group | null = null, sourceMixer: THREE.AnimationMixer | null = null;
@@ -292,13 +308,30 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Ice blend out'&&frame>90&&!p.groundHit?.slippy&&iceMix>.2&&iceMix<=.6)frozen=true;
     if(frame>=260)resetInspector();return;
   }
-  if (mode === 'Idle' || mode === 'Idle and stops') {
+  if (mode === 'Idle' || mode === 'Idle and stops' || mode === 'Stops at three paces') {
     p.camDir.set(0,0,-1);
-    const demo={moveX:0,moveY:mode==='Idle and stops'?(frame>=90&&frame<180?1:frame>=300&&frame<390?.3:0):0,
-      jumpHeld:false,jumpPressed:false,jumpReleased:false};
+    // Three paces: a full run, a fast jog and the slowest that still skids.
+    const pace=mode==='Stops at three paces'?(frame>=90&&frame<180?1:frame>=300&&frame<390?.75:frame>=510&&frame<600?.55:0)
+      :mode==='Idle and stops'?(frame>=90&&frame<180?1:frame>=300&&frame<390?.3:0):0;
+    const demo={moveX:0,moveY:pace,jumpHeld:false,jumpPressed:false,jumpReleased:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
     if(stopAt==='Settled'&&frame===(mode==='Idle'?120:470))frozen=true;
-    if(mode==='Idle and stops'&&frame>540)resetInspector();return;
+    if(mode==='Idle and stops'&&frame>540||mode==='Stops at three paces'&&frame>740)resetInspector();return;
+  }
+  if(mode==='Skate, charge and carve'||mode==='Skate and coast'){
+    // Mount, let X go, then: hold a full charge for seconds, steering under
+    // it, ollie and keep X down through the landing; or just roll, weaving.
+    p.camDir.set(0,0,-1);
+    const t=frame/60,charging=mode==='Skate, charge and carve';
+    const heldAt=(s:number)=>s>.4&&s<1.5||charging&&(s>=2.4&&s<6.2||s>=6.4&&s<9.2);
+    const held=heldAt(t),previousHeld=heldAt((frame-1)/60);
+    const steer=charging?(t>3.6&&t<4.4?1:t>4.6&&t<5.4?-1:0):(t>3&&t<3.9?1:t>4.2&&t<5.1?-1:t>6.2&&t<6.6?.6:0);
+    // (Stick forward is a push on a board; coasting lets it go once he is rolling.)
+    const demo={moveX:steer,moveY:t<(charging?9.2:2.6)?1:0,jumpHeld:held,jumpPressed:held&&!previousHeld,jumpReleased:!held&&previousHeld,
+      grabHeld:t>(charging?9.6:8.4)&&t<(charging?12.6:11.4),grabPressed:false};
+    nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Charge'&&skateMotion?.phase==='charge'&&skateMotion.time>=1.2)frozen=true;
+    if(frame>=(charging?800:740))resetInspector();return;
   }
   if(['Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release'].includes(mode)){
     p.camDir.set(0,0,-1);
@@ -365,6 +398,24 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Settled'&&frame>=(low?130:twice?200:jump?170:150))frozen=true;
     if(frame>=(twice?260:230))resetInspector();return;
   }
+  const low=LOW_MOTIONS[mode];
+  if(low){
+    p.camDir.set(0,0,-1);
+    // Circle held from frame 40; each entry is [from, to) in frames.
+    const within=(spans:number[][])=>spans.some(([from,to])=>frame>=from&&frame<to);
+    const circle=within(low.circle),stick=within(low.stick),push=low.stick.find(([from,to])=>frame>=from&&frame<to);
+    const hop=low.jump?.find(at=>frame>=at&&frame<=at+5);
+    nativeStep(dt,{moveX:push?.[2]??0,moveY:stick?push?.[3]??1:0,jumpHeld:hop!==undefined&&frame<hop+5,jumpPressed:frame===hop,jumpReleased:hop!==undefined&&frame===hop+5,
+      grabHeld:circle,grabPressed:low.circle.some(([from])=>frame===from)},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    const crouched=runtime.activeClipId==='player.crouch',crawling=runtime.activeClipId==='player.crawl';
+    const down=low.circle[0][0],up=low.circle[low.circle.length-1][1],off=low.stick[0]?.[0]??Infinity;
+    if(stopAt==='Crouch dip'&&crouched&&frame>=down+17 || stopAt==='Crouched'&&crouched&&frame>=down+55 ||
+      stopAt==='Crawl reach'&&crawling&&frame>=off+14 || stopAt==='Crawling'&&crawling&&frame>=off+50 ||
+      stopAt==='Rising'&&frame>=up+7 ||
+      stopAt==='Settled'&&frame>=low.end-70)frozen=true;
+    if(frame>=low.end)resetInspector();return;
+  }
   if(mode==='Pancake slam'||mode==='Slam and run'){
     p.camDir.set(0,0,-1);
     const slam=frame===48;
@@ -403,7 +454,8 @@ p.step = (dt: number, input: any, level: Level) => {
   }
   const secondJump = mode === 'Double jump' || mode === 'Running double jump';
   const running = mode === 'Running jump' || mode === 'Coasting jump' || mode === 'Running double jump' || mode === 'Run and stop';
-  const hold = mode === 'Tap jump' ? 3 : running || mode === 'Precision jump' ? 18 : 35, release = 50 + hold;
+  // 'Held jump' keeps X down well past full charge, to watch him wait on it.
+  const hold = mode === 'Tap jump' ? 3 : mode === 'Held jump' ? 170 : running || mode === 'Precision jump' ? 18 : 35, release = 50 + hold;
   const demo = {moveX: 0, moveY: mode === 'Precision jump' ? .2 : running &&
       (mode !== 'Run and stop' || frame < 145) && (mode !== 'Coasting jump' || frame < release) ? 1 : 0,
     jumpHeld: frame >= 50 && frame < release, jumpPressed: frame === 50, jumpReleased: frame === release};
@@ -427,7 +479,7 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt === 'Settled' && landFrame && frame >= landFrame + 40 &&
         ['player.idle','player.run'].includes(runtime.activeClipId ?? '') &&
         runtime.diagnostics.transitionBlendWeight === null)) frozen = true;
-  if (frame > (mode === 'Run and stop' ? 750 : 300)) resetInspector();
+  if (frame > (mode === 'Run and stop' ? 750 : mode === 'Held jump' ? 420 : 300)) resetInspector();
 };
 const nativeRender = g.renderer.render.bind(g.renderer);
 g.renderer.render = (...args: any[]) => {
@@ -584,8 +636,9 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run','Slide','Slide and run','Slide to crouch','Slide to crawl','Slide jump','Slide jump and run','Slide double jump and run',
-  'Skate flow','Mount cancel','Slow X push','Fakie slow X push','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+const motionSelect=select('Motion',['Idle','Idle and stops','Stops at three paces','Tap jump','Full jump','Held jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run','Slide','Slide and run','Slide to crouch','Slide to crawl','Slide jump','Slide jump and run','Slide double jump and run',
+  ...Object.keys(LOW_MOTIONS),
+  'Skate flow','Skate, charge and carve','Skate and coast','Mount cancel','Slow X push','Fakie slow X push','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -601,7 +654,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle','Slide hip down','Slide skid','Slide crouch','Slide stand','Slide tuck','Slide touchdown',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle','Slide hip down','Slide skid','Slide crouch','Slide stand','Slide tuck','Slide touchdown','Crouch dip','Crouched','Crawl reach','Crawling','Rising',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Push stroke','Speed recovered','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);

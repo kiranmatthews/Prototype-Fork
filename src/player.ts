@@ -138,6 +138,7 @@ import {
 import type { ProceduralMotionContext } from './animation/types';
 import { solveTwoBoneIk } from './animation/ik';
 import { JAK_SLIDE, JAK_SLIDE_JUMP } from './animation/jakSlide';
+import { JAK_SKID } from './animation/jakSkid';
 import {
   FORWARD_ROLL_TUCK_INPUT,
   sampleForwardRollPresentation,
@@ -498,6 +499,37 @@ const _plantML = new THREE.Matrix4();
 const _plantV = new THREE.Vector3();
 const _plantO = new THREE.Vector3();
 const _plantC = new THREE.Vector3();
+/** The crawl was first paced at 3.5 m/s, and three of its rules were written as plain speeds against that:
+ * 1.2 m/s for a held Circle to be wholly the crawl and no longer part crouch, 1.5 m/s of travel before the
+ * body turns to face where it is going, and 0.5 m/s before its step clock runs. Each is kept as the same
+ * share of the crawl's own pace, and never more than it was, so a slower crawl is still a crawl, and still
+ * turns to face any way the stick sends it, at the same push of the stick. */
+const CRAWL_REFERENCE_SPEED = 3.5;
+const crawlPaced = (metresPerSecond: number) =>
+  Math.min(metresPerSecond, Math.max(0, TUNING.crawlSpeed) * metresPerSecond / CRAWL_REFERENCE_SPEED);
+const crawlPoseSpeed = () => Math.max(.05, crawlPaced(1.2));
+// Standing up out of a crouch: the seconds the soles stay held on their marks, and by when they are let go.
+const LOW_RISE_HOLD = [.36, .78] as const;
+// Down into a crouch from a crawl, a skid or a step: the seconds the pose folds the legs under him before
+// the soles are taken to their marks, and the seconds that then takes.
+const LOW_GATHER = [.24, .32] as const;
+const LOW_KNEE_SWING = 16; // radians a second: how fast a folded knee is swung round to the side the pose has taken it to
+const LOW_KNEE_SETTLE = 14; // a second: how soon that swing slows as the knee comes onto the pose's side
+const LOW_KNEE_PUSH = 200; // radians a second, each second: how quickly the swing gets up to speed
+const LOW_KNEE_CLEARANCE = .075; // metres a knee joint is kept above the floor: about what the knee itself takes up
+const LOW_KNEE_FLARE = .15; // metres: how wide of a straight line a carried knee swings on its way
+const LOW_FOOT_FLARE = .1; // metres: and its foot
+const LOW_FLARE_OVER = .6; // metres a foot has to travel for the whole of that; a foot that hardly moves swings out not at all
+const LOW_FEET_FINISH = 11; // a second: how soon a foot carry that is no longer reported is finished off
+const LOW_KNEE_SETTLE_SPEED = .5; // metres a second: how fast he comes back down off a knee he rode up over
+const LOW_KNEE_RIDE = .14; // metres: the most the body rides up over a knee that comes under it
+const LOW_TOE_RISE = .62; // radians: the most a held shoe's heel comes up, whether the pose asks or the pelvis pulls
+const LOW_TOE_FLOAT = .035; // metres more it may rise over soles that are held, which come up onto their toes for it
+const LOW_SOLE_FLOAT = .012; // metres a carried pelvis may take its lowest sole off the floor as it swings past standing
+const LOW_FIT_LIFT = .12; // metres: the most the floor fit lifts a body that is still being carried up out of a low pose
+const LOW_LET_GO = .12; // seconds the legs and arms take to ease out of a hold that a jump cut off
+const LOW_LET_GO_FAR = 2.5; // and how many times longer the legs take, more, where the feet had their whole way still to go
+const LOW_HAND_KEEP = .3; // seconds over which a crawling hand lets go of the lift its last plant needed
 const IDLE_STANCE_SETTLE = 1.2; // seconds of settled idle before its stance is trusted (a landing finishes under the idle hint)
 const _soleUp = new THREE.Vector3(0, 1, 0);
 /** A foot bone's own contact sockets. The bone knows which side it is on. */
@@ -508,12 +540,31 @@ function soleSockets(ankle: THREE.Object3D | null) {
 }
 const _soleTargets = [new THREE.Vector3(), new THREE.Vector3()];
 const _soleAims = [new THREE.Vector3(), new THREE.Vector3()];
+const _lowInv = new THREE.Matrix4();
+const _lowLinear = new THREE.Matrix3();
+const _lowUp = new THREE.Vector3();
+const _lowAim = new THREE.Vector3();
+const _lowSide = new THREE.Vector3();
+const _lowReach = new THREE.Vector3();
+const _lowAnkle = new THREE.Vector3();
+const _lowOffset = new THREE.Vector3();
+const _lowFront = new THREE.Vector3();
+const _lowHip = new THREE.Vector3();
+const _lowFlat = new THREE.Quaternion();
+const _lowNow = new THREE.Quaternion();
+const _lowTurn = new THREE.Quaternion();
+const _lowStep = new THREE.Quaternion();
+const _lowBend = new THREE.Vector3();
+const _lowPosed = Array.from({ length: 6 }, () => new THREE.Quaternion());
+const _lowMarks = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
 const _solePole = new THREE.Vector3();
 const _soleForward = new THREE.Vector3();
 const _soleLeft = new THREE.Vector3();
 const _soleA = new THREE.Vector3();
 const _soleB = new THREE.Vector3();
 const _soleFrom = new THREE.Quaternion();
+const _skidAhead = new THREE.Vector3();
+const _skidAt = new THREE.Vector3();
 const _soleTo = new THREE.Quaternion();
 const _trickOffset = new THREE.Vector3();
 const _trickPivot = new THREE.Vector3();
@@ -658,6 +709,10 @@ export class Player {
   private ledgeVisualCentre: THREE.Vector3 | null = null;
   /** Read-only presentation evidence for the local motion comparison. */
   ledgeGripError = 0;
+  /** The D scheme is in use, whatever he is doing. */
+  private get directScheme(): boolean {
+    return this.onFootJumpStudy?.direct === true && !this.alwaysSkate;
+  }
   private get directFootStudy(): boolean {
     return this.onFootJumpStudy?.direct === true && !this.freeSkate && !this.alwaysSkate &&
       !this.isBailing && !this.crawling && !this.sliding && !this.swimming && !this.slamActive &&
@@ -990,7 +1045,7 @@ export class Player {
   // kept in the root's frame alone would swap sides whenever the facing had
   // changed). The slam recovery lands on these marks, so its handoff never
   // slides a foot.
-  private readonly idleStance = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
+  private readonly idleStance = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3(), turn: new THREE.Quaternion() }));
   private idleStanceValid = false;
   private idleStanceT = 0;
   private idleStanceNext = IDLE_STANCE_SETTLE;
@@ -1014,6 +1069,103 @@ export class Player {
   private readonly slideSoleHold: [number, number] = [0, 0];
   private slideSolePhase: 'none' | 'skid' | 'rise' | 'land' = 'none';
   private slideExitT = -1; // seconds since something else took the skid over on the ground
+  // A keyed clip that stands on held soles (the skid out of a run, the jump
+  // charge): which, and its timeline while it plays (the runtime reports
+  // them), each sole's hold and mark, and the turn each leg joint was given
+  // by its hold, eased out when something else takes the legs.
+  private keyedHoldKind: 'skid' | 'stand' | null = null;
+  private keyedHoldTime: number | null = null;
+  // A clip that stands where the idle stood takes the pelvis from the floor
+  // fit as its own carry into the clip runs out: how much of that carry is
+  // left, what the fit was applying when it began, and what is still applied.
+  private keyedEntering = 0;
+  private keyedStanding = false;
+  private keyedSeatFrom = 0;
+  private keyedSeatCarry = 0;
+  private readonly keyedSoleMarks = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3(), turn: new THREE.Quaternion() }));
+  private readonly keyedSoleHold: [number, number] = [0, 0];
+  private readonly keyedLegTurns = Array.from({ length: 6 }, () => new THREE.Quaternion());
+  private keyedLegsHeld = false;
+  private keyedLegsFreeT = -1;
+  private keyedSeatHold = 0;
+  // The keyed skid's soles slide to where he will stand. For each: where it
+  // was when it took the floor (from the idle's own mark, in the facing
+  // frame) and the ground that was left then; how far along the ground it
+  // has got, which it never gives back while he is moving; where it was last
+  // frame; whatever lead it still has when he stops; and whether it is down.
+  private readonly keyedSkidTake = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3(),
+    from: 0, along: -Infinity, last: NaN, spare: 0, on: false, down: false }));
+  private readonly keyedSkidWay = new THREE.Vector3(0, 0, 1); // the way he is going, in the facing frame
+  private readonly keyedSkidWayWorld = new THREE.Vector3(0, 0, 1); // and in the world
+  private keyedSkidUnit = 1; // facing-frame units to a metre of ground
+  private keyedSkidSeconds = 0; // since the skid began
+  private keyedSkidSeatT = -1; // and since the floor fit stood aside for its held soles
+  private keyedSkidDusty = false;
+  // D carries the body between standing, the crouch and the crawl. While it
+  // does, the runtime reports how much of the pelvis's own carry is left (1 on
+  // the cut, 0 once it has run out) and counts the cuts. The on-foot seating
+  // follows that: what it last applied, the cut it last answered, what it
+  // was applying on that cut, what the settled idle asks of it, and what is
+  // left to hand over once a carry has run out. The seat is called with no
+  // arguments (harnesses wrap it that way), so the frame's time waits here.
+  private lowPoseCarry: number | null = null;
+  private lowPoseCarrySerial = 0;
+  private lowPoseGathering = false;
+  private footSeatDrop = 0;
+  private footSeatSerial = 0;
+  private footSeatFrom = 0;
+  private footSeatStanding: number | null = null;
+  private footSeatSlack = 0;
+  private keyedSoleFit = false;
+  private keyedSoleFitWas = false;
+  private footSeatApplied = 0; // what the fit actually moved him by last frame, under any hold that stood it aside
+  private keyedSeatHeld = 0;
+  private footSeatSeconds = 0;
+  // How firmly the crouch holds each sole on the stand's own mark, how much a
+  // free sole or a hand is kept on top of the floor, and the clock of a rise
+  // out of the crouch (-1 when none is running).
+  private lowSoleHold = 0;
+  private readonly lowStance = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3(), turn: new THREE.Quaternion() }));
+  private lowStanceValid = false;
+  private lowSoleQuick = true;
+  private lowSoleGuard = 0;
+  private lowHandGuard = 0;
+  private readonly lowHandLift: [number, number] = [0, 0];
+  private lowRiseT = -1;
+  private lowCrouchT = 0;
+  // What the holds and guards did to each leg and arm joint on the last frame
+  // they acted, and the seconds since they were cut off (-1: not running).
+  // The side of its hip-to-ankle line each knee is folded to while a shoe is lifted, inside the body.
+  private readonly lowBends = [new THREE.Vector3(), new THREE.Vector3()];
+  private readonly lowBendValid: [boolean, boolean] = [false, false];
+  private readonly lowBendSpin: [number, number] = [0, 0];
+  private readonly lowBendLate: [boolean, boolean] = [false, false];
+  // Between a crouch and a crawl, and up off all fours, the legs are not
+  // let go joint by joint: each foot is carried across over the floor. Kept
+  // for that: what the cut asks (how much of the way is left, how far a
+  // speed has coasted), the cut answered, where each foot was shown and how
+  // fast it was going on it, and what is shown now, for the next one.
+  private lowFeetCarry: readonly [number, number] | null = null;
+  private lowFeetSerial = 0;
+  private lowFeetBusy = false;
+  private lowFeetLeft = 0;
+  private lowKneeLift = 0;
+  private lowGathered = false;
+  private lowFeetSeen = false;
+  private lowFeetSeenLeft = 0;
+  private lowFeetSeenCoast = 0;
+  private lowFeetRate = 0;
+  private lowFeetShownValid = false;
+  private readonly lowFeetFrom = [0, 1].map(() => ({ ankle: new THREE.Vector3(), speed: new THREE.Vector3(), turn: new THREE.Quaternion(), knee: new THREE.Vector3() }));
+  private readonly lowFeetShown = [0, 1].map(() => ({ ankle: new THREE.Vector3(), speed: new THREE.Vector3(), turn: new THREE.Quaternion(), knee: new THREE.Vector3() }));
+  private readonly lowLegTurns = Array.from({ length: 6 }, () => new THREE.Quaternion());
+  private readonly lowArmTurns = Array.from({ length: 4 }, () => new THREE.Quaternion());
+  private lowLegsHeld = false;
+  private lowArmsHeld = false;
+  private lowLegsFreeT = -1;
+  private lowLegsFreeFor = LOW_LET_GO;
+  private lowArmsFreeT = -1;
+  private lowHint: PlayerAnimationClipHint | null = null;
   // What holding the soles did to each leg joint on the last frame it was
   // done, and the seconds since: let go, a leg eases out of that from
   // wherever the next motion has it, instead of dropping it.
@@ -1819,6 +1971,9 @@ export class Player {
   private walkIntent = new THREE.Vector3(); // world heading presented immediately during a committed turnaround
   private raycaster = new THREE.Raycaster();
   private readonly interactionMeasure = new CharacterInteractionBounds();
+  /** The hands and the shoes are measured apart from the body, so none of them loses its place. */
+  private readonly handMeasure = new CharacterInteractionBounds();
+  private readonly footMeasure = new CharacterInteractionBounds();
   private interactionVersion = 0;
   private measuredInteractionVersion = -1;
   private readonly characterBounds = new THREE.Box3();
@@ -2401,7 +2556,7 @@ export class Player {
       ? Math.max(this.animationPlanarSpeed, TUNING.walkSpeed * this.walkRamp)
       : this.animationPlanarSpeed;
     const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
-    const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / 1.2);
+    const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / crawlPoseSpeed());
     const crouchPose = Math.max(0, this.crawlPose - crawlMotion);
     const charge = THREE.MathUtils.clamp(
       this.chargeTimer / Math.max(TUNING.jumpChargeTime, 0.001),
@@ -3014,6 +3169,35 @@ export class Player {
       0,
       1,
     );
+  }
+
+  /** What is left of the pelvis's carry between standing and the low poses
+   * (1 on the cut, 0 once it has run out, under 0 while it swings past), or
+   * null when no such carry is running; `serial` counts the cuts. `gathering`
+   * is the moment on the way up off all fours when he is still being carried
+   * toward the crouch: free to move already, but not yet a body that stands
+   * on its soles. */
+  setLowPoseCarry(left: number | null, serial: number, gathering = false, feet: readonly [number, number] | null = null): void {
+    this.lowPoseCarry = left !== null && Number.isFinite(left) ? left : null;
+    this.lowPoseCarrySerial = serial;
+    this.lowPoseGathering = gathering;
+    this.lowFeetCarry = feet && Number.isFinite(feet[0]) && Number.isFinite(feet[1]) ? feet : null;
+  }
+
+  /** A keyed clip that stands on its soles while he is still moving (the skid
+   * out of a run, a planted jump charge) asks for the floor fit whole: its
+   * lower sole on the floor, whichever way that moves him, at any speed. */
+  setKeyedSoleFit(active: boolean): void {
+    this.keyedSoleFit = active;
+  }
+
+  /** A keyed clip that stands on held soles, and its timeline: the skid out
+   * of a run, which takes its holds as it goes, or a clip that simply stands
+   * where the idle stood (the jump charge). */
+  setKeyedSoleHold(kind: 'skid' | 'stand' | null, time: number | null = null, entering = 0): void {
+    this.keyedHoldKind = kind;
+    this.keyedHoldTime = kind !== null && time !== null && Number.isFinite(time) ? time : kind === null ? null : 0;
+    this.keyedEntering = Number.isFinite(entering) ? entering : 0;
   }
 
   setAuthoredCrawlPalmWeight(weight: number): void {
@@ -18844,6 +19028,7 @@ export class Player {
       if(!foot||!heel)return;
       this.soleToFacing(foot,this.idleStance[i].foot);
       this.soleToFacing(heel,this.idleStance[i].heel);
+      this.bodyTurn(ankle!,this.idleStance[i].turn);
     }
     this.idleStanceValid=true;
   }
@@ -19201,6 +19386,166 @@ export class Player {
     this.group.updateMatrixWorld(true);
   }
 
+  /** A keyed clip's holds on its soles, taken and given up before the floor
+   * fit reads them. What a hold did to the legs is let go of over a fifth of
+   * a second once something else has them: a run, a jump, the idle. */
+  private advanceKeyedSoles(dt:number):void {
+    const joints=[this.legL,this.kneeL,this.ankleL,this.legR,this.kneeR,this.ankleR];
+    const kind=this.keyedHoldKind,time=this.keyedHoldTime,hit=this.groundHit,hold=this.keyedSoleHold;
+    const ankles=[this.ankleL,this.ankleR],left=ankles.findIndex(ankle=>soleSockets(ankle).side>0),right=1-left;
+    // (A foot still being carried in from a crawl is the carry's until it is across.)
+    const on=kind!==null&&time!==null&&left>=0&&!!hit&&this.grounded&&hit.normal.y>=.3&&!this.freeSkate&&!this.isBailing&&!!this.riderG&&
+      !!this.bodyGroup.parent&&this.idleStanceValid&&!(kind==='stand'&&this.lowFeetBusy);
+    if(!on){
+      // Let go this frame: the legs keep, whole, the turn their holds gave them last.
+      if(this.keyedLegsHeld)this.keyedLegsFreeT=0;
+      this.keyedLegsHeld=this.keyedStanding=false;hold[0]=hold[1]=this.keyedSeatHold=this.keyedSeatCarry=0;
+    }
+    if(!on||kind!=='skid'){
+      this.keyedSkidSeconds=0;this.keyedSkidSeatT=-1;
+      for(const take of this.keyedSkidTake)take.on=take.down=false;
+      if(this.keyedSkidDusty){puffs.cutTrail('skid-sole-0');puffs.cutTrail('skid-sole-1');this.keyedSkidDusty=false;}
+    }
+    if(this.keyedLegsFreeT>=0){
+      const remaining=1-THREE.MathUtils.smoothstep(this.keyedLegsFreeT,0,JAK_SKID.free);
+      for(const [i,joint] of joints.entries())if(joint)joint.quaternion.premultiply(_soleFrom.identity().slerp(this.keyedLegTurns[i],remaining));
+      this.keyedLegsFreeT=this.keyedLegsFreeT+dt<JAK_SKID.free?this.keyedLegsFreeT+dt:-1;
+      this.group.updateMatrixWorld(true);
+    }
+    if(!on)return;
+    const smooth=THREE.MathUtils.smoothstep,stop=JAK_SKID.rise+JAK_SKID.catch;
+    if(kind==='stand'){
+      // Both soles, where the idle stood, under a pelvis that is the clip's.
+      // The idle's own root rides above where it stands and the floor fit
+      // brings it down; that is let go along the pelvis's carry into the
+      // clip, so the two never add up to a bump.
+      if(!this.keyedStanding){this.keyedStanding=true;this.keyedSeatFrom=this.footSeatApplied;}
+      for(const index of [left,right])hold[index]=Math.min(1,hold[index]+dt/.06);
+      this.keyedSeatHold=1;this.keyedSeatCarry=this.keyedSeatFrom*this.keyedEntering;
+      return;
+    }
+    this.keyedStanding=false;
+    // Each sole takes the floor once its leg has been thrown where it is
+    // going, the back one a little before the front, or sooner if he is all
+    // but stopped; and keeps it. Taken over a few frames, wherever in the stop.
+    this.keyedSkidSeconds+=dt;
+    const since=this.keyedSkidSeconds,before=this.walkVelocity.length()/(TUNING.walkSpeed/Math.max(.05,TUNING.walkSlowdownTime));
+    const wantLeft=hold[left]>0||since>=JAK_SKID.take[0]||before<=JAK_SKID.late[0]||time!>=stop;
+    const wantRight=hold[right]>0||since>=JAK_SKID.take[1]||before<=JAK_SKID.late[1]||time!>=stop;
+    if(wantLeft)hold[left]=Math.min(1,hold[left]+dt/JAK_SKID.grip);
+    if(wantRight)hold[right]=Math.min(1,hold[right]+dt/JAK_SKID.grip);
+    // Over held soles the pelvis is the clip's and the floor fit stands
+    // aside: once both are held, and all but whole, because until then the
+    // fit is all that keeps a free sole on top of the floor. It comes back
+    // under the settle, as the idle, which is seated by it, takes the legs.
+    const stood=smooth(Math.min(hold[left],hold[right]),.5,1);
+    this.keyedSeatHold=stood*(1-smooth(time!,stop+JAK_SKID.seat[0],stop+JAK_SKID.seat[1]));
+    // What the fit was doing for him as it stood aside is not dropped with
+    // it. A leg thrown through under him lifts him, a hop to change feet,
+    // and he comes down off that into the sit in his own time.
+    if(stood>0&&this.keyedSkidSeatT<0){this.keyedSkidSeatT=0;this.keyedSeatFrom=this.footSeatApplied;}
+    if(this.keyedSkidSeatT>=0){
+      this.keyedSeatCarry=this.keyedSeatFrom*stood*(1-smooth(this.keyedSkidSeatT,0,JAK_SKID.sink));
+      this.keyedSkidSeatT+=dt;
+    } else this.keyedSeatCarry=0;
+  }
+
+  /** A keyed clip's held soles on the floor: a jump charge's where the idle
+   * stood, a skid's wherever they have slid to. Both stay under a pelvis the
+   * clip goes on moving, until the idle, which stands on the same marks, has
+   * the legs. */
+  private plantKeyedSoles(dt:number):void {
+    const time=this.keyedHoldTime,hit=this.groundHit,hold=this.keyedSoleHold,marks=this.keyedSoleMarks,skid=this.keyedHoldKind==='skid';
+    if(time===null||!hit||Math.max(hold[0],hold[1])<=1e-4)return;
+    const joints=[this.legL,this.kneeL,this.ankleL,this.legR,this.kneeR,this.ankleR];
+    this.group.updateMatrixWorld(true);
+    if(skid)this.slideKeyedSoles(dt,time,hit);
+    else for(const [index,mark] of marks.entries()){
+      const stance=this.idleStance[index];mark.foot.copy(stance.foot);mark.heel.copy(stance.heel);mark.turn.copy(stance.turn);
+    }
+    const posed=joints.map(joint=>joint?joint.quaternion.clone():null);
+    // Standing legs are all but straight, which is what the low poses' own
+    // solver is for: the shoe's turn first, then the leg to it, once. A
+    // skid's marks have been eased from the pose already.
+    this.plantLowSoles(hit,marks,hold,skid);
+    for(const [i,joint] of joints.entries())if(joint&&posed[i])this.keyedLegTurns[i].copy(joint.quaternion).multiply(posed[i]!.invert());
+    this.keyedLegsHeld=true;this.keyedLegsFreeT=-1;
+  }
+
+  /** Where the keyed skid's soles are on the floor this frame, and the dust
+   * they lay. A sole that has taken the floor slides: flat, braking, never
+   * back the way it came. What it has is a lead, how far from the idle's own
+   * mark it was when it came down, and it gives that lead up as the ground he
+   * has left runs out. So it is always going slower than he is by a share of
+   * his own speed, the largest where it lands and less as he slows, and it is
+   * on its mark, under him, on the frame he stops. A foot that came down
+   * behind its mark is dragged in after him the same way. */
+  private slideKeyedSoles(dt:number,time:number,hit:GroundHit):void {
+    const hold=this.keyedSoleHold,marks=this.keyedSoleMarks,ankles=[this.ankleL,this.ankleR];
+    const smooth=THREE.MathUtils.smoothstep,stop=JAK_SKID.rise+JAK_SKID.catch,surface=surfaceFromName(this.surfaceName);
+    // The ground he still has to cover, in the facing frame the marks are
+    // kept in. (Stepped a frame at a time, that is half a frame's travel
+    // less than the smooth figure.)
+    const speed=this.walkVelocity.length(),slowing=TUNING.walkSpeed/Math.max(.05,TUNING.walkSlowdownTime),moving=speed>1e-3;
+    const seconds=Math.max(0,speed/(2*slowing)-dt/2),ahead=_skidAhead.set(0,0,0);
+    if(speed>1e-4)this.group.worldToLocal(ahead.copy(this.walkVelocity).multiplyScalar(seconds).add(this.group.getWorldPosition(_soleA)))
+      .applyAxisAngle(_soleUp,-this.bodyGroup.rotation.y).setY(0);
+    const left=ahead.length(),way=this.keyedSkidWay,wayWorld=this.keyedSkidWayWorld;
+    if(left>1e-5&&speed*seconds>1e-5){
+      way.copy(ahead).multiplyScalar(1/left);wayWorld.copy(this.walkVelocity).setY(0).normalize();this.keyedSkidUnit=left/(speed*seconds);
+    }
+    const unit=this.keyedSkidUnit;
+    for(const index of [0,1]){
+      const mark=marks[index],stance=this.idleStance[index],take=this.keyedSkidTake[index],{foot,heel}=soleSockets(ankles[index]),weight=hold[index];
+      mark.foot.copy(stance.foot);mark.heel.copy(stance.heel);mark.turn.copy(stance.turn);
+      if(!foot||!heel||weight<=1e-4){take.on=take.down=false;continue;}
+      this.soleToFacing(foot,_soleA);this.soleToFacing(heel,_soleB);
+      if(!take.on){
+        take.on=true;take.down=false;take.from=Math.max(left,.03);take.along=-Infinity;take.last=NaN;take.spare=0;
+        take.foot.subVectors(_soleA,stance.foot).setY(0);take.heel.subVectors(_soleB,stance.heel).setY(0);
+        // Thrown further ahead than it could slide from, it lands short of
+        // that; left further behind than it could be dragged from, it is
+        // brought part of the way in before it comes down.
+        const lead=take.foot.dot(way),fits=THREE.MathUtils.clamp(lead,-JAK_SKID.drag/JAK_SKID.slide*take.from,JAK_SKID.most/JAK_SKID.slide*take.from);
+        take.foot.addScaledVector(way,fits-lead);take.heel.addScaledVector(way,fits-lead);
+      }
+      const share=Math.pow(THREE.MathUtils.clamp(left/take.from,0,1),JAK_SKID.slide);
+      mark.foot.addScaledVector(take.foot,share);mark.heel.addScaledVector(take.heel,share);
+      // Onto the floor from wherever the pose has the sole, as its hold comes
+      // on: across to where it belongs first, while it is still in the air,
+      // and then down.
+      const across=smooth(weight,0,.65),taken=weight*weight*(3-2*weight);
+      for(const [point,posed] of [[mark.foot,_soleA],[mark.heel,_soleB]] as const)
+        point.set(THREE.MathUtils.lerp(posed.x,point.x,across),THREE.MathUtils.lerp(posed.y,point.y,taken),THREE.MathUtils.lerp(posed.z,point.z,across));
+      // Once it is down, never back along the ground while he moves.
+      // Whatever that leaves it ahead of its mark when he has stopped is
+      // given back as he settles.
+      let along=this.soleToWorld(mark.foot,_skidAt).dot(wayWorld);
+      const down=weight>=.9,owed=down?Math.max(0,take.along-along):0;
+      if(moving)take.spare=owed;
+      const shift=moving?owed:Math.min(owed,take.spare)*(1-smooth(time,stop,stop+JAK_SKID.settle));
+      if(shift>0){mark.foot.addScaledVector(way,shift*unit);mark.heel.addScaledVector(way,shift*unit);along+=shift;}
+      if(down&&(moving||!Number.isFinite(take.along)))take.along=Math.max(take.along,along);
+      const sliding=dt>0&&Number.isFinite(take.last)?(along-take.last)/dt:0;
+      take.last=along;
+      if(!down)continue;
+      // Dust: a burst where each sole comes down, and a line of it from under
+      // each for as long as it is sliding, left standing along the way he came.
+      this.soleToWorld(_soleA.addVectors(mark.foot,mark.heel).multiplyScalar(.5),_skidAt);
+      const ground=this.supportHeight(hit,_skidAt);
+      if(!take.down){
+        take.down=true;
+        if(sliding>1.5)puffs.burst('dustFootSkid',_skidAt.x,ground+.05,_skidAt.z,{count:take.foot.dot(way)>0?4:3,
+          dir:PUFF_DIR.copy(wayWorld).multiplyScalar(.3).setY(1),surface,groundY:ground,
+          parentVel:PUFF_VEL.copy(wayWorld).multiplyScalar(sliding),strength:Math.min(1.5,.6+sliding/8)});
+      }
+      puffs.trail(`skid-sole-${index}`,'dustFootSkid',_skidAt.x,ground+.05,_skidAt.z,{emit:sliding>JAK_SKID.dust,
+        dir:PUFF_DIR.copy(wayWorld).multiplyScalar(.3).setY(1),surface,groundY:ground,
+        parentVel:PUFF_VEL.copy(wayWorld).multiplyScalar(sliding),strength:Math.min(1.5,.55+sliding/7)});
+      this.keyedSkidDusty=true;
+    }
+  }
+
   /** Move only the posed rider along its support normal. */
   private liftRider(distance:number,normal:THREE.Vector3):void {
     const parent=this.bodyGroup.parent!;
@@ -19217,11 +19562,93 @@ export class Player {
    * The rider-only translation never moves collision, the board or the rig's
    * bind pose, and the deck solver retains exclusive ownership while skating. */
   private seatOnFoot(): void {
+    const rg = this.riderG, hint = this.animationClipHint, dt = this.footSeatSeconds;
+    const fit = this.lowPoseGathering && this.directScheme ? null : this.onFootSeatDrop();
+    // Under D the crouch and the crawl are reached by carrying the body, and
+    // this fit has to change hands as the pelvis does. So while such a carry
+    // runs, what is applied goes from what it was on the cut to what the new
+    // pose wants along the pelvis's own curve, and the two never pull apart.
+    // Every other change (a jump, a landing) takes and drops the fit on its
+    // own frame as before.
+    const carry = this.directScheme && this.grounded && !this.freeSkate ? this.lowPoseCarry : null;
+    let apply = fit ?? 0;
+    if (carry === null && fit !== null && this.directScheme && this.lowFeetBusy && this.lowFeetLeft > .02) {
+      // Something that is not carried took over while the feet were still
+      // on their way (a jump charged just after a crawl stops). The pose's
+      // own legs are then not the ones on screen, and fitting them to the
+      // floor would throw the body up by the length of a leg. What was
+      // applied is kept, and handed over once the feet are across.
+      apply = this.footSeatDrop;
+      this.footSeatSlack = apply - fit;
+    } else if (carry === null) {
+      // What the settled idle asks for is remembered: it is where a rise is headed.
+      if (fit !== null && hint === 'player.idle' && this.directScheme && this.walkVelocity.lengthSq() < 1e-4) this.footSeatStanding = fit;
+      // A keyed clip that takes the whole fit, or gives it back, does so from
+      // what was applied: a run's stride is in the air half the time, and the
+      // fit would otherwise put him on the floor in one frame.
+      // So does a skid whose pelvis was its own and is taken from it at once
+      // (he runs on, or jumps): the fit comes back from what was applied,
+      // which under that hold was nothing.
+      if ((this.keyedSoleFit !== this.keyedSoleFitWas || this.keyedSeatHeld - this.keyedSeatHold > .25) && fit !== null)
+        this.footSeatSlack = this.footSeatApplied - fit;
+      this.keyedSoleFitWas = this.keyedSoleFit;
+      // A carry that has just run out hands over to the fit without a step.
+      // A skid is cut to out of a run in mid stride, as often as not with
+      // both feet off the floor and one of them on its way up. Followed at
+      // once, that foot would throw him at the floor as fast as it was
+      // rising. So there the fit starts from what was applied and comes to
+      // follow the pose over its first tenth of a second.
+      const taking = this.keyedSkidSeconds > 0 ? THREE.MathUtils.smoothstep(this.keyedSkidSeconds, 0, JAK_SKID.settleIn) : 1;
+      // (Only ever for a foot that is going up. One the pose pushes down
+      // into the floor is answered at once, as it always was.)
+      if (taking < 1 && fit !== null)
+        this.footSeatSlack = Math.min(THREE.MathUtils.lerp(this.footSeatDrop - fit, this.footSeatSlack, taking), Math.max(0, this.footSeatSlack));
+      this.footSeatSlack = fit === null ? 0 : this.footSeatSlack * Math.exp(-dt / .08 * taking);
+      apply += this.footSeatSlack;
+    } else {
+      if (this.footSeatSerial !== this.lowPoseCarrySerial) {
+        this.footSeatSerial = this.lowPoseCarrySerial;
+        this.footSeatFrom = this.footSeatDrop;
+      }
+      // Standing still, that is the idle's own figure and not the pose's of
+      // the moment: on the way up the legs swing down under him, and for a
+      // few frames the pose alone has them far through the floor. A run has
+      // no settled figure, and takes the pose's with that swing left out.
+      const target = fit === null ? 0 : hint === 'player.idle' && this.footSeatStanding !== null ? this.footSeatStanding
+        : Math.max(fit, -LOW_FIT_LIFT);
+      apply = target + (this.footSeatFrom - target) * carry;
+      // The pelvis may swing past standing, but not off its own feet. Over
+      // soles that are held it has the height of a rise onto the toes; past
+      // that, or over free soles, it comes back onto what the pose's lowest
+      // sole allows.
+      const float = LOW_SOLE_FLOAT + LOW_TOE_FLOAT * THREE.MathUtils.smoothstep(this.lowSoleHold, 0, 1);
+      if (fit !== null) apply = fit - float + Math.log1p(Math.exp((apply - fit + float) * 160)) / 160;
+      this.footSeatSlack = fit === null ? 0 : apply - fit;
+    }
+    this.footSeatDrop = apply;
+    const kept = 1 - Math.max(this.keyedSeatHold, ...this.slideSoleHold), applied = apply * kept + this.keyedSeatCarry;
+    this.footSeatApplied = applied;
+    this.keyedSeatHeld = this.keyedSeatHold;
+    if (Math.abs(applied) < 1e-8 || !rg?.parent) return;
+    // A running lean or sloped parent must not turn a vertical correction
+    // into a sideways move. Convert a WORLD-up delta into the rider's parent.
+    _plantInv.copy(rg.parent.matrixWorld).invert();
+    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+    // Soles the keyed slide is holding are on the floor already, under a
+    // pelvis that is keyed; this fit takes over exactly as they are let go.
+    _plantC.set(0, -applied, 0).applyMatrix4(_plantInv).sub(_plantO);
+    rg.position.add(_plantC);
+  }
+
+  /** How far the on-foot pose has to come down for its lowest sole to stand
+   * on the floor (negative: up), or null where the pose is not one that
+   * stands on its soles. */
+  private onFootSeatDrop(): number | null {
     const rg = this.riderG;
-    if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return;
+    if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return null;
     const hint = this.animationClipHint;
     const slopeGlide = hint === SLOPE_SLIDE_CLIP_ID;
-    if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID && !slopeGlide) return;
+    if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID && !slopeGlide) return null;
     const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? 1 : locomotionWalkBlendWeight(
       this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
     );
@@ -19234,10 +19661,10 @@ export class Player {
     // blends into the native idle. Keep its floor correction through that mix.
     const directContact = this.directFootStudy &&
       (hint === 'player.idle' || this.authoredClip(hint)?.metadata?.jakDirect);
-    if (weight <= 0.002 && !directContact) return;
+    if (weight <= 0.002 && !directContact && !this.keyedSoleFit) return null;
 
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
-    if (normal.y < 0.1) return;
+    if (normal.y < 0.1) return null;
     let clearance = Infinity;
     // The rounded outsole's lowest vertex changes as a foot rolls. Read its
     // small mesh directly, leaving the separate skate footprint cache intact.
@@ -19250,24 +19677,549 @@ export class Player {
         clearance = Math.min(clearance, _plantV.dot(normal) / normal.y);
       }
     }
-    if (!Number.isFinite(clearance)) return;
+    if (!Number.isFinite(clearance)) return null;
 
     // Keep the authored planted load above its support plane, also correcting
     // downward penetration. This moves presentation only, never collision.
     // D's independent stride/rebound mix can briefly extend a shoe below the
     // floor. Fit only that penetration at full weight; upward authored bounce
     // and the native idle/walk seating keep their usual ownership.
-    const drop = directContact && clearance < .006 ? clearance - .006
+    const drop = this.keyedSoleFit || directContact && clearance < .006 ? clearance - .006
       : (hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
-    if (Math.abs(drop) < 1e-8) return;
-    // A running lean or sloped parent must not turn a vertical correction
-    // into a sideways move. Convert a WORLD-up delta into the rider's parent.
-    _plantInv.copy(rg.parent.matrixWorld).invert();
-    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
-    // Soles the keyed slide is holding are on the floor already, under a
-    // pelvis that is keyed; this fit takes over exactly as they are let go.
-    _plantC.set(0, -drop * (1 - Math.max(...this.slideSoleHold)), 0).applyMatrix4(_plantInv).sub(_plantO);
-    rg.position.add(_plantC);
+    return drop;
+  }
+
+  /** A joint's turn inside the body, which is scaled more in height than in
+   * width: turns are plain there, where in the world they shear. */
+  private bodyTurn(joint: THREE.Object3D, target: THREE.Quaternion): THREE.Quaternion {
+    target.copy(joint.quaternion);
+    for (let node = joint.parent; node && node !== this.bodyGroup; node = node.parent) target.premultiply(node.quaternion);
+    return target;
+  }
+
+  /** Put each sole on its mark under a leg that may be locked straight, as a
+   * standing one is. There a degree at the shin is a centimetre at the sole,
+   * and solving the leg and levelling the shoe in turn never settles. So the
+   * shoe's whole turn is decided first: the one it stood in (`stance`), faced
+   * along its mark and with the heel lift the pose has. That fixes where the
+   * ankle must be, the leg is solved to it once, and the knee bends the way
+   * a knee does. `weight` eases the shoe's turn; the marks ease themselves,
+   * unless the caller has done that already (`eased`). */
+  private plantLowSoles(hit: GroundHit, stance: readonly {foot: THREE.Vector3; heel: THREE.Vector3; turn: THREE.Quaternion}[],
+    hold: number | readonly [number, number], eased = false): void {
+    const body = this.bodyGroup, normal = hit.normal, holds = typeof hold === 'number' ? [hold, hold] : hold;
+    const legs = [[this.legL, this.kneeL, this.ankleL], [this.legR, this.kneeR, this.ankleR]] as const;
+    const soft = (value: number) => value <= 0 ? 0 : value >= .12 ? value - .06 : value * value / .24;
+    for (const [i, [root, mid, end]] of legs.entries()) {
+      const {foot, heel, side} = soleSockets(end);
+      if (!root || !mid || !end || !foot || !heel) continue;
+      body.updateWorldMatrix(true, true);
+      _lowInv.copy(body.matrixWorld).invert();
+      // A shoe the pose has turned right over (the crawl drags its insteps)
+      // has no shortest way back to flat, so it is left alone until the pose
+      // has brought it most of the way round.
+      this.bodyTurn(end, _lowNow);
+      const weight = holds[i] * (1 - THREE.MathUtils.smoothstep(_lowNow.angleTo(stance[i].turn), 1.5, 2.3));
+      if (weight <= 1e-3) continue;
+      // The mark itself moves between where the pose has the sole and where
+      // it belongs, so the leg is never solved for somewhere it is not going.
+      const mark = _lowMarks[i], target = _soleTargets[i], aim = _soleAims[i];
+      if (eased) { mark.foot.copy(stance[i].foot); mark.heel.copy(stance[i].heel); }
+      else {
+        this.soleToFacing(foot, mark.foot).lerp(stance[i].foot, weight);
+        this.soleToFacing(heel, mark.heel).lerp(stance[i].heel, weight);
+      }
+      this.soleToWorld(mark.foot, target); target.y = this.supportHeight(hit, target) + mark.foot.y;
+      this.soleToWorld(mark.heel, aim); aim.y = this.supportHeight(hit, aim) + mark.heel.y;
+      aim.subVectors(target, aim).addScaledVector(normal, -aim.dot(normal));
+      // The heel lift the pose has: up onto the toes turns the rigid shoe
+      // about its tip, as far ahead of the sole's centre as the heel is
+      // behind. A flat shoe gets exactly none, and the range has no corners.
+      foot.getWorldPosition(_soleA).sub(heel.getWorldPosition(_soleB));
+      const reach = _soleA.length() || 1, pitch = -Math.asin(THREE.MathUtils.clamp(_soleA.dot(normal) / reach, -1, 1)) - .06;
+      const heelLift = soft(pitch) - soft(pitch - .5), ahead = 1 / (aim.length() || 1);
+      // Everything else inside the body. The floor's normal goes in as a
+      // plane does, the mark's heading as a direction.
+      _lowUp.copy(normal).applyMatrix3(_lowLinear.setFromMatrix4(body.matrixWorld).transpose()).normalize();
+      _lowAim.copy(target).sub(aim).applyMatrix4(_lowInv);
+      _lowAim.subVectors(_lowReach.copy(target).applyMatrix4(_lowInv), _lowAim);
+      _lowAim.addScaledVector(_lowUp, -_lowAim.dot(_lowUp)).normalize();
+      _lowFront.copy(foot.getWorldPosition(_soleA)).applyMatrix4(_lowInv);
+      // The stance's turn, faced along the mark: the shoe flat on the floor.
+      _lowSide.copy(_lowFront).sub(heel.getWorldPosition(_soleB).applyMatrix4(_lowInv)).normalize()
+        .applyQuaternion(_lowStep.copy(_lowNow).invert()).applyQuaternion(stance[i].turn);
+      _lowSide.addScaledVector(_lowUp, -_lowSide.dot(_lowUp));
+      _lowFlat.copy(stance[i].turn);
+      if (_lowSide.lengthSq() > 1e-8 && _lowAim.lengthSq() > .5) _lowFlat.premultiply(_lowStep.setFromUnitVectors(_lowSide.normalize(), _lowAim));
+      _lowSide.crossVectors(_lowUp, _lowAim).normalize();
+      end.getWorldPosition(_lowAnkle).applyMatrix4(_lowInv);
+      _lowFront.sub(_lowAnkle);
+      _lowHip.copy(root.getWorldPosition(_soleA)).applyMatrix4(_lowInv);
+      const length = _lowHip.distanceTo(_soleB.copy(mid.getWorldPosition(_soleB)).applyMatrix4(_lowInv)) + _soleB.distanceTo(_lowAnkle);
+      // With the heel up by `lift`: where the sole's centre goes (a mark that
+      // is still on its way takes the lift with it by as much as it has
+      // come), the shoe's turn, and where that leaves the ankle. It answers
+      // with how far short of that ankle the whole leg is.
+      const place = (lift: number): number => {
+        _lowReach.copy(target).addScaledVector(normal, weight * reach * Math.sin(lift))
+          .addScaledVector(aim, weight * reach * (1 - Math.cos(lift)) * ahead).applyMatrix4(_lowInv);
+        _lowTurn.copy(_lowFlat).premultiply(_lowStep.setFromAxisAngle(_lowSide, lift));
+        _lowTurn.copy(_lowStep.copy(_lowNow).slerp(_lowTurn, weight));
+        _lowOffset.copy(_lowFront).applyQuaternion(_lowStep.copy(_lowNow).invert()).applyQuaternion(_lowTurn);
+        return _soleB.copy(_lowReach).sub(_lowOffset).distanceTo(_lowHip) - length;
+      };
+      // A pelvis that swings up past standing outreaches a straight leg. The
+      // sole stays on its mark and the heel comes up instead: he rises onto
+      // his toes and settles back, as a body does that has stood up briskly.
+      let lift = heelLift, short = place(lift);
+      for (let step = 0; step < 3 && short > -.01 && lift < LOW_TOE_RISE; step++) {
+        const need = Math.log1p(Math.exp(short * 300)) / 300;
+        if (need < 2e-4) break;
+        const gain = (short - place(lift + .04)) / .04;
+        if (gain < .05) break;
+        lift = Math.min(LOW_TOE_RISE, lift + need / gain);
+        short = place(lift);
+      }
+      const shoe = this.proceduralFootwear.find(part => part.side === (side > 0 ? 'left' : 'right'))?.sole;
+      const points = shoe?.geometry.getAttribute('position');
+      // A knee bends toward the front of its own thigh, which is also what
+      // unlocks a leg that stands straight or locked back. A sole that is
+      // still on its way keeps, by as much as it has to go, the side of the
+      // hip-to-ankle line the pose has its knee on, so a hold that is only
+      // starting or ending leaves the pose its leg. So does a foot that is
+      // being carried in from a crawl, whose knee is on its own way round.
+      root.getWorldPosition(_soleA); mid.getWorldPosition(_soleB);
+      _lowBend.set(0, 0, 1).transformDirection(root.matrixWorld);
+      const given = Math.max(1 - weight, Math.min(1, this.lowFeetLeft * 2));
+      if (given > 0) {
+        _solePole.subVectors(end.getWorldPosition(_solePole), _soleA);
+        _soleB.sub(_soleA).addScaledVector(_solePole, -_soleB.dot(_solePole) / Math.max(1e-6, _solePole.lengthSq()));
+        const posed = given * THREE.MathUtils.smoothstep(_soleB.length(), .01, .04);
+        _lowBend.multiplyScalar(1 - posed).addScaledVector(_soleB.normalize(), posed);
+      }
+      for (let pass = 0; pass < 2; pass++) {
+        _lowAnkle.copy(_lowReach).sub(_lowOffset).applyMatrix4(body.matrixWorld);
+        root.getWorldPosition(_solePole).addScaledVector(_lowBend, .6);
+        const solved = solveTwoBoneIk({root, mid, end, effector: end, target: _lowAnkle, pole: _solePole, weight: 1,
+          accountForParentScale: true, tolerance: .002, solveSpace: body});
+        end.quaternion.copy(this.bodyTurn(mid, _lowStep).invert().multiply(_lowTurn));
+        end.updateWorldMatrix(true, true);
+        // A shoe up on its toes turns about the tip of a flat sole, but its
+        // own toe reaches past that and curls up: set it down by what that
+        // leaves between the shoe and the floor. And a shoe that is still
+        // turning level from a crawl has its toe under its own middle: lift
+        // it by what would be in the floor.
+        if (pass || !shoe || !points) break;
+        let clearance = Infinity;
+        for (let k = 0; k < points.count; k++) {
+          _plantV.fromBufferAttribute(points, k).applyMatrix4(shoe.matrixWorld);
+          clearance = Math.min(clearance, _plantV.y - this.supportHeight(hit, _plantV));
+        }
+        const spare = clearance < .003 ? clearance - .003 : lift >= .02 && solved.reached ? Math.max(0, clearance - mark.foot.y) : 0;
+        if (!Number.isFinite(spare) || Math.abs(spare) < 4e-4) break;
+        _lowReach.applyMatrix4(body.matrixWorld).addScaledVector(normal, -spare / Math.max(.3, normal.y)).applyMatrix4(_lowInv);
+      }
+    }
+    this.group.updateMatrixWorld(true);
+  }
+
+  /** Between all fours and his feet the pose swings each thigh down under
+   * him, and alone it would take the knee through the floor on the way: the
+   * pelvis is still too low for a thigh to pass under it. So the body rides
+   * up over a knee that comes under, by what the knee needs and no more than
+   * a hand's width, and settles back as it comes through, no faster than a
+   * body does. It answers with how far it is riding. */
+  private rideOverKnees(hit: GroundHit, weight: number, dt: number): number {
+    let low = Infinity;
+    for (const knee of [this.kneeL, this.kneeR]) if (knee) low = Math.min(low, knee.getWorldPosition(_soleA).y - this.supportHeight(hit, _soleA));
+    const depth = LOW_KNEE_CLEARANCE - low;
+    const need = !Number.isFinite(depth) || depth <= -.02 ? 0 : depth >= .02 ? depth : (depth + .02) * (depth + .02) / .08;
+    // It comes back down no faster than a body settles: a knee that is let
+    // off on one frame (a cut that carries the feet) does not drop him.
+    const lift = Math.max(weight * LOW_KNEE_RIDE * Math.tanh(need / LOW_KNEE_RIDE), this.lowKneeLift - LOW_KNEE_SETTLE_SPEED * dt);
+    this.lowKneeLift = lift >= 5e-4 ? lift : 0;
+    if (this.lowKneeLift > 0) this.liftRider(this.lowKneeLift, hit.normal);
+    return this.lowKneeLift;
+  }
+
+  /** Where a joint is over the ground: across and along the way the body
+   * faces, and its height above the floor under it. The body leans into a
+   * turn and this does not, so a foot kept here stays on the floor. */
+  private overGround(hit: GroundHit | null, joint: THREE.Object3D, target: THREE.Vector3): THREE.Vector3 {
+    joint.getWorldPosition(target);
+    const height = target.y - (hit ? this.supportHeight(hit, target) : this.pos.y), q = this.group.quaternion;
+    target.sub(this.pos).applyAxisAngle(_soleUp, -2 * Math.atan2(q.y, q.w) - this.bodyGroup.rotation.y);
+    target.y = height;
+    return target;
+  }
+
+  /** Back from over the ground to the world, for the body's current facing. */
+  private fromGround(hit: GroundHit, mark: THREE.Vector3, target: THREE.Vector3): THREE.Vector3 {
+    const q = this.group.quaternion;
+    target.copy(mark).applyAxisAngle(_soleUp, 2 * Math.atan2(q.y, q.w) + this.bodyGroup.rotation.y).add(this.pos);
+    target.y = this.supportHeight(hit, target) + mark.y;
+    return target;
+  }
+
+  /** Half way between a crouch and a crawl the pose alone has a shin
+   * straight down through the floor: the two are a quarter turn of each leg
+   * apart, and no leg bends through that. So on those cuts the legs take
+   * the new motion at once and each foot is carried to it instead: from
+   * where it was shown, run on by the speed it had, in a straight line over
+   * the floor to where the new motion has it, the shoe turning from the one
+   * to the other as it goes. The knee is drawn the same way, toward a point
+   * that goes from where it was to where the new motion has it. Both ends
+   * are on or over the floor, so everything between them is. */
+  private carryFeet(hit: GroundHit, left: number, coast: number): void {
+    const body = this.bodyGroup, share = THREE.MathUtils.clamp(left, 0, 1);
+    for (const [i, [root, mid, end]] of ([[this.legL, this.kneeL, this.ankleL], [this.legR, this.kneeR, this.ankleR]] as const).entries()) {
+      if (!root || !mid || !end) continue;
+      const from = this.lowFeetFrom[i];
+      const knee = this.overGround(hit, mid, _lowFront).lerp(from.knee, share);
+      const ankle = this.overGround(hit, end, _lowAnkle), was = _lowOffset.copy(from.ankle).addScaledVector(from.speed, coast);
+      // Level, the foot goes straight across. In height it keeps low through
+      // the middle, by the floor, where it passes under a hip that is itself
+      // on its way down; and where it has far to go it swings a little wide
+      // of that hip as it goes.
+      const low = Math.min(ankle.y, was.y), rise = Math.abs(ankle.y - was.y), up = ankle.y >= was.y ? 1 - share : share;
+      const far = Math.min(1, Math.hypot(ankle.x - was.x, ankle.z - was.z) / LOW_FLARE_OVER);
+      const wide = Math.sign(ankle.x + was.x) * 4 * share * (1 - share) * far;
+      ankle.lerp(was, left);
+      ankle.y = low + rise * up * up;
+      ankle.x += wide * LOW_FOOT_FLARE;
+      knee.x += wide * LOW_KNEE_FLARE;
+      const target = this.fromGround(hit, ankle, _soleTargets[0]);
+      this.bodyTurn(end, _lowNow).slerp(from.turn, share);
+      // The pole is that knee, pushed well out from the line the leg lies
+      // on. A knee that comes onto the line has no side left, and one that
+      // crossed it would bend backwards: as it nears the line the leg bends
+      // toward the front of its own thigh instead, as a knee does.
+      root.getWorldPosition(_lowHip);
+      _lowAim.subVectors(target, _lowHip);
+      const span = _lowAim.lengthSq();
+      if (span < 1e-8) continue;
+      this.fromGround(hit, knee, _solePole).sub(_lowHip);
+      _solePole.addScaledVector(_lowAim, -_solePole.dot(_lowAim) / span);
+      const sure = THREE.MathUtils.smoothstep(_solePole.length(), .01, .05);
+      _lowBend.set(0, 0, 1).transformDirection(root.matrixWorld);
+      _lowBend.addScaledVector(_lowAim, -_lowBend.dot(_lowAim) / span);
+      if (sure > 0) _solePole.normalize(); else _solePole.set(0, 0, 0);
+      if (sure < 1 && _lowBend.lengthSq() > 1e-8) _solePole.multiplyScalar(sure).addScaledVector(_lowBend.normalize(), 1 - sure);
+      if (_solePole.lengthSq() < 1e-8) continue;
+      _solePole.setLength(.6).addScaledVector(_lowAim, .5).add(_lowHip);
+      solveTwoBoneIk({root, mid, end, effector: end, target, pole: _solePole, weight: 1, accountForParentScale: true, tolerance: .002,
+        solveSpace: body});
+      end.quaternion.copy(this.bodyTurn(mid, _lowStep).invert().multiply(_lowNow));
+      end.updateWorldMatrix(true, true);
+    }
+    this.group.updateMatrixWorld(true);
+  }
+
+  /** A shoe that the pose would put into the floor is lifted out of it whole:
+   * the leg folds a little more and the shoe keeps the turn the pose gives
+   * it. It is what is left to do once the feet have been carried between
+   * the low poses (`carryFeet`): the crawl itself drags its toes a few
+   * centimetres under, and a shoe that is turning over on its way across
+   * dips its tip. The knee stays on the side of the hip-to-ankle line the
+   * pose has it on; when the pose takes it across that line, the folded
+   * knee is swung round to the other side over a few frames, outward, and
+   * not thrown there in one, and the leg keeps that knee until it has
+   * arrived, lifted or not. Nothing is lifted that is not in the floor: a
+   * millimetre under a locked leg throws its knee. */
+  private liftShoes(hit: GroundHit, weight: number, dt: number): void {
+    const body = this.bodyGroup;
+    const ease = (depth: number) => depth <= -.004 ? 0 : depth >= .004 ? depth : (depth + .004) * (depth + .004) / .016;
+    REACH_C.set(this.pos.x, hit.y, this.pos.z);
+    body.updateWorldMatrix(true, true);
+    _lowInv.copy(body.matrixWorld).invert();
+    for (const [i, [root, mid, end]] of ([[this.legL, this.kneeL, this.ankleL], [this.legR, this.kneeR, this.ankleR]] as const).entries()) {
+      if (!root || !mid || !end) continue;
+      // Inside the body, where a leg is rigid: the hip-to-ankle line, and the
+      // side of it the pose has the knee on.
+      _lowHip.copy(root.getWorldPosition(_soleA)).applyMatrix4(_lowInv);
+      _lowAim.copy(end.getWorldPosition(_soleA)).applyMatrix4(_lowInv).sub(_lowHip);
+      const span = _lowAim.length();
+      if (span < 1e-4) continue;
+      _lowAim.multiplyScalar(1 / span);
+      _lowSide.copy(mid.getWorldPosition(_soleB)).applyMatrix4(_lowInv).sub(_lowHip);
+      _lowSide.addScaledVector(_lowAim, -_lowSide.dot(_lowAim));
+      const out = _lowSide.length(), bend = this.lowBends[i];
+      // Where the knee is clearly off the line the pose is believed, by as
+      // much as it is clear; a straight leg keeps the side it last had.
+      const sure = THREE.MathUtils.smoothstep(out, .012, .05);
+      if (out > 1e-4) _lowSide.multiplyScalar(1 / out);
+      const clearance = this.footMeasure.sampledPlaneDistance(end, hit.normal, REACH_C);
+      const lift = Number.isFinite(clearance) ? weight * ease(.004 - clearance) : 0;
+      if (!this.lowBendValid[i]) {
+        if (out > 1e-4) bend.copy(_lowSide); else bend.set(0, 0, 1).applyQuaternion(this.bodyTurn(root, _lowNow));
+        this.lowBendValid[i] = true; this.lowBendSpin[i] = 0; this.lowBendLate[i] = false;
+      }
+      if (lift < 5e-4 && !(this.lowBendLate[i] && sure > 0)) {
+        // With nothing to lift, and no knee still on its way round, the leg
+        // is the pose's, and so is its knee.
+        if (out > 1e-4 && sure >= 1) bend.copy(_lowSide);
+        this.lowBendSpin[i] = 0; this.lowBendLate[i] = false;
+        continue;
+      }
+      bend.addScaledVector(_lowAim, -bend.dot(_lowAim));
+      if (bend.lengthSq() < 1e-8) bend.copy(_lowSide); else bend.normalize();
+      let turn = 0;
+      if (sure > 0 && out > 1e-4) {
+        turn = Math.atan2(_lowReach.crossVectors(bend, _lowSide).dot(_lowAim), bend.dot(_lowSide));
+        // Straight across goes round the outside of the leg.
+        if (Math.abs(turn) > 2.6) {
+          const outward = _lowReach.crossVectors(_lowAim, bend).x * (soleSockets(end).side > 0 ? 1 : -1);
+          turn = Math.abs(turn) * (outward >= 0 ? 1 : -1);
+        }
+      }
+      // The knee is swung toward the pose's side: got up to speed, never
+      // faster than a knee swings, and slowed onto it as it arrives.
+      const wanted = THREE.MathUtils.clamp(turn * LOW_KNEE_SETTLE, -LOW_KNEE_SWING, LOW_KNEE_SWING) * sure;
+      this.lowBendSpin[i] += THREE.MathUtils.clamp(wanted - this.lowBendSpin[i], -LOW_KNEE_PUSH * dt, LOW_KNEE_PUSH * dt);
+      let step = this.lowBendSpin[i] * dt;
+      if (turn === 0 || step * turn < 0 && Math.abs(turn) < .02 || Math.abs(step) > Math.abs(turn) && step * turn > 0) {
+        step = turn; this.lowBendSpin[i] = dt > 1e-6 ? step / dt : 0;
+      }
+      bend.applyAxisAngle(_lowAim, step);
+      // Until it is there the leg keeps this knee, lifted or not: a shoe
+      // that comes clear of the floor does not give its knee back at once.
+      this.lowBendLate[i] = sure > 0 && Math.abs(turn - step) > .02;
+      this.bodyTurn(end, _lowNow);
+      const target = _soleTargets[0].copy(end.getWorldPosition(_soleA)).addScaledVector(hit.normal, lift / Math.max(.3, hit.normal.y));
+      _lowReach.copy(bend);
+      _solePole.copy(_lowHip).addScaledVector(_lowAim, span * .5).addScaledVector(_lowReach, .6).applyMatrix4(body.matrixWorld);
+      solveTwoBoneIk({root, mid, end, effector: end, target, pole: _solePole, weight: 1, accountForParentScale: true, tolerance: .002,
+        solveSpace: body});
+      end.quaternion.copy(this.bodyTurn(mid, _lowStep).invert().multiply(_lowNow));
+      end.updateWorldMatrix(true, true);
+    }
+    this.group.updateMatrixWorld(true);
+  }
+
+  /** Under D a crouch folds over the feet the stand left on the floor. The
+   * crouch's own legs were drawn for another body: on this one a foot hangs
+   * in the air and the other toe digs in. So both soles keep the idle's own
+   * marks, from the moment he starts down until he is standing again, and
+   * the legs fold and straighten over them. The crawl takes its feet with
+   * it: between the crouch and the crawl, and up off all fours, each foot
+   * is carried across the floor (`carryFeet`), and there, as wherever a
+   * sole is not held, a shoe that would dip into the floor is lifted out
+   * of it. Every weight eases. */
+  private holdLowSoles(dt: number): void {
+    const hint = this.animationClipHint, hit = this.groundHit, smooth = THREE.MathUtils.smoothstep;
+    const rigged = this.directScheme && !this.freeSkate && !this.isBailing && !!this.riderG && !!this.bodyGroup.parent;
+    const supported = rigged && !!hit && this.grounded && this.state === 'ride' && hit.normal.y >= .3;
+    const crouched = supported && hint === 'player.crouch', low = crouched || supported && hint === 'player.crawl';
+    const standing = supported && (hint === 'player.idle' || hint === 'player.run');
+    const ankles = [this.ankleL, this.ankleR], joints = [this.legL, this.kneeL, this.ankleL, this.legR, this.kneeR, this.ankleR];
+    if (supported) this.group.updateMatrixWorld(true);
+    if (crouched && this.lowHint !== 'player.crouch') {
+      // Straight down from a stand the soles are simply kept where they are:
+      // a nearly straight leg throws its knee centimetres for a millimetre
+      // at the foot, so the marks are read from this very frame. From a step,
+      // a crawl or a skid the feet are gathered in onto the stance the idle
+      // was last seen in.
+      const still = this.lowHint === 'player.idle' && this.walkVelocity.lengthSq() < .01;
+      this.lowStanceValid = still || this.idleStanceValid;
+      for (const [i, ankle] of ankles.entries()) {
+        const {foot, heel} = soleSockets(ankle), mark = this.lowStance[i];
+        if (still && ankle && foot && heel) {
+          this.soleToFacing(foot, mark.foot); this.soleToFacing(heel, mark.heel); this.bodyTurn(ankle, mark.turn);
+          mark.foot.y = mark.heel.y = THREE.MathUtils.clamp(Math.min(mark.foot.y, mark.heel.y), .006, .02);
+        } else if (still) this.lowStanceValid = false;
+        else {mark.foot.copy(this.idleStance[i].foot); mark.heel.copy(this.idleStance[i].heel); mark.turn.copy(this.idleStance[i].turn);}
+      }
+      this.lowSoleQuick = this.lowHint === 'player.idle' || this.lowHint === 'player.run';
+      if (still && this.lowStanceValid) this.lowSoleHold = 1;
+    }
+    // Up out of the crouch the hold stays until the legs have straightened
+    // over the feet, and gives way at once to a step.
+    this.lowCrouchT = crouched ? this.lowCrouchT + dt : 0;
+    if (crouched) this.lowRiseT = -1;
+    else if (this.lowHint === 'player.crouch' && supported && hint === 'player.idle' && this.lowSoleHold > 0) this.lowRiseT = 0;
+    else if (this.lowGathered && !this.lowPoseGathering && supported && hint === 'player.idle' && this.lowFeetBusy) {
+      // Up off all fours the feet were never held. From the moment he is
+      // carried on to his feet they are gathered onto the stance the idle
+      // was last seen in, land on it, and stay there while he settles.
+      this.lowRiseT = 0; this.lowSoleQuick = false;
+      this.lowStanceValid = this.idleStanceValid;
+      for (const [i, mark] of this.lowStance.entries()) {
+        mark.foot.copy(this.idleStance[i].foot); mark.heel.copy(this.idleStance[i].heel); mark.turn.copy(this.idleStance[i].turn);
+      }
+    }
+    else if (this.lowRiseT >= 0) this.lowRiseT = supported && hint === 'player.idle' && this.lowRiseT + dt < LOW_RISE_HOLD[1] ? this.lowRiseT + dt : -1;
+    this.lowHint = hint; this.lowGathered = supported && this.lowPoseGathering;
+    const steps = smooth(this.walkVelocity.length(), .2, 1.2);
+    // Feet that have to be gathered in are left to the pose until it has
+    // them folded under him, and are let go quickly, before a crawl has
+    // swung them far.
+    const want = !this.lowStanceValid ? 0 : crouched ? this.lowSoleQuick || this.lowCrouchT >= LOW_GATHER[0] ? 1 : 0
+      : this.lowRiseT >= 0 ? (1 - smooth(this.lowRiseT, LOW_RISE_HOLD[0], LOW_RISE_HOLD[1])) * (1 - steps) : 0;
+    this.lowSoleHold += THREE.MathUtils.clamp(want - this.lowSoleHold, -dt / .1, dt / (this.lowSoleQuick ? .1 : LOW_GATHER[1]));
+    // Free soles are kept on top of the floor through the low poses and for
+    // as long as the body is still being carried up out of one.
+    const guarded = low || standing && (this.lowPoseGathering || this.lowPoseCarry !== null && Math.abs(this.lowPoseCarry) > .02);
+    this.lowSoleGuard += THREE.MathUtils.clamp((guarded ? 1 : 0) - this.lowSoleGuard, -dt / .3, dt / .12);
+    if (!supported || this.lowSoleHold <= 1e-3 && this.lowSoleGuard <= 1e-3) {
+      if (!supported) this.lowSoleHold = this.lowSoleGuard = 0;
+      this.lowBendValid[0] = this.lowBendValid[1] = false;
+      // A jump or a drop out of a low pose leaves the floor on one frame.
+      // What holding the feet to it had done to each leg joint is then eased
+      // out of whatever the next motion has them in, instead of dropped:
+      // over longer where the feet were still being carried a long way, and
+      // the legs trail after him as he goes. A knee he had ridden up over
+      // lets him down as slowly as it would have on the floor.
+      if (this.lowLegsHeld) {this.lowLegsFreeT = 0; this.lowLegsFreeFor = LOW_LET_GO * (1 + LOW_LET_GO_FAR * this.lowFeetLeft);}
+      this.lowLegsHeld = false;
+      this.lowFeetBusy = this.lowFeetSeen = false; this.lowFeetLeft = 0;
+      this.lowKneeLift = rigged ? Math.max(0, this.lowKneeLift - LOW_KNEE_SETTLE_SPEED * dt) : 0;
+      if (this.lowKneeLift > 0) this.liftRider(this.lowKneeLift, hit?.normal ?? _soleUp);
+      if (this.lowLegsFreeT >= 0 && rigged) {
+        const left = 1 - smooth(this.lowLegsFreeT, 0, this.lowLegsFreeFor);
+        for (const [i, joint] of joints.entries()) if (joint) joint.quaternion.premultiply(_soleFrom.identity().slerp(this.lowLegTurns[i], left));
+        this.lowLegsFreeT = this.lowLegsFreeT + dt < this.lowLegsFreeFor ? this.lowLegsFreeT + dt : -1;
+        this.group.updateMatrixWorld(true);
+      } else this.lowLegsFreeT = -1;
+      return;
+    }
+    for (const [i, joint] of joints.entries()) if (joint) _lowPosed[i].copy(joint.quaternion);
+    // Feet that a cut carries start from where they were last shown. A carry
+    // that stops being reported while they are still on their way (whatever
+    // took the motion away did not carry it on) is finished here, at the
+    // rate it was going: the feet do not drop to where the new motion is.
+    let feet = this.lowFeetCarry;
+    if (feet) {
+      this.lowFeetRate = this.lowFeetSeen && dt > 1e-5 ? (feet[0] - this.lowFeetSeenLeft) / dt : 0;
+      this.lowFeetSeenLeft = feet[0]; this.lowFeetSeenCoast = feet[1]; this.lowFeetSeen = true;
+    } else if (this.lowFeetBusy && this.lowFeetSeen && this.lowFeetSeenLeft > 1e-3) {
+      const settle = Math.exp(-LOW_FEET_FINISH * dt), pull = (this.lowFeetRate + LOW_FEET_FINISH * this.lowFeetSeenLeft) * dt;
+      this.lowFeetRate = (this.lowFeetRate - LOW_FEET_FINISH * pull) * settle;
+      this.lowFeetSeenLeft = Math.max(0, (this.lowFeetSeenLeft + pull) * settle);
+      this.lowFeetSeenCoast *= settle;
+      feet = [this.lowFeetSeenLeft, this.lowFeetSeenCoast];
+    } else this.lowFeetSeen = false;
+    if (this.lowFeetCarry && this.lowFeetSerial !== this.lowPoseCarrySerial) {
+      this.lowFeetSerial = this.lowPoseCarrySerial;
+      this.lowFeetBusy = this.lowFeetShownValid;
+      // They start from what is on screen, so the floor has nothing to
+      // push out on this frame and is kept under them from it: off a
+      // landing straight into a crawl there is no time to ease that in.
+      if (this.lowFeetBusy) this.lowSoleGuard = 1;
+      for (const [i, shown] of this.lowFeetShown.entries()) {
+        const from = this.lowFeetFrom[i];
+        from.ankle.copy(shown.ankle); from.speed.copy(shown.speed).clampLength(0, 6); from.turn.copy(shown.turn); from.knee.copy(shown.knee);
+      }
+    }
+    if (!feet) this.lowFeetBusy = false;
+    this.lowFeetLeft = feet && this.lowFeetBusy ? THREE.MathUtils.clamp(feet[0], 0, 1) : 0;
+    const carried = !!feet && this.lowFeetBusy && Math.abs(feet[0]) > 1e-3;
+    if (carried) this.carryFeet(hit!, feet![0], feet![1]);
+    // First a knee, then a sole, that would dip into the floor is laid on it,
+    // wherever the pose has it. Then each sole is taken to its mark, or given back.
+    if (this.lowSoleGuard > 1e-3) {
+      // Riding up moves the hips and not where the feet are bound: they are
+      // carried again from the pose, under the body where it now is.
+      if (this.rideOverKnees(hit!, this.lowSoleGuard, dt) > 0 && carried) {
+        for (const [i, joint] of joints.entries()) if (joint) joint.quaternion.copy(_lowPosed[i]);
+        this.group.updateMatrixWorld(true);
+        this.carryFeet(hit!, feet![0], feet![1]);
+      }
+      this.liftShoes(hit!, this.lowSoleGuard, dt);
+    } else {this.lowBendValid[0] = this.lowBendValid[1] = false; this.lowKneeLift = 0;}
+    const hold = smooth(this.lowSoleHold, 0, 1);
+    if (hold > 1e-3) this.plantLowSoles(hit!, this.lowStance, hold);
+    for (const [i, joint] of joints.entries())
+      if (joint) this.lowLegTurns[i].copy(joint.quaternion).multiply(_soleTo.copy(_lowPosed[i]).invert());
+    this.lowLegsHeld = true; this.lowLegsFreeT = -1;
+  }
+
+  /** Where each foot and knee is on screen once everything has posed the
+   * legs: where a cut that carries the feet starts them from. It is kept
+   * through every motion and not only the low ones, since a crawl is also
+   * come into off a landing, with the feet wherever that left them. */
+  private rememberLowFeet(dt: number): void {
+    const hit = this.grounded ? this.groundHit : null;
+    const known = this.directScheme && !this.freeSkate && !this.isBailing && !!this.riderG && !!this.bodyGroup.parent;
+    for (const [i, [mid, end]] of ([[this.kneeL, this.ankleL], [this.kneeR, this.ankleR]] as const).entries()) {
+      if (!known || !mid || !end) {this.lowFeetShownValid = false; return;}
+      const shown = this.lowFeetShown[i], ankle = this.overGround(hit, end, _lowAnkle);
+      if (this.lowFeetShownValid && dt > 1e-5) shown.speed.copy(ankle).sub(shown.ankle).multiplyScalar(1 / dt); else shown.speed.set(0, 0, 0);
+      shown.ankle.copy(ankle);
+      this.bodyTurn(end, shown.turn);
+      this.overGround(hit, mid, shown.knee);
+    }
+    this.lowFeetShownValid = true;
+  }
+
+  /** A hand that the crouch brings down to the floor stops on it. The body
+   * dips a little under the crouch as it arrives; the arm gives at the elbow
+   * for that, the way it is already bent, and the hand stays where it landed.
+   * The crawl plants its hands with the wrist at floor height, which buries
+   * a hand this size. There each hand is raised by what its plant needs and
+   * keeps most of that through the reach that follows, so it still lifts
+   * off the floor to come forward. */
+  private guardLowHands(dt: number): void {
+    const hint = this.animationClipHint, hit = this.groundHit;
+    const rigged = this.directScheme && !this.freeSkate && !this.isBailing && !!this.riderG && !!this.bodyGroup.parent;
+    const able = rigged && this.grounded && this.state === 'ride';
+    const crouched = able && hint === 'player.crouch', crawling = able && hint === 'player.crawl';
+    this.lowHandGuard += THREE.MathUtils.clamp((crouched || crawling ? 1 : 0) - this.lowHandGuard, -dt / .25, dt / .1);
+    const joints = [this.armL, this.elbowL, this.armR, this.elbowR];
+    if (this.lowHandGuard <= 1e-3 || !able || !hit || hit.normal.y < .3) {
+      if (!able) this.lowHandGuard = 0;
+      this.lowHandLift[0] = this.lowHandLift[1] = 0;
+      // As with the feet: off the floor on one frame, the arms ease out of
+      // what the guard had done to them.
+      if (this.lowArmsHeld) this.lowArmsFreeT = 0;
+      this.lowArmsHeld = false;
+      if (this.lowArmsFreeT >= 0 && rigged) {
+        // Under the character's look, as below, so that it is still applied once.
+        const left = 1 - THREE.MathUtils.smoothstep(this.lowArmsFreeT, 0, LOW_LET_GO);
+        this.clearCharacterAppearance();
+        for (const [i, joint] of joints.entries()) if (joint) joint.quaternion.premultiply(_soleFrom.identity().slerp(this.lowArmTurns[i], left));
+        this.syncCharacterAppearance({deferWorldMatrices: true});
+        this.lowArmsFreeT = this.lowArmsFreeT + dt < LOW_LET_GO ? this.lowArmsFreeT + dt : -1;
+        this.group.updateMatrixWorld(true);
+      } else this.lowArmsFreeT = -1;
+      return;
+    }
+    for (const [i, joint] of joints.entries()) if (joint) _lowPosed[i].copy(joint.quaternion);
+    this.lowArmsHeld = false;
+    const arms = [[this.armL, this.elbowL, this.wristL], [this.armR, this.elbowR, this.wristR]] as const;
+    const ease = (depth: number) => depth <= -.006 ? 0 : depth >= .006 ? depth : (depth + .006) * (depth + .006) / .024;
+    const keep = crawling ? Math.exp(-dt / LOW_HAND_KEEP) : crouched ? 0 : Math.exp(-dt / .12);
+    // Each hand is measured as it will be drawn, palms laid flat and all.
+    this.group.updateMatrixWorld(true);
+    REACH_C.set(this.pos.x, hit.y, this.pos.z);
+    let raised = false;
+    for (const [i, [, , end]] of arms.entries()) {
+      const clearance = end ? this.handMeasure.sampledPlaneDistance(end, hit.normal, REACH_C) : Infinity;
+      this.lowHandLift[i] = Math.min(.3, Math.max(this.lowHandLift[i] * keep, Number.isFinite(clearance) ? ease(.006 - clearance) : 0));
+      raised ||= this.lowHandLift[i] * this.lowHandGuard > 5e-4;
+    }
+    if (!raised) return;
+    // The character's look turns the upper arms and lays the crawl's palms
+    // flat over whatever pose it is given. It is taken off while the wrists
+    // are raised and put back over the result, so it is applied exactly once.
+    this.clearCharacterAppearance();
+    this.group.updateMatrixWorld(true);
+    for (const [i, [root, mid, end]] of arms.entries()) {
+      const amount = this.lowHandLift[i] * this.lowHandGuard;
+      if (!root || !mid || !end || amount <= 5e-4) continue;
+      const target = _soleTargets[0].copy(end.getWorldPosition(_soleA)).addScaledVector(hit.normal, amount);
+      // The elbow keeps the side of the shoulder-to-wrist line it is on.
+      root.getWorldPosition(_soleB).add(_soleA).multiplyScalar(.5);
+      _soleA.subVectors(mid.getWorldPosition(_solePole), _soleB);
+      if (_soleA.lengthSq() < 1e-6) _soleA.set(0, 1, 0);
+      _solePole.addScaledVector(_soleA.normalize(), .6);
+      solveTwoBoneIk({root, mid, end, effector: end, target, pole: _solePole, weight: 1, accountForParentScale: true, tolerance: .002,
+        solveSpace: this.bodyGroup});
+    }
+    this.syncCharacterAppearance({deferWorldMatrices: true});
+    this.group.updateMatrixWorld(true);
+    for (const [i, joint] of joints.entries())
+      if (joint) this.lowArmTurns[i].copy(joint.quaternion).multiply(_soleTo.copy(_lowPosed[i]).invert());
+    this.lowArmsHeld = true; this.lowArmsFreeT = -1;
   }
 
   /** The airborne pose lifts its shoes above the movement feet. Ease that
@@ -19781,7 +20733,12 @@ export class Player {
     } else {
       const vx = this.pos.x - this.prevPos.x;
       const vz = this.pos.z - this.prevPos.z;
-      if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
+      // Travel turns the body at 1.5 m/s. A crawl under the stick turns at its
+      // own pace instead: set slower than that, it would never face where it
+      // goes. Crouched with the stick at rest keeps the plain rule, so a
+      // moving floor still does not turn him.
+      const turns = this.crawling && (input.moveX !== 0 || input.moveY !== 0) ? crawlPaced(1.5) : 1.5;
+      if (vx * vx + vz * vz > (turns * dt) * (turns * dt)) {
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
       }
     }
@@ -19874,11 +20831,11 @@ export class Player {
     this.walkAmp += ((runningAnim ? 1 : 0) - this.walkAmp) * Math.min(1, 10 * dt);
     this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
     if (runningAnim) this.walkPhase += (4 + gaitPlanar * 1.0) * dt;
-    else if (this.crawling && planar > 0.5) this.walkPhase += (2 + planar * 0.8) * dt;
+    else if (this.crawling && planar > crawlPaced(.5)) this.walkPhase += (2 + planar * 0.8) * dt;
     // Circle-hold splits by motion (the reference does): standing still is a
     // compact upright SQUAT; the all-fours crawl only takes over once she
     // actually moves.
-    const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
+    const crawlMove = this.crawlPose * Math.min(1, planar / crawlPoseSpeed());
     const crouchW = Math.max(0, this.crawlPose - crawlMove);
     if (this.crawling) {
       const ownership = this.authoredLowPoseOuterOwnership?.(dt) ?? 0;
@@ -20750,7 +21707,13 @@ export class Player {
     // A keyed slide owns its whole body, and still does while its lean is
     // easing away under whatever follows it.
     const outerSlide=this.jakSlideClip()?0:this.slidePose;
-    const directOwnsBody = pancakeSlam || keyedSlide || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
+    // So does a keyed jump charge: its sink and its fold are its keys'.
+    const keyedCharge=this.animationClipHint===JUMP_CHARGE_CLIP_ID&&!!this.authoredClip(JUMP_CHARGE_CLIP_ID)?.metadata?.jakCharge;
+    const directOwnsBody = pancakeSlam || keyedSlide || keyedCharge || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
+    // D carries the body between standing, which owns its whole offset, and a
+    // crouch or crawl whose clip does. The old idle breath and step bounce
+    // would switch on between the two in a single frame, so they stay out.
+    const directLow = this.directScheme && legacyLowPoseOuterWeight <= 0 && (this.crawling || this.crawlPose > .001);
     if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
@@ -20798,8 +21761,8 @@ export class Player {
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * bodyDropPose : 0) +
-      walkMagnitude * 0.075 * this.walkAmp + // reference bounce: each step hops
-      breathe * 0.015 * this.idleAmp;
+      (directLow ? 0 : walkMagnitude * 0.075 * this.walkAmp + // reference bounce: each step hops
+        breathe * 0.015 * this.idleAmp);
     // Launch keys already contain their load, waist pivot and extension.
     // Retiring the ordinary charge/run offsets prevents a second visual dip.
     if (launchOwnsBody || directOwnsBody) this.bodyGroup.position.y = 0;
@@ -21309,11 +22272,17 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.presentJakSlide(dt);
+    this.advanceKeyedSoles(dt);
+    this.footSeatSeconds = dt > 0 ? dt : 0;
     this.seatOnFoot();
+    this.holdLowSoles(dt);
+    this.guardLowHands(dt);
     this.seatPancakeSlam();
     this.plantPancakeSoles();
+    this.plantKeyedSoles(dt);
     this.advancePancakeTail(dt);
     this.rememberIdleStance(dt);
+    this.rememberLowFeet(dt);
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),

@@ -165,7 +165,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
     assert.ok(low<standing.hips*.7,`the rise never loaded a crouch: ${low} vs standing ${standing.hips}`);
     assert.ok(peak>standing.head+.05&&stretch>1.08,`the rise did not spring past standing: head ${peak} vs ${standing.head}, torso ${stretch}`);
     assert.ok(span(crouch,lock).every(row=>row.localUp>.93),'the rise did not stay upright over its feet');
-    assert.ok(maxSlide<.025&&maxSoleHeight<.035,`planted soles moved: slid ${maxSlide} m, rose ${maxSoleHeight} m`);
+    // (Up on the toes at the spring, the sole's middle is 35 mm off the floor in D's own stand.)
+    assert.ok(maxSlide<.025&&maxSoleHeight<.04,`planted soles moved: slid ${maxSlide} m, rose ${maxSoleHeight} m`);
     if(!running){
       assert.ok(handoffJump<.02,`the handoff to idle popped: ${handoffJump} m`);
       soles(p).forEach((sole,i)=>assert.ok(sole.sub(p.pos).distanceTo(standing.soles[i])<.015,'the recovery did not finish in the idle stance'));

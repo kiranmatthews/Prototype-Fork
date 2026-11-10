@@ -213,7 +213,7 @@ export const TUNING = {
   balanceNoise: 0.18, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
   balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
   balanceSafePeriod: 0.25, // eases outward catch input; inward correction always stays full strength
-  crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
+  crawlSpeed: 1.1, // Crash crouch-crawl speed while holding Circle stopped; a cycle covers CRAWL_STRIDE_METRES (0.9 m), so 1.1 m/s plays 1.2 cycles a second
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
   arrowBoostMult: 1.25, // holding X on the Arrow-crate impact tick multiplies the launch
@@ -446,7 +446,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceNoise: { min: 0, max: 0.6, step: 0.02 },
   balanceNoiseFreq: { min: 0.5, max: 20, step: 0.5 },
   balanceSafePeriod: { min: 0, max: 1.5, step: 0.05 },
-  crawlSpeed: { min: 2, max: 10, step: 0.5 },
+  crawlSpeed: { min: 0.5, max: 10, step: 0.1 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
   arrowBoostMult: { min: 1, max: 2, step: 0.05 },
@@ -842,7 +842,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Minimum velocity into the landing surface for a huge-drop bail. A fast but well-aligned transition landing remains safe.',
   crateTripSpeed:
     'Skate into a plain wood crate or checkpoint at or above this (but below smashSpeed, which plows through) and you trip OVER the box and tumble down the far side. Below it, the crate is a wall.',
-  crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
+  crawlSpeed: 'Movement speed of the all-fours Circle-crawl. The crawl animation keeps pace: one cycle for every 0.9 m covered.',
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
   arrowBounce:
