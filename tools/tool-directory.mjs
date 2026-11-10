@@ -41,6 +41,7 @@ function category(file) {
 function reviewQuery(file) {
   if (file === 'skate-playtest.html' || file === 'skate-reference-lab.html') return '';
   if (file === 'jump-review.html') return '?playtest&level=codex-lab&nocrt&lite';
+  if (file === 'tools/flame-heat/review.html') return '?playtest&level=dark&launchReview&nocrt&lite';
   if (file.includes('/') && file !== 'tools/carton-game-review.html') return '';
   let level = 'codex-lab';
   if (/park-|competition|jungle-cup|cup-performance|trick-|grind-|balance-|spin-review|interaction|milk-bottle/.test(file)) level = 'jungle-cup';

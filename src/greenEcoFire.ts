@@ -46,7 +46,7 @@ const fragmentShader = /* glsl */`
  * Distances are fractions of the source sprite's FULL width, not its radius.
  * Geometry supplies the soft profile; motion and colour come from the port.
  */
-function puffGeometry(kind: EcoSprite): THREE.InstancedBufferGeometry {
+export function createEcoPuffGeometry(kind: EcoSprite): THREE.InstancedBufferGeometry {
   const positions: number[] = [], profiles: number[] = [], indices: number[] = [];
   const n = kind === 'starflash' ? 16 : 8;
   const centre = kind === 'bigpuff' ? .9 : 1;
@@ -105,7 +105,7 @@ class EcoBatch {
   readonly mesh: THREE.Mesh<THREE.InstancedBufferGeometry,THREE.ShaderMaterial>;
   count=0;
   constructor(readonly kind: EcoSprite,capacity: number) {
-    this.gouraud=puffGeometry(kind);
+    this.gouraud=createEcoPuffGeometry(kind);
     this.positions=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4).setUsage(THREE.DynamicDrawUsage);
     this.colors=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4).setUsage(THREE.DynamicDrawUsage);
     this.rolls=new THREE.InstancedBufferAttribute(new Float32Array(capacity),1).setUsage(THREE.DynamicDrawUsage);

@@ -11676,3 +11676,43 @@ Verification:
 - Committed on top of `97d199bb`, which packs the desert terrain: the production build and the release-size check pass again there, at 932,906,413 of 1,000,000,000 bytes.
 - Inspector: `Idle`, `Held jump`, `Shimmy ledge`.
 - Reviewed as frame sheets in the comparison lab on the real mesh (the stand from in front and behind, the charge from in front, the side and behind, the shimmy from behind and obliquely) and as the measurements above. Not watched at speed, and not yet played by Kiran.
+
+
+## 2026-11-11 — Integrate completed work without replacing Claude's animation, and put Jak flames in torches
+
+Brief: treat Claude's latest movement/animation commit as authoritative, reconcile
+the older worktrees, and make the Jak flame effect appear in all torches on main.
+Prompt-to-playable: approximately 25 minutes, including the branch audit and
+main-game startup diagnosis; release verification and worktree alignment followed.
+
+Started from `91fe4413`, already on `origin/main`. Audited all ten active worktrees:
+completed jump/skate/ledge/eco, bridge, enemy and heat-distortion work was already
+integrated. The progress-HUD checkpoint explicitly remains unfinished. The dirty
+shared Documents checkout is preserved. Detailed lineage and disposition are in
+`WORKTREE_INTEGRATION_2026-11-11.md`. Added the user's animation-authority instruction
+to AGENTS so an older branch cannot silently supersede the new mainline motion.
+
+The shared torch factory still drew three cones despite its newer heat pass. It
+now uses the source maincave torch graph (eight launchers), rendered on the
+existing Gouraud puff geometry. All shared torches, phase flames and ferry
+braziers use it; the source green-eco vents remain distinct. Preserved lights,
+heat, phase warnings, extinction/reignition, transforms and resource cleanup.
+Two instanced draws, no textures, fixed 256-particle capacity; deterministic
+12-second sweep peaks at 111 visible particles with no drops at 30/60/120 Hz.
+
+Browser review found ordinary-game integration errors that the comparison lab
+did not exercise. The D document adapter now hands the animation generator the
+body skeleton instead of the board-authoring wrapper; a regression proves every
+generated clip exactly matches the comparison lab. Motion downloads accept both
+raw gzip and already HTTP-decoded payloads. Claude's animation/controller/tuning
+files are unchanged. The local flame review now resolves its assets from the
+root, and its Labs link includes the required launch-review fixture parameters.
+
+Validation: original-source check, 30/60/120 Hz torch fidelity/lifecycle checks,
+all 92 actual Nightworks torches including moving mounts and phase cycles, shared
+heat-pass checks, green-eco checks, motion-asset tests, two-player animation
+lifecycle checks (29 native owners), production build and hosting-size check.
+Real in-app browser: lite and full-render Nightworks, normal 720 and MAX/native
+(2560×1440 heat framebuffer), animated flames and character visible together;
+no new console errors after the two startup fixes. Local server restored at
+`http://127.0.0.1:5189/`.
