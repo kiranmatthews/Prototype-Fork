@@ -5,6 +5,7 @@ import { Level } from '../src/level';
 import { LOCOMOTION_WALK_BLEND_INPUT, RigBinding, createPlayerStarterAnimationSuite } from '../src/animation';
 import type { AnimationClip } from '../src/animation';
 import {PANCAKE_SLAM} from '../src/animation/pancakeSlam';
+import {JAK_SLIDE,JAK_SLIDE_JUMP} from '../src/animation/jakSlide';
 import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
 import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
@@ -343,6 +344,27 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
   }
+  if(mode.startsWith('Slide')){
+    p.camDir.set(0,0,-1);
+    // A second tap in the air is the double jump out of the slide jump.
+    const twice=mode.startsWith('Slide double jump'),jump=twice||mode.startsWith('Slide jump');
+    const hop=frame>=74&&frame<79||twice&&frame>=96&&frame<100;
+    const low=mode==='Slide to crouch'||mode==='Slide to crawl';
+    const keep=mode==='Slide to crawl'||mode.endsWith('and run');
+    nativeStep(dt,{moveX:0,moveY:frame>=20&&(frame<70||keep)?1:0,
+      jumpHeld:jump&&hop,jumpPressed:jump&&(frame===74||twice&&frame===96),jumpReleased:jump&&(frame===79||twice&&frame===100),
+      grabHeld:frame===62||low&&frame>=62,grabPressed:frame===62},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    const time=runtime.diagnostics.timelineTime??0,sliding=runtime.activeClipId==='player.slide';
+    const leaping=runtime.activeClipId==='player.slide-jump';
+    if(stopAt==='Slide hip down'&&sliding&&time>=.17 || stopAt==='Slide skid'&&sliding&&time>=.30 ||
+      stopAt==='Slide crouch'&&sliding&&time>=JAK_SLIDE.rise+JAK_SLIDE.crouch ||
+      stopAt==='Slide stand'&&sliding&&time>=JAK_SLIDE.rise+JAK_SLIDE.stand ||
+      stopAt==='Slide tuck'&&leaping&&time>=.24 || stopAt==='Apex'&&leaping&&time>=JAK_SLIDE_JUMP.apex ||
+      stopAt==='Slide touchdown'&&leaping&&time>=JAK_SLIDE_JUMP.land+JAK_SLIDE_JUMP.dip ||
+      stopAt==='Settled'&&frame>=(low?130:twice?200:jump?170:150))frozen=true;
+    if(frame>=(twice?260:230))resetInspector();return;
+  }
   if(mode==='Pancake slam'||mode==='Slam and run'){
     p.camDir.set(0,0,-1);
     const slam=frame===48;
@@ -562,7 +584,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run','Slide','Slide and run','Slide to crouch','Slide to crawl','Slide jump','Slide jump and run','Slide double jump and run',
   'Skate flow','Mount cancel','Slow X push','Fakie slow X push','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -579,7 +601,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle','Slide hip down','Slide skid','Slide crouch','Slide stand','Slide tuck','Slide touchdown',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Push stroke','Speed recovered','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);

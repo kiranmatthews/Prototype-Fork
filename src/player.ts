@@ -137,6 +137,7 @@ import {
 } from './animation/bridge';
 import type { ProceduralMotionContext } from './animation/types';
 import { solveTwoBoneIk } from './animation/ik';
+import { JAK_SLIDE, JAK_SLIDE_JUMP } from './animation/jakSlide';
 import {
   FORWARD_ROLL_TUCK_INPUT,
   sampleForwardRollPresentation,
@@ -996,6 +997,34 @@ export class Player {
   private readonly pancakeSoleMarks = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
   private pancakeSolesPlanted = false;
   private pancakeSolesMeasured = false;
+  // An authored slide's clocks: seconds since the skid began, seconds since
+  // it ended in a plain get-up (-1 otherwise), seconds its jump has fallen
+  // and seconds since that jump touched down (-1 otherwise).
+  private slideClipT = -1;
+  private slideRiseT = -1;
+  private slideJumpFallT = 0;
+  private slideJumpLandT = -1;
+  private slideJumpLanded = false;
+  // Its floor contact: how far this body's seated hip sits from where the
+  // keys put it (learnt, and kept between slides), and each sole's hold.
+  private slideSeatLift = 0;
+  private readonly slideSoleMarks = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
+  private readonly slideStepFrom = { foot: new THREE.Vector3(), heel: new THREE.Vector3() };
+  private readonly slideStepTo = { foot: new THREE.Vector3(), heel: new THREE.Vector3() };
+  private readonly slideSoleHold: [number, number] = [0, 0];
+  private slideSolePhase: 'none' | 'skid' | 'rise' | 'land' = 'none';
+  private slideExitT = -1; // seconds since something else took the skid over on the ground
+  // What holding the soles did to each leg joint on the last frame it was
+  // done, and the seconds since: let go, a leg eases out of that from
+  // wherever the next motion has it, instead of dropping it.
+  private readonly slideLegTurns = Array.from({ length: 6 }, () => new THREE.Quaternion());
+  private readonly slideLegPosed = Array.from({ length: 6 }, () => new THREE.Quaternion());
+  private slideLegsHeld = false;
+  private slideLegsFreeT = -1;
+  // The body's own travel over the last pose frame, in the rig root's frame.
+  private readonly slideTravel = new THREE.Vector3();
+  private readonly slideTravelFrom = new THREE.Vector3(Number.NaN, 0, 0);
+  private slideSolesMeasured = false;
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
@@ -2480,6 +2509,13 @@ export class Player {
         inputs: {
           pancakeSlamTime:this.pancakeSlamTime(),
           pancakeSlamTail:this.slamTailT,
+          jakSlideTime:this.jakSlideTime(),
+          jakSlideRise:this.slideRiseT,
+          jakSlideJumpLand:this.slideJumpLandT,
+          jakSlideSegment:this.slideRiseT>=0||this.slideJumpLandT>=0?1:0,
+          jakSlideFree:this.slideJumpLandT>=0||this.slideRecoverT<=0&&!this.slideEndPending?1:0,
+          jakSlideJumpTime:this.jakSlideJumpTime(),
+          jakTravelX:this.slideTravel.x,jakTravelY:this.slideTravel.y,jakTravelZ:this.slideTravel.z,
           boardAbandon: this.boardAbandonActive ? 1 : 0,
           nativeAir: this.nativeAirPresentation ? 1 : 0,
           jakFrame: this.footStudyFrame,
@@ -5492,7 +5528,7 @@ export class Player {
       this.chargeTimer = 0;
       this.jumpBufferT = 0;
       this.score(CONST.ptsSlide, 'Slide');
-      sfx.play('woosh', 0.7);
+      sfx.play('slide', 0.75);
     }
 
     // Rail candidate is computed once per step: used for grind entry, the
@@ -6354,7 +6390,7 @@ export class Player {
       this.slideCd = CONST.slideCooldown;
       this.airMomentum = true;
       this.lastJumpType = 'Slide Jump';
-      sfx.play('woosh2', 0.6);
+      sfx.play('slideJump', 0.7);
     } else if (this.freeSkate) {
       // Leaving the mounted board: THPS board ollie at any rolling speed. The
       // deck's ownership, not an arbitrary speed threshold, defines the move.
@@ -9455,6 +9491,7 @@ export class Player {
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
+      const slideJumpTouchdown = this.slideJumpAir;
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
       const wasPipeHang = this.pipeHang; // (cleared next step; needed for drop-in rules below)
@@ -9580,6 +9617,21 @@ export class Player {
         // the board OFF for a beat so a slope re-accelerating you — or a
         // direction you're holding — can't flip the deck out.
         this.skateBlockT = 0.3;
+        // The slide put the walk itself at rest and flew on its own burst, so
+        // a held direction used to start again from a stand. It now runs on
+        // out of the touchdown at the pace an ordinary running jump lands
+        // with. A neutral stick still stops on the spot.
+        const footSpeed = this.directFootStudy && !this.onFootJumpStudy?.nativeLocomotion
+          ? this.onFootJumpStudy?.runSpeed ?? TUNING.walkSpeed : TUNING.walkSpeed;
+        const carried = Math.min(Math.hypot(incomingPlanarX, incomingPlanarZ), footSpeed);
+        const runsOn = Math.hypot(input.moveX, input.moveY) > .05 && carried > 3;
+        if (runsOn) {
+          this.walkVelocity.set(incomingPlanarX, 0, incomingPlanarZ).setLength(carried);
+          this.walkRamp = Math.max(this.walkRamp, Math.min(1, carried / Math.max(TUNING.walkSpeed, 1e-6)));
+        }
+        // The keyed slide jump has its own touchdown for coming to a stand.
+        // Running on, it lands as any running jump does.
+        if (slideJumpTouchdown && !runsOn && this.jakSlideJumpClip()) {this.slideJumpLandT = 0; this.slideJumpLanded = true;}
       }
       // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
@@ -18840,14 +18892,22 @@ export class Player {
     const release=Number(clip.metadata!.pancakeRecoveryStart??clip.range.end),lockEnd=Number(clip.metadata!.pancakeGroundStart)+this.slamFlatDuration;
     const weight=THREE.MathUtils.smoothstep(time,feetDown-lead,feetDown)*
       (this.pancakeSolesMeasured?1:1-THREE.MathUtils.smoothstep(time,release,lockEnd));
-    if(weight<=1e-4)return;
+    this.plantSolesOnMarks(hit,this.pancakeSoleMarks,[weight,weight]);
+  }
+
+  /** Hold each sole on its mark with the leg above it, level and aimed. The
+   * marks and weights are in left, right order. `settle` then sits the whole
+   * rider on its lowest surface, which only a pose that owns both feet wants. */
+  private plantSolesOnMarks(hit:GroundHit,marks:readonly {foot:THREE.Vector3;heel:THREE.Vector3}[],weights:[number,number],settle=true,kneeLift=0):void {
+    if(Math.max(...weights)<=1e-4)return;
+    const legs=[[this.legL,this.kneeL,this.ankleL],[this.legR,this.kneeR,this.ankleR]] as const;
     const normal=hit.normal;
     _soleForward.set(0,0,1).transformDirection(this.bodyGroup.matrixWorld);
     _soleLeft.set(1,0,0).transformDirection(this.bodyGroup.matrixWorld);
     const soles=legs.map(([root,mid,end],i)=>{
       const {foot,heel,side}=soleSockets(end);
       if(!root||!mid||!end||!foot||!heel)return null;
-      const mark=this.pancakeSoleMarks[i],target=_soleTargets[i],aim=_soleAims[i];
+      const mark=marks[i],target=_soleTargets[i],aim=_soleAims[i];
       this.soleToWorld(mark.foot,target);target.y=this.supportHeight(hit,target)+mark.foot.y;
       this.soleToWorld(mark.heel,aim);aim.y=this.supportHeight(hit,aim)+mark.heel.y;
       aim.subVectors(target,aim).addScaledVector(normal,-aim.dot(normal));
@@ -18859,22 +18919,25 @@ export class Player {
       foot.getWorldPosition(_soleA).sub(heel.getWorldPosition(_soleB));
       const reach=_soleA.length()||1,heelLift=THREE.MathUtils.clamp(-Math.asin(THREE.MathUtils.clamp(_soleA.dot(normal)/reach,-1,1))-.06,0,.5);
       target.addScaledVector(normal,reach*Math.sin(heelLift)).addScaledVector(aim,reach*(1-Math.cos(heelLift))/(aim.length()||1));
-      return {root,mid,end,foot,heel,side,target,aim,heelLift};
+      return {root,mid,end,foot,heel,side,target,aim,heelLift,weight:weights[i]};
     });
     // A spring past standing can outreach a leg. The pelvis gives way, as a
     // real one would, until both soles are back on their marks.
     for(let attempt=0;attempt<3;attempt++){
       let short=0;
       for(const sole of soles){
-        if(!sole)continue;
-        const {root,mid,end,foot,heel,side,target,aim,heelLift}=sole;
+        if(!sole||sole.weight<=1e-4)continue;
+        const {root,mid,end,foot,heel,side,target,aim,heelLift,weight}=sole;
         // The sole's socket sits ahead of the ankle, so levelling the shoe
         // moves it: solve the leg, level and aim the shoe, then solve once more.
         for(let pass=0;pass<2;pass++){
-          root.getWorldPosition(_solePole).addScaledVector(_soleForward,.6).addScaledVector(_soleLeft,side*.06);
+          root.getWorldPosition(_solePole).addScaledVector(_soleForward,.6).addScaledVector(_soleLeft,side*.06).addScaledVector(normal,kneeLift);
+          // The body is scaled more in height than in width, so a leg's
+          // length in the world changes as it turns. The keyed slide solves
+          // inside the body, where it does not, and lands on the mark.
           const solved=solveTwoBoneIk({root,mid,end,effector:foot,target,pole:_solePole,weight,
-            accountForParentScale:true,tolerance:.002});
-          if(pass&&!solved.reached&&weight>=1)short=Math.max(short,solved.error);
+            accountForParentScale:true,tolerance:.002,...(settle?{}:{solveSpace:this.bodyGroup})});
+          if(pass&&!solved.reached&&weight>=1&&settle)short=Math.max(short,solved.error);
           _soleFrom.copy(end.quaternion);
           for(let step=0;step<3;step++){
             end.updateWorldMatrix(true,true);
@@ -18892,11 +18955,250 @@ export class Player {
       this.liftRider(-short,normal);
     }
     this.group.updateMatrixWorld(true);
+    if(!settle)return;
     // A levelled shoe is thicker than its socket. Keep the actual surface on
     // its support after that last rotation as well.
-    const clearance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
+    const clearance=this.interactionMeasure.sampledPlaneDistance(this.riderG!,normal,
       REACH_C.set(this.pos.x,hit.y,this.pos.z));
-    if(Number.isFinite(clearance)&&Math.abs(clearance-.006)>1e-4)this.liftRider(.006-clearance,normal);
+    if(Number.isFinite(clearance)&&Math.abs(clearance-.006)>1e-4)this.liftRider((.006-clearance)*Math.max(...weights),normal);
+  }
+
+  private jakSlideClip():AnimationClip|null {
+    const clip=this.authoredClip('player.slide');
+    return clip?.metadata?.jakSlide?clip:null;
+  }
+
+  private jakSlideJumpClip():AnimationClip|null {
+    const clip=this.authoredClip('player.slide-jump');
+    return clip?.metadata?.jakSlideJump?clip:null;
+  }
+
+  /** The keyed slide's timeline: the sweep down onto the hip, a sway that
+   * loops for as long as the skid lasts, then the get-up from the moment it ends. */
+  private jakSlideTime():number {
+    if(!this.jakSlideClip()||this.slideClipT<0)return 0;
+    const {hold,rise}=JAK_SLIDE;
+    if(this.slideRiseT>=0)return rise+this.slideRiseT;
+    return this.slideClipT<hold?this.slideClipT:hold+(this.slideClipT-hold)%(rise-hold);
+  }
+
+  /** The keyed slide jump follows the climb to its apex, counts the fall and
+   * then its touchdown. */
+  private jakSlideJumpTime():number {
+    if(!this.jakSlideJumpClip())return 0;
+    const {apex,fall,land}=JAK_SLIDE_JUMP;
+    if(this.slideJumpLandT>=0)return land+this.slideJumpLandT;
+    return this.vVel>0?apex*(1-Math.min(1,this.vVel/Math.max(this.launchVy,.001))):apex+Math.min(fall,this.slideJumpFallT);
+  }
+
+  /** The keyed slide's clocks, set before this frame's pose reads them. A
+   * plain skid ends in its own get-up and its jump in its own touchdown;
+   * both finish over the idle or a run. Anything else takes over at once. */
+  private advanceJakSlide(dt:number):void {
+    // How far the body itself has moved this frame, in the frame its pelvis
+    // is keyed in: a cut that changes this speed leaves the pelvis behind.
+    if(dt>1e-5&&Number.isFinite(this.slideTravelFrom.x)){
+      this.bodyGroup.updateWorldMatrix(true,false);
+      _soleA.subVectors(this.pos,this.slideTravelFrom).multiplyScalar(1/dt);
+      this.slideTravel.set(_soleA.dot(_soleLeft.set(1,0,0).transformDirection(this.bodyGroup.matrixWorld))/this.bodyGroup.scale.x,
+        _soleA.y/this.bodyGroup.scale.y,
+        _soleA.dot(_soleForward.set(0,0,1).transformDirection(this.bodyGroup.matrixWorld))/this.bodyGroup.scale.z);
+    }else this.slideTravel.set(0,0,0);
+    this.slideTravelFrom.copy(this.pos);
+    const hint=this.animationClipHint,standing=hint==='player.idle'||hint==='player.run';
+    const plain=this.state==='ride'&&this.grounded&&!this.freeSkate&&!this.isBailing&&!this.crawling&&!this.slamActive&&
+      this.spinTimer<=0&&!this.groundHit?.slippy;
+    if(!this.jakSlideClip())this.slideClipT=this.slideRiseT=-1;
+    else if(this.sliding){
+      this.slideClipT=this.slideClipT<0||this.slideRiseT>=0?0:this.slideClipT+dt;
+      this.slideRiseT=-1;
+    }else if(this.slideClipT>=0){
+      const next=this.slideRiseT<0?0:this.slideRiseT+dt;
+      // Once he is up and free to move, a run starts as any run from a stand does.
+      const runs=hint==='player.run'&&this.slideRecoverT<=0&&!this.slideEndPending&&next>=JAK_SLIDE.stand;
+      if(plain&&(standing||hint==='player.slide')&&!runs&&next<JAK_SLIDE.lock+JAK_SLIDE.tail)this.slideRiseT=next;
+      else{
+        // A crouch, a crawl or anything else low takes the body from here.
+        if(this.grounded&&this.state==='ride'&&next<JAK_SLIDE.lock)this.slideExitT=0;
+        this.slideClipT=this.slideRiseT=-1;
+      }
+    }
+    if(this.slideExitT>=0)this.slideExitT=this.slideClipT<0&&this.grounded&&this.slideExitT+dt<.7?this.slideExitT+dt:-1;
+    if(!this.jakSlideJumpClip()){this.slideJumpFallT=0;this.slideJumpLandT=-1;}
+    else if(this.slideJumpAir&&this.state==='air'){
+      this.slideJumpFallT=this.vVel<=0?this.slideJumpFallT+dt:0;
+      this.slideJumpLandT=-1;
+    }else{
+      this.slideJumpFallT=0;
+      if(this.slideJumpLandT>=0){
+        // The landing marked the touchdown itself; count on from there.
+        const next=this.slideJumpLandT+(this.slideJumpLanded?0:dt);
+        const runs=hint==='player.run'&&next>=JAK_SLIDE_JUMP.stand;
+        this.slideJumpLandT=plain&&standing&&!runs&&!this.sliding&&next<JAK_SLIDE_JUMP.settle?next:-1;
+      }
+    }
+    this.slideJumpLanded=false;
+  }
+
+  /** The keyed slide's contact with the floor. The clip's curves own every
+   * movement; this only fits them to the floor, and only with weights that
+   * ease, so it can never move the body by itself from one frame to the next.
+   * The seated hip is settled by an offset that is learnt slowly while the
+   * skid is still. The left sole finds the idle's own mark during the sweep
+   * down and keeps it until he stands, and the right foot is walked back to
+   * its mark beside it; a landing puts both soles on theirs. */
+  private presentJakSlide(dt:number):void {
+    const hit=this.groundHit,hold=this.slideSoleHold,marks=this.slideSoleMarks;
+    const supported=!!hit&&this.grounded&&hit.normal.y>=.3&&!!this.riderG&&!!this.bodyGroup.parent;
+    const rise=this.slideRiseT,land=this.slideJumpLandT;
+    const skid=supported&&this.slideClipT>=0&&!!this.jakSlideClip();
+    const smooth=THREE.MathUtils.smoothstep;
+    if(skid){
+      const seat=rise<0?smooth(this.slideClipT,JAK_SLIDE.seat[0],JAK_SLIDE.seat[1]):1-smooth(rise,JAK_SLIDE.unseat[0],JAK_SLIDE.unseat[1]);
+      if(Math.abs(this.slideSeatLift*seat)>1e-6)this.liftRider(this.slideSeatLift*seat,hit!.normal);
+      if(seat>=1&&this.slideClipT>JAK_SLIDE.seat[1]+.16){
+        this.group.updateMatrixWorld(true);
+        const distance=this.interactionMeasure.sampledPlaneDistance(this.riderG!,hit!.normal,REACH_C.set(this.pos.x,hit!.y,this.pos.z));
+        if(Number.isFinite(distance))this.slideSeatLift=THREE.MathUtils.clamp(this.slideSeatLift+(.008-distance)*(1-Math.exp(-12*dt)),-.2,.2);
+      }
+    }
+    const ankles=[this.ankleL,this.ankleR],left=ankles.findIndex(ankle=>soleSockets(ankle).side>0),right=1-left;
+    const phase=!supported?'none':skid&&rise<0?'skid':skid?'rise':land>=0&&this.jakSlideJumpClip()?'land':'none';
+    const measure=(index:number,mark:{foot:THREE.Vector3;heel:THREE.Vector3})=>{
+      const {foot,heel}=soleSockets(ankles[index]);
+      if(foot&&heel){this.soleToFacing(foot,mark.foot);this.soleToFacing(heel,mark.heel);}
+    };
+    const stance=(index:number,mark:{foot:THREE.Vector3;heel:THREE.Vector3})=>{
+      mark.foot.copy(this.idleStance[index].foot);mark.heel.copy(this.idleStance[index].heel);
+    };
+    if(phase!==this.slideSolePhase&&phase!=='none'){
+      this.group.updateMatrixWorld(true);
+      if(phase==='skid'||this.slideSolePhase==='none')this.slideSolesMeasured=this.idleStanceValid;
+      if(this.slideSolesMeasured){
+        stance(left,marks[left]);
+        if(phase==='land')stance(right,marks[right]);else stance(right,this.slideStepTo);
+      }else{
+        // Without a measured stance each sole holds where it comes down, and
+        // the right one steps in opposite the left.
+        measure(left,marks[left]);measure(right,marks[right]);
+        for(const mark of marks)mark.foot.y=mark.heel.y=.02;
+        for(const part of ['foot','heel'] as const){
+          this.slideStepTo[part].copy(marks[left][part]);
+          this.slideStepTo[part].x=-Math.max(.08,Math.abs(marks[left][part].x));
+        }
+      }
+      if(phase==='rise')measure(right,this.slideStepFrom);
+    }
+    this.slideSolePhase=phase;
+    const free=this.slideRecoverT<=0&&!this.slideEndPending||phase==='land'?smooth(this.walkVelocity.length(),.2,1.2):0;
+    let wantL=0,wantR=0;
+    if(phase==='skid')wantL=this.slideSolesMeasured?smooth(this.slideClipT,JAK_SLIDE.solePlant[0],JAK_SLIDE.solePlant[1]):0;
+    else if(phase==='rise'){
+      // The toes come down as the hold takes the foot, then the flat sole is
+      // drawn back along the floor to its mark.
+      const step=smooth(rise,JAK_SLIDE.step[0],JAK_SLIDE.step[1]),eased=step*step*(3-2*step),flat=smooth(rise,0,.13);
+      for(const part of ['foot','heel'] as const){
+        const from=this.slideStepFrom[part],to=this.slideStepTo[part];
+        marks[right][part].lerpVectors(from,to,eased).setY(THREE.MathUtils.lerp(from.y,to.y,flat));
+      }
+      // Measured marks are the idle's own, so they hold until it has the
+      // legs back and the two agree; improvised ones let go as he stands.
+      const kept=this.slideSolesMeasured?1:1-smooth(rise,JAK_SLIDE.stand-.14,JAK_SLIDE.stand+.02);
+      wantL=wantR=kept*(1-free);
+    }else if(phase==='land'){
+      const kept=this.slideSolesMeasured?1:1-smooth(land,.24,.40);
+      wantL=wantR=kept*(1-free);
+    }
+    // The get-up takes and gives up its hold over a few frames, and running
+    // out of it lets go with the speed. A touchdown puts both soles on the
+    // floor on its own frame, and anything else that ends a hold takes the
+    // legs at once and eases them out of it below.
+    for(const [index,want] of [[left,wantL],[right,wantR]] as const)
+      hold[index]=phase==='none'?0:phase!=='rise'?want:hold[index]+THREE.MathUtils.clamp(want-hold[index],-dt/.12,dt/.12);
+    const held=Math.max(hold[0],hold[1])>1e-4;
+    const joints=[this.legL,this.kneeL,this.ankleL,this.legR,this.kneeR,this.ankleR];
+    if(this.slideLegsHeld&&!held)this.slideLegsFreeT=0;
+    this.slideLegsHeld=held;
+    if(!held&&this.slideLegsFreeT>=0){
+      const remaining=1-smooth(this.slideLegsFreeT,0,.2);
+      for(const [i,joint] of joints.entries())if(joint)joint.quaternion.premultiply(_soleFrom.identity().slerp(this.slideLegTurns[i],remaining));
+      this.slideLegsFreeT=this.slideLegsFreeT+dt<.2?this.slideLegsFreeT+dt:-1;
+      this.group.updateMatrixWorld(true);
+    }
+    if(!supported||!this.riderG||!this.bodyGroup.parent||!held&&phase==='none'&&this.slideExitT<0)return;
+    for(const [i,joint] of joints.entries())if(joint)this.slideLegPosed[i].copy(joint.quaternion);
+    // Seated, a knee folds up over its foot; standing, forward.
+    this.group.updateMatrixWorld(true);
+    const seated=this.legL?1-smooth(this.legL.getWorldPosition(_soleA).y-this.pos.y,.5,.9):0;
+    if(phase!=='land'){
+      // What is not held still may not sink into the floor: the body rides up
+      // over a knee that folds under it, and a free sole skims the surface.
+      const fade=phase!=='none'?1:1-smooth(this.slideExitT,.45,.7);
+      let low=Infinity;
+      for(const knee of [this.kneeL,this.kneeR])if(knee)low=Math.min(low,knee.getWorldPosition(_soleA).y-this.supportHeight(hit!,_soleA));
+      const lift=fade*Math.log1p(Math.exp((.085-low)*60))/60;
+      if(lift>5e-4)this.liftRider(lift,hit!.normal);
+    }
+    if(held)this.plantSolesOnMarks(hit!,marks,[hold[0],hold[1]],false,.8*seated);
+    if(phase!=='land'){
+      // A sole that is fully held is already where it belongs.
+      const fade=phase!=='none'?1:1-smooth(this.slideExitT,.45,.7);
+      this.skimSoles(hit!,[fade*(1-hold[0]*hold[0]),fade*(1-hold[1]*hold[1])]);
+    }
+    if(held)for(const [i,joint] of joints.entries())
+      if(joint)this.slideLegTurns[i].copy(joint.quaternion).multiply(_soleTo.copy(this.slideLegPosed[i]).invert());
+  }
+
+  /** Lift a sole that would dip into the floor back onto it, bending the leg
+   * the way it is already bent. The lift eases in over the last centimetre,
+   * so a foot that comes down or drags along the surface never snaps. */
+  private skimSoles(hit:GroundHit,weights:[number,number]):void {
+    const legs=[[this.legL,this.kneeL,this.ankleL],[this.legR,this.kneeR,this.ankleR]] as const;
+    const ease=(depth:number)=>Math.log1p(Math.exp(depth*120))/120;
+    for(const [i,[root,mid,end]] of legs.entries()){
+      const {foot,heel}=soleSockets(end);
+      if(weights[i]<=1e-3||!root||!mid||!end||!foot||!heel)continue;
+      for(let pass=0;pass<2;pass++){
+        foot.getWorldPosition(_soleA);heel.getWorldPosition(_soleB);
+        const centre=_soleA.y-this.supportHeight(hit,_soleA),back=_soleB.y-this.supportHeight(hit,_soleB);
+        const lift=weights[i]*ease(.008-Math.min(centre,back));
+        if(lift>=5e-4){
+          const target=_soleTargets[i].copy(centre<back?_soleA:_soleB).addScaledVector(hit.normal,lift/Math.max(.3,hit.normal.y));
+          // The knee keeps the side of the hip-to-ankle line it is on.
+          root.getWorldPosition(_soleA);end.getWorldPosition(_soleB);mid.getWorldPosition(_solePole);
+          _soleA.add(_soleB).multiplyScalar(.5);_soleB.subVectors(_solePole,_soleA);
+          if(_soleB.lengthSq()<1e-6)_soleB.set(0,1,0);
+          _solePole.addScaledVector(_soleB.normalize(),.6);
+          solveTwoBoneIk({root,mid,end,effector:centre<back?foot:heel,target,pole:_solePole,weight:1,accountForParentScale:true,tolerance:.002,
+            solveSpace:this.bodyGroup});
+          end.updateWorldMatrix(true,true);
+        }
+        // A toe that points down into the floor is laid along it, turned
+        // whichever way lifts it: up under a standing shin, back under a
+        // trailing one. The tip is as far ahead of the sole's centre as the
+        // heel is behind it.
+        foot.getWorldPosition(_soleA);heel.getWorldPosition(_soleB);
+        _soleB.subVectors(_soleA,_soleB).add(_soleA);
+        const raise=weights[i]*ease(.008-(_soleB.y-this.supportHeight(hit,_soleB)));
+        if(raise<5e-4)break;
+        // About the ankle the tip's height is `up cos + swing sin` of the
+        // turn. Two turns reach the height wanted: the smaller, or under a
+        // foot hanging straight down, the one that continues the shin.
+        _soleB.sub(end.getWorldPosition(_soleA));
+        const up=_soleB.y,swing=_soleA.set(1,0,0).transformDirection(end.matrixWorld).cross(_soleB);
+        const size=Math.hypot(up,swing.y);
+        if(size<1e-4)break;
+        const middle=Math.atan2(swing.y,up),spread=Math.acos(THREE.MathUtils.clamp((up+raise)/size,-1,1));
+        const turns=[middle+spread,middle-spread].map(angle=>Math.atan2(Math.sin(angle),Math.cos(angle)));
+        end.getWorldPosition(_soleB).sub(mid.getWorldPosition(_solePole));
+        const along=swing.x*_soleB.x+swing.z*_soleB.z;
+        const turn=Math.abs(Math.abs(turns[0])-Math.abs(turns[1]))>.3||Math.abs(along)<1e-4
+          ?Math.abs(turns[0])<Math.abs(turns[1])?turns[0]:turns[1]
+          :turns.find(angle=>angle*along>0)??turns[0];
+        end.rotateX(turn);end.updateWorldMatrix(true,true);
+      }
+    }
+    this.group.updateMatrixWorld(true);
   }
 
   /** Move only the posed rider along its support normal. */
@@ -18962,7 +19264,9 @@ export class Player {
     // into a sideways move. Convert a WORLD-up delta into the rider's parent.
     _plantInv.copy(rg.parent.matrixWorld).invert();
     _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
-    _plantC.set(0, -drop, 0).applyMatrix4(_plantInv).sub(_plantO);
+    // Soles the keyed slide is holding are on the floor already, under a
+    // pelvis that is keyed; this fit takes over exactly as they are let go.
+    _plantC.set(0, -drop * (1 - Math.max(...this.slideSoleHold)), 0).applyMatrix4(_plantInv).sub(_plantO);
     rg.position.add(_plantC);
   }
 
@@ -20441,7 +20745,12 @@ export class Player {
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     const launchOwnsBody = !this.airFromSkate && isLaunchClip(this.animationClipHint);
     const pancakeSlam=this.animationClipHint==='player.slam'&&!!this.authoredClip('player.slam')?.metadata?.pancakeSlam;
-    const directOwnsBody = pancakeSlam || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
+    const keyedSlide=!!this.jakSlideClip()&&(this.animationClipHint==='player.slide'||this.slideRiseT>=0)||
+      !!this.jakSlideJumpClip()&&(this.animationClipHint==='player.slide-jump'||this.slideJumpLandT>=0);
+    // A keyed slide owns its whole body, and still does while its lean is
+    // easing away under whatever follows it.
+    const outerSlide=this.jakSlideClip()?0:this.slidePose;
+    const directOwnsBody = pancakeSlam || keyedSlide || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
     if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
@@ -20453,7 +20762,7 @@ export class Player {
       this.bodyGroup.rotation.x =
         flip * (1 - this.grabPose) +
         .24 * this.grabPose -
-        0.6 * this.slidePose + // baseball slide: leaned back on the hip
+        0.6 * outerSlide + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) * legacyLowPoseOuterWeight -
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * bodyDropPose + // belly-first pancake; recovery replaces it with the captured turn
@@ -20483,7 +20792,7 @@ export class Player {
     // a missing/invalid or preserved legacy clip deliberately keeps it.
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
-      this.slidePose * 0.38 -
+      outerSlide * 0.38 -
       (crawlMove * 0.2 + crouchW * 0.36) * legacyLowPoseOuterWeight -
       this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop buries the torso through the deck
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
@@ -20716,6 +21025,7 @@ export class Player {
     // These layers only write joint angles and length factors. Resolve their
     // combined segment strain once, before later pose/contact solvers read it.
     const batchBailDeformations = (this.isBailing || this.bailRiseAge >= 0) && !this.playerAnimationBridge.previewActive;
+    this.advanceJakSlide(dt);
     this.playerAnimationBridge.applyOverlay(dt, batchBailDeformations);
     if (batchBailDeformations) this.playerAnimationBridge.beginDeformationBatch();
     if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive)
@@ -20998,6 +21308,7 @@ export class Player {
     if(this.specialFlip&&this.flipT>0)this.applyBackflipPose(1-this.flipT/this.flipDuration);
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
+    this.presentJakSlide(dt);
     this.seatOnFoot();
     this.seatPancakeSlam();
     this.plantPancakeSoles();

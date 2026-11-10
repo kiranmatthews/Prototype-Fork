@@ -1,6 +1,8 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { MathUtils } from 'three';
 import { JakAirPoseSpring } from './jakAirMotion';
+import { PoseInertia } from './animation/poseInertia';
+import type { InertiaShape } from './animation/poseInertia';
 import { ledgeRebound } from './animation/ledgeMotion';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animation/elasticity';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
@@ -224,6 +226,11 @@ function clipVariantBlend(
     : null;
 }
 
+type KeyedInertia = { segments: InertiaShape[]; out: Record<string, InertiaShape> };
+/** A keyed clip's own description of how the body enters, crosses and leaves it. */
+function inertiaOf(clip: AnimationClip | null | undefined): KeyedInertia | null {
+  return (clip?.metadata?.jakInertia as unknown as KeyedInertia | undefined) ?? null;
+}
 function withControlDefaults(
   pose: PoseBuffer,
   defaults: ReadonlyMap<string, number>,
@@ -319,6 +326,16 @@ export class CharacterAnimationRuntime {
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
   private readonly jakAirSpring = new JakAirPoseSpring();
+  // Cuts into, inside and out of a keyed clip that asks for it keep the
+  // body's position and speed; see PoseInertia.
+  private readonly inertia = new PoseInertia();
+  private inertiaCut: InertiaShape | null = null;
+  private inertiaExit: Record<string, InertiaShape> | null = null;
+  private inertiaSegment = -1;
+  private inertiaTime = 0;
+  private poseBeforeLast: PoseBuffer | null = null;
+  private lastFrameSeconds = 0;
+  private travel: number[] | null = null;
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
   private bailOutgoingPose: PoseBuffer | null = null;
@@ -546,7 +563,7 @@ export class CharacterAnimationRuntime {
       }
       // Ice balance and gravity-slope gliding start on contact, without a dry
       // landing plant/recovery. Board contact retains its procedural spring.
-      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && (intent.motion.inputs?.jakSlideJumpLand ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         const directLanding = this.findPlayableClip(LAND_CLIP_ID)?.metadata?.jakDirect;
         const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
@@ -624,6 +641,14 @@ export class CharacterAnimationRuntime {
         // Control is back, as after any landing, while the slam's arms and
         // torso finish their sweep over the live idle or run.
         requested = 'player.slam';
+      } else if ((inputs.jakSlideRise ?? -1) >= 0 && ['player.run','player.idle'].includes(hint) &&
+          this.findPlayableClip('player.slide')?.metadata?.jakSlide) {
+        // The skid's own get-up finishes over the idle, or over a run.
+        requested = 'player.slide';
+      } else if ((inputs.jakSlideJumpLand ?? -1) >= 0 && ['player.run','player.idle'].includes(hint) &&
+          this.findPlayableClip('player.slide-jump')?.metadata?.jakSlideJump) {
+        // Its jump lands in its own clip, the same way.
+        requested = 'player.slide-jump';
       } else if (hint === 'player.climb') {
         directTime = intent.motion.actionProgress * this.findPlayableClip('player.climb')!.duration;
       } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
@@ -703,7 +728,15 @@ export class CharacterAnimationRuntime {
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
         (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect)
         ? this.pendingIdleHandoffOffset : null;
-      const switchBlendDuration = this.manualClipId === null
+      const keyed = inertiaOf(clip), keyedBefore = inertiaOf(previousClip);
+      const inertial = this.manualClipId === null && !this.restartPending && !!previousClipId && !!this.lastSampledPose &&
+        (!!keyed || !!keyedBefore || this.inertia.active);
+      if (keyedBefore) this.inertiaExit = keyedBefore.out;
+      this.inertiaCut = !inertial ? null
+        : keyed ? keyed.segments[Math.max(0, Math.round(intent.motion.inputs?.jakSlideSegment ?? 0))] ?? keyed.segments[0]
+        : this.inertiaExit?.[clip.id] ?? this.inertiaExit?.default ?? null;
+      if (!inertial) this.inertia.reset();
+      const switchBlendDuration = this.inertiaCut ? 0 : this.manualClipId === null
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? directDoubleBlend : clip.id === LAND_CLIP_ID ? .02
@@ -793,6 +826,18 @@ export class CharacterAnimationRuntime {
     if (directTime !== null) this.timelineTime = Math.min(clip.range.end, Math.max(clip.range.start, directTime));
     if(clip.metadata?.pancakeSlam&&this.manualClipId===null)
       this.timelineTime=MathUtils.clamp(motion.inputs?.pancakeSlamTime??0,clip.range.start,clip.range.end);
+    const keyedClip = this.manualClipId === null ? inertiaOf(clip) : null;
+    if (keyedClip) {
+      this.timelineTime=MathUtils.clamp((clip.metadata!.jakSlide?motion.inputs?.jakSlideTime:motion.inputs?.jakSlideJumpTime)??0,
+        clip.range.start,clip.range.end);
+      // Each part of a keyed clip runs on its own clock. Where the timeline
+      // jumps from one part to the next, the pose is carried across.
+      const segment = Math.max(0, Math.round(motion.inputs?.jakSlideSegment ?? 0));
+      if (!switched && (segment !== this.inertiaSegment || Math.abs(this.timelineTime - this.inertiaTime) > .12) && this.lastSampledPose)
+        this.inertiaCut = keyedClip.segments[segment] ?? keyedClip.segments[0];
+      this.inertiaSegment = segment;
+      this.inertiaTime = this.timelineTime;
+    } else this.inertiaSegment = -1;
     if (this.manualClipId === null && this.transient?.kind === 'run-stop' && !clip.metadata?.jakDirect) {
       const span = Math.max(1e-6, clip.range.end - clip.range.start);
       const coasting = motion.normalizedSpeed > .005;
@@ -905,11 +950,13 @@ export class CharacterAnimationRuntime {
       this.pendingIdleHandoffOffset = null;
     }
     if (this.manualClipId === null && clip.metadata?.jakDirect &&
-        (this.transient?.kind === 'landing' || clip.id === 'player.climb' || clip.metadata?.pancakeSlam&&motion.grounded)) {
+        (this.transient?.kind === 'landing' || clip.id === 'player.climb' || clip.metadata?.pancakeSlam&&motion.grounded ||
+          !!keyedClip&&this.inertiaSegment===1)) {
       const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
       const pancakeRecoveryStart=Number(clip.metadata?.pancakeRecoveryStart??.68);
-      const phase = clip.metadata?.pancakeSlam ? MathUtils.clamp((this.timelineTime-pancakeRecoveryStart)/
-        Math.max(.001,clip.range.end-pancakeRecoveryStart),0,1) : clip.id === 'player.climb'
+      const authoredStart=clip.metadata?.pancakeSlam?pancakeRecoveryStart:Number(clip.metadata?.recoveryStart);
+      const phase = Number.isFinite(authoredStart)&&(clip.metadata?.pancakeSlam||keyedClip) ? MathUtils.clamp((this.timelineTime-authoredStart)/
+        Math.max(.001,clip.range.end-authoredStart),0,1) : clip.id === 'player.climb'
         ? recovery >= 0 ? .7 + recovery * .3 : motion.actionProgress * .7
         : (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
       pose = this.recoverDirectLocomotion(clip, pose, motion, phase, dt);
@@ -1027,6 +1074,19 @@ export class CharacterAnimationRuntime {
       const phase = (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
       pose = directLandingSpring ? blendPoses(pose, filtered, 1 - smoothstep01((phase - .70) / .30)) : filtered;
     } else this.jakAirSpring.reset();
+    if (this.manualClipId !== null) {this.inertia.reset(); this.inertiaCut = null;}
+    if (this.inertiaCut || this.inertia.active) {
+      const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
+      pose = canonical(pose);
+      const travel = [motion.inputs?.jakTravelX ?? 0, motion.inputs?.jakTravelY ?? 0, motion.inputs?.jakTravelZ ?? 0];
+      if (this.inertiaCut) this.inertia.cut(pose, this.lastSampledPose ? canonical(this.lastSampledPose) : null,
+        this.poseBeforeLast ? canonical(this.poseBeforeLast) : null, this.lastFrameSeconds, this.inertiaCut, travel, this.travel);
+      this.inertiaCut = null;
+      pose = this.inertia.apply(pose, dt, travel);
+    }
+    this.travel = [motion.inputs?.jakTravelX ?? 0, motion.inputs?.jakTravelY ?? 0, motion.inputs?.jakTravelZ ?? 0];
+    this.poseBeforeLast = this.lastSampledPose;
+    this.lastFrameSeconds = dt;
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
@@ -1110,21 +1170,22 @@ export class CharacterAnimationRuntime {
     const idleTime = clipTimeAt(idle, state.idleClock, {offset: state.idleOffset});
     const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
     const moving = smoothstep01(motion.normalizedSpeed * TUNING.walkSpeed / .8);
-    const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
-      canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
+    const runPose = canonical(this.samplePoseAt(run, runTime, motion, true));
+    const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)), runPose, moving);
     const source = canonical(pose);
     // The slam states its own windows: live legs by the end of its lock, then
     // the arms and torso settling over them through its tail.
     const window = (range: unknown) => Array.isArray(range) && this.timelineTime !== null
       ? smoothstep01((this.timelineTime - Number(range[0])) / Math.max(.001, Number(range[1]) - Number(range[0]))) : null;
-    const pancakeLegs = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeLegsBlend) : null;
-    const pancakeBody = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeBodyBlend) : null;
+    const pancakeLegs = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeLegsBlend) : window(clip.metadata?.recoveryLegsBlend);
+    const pancakeBody = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeBodyBlend) : window(clip.metadata?.recoveryBodyBlend);
+    const movingLegs = motion.inputs?.jakSlideFree ? window(clip.metadata?.recoveryMovingLegsBlend) : null;
     const bodyWeight = pancakeBody ?? smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
     const restingLegsWeight = pancakeLegs ?? smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
     // The first stride starts as the feet clear the lip, and is fully live on
     // the deck. Keep the torso's separate rebound instead of freezing both
     // legs in the final mantle pose for the whole recovery window.
-    const runningLegsWeight = climb ? recovery >= 0 ? 1 : smoothstep01((motion.actionProgress-.78)/.22) : restingLegsWeight;
+    const runningLegsWeight = climb ? recovery >= 0 ? 1 : smoothstep01((motion.actionProgress-.78)/.22) : movingLegs ?? restingLegsWeight;
     const legsWeight = MathUtils.lerp(restingLegsWeight,runningLegsWeight,moving);
     const result = blendPoses(source, target, bodyWeight);
     const stride = blendPoses(source, target, legsWeight);
@@ -1135,6 +1196,14 @@ export class CharacterAnimationRuntime {
       if (stride.joints[id]) result.joints[id] = stride.joints[id];
     for (const [id, value] of Object.entries(stride.scalars ?? {}))
       if (id.startsWith('deform.leg.')) result.scalars![id] = value;
+    // The source idle's root rides above where it stands and is seated on its
+    // soles afterwards. A keyed clip that holds its own soles keeps its own
+    // standing height instead, and takes a run's bounce only as he runs.
+    const keyedRoot = inertiaOf(clip) ? source.joints.root?.position : undefined;
+    if (keyedRoot && result.joints.root?.position) result.joints.root = {...result.joints.root, position: [
+      result.joints.root.position[0],
+      MathUtils.lerp(keyedRoot[1], runPose.joints.root?.position?.[1] ?? keyedRoot[1], legsWeight * moving),
+      result.joints.root.position[2]]};
     if (climb && recovery >= 0) {
       const pulse = ledgeRebound(recovery), amplitudes = characterElasticityAmplitudes('jak-ledge-climb');
       result.scalars ??= {};
@@ -1434,6 +1503,11 @@ export class CharacterAnimationRuntime {
     this.proceduralDriverCount = 0;
     this.motionContext = null;
     this.lastSampledPose = null;
+    this.poseBeforeLast = null;
+    this.travel = null;
+    this.inertia.reset();
+    this.inertiaCut = null;
+    this.inertiaSegment = -1;
     this.jakAirSpring.reset();
     this.transitionBlendWeight = null;
     this.switchOutgoingPose = null;

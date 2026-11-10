@@ -43,7 +43,7 @@ existing authority.
 
 ## Coverage
 
-`npm run check:animation-d` runs 40 independent checks and preserves a separate
+`npm run check:animation-d` runs 41 independent checks and preserves a separate
 log/result for each. It is also part of `check:all`, not the Pages build path.
 
 | Area | Coverage |
@@ -69,6 +69,17 @@ Landed shoe tips stay within 1.2 cm of their marks through the crouch, the
 spring past standing and the handoff. The pelvis and legs reach the idle's own
 stance by the end of the lock, so a stationary exit hands over with a head step
 under 8 mm while the arms finish their sweep.
+
+D also keys its own slide and slide jump, and carries the body across every
+cut into, inside and out of them (`poseInertia.ts`) in place of a crossfade.
+The slide regression covers 21 combinations of frame rate and exit: standing
+up, running on, a held crouch, a held crawl, the jump landing in a stand or a
+run, and a double jump out of it landing in a run. It proves movement
+identical to the native presentation frame for frame, a bound on how much any
+part's world speed may change in one frame, no sole sinking into the floor,
+held soles that stay put while he stands up, a standing touchdown with no
+stock landing in it, and that running on out of the jump keeps run speed from
+the first frame on the ground through the ordinary running landing.
 
 The follow-up passes nine rubber-motion cases, 18 double-jump transitions,
 12 UI-tuning configurations, source-retarget and precision-jump checks. Paired

@@ -34,7 +34,7 @@ type Channel='pelvis'|'back'|'hips'|'spine'|'chest'|'neck'|'armPitch'|'armRoll'|
   |'thigh'|'splay'|'knee'|'ankle'|'plant'|'toes'|'torso'|'arms'|'legs';
 /** `out` leaves a key at speed (an impact), `in` arrives at speed and stops
  * dead (a slap), `hit` does both (a bounce). Everything else eases. */
-type Key=readonly [time:number,value:number,mode?:'in'|'out'|'hit'];
+export type Key=readonly [time:number,value:number,mode?:'in'|'out'|'hit'];
 
 // One list per channel, each an eased curve through its own extremes: recoil
 // past the coil, drift through the hang, whip into the dive, splat, rebound,
@@ -116,7 +116,7 @@ const HAND_LAG=.024;
 
 /** Shape-preserving cubic through the keys: extremes rest, runs flow, and
  * nothing overshoots unless a key says so. */
-function curve(keys:readonly Key[]):(time:number)=>number {
+export function curve(keys:readonly Key[]):(time:number)=>number {
   const n=keys.length,h:number[]=[],d:number[]=[];
   for(let i=0;i<n-1;i++){h.push(keys[i+1][0]-keys[i][0]);d.push((keys[i+1][1]-keys[i][1])/h[i]);}
   const auto=keys.map((_,i)=>{

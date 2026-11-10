@@ -14,7 +14,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     const base=createPlayerStarterAnimationSuite(rig),doc=gameplayAnimationDocument(base,rig,jak);
     const runtime=createCharacterAnimationRuntime(p,doc),presentation=new GameplayAnimationPresentation(p,scene,assets);
     // Uncovered native families must survive adopting the default scheme.
-    for(const clip of base.clips.filter(c=>/bail|death|rope|grind|crawl|crouch|slide|swim|roll-land|launch/.test(c.id)))
+    // It keys its own slide and slide jump; the downhill shoe glide stays native.
+    for(const clip of base.clips.filter(c=>/bail|death|rope|grind|crawl|crouch|slope-slide|swim|roll-land|launch/.test(c.id)))
       assert.deepEqual(doc.clips.find(c=>c.id===clip.id),clip,`default scheme replaced ${clip.id}`);
     assert.equal(p.rawInput,undefined);
     p.respawn(level,true,true);
@@ -22,6 +23,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     p.freeSkate=true;
     assert.doesNotThrow(()=>p.prepareStartPresentation(level),'mounted cold startup required input');
     p.freeSkate=false;
+    for(const [id,flag] of [['player.slide','jakSlide'],['player.slide-jump','jakSlideJump']])
+      assert.equal(doc.clips.find(c=>c.id===id)?.metadata?.[flag],true,`default scheme lost its keyed ${id}`);
     p.rawInput=makeInput();return {p,runtime,presentation};
   };
   const first=create(),second=create(),{p,runtime,presentation}=first,motion=presentation.skate;

@@ -4,6 +4,7 @@ import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefiniti
 import type { OnFootJumpStudy } from '../onFootJumpStudy';
 import { JAK_LEDGE_MOTION, ledgeRebound } from './ledgeMotion';
 import {createPancakeSlamClip} from './pancakeSlam';
+import {createJakSlideClip,createJakSlideJumpClip} from './jakSlide';
 
 type JointSample = {p: Vec3Tuple; q: QuaternionTuple};
 type Frame = Record<string, JointSample>;
@@ -287,6 +288,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
   }
   const landing=suite.clips.find(clip=>clip.id==='player.land');
-  suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig,landing):clip);
+  suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig,landing)
+    :clip.id==='player.slide'?createJakSlideClip(clip,rig):clip.id==='player.slide-jump'?createJakSlideJumpClip(clip,rig):clip);
   return suite;
 }
