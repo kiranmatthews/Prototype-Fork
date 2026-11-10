@@ -53,7 +53,13 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST,TUNING})=>{
   }
   const jumping=create();slide(jumping,{moveX:1});hold(jumping,3,{jumpHeld:true});tick(jumping,{jumpReleased:true});
   assert.equal(jumping.p.state,'air');assert.equal(jumping.p.lastJumpType,'Slide Jump');assert.equal(jumping.p.freeSkate,false);
-  tick(jumping);assert.equal(jumping.p.iceSlideCarry,false,'jump retained a stale carry owner');
+  tick(jumping);assert.equal(jumping.p.iceSlideCarry,true,'jump lost the on-foot coast owner');
+  // Ice momentum must not silently mount a board when this foot jump lands.
+  let jumpFrames=1;while(!jumping.p.grounded&&jumpFrames<180){
+   tick(jumping);jumpFrames++;assert.equal(jumping.p.freeSkate,false,'ice jump auto-mounted a board');
+  }
+  assert.ok(jumping.p.grounded,'ice slide jump never landed');
+  hold(jumping,30);assert.equal(jumping.p.freeSkate,false,'coasting after landing auto-mounted a board');
   const mounting=create();slide(mounting,{moveY:1});hold(mounting,14);hold(mounting,100,{moveY:1,jumpHeld:true});
   assert.equal(mounting.p.freeSkate,true,'ice coast blocked a deliberate board commitment');assert.equal(mounting.p.iceSlideCarry,false);
   assert.equal(JSON.stringify(TUNING),tuning);

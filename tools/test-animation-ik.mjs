@@ -105,6 +105,19 @@ try {
   assert.equal(mid.quaternion.equals(midBeforeInvalid), true);
   assert.ok(Number.isFinite(invalid.error));
 
+  // Rotated, non-uniform character proportions must not change the analytic
+  // segment lengths as the joints turn. Contacts are still world-space.
+  rigRoot.scale.set(1.18,1.36,.92);rigRoot.rotation.set(.2,.35,-.1);
+  for(const local of [[1.1,-3.5,.8],[-.4,-2.9,1.2],[.8,-3.8,-.1]]){
+    root.quaternion.identity();mid.quaternion.identity();scene.updateWorldMatrix(true,true);
+    const scaledTarget=rigRoot.localToWorld(new THREE.Vector3(...local));
+    const scaledPole=rigRoot.localToWorld(new THREE.Vector3(0,0,3));
+    const result=solveTwoBoneIk({root,mid,end,target:scaledTarget,pole:scaledPole,solveSpace:rigRoot});
+    assert.ok(result.error<1e-5,`affine contact missed by ${result.error}`);
+    assert.equal(result.status,'reached');
+    assert.deepEqual(mid.position.toArray(),[0,-2,0]);assert.deepEqual(end.position.toArray(),[0,-2,0]);
+  }
+
   // Semantic inference is topology checked, but remains independent of Bone/humanoid classes.
   const semanticRoot = new THREE.Group();
   const joints = new Map();

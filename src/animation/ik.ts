@@ -86,6 +86,9 @@ export interface ResolveIkChainOptions {
 export interface TwoBoneIkOptions {
   /** Aim through the complete parent linear transform on proportioned rigs. */
   accountForParentScale?: boolean;
+  /** Measure lengths in a common ancestor's affine space. This avoids using
+   * changing world lengths beneath a non-uniform character proportion scale. */
+  solveSpace?: THREE.Object3D;
   root: THREE.Object3D;
   mid: THREE.Object3D;
   end: THREE.Object3D;
@@ -355,6 +358,17 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
     return resultForFailure('invalid', 'IK hierarchy produced a non-finite world transform', effector, target);
   }
 
+  const worldA=a.clone(),worldB=b.clone(),worldC=c.clone();
+  const solveTarget=target.clone();
+  if(options.solveSpace){
+    const space=options.solveSpace;
+    space.updateWorldMatrix(true,false);
+    if(!isDescendant(root,space)||space===root||Math.abs(space.matrixWorld.determinant())<EPSILON)
+      return resultForFailure('invalid','IK solve space must be a nonsingular ancestor of the chain',effector,target);
+    const inverse=space.matrixWorld.clone().invert();
+    for(const point of [a,b,c,solveTarget,pole])point.applyMatrix4(inverse);
+  }
+
   const upperLength = a.distanceTo(b);
   const lowerLength = b.distanceTo(c);
   if (!Number.isFinite(upperLength) || !Number.isFinite(lowerLength)
@@ -362,7 +376,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
     return resultForFailure('degenerate', 'IK segments must have non-zero finite world lengths', effector, target);
   }
 
-  const targetOffset = target.clone().sub(a);
+  const targetOffset = solveTarget.clone().sub(a);
   const requestedDistance = targetOffset.length();
   if (!Number.isFinite(requestedDistance)) {
     return resultForFailure('invalid', 'IK target distance is not finite', effector, target);
@@ -399,6 +413,12 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
     .addScaledVector(aimDirection, along)
     .addScaledVector(poleDirection, bendHeight);
 
+  if(options.solveSpace){
+    desiredEnd.applyMatrix4(options.solveSpace.matrixWorld);
+    desiredMid.applyMatrix4(options.solveSpace.matrixWorld);
+    a.copy(worldA);b.copy(worldB);c.copy(worldC);
+  }
+
   const currentUpper = b.clone().sub(a);
   const desiredUpper = desiredMid.clone().sub(a);
   if (currentUpper.lengthSq() <= EPSILON * EPSILON || desiredUpper.lengthSq() <= EPSILON * EPSILON) {
@@ -411,7 +431,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
   const maxStep = finiteClamp(options.maxAngularStepRadians, Math.PI, 0, Math.PI);
   const rootDelta = new THREE.Quaternion().setFromUnitVectors(currentUpper, desiredUpper).normalize();
   const rootWrite = writeWorldRotationDelta(root, rootDelta, weight, maxStep, options.rootLimit,
-    options.accountForParentScale ? [currentUpper, desiredUpper] : undefined);
+    options.accountForParentScale || options.solveSpace ? [currentUpper, desiredUpper] : undefined);
   if (!rootWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);
@@ -441,7 +461,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
 
   const midDelta = new THREE.Quaternion().setFromUnitVectors(currentLower, desiredLower).normalize();
   const midWrite = writeWorldRotationDelta(mid, midDelta, weight, maxStep, options.midLimit,
-    options.accountForParentScale ? [currentLower, desiredLower] : undefined);
+    options.accountForParentScale || options.solveSpace ? [currentLower, desiredLower] : undefined);
   if (!midWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);
@@ -474,7 +494,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
     reached,
     clamped,
     error,
-    targetDistance: requestedDistance,
+    targetDistance: worldA.distanceTo(target),
     solvedDistance: a.distanceTo(endPosition),
     iterations: 1,
     endPosition,

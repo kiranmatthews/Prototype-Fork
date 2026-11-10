@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { gunzipSync } from 'node:zlib';
 import * as THREE from 'three';
 import ts from 'typescript';
 import { createServer } from 'vite';
@@ -30,10 +31,28 @@ export async function withSkateRuntime(run, options = {}) {
   const warn = console.warn, error = console.error;
   console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };
   console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };
-  let level;
+  let level;const animationDisposables=[];
   try {
     const { Level, findLevel } = await server.ssrLoadModule('/src/level.ts');
-    const { Player } = await server.ssrLoadModule('/src/player.ts');
+    let { Player } = await server.ssrLoadModule('/src/player.ts');
+    // Exercise existing gameplay scenarios with the exact default animation
+    // factory as well as their isolated native-controller baselines.
+    if(options.animationScheme==='D'||process.env.GAMEPLAY_ANIMATION_SCHEME==='D'){
+      const [{GameplayAnimationPresentation,gameplayAnimationDocument},{createCharacterAnimationRuntime},
+        {RigBinding,createPlayerStarterAnimationSuite},jak,skate]=await Promise.all([
+          server.ssrLoadModule('/src/gameplayAnimationScheme.ts'),server.ssrLoadModule('/src/characterAnimationRuntime.ts'),
+          server.ssrLoadModule('/src/animation/index.ts'),
+          ...['jak','skate'].map(async name=>JSON.parse(gunzipSync(await readFile(new URL(`../public/motion-study/${name}/motion.json.gz`,import.meta.url))))),
+        ]);
+      const ink=new THREE.Texture(),BasePlayer=Player;animationDisposables.push(ink);
+      Player=class extends BasePlayer{
+        constructor(scene){super(scene);
+          const rig=RigBinding.fromSculptRuntime(this.animationRig.root).definition;
+          animationDisposables.push(createCharacterAnimationRuntime(this,gameplayAnimationDocument(createPlayerStarterAnimationSuite(rig),rig,jak)),
+            new GameplayAnimationPresentation(this,scene,{jak,skate,ink}));
+        }
+      };
+    }
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
     const scene = new THREE.Scene();
     level = new Level(scene, options.levelEntry ?? findLevel('jungle-cup'));
@@ -50,6 +69,7 @@ export async function withSkateRuntime(run, options = {}) {
     };
     await run({ THREE, server, scene, Level, Player, level, player, CONST, TUNING, step });
   } finally {
+    animationDisposables.reverse().forEach(value=>value.dispose());
     level?.dispose();
     await server.close();
     console.warn = warn; console.error = error;

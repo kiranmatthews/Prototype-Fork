@@ -208,7 +208,8 @@ try {
  late.time=3;late.update(0);assert.equal(off.on,true);assert.equal(off.mesh.material,off.litMat);assert.ok(off.mesh.children.every(c=>c.visible));late.dispose();
  // The global grind rope's deforming visual samples the same rebaked polyline.
  const bridge=new Level(new THREE.Scene(),{id:'rope-braid',name:'Braided rope',data:{v:1,name:'Braided rope',spawn:[0,0,0],killY:-30,components:[{t:'rope',p:[0,4,0],len:14},{t:'gate',p:[0,0,-30]}]}});
- const sky=bridge.ropes[0];for(let i=0;i<80;i++){bridge.grindRope(sky.rail);bridge.update(CONST.fixedStep);}
+ const sky=bridge.ropes[0],riderPosition=sky.rail.pointAt(sky.rail.totalLength/2).clone();
+ for(let i=0;i<80;i++){bridge.grindRope(sky.rail,riderPosition);bridge.update(CONST.fixedStep);}
  assert.ok(sky.rail.points.some((p,i)=>p.y<sky.rest[i].y-.01),'loaded grind rope sags');
  const vertices=sky.visual.mesh.geometry.attributes.position;
  const ropeSides=sky.visual.radialSegments;

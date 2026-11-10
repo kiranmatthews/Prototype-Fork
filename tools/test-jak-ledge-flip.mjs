@@ -17,8 +17,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
   let frames=0;
   const flight=(flip,hold,move,double=false)=>{
     reset(flip);const trace=[],clips=new Set();let second=-1,air=false;
-    for(let f=0;f<150;f++){
-      const input={moveY:move,jumpPressed:f===15,jumpHeld:f>=15&&f<15+hold,jumpReleased:f===15+hold};
+    for(let f=0;f<200;f++){
+      const input={moveY:move,jumpPressed:f===60,jumpHeld:f>=60&&f<60+hold,jumpReleased:f===60+hold};
       if(double&&air&&second<0&&p.vVel<2){second=f;input.jumpPressed=input.jumpHeld=true;}
       if(second>=0&&f===second+1)input.jumpReleased=true;
       tick(input);air||=!p.grounded;clips.add(runtime.activeClipId);
@@ -31,7 +31,9 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
   for(const [hold,move,double] of [[1,0,false],[35,0,false],[18,1,false],[35,0,true],[90,1,false]]){
     const before=flight(false,hold,move,double),after=flight(true,hold,move,double);
     assert.deepEqual(after.trace,before.trace,'flip presentation changed the physics or skate gesture');
-    if(hold<90)assert.ok(after.clips.has('player.jak-flip'),'missing restored flip');
+    // Only a running launch at the live 8.85 m/s cutoff should roll. Vertical
+    // and tiny travel jumps deliberately retain the upright jump family.
+    if(hold<90)assert.equal(after.clips.has('player.jak-flip'),move===1,'takeoff-speed flip selection');
     if(double)assert.ok(after.clips.has('player.double-jump'),'flip swallowed double jump');
     if(hold===90)assert.ok(after.trace.some(t=>t[2]),'hold-to-skate failed');
     flights.push({hold,move,double,clips:[...after.clips]});
@@ -65,7 +67,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
       assert.ok(p.pos.x>start+.3,'shimmy movement was lost');
       assert.ok(planted>5,'shimmy slid both hands continuously');
       tick({jumpPressed:true,jumpHeld:true});
-      for(let f=0;f<50;f++){tick();clips.add(runtime.activeClipId);frames++;}
+      for(let f=0;f<90;f++){tick();clips.add(runtime.activeClipId);frames++;}
       assert.ok(clips.has('player.climb'));assert.ok(p.grounded&&p.pos.y>3.59,'pull-up did not finish supported');
     }else{
       p.camDir.set(0,0,-1);for(let f=0;f<30;f++){tick({moveY:-1});clips.add(runtime.activeClipId);frames++;}

@@ -23,7 +23,9 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
     ['hipLeft','kneeLeft','Lthigh','Lknee'],['kneeLeft','ankleLeft','Lknee','Lankle'],
     ['hipRight','kneeRight','Rthigh','Rknee'],['kneeRight','ankleRight','Rknee','Rankle']];
   let maxDirectionError=0,samples=0;
-  for(const clip of suite.clips.filter(c=>c.metadata?.jakDirect)) {
+  // The authored slam also uses D's gameplay clock but has no source samples.
+  // Its full rendered recovery/contact checks live in test-pancake-slam.
+  for(const clip of suite.clips.filter(c=>c.metadata?.jakSourceClip)) {
     const ref=bank.clips[clip.metadata.jakSourceClip];
     const sourceFrames=clip.id==='player.jak-short-land'?[...ref.samples.slice(0,ref.frames),...bank.clips['jump-land'].samples.slice(50)]
       :clip.id==='player.jak-soft-land'?ref.samples.slice(50):ref.samples;

@@ -819,14 +819,25 @@ try {
   const doubleHipLeft = doublePlayer.animationRig.jointsById.get("hipLeft")?.node;
   const doubleHipRight = doublePlayer.animationRig.jointsById.get("hipRight")?.node;
   assert.ok(doubleHipLeft && doubleHipRight, "double-jump hip tracks were not bound");
+  // The current starter replaced the historical instant split with a short
+  // second-pop handoff and asymmetric tuck. Keep checking actual live joints
+  // after that handoff, without requiring the superseded split silhouette.
+  for(let frame=0;frame<6;frame++)tickDouble(makeInput());
+  assert.equal(doubleRuntime.activeClipId,"player.double-jump");
+  closeTo(doublePlayer.bodyGroup.rotation.x,0,"second-pop tuck acquired a somersault",1e-6);
   const doubleLeftDirection = new THREE.Vector3(0, -1, 0)
     .applyQuaternion(doubleHipLeft.quaternion);
   const doubleRightDirection = new THREE.Vector3(0, -1, 0)
     .applyQuaternion(doubleHipRight.quaternion);
-  assert.ok(doubleLeftDirection.x > 0.6,
-    "double-jump left leg did not split outward");
-  assert.ok(doubleRightDirection.x < -0.6,
-    "double-jump right leg did not split outward");
+  assert.ok(doubleLeftDirection.x>.02&&doubleLeftDirection.x<.4,
+    "second-pop left thigh lost its compact outward tuck");
+  assert.ok(doubleRightDirection.x<-.02&&doubleRightDirection.x>-.4,
+    "second-pop right thigh lost its compact outward tuck");
+  for(const id of ['kneeLeft','kneeRight']){
+    const knee=doublePlayer.animationRig.jointsById.get(id).node;
+    assert.ok(new THREE.Vector3(0,-1,0).applyQuaternion(knee.quaternion).angleTo(new THREE.Vector3(0,-1,0))>.4,
+      `${id} did not gather into the second-pop tuck`);
+  }
 
   // Continued running owns gameplay immediately on touchdown. Presentation
   // keeps a short rebound reaction over a moving Run base, then hands the
@@ -988,7 +999,7 @@ try {
     replayer.end();
   }
 
-  console.log("Validated Unity crouch/crawl routing, crouch-jump slam priority, forward-roll curl, and split double jump.");
+  console.log("Validated Unity crouch/crawl routing, crouch-jump slam priority, forward-roll curl, and the second-pop tuck.");
   doubleRuntime.dispose();
   boardAnimationRuntime.dispose();
   legacyLowPoseRuntime.dispose();

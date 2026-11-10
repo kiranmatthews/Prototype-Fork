@@ -26,6 +26,9 @@ const FILES: Record<string, string> = {
   spin1: 'spin-1.wav',
   spin2: 'spin-3.wav',
   spin3: 'spin-4.wav',
+  // Generated placeholders: tools/make-slide-sounds.py
+  slide: 'slide.wav',
+  slideJump: 'slide-jump.wav',
   woosh: 'woosh.wav',
   woosh2: 'woosh-2.wav',
   woosh3: 'woosh-3.wav',

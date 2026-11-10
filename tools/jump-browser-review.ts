@@ -4,6 +4,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Level } from '../src/level';
 import { LOCOMOTION_WALK_BLEND_INPUT, RigBinding, createPlayerStarterAnimationSuite } from '../src/animation';
 import type { AnimationClip } from '../src/animation';
+import {PANCAKE_SLAM} from '../src/animation/pancakeSlam';
+import {JAK_SLIDE,JAK_SLIDE_JUMP} from '../src/animation/jakSlide';
 import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
 import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
@@ -131,8 +133,8 @@ function updateSource() {
     // The reference is the original moving flop recovery, aligned by action
     // phase rather than pretending the adapted pancake uses identical keys.
     name=p.slamActive?(p.slamHangT>0?'flop-down':'flop-down-loop'):'moving-flop-down-land';
-    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/CONST.slamHang)*.25:0):
-      (1-p.slamFlatT/CONST.slamFlat)*.65;
+    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/p.slamHangDuration)*.25:0):
+      (1-p.slamFlatT/p.slamFlatDuration)*.65;
     sourceNote.textContent='Bone Man left · pancake adaptation · original Jak flop right';
   }
   const poseFrame = runtime.diagnostics.motionContext?.inputs?.jakFrame ?? p.footStudyFrame;
@@ -210,6 +212,10 @@ function resetInspector() {
   if (!reviewLevel) return;
   frame = landFrame = doubleFrame = 0; frozen = hadAir = stepFrame = false; visited.clear();
   p.enterLevel('jump-review'); p.respawn(reviewLevel, true); p.freeSkate = false;
+  if(mode==='Slow X push'||mode==='Fakie slow X push'){
+    p.freeSkate=true;p.speed=18;p.lastPlanar=18;p.stance=mode==='Fakie slow X push'?1:-1;
+    p.grounded=true;p.state='ride';p.groundHit=p.queryGround(reviewLevel);
+  }
   if (mode==='Ice stance' || mode==='Fakie ice stance') {
     p.respawn(reviewLevel,true,true,{position:new THREE.Vector3(1080,.02,18)});
     p.freeSkate=true;p.speed=18;p.lastPlanar=18;p.stance=mode==='Fakie ice stance'?1:-1;
@@ -267,6 +273,15 @@ p.step = (dt: number, input: any, level: Level) => {
   if(mode==='Play ledges')p.camDir.set(-Math.sin(angle),0,-Math.cos(angle));
   if (!reviewLevel || frozen&&!stepFrame || slow&&!stepFrame&&++skips%3!==0) return;
   stepFrame=false;
+  if(mode==='Slow X push'||mode==='Fakie slow X push'){
+    p.camDir.set(0,0,-1);
+    if(frame===30)p.speed=p.lastPlanar=4;
+    nativeStep(dt,{moveX:0,moveY:0,jumpHeld:frame>=30&&frame<240,jumpPressed:frame===30,jumpReleased:frame===240},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Push stroke'&&skateMotion?.phase==='push'&&skateMotion.time>=.35 ||
+      stopAt==='Speed recovered'&&frame>150&&!skateMotion?.diagnostics.speedRecoveryPush)frozen=true;
+    if(frame>=360)resetInspector();return;
+  }
   if (mode==='Ice stance' || mode==='Fakie ice stance') {
     p.camDir.set(0,0,-1);
     nativeStep(dt,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false},reviewLevel);
@@ -329,6 +344,27 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
   }
+  if(mode.startsWith('Slide')){
+    p.camDir.set(0,0,-1);
+    // A second tap in the air is the double jump out of the slide jump.
+    const twice=mode.startsWith('Slide double jump'),jump=twice||mode.startsWith('Slide jump');
+    const hop=frame>=74&&frame<79||twice&&frame>=96&&frame<100;
+    const low=mode==='Slide to crouch'||mode==='Slide to crawl';
+    const keep=mode==='Slide to crawl'||mode.endsWith('and run');
+    nativeStep(dt,{moveX:0,moveY:frame>=20&&(frame<70||keep)?1:0,
+      jumpHeld:jump&&hop,jumpPressed:jump&&(frame===74||twice&&frame===96),jumpReleased:jump&&(frame===79||twice&&frame===100),
+      grabHeld:frame===62||low&&frame>=62,grabPressed:frame===62},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    const time=runtime.diagnostics.timelineTime??0,sliding=runtime.activeClipId==='player.slide';
+    const leaping=runtime.activeClipId==='player.slide-jump';
+    if(stopAt==='Slide hip down'&&sliding&&time>=.17 || stopAt==='Slide skid'&&sliding&&time>=.30 ||
+      stopAt==='Slide crouch'&&sliding&&time>=JAK_SLIDE.rise+JAK_SLIDE.crouch ||
+      stopAt==='Slide stand'&&sliding&&time>=JAK_SLIDE.rise+JAK_SLIDE.stand ||
+      stopAt==='Slide tuck'&&leaping&&time>=.24 || stopAt==='Apex'&&leaping&&time>=JAK_SLIDE_JUMP.apex ||
+      stopAt==='Slide touchdown'&&leaping&&time>=JAK_SLIDE_JUMP.land+JAK_SLIDE_JUMP.dip ||
+      stopAt==='Settled'&&frame>=(low?130:twice?200:jump?170:150))frozen=true;
+    if(frame>=(twice?260:230))resetInspector();return;
+  }
   if(mode==='Pancake slam'||mode==='Slam and run'){
     p.camDir.set(0,0,-1);
     const slam=frame===48;
@@ -336,15 +372,17 @@ p.step = (dt: number, input: any, level: Level) => {
       jumpHeld:frame>=20&&frame<30,jumpPressed:frame===20,jumpReleased:frame===30,
       grabHeld:slam,grabPressed:slam},reviewLevel);
     reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
-    const age=p.slamFlatT>0?CONST.slamFlat-p.slamFlatT:-1;
-    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT<.23&&p.slamHangT>.15 ||
+    const age=p.slamFlatT>0?p.slamFlatDuration-p.slamFlatT:-1,ground=PANCAKE_SLAM.groundStart;
+    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT>0&&p.slamHangDuration-p.slamHangT>=PANCAKE_SLAM.coil ||
       stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
-      stopAt==='Slam impact'&&age>=.04&&age<.08 ||
-      stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
-      stopAt==='Slam inversion'&&age>=.18&&age<.22 ||
-      stopAt==='Slam feet down'&&age>=.35&&age<.39 ||
-      stopAt==='Slam settle'&&age>=.43 ||stopAt==='Run exit'&&frame>=140)frozen=true;
-    if(frame>=210)resetInspector();return;
+      stopAt==='Slam impact'&&age>=.03&&age<.06 ||
+      stopAt==='Slam rebound'&&age>=PANCAKE_SLAM.rebound-ground ||
+      stopAt==='Slam inversion'&&age>=PANCAKE_SLAM.roll-ground ||
+      stopAt==='Slam feet down'&&age>=PANCAKE_SLAM.feetDown-ground ||
+      stopAt==='Slam crouch'&&age>=PANCAKE_SLAM.crouch-ground ||
+      stopAt==='Slam spring'&&age>=PANCAKE_SLAM.spring-ground ||
+      stopAt==='Slam settle'&&age>=PANCAKE_SLAM.settle-ground ||stopAt==='Run exit'&&frame>=175)frozen=true;
+    if(frame>=250)resetInspector();return;
   }
   if (mode === 'Walk, run and turn') {
     p.camDir.set(0,0,-1);
@@ -546,8 +584,8 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run',
-  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run','Slide','Slide and run','Slide to crouch','Slide to crawl','Slide jump','Slide jump and run','Slide double jump and run',
+  'Skate flow','Mount cancel','Slow X push','Fakie slow X push','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -563,8 +601,8 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam settle',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle','Slide hip down','Slide skid','Slide crouch','Slide stand','Slide tuck','Slide touchdown',
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Push stroke','Speed recovered','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);

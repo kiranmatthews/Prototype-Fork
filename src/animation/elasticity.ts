@@ -21,7 +21,9 @@ const PROFILES:Record<string,Amplitudes> = {
   jump:[.12,.08,.12,.12,.15], 'double-jump':[.12,.08,.12,.12,.15], 'slide-jump':[.12,.08,.12,.12,.15],
   // Local D authoring profiles multiply the source's existing segment keys.
   // The source double-jump torso already stretches strongly; legs need more.
-  'jak-flip':[.18,.10,.18,.16,.22], 'jak-double-jump':[.06,.10,.18,.16,.22],
+  'jak-flip':[.18,.10,.18,.16,.22], 'jak-jump':[.06,.10,.18,.16,.22], 'jak-double-jump':[.06,.10,.18,.16,.22],
+  // Keyed D slide: a whip onto the hip, a spring to the feet and a loose split jump.
+  'jak-slide':[.12,.10,.16,.12,.16], 'jak-slide-jump':[.12,.10,.18,.16,.22],
   'jak-ledge-catch':[.065,0,0,.035,.045], // hands stay planted while the hanging body rebounds
   'jak-ledge-climb':[.10,.03,.04,0,0], // supported feet retain their lengths during the settle
   fall:[.08,.06,.08,.08,.10], land:[.10,.06,.08,.10,.12],
@@ -40,6 +42,7 @@ const PROFILES:Record<string,Amplitudes> = {
   rope:[.025,0,0,.035,.050], 'rope-climb':[.025,0,0,.040,.050],
   'rope-release':[.080,.070,.10,.070,.10], 'rope-release-charged':[.080,.070,.10,.070,.10],
   slam:[.065,.030,.050,.045,.060], 'pancake-slam':[.28,.12,.18,.18,.25],
+  'pancake-slam-impact':[0,.28,.40,.30,.40], // limbs spread longer at contact; never shorten into the floor
   bail:[.045,.045,.060,.060,.080],
   death:[.040,.020,.030,.025,.035], spin:[.045,.030,.045,.025,.040],
 };

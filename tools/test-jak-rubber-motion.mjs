@@ -19,7 +19,8 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   const joints=['hips','spine','chest','shoulderLeft','shoulderRight','elbowLeft','elbowRight',
     'hipLeft','hipRight','kneeLeft','kneeRight'];
   for(const [name,hold,move,secondAt] of [['roll tap',3,1,null],['roll full',18,1,null],
-    ['roll double early',18,1,2],['roll double late',18,1,-10],['upright double',35,0,-.1],['precision double',18,.2,-.1]]) {
+    ['roll double early',18,1,2],['roll double late',18,1,-10],['upright double',35,0,-.1],['precision double',18,.2,-.1],
+    ['upright tap',3,0,null],['upright full',35,0,null],['precision single',18,.2,null]]) {
     p.enterLevel('jak-rubber');p.respawn(level,true,true);p.freeSkate=false;
     p.onFootJumpStudy={...JAK_DIRECT_PHYSICS,flip:true};runtime.restart();
     const rows=[];let second=-1,previous=null;
@@ -63,8 +64,15 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
           `${name}: body accelerated/stopped abruptly at the end of the turn`);
       }
       if(name==='roll double early')assert.ok(rows[second+1].angles.hips>.03,'double jump froze the interrupted rotation');
+      if(secondAt===null&&!name.startsWith('roll')) {
+        const apex=air.find(r=>r.physics[3]<=0);
+        assert.ok(apex&&apex.time*60>=10&&apex.time*60<=16,`${name}: apex lost the loose double-jump gather`);
+        const rise=air.filter(r=>r.physics[3]>0);
+        assert.ok(Math.max(...rise.map(r=>r.scalars['deform.leg.lower.left.length']))>1.12,
+          `${name}: takeoff lost the independent leg stretch`);
+      }
     }
-    if(baseline)assert.deepEqual(rows.map(r=>r.physics),baseline.cases[cases.length].rows.map(r=>r.physics),
+    if(baseline?.cases[cases.length])assert.deepEqual(rows.map(r=>r.physics),baseline.cases[cases.length].rows.map(r=>r.physics),
       `${name}: animation altered jump physics`);
     cases.push({name,second,worst,ranges,maxMotionStep,handoffs,rows});
   }

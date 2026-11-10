@@ -2,6 +2,12 @@ import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 await withSkateRuntime(async ({THREE,Level,Player,CONST,TUNING,server})=>{
  const levels=[];
+ const finishClimb=(fixture,input={})=>{
+  assert.equal(fixture.p.ledgePhase,'climb','climb did not start');
+  // Native and D deliberately have different climb/rebound durations.
+  let frames=0;while(!fixture.p.grounded&&frames++<120)fixture.tick(input);
+  assert.ok(fixture.p.grounded,'climb never returned to supported locomotion');
+ };
  const make=(kind='wood',axis='x',sign=1,ceiling=false)=>{
   const point=(inward,y,across=0)=>axis==='x'?[inward*sign,y,across]:[across,y,inward*sign];
   const data={v:1,name:'Ledge crate regression',spawn:point(-.7,.8),killY:-12,components:[
@@ -25,15 +31,15 @@ await withSkateRuntime(async ({THREE,Level,Player,CONST,TUNING,server})=>{
    const f=make(kind,axis,sign);assert.ok(f.caught,`${axis}/${sign}/${kind}: no catch`);
    for(let i=0;i<10;i++)f.tick();
    f.tick({jumpPressed:true,jumpHeld:true});
-   for(let i=0;i<35;i++)f.tick();
+   finishClimb(f);
    assert.equal(f.c.alive,false,`${axis}/${sign}/${kind}: blocked by crate`);
    assert.ok(f.p.grounded&&f.p.pos.y>1.99,`${axis}/${sign}/${kind}: no supported finish ${f.p.state}/${f.p.pos.toArray()}`);
   }
   const spin=make();for(let i=0;i<10;i++)spin.tick();spin.tick({spinHeld:true,spinPressed:true});
   assert.ok(spin.p.spinning,'grip swallowed spin input');assert.equal(spin.p.ledgePhase,'climb','spin should request pop-up');
-  for(let i=0;i<35;i++)spin.tick();assert.equal(spin.c.alive,false);assert.ok(spin.p.grounded);
+  finishClimb(spin);assert.equal(spin.c.alive,false);assert.ok(spin.p.grounded);
   const held=make();for(let i=0;i<10;i++)held.tick();held.tick({jumpPressed:true,jumpHeld:true});
-  for(let i=0;i<40;i++)held.tick({jumpHeld:true});held.tick({jumpReleased:true});assert.ok(held.p.grounded,'climb button caused an extra jump');
+  finishClimb(held,{jumpHeld:true});held.tick({jumpReleased:true});assert.ok(held.p.grounded,'climb button caused an extra jump');
   for(const kind of ['metal','metalbounce','bang','nitrobang']){
    const f=make(kind);assert.ok(f.caught);for(let i=0;i<10;i++)f.tick();f.tick({jumpPressed:true});for(let i=0;i<30;i++)f.tick();
    assert.ok(f.c.alive);assert.equal(f.p.state,'hang');assert.equal(f.p.ledgePhase,'grip',`${kind}: passed through solid crate`);
