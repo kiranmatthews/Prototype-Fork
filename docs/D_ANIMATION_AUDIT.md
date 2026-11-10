@@ -7,16 +7,21 @@ existing authority.
 
 ## Final behaviour
 
-- Restore the first pancake's broad spread, palm orientation and flat impact.
-  Retain the 0.26-second anticipation hold inside the existing 0.32-second hang
-  and the existing 0.5-second grounded recovery. The low forward roll completes
-  before the live idle/run handoff. Its rotation uses evenly sampled, eased
-  keys to avoid acceleration changes at uneven pose-key intervals.
-- Follow-up polish holds the stretched flat pose for 100 ms, then gathers the
-  chin, arms and knees into a tighter roll. Actual posed-surface support keeps
-  contact through the turn, without extending the controller's recovery lock.
-  The single jump shares the double jump's independent-limb stretch and earlier
-  apex gather; its existing double-jump variant remains separate.
+- Keep the first pancake's broad spread, palm orientation and flat impact.
+  The anticipation recoils past its coil and holds it alive inside D's own
+  floaty 0.55-second hang; the dive eases off it into the unchanged peak fall
+  speed. The low forward roll and the rise finish inside D's own 1.15-second
+  grounded recovery, before the live idle/run handoff. Every channel is an eased curve baked at an even
+  120 Hz cadence, so nothing accelerates at uneven pose-key intervals.
+- The pancake no longer freezes on the floor: limbs slap down after the torso
+  and bounce, the torso rebounds, and the body gathers back into a tighter
+  roll. Actual posed-surface support keeps contact through the turn. The roll
+  rocks onto planted soles, loads a crouch and springs past standing before it
+  settles. The palms plant on the floor through the gather, the arms tuck
+  through the roll, and from the sit-up they play the jump landing's own arm
+  sweep at its real pace, finishing over live idle or run for 0.6 seconds
+  after control returns. The single jump shares the double jump's independent-limb stretch
+  and earlier apex gather; its existing double-jump variant remains separate.
 - At the bottom of the slam, both arms and both legs stretch outward rather
   than shorten. The shared `pancake-slam-impact` profile authors 28–40% segment
   extension while the torso flattens. The impact unwinds into the recovery;
@@ -52,11 +57,18 @@ log/result for each. It is also part of `check:all`, not the Pages build path.
 | Lifecycle | Cold mounted start, two independent players, reset during push/mount/dismount, hidden character and Studio preview |
 
 The final slam regression covers 18 combinations of frame rate, drop height and
-stationary/running exit, totalling 3,150 frames. Movement and action clocks match
-the unmodified controller exactly. All impact limb lengths exceed 1.26× rest
-through the longer bottom settle, whose head drift stays below 1.5 mm;
-minimum sampled body clearance is 6 mm, the roll completes forward, and the
-grounded recovery returns to the requested locomotion.
+stationary/running exit, plus a player whose idle stance was never measured,
+totalling 5,106 frames. D hangs longer and eases into its fall, but comes
+straight down, never exceeds the native peak fall speed and reaches it on a
+long drop; after its 1.15-second lock it resumes the very same native
+movement, delayed. All impact limb lengths exceed 1.2x rest while the torso
+squashes to 0.65x and rebounds; minimum sampled body clearance is 6 mm and the
+recovery never leaves the floor. The roll turns forward only, at no more than
+0.26 rad per 60 Hz frame and with no change of speed above 0.05 rad per frame.
+Landed shoe tips stay within 1.2 cm of their marks through the crouch, the
+spring past standing and the handoff. The pelvis and legs reach the idle's own
+stance by the end of the lock, so a stationary exit hands over with a head step
+under 8 mm while the arms finish their sweep.
 
 The follow-up passes nine rubber-motion cases, 18 double-jump transitions,
 12 UI-tuning configurations, source-retarget and precision-jump checks. Paired

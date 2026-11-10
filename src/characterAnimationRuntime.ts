@@ -619,6 +619,11 @@ export class CharacterAnimationRuntime {
         // and landing one-shot between the climb and the next running step.
         requested = 'player.climb';
         directTime = this.findPlayableClip(requested)!.duration;
+      } else if ((inputs.pancakeSlamTail ?? -1) >= 0 && ['player.run','player.idle'].includes(hint) &&
+          this.findPlayableClip('player.slam')?.metadata?.pancakeSlam) {
+        // Control is back, as after any landing, while the slam's arms and
+        // torso finish their sweep over the live idle or run.
+        requested = 'player.slam';
       } else if (hint === 'player.climb') {
         directTime = intent.motion.actionProgress * this.findPlayableClip('player.climb')!.duration;
       } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
@@ -1108,8 +1113,14 @@ export class CharacterAnimationRuntime {
     const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
       canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
     const source = canonical(pose);
-    const bodyWeight = smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
-    const restingLegsWeight = smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
+    // The slam states its own windows: live legs by the end of its lock, then
+    // the arms and torso settling over them through its tail.
+    const window = (range: unknown) => Array.isArray(range) && this.timelineTime !== null
+      ? smoothstep01((this.timelineTime - Number(range[0])) / Math.max(.001, Number(range[1]) - Number(range[0]))) : null;
+    const pancakeLegs = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeLegsBlend) : null;
+    const pancakeBody = clip.metadata?.pancakeSlam ? window(clip.metadata.pancakeBodyBlend) : null;
+    const bodyWeight = pancakeBody ?? smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
+    const restingLegsWeight = pancakeLegs ?? smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
     // The first stride starts as the feet clear the lip, and is fully live on
     // the deck. Keep the torso's separate rebound instead of freezing both
     // legs in the final mantle pose for the whole recovery window.
@@ -1117,7 +1128,10 @@ export class CharacterAnimationRuntime {
     const legsWeight = MathUtils.lerp(restingLegsWeight,runningLegsWeight,moving);
     const result = blendPoses(source, target, bodyWeight);
     const stride = blendPoses(source, target, legsWeight);
-    for (const id of ['hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight','toeLeft','toeRight'])
+    // The slam's pelvis arrives with its legs, so the soles it planted stay
+    // put while only the spine and arms go on settling.
+    for (const id of [...(pancakeLegs === null ? [] : ['root','hips','torsoRoot']),
+        'hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight','toeLeft','toeRight'])
       if (stride.joints[id]) result.joints[id] = stride.joints[id];
     for (const [id, value] of Object.entries(stride.scalars ?? {}))
       if (id.startsWith('deform.leg.')) result.scalars![id] = value;

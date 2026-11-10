@@ -286,6 +286,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     }
     const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
   }
-  suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig):clip);
+  const landing=suite.clips.find(clip=>clip.id==='player.land');
+  suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig,landing):clip);
   return suite;
 }

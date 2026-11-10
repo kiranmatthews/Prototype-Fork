@@ -497,6 +497,23 @@ const _plantML = new THREE.Matrix4();
 const _plantV = new THREE.Vector3();
 const _plantO = new THREE.Vector3();
 const _plantC = new THREE.Vector3();
+const IDLE_STANCE_SETTLE = 1.2; // seconds of settled idle before its stance is trusted (a landing finishes under the idle hint)
+const _soleUp = new THREE.Vector3(0, 1, 0);
+/** A foot bone's own contact sockets. The bone knows which side it is on. */
+function soleSockets(ankle: THREE.Object3D | null) {
+  const name = ankle?.userData.anatomicalSide;
+  return { foot: ankle?.getObjectByName(`socket-foot-${name}`), heel: ankle?.getObjectByName(`socket-heel-${name}`),
+    side: name === 'left' ? 1 : -1 };
+}
+const _soleTargets = [new THREE.Vector3(), new THREE.Vector3()];
+const _soleAims = [new THREE.Vector3(), new THREE.Vector3()];
+const _solePole = new THREE.Vector3();
+const _soleForward = new THREE.Vector3();
+const _soleLeft = new THREE.Vector3();
+const _soleA = new THREE.Vector3();
+const _soleB = new THREE.Vector3();
+const _soleFrom = new THREE.Quaternion();
+const _soleTo = new THREE.Quaternion();
 const _trickOffset = new THREE.Vector3();
 const _trickPivot = new THREE.Vector3();
 const _trickRight = new THREE.Vector3(1,0,0);
@@ -963,6 +980,22 @@ export class Player {
   private slamActive = false; // Fresh Circle in on-foot air: pancake body slam
   private slamHangT = 0; // cartoon hang before the drop
   private slamFlatT = 0; // lie pancaked on the ground for a beat after impact
+  private slamFlatDuration = CONST.slamFlat; // the lock this impact started with: an authored slam clip may own a longer recovery
+  private slamHangDuration = CONST.slamHang; // the hang this slam started with: an authored slam clip may own a longer, floatier one
+  private slamTailT = -1; // presentation only: seconds since an authored slam's lock ended while its arms finish over live movement, or -1
+  private slamDropT = 0; // seconds into the plummet: the dive's pose keeps moving, and an authored clip may ease the fall up to its peak speed
+  // The settled idle's own sole and heel placement, in the root's frame with
+  // the body's facing turned out (the body turns inside the root, so marks
+  // kept in the root's frame alone would swap sides whenever the facing had
+  // changed). The slam recovery lands on these marks, so its handoff never
+  // slides a foot.
+  private readonly idleStance = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
+  private idleStanceValid = false;
+  private idleStanceT = 0;
+  private idleStanceNext = IDLE_STANCE_SETTLE;
+  private readonly pancakeSoleMarks = [0, 1].map(() => ({ foot: new THREE.Vector3(), heel: new THREE.Vector3() }));
+  private pancakeSolesPlanted = false;
+  private pancakeSolesMeasured = false;
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
@@ -2363,12 +2396,12 @@ export class Player {
         : 0;
     const slamProgress = this.slamActive
       ? this.slamHangT > 0
-        ? 0.33 * (1 - this.slamHangT / Math.max(CONST.slamHang, 0.001))
+        ? 0.33 * (1 - this.slamHangT / Math.max(this.slamHangDuration, 0.001))
         : 0.66
       : this.slamSquash > 0
         ? 0.66 + 0.17 * (1 - this.slamSquash / Math.max(CONST.slamSquashTime, 0.001))
         : this.slamFlatT > 0
-          ? 0.83 + 0.17 * (1 - this.slamFlatT / Math.max(CONST.slamFlat, 0.001))
+          ? 0.83 + 0.17 * (1 - this.slamFlatT / Math.max(this.slamFlatDuration, 0.001))
           : 0;
     const bailProgress = this.isBailing
       ? this.bailRecoverT >= 0
@@ -2445,8 +2478,8 @@ export class Player {
         grounded: this.grounded,
         actionProgress,
         inputs: {
-          pancakeSlamTime:this.slamActive?CONST.slamHang-this.slamHangT:
-            CONST.slamHang+CONST.slamFlat-this.slamFlatT,
+          pancakeSlamTime:this.pancakeSlamTime(),
+          pancakeSlamTail:this.slamTailT,
           boardAbandon: this.boardAbandonActive ? 1 : 0,
           nativeAir: this.nativeAirPresentation ? 1 : 0,
           jakFrame: this.footStudyFrame,
@@ -3617,6 +3650,7 @@ export class Player {
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamFlatT = 0;
+    this.slamTailT = -1;
     this.charging = false;
     this.chargePlanted = false;
     this.chargeTimer = 0;
@@ -3990,6 +4024,7 @@ export class Player {
     this.crouchSpinStackRemainder.clear();
     this.spinCd = 0;
     this.slamFlatT = 0; // dying mid-pancake must not respawn you still flattened
+    this.slamTailT = -1;
     this.bodyGroup.rotation.y = 0;
     this.headPitchPose = 0;
     this.headYawPose = 0;
@@ -5709,6 +5744,7 @@ export class Player {
     this.grabPose = 0;
     this.slamActive = false;
     this.slamSquash = this.slamFlatT = 0;
+    this.slamTailT = -1;
     this.endManual();
     this.loseCombo();
     this.bailing = this.ragActive = false;
@@ -9088,7 +9124,11 @@ export class Player {
       this.debrisSlamToken = {};
       this.vertAir = false; // the slam plummets straight down, no wall glue
       this.vertLatVel = 0;
-      this.slamHangT = CONST.slamHang;
+      // An authored pancake owns its own hang length, as it does its recovery.
+      const authoredHang = Number(this.pancakeSlamClip()?.metadata?.pancakeHang);
+      this.slamHangDuration = authoredHang > 0 ? authoredHang : CONST.slamHang;
+      this.slamHangT = this.slamHangDuration;
+      this.slamDropT = 0;
       this.grabPhase = 'none';
       this.grabT = 0;
       this.grabGraceTimer = 0;
@@ -9116,10 +9156,18 @@ export class Player {
       if (this.slamHangT > 0) {
         // the cartoon hang: no gravity, forward motion screeches off
         this.slamHangT -= dt;
+        // Whatever this step ran past the hang already belongs to the dive,
+        // so its pose never stalls for a frame.
+        if (this.slamHangT <= 0) this.slamDropT = -this.slamHangT;
         this.vVel = 0;
         this.speed *= Math.max(0, 1 - 10 * dt);
       } else {
-        this.vVel = -CONST.slamSpeed; // authored plummet, gravity doesn't apply
+        // Authored plummet, gravity doesn't apply. A floaty pancake eases off
+        // the hang into the very same peak speed instead of starting at it.
+        this.slamDropT += dt;
+        const ramp = Number(this.pancakeSlamClip()?.metadata?.pancakeDropRamp);
+        const eased = ramp > 0 ? Math.min(1, this.slamDropT / ramp) : 1;
+        this.vVel = -CONST.slamSpeed * eased * eased;
       }
     } else {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
@@ -9586,6 +9634,7 @@ export class Player {
         this.slamActive = false;
         this.slamHangT = 0;
         this.slamFlatT = 0;
+        this.slamTailT = -1;
         this.slamSquash = 0;
         if (this.launchFromTrampoline(hit, input)) {
           this.landingScoring = false;
@@ -10035,6 +10084,7 @@ export class Player {
     if (metalSpringImpact) {
       this.slamActive = false;
       this.slamHangT = this.slamFlatT = this.slamSquash = 0;
+      this.slamTailT = -1;
       sfx.play('crunch', .9, .55);
     }
     this.bail(this.masks > 0, this.speed, 'landing', normalImpact);
@@ -10058,7 +10108,11 @@ export class Player {
   private slamImpact(level: Level): void {
     this.slamActive = false;
     this.slamSquash = CONST.slamSquashTime;
-    this.slamFlatT = CONST.slamFlat; // stay pancaked for a beat
+    // Stay down for a beat. An authored pancake owns its own recovery length,
+    // so the lock always ends as its roll and spring-up do.
+    const authoredRecovery = Number(this.pancakeSlamClip()?.metadata?.pancakeRecovery);
+    this.slamFlatDuration = authoredRecovery > 0 ? authoredRecovery : CONST.slamFlat;
+    this.slamFlatT = this.slamFlatDuration;
     this.speed = 0;
     this.score(CONST.ptsSlam, 'Body Slam');
     sfx.play('crunch', 0.9);
@@ -11663,6 +11717,7 @@ export class Player {
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamFlatT = 0;
+    this.slamTailT = -1;
     this.teetering = false;
     this.ropeObj = null;
     this.ledgeT = 0;
@@ -18660,10 +18715,25 @@ export class Player {
     this.riderG.position.add(_plantC);
   }
 
+  private pancakeSlamClip():AnimationClip|null {
+    const clip=this.authoredClip('player.slam');
+    return clip?.metadata?.pancakeSlam?clip:null;
+  }
+
+  /** The articulated slam's timeline: the hang, then the plummet (which holds
+   * its last pose through a long drop), then the grounded recovery. A clip
+   * without the newer markers keeps its original hang-then-recovery layout. */
+  private pancakeSlamTime():number {
+    const metadata=this.pancakeSlamClip()?.metadata;
+    const hang=Number(metadata?.pancakeHang??CONST.slamHang),ground=Number(metadata?.pancakeGroundStart??hang);
+    if(!this.slamActive)return ground+this.slamFlatDuration-this.slamFlatT+Math.max(0,this.slamTailT);
+    return this.slamHangT>0?hang*(1-this.slamHangT/Math.max(this.slamHangDuration,.001)):Math.min(ground,hang+this.slamDropT);
+  }
+
   /** Support the articulated slam with its actual posed surface. */
   private seatPancakeSlam():void {
-    const clip=this.animationClipHint==='player.slam'?this.authoredClip('player.slam'):null;
-    if(!this.grounded||!clip?.metadata?.pancakeSlam||
+    const clip=this.animationClipHint==='player.slam'?this.pancakeSlamClip():null;
+    if(!this.grounded||!clip||
       !this.groundHit||!this.riderG||!this.bodyGroup.parent)return;
     const normal=this.groundHit.normal;
     if(normal.y<.3)return;
@@ -18674,11 +18744,12 @@ export class Player {
     const distance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
       REACH_C.set(this.pos.x,this.groundHit.y,this.pos.z));
     if(!Number.isFinite(distance))return;
-    const feetDown=Number(clip.metadata.pancakeRecoveryStart??Infinity);
-    const time=CONST.slamHang+CONST.slamFlat-this.slamFlatT;
+    const metadata=clip.metadata!;
+    const feetDown=Number(metadata.pancakeFeetDown??metadata.pancakeRecoveryStart??Infinity);
+    const time=this.pancakeSlamTime();
     const planted=Number.isFinite(feetDown)?THREE.MathUtils.smoothstep(time,feetDown-.05,feetDown):0;
     const target=THREE.MathUtils.lerp(.015,.006,planted);
-    const contact=clip.metadata.pancakeContactRoll?1:planted;
+    const contact=metadata.pancakeContactRoll?1:planted;
     const lift=(target-distance)*(distance>target?contact:1);
     if(Math.abs(lift)<1e-8)return;
     this.bodyGroup.parent.updateWorldMatrix(true,false);
@@ -18688,6 +18759,154 @@ export class Player {
     this.bodyGroup.position.add(_plantC);
     // Attached glove/head skins must refresh bind inverses as well as bones;
     // otherwise the following bounds pass applies this root shift twice.
+    this.group.updateMatrixWorld(true);
+  }
+
+  private supportHeight(hit:GroundHit,point:THREE.Vector3):number {
+    return hit.y-(hit.normal.x*(point.x-this.pos.x)+hit.normal.z*(point.z-this.pos.z))/Math.max(.3,hit.normal.y);
+  }
+
+  /** A socket's position in the root's frame with the body's facing turned out. */
+  private soleToFacing(socket:THREE.Object3D,target:THREE.Vector3):THREE.Vector3 {
+    return this.group.worldToLocal(socket.getWorldPosition(target)).applyAxisAngle(_soleUp,-this.bodyGroup.rotation.y);
+  }
+
+  /** Back from the facing frame to the world, for the body's current facing. */
+  private soleToWorld(mark:THREE.Vector3,target:THREE.Vector3):THREE.Vector3 {
+    return this.group.localToWorld(target.copy(mark).applyAxisAngle(_soleUp,this.bodyGroup.rotation.y));
+  }
+
+  /** Remember where the settled idle actually stands. Character proportions
+   * are live settings, so the stance is measured rather than assumed. */
+  private rememberIdleStance(dt:number):void {
+    const hit=this.groundHit;
+    const settled=this.animationClipHint==='player.idle'&&this.grounded&&!this.freeSkate&&!this.isBailing&&
+      this.slamFlatT<=0&&!!hit&&hit.normal.y>.95&&this.walkVelocity.lengthSq()<1e-4;
+    if(!settled){this.idleStanceT=0;this.idleStanceNext=IDLE_STANCE_SETTLE;return;}
+    this.idleStanceT+=dt;
+    if(this.idleStanceT<this.idleStanceNext)return;
+    this.idleStanceNext=this.idleStanceT+2;
+    this.group.updateMatrixWorld(true);
+    for(const [i,ankle] of [this.ankleL,this.ankleR].entries()){
+      const {foot,heel}=soleSockets(ankle);
+      if(!foot||!heel)return;
+      this.soleToFacing(foot,this.idleStance[i].foot);
+      this.soleToFacing(heel,this.idleStance[i].heel);
+    }
+    this.idleStanceValid=true;
+  }
+
+  /** Once an authored slam's lock ends, its arms and torso keep settling for
+   * a moment over live movement, as a jump landing's do. Anything that is not
+   * plain standing or running ends that at once. */
+  private advancePancakeTail(dt:number):void {
+    const tail=Number(this.pancakeSlamClip()?.metadata?.pancakeTail);
+    const locked=this.slamFlatT>0;
+    if(locked&&tail>0)this.slamTailT=0;
+    else if(this.slamTailT>=0){
+      const plain=this.grounded&&!this.slamActive&&!this.freeSkate&&!this.isBailing&&!this.crawling&&!this.sliding&&
+        (this.animationClipHint==='player.idle'||this.animationClipHint==='player.run');
+      this.slamTailT=plain&&tail>0&&this.slamTailT+dt<tail?this.slamTailT+dt:-1;
+    }
+  }
+
+  /** Land the slam recovery on fixed soles. The roll's feet arrive on the
+   * idle's own marks and stay there while the crouch opens into the stand;
+   * the pelvis and the elastic leg lengths keep their authored spring above
+   * them. Presentation only: gameplay position and velocity never move. */
+  private plantPancakeSoles():void {
+    const clip=this.animationClipHint==='player.slam'?this.pancakeSlamClip():null,hit=this.groundHit;
+    const feetDown=Number(clip?.metadata?.pancakeFeetDown),lead=.14,time=this.pancakeSlamTime();
+    if(!clip||!hit||!this.grounded||hit.normal.y<.3||this.slamFlatT<=0||!this.riderG||!this.bodyGroup.parent||!(time>=feetDown-lead)){
+      this.pancakeSolesPlanted=false;return;
+    }
+    const legs=[[this.legL,this.kneeL,this.ankleL],[this.legR,this.kneeR,this.ankleR]] as const;
+    this.group.updateMatrixWorld(true);
+    if(!this.pancakeSolesPlanted){
+      this.pancakeSolesMeasured=this.idleStanceValid;
+      for(const [i,[,,ankle]] of legs.entries()){
+        // Without a measured stance, hold wherever the roll brings each sole down.
+        const mark=this.pancakeSoleMarks[i],{foot,heel}=soleSockets(ankle);
+        if(this.idleStanceValid){mark.foot.copy(this.idleStance[i].foot);mark.heel.copy(this.idleStance[i].heel);}
+        else if(foot&&heel){
+          this.soleToFacing(foot,mark.foot);this.soleToFacing(heel,mark.heel);
+          mark.foot.y=mark.heel.y=.02;
+        }
+      }
+    }
+    this.pancakeSolesPlanted=true;
+    // Reach for the marks as the roll opens. Measured marks are where the idle
+    // stands, so they hold to the end; improvised ones let go with the handoff.
+    const release=Number(clip.metadata!.pancakeRecoveryStart??clip.range.end),lockEnd=Number(clip.metadata!.pancakeGroundStart)+this.slamFlatDuration;
+    const weight=THREE.MathUtils.smoothstep(time,feetDown-lead,feetDown)*
+      (this.pancakeSolesMeasured?1:1-THREE.MathUtils.smoothstep(time,release,lockEnd));
+    if(weight<=1e-4)return;
+    const normal=hit.normal;
+    _soleForward.set(0,0,1).transformDirection(this.bodyGroup.matrixWorld);
+    _soleLeft.set(1,0,0).transformDirection(this.bodyGroup.matrixWorld);
+    const soles=legs.map(([root,mid,end],i)=>{
+      const {foot,heel,side}=soleSockets(end);
+      if(!root||!mid||!end||!foot||!heel)return null;
+      const mark=this.pancakeSoleMarks[i],target=_soleTargets[i],aim=_soleAims[i];
+      this.soleToWorld(mark.foot,target);target.y=this.supportHeight(hit,target)+mark.foot.y;
+      this.soleToWorld(mark.heel,aim);aim.y=this.supportHeight(hit,aim)+mark.heel.y;
+      aim.subVectors(target,aim).addScaledVector(normal,-aim.dot(normal));
+      // Keep the authored heel lift: springing onto the toes turns the rigid
+      // shoe about its tip, which sits as far ahead of the sole's centre as
+      // the heel sits behind it.
+      // A few degrees of slack keep the baked pose's rounding from reading
+      // as a lift.
+      foot.getWorldPosition(_soleA).sub(heel.getWorldPosition(_soleB));
+      const reach=_soleA.length()||1,heelLift=THREE.MathUtils.clamp(-Math.asin(THREE.MathUtils.clamp(_soleA.dot(normal)/reach,-1,1))-.06,0,.5);
+      target.addScaledVector(normal,reach*Math.sin(heelLift)).addScaledVector(aim,reach*(1-Math.cos(heelLift))/(aim.length()||1));
+      return {root,mid,end,foot,heel,side,target,aim,heelLift};
+    });
+    // A spring past standing can outreach a leg. The pelvis gives way, as a
+    // real one would, until both soles are back on their marks.
+    for(let attempt=0;attempt<3;attempt++){
+      let short=0;
+      for(const sole of soles){
+        if(!sole)continue;
+        const {root,mid,end,foot,heel,side,target,aim,heelLift}=sole;
+        // The sole's socket sits ahead of the ankle, so levelling the shoe
+        // moves it: solve the leg, level and aim the shoe, then solve once more.
+        for(let pass=0;pass<2;pass++){
+          root.getWorldPosition(_solePole).addScaledVector(_soleForward,.6).addScaledVector(_soleLeft,side*.06);
+          const solved=solveTwoBoneIk({root,mid,end,effector:foot,target,pole:_solePole,weight,
+            accountForParentScale:true,tolerance:.002});
+          if(pass&&!solved.reached&&weight>=1)short=Math.max(short,solved.error);
+          _soleFrom.copy(end.quaternion);
+          for(let step=0;step<3;step++){
+            end.updateWorldMatrix(true,true);
+            foot.getWorldPosition(_soleA).sub(heel.getWorldPosition(_soleB));
+            end.rotateX(Math.asin(THREE.MathUtils.clamp(_soleA.dot(normal)/(_soleA.length()||1),-1,1))+heelLift);
+            _soleA.addScaledVector(normal,-_soleA.dot(normal));
+            end.rotateY(Math.atan2(_soleB.crossVectors(_soleA,aim).dot(normal),_soleA.dot(aim)));
+          }
+          _soleTo.copy(end.quaternion);
+          end.quaternion.copy(_soleFrom).slerp(_soleTo,weight);
+          end.updateWorldMatrix(true,true);
+        }
+      }
+      if(short<.004)break;
+      this.liftRider(-short,normal);
+    }
+    this.group.updateMatrixWorld(true);
+    // A levelled shoe is thicker than its socket. Keep the actual surface on
+    // its support after that last rotation as well.
+    const clearance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
+      REACH_C.set(this.pos.x,hit.y,this.pos.z));
+    if(Number.isFinite(clearance)&&Math.abs(clearance-.006)>1e-4)this.liftRider(.006-clearance,normal);
+  }
+
+  /** Move only the posed rider along its support normal. */
+  private liftRider(distance:number,normal:THREE.Vector3):void {
+    const parent=this.bodyGroup.parent!;
+    parent.updateWorldMatrix(true,false);
+    _plantInv.copy(parent.matrixWorld).invert();
+    _plantO.set(0,0,0).applyMatrix4(_plantInv);
+    _plantC.set(0,distance/Math.max(.3,normal.y),0).applyMatrix4(_plantInv).sub(_plantO);
+    this.bodyGroup.position.add(_plantC);
     this.group.updateMatrixWorld(true);
   }
 
@@ -20781,6 +21000,9 @@ export class Player {
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
     this.seatPancakeSlam();
+    this.plantPancakeSoles();
+    this.advancePancakeTail(dt);
+    this.rememberIdleStance(dt);
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),

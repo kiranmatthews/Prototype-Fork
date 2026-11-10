@@ -132,8 +132,8 @@ function updateSource() {
     // The reference is the original moving flop recovery, aligned by action
     // phase rather than pretending the adapted pancake uses identical keys.
     name=p.slamActive?(p.slamHangT>0?'flop-down':'flop-down-loop'):'moving-flop-down-land';
-    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/CONST.slamHang)*.25:0):
-      (1-p.slamFlatT/CONST.slamFlat)*.65;
+    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/p.slamHangDuration)*.25:0):
+      (1-p.slamFlatT/p.slamFlatDuration)*.65;
     sourceNote.textContent='Bone Man left · pancake adaptation · original Jak flop right';
   }
   const poseFrame = runtime.diagnostics.motionContext?.inputs?.jakFrame ?? p.footStudyFrame;
@@ -350,15 +350,17 @@ p.step = (dt: number, input: any, level: Level) => {
       jumpHeld:frame>=20&&frame<30,jumpPressed:frame===20,jumpReleased:frame===30,
       grabHeld:slam,grabPressed:slam},reviewLevel);
     reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
-    const age=p.slamFlatT>0?CONST.slamFlat-p.slamFlatT:-1;
-    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT<.23&&p.slamHangT>.15 ||
+    const age=p.slamFlatT>0?p.slamFlatDuration-p.slamFlatT:-1,ground=PANCAKE_SLAM.groundStart;
+    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT>0&&p.slamHangDuration-p.slamHangT>=PANCAKE_SLAM.coil ||
       stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
-      stopAt==='Slam impact'&&age>=.04&&age<.08 ||
-      stopAt==='Slam rebound'&&age>=.18&&age<.22 ||
-      stopAt==='Slam inversion'&&age>=.24&&age<.28 ||
-      stopAt==='Slam feet down'&&age>=PANCAKE_SLAM.feetDown-PANCAKE_SLAM.hang ||
-      stopAt==='Slam settle'&&age>=.48 ||stopAt==='Run exit'&&frame>=140)frozen=true;
-    if(frame>=210)resetInspector();return;
+      stopAt==='Slam impact'&&age>=.03&&age<.06 ||
+      stopAt==='Slam rebound'&&age>=PANCAKE_SLAM.rebound-ground ||
+      stopAt==='Slam inversion'&&age>=PANCAKE_SLAM.roll-ground ||
+      stopAt==='Slam feet down'&&age>=PANCAKE_SLAM.feetDown-ground ||
+      stopAt==='Slam crouch'&&age>=PANCAKE_SLAM.crouch-ground ||
+      stopAt==='Slam spring'&&age>=PANCAKE_SLAM.spring-ground ||
+      stopAt==='Slam settle'&&age>=PANCAKE_SLAM.settle-ground ||stopAt==='Run exit'&&frame>=175)frozen=true;
+    if(frame>=250)resetInspector();return;
   }
   if (mode === 'Walk, run and turn') {
     p.camDir.set(0,0,-1);
@@ -577,7 +579,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam settle',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam crouch','Slam spring','Slam settle',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Push stroke','Speed recovered','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
