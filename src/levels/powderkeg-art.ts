@@ -16,6 +16,10 @@ const scale = (a: V3, k: number): V3 => [clamp(a[0] * k), clamp(a[1] * k), clamp
 
 export interface Palette { a: V3; b: V3; shelf: V3; seep: V3; }
 export const ROCK: Palette = { a: hex('#7d8498'), b: hex('#565d73'), shelf: hex('#f4f8fd'), seep: hex('#9fd6f0') };
+/** The dark slate of the mountain's rock pieces, for faces made in code to stand behind them. */
+export const SLATE: Palette = { a: hex('#5f5a86'), b: hex('#3d3a5c'), shelf: hex('#f4f8fd'), seep: hex('#9fd6f0') };
+/** The same slate in shadow, its shelves bare: a wall that white ledges read against. */
+export const SLATE_DEEP: Palette = { a: hex('#484569'), b: hex('#302e49'), shelf: hex('#545078'), seep: hex('#6f8fc0') };
 export const BLUE_ICE: Palette = { a: hex('#8ecbea'), b: hex('#3f7fc0'), shelf: hex('#e9f4fc'), seep: hex('#d3eefb') };
 const SNOW_LIT = hex('#f6f9fe'), SNOW_SHADE = hex('#cfdef2');
 

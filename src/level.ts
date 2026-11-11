@@ -171,7 +171,6 @@ import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { DESERT_CANYON_LEVEL, SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
 import { POWDERKEG_PEAK_LEVEL } from './levels/powderkeg-peak';
-import { POWDERKEG_KIT_LEVEL } from './levels/powderkeg-kit';
 import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -2647,7 +2646,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: 'powderkeg-peak', name: POWDERKEG_PEAK_LEVEL.name, data: POWDERKEG_PEAK_LEVEL },
-  { id: 'powderkeg-kit', name: POWDERKEG_KIT_LEVEL.name, data: POWDERKEG_KIT_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mayfield-mall', name: MAYFIELD_MALL_LEVEL.name, data: MAYFIELD_MALL_LEVEL },

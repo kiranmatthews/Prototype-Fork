@@ -11888,3 +11888,44 @@ sources, none dropped, one shared heat draw, no console or WebGL errors.
 Native disabled controls are identical; phase changes affect 2,864 pixels.
 Production build and hosting-size check pass (935,135,311 bytes). No full suite
 run. Character animation, other heat sources and Temple v6 are untouched.
+
+## 2026-11-11 — Powderkeg Peak: a new level from the bible's Crash shapes
+
+Brief: design a new level from scratch on the shape and length of the Crash
+levels recorded in the bible, iterating until it is a best effort; scenery may
+be made in code or reuse existing assets. About 1 h 45 min from prompt to a
+first playable greybox, 3 h 15 min to the first complete version, 5 h 20 min to
+this reviewed one.
+
+`powderkeg-peak` is a snow mountain climbed on foot and ridden down twice:
+Kindling Steps (foot, into the screen), First Tracks (board, 561 m), the tarn
+and hoist, the Headwall (foot, two side-on ledge rows), Powderkeg Run (board,
+656 m). The shape joins the Crash 2 mountain layout to Air Crash's alternation
+of foot and board. Optional: the Old Adit (blue gem) above the east landing and
+the Cold Storage bonus round from the summit. `docs/POWDERKEG_PEAK_DESIGN.md`
+has the plan, beats, ladders, crate rules and the engine figures measured here.
+
+The mountain is one height function with fine solid patches for ridden and
+walked ground (`powderkeg-terrain.ts`); rock faces, ice, snow caps, timber and
+fences are made in code (`powderkeg-art.ts`); huts, lamps, arches, kegs, pines
+and slate pieces are existing assets. Engine additions are small: a `snow`
+surface texture, and `tex`/`color` on `stone` and `crusher` so snowballs and ice
+stampers can be drawn. `src/tuning.ts` is untouched.
+
+After an independent review of the first complete version, this pass: gave the
+adit a way out and removed its inner checkpoint; moved the adit to the east
+landing and the bonus pad to the summit so neither precedes what it uses; made
+the first board crevasse half width with a sound lane; moved snowball troughs a
+second and a half past their bends; added three run checkpoints, each closing
+its crate group; filled the empty stretches; fenced every walked pad (snow
+beyond the pads was not solid); and fixed a label over the 120-character limit
+that had been invalidating the level.
+
+Validation: input-only pilots finish with no deaths (main route 175.2 s, with
+the gem route 204.4 s, collector's line 217.6 s with every run crate taken;
+bonus round 39.5 s, 17 of 17). Crate report: 143 crates, 54 clusters, mean
+2.59, 9 % singles, 10 checkpoints. `npm run check:levels` passes; production
+build and hosting-size check pass (935,213,498 bytes). Reviewed in the browser
+in lite render at 720 across all sections and in full render at five places,
+with no console errors. No full suite run, no human play test yet, and no
+second independent review.

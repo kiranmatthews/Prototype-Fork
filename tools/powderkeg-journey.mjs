@@ -1,22 +1,25 @@
 // Powderkeg Peak · one input-only journey from the lodge yard to the powder works gate.
 // Ordinary device samples only: the walker climbs Kindling Steps, the rider takes First Tracks to the tarn,
 // rides the hoist, walks both ledge rows of the Headwall and rides Powderkeg Run through the gate.
-// Beats are keyed by name so a run can start at any checkpoint (POWDERKEG_START=crest|tarn|hoist|east|summit).
+// Beats are keyed by name so a run can start at any checkpoint (POWDERKEG_START=crest|tarn|hoist|east|upper|summit).
+// POWDERKEG_SKIP_ADIT=1 leaves the optional gem route out (the line a time trial takes).
 export const POWDERKEG_STARTS = {
   crest: { position: [0, 10.62, -197], heading: [0, 0, -1], beat: 'first tracks' },
-  adit: { position: [0, -7.88, -562], heading: [0, 0, -1], beat: 'old adit' },
   tarn: { position: [0, -7.88, -560], heading: [0, 0, -1], beat: 'tarn and hoist' },
   hoist: { position: [4, 6.12, -606], heading: [1, 0, 0], beat: 'lower row' },
-  east: { position: [85, 19.92, -611], heading: [0, 0, -1], beat: 'upper row' },
+  east: { position: [86.5, 19.14, -608.4], heading: [0, 0, -1], beat: 'old adit' },
+  upper: { position: [86, 19.14, -610], heading: [0, 0, -1], beat: 'upper row' },
   summit: { position: [-24, 28.12, -614], heading: [-1, 0, 0], beat: 'powderkeg run' },
 };
 
 export async function runPowderkegJourney(r, { from = null, log = console.log, collect = false } = {}) {
   const { p, l } = r, m = r.sourceModule, { RUN1, RUN2 } = m.POWDERKEG_PATHS, PLAN = m.POWDERKEG_PLAN;
   const dt = r.CONST.fixedStep;
+  if (process.env.POWDERKEG_DEBUG) for (const name of ['bail', 'die']) { const inner = p[name].bind(p); p[name] = (...args) => { log(`${name}(${args.slice(0, 3).map(a => typeof a === 'object' ? '…' : a).join(', ')}) grab ${p.grabPhase} spinAngle ${p.grabSpinAngle} fromSkate ${p.airFromSkate} freeSkate ${p.freeSkate} spinT ${p.spinTimer} flipT ${p.flipT} pipeEnd ${p.pipeEndFly} rollOff ${p.rollOffT} align ${p.landingAlignPose} state ${p.state} ${new Error().stack.split('\n').slice(2, 6).map(line => line.trim().replace(/\(.*\/src\//, '(')).join(' < ')}`); return inner(...args); }; }
   const dead = () => p.isBailing || ['dead', 'gameover'].includes(p.state);
   const pose = () => ({ x: +p.pos.x.toFixed(2), y: +p.pos.y.toFixed(2), z: +p.pos.z.toFixed(2), state: p.state, grounded: p.grounded, board: p.freeSkate, speed: +p.speed.toFixed(2), vVel: +p.vVel.toFixed(2), deaths: p.totalDeaths, t: +(r.frame * dt).toFixed(1), ground: p.groundHit?.name ?? null });
-  const fail = message => { throw new Error(`${message} at ${JSON.stringify(pose())}`); };
+  const near = () => [...l.enemies.filter(e => e.box.distanceToPoint(p.pos) < 6).map(e => `${e.kind}${e.alive ? '' : '(dead)'}@${[e.box.min.x, e.box.max.x].map(v => v.toFixed(2)).join('..')}`), ...l.crushers.filter(c => Math.abs(c.x - p.pos.x) < 5 && Math.abs(c.z - p.pos.z) < 3).map(c => `stamper@${c.x}`)].join(' ');
+  const fail = message => { throw new Error(`${message} at ${JSON.stringify(pose())} bailing ${p.isBailing} spinning ${p.spinning} near [${near()}]`); };
   // Spin policy: bank checkpoints, break plain boxes and spin killable foes that come close; never spin beside TNT or Nitro.
   let lastSpin = false;
   const autoSpin = sample => {
@@ -33,7 +36,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
     const out = autoSpin(sample);
     if (out.grabHeld && !p.grounded) out.grabHeld = false;
     r.tick(out);
-    if (debug === 'all') log('dbg', label, JSON.stringify(pose()));
+    if (debug === 'all') log(`dbg ${label} ${JSON.stringify(pose())}`);
     if (dead()) fail(`${label}: lost control`);
   };
   // A stick held along one axis reads exactly zero on the other (the input layer's dead zone); the engine treats any
@@ -63,9 +66,11 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
   };
   /** `spin` holds Spin on the way down: the counter for a landing with a foe on it. */
   const fly = (x, z, y, { double = false, label = 'air', tol = 1.9, spin = false } = {}) => {
-    let doubled = false;
+    let doubled = false, spun = false;
     run(`${label} air`, () => p.grounded, () => {
-      const d = dist(x, z), sample = { ...toward(x, z, clamp(d / 1.2, 0, 1)), ...(spin && p.vVel < 3 ? { spinHeld: true } : {}) };
+      // A spin lasts 0.3 s: begin it on the way down, a metre and a half above the landing, so it is live at touchdown.
+      const d = dist(x, z), spinning = spin && p.vVel < 0 && (y === undefined || p.pos.y - y < 1.5), press = spinning && (p.spinning || !spun); spun = press;
+      const sample = { ...toward(x, z, clamp(d / 1.2, 0, 1)), ...(spinning ? { spinHeld: press } : {}) };
       if (double && !doubled && p.vVel < 1.5) { doubled = true; return { ...sample, jumpHeld: true, jumpPressed: true }; }
       if (double && doubled && p.vVel > 0) return { ...sample, jumpHeld: true };
       return sample;
@@ -85,17 +90,18 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
   };
   const still = (frames, label = 'wait') => { for (let i = 0; i < frames; i++) step({}, label); };
   /** Jump onto an arrow crate, double jump as the bounce slows, then make for a landing `y` up: grab its lip and climb, or land on it. */
-  const arrowLaunch = ([ax, az], [lx, lz], y, label, standOff = true) => {
+  const arrowLaunch = ([ax, az], [lx, lz], y, label, off = [0, -.3]) => {
+    const away = Math.hypot(lx - ax, lz - az) || 1, cx = lx + (lx - ax) / away * 3, cz = lz + (lz - az) / away * 3;
     run(`${label} approach`, () => dist(ax, az) < 2.5, () => toward(ax, az, 1), 600);
     for (let i = 0; i < 12; i++) step({ ...toward(ax, az, 1), jumpHeld: true }, `${label} hop`);
     step({ ...toward(ax, az, 1), jumpHeld: false, jumpReleased: true }, `${label} hop`);
     let bounced = false, doubled = false;
     for (let i = 0; i < 700 && !(bounced && p.grounded && Math.abs(p.pos.y - y) < .4); i++) {
       const before = p.vVel; let sample;
-      if (p.state === 'hang') sample = { ...toward(lx, lz - 3, 1), jumpHeld: i % 20 < 10, jumpPressed: i % 20 === 0 };
+      if (p.state === 'hang') sample = { ...toward(cx, cz, 1), jumpHeld: i % 20 < 10, jumpPressed: i % 20 === 0 };
       else {
-        const overArrow = toward(ax, az + (standOff ? -.3 : 0), clamp(dist(ax, az) / 1.2, 0, 1));
-        const aim = !bounced ? overArrow : doubled && p.pos.y > y - 2.6 ? toward(lx, lz, 1) : standOff ? overArrow : toward(lx, lz, .5);
+        const overArrow = toward(ax + off[0], az + off[1], clamp(dist(ax + off[0], az + off[1]) / 1.2, 0, 1));
+        const aim = !bounced ? overArrow : doubled && p.pos.y > y - 2.6 ? toward(lx, lz, 1) : overArrow;
         if (bounced && !doubled && p.vVel > 0 && p.vVel < 4) { doubled = true; sample = { ...aim, jumpHeld: true, jumpPressed: true }; }
         else sample = doubled && p.vVel > 0 ? { ...aim, jumpHeld: true } : aim;
       }
@@ -189,8 +195,14 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
         // Arrow: bounce to break the pair overhead, then the row, the arrow last.
         walk(-3.4, Z(76.9), { tol: .3 });
         for (let i = 0; i < 12; i++) step({ ...toward(-3.4, Z(79), 1), jumpHeld: true }, 'hop onto the arrow'); step({ ...toward(-3.4, Z(79), 1), jumpHeld: false, jumpReleased: true }, 'hop onto the arrow');
-        run('bounce on the arrow until the pair overhead is gone', () => !l.crates.some(c => c.alive && Math.abs(c.mesh.position.x + 3.4) < .4 && Math.abs(c.mesh.position.z - Z(79)) < .4 && c.mesh.position.y > 6), () => toward(-3.4, Z(79), clamp(dist(-3.4, Z(79)) / 1, 0, .7)), 900);
-        run('down off the arrow', () => p.grounded && p.pos.y < 2.7, () => toward(-3.4, Z(76.6), 1), 300);
+        // Jump held as the feet meet the arrow makes the bounce a high one; a fresh press at its top adds the double jump.
+        { let fresh = false; run('bounce on the arrow until the pair overhead is gone', () => !l.crates.some(c => c.alive && Math.abs(c.mesh.position.x + 3.4) < .4 && Math.abs(c.mesh.position.z - Z(79)) < .4 && c.mesh.position.y > 6), () => {
+          const aim = toward(-3.4, Z(79), clamp(dist(-3.4, Z(79)) / 1, 0, .7));
+          if (p.vVel > 6) { fresh = true; return aim; }                                                  // rising off the arrow: release
+          if (fresh && p.vVel > 0 && p.vVel < 4) { fresh = false; return { ...aim, jumpHeld: true, jumpPressed: true }; }   // the double jump at the top
+          return { ...aim, jumpHeld: true };                                                             // held through the fall and the next impact
+        }, 1500); }
+        run('down off the arrow', () => p.grounded && p.pos.y < 2.7, () => toward(-3.4, Z(76.6), 1), 600);
         walk(-3.4, Z(77.2), { tol: .3 }); for (let k = 0; k < 3; k++) { spinOnce('arrow row'); still(10, 'settle'); }
         walk(0, Z(80), { tol: .5 });
       } else { walk(3, Z(70), { keep: true }); walk(3, Z(75.5), { keep: true }); walk(0, Z(80), { keep: true }); }
@@ -203,7 +215,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       if (collect) { walk(-3.1, Z(148.3), { tol: .35 }); for (let k = 0; k < 3; k++) { spinOnce('mask stack'); still(12, 'settle'); } walk(0, Z(146.2), { tol: .4 }); }
       walk(0, Z(146.5), { keep: true });
       leap([0, Z(151)], [0, Z(155.4), 7.5], { label: 'first pillar' });
-      leap([0, Z(157.3)], [0, Z(161.6), 8], { label: 'glazed pillar', tap: true });
+      leap([0, Z(157.3)], [0, Z(161.6), 8], { label: 'second pillar', tap: true });
       leap([0, Z(163.8)], [0, Z(168.4), 8.5], { label: 'third pillar', tap: true, spin: true });
       walk(0, Z(169.6));
       jump(0, Z(173.4), 9.4, { label: 'onto the lookout shelf' });
@@ -215,40 +227,13 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
     } },
     { name: 'first tracks', run() {
       mount(0, -212);
-      // The collector's line pushes all the way (a board trips on a box below 12.5 m/s), takes each stack in its lane and the log rail over the crevasse.
-      if (collect) ride(RUN1, RUN1.length - 34, { label: 'first tracks, every box', push: true, grinds: [{ pop: 394.6, end: 425 }],
-        lane: laneOf([[100, 0], [116, -2.6], [128, -2.6], [146, 2.6], [158, 2.6], [176, 0], [298, 0], [306, -3], [316, -3], [330, 0], [372, 0], [384, -3.4], [432, -3.4], [446, 0], [484, 0], [492, -2.8], [500, -2.8], [514, 2.8], [524, 2.8], [532, 0]]) });
-      else ride(RUN1, RUN1.length - 34, { label: 'first tracks', pops: [403] });
+      // The collector's line pushes all the way (a board trips on a box below 12.5 m/s), takes each stack in its lane and the log rail over the half crevasse.
+      if (collect) ride(RUN1, RUN1.length - 34, { label: 'first tracks, every box', push: true, grinds: [{ pop: 394.6, end: 421 }],
+        lane: laneOf([[52, 0], [84, 3], [100, 3], [114, -2.6], [128, -2.6], [142, 2.6], [158, 2.6], [176, 0], [192, -2.8], [208, -2.8], [224, 0], [306, 0], [314, -1.2], [338, -1.2], [352, 0], [372, 0], [384, -3.7], [423, -3.7], [428, -2.6], [437, -2.6], [452, 2.6], [466, 2.6], [484, -2.8], [500, -2.8], [514, 2.8], [524, 2.8], [532, 0]]) });
+      // The plain line banks the mid-run checkpoint and rides on down the sound half beside the crevasse.
+      else ride(RUN1, RUN1.length - 34, { label: 'first tracks', lane: laneOf([[306, 0], [314, -1.2], [338, -1.2], [352, 0], [380, 0], [394, 3], [414, 3], [430, 0]]) });
       ride(RUN1, RUN1.length - 8, { cap: 9, label: 'slow for the shore' });
       dismount('tarn shore');
-    } },
-    { name: 'old adit', run() {
-      // The gem route: steel arrow, double jump, grab the lip, into the mine mouth; out again by the ring on the gem shelf.
-      const [mx, my, mz] = PLAN.MOUTH, X = PLAN.CAVE_X, z = PLAN.CAVE_Z, A = PLAN.ADIT;
-      walk(0, -560); still(20, 'bank the tarn checkpoint');
-      walk(-16, -593.4);
-      arrowLaunch([-16, -597.6], [mx, mz + .5], my, 'arrow to the adit mouth');
-      run('into the adit', () => p.pos.x > X - 5, () => toward(mx, mz - 1.4, 1), 240);
-      still(12, 'arrive'); walk(X + 4.5, z); still(20, 'bank the adit checkpoint');
-      walk(X + 7.4, z - .5, { tol: .35 }); spinOnce('adit landing pair');
-      walk(X + 6, z, { keep: true });
-      leap([X + A[0].x1, z], [X + 15.2, z, A[1].y], { label: 'onto the glazed drift' });
-      // Nitro goes off on the body's whole silhouette, not its feet: leave the ice a good stride before it.
-      leap([X + 19.8, z], [X + 27.9, z, A[2].y], { label: 'over the Nitro at the lip', double: true, hold: 3 });
-      leap([X + A[2].x1, z], [X + 32.5, z, A[3].y], { label: 'second rotten shelf', tap: true });
-      leap([X + A[3].x1, z], [X + 36.6, z, A[4].y], { label: 'quick stamper gallery', tap: true });
-      // Quick stampers: go as each nears the top of its rise. The second is the run-up to the wide gap, so there is no stopping under it.
-      walk(X + 36.9, z); waitRise(X + 39.4, z, 'quick stamper, first'); walk(X + 41.5, z, { tol: .3 }); spinOnce('pocket crate'); walk(X + 42.9, z, { tol: .3 });
-      waitRise(X + 45.2, z, 'quick stamper, second');
-      leap([X + A[4].x1, z], [X + 53.3, z, A[5].y], { label: 'the wide gap onto the bristleback pillar', spin: true, hold: 3.4 });
-      leap([X + A[5].x1, z], [X + 59.8, z, A[6].y], { label: 'arrow floor', tap: true });
-      walk(X + 60.6, z - .5, { tol: .35 }); spinOnce('arrow floor pair');
-      walk(X + 62.2, z); walk(X + 63, z, { tol: .25 }); spinOnce('the box beside the arrow');
-      arrowLaunch([X + 65.06, z], [X + 68.6, z], PLAN.GEM_Y, 'arrow to the gem shelf');
-      walk(X + 70, z, { keep: true }); walk(X + 72.3, z - .5, { tol: .4 });
-      for (let k = 0; k < 4; k++) { spinOnce('gem shelf tower'); still(14, 'let the tower settle'); }
-      run('out by the ring', () => p.pos.x < 100, () => toward(X + 77.4, z, 1), 400);
-      still(12, 'back on the shore');
     } },
     { name: 'tarn and hoist', run() {
       walk(0, -560); still(20, 'bank the tarn checkpoint');
@@ -275,26 +260,57 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       jump(99, z, A[8].y, { label: 'buttress tier two' }); walk(98, z, { tol: .4 });
       jump(93.5, z, A[9].y, { label: 'buttress tier three' }); walk(92.4, z, { tol: .4 });
       jump(88.4, z, B0_Y, { label: 'east landing' });
-      walk(85, -610.4); still(20, 'bank the east landing checkpoint');
+      walk(87.4, ROW_A + .2, { tol: .4 }); still(20, 'bank the east landing checkpoint');
+    } },
+    { name: 'old adit', run() {
+      if (process.env.POWDERKEG_SKIP_ADIT === '1') return;
+      // The gem route: steel arrow in the corner, double jump, onto the door sill and in; out again by the ring past the gem.
+      const [dx, dy, dz] = PLAN.DOOR, [ax, , az] = PLAN.ARROW, X = PLAN.CAVE_X, z = PLAN.CAVE_Z, A = PLAN.ADIT;
+      walk(86.4, az + 3);
+      arrowLaunch([ax, az], [dx + 1.5, az], dy, 'arrow to the adit door', [.3, 0]);
+      run('into the adit', () => p.pos.x > X - 5, () => toward(dx, dz - 1.4, 1), 300);
+      still(12, 'arrive');
+      walk(X + 6.4, z - .5, { tol: .35 }); spinOnce('adit landing pair');
+      walk(X + 6, z + .8, { keep: true });
+      // The glazed drift: along the lip, clear of the Nitro by the wall, and off the end of the ice.
+      leap([X + A[0].x1, z + .8], [X + 15.2, z + .8, A[1].y], { label: 'onto the glazed drift' });
+      leap([X + A[1].x1, z + .8], [X + 27.6, z + .4, A[2].y], { label: 'off the ice onto the first rotten shelf', hold: 3 });
+      leap([X + A[2].x1, z], [X + 32.4, z, A[3].y], { label: 'second rotten shelf', tap: true });
+      leap([X + A[3].x1, z], [X + 37, z, A[4].y], { label: 'quick stamper gallery', tap: true });
+      // Quick stampers: go as each nears the top of its rise; the pocket between them holds one box.
+      walk(X + 38.7, z); waitRise(X + 41.3, z, 'quick stamper, first'); walk(X + 43.6, z, { tol: .3 }); spinOnce('pocket crate'); walk(X + 44.9, z, { tol: .3 });
+      waitRise(X + 47.3, z, 'quick stamper, second'); walk(X + 50.4, z, { keep: true });
+      leap([X + A[4].x1, z], [X + 59.7, z, A[5].y], { label: 'the wide gap onto the bristleback pillar', spin: true, hold: 3.4 });
+      // Step into its beat spinning (the pilot spins any killable foe within three metres).
+      run('clear the bristleback', () => !l.enemies.some(e => e.alive && e.box.distanceToPoint(p.pos) < 5), () => toward(X + 62, z, .45), 300);
+      leap([X + A[5].x1, z], [X + 67.8, z, A[6].y], { label: 'arrow floor', tap: true });
+      walk(X + 68.2, z - .5, { tol: .35 }); spinOnce('arrow floor pair');
+      walk(X + 70.4, z);
+      arrowLaunch([X + 73.2, z], [X + 76.8, z], PLAN.GEM_Y, 'arrow to the gem shelf', [-.3, 0]);
+      walk(X + 78.6, z, { keep: true }); walk(X + 80.8, z - .5, { tol: .4 });
+      for (let k = 0; k < 4; k++) { spinOnce('gem shelf tower'); still(14, 'let the tower settle'); }
+      run('out by the ring', () => p.pos.x < 200, () => toward(X + 86.6, z, 1), 400);
+      still(12, 'back on the east landing');
     } },
     { name: 'upper row', run() {
       const z = ROW_B;
-      walk(84, z); walk(87.6, z);
+      walk(84, z); walk(86.4, z);
       { const c = stamperAt(75.5, z); run('stamper over the ice: go as it nears the top of its rise', () => { const f = stampPhase(c); return f > .84 && f < .92; }, () => ({}), 600); }
       walk(69, z, { keep: true });
-      leap([B[0].x0, z], [61.6, z, B[1].y], { label: 'bristleback pillar', spin: true });
+      leap([B[0].x0, z], [62.5, z, B[1].y], { label: 'bristleback pillar', spin: true });
+      run('clear the bristleback', () => !l.enemies.some(e => e.alive && e.box.distanceToPoint(p.pos) < 5), () => toward(60.6, z, .45), 300);
       leap([B[1].x0, z], [54.8, z, B[2].y], { label: 'rotten shelf one', tap: true });
       leap([B[2].x0, z], [50.3, z, B[3].y], { label: 'rotten shelf two', tap: true });
       leap([B[3].x0, z], [45.8, z, B[4].y], { label: 'rotten shelf three', tap: true });
       leap([B[4].x0, z], [41.4, z + .6, B[5].y], { label: 'switch ledge', tap: true });
-      walk(39, z + 1); walk(34.4, z + 1); walk(33.2, z - .1, { tol: .25 }); spinOnce('hit the switch');
-      if (!l.crates.some(c => c.alive && !c.pending && Math.abs(c.box.min.x - 26.4) < .7 && Math.abs(c.mesh.position.z - z) < .5)) fail('the switch did not build the bridge');
+      walk(39, z + 1); walk(33.4, z + 1); walk(32.3, z - .2, { tol: .25 }); spinOnce('hit the switch');
+      const bridge = () => l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 25 && c.mesh.position.x < 31.2);
+      if (bridge().length < 5) fail('the switch did not build the bridge');
       // Walk the lids: a jump onto a wooden lid is a stomp and would break the footing.
-      if (debug) log(`bridge: masks ${p.masks} uber ${p.uberTimer.toFixed(1)} crates ${l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 23 && c.mesh.position.x < 31).length}`);
-      walk(31.6, z, { keep: true }); walk(24, z, { tol: .35, noSpin: true });
-      if (debug) log(`bridge end: crates ${l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 23 && c.mesh.position.x < 31).map(c => c.mesh.position.x.toFixed(1)).join(',')} at ${p.pos.x.toFixed(2)},${p.pos.y.toFixed(2)}`);
-      jump(21.6, z, B[6].y, { label: 'off the bridge', charge: 12, tol: 1.8, noSpin: true });
-      walk(22.1, z - .45, { tol: .3 }); for (let k = 0; k < 2; k++) { spinOnce('mask stack past the bridge'); still(12, 'settle'); } walk(21.7, z, { tol: .3 });
+      walk(31.4, z, { keep: true }); walk(26.5, z, { tol: .3, noSpin: true });
+      if (debug) log(`bridge end: masks ${p.masks} uber ${p.uberTimer.toFixed(1)} crates ${bridge().map(c => c.mesh.position.x.toFixed(1)).join(',')} at ${p.pos.x.toFixed(2)},${p.pos.y.toFixed(2)}`);
+      jump(24.3, z, B[6].y, { label: 'off the bridge', charge: 12, tol: 1.8, noSpin: true });
+      walk(23.7, z - .45, { tol: .3 }); for (let k = 0; k < 2; k++) { spinOnce('mask stack past the bridge'); still(12, 'settle'); } walk(22.2, z, { tol: .3 });
       waitStamper(19.5, z, .8, 'twin stampers, first'); walk(16.6, z);
       waitStamper(13.5, z, .8, 'twin stampers, second'); walk(11, z, { keep: true });
       leap([B[6].x0, z], [4.8, z, B[7].y], { label: 'last pillar', hold: 1 });
@@ -303,9 +319,9 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
     } },
     { name: 'powderkeg run', run() {
       mount(-36, -614);
-      if (collect) ride(RUN2, RUN2.length - 40, { label: 'powderkeg run, every box', push: true, pops: [221, 595], grinds: [{ pop: 50.6, end: 85 }, { pop: 450.6, end: 462 }],
-        lane: laneOf([[30, 0], [44, 0], [50, 3.2], [96, 3.2], [110, 0], [238, 0], [248, -2.2], [258, -2.2], [272, 2.2], [281, 2.2], [292, 0], [354, 0], [360, -1.5], [366, -1.5], [378, 0], [402, 0], [426, 0], [438, -3.6], [464, -3.6], [476, 0], [524, 0], [530, -1.5], [536, -1.5], [546, 0], [568, 0]]) });
-      else ride(RUN2, RUN2.length - 40, { label: 'powderkeg run', pops: [221, 451, 595] });
+      if (collect) ride(RUN2, RUN2.length - 40, { label: 'powderkeg run, every box', push: true, pops: [243, 595], grinds: [{ pop: 50.6, end: 85 }, { pop: 450.6, end: 462 }],
+        lane: laneOf([[30, 0], [44, 0], [50, 3.2], [114, 3.2], [132, -2.4], [146, -2.4], [162, 0], [426, 0], [438, -3.6], [464, -3.6], [476, 0], [568, 0]]) });
+      else ride(RUN2, RUN2.length - 40, { label: 'powderkeg run', pops: [243, 451, 595] });
       ride(RUN2, RUN2.length - 4, { cap: 9, label: 'slow for the works yard' });
       dismount('works yard');
       const [fx, , fz] = PLAN.FINISH;
