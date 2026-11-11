@@ -1,0 +1,42 @@
+{
+  "id": "narrow-v2",
+  "fps": 18,
+  "frames": [
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/01.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/02.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/03.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/04.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/05.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/06.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/07.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/08.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/09.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/10.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/11.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/narrow/12.png"
+    }
+  ]
+}

@@ -1,0 +1,880 @@
+{
+  "tool": "built-in image_gen",
+  "status": "SELECTED_AND_REVIEWED",
+  "frames": [
+    {
+      "family": "narrow",
+      "frame": 1,
+      "file": "public/fire-sprites/v2/narrow/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png",
+      "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+      "prompts": [
+        "prompts/narrow-01.txt",
+        "prompts/narrow-01-revision.txt"
+      ],
+      "references": [
+        "/private/tmp/fire-reference-20261111/IMG_4429/frame-003.png",
+        "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8dc129f2-bc1f-48d9-a8d4-2012c6358fbb.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:35:40.814Z",
+      "referenceVersions": [
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4429/frame-003.png",
+          "sha256": "52400af07f64070a63545893658ed7670026d88e5efe0784bd29f3b18245103a"
+        },
+        {
+          "file": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8dc129f2-bc1f-48d9-a8d4-2012c6358fbb.png",
+          "sha256": "1badd19f24ce37dc5cd4ea88fae362a37db5104ab6cd2410e5fa5a07d489a3ca"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 2,
+      "file": "public/fire-sprites/v2/narrow/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-dd0a3697-62d6-4b83-ba71-7318d8fc877c.png",
+      "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e",
+      "prompts": [
+        "prompts/narrow-02.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:41:00.096Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 3,
+      "file": "public/fire-sprites/v2/narrow/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-36992a25-0379-419b-9e24-79016cfaf36d.png",
+      "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798",
+      "prompts": [
+        "prompts/narrow-03.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/02.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:42:16.177Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/02.png",
+          "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-dd0a3697-62d6-4b83-ba71-7318d8fc877c.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 4,
+      "file": "public/fire-sprites/v2/narrow/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-de178a40-558f-449a-aca5-00c284839929.png",
+      "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc",
+      "prompts": [
+        "prompts/narrow-04.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/03.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:43:27.745Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-36992a25-0379-419b-9e24-79016cfaf36d.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 5,
+      "file": "public/fire-sprites/v2/narrow/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-eb09e5e5-a3d9-4de3-8468-ec1b414194fb.png",
+      "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77",
+      "prompts": [
+        "prompts/narrow-05.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/04.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:44:50.805Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/04.png",
+          "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-de178a40-558f-449a-aca5-00c284839929.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 6,
+      "file": "public/fire-sprites/v2/narrow/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b0a624d3-6e2e-42b8-ab4a-0167371ee454.png",
+      "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634",
+      "prompts": [
+        "prompts/narrow-06.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/05.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:46:53.069Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/05.png",
+          "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-eb09e5e5-a3d9-4de3-8468-ec1b414194fb.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 7,
+      "file": "public/fire-sprites/v2/narrow/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0e6e65e8-1e42-4800-a2bd-afc3c169442e.png",
+      "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c",
+      "prompts": [
+        "prompts/narrow-07.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/06.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:48:24.841Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/06.png",
+          "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b0a624d3-6e2e-42b8-ab4a-0167371ee454.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 8,
+      "file": "public/fire-sprites/v2/narrow/08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-517a0644-2ff9-40fb-80b2-eeab30f1e8d5.png",
+      "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724",
+      "prompts": [
+        "prompts/narrow-08.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/07.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:49:44.763Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/07.png",
+          "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0e6e65e8-1e42-4800-a2bd-afc3c169442e.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 9,
+      "file": "public/fire-sprites/v2/narrow/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ed6c7035-d765-417c-8559-e8e36a30b1e0.png",
+      "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35",
+      "prompts": [
+        "prompts/narrow-09.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/08.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:50:52.548Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-517a0644-2ff9-40fb-80b2-eeab30f1e8d5.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 10,
+      "file": "public/fire-sprites/v2/narrow/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c7ee71ee-6132-4d40-ba08-0126e2ee03ac.png",
+      "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e",
+      "prompts": [
+        "prompts/narrow-10.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/09.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:52:29.350Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/09.png",
+          "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ed6c7035-d765-417c-8559-e8e36a30b1e0.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 11,
+      "file": "public/fire-sprites/v2/narrow/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-10a14a0b-f89b-4011-89b4-2363c6b3e4a7.png",
+      "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c",
+      "prompts": [
+        "prompts/narrow-11.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/10.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:54:20.248Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/10.png",
+          "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c7ee71ee-6132-4d40-ba08-0126e2ee03ac.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "frame": 12,
+      "file": "public/fire-sprites/v2/narrow/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-68d35dbd-863e-4908-bc74-f8f87a87b202.png",
+      "sha256": "7b1c5be70ef1ded5ce7b08f234dc6292bf2fc48bed385c898e934c4fa1dab87b",
+      "prompts": [
+        "prompts/narrow-12.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/11.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:55:27.358Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/11.png",
+          "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-10a14a0b-f89b-4011-89b4-2363c6b3e4a7.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 1,
+      "file": "public/fire-sprites/v2/medium/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png",
+      "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+      "prompts": [
+        "prompts/medium-01.txt"
+      ],
+      "references": [
+        "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T06:59:43.756Z",
+      "referenceVersions": [
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+          "sha256": "02cecf11191a8b7a84ba3977d3cb098a83b5113523f70b32752992a6eddcd75d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ddc91574-a66b-46b3-9a78-df8ca7767ab2.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 1,
+      "file": "public/fire-sprites/v2/broad/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0c9d351e-8f2d-4dbf-bbc3-37b85560779f.png",
+      "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e",
+      "prompts": [
+        "prompts/broad-01.txt"
+      ],
+      "references": [
+        "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:01:05.505Z",
+      "referenceVersions": [
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+          "sha256": "02cecf11191a8b7a84ba3977d3cb098a83b5113523f70b32752992a6eddcd75d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 2,
+      "file": "public/fire-sprites/v2/medium/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2b676443-eca6-48cc-8004-a2afbc940559.png",
+      "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb",
+      "prompts": [
+        "prompts/medium-02.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:03:52.618Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 3,
+      "file": "public/fire-sprites/v2/medium/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2be7051f-29af-4011-97e2-ee683520ce3b.png",
+      "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344",
+      "prompts": [
+        "prompts/medium-03.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/02.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:05:22.416Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/02.png",
+          "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2b676443-eca6-48cc-8004-a2afbc940559.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 4,
+      "file": "public/fire-sprites/v2/medium/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a2ccf8ad-dea4-46c1-9581-16bc2d06f6b8.png",
+      "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e",
+      "prompts": [
+        "prompts/medium-04.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/03.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:06:58.931Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/03.png",
+          "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2be7051f-29af-4011-97e2-ee683520ce3b.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 5,
+      "file": "public/fire-sprites/v2/medium/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8d56f47c-64dd-47ec-8e9f-38c57e15e6b5.png",
+      "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b",
+      "prompts": [
+        "prompts/medium-05.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/04.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:08:10.982Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/04.png",
+          "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a2ccf8ad-dea4-46c1-9581-16bc2d06f6b8.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 6,
+      "file": "public/fire-sprites/v2/medium/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-561f6532-9574-467f-b142-540997190c7a.png",
+      "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e",
+      "prompts": [
+        "prompts/medium-06.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/05.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:09:35.450Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/05.png",
+          "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8d56f47c-64dd-47ec-8e9f-38c57e15e6b5.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 7,
+      "file": "public/fire-sprites/v2/medium/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6b54f66b-3d56-4dae-bc16-4d87122d8f18.png",
+      "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7",
+      "prompts": [
+        "prompts/medium-07.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/06.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:10:45.164Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/06.png",
+          "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-561f6532-9574-467f-b142-540997190c7a.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 8,
+      "file": "public/fire-sprites/v2/medium/08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-47e3d4ae-0b74-49d4-9f04-9bfadcebe6d1.png",
+      "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6",
+      "prompts": [
+        "prompts/medium-08.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/07.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:11:59.365Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/07.png",
+          "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6b54f66b-3d56-4dae-bc16-4d87122d8f18.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 9,
+      "file": "public/fire-sprites/v2/medium/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bc415396-46ec-4c76-b48d-eaaea981235e.png",
+      "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176",
+      "prompts": [
+        "prompts/medium-09.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/08.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:13:34.476Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/08.png",
+          "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-47e3d4ae-0b74-49d4-9f04-9bfadcebe6d1.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 10,
+      "file": "public/fire-sprites/v2/medium/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0472db03-ee99-4b50-861f-f19a958548a0.png",
+      "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c",
+      "prompts": [
+        "prompts/medium-10-revision.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/09.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/11.png"
+      ],
+      "previous": {
+        "family": "medium",
+        "frame": 10,
+        "file": "public/fire-sprites/v2/medium/10.png",
+        "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-69fe900d-1893-4662-966b-91f63a029c5c.png",
+        "sha256": "5f5071be271e38b994fbf0a783b0c730e238e05f3a67d7022a24ac483346fb3c",
+        "prompts": [
+          "prompts/medium-10.txt"
+        ],
+        "references": [
+          "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/09.png",
+          "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png"
+        ],
+        "sourceModifiedAt": "2026-11-11T07:14:59.485Z",
+        "referenceVersions": [
+          {
+            "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/09.png",
+            "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176",
+            "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bc415396-46ec-4c76-b48d-eaaea981235e.png"
+          },
+          {
+            "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+            "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+            "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png"
+          }
+        ]
+      },
+      "sourceModifiedAt": "2026-11-11T07:43:01.257Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bc415396-46ec-4c76-b48d-eaaea981235e.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/11.png",
+          "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ff73213b-5f94-4e4c-a377-755a8f06e7de.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 11,
+      "file": "public/fire-sprites/v2/medium/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ff73213b-5f94-4e4c-a377-755a8f06e7de.png",
+      "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639",
+      "prompts": [
+        "prompts/medium-11.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/10.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:16:27.634Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/10.png",
+          "sha256": "5f5071be271e38b994fbf0a783b0c730e238e05f3a67d7022a24ac483346fb3c",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-69fe900d-1893-4662-966b-91f63a029c5c.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "frame": 12,
+      "file": "public/fire-sprites/v2/medium/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fb49a1ef-b48a-470c-9dde-306cadc1cfea.png",
+      "sha256": "6eae56fe6e72d277ffee323b5dfa02f2b8ef85f8d361a6364be41b2eec62233c",
+      "prompts": [
+        "prompts/medium-12.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/11.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:17:25.816Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/11.png",
+          "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ff73213b-5f94-4e4c-a377-755a8f06e7de.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb449573-b681-40e6-b660-436806c7cd44.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 2,
+      "file": "public/fire-sprites/v2/broad/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-54571da5-f39d-4891-b0fe-7d5031fe4197.png",
+      "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d",
+      "prompts": [
+        "prompts/broad-02.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:19:21.682Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0c9d351e-8f2d-4dbf-bbc3-37b85560779f.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 3,
+      "file": "public/fire-sprites/v2/broad/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b8c5ab7e-dc29-4cb5-814b-3a9420a2fdc9.png",
+      "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0",
+      "prompts": [
+        "prompts/broad-03.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/02.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:20:19.868Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/02.png",
+          "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-54571da5-f39d-4891-b0fe-7d5031fe4197.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 4,
+      "file": "public/fire-sprites/v2/broad/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e19ec00c-cfe6-4f9e-89fa-3f5d042054ac.png",
+      "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c",
+      "prompts": [
+        "prompts/broad-04.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/03.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:21:13.689Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/03.png",
+          "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b8c5ab7e-dc29-4cb5-814b-3a9420a2fdc9.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 5,
+      "file": "public/fire-sprites/v2/broad/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1fead451-fbd8-434a-a074-83277a697a1c.png",
+      "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349",
+      "prompts": [
+        "prompts/broad-05.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/04.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:23:04.809Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/04.png",
+          "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e19ec00c-cfe6-4f9e-89fa-3f5d042054ac.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 6,
+      "file": "public/fire-sprites/v2/broad/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-45aa2766-7ba6-4882-837b-299d9c68a268.png",
+      "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9",
+      "prompts": [
+        "prompts/broad-06.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/05.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:24:11.774Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/05.png",
+          "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1fead451-fbd8-434a-a074-83277a697a1c.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 7,
+      "file": "public/fire-sprites/v2/broad/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a98aad1f-8921-4e87-9179-54eb1ea171ad.png",
+      "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961",
+      "prompts": [
+        "prompts/broad-07.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/06.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:25:20.609Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/06.png",
+          "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-45aa2766-7ba6-4882-837b-299d9c68a268.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 8,
+      "file": "public/fire-sprites/v2/broad/08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-577182f9-6fb2-428f-b271-ea24b7495693.png",
+      "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5",
+      "prompts": [
+        "prompts/broad-08.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/07.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:26:26.610Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/07.png",
+          "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a98aad1f-8921-4e87-9179-54eb1ea171ad.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 9,
+      "file": "public/fire-sprites/v2/broad/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-07872939-33f0-4033-95ea-207d884a9b0b.png",
+      "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d",
+      "prompts": [
+        "prompts/broad-09.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/08.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:27:35.148Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/08.png",
+          "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-577182f9-6fb2-428f-b271-ea24b7495693.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 10,
+      "file": "public/fire-sprites/v2/broad/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-330b5b93-2a5b-42f2-9cef-40406adba173.png",
+      "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994",
+      "prompts": [
+        "prompts/broad-10.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/09.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:28:46.009Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/09.png",
+          "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-07872939-33f0-4033-95ea-207d884a9b0b.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 11,
+      "file": "public/fire-sprites/v2/broad/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-14efee9b-11ca-4f73-af23-87b72065ca8e.png",
+      "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb",
+      "prompts": [
+        "prompts/broad-11-revision.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/10.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/12.png"
+      ],
+      "previous": {
+        "family": "broad",
+        "frame": 11,
+        "file": "public/fire-sprites/v2/broad/11.png",
+        "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c48f2a1d-dc88-4d0e-8915-5cd7264c001d.png",
+        "sha256": "efe5647725e0110e17321b7980a3497a5e7ac31cfed5b7212f81fea7ed0b0120",
+        "prompts": [
+          "prompts/broad-11.txt"
+        ],
+        "references": [
+          "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/10.png",
+          "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png"
+        ],
+        "sourceModifiedAt": "2026-11-11T07:30:06.403Z",
+        "referenceVersions": [
+          {
+            "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/10.png",
+            "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994",
+            "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-330b5b93-2a5b-42f2-9cef-40406adba173.png"
+          },
+          {
+            "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png",
+            "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e",
+            "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0c9d351e-8f2d-4dbf-bbc3-37b85560779f.png"
+          }
+        ]
+      },
+      "sourceModifiedAt": "2026-11-11T07:43:53.141Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/10.png",
+          "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-330b5b93-2a5b-42f2-9cef-40406adba173.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/12.png",
+          "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-839e3acc-ec8e-40d2-b735-0decddd011bb.png"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "frame": 12,
+      "file": "public/fire-sprites/v2/broad/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-839e3acc-ec8e-40d2-b735-0decddd011bb.png",
+      "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f",
+      "prompts": [
+        "prompts/broad-12.txt"
+      ],
+      "references": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/11.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png"
+      ],
+      "sourceModifiedAt": "2026-11-11T07:34:19.429Z",
+      "referenceVersions": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/11.png",
+          "sha256": "efe5647725e0110e17321b7980a3497a5e7ac31cfed5b7212f81fea7ed0b0120",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c48f2a1d-dc88-4d0e-8915-5cd7264c001d.png"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e",
+          "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0c9d351e-8f2d-4dbf-bbc3-37b85560779f.png"
+        }
+      ]
+    }
+  ],
+  "note": "Each selected cel has its own built-in imagegen call. Previous entries retain replaced candidates; referenceVersions identifies the input version at call time. Source modification timestamps come from the saved generated files, not inferred animation timing."
+}

@@ -1,0 +1,82 @@
+{
+  "reviewedAt": "2026-11-11T08:02:56.025048+00:00",
+  "baseCommit": "8a284133a03ffc180405ad11302ab3d2fa9902ae",
+  "localProductionBase": "http://127.0.0.1:5417/Prototype-Fork/",
+  "buildStamp": "Codex/sol fork \u00b7 11-11 07:59 UTC",
+  "offlineVersion": "62019993e814d51f346d",
+  "releaseBytes": 974661931,
+  "releaseBudget": 1000000000,
+  "selectedOriginals": 36,
+  "distinctOriginalHashes": 36,
+  "families": [
+    "narrow",
+    "medium",
+    "broad"
+  ],
+  "nativeCellSizes": {
+    "narrow": [
+      1254,
+      1254
+    ],
+    "medium": [
+      1254,
+      1254
+    ],
+    "broad": [
+      1774,
+      887
+    ]
+  },
+  "atlasPages": 6,
+  "maxAtlasDimension": 3762,
+  "pixelExactNativePacking": true,
+  "browser": "Connected in-app browser using cua_repl; actual lite and full WebGL rendering",
+  "checks": [
+    "All eight production exhibits isolated and captured",
+    "Production subpath and thumbnails",
+    "Every source cel stepped 01 through 12 and wrapped to 01",
+    "Redrawn medium 10 and broad 11 displayed from second atlas page",
+    "Quarter-speed and normal playback",
+    "Source-only view, hue controls and optional interpolation",
+    "Camera orbit",
+    "Native 1972\u00d7992 drawing buffer and 720p option",
+    "Portrait and short landscape layouts without page overflow",
+    "Existing Jak heat visibly refracts backdrop",
+    "Paused frame pixel identity",
+    "Zero-strength heat equals disabled heat",
+    "Clean browser error/warning logs"
+  ],
+  "pixelChecks": {
+    "screenshot": [
+      1280,
+      720
+    ],
+    "heatOnOff": {
+      "changed": 940,
+      "peak": 31,
+      "mean": 0.021590574494536413
+    },
+    "zeroVsOff": {
+      "changed": 0,
+      "peak": 0,
+      "mean": 0
+    },
+    "paused": {
+      "changed": 0,
+      "peak": 0,
+      "mean": 0
+    }
+  },
+  "commandsPassed": [
+    "native pack with exact RGBA extraction assertions",
+    "36 source/runtime/provenance SHA-256 checks",
+    "npm run build",
+    "npm run check:release",
+    "node tools/test-tool-directory.mjs",
+    "node --check tools/fire-sprite-lab/browser.mjs",
+    "git diff --check"
+  ],
+  "fullSuiteRun": false,
+  "standaloneBrowserHarnessRun": false,
+  "visualLimits": "Generated interpretation of the supplied footage; original Crash 4 frame count and exact global repeat period are not established."
+}

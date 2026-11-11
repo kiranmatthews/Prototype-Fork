@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
-import {SpriteFire,type SpriteFireSpec} from '../spriteFire';
+import {SpriteFire,type SpriteFireSpec,type FireCycleData,type FireCycle,type FireFamily} from '../spriteFire';
 import {FlameHeatDistortion} from '../flameHeatDistortion';
 import './lab.css';
 
@@ -8,14 +8,14 @@ declare const __BUILD_CHANNEL__:string;
 declare const __BUILD_TAG__:string;
 
 const EXHIBITS:(SpriteFireSpec&{name:string;tag:string;colour:string;description:string})[]=[
-  {arrangement:'torch',hue:0,name:'Golden torch',tag:'THE ORIGINAL',colour:'#ffbb61',description:'A steady golden heart with three curling tongues. The original painted flame, layered at different scales.'},
-  {arrangement:'bonfire',hue:-.035,name:'Wild bonfire',tag:'GATHERING HEAT',colour:'#ff7655',description:'A wide, restless fire. Staggered flames gather around a taller core, with glowing embers drifting upward.'},
-  {arrangement:'wall',hue:.025,name:'Solar curtain',tag:'LINE OF FIRE',colour:'#ffe485',description:'Seven tongues overlap into a continuous wall. A brighter yellow hue and offset timing keep the edge alive.'},
-  {arrangement:'ring',hue:.25,name:'Alchemist’s ring',tag:'CLOSED CIRCUIT',colour:'#adf363',description:'A ring of small green flames with an open centre. Orbit the exhibit to see each sprite turn toward you.'},
-  {arrangement:'jet',hue:.49,name:'Blue jet',tag:'UNDER PRESSURE',colour:'#84baff',description:'A fast sideways stream. The same upright artwork is turned along the jet, with sparks trailing from its tip.'},
-  {arrangement:'wisp',hue:.41,name:'Spirit flame',tag:'SLOW BURN',colour:'#7bf1dc',description:'A slender cyan flame that hovers and breathes. Slower playback lets the painted curls unfold.'},
-  {arrangement:'vortex',hue:.69,name:'Violet spiral',tag:'UPWARD CURRENT',colour:'#c9a0ff',description:'Nine violet tongues circle a rising column. Their orbit and staggered frames make a twisting plume.'},
-  {arrangement:'embers',hue:.86,name:'Rose embers',tag:'AFTER THE FIRE',colour:'#ff9ac7',description:'A low bed of pink flames releases a tall shower of embers. Even the tiny sparks reuse the same artwork.'},
+  {arrangement:'torch',family:'narrow',hue:0,name:'Golden torch',tag:'THE ORIGINAL',colour:'#ffbb61',description:'A narrow drawn cycle: the red head hollows, rises and breaks away while a new tongue grows from the bright base.'},
+  {arrangement:'bonfire',family:'medium',hue:0,name:'Wild bonfire',tag:'GATHERING HEAT',colour:'#ff7655',description:'Three medium flames overlap at different phases. Broad colour shapes stretch, separate and reform above a steady bed.'},
+  {arrangement:'wall',family:'broad',hue:.025,name:'Solar curtain',tag:'LINE OF FIRE',colour:'#ffe485',description:'Two independently drawn broad flames overlap into a low curtain. Neighbouring lobes rise and break at different times.'},
+  {arrangement:'ring',family:'narrow',hue:.25,name:'Alchemist’s ring',tag:'CLOSED CIRCUIT',colour:'#adf363',description:'Ten small green flames circle an open centre. Each keeps the narrow drawing’s proportions as it turns toward the camera.'},
+  {arrangement:'jet',family:'narrow',hue:.49,name:'Blue jet',tag:'UNDER PRESSURE',colour:'#84baff',description:'A fast sideways stream of narrow flames. The original drawings turn along the jet and travel out from its mouth.'},
+  {arrangement:'wisp',family:'narrow',hue:.41,name:'Spirit flame',tag:'SLOW BURN',colour:'#7bf1dc',description:'A single slender cyan flame. Slower playback exposes the rising holes, separating tips and changing yellow core.'},
+  {arrangement:'vortex',family:'narrow',hue:.69,name:'Violet spiral',tag:'UPWARD CURRENT',colour:'#c9a0ff',description:'Five violet flames orbit a rising column. Offset drawings and circular motion create a twisting plume.'},
+  {arrangement:'embers',family:'broad',hue:.86,name:'Rose embers',tag:'AFTER THE FIRE',colour:'#ff9ac7',description:'A broad low flame in rose colours releases a shower of embers. The bed uses its own wide drawings.'},
 ];
 const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const canvas=element<HTMLCanvasElement>('world'),stage=element('stage'),loading=element('loading');
@@ -31,7 +31,8 @@ const heat=new FlameHeatDistortion();
 const fires:SpriteFire[]=[],boards:THREE.Mesh[]=[],ownedTextures:THREE.Texture[]=[];
 const stationObjects:THREE.Object3D[][]=[],labels:THREE.Sprite[]=[];
 const materials=new Set<THREE.Material>(),geometries=new Set<THREE.BufferGeometry>();
-let atlas:THREE.Texture|null=null,selected=0,overview=true,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,speed=1,last=performance.now(),frame=0,disposed=false,raf=0,page=0;
+const cycles={} as Record<FireFamily,FireCycle>;
+let selected=0,overview=true,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,speed=1,last=performance.now(),frame=0,disposed=false,raf=0,page=0;
 const hues=EXHIBITS.map(e=>e.hue);
 const locations=EXHIBITS.map((_,i)=>new THREE.Vector3((i%4-1.5)*7.3,.62,i<4?0:-9));
 const lookTarget=new THREE.Vector3(),positionTarget=new THREE.Vector3();
@@ -99,12 +100,12 @@ function frameCollection(animate=true){
   overview=true;controls.autoRotate=false;element('orbit').setAttribute('aria-pressed','false');
   lookTarget.set(0,1,-4.6);
   const distance=Math.max(32,34/Math.max(.55,camera.aspect));positionTarget.set(5,distance*.57,distance*.8-4.6);
-  travel=animate?1:0;if(!animate){camera.position.copy(positionTarget);controls.target.copy(lookTarget);controls.update();}
+  travel=animate?1:0;stage.setAttribute('aria-busy',String(animate));if(!animate){camera.position.copy(positionTarget);controls.target.copy(lookTarget);controls.update();}
   element('overview').setAttribute('aria-pressed','true');element('scene-caption').textContent='THE COLLECTION / EIGHT STUDIES';
   refreshVisibility();
 }
 function focus(){
-  overview=false;const p=locations[selected];lookTarget.copy(p).add(new THREE.Vector3(0,1.6,0));
+  stage.setAttribute('aria-busy','true');overview=false;const p=locations[selected];lookTarget.copy(p).add(new THREE.Vector3(0,1.6,0));
   const distance=Math.max(8.8,7.0/Math.max(.5,camera.aspect));positionTarget.copy(p).add(new THREE.Vector3(2.0,3.2,distance));travel=1;
   element('overview').setAttribute('aria-pressed','false');element('scene-caption').textContent=`STUDY ${String(selected+1).padStart(2,'0')} / ${EXHIBITS[selected].name.toUpperCase()}`;
   refreshVisibility();
@@ -120,6 +121,7 @@ function select(i:number,move=true){selected=(i+EXHIBITS.length)%EXHIBITS.length
 const nav=element('exhibits');EXHIBITS.forEach((e,i)=>{
   const button=document.createElement('button');button.className='exhibit';button.style.setProperty('--accent',e.colour);button.setAttribute('aria-pressed',String(i===selected));button.setAttribute('aria-label',`${String(i+1).padStart(2,'0')} ${e.name}`);
   button.style.setProperty('--hue',`${e.hue*360}deg`);
+  button.style.setProperty('--source',`url('${new URL(`./fire-sprites/v2/${e.family}/01.png`,document.baseURI).href}')`);
   button.innerHTML=`<span class="number">${String(i+1).padStart(2,'0')}</span><span class="mini-flame" aria-hidden="true"></span><span><span class="title">${e.name}</span><span class="kind">${e.arrangement}</span><span class="colour-line"></span></span>`;
   button.onclick=()=>select(i);nav.append(button);
 });
@@ -127,9 +129,9 @@ function refreshCards(){const compact=innerWidth<=760;nav.querySelectorAll<HTMLB
 element('prev-page').onclick=()=>{page=1-page;refreshCards();};element('next-page').onclick=()=>{page=1-page;refreshCards();};
 element('overview').onclick=()=>frameCollection();element('focus').onclick=focus;
 element('orbit').onclick=()=>{controls.autoRotate=!controls.autoRotate;controls.autoRotateSpeed=.7;element('orbit').setAttribute('aria-pressed',String(controls.autoRotate));};
-controls.addEventListener('start',()=>{travel=0;});
+controls.addEventListener('start',()=>{travel=0;stage.setAttribute('aria-busy','false');});
 function playback(){element('pause').setAttribute('aria-pressed',String(paused));element('pause').textContent=paused?'▶ Play':'Ⅱ Pause';}
-element('pause').onclick=()=>{paused=!paused;playback();};element('step').onclick=()=>{paused=true;time+=1/16;playback();};
+element('pause').onclick=()=>{paused=!paused;playback();};element('step').onclick=()=>{paused=true;const rate=fires[selected]?.drawingRate??18;time=(Math.floor(time*rate+1e-6)+1)/rate+1e-6;playback();};
 element<HTMLSelectElement>('speed').onchange=e=>speed=Number((e.target as HTMLSelectElement).value);
 function setHue(degrees:number){hues[selected]=degrees/360;if(fires[selected])fires[selected].uniforms.hue.value=hues[selected];updateInspector();}
 element<HTMLInputElement>('hue').oninput=e=>setHue(Number((e.target as HTMLInputElement).value));
@@ -137,6 +139,8 @@ document.querySelectorAll<HTMLButtonElement>('[data-hue]').forEach(b=>b.onclick=
 element<HTMLInputElement>('heat').onchange=e=>heat.enabled=(e.target as HTMLInputElement).checked;
 element<HTMLInputElement>('heat-strength').oninput=e=>{heat.strength=Number((e.target as HTMLInputElement).value);element('heat-value').textContent=`${heat.strength.toFixed(1)}×`;};
 element<HTMLInputElement>('grid').onchange=refreshVisibility;
+element<HTMLInputElement>('source-only').onchange=e=>{fires.forEach(f=>f.sourceOnly=(e.target as HTMLInputElement).checked);time=0;focus();};
+element<HTMLInputElement>('drawing-frame').oninput=e=>{paused=true;time=Number((e.target as HTMLInputElement).value)/(fires[selected]?.drawingRate??18)+1e-6;playback();};
 element<HTMLInputElement>('interpolate').onchange=e=>fires.forEach(f=>f.uniforms.blendFrames.value=(e.target as HTMLInputElement).checked?1:0);
 element<HTMLSelectElement>('resolution').onchange=size;
 element('reset').onclick=()=>{setHue(EXHIBITS[selected].hue*360);time=0;};
@@ -152,8 +156,10 @@ const resizeObserver=new ResizeObserver(size);resizeObserver.observe(stage);
 function draw(){
   if(disposed)return;const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
   if(!paused&&!document.hidden)time+=dt*speed;
-  if(travel){const alpha=1-Math.exp(-dt*7);camera.position.lerp(positionTarget,alpha);controls.target.lerp(lookTarget,alpha);if(camera.position.distanceToSquared(positionTarget)<.0001){camera.position.copy(positionTarget);controls.target.copy(lookTarget);travel=0;}}
+  if(travel){const alpha=1-Math.exp(-dt*7);camera.position.lerp(positionTarget,alpha);controls.target.lerp(lookTarget,alpha);if(camera.position.distanceToSquared(positionTarget)<.0001){camera.position.copy(positionTarget);controls.target.copy(lookTarget);travel=0;stage.setAttribute('aria-busy','false');}}
   controls.update();camera.updateMatrixWorld();fires.forEach(f=>f.update(time,camera));scene.updateMatrixWorld(true);
+  const selectedFire=fires[selected];
+  if(selectedFire){element('drawing-value').textContent=`${selectedFire.cycle.id.toUpperCase()} · ${String(selectedFire.drawingFrame+1).padStart(2,'0')} / ${selectedFire.cycle.frameCount}`;element<HTMLInputElement>('drawing-frame').max=String(selectedFire.cycle.frameCount-1);element<HTMLInputElement>('drawing-frame').value=String(selectedFire.drawingFrame);}
   heat.reviewTime=time;renderer.info.reset();
   if(!heat.render(renderer,scene,camera,null,undefined,false))renderer.render(scene,camera);
   if(frame++%30===0){const s=renderer.getDrawingBufferSize(new THREE.Vector2());element('render-stats').textContent=`${s.x} × ${s.y} · ${paused?'PAUSED':'LIVE'}`;}
@@ -161,20 +167,34 @@ function draw(){
 }
 async function start(){
   try{
-    atlas=await new THREE.TextureLoader().loadAsync(new URL('./fire-sprites/flame-atlas.png',document.baseURI).href);
-    atlas.colorSpace=THREE.SRGBColorSpace;atlas.minFilter=atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=false;atlas.wrapS=atlas.wrapT=THREE.ClampToEdgeWrapping;
-    EXHIBITS.forEach((spec,i)=>{const fire=new SpriteFire(atlas!,{...spec,seed:i+1});fire.position.copy(locations[i]);fires.push(fire);scene.add(fire);});
+    const base=new URL('./fire-sprites/v2/',document.baseURI);
+    const response=await fetch(new URL('cycles.json',base));
+    if(!response.ok)throw Error('Flame cycle manifest: '+response.status);
+    const data=await response.json() as Record<FireFamily,FireCycleData>;
+    const loader=new THREE.TextureLoader();
+    await Promise.all((Object.keys(data) as FireFamily[]).map(async family=>{
+      const cycle=data[family];
+      const textures=await Promise.all(cycle.pages.map(async page=>{
+        const texture=await loader.loadAsync(new URL(page.file,base).href);
+        texture.colorSpace=THREE.SRGBColorSpace;texture.minFilter=texture.magFilter=THREE.LinearFilter;
+        texture.generateMipmaps=false;texture.wrapS=texture.wrapT=THREE.ClampToEdgeWrapping;
+        ownedTextures.push(texture);return texture;
+      }));
+      cycles[family]={...cycle,textures};
+    }));
+    element('frame-total').textContent=Object.values(cycles).reduce((n,c)=>n+c.frameCount,0)+' DRAWINGS';
+    EXHIBITS.forEach((spec,i)=>{const fire=new SpriteFire(cycles[spec.family],{...spec,seed:i+1});fire.position.copy(locations[i]);fires.push(fire);scene.add(fire);});
     const fragment=location.hash.slice(1),index=EXHIBITS.findIndex(e=>e.arrangement===fragment);
     updateInspector();playback();size();if(index>=0)select(index);else frameCollection(false);loading.hidden=true;draw();
-  }catch(error){loading.textContent=`The flame atlas could not load. Reload to try again.`;console.error(error);}
+  }catch(error){loading.textContent=`The flame drawings could not load. Reload to try again.`;console.error(error);}
 }
 function dispose(){
-  if(disposed)return;disposed=true;cancelAnimationFrame(raf);resizeObserver.disconnect();window.removeEventListener('keydown',keydown);controls.dispose();heat.dispose();fires.forEach(f=>f.dispose());atlas?.dispose();ownedTextures.forEach(t=>t.dispose());materials.forEach(m=>m.dispose());geometries.forEach(g=>g.dispose());renderer.dispose();
+  if(disposed)return;disposed=true;cancelAnimationFrame(raf);resizeObserver.disconnect();window.removeEventListener('keydown',keydown);controls.dispose();heat.dispose();fires.forEach(f=>f.dispose());ownedTextures.forEach(t=>t.dispose());materials.forEach(m=>m.dispose());geometries.forEach(g=>g.dispose());renderer.dispose();
 }
 window.addEventListener('pagehide',event=>{if(!event.persisted)dispose();});
 // Bounded authoring hooks let the browser smoke test freeze an exact pose and
 // compare the shared framebuffer heat pass without changing gameplay code.
-Object.assign(window,{__fireLab:{renderer,scene,camera,controls,heat,fires,select,frameCollection,focus,
+Object.assign(window,{__fireLab:{renderer,scene,camera,controls,heat,fires,cycles,select,frameCollection,focus,
   setTime:(value:number)=>{time=value;paused=true;playback();},
-  get state(){return {ready:fires.length===8,time,paused,selected,overview,transitioning:travel>0,hues:[...hues],spriteCount:fires.reduce((n,f)=>n+f.spriteCount,0),heat:heat.diagnostics};},dispose}});
+  get state(){return {ready:fires.length===8,time,paused,selected,overview,transitioning:travel>0,hues:[...hues],sourceOnly:element<HTMLInputElement>('source-only').checked,families:Object.keys(cycles),frame: fires[selected]?.drawingFrame,spriteCount:fires.reduce((n,f)=>n+f.spriteCount,0),heat:heat.diagnostics};},dispose}});
 void start();

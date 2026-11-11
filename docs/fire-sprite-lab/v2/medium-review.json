@@ -1,0 +1,259 @@
+{
+  "id": "medium-v2",
+  "manifest": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/docs/fire-sprite-lab/v2/medium-cycle.json",
+  "fps": 18,
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "frameCount": 12,
+  "durationMs": 667,
+  "delaysMs": [
+    56,
+    55,
+    56,
+    55,
+    56,
+    55,
+    56,
+    55,
+    56,
+    56,
+    55,
+    56
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "file": "../../../public/fire-sprites/v2/medium/01.png",
+      "bounds": {
+        "left": 203,
+        "top": 87,
+        "right": 1021,
+        "bottom": 1173
+      },
+      "area": 451145,
+      "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b"
+    },
+    {
+      "frame": 2,
+      "file": "../../../public/fire-sprites/v2/medium/02.png",
+      "bounds": {
+        "left": 194,
+        "top": 64,
+        "right": 1026,
+        "bottom": 1173
+      },
+      "area": 468839,
+      "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+    },
+    {
+      "frame": 3,
+      "file": "../../../public/fire-sprites/v2/medium/03.png",
+      "bounds": {
+        "left": 186,
+        "top": 45,
+        "right": 1031,
+        "bottom": 1175
+      },
+      "area": 507449,
+      "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+    },
+    {
+      "frame": 4,
+      "file": "../../../public/fire-sprites/v2/medium/04.png",
+      "bounds": {
+        "left": 181,
+        "top": 63,
+        "right": 1033,
+        "bottom": 1178
+      },
+      "area": 449551,
+      "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+    },
+    {
+      "frame": 5,
+      "file": "../../../public/fire-sprites/v2/medium/05.png",
+      "bounds": {
+        "left": 171,
+        "top": 74,
+        "right": 1036,
+        "bottom": 1179
+      },
+      "area": 470146,
+      "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b"
+    },
+    {
+      "frame": 6,
+      "file": "../../../public/fire-sprites/v2/medium/06.png",
+      "bounds": {
+        "left": 162,
+        "top": 56,
+        "right": 1040,
+        "bottom": 1180
+      },
+      "area": 515167,
+      "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+    },
+    {
+      "frame": 7,
+      "file": "../../../public/fire-sprites/v2/medium/07.png",
+      "bounds": {
+        "left": 158,
+        "top": 177,
+        "right": 1042,
+        "bottom": 1181
+      },
+      "area": 576030,
+      "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7"
+    },
+    {
+      "frame": 8,
+      "file": "../../../public/fire-sprites/v2/medium/08.png",
+      "bounds": {
+        "left": 155,
+        "top": 156,
+        "right": 1046,
+        "bottom": 1187
+      },
+      "area": 502524,
+      "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+    },
+    {
+      "frame": 9,
+      "file": "../../../public/fire-sprites/v2/medium/09.png",
+      "bounds": {
+        "left": 147,
+        "top": 33,
+        "right": 1133,
+        "bottom": 1187
+      },
+      "area": 520061,
+      "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+    },
+    {
+      "frame": 10,
+      "file": "../../../public/fire-sprites/v2/medium/10.png",
+      "bounds": {
+        "left": 154,
+        "top": 97,
+        "right": 1049,
+        "bottom": 1184
+      },
+      "area": 474813,
+      "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c"
+    },
+    {
+      "frame": 11,
+      "file": "../../../public/fire-sprites/v2/medium/11.png",
+      "bounds": {
+        "left": 202,
+        "top": 88,
+        "right": 1023,
+        "bottom": 1175
+      },
+      "area": 458748,
+      "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+    },
+    {
+      "frame": 12,
+      "file": "../../../public/fire-sprites/v2/medium/12.png",
+      "bounds": {
+        "left": 200,
+        "top": 86,
+        "right": 1023,
+        "bottom": 1174
+      },
+      "area": 458872,
+      "sha256": "6eae56fe6e72d277ffee323b5dfa02f2b8ef85f8d361a6364be41b2eec62233c"
+    }
+  ],
+  "duplicateFrames": [],
+  "transitions": [
+    {
+      "from": 1,
+      "to": 2,
+      "seam": false,
+      "silhouetteOverlap": 0.7430989309523675,
+      "premultipliedDifference": 0.054533172497366444
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "seam": false,
+      "silhouetteOverlap": 0.6881532107062154,
+      "premultipliedDifference": 0.07168174605346152
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "seam": false,
+      "silhouetteOverlap": 0.6936146268873274,
+      "premultipliedDifference": 0.07240425944186192
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "seam": false,
+      "silhouetteOverlap": 0.7416326646533689,
+      "premultipliedDifference": 0.05751375333396881
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "seam": false,
+      "silhouetteOverlap": 0.759346011297337,
+      "premultipliedDifference": 0.05590929491870949
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "seam": false,
+      "silhouetteOverlap": 0.7693900315506513,
+      "premultipliedDifference": 0.06101512468455835
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "seam": false,
+      "silhouetteOverlap": 0.6931459847025825,
+      "premultipliedDifference": 0.08420608660977828
+    },
+    {
+      "from": 8,
+      "to": 9,
+      "seam": false,
+      "silhouetteOverlap": 0.6891567379377092,
+      "premultipliedDifference": 0.07769267919396844
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "seam": false,
+      "silhouetteOverlap": 0.6710795682600248,
+      "premultipliedDifference": 0.08211018808480916
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "seam": false,
+      "silhouetteOverlap": 0.6684648785804906,
+      "premultipliedDifference": 0.0785633015606182
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "seam": false,
+      "silhouetteOverlap": 0.9718094100408432,
+      "premultipliedDifference": 0.007222519971771481
+    },
+    {
+      "from": 12,
+      "to": 1,
+      "seam": true,
+      "silhouetteOverlap": 0.9449639703556806,
+      "premultipliedDifference": 0.01608580003743893
+    }
+  ],
+  "reviewStatus": "Source contact sheet, successive poses and loop boundary reviewed; native packing and in-scene checks are recorded in browser/."
+}

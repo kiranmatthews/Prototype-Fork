@@ -1,0 +1,47 @@
+[
+  {
+    "name": "720p",
+    "canvas": [
+      986,
+      496
+    ],
+    "document": [
+      1280,
+      720
+    ],
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "name": "portrait",
+    "canvas": [
+      390,
+      450
+    ],
+    "document": [
+      390,
+      844
+    ],
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  {
+    "name": "landscape",
+    "canvas": [
+      604,
+      254
+    ],
+    "document": [
+      844,
+      390
+    ],
+    "viewport": [
+      844,
+      390
+    ]
+  }
+]

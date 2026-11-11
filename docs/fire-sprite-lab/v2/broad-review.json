@@ -1,0 +1,259 @@
+{
+  "id": "broad-v2",
+  "manifest": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/docs/fire-sprite-lab/v2/broad-cycle.json",
+  "fps": 18,
+  "canvas": {
+    "width": 1774,
+    "height": 887
+  },
+  "frameCount": 12,
+  "durationMs": 667,
+  "delaysMs": [
+    56,
+    55,
+    56,
+    55,
+    56,
+    55,
+    56,
+    55,
+    56,
+    56,
+    55,
+    56
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "file": "../../../public/fire-sprites/v2/broad/01.png",
+      "bounds": {
+        "left": 129,
+        "top": 148,
+        "right": 1650,
+        "bottom": 770
+      },
+      "area": 444575,
+      "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+    },
+    {
+      "frame": 2,
+      "file": "../../../public/fire-sprites/v2/broad/02.png",
+      "bounds": {
+        "left": 121,
+        "top": 119,
+        "right": 1657,
+        "bottom": 773
+      },
+      "area": 463882,
+      "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+    },
+    {
+      "frame": 3,
+      "file": "../../../public/fire-sprites/v2/broad/03.png",
+      "bounds": {
+        "left": 125,
+        "top": 115,
+        "right": 1648,
+        "bottom": 773
+      },
+      "area": 492120,
+      "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0"
+    },
+    {
+      "frame": 4,
+      "file": "../../../public/fire-sprites/v2/broad/04.png",
+      "bounds": {
+        "left": 123,
+        "top": 114,
+        "right": 1649,
+        "bottom": 774
+      },
+      "area": 466908,
+      "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+    },
+    {
+      "frame": 5,
+      "file": "../../../public/fire-sprites/v2/broad/05.png",
+      "bounds": {
+        "left": 121,
+        "top": 86,
+        "right": 1654,
+        "bottom": 775
+      },
+      "area": 362519,
+      "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+    },
+    {
+      "frame": 6,
+      "file": "../../../public/fire-sprites/v2/broad/06.png",
+      "bounds": {
+        "left": 122,
+        "top": 83,
+        "right": 1652,
+        "bottom": 775
+      },
+      "area": 342745,
+      "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+    },
+    {
+      "frame": 7,
+      "file": "../../../public/fire-sprites/v2/broad/07.png",
+      "bounds": {
+        "left": 124,
+        "top": 85,
+        "right": 1649,
+        "bottom": 775
+      },
+      "area": 307150,
+      "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+    },
+    {
+      "frame": 8,
+      "file": "../../../public/fire-sprites/v2/broad/08.png",
+      "bounds": {
+        "left": 119,
+        "top": 161,
+        "right": 1682,
+        "bottom": 776
+      },
+      "area": 320028,
+      "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+    },
+    {
+      "frame": 9,
+      "file": "../../../public/fire-sprites/v2/broad/09.png",
+      "bounds": {
+        "left": 114,
+        "top": 233,
+        "right": 1659,
+        "bottom": 777
+      },
+      "area": 317120,
+      "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+    },
+    {
+      "frame": 10,
+      "file": "../../../public/fire-sprites/v2/broad/10.png",
+      "bounds": {
+        "left": 112,
+        "top": 208,
+        "right": 1661,
+        "bottom": 778
+      },
+      "area": 329157,
+      "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994"
+    },
+    {
+      "frame": 11,
+      "file": "../../../public/fire-sprites/v2/broad/11.png",
+      "bounds": {
+        "left": 114,
+        "top": 197,
+        "right": 1659,
+        "bottom": 776
+      },
+      "area": 369004,
+      "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb"
+    },
+    {
+      "frame": 12,
+      "file": "../../../public/fire-sprites/v2/broad/12.png",
+      "bounds": {
+        "left": 121,
+        "top": 141,
+        "right": 1653,
+        "bottom": 772
+      },
+      "area": 459861,
+      "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+    }
+  ],
+  "duplicateFrames": [],
+  "transitions": [
+    {
+      "from": 1,
+      "to": 2,
+      "seam": false,
+      "silhouetteOverlap": 0.7617948901896838,
+      "premultipliedDifference": 0.05110392696636498
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "seam": false,
+      "silhouetteOverlap": 0.7296826499381363,
+      "premultipliedDifference": 0.06142123537129723
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "seam": false,
+      "silhouetteOverlap": 0.7772989277753795,
+      "premultipliedDifference": 0.05279005137605228
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "seam": false,
+      "silhouetteOverlap": 0.6232698471086832,
+      "premultipliedDifference": 0.08115952602499207
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "seam": false,
+      "silhouetteOverlap": 0.7810404548392309,
+      "premultipliedDifference": 0.03428983441559392
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "seam": false,
+      "silhouetteOverlap": 0.7167005572134049,
+      "premultipliedDifference": 0.04118042566300378
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "seam": false,
+      "silhouetteOverlap": 0.6097959665478546,
+      "premultipliedDifference": 0.054308205017225185
+    },
+    {
+      "from": 8,
+      "to": 9,
+      "seam": false,
+      "silhouetteOverlap": 0.6218494879781754,
+      "premultipliedDifference": 0.053887906059165894
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "seam": false,
+      "silhouetteOverlap": 0.5651623368762559,
+      "premultipliedDifference": 0.0661696087384576
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "seam": false,
+      "silhouetteOverlap": 0.7667713200749862,
+      "premultipliedDifference": 0.037987233569616134
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "seam": false,
+      "silhouetteOverlap": 0.5902384286344542,
+      "premultipliedDifference": 0.08610280554545947
+    },
+    {
+      "from": 12,
+      "to": 1,
+      "seam": true,
+      "silhouetteOverlap": 0.8300731740376814,
+      "premultipliedDifference": 0.039468662095231956
+    }
+  ],
+  "reviewStatus": "Source contact sheet, successive poses and loop boundary reviewed; native packing and in-scene checks are recorded in browser/."
+}
