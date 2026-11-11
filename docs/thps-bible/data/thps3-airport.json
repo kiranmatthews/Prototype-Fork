@@ -1,0 +1,2605 @@
+{
+ "id": "thps3-airport",
+ "game": "THPS3",
+ "level": "Airport",
+ "location": "unnamed international terminal, in-fiction airline \"Hawkair\"",
+ "type": "career-street",
+ "careerPosition": 5,
+ "timeLimit": "2:00 (remake longplay runs start at 10:00)",
+ "versions": [
+  "PS2 2001",
+  "GameCube 2001 (TAS)",
+  "PS1 2001 edition (VG; different content)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p086-p100 (overview, lines, helipad, S-K-A-T-E by skater group, tape, goals, stat points, map p091, decks, gaps)",
+  "J3 p018-p020 (Hawk and Caballero configurations, tape, goals, secret area)",
+  "TAS3 3:36-4:48 (GameCube, all nine goals in one 2:00 run; tape at 4:45.5)",
+  "LP3 0:31:00-0:41:00 (PS2 human, four runs)",
+  "VG TonyHawk_sProSkater3-Airport.png (PS1 edition: different goals and layout)",
+  "PS34 airport (THPS 3+4 walkthrough text + screenshots 3-7, 15, 16)",
+  "LP34 0:31:00-0:38:00 (THPS 3+4 Xbox Series longplay; tape at 0:35:27)"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 75,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get a Pro Score: 150,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get a Sick Score: 300,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "original PS2"
+  },
+  {
+   "text": "Airwalk Over An Escalator -or- Crooked Grind Around Baggage Claim (depends on skater)",
+   "version": "original PS2"
+  },
+  {
+   "text": "Visit 10 Countries",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get the Tickets to Your Skate Buddy",
+   "version": "original PS2"
+  },
+  {
+   "text": "Stop the Pickpockets",
+   "version": "original PS2"
+  },
+  {
+   "text": "High Score 75,000; Pro Score 150,000; Sick Score 300,000; High Combo 20,000; Collect SKATE Letters; Airwalk Over an Escalator; Visit 10 Countries; Get the Tickets to Your Skate Buddy; Stop the Pickpockets; Get the Secret Tape",
+   "version": "remake 2025"
+  },
+  {
+   "text": "Pro goals: Platinum Score 700,000; Collect COMBO Letters; Combo from Start to Finish; 540 Shove-It Over the Gate Transfer Gap; Collect 5 Passports",
+   "version": "remake 2025"
+  },
+  {
+   "text": "High Score 40,000; Pro Score 100,000; Sick Score! 200,000; Collect S-K-A-T-E; Snag the Flags; Lost Luggage Found!; Nosebluntslide the Airport Sign; Grind the Plane; Find the Secret Tape",
+   "version": "PS1 edition"
+  }
+ ],
+ "size": {
+  "class": "large (long and linear)",
+  "footprint": "rough estimate ≈ 200–300 m from the ticket hall to the fork, two gate arms ≈ 50–80 m each, cargo basement under the gates of similar length; corridor ≈ 25–50 m wide. Not measured.",
+  "evidence": "G3 p091 isometric map (one long tube with two escalator banks, a fork and two curved arms; cargo drawn detached); G3 p086 (\"elongated terminal ... two lengthy escalators\"); TAS3 needs ≈ 35 s with detours from spawn to the fork. No scale object was measurable, so the metres are low confidence."
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Ticket hall (spawn)",
+   "layer": "terminal floor; counters ≈ 1 m; lights overhead",
+   "features": [
+    "Hawkair counters left (tickets) and right (X-ray machine behind)",
+    "payphone kiosk with a row of ceiling lights above",
+    "men's room (urinal wall)",
+    "lockers and flight-schedule monitors",
+    "Jeep poster",
+    "first moving walkway with a centre handrail"
+   ],
+   "notes": "G3 p093 screenshot (start hall, counters both sides); G3 p086-p090. Pickpocket 1 by the Jeep poster."
+  },
+  {
+   "id": "Z2",
+   "name": "Helipad (secret area)",
+   "layer": "outdoor pad at terminal level",
+   "features": [
+    "helicopter with grindable rotor blades",
+    "baggage conveyor belt with edges",
+    "belt continues back inside down to baggage claim"
+   ],
+   "notes": "Reached by riding the baggage belt through the X-ray machine behind the right counter (G3 p087). The helicopter is visible through the baggage-claim windows (G3 p087). Grinding the blades makes it take off (J3 p020)."
+  },
+  {
+   "id": "Z3",
+   "name": "Baggage claim",
+   "layer": "terminal floor; carousel ≈ 1 m; ledge above centre ramp; lights",
+   "features": [
+    "round moving carousel with a small ramp on top",
+    "two escalators with quarter pipes / banked walls either side",
+    "central vert ramp with a ledge above",
+    "perimeter rails"
+   ],
+   "notes": "Trick goals live here: Airwalk over an escalator (Escalatin' the Situation) or a Crooked grind for a full carousel rotation (Grind Baggage Claim). G3 p089, p095."
+  },
+  {
+   "id": "Z4",
+   "name": "Security checkpoint",
+   "layer": "terminal floor",
+   "features": [
+    "metal detectors (void the tickets, alarm)",
+    "banked walls on the left to transfer over (O the S)",
+    "small ramp on the left",
+    "rent-a-cops"
+   ],
+   "notes": "G3 p090: the tickets are voided if carried through the detectors, so the escort goal teaches the transfer over them."
+  },
+  {
+   "id": "Z5",
+   "name": "Mid-terminal: purple sitting area and restrooms",
+   "layer": "floor; monitors; message board; lights",
+   "features": [
+    "purple carpet and palm planter",
+    "large panel monitors",
+    "scrolling message sign with a narrow monitor below",
+    "ladies' restroom (rail, sink ledge)",
+    "second payphone kiosk",
+    "second moving walkway"
+   ],
+   "notes": "Pickpockets 3 and 4 in the ladies' restroom (G3 p091). K for two skater groups is here (G3 p088)."
+  },
+  {
+   "id": "Z6",
+   "name": "Escalator banks (two)",
+   "layer": "sloped handrails; ramps at top and between",
+   "features": [
+    "centre ramp at the top of the first escalators (Takin' the High Road)",
+    "small ramp between the last escalators (Last High Light)",
+    "escalator handrails (Escalator Hop)"
+   ],
+   "notes": "The terminal drops one level per bank on its way to the gates (G3 p086 \"two lengthy escalators\")."
+  },
+  {
+   "id": "Z7",
+   "name": "The fork",
+   "layer": "gates floor",
+   "features": [
+    "short banked wall facing the bottom of the last escalators",
+    "arrivals/departures screens",
+    "branches right (north gates) and left (south gates)"
+   ],
+   "notes": "End point of Start to Finish!!! (G3 p097). Pickpocket 5 at the screens (G3 p091). The human longplay throws its specials on this wall (LP3 0:38:50, 0:40:44)."
+  },
+  {
+   "id": "Z8",
+   "name": "Northern gates (tape arm)",
+   "layer": "gates floor → window lattice rails (three tiers) → roof lattice",
+   "features": [
+    "curved glazed window wall with a lattice of red pipe rails at rising heights",
+    "flag rail: Bahamas, Canada, USA, Australia, France",
+    "gate doors with narrow quarter pipes",
+    "grey steel safety rails across the gates",
+    "green couches",
+    "large bank of monitors",
+    "spiral stair and walkway down to the cargo"
+   ],
+   "notes": "Tape on the uppermost lattice rail around the curve (G3 p089). Remake labels the gate QPs with city names (PS34 screenshot 15: \"Vancouver\")."
+  },
+  {
+   "id": "Z9",
+   "name": "Southern gates (mirror arm)",
+   "layer": "as Z8",
+   "features": [
+    "flag rail: Bermuda, Chad, Mexico, Russia, Great Britain",
+    "skate buddy waiting just before the Bermudan flag",
+    "spiral stair to the cargo",
+    "top lattice rail (deck for one skater group)"
+   ],
+   "notes": "Mirror of Z8. G3 p093 places one group's New Deck \"in the same location as the Secret Tape, just on the southern end's rail\". The remake puts its COMBO letters on this lattice (PS34)."
+  },
+  {
+   "id": "Z10",
+   "name": "Cargo basement",
+   "layer": "one level below the gates",
+   "features": [
+    "\"boomerang-shaped half pipe with closed ends\": long concrete banked walls",
+    "red arrows painted on the walls",
+    "rows of overhead lights",
+    "cargo crates",
+    "baggage cart / vehicle",
+    "concrete ledge round the area"
+   ],
+   "notes": "G3 p086-p087, p099-p100. From here a big air reaches the gates' lattice rails: Economy (lowest), Business, 1st Class (uppermost, \"max stats\")."
+  }
+ ],
+ "landmarks": [
+  "Hawkair ticket counters",
+  "X-ray machine",
+  "helicopter on the helipad",
+  "baggage carousel",
+  "metal detectors",
+  "scrolling message sign",
+  "escalator banks",
+  "banked wall at the fork",
+  "flags of ten countries",
+  "red window lattice",
+  "airliners outside the windows",
+  "spiral stairs"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the terminal toward the first moving walkway (counters left and right)",
+  "visibleCollectibles": [
+   "Tickets (left counter)",
+   "S for Hawk/Glifberg/Margera/Reynolds/Thomas (lights above the payphone kiosk)",
+   "S for Caballero/Koston/Mullen/Rowley (centre handrail of the first walkway, ahead)"
+  ],
+  "notes": "Tape not visible: it sits at the far end of the level. Remake: \"S straight ahead after level start\" (PS34)."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Secret tape — top rail of the northern window lattice",
+   "zone": "Z8",
+   "landmark": "uppermost red pipe rail of the curved window lattice in the northern gates, at the curve near the end of the arm; launch is the narrow quarter pipe in a gate doorway left of the French flag",
+   "layer": "window-lattice rail (third tier above the flag rail)",
+   "heightM": "≈ 5–8 m above the gates floor; ≈ 9–14 m above the cargo floor (estimated: door-height narrow QP ≈ 2.5–3 m, then two wallride–wallie steps up the glass; G3 says reaching it from the cargo needs \"most likely max stats\"). Low confidence.",
+   "launchFrom": "narrow quarter pipe built into a gate doorway (or, expert line, the spiral-stair handrail and lattice)",
+   "visibility": {
+    "firstSight": "on entering the northern gates from the fork: the red lattice climbs the glass wall ahead/right; the tape is on its top tier (inferred from G3 p089 and remake screenshot 16; not seen from the floor in the TAS frames)",
+    "fromSpawn": false,
+    "reads": "tape icon sitting on a red pipe rail against the night/sky glazing; in the remake it glints blue on the rail (PS34 screenshot 16)",
+    "distanceFromFirstSightM": "≈ 20–40 m from the fork to the pickup (low confidence)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "bottom of the last escalators (Z7, the fork)",
+     "to": "northern gates (Z8)",
+     "geometry": "Turn right at the fork; G3 p089 warns of the rent-a-cop at the escalator foot."
+    },
+    {
+     "step": 2,
+     "move": "vert-air prep",
+     "from": "gates floor",
+     "to": "narrow QP in a gate doorway left of the French flag",
+     "geometry": "Build speed on the open gates floor; J3 p018 identifies it as the gate C door left of the departures board. Remake: doorway QP with a city label (PS34 15; LP34 0:35:23)."
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "narrow gate QP",
+     "to": "uppermost lattice rail on the right",
+     "geometry": "Air up the QP, steer slightly right (J3 p019) and land in a grind on the top rail (G3 p089). Remake run reached it as FS 50-50 on a lower window rail → FS wallride on the glass → wallie → top rail, scoring \"1st Class Grind!!\" (LP34 0:35:27)."
+    },
+    {
+     "step": 4,
+     "move": "grind (balance)",
+     "from": "top rail",
+     "to": "curve near the end of the north arm",
+     "geometry": "Hold the grind round the curve, keeping balance (J3 p019 \"tenez l'équilibre jusqu'à la cassette\"); the tape sits on the curve (G3 p089)."
+    },
+    {
+     "step": 5,
+     "move": "drop",
+     "from": "top rail",
+     "to": "gates floor",
+     "geometry": "Drop off, or keep grinding: for Hawk/Koston/Muska/Thomas a stat point lies further along (\"hold the grind through the Secret Tape\", G3 p092)."
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air",
+    "grind",
+    "wallride",
+    "wallie"
+   ],
+   "speed": "high (full run-up into the narrow QP)",
+   "skillGates": [
+    "land a grind from vert air onto a rail several metres up",
+    "rail balance on a long curved rail (taught by Visit 10 Countries: hold the flag rail, tap left/right, G3 p089)",
+    "optional: wallride + wallie up glass (remake run, TAS)"
+   ],
+   "coupling": "none (no unlock); pedestrians, a rent-a-cop and pickpockets on the floor",
+   "failure": "A miss drops you onto the gates floor next to the launch QP (inside the glazed wall, so no out-of-bounds); retry ≈ 5–10 s. The real cost is distance: the north arm is the farthest point from spawn (≈ 25–35 s of a 2:00 run).",
+   "timeFromSpawnS": "TAS3: 64 s into the run (4:45.5 vs start 3:41), last goal of the run; the climb from the spiral handrail takes ≈ 3.5 s. Remake: pickup at 5:51 of 10:00; ≈ 3 s from the gate QP and ≈ 9 s from rolling across the floor (LP34 0:35:17-0:35:27). Human PS2 longplay pickup not located in my samples.",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "REWARD",
+    "EXPLORE"
+   ],
+   "why": "The tape crowns the vertical showcase of a linear level: the far end of the terminal has a glass wall whose red pipes form a ladder of rails. The lowest tier carries the Visit 10 Countries flags, the next tiers are reached by \"class\" gaps from the cargo below, and the tape sits on the top tier. One purpose-built launcher (the doorway QP next to a named flag) makes the top reachable without max stats.",
+   "evidence": "G3 p089, p092, p093, p099; J3 p018-p019; TAS3 4:40-4:45.5; PS34 airport (text, screenshots 15-16); LP34 0:35:17-0:35:29",
+   "confidence": "high (location); medium (heights)",
+   "altRoutes": [
+    {
+     "name": "TAS lattice climb",
+     "steps": [
+      "grind the north flag rail through five flags (Parlez-vous Skate?, G'Day, American Made, Welcome, Eh?, Country of 700 Islands)",
+      "onto the spiral-stair handrail (\"Kissed the Rail\"; 10 Countries complete)",
+      "Boneless + BS Overcrook onto the lattice",
+      "BS 5-0",
+      "Wallie",
+      "top rail: tape"
+     ],
+     "evidence": "TAS3 4:40-4:45.5"
+    },
+    {
+     "name": "1st Class Grind!! from the cargo",
+     "steps": [
+      "build speed on the cargo banked walls",
+      "big air up past the gates floor",
+      "land on the uppermost red rail"
+     ],
+     "evidence": "G3 p099 (\"most likely max stats are needed ... plan for a return visit\")"
+    }
+   ]
+  },
+  {
+   "id": "S-g1",
+   "type": "letter",
+   "label": "S (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z1",
+   "landmark": "ceiling lights above the payphone kiosk nearest the start",
+   "layer": "overhead lights",
+   "heightM": "light row ≈ 4–6 m (estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "from spawn",
+    "fromSpawn": true,
+    "reads": "floating letter over the lights",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "leap from the kiosk onto the lights (Illuminatin')"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the lights, ollie off the end"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; TAS3 3:46-3:47 (S in HUD after Illuminatin')",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g1",
+   "type": "letter",
+   "label": "K (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z5",
+   "landmark": "lights by the payphones across from the ladies' restroom",
+   "layer": "overhead lights",
+   "heightM": "as S",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "phone kiosk → lights (Lighten Up!)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the lights"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088, p097; TAS3 4:11",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g1",
+   "type": "letter",
+   "label": "A (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z6",
+   "landmark": "last escalators down to the gates: centre handrail of the left pair",
+   "layer": "escalator handrail",
+   "heightM": "sloped rail",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the handrail line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind down the centre handrail of the left pair"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; TAS3 4:16 (A at the fork)",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g1",
+   "type": "letter",
+   "label": "T (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z8",
+   "landmark": "hovering high above the first narrow QP on the left in the northern gates",
+   "layer": "air above a narrow QP",
+   "heightM": "above QP coping (height unknown)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter above a doorway QP",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "right at the bottom of the last escalators"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the first narrow QP on the left"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE",
+    "TEASE"
+   ],
+   "why": "Teaches the same doorway-QP launcher that the tape uses, one QP earlier on the same arm.",
+   "evidence": "G3 p088; TAS3 4:30; LP3 0:36:14",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g1",
+   "type": "letter",
+   "label": "E (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z8",
+   "landmark": "above the large bank of monitors in the northern end",
+   "layer": "air above monitors",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "continue in the T direction; pop off/over the monitor bank"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Ends the letter tour in the tape arm: the player finishing SKATE is standing under the lattice.",
+   "evidence": "G3 p088; TAS3 4:35; LP3 0:36:20",
+   "confidence": "high"
+  },
+  {
+   "id": "S-g2",
+   "type": "letter",
+   "label": "S (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z1",
+   "landmark": "centre handrail of the very first moving walkway",
+   "layer": "handrail",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": true,
+    "reads": "letter on the walkway centre rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the centre handrail (Walkway Ride 1!)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; J3 p018",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g2",
+   "type": "letter",
+   "label": "K (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z5",
+   "landmark": "right-hand row of lights behind the scrolling message sign",
+   "layer": "overhead lights",
+   "heightM": "light row",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the lights",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "centre ramp at the top of the first escalators → lights (Takin' the High Road)"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "lights → lights angling right → lights over the walkway (Droppin' Science!)"
+    },
+    {
+     "step": 3,
+     "move": "alt",
+     "from": "",
+     "to": "",
+     "geometry": "or pop from the narrow monitor below the message sign"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088, p095, p097; J3 p018",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g2",
+   "type": "letter",
+   "label": "A (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z7",
+   "landmark": "above the short banked wall directly across from the bottom of the last escalators (centre)",
+   "layer": "air above banked wall",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "big letter hanging over the wall (beacon at the fork)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "charge the banked wall"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; J3 p018; PS34 (remake A \"above a short quarter pipe at the fork\")",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g2",
+   "type": "letter",
+   "label": "T (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z9",
+   "landmark": "spiral stair from the Bermudan flag down to the cargo",
+   "layer": "spiral handrail",
+   "heightM": "descending",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the spiral rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind Spiral Stairs South down to the cargo"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE",
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; J3 p018",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g2",
+   "type": "letter",
+   "label": "E (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z10",
+   "landmark": "northern end of the cargo area, red rail behind the spiral stairway",
+   "layer": "cargo rail",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on a red rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the cargo wall or the red rail"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ledge"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p088; J3 p018",
+   "confidence": "high"
+  },
+  {
+   "id": "S-g3",
+   "type": "letter",
+   "label": "S (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z1",
+   "landmark": "men's room near the start: wall of urinals",
+   "layer": "inside room",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter inside a restroom",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "rail → urinals → rails (Draining the Vein)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p088, p094",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g3",
+   "type": "letter",
+   "label": "K (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z5",
+   "landmark": "ledge over the sinks in the ladies' restroom",
+   "layer": "inside room",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter inside a restroom",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "rail → sink ledge → rail (Look Out!!)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p088, p096",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g3",
+   "type": "letter",
+   "label": "A (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z6",
+   "landmark": "next to the lights reached from the ramp between the last escalators",
+   "layer": "overhead lights",
+   "heightM": "light row",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter beside the lights",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "ramp between the last escalators → lights (Last High Light)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088, p097",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g3",
+   "type": "letter",
+   "label": "T (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z9",
+   "landmark": "southern gates, launch off the large bank of monitors near the spiral walkway",
+   "layer": "air",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "left at the bottom of the last escalator"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "launch off the monitor bank"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p088",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g3",
+   "type": "letter",
+   "label": "E (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z10",
+   "landmark": "basement, atop crates near the wall",
+   "layer": "crate tops",
+   "heightM": "≈ 1–2 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on crates",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind the ledge"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "transfer onto the crates"
+    }
+   ],
+   "moves": [
+    "ledge",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p088",
+   "confidence": "high"
+  },
+  {
+   "id": "TICKETS",
+   "type": "goal-object",
+   "label": "Tickets for the skate buddy",
+   "zone": "Z1→Z9",
+   "landmark": "Hawkair counter left of the start → buddy on the right just before the Bermudan flag (south)",
+   "layer": "counter top",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": true,
+    "reads": "tickets on the counter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the left counter to pick them up"
+    },
+    {
+     "step": 2,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "down the terminal without bailing"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "over the metal detectors via the banked walls on the left (O the S)"
+    },
+    {
+     "step": 4,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "left at the fork, deliver"
+    }
+   ],
+   "moves": [
+    "grind",
+    "transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "a bail returns the tickets to the counter; walking through the detectors voids them; the buddy shouts and swings his board if you pass without tickets",
+   "failure": "full restart from the counter",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "G3 p090; J3 p019; TAS3 3:42 & 4:27; LP3 0:36:40",
+   "confidence": "high"
+  },
+  {
+   "id": "PICKPOCKETS",
+   "type": "goal-object",
+   "label": "Five pickpockets",
+   "zone": "Z1, Z5, Z7",
+   "landmark": "(1) Jeep poster by the Hawkair counter; (2) men's room entrance furthest from the counters; (3-4) ladies' restroom past the first escalators, splitting to both doors; (5) arrivals/departures screens after the second escalators, turn right",
+   "layer": "floor",
+   "heightM": "ground",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "revealed by an audio cue; run waving their loot",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "skate into each one"
+    }
+   ],
+   "moves": [
+    "moving-object"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "moving targets that flee",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p090-p091; J3 p019-p020; TAS3 3:50-4:33",
+   "confidence": "high"
+  },
+  {
+   "id": "FLAGS",
+   "type": "goal-object",
+   "label": "Flags of ten countries",
+   "zone": "Z8, Z9",
+   "landmark": "hang over the red window rails: north Bahamas, Canada, USA, Australia, France; south Bermuda, Chad, Mexico, Russia, Great Britain",
+   "layer": "lowest lattice rail",
+   "heightM": "rail ≈ 1–2 m (estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "flags draped over a rail line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "hop onto the last red rail on the right-hand side; ride the curved end up"
+    },
+    {
+     "step": 2,
+     "move": "grind (balance)",
+     "from": "",
+     "to": "",
+     "geometry": "hold through five flags, tapping left/right"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Teaches the exact rail system (and the balance) that the tape sits on, one tier lower.",
+   "evidence": "G3 p089, p098-p100; J3 p019; TAS3 4:21-4:42; LP3 0:38:42",
+   "confidence": "high"
+  },
+  {
+   "id": "TRICK",
+   "type": "goal-object",
+   "label": "Trick goal (per skater)",
+   "zone": "Z3",
+   "landmark": "baggage claim",
+   "layer": "escalator / carousel",
+   "heightM": "escalators ≈ one storey",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "goal photographer near the spot (J3 p002)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "Airwalk: banked walls against the back wall → alley-oop over an escalator (Escalatin' the Situation)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "or Crooked grind the carousel's lower edge for a full rotation (Grind Baggage Claim)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "moving-object"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "G3 p089; J3 p019; TAS3 4:06-4:07",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-hawk",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Hawk, Koston, Muska, Thomas)",
+   "zone": "Z1-Z8",
+   "landmark": "includes one on the tape rail beyond the tape",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "ledge above escalators / ramp in back-left corner; lights over metal detectors near the purple sitting area; women's restroom rail → lockers → monitors → lights; tape rail continued"
+    }
+   ],
+   "moves": [
+    "grind",
+    "kicker"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p091-p092 (OCR + map); J3 p020 (Hawk: one above a QP before gate D reached by grinding the whole tape rail)",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-glif",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Glifberg, Mullen, Steamer)",
+   "zone": "Z1-Z8",
+   "landmark": "kiosk lights; lights over metal detectors; Last High Light; carousel ramp → lights; above the vert ramp used for the tape",
+   "layer": "lights / air",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "launchers under light rows"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "final one: hit the ramp left of the French flag (the tape launcher)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEASE",
+    "EXPLORE"
+   ],
+   "why": "The last stat point hangs over the tape launcher: a breadcrumb that shows the launcher is meant for height.",
+   "evidence": "G3 p092",
+   "confidence": "medium"
+  },
+  {
+   "id": "DECKS",
+   "type": "deck-set",
+   "label": "New decks (three skater groups)",
+   "zone": "Z5, Z9",
+   "landmark": "(a) Caballero/Koston/Mullen/Rowley: purple sitting area off the end of the lights (wall base → panel monitors past the metal detectors); (b) Hawk/Glifberg/Margera/Reynolds/Steamer: lights over the ladies' restroom entrance (narrow monitor under the message sign → lights); (c) Campbell/Lasek/Muska/Thomas: south top lattice rail, \"same location as the Secret Tape, just on the southern end's rail\" (ramp right of the Bermuda flag)",
+   "layer": "lights / top lattice rail",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck pickup",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "monitor or ramp launch"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind to the deck"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "Deck (c) is the mirror of the tape: the south arm repeats the lesson.",
+   "evidence": "G3 p091 map, p093",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PASSPORTS",
+   "type": "remake-goal-object",
+   "label": "Remake: 5 passports (pro goal)",
+   "zone": "Z2, Z3, Z8, Z9, Z10",
+   "landmark": "over the X-ray conveyor; on the carousel; up the narrow QP labelled London (south); the rail behind the departure boards; above a cargo light (QP → grind → hop to lights)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating passports",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "one per district"
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-COMBO",
+   "type": "remake-letter",
+   "label": "Remake: C-O-M-B-O (one combo)",
+   "zone": "Z9",
+   "landmark": "south window lattice: C on a rail on the left; wallride up to the higher rail for O and M; next highest rail for B; jump to the next rail for the last O",
+   "layer": "lattice tiers 1-4",
+   "heightM": "ascending",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letters stacked up the lattice",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "C"
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "",
+     "to": "",
+     "geometry": "up the glass"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "O, M"
+    },
+    {
+     "step": 4,
+     "move": "wallie",
+     "from": "",
+     "to": "",
+     "geometry": "up a tier"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "B"
+    },
+    {
+     "step": 6,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "O"
+    }
+   ],
+   "moves": [
+    "grind",
+    "wallride",
+    "wallie",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 4,
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "The remake turns the mirror lattice into an explicit tutorial ladder for the tape climb.",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "type": "remake-collectible",
+   "label": "Remake: cash ×5",
+   "zone": "Z2, Z3, Z4, Z9, Z10",
+   "landmark": "through the X-ray; carousel ramp; small ramp left at security; QP labelled Tokyo → rail all the way round; above the vehicle driving round the cargo",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "cash bundles",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see text"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "vert-air",
+    "grind",
+    "moving-object"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "type": "remake-collectible",
+   "label": "Remake: hidden deck",
+   "zone": "Z1",
+   "landmark": "first slope: centre ramp → light → next light → hop off the end",
+   "layer": "lights",
+   "heightM": "light row",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "centre ramp"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "light to light"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-LOGO",
+   "type": "remake-collectible",
+   "label": "Remake: Iron Galaxy logo",
+   "zone": "Z2",
+   "landmark": "helicopter rotor blade (through the X-ray machine; ramp → grind the rotor)",
+   "layer": "rotor",
+   "heightM": "rotor height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "logo on the rotor",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "secret-area",
+     "from": "",
+     "to": "",
+     "geometry": "X-ray conveyor"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "ramp"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "rotor"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "type": "remake-collectible",
+   "label": "Remake: panda plushie",
+   "zone": "Z9",
+   "landmark": "on top of the narrow QP labelled Tokyo; ride up and hold the level-out button",
+   "layer": "QP deck",
+   "heightM": "QP top",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "plushie",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "up the QP, level out onto its top"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  },
+  {
+   "id": "R-SP",
+   "type": "remake-collectible",
+   "label": "Remake: stat points ×4",
+   "zone": "Z1, Z3, Z4, Z8",
+   "landmark": "wallride + ollie up the Taco Bell, grind the top; above the left baggage-claim escalator (transfer over it); wallride the ad before security → grind the light; QP labelled Vancouver → flag rail all the way round",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see text"
+    }
+   ],
+   "moves": [
+    "wallride",
+    "grind",
+    "transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 airport",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "X-Ray",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "through the X-ray machine behind the right-hand ticket counter without falling",
+   "moves": [
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "R-LOGO",
+    "R-CASH"
+   ],
+   "evidence": "G3 p093"
+  },
+  {
+   "name": "Walkway Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "between moving-walkway handrails, uppermost level",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Walkway Ride 1!",
+   "points": 100,
+   "kind": "other (grind)",
+   "location": "centre handrail of the walkway near the start",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "S-g2"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Local Call",
+   "points": 100,
+   "kind": "ledge",
+   "location": "edge of the payphone kiosk nearest the start",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Illuminatin'",
+   "points": 100,
+   "kind": "kicker",
+   "location": "phone kiosk nearest the start → lights above",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "S-g1"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "The Hard Way Up!",
+   "points": 200,
+   "kind": "wallride",
+   "location": "wallride into the lockers → flight-schedule monitors → light by the escalator",
+   "moves": [
+    "wallride"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Draining the Vein",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "men's room rail → urinals → rails",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "S-g3"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Takin' the High Road",
+   "points": 100,
+   "kind": "kicker",
+   "location": "centre ramp at the top of the first escalators → lights",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "K-g2"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Escalator Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "escalator handrail → a different escalator (listed twice in G3, H and Y)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Claim Hop!",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "any two perimeter rails in baggage claim",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Grind Baggage Claim",
+   "points": 100,
+   "kind": "other (moving carousel)",
+   "location": "full rotation of the carousel; more laps, more multiplier",
+   "moves": [
+    "grind",
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "TRICK"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Baggage Claimed!",
+   "points": 100,
+   "kind": "kicker",
+   "location": "ramp on top of the carousel → lights near the metal detectors",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Spotted Bags",
+   "points": 100,
+   "kind": "lip",
+   "location": "centre vert ramp in baggage claim → stall on the ledge above",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Escalatin' the Situation",
+   "points": 100,
+   "kind": "over-object",
+   "location": "transfer over the escalators in baggage claim (Airwalk goal)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TRICK"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Through the Pad!",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "grind the helipad conveyor belt and leap into a grind on the escalators down to baggage claim",
+   "moves": [
+    "grind",
+    "ollie",
+    "moving-object"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Adios Chopper!",
+   "points": 200,
+   "kind": "secret-area",
+   "location": "from the helipad ramp into a grind on the helicopter blades",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "R-LOGO"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Heliport Baggage",
+   "points": 50,
+   "kind": "ledge-to-ledge",
+   "location": "helipad belt edge → other edge",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Flying High in the Sky",
+   "points": 200,
+   "kind": "other (grind/stall)",
+   "location": "monitors outside the women's restroom → atop the message board",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Mulin'",
+   "points": 100,
+   "kind": "over-object",
+   "location": "over the security scanners leaving baggage claim",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TICKETS"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Look Out!!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "ladies' restroom rail → sink ledge → rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "K-g3"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Droppin' Science",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "High Road lights → lights angling right → lights over the walkway",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "K-g2"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Lighten Up!",
+   "points": 100,
+   "kind": "kicker",
+   "location": "phones across from the ladies' restroom → lights",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "K-g1"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Long Distance",
+   "points": 100,
+   "kind": "ledge",
+   "location": "edge of the payphone kiosk across from the ladies' restroom",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Walkway Ride 2!",
+   "points": 100,
+   "kind": "other (grind)",
+   "location": "centre handrail of the walkway near the ladies' restroom",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "O the S",
+   "points": 100,
+   "kind": "over-object",
+   "location": "over the metal detectors by the purple area without passing under",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TICKETS"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Start to Finish!!!",
+   "points": 600,
+   "kind": "other (no-touch combo)",
+   "location": "from a ticket counter, no four wheels down through the terminal and both escalators to the banked wall at the fork",
+   "moves": [
+    "grind",
+    "manual",
+    "revert"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Last High Light!",
+   "points": 100,
+   "kind": "kicker",
+   "location": "ramp between the last escalators → lights",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "A-g3"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Gate Hop!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "red wall rail, north or south, leap the break at a gate",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Gate Transfer!",
+   "points": 300,
+   "kind": "rail-transfer",
+   "location": "grey safety rails across the gates, or QP over the gate to QP (remake pro goal: 540 Shove-It over it)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Musical Chairs",
+   "points": 100,
+   "kind": "manual",
+   "location": "green couch grind → manual → couch across the room",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p093-p100"
+  },
+  {
+   "name": "Country of 700 Islands",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "north flag rail: Bahamas",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p098; TAS3 4:40"
+  },
+  {
+   "name": "Welcome, Eh?",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "north flag rail: Canada",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p098; TAS3 4:40"
+  },
+  {
+   "name": "American Made",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "north flag rail: USA",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p098; TAS3 4:40"
+  },
+  {
+   "name": "G'Day",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "north flag rail: Australia",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p098; TAS3 4:40"
+  },
+  {
+   "name": "Parlez-vous Skate?",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "north flag rail: France",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p098; TAS3 4:40"
+  },
+  {
+   "name": "Rail Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "cargo concrete wall → red rail by the spiral walkways",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Spiral Stairs South",
+   "points": 100,
+   "kind": "other (grind)",
+   "location": "handrail down the south spiral (where the buddy waits)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "T-g2"
+   ],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Spiral Stairs North",
+   "points": 100,
+   "kind": "other (grind)",
+   "location": "handrail down the north spiral (where the tape is)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p099; TAS3 4:42"
+  },
+  {
+   "name": "Economy Class Lip",
+   "points": 250,
+   "kind": "lip",
+   "location": "sky up from the cargo into a stall on the red rail below the flags",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Economy Class Grind!",
+   "points": 100,
+   "kind": "hangtime",
+   "location": "from the red arrows on the cargo walls, grind the red rail below the flags",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Business Class Lip!",
+   "points": 500,
+   "kind": "lip",
+   "location": "cargo walls → stall on the second rail",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Business Class Grind!",
+   "points": 200,
+   "kind": "hangtime",
+   "location": "cargo → grind the second red rail",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "1st Class Grind!!",
+   "points": 300,
+   "kind": "hangtime",
+   "location": "cargo → grind the uppermost red rail near the gates (\"most likely max stats\"); in the remake it also fires when the top rail is reached from the gates floor by wallride + wallie (LP34 0:35:27)",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p099; LP34 0:35:27"
+  },
+  {
+   "name": "1st Class Lip!!",
+   "points": 1000,
+   "kind": "lip",
+   "location": "as 1st Class Grind!! but a lip trick",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p099"
+  },
+  {
+   "name": "Welcome to the Triangle",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "south flag rail: Bermuda",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p099-p100; TAS3 4:21-4:26"
+  },
+  {
+   "name": "Golden!",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "south flag rail: Chad",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p099-p100; TAS3 4:21-4:26"
+  },
+  {
+   "name": "Hola!",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "south flag rail: Mexico",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p099-p100; TAS3 4:21-4:26"
+  },
+  {
+   "name": "Zdrasvuite!",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "south flag rail: Russia",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p099-p100; TAS3 4:21-4:26"
+  },
+  {
+   "name": "Tea Time!",
+   "points": 50,
+   "kind": "other (grind through flag)",
+   "location": "south flag rail: Great Britain",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FLAGS"
+   ],
+   "evidence": "G3 p099-p100; TAS3 4:21-4:26"
+  },
+  {
+   "name": "Light Hop!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "cargo: one overhead light row → another",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p100"
+  },
+  {
+   "name": "Light Pop!",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "cargo concrete ledge ↔ light row",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p100"
+  },
+  {
+   "name": "Off the Couch (Neversoft Challenge)",
+   "points": 100,
+   "kind": "manual",
+   "location": "hint: \"use a manual ... a bunch of couches ahead of you\"",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p100"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Ride the baggage belt through the X-ray machine behind the right ticket counter (ollie onto the belt)",
+   "opens": "Secret helipad outside baggage claim (helicopter, belt edges, belt back down into baggage claim)",
+   "neededFor": [
+    "R-LOGO",
+    "R-PASSPORTS",
+    "R-CASH"
+   ],
+   "evidence": "G3 p087, p093, p096; TAS3 3:53-4:01; J3 p020"
+  },
+  {
+   "trigger": "Grind the helicopter blades (Adios Chopper!)",
+   "opens": "The helicopter takes off (J3: \"faire décoller\")",
+   "neededFor": [],
+   "evidence": "J3 p020; G3 p096"
+  },
+  {
+   "trigger": "Carry the tickets through the metal detectors / bail",
+   "opens": "Tickets voided / reset to the counter",
+   "neededFor": [
+    "TICKETS"
+   ],
+   "evidence": "G3 p090"
+  },
+  {
+   "trigger": "Approach a pickpocket",
+   "opens": "He reveals himself (audio cue) and flees",
+   "neededFor": [
+    "PICKPOCKETS"
+   ],
+   "evidence": "G3 p090"
+  },
+  {
+   "trigger": "none",
+   "opens": "The tape needs no unlock; it is gated by distance and by the top-rail launch",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G3 p089"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Hawkair opener",
+   "sequence": [
+    "payphone kiosk (left)",
+    "Illuminatin' lights",
+    "trick between lights",
+    "flip into the escalator grind",
+    "ollie the rent-a-cop",
+    "rail under the Nokia sign",
+    "manual",
+    "special grind on the walkway centre rail (Walkway Ride 2!)",
+    "manual",
+    "O the S over the detectors"
+   ],
+   "links": [
+    "manual",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "S-g1",
+    "K-g1"
+   ],
+   "why": "Uses the overhead light rows as the opening rails; carries straight into the security transfer.",
+   "evidence": "G3 p086"
+  },
+  {
+   "id": "L2",
+   "name": "X-ray to baggage claim",
+   "sequence": [
+    "over the right counter",
+    "belt through the X-ray",
+    "escalator grind",
+    "carousel (Grind Baggage Claim ×1-2)",
+    "momentum-timed jump to the detector rails",
+    "Claim Hop!"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "TRICK"
+   ],
+   "why": "A moving rail (carousel) as multiplier engine; the timing of the hop uses carousel momentum.",
+   "evidence": "G3 p086"
+  },
+  {
+   "id": "L3",
+   "name": "Helipad drop",
+   "sequence": [
+    "X-Ray",
+    "helipad: Heliport Baggage / Adios Chopper!",
+    "belt edge",
+    "Through the Pad! into the escalators",
+    "baggage claim"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "R-LOGO"
+   ],
+   "why": "The secret area loops back into the main route, so the detour costs little time (TAS uses it).",
+   "evidence": "TAS3 3:53-4:02; G3 p096"
+  },
+  {
+   "id": "L4",
+   "name": "High road light chain",
+   "sequence": [
+    "centre ramp at the top of the first escalators",
+    "Takin' the High Road",
+    "off the end into the lights angling right",
+    "lights over the walkway (Droppin' Science!)"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "K-g2"
+   ],
+   "why": "A rail line in the ceiling layer, above pedestrians.",
+   "evidence": "G3 p088, p095, p097"
+  },
+  {
+   "id": "L5",
+   "name": "Start to Finish!!!",
+   "sequence": [
+    "ticket counter grind",
+    "grind/manual/trick the whole terminal",
+    "down both escalator banks",
+    "banked wall at the fork"
+   ],
+   "links": [
+    "manual",
+    "revert"
+   ],
+   "collectibles": [],
+   "why": "A gap that rewards the linear layout as one continuous combo (600 pts; remake pro goal).",
+   "evidence": "G3 p097; PS34 airport"
+  },
+  {
+   "id": "L6",
+   "name": "Hemisphere trips",
+   "sequence": [
+    "special grind onto a flag rail",
+    "Gate Hop! over each gate break",
+    "five flags"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "FLAGS"
+   ],
+   "why": "\"A successful trip through each hemisphere can earn a combined 180,000 points\" — the flag rails are also the best scoring rails.",
+   "evidence": "G3 p090"
+  },
+  {
+   "id": "L7",
+   "name": "Cargo bank line",
+   "sequence": [
+    "spiral walkway down",
+    "tricks off the banked walls (special)",
+    "revert",
+    "manual into the wall grind across",
+    "switch grinds past the crates",
+    "Light Hop! / Light Pop! wall ↔ lights"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "E-g2",
+    "E-g3"
+   ],
+   "why": "The basement is a closed-ended half pipe for vert players.",
+   "evidence": "G3 p087, p100"
+  },
+  {
+   "id": "L8",
+   "name": "Window-lattice climb (tape line)",
+   "sequence": [
+    "north flag rail (5 flags)",
+    "spiral handrail",
+    "lattice tier 2 (Boneless + overcrook or wallride)",
+    "wallie",
+    "top rail",
+    "tape"
+   ],
+   "links": [
+    "wallie",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "TAPE",
+    "FLAGS"
+   ],
+   "why": "Stacks the goal rail, the stair rail and the lattice into one ascending line.",
+   "evidence": "TAS3 4:40-4:45.5; LP34 0:35:23-0:35:29"
+  },
+  {
+   "id": "L9",
+   "name": "Fork special wall",
+   "sequence": [
+    "bottom of the last escalators",
+    "banked wall at the fork",
+    "The 900",
+    "revert",
+    "nose manual",
+    "double kickflip indy",
+    "cannonball"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "A-g2"
+   ],
+   "why": "The one vert wall on the main route doubles as the combo booster; the human longplay gets Sick score here.",
+   "evidence": "LP3 0:38:50, 0:40:44"
+  }
+ ],
+ "guidance": [
+  "The terminal is a funnel: escalators lead down one level at a time and every sign and corridor points toward the gates. The tape is at the end of the funnel, the farthest point from spawn (G3 p086, p091).",
+  "Each ceiling-light row has its own launcher under it: phone kiosk, centre ramp, narrow monitor, small ramp. Letters, stat points and decks sit on those rows, so the player learns \"find the launcher under the rail\" (G3 p088, p092-p093).",
+  "The banked wall at the fork faces the bottom of the last escalators and carries a hanging letter for one skater group: a landmark at the decision point (G3 p088).",
+  "The helicopter can be seen through the baggage-claim windows: a tease for the helipad. The way in is the X-ray belt behind the right counter, a \"forbidden\" passenger path (G3 p087).",
+  "Flags drape over the lowest window rail, so a row of colours marks the rail line, and the Visit 10 Countries goal sends every player along it. The tape is on the same rail system, two tiers higher (G3 p089).",
+  "The doorway QPs are purpose-built launchers. The original guide names them by the flag beside them (\"left of the French flag\"); the remake gives them city signs (Vancouver, Tokyo, London) so text can point at them (G3 p089; PS34).",
+  "One skater group's last stat point floats above the tape launcher (G3 p092), and the Hawk group's continues past the tape on the same rail: breadcrumbs that confirm the rail is a destination.",
+  "Hidden on purpose: the helipad (behind the counter), the cargo basement (down the spiral walkways), and the restroom interiors (pickpockets; one group's S and K).",
+  "Remake: the tape glints blue on the rail (PS34 screenshot 16); the COMBO letters form a visible ladder up the south lattice (PS34)."
+ ],
+ "designLogic": [
+  "Linear level, tape at the end: the tape marks the far end of a one-way terminal, so it rewards traversal. TAS3 picks it up last (64 s in); the remake player picks it up after finishing the countries goal at the same window (LP34 0:35:14-0:35:27).",
+  "Vertical ladder on one wall: the gates' glazed wall carries the flag rail (goal), the Economy, Business and 1st Class rails (gaps from the cargo), and the tape on the top tier. One piece of geometry carries a graded series of challenges (G3 p089, p099).",
+  "Two ways up, two costs: the top rail can be reached cheaply from the gates floor through the doorway QP, or expensively from the cargo with max stats (\"plan for a return visit\"). The cheap route gives the tape; the expensive route only gives points (G3 p089 vs p099).",
+  "The approach is taught first: Visit 10 Countries puts the player on the same rail system with the same balance demand (hold a long curved grind through five flags) before the tape asks for it one tier higher.",
+  "Mirrored arms: the south arm repeats the north arm (flags, spiral stair, top rail). One group's deck sits on the south top rail \"in the same location as the Secret Tape\", and the remake hangs its COMBO ladder there (G3 p093; PS34).",
+  "Letters as a guided tour: for Hawk's group the five letters run from the start-hall lights to the northern monitor bank, so finishing S-K-A-T-E leaves the player under the tape lattice (G3 p088; TAS3 4:35 → tape 4:45).",
+  "The escort goal teaches the transfer: Get the Tickets forbids the metal detectors, so the player must transfer over the checkpoint (O the S). Clearing an obstacle by air is the skill the gate QPs and the tape launch then use (G3 p090).",
+  "A secret area through a forbidden door: the helipad is reached by riding the baggage belt through the X-ray machine. The tease (helicopter seen through glass) and the way in are in different rooms, and the way out (Through the Pad!) returns you to the main route (G3 p087, p096).",
+  "Cheap failure, expensive distance: missing the top rail drops you on the gates floor beside the launcher (a few seconds to retry), but reaching the north arm from spawn costs a large share of a 2:00 run. The tape fits the end of a run, after the other goals.",
+  "Skater-dependent placement: letters, stat points, decks and the trick goal change with the chosen skater (three letter sets, four stat-point sets), but the tape never moves (G3 p008, p088-p093; J3 p002). The tape is the level's fixed landmark.",
+  "Moving rails as score engines: carousel (laps add multipliers), walkways and escalators turn travel into scoring (G3 p095).",
+  "People as obstacles and targets: rent-a-cops and pedestrians obstruct; pickpockets flee and must be chased down. The floor stays busy while the rail layers are empty (G3 p086, p090)."
+ ],
+ "remakeChanges": [
+  "Tape: same place and same idea (end of level, go right, high rail against the window, launch from one of the narrow QPs) (PS34). The remake run chains FS 50-50 → FS wallride → wallie → top rail and scores the original \"1st Class Grind!!\" gap on the way, so the tape rail is the 1st Class rail (LP34 0:35:27).",
+  "Gate QPs are signposted with city names (Vancouver, Tokyo, London), giving text and players a way to name the launchers (PS34 screenshots, text).",
+  "New pro goal COMBO letters climb the south lattice tier by tier (wallride → higher rail → higher rail → jump), an explicit tutorial for the tape climb on the mirror wall (PS34).",
+  "New collectibles: 5 passports (one per district), 5 cash, hidden deck on the first light rows, Iron Galaxy logo on the helicopter rotor, panda plushie on top of the Tokyo QP (needs the level-out button), 4 stat points (PS34).",
+  "Letters: one fixed set (S straight ahead; K on the third light; A above the short QP at the fork; T down the winding south slope; E on a rail fixed to a curved QP in the lower area) instead of three skater-dependent sets (PS34 vs G3 p088).",
+  "Score thresholds unchanged (75k/150k/300k) plus High Combo 20,000; runs in the longplay start at 10:00 instead of 2:00 (PS34; LP34 0:31:20).",
+  "PS1 edition (VG): a different airport. One hall at the end with five flags (\"Snag the Flags\"), luggage pickups (\"Lost Luggage Found!\"), \"Nosebluntslide the Airport Sign\" and \"Grind the Plane\" goals, gap labels \"Plane Bash\" and \"Hey Get Down\". Its tape is a high beam at the threshold of the gates hall, beside the E, not a window lattice."
+ ],
+ "transfer": [
+  "Window-lattice crystal: a curved glass wall with three rail tiers (≈ 1.5 m, ≈ 4 m, ≈ 6.5 m above the floor) and the crystal on the top tier past a bend. Primary launch: a narrow quarter pipe in a doorway (vert air ≈ 3–4 m) into a grind snap on tier 2 or 3. Expert line: grind tier 1, wallride the glass, wallie, grind-ollie (≈ 2.4 m pop) to the top. The rails are inside the room, so a miss lands on the floor beside the launcher.",
+  "Teach the rail system first: make the level's main objective (e.g. ring five bells or flags) a long curved grind on tier 1 of the same wall, so the balance and the line are known before the crystal asks for them one tier up.",
+  "Mirror arm as a rehearsal: build the same lattice on the opposite arm with a lesser reward (a gem cluster) on its top tier, so the player can practise the climb.",
+  "\"Forbidden belt\" secret: a conveyor (moving platform) through a scanner tunnel behind a counter leads to an outdoor pad with a spinning rotor rail; a speed pad on the belt exit returns the player to the main hall (loop back like Through the Pad!).",
+  "Light-row grammar: hang ceiling-light rows (grindable) along a long corridor and put a launcher under each (kicker, trampoline or speed pad). Use them for breadcrumb gems that lead to the far end where the crystal is.",
+  "Two-tier access: let a huge vert air from a basement half pipe below the glass wall also reach the crystal rail (for experts at full speed). The designed route stays the doorway QP."
+ ],
+ "openQuestions": [
+  "Exact rail heights of the window lattice and the doorway QP size: no measurable reference in my frames (estimates only).",
+  "Whether the tape is visible from the fork or only from inside the north arm (no frame shows the first sighting).",
+  "The PS2 human longplay's tape pickup was not located in my samples (LP3 0:36:04-0:36:26, 0:37:42-0:38:06, 0:38:42-0:39:04, 0:40:34-0:40:52 checked).",
+  "PS1 edition tape route (VG shows the icon on a high beam near \"Hey Get Down\" but no route).",
+  "Footprint in metres (no scale object measured)."
+ ]
+}

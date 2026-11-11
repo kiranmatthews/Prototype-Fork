@@ -1,0 +1,2841 @@
+{
+ "id": "thps3-los-angeles",
+ "game": "THPS3",
+ "level": "Los Angeles",
+ "location": "downtown Los Angeles, California",
+ "type": "career-street",
+ "careerPosition": 7,
+ "timeLimit": "2:00 (remake longplay runs start at 10:00)",
+ "versions": [
+  "PS2 2001",
+  "GameCube 2001 (TAS)",
+  "PS1 2001 edition (VG; different content)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p116-p130 (goals, scoring lines, S-K-A-T-E by skater group, tape, trick goals, Free Ballin', earthquake, car chase, map p121, stat points p122, decks p123, gaps p124-p130)",
+  "J3 p022-p025 (Hawk and Caballero letter sets, earthquake rails, tape, car chase, secret areas)",
+  "TAS3 5:26-6:10 (GameCube; earthquake 15 s into the run, tape 34 s in, by a wall climb up the purple tower)",
+  "LP3 0:51:40-0:59:50 (PS2 human; quake in run 2, tape route on the roofs in run 3 at 0:57:12-0:57:26)",
+  "VG TonyHawk_sProSkater3-LosAngeles.png (PS1 edition: no earthquake; different goals)",
+  "PS34 los-angeles (THPS 3+4 text + screenshots 3-7, 11-21)",
+  "LP34 0:43:40-0:49:10 (THPS 3+4 longplay; quake cutscene 0:46:48, car chase 0:47:26, tape 0:48:06-0:48:08)",
+  "WEB hardcoregamer (THPS 3+4 LA guide); WEB newsbeep (2025 news: the level is modelled on Pershing Square; search snippet)"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 100,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get a Pro Score: 190,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get a Sick Score: 400,000 points",
+   "version": "original PS2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original PS2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "original PS2"
+  },
+  {
+   "text": "One Foot Japan the Tower Poppin' Transfer -or- Varial Kickflip the Tower Rails Gap (depends on skater)",
+   "version": "original PS2"
+  },
+  {
+   "text": "Free Ballin'",
+   "version": "original PS2"
+  },
+  {
+   "text": "Start the Earthquake",
+   "version": "original PS2"
+  },
+  {
+   "text": "Stop the Car Chase",
+   "version": "original PS2"
+  },
+  {
+   "text": "High Score 100,000; Pro Score 190,000; Sick Score 400,000; High Combo 40,000; Collect SKATE Letters; One Foot Japan the Tower Poppin' Transfer; Free Ballin'; Start the Earthquake; Stop the Car Chase; Get the Secret Tape",
+   "version": "remake 2025"
+  },
+  {
+   "text": "Pro goals: Platinum Score 800,000; Collect COMBO Letters; Monty or Smith Grind a Wire Ridin' Gap; Wallride the Passin' Gas Gap (needs the Froggy Grind special); Scatter All the Seagulls",
+   "version": "remake 2025"
+  },
+  {
+   "text": "High Score 15,000; Pro Score 40,000; Sick Score! 100,000; Collect S-K-A-T-E; Transformers Shutdown; Grind the Electric Rail; Elevator Grind; Kickflip Over Elevator Lobby; Find the Secret Tape",
+   "version": "PS1 edition"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "rough estimate ≈ 250–350 m on a side (several city blocks round a central library block). Not measured.",
+  "evidence": "G3 p116 (\"the course spans several city blocks\"); G3 p121 map shows the library block in the centre with streets on four sides, the fountain plaza and towers to one side, the purple half-pipe area and theatre on another, and an elevated freeway crossing the whole map. Downtown blocks of ≈ 80–120 m are assumed; low confidence."
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Library block (spawn)",
+   "layer": "plaza; stairs and handrails; library roof (≈ 3–4 storeys, estimate); tunnel through the building",
+   "features": [
+    "curvy white stairs and rails at the start",
+    "short banked wall / QP behind the start",
+    "handrails behind the library down a grassy hill with palms (Eastern quake rail)",
+    "tunnel through the library (Western quake rail)",
+    "front stairs in two sets with planters (Northern and Southern quake rails beside them)",
+    "cable from the top of the grassy hill / concrete walkway up to the library roof",
+    "roof rail around the front of the roof"
+   ],
+   "notes": "Everything in the earthquake goal is on the four sides of this block (G3 p120). The roof cable is the shared climb for the tape route, three stat points and a car-chase approach (G3 p119, p122; hardcoregamer)."
+  },
+  {
+   "id": "Z2",
+   "name": "Fountain plaza and towers (west side)",
+   "layer": "street; fountain lip ≈ 0.5 m; QPs; narrow lobby roof with a rooftop half pipe; window-washer scaffolds",
+   "features": [
+    "circular fountain (lip grind for laps)",
+    "curved benches",
+    "two QPs facing a glass tower",
+    "rooftop half pipe on the narrow concrete roof above the windowed lobby",
+    "window-washing scaffolds on both sides",
+    "power lines by the lampposts"
+   ],
+   "notes": "Trick goal (Tower Poppin'), Washin' Windows, Over the Fountain!, Electrified!. J3 p025: the scaffold platforms are reachable from the QPs below."
+  },
+  {
+   "id": "Z3",
+   "name": "Towers' rear walkway and underground",
+   "layer": "raised walkway with stairs and handrails; brick ledges; tunnels below grates",
+   "features": [
+    "walkway behind the towers with handrails across stairs (Tower Rails gap)",
+    "curving brick ledge above the handrails (They're Grate! switch)",
+    "brick ledges of the office building behind the towers (Doorway Hop)",
+    "subterranean half pipe under the grates",
+    "kiosk with small QPs either side"
+   ],
+   "notes": "Second trick goal (Varial Kickflip the Tower Rails Gap). G3 p119 warns that opening the grates first makes landings sloppy."
+  },
+  {
+   "id": "Z4",
+   "name": "Purple half pipe area (\"arrow alley\")",
+   "layer": "street; half pipe; purple tower; gully",
+   "features": [
+    "purple half pipe with angled yellow ramps",
+    "narrow QP behind its wall",
+    "gully/swale with two red stone balls on pedestals",
+    "small yellow kicker → curved stairs",
+    "purple QP in a narrow alley",
+    "purple tower with a black pipe sticking out at the top (tape)",
+    "cable from the half pipe across the street to the hotel and on (Wire Ridin' circuit)"
+   ],
+   "notes": "G3 p119: the tape is \"high above the purple half pipe, on a pillar way out of reach from a ground attack\"."
+  },
+  {
+   "id": "Z5",
+   "name": "Theatre block",
+   "layer": "street; theatre stairs; marquee; rooftops; vertical sign",
+   "features": [
+    "movie theatre with marquee (XXX) and a vertical \"Busters Cherry\" sign",
+    "theatre stairs",
+    "office building with a green ledge on the corner opposite the library",
+    "red building",
+    "alley between the theatre and the office building"
+   ],
+   "notes": "The rooftop half of the tape route crosses this block (G3 p119, p128)."
+  },
+  {
+   "id": "Z6",
+   "name": "Hotel and fire truck",
+   "layer": "street; arcade; white ledge; awning; pink roof",
+   "features": [
+    "Morehead Hotel with arcade, awning and concrete ramps by the entrance",
+    "fire truck with a grindable ladder and a kicker on the sidewalk",
+    "barrel fire",
+    "pink building roof across from the purple half pipe"
+   ],
+   "notes": "Shoots N' Ladders!, Nice Move!, Hung Over (an E for one group)."
+  },
+  {
+   "id": "Z7",
+   "name": "Carwash, kiosk and liquor store",
+   "layer": "street; banked concrete walls; carwash roof",
+   "features": [
+    "carwash with banked concrete walls either side of a centre sign",
+    "rails inside the carwash",
+    "white sign on top",
+    "carwash roof",
+    "\"Havgas\" sign",
+    "liquor store with concrete QPs",
+    "handrail and tower walkway behind the carwash",
+    "smoking grates platform near the carwash (J3)"
+   ],
+   "notes": "After the quake the carwash roof is the second way onto the freeway (G3 p121; remake: spine transfer between the carwash QPs, PS34)."
+  },
+  {
+   "id": "Z8",
+   "name": "Freeway (overpass)",
+   "layer": "elevated deck (≈ 6–10 m, estimate) with guardrails",
+   "features": [
+    "curving elevated freeway across the map",
+    "after the quake: tilted slabs as ramps, two breaks between the trapped car and the library end, a car hanging at a break",
+    "plywood sheets as a kicker at the library end",
+    "I-10 / Santa Monica sign"
+   ],
+   "notes": "No route or gap in G3 uses it before the earthquake (inferred: out of reach until then); afterwards it is a skateable elevated route (G3 p116, p119-p121, p130)."
+  },
+  {
+   "id": "Z9",
+   "name": "Yellow building",
+   "layer": "street; angled wall; roof with holes",
+   "features": [
+    "window-like opening in the side (Yellow Cutter!)",
+    "narrow angled wall used as a ramp",
+    "holes in the roof (Yellow Fall)"
+   ],
+   "notes": "\"Swiss cheese-like house\" with an E on top for one group (G3 p118). Near the half pipe under the overpass (G3 p122)."
+  }
+ ],
+ "landmarks": [
+  "library with curvy white stairs",
+  "circular fountain",
+  "glass towers with a rooftop half pipe",
+  "purple half pipe and purple tower",
+  "XXX / Busters Cherry theatre",
+  "Morehead Hotel",
+  "fire truck",
+  "carwash and Havgas sign",
+  "elevated freeway",
+  "Hollywood sign on the hills (LP34 0:47:30)"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "from the top of the curvy white stairs by the library; the roof cable in front, stairs down to the street on the right, the back-of-library rails on the left",
+  "visibleCollectibles": [
+   "S for Hawk/Glifberg/Margera/Reynolds/Thomas (Northern Tremor rail, down the stairs to the right)",
+   "K for the same group (fountain edge across the street)",
+   "the four quake rails are within a lap of the block"
+  ],
+  "notes": "Tape not reported visible from spawn."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Secret tape — black pipe off the top of the purple tower",
+   "zone": "Z4/Z5",
+   "landmark": "black pipe sticking out of the purple tower high above the purple half pipe, across the street from the Busters Cherry theatre",
+   "layer": "rooftop / tower top",
+   "heightM": "≈ 12–18 m above the street (estimate: the pickup happens at the height of neighbouring roof railings, TAS3 6:07.8; the route arrives over 3–5-storey roofs, LP3 0:57:16-0:57:24). Low confidence.",
+   "launchFrom": "the Busters Cherry sign grind (designed); the purple tower wall (TAS)",
+   "visibility": {
+    "firstSight": "from the purple half pipe and gully below (G3 p119: on a pillar \"way out of reach from a ground attack\"); the first sight is from below, the approach from across the street",
+    "fromSpawn": "not reported",
+    "reads": "tape on top of a pillar/pipe that is plainly out of reach from the half pipe below",
+    "distanceFromFirstSightM": "≈ 12–18 m vertically above the half pipe where it is first seen (estimate)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "unlock",
+     "from": "four Quake rails round the library (Z1)",
+     "to": "earthquake",
+     "geometry": "Precondition: \"The Start the Earthquake goal must be completed before attempting the Secret Tape\" (G3 p119). Grind the Northern, Southern, Eastern and Western Quake rails; the freeway breaks up."
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "top of the grassy hill / concrete walkway by the start",
+     "to": "library roof",
+     "geometry": "Gain speed on the banked wall or QP behind the start, then grind the cable up to the roof; \"ollie into short grinds should momentum fail\" (G3 p122; J3 p023)."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "library roof",
+     "to": "broken freeway deck",
+     "geometry": "Jump from the roof onto the freeway section (J3 p023 \"sautez sur le tronçon d'autoroute\"; LP3 0:57:14). Alternative: from the carwash roof onto the tipped slab (G3 p121; remake spine transfer, PS34)."
+    },
+    {
+     "step": 4,
+     "move": "kicker",
+     "from": "plywood sheets at the library end of the freeway",
+     "to": "office building with the green ledge",
+     "geometry": "Overpass Leap (200): launch off the plywood ramp; land on the roof or grind its edge to get onto the flat (G3 p119, p128; J3 p023; LP3 0:57:16-0:57:18 \"Fastplant + Overpass Leap\")."
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "office roof",
+     "to": "edge of the red building",
+     "geometry": "Leap into a grind on the red building's edge (G3 p119); LP3 0:57:20-0:57:22 shows the terracotta roof ridge."
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "red building edge",
+     "to": "Busters Cherry sign",
+     "geometry": "Hold the grind through the bend onto the theatre's vertical sign: Don't Fall!!! (200) when entered from the first building after the freeway (G3 p119, p128)."
+    },
+    {
+     "step": 7,
+     "move": "rail-transfer",
+     "from": "Busters Cherry sign",
+     "to": "black pipe on the purple tower",
+     "geometry": "Leap across the street gap to the pipe and hold the grind: Bustin' Cherries! (100) → tape (G3 p119, p128; LP3 0:57:24; LP34 0:48:06-0:48:08)."
+    },
+    {
+     "step": 8,
+     "move": "drop",
+     "from": "pipe",
+     "to": "purple deck / half pipe below",
+     "geometry": "Drop off to safety (G3 p119)."
+    }
+   ],
+   "moves": [
+    "unlock",
+    "wire",
+    "ollie",
+    "kicker",
+    "ledge",
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "high (cable climb and the freeway kicker need momentum)",
+   "skillGates": [
+    "Start the Earthquake done (four rails)",
+    "uphill cable grind",
+    "roof-to-roof gap jumps",
+    "landing a grind on a sign edge and then on a thin pipe"
+   ],
+   "coupling": "unlock (earthquake; the broken freeway persists into later runs, LP3 run 3); traffic, lowriders and the van chase on the streets below until the car chase is stopped",
+   "failure": "A miss on the roof chain drops you 3–5 storeys to the street or the purple area. Recovery is a ride back to the start cable (the whole route from spawn takes ≈ 12–14 s, LP3), so a miss costs ≈ 15–25 s of a 2:00 run. Without the quake the freeway route does not exist.",
+   "timeFromSpawnS": "LP3 (human): ≈ 14 s from the run start to Bustin' Cherries (0:57:10 → 0:57:24), with the quake done in the previous run. TAS3: 34 s into its run (6:07.8 vs 5:31), after the quake (5:46), car chase, balls and letters; its own climb takes ≈ 4 s. LP34 (remake): ≈ 10 s from the freeway kicker to the pickup (0:47:58 → 0:48:08).",
+   "difficulty": 4,
+   "roles": [
+    "TEST",
+    "EXPLORE",
+    "REWARD"
+   ],
+   "why": "The tape is the payoff of the level's set piece: the freeway only becomes a road to the roofs after the earthquake, so the tape asks the player to cause the event and then use what it leaves behind. It is shown from below, at the purple half pipe where the player already skates, but solved from above and across the street.",
+   "evidence": "G3 p119, p121-p122, p128; J3 p023-p024; LP3 0:57:10-0:57:26; TAS3 6:04-6:08; LP34 0:47:38-0:48:08; PS34 los-angeles; WEB hardcoregamer",
+   "confidence": "high (route and location); low (heights)",
+   "altRoutes": [
+    {
+     "name": "TAS wall climb",
+     "steps": [
+      "no comply on a purple ledge at the base of the tower",
+      "180 Boneless",
+      "wallride up the purple tower wall",
+      "Wallie",
+      "land on the black pipe (\"Kissed the Rail\")",
+      "tape"
+     ],
+     "evidence": "TAS3 6:04-6:07.8 (frames show Boneless on the tower wall at 6:06 and the combo \"180 Boneless + Wallie + Kissed the Rail\" at 6:07)"
+    },
+    {
+     "name": "Carwash access to the freeway",
+     "steps": [
+      "transfer to the carwash roof",
+      "hop onto the tipped freeway slab",
+      "ride up the incline",
+      "continue to the plywood kicker"
+     ],
+     "evidence": "G3 p121 (car-chase text); J3 p024 (QP right of the \"huge discounts\" shop behind the carwash, lip up onto a suspended road section); PS34 (spine transfer between the carwash QPs)"
+    }
+   ]
+  },
+  {
+   "id": "S-g1",
+   "type": "letter",
+   "label": "S (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z1",
+   "landmark": "on the Northern Tremor! rail: down the start stairs, turn right, the handrail nearest the street",
+   "layer": "handrail",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": true,
+    "reads": "letter on the rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the Northern quake rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "The first letter is on a quake rail: collecting it advances the earthquake.",
+   "evidence": "G3 p118; J3 p022; TAS3 5:45",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g1",
+   "type": "letter",
+   "label": "K (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z2",
+   "landmark": "on the edge of the circular fountain",
+   "layer": "fountain lip",
+   "heightM": "≈ 0.5 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": true,
+    "reads": "letter on the lip",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "cross the street (West Side!), grind the fountain lip"
+    }
+   ],
+   "moves": [
+    "ledge"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g1",
+   "type": "letter",
+   "label": "A (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z1",
+   "landmark": "handrail in front of the library on the south side of the stairs; in the corner by the stairs to the front",
+   "layer": "handrail",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter by the stairs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the south-side front handrail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022; TAS3 5:40",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g1",
+   "type": "letter",
+   "label": "T (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z4",
+   "landmark": "above the inside edge of the wall by the purple QP in the narrow alley",
+   "layer": "wall top",
+   "heightM": "above QP (unknown)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter over a purple wall",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "purple QP in the alley → grind on the inside edge of the wall"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "hold round toward the T (or air out and land in a grind near it)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Introduces the purple area (tape district) through a QP-to-wall-grind transfer.",
+   "evidence": "G3 p118; J3 p022; TAS3 ~6:02",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g1",
+   "type": "letter",
+   "label": "E (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "zone": "Z6",
+   "landmark": "over the awning at the Morehead Hotel entrance, left of the fire truck",
+   "layer": "awning",
+   "heightM": "≈ 3–4 m (estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter over an awning",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "transfer over the awning (Hung Over)"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; TAS3 6:03",
+   "confidence": "high"
+  },
+  {
+   "id": "S-g2",
+   "type": "letter",
+   "label": "S (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z1",
+   "landmark": "handrails behind the library, transfer between them on the way down",
+   "layer": "handrails",
+   "heightM": "sloped",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the rail line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "grind and transfer between the back-of-library rails (\"a SKATE-alicious lap\")"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g2",
+   "type": "letter",
+   "label": "K (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z5",
+   "landmark": "hanging above the gap between the office-building ledge and the theatre (Triple X Hop)",
+   "layer": "air between ledges",
+   "heightM": "ledge height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter in the gap",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind the office ledge and its chain"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "across the gap (Triple X Hop!)"
+    }
+   ],
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g2",
+   "type": "letter",
+   "label": "A (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z6",
+   "landmark": "atop the fire-truck ladder",
+   "layer": "ladder (inclined rail)",
+   "heightM": "ladder top",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the ladder",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "small kicker on the sidewalk (To the Ladder!)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind up the ladder"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g2",
+   "type": "letter",
+   "label": "T (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z7",
+   "landmark": "just above the large white sign on top of the carwash",
+   "layer": "sign top",
+   "heightM": "carwash roof + sign",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter over the sign",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air from the banked concrete walls in front"
+    },
+    {
+     "step": 2,
+     "move": "alt",
+     "from": "",
+     "to": "",
+     "geometry": "or grind the top of the sign from the QP on the roof"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g2",
+   "type": "letter",
+   "label": "E (Caballero, Koston, Mullen, Rowley)",
+   "zone": "Z7",
+   "landmark": "above the large QP in the back corner past the carwash toward the liquor store",
+   "layer": "air above QP",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118; J3 p022",
+   "confidence": "high"
+  },
+  {
+   "id": "S-g3",
+   "type": "letter",
+   "label": "S (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z1",
+   "landmark": "just inside the library's northern entrance, right-hand rail",
+   "layer": "inside building",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter inside",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "down the start stairs, into the library, grind the right-hand rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p118",
+   "confidence": "high"
+  },
+  {
+   "id": "K-g3",
+   "type": "letter",
+   "label": "K (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z2",
+   "landmark": "above the transfer from the fountain QP (left) up to the lobby roof (Tower Poppin')",
+   "layer": "rooftop half pipe",
+   "heightM": "lobby roof",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "floating letter",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "left QP → lobby roof (Tower Poppin')"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118",
+   "confidence": "high"
+  },
+  {
+   "id": "A-g3",
+   "type": "letter",
+   "label": "A (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z3",
+   "landmark": "over the stairs behind the tower (Tower Rails gap)",
+   "layer": "handrails",
+   "heightM": "sloped",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter over stairs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "drop off the tower to the back stairs, grind up and over"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118",
+   "confidence": "high"
+  },
+  {
+   "id": "T-g3",
+   "type": "letter",
+   "label": "T (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z3/Z4",
+   "landmark": "on the cable between the kiosk and the half pipe under the overpass",
+   "layer": "cable",
+   "heightM": "cable height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on a wire",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "walkway handrail behind the carwash → kiosk"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "kiosk → cable across the street"
+    }
+   ],
+   "moves": [
+    "grind",
+    "wire"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "G3 p118",
+   "confidence": "high"
+  },
+  {
+   "id": "E-g3",
+   "type": "letter",
+   "label": "E (Campbell, Lasek, Muska, Steamer)",
+   "zone": "Z9",
+   "landmark": "on top of the yellow \"Swiss cheese\" house",
+   "layer": "roof",
+   "heightM": "roof (≈ 4–6 m, estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letter on the roof",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "",
+     "to": "",
+     "geometry": "grind or ride up the long angled wall to the roof"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "ollie for the letter"
+    }
+   ],
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p118",
+   "confidence": "high"
+  },
+  {
+   "id": "QUAKE",
+   "type": "goal-object",
+   "label": "Four Quake rails (Start the Earthquake)",
+   "zone": "Z1",
+   "landmark": "one on each side of the library: Northern (street handrail on the start side, toward the fountain); Southern (street corner past the newspaper machines to the side steps); Eastern (long rail behind the library down the hill to the theatre street, leftmost rail from the start); Western (straight rail inside the tunnel through the library)",
+   "layer": "handrails",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "\"appropriately labeled 'Quake' rails\" (G3 p120)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "all four, in any order, in one run"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "TAS3: all four in ≈ 10 s, quake 15 s into the run (5:46); LP3: in run 2, Northern 0:54:40 → Eastern 0:55:20",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "Forces a lap of the central block: the trigger is the level's main loop.",
+   "evidence": "G3 p120; J3 p023; TAS3 5:36-5:46; PS34; WEB hardcoregamer",
+   "confidence": "high"
+  },
+  {
+   "id": "BALLS",
+   "type": "goal-object",
+   "label": "Two red stone balls (Free Ballin')",
+   "zone": "Z4",
+   "landmark": "on pedestals near the purple half pipe",
+   "layer": "pedestals",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "large red balls",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "trick into each ball (grinding them also works, J3)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "once freed they roll back and forth in the gully and knock skaters down (G3 p120)",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p119-p120; J3 p023; TAS3 5:57-5:59",
+   "confidence": "high"
+  },
+  {
+   "id": "TRICK",
+   "type": "goal-object",
+   "label": "Trick goal (per skater)",
+   "zone": "Z2/Z3",
+   "landmark": "One Foot Japan over the Tower Poppin' transfer (Hawk, Caballero, Glifberg, Lasek) or Varial Kickflip across the Tower Rails gap (the others)",
+   "layer": "QP / handrail",
+   "heightM": "lobby roof / walkway",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "goal photographer near the spot (J3 p002)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "fountain QP → rooftop half pipe (Tower Poppin')"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "or handrail → handrail across the stairs (Tower Rails)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "G3 p119; J3 p022-p023; TAS3 5:49-5:52; LP3 0:56:40",
+   "confidence": "high"
+  },
+  {
+   "id": "CAR",
+   "type": "goal-object",
+   "label": "Trapped motorist (Stop the Car Chase)",
+   "zone": "Z8",
+   "landmark": "car stuck on the broken freeway after the quake",
+   "layer": "freeway deck",
+   "heightM": "deck height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "car hanging at a break; you hear the driver call for help near the carwash",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "to the carwash roof"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "onto the tipped piece of highway"
+    },
+    {
+     "step": 3,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "up the inclined roadway"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "guardrail by the car"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "across the car roof (Bye-Bye) → it falls and blocks the chase"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "unlock"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "needs the earthquake; removes the van-and-police chase from the streets",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "G3 p121, p130; J3 p024; TAS3 5:52-5:56; LP34 0:47:20-0:47:36; WEB hardcoregamer",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-hawk",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Hawk, Koston, Muska, Thomas)",
+   "zone": "Z2, Z4, Z6, Z1, Z7",
+   "landmark": "over the circular fountain (Over the Fountain!); in the tree by the purple half pipe (wall → cable to the right); fire-truck ladder → hotel white ledge → off the end to the pink building roof; on the library cable near the roof; high over the gap between the two QPs in front of the carwash (+ Cold Chillin')",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see where"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p122; J3 p024 (Hawk: on the start cable; over the fountain; between QPs behind the carwash; on the purple construction via an ascending cable; over an office building via the same cable)",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-cab",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Caballero, Lasek, Reynolds)",
+   "zone": "Z2, Z5, Z1, Z7, Z4",
+   "landmark": "over the ramp near the window washers (left fountain QP); over the QP in the alley between the theatre and the office building; library-roof rail via the grassy-hill cable; leap from the carwash edge toward the Havgas sign; on the wire from the purple half pipe to the Morehead Hotel",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see where"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p122",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-cam",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Campbell, Margera, Rowley)",
+   "zone": "Z1, Z3, Z7, Z9, Z5",
+   "landmark": "library roof via the start cable (left, above the short rail at the back); over the towers' walkway — They're GRATE! then sky out of the underground half pipe; mid-air on the transfer from the liquor-store QP to the carwash roof; kiosk cable → yellow-house edge; on the wire between the theatre and the office building (Ridin' the XXX)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see where"
+    }
+   ],
+   "moves": [
+    "wire",
+    "transfer",
+    "unlock"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p122",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-glif",
+   "type": "stat-point-set",
+   "label": "Stat points ×5 (Glifberg, Mullen, Steamer)",
+   "zone": "Z2, Z1/Z8, Z5, Z7, Z1",
+   "landmark": "Tower Poppin' to the lobby roof, leap toward the stairways behind the towers; library roof → leap toward the overpass, between the two structures; on the tape route between the first roof and the Busters Cherry sign; carwash alley between two concrete QPs; over the Pure Air gap on the library roof after They're GRATE!",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see where"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "ollie",
+    "unlock"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE",
+    "TEASE"
+   ],
+   "why": "One point sits on the tape route itself: a reward for scouting the roofs.",
+   "evidence": "G3 p122",
+   "confidence": "high"
+  },
+  {
+   "id": "DECKS",
+   "type": "deck-set",
+   "label": "New decks (three skater groups)",
+   "zone": "Z2, Z5, Z4",
+   "landmark": "(a) Hawk/Glifberg/Margera/Reynolds/Steamer: on the cable back across the street from the right fountain QP; (b) Caballero/Koston/Mullen/Rowley: on the theatre marquee via the purple half-pipe cable (Ridin' the XXX); (c) Campbell/Lasek/Muska/Thomas: on a cable from the half pipe under the overpass toward the fountain (or the Wire Ridin' circuit from the purple half pipe)",
+   "layer": "cables / marquee",
+   "heightM": "cable height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "cable grinds across streets"
+    }
+   ],
+   "moves": [
+    "wire",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "G3 p121 map, p123; J3 p024-p025 (Hawk deck on an electric wire right of the start)",
+   "confidence": "high"
+  },
+  {
+   "id": "R-COMBO",
+   "type": "remake-letter",
+   "label": "Remake: C-O-M-B-O (one combo)",
+   "zone": "Z2",
+   "landmark": "from the right fountain QP transfer to the upper level; revert, manual to the other QP; up and grind the rails to the left; jump off left to a small rooftop for the last letter",
+   "layer": "rooftop half pipe / rails",
+   "heightM": "lobby roof level",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "letters along the tower line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "fountain QP → upper level"
+    },
+    {
+     "step": 2,
+     "move": "revert",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "rails"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "to the small rooftop"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "revert",
+    "manual",
+    "grind",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Spells out the original tower line (Tower Poppin' → revert manual → Tower Lockin') as letters.",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-GULLS",
+   "type": "remake-goal-object",
+   "label": "Remake: scatter 5 seagull groups",
+   "zone": "Z1, Z8, Z4, Z2, Z9",
+   "landmark": "wire to the roof then the rail right; from that roof down to the broken highway and up its ramp onto another roof; the purple-area QP wire all the way round; the fountain QP to the ledge above (grind or lip); wallride the Yeti shopfront and grind its top",
+   "layer": "roofs / wires",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "birds on ledges",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": "see where"
+    }
+   ],
+   "moves": [
+    "wire",
+    "kicker",
+    "wallride",
+    "lip"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "The second group sits on the tape route's freeway-to-roof leap.",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "type": "remake-collectible",
+   "label": "Remake: cash ×4",
+   "zone": "Z1, Z7, Z1, Z9",
+   "landmark": "above an orange wall straight from the start; between two QPs at the carwash; on the rail to the right after the start wire to the roof; Yeti shopfront → roof → wallride the billboard",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "cash",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wallride",
+    "wire"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "type": "remake-collectible",
+   "label": "Remake: hidden deck",
+   "zone": "Z5",
+   "landmark": "Yeti shopfront (next to Taco Bell) → roof → wire to the theatre roof, follow it round",
+   "layer": "roof / wire",
+   "heightM": "roof",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "",
+     "to": "",
+     "geometry": "shopfront"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "roof edge"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "to the theatre roof"
+    }
+   ],
+   "moves": [
+    "wallride",
+    "grind",
+    "wire"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-LOGO",
+   "type": "remake-collectible",
+   "label": "Remake: Iron Galaxy logo",
+   "zone": "Z1",
+   "landmark": "after They're Grate!, the newly opened area on the library roof, reached by the start wire",
+   "layer": "roof",
+   "heightM": "roof",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "logo",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "unlock",
+     "from": "",
+     "to": "",
+     "geometry": "They're Grate!"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "start wire to the roof"
+    }
+   ],
+   "moves": [
+    "unlock",
+    "wire"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "type": "remake-collectible",
+   "label": "Remake: panda plushie",
+   "zone": "Z3",
+   "landmark": "inside the pit under the grate-covered QPs once They're Grate! opens them",
+   "layer": "underground",
+   "heightM": "below street",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "plushie",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "unlock",
+     "from": "",
+     "to": "",
+     "geometry": "They're Grate!"
+    },
+    {
+     "step": 2,
+     "move": "drop",
+     "from": "",
+     "to": "",
+     "geometry": "into the opened pit"
+    }
+   ],
+   "moves": [
+    "unlock"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  },
+  {
+   "id": "R-SP",
+   "type": "remake-collectible",
+   "label": "Remake: stat points ×4",
+   "zone": "Z1, Z2, Z4, Z7",
+   "landmark": "start wire to the roof; ollie off the small fountain's edge; wire from a purple-area QP; between QPs opposite the carwash (may need a Boneless)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wire",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 los-angeles",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Eastern Tremor!",
+   "points": 100,
+   "kind": "other (grind; quake trigger)",
+   "location": "handrail behind the library down toward the street",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "QUAKE",
+    "TAPE"
+   ],
+   "evidence": "G3 p124; TAS3 5:36"
+  },
+  {
+   "name": "Rail Skip!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "left from the start: rail nearest the back of the library → Eastern Tremor rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "S-g2"
+   ],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "Bunker",
+   "points": 200,
+   "kind": "other (drop)",
+   "location": "skip the start stairs, ollie over the grassy hill to the sidewalk/street",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "Northern Tremor!",
+   "points": 100,
+   "kind": "other (grind; quake trigger)",
+   "location": "handrail along the street on the north side of the library",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "QUAKE",
+    "S-g1",
+    "TAPE"
+   ],
+   "evidence": "G3 p124; LP3 0:54:40"
+  },
+  {
+   "name": "Southern Tremor!",
+   "points": 100,
+   "kind": "other (grind; quake trigger)",
+   "location": "rail between the street corner and the side steps",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "QUAKE",
+    "TAPE"
+   ],
+   "evidence": "G3 p124; LP34 0:46:20"
+  },
+  {
+   "name": "Western Tremor",
+   "points": 100,
+   "kind": "other (grind; quake trigger)",
+   "location": "rail straight through the tunnel in the library",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "QUAKE",
+    "TAPE"
+   ],
+   "evidence": "G3 p124; TAS3 5:43"
+  },
+  {
+   "name": "Gettin A Learn On!",
+   "points": 100,
+   "kind": "ledge",
+   "location": "south wall in front of the library → over the steps nearest the Southern Tremor rail",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p124; TAS3 5:38"
+  },
+  {
+   "name": "Stair Skip!",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "hold Gettin A Learn On! toward the rear and transfer over the side steps",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "Down the Stairs",
+   "points": 100,
+   "kind": "other (stair ollie)",
+   "location": "ollie the top set of library stairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "All the Way",
+   "points": 300,
+   "kind": "other (stair ollie)",
+   "location": "both sets of library stairs in one jump",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "Pure Air!",
+   "points": 200,
+   "kind": "secret-area",
+   "location": "after They're Grate!: top of the library, drop into the opened grates and clear the gap between the QPs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "R-LOGO"
+   ],
+   "evidence": "G3 p124"
+  },
+  {
+   "name": "West Side!",
+   "points": 100,
+   "kind": "over-object",
+   "location": "clear the street between the library and the fountain in one bound",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "East Side!",
+   "points": 100,
+   "kind": "over-object",
+   "location": "back across the street (a car plant counts)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Goin' Ballistic",
+   "points": 200,
+   "kind": "hangtime",
+   "location": "even higher air from the rooftop half pipe",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Nosebleed Time",
+   "points": 100,
+   "kind": "hangtime",
+   "location": "Tower Poppin'/Lockin' onto the office roof and air moderately high",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Tower Poppin'",
+   "points": 100,
+   "kind": "transfer",
+   "location": "fountain QPs → narrow concrete roof above the windowed lobby",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [
+    "TRICK",
+    "K-g3",
+    "R-COMBO"
+   ],
+   "evidence": "G3 p125; LP3 0:56:40"
+  },
+  {
+   "name": "Washin' Windows",
+   "points": 200,
+   "kind": "other (grind)",
+   "location": "Tower Poppin' QP → grind a window-washing scaffold above",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Wire Drop!!!",
+   "points": 300,
+   "kind": "wire",
+   "location": "grind the Wire Ridin' 1-2-3 cable all the way to the fountain and drop into a grind on its edge",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Tower Rail Swap!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "handrails of the tower walkway behind the carwash",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Tower South",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "handrail behind the carwash across the break before the kiosk",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Electrified!",
+   "points": 300,
+   "kind": "wire",
+   "location": "pop off a curved bench near the fountain into the power lines by the lampposts",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Southern Washer Lip",
+   "points": 100,
+   "kind": "lip",
+   "location": "left fountain QP → lip on the scaffold above",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Northern Washer Lip",
+   "points": 100,
+   "kind": "lip",
+   "location": "right fountain QP → lip on the scaffold above",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p125"
+  },
+  {
+   "name": "Over the Fountain!",
+   "points": 200,
+   "kind": "over-object",
+   "location": "air off the ledge of the round fountain",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "SP-hawk"
+   ],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Fountain Hop",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "curved bench → fountain → other bench",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Kiosk!",
+   "points": 100,
+   "kind": "transfer",
+   "location": "small QPs either side of the kiosk next to the carwash, up and over",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "They're Grate!",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "grind the curving brick ledge above the Tower Rails handrails; drops the grates into the tunnels and other grates round the city",
+   "moves": [
+    "grind",
+    "ledge"
+   ],
+   "onRouteOf": [
+    "R-LOGO",
+    "R-PANDA",
+    "SP-cam",
+    "SP-glif"
+   ],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Tower Rails Gap",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "walkway behind the towers: handrail to handrail across the stairs",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "TRICK",
+    "A-g3"
+   ],
+   "evidence": "G3 p126; TAS3 5:49-5:52"
+  },
+  {
+   "name": "Doorway Hop",
+   "points": 50,
+   "kind": "ledge-to-ledge",
+   "location": "brick ledges of the office building behind the towers, across breaks by the doors",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Venting Frustration",
+   "points": 200,
+   "kind": "secret-area",
+   "location": "after They're GRATE!, out of the subterranean half pipe onto the banked wall below the tower handrails",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Tower Lockin'",
+   "points": 100,
+   "kind": "transfer",
+   "location": "as Tower Poppin' via the other side of the narrow rooftop half pipe (one QP only)",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p126"
+  },
+  {
+   "name": "Shoots N' Ladders!",
+   "points": 200,
+   "kind": "other (grind)",
+   "location": "grind the fire-truck ladder",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "To the Ladder!",
+   "points": 100,
+   "kind": "kicker",
+   "location": "small sidewalk kicker → grind the truck's ladder",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "A-g2"
+   ],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Nice Move!",
+   "points": 300,
+   "kind": "roof",
+   "location": "ladder → hotel white ledge toward the theatre → leap right onto the pink roof across from the purple half pipe",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "SP-hawk"
+   ],
+   "evidence": "G3 p127; LP3 0:56:10"
+  },
+  {
+   "name": "Hot, Hot, Hot!",
+   "points": 200,
+   "kind": "over-object",
+   "location": "leap the barrel fire by the fire truck",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Lip Wash",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip on top of the white sign above the carwash",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Squeaky Clean!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "between the two rails inside the carwash",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Grind Illin'",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "banked wall right of the fire truck → wall by the liquor store",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Cold Chillin'",
+   "points": 100,
+   "kind": "transfer",
+   "location": "the two concrete QPs between the fire truck and the liquor store",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [
+    "SP-hawk"
+   ],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Burrito Carnitas",
+   "points": 100,
+   "kind": "ledge",
+   "location": "blue edge of the carwash past the centre sign",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Burrito Grande",
+   "points": 100,
+   "kind": "over-object",
+   "location": "alley-oop over the carwash centre sign via the banked walls",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "To Get to the Other Side, Baby!",
+   "points": 200,
+   "kind": "roof",
+   "location": "carwash roof BEFORE the earthquake: grind one side, manual across, grind the other edge",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Passin' Gas!",
+   "points": 200,
+   "kind": "wallride",
+   "location": "leap from the carwash edge and wallride the Havgas sign",
+   "moves": [
+    "wallride"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "name": "Triple X Hop!",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "theatre stairs → ledge of the office building opposite the library (either way)",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [
+    "K-g2"
+   ],
+   "evidence": "G3 p128"
+  },
+  {
+   "name": "Yellow Cutter!",
+   "points": 100,
+   "kind": "other (through opening)",
+   "location": "jump through the window-like opening in the yellow building",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p128"
+  },
+  {
+   "name": "Don't Fall!!!",
+   "points": 200,
+   "kind": "roof",
+   "location": "first building after the freeway → grind on the edge of the Busters Cherry sign",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE",
+    "SP-glif"
+   ],
+   "evidence": "G3 p128; LP3 0:57:20"
+  },
+  {
+   "name": "Bustin Cherries!",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "Busters Cherry sign → black pipe by the tape",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p128; LP3 0:57:24"
+  },
+  {
+   "name": "Overpass Leap",
+   "points": 200,
+   "kind": "kicker",
+   "location": "plywood ramp at the end of the freeway near the library → grind on the office building with the green ledge",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "TAPE",
+    "R-GULLS"
+   ],
+   "evidence": "G3 p128; LP3 0:57:18"
+  },
+  {
+   "name": "Ridin' the XXX",
+   "points": 200,
+   "kind": "wire",
+   "location": "purple half-pipe wire (Purple Transfer side) across the street onto the theatre marquee",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "DECKS",
+    "SP-cam"
+   ],
+   "evidence": "G3 p128"
+  },
+  {
+   "name": "Pershing Ramp",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "from the library toward the yellow building: rails by the small ramp",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p128"
+  },
+  {
+   "name": "Purple Transfer",
+   "points": 100,
+   "kind": "transfer",
+   "location": "purple half pipe → narrow QP on the other side of the wall",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Purple Skippin'",
+   "points": 100,
+   "kind": "transfer",
+   "location": "angled ramps by the purple half pipe, over it lengthwise",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Indiana Style!",
+   "points": 100,
+   "kind": "manual",
+   "location": "after Free Ballin', manual across the balls' path in the gully",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "BALLS"
+   ],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Hotel Lip Smackin'",
+   "points": 100,
+   "kind": "lip",
+   "location": "concrete ramps by the Morehead Hotel entrance → lip on the ledge above",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Hung Over",
+   "points": 100,
+   "kind": "over-object",
+   "location": "transfer over the Morehead Hotel awning",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "E-g1"
+   ],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "To the Stairs!",
+   "points": 100,
+   "kind": "kicker",
+   "location": "small yellow kicker by the purple half pipe → grind the curved stair nearest the street",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Over the Yellow Stone Shack",
+   "points": 100,
+   "kind": "over-object",
+   "location": "the yellow building's narrow angled wall as a ramp, over the rest of it",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Yellow Fall",
+   "points": 100,
+   "kind": "other (drop)",
+   "location": "drop through a hole in the yellow building's roof",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p129"
+  },
+  {
+   "name": "Bye-Bye",
+   "points": 200,
+   "kind": "over-object",
+   "location": "after the quake: grind across the trapped car on the freeway; it falls into the road below",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "CAR"
+   ],
+   "evidence": "G3 p130; TAS3 5:55"
+  },
+  {
+   "name": "Wire Ridin 1!",
+   "points": 100,
+   "kind": "wire",
+   "location": "purple half pipe → cable toward the hotel, past its door and back across the street toward the freeway",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p130"
+  },
+  {
+   "name": "Wire Ridin 2!!",
+   "points": 200,
+   "kind": "wire",
+   "location": "continue past the half pipe to the corner across from the library",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p130"
+  },
+  {
+   "name": "Wire Ridin 3!!",
+   "points": 300,
+   "kind": "wire",
+   "location": "continue off the very end of the cable near the circular fountain",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p130"
+  },
+  {
+   "name": "Overpass Aftershock",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "guardrail on the demolished freeway, over the two breaks between the trapped car and the ramp near the library",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p130"
+  },
+  {
+   "name": "Alley-Oop! (Neversoft Challenge)",
+   "points": 300,
+   "kind": "other",
+   "location": "\"As in jumping, not a highlight reel dunk\" (location not given)",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p130"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Grind the four Quake rails (N, S, E, W of the library) — \"Start the Earthquake\"",
+   "opens": "Cutscene; the elevated freeway breaks into tilted slabs with two breaks, a car left hanging, plywood kicker usable at the library end. Opens the freeway as a skateable route (from the library roof or the carwash roof) and with it the roofs of the theatre block. The broken state persists into later runs (LP3 run 3).",
+   "neededFor": [
+    "TAPE",
+    "CAR"
+   ],
+   "evidence": "G3 p116, p119-p121; J3 p023-p024; TAS3 5:46; LP3 0:54:40-0:57:18; LP34 0:46:48-0:47:02"
+  },
+  {
+   "trigger": "Earthquake (side effect)",
+   "opens": "Removes the \"To Get to the Other Side, Baby!\" line (a carwash-roof gap that only exists before the quake)",
+   "neededFor": [],
+   "evidence": "G3 p127"
+  },
+  {
+   "trigger": "Grind across the trapped car (Bye-Bye)",
+   "opens": "The car falls into the road and stops the van-and-police chase (moving street hazard removed)",
+   "neededFor": [
+    "CAR"
+   ],
+   "evidence": "G3 p121, p130; LP34 0:47:26-0:47:36"
+  },
+  {
+   "trigger": "Grind the curving brick ledge above the Tower Rails handrails (They're Grate!)",
+   "opens": "Grates drop into the tunnels: a subterranean half pipe by the tower; other grates round the city, including QPs on the library roof (Pure Air!). Remake: grate-covered QPs open; panda inside; Iron Galaxy logo in the new roof area.",
+   "neededFor": [
+    "SP-cam",
+    "SP-glif",
+    "R-LOGO",
+    "R-PANDA"
+   ],
+   "evidence": "G3 p119, p124, p126; J3 p025; PS34"
+  },
+  {
+   "trigger": "Trick into the two red balls (Free Ballin')",
+   "opens": "The balls roll back and forth in the gully by the purple half pipe (a moving hazard) and enable the Indiana Style! manual gap",
+   "neededFor": [
+    "BALLS"
+   ],
+   "evidence": "G3 p120, p129"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Library to carwash opener",
+   "sequence": [
+    "special tricks on the wall behind the start",
+    "revert into a manual (left)",
+    "Rail Skip! onto the longer back rail",
+    "manual into the office-building ledge",
+    "Triple X Hop! across the alley",
+    "special grind past the theatre round the bend",
+    "manual up the kicker",
+    "double heelflip into the ladder (Shoots N' Ladders!)",
+    "manual up the right carwash wall",
+    "grind toward the liquor store (Burrito Carnitas)"
+   ],
+   "links": [
+    "revert",
+    "manual",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "S-g2",
+    "K-g2",
+    "A-g2"
+   ],
+   "why": "A city-scale chain: one combo crosses three blocks.",
+   "evidence": "G3 p116"
+  },
+  {
+   "id": "L2",
+   "name": "Carwash to hotel roofs",
+   "sequence": [
+    "liquor-store QP coping grind",
+    "Grind Illin'",
+    "fire-truck ladder (Hot, Hot, Hot! + Shoots N' Ladders!)",
+    "special grind on the hotel's white brick ledge",
+    "leap right onto the pink roof (Nice Move!)"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "SP-hawk"
+   ],
+   "why": "Lifts the player from the street to roof level without a ramp: ladder as the stair.",
+   "evidence": "G3 p117"
+  },
+  {
+   "id": "L3",
+   "name": "Tower line",
+   "sequence": [
+    "special off the right fountain QP",
+    "Tower Poppin'",
+    "revert, manual across the lobby roof",
+    "Tower Lockin'",
+    "manual to the stairs",
+    "grind up and over (Tower Rails gap)"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "TRICK",
+    "K-g3",
+    "A-g3",
+    "R-COMBO"
+   ],
+   "why": "Uses both trick-goal spots in one line; the remake turns it into the COMBO letters.",
+   "evidence": "G3 p117; PS34"
+  },
+  {
+   "id": "L4",
+   "name": "Ill Scoring library loop",
+   "sequence": [
+    "curvy white rails at the start",
+    "manual",
+    "Northern Tremor rail",
+    "West Side! over the street",
+    "QP stall, revert to manual",
+    "fountain lip laps (Ped Props)",
+    "manual onto the street",
+    "Southern Tremor rail",
+    "Gettin' A Learn On!",
+    "Stair Skip!"
+   ],
+   "links": [
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "S-g1",
+    "K-g1",
+    "QUAKE"
+   ],
+   "why": "A loop round the start block that touches two quake rails and the endless fountain lip.",
+   "evidence": "G3 p117"
+  },
+  {
+   "id": "L5",
+   "name": "Quake lap",
+   "sequence": [
+    "Eastern rail (down the hill)",
+    "south side (Gettin' a Learn On!, Stair Skip!)",
+    "Western rail (tunnel)",
+    "Northern rail"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [
+    "QUAKE",
+    "S-g1",
+    "A-g1"
+   ],
+   "why": "The event trigger is a lap of the central block; TAS3 does it in ≈ 10 s.",
+   "evidence": "TAS3 5:36-5:46"
+  },
+  {
+   "id": "L6",
+   "name": "Wire Ridin' circuit",
+   "sequence": [
+    "up the purple half pipe",
+    "cable toward the hotel, past its door",
+    "back across the street toward the freeway (Wire Ridin 1!)",
+    "past the half pipe to the corner across from the library (2!!)",
+    "off the end near the fountain (3!!)",
+    "drop into a grind on the fountain edge (Wire Drop!!!)",
+    "fountain lip laps"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "DECKS"
+   ],
+   "why": "The longest continuous cable in the level, ending in the circular lip that can be ground indefinitely.",
+   "evidence": "G3 p125, p130; G3 p123"
+  },
+  {
+   "id": "L7",
+   "name": "Freeway-to-roofs tape line",
+   "sequence": [
+    "start cable to the library roof",
+    "jump onto the broken freeway",
+    "plywood kicker (Overpass Leap)",
+    "office roof",
+    "red building edge",
+    "Busters Cherry sign (Don't Fall!!!)",
+    "black pipe (Bustin' Cherries!)",
+    "tape"
+   ],
+   "links": [
+    "rail-transfer",
+    "ledge"
+   ],
+   "collectibles": [
+    "TAPE",
+    "SP-glif",
+    "R-GULLS"
+   ],
+   "why": "Exists only after the earthquake; every link is a named gap.",
+   "evidence": "G3 p119, p128; LP3 0:57:12-0:57:24; LP34 0:47:58-0:48:08"
+  },
+  {
+   "id": "L8",
+   "name": "Purple park line",
+   "sequence": [
+    "Purple Transfer",
+    "Purple Skippin'",
+    "To the Stairs! (yellow kicker)",
+    "balls in the gully (Free Ballin', Indiana Style!)"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [
+    "BALLS",
+    "T-g1"
+   ],
+   "why": "A small vert park under the tape, where the player sees the tape out of reach.",
+   "evidence": "G3 p129"
+  },
+  {
+   "id": "L9",
+   "name": "Car-chase line",
+   "sequence": [
+    "carwash QPs / roof",
+    "tipped freeway slab",
+    "inclined deck",
+    "guardrail",
+    "car roof (Bye-Bye)",
+    "Overpass Aftershock over the two breaks"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "CAR"
+   ],
+   "why": "The same post-quake geometry serves a goal and the tape route.",
+   "evidence": "G3 p121, p130; LP34 0:47:14-0:47:26"
+  }
+ ],
+ "guidance": [
+  "The library is the hub and the start; the four quake rails are on its four sides and are labelled (\"appropriately labeled 'Quake' rails\", G3 p120). The trigger is signposted geometry, not a hidden switch.",
+  "The freeway is on the skyline from the plaza (TAS3 6:03 shows it behind the start stairs). After the quake the broken deck reads as a road that leads somewhere, and its plywood kicker points at the roofs (inferred from LP3 0:57:16 and LP34 0:47:58).",
+  "The tape is shown from below: on a pillar above the purple half pipe, \"way out of reach from a ground attack\" (G3 p119). The player sees it from a place they visit for other goals (Free Ballin', purple transfers, a letter), and the solution is on the other side of the street.",
+  "Cables crossing streets are visible lines that are also routes: the start cable to the library roof (tape route, three stat points), the purple-pipe cable (Wire Ridin', decks), power lines (Electrified!).",
+  "Landmark props double as ramps: the fire-truck ladder is an inclined rail to roof level; the carwash's banked walls and white sign stack a vert spot onto a street corner.",
+  "The theatre's vertical Busters Cherry sign is both a landmark and the last grind before the tape.",
+  "Hidden on purpose: the underground half pipe and the library-roof QPs (behind They're Grate!), the window-washer scaffolds (above the plaza), the yellow house's interior holes.",
+  "Remake: the pro goals and collectibles lean on the same infrastructure (seagulls on the freeway-to-roof leap, COMBO on the tower line, cash and deck on rooftops reached by wallrides)."
+ ],
+ "designLogic": [
+  "The tape is gated by the level's set piece: the earthquake turns the freeway from scenery into a route, and the tape route runs over it. The player must cause the event and then use what it leaves (G3 p119; J3 p023).",
+  "The trigger teaches the loop: Start the Earthquake needs one rail on each side of the library, so the first goal walks the player round the central block, the level's main circulation (G3 p120; TAS3 5:36-5:46).",
+  "An event that adds and removes: the quake opens the freeway and the roofs but deletes the pre-quake carwash-roof gap. The order of play matters (G3 p127).",
+  "Persistence makes a two-run plan: the broken freeway stays broken in later runs. The human player starts the quake in run 2 and goes straight up the roofs in run 3, reaching the tape ≈ 14 s after the run starts (LP3 0:55:20, 0:57:10-0:57:24).",
+  "Every link of the tape route is a named gap (Overpass Leap, Don't Fall!!!, Bustin' Cherries!). The gap list confirms each step, and the score rewards the same chain.",
+  "Seen from below, solved from above: the tape is set where it cannot be reached from the purple half pipe, so the player has to plan an approach from the roofs across the street.",
+  "Three skill bands for one pickup: the designed rooftop chain; an alternative freeway access from the carwash roof (G3 p121; J3 p024); and an expert climb straight up the purple tower with boneless, wallride and wallie (TAS3 6:04-6:07).",
+  "Shared climb: the start cable to the library roof carries the tape route, three stat points (G3 p122) and, in the remake, the car-chase approach (hardcoregamer). One piece of geometry teaches the climb.",
+  "A stat point on the tape route (Glifberg group, \"between the first roof and the Busters Cherry sign\", G3 p122) rewards scouting the roofs before the tape is attempted.",
+  "Moving hazards are part of the event chain: lowriders and the van chase fill the streets until the post-quake geometry is used to stop the chase; the freed balls add a rolling hazard to the purple area (G3 p116, p120-p121).",
+  "Skater groups tour different districts: Hawk's letters cover the library, fountain, purple alley and hotel; Caballero's the back rails, theatre, fire truck and carwash; Campbell's go inside the library, up the towers, along the kiosk cable and onto the yellow house (G3 p118).",
+  "Failure is expensive in height, cheap in distance: a miss on the roofs means a long fall, but the start cable is close to spawn, so a retry costs ≈ 15–25 s."
+ ],
+ "remakeChanges": [
+  "Tape unchanged in place and logic: still needs the earthquake; the remake text uses the carwash access (\"spine transfer onto the highway ... ramp up onto a rooftop ... jump to the next rooftop ... grind the end and jump to the rail sticking out\") (PS34). LP34 shows the same chain: freeway plywood kicker → roof → building edge → theatre sign → purple tower pipe → tape (0:47:58-0:48:08). The theatre's vertical sign appears to carry different lettering in the remake (low confidence from a 480-px frame).",
+  "Quake trigger unchanged (four rails round the main building); the cutscene now shows a panicking driver, then a car left hanging, and the remake adds a shop notification (LP34 0:46:48-0:47:02).",
+  "Letters: one fixed set — S above a red rail to the right of the start, K on the fountain edge, A up the stairs above a rail, T on a purple structure by wallride + wallie, E between two QPs inside an archway (transfer) (PS34). Four of five follow the original Hawk group; E is new.",
+  "Pro goals add COMBO letters on the tower line, a Monty/Smith grind on Wire Ridin', a Passin' Gas wallride and five seagull groups, one of them on the freeway-to-roof leap (PS34).",
+  "Collectibles added: cash ×4, hidden deck (Yeti shopfront → roof → wire to the theatre roof), Iron Galaxy logo (library roof area opened by They're Grate!), panda (inside the grate pit), stat points ×4 (PS34).",
+  "Score thresholds unchanged (100k/190k/400k) plus High Combo 40,000; the longplay's runs start at 10:00 (PS34; LP34 0:44:20).",
+  "PS1 edition (VG) is another level: goals are Transformers Shutdown, Grind the Electric Rail, Elevator Grind, Kickflip over the Elevator Lobby; office towers with an elevator; the freeway is already drawn broken (no earthquake) and the tape icon is on the purple tower beside it, next to the K. The PS1 edition keeps the tape spot and the broken freeway but drops the event."
+ ],
+ "transfer": [
+  "Event-gated crystal: four switch-rails, one on each side of a central block, must be ground in one run. Grinding all four collapses an elevated bridge into tilted slabs (kickers) and a broken deck. The crystal sits on a short rail sticking out of a tower across the street, reached only from the collapsed deck via a roof chain.",
+  "Roof chain from the broken deck: plank kicker (full ollie ≈ 1.8 m high, ≈ 9–14 m long) → flat roof → grind a roof edge → hold the grind round a bend onto a vertical sign → grind-ollie (≈ 2.4 m pop) across a street-width gap onto the tower rail. Name each link (sign or sound cue) so the player gets feedback per step.",
+  "Seen from below: put the crystal directly above a small vert park the player must use for another objective, high enough that vert air (and double jump on foot, ≈ 4.6 m) cannot reach it, so the player looks for another way up.",
+  "Expert bypass: allow wallride up the tower face + wallie into the crystal rail, at full speed only. It rewards mastery without replacing the designed chain.",
+  "Persistence through checkpoints: once the bridge collapses, keep it collapsed after respawn, so a failed roof chain only costs the climb back via a cable (rope or rail) near the start.",
+  "Add-and-remove: a rooftop line that only works before the collapse (e.g. a manual across an intact roof) makes the trigger a choice."
+ ],
+ "openQuestions": [
+  "Which LA loop a Neversoft programmer named as his favourite sustained line: the quote was not found (four web searches; blocked sites not used). Candidates from G3: the circular-fountain lip (endless circle, Ped Props, G3 p117), the Wire Ridin' 1-2-3 cable circuit ending in Wire Drop!!! onto the fountain (G3 p125, p130), and the lap of handrails round the library block that the quake rails also trace (G3 p118, p120).",
+  "Whether the tape object exists before the earthquake (G3 says the quake must be done first; no source shows an attempt before it).",
+  "Exact heights of the freeway deck, the roofs and the tower pipe (estimates only).",
+  "Whether the tape is visible from spawn or from the freeway (not shown in my frames).",
+  "The remake's theatre-sign lettering (frame too small to read with confidence)."
+ ]
+}

@@ -1,0 +1,1556 @@
+{
+ "id": "thps3-skater-island",
+ "game": "THPS3",
+ "level": "Skater Island",
+ "location": "Middletown, Rhode Island, USA (a real indoor park)",
+ "type": "competition",
+ "careerPosition": 6,
+ "timeLimit": "3 heats × 1:00",
+ "versions": [
+  "PS2 2001",
+  "GameCube 2001 (TAS)",
+  "PS1 2001 edition (VG; no ship)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p103-p114 (rules and overview p103, scoring lines p104, secret area p105, decks p106, map p107, stat points p108, gaps p109-p114)",
+  "J3 p021 (Hawk stat points, hidden deck, secret zone)",
+  "TAS3 4:50-5:21 (GameCube; two one-combo heats, gold)",
+  "LP3 0:41:01-0:51:15 (PS2 human: hidden-combo heats; pirate-flag unlock and ship visit 0:50:05-0:51:05)",
+  "VG TonyHawk_sProSkater3-SkaterIsland.png (PS1 edition, 'Competition invite #2: The King of the Coast Jam')",
+  "PS34 skater-island (THPS 3+4 text)",
+  "LP34 0:38:10-0:43:30 (THPS 3+4 heats incl. the ship)",
+  "PS34 all-secret-tapes page (no tape listed)"
+ ],
+ "goals": [
+  {
+   "text": "Competition \"King of the Coast Jam\": three one-minute runs; bails hurt; average of the top two runs; top 3 earn a medal",
+   "version": "original PS2 (G3 p103)"
+  },
+  {
+   "text": "Get a Medal in the Competition; platinum pro goal: Lip Trick Near the Pirate (then place first)",
+   "version": "remake 2025 (PS34)"
+  },
+  {
+   "text": "Competition invite #2 \"The King of the Coast Jam\": 3 heats per skater, best 2 heats win, points deducted for bails",
+   "version": "PS1 edition (VG)"
+  }
+ ],
+ "size": {
+  "class": "medium (indoor park) + outdoor secret area",
+  "footprint": "indoor park ≈ 1,860 m² by the real-world figure (20,000 sq ft, e.g. ≈ 30 × 60 m); beach and pirate ship outside, not measured",
+  "evidence": "G3 p103 (\"the 20,000 square foot Skater Island\"; converted: 20,000 ft² ≈ 1,858 m²). The in-game recreation may not be at that scale; the ship area is not measured."
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Street course (spawn)",
+   "layer": "floor; funboxes; wall quarter pipes; lights and shelves above",
+   "features": [
+    "first funbox right of the start (Fiji Mermaid Hop)",
+    "second funbox left (42 Miles to NYC Hop)",
+    "wall-covering QPs with breaks on the wall across from the start (Heartbreaker, Jersey Nun gaps)",
+    "sticker-clad extension",
+    "short QPs",
+    "vending machines with rails (That's a Mouthful)",
+    "lights above the start (Russian Tease)",
+    "speaker shelf above the Heartbreaker QPs",
+    "immense vert ramp in a corner"
+   ],
+   "notes": "G3 p103-p104, p106, p109-p110."
+  },
+  {
+   "id": "Z2",
+   "name": "Big half pipe",
+   "layer": "vert; deck above with stairs",
+   "features": [
+    "roll-in (Aaron C. Roll-in of Death)",
+    "deck with a stair set to the floor",
+    "surfboard hanging on the wall (Surf's Up)",
+    "tunnel back to the half pipe with QPs either side (The Boss Gap)",
+    "two flags between the half pipe and the observation platform: pirate flag and US flag"
+   ],
+   "notes": "G3 p104-p105, p111-p112. Grinding the pirate flag opens the doors to the beach."
+  },
+  {
+   "id": "Z3",
+   "name": "Observation platform",
+   "layer": "raised platform with a window and an opening",
+   "features": [
+    "window in the lower portion (Drive Thru Window)",
+    "opening near the pool (Rollerboy Gap)",
+    "short wooden rails on top (High Rail Stomp)",
+    "drop into the snakerun (The Drop)"
+   ],
+   "notes": "G3 p113."
+  },
+  {
+   "id": "Z4",
+   "name": "Bowl zone",
+   "layer": "bowls (vert and shallow); decks with handrails; sprinklers overhead",
+   "features": [
+    "peanut bowl with a pair of hips between deep and shallow ends",
+    "mini snakerun",
+    "shallow, vert-less pool",
+    "pool by the vending machines (At the 50/10/5, Touchdown! into the half pipe)",
+    "bleachers",
+    "wooden handrails on the decks",
+    "sprinkler pipes overhead (Dreamer, Hell No H2O)"
+   ],
+   "notes": "G3 p103-p104, p111-p113."
+  },
+  {
+   "id": "Z5",
+   "name": "Beach (secret area)",
+   "layer": "sand; QPs against the park's outside wall",
+   "features": [
+    "bonfire (A Burning Sensation)",
+    "rowboat",
+    "palm tree",
+    "two QPs against the outside wall with cannons above (Blast 'Em, Cannon Fodder)"
+   ],
+   "notes": "Opened by the flag grind (G3 p105)."
+  },
+  {
+   "id": "Z6",
+   "name": "Pirate ship",
+   "layer": "deck; masts and beams; crow's nest; bow beam over the water",
+   "features": [
+    "two green QPs on the main deck",
+    "masts with horizontal beams and ropes down to the beach",
+    "small bowl at the stern",
+    "large white sail",
+    "red sidewalls with a gangplank gap",
+    "bow beam (bowsprit) with a stat point for every skater",
+    "crow's nest with a pirate"
+   ],
+   "notes": "G3 p105, p114; LP3 0:50:15-0:51:05."
+  },
+  {
+   "id": "Z7",
+   "name": "The sea",
+   "layer": "water (out of bounds)",
+   "features": [
+    "falling in sends you back to a high spot on the mast"
+   ],
+   "notes": "G3 p105 (\"Walkin' the Plank\"); LP3 0:51:05 \"Shark Attack!\"; remake: respawn in the crow's nest (PS34)."
+  }
+ ],
+ "landmarks": [
+  "huge half pipe",
+  "observation platform",
+  "pirate flag next to the US flag",
+  "peanut bowl",
+  "vending machines",
+  "pirate ship",
+  "bonfire",
+  "palm tree"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "into the street course: first funbox to the right, a second funbox and a vert ramp to the left",
+  "visibleCollectibles": [],
+  "notes": "No tape or letters."
+ },
+ "collectibles": [
+  {
+   "id": "PIRATE-AREA",
+   "type": "secret-area",
+   "label": "Pirate-ship secret area (beach + ship)",
+   "zone": "Z5-Z6",
+   "landmark": "outside the park, through doors opened by grinding the pirate flag beside Old Glory",
+   "layer": "outdoor; ship deck and masts",
+   "heightM": "masts several storeys (not measured)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "two flags hang between the half pipe and the observation platform; the pirate flag is the switch",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "from the top of the half pipe toward the observation deck"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the pirate flag (Skull N' Bones; the US flag beside it is Stars N' Stripes)"
+    },
+    {
+     "step": 3,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "through the opened doors to the beach"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "up the gangplank onto the ship"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "unlock"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "when the pirates see you on the beach, their cannons fire and destroy a large chunk of the street course (G3 p105)",
+   "failure": "a heat spent exploring scores almost nothing: LP3 heat 1 judges 0.0 / 9.5 / 0.0 after the ship visit (0:50:35)",
+   "timeFromSpawnS": "LP3: flag grind at 0:24 left, beach at 0:16, gangplank at 0:07, bowsprit at 0:02 — ≈ 22 s from the flag to the bow",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "EXPLORE"
+   ],
+   "why": "The only secret area is a whole new outdoor stage behind a switch that is also a decoration in plain view of the half pipe.",
+   "evidence": "G3 p105, p112; J3 p021 (\"the black skull flag on the small wooden-stairs area: grind it taking off from the hump before it\"); LP3 0:50:05-0:50:25",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-bow",
+   "type": "stat-point",
+   "label": "Stat point on the bow beam (every skater group)",
+   "zone": "Z6",
+   "landmark": "end of the beam off the bow of the pirate ship",
+   "layer": "beam over the water",
+   "heightM": "deck height + beam (not measured)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat disc at the tip of the bowsprit",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "board the ship"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind out along the bow beam"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "leap off the end to grab it → fall in the sea → respawn high on the mast"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The pickup deliberately throws you into the sea, and the respawn puts you atop the mast where ropes and beams are otherwise unreachable (G3 \"Walkin' the Plank\").",
+   "evidence": "G3 p105, p108; J3 p021; LP3 0:51:00-0:51:05 (\"5 of 5 stat points\", then \"Shark Attack!\")",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-hawk",
+   "type": "stat-point-set",
+   "label": "Stat points ×4 more (Hawk, Koston, Muska, Thomas)",
+   "zone": "Z4, Z1, Z2",
+   "landmark": "decking above the pool in the corner opposite the start (rail by the Neversoft vending machines); directly behind the start; above the coping between the snakerun and the shallow pool; above the tunnel to the half pipe (The Boss Gap)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p108; J3 p021 (Hawk: behind you at the start; long barrier between two QPs; small barrier by the vending machines; in the bowl zone; end of the galleon bowsprit)",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-cab",
+   "type": "stat-point-set",
+   "label": "Stat points ×4 more (Caballero, Lasek, Reynolds)",
+   "zone": "Z1, Z4, Z2",
+   "landmark": "second funbox right → rail above; beam halfway up the wall over the lower pools, leap off the end toward the Crowd Pleaser I rail; the Jersey Nun Gap QPs; above the deep end of the pool nearest the half pipe",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p108",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-cam",
+   "type": "stat-point-set",
+   "label": "Stat points ×4 more (Campbell, Margera, Rowley)",
+   "zone": "Z1, Z4, Z2",
+   "landmark": "second funbox left (grind the extension); wooden railing on the deck between the snakerun and the street course; out of the vending-machine pool into the Crowd Pleaser II rail; between the flags by the observation deck (leap from the half-pipe deck)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "grind",
+    "lip",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p108",
+   "confidence": "high"
+  },
+  {
+   "id": "SP-glif",
+   "type": "stat-point-set",
+   "label": "Stat points ×4 more (Glifberg, Mullen, Steamer)",
+   "zone": "Z2, Z4, Z1",
+   "landmark": "Boneless out of the half pipe into a grind on the surfboard; sky out of the shallow pool along the back wall; far side of the street course high above the short QPs left of the tunnel; speaker shelf above the Heartbreaker gap (launch off the vert ramp below, grind the shelf)",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "boneless",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "G3 p108",
+   "confidence": "high"
+  },
+  {
+   "id": "DECKS",
+   "type": "deck-set",
+   "label": "New decks ×3 (skater groups)",
+   "zone": "Z1, Z3",
+   "landmark": "(a) Hawk group: shallow pool → grind the left side of the lights above the start (Russian Tease Gap), hold off the far side; (b) Caballero group: speaker shelf above the Heartbreaker QPs (launch off the ramps below; if the pirates destroyed those ramps: shallow pool → lights above the start → ollie to the rail by the wall → grind to the speakers); (c) Campbell group: atop the platform above the snakerun: from the half-pipe decking onto the platform above the stairs (grind the flags), roll to the very top above the pool. J3 (Hawk): on a high lamp in front of the judges, reached from the curved edge of the bowl below, grinding the lamp's left edge",
+   "layer": "lights / shelf / platform top",
+   "heightM": "overhead",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck pickups",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "pool → lights / ramps → shelf / deck → platform"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "The Caballero deck has a documented fallback route for the post-cannon park: the guide plans for the event destroying the original launch.",
+   "evidence": "G3 p106; J3 p021",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "type": "remake-collectible",
+   "label": "Remake: cash ×3",
+   "zone": "Z4, Z5, Z1",
+   "landmark": "turn right from the start, up the ramp, left across the pools; outside straight ahead on the palm tree; back left corner QP → rail above to the right → next rail right, all the way",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "cash",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 skater-island",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "type": "remake-collectible",
+   "label": "Remake: hidden deck",
+   "zone": "Z1",
+   "landmark": "back left corner QP → rail above to the left → wire to the deck",
+   "layer": "wire",
+   "heightM": "overhead",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "corner QP"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "rail"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "wire"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "wire"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 skater-island",
+   "confidence": "high"
+  },
+  {
+   "id": "R-LOGO",
+   "type": "remake-collectible",
+   "label": "Remake: Iron Galaxy logo",
+   "zone": "Z6",
+   "landmark": "board the ship, grind the bowsprit, jump into the water; respawn in the crow's nest, where the logo is",
+   "layer": "crow's nest",
+   "heightM": "mast top",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "logo",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "bowsprit"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "into the water"
+    },
+    {
+     "step": 3,
+     "move": "other",
+     "from": "",
+     "to": "",
+     "geometry": "respawn in the crow's nest"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "The remake turns the original's fall-and-respawn into the access to a collectible.",
+   "evidence": "PS34 skater-island",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "type": "remake-collectible",
+   "label": "Remake: panda plushie",
+   "zone": "Z5",
+   "landmark": "left side of the beach, behind the small boat",
+   "layer": "sand",
+   "heightM": "ground",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "plushie",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "roll",
+     "from": "",
+     "to": "",
+     "geometry": "outside, behind the boat"
+    }
+   ],
+   "moves": [],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 skater-island",
+   "confidence": "high"
+  },
+  {
+   "id": "R-SP",
+   "type": "remake-collectible",
+   "label": "Remake: stat points ×3",
+   "zone": "Z4, Z1, Z6",
+   "landmark": "above the bowls (right from the start, up the ramp); between two tall QPs ahead of the start; on the bowsprit",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "",
+    "fromSpawn": null,
+    "reads": "stat discs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "mixed",
+     "from": "",
+     "to": "",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not observed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34 skater-island",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Fiji Mermaid Hop",
+   "points": 50,
+   "kind": "over-object",
+   "location": "from the start, clear the first funbox on the right in one bound",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Street Park Re-Entry Rail",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "short ledge against the wall by the shallow pool, clockwise → QPs behind the start (assignment from OCR order; medium confidence)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Mr. O'Donnell Hop",
+   "points": 50,
+   "kind": "other",
+   "location": "description not transcribed",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Piedmont, North Dakota Gap",
+   "points": 50,
+   "kind": "over-object",
+   "location": "funbox right of the start → over the wooden railing into the pool behind",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Dancin' on the Tables Transfer",
+   "points": 150,
+   "kind": "pool-transfer",
+   "location": "QPs behind the start → shallow pool",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Crowd Pleaser I",
+   "points": 100,
+   "kind": "lip",
+   "location": "ramp behind the pool → stall on a rail (OCR partly garbled)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "SP-cab"
+   ],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Russian Tease Gap",
+   "points": 250,
+   "kind": "transfer",
+   "location": "shallow pool → grind the lights above the start",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [
+    "DECKS"
+   ],
+   "evidence": "G3 p109"
+  },
+  {
+   "name": "Hit the Stairs",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "rail atop the funbox by the snakerun → a stair of the stepped box nearer the tunnel",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p110"
+  },
+  {
+   "name": "42 Miles to NYC Hop",
+   "points": 50,
+   "kind": "over-object",
+   "location": "over the second funbox on the left after the start",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p110"
+  },
+  {
+   "name": "Hell No H2O Gap",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "one set of sprinklers → another",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p110"
+  },
+  {
+   "name": "The Dreamer Gap",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "wooden handrail above the pools → sprinkler system overhead",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p110"
+  },
+  {
+   "name": "The Heartbreaker Gap",
+   "points": 50,
+   "kind": "lip",
+   "location": "transfer the gap in the wall ramps across from the start (coping grind lap)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "DECKS",
+    "SP-glif"
+   ],
+   "evidence": "G3 p110"
+  },
+  {
+   "name": "The Jersey Nun Gap",
+   "points": 50,
+   "kind": "lip",
+   "location": "the second break in the perimeter ramps (G3 p104)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "SP-cab"
+   ],
+   "evidence": "G3 p104, p110"
+  },
+  {
+   "name": "Stair Hop",
+   "points": 50,
+   "kind": "over-object",
+   "location": "from the deck above the vending-machine pool, over the stairs into the half pipe",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "Stair Set",
+   "points": 50,
+   "kind": "other (grind)",
+   "location": "handrail down the steps from the half-pipe deck to the floor",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "At the 50",
+   "points": 50,
+   "kind": "pool-transfer",
+   "location": "vending-machine pool → half pipe, landing a short way in",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "At the 10",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "same, landing further in",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "At the 5",
+   "points": 500,
+   "kind": "pool-transfer",
+   "location": "same, even further",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "Touchdown!",
+   "points": 1000,
+   "kind": "pool-transfer",
+   "location": "one huge jump from the pool into the half pipe's flat bottom",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "The Flame Transfer",
+   "points": 250,
+   "kind": "pool-transfer",
+   "location": "between the vending-machine pool and the half pipe, either side",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "South Amboy, NJ Gap",
+   "points": 50,
+   "kind": "over-object",
+   "location": "short street QPs → over the railing into the vending-machine pool",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "Crowd Pleaser II",
+   "points": 100,
+   "kind": "lip",
+   "location": "out of the vending-machine pool → stall on the rail above",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "SP-cam"
+   ],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "Coping 2 Rail Pop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "pool/bowl coping → a deck handrail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "Rail 2 Rail Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "deck rail to rail (text partly illegible)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p111"
+  },
+  {
+   "name": "That's a Mouthful",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "vending machines → wooden rail → next vending machines",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "Handrail Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "rail on the back wall under the bleachers by the peanut pool → rail between the vending machines",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "The Boss Gap",
+   "points": 50,
+   "kind": "channel",
+   "location": "QPs flanking the tunnel back to the half pipe",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [
+    "SP-hawk"
+   ],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "The Law Transfer",
+   "points": 250,
+   "kind": "transfer",
+   "location": "half pipe → snakerun (either direction; easiest from the side away from the wall)",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "The Rollerboy Gap",
+   "points": 250,
+   "kind": "over-object",
+   "location": "wall-side lip of the half pipe, left to right, off the edge through the opening in the platform, land on the ramp below",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "The Aaron C. Roll-In of Death Gap",
+   "points": 50,
+   "kind": "channel",
+   "location": "transfer over the half-pipe roll-in",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p112; LP3 0:41:56"
+  },
+  {
+   "name": "Surf's Up",
+   "points": 150,
+   "kind": "other (grind)",
+   "location": "out of the half pipe into a grind on the surfboard on the wall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "SP-glif"
+   ],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "Skull N' Bones",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "from the half pipe, land in a grind on the pirate flag between the half pipe and the observation platform (opens the doors)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "PIRATE-AREA"
+   ],
+   "evidence": "G3 p112"
+  },
+  {
+   "name": "Stars N' Stripes",
+   "points": 100,
+   "kind": "other (grind)",
+   "location": "the same on the US flag beside it",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "PIRATE-AREA"
+   ],
+   "evidence": "G3 p112; LP3 0:50:05"
+  },
+  {
+   "name": "Drive Thru Window",
+   "points": 150,
+   "kind": "other (through opening)",
+   "location": "ollie through the window in the lower part of the observation platform",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "High Rail Stomp",
+   "points": 250,
+   "kind": "lip",
+   "location": "snakerun → grind or lip on a short wooden rail atop the observation platform",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "The Drop",
+   "points": 250,
+   "kind": "other (drop)",
+   "location": "ollie off the top of the observation deck into the snakerun",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Bowl Transfer",
+   "points": 50,
+   "kind": "pool-transfer",
+   "location": "one pool to another through the air",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Palm Tree Hop",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "grind the 2x4 by the destroyed ramps → the palm tree outside (exists after the cannon blast)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "A Burning Sensation",
+   "points": 50,
+   "kind": "over-object",
+   "location": "leap the bonfire on the beach",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Blast 'Em",
+   "points": 100,
+   "kind": "channel",
+   "location": "the two QPs against the outside wall on the beach",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Cannon Fodder",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip above the cannons on the outside wall",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Fearless Shark Hop",
+   "points": 250,
+   "kind": "other",
+   "location": "description not transcribed (name suggests the water at the bow)",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p113"
+  },
+  {
+   "name": "Mast Transfer",
+   "points": 100,
+   "kind": "transfer",
+   "location": "from the mast nearer the stern to the QPs either side",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Swab the Deck Gap",
+   "points": 50,
+   "kind": "channel",
+   "location": "the two green QPs on the main deck",
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Keel Haul Gap",
+   "points": 50,
+   "kind": "over-object",
+   "location": "QP on the rear deck → up and over the horizontal beam of the small stern mast",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Look Out Below!",
+   "points": 200,
+   "kind": "lip",
+   "location": "QP nearer the bow → stall on the wooden ledge on the mast",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Sail Rip",
+   "points": 100,
+   "kind": "other (through sail)",
+   "location": "out of the stern bowl through the large white sail",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Cannon Grind",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "red sidewall of the ship across the gangplank gap",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Shore Leave",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "deck → front-mast beam → rope down to the beach",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Land Lubber",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "as Shore Leave on the centre mast",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Front Mast Back Grind",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "out on the bow beam (stat point) and grind back onto the ship",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "SP-bow"
+   ],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "Roof Bustin' (Neversoft Challenge)",
+   "points": 100,
+   "kind": "other",
+   "location": "hint only",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  },
+  {
+   "name": "How'd You Find That? (Neversoft Challenge)",
+   "points": 500,
+   "kind": "other",
+   "location": "hint only",
+   "moves": [
+    "unknown"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p114"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Grind the pirate flag beside Old Glory (from the half pipe, or off the hump before the small wooden-stair area)",
+   "opens": "Doors from the park to the beach; the beach and the pirate ship become skateable",
+   "neededFor": [
+    "PIRATE-AREA",
+    "SP-bow",
+    "R-LOGO",
+    "R-PANDA"
+   ],
+   "evidence": "G3 p105, p112; J3 p021; LP3 0:50:05-0:50:15"
+  },
+  {
+   "trigger": "Be seen on the beach by the pirates",
+   "opens": "Cannons fire: a large chunk of the street course is destroyed (ramps near the speaker shelf / Heartbreaker area); a 2x4 by the destroyed ramps now links to the palm tree outside (Palm Tree Hop). G3 suggests staying inside after the flag grind to keep the park intact",
+   "neededFor": [],
+   "evidence": "G3 p104-p106, p113"
+  },
+  {
+   "trigger": "Fall into the sea (e.g. off the bow beam)",
+   "opens": "Respawn high on the mast (\"Walkin' the Plank\"): ropes and beams otherwise unreachable; remake: crow's nest with the Iron Galaxy logo",
+   "neededFor": [
+    "SP-bow",
+    "R-LOGO"
+   ],
+   "evidence": "G3 p105; LP3 0:51:05; PS34"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Half pipe to sprinklers",
+   "sequence": [
+    "half-pipe tricks (special)",
+    "grind right of the roll-in",
+    "through the platform hole (Rollerboy)",
+    "manual",
+    "clockwise grind round the snakerun",
+    "wooden railing before the incline",
+    "sprinklers (The Dreamer)",
+    "across to the next set (Hell No H2O)"
+   ],
+   "links": [
+    "manual",
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "Uses the overhead sprinkler pipes as the high grind layer.",
+   "evidence": "G3 p104"
+  },
+  {
+   "id": "L2",
+   "name": "Beach line",
+   "sequence": [
+    "grind the pirate flag",
+    "outside (cutscene)",
+    "back in: The Boss Gap over the tunnel",
+    "revert, manual outside",
+    "over the bonfire (A Burning Sensation)",
+    "manual to the rowboat",
+    "airs",
+    "revert, manual, bonfire again",
+    "manual up the wall QPs → Cannon Fodder"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "PIRATE-AREA"
+   ],
+   "why": "Connects inside and outside through the opened doors.",
+   "evidence": "G3 p104"
+  },
+  {
+   "id": "L3",
+   "name": "Perimeter coping lap",
+   "sequence": [
+    "double heelflip over the nearest funbox (Fiji Mermaid Hop)",
+    "manual",
+    "second funbox rail",
+    "manual up the vert ramp on the left",
+    "clockwise perimeter coping: Heartbreaker, Jersey Nun",
+    "manual",
+    "special grind left rail",
+    "lower rail by the vending machines",
+    "manual into the half pipe",
+    "over the roll-in (Aaron C.)"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [
+    "DECKS"
+   ],
+   "why": "The wall-covering QPs form a coping loop round the street course.",
+   "evidence": "G3 p104"
+  },
+  {
+   "id": "L4",
+   "name": "Pool-to-pipe distance ladder",
+   "sequence": [
+    "vending-machine pool",
+    "At the 50",
+    "At the 10",
+    "At the 5",
+    "Touchdown!"
+   ],
+   "links": [],
+   "collectibles": [],
+   "why": "One transfer graded by landing distance: 50 → 100 → 500 → 1000 points.",
+   "evidence": "G3 p111"
+  },
+  {
+   "id": "L5",
+   "name": "TAS one-combo heat",
+   "sequence": [
+    "360 Boneless + 360 Varial over the start funbox",
+    "The 900 + Wallie + One Foot Japan up the wall QP extension",
+    "one wheel nosemanual",
+    "end run"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [],
+   "why": "≈ 116,000 points in ≈ 3 s; judges 91.0-92.8 (score 92.2); repeated for gold.",
+   "evidence": "TAS3 5:02-5:20"
+  },
+  {
+   "id": "L6",
+   "name": "Human roll-in combo",
+   "sequence": [
+    "180 over the roll-in (Aaron C.)",
+    "pop shove-it",
+    "BS 50-50",
+    "180 double heelflip",
+    "Coping 2 Rail Pop",
+    "FS feeble",
+    "Kissed the Rail"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "A \"hidden combo\" in the half pipe worth 31,498 (LP3).",
+   "evidence": "LP3 0:41:56"
+  },
+  {
+   "id": "L7",
+   "name": "Ship deck line",
+   "sequence": [
+    "two green QPs (Swab the Deck)",
+    "Mast Transfer",
+    "stern bowl → Sail Rip",
+    "sidewall (Cannon Grind)",
+    "mast beam → rope to the beach (Shore Leave / Land Lubber)"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "SP-bow"
+   ],
+   "why": "The ship is a small park of its own with ropes back to the beach.",
+   "evidence": "G3 p114"
+  }
+ ],
+ "guidance": [
+  "The switch is a flag in plain view of the half pipe, next to the US flag; both are gaps, so the player is likely to grind them while skating the pipe (G3 p105, p112).",
+  "The cutscene when you first go outside shows the ship; the cannon blast makes the event obvious by damaging the park (G3 p104-p105).",
+  "Every skater group's stat point is on the bow beam: one shared destination that draws everyone to the ship (G3 p105, p108).",
+  "Overhead lines (lights above the start, sprinklers, speaker shelf, wires) are the hidden layer for decks and stat points.",
+  "Remake: the logo is in the crow's nest and the respawn after jumping in the water takes you there (PS34)."
+ ],
+ "designLogic": [
+  "No tape in a competition, but a whole hidden stage: the pirate ship is the competition's exploration reward (G3 p105; PS34 all-tapes list omits Skater Island).",
+  "A decorative switch: the flag that opens the doors is a scored gap on the half pipe's natural line, so players can find it by chance (G3 p112).",
+  "The event has a cost: going outside makes the pirates fire and destroys part of the street course. G3 documents the alternative deck route for the damaged park and suggests staying inside to keep it intact (G3 p105-p106).",
+  "Falling as transport: the bow-beam stat point drops you in the sea, and the respawn puts you high on the mast, the only way to reach some ropes and beams (G3 p105). The remake hangs a collectible on that mechanic (PS34).",
+  "A graded transfer family (At the 50/10/5/Touchdown!) teaches distance control on one geometry and pays 20× for the extreme version (G3 p111).",
+  "Exploring costs score: the human spent a heat reaching the bow and scored 0.0 / 9.5 / 0.0 from the judges (LP3 0:50:35). Competition hides reward exploration, not the medal.",
+  "One clean combo wins: the TAS takes gold with two 3-second heats from the start funbox and the wall QP next to it (TAS3 5:02-5:16).",
+  "Real-park fidelity: G3 says the 20,000 sq ft park was \"faithfully recreated\" (p103); the fantasy layer (beach, ship, cannons) is added behind a door.",
+  "A side-by-side transition classroom: peanut bowl with hips (deep and shallow ends), mini snakerun, vert-less shallow pool, a pool next to the big half pipe and an immense corner vert ramp (G3 p103).",
+  "Through-gaps teach aiming: Drive Thru Window (through the platform window), Rollerboy (through the platform opening), Sail Rip (through the sail), Touchdown! (into the half pipe's flat) (G3 p111-p114).",
+  "The secret area loops back: the ship has ropes from its mast beams down to the beach (Shore Leave, Land Lubber) and a beam grind back aboard from the bow (Front Mast Back Grind), so it is a small park with its own exits (G3 p114)."
+ ],
+ "remakeChanges": [
+  "Still a medal competition; no tape added (PS34).",
+  "Platinum pro goal: lip trick on the mast next to the pirate skeleton (PS34).",
+  "Collectibles added: cash ×3 (one on the palm tree outside), hidden deck on a wire from the back-left corner QP, Iron Galaxy logo in the crow's nest (reached by jumping in the water from the bowsprit and respawning there), panda behind the small boat, stat points ×3 (one on the bowsprit) (PS34).",
+  "LP34 shows the ship visited during heats (0:39:50-0:40:30) and a \"Several Days Later\" title card during a heat (0:41:00), likely the remake's version of the water respawn (inferred; low confidence).",
+  "PS1 edition (VG): the same warehouse park (half pipe with a logo, peanut bowl with a skull logo, funboxes, cables), but the outside area is an asphalt lot with a wooden funbox, a wooden ramp, curbs and cables from the roof; no beach and no ship."
+ ],
+ "transfer": [
+  "Flag switch crystal: hang two flags on a wire beside a big half pipe; grinding the skull flag opens a gate to an outdoor area with a ship; the crystal sits at the end of the bowsprit (grind out, then ollie off the end to collect).",
+  "Fall-to-climb: falling into the sea respawns the player on the mast top; from there, ropes (snapping or swinging) and beams reach a second crystal-style reward that cannot be reached any other way.",
+  "Distance ladder: a pool beside a half pipe with gems placed at 3, 6 and 9 m into the pipe, the last needing a full-speed transfer (≈ 13.8 m at maximum charge).",
+  "Consequence event: opening the outdoor area triggers cannons that destroy one set of ramps inside; leave a documented fallback line (lights → wall rail) so the indoor reward stays reachable."
+ ],
+ "openQuestions": [
+  "Descriptions of Mr. O'Donnell Hop and Fearless Shark Hop (not legible in my reading); Rail 2 Rail Hop only partly legible.",
+  "Exactly which ramps the cannon blast destroys (G3 implies the speaker-shelf / Heartbreaker area).",
+  "G3 header says 54 gaps; 53 entries (incl. two Neversoft Challenges) were transcribed.",
+  "Context of the remake's \"Several Days Later\" card."
+ ]
+}
