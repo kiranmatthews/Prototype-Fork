@@ -25,6 +25,7 @@ import { CARLISLE_HARBOUR_BONUS } from './carlisle-harbour-bonus';
 import { MAYFIELD_BONUS_LEVEL } from './mayfield-bonus';
 import { DUSTY_ROAD_BONUS_COURSE } from './dusty-road-bonus';
 import { EMBER_RELIQUARY_BONUS_COURSE } from './ember-reliquary-bonus';
+import { POWDERKEG_BONUS_LEVEL } from './powderkeg-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -132,6 +133,8 @@ BONUS_LEVEL_ENTRIES.push({id:'bonus-jungle-gate',name:ANCIENT_GATES_BONUS.name,d
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rooftop-relay',name:ROOFTOP_PORCH_BONUS.name,data:ROOFTOP_PORCH_BONUS});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVEL.name,data:RUMBLEWATER_BONUS_LEVEL});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rolling-bones',name:ROLLING_BONES_BONUS_LEVEL.name,data:ROLLING_BONES_BONUS_LEVEL});
+BONUS_BY_PARENT_ID.set('powderkeg-peak',POWDERKEG_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-powderkeg-peak',name:POWDERKEG_BONUS_LEVEL.name,data:POWDERKEG_BONUS_LEVEL});
 
 /** Unknown editor courses keep the small safe room; campaign aliases share
  * their parent's explicit room, so renamed/editable replacements stay linked. */

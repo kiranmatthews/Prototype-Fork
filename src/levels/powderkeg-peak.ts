@@ -51,7 +51,7 @@ const slate = (x0: number, x1: number, z0: number, z1: number, bottom: number, t
   add({ t: 'decor', dkind: 'crowncrashcavernrock', p: [r3((x0 + x1) / 2), r3(bottom), r3((z0 + z1) / 2)], s: [r3(x1 - x0), r3(top - bottom), r3(z1 - z0)], yaw: seed % 2 ? 180 : 0, seed, scenerySolid: false, grp: G.rock, nm });
 /** Shadowed rock behind the slate pieces: the clefts between them close on this, never on sky. */
 const backing = (x0: number, x1: number, z0: number, z1: number, bottom: number, top: number, nm: string): CustomComponent =>
-  block(x0, x1, z0, z1, top, top - bottom, nm, { tex: 'solid', color: '#34384c', edgeGrinding: false, grp: G.rock });
+  block(x0, x1, z0, z1, top, top - bottom, nm, { tex: 'solid', color: '#3d4259', edgeGrinding: false, grp: G.rock });
 /** A touch-kill sheet at height `y` (the engine's box reaches 0.25 m above and 1.75 m below it). */
 const kill = (x0: number, x1: number, z0: number, z1: number, y: number, nm: string): CustomComponent =>
   add({ t: 'pit', p: [r3((x0 + x1) / 2), r3(y), r3((z0 + z1) / 2)], s: [r3(x1 - x0), 1, r3(z1 - z0)], invisible: true, grp: G.bounds, nm });
@@ -234,7 +234,9 @@ const mountain = new Mountain({
     pad(0, -CREST_S, 10, 10, CREST_Y, 9),
     pad(0, -578, 31, 27, TARN_Y, 12),
     rectPad(-42, -627, 110, -602.5, undefined),
-    pad(-28, -614, 14, 11, SUMMIT_Y, 8),
+    pad(-28, -614, 14, 12.6, SUMMIT_Y, 8),
+    // The shore runs flat to the foot of the headwall: the summit's skirt must never drape down the cliff.
+    rectPad(-44, -602.4, 112, -591, TARN_Y, 3, 'path'),
     pad(FINISH[0], FINISH[2] + 10, 13, 18, FINISH[1], 10),
   ],
 });
@@ -254,7 +256,7 @@ for (const [path, gaps] of [[RUN1, RUN1_GAPS], [RUN2, RUN2_GAPS]] as const) for 
 C.push(...padMeshes(mountain, -17, -14, 17, 19, 1.6, { nm: 'Lodge yard', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, -11, -208, 11, -188, 1.6, { nm: 'First crest', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, -33, -603, 33, -552, 2, { nm: 'Tarn shore', grp: G.ground, tex: 'snow' }));
-C.push(...padMeshes(mountain, -44, -626, -14, -602, 1.6, { nm: 'Summit', grp: G.ground, tex: 'snow' }));
+C.push(...padMeshes(mountain, -44, -626, -14, -602.7, 1.6, { nm: 'Summit', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, FINISH[0] - 14, FINISH[2] - 8, FINISH[0] + 14, FINISH[2] + 28, 1.6, { nm: 'Powder works yard', grp: G.ground, tex: 'snow' }));
 const routes = [CLIMB, RUN1, RUN2];
 const nearRoute = (x: number, z: number): boolean => routes.some(path => path.nearest(x, z, 85) !== null) || (Math.abs(x - 34) < 120 && z < -520 && z > -690);
@@ -276,8 +278,10 @@ const runFruit = (path: Path, s0: number, s1: number, lat0: number, lat1: number
 /** A straight grind rail between two stations of a run, `lift` above the snow at each end. */
 const runRail = (path: Path, s0: number, s1: number, lat: number, lift: number, nm: string): CustomComponent => {
   const a = on(path, s0, lat, lift), b = on(path, s1, lat, lift);
+  railPosts.push({ path, s0, s1, lat, lift });
   return add({ t: 'rail', p: a, pts: [[0, 0, 0, 0], [r3(b[0] - a[0]), r3(b[2] - a[2]), 0, r3(b[1] - a[1])]], grp: G.course, nm });
 };
+const railPosts: { path: Path; s0: number; s1: number; lat: number; lift: number }[] = [];
 const runCheckpoint = (path: Path, s: number, nm: string) => checkpoint(on(path, s, 0), nm);
 
 // First Tracks: one decision every two seconds or so. Speed is the key to every box on a run: below 12.5 m/s a crate trips the board.
@@ -389,6 +393,9 @@ block(90, 104, ROW_B - 2, ROW_B + 2, 30, 42, 'Rock closing the east landing', pr
 const lowerTop = (x: number): number => 18.8 + (19.6 - 18.8) * Math.max(0, Math.min(1, (62 - x) / 4)) + (22.4 - 19.6) * Math.max(0, Math.min(1, (32 - x) / 4));
 for (let x = -9, i = 0; x < 104; x += 23, i++) slate(x, Math.min(105, x + 26), ROW_A - 7.5, ROW_A - 2, -11, Math.max(lowerTop(x), lowerTop(x + 26)) - .15, 40 + i, `Headwall slate, lower ${i + 1}`);
 for (let x = -17, i = 0; x < 104; x += 24, i++) slate(x, Math.min(105, x + 27), ROW_B - 9, ROW_B - 2, 12, 36.6 + (i % 2) * 1.2, 50 + i, `Headwall slate, upper ${i + 1}`);
+// A second course behind the first, half a piece along, so the clefts of one close on the faces of the other.
+for (let x = 3, i = 0; x < 96; x += 23, i++) slate(x, Math.min(104, x + 24), ROW_A - 8, ROW_A - 3.1, -11, Math.max(lowerTop(x), lowerTop(x + 24)) - .5, 70 + i, `Headwall slate, lower second course ${i + 1}`);
+for (let x = -5, i = 0; x < 96; x += 24, i++) slate(x, Math.min(104, x + 25), ROW_B - 9.5, ROW_B - 3.1, 12, 35.8, 80 + i, `Headwall slate, upper second course ${i + 1}`);
 backing(-8, 30, ROW_A - 6, ROW_A - 3.9, -11, 21.6, 'Headwall heart, lower west'); backing(30, 60, ROW_A - 6, ROW_A - 3.9, -11, 18.8, 'Headwall heart, lower middle'); backing(60, 104, ROW_A - 6, ROW_A - 3.9, -11, 18, 'Headwall heart, lower east');
 backing(-16, 104, ROW_B - 8, ROW_B - 3.9, 12, 35.4, 'Headwall heart, upper');
 C.push(...snowCap({ line: [[-8, ROW_A - 2], [104, ROW_A - 2]], side: -1, y: t => lowerTop(-8 + t) - .3, depth: 4, height: .9, overhang: .1, seed: 42, nm: 'Headwall shelf snow', grp: G.rock }));
@@ -437,6 +444,71 @@ foe('grunt', 16.5, 22.6, ROW_B, 1, 1.4, 'Snow crab in the pocket between the twi
 stamper(13.5, 22.6, ROW_B, 1.6, 'Twin stampers, second: half a cycle off, so the pocket is a stop');
 crate(4.8, 23.6 + 2.3, ROW_B, 'mystery', 'Over the last pillar');
 stack(-3.5, APPROACH_Y, ROW_B, ['wood', 'wood', 'wood'], 'Tower on the summit approach (the double jump reaches its top)');
+
+// ───────────────────────────── The Old Adit · the gem route ─────────────────────────────
+// A mine mouth eight metres up the rock west of the hoist. Only the steel arrow below it reaches the lip (arrow, double
+// jump, grab): a floor double jump falls a metre short. Inside, a detached ice gallery carries the hard recombinations
+// (ice with Nitro at the lip, rotten shelves, quick twin stampers, a committed gap onto an occupied pillar, an arrow
+// climb) to the blue gem. Its boxes are not needed to finish, and no deathless run is asked for.
+const MOUTH: P3 = [-16, 0, -601], CAVE_X = 500, CAVE_Z = 0;
+floorBlock(-20, -12, -602.4, -599.2, MOUTH[1], 1.2, 'Adit mouth ledge');
+slate(-21, -11, -602.9, -599, -2.6, MOUTH[1] - .22, 91, 'Adit mouth ledge: slate corbel');
+block(-17.7, -14.3, -602.5, -602.2, 3.3, 3.3, 'Adit mouth: the dark of the tunnel', { tex: 'solid', color: '#0d0f18', edgeGrinding: false, grp: G.rock });
+crate(-16, TARN_Y + .17, -597.6, 'metalbounce', 'Steel arrow under the adit mouth (the tool: it cannot be smashed or spent)');
+add({ t: 'returnportal', p: [MOUTH[0], MOUTH[1], -601.9], s: [3, 3, .9], yaw: 0, to: [CAVE_X + 2.5, .12, CAVE_Z], exitYaw: 270, artProxy: true, grp: G.course, nm: 'Into the Old Adit' });
+interface Shelf { x0: number; x1: number; y: number; ice?: boolean; crumble?: boolean; nm: string; }
+const ADIT: Shelf[] = [
+  { x0: 0, x1: 10, y: 0, nm: 'Adit landing' },
+  { x0: 13.2, x1: 23, y: .8, ice: true, nm: 'Glazed drift with Nitro at its lip' },
+  { x0: 26.4, x1: 29.4, y: 1.6, crumble: true, nm: 'Rotten shelf, first' },
+  { x0: 31, x1: 34, y: 2.2, crumble: true, nm: 'Rotten shelf, second' },
+  { x0: 35.6, x1: 46, y: 2.8, nm: 'Quick stamper gallery' },
+  { x0: 50.4, x1: 53.6, y: 3.6, nm: 'Bristleback pillar past the wide gap' },
+  { x0: 56.6, x1: 64, y: 4.4, nm: 'Arrow floor' },
+  { x0: 64.5, x1: 75, y: 8.8, nm: 'Gem shelf' },
+];
+const GEM_Y = 8.8;
+for (const q of ADIT) {
+  const x0 = CAVE_X + q.x0, x1 = CAVE_X + q.x1;
+  if (q.crumble) { add({ t: 'crumble', p: [r3((x0 + x1) / 2), q.y, CAVE_Z], s: [r3(x1 - x0), .5, 4], tex: 'bridge-ice', color: ICE, grp: G.hazards, nm: q.nm }); continue; }
+  block(x0, x1, CAVE_Z - 2, CAVE_Z + 2, q.y, SLAB, q.nm, q.ice ? { tex: 'ice', color: ICE, slip: true } : { tex: 'plank', color: '#b08a5c' });
+  block(x0, x1, CAVE_Z - 2, CAVE_Z + 2, q.y - SLAB, q.y + 6 - SLAB, `${q.nm}: body`, { artProxy: true, edgeGrinding: false, grp: G.rock });
+  C.push(...cliff({ line: [[x0, CAVE_Z - 2], [x0, CAVE_Z + 2], [x1, CAVE_Z + 2], [x1, CAVE_Z - 2]], side: -1, bottom: -6.4, top: q.y - .4, palette: BLUE_ICE, relief: .3, batter: .02, seed: Math.round(q.x0) + 5, ice: 0, nm: `${q.nm}: ice column`, grp: G.rock }));
+}
+// The gallery itself: a wall of blue ice behind, a roof that keeps the sun out, dark floor far below, pit props along the wall.
+block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z - 2.6, 19, 27, 'Adit: ice wall heart', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z + 3.4, 21, 2.4, 'Adit: roof', { tex: 'solid', color: '#16294a', edgeGrinding: false, grp: G.rock });
+block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z + 3.4, -6.4, 1.6, 'Adit: the dark below', { tex: 'solid', color: '#0e1a33', edgeGrinding: false, grp: G.rock });
+for (const x of [CAVE_X - 8, CAVE_X + 80.6]) block(x, x + 2.4, CAVE_Z - 7, CAVE_Z + 3.4, 19, 27, 'Adit: end wall', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+C.push(...cliff({ line: [[CAVE_X - 6, CAVE_Z - 2.4], [CAVE_X + 81, CAVE_Z - 2.4]], side: -1, bottom: -6.4, top: 18.8, palette: BLUE_ICE, relief: .75, batter: 0, seed: 77, ice: 0, nm: 'Adit: ice wall', grp: G.rock }));
+{
+  const props = new Timber('Adit pit props', G.scenery);
+  for (let x = CAVE_X + 5; x < CAVE_X + 78; x += 9.5) { const base = -6.4; props.beam([x, base, CAVE_Z - 2.1], [x, 14.5, CAVE_Z - 2.1], .34); props.beam([x - 1.2, 14.5, CAVE_Z - 2.1], [x + 1.2, 14.5, CAVE_Z - 2.1], .3); }
+  for (const dx of [-1.75, 1.75]) props.beam([MOUTH[0] + dx, MOUTH[1] - .1, -602.05], [MOUTH[0] + dx, MOUTH[1] + 3.4, -602.05], .3);
+  props.beam([MOUTH[0] - 2.1, MOUTH[1] + 3.5, -602.05], [MOUTH[0] + 2.1, MOUTH[1] + 3.5, -602.05], .34);
+  C.push(...props.done());
+}
+kill(CAVE_X - 6, CAVE_X + 81, CAVE_Z - 2.6, CAVE_Z + 2.6, -3.4, 'Adit: fall');
+fence(CAVE_X - 6, CAVE_X + 81, CAVE_Z + 2, CAVE_Z + 2.4, -4, 26, 'Adit: lip fence');
+add({ t: 'zone', p: [CAVE_X + 37.5, 0, CAVE_Z], s: [91, 1, 8], dir: 'E', grp: G.camera, nm: 'Old Adit: side-on, heading east' });
+add({ t: 'camnode', p: [CAVE_X + 37.5, 6, CAVE_Z - 2], s: [96, 34, 16], cameraView: true, cameraPresentationOnly: true, cameraPosition: [CAVE_X + 37.5, 8, CAVE_Z + 22], cameraTarget: [CAVE_X + 37.5, 5.4, CAVE_Z],
+  cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 3, grp: G.camera, nm: 'Old Adit: side view' });
+// Adit content.
+checkpoint([CAVE_X + 4.5, 0, CAVE_Z], 'A1 · Adit landing');
+rowOf(CAVE_X + 7, 0, CAVE_Z - 1.4, ['wood', 'wood'], 'Pair on the adit landing, against the wall (open the route)');
+crate(CAVE_X + 17.5, .8, CAVE_Z, 'wood', 'On the glazed drift (bait: the slide carries you into the Nitro)');
+crate(CAVE_X + 22.3, .8, CAVE_Z, 'nitro', 'Nitro at the lip of the ice: jump before it');
+stamper(CAVE_X + 38.2, 2.8, CAVE_Z, 0, 'Quick stamper, first', { cycle: 2.6 });
+crate(CAVE_X + 41.1, 2.8, CAVE_Z, 'mystery', 'In the pocket between the quick stampers');
+stamper(CAVE_X + 44, 2.8, CAVE_Z, 1.3, 'Quick stamper, second: half a cycle off', { cycle: 2.6 });
+foe('spiker', CAVE_X + 52, 3.6, CAVE_Z, .8, 1.4, 'Bristleback on the pillar past the wide gap');
+rowOf(CAVE_X + 58, 4.4, CAVE_Z - 1.4, ['wood', 'mystery'], 'Pair on the arrow floor, against the wall (rest before the climb)');
+crate(CAVE_X + 62.4, 4.4, CAVE_Z, 'bouncy', 'Arrow to the gem shelf');
+stack(CAVE_X + 70.5, GEM_Y, CAVE_Z - 1.4, ['wood', 'wood', 'life'], 'Tower on the gem shelf: the life on top');
+add({ t: 'colouredgem', gemColour: 'blue', p: [CAVE_X + 68, GEM_Y, CAVE_Z], grp: G.course, nm: 'The blue gem' });
+add({ t: 'returnportal', p: [CAVE_X + 74.2, GEM_Y, CAVE_Z], s: [.9, 3, 3], yaw: 0, to: [-16, r3(TARN_Y + .14), -595.4], exitYaw: 180, grp: G.course, nm: 'Back to the tarn' });
+for (const [x, y] of [[2, 0], [20, .8], [44.8, 2.8], [58, 4.4], [66.5, GEM_Y]] as const) add({ t: 'torch', p: [CAVE_X + x, y, CAVE_Z - 1.6], rise: 2.2, w: 1, grp: G.scenery, nm: 'Adit lamp' });
+fruitLine([CAVE_X + 9.6, 0, CAVE_Z], [CAVE_X + 13.6, .8, CAVE_Z], 3, 1.3); fruitLine([CAVE_X + 46.4, 2.8, CAVE_Z], [CAVE_X + 50.8, 3.6, CAVE_Z], 4, 1.7);
 
 // ───────────────────────────── Dressing ─────────────────────────────
 const ground = (x: number, z: number, dy = 0): P3 => [r3(x), r3(mountain.y(x, z) + dy), r3(z)];
@@ -488,6 +560,19 @@ for (const path of [RUN1, RUN2]) for (let st = 30, n = 0; st < path.length - 20;
   prop('crowncrashcavernrock', ground(x, z, -1.2), Math.round(rnd(n * 11) * 360), 'Slate outcrop', { s: [r3(w), r3(h), r3(w * .8)] });
 }
 
+// Each grind rail stands on hewn posts (none over a crevasse).
+{
+  const posts = new Timber('Rail posts', G.scenery);
+  for (const q of railPosts) {
+    const gaps = q.path === RUN1 ? RUN1_GAPS : RUN2_GAPS, a = on(q.path, q.s0, q.lat, q.lift), b = on(q.path, q.s1, q.lat, q.lift), n = Math.round((q.s1 - q.s0) / 3.5);
+    for (let i = 0; i <= n; i++) {
+      const st = q.s0 + (q.s1 - q.s0) * i / n; if (gaps.some(g => st > g.a - .8 && st < g.b + .8)) continue;
+      const foot = on(q.path, st, q.lat), y = a[1] + (b[1] - a[1]) * i / n;
+      posts.beam([foot[0], foot[1] - .4, foot[2]], [foot[0], y - .04, foot[2]], .16); posts.beam([foot[0] - .22, y - .09, foot[2] - .22], [foot[0] + .22, y - .09, foot[2] + .22], .12);
+    }
+  }
+  C.push(...posts.done());
+}
 // The tarn: a hut by the shore, lamps, and the hoist's timber tower against the rock.
 prop('treehouseporchhut', ground(22, -563), 270, 'Tarn hut'); lamp(9, -556); lamp(-9, -556); lamp(4.5, -600.5);
 {
@@ -513,7 +598,7 @@ add({ t: 'camnode', p: [45, 14, ROW_A - 4], s: [132, 62, 21], cameraView: true, 
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 4, grp: G.camera, nm: 'Headwall: a side view wide enough to read a stamper before you reach it' });
 
 // The summit: the last hut and the start arch of Powderkeg Run.
-prop('treehouseporchhut', ground(-36, -621.5), 0, 'Summit hut'); lamp(-19, -609);
+prop('treehouseporchhut', ground(-24.5, -622.5), 0, 'Summit hut'); lamp(-19, -609);
 { const q = on(RUN2, 9, 0); prop('crowncrashoakarch', [q[0], q[1] - .1, q[2]], 90, 'Powderkeg Run start arch', { s: [15, 9.4, 3.5] }); }
 // The powder works: the yard at the bottom of the mountain.
 prop('trialsv2crabshack', ground(FINISH[0] + 12, FINISH[2] + 14), 270, 'Powder works store'); prop('treehouseporchhut', ground(FINISH[0] - 12.5, FINISH[2] + 16), 90, 'Powder works hut');
@@ -541,7 +626,7 @@ export const POWDERKEG_PATHS = { CLIMB, RUN1, RUN2 };
 export const POWDERKEG_MOUNTAIN = mountain;
 export const POWDERKEG_BOUNDS = BOUNDS;
 export const POWDERKEG_TREES = treeCount;
-export const POWDERKEG_PLAN = { HALF, CREST_Y, CREST_S, TARN_Y, SUMMIT_Y, ROW_A, ROW_B, A0_Y, B0_Y, APPROACH_Y, FINISH, TERRACES, RAMPS, CREVASSES, ROW_A_LEDGES, ROW_B_LEDGES, RUN_HALF };
+export const POWDERKEG_PLAN = { MOUTH, CAVE_X, CAVE_Z, ADIT, GEM_Y, HALF, CREST_Y, CREST_S, TARN_Y, SUMMIT_Y, ROW_A, ROW_B, A0_Y, B0_Y, APPROACH_Y, FINISH, TERRACES, RAMPS, CREVASSES, ROW_A_LEDGES, ROW_B_LEDGES, RUN_HALF };
 export const POWDERKEG_PEAK_LEVEL: CustomLevelData = {
   v: 1, name: 'Powderkeg Peak', spawn: [0, .14, 8], killY: -44, sky: 'day', groups, components: C,
   // Late light: a low warm sun out of the south-west, blue in every shadow, haze that keeps the far slopes soft.

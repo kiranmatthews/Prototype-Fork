@@ -215,7 +215,7 @@ export const paint = (m: Mountain, x: number, z: number, g: GroundSample, n: P3)
   if (g.kind === 'piste') c = mix3(c, PISTE, g.cover * (.55 + .2 * Math.sin((x + z) * 2.1)));
   else if (g.kind === 'path') c = mix3(c, PATH, g.cover * .6);
   else if (g.kind === 'ice') c = mix3(c, ICE, g.cover);
-  else if (g.kind === 'crevasse') return mix3(CREVASSE_TOP, CREVASSE_DEEP, clamp(.15 + noise2(x / 2.3, z / 2.3) * .15 + ramp(n[1], .25, .8) * .8));
+  else if (g.kind === 'crevasse') return mix3(CREVASSE_DEEP, CREVASSE_TOP, clamp(.12 + noise2(x / 2.3, z / 2.3) * .14));
   const rock = mix3(ROCK_A, ROCK_B, clamp(.5 + noise2(x / 3.1, g.y / 1.7) * .6 + Math.sin(g.y * 1.9) * .2));
   return mix3(c, rock, steep * (1 - g.cover));
 };

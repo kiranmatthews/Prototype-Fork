@@ -4,6 +4,7 @@
 // Beats are keyed by name so a run can start at any checkpoint (POWDERKEG_START=crest|tarn|hoist|east|summit).
 export const POWDERKEG_STARTS = {
   crest: { position: [0, 10.62, -197], heading: [0, 0, -1], beat: 'first tracks' },
+  adit: { position: [0, -7.88, -562], heading: [0, 0, -1], beat: 'old adit' },
   tarn: { position: [0, -7.88, -560], heading: [0, 0, -1], beat: 'tarn and hoist' },
   hoist: { position: [4, 6.12, -606], heading: [1, 0, 0], beat: 'lower row' },
   east: { position: [85, 19.92, -611], heading: [0, 0, -1], beat: 'upper row' },
@@ -82,6 +83,26 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     fly(lx, lz, ly, { double, label, tol, spin });
   };
   const still = (frames, label = 'wait') => { for (let i = 0; i < frames; i++) step({}, label); };
+  /** Jump onto an arrow crate, double jump as the bounce slows, then make for a landing `y` up: grab its lip and climb, or land on it. */
+  const arrowLaunch = ([ax, az], [lx, lz], y, label, standOff = true) => {
+    run(`${label} approach`, () => dist(ax, az) < 2.5, () => toward(ax, az, 1), 600);
+    for (let i = 0; i < 12; i++) step({ ...toward(ax, az, 1), jumpHeld: true }, `${label} hop`);
+    step({ ...toward(ax, az, 1), jumpHeld: false, jumpReleased: true }, `${label} hop`);
+    let bounced = false, doubled = false;
+    for (let i = 0; i < 700 && !(bounced && p.grounded && Math.abs(p.pos.y - y) < .4); i++) {
+      const before = p.vVel; let sample;
+      if (p.state === 'hang') sample = { ...toward(lx, lz - 3, 1), jumpHeld: i % 20 < 10, jumpPressed: i % 20 === 0 };
+      else {
+        const overArrow = toward(ax, az + (standOff ? -.3 : 0), clamp(dist(ax, az) / 1.2, 0, 1));
+        const aim = !bounced ? overArrow : doubled && p.pos.y > y - 2.6 ? toward(lx, lz, 1) : standOff ? overArrow : toward(lx, lz, .5);
+        if (bounced && !doubled && p.vVel > 0 && p.vVel < 4) { doubled = true; sample = { ...aim, jumpHeld: true, jumpPressed: true }; }
+        else sample = doubled && p.vVel > 0 ? { ...aim, jumpHeld: true } : aim;
+      }
+      step(sample, label);
+      if (!bounced && before < 0 && p.vVel > 8) bounced = true;
+    }
+    if (!(p.grounded && Math.abs(p.pos.y - y) < .4)) fail(`${label} did not reach the landing`);
+  };
 
   // ---- board ----
   /** Where a boulder will be along its own axis `t` seconds from now (constant speed, turning at both ends). */
@@ -130,6 +151,8 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
   const stampPhase = c => (((l.time + c.phase) % c.cycle) + c.cycle) % c.cycle / c.cycle;
   /** Wait until the stamper has at least `need` seconds of hang left (or is well into its rise with a full hang to follow). */
   const waitStamper = (x, z, need, label) => { const c = stamperAt(x, z); run(label, () => { const f = stampPhase(c); return f > .9 || f * c.cycle < .38 * c.cycle - need; }, () => ({}), 600); };
+  /** Go-signal for a stamper you must pass without stopping: it is past the middle of its rise, with the whole hang still to come. */
+  const waitRise = (x, z, label) => { const c = stamperAt(x, z); run(label, () => { const f = stampPhase(c); return f > .85 && f < .93; }, () => ({}), 600); };
   const stoneAt = (x, z) => l.stones.find(q => Math.hypot(q.mesh.position.x - x, q.mesh.position.z - z) < 12 && Math.abs(q.mesh.position.z - z) < 1.5) ?? fail('no boulder');
   const spinOnce = label => { for (let i = 0; i < 16; i++) step({ spinHeld: i < 8 }, label); };
   const beats = [
@@ -160,6 +183,34 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
       ride(RUN1, RUN1.length - 34, { label: 'first tracks', pops: [403] });
       ride(RUN1, RUN1.length - 8, { cap: 9, label: 'slow for the shore' });
       dismount('tarn shore');
+    } },
+    { name: 'old adit', run() {
+      // The gem route: steel arrow, double jump, grab the lip, into the mine mouth; out again by the ring on the gem shelf.
+      const [mx, my, mz] = PLAN.MOUTH, X = PLAN.CAVE_X, z = PLAN.CAVE_Z, A = PLAN.ADIT;
+      walk(0, -560); still(20, 'bank the tarn checkpoint');
+      walk(-16, -593.4);
+      arrowLaunch([-16, -597.6], [mx, mz + .5], my, 'arrow to the adit mouth');
+      run('into the adit', () => p.pos.x > X - 5, () => toward(mx, mz - 1.4, 1), 240);
+      still(12, 'arrive'); walk(X + 4.5, z); still(20, 'bank the adit checkpoint');
+      walk(X + 7.4, z - .5, { tol: .35 }); spinOnce('adit landing pair');
+      walk(X + 6, z, { keep: true });
+      leap([X + A[0].x1, z], [X + 15.2, z, A[1].y], { label: 'onto the glazed drift' });
+      // Nitro goes off on the body's whole silhouette, not its feet: leave the ice a good stride before it.
+      leap([X + 19.8, z], [X + 27.9, z, A[2].y], { label: 'over the Nitro at the lip', double: true, hold: 3 });
+      leap([X + A[2].x1, z], [X + 32.5, z, A[3].y], { label: 'second rotten shelf', tap: true });
+      leap([X + A[3].x1, z], [X + 36.5, z, A[4].y], { label: 'quick stamper gallery', tap: true });
+      // Quick stampers: go as each nears the top of its rise. The second is the run-up to the wide gap, so there is no stopping under it.
+      walk(X + 35.9, z); waitRise(X + 38.2, z, 'quick stamper, first'); walk(X + 40.25, z, { tol: .3 }); spinOnce('pocket crate'); walk(X + 41.7, z, { tol: .3 });
+      waitRise(X + 44, z, 'quick stamper, second');
+      leap([X + A[4].x1, z], [X + 51.3, z, A[5].y], { label: 'the wide gap onto the bristleback pillar', spin: true, hold: 3.4 });
+      leap([X + A[5].x1, z], [X + 57.8, z, A[6].y], { label: 'arrow floor', tap: true });
+      walk(X + 58.6, z - .5, { tol: .35 }); spinOnce('arrow floor pair');
+      walk(X + 60.2, z);
+      arrowLaunch([X + 62.4, z], [X + 66.6, z], PLAN.GEM_Y, 'arrow to the gem shelf', false);
+      walk(X + 68, z, { keep: true }); walk(X + 70.3, z - .5, { tol: .4 });
+      for (let k = 0; k < 4; k++) { spinOnce('gem shelf tower'); still(14, 'let the tower settle'); }
+      run('out by the ring', () => p.pos.x < 100, () => toward(X + 75.4, z, 1), 400);
+      still(12, 'back on the shore');
     } },
     { name: 'tarn and hoist', run() {
       walk(0, -560); still(20, 'bank the tarn checkpoint');
