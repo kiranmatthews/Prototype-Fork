@@ -1,0 +1,42 @@
+{
+  "id": "medium-v2",
+  "fps": 18,
+  "frames": [
+    {
+      "file": "../../../public/fire-sprites/v2/medium/01.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/02.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/03.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/04.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/05.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/06.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/07.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/08.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/09.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/10.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/11.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/medium/12.png"
+    }
+  ]
+}

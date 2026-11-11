@@ -1,0 +1,21 @@
+{
+  "screenshot": [
+    1280,
+    720
+  ],
+  "heatOnOff": {
+    "changed": 940,
+    "peak": 31,
+    "mean": 0.021590574494536413
+  },
+  "zeroVsOff": {
+    "changed": 0,
+    "peak": 0,
+    "mean": 0
+  },
+  "paused": {
+    "changed": 0,
+    "peak": 0,
+    "mean": 0
+  }
+}

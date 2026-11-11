@@ -8,6 +8,8 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 .exhibit .title,.exhibit .kind,.exhibit .colour-line{display:block}
 @media(pointer:coarse){button,select{min-height:44px}.swatches button{min-height:28px;width:28px}.swatches{gap:8px}input[type=range]{height:34px}.toggle{min-height:44px}.view-tools button{min-height:40px}}
-.mini-flame{position:absolute;width:46px;height:46px;top:3px;right:6px;pointer-events:none;background-image:url('/fire-sprites/flame-atlas.png');background-size:400% 400%;filter:hue-rotate(var(--hue));opacity:.9}
+.mini-flame{position:absolute;width:46px;height:46px;top:3px;right:6px;pointer-events:none;background-image:var(--source);background-size:contain;background-position:center;background-repeat:no-repeat;filter:hue-rotate(var(--hue));opacity:.9}
 @media(max-width:1050px){.mini-flame{width:35px;height:35px;right:3px}}
 @media(max-height:520px) and (orientation:landscape){.mini-flame{width:28px;height:28px;top:1px}}
+
+.drawing-review{margin-top:16px;padding-bottom:10px;border-bottom:1px solid var(--line)}

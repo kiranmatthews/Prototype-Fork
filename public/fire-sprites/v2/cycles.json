@@ -1,0 +1,377 @@
+{
+  "narrow": {
+    "id": "narrow",
+    "width": 1254,
+    "height": 1254,
+    "fps": 18,
+    "frameCount": 12,
+    "pages": [
+      {
+        "file": "narrow/atlas-0.png",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-1.png",
+        "columns": 3,
+        "rows": 1,
+        "first": 9,
+        "count": 3,
+        "width": 3762,
+        "height": 1254
+      }
+    ],
+    "frames": [
+      {
+        "file": "narrow/01.png",
+        "anchor": [
+          0.4808284512357997,
+          0.05622009569377995
+        ],
+        "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8"
+      },
+      {
+        "file": "narrow/02.png",
+        "anchor": [
+          0.48042637648257097,
+          0.054625199362041466
+        ],
+        "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e"
+      },
+      {
+        "file": "narrow/03.png",
+        "anchor": [
+          0.48016483714300184,
+          0.07535885167464118
+        ],
+        "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+      },
+      {
+        "file": "narrow/04.png",
+        "anchor": [
+          0.4789558655402771,
+          0.0737639553429027
+        ],
+        "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+      },
+      {
+        "file": "narrow/05.png",
+        "anchor": [
+          0.47850656006663506,
+          0.07216905901116433
+        ],
+        "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77"
+      },
+      {
+        "file": "narrow/06.png",
+        "anchor": [
+          0.4777384307976093,
+          0.07057416267942584
+        ],
+        "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634"
+      },
+      {
+        "file": "narrow/07.png",
+        "anchor": [
+          0.4788192051738784,
+          0.06897926634768736
+        ],
+        "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c"
+      },
+      {
+        "file": "narrow/08.png",
+        "anchor": [
+          0.4785613590211122,
+          0.06499202551834127
+        ],
+        "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+      },
+      {
+        "file": "narrow/09.png",
+        "anchor": [
+          0.47794351502825944,
+          0.0633971291866029
+        ],
+        "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35"
+      },
+      {
+        "file": "narrow/10.png",
+        "anchor": [
+          0.4787079412096166,
+          0.05861244019138756
+        ],
+        "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e"
+      },
+      {
+        "file": "narrow/11.png",
+        "anchor": [
+          0.47927458486834307,
+          0.05223285486443385
+        ],
+        "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c"
+      },
+      {
+        "file": "narrow/12.png",
+        "anchor": [
+          0.4783673223587258,
+          0.04984051036682613
+        ],
+        "sha256": "7b1c5be70ef1ded5ce7b08f234dc6292bf2fc48bed385c898e934c4fa1dab87b"
+      }
+    ]
+  },
+  "medium": {
+    "id": "medium",
+    "width": 1254,
+    "height": 1254,
+    "fps": 18,
+    "frameCount": 12,
+    "pages": [
+      {
+        "file": "medium/atlas-0.png",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-1.png",
+        "columns": 3,
+        "rows": 1,
+        "first": 9,
+        "count": 3,
+        "width": 3762,
+        "height": 1254
+      }
+    ],
+    "frames": [
+      {
+        "file": "medium/01.png",
+        "anchor": [
+          0.48536489853538556,
+          0.06499202551834127
+        ],
+        "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b"
+      },
+      {
+        "file": "medium/02.png",
+        "anchor": [
+          0.4851313713502361,
+          0.06499202551834127
+        ],
+        "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+      },
+      {
+        "file": "medium/03.png",
+        "anchor": [
+          0.4860061741267727,
+          0.0633971291866029
+        ],
+        "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+      },
+      {
+        "file": "medium/04.png",
+        "anchor": [
+          0.48385267635824397,
+          0.06100478468899517
+        ],
+        "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+      },
+      {
+        "file": "medium/05.png",
+        "anchor": [
+          0.48462629572184246,
+          0.06020733652312604
+        ],
+        "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b"
+      },
+      {
+        "file": "medium/06.png",
+        "anchor": [
+          0.48392109101974035,
+          0.0594098883572568
+        ],
+        "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+      },
+      {
+        "file": "medium/07.png",
+        "anchor": [
+          0.4843285775178833,
+          0.05861244019138756
+        ],
+        "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7"
+      },
+      {
+        "file": "medium/08.png",
+        "anchor": [
+          0.4854764956040915,
+          0.054625199362041466
+        ],
+        "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+      },
+      {
+        "file": "medium/09.png",
+        "anchor": [
+          0.4845401017823902,
+          0.053827751196172224
+        ],
+        "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+      },
+      {
+        "file": "medium/10.png",
+        "anchor": [
+          0.47868691769572436,
+          0.05622009569377995
+        ],
+        "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c"
+      },
+      {
+        "file": "medium/11.png",
+        "anchor": [
+          0.4851515905756634,
+          0.0633971291866029
+        ],
+        "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+      },
+      {
+        "file": "medium/12.png",
+        "anchor": [
+          0.4851420641819468,
+          0.06419457735247214
+        ],
+        "sha256": "6eae56fe6e72d277ffee323b5dfa02f2b8ef85f8d361a6364be41b2eec62233c"
+      }
+    ]
+  },
+  "broad": {
+    "id": "broad",
+    "width": 1774,
+    "height": 887,
+    "fps": 18,
+    "frameCount": 12,
+    "pages": [
+      {
+        "file": "broad/atlas-0.png",
+        "columns": 2,
+        "rows": 4,
+        "first": 0,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-1.png",
+        "columns": 2,
+        "rows": 2,
+        "first": 8,
+        "count": 4,
+        "width": 3548,
+        "height": 1774
+      }
+    ],
+    "frames": [
+      {
+        "file": "broad/01.png",
+        "anchor": [
+          0.4961578192766943,
+          0.13246899661781286
+        ],
+        "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+      },
+      {
+        "file": "broad/02.png",
+        "anchor": [
+          0.4933264108695832,
+          0.12908680947012396
+        ],
+        "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+      },
+      {
+        "file": "broad/03.png",
+        "anchor": [
+          0.4893996198410052,
+          0.12908680947012396
+        ],
+        "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0"
+      },
+      {
+        "file": "broad/04.png",
+        "anchor": [
+          0.49027460220600844,
+          0.1279594137542277
+        ],
+        "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+      },
+      {
+        "file": "broad/05.png",
+        "anchor": [
+          0.49013529487314406,
+          0.12683201803833144
+        ],
+        "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+      },
+      {
+        "file": "broad/06.png",
+        "anchor": [
+          0.48869122980131147,
+          0.12683201803833144
+        ],
+        "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+      },
+      {
+        "file": "broad/07.png",
+        "anchor": [
+          0.4902004129485676,
+          0.12683201803833144
+        ],
+        "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+      },
+      {
+        "file": "broad/08.png",
+        "anchor": [
+          0.49199559760728007,
+          0.12457722660653892
+        ],
+        "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+      },
+      {
+        "file": "broad/09.png",
+        "anchor": [
+          0.4888601481210307,
+          0.12457722660653892
+        ],
+        "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+      },
+      {
+        "file": "broad/10.png",
+        "anchor": [
+          0.4888905699704809,
+          0.12457722660653892
+        ],
+        "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994"
+      },
+      {
+        "file": "broad/11.png",
+        "anchor": [
+          0.49298151652963623,
+          0.12570462232243518
+        ],
+        "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb"
+      },
+      {
+        "file": "broad/12.png",
+        "anchor": [
+          0.4932039325882728,
+          0.13021420518602034
+        ],
+        "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+      }
+    ]
+  }
+}

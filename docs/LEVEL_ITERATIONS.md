@@ -11899,6 +11899,18 @@ Build/type-check, release-size check (934,016,565 / 1,000,000,000 bytes), Labs d
 
 Evidence: [implementation and reproduction](fire-sprite-lab/README.md), [imagegen prompt](fire-sprite-lab/imagegen-prompt.txt), [production browser report](fire-sprite-lab/production-browser.json), [collection](fire-sprite-lab/collection-native.png), [native torch](fire-sprite-lab/torch-native.png) and [touch inspector](fire-sprite-lab/touch-native.png).
 
+### 2026-11-11 — Fire Sprite Lab: recording-driven individual cels
+
+The user rejected the first atlas and requested frame-by-frame Crash 4 reference study and separate imagegen runs for different flame proportions, with Looney Tunes/Tex Avery drawing language. Work resumed from the two supplied torch/brazier recordings at approximately 19:28 NZDT; the revised playable preview was available at 20:40 (about 72 minutes from receiving the usable reference). Full local production review took approximately 95 minutes from that resumption.
+
+Reviewed timestamped crops from both recordings. Observed the connected bright base, large red masses and negative shapes, independent inner colour flow, rising separated tips and overlapping asynchronous lobes. The recordings do not establish an original sprite count or exact loop period. Generated 36 selected PNG cels individually: twelve narrow, twelve medium and twelve broad. Each family began with an independent generation. Redrew medium 10 and broad 11 after spotting abrupt changes in the first sequences. Exact prompts, originals, hashes and reference versions are retained in [the revision provenance](fire-sprite-lab/v2/generation.json).
+
+Replaced the rejected runtime atlas with native 1254×1254 narrow/medium and 1774×887 broad drawings, packed into six texture pages without changing a pixel. Per-frame foot registration removes base drift while preserving each drawing's proportions and silhouette. Discrete 18 fps cels are the default; removed procedural shader sway and body pulsing. Reworked the eight arrangements around the three families, added single-flame inspection and a frame scrubber, corrected one-frame stepping, retained hue controls, and made upper shapes luminous/translucent. The existing shared Jak heat pass and pocket writer are unchanged. Native original art remains available at every view distance.
+
+Validation: native atlas extraction equals every original RGBA frame; all 36 selected file hashes are distinct. Real browser review covers lite/full rendering, all eight arrangements, source cycles, every step and 12→01 wrap, the redrawn cels on each family's second texture page, hue, slow playback, optional interpolation, orbit, heat, normal/MAX resolution, portrait and short landscape without whole-page overflow. Heat changes 940 screenshot pixels in a frozen fixture; repeat pause and zero-strength/disabled heat are pixel-identical. Production-path review caught and fixed relative thumbnail URLs before publication. Console checks are clean. Build/type-check, hosting-size and tool-directory checks pass; no full suite was run.
+
+Evidence: [reference study](fire-sprite-lab/v2/reference-study.md), [source sequences and implementation](fire-sprite-lab/README.md), [browser checks](fire-sprite-lab/v2/browser), and [production review](fire-sprite-lab/v2/validation.json).
+
 ## 2026-11-11 — Powderkeg Peak: a new level from the bible's Crash shapes
 
 Brief: design a new level from scratch on the shape and length of the Crash

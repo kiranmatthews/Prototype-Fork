@@ -1,0 +1,42 @@
+{
+  "id": "broad-v2",
+  "fps": 18,
+  "frames": [
+    {
+      "file": "../../../public/fire-sprites/v2/broad/01.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/02.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/03.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/04.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/05.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/06.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/07.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/08.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/09.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/10.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/11.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/12.png"
+    }
+  ]
+}

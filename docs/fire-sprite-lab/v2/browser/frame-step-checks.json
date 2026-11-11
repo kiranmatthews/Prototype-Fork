@@ -1,0 +1,56 @@
+[
+  {
+    "family": "01 Golden torch",
+    "frames": [
+      "NARROW · 01 / 12",
+      "NARROW · 02 / 12",
+      "NARROW · 03 / 12",
+      "NARROW · 04 / 12",
+      "NARROW · 05 / 12",
+      "NARROW · 06 / 12",
+      "NARROW · 07 / 12",
+      "NARROW · 08 / 12",
+      "NARROW · 09 / 12",
+      "NARROW · 10 / 12",
+      "NARROW · 11 / 12",
+      "NARROW · 12 / 12"
+    ],
+    "seam": "NARROW · 01 / 12"
+  },
+  {
+    "family": "02 Wild bonfire",
+    "frames": [
+      "MEDIUM · 01 / 12",
+      "MEDIUM · 02 / 12",
+      "MEDIUM · 03 / 12",
+      "MEDIUM · 04 / 12",
+      "MEDIUM · 05 / 12",
+      "MEDIUM · 06 / 12",
+      "MEDIUM · 07 / 12",
+      "MEDIUM · 08 / 12",
+      "MEDIUM · 09 / 12",
+      "MEDIUM · 10 / 12",
+      "MEDIUM · 11 / 12",
+      "MEDIUM · 12 / 12"
+    ],
+    "seam": "MEDIUM · 01 / 12"
+  },
+  {
+    "family": "03 Solar curtain",
+    "frames": [
+      "BROAD · 01 / 12",
+      "BROAD · 02 / 12",
+      "BROAD · 03 / 12",
+      "BROAD · 04 / 12",
+      "BROAD · 05 / 12",
+      "BROAD · 06 / 12",
+      "BROAD · 07 / 12",
+      "BROAD · 08 / 12",
+      "BROAD · 09 / 12",
+      "BROAD · 10 / 12",
+      "BROAD · 11 / 12",
+      "BROAD · 12 / 12"
+    ],
+    "seam": "BROAD · 01 / 12"
+  }
+]
