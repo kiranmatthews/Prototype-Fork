@@ -1,0 +1,1870 @@
+{
+ "id": "thps3-suburbia",
+ "game": "THPS3",
+ "level": "Suburbia",
+ "location": "suburban cul-de-sac on a fall afternoon (Halloween leftovers)",
+ "type": "career-street",
+ "careerPosition": 4,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS2 2001",
+  "GameCube (TAS3)",
+  "PS1 edition (VG)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p070-p084 (scan index; printed page = scan - 1)",
+  "J3 p015-p017",
+  "VG TonyHawk_sProSkater3-Suburbia.png (PS1)",
+  "TAS3 2:40-3:28",
+  "LP3 0:23:18-0:28:02 (tape run 0:27:28-0:27:54)",
+  "LP34 0:26:05-0:30:35 (tape 0:28:36-0:28:58)",
+  "PS34 suburbia",
+  "WEB pcgamesn",
+  "WEB operationsports (search summary)"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 55,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Pro Score: 110,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Sick Score: 200,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "original"
+  },
+  {
+   "text": "Nosegrab Between the Ramps Gap -or- Heelflip the Trailer Hop",
+   "version": "original"
+  },
+  {
+   "text": "Squash 5 Pumpkins",
+   "version": "original"
+  },
+  {
+   "text": "Help the Thin Man",
+   "version": "original"
+  },
+  {
+   "text": "Restore Power to the Dish",
+   "version": "original"
+  },
+  {
+   "text": "High Score 20,000; Pro Score 50,000; Sick Score! 150,000; Collect S-K-A-T-E; Appall the Appliances; Disrespect the Dishes; Ice the Ice Cream Man; 360 Flip the Weathervane; Find the Secret Tape",
+   "version": "PS1 edition (VG header)"
+  },
+  {
+   "text": "High Score 55,000; Pro 110,000; Sick 200,000; High Combo 15,000; Collect SKATE Letters; Nosegrab Between the Ramps; Help the Thin Man; Restore Power to the Dish; Squash 5 Pumpkins; Get the Secret Tape",
+   "version": "remake 2025"
+  },
+  {
+   "text": "Pro goals: Platinum Score 600,000; Collect COMBO Letters; Manual Around the Sac; Pizza Guy in the Abyss; Impress the Skaters",
+   "version": "remake 2025"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 130-170 × 120-160 m",
+  "evidence": "G3 p075 3D map: ≈ 3 cul-de-sac diameters across; turning circle with three funboxes and the ice-cream truck loop taken as ≈ 40-50 m. Low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start tree and cul-de-sac",
+   "layer": "kicker, street, funboxes, sidewalk",
+   "features": [
+    "start kicker at a tree (west edge)",
+    "funboxes",
+    "sidewalk lap",
+    "ice-cream truck",
+    "bent stop sign"
+   ],
+   "notes": "hub; Manual the Sac!, Headless Horseman Gap"
+  },
+  {
+   "id": "Z2",
+   "name": "Construction site (south)",
+   "layer": "ground, kickers, house frame, pool",
+   "features": [
+    "fire truck with ladder",
+    "quarter pipes",
+    "chainlink fences",
+    "house frame",
+    "wood on sawhorses (axe)",
+    "pool"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z3",
+   "name": "Richey's house (east)",
+   "layer": "front porch, backyard mini-park, orange roof",
+   "features": [
+    "grass patches",
+    "roll-in onto ramps",
+    "trees growing out of ramps",
+    "carport",
+    "satellite dish",
+    "brick wall"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z4",
+   "name": "Gray house and nude bowl (north-east)",
+   "layer": "backyard bowl, ramps, roof, power lines",
+   "features": [
+    "broken fence",
+    "graffitied quarter pipes and pool",
+    "BBQ guys",
+    "Stop-sign quarter pipe",
+    "bar",
+    "ramped walkway to the roof with a launch ramp",
+    "power lines"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z5",
+   "name": "Trailer park (north-west)",
+   "layer": "dirt lot, trailers, ramps, clotheslines",
+   "features": [
+    "three trailers",
+    "dirt walls",
+    "spine",
+    "upright picnic table",
+    "Utopia sign",
+    "half pipe by the haunted house"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z6",
+   "name": "Haunted house front (west, on a rise)",
+   "layer": "front yard, stairs, porch, upper floor, roof",
+   "features": [
+    "stairs to the street and to the trailer park",
+    "short wall",
+    "porch banked wall",
+    "boarded door",
+    "upper-floor front windows",
+    "flagpole (tape)",
+    "roof half pipe",
+    "steeple"
+   ],
+   "notes": "Thin Man on the path from the trailer park"
+  },
+  {
+   "id": "Z7",
+   "name": "Haunted interior (secret area)",
+   "layer": "hallway, upstairs hallway",
+   "features": [
+    "dead-end hallway wall",
+    "upstairs hallway behind a back window",
+    "glass front windows"
+   ],
+   "notes": "opened by Help the Thin Man"
+  },
+  {
+   "id": "Z8",
+   "name": "Haunted backyard (secret area)",
+   "layer": "bowl-like yard",
+   "features": [
+    "banked walls",
+    "tombstones",
+    "lower ledge",
+    "steel bar",
+    "corner tree",
+    "tall ramp against the back of the house"
+   ],
+   "notes": "six gaps of its own"
+  }
+ ],
+ "landmarks": [
+  "cul-de-sac with funboxes",
+  "start tree",
+  "haunted mansion on a rise",
+  "trailer park with Utopia sign and upright picnic table",
+  "gray house and nude bowl",
+  "Richey's orange-roofed house with satellite dish",
+  "construction site and fire truck",
+  "ice-cream truck",
+  "power lines across the hub"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "east into the cul-de-sac (LP3 0:23:25)",
+  "visibleCollectibles": [
+   "S (G1) on the 2x4s across the street"
+  ],
+  "notes": "haunted house and flagpole are behind the player (PS34: U-turn left to the steps); the pole faces the sac (inferred from LP3 0:27:53)"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Secret Tape",
+   "zone": "Z6",
+   "landmark": "flagpole projecting from the haunted house's upper-floor front over the front yard, facing the cul-de-sac",
+   "layer": "upper floor / façade",
+   "heightM": "≈ 5-7 above the front yard; ≈ 8-12 above the street; ≈ level with the upstairs floor",
+   "launchFrom": "upstairs hallway floor, through the front windows",
+   "visibility": {
+    "firstSight": "from the cul-de-sac facing the mansion (inferred); again through the front glass at the end of the upstairs hallway",
+    "fromSpawn": false,
+    "reads": "tape on a flagpole on a dark mansion above the hub",
+    "distanceFromFirstSightM": "≈ 30-50 from the sac; ≈ 3-6 from the front glass"
+   },
+   "route": [
+    {
+     "step": 0,
+     "move": "unlock",
+     "from": "construction site wood row nearest the fire truck (axe)",
+     "to": "Thin Man on the path from the trailer park",
+     "geometry": "fetch quest; he chops the boarded door (G3 p074; TAS3 2:50; LP34 0:28:36)"
+    },
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "street",
+     "to": "haunted front door",
+     "geometry": "up the front stairs (LP3 0:27:28-0:27:31)"
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "door",
+     "to": "hallway end wall",
+     "geometry": "roll down the hallway; 'appears to lead to a dead end' (LP3 0:27:32-0:27:34)"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "hallway",
+     "to": "backyard",
+     "geometry": "over the wall on the right (I Got a Bad Feeling About This! 100; G3 calls it Haunted Backyard Transfer) (LP3 0:27:34-0:27:36)"
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "backyard back wall",
+     "to": "speed",
+     "geometry": "trick off the back wall; LP3 links 540 cannonball + BS revert (0:27:37-0:27:48)"
+    },
+    {
+     "step": 5,
+     "move": "kicker",
+     "from": "tall ramp against the back of the house",
+     "to": "upstairs window",
+     "geometry": "leap up and over the ramp, crash through the window (break-glass) (LP3 0:27:49-0:27:52)"
+    },
+    {
+     "step": 6,
+     "move": "manual",
+     "from": "upstairs room",
+     "to": "hallway centre line",
+     "geometry": "bats; slow down and align with the hallway's centre (G3 p073)"
+    },
+    {
+     "step": 7,
+     "move": "break-glass",
+     "from": "upstairs hallway",
+     "to": "outside",
+     "geometry": "leap through the front glass windows"
+    },
+    {
+     "step": 8,
+     "move": "grind",
+     "from": "air",
+     "to": "flagpole",
+     "geometry": "land in a grind on the pole: SECRET TAPE at LP3 0:27:53 (timer 0:06)"
+    },
+    {
+     "step": 9,
+     "move": "ollie",
+     "from": "end of the pole",
+     "to": "front yard / sac",
+     "geometry": "Spooky Drop 100"
+    }
+   ],
+   "altRoutes": [
+    {
+     "name": "Remake (PS34; LP34 0:28:48-0:28:58)",
+     "steps": [
+      "into the house",
+      "quarter pipe over the wall to the right",
+      "skate up the side of the house and through the hall",
+      "through the glass",
+      "grind the flagpole"
+     ],
+     "moves": [
+      "transfer",
+      "kicker",
+      "break-glass",
+      "grind"
+     ],
+     "time": "10 s from the hallway"
+    },
+    {
+     "name": "TAS3 (unresolved)",
+     "steps": [
+      "fifth pumpkin on the haunted porch (3:20-3:21)",
+      "airwalk ollie with two 'kissed the rail' beside the front door",
+      "End Run; SECRET TAPE registers at 3:25"
+     ],
+     "moves": [
+      "ollie"
+     ],
+     "time": "pickup not visible"
+    }
+   ],
+   "moves": [
+    "unlock",
+    "ollie",
+    "transfer",
+    "vert-air",
+    "kicker",
+    "break-glass",
+    "grind"
+   ],
+   "speed": "high then slow",
+   "skillGates": [
+    "Thin Man errand (fetch the axe)",
+    "vert transfer over a wall",
+    "speed from the back wall to clear the tall ramp",
+    "slowing and aligning in the hallway",
+    "short pole grind after breaking glass"
+   ],
+   "coupling": "unlock: Thin Man opens the house (persists across runs)",
+   "failure": "miss off the pole: ≈ 5-7 m drop into the front yard by the start (soft); missed window: back into the backyard (≈ 5-10 s); full retry from the door ≈ 20-25 s",
+   "timeFromSpawnS": "LP3 25 s from the front steps (0:27:28-0:27:53), 4 s from the tall ramp; LP34 10 s from the hallway; TAS3 not visible",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEASE",
+    "EXPLORE",
+    "TEST",
+    "REWARD"
+   ],
+   "why": "locked-house tape: hung on the building overlooking the hub, reachable only from inside after an errand that tours the level; the route turns the house inside out and drops the player back at the start",
+   "evidence": "G3 p073-p074, p082-p083; J3 p016-p017; VG PS1 ≈ (1397, 777); LP3 0:25:25-0:25:40, 0:27:28-0:27:54; LP34 0:28:36-0:28:58; TAS3 2:50, 3:20-3:25; PS34 suburbia; WEB pcgamesn",
+   "confidence": "high (location, route); low (heights)"
+  },
+  {
+   "id": "S-G1",
+   "type": "letter",
+   "label": "S (G1 Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "group": "G1",
+   "landmark": "across the street from the start: grind up the angled 2x4s to the top of the fence",
+   "layer": "fence top, ≈ 2 m",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p072; J3 p015",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G1",
+   "type": "letter",
+   "label": "K (G1)",
+   "group": "G1",
+   "landmark": "ramped walkway up to the gray house roof; on the edge of the launch ramp facing the trailer park",
+   "layer": "roof, ≈ 5 m",
+   "moves": [
+    "bank",
+    "kicker"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G1",
+   "type": "letter",
+   "label": "A (G1)",
+   "group": "G1",
+   "landmark": "on top of the upright picnic table in the trailer park (stall: Picnic Lip Tric!)",
+   "layer": "≈ 2–3 m",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G1",
+   "type": "letter",
+   "label": "T (G1)",
+   "group": "G1",
+   "landmark": "grind the short wall in front of the haunted house",
+   "layer": "wall, ≈ 1 m",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p072; J3 p015",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G1",
+   "type": "letter",
+   "label": "E (G1)",
+   "group": "G1",
+   "landmark": "above the quarter pipe on the side of the house under construction, across from the haunted house",
+   "layer": "air",
+   "moves": [
+    "vert-air"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G2",
+   "type": "letter",
+   "label": "S (G2 Caballero, Koston, Mullen, Rowley)",
+   "group": "G2",
+   "landmark": "trailer park: grind up the clothesline right of the Utopia sign",
+   "layer": "clothesline",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G2",
+   "type": "letter",
+   "label": "K (G2)",
+   "group": "G2",
+   "landmark": "above the dirt wall in the trailer park opposite the haunted house",
+   "layer": "air",
+   "moves": [
+    "vert-air"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G2",
+   "type": "letter",
+   "label": "A (G2)",
+   "group": "G2",
+   "landmark": "on the roof of the truck parked on the street by the gray house",
+   "layer": "≈ 2–3 m",
+   "moves": [
+    "ollie"
+   ],
+   "evidence": "G3 p072 (J3: \"above a Jeep on the road\")",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G2",
+   "type": "letter",
+   "label": "T (G2)",
+   "group": "G2",
+   "landmark": "through the nice home's carport, left; above the wall opposite the pumpkin",
+   "layer": "air",
+   "moves": [
+    "ollie"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G2",
+   "type": "letter",
+   "label": "E (G2)",
+   "group": "G2",
+   "landmark": "roof of the nice house, side nearest the construction site: roll-in onto the ramps, up onto the left eave",
+   "layer": "roof, ≈ 5–6 m",
+   "moves": [
+    "bank",
+    "ollie"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G3",
+   "type": "letter",
+   "label": "S (G3 Campbell, Lasek, Muska, Steamer)",
+   "group": "G3",
+   "landmark": "big kicker against the chainlink fence by the fire truck, on the way into the construction site",
+   "layer": "air",
+   "moves": [
+    "kicker"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G3",
+   "type": "letter",
+   "label": "K (G3)",
+   "group": "G3",
+   "landmark": "on the brick wall behind the Richey's house where it meets the construction-site fence",
+   "layer": "wall",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G3",
+   "type": "letter",
+   "label": "A (G3)",
+   "group": "G3",
+   "landmark": "on top of the nearest blue trailer (roll up the straight ramp)",
+   "layer": "trailer roof, ≈ 3 m",
+   "moves": [
+    "kicker"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G3",
+   "type": "letter",
+   "label": "T (G3)",
+   "group": "G3",
+   "landmark": "on top of the clothesline between the spine and the half pipe",
+   "layer": "clothesline",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G3",
+   "type": "letter",
+   "label": "E (G3)",
+   "group": "G3",
+   "landmark": "above the banked wall on the side of the haunted house nearest the fire truck",
+   "layer": "air",
+   "moves": [
+    "vert-air"
+   ],
+   "evidence": "G3 p072",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "SKATE-Remake",
+   "type": "letter",
+   "label": "S-K-A-T-E (Remake)",
+   "group": "Remake",
+   "landmark": "S: straight ahead from the start, grind the wooden plank; K: other side of the fence, the rooftop; A: above the quarter pipe with the upturned bench; T: U-turn left up the steps, above the low wall; E: right, above a large quarter pipe (≈ G1)",
+   "layer": "as G1",
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "evidence": "PS34 suburbia",
+   "version": "remake",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "SKATE-PS1",
+   "type": "letter",
+   "label": "S, K, A, T, E (PS1)",
+   "group": "PS1",
+   "landmark": "S ≈ (1551, 840) by the start ramp; K ≈ (1977, 505); A ≈ (2255, 909); T ≈ (1832, 1306) by the pool; E ≈ (1841, 1001)",
+   "layer": "—",
+   "moves": [],
+   "evidence": "VG PS1",
+   "version": "PS1 edition",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (remake pro goal only)",
+   "zone": "Z4",
+   "landmark": "gray house: broken fence, quarter pipe, fence, handrail to the roof",
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "quarter pipe on the right (after breaking the fence)",
+     "to": "C",
+     "geometry": "get up and grind"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "grind",
+     "to": "O",
+     "geometry": "hop to the fence"
+    },
+    {
+     "step": 3,
+     "move": "manual",
+     "from": "fence",
+     "to": "M",
+     "geometry": "drop down and manual"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "ground",
+     "to": "handrail up to the roof",
+     "geometry": "go across to the handrail"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "top of the handrail",
+     "to": "B, O",
+     "geometry": "jump off to the right; land the combo"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "manual",
+    "ollie"
+   ],
+   "evidence": "PS34 suburbia; absent from G3 p070, LP3 goal cards, VG goal lists (THPS4 goal type, G4m p002/p004)",
+   "confidence": "medium",
+   "version": "remake",
+   "why": "G3's gray-house scoring line rebuilt as a single-combo letter line",
+   "roles": [
+    "TEACH-LINE"
+   ]
+  },
+  {
+   "id": "AXE-THINMAN",
+   "type": "goal-object",
+   "label": "Help the Thin Man (axe)",
+   "zone": "Z2 → Z6",
+   "landmark": "axe on the wood row nearest the fire truck; Thin Man on the path from the trailer park to the haunted house",
+   "moves": [
+    "grind"
+   ],
+   "coupling": "unlock for the tape's secret area",
+   "evidence": "G3 p074; J3 p016-p017; TAS3 2:50",
+   "confidence": "high"
+  },
+  {
+   "id": "PUMPKINS",
+   "type": "goal-object",
+   "label": "Squash 5 Pumpkins",
+   "zone": "Z3/Z4/Z5/Z6",
+   "landmark": "1 brick wall by the construction site; 2 quarter pipe nearest the dish house (gray backyard); 3 curb in front of the gray house; 4 trailer half-pipe street-side lip; 5 banked wall in the haunted porch corner",
+   "moves": [
+    "grind",
+    "vert-air",
+    "lip"
+   ],
+   "evidence": "G3 p073-p074; J3 p016",
+   "confidence": "high"
+  },
+  {
+   "id": "DISH",
+   "type": "goal-object",
+   "label": "Restore Power to the Dish",
+   "zone": "Z4/Z3",
+   "landmark": "cable from the gray house roof to the Richey's (2 branches); cable back from the orange roof peak (2 branches)",
+   "moves": [
+    "wire"
+   ],
+   "evidence": "G3 p074-p075",
+   "confidence": "high"
+  },
+  {
+   "id": "RAMPS-TRAILER",
+   "type": "goal-object",
+   "label": "Nosegrab Between the Ramps / Heelflip the Trailer Hop",
+   "zone": "Z5",
+   "landmark": "left quarter pipe → spine; board ramp by the blue trailer over it",
+   "moves": [
+    "vert-air",
+    "kicker"
+   ],
+   "evidence": "G3 p073",
+   "confidence": "high"
+  },
+  {
+   "id": "STATPOINTS-ON-ROUTE",
+   "type": "goal-object",
+   "label": "Stat points on the route",
+   "zone": "Z7/Z4",
+   "landmark": "above the wall at the back of the haunted hallway; on the power lines past the utility pole towards the haunted house",
+   "moves": [
+    "transfer",
+    "wire"
+   ],
+   "evidence": "G3 p076",
+   "confidence": "high"
+  },
+  {
+   "id": "DECKS",
+   "type": "goal-object",
+   "label": "New Decks (3 groups)",
+   "zone": "Z2/Z3",
+   "landmark": "top of the house under construction; Richey's eave below the dish (lower cable); nice house's left edge onto the wall and through the yellow-leaved tree",
+   "moves": [
+    "grind",
+    "wire",
+    "kicker"
+   ],
+   "evidence": "G3 p077",
+   "confidence": "high"
+  },
+  {
+   "id": "REMAKE-EXTRAS",
+   "type": "other",
+   "label": "Remake: Cash ×4, Hidden Deck, Iron Galaxy logo, Panda plushie, 3 stat points",
+   "zone": "various",
+   "landmark": "Cash on a small moving plane (trailer area), on the power line, at the fire-engine rail, in the haunted backyard; Hidden Deck above a construction-site quarter pipe; logo via the wires to the roof facing the creepy house; plushie and a stat point in the haunted backyard",
+   "evidence": "PS34 suburbia",
+   "version": "remake",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Stop Gap",
+   "mapKey": "A",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "bent stop sign → right-hand wall up to the haunted house",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "(to the tape's stairs)"
+   ],
+   "evidence": "G3 p077"
+  },
+  {
+   "name": "Manual the Sac!",
+   "mapKey": "B",
+   "points": 1000,
+   "kind": "manual",
+   "location": "manual the full sidewalk lap of the cul-de-sac",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "(remake pro goal)"
+   ],
+   "evidence": "G3 p077"
+  },
+  {
+   "name": "Up N'Over",
+   "mapKey": "C",
+   "points": 50,
+   "kind": "kicker",
+   "location": "sidewalk kicker → wood propped against the gray house's fence",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "S (G1)"
+   ],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Ding Dong Ditch Transfer",
+   "mapKey": "D",
+   "points": 500,
+   "kind": "other",
+   "location": "between the two grass patches by the Richey's front door",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Smack City Gap",
+   "mapKey": "D",
+   "points": 50,
+   "kind": "other",
+   "location": "over the whole Richey's front porch",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Street Transfer",
+   "mapKey": "E",
+   "points": 500,
+   "kind": "channel",
+   "location": "quarter pipes by the fire truck",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "stat point"
+   ],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Fire Fighter",
+   "mapKey": "F",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "fire-truck ladder → chainlink fence by the haunted house",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Corner Cut Construction",
+   "mapKey": "G",
+   "points": 100,
+   "kind": "kicker",
+   "location": "kicker by the fire truck → fence by the smouldering house",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "line L2"
+   ],
+   "evidence": "G3 p071, p078"
+  },
+  {
+   "name": "On Site Construction",
+   "mapKey": "G",
+   "points": 100,
+   "kind": "kicker",
+   "location": "large kicker → house frame",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Fence Trippin'",
+   "mapKey": "H",
+   "points": 100,
+   "kind": "kicker",
+   "location": "→ chainlink fence along the street by the fire truck",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Plywood Pop",
+   "mapKey": "I",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "laid-out wood → other piece",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "AXE (TAS3 2:50)"
+   ],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "2x4 Hop",
+   "mapKey": "J",
+   "points": 50,
+   "kind": "kicker",
+   "location": "small kickers → cut wood on the sawhorses",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "AXE"
+   ],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Where's Your Hard Hat?",
+   "mapKey": "J",
+   "points": 250,
+   "kind": "kicker",
+   "location": "small kickers → house frame",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p078"
+  },
+  {
+   "name": "Grabbin' Pine!",
+   "mapKey": "K",
+   "points": 100,
+   "kind": "lip",
+   "location": "wooden quarter pipe on the street → lip on the frame",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p079"
+  },
+  {
+   "name": "Over Under Construction",
+   "mapKey": "K",
+   "points": 100,
+   "kind": "other",
+   "location": "grind the beams up and over the future roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p079"
+  },
+  {
+   "name": "Howdy Neighbor Part I",
+   "mapKey": "L",
+   "points": 75,
+   "kind": "pool-transfer",
+   "location": "pool by the site → Richey's backyard",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p079"
+  },
+  {
+   "name": "Howdy Neighbor Part II",
+   "mapKey": "L",
+   "points": 75,
+   "kind": "over-object",
+   "location": "Richey's backyard → over the wall to the site",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p079"
+  },
+  {
+   "name": "Hop the Fence",
+   "mapKey": "M",
+   "points": 50,
+   "kind": "kicker",
+   "location": "small kicker between frame and pool → fence",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p079"
+  },
+  {
+   "name": "Chainlink Gap",
+   "mapKey": "N",
+   "points": 50,
+   "kind": "other",
+   "location": "ollie the break in the fence mid-grind",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "line L2"
+   ],
+   "evidence": "G3 p071, p079"
+  },
+  {
+   "name": "Rich Hump Hop",
+   "mapKey": "O",
+   "points": 50,
+   "kind": "kicker",
+   "location": "small ramp on top of the Richey's ramps",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p080"
+  },
+  {
+   "name": "Roof Rage Level I",
+   "mapKey": "P",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip on the lowest edge of the Richey's roof",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p080"
+  },
+  {
+   "name": "Roof Rage Level II",
+   "mapKey": "Q",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip on the roof's highest point",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p080"
+  },
+  {
+   "name": "Cash Money Transfer",
+   "mapKey": "R",
+   "points": 75,
+   "kind": "over-object",
+   "location": "over the right-hand carport via the quarter pipes",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p080"
+  },
+  {
+   "name": "Trick Up a Tree!",
+   "mapKey": "S",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip on the blocks in the trees growing out of the ramps",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p080"
+  },
+  {
+   "name": "Riches to Riches Mini-Gap",
+   "mapKey": "T",
+   "points": 50,
+   "kind": "channel",
+   "location": "between the two tree ramps",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "line L2"
+   ],
+   "evidence": "G3 p071, p080"
+  },
+  {
+   "name": "Nude Fence Gap",
+   "mapKey": "A",
+   "points": 100,
+   "kind": "channel",
+   "location": "the two quarter pipes by the BBQ guys",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Hot Foot",
+   "mapKey": "B",
+   "points": 50,
+   "kind": "over-object",
+   "location": "ollie over the barbecue grill",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Wall Hoppin'",
+   "mapKey": "C",
+   "points": 50,
+   "kind": "over-object",
+   "location": "nice house's quarter pipe over the wall towards the BBQ",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Social Climber",
+   "mapKey": "D",
+   "points": 150,
+   "kind": "roof",
+   "location": "BBQ quarter pipe over the wall onto the Richey's roof",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Raisin' the Roof!",
+   "mapKey": "E",
+   "points": 100,
+   "kind": "lip",
+   "location": "quarter pipe under the Stop sign → stall on the roof",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [
+    "line L3"
+   ],
+   "evidence": "G3 p071, p081"
+  },
+  {
+   "name": "Raisin' the Bar!",
+   "mapKey": "F",
+   "points": 100,
+   "kind": "lip",
+   "location": "quarter pipe to the left → stall on the bar",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [
+    "line L3"
+   ],
+   "evidence": "G3 p071, p081"
+  },
+  {
+   "name": "Whose House?...Skillz House!",
+   "mapKey": "G",
+   "points": 1000,
+   "kind": "roof",
+   "location": "transfer over the gray house's roof between its two quarter pipes (needs high stats)",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Power Up Gap",
+   "mapKey": "H",
+   "points": 250,
+   "kind": "wire",
+   "location": "upper power line over the bowl → lower line",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "DISH"
+   ],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Smells Like Some BBQ!",
+   "mapKey": "I",
+   "points": 50,
+   "kind": "kicker",
+   "location": "kicker by the BBQ → wooden fence",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p081"
+  },
+  {
+   "name": "Trailer Roof Gap",
+   "mapKey": "J",
+   "points": 100,
+   "kind": "roof",
+   "location": "launch ramp on the gray house roof → blue trailer",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "K (G1)"
+   ],
+   "evidence": "G3 p082"
+  },
+  {
+   "name": "Twister Bait Gap",
+   "mapKey": "K",
+   "points": 50,
+   "kind": "over-object",
+   "location": "straight-angled ramp over the red-striped trailer",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p082"
+  },
+  {
+   "name": "Trailer Hop",
+   "mapKey": "L",
+   "points": 100,
+   "kind": "over-object",
+   "location": "over the blue trailer",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "goal (Heelflip)"
+   ],
+   "evidence": "G3 p073, p082"
+  },
+  {
+   "name": "Utopia Sign Gap",
+   "mapKey": "M",
+   "points": 250,
+   "kind": "other",
+   "location": "from the blue trailer into a grind on the Utopia sign",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p082"
+  },
+  {
+   "name": "Mansion on Wheels Transfer",
+   "mapKey": "N",
+   "points": 250,
+   "kind": "over-object",
+   "location": "narrow quarter pipe by the peach trailer, over it to the vert ramp by the street",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "line L1"
+   ],
+   "evidence": "G3 p070, p082"
+  },
+  {
+   "name": "Picnic Lip Tric!",
+   "mapKey": "O",
+   "points": 100,
+   "kind": "lip",
+   "location": "stall on the upright picnic table",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "A (G1)"
+   ],
+   "evidence": "G3 p072, p082"
+  },
+  {
+   "name": "The Holly Matchet Rules Transfer",
+   "mapKey": "P",
+   "points": 50,
+   "kind": "channel",
+   "location": "half pipe by the haunted house → trailer quarter pipes",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "line L4"
+   ],
+   "evidence": "G3 p071, p082"
+  },
+  {
+   "name": "Between the Ramps",
+   "mapKey": "Q",
+   "points": 50,
+   "kind": "spine",
+   "location": "over the gap opposite the picnic table",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "goal (Nosegrab)"
+   ],
+   "evidence": "G3 p073, p082"
+  },
+  {
+   "name": "Trailer Fence Hop",
+   "mapKey": "R",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "half-pipe coping → chainlink fence",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p082"
+  },
+  {
+   "name": "Spooky Drop",
+   "mapKey": "S",
+   "points": 100,
+   "kind": "other",
+   "location": "ollie off the end of the tape's pole",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p083; LP3 0:27:53"
+  },
+  {
+   "name": "Headless Horseman Gap",
+   "mapKey": "S",
+   "points": 500,
+   "kind": "over-object",
+   "location": "start-tree ramp over the tree into the haunted front yard",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "(to the tape's door)"
+   ],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "Haunted Stair Set I",
+   "mapKey": "T",
+   "points": 50,
+   "kind": "other",
+   "location": "ollie the stairs from the haunted house down to the trailer park",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "Haunted Stair Set II",
+   "mapKey": "U",
+   "points": 50,
+   "kind": "other",
+   "location": "clean the stairs from the front door down to the street",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "Leave This Place",
+   "mapKey": "V",
+   "points": 500,
+   "kind": "wire",
+   "location": "uppermost roof half pipe → wires down to the first trailer-park utility pole",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "Return to the Living",
+   "mapKey": "W",
+   "points": 500,
+   "kind": "wire",
+   "location": "backyard → Look Out Behind You! → third-floor roof → over the steeple → power lines across the street, held across the neighbourhood",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "No Man's Land Gap",
+   "mapKey": "X",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "backyard wall nearest the trailer half pipe → over the iron fence onto the Thin Man's path",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p083"
+  },
+  {
+   "name": "I Got a Bad Feeling About This!",
+   "mapKey": "A",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "hallway end wall → banked wall on the other side (into the backyard)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p073, p084; LP3 0:27:36"
+  },
+  {
+   "name": "Look Out Behind You!",
+   "mapKey": "B",
+   "points": 100,
+   "kind": "roof",
+   "location": "alley-oop into the backyard, wall launch onto the roof",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  },
+  {
+   "name": "So Cold...",
+   "mapKey": "C",
+   "points": 50,
+   "kind": "lip",
+   "location": "lip on the steel bar across from the upstairs-hallway entrance",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  },
+  {
+   "name": "No Rest for the Wicked Grind",
+   "mapKey": "D",
+   "points": 100,
+   "kind": "other",
+   "location": "grind across the tombstones",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  },
+  {
+   "name": "Wake the Dead Grind",
+   "mapKey": "E",
+   "points": 250,
+   "kind": "other",
+   "location": "lower ledge of the backyard wall, a full lap",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  },
+  {
+   "name": "Scary Tree Plant",
+   "mapKey": "F",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip trick on the tree in the corner",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  },
+  {
+   "name": "Neversoft Challenge: Airplane Drop",
+   "mapKey": null,
+   "points": 5000,
+   "kind": "other",
+   "location": "\"Is more help needed than the name?\"",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "G3 p084"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "grind the wood row nearest the fire truck",
+   "opens": "axe picked up (HUD cleaver icon)",
+   "neededFor": [
+    "AXE-THINMAN"
+   ],
+   "evidence": "G3 p074; TAS3 2:50"
+  },
+  {
+   "trigger": "bring the axe to the Thin Man",
+   "opens": "haunted house interior and backyard (persist)",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G3 p074; LP3 0:25:40; LP34 0:28:36-0:28:46"
+  },
+  {
+   "trigger": "crash the upstairs back window, then the front windows",
+   "opens": "upstairs hallway; the flagpole",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G3 p073; J3 p017; LP3 0:27:51-0:27:53"
+  },
+  {
+   "trigger": "grind both power lines (4 branches)",
+   "opens": "power to the dish",
+   "neededFor": [
+    "DISH"
+   ],
+   "evidence": "G3 p074-p075"
+  },
+  {
+   "trigger": "remake: haunted front door opens periodically",
+   "opens": "'the Abyss'",
+   "neededFor": [
+    "Pizza Guy in the Abyss (pro)"
+   ],
+   "evidence": "PS34 suburbia"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Trailer titans",
+   "sequence": [
+    "back wall (speed)",
+    "narrow quarter pipe by the peach trailer",
+    "transfer the trailer (Mansion on Wheels)",
+    "revert",
+    "manual",
+    "stall on the picnic table (Picnic Lip Tric!)",
+    "manual",
+    "Twister Bait / Holly Matchet"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "A (G1)"
+   ],
+   "why": "the trailer park's hard line",
+   "evidence": "G3 p070"
+  },
+  {
+   "id": "L2",
+   "name": "Construction line",
+   "sequence": [
+    "out of the sac towards the fire truck",
+    "kicker",
+    "fence (Corner Cut Construction)",
+    "ollie the break (Chainlink Gap)",
+    "special grind",
+    "hop the wall into the Richey's backyard",
+    "grind the box",
+    "manual down the roll-in",
+    "Riches to Riches Mini-Gap"
+   ],
+   "links": [
+    "grind",
+    "manual"
+   ],
+   "collectibles": [
+    "S",
+    "K (G3)"
+   ],
+   "why": "a long grind that crosses two areas",
+   "evidence": "G3 p071"
+  },
+  {
+   "id": "L3",
+   "name": "Gray-house pool",
+   "sequence": [
+    "through the broken fence",
+    "left quarter pipe",
+    "stall on the bar (Raisin' the Bar!)",
+    "shove-it",
+    "revert",
+    "manual",
+    "special grind on the pool lip, counter-clockwise, 1.5 laps",
+    "manual up the ramp under the Stop sign",
+    "stall on the roof edge (Raisin' the Roof!)"
+   ],
+   "links": [
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "collectibles": [
+    "pumpkin 2"
+   ],
+   "why": "G3's \"Poolside Insanity\": over 300,000 points with two laps and a final revert",
+   "evidence": "G3 p071"
+  },
+  {
+   "id": "L4",
+   "name": "Long line to the haunted house",
+   "sequence": [
+    "trailer park (meter)",
+    "Holly Matchet Rules Transfer",
+    "manual between two quarter pipes",
+    "melon on the far ramp",
+    "revert",
+    "special manual back",
+    "grind the quarter-pipe lip towards the haunted house",
+    "kickflip",
+    "manual",
+    "grind the short wall into the haunted house",
+    "heelflip",
+    "manual up the banked wall (I Got a Bad Feeling About This!)",
+    "revert",
+    "stall, or Look Out Behind You!"
+   ],
+   "links": [
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "collectibles": [
+    "T (G1)",
+    "pumpkin 5"
+   ],
+   "why": "the scoring line ends on the tape route's first transfer",
+   "evidence": "G3 p071"
+  },
+  {
+   "id": "L5",
+   "name": "Thin Man errand",
+   "sequence": [
+    "construction site: grind the wood row by the fire truck (axe)",
+    "across the sac",
+    "path up from the trailer park",
+    "Thin Man (cutscene)"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "AXE"
+   ],
+   "why": "a fetch quest that tours the level",
+   "evidence": "G3 p074; TAS3 2:50"
+  },
+  {
+   "id": "L6",
+   "name": "Tape route",
+   "sequence": [
+    "front stairs",
+    "hallway",
+    "over the wall (I Got a Bad Feeling About This!)",
+    "back wall (speed, revert)",
+    "tall ramp",
+    "upstairs window",
+    "hallway",
+    "front window",
+    "flagpole (tape)",
+    "Spooky Drop"
+   ],
+   "links": [
+    "transfer",
+    "revert",
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [
+    "TAPE",
+    "stat point"
+   ],
+   "why": "an inside-out loop through the house",
+   "evidence": "G3 p073; LP3 0:27:28–0:27:53"
+  },
+  {
+   "id": "L7",
+   "name": "Power lines",
+   "sequence": [
+    "ramped walkway",
+    "gray house roof",
+    "cable to the Richey's house (2 branches)",
+    "orange roof peak",
+    "second cable back (2 branches); Power Up Gap; deck on the Richey's eave"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "DISH",
+    "deck",
+    "stat point"
+   ],
+   "why": "roof-height wires across the hub",
+   "evidence": "G3 p074–p077, p081"
+  },
+  {
+   "id": "L8",
+   "name": "Haunted roof lines",
+   "sequence": [
+    "Leave This Place: roof half pipe",
+    "wires down to the trailer park pole; Return to the Living: backyard",
+    "roof",
+    "over the steeple",
+    "power lines across the street"
+   ],
+   "links": [
+    "grind",
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "the house's top as a launch to the wires",
+   "evidence": "G3 p083"
+  },
+  {
+   "id": "L9",
+   "name": "Manual the Sac",
+   "sequence": [
+    "full lap of the cul-de-sac sidewalk in a manual from the opening drop"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [],
+   "why": "the spawn's own line; the remake's Manual Around the Sac",
+   "evidence": "G3 p077; PS34"
+  },
+  {
+   "id": "L10",
+   "name": "Remake COMBO",
+   "sequence": [
+    "broken fence",
+    "right quarter pipe",
+    "grind (C)",
+    "fence (O)",
+    "drop, manual (M)",
+    "handrail up to the roof",
+    "jump off right (B, O)"
+   ],
+   "links": [
+    "grind",
+    "manual"
+   ],
+   "collectibles": [
+    "COMBO (remake)"
+   ],
+   "why": "the gray-house line as a single-combo letter line",
+   "evidence": "PS34 suburbia"
+  }
+ ],
+ "guidance": [
+  "The mansion overlooks the hub. The haunted house stands on a rise at the west edge of the sac; its flagpole faces the circle every line crosses (inferred from LP3 0:27:53's view).",
+  "The NPC points at the door. The Thin Man stands on the path to the boarded house; the goal card shows him by the gate (LP3 0:23:21–0:23:22). The axe is an item the HUD tracks (G3 p074).",
+  "Letters and lines lead to the front wall. G1's T is on the wall in front of the house; G3's E above its side banked wall; G3's long scoring line ends at the house; the fifth pumpkin is on its porch.",
+  "Inside, glass marks the way. The upstairs window is the target of the backyard ramp; the front glass frames the pole (\"On the other side of the glass ahead\", PS34).",
+  "Hidden on purpose: the hallway \"seems to lead to a dead end\" (G3 p074); the backyard and the upstairs are out of sight until the wall transfer."
+ ],
+ "designLogic": [
+  "Locked-house tape. The tape hangs on the front of the building that overlooks the hub, but can only be reached from inside, after an errand. It is the first THPS3 tape behind a fetch quest.",
+  "The errand tours the level. The axe is at the construction site (south), the Thin Man by the trailer park path (west): the errand crosses the sac and introduces two areas.",
+  "An inside-out loop. In at the front door, through the hallway, out to the back, up the back wall, in at the top, out through the front window: one building, walked through completely.",
+  "Speed, then precision. The backyard gives speed for the tall ramp; the hallway asks to \"slow down and align\" before the last jump to the pole (G3 p073).",
+  "Glass as doors. Two breakable windows bracket the upstairs; each is a commitment point.",
+  "A soft finish at the start. The pole is over the front yard by the start tree; a miss or the exit (Spooky Drop) returns the player to the hub.",
+  "Lines rehearse the route. G3's long scoring line ends with the wall transfer into the backyard (step 3) and Look Out Behind You! (the backyard wall launch).",
+  "The revert links the backyard. LP3 keeps the combo through the yard with a revert after a 540 cannonball; the tape's speed-building step is THPS3's new vert-to-manual link in action.",
+  "A secret area that is a park. The backyard has its own gaps (six), a stat point and the launch to the roof wires; the tape route uses its geometry rather than adding a special path.",
+  "Progression across THPS3's first three tapes. Foundry: no unlock, open upper layer. Canada: a switch on the route. Suburbia: a fetch quest across the level and a building interior.",
+  "The PS1 edition had no interior. Its tape floats over the sac by a boom; the PS2 build moved the challenge into a gated building with an NPC.",
+  "The remake keeps the route and fills the house. Cash, a plushie and a stat point in the backyard, and a periodic door into \"the Abyss\" (pro goal)."
+ ],
+ "remakeChanges": [
+  "Tape: same route (PS34; LP34 10 s from the hallway); pcgamesn calls the pole a 'tree branch'",
+  "Goals: Heelflip the Trailer Hop alternative dropped; High Combo 15,000; five pro goals (COMBO, Manual Around the Sac, Pizza Guy in the Abyss, Impress the Skaters)",
+  "Three letter sets -> one set (≈ G1)",
+  "COMBO letters on the gray-house line (pro goal)",
+  "Haunted front door opens periodically into 'the Abyss' (pro goal)",
+  "New pickups: Cash ×4 (one on a moving plane), Hidden Deck, Iron Galaxy logo, plushie, 3 stat points (backyard and wires populated)",
+  "PS1 edition (2001): different layout and goals; tape over the cul-de-sac by a boom, no interior"
+ ],
+ "transfer": [
+  "Locked-house crystal. A two-storey house on a rise at the hub's edge, with a short pole (grindable, ≈ 3 m long) projecting from the upper floor over the front yard; the crystal on the pole, ≥ 7 m above the yard below.",
+  "Errand gate. The door is boarded; an NPC opens it when the player brings an item found on a rail at the far side of the level (pickup shown on the HUD).",
+  "Inside-out route. Hallway → a wall to vert-transfer over (quarter pipe + vert-air) → a bowl-like backyard → a tall launch ramp into a smashable upper window → a short hallway → smashable front window → pole grind (snap radius 2.1 m makes the short pole fair).",
+  "Speed then calm. Put a speed pad or bowl wall before the launch ramp; make the upstairs hallway short and straight so players line up before the window.",
+  "Soft exit. The fall from the pole lands in the front yard next to the spawn.",
+  "Keep walkers off. The porch roof below the pole must be unstandable or ≥ 3 m below it with no grab edge; the pole ≥ 6.5 m above any standable surface outside the house."
+ ],
+ "openQuestions": [
+  "The TAS's tape pickup is not visible: the goal registers in the end-of-run messages (3:25) after the fifth pumpkin on the haunted porch (3:20–3:21), where the skater \"kisses the rail\" twice beside the front door; a direct touch of the pole from the porch is possible but unconfirmed.",
+  "Heights of the front yard, the upper floor and the pole are estimates.",
+  "G3's tape text names a \"Haunted Backyard Transfer\" gap that is not in its gap list.",
+  "The PS1 edition's tape route (map only; a boom reaches towards it).",
+  "PCGamesN's \"tree branch\" vs the flagpole in every other source (remake).",
+  "Whether the remake's interior layout differs in detail (only 10 s of LP34 seen)."
+ ]
+}

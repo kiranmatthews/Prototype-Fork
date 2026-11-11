@@ -1,0 +1,1842 @@
+{
+ "id": "thps3-foundry",
+ "game": "THPS3",
+ "level": "The Foundry",
+ "location": "a working steel foundry (no city named in the sources)",
+ "type": "career-park",
+ "careerPosition": 1,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS2 2001",
+  "GameCube (TAS3)",
+  "PS1 edition (VG)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p028-p040 (scan index; printed page = scan - 1)",
+  "J3 p009-p011",
+  "VG TonyHawk_sProSkater3-Foundry.png (PS1)",
+  "TAS3 0:38-1:18",
+  "LP3 0:02:30-0:11:30 (tape 0:08:03-0:08:19)",
+  "LP34 0:12:35-0:16:40",
+  "PS34 foundry",
+  "WEB pcgamesn"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 10,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Pro Score: 30,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Sick Score: 60,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "original"
+  },
+  {
+   "text": "Cannonball Over the Half Pipe -or- 50-50 TC's Rail",
+   "version": "original"
+  },
+  {
+   "text": "Soak the Foreman",
+   "version": "original"
+  },
+  {
+   "text": "Grind the Molten Bucket",
+   "version": "original"
+  },
+  {
+   "text": "Un-Jam 5 Valves",
+   "version": "original"
+  },
+  {
+   "text": "High Score 10,000; Pro Score 25,000; Sick Score! 75,000; Collect S-K-A-T-E; Valves Unjammed; Activate Press; Cannonball Over the Halfpipe; Grind the Control Booth; Find the Secret Tape",
+   "version": "PS1 edition (VG header)"
+  },
+  {
+   "text": "High Score 10,000; Pro Score 30,000; Sick Score 60,000; High Combo 7,500; Collect SKATE Letters; Indy Over the Half Pipe; Soak the Foreman; Grind the Molten Bucket; Un-Jam 5 Valves; Get the Secret Tape",
+   "version": "remake 2025"
+  },
+  {
+   "text": "Pro goals: Platinum Score 400,000; Collect COMBO Letters; Double Kickflip the Stomp the Presses Gap; Froggy Grind Down the Helix Room; Collect the 5 Forged Tonys",
+   "version": "remake 2025"
+  }
+ ],
+ "size": {
+  "class": "small-medium",
+  "footprint": "≈ 90-120 × 30-40 m hall plus a ≈ 15-20 m cylindrical generator core",
+  "evidence": "G3 p033 3D map proportions (hall ≈ 6.3 × core diameter, ≈ 3:1 length:width); four vert-ramp zones end to end. G3 p028 calls it compact. No scale; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start deck, fans and core door",
+   "layer": "raised deck, roll-ins, vert ramps",
+   "features": [
+    "three roll-ins",
+    "exhaust-fan vert ramps",
+    "kickers to the catwalks",
+    "curving ramps behind the start (Generator Transfer)",
+    "core door"
+   ],
+   "notes": "VG START ≈ (2070, 1351)"
+  },
+  {
+   "id": "Z2",
+   "name": "Sunken conveyor half pipe",
+   "layer": "sunken vert",
+   "features": [
+    "half pipe across the hall",
+    "quarter pipes flanking the centre roll-in",
+    "valves 1 and 5"
+   ],
+   "notes": "Over the Pipe!; Cannonball goal"
+  },
+  {
+   "id": "Z3",
+   "name": "Catwalk network",
+   "layer": "catwalks ≈ 3-5 m",
+   "features": [
+    "Y-shaped catwalks over the half pipe",
+    "yellow handrails",
+    "path to the glass observation box"
+   ],
+   "notes": "back door to the tape"
+  },
+  {
+   "id": "Z4",
+   "name": "Press and control booth",
+   "layer": "floor, elevated walkway, booth roof",
+   "features": [
+    "pressing machine (rises)",
+    "booth roof rail (Press Box Kink)",
+    "TC's Rail"
+   ],
+   "notes": "VG PRESS ≈ (1314, 967)"
+  },
+  {
+   "id": "Z5",
+   "name": "Cooling tank and foreman",
+   "layer": "floor, ramps, walkway above",
+   "features": [
+    "water tank",
+    "launch ramps",
+    "triangular ramp",
+    "hoist and control panel",
+    "valve 2"
+   ],
+   "notes": "Soak the Foreman"
+  },
+  {
+   "id": "Z6",
+   "name": "Furnace row",
+   "layer": "floor, scaffolding, pipe atop tanks",
+   "features": [
+    "4 furnaces / 3 rusty tanks",
+    "pipe on top",
+    "walkway handrails",
+    "launch ramps"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z7",
+   "name": "Molten operations",
+   "layer": "floor, banked walls, office",
+   "features": [
+    "molten tank with vented base",
+    "bucket on an overhead track",
+    "Molten Ops office flanked by banked walls",
+    "ramp and stairs",
+    "curved yellow guardrail"
+   ],
+   "notes": "valves 3 and 4"
+  },
+  {
+   "id": "Z8",
+   "name": "Balcony above the Molten Ops office",
+   "layer": "upper deck ≈ 4-6 m",
+   "features": [
+    "ledge and handrail",
+    "quarter pipe against the wall"
+   ],
+   "notes": "Porch Rail Tap, Nice View Up Here!"
+  },
+  {
+   "id": "Z9",
+   "name": "Rafters",
+   "layer": "top ≈ 6-9 m",
+   "features": [
+    "two suspended concrete platforms",
+    "ductwork over the cooling tank",
+    "tape beam lengthwise over the middle",
+    "glass-encased observation area"
+   ],
+   "notes": "VG tape ≈ (983, 727)"
+  },
+  {
+   "id": "Z10",
+   "name": "Generator core (helix room)",
+   "layer": "secret area, spiral on 3 levels over a bowl",
+   "features": [
+    "spiral walkway",
+    "bowl floor"
+   ],
+   "notes": "opened by Un-Jam 5 Valves; not on the PS1 map"
+  }
+ ],
+ "landmarks": [
+  "exhaust fans",
+  "sunken conveyor half pipe",
+  "Y-shaped catwalks",
+  "pressing machine",
+  "cooling tank with foreman and hoist",
+  "furnace row",
+  "molten tank and pouring bucket",
+  "Molten Operations office and balcony",
+  "suspended concrete platforms",
+  "tape beam",
+  "glass-encased observation area",
+  "generator core"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the hall over three roll-ins towards the half pipe",
+  "visibleCollectibles": [
+   "catwalk stat point (G1-type groups)"
+  ],
+  "notes": "three openings: centre roll-in over the half pipe; kicker onto the catwalk (back door to the tape); fan vert ramps. Tape not identified in spawn frames"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Secret Tape",
+   "zone": "Z9",
+   "landmark": "metal beam running lengthwise high over the middle of the hall, between the glass observation box and the suspended platforms",
+   "layer": "rafters",
+   "heightM": "≈ 6-9 above the main floor (≈ 9-13 above the half-pipe bottom); level with the observation platform; slightly below the balcony/platforms",
+   "launchFrom": "suspended platform (main) or the small ramp in the observation box (back door)",
+   "visibility": {
+    "firstSight": "observation platform (G3 shot 1:49) or the platforms; from the floor looking up (inferred)",
+    "fromSpawn": false,
+    "reads": "tape on a dark beam with a warm glow (J3 shot 9)",
+    "distanceFromFirstSightM": "≈ 10-20 (box or platform to tape)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "bank",
+     "from": "Molten Ops floor",
+     "to": "banked walls flanking the control room",
+     "geometry": "trick until the Special Meter is full (G3 p031)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "banked wall",
+     "to": "balcony ledge ≈ 4-6 m up",
+     "geometry": "sky into a grind on the ledge; named Porch Rail Tap 500 (G3 p039); LP3 0:08:06-0:08:08"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "balcony",
+     "to": "balcony quarter pipe",
+     "geometry": "speed off the quarter pipe against the wall"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "balcony edge",
+     "to": "suspended concrete platform",
+     "geometry": "CG's SKDK 2 STFK 250; LP3 bails on landing 0:08:09-0:08:12"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "platform",
+     "to": "beam",
+     "geometry": "leap towards the centre of the room, land in a grind (Walkin' a Thin Line! 500)"
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "beam",
+     "to": "tape",
+     "geometry": "hold the grind; LP3 0:08:17 timer 0:13"
+    }
+   ],
+   "altRoutes": [
+    {
+     "name": "Use the Back Door (G3 p031 sidebar; J3 p009; PS34; pcgamesn)",
+     "steps": [
+      "kicker/ledge beside the start onto the yellow-railed catwalk",
+      "follow the catwalk (right-hand path) to the glass-encased observation area",
+      "stop in the centre facing the beam",
+      "break the glass, ollie off the small ramp into a grind on the beam",
+      "hold the grind to the tape"
+     ],
+     "moves": [
+      "kicker",
+      "grind",
+      "ollie",
+      "break-glass"
+     ],
+     "time": "≈ 11 s from spawn to the platform (G3 shot 1:49)"
+    },
+    {
+     "name": "TAS3 0:46-0:53",
+     "steps": [
+      "special grind on the back wall rail, wallie (valve)",
+      "noseslide the curved back guardrail (Round the Bend)",
+      "boneless over the molten tank onto a platform (CG's SKDK 2 STFK, special grind)",
+      "leap to the centre; tape collected in mid-air at timer 1:48",
+      "land by the press near letter A"
+     ],
+     "moves": [
+      "grind",
+      "wallie",
+      "boneless",
+      "ollie"
+     ],
+     "time": "12 s from spawn"
+    }
+   ],
+   "moves": [
+    "bank",
+    "vert-air",
+    "grind",
+    "transfer",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "full Special Meter",
+    "Air/Hang Time/Speed stats (G3 sidebar 'Bette Would Dig It')",
+    "grind landing on a narrow beam",
+    "knowing the catwalk leads to the box (back door)"
+   ],
+   "coupling": "none (glass broken on the back-door route)",
+   "failure": "fall ≈ 6-9 m to the press/tank floor; back door retry ≈ 11 s; main route needs the meter refilled",
+   "timeFromSpawnS": "TAS 12 (TAS3 0:40-0:52); LP3 14 s from the balcony (0:08:03-0:08:17); G3 main-route shots ≈ 38-40 s in; back door ≈ 11 s",
+   "difficulty": 3,
+   "roles": [
+    "TEASE",
+    "TEST",
+    "EXPLORE",
+    "TEACH-LINE"
+   ],
+   "why": "first THPS3 tape teaches the vertical scale: the tape is the midpoint of an upper loop reachable from both ends; hard end tests meter + sky + leaps, easy end rewards catwalk exploration from the spawn",
+   "evidence": "G3 p031, p034-p035, p039-p040; J3 p009, p011; VG; TAS3 0:46-0:53; LP3 0:07:45-0:08:19; PS34 foundry; WEB pcgamesn",
+   "confidence": "high (location, routes); low (heights)"
+  },
+  {
+   "id": "S-G1",
+   "type": "letter",
+   "label": "S (Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "group": "G1",
+   "zone": "Z1",
+   "landmark": "above the vert ramp on the side of the tanks nearest the start",
+   "layer": "air over vert ramp",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {
+    "firstSight": "start area",
+    "fromSpawn": null
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G1",
+   "type": "letter",
+   "label": "K",
+   "group": "G1",
+   "zone": "Z1",
+   "landmark": "above the vert ramp under the right-hand fan",
+   "layer": "air over vert ramp",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G1",
+   "type": "letter",
+   "label": "A",
+   "group": "G1",
+   "zone": "Z4",
+   "landmark": "opposite side of the press from the control booth; lower ledge under the foreman",
+   "layer": "ledge",
+   "heightM": "≈ 1",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G1",
+   "type": "letter",
+   "label": "T",
+   "group": "G1",
+   "zone": "Z7",
+   "landmark": "above the handrail wrapping around the molten operations area",
+   "layer": "handrail",
+   "heightM": "≈ 1-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G1",
+   "type": "letter",
+   "label": "E",
+   "group": "G1",
+   "zone": "Z7",
+   "landmark": "same position as S on the side of the tanks nearest the molten area",
+   "layer": "air over vert ramp",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G2",
+   "type": "letter",
+   "label": "S (Caballero, Koston, Mullen, Rowley)",
+   "group": "G2",
+   "zone": "Z5",
+   "landmark": "over the edge of the cooling tank; vert ramp at the tank's base",
+   "layer": "air",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G2",
+   "type": "letter",
+   "label": "K",
+   "group": "G2",
+   "zone": "Z1",
+   "landmark": "above the vert ramp under the left-hand fan",
+   "layer": "air",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G2",
+   "type": "letter",
+   "label": "A",
+   "group": "G2",
+   "zone": "Z4",
+   "landmark": "atop the handrail nearest the press, above the worker's booth",
+   "layer": "handrail",
+   "heightM": "≈ 1-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G2",
+   "type": "letter",
+   "label": "T",
+   "group": "G2",
+   "zone": "Z7",
+   "landmark": "above the handrail round the molten area",
+   "layer": "handrail",
+   "heightM": "≈ 1-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G2",
+   "type": "letter",
+   "label": "E",
+   "group": "G2",
+   "zone": "Z7",
+   "landmark": "platform of the molten tank; air off the kicker left of the tank",
+   "layer": "air off kicker",
+   "heightM": "≈ 2-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G3",
+   "type": "letter",
+   "label": "S (Campbell, Lasek, Muska, Steamer)",
+   "group": "G3",
+   "zone": "Z2",
+   "landmark": "above the centre of the half pipe; kicker on the floor above it",
+   "layer": "air over half pipe",
+   "heightM": "≈ 2-4 above the deck",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G3",
+   "type": "letter",
+   "label": "K",
+   "group": "G3",
+   "zone": "Z4",
+   "landmark": "upper green ledge behind the foreman, opposite the booth",
+   "layer": "ledge",
+   "heightM": "≈ 2-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G3",
+   "type": "letter",
+   "label": "A",
+   "group": "G3",
+   "zone": "Z7",
+   "landmark": "transfer the quarter pipes flanking the molten tank",
+   "layer": "air over molten tank",
+   "heightM": "≈ 3-5",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G3",
+   "type": "letter",
+   "label": "T",
+   "group": "G3",
+   "zone": "Z6",
+   "landmark": "rail atop the handrail nearest the furnace tanks",
+   "layer": "rail",
+   "heightM": "≈ 1-3",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G3",
+   "type": "letter",
+   "label": "E",
+   "group": "G3",
+   "zone": "Z1",
+   "landmark": "turn left at the start, vert ramp",
+   "layer": "air over vert ramp",
+   "heightM": "≈ 4-6",
+   "launchFrom": null,
+   "visibility": {},
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "floor-level retry",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "letters tour the floor zones; one per zone per group",
+   "evidence": "G3 p030",
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "SKATE-REMAKE",
+   "type": "letter",
+   "label": "S-K-A-T-E (remake, one set)",
+   "zone": "Z1-Z7",
+   "landmark": "S left of the half pipe up the slope above a small QP; K down the slope from start, left, above a QP; A past the half pipe on the right above a platform edge; T back of level up the right slope above the rail; E opposite S",
+   "layer": "floor",
+   "heightM": "unknown",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "evidence": "PS34 foundry",
+   "confidence": "medium",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "version": "remake"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (remake pro goal only)",
+   "zone": "Z3",
+   "landmark": "back-door catwalk",
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "start",
+     "to": "raised catwalk",
+     "geometry": "head right"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "catwalk",
+     "to": "C, O, M",
+     "geometry": "grind the yellow rails"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "end of catwalk",
+     "to": "B",
+     "geometry": "jump off and grind again"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "end",
+     "to": "O",
+     "geometry": "jump off and grind the rail ahead; land the combo"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "ollie"
+   ],
+   "evidence": "PS34 foundry; absent from G3 p028, J3, VG goal lists (COMBO letters are a THPS4 goal type, G4m p002/p004)",
+   "confidence": "medium",
+   "version": "remake",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "the remake converts the tape's easy approach into a single-combo letter line"
+  },
+  {
+   "id": "VALVES",
+   "type": "goal-object",
+   "label": "Un-Jam 5 Valves",
+   "zone": "Z2/Z5/Z7",
+   "landmark": "1 before the half pipe; 2 across the cooling tank from the foreman; 3 halfway up the ramp to molten ops; 4 on the walkway down from above the office; 5 far side of the half pipe (worker)",
+   "layer": "wall-mounted, grind the cross-bar",
+   "moves": [
+    "grind"
+   ],
+   "coupling": "opens the generator core",
+   "evidence": "G3 p032; J3 p010; VG",
+   "confidence": "high"
+  },
+  {
+   "id": "FOREMAN",
+   "type": "goal-object",
+   "label": "Soak the Foreman",
+   "zone": "Z5",
+   "landmark": "walkway above the cooling tank; hoist control panel",
+   "moves": [
+    "grind"
+   ],
+   "coupling": "hoist swings into the foreman",
+   "evidence": "G3 p032; PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "BUCKET",
+   "type": "goal-object",
+   "label": "Grind the Molten Bucket",
+   "zone": "Z7",
+   "landmark": "bucket on an overhead track pouring into the molten tub every few seconds",
+   "moves": [
+    "kicker",
+    "transfer",
+    "grind"
+   ],
+   "coupling": "timed moving object; done during Deep Fried Transfer (J3)",
+   "difficulty": 3,
+   "evidence": "G3 p032, p039; J3 p010",
+   "confidence": "high"
+  },
+  {
+   "id": "STATPOINTS-ON-ROUTE",
+   "type": "goal-object",
+   "label": "Stat points on the tape's upper layer",
+   "zone": "Z3/Z8/Z9",
+   "landmark": "catwalk first turn; outer catwalk rail; balcony quarter pipe far left; ductwork above the cooling tank",
+   "moves": [
+    "kicker",
+    "grind",
+    "vert-air",
+    "ollie"
+   ],
+   "why": "pre-teach the upper layer",
+   "evidence": "G3 p034",
+   "confidence": "high"
+  },
+  {
+   "id": "DECKS",
+   "type": "goal-object",
+   "label": "New Decks (3 groups)",
+   "zone": "Z1/Z8/Z6",
+   "landmark": "vert ramp right of start; balcony handrail towards the centre of the room; pipe atop the furnace tanks",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "evidence": "G3 p035",
+   "confidence": "high"
+  },
+  {
+   "id": "REMAKE-EXTRAS",
+   "type": "other",
+   "label": "Remake: Cash ×3, Hidden Deck, Iron Galaxy logo, Panda plushie, 2 stat points, 5 Forged Tonys",
+   "zone": "various",
+   "landmark": "Cash 3 on the raised platform beside the tape route; Hidden Deck on the rafters (LP34 0:15:07 from the catwalk drop); logo at the top of the helix; Forged Tony on the vent shaft (ductwork)",
+   "evidence": "PS34 foundry; LP34 0:15:03-0:15:08",
+   "version": "remake",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Generator Hop",
+   "mapKey": "A",
+   "points": 250,
+   "kind": "hip",
+   "location": "transfer the banked walls outside the core entrance",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p035"
+  },
+  {
+   "name": "Generator Transfer",
+   "mapKey": "A",
+   "points": 500,
+   "kind": "channel",
+   "location": "air over the gap dividing the curving ramps behind the start",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p035"
+  },
+  {
+   "name": "Low Current Walkway Lip",
+   "mapKey": "B",
+   "points": 250,
+   "kind": "lip",
+   "location": "core: from the base to a lip trick on the spiral's 2nd level",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p035"
+  },
+  {
+   "name": "High Voltage Walkway Lip",
+   "mapKey": "B",
+   "points": 750,
+   "kind": "lip",
+   "location": "core: lip on the 3rd level",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p035"
+  },
+  {
+   "name": "From Way Down Town!",
+   "mapKey": "C",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "catwalk → any of the three rails on the 4-furnace row",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "(LP34 Hidden Deck)"
+   ],
+   "evidence": "G3 p036; LP34 0:15:06"
+  },
+  {
+   "name": "Railin' on Furnace Row",
+   "mapKey": "D",
+   "points": 250,
+   "kind": "kicker",
+   "location": "launch ramp at the end of the furnace row → scaffolding",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p036"
+  },
+  {
+   "name": "Furnace Topper Rail",
+   "mapKey": "D",
+   "points": 500,
+   "kind": "kicker",
+   "location": "ramp at the row's end → pipe atop the three rusty tanks",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "DECK"
+   ],
+   "evidence": "G3 p036"
+  },
+  {
+   "name": "Furnace Row Extension",
+   "mapKey": "D",
+   "points": 500,
+   "kind": "lip",
+   "location": "quarter pipe → lip trick on the short side of the furnace-row guardrail",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p036"
+  },
+  {
+   "name": "Furnace Walk Rail 2 Rail!",
+   "mapKey": "E",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "between the two railings in front of the furnace row",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p036"
+  },
+  {
+   "name": "Press Walk Rail 2 Rail!",
+   "mapKey": "F",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "between TC's Rail and the Press Box Kink rail",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p036"
+  },
+  {
+   "name": "Furnace Walk",
+   "mapKey": "G",
+   "points": 150,
+   "kind": "other",
+   "location": "grind the length of the furnace walkway handrail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Press Box Kink",
+   "mapKey": "H",
+   "points": 100,
+   "kind": "other",
+   "location": "rail on the roof of the press control booth",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "TC's Rail",
+   "mapKey": "I",
+   "points": 100,
+   "kind": "other",
+   "location": "outside handrail of the elevated walkway next to the booth",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "goal (alt.)"
+   ],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Press Booth Rail 2 Rail",
+   "mapKey": "J",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "booth's kinked walkway rail ↔ the booth's front edge",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Rail Hop",
+   "mapKey": "K",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "Furnace Walk rail → rail curving round the back",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Over the Pipe!",
+   "mapKey": "L",
+   "points": 250,
+   "kind": "channel",
+   "location": "transfer over the half pipe",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "goal"
+   ],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Roll In Hop",
+   "mapKey": "M",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "grind to grind over the centre roll-in",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Roll In Transfer",
+   "mapKey": "M",
+   "points": 500,
+   "kind": "channel",
+   "location": "air between the two quarter pipes flanking the centre roll-in",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Split the Wickets!",
+   "mapKey": "N",
+   "points": 150,
+   "kind": "other",
+   "location": "from the top of a fan housing over and between the Y-shaped catwalks",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Catwalk Grind",
+   "mapKey": "O",
+   "points": 250,
+   "kind": "kicker",
+   "location": "any ramp → grind on the catwalk handrails",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE (back door)"
+   ],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Catwalk Balancing Act",
+   "mapKey": "P",
+   "points": 500,
+   "kind": "lip",
+   "location": "stall on the catwalk above the half pipe",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Catwalk Tight Lip",
+   "mapKey": "Q",
+   "points": 750,
+   "kind": "lip",
+   "location": "sky out of the half pipe, stall on the catwalk rail",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "Up and Over!!!",
+   "mapKey": "R",
+   "points": 500,
+   "kind": "other",
+   "location": "from the right fan housing over the second walkway into the conveyor pipe",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p037"
+  },
+  {
+   "name": "From Way Down Town!",
+   "mapKey": "S",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "catwalk → rail round the soaking tub",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Tub Rail Tap",
+   "mapKey": "T",
+   "points": 250,
+   "kind": "kicker",
+   "location": "triangular ramp beside the water tank → tank edge or catwalk",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Stomp the Presses!",
+   "mapKey": "U",
+   "points": 250,
+   "kind": "other",
+   "location": "moving object: wait for the press to rise, transfer from a side ramp into a grind on it",
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "onRouteOf": [
+    "(remake pro goal)"
+   ],
+   "evidence": "G3 p038; PS34"
+  },
+  {
+   "name": "Edge O' the Tub Extension",
+   "mapKey": "V",
+   "points": 250,
+   "kind": "lip",
+   "location": "launch ramps beside the tank → plant on the tank lip",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [
+    "line L2"
+   ],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Poolside Over Under Gap",
+   "mapKey": "V",
+   "points": 150,
+   "kind": "other",
+   "location": "quarter pipes at the tub's base, over the tub and down between the walkway rail",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Lil' Rail Hop",
+   "mapKey": "W",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "(book prints Poolside Over Under's text again)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Just Passing Through",
+   "mapKey": "X",
+   "points": 250,
+   "kind": "over-object",
+   "location": "triangular ramp by the tank, over the catwalk towards the foreman",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p038"
+  },
+  {
+   "name": "Hot Tub Jump",
+   "mapKey": "A",
+   "points": 150,
+   "kind": "over-object",
+   "location": "grind the wall by the molten tank, ollie over the tank, continue the grind",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "(TAS line)"
+   ],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Hardway Over the Hot Tub",
+   "mapKey": "A",
+   "points": 350,
+   "kind": "over-object",
+   "location": "air from the tub's vented base over the tub to the open area",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Deep Fried Transfer",
+   "mapKey": "A",
+   "points": 500,
+   "kind": "pool-transfer",
+   "location": "air over the molten tank",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "BUCKET goal"
+   ],
+   "evidence": "G3 p039; J3 p010"
+  },
+  {
+   "name": "Bucket O' Hot Sauce!",
+   "mapKey": "A",
+   "points": 250,
+   "kind": "other",
+   "location": "moving object: Deep Fried Transfer while the bucket is parked over the tank",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "BUCKET goal"
+   ],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Circus Act Around the Bend!",
+   "mapKey": "B",
+   "points": 500,
+   "kind": "manual",
+   "location": "manual the flat paths round the back",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Round the Bend!!!",
+   "mapKey": "B",
+   "points": 500,
+   "kind": "other",
+   "location": "grind the flat part of the yellow guardrail round the back",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE (TAS)"
+   ],
+   "evidence": "G3 p039; TAS3 0:48"
+  },
+  {
+   "name": "CG's SKDK 2 STFK",
+   "mapKey": "C",
+   "points": 250,
+   "kind": "roof",
+   "location": "balcony above the Molten Ops office → a suspended platform",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p039; TAS3 0:50; LP3 0:08:09"
+  },
+  {
+   "name": "Back End Rail 2 Rail",
+   "mapKey": "D",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "between the ledge, guardrail and coping curving round the back",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Porch Rail Tap",
+   "mapKey": "E",
+   "points": 500,
+   "kind": "lip",
+   "location": "quarter pipe by the Molten Ops office → grind on the balcony",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Nice View Up Here!",
+   "mapKey": "E",
+   "points": 750,
+   "kind": "lip",
+   "location": "stall on the balcony's edge",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [
+    "TAPE (alt.)"
+   ],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Stair Steppin'",
+   "mapKey": "F",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "ramp behind the office, grind the edge, transfer the steps, continue",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "line L3"
+   ],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Control Booth Transfer",
+   "mapKey": "G",
+   "points": 500,
+   "kind": "hip",
+   "location": "quarter pipes flanking the Molten Ops office",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p039"
+  },
+  {
+   "name": "Don't Look Down!",
+   "mapKey": "H",
+   "points": 500,
+   "kind": "other",
+   "location": "balcony → platform → grind the ductwork high above the floor",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "stat point"
+   ],
+   "evidence": "G3 p040"
+  },
+  {
+   "name": "Walkin' a Thin Line!",
+   "mapKey": "I",
+   "points": 500,
+   "kind": "other",
+   "location": "grind the metal beam where the tape is",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p040"
+  },
+  {
+   "name": "Neversoft Challenge: Nausea Grind!!!",
+   "mapKey": null,
+   "points": 500,
+   "kind": "other",
+   "location": "\"a gut-twisting grind\" (most likely the helix walkway; not stated)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p040"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "none",
+   "opens": "catwalk, observation box, balcony, platforms, beam (always open)",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G3 p031"
+  },
+  {
+   "trigger": "skate through the observation box glass",
+   "opens": "the small ramp to the beam",
+   "neededFor": [
+    "TAPE (back door)"
+   ],
+   "evidence": "J3 p009; PS34"
+  },
+  {
+   "trigger": "Un-Jam 5 Valves",
+   "opens": "generator core (spiral helix room) by the start",
+   "neededFor": [],
+   "evidence": "G3 p033; PS34 (remake Iron Galaxy logo, Froggy Grind pro goal)"
+  },
+  {
+   "trigger": "grind the hoist control panel",
+   "opens": "hoist swings, foreman soaked",
+   "neededFor": [
+    "FOREMAN"
+   ],
+   "evidence": "G3 p032"
+  },
+  {
+   "trigger": "molten bucket cycle (every few seconds)",
+   "opens": "bucket parked over the tank",
+   "neededFor": [
+    "BUCKET"
+   ],
+   "evidence": "G3 p032, p039"
+  },
+  {
+   "trigger": "press cycle",
+   "opens": "press rises/opens",
+   "neededFor": [
+    "Stomp the Presses!",
+    "a stat point"
+   ],
+   "evidence": "G3 p034, p038"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "20-second sick score",
+   "sequence": [
+    "centre roll-in",
+    "flip over the half pipe (Over the Pipe!)",
+    "manual",
+    "Press Box Kink rail",
+    "manual into the vert ramp",
+    "Wrap Around",
+    "revert",
+    "manual",
+    "TC's Rail",
+    "manual",
+    "Over the Pipe! again"
+   ],
+   "links": [
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "goal (TC's Rail)"
+   ],
+   "why": "the opening line: vert, rails and manuals in one combo, only possible with the revert",
+   "evidence": "G3 p029"
+  },
+  {
+   "id": "L2",
+   "name": "Tub line",
+   "sequence": [
+    "right roll-in",
+    "Over the Pipe!",
+    "manual",
+    "ramp on the right",
+    "stall on the water tank (Edge O' the Tub Extension)",
+    "revert",
+    "manual",
+    "Over the Pipe!"
+   ],
+   "links": [
+    "manual",
+    "revert"
+   ],
+   "collectibles": [],
+   "why": "a vert stall used as a link",
+   "evidence": "G3 p029"
+  },
+  {
+   "id": "L3",
+   "name": "Back-of-hall line",
+   "sequence": [
+    "ramps up to the Molten Ops office",
+    "handrail up the right walkway",
+    "back ledge by the windows",
+    "Stair Steppin'",
+    "manual down the ramp",
+    "Furnace Row Extension handplant",
+    "revert"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "T (G1",
+    "G2)"
+   ],
+   "why": "the floor line under the tape's balcony",
+   "evidence": "G3 p029"
+  },
+  {
+   "id": "L4",
+   "name": "Balcony route (tape)",
+   "sequence": [
+    "banked walls (meter)",
+    "sky to the balcony ledge (Porch Rail Tap)",
+    "balcony quarter pipe",
+    "leap to a platform (CG's SKDK 2 STFK)",
+    "leap to the beam (Walkin' a Thin Line!)",
+    "tape; branch: platform",
+    "ductwork (Don't Look Down!)"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE",
+    "deck",
+    "2 stat points"
+   ],
+   "why": "the expert half of the upper loop",
+   "evidence": "G3 p031, p034–p035, p039–p040; LP3 0:08:03–0:08:17"
+  },
+  {
+   "id": "L5",
+   "name": "Back door (tape)",
+   "sequence": [
+    "start kicker",
+    "catwalk (Catwalk Grind)",
+    "observation box",
+    "(glass)",
+    "small ramp",
+    "beam",
+    "tape",
+    "on to the platforms",
+    "balcony"
+   ],
+   "links": [
+    "kicker",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE",
+    "catwalk stat points; remake COMBO",
+    "Cash",
+    "Hidden Deck"
+   ],
+   "why": "the easy half of the upper loop, from the spawn",
+   "evidence": "G3 p031; J3 p009, p011; PS34"
+  },
+  {
+   "id": "L6",
+   "name": "Catwalk drops",
+   "sequence": [
+    "catwalk",
+    "From Way Down Town! (furnace rails or tub rail)",
+    "Furnace Walk",
+    "Rail Hop",
+    "Round the Bend!!!"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "remake Hidden Deck"
+   ],
+   "why": "the catwalk feeds the floor rails",
+   "evidence": "G3 p036–p039; LP34 0:15:03–0:15:08"
+  },
+  {
+   "id": "L7",
+   "name": "Round the bend (TAS)",
+   "sequence": [
+    "back wall grind",
+    "wallie",
+    "curved guardrail noseslide (Round the Bend)",
+    "boneless over the molten tank",
+    "platform (CG's SKDK 2 STFK)",
+    "air through the tape"
+   ],
+   "links": [
+    "wallie",
+    "grind",
+    "boneless"
+   ],
+   "collectibles": [
+    "TAPE",
+    "valve"
+   ],
+   "why": "the fastest climb skips the balcony entirely",
+   "evidence": "TAS3 0:46–0:53"
+  },
+  {
+   "id": "L8",
+   "name": "Bucket timing",
+   "sequence": [
+    "molten-area ramps (meter)",
+    "wait for the bucket",
+    "tiny ramp at the tank",
+    "Deep Fried Transfer",
+    "grind the bucket's side rail"
+   ],
+   "links": [
+    "vert-air",
+    "grind"
+   ],
+   "collectibles": [
+    "BUCKET goal"
+   ],
+   "why": "a timed moving-object line",
+   "evidence": "G3 p032; J3 p010"
+  },
+  {
+   "id": "L9",
+   "name": "Generator core",
+   "sequence": [
+    "after the valves: door by the start",
+    "spiral to the top",
+    "grind or manual all the way down",
+    "bowl",
+    "lips on walkway levels 2 and 3"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "lip"
+   ],
+   "collectibles": [
+    "— (remake Iron Galaxy logo)"
+   ],
+   "why": "reward area; a long descending line",
+   "evidence": "G3 p033, p035"
+  },
+  {
+   "id": "L10",
+   "name": "Remake COMBO",
+   "sequence": [
+    "start, right",
+    "raised catwalk",
+    "yellow rails (C, O, M)",
+    "off the end",
+    "grind (B)",
+    "off the end",
+    "rail ahead (O)"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "COMBO (remake)"
+   ],
+   "why": "the back-door catwalk as a single-combo letter line",
+   "evidence": "PS34 foundry"
+  }
+ ],
+ "guidance": [
+  "The catwalk starts at the spawn. Kickers beside the start deck put the catwalk's yellow rails right in front of the player; following them leads to the observation box and the beam (G3 p034 stat point, p031 sidebar).",
+  "The beam hangs over the busy middle. The tape is over the press and cooling tank, the zones every floor line crosses, so it is seen from below many times before it is reached (inferred from its position).",
+  "Pickups seed the hard route. A stat point at the balcony quarter pipe, another on the ductwork, and a deck on the balcony handrail give reasons to climb the back of the hall before the tape route is known (G3 p034–p035).",
+  "The guide's sidebar says it outright. \"Bette Would Dig It\" tells players to spend early stat points on Air, Hang Time and Speed for the tape (G3 p031): the first tape doubles as the stat-point tutorial.",
+  "Hidden on purpose: the observation box's link to the beam (a small ramp behind glass) and the platforms' link to the beam are only obvious once you stand on the upper layer."
+ ],
+ "designLogic": [
+  "One tape, two ends. The tape sits mid-way along an upper loop; the back end needs meter, a sky and two leaps, the front end needs only exploration and a stop-and-ollie. The guide prints the hard way first and the easy way as a sidebar; the remake's guides print only the easy way (PS34, pcgamesn).",
+  "The easy end starts at the spawn. The catwalk kicker is one of the three choices the player faces at the start, so a curious first run can reach the observation box in about 11 s (G3 shot at 1:49) and the tape a few seconds later.",
+  "The hard end tests THPS3's air tools. Fill the Special Meter, sky off a banked wall into a grind, speed from a quarter pipe, leap, leap. It is the career's first lesson in \"go up first, then across\".",
+  "Above the main line, not beside it. The beam is over the press and the cooling tank, where the floor lines and two letters per group pass; the tape is visible from where it cannot be reached.",
+  "Pickups pre-teach the climb. Stat points and a deck on the balcony and ductwork reward the first visit to the upper layer (G3 p034–p035).",
+  "The tape needs no unlock. The level's two events (valves → core, bucket, press) are kept off the tape route, so the first tape tests movement only.",
+  "Letters stay on the floor. Every letter set tours the four floor zones; none touches the upper loop. The letters teach the floor lines, the tape teaches the second layer.",
+  "Failure costs a climb, not a run. A fall drops 6–9 m to the floor; the back door is ≈ 11 s from the spawn, so several attempts fit in two minutes. LP3's bail on the platform still reached the tape.",
+  "Expert shortcut by gap knowledge. The TAS reaches a platform from the back guardrail with a boneless over the molten tank (12 s from spawn). The level lets mastery skip the designed staircase.",
+  "The revert is the new link of the floor lines. All three of G3's lines join vert to manual with a revert (Wrap Around → revert → manual; stall → revert → manual; handplant → revert). The tape route itself does not need it.",
+  "Compact first level, vertical not wide. G3 calls the Foundry compact; its growth is in height (five layers), which prepares the much bigger Canada.",
+  "The remake scores the approach. COMBO letters on the back-door catwalk, cash on the tape's platform and a Hidden Deck on the rafters turn the easy route into a scored, populated line."
+ ],
+ "remakeChanges": [
+  "Tape: same beam; remake guides give only the catwalk/glass-box route (PS34; pcgamesn)",
+  "Goal 'Cannonball Over the Half Pipe -or- 50-50 TC's Rail' -> 'Indy Over the Half Pipe'; High Combo 7,500; five pro goals",
+  "Three letter sets by skater group -> one set (≈ G1)",
+  "COMBO letters added on the back-door catwalk (pro goal)",
+  "New pickups: Cash ×3 (one beside the tape route), Hidden Deck on the rafters, Iron Galaxy logo at the top of the helix, Panda plushie, 2 stat points, 5 Forged Tonys (one on the ductwork)",
+  "PS1 edition (2001): different goals (Activate Press, Grind the Control Booth, Valves Unjammed); tape on the rafter gantry above the press; no core on the map"
+ ],
+ "transfer": [
+  "Mid-loop crystal. Build an upper loop of narrow platforms ≈ 6–8 m above the floor: catwalk from the spawn → small glass box → long beam (grindable platform edge, ≈ 0.4 m wide) → two hanging slabs → balcony. Put the crystal on the beam's midpoint, ≥ 7 m above any floor, over the level's busiest zone.",
+  "Two ends, two skill levels. Easy end: a kicker beside the spawn onto the catwalk, then a short ramp at the box that ollies straight into the beam grind (grind snap radius 2.1 m forgives the line-up). Hard end: a banked wall to wallride/vert-air up to the balcony, then two ollies across ≈ 6–8 m gaps (inside the ≈ 9.4 m cruise-ollie range) to a slab and to the beam.",
+  "Breakable box. Close the box with smashable glass (break-glass) so the easy end is visible but reads as \"something to break into\".",
+  "Seed the climb. Put two lesser pickups (or a trick-gate reward) on the balcony quarter pipe and on a high duct above the slabs, so the hard end is visited before the crystal route is known.",
+  "Keep walkers off. Hold the beam ≥ 7 m above the floor and ≥ 3 m from any ledge a walker can grab; the slabs and box are the only standable surfaces nearby, and both lie on the designed routes.",
+  "Cheap retries. Land a miss on flat floor beside the spawn-side catwalk kicker, so a retry is a ≈ 10–15 s climb inside the run."
+ ],
+ "openQuestions": [
+  "Exact heights of the catwalk, balcony, platforms and beam: no source gives them; all are estimates.",
+  "Whether the tape is visible from the spawn deck: not seen in any frame I examined.",
+  "Where the glass box sits relative to the press: the PS1 map shows a glazed box above the press, the PS2 sources only say \"glass-encased observation area\" at the catwalk's end.",
+  "G3 announces 47 gaps but describes 44 plus the challenge; W Lil' Rail Hop repeats another gap's text.",
+  "The Neversoft Challenge \"Nausea Grind!!!\" is not located by the guide; the helix is a guess.",
+  "TAS3 Foundry glitches or GameCube-specific collision were not checked against the PS2 build.",
+  "The remake's tape pickup was not captured in LP34 (0:12:35–0:16:40 shows the catwalk and the Hidden Deck)."
+ ]
+}

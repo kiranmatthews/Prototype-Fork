@@ -1,0 +1,2266 @@
+{
+ "id": "thps3-canada",
+ "game": "THPS3",
+ "level": "Canada",
+ "location": "British Columbia, Canada (parking lot, skatepark, forest, mountain)",
+ "type": "career-park",
+ "typeNote": "mixed: street-style parking lot + concrete park + forest/mountain walkways",
+ "careerPosition": 2,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS2 2001",
+  "GameCube (TAS3)",
+  "PS1 edition (VG)",
+  "THPS 3+4 2025"
+ ],
+ "sources": [
+  "G3 p042-p058 (scan index; printed page = scan - 1)",
+  "J3 p011-p012",
+  "VG PS2_TonyHawk_sProSkater3-Canada.png",
+  "VG TonyHawk_sProSkater3-Canada.png (PS1)",
+  "TAS3 1:20-2:02",
+  "LP3 0:11:28-0:16:20 (tape run 0:14:08-0:15:30)",
+  "LP34 0:17:40-0:21:50",
+  "PS34 canada",
+  "WEB pcgamesn"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 35,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Pro Score: 70,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Get a Sick Score: 120,000 points",
+   "version": "original"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "original"
+  },
+  {
+   "text": "Melon Grab Over the Blade -or- Nosegrind Around the Horn",
+   "version": "original"
+  },
+  {
+   "text": "Get Chuck Unstuck",
+   "version": "original"
+  },
+  {
+   "text": "Bury that Bully!",
+   "version": "original"
+  },
+  {
+   "text": "Impress the Skaters",
+   "version": "original"
+  },
+  {
+   "text": "High Score 50,000; Pro Score 125,000; Sick Score! 250,000; Collect S-K-A-T-E; Totem Poles; Blow Up the Tree; Nosegrind Over the Tree; Ollie Over the Pool; Find the Secret Tape",
+   "version": "PS1 edition (VG header)"
+  },
+  {
+   "text": "High Score 35,000; Pro 70,000; Sick 120,000; High Combo 10,000; Collect SKATE Letters; Nosegrind Around the Horn; Get Chuck Unstuck; Bury That Bully!; Impress the Skaters; Get the Secret Tape",
+   "version": "remake 2025"
+  },
+  {
+   "text": "Pro goals: Platinum Score 500,000; Collect COMBO Letters; Bluntslide the Mandatory Videogame Mine Cart Ride; Stiffy Over the Hill; Bring Peter His Thermos",
+   "version": "remake 2025"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 180-240 × 120-170 m",
+  "evidence": "VG PS2 parked cars ≈ 31 px for ≈ 4.5 m (≈ 7 px/m) over a ≈ 1700 px playable render; iso not corrected; G3 p042 'as big as the country itself'. Low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start blade and upper lot",
+   "layer": "start ramp, lot, fences, curbs",
+   "features": [
+    "bulldozer-blade start ramp under a Canadian flag sign",
+    "parked cars with two kickers",
+    "yellow curb and blocks",
+    "wooden fence",
+    "Chuck at a light pole",
+    "quarter pipe across the lot"
+   ],
+   "notes": "VG 'OVER THE BLADE' ≈ (1082, 687)"
+  },
+  {
+   "id": "Z2",
+   "name": "Lower parking lot",
+   "layer": "sloping lot, handrails, banners",
+   "features": [
+    "centre handrails downhill",
+    "big quarter pipe at the bottom",
+    "two billboards",
+    "chainlink fence above"
+   ],
+   "notes": "sick score on the rails alone (J3 p011)"
+  },
+  {
+   "id": "Z3",
+   "name": "Concrete skatepark",
+   "layer": "pools, bowls, quarter pipes",
+   "features": [
+    "L-shaped bowls",
+    "corner pools",
+    "funbox and kickers",
+    "back wall with a gap",
+    "wrap-around quarter pipe",
+    "totem pole",
+    "announcer platform",
+    "snow mounds with rails",
+    "five skaters"
+   ],
+   "notes": "totem ≈ (1700, 950)"
+  },
+  {
+   "id": "Z4",
+   "name": "Stream and Old Wing Dam",
+   "layer": "stream bed, logs",
+   "features": [
+    "logs across the frozen stream",
+    "waterfall",
+    "Bully"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z5",
+   "name": "Corral",
+   "layer": "fenced bowl, stump, ramps",
+   "features": [
+    "corral fence and gates",
+    "huge stump with a pine",
+    "dead tree",
+    "ramps over the stream"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z6",
+   "name": "Forest walkways and the Horn",
+   "layer": "walkways ≈ 3-10 m, ropes, logs, cabin roof",
+   "features": [
+    "snowbank and cabin by the start",
+    "walkway through a tree tunnel (the Horn)",
+    "roped walkway round the Horn",
+    "fork",
+    "logs",
+    "branch against the mountainside"
+   ],
+   "notes": "'AROUND THE HORN' ≈ (984, 873)"
+  },
+  {
+   "id": "Z7",
+   "name": "Generator",
+   "layer": "lower walkway",
+   "features": [
+    "generator with a lever (red box)",
+    "rope in front of it"
+   ],
+   "notes": "the switch for the tape"
+  },
+  {
+   "id": "Z8",
+   "name": "Log loader and lookout tower",
+   "layer": "ground banked wall, raised loader, tower half pipe, covered half pipe",
+   "features": [
+    "log loader (raised by the generator)",
+    "lookout tower half pipe",
+    "covered half pipe",
+    "large ramp up to the rail"
+   ],
+   "notes": "far left of the PS2 map"
+  },
+  {
+   "id": "Z9",
+   "name": "Mountain and mine track",
+   "layer": "top layer ≈ 15-25 m",
+   "features": [
+    "old miniature railroad",
+    "right rail to the tape",
+    "left rail to the Bully's cabin and power lines",
+    "cable up the cliff (TAS)",
+    "fog below"
+   ],
+   "notes": "tape ≈ (588, 815)"
+  }
+ ],
+ "landmarks": [
+  "bulldozer-blade start under a Canadian flag",
+  "parking lots with banners",
+  "concrete pools and L-shaped bowls",
+  "totem pole",
+  "corral with a huge stump and pine",
+  "the Horn (tree with a tunnel)",
+  "cabin and snowbank",
+  "generator",
+  "log loader",
+  "lookout tower",
+  "mine-cart track on the mountain",
+  "waterfall"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "downhill into the parking lot and the park (LP3 0:11:33)",
+  "visibleCollectibles": [
+   "G1 lot letters (S over the cars, K on the quarter pipe across the lot)",
+   "Chuck"
+  ],
+  "notes": "tape is behind the spawn, ≈ 20 m up the cliff; the forest letter set starts by turning round"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Secret Tape",
+   "zone": "Z9",
+   "landmark": "fork of the mine-cart track on the mountainside; the right-hand rail splits off towards the tape",
+   "layer": "mountain track (top)",
+   "heightM": "≈ 15-25 above the forest floor/walkways below; ≈ 0-2 above the rail",
+   "launchFrom": "right-hand rail of the track (grind)",
+   "visibility": {
+    "firstSight": "top of the climb (tower ramp / track); TAS from the cliff cable",
+    "fromSpawn": false,
+    "reads": "floating tape beside the track above the forest",
+    "distanceFromFirstSightM": "≈ 10-20 (along the rail)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "spawn (start blade, ridden backwards)",
+     "to": "forest walkway",
+     "geometry": "Climb the Tree 100 then Tree Air Gap 50 (G3 p050); alt: snowbank → cabin → walkway → log (G3 'Raise the Roof')"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "walkway through the Horn tunnel",
+     "to": "fork",
+     "geometry": "away from the parking lot (G3 p045); LP3 0:14:21"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "right fork",
+     "to": "lower walkway",
+     "geometry": "grind the log extending left off the walkway down to the lower walkway (LP3 0:14:25-0:14:26)"
+    },
+    {
+     "step": 4,
+     "move": "unlock",
+     "from": "lower walkway",
+     "to": "generator",
+     "geometry": "grind the rope in front of the generator (lever); the log loader rises and opens (LP3 0:14:30-0:14:32)"
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "banked wall",
+     "to": "raised log loader",
+     "geometry": "alley-oop in, land near the near edge (Load and Go 250; LP3 0:15:15-0:15:17)"
+    },
+    {
+     "step": 6,
+     "move": "transfer",
+     "from": "loader",
+     "to": "half pipe on the lookout tower",
+     "geometry": "Smooth as Silk 100 (LP3 0:15:17-0:15:18)"
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "tower half pipe ramp",
+     "to": "covered half pipe above",
+     "geometry": "line up and ollie (LP3 0:15:18-0:15:19)"
+    },
+    {
+     "step": 8,
+     "move": "transfer",
+     "from": "covered half pipe",
+     "to": "large ramp leading upward",
+     "geometry": "Pickaxe Sluice 50; line up straight (LP3 0:15:19-0:15:22; first attempt failed here 0:14:46)"
+    },
+    {
+     "step": 9,
+     "move": "grind",
+     "from": "top of the ramp",
+     "to": "right-hand rail of the mine track",
+     "geometry": "grind downhill to the right (LP3 0:15:23 FS boardslide)"
+    },
+    {
+     "step": 10,
+     "move": "grind",
+     "from": "rail fork",
+     "to": "tape",
+     "geometry": "SECRET TAPE! at LP3 0:15:25, timer 0:48"
+    },
+    {
+     "step": 11,
+     "move": "ollie",
+     "from": "rail past the tape",
+     "to": "rope on the walkway below",
+     "geometry": "Mountain Man Mine Stomp 250 → Look Ma! No Talent! → Around the Horn (LP3 0:15:26-0:15:28)"
+    }
+   ],
+   "altRoutes": [
+    {
+     "name": "TAS cable (TAS3 1:22-1:30)",
+     "steps": [
+      "fence grind by the start",
+      "snowbank → cabin roof",
+      "leap onto a cable running up the cliff",
+      "special grind up the cable",
+      "drop onto the track; tape at timer 1:52"
+     ],
+     "moves": [
+      "grind",
+      "ollie",
+      "wire"
+     ],
+     "time": "8 s from spawn; skips the generator"
+    },
+    {
+     "name": "Remake (pcgamesn / PS34)",
+     "steps": [
+      "turn left at the start, up to the snow-covered cabin, onto the walkway by Around the Horn",
+      "follow the walkway to a half pipe; grind the switch to its left",
+      "half pipe rises; platform above",
+      "end of the platform, ollie, grind the rightmost rail → tape"
+     ],
+     "moves": [
+      "ollie",
+      "grind",
+      "unlock",
+      "transfer"
+     ],
+     "time": "LP34 ≈ 20 s from the raised loader"
+    }
+   ],
+   "moves": [
+    "grind",
+    "unlock",
+    "bank",
+    "vert-air",
+    "transfer",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "knowing the generator raises the loader",
+    "alley-oop transfer into the loader, landing near its near edge",
+    "line-up for each jump",
+    "choosing the right-hand rail"
+   ],
+   "coupling": "unlock: generator rope raises the log loader; persists for the run",
+   "failure": "falls of ≈ 10-20 m into the gorge, stream or fog; LP3 lost ≈ 29 s (12 s back to the start, 17 s re-climb) and still made it",
+   "timeFromSpawnS": "LP3 72 s incl. one failed ascent (tape timer 0:48); loader → tape 10 s; TAS3 8 s (cable); LP34 ≈ 20 s loader → tape",
+   "difficulty": 4,
+   "roles": [
+    "SECRET-AREA",
+    "TEST",
+    "EXPLORE",
+    "TEACH-LINE",
+    "REWARD"
+   ],
+   "why": "first switch-gated tape and first staircase of vert transfers; climbs the full height of the level; the forest letter set rehearses the lower half; the tape sits at a fork whose exit drops into the Around the Horn goal",
+   "evidence": "G3 p044-p045, p052, p057-p058; J3 p012; VG PS2 ≈ (588, 815); VG PS1 ≈ (383, 896); TAS3 1:22-1:31; LP3 0:14:08-0:15:30; LP34 0:19:56-0:20:24; PS34 canada; WEB pcgamesn",
+   "confidence": "high (location, route); low (heights, generator position)"
+  },
+  {
+   "id": "S-G1",
+   "type": "letter",
+   "label": "S (G1 Hawk, Glifberg, Margera, Reynolds, Thomas)",
+   "group": "G1",
+   "landmark": "over the parked cars: transfer them via the two kickers",
+   "layer": "air, ≈ 3–4 m",
+   "moves": [
+    "kicker",
+    "transfer"
+   ],
+   "vgCoord": "≈ (1351, 526)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G1",
+   "type": "letter",
+   "label": "K (G1)",
+   "group": "G1",
+   "landmark": "on top of the quarter pipe across the lot from the start",
+   "layer": "coping",
+   "moves": [
+    "vert-air"
+   ],
+   "vgCoord": "≈ (1652, 318)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G1",
+   "type": "letter",
+   "label": "A (G1)",
+   "group": "G1",
+   "landmark": "atop the wooden fence along the lower lot, across from the banners",
+   "layer": "fence, ≈ 1 m",
+   "moves": [
+    "grind"
+   ],
+   "vgCoord": "≈ (1910, 514)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G1",
+   "type": "letter",
+   "label": "T (G1)",
+   "group": "G1",
+   "landmark": "dead centre above the large quarter pipe at the bottom of the lot",
+   "layer": "air",
+   "moves": [
+    "vert-air"
+   ],
+   "vgCoord": "≈ (2015, 694)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G1",
+   "type": "letter",
+   "label": "E (G1)",
+   "group": "G1",
+   "landmark": "just above the two banners: grind the first sign, ollie the gap",
+   "layer": "air between billboards",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "vgCoord": "≈ (1840, 652)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G2",
+   "type": "letter",
+   "label": "S (G2 Caballero, Koston, Mullen, Rowley)",
+   "group": "G2",
+   "landmark": "park corner where the lot curves: grind the fence on the right of the lot, ollie",
+   "layer": "air off a fence",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "vgCoord": "≈ (1592, 517)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G2",
+   "type": "letter",
+   "label": "K (G2)",
+   "group": "G2",
+   "landmark": "on the park's ledge above the lower lot",
+   "layer": "ledge",
+   "moves": [
+    "grind"
+   ],
+   "vgCoord": "≈ (1878, 705)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G2",
+   "type": "letter",
+   "label": "A (G2)",
+   "group": "G2",
+   "landmark": "on the coping of the wrap-around quarter pipe in the back corner",
+   "layer": "coping",
+   "moves": [
+    "lip",
+    "grind"
+   ],
+   "vgCoord": "≈ (2234, 935)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G2",
+   "type": "letter",
+   "label": "T (G2)",
+   "group": "G2",
+   "landmark": "above the quarter pipe across from the A, clockwise towards the totem",
+   "layer": "air",
+   "moves": [
+    "vert-air"
+   ],
+   "vgCoord": "≈ (1961, 1068)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G2",
+   "type": "letter",
+   "label": "E (G2)",
+   "group": "G2",
+   "landmark": "on the totem pole's outstretched wings: grind the fence from T, ollie onto the totem",
+   "layer": "totem wings, ≈ 3–4 m",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "vgCoord": "≈ (1714, 946)",
+   "evidence": "G3 p044; J3 p012",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "S-G3",
+   "type": "letter",
+   "label": "S (G3 Campbell, Lasek, Muska, Steamer)",
+   "group": "G3",
+   "landmark": "grind the wooden fence of the upper lot past Chuck towards the start, hold towards the cabin",
+   "layer": "fence",
+   "moves": [
+    "grind"
+   ],
+   "vgCoord": "≈ (1403, 593)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "K-G3",
+   "type": "letter",
+   "label": "K (G3)",
+   "group": "G3",
+   "landmark": "snowbank → cabin roof by the start → ollie off the roof towards the walkway",
+   "layer": "air between roof and walkway, ≈ 3–5 m",
+   "moves": [
+    "bank",
+    "ollie"
+   ],
+   "vgCoord": "≈ (789, 677)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "A-G3",
+   "type": "letter",
+   "label": "A (G3)",
+   "group": "G3",
+   "landmark": "after the K, ollie onto the large branch (the branch against the mountainside, Prospector Path)",
+   "layer": "branch, ≈ 5–8 m",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "vgCoord": "≈ (558, 866), just below the tape",
+   "evidence": "G3 p044, p052",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "T-G3",
+   "type": "letter",
+   "label": "T (G3)",
+   "group": "G3",
+   "landmark": "hold the grind past A onto the next log, to the left towards the generator",
+   "layer": "log",
+   "moves": [
+    "grind"
+   ],
+   "vgCoord": "≈ (475, 1054)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "E-G3",
+   "type": "letter",
+   "label": "E (G3)",
+   "group": "G3",
+   "landmark": "past the generator, at the half pipe that leads up towards the tape: leap out of the air \"near the green building\"",
+   "layer": "air at the loader",
+   "moves": [
+    "vert-air"
+   ],
+   "vgCoord": "≈ (395, 1273)",
+   "evidence": "G3 p044",
+   "version": "original",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "SKATE-Remake",
+   "type": "letter",
+   "label": "S-K-A-T-E (Remake)",
+   "group": "Remake",
+   "landmark": "S above a rail (turn round left at the start); K on the roof; A on the tree branch; T on a metal rail; E above the small half pipe ahead (LP34 0:20:11 collects E on the tower climb)",
+   "layer": "as G3 set",
+   "moves": [
+    "grind",
+    "ollie",
+    "vert-air"
+   ],
+   "vgCoord": "—",
+   "evidence": "PS34 canada; LP34 0:20:11",
+   "version": "remake",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "SKATE-PS1",
+   "type": "letter",
+   "label": "S, K, A, T, E (PS1)",
+   "group": "PS1",
+   "landmark": "S ≈ (1414, 603), K ≈ (2214, 778), E ≈ (2390, 926), A ≈ (2767, 1349), T ≈ (1016, 1472) PS1 px",
+   "layer": "—",
+   "moves": [],
+   "vgCoord": "—",
+   "evidence": "VG PS1",
+   "version": "PS1 edition",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "confidence": "high (location), low (height)"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (remake pro goal only)",
+   "zone": "Z8",
+   "landmark": "raised loader at the back of the level",
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "raised loader",
+     "to": "C",
+     "geometry": "grind the rail"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "round the corner",
+     "to": "O",
+     "geometry": "jump to the next rail"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "rail",
+     "to": "M",
+     "geometry": "jump onto the walkway"
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "walkway",
+     "to": "B",
+     "geometry": "manual across, jump off the left side"
+    },
+    {
+     "step": 5,
+     "move": "manual",
+     "from": "landing",
+     "to": "O",
+     "geometry": "manual up the ramp; land the combo"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "ollie",
+    "manual"
+   ],
+   "evidence": "PS34 canada; absent from G3 p042, J3, VG goal lists (THPS4 goal type, G4m p002/p004)",
+   "confidence": "medium",
+   "version": "remake",
+   "why": "single-combo letter line at the foot of the tape climb",
+   "roles": [
+    "TEACH-LINE"
+   ]
+  },
+  {
+   "id": "CHUCK",
+   "type": "goal-object",
+   "label": "Get Chuck Unstuck",
+   "zone": "Z1",
+   "landmark": "light pole by the start",
+   "moves": [
+    "ollie"
+   ],
+   "evidence": "G3 p046; J3 p012; LP3 0:14:12",
+   "confidence": "high"
+  },
+  {
+   "id": "BULLY",
+   "type": "goal-object",
+   "label": "Bury that Bully!",
+   "zone": "Z1/Z6",
+   "landmark": "snow-covered tree right of the walkway; launched from the right side of the start blade",
+   "moves": [
+    "kicker",
+    "vert-air"
+   ],
+   "coupling": "tree sheds snow on the Bully",
+   "evidence": "G3 p046; remake differs (PS34)",
+   "confidence": "high"
+  },
+  {
+   "id": "SKATERS",
+   "type": "goal-object",
+   "label": "Impress the Skaters (5)",
+   "zone": "Z3",
+   "landmark": "corner by the lot turn; corner quarter pipe above the lower lot; back of the park; hip by the totem; corner quarter pipe by the start",
+   "moves": [
+    "vert-air",
+    "grind",
+    "rail-transfer"
+   ],
+   "evidence": "G3 p046-p047",
+   "confidence": "high"
+  },
+  {
+   "id": "HORN",
+   "type": "goal-object",
+   "label": "Nosegrind Around the Horn",
+   "zone": "Z6",
+   "landmark": "right-hand rope round the Horn tree to the tunnel",
+   "moves": [
+    "grind"
+   ],
+   "why": "the tape's exit lands on this rope",
+   "evidence": "G3 p045, p055",
+   "confidence": "high"
+  },
+  {
+   "id": "STATPOINTS-ON-ROUTE",
+   "type": "goal-object",
+   "label": "Stat points on the walkway layer",
+   "zone": "Z6/Z7",
+   "landmark": "rope near the generator back towards the park (ends above the corral); Around the Horn rope",
+   "moves": [
+    "grind"
+   ],
+   "evidence": "G3 p048",
+   "confidence": "high"
+  },
+  {
+   "id": "DECKS",
+   "type": "goal-object",
+   "label": "New Decks (3 groups)",
+   "zone": "Z1/Z6/Z3",
+   "landmark": "bulldozer as a vert ramp by the flag; ropes round the Horn; above the corner pool",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "evidence": "G3 p049",
+   "confidence": "high"
+  },
+  {
+   "id": "REMAKE-EXTRAS",
+   "type": "other",
+   "label": "Remake: Cash ×4, Hidden Deck, Iron Galaxy logo, Panda plushie, 3 stat points, Peter's thermos",
+   "zone": "various",
+   "landmark": "Cash and Iron Galaxy logo on the left-hand track and the wire beyond the tape fork; Hidden Deck above the quarter pipe under the flag; thermos on a red car, delivered to the man by the raised quarter pipe",
+   "evidence": "PS34 canada",
+   "version": "remake",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Air Over the Blade Grind",
+   "mapKey": "A",
+   "points": 250,
+   "kind": "over-object",
+   "location": "fence → air over the bulldozer blade under the flag → fence",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p049"
+  },
+  {
+   "name": "Dozer Blade Gap",
+   "mapKey": "A",
+   "points": 100,
+   "kind": "over-object",
+   "location": "grind the yellow curb, leap the blade, continue on the curb",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p049"
+  },
+  {
+   "name": "Fence Hoppin'",
+   "mapKey": "B",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "rail right of the start → chainlink fence",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "(LP3 opener)"
+   ],
+   "evidence": "G3 p049; LP3 0:11:34"
+  },
+  {
+   "name": "Curb Hoppin",
+   "mapKey": "B",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "yellow curb → concrete parking block",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Sap Slapper",
+   "mapKey": "C",
+   "points": 250,
+   "kind": "other",
+   "location": "from the start onto the walkway behind it, rope on the right",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Over the Blade",
+   "mapKey": "C",
+   "points": 25,
+   "kind": "over-object",
+   "location": "transfer over the blade's centre spike",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "goal Melon Grab"
+   ],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Climb the Tree",
+   "mapKey": "C",
+   "points": 100,
+   "kind": "kicker",
+   "location": "charge the start ramp, leap for the walkway beyond",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p050; LP3 0:15:01"
+  },
+  {
+   "name": "Tree Air Gap",
+   "mapKey": "C",
+   "points": 50,
+   "kind": "other",
+   "location": "short gap in the walkway beyond",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p050; LP3 0:15:03"
+  },
+  {
+   "name": "Fence Bomb",
+   "mapKey": "D",
+   "points": 250,
+   "kind": "kicker",
+   "location": "kickers by the cars → fence",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Curb Bomb",
+   "mapKey": "D",
+   "points": 250,
+   "kind": "kicker",
+   "location": "kickers by the cars → curb",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Car Gap",
+   "mapKey": "D",
+   "points": 200,
+   "kind": "over-object",
+   "location": "ramp to ramp over the cars",
+   "moves": [
+    "kicker",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "S (G1)"
+   ],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Fence Extension",
+   "mapKey": "E",
+   "points": 100,
+   "kind": "lip",
+   "location": "corner pool → lip on the chainlink fence above",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Cut the Corner",
+   "mapKey": "E",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "fence by the curved bowl → triangular stone platform ledge",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p050"
+  },
+  {
+   "name": "Manual Transmission",
+   "mapKey": "F",
+   "points": 50,
+   "kind": "manual",
+   "location": "manual the ledge by the fence parallel to the lower lot",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "IPO Funding",
+   "mapKey": "G",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "handrail → banner",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Banner Ad Dot Com",
+   "mapKey": "G",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "billboard → other billboard",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "E (G1)"
+   ],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "...Just Went Bankrupt",
+   "mapKey": "G",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "after IPO/Banner, onto a handrail in front",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Park to Lot Launch",
+   "mapKey": "G",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "fence above the lower lot → handrail below",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Parking Lot Mini Gap",
+   "mapKey": "H",
+   "points": 50,
+   "kind": "other",
+   "location": "across the gap in a lower-lot handrail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Crossover the Easy Way",
+   "mapKey": "H",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "uphill-side rails → flat rails at the bottom",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Crossover the Hard Way",
+   "mapKey": "H",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "from the top, centre rail → parallel rail",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Go Long and Grind",
+   "mapKey": "I",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "fence above the lower lot → short ledge behind the quarter-pipe wall",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Flying Fence Stomp",
+   "mapKey": "J",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "wooden rail → pool → fence",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Big Air Fence Stomp",
+   "mapKey": "J",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "back of the quarter pipe → chainlink fence",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Airin' Up and Out",
+   "mapKey": "K",
+   "points": 250,
+   "kind": "lip",
+   "location": "bottom of the lot, last section of the quarter pipe → lip on the fence",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p051"
+  },
+  {
+   "name": "Nice Save, Cheater",
+   "mapKey": "L",
+   "points": 50,
+   "kind": "wire",
+   "location": "rope behind the start → rope towards the hole in the tree",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Mine Cart Launch",
+   "mapKey": "M",
+   "points": 100,
+   "kind": "wire",
+   "location": "end of the Mine Cart Ride → power lines to the streetlights",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "(TAS cable?)"
+   ],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Prospector Path",
+   "mapKey": "N",
+   "points": 50,
+   "kind": "wire",
+   "location": "snowbank and cabin → upper walkway → left rope → branch against the mountainside",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "A (G3)"
+   ],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "All That Glitters",
+   "mapKey": "O",
+   "points": 50,
+   "kind": "wire",
+   "location": "cabin roof → walkway → left rope → rope towards Around the Horn",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "line L3"
+   ],
+   "evidence": "G3 p043, p052"
+  },
+  {
+   "name": "The Old Wing Dam",
+   "mapKey": "P",
+   "points": 100,
+   "kind": "other",
+   "location": "logs across the stream behind the start",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "stat point"
+   ],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Whoa. That Was Cool.",
+   "mapKey": "P",
+   "points": 500,
+   "kind": "kicker",
+   "location": "corral snow bank over the path into a Wing Dam log",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Hitch Knot Gap",
+   "mapKey": "Q",
+   "points": 100,
+   "kind": "wire",
+   "location": "left rope after the tree, ollie the break, continue",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Still Bootleggin'",
+   "mapKey": "Q",
+   "points": 50,
+   "kind": "other",
+   "location": "walkway through the tree, left at the fork, ollie to the generator walkway",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE (alt.)"
+   ],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "The Haunted Mine",
+   "mapKey": "R",
+   "points": 100,
+   "kind": "wire",
+   "location": "corral edge → rope round to the generator",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Enim Detnuah Eht",
+   "mapKey": "R",
+   "points": 100,
+   "kind": "wire",
+   "location": "the same backwards",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p052"
+  },
+  {
+   "name": "Bowl to Bowl",
+   "mapKey": "A",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "coping of one L-shaped bowl → the other",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Light It Up!",
+   "mapKey": "A",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "pool by the totem → pool by the lot",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Bowl to Rail",
+   "mapKey": "B",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "bowl coping → rail by the corral",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Rail to Bowl",
+   "mapKey": "B",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "rail → bowl coping",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Fence Transfer",
+   "mapKey": "B",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "park rail → chainlink fence",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "skater 2"
+   ],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Aurora Burly-Alis!",
+   "mapKey": "C",
+   "points": 250,
+   "kind": "pool-transfer",
+   "location": "L-bowl by the lot's corner → middle bowl",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Antenna Stomp",
+   "mapKey": "D",
+   "points": 250,
+   "kind": "over-object",
+   "location": "over the announcer platform → grind the rod or its wire",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p053"
+  },
+  {
+   "name": "Crooked Extension",
+   "mapKey": "D",
+   "points": 100,
+   "kind": "lip",
+   "location": "pool by the lots → lip on the slanting rail high above",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "We Don't Need No Steeenking Rails",
+   "mapKey": "E",
+   "points": 50,
+   "kind": "other",
+   "location": "snow mound to snow mound without touching the three rails",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Rail Bank Shot",
+   "mapKey": "F",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "long curved rail by the totem → smaller rail",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Rail Stomp",
+   "mapKey": "F",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "half-pipe coping by the totem → curved rail on the ground",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Flying Fenceman",
+   "mapKey": "G",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "corner quarter-pipe coping (counter-clockwise) → fence below",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "skater 5"
+   ],
+   "evidence": "G3 p042, p054"
+  },
+  {
+   "name": "Funbox Hop",
+   "mapKey": "H",
+   "points": 10,
+   "kind": "kicker",
+   "location": "between the two kickers along the park edge",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Funbox to Rail Stomp",
+   "mapKey": "H",
+   "points": 250,
+   "kind": "kicker",
+   "location": "funbox → grind on the curved quarter pipe",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Ahhh! My Head!",
+   "mapKey": "I",
+   "points": 200,
+   "kind": "other",
+   "location": "grind the totem's wings to lop off its head, ollie back in",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "E (G2)",
+    "skater 4"
+   ],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Breezy Pants Gap",
+   "mapKey": "J",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "grind over the gap in the back quarter-pipe wall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "skater 3"
+   ],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Breezy Channel Gap",
+   "mapKey": "J",
+   "points": 250,
+   "kind": "channel",
+   "location": "air over that gap",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Over the Hump",
+   "mapKey": "J",
+   "points": 50,
+   "kind": "other",
+   "location": "grind over the fence's highest point",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Buck Wild",
+   "mapKey": "K",
+   "points": 500,
+   "kind": "other",
+   "location": "corral → across the river → air into the nearest park pool",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p054"
+  },
+  {
+   "name": "Grind the Pine",
+   "mapKey": "L",
+   "points": 250,
+   "kind": "kicker",
+   "location": "stump → grind a branch",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Good Eye!",
+   "mapKey": "L",
+   "points": 250,
+   "kind": "wire",
+   "location": "Look Ma / Around the Horn ropes → hidden branches in the pine on the stump",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "You're Over the Hill!",
+   "mapKey": "L",
+   "points": 500,
+   "kind": "other",
+   "location": "grind over the stump's highest piece",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "(remake Stiffy Over the Hill)"
+   ],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Hillside Rail Stomp",
+   "mapKey": "L",
+   "points": 250,
+   "kind": "kicker",
+   "location": "stump's ramped sides → rope along the walkway",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Hillside Tree Path Launch",
+   "mapKey": "L",
+   "points": 50,
+   "kind": "kicker",
+   "location": "the same, landing on the path",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "There's Gold in Them Thar Hills",
+   "mapKey": "M",
+   "points": 100,
+   "kind": "kicker",
+   "location": "ramp by the stream → over it to the corral ramp",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "River Hop",
+   "mapKey": "M",
+   "points": 250,
+   "kind": "kicker",
+   "location": "the reverse",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Felled Oak",
+   "mapKey": "M",
+   "points": 100,
+   "kind": "kicker",
+   "location": "corral ramp against a stump → log back to the park",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Around the Horn",
+   "mapKey": "N",
+   "points": 100,
+   "kind": "wire",
+   "location": "rope round the large tree with the tunnel",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "goal; TAPE exit"
+   ],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Look Ma! No Talent!",
+   "mapKey": "N",
+   "points": 10,
+   "kind": "wire",
+   "location": "gap in the rope just before Around the Horn",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE exit"
+   ],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Corral Gap Transfer",
+   "mapKey": "O",
+   "points": 50,
+   "kind": "over-object",
+   "location": "transfer over a corral gate",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "The Rush Is On",
+   "mapKey": "O",
+   "points": 250,
+   "kind": "other",
+   "location": "grind the corral's whole perimeter",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p055"
+  },
+  {
+   "name": "Tree to Corral Grind",
+   "mapKey": "P",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "dead tree over the stream → corral fence",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p056"
+  },
+  {
+   "name": "Corral to Tree Grind",
+   "mapKey": "P",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "corral fence → over the stream → tree",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p056"
+  },
+  {
+   "name": "Corral to Tree Transfer",
+   "mapKey": "P",
+   "points": 50,
+   "kind": "other",
+   "location": "corral fence → tree (jump)",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p056"
+  },
+  {
+   "name": "Walkin' the Riffles",
+   "mapKey": "A",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "tower coping nearest the mountain → next ramp's edge",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Pickaxe Sluice",
+   "mapKey": "A",
+   "points": 50,
+   "kind": "other",
+   "location": "covered half pipe → large ramp up to the rail",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p057; LP3 0:15:20"
+  },
+  {
+   "name": "Smooth as Silk",
+   "mapKey": "B",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "raised loader → coping of the half pipe in the tower",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Load and Go",
+   "mapKey": "C",
+   "points": 250,
+   "kind": "pool-transfer",
+   "location": "walkway → raised loader",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G3 p057; LP3 0:15:16"
+  },
+  {
+   "name": "Comin' Out of the Sky",
+   "mapKey": "C",
+   "points": 50,
+   "kind": "other",
+   "location": "loader → curved end of the walkway",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Chainsaw Buzzin'",
+   "mapKey": "D",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "log by the mountain → rope by the generator",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "T (G3)"
+   ],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Steam Stomp!",
+   "mapKey": "D",
+   "points": 1000,
+   "kind": "other",
+   "location": "rope in front of the generator, grind started by hitting it (press late)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE (switch)"
+   ],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Saved by the Generator",
+   "mapKey": "D",
+   "points": 500,
+   "kind": "other",
+   "location": "hit the generator by the lever; counts even if you fall into the fog",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE (switch)"
+   ],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Nice Shootin'...",
+   "mapKey": "E",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "rope past the generator → straight rope nearby",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "...Tex!",
+   "mapKey": "E",
+   "points": 250,
+   "kind": "other",
+   "location": "continue, jump the hole in the walkway",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p057"
+  },
+  {
+   "name": "Mandatory Videogame Mine Cart Ride",
+   "mapKey": "F",
+   "points": 500,
+   "kind": "other",
+   "location": "left-hand rail past the waterfall to the cabin near the Bully",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "(remake pro goal)"
+   ],
+   "evidence": "G3 p058"
+  },
+  {
+   "name": "The Pandhandler",
+   "mapKey": "G",
+   "points": 100,
+   "kind": "lip",
+   "location": "sky out of the corral, lip on the roped walkway",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p058"
+  },
+  {
+   "name": "Dead Man's Slide",
+   "mapKey": "H",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "uppermost-walkway log → second log towards the generator, no ollie",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE (walkway)"
+   ],
+   "evidence": "G3 p058"
+  },
+  {
+   "name": "Is Not Gold",
+   "mapKey": "I",
+   "points": 150,
+   "kind": "wire",
+   "location": "All That Glitters → off right onto the rope on the walkway below",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p058"
+  },
+  {
+   "name": "Mountain Man Mine Stomp",
+   "mapKey": "J",
+   "points": 250,
+   "kind": "wire",
+   "location": "rail past the tape → leap → rope on the walkway below",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE exit"
+   ],
+   "evidence": "G3 p058; LP3 0:15:27; TAS3 1:31"
+  },
+  {
+   "name": "Neversoft Challenge: Rockslide!!!",
+   "mapKey": null,
+   "points": 1000,
+   "kind": "other",
+   "location": "\"get a high view of the course and take a blind leap of faith\"",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G3 p058"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "grind the rope in front of the generator (lever)",
+   "opens": "log loader rises and opens into an elevated vert ramp (persists)",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G3 p045, p057; J3 p012; LP3 0:14:30, 0:15:15"
+  },
+  {
+   "trigger": "ollie into Chuck or the light pole",
+   "opens": "Chuck freed",
+   "neededFor": [
+    "CHUCK"
+   ],
+   "evidence": "G3 p046"
+  },
+  {
+   "trigger": "land in the snow-covered tree",
+   "opens": "snow buries the Bully",
+   "neededFor": [
+    "BULLY"
+   ],
+   "evidence": "G3 p046"
+  },
+  {
+   "trigger": "grind the totem's wings",
+   "opens": "totem head falls (Ahhh! My Head!)",
+   "neededFor": [
+    "E-G2 route",
+    "SKATERS"
+   ],
+   "evidence": "G3 p054"
+  },
+  {
+   "trigger": "TNT shed (PS1 edition)",
+   "opens": "Blow Up the Tree goal",
+   "neededFor": [],
+   "evidence": "VG PS1"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Parking lot",
+   "sequence": [
+    "across the lot",
+    "big trick off the vert ramp at the far end",
+    "back on the right: kickers (Car Gap)",
+    "manual",
+    "Curb Hoppin",
+    "manual",
+    "big grab over the start (Over the Blade)",
+    "fence grinds (Fence Hoppin')"
+   ],
+   "links": [
+    "manual",
+    "grind"
+   ],
+   "collectibles": [
+    "S",
+    "K (G1)"
+   ],
+   "why": "the lot as a warm-up loop",
+   "evidence": "G3 p042"
+  },
+  {
+   "id": "L2",
+   "name": "Skatepark perimeter",
+   "sequence": [
+    "corner quarter pipe by the start, lip counter-clockwise",
+    "fence below (Flying Fenceman)",
+    "rail on the left",
+    "round the bend",
+    "kickflip to tailslide on the fence (Fence Transfer)",
+    "heelflip into manual",
+    "quarter pipe beyond the red rails",
+    "revert",
+    "manual towards the pool"
+   ],
+   "links": [
+    "rail-transfer",
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "G2 letters",
+    "skaters"
+   ],
+   "why": "the park's rim is one continuous grind with vert links",
+   "evidence": "G3 p042, p046–p047"
+  },
+  {
+   "id": "L3",
+   "name": "Treetops",
+   "sequence": [
+    "snowbank",
+    "cabin roof",
+    "walkway",
+    "left rope",
+    "All That Glitters",
+    "trick the break (Look Ma! No Talent!)",
+    "nosegrind Around the Horn",
+    "manual through the hole in the tree"
+   ],
+   "links": [
+    "grind",
+    "ollie",
+    "manual"
+   ],
+   "collectibles": [
+    "goal (Around the Horn)"
+   ],
+   "why": "the forest's scoring line; also the tape's exit",
+   "evidence": "G3 p043, p045"
+  },
+  {
+   "id": "L4",
+   "name": "Forest letters (G3 set)",
+   "sequence": [
+    "fence past Chuck (S)",
+    "snowbank",
+    "cabin roof (K)",
+    "branch (A)",
+    "log to the generator (T)",
+    "loader (E)"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "S",
+    "K",
+    "A",
+    "T",
+    "E (G3; remake)"
+   ],
+   "why": "rehearses the tape route up to the climb",
+   "evidence": "G3 p044; PS34"
+  },
+  {
+   "id": "L5",
+   "name": "Tape climb",
+   "sequence": [
+    "walkway through the tree",
+    "right fork",
+    "log",
+    "lower walkway",
+    "generator rope (switch)",
+    "banked wall",
+    "loader (Load and Go)",
+    "tower (Smooth as Silk)",
+    "covered half pipe",
+    "Pickaxe Sluice",
+    "right-hand rail",
+    "tape",
+    "Mountain Man Mine Stomp",
+    "Around the Horn"
+   ],
+   "links": [
+    "grind",
+    "unlock",
+    "transfer",
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE",
+    "E (G3)",
+    "stat point"
+   ],
+   "why": "staircase of vert transfers to the top layer",
+   "evidence": "G3 p045, p057–p058; LP3 0:14:15–0:15:28"
+  },
+  {
+   "id": "L6",
+   "name": "Mine cart ride",
+   "sequence": [
+    "top of the track",
+    "left-hand rail past the waterfall",
+    "cabin near the Bully (Mandatory Videogame Mine Cart Ride 500)",
+    "launch onto the power lines down to the streetlights (Mine Cart Launch)"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "remake Cash",
+    "Iron Galaxy logo"
+   ],
+   "why": "the tape's sister branch: a long descent back to the lot",
+   "evidence": "G3 p052, p058; PS34"
+  },
+  {
+   "id": "L7",
+   "name": "TAS cable",
+   "sequence": [
+    "fence",
+    "snowbank",
+    "cabin roof",
+    "cable up the cliff (special grind)",
+    "track",
+    "tape"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE"
+   ],
+   "why": "an expert bypass of the switch",
+   "evidence": "TAS3 1:22–1:30"
+  },
+  {
+   "id": "L8",
+   "name": "Corral",
+   "sequence": [
+    "Corral Gap Transfer",
+    "The Rush Is On (perimeter grind)",
+    "stump (You're Over the Hill!, Grind the Pine)",
+    "Hillside Rail Stomp",
+    "River Hop / Buck Wild into the park"
+   ],
+   "links": [
+    "grind",
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "a separate bowl-and-stump playground",
+   "evidence": "G3 p055–p056"
+  },
+  {
+   "id": "L9",
+   "name": "Lower-lot rails",
+   "sequence": [
+    "from the top, centre rail",
+    "Crossover the Hard Way",
+    "Parking Lot Mini Gap",
+    "banners (Banner Ad Dot Com",
+    "IPO Funding",
+    "...Just Went Bankrupt)"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "A",
+    "E (G1)"
+   ],
+   "why": "J3: the sick score on these rails alone",
+   "evidence": "G3 p051; J3 p011"
+  },
+  {
+   "id": "L10",
+   "name": "Remake COMBO",
+   "sequence": [
+    "raised loader: rail (C)",
+    "corner jump to the next rail (O)",
+    "walkway (M)",
+    "manual, off the left side (B)",
+    "manual up the ramp (O)"
+   ],
+   "links": [
+    "grind",
+    "manual"
+   ],
+   "collectibles": [
+    "COMBO (remake)"
+   ],
+   "why": "single-combo letter line at the foot of the climb",
+   "evidence": "PS34 canada"
+  }
+ ],
+ "guidance": [
+  "The letters walk the route. The G3 set (remake: the only set) runs fence → cabin roof → branch → log → loader, the first half of the tape route; the A sits on the branch directly below the tape (VG PS2).",
+  "Cause and effect in view. The generator's effect is seen \"in the distance\": the loader rises and opens (G3 p045). The switch is a red box with a lever (J3).",
+  "The climb is a visible staircase. Loader, tower, covered half pipe and ramp stand one above the other at the far end of the forest; each next ramp is in view from the last (G3: \"line up and ollie\", \"line up straight for the next jump\").",
+  "Pickups reward the walkways. Stat points on the Horn rope and on the generator rope back towards the park bring players to the generator before they know what it does (G3 p048).",
+  "Hidden on purpose: the tape is behind the spawn and above the treetops; the cable up the cliff is not signposted (TAS only)."
+ ],
+ "designLogic": [
+  "First switch-gated tape. Canada (career 2) adds an unlock; the switch lies on the walkway everyone uses, and its effect is visible from it.",
+  "A staircase of transfers. Banked wall → loader → tower half pipe → covered half pipe → ramp → rail: each step is a vert transfer upward, so the climb converts vert skill into height.",
+  "Little overlap, high stakes. G3 warns there is \"not much overlap\" between loader and tower; the jumps are tuned to demand line-up and speed, and a miss falls 10–20 m.",
+  "State persists, so failure is affordable. The loader stays raised; LP3's failed first ascent cost ≈ 29 s and the second attempt still fitted in the run.",
+  "The letters are the rehearsal. The G3 set covers the route up to the climb; the remake keeps only that set and says \"follow the same path as for the SKATE letters\".",
+  "Tape at a fork, not a dead end. Right rail → tape → exit onto the Around the Horn rope (a goal); left rail → the level's longest grind (Mine Cart Ride, 500) and a launch back to the lot.",
+  "Exit into a goal. Both the TAS and LP3 chain the tape into Mountain Man Mine Stomp → Look Ma! No Talent! → Around the Horn: the tape's descent is the start of the treetop scoring line.",
+  "Behind the spawn. The spawn faces the lot; the tape lies behind and above, so it is found by turning round, the opposite of Foundry's tape over the middle.",
+  "Three areas, three letter tours. Each skater group's letters tour one area (lot, park, forest), so the level is learnt area by area across the cast.",
+  "Expert bypass. The TAS climbs a cable from the cabin roof up the cliff to the track in 8 s, skipping the switch: lines (ropes, cables) connect the layers for those who see them.",
+  "Difficulty step from Foundry. Foundry: no unlock, two leaps, ≈ 6–9 m. Canada: unlock + four transfers, ≈ 15–25 m, a rail choice.",
+  "The PS1 edition keeps the idea. A smaller, different layout still puts the tape at the top of a mine-cart track up the mountain (VG PS1).",
+  "The remake extends the branches. Cash and the Iron Galaxy logo on the left branch, COMBO at the foot of the climb, a man waiting by the raised quarter pipe (thermos goal): the climb becomes a hub."
+ ],
+ "remakeChanges": [
+  "Tape: same route (lever → elevated half pipe → platforms → track; LP34 0:20:00-0:20:20)",
+  "Letters: three sets (lot, park, forest) -> forest set only, along the tape route",
+  "Goals: Melon Grab Over the Blade removed; Bury That Bully reworked (boneless to a platform, grind a short rail); High Combo 10,000; five pro goals",
+  "COMBO letters added at the raised loader (pro goal)",
+  "New pickups populate the other branch of the fork: Cash and the Iron Galaxy logo on the left track and wire; Hidden Deck under the flag; plushie; thermos errand",
+  "PS1 edition (2001): different layout and goals; tape at the top of a mine-cart track on the slope"
+ ],
+ "transfer": [
+  "Switch-raised ramp. A trick rail or lever on the walkway route that raises a quarter-pipe platform (moving platform) 4–6 m, visible from the switch; it stays up for the run.",
+  "Staircase of vert transfers. Three vert ramps at rising heights (each ≈ 3–4 m higher), linked by transfers/spine transfers; keep each landing deck ≥ 3 m deep on the near side so line-up, not luck, decides.",
+  "Crystal at a rail fork. At the top, a grindable track that splits: right branch carries the crystal, left branch is a long descending grind (travelling-rail feel) back towards the start.",
+  "Exit into a line. After the crystal, a short ollie from the rail's end onto a rope/rail circling a big tree, so the crystal run flows into a scoring line.",
+  "Letters as rehearsal. Put the level's lesser pickups along the lower half of the crystal route (fence, roof, branch, log, ramp).",
+  "Expert cable. A long grindable cable (snapping rope or travelling rail) from a roof near the spawn up a cliff to the track: fast for those who see it, risky (a fall ≥ 10 m).",
+  "Keep walkers off. The track ≥ 15 m above the forest floor with no standable ledge within the 4.6 m double-jump + ledge-grab reach."
+ ],
+ "openQuestions": [
+  "The generator's position: G3 says the loader rises \"in the distance\"; J3 puts the lever next to the half pipe at the end of a walkway, with a man standing there.",
+  "What \"the green building\" by the forest E is; VG PS2 puts E at the foot of the tower.",
+  "G3 announces 87 gaps and describes 84 plus the challenge.",
+  "Whether the TAS cable route works on PS2 (the TAS is the GameCube port) and which wire it is.",
+  "The PS1 edition's tape route (map only).",
+  "Heights of the loader, tower and track are estimates."
+ ]
+}
