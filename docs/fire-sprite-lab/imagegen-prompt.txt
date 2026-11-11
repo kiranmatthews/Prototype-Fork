@@ -1,0 +1,10 @@
+Built-in image_gen tool. Generated 11 November 2026.
+Project asset: public/fire-sprites/flame-atlas.png
+No external game art is used.
+
+Use case: stylized-concept
+Asset type: transparent game VFX sprite atlas, 4 columns by 4 rows, exactly sixteen equal square cells, square overall image.
+Primary request: Create sixteen sequential animation frames of a single stylized cartoon flame in the visual language of Crash Bandicoot 4's fire effects: bold sculpted curling flame tongues, chunky graphic silhouette, bright creamy yellow heart, golden yellow middle, saturated orange outer lobes and restrained red-orange tips. This is 2D hand-painted billboard flame artwork for a realtime game, with crisp readable shapes and softly painted interior colour transitions.
+Composition/framing: precisely regular 4x4 animation atlas without visible grid lines. Each cell holds the SAME size flame with its base fixed at 50% horizontally and 86% vertically in its cell. Flame occupies about 65% of cell width and 76% of cell height, with transparent padding on ALL sides. Consistent registration, scale and base position across all 16 frames. Sequence reads left-to-right then top-to-bottom, animated flowing lick bending and stretching upward, tip separates into a small hot wisp then reforms. Last frame flows into first for a looping animation. A small amount of changing inner silhouette is enough; keep the body mass and fixed base stable.
+Scene/backdrop: genuine transparent alpha, no backdrop.
+Constraints: flame only, no objects, no logs, no torch, no scenery, no shadows, no ground plane. No words, numbers, captions, borders, grid lines, watermark. No black outline. No realistic photographic fire, no smoke cloud, no fuzzy glow extending to cell edges. Each frame isolated, no overlaps between cells. Transparent outside flames; bright body retains strong opaque colour. Export square PNG with real alpha.

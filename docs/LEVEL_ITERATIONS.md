@@ -11889,6 +11889,16 @@ Native disabled controls are identical; phase changes affect 2,864 pixels.
 Production build and hosting-size check pass (935,135,311 bytes). No full suite
 run. Character animation, other heat sources and Temple v6 are untouched.
 
+### 2026-11-11 — Fire Sprite Lab: imagegen billboard flame exhibition
+
+First interactive browser result took approximately ten minutes from the brief; the complete local production validation took approximately nineteen minutes. Added **Labs → Fire Sprite Lab**, a dedicated orbitable exhibition of golden torches, bonfires, a solar flame wall, a green ring, a blue jet, a cyan spirit flame, a violet spiral and rose embers. The built-in imagegen tool created one original transparent 16-frame atlas in the Crash Bandicoot 4 flame style. All eight arrangements reuse it through 157 camera-facing quads, staggered playback and shader hue transforms. The original PNG and exact generation prompt are retained.
+
+The lab reuses the game's unchanged `FlameHeatDistortion` and `writeTorchHeat`: eleven-slice Jak framebuffer refraction, small rising pockets, foreground depth protection and sprites drawn after the heat. Collection mode stays within 288 heat pockets; focus mode isolates one exhibit. Pause, frame stepping, slow motion, editable hues, frame interpolation, grid and heat toggles, heat strength, orbit and MAX/native or 720p rendering are exposed. Compact screens page the collection and scroll only the inspector; reduced-motion starts paused. Gameplay, level data, movement and existing torch effects are unchanged.
+
+Build/type-check, release-size check (934,016,565 / 1,000,000,000 bytes), Labs directory and offline-entry checks pass. Real Chrome validation covers lite and full production rendering under the Pages subpath, every exhibit, shared texture identity, 720p, 1920×1080 native, 4:3, phone portrait, short landscape, 2× native touch, tap controls and reduced motion. Pausing and zero-strength heat are pixel-exact; animation stepping changes 18,668 pixels, the heat pass refracts 1,708 pixels in the frozen torch fixture, and hue changes recolour 24,514. Console and WebGL error checks are clean. No full suite was run.
+
+Evidence: [implementation and reproduction](fire-sprite-lab/README.md), [imagegen prompt](fire-sprite-lab/imagegen-prompt.txt), [production browser report](fire-sprite-lab/production-browser.json), [collection](fire-sprite-lab/collection-native.png), [native torch](fire-sprite-lab/torch-native.png) and [touch inspector](fire-sprite-lab/touch-native.png).
+
 ## 2026-11-11 — Powderkeg Peak: a new level from the bible's Crash shapes
 
 Brief: design a new level from scratch on the shape and length of the Crash

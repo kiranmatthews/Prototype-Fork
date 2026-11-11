@@ -1,0 +1,218 @@
+{
+  "base": "http://127.0.0.1:5417/Prototype-Fork/",
+  "checks": [
+    "Lite renderer opens all eight exhibits",
+    "All eight arrangements, shared texture identity, selected exhibit isolation, live heat sources",
+    "Pixel-exact pause, advancing frames, playback, hue change, heat on/off, zero-strength identity, frame blend toggle",
+    "720p, MAX/native, 4:3, portrait and short landscape fit; paged collection; orbit; no WebGL errors",
+    "Published Labs directory entry",
+    "Touch selection, colour and heat controls, internally scrolling inspector, 2× native DPR, reduced-motion pause"
+  ],
+  "errors": [],
+  "exhibits": [
+    {
+      "name": "Golden torch",
+      "sprites": 13,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 98,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Wild bonfire",
+      "sprites": 18,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 172,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Solar curtain",
+      "sprites": 17,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 248,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Alchemist’s ring",
+      "sprites": 22,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 324,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Blue jet",
+      "sprites": 19,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 406,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Spirit flame",
+      "sprites": 13,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 479,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Violet spiral",
+      "sprites": 19,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 553,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    },
+    {
+      "name": "Rose embers",
+      "sprites": 36,
+      "heat": {
+        "enabled": true,
+        "sources": 1,
+        "visible": 36,
+        "dropped": 0,
+        "frames": 625,
+        "copySize": [
+          1146,
+          736
+        ],
+        "textureType": 1009,
+        "extraDraws": 1
+      }
+    }
+  ],
+  "sizes": [
+    {
+      "name": "normal-720",
+      "width": 1280,
+      "height": 720,
+      "canvas": [
+        986,
+        496
+      ]
+    },
+    {
+      "name": "desktop-native",
+      "width": 1920,
+      "height": 1080,
+      "canvas": [
+        1590,
+        828
+      ]
+    },
+    {
+      "name": "four-three",
+      "width": 1024,
+      "height": 768,
+      "canvas": [
+        762,
+        544
+      ]
+    },
+    {
+      "name": "portrait",
+      "width": 390,
+      "height": 844,
+      "canvas": [
+        390,
+        450
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "canvas": [
+        604,
+        254
+      ]
+    }
+  ],
+  "frameStep": {
+    "changed": 18668,
+    "peak": 208,
+    "mean": 0.9743211264132332
+  },
+  "heatPixels": {
+    "changed": 1708,
+    "peak": 118,
+    "mean": 0.06193328401244404
+  },
+  "heatIdentity": {
+    "changed": 0,
+    "peak": 0,
+    "mean": 0
+  },
+  "huePixels": {
+    "changed": 24514,
+    "peak": 241,
+    "mean": 5.345045858942257
+  },
+  "pass": true
+}
