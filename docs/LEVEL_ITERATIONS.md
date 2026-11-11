@@ -11905,7 +11905,7 @@ Brief: design a new level from scratch on the shape and length of the Crash
 levels recorded in the bible, iterating until it is a best effort; scenery may
 be made in code or reuse existing assets. About 1 h 45 min from prompt to a
 first playable greybox, 3 h 15 min to the first complete version, 5 h 20 min to
-this reviewed one.
+the reviewed one and about 7 h to the twice-reviewed one recorded here.
 
 `powderkeg-peak` is a snow mountain climbed on foot and ridden down twice:
 Kindling Steps (foot, into the screen), First Tracks (board, 561 m), the tarn
@@ -11936,9 +11936,22 @@ the gem route 204.4 s, collector's line 217.6 s with every run crate taken;
 bonus round 39.5 s, 17 of 17). Crate report: 143 crates, 54 clusters, mean
 2.59, 9 % singles, 10 checkpoints. `npm run check:levels` passes; production
 build and hosting-size check pass, before the merge with main (935,213,498
-bytes) and after it (936,287,972 bytes). In this container the merged tree's
+bytes) and after it (936,288,292 bytes). In this container the merged tree's
 first build ran out of memory in the release-packaging step at Node's default
 heap and passed with `--max-old-space-size=4096`. Reviewed in the browser
 in lite render at 720 across all sections and in full render at five places,
-with no console errors. No full suite run, no human play test yet, and no
-second independent review.
+with no console errors. No full suite run and no human play test yet.
+
+A second independent review then found no blocker and nine smaller items.
+Fixed: a kill box that the rising hoist carried a rider through; the upper
+row's bristleback pillar (a clear three metres to land on) and its bait crates
+(against the wall); a checkpoint on the switch ledge, with the Nitro-framed
+life moved six metres clear of the landing; the first run's checkpoint and
+fruit moved to the sound side of the half crevasse; a wall behind the lower
+row so its snow shelf cannot be stood on; gully fences in front of wall lips
+that could be grabbed but not climbed; a dead-level ridge so the block at the
+mount always needs a push or a spin; the fast snowball moved forty metres
+clear of the crate bridge. Tested and not changed: the first arrow's pair is
+broken by a plain bounce with a double jump (the bible's head-reach table is
+stale). Final figures: 142 crates, 11 checkpoints, pilots 175.2 s, 204.0 s
+and 217.8 s with no deaths.

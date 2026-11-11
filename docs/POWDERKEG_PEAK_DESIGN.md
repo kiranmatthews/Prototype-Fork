@@ -35,16 +35,16 @@ carry the pits, ledges and enemies; speed lives on the two descents.
 | S1 Kindling Steps | Foot, into the screen, 12 m walled gully | 197 m, +10.5 m | Ice underfoot | C1 powder landing, C2 crest |
 | S2 First Tracks | Board, square-wave descent | 561 m, -18.5 m | Rolling snowballs | C3 past the boulders, C4 tarn |
 | Tarn and hoist | Foot, hub; the camera turns side-on on the way up | 14 m lift | (rest) | C5 hoist landing |
-| S3 The Headwall | Foot, side-on: east along the lower row, up the buttress, west along the upper row | 2 × 105 m, +22 m | Ice stampers | C6 east landing, C7 summit |
-| S4 Powderkeg Run | Board, ridge then the long face | 656 m, -40 m | Everything, combined | C8, C9, C10 |
+| S3 The Headwall | Foot, side-on: east along the lower row, up the buttress, west along the upper row | 2 × 105 m, +22 m | Ice stampers | C6 east landing, C7 switch ledge, C8 summit |
+| S4 Powderkeg Run | Board, ridge then the long face | 656 m, -40 m | Everything, combined | C9, C10, C11 |
 
 ## Beats
 
 **S1 Kindling Steps.** Yard stack → snow crab alone on a wide shelf → mill pond
 (first ice, a crate row to spin while sliding) → snowball in its trough (stand,
 watch, cross behind it) → half crevasse with a crate over the open half → arrow
-crate with a pair 8.3 m overhead (only the bounce with a double jump reaches
-it) → first full crevasse → ice shelf with a firm snow lip above the second
+crate with a pair side by side 8.3 m overhead (only the bounce with a double
+jump at its top reaches it; fruit rises toward it) → first full crevasse → ice shelf with a firm snow lip above the second
 crevasse → TNT debut on the powder landing (C1) → bristleback alone on a wide
 shelf → three pillars, the last with a crab on it → lookout shelf: a reward
 block and a Nitro pair at rest by the wall (first Nitro, on foot) → crest (C2).
@@ -52,9 +52,10 @@ block and a Nitro pair at rest by the wall (first Nitro, on foot) → crest (C2)
 **S2 First Tracks.** First stack dead ahead at the foot of the first pitch →
 tall stack on the inside of the bend → slalom pair → Nitro pair on the edge of
 a straight, in view for all of it → apex stack → two snowball troughs, each a
-second and a half past the bend → tall stack and checkpoint C3 → the half
-crevasse: ride on down the sound half, ollie it, or grind the log across it;
-the two risky lines meet at one tall stack → bend stack → run-out stacks → shore.
+second and a half past the bend → tall stack and checkpoint C3, both on the
+side that stays sound → the half crevasse: the plain fruit rides on down the
+sound half; a bowed line of fruit offers the ollie and a log the grind, and
+those two lines meet at one tall stack → bend stack → run-out stacks → shore.
 
 **The tarn.** Ice with a block in the middle, a watcher on firm snow by the
 hoist (its debut), the hoist up the wall.
@@ -62,21 +63,25 @@ hoist (its debut), the hoist up the wall.
 **S3 lower row (east).** Stamper over solid ledge with eleven metres to watch it
 from → bristleback on the take-off → lone pillar → stamper pair with a one-crate
 pocket → rotten ice plank (debut, level with both banks) → TNT between two boxes
-at the near end of the rest ledge → jump to a far bank under a stamper → three
+on the rest ledge, its blast clear of both the plank and the take-off → jump to
+a far bank under a stamper → three
 buttress tiers, one a dead end with a reward → east landing (C6).
 
 **S3 upper row (west).** Stamper over glazed ice (wait on the dry landing, then
-run) → pillar with a bristleback on its far half → three rotten shelves → switch
-ledge: `!` by the lip, a life framed by Nitro against the wall → switch bridge
-of five crates → four metres of floor, a mask → twin stampers half a cycle apart
-with a crab in the pocket → last pillar → summit (C7, the crystal, the bonus pad).
+run) → pillar whose near three metres are clear, a bristleback at its far end →
+three rotten shelves → switch ledge: checkpoint C7 where you land, six clear
+metres, a life framed by Nitro against the wall, three clear metres, the `!` by
+the lip → switch bridge of four crates → four metres of floor, a mask → twin
+stampers half a cycle apart with a crab in the pocket → last pillar → summit
+(C8, the crystal, the bonus pad).
 
-**S4 Powderkeg Run.** Block to ram on the level ridge (only a held push reaches
-smashing speed; a mask is in it) → ridge rail with a watcher over it → tall
+**S4 Powderkeg Run.** Block to ram on the dead-level ridge (a coasting board
+always trips on it: push, or spin; a mask is in it) → ridge rail with a watcher over it → tall
 stacks down the first face → twin snowballs rolling in step → first full
-crevasse → tall stack, C8 → chicane with Nitro on the inside of each bend →
-tall stack, C9 → fast snowball → second crevasse with a one-way crate bridge to
-grind → Nitro on both edges at once → tall stack, C10 → the long gap (11 m) →
+crevasse → tall stack, C9 → chicane with Nitro on the inside of each bend →
+tall stack, C10 → fast snowball, then forty metres to line up → second crevasse
+with a one-way crate bridge to grind → Nitro on both edges at once → tall
+stack, C11 → the long gap (11 m) →
 works yard, the green `!`, the gate.
 
 ## Ladders
@@ -95,8 +100,8 @@ Each hazard is introduced with room, developed, twisted, then used in the last r
 
 ## Crates
 
-143 crates in the level (139 counted) in 54 clusters, mean cluster size 2.59,
-5 single crates (9 %); 10 checkpoints; 17 more in the bonus round; gem tally 166.
+142 crates in the level (138 counted) in 54 clusters, mean cluster size 2.57,
+5 single crates (9 %); 11 checkpoints; 17 more in the bonus round; gem tally 166.
 Every cluster has one named job in its label (teach, reward, bait, landing
 marker, count trap, checkpoint group).
 
@@ -140,6 +145,7 @@ bridge and a green `!`.
 | Ollie at 23 m/s | 0.62 s in the air, 14.2 m |
 | Each smash | costs 19 % of speed (a whole stack is one contact); a checkpoint costs 8 % |
 | Jump, double jump (feet) | 2.84 m, 4.59 m; a grab adds 2.4 m |
+| Breaking a floating crate from below | by the top of the silhouette, about 3.0 m above the feet: floor double jump 7.6 m, plain arrow bounce 7.9 m, arrow bounce with a double jump about 9.5 m |
 | Arrow bounce | 16 m/s, 20 m/s with Jump held on impact |
 | Spin | active 0.3 s, 0.15 s cool-down, 0.8 m reach |
 | Run speed on foot; TNT and Nitro blast | 9 m/s; 2.75 m |
@@ -165,15 +171,15 @@ are made in code too. Huts, lamps, arches, kegs and pines are existing assets.
 | Check | Result |
 | --- | --- |
 | Input-only pilot, main route | Finishes in 175.2 s, no deaths |
-| Input-only pilot with the gem route | 204.4 s, no deaths |
-| Collector's line (`POWDERKEG_COLLECT=1`) | 217.6 s, no deaths; all 10 checkpoints and 123 of the 139 counted crates |
+| Input-only pilot with the gem route | 204.0 s, no deaths |
+| Collector's line (`POWDERKEG_COLLECT=1`) | 217.8 s, no deaths; all 11 checkpoints and 123 of the 138 counted crates |
 | Bonus round pilot | 39.5 s, 17 of 17 counted boxes |
 | `npm run check:levels` | passes |
 | Crate report (`tools/crate-placement-report.mjs --levels powderkeg-peak`) | figures above |
 
-The sixteen crates the collector leaves are known: the two TNT clusters (five)
+The fifteen crates the collector leaves are known: the two TNT clusters (five)
 and the adit's bait pair (the pilot will not spin beside an explosive), the
-five switch-bridge crates it walks on, and four far crates of S1 clusters its
+four switch-bridge crates it walks on, and four far crates of S1 clusters its
 spin does not reach. No crate on either board run is left.
 
 Medal times: gold 165 s, silver 195 s, bronze 240 s (main route).
@@ -185,9 +191,22 @@ Medal times: gold 165 s, silver 195 s, bronze 240 s (main route).
 - The pilots prove one line and its collector variant, not every line a player
   can choose; the half crevasse's ollie line and the chicane edges were checked
   by measurement and by eye.
-- An independent review of the first complete version found two blockers and
-  twelve fairness items; all were addressed in this version, which has not yet
-  had a second independent review or a human play test.
+- Two independent reviews were taken. The first found two blockers and twelve
+  fairness items in the first complete version; all were addressed. The second
+  found no blocker and nine smaller items; eight were fixed (among them a kill
+  box the rising hoist carried a rider through, a landing beside a Nitro, a
+  missing checkpoint on the upper row, and fruit that led a rider into the
+  first crevasse). The ninth, that the first arrow's reward needs Jump held on
+  the arrow, was tested and does not hold: a plain bounce with a double jump
+  breaks the pair. The pair was set side by side all the same, since a stacked
+  upper box sat at the limit of that move. No human has played the level yet.
+- The bible's Part XV gives head reach as feet plus 0.92 m, and the crate
+  report classes the arrow pair by that figure ("arrow-perfect-double"). The
+  engine now breaks floating crates with the top of the silhouette, about three
+  metres above the feet, as measured above; the bible's table needs re-measuring.
+- Standing on a resting ice stamper and riding it up may reach the adit door
+  without the arrow. It was not confirmed either way and is left as a possible
+  shortcut: the arrow stands beside it in any case.
 - Rock is built from existing slate pieces and code-made faces. Bespoke
   modelled pieces would need the owner's Tripo account, which this cloud session
   cannot reach.

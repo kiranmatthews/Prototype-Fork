@@ -149,7 +149,8 @@ for (const q of CREVASSES) {
   const x0 = q.x0 ?? -HALF, x1 = q.x1 ?? HALF, far = gullyFloor(q.b + .2);
   C.push(...cliff({ line: [[x0, -q.b], [x1, -q.b]], side: -1, bottom: q.y - 8.4, top: far - .2, palette: BLUE_ICE, relief: .32, batter: .02, seed: Math.round(q.a), ice: 0, nm: `${q.nm}: far wall`, grp: G.rock }));
 }
-for (const side of [-1, 1]) fence(side * (HALF + .2) - .2, side * (HALF + .2) + .2, -191, -12, -2, 30, 'Gully lip fence');
+// The fences stand a hand in front of the wall faces: a lip that could be grabbed but never climbed is a false promise.
+for (const side of [-1, 1]) fence(side * (HALF - .1) - .2, side * (HALF - .1) + .2, -191, -12, -2, 30, 'Gully lip fence');
 
 // Kindling Steps · content. Jobs are named per cluster (bible, law 3).
 stack(-4, 0, -8, ['wood', 'mystery'], 'Yard stack (teach: top first or the fruit crate drops)'); crate(-4.96, 0, -8, 'wood', 'Yard stack: the step beside it');
@@ -164,9 +165,10 @@ add({ t: 'stone', p: [0, 2.5, -62.5], axis: 'x', range: 4.5, speed: 4.5, radius:
 fruitLine([0, 2.5, -65.5], [3, 2.5, -70], 3); fruitLine([3, 2.5, -71.4], [3, 2.5, -73.6], 2);
 crate(-3, 2.5 + 1.4, -72.5, 'mystery', 'Over the open half of the crevasse, above a spin from either bank (reward for the risk: jump the gap through it)');
 rowOf(-4.36, 2.5, -79, ['wood', 'bouncy', 'wood'], 'Arrow crate between two boxes on the runway (teach the tool; break its neighbours first and it is still there)');
-// The pair hangs 8.3 m over the runway: past a floor double jump (7.5 m to the top of the hair), inside the arrow's
-// bounce with a double jump at its top (9.5 m) or with Jump held on the arrow (9.9 m). Both are what the adit asks later.
-stack(-3.4, 2.5 + 8.3, -79, ['wood', 'mystery'], 'The pair only the arrow reaches (teach: double jump at the top of the bounce)');
+// The pair hangs side by side 8.3 m over the runway: past a floor double jump and past a plain bounce off the arrow
+// (7.6 m and 7.9 m to the top of the hair), well inside the bounce with a double jump at its top (9.5 m). That move,
+// with a grab, is what the adit asks later. Side by side, not stacked: an upper box would sit at the very limit of it.
+rowOf(-3.88, 2.5 + 8.3, -79, ['wood', 'mystery'], 'The pair only the arrow reaches (teach: double jump at the top of the bounce)');
 for (const dy of [3, 4.6, 6.2]) fruit(-3.4, 2.5 + dy, -79);
 fruitLine([0, 2.5, -84.6], [0, 2.5, -88.6], 5, 1.8);
 stack(3.8, 2.5, -95, ['wood', 'wood', 'mystery'], 'Stack on the first landing (marks the landing; the double jump reaches its top)');
@@ -190,7 +192,7 @@ const RUN1 = new Path('First Tracks', 0, -206, 0,
 const TARN_Y = -8, SUMMIT_Y = 28;
 const RUN2 = new Path('Powderkeg Run', -30, -614, 90,
   [{ len: 90 }, { turn: 90, r: 44 }, { len: 130 }, { turn: -45, r: 50 }, { turn: 45, r: 50 }, { len: 110 }, { turn: 45, r: 50 }, { turn: -45, r: 50 }, { len: 100 }],
-  profile([[0, SUMMIT_Y], [14, 27.8], [90, 26.5], [159, 21], [289, 11], [368, 6], [478, -3], [556, -8.5], [640, -12], [656.2, -12]]));
+  profile([[0, SUMMIT_Y], [46, SUMMIT_Y], [90, 26.5], [159, 21], [289, 11], [368, 6], [478, -3], [556, -8.5], [640, -12], [656.2, -12]]));
 const CLIMB = new Path('Kindling Steps', 0, 0, 0, [{ len: CREST_S + 9 }],
   profile([[0, 3.2], [12, 4.4], [37, 5.2], [99, 6], [131, 8.4], [151, 10.4], [191, 13], [206, CREST_Y + 1.2]]));
 const finish = RUN2.at(RUN2.length), FINISH: P3 = [r3(finish.x), -12, r3(finish.z)];
@@ -207,7 +209,8 @@ const TROUGHS: Trough[] = [
   { path: RUN1, s: 301, centre: 0, range: 8.4, speed: 6.5, radius: 1.2, nm: 'Second boulder, quicker' },
   { path: RUN2, s: 200, centre: -4.2, range: 3.6, speed: 5, radius: 1.2, nm: 'Twin boulders rolling in step, left: the clear lane between them moves' },
   { path: RUN2, s: 200, centre: 4.2, range: 3.6, speed: 5, radius: 1.2, nm: 'Twin boulders rolling in step, right' },
-  { path: RUN2, s: 424, centre: 0, range: 8.4, speed: 8, radius: 1.3, nm: 'Fast boulder before the crate bridge' },
+  // Forty metres before the crate bridge: whichever way the boulder sends a rider, there is time to line up the grind.
+  { path: RUN2, s: 410, centre: 0, range: 8.4, speed: 8, radius: 1.3, nm: 'Fast boulder, with room after it to line up the crate bridge' },
 ];
 const troughRect = (t: Trough): [number, number, number, number] => {
   const f = t.path.at(t.s), reach = RUN_HALF + 4.2, along = 1.9;
@@ -319,11 +322,12 @@ runNitro(RUN1, 168, -1, 'Nitro on the left edge of the straight (debut on a boar
 runFruit(RUN1, 160, 178, 2.6, 0, 4); runFruit(RUN1, 184, 198, -.6, -2.8, 3);
 runStack(RUN1, 204, -2.8, ['wood', 'wood', 'wood'], 'Tall stack at the apex of the second bend');
 runFruit(RUN1, 211, 232, -2.8, 0, 4); runFruit(RUN1, 240, 258, 0, 0, 4); runFruit(RUN1, 280, 292, 0, 0, 3);
-runFruit(RUN1, 310, 318, 0, -1.2, 3);
-runStack(RUN1, 322, -1.2, ['wood', 'wood', 'mystery'], 'Tall stack past the boulders (the group the checkpoint closes)');
-runFruit(RUN1, 346, 372, -1.2, 1.5, 5);
-// The half crevasse: ride on down the right, ollie it for the tall stack, or grind the log across it.
-runFruit(RUN1, 384, 399, .4, -1.5, 3); runFruit(RUN1, 402.5, 411.5, -1.5, -1.5, 5, 1.3);
+runFruit(RUN1, 310, 318, 0, 1.2, 3);
+runStack(RUN1, 322, 1.2, ['wood', 'wood', 'mystery'], 'Tall stack past the boulders (the group the checkpoint closes)');
+runFruit(RUN1, 346, 372, 1.2, 2.6, 5);
+// The half crevasse: ride on down the right, ollie it, or grind the log across it. The plain fruit keeps to the sound
+// half; only the bowed line over the gap offers the jump.
+runFruit(RUN1, 384, 414, 2.6, 2.6, 5); runFruit(RUN1, 402.5, 411.5, -1.5, -1.5, 5, 1.3);
 runRail(RUN1, 396, 420, -3.7, .55, 'Log rail over the half crevasse (the other way across)');
 runFruit(RUN1, 398, 418, -3.7, -3.7, 5);
 runStack(RUN1, 433, -2.6, ['wood', 'wood', 'mystery'], 'Tall stack where the jump and the grind meet again (either way across pays; the fruit differs)');
@@ -335,7 +339,7 @@ runFruit(RUN1, 538, 554, 0, 0, 3);
 
 // Powderkeg Run: everything the mountain has taught, at speed.
 runFruit(RUN2, 6, 30, 0, 0, 5);
-runStack(RUN2, 40, -.48, ['wood', 'wood'], 'Block to ram through at the mount (charge: the ridge is level, so only a held push reaches smashing speed)');
+runStack(RUN2, 40, -.48, ['wood', 'wood'], 'Block to ram at the mount (charge: on the level ridge a coasting board trips on it; push, or spin)');
 runStack(RUN2, 40, .48, ['wood', 'mask'], 'Block at the mount: the mask in it');
 runRail(RUN2, 52, 84, 3.2, .6, 'Ridge fence rail');
 runFruit(RUN2, 54, 82, 3.2, 3.2, 6);
@@ -351,7 +355,7 @@ runNitro(RUN2, 312, 1, 'Nitro on the inside of the first chicane bend');
 runFruit(RUN2, 296, 326, -1, -2.6, 5); runFruit(RUN2, 332, 362, 2.6, 0, 5);
 runNitro(RUN2, 346, -1, 'Nitro on the inside of the second chicane bend');
 runStack(RUN2, 372, 0, ['wood', 'wood', 'wood'], 'Tall stack out of the chicane (the group the checkpoint closes)');
-runFruit(RUN2, 394, 412, 0, 0, 3);
+runFruit(RUN2, 418, 442, 0, -3.6, 4);
 { // One-way grind bridge: a crate row at deck height across the second crevasse. Ridden, it is consumed behind the rider.
   const lip = on(RUN2, 452, -3.6), far = on(RUN2, 461, -3.6), n = 8, z0 = (lip[2] + far[2]) / 2 + (n - 1) / 2 * CR;
   rowOf(lip[0], lip[1] - .3 - 1.152, z0, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood', 'wood'], 'Crate bridge over the crevasse', true);
@@ -391,12 +395,12 @@ const ROW_A_LEDGES: Ledge[] = [
 const B0_Y = 19;
 const ROW_B_LEDGES: Ledge[] = [
   { x0: 66, x1: 80, y: B0_Y, ice: true, nm: 'Glazed gallery under the stamper' },
-  { x0: 59.2, x1: 63.4, y: 19.8, nm: 'Bristleback pillar: its near end is clear to land on' },
+  { x0: 57.6, x1: 63.4, y: 19.8, nm: 'Bristleback pillar: its near three metres are clear to land on' },
   { x0: 53.3, x1: 56.3, y: 20.2, crumble: true, nm: 'Rotten shelf one' },
   { x0: 48.8, x1: 51.8, y: 20.7, crumble: true, nm: 'Rotten shelf two' },
   { x0: 44.3, x1: 47.3, y: 21.2, crumble: true, nm: 'Rotten shelf three' },
-  { x0: 31, x1: 43, y: 21.8, nm: 'Switch ledge' },
-  { x0: 10, x1: 25.4, y: 22.6, nm: 'Twin stamper gallery, with four metres of floor to read it from' },
+  { x0: 29.4, x1: 43, y: 21.8, nm: 'Switch ledge' },
+  { x0: 10, x1: 24.8, y: 22.6, nm: 'Twin stamper gallery, with four metres of floor to read it from' },
   { x0: 3, x1: 6.6, y: 23.6, nm: 'Last pillar' },
   { x0: -14, x1: 0, y: 24.6, nm: 'Summit approach' },
 ];
@@ -446,9 +450,12 @@ slate(90, 104.5, ROW_B - 2.4, ROW_B + 2.2, 16, 30.6, 64, 'East landing slate');
 C.push(...snowCap({ line: [[90, ROW_B + 2], [104, ROW_B + 2]], side: -1, y: 30.2, depth: 4, height: 1, seed: 52, nm: 'East landing cap', grp: G.rock }));
 add({ t: 'ramp', p: [-10, APPROACH_Y, ROW_B], len: 8, rise: r3(SUMMIT_Y - APPROACH_Y), w: 4, yaw: 90, tex: 'snow', color: SNOW, grp: G.ground, nm: 'Drift ramp onto the summit' });
 // Falls: one sheet under each row, and an unseen fence along each row's open (south) edge.
-kill(-1, 104, ROW_A - 2, ROW_A + 2, 1.5, 'Lower row: fall');
+// The sheet starts past the hoist landing, which is solid to the shore: the rising hoist deck beside it must carry no one through a kill box.
+kill(26, 104, ROW_A - 2, ROW_A + 2, 1.5, 'Lower row: fall');
 kill(-16, 80, ROW_B - 2, ROW_B + 2, 14, 'Upper row: fall');
 fence(-1, 104, ROW_A + 2, ROW_A + 2.4, 4, 40, 'Lower row: lip fence');
+// The shelf of snow on top of the wall behind the lower row is scenery: nobody stands on it (the east landing joins both rows, so the wall breaks there).
+fence(-8, 80, ROW_A - 2.4, ROW_A - 2, 4, 40, 'Lower row: back wall'); fence(90, 104, ROW_A - 2.4, ROW_A - 2, 4, 40, 'Buttress: back wall');
 fence(-16, 80, ROW_B + 2, ROW_B + 2.4, 18, 30, 'Upper row: lip fence');
 fence(90, 104, ROW_B + 2, ROW_B + 2.4, 18, 30, 'East landing: lip fence');
 add({ t: 'zone', p: [46, 6, ROW_A], s: [108, 1, 8], dir: 'E', grp: G.camera, nm: 'Lower row: side-on, heading east' });
@@ -467,18 +474,18 @@ fruitLine([44.2, 8, ROW_A], [48.1, 9, ROW_A], 3, 1.3);
 stamper(53, 9, ROW_A, 0, 'Stamper pair, first');
 crate(57, 9, ROW_A, 'wood', 'In the pocket between the stampers (one crate per safe window)');
 stamper(61, 9, ROW_A, 3.2 - 8 / 9, 'Stamper pair, second: open 0.9 s after the first for a walker who keeps going');
-rowOf(70.04, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes at the near end of the rest ledge (test: the far end and its take-off lie outside the blast)');
+rowOf(71.54, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes on the rest ledge (test: the plank behind and the take-off ahead both lie outside the blast)');
 fruitLine([78.6, 9, ROW_A], [82.4, 10.2, ROW_A], 3, 1.6);
 stamper(84.5, 10.2, ROW_A, 0, 'Stamper on the far bank: jump as it rises');
 stack(100.2, 14.6, ROW_A, ['wood', 'mystery'], 'At the dead end of the second buttress tier (reward for going the wrong way first)');
 stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
-rowOf(67.3, B0_Y, ROW_B, ['wood', 'wood'], 'On the ice by the far lip (bait: the slide carries you at the gap)');
-foe('spiker', 60.6, 19.8, ROW_B, .7, 1.4, 'Bristleback on the far half of the landing pillar: land short and spin, or spin as you land');
+rowOf(67.3, B0_Y, ROW_B - 1.4, ['wood', 'wood'], 'On the ice by the far lip, against the wall (bait: the slide carries you at the gap)');
+foe('spiker', 58.85, 19.8, ROW_B, .4, 1.2, 'Bristleback at the far end of the landing pillar: a short hop off the ice lands clear of it');
 // The mask waits on the far side of the crate bridge: a third mask smashes every box it touches, the bridge included.
 stack(23.8, 22.6, ROW_B - 1.4, ['wood', 'mask'], 'Mask on a box at the end of the bridge, before the twin stampers');
-rowOf(36.04, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall: only from above');
-crate(31.9, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall, three clear metres from the Nitro: it builds the crate bridge', { grp: SWITCH });
-rowOf(28.2 - 2 * CR, 21.8 - 1.152, ROW_B, ['wood', 'wood', 'mystery', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
+rowOf(34.55, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall, six metres past the landing: only from above');
+crate(30.2, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall, three clear metres from the Nitro: it builds the crate bridge', { grp: SWITCH });
+rowOf(27.1 - 1.5 * CR, 21.8 - 1.152, ROW_B, ['wood', 'mystery', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
 stamper(19.5, 22.6, ROW_B, 0, 'Twin stampers, first');
 foe('grunt', 16.5, 22.6, ROW_B, .7, 1.4, 'Snow crab in the pocket between the twin stampers (arrive spinning)');
 stamper(13.5, 22.6, ROW_B, 1.6, 'Twin stampers, second: half a cycle off, so the pocket is a stop');
@@ -645,7 +652,7 @@ prop('treehouseporchhut', ground(27.9, -563), 270, 'Tarn hut'); lamp(9, -556); l
   }
   C.push(...frames.done());
 }
-for (const [x, y, z] of [[1.2, A0_Y, ROW_A - 1.5], [77.4, 9, ROW_A - 1.5], [81.2, B0_Y, ROW_B - 1.5], [42.2, 21.8, ROW_B - 1.5], [-9, APPROACH_Y, ROW_B - 1.5]] as const) torch(x, y, z);
+for (const [x, y, z] of [[1.2, A0_Y, ROW_A - 1.5], [77.4, 9, ROW_A - 1.5], [81.2, B0_Y, ROW_B - 1.5], [39.6, 21.8, ROW_B - 1.5], [-9, APPROACH_Y, ROW_B - 1.5]] as const) torch(x, y, z);
 add({ t: 'camnode', p: [45, 14, ROW_A - 4], s: [132, 62, 21], cameraView: true, cameraPresentationOnly: true, cameraPosition: [45, 17, ROW_A + 22], cameraTarget: [45, 14.4, ROW_A],
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 4, grp: G.camera, nm: 'Headwall: a side view wide enough to read a stamper before you reach it' });
 
@@ -708,14 +715,15 @@ for (const node of laneNodes) add({ t: 'camnode', p: node.p, radius: node.radius
 // through at speed, on the fruit line, closing the crate group before it.
 checkpoint([-3.4, 5, -124], 'C1 · Powder landing');
 checkpoint([0, CREST_Y, -CREST_S], 'C2 · First crest: board from here');
-checkpoint(on(RUN1, 334, -1.2), 'C3 · First Tracks, past the boulders');
+checkpoint(on(RUN1, 334, 1.2), 'C3 · First Tracks, past the boulders (on the side of the piste that stays sound)');
 checkpoint([0, TARN_Y, -560], 'C4 · Tarn shore');
 checkpoint([4, A0_Y, ROW_A], 'C5 · Hoist landing');
 checkpoint([86.5, B0_Y, ROW_A + .4], 'C6 · East landing');
-checkpoint([-24, SUMMIT_Y, ROW_B], 'C7 · Summit: board from here');
-checkpoint(on(RUN2, 281, 0), 'C8 · Powderkeg Run, past the first crevasse');
-checkpoint(on(RUN2, 384, 0), 'C9 · Mid-run, before the fast boulder');
-checkpoint(on(RUN2, 548, 0), 'C10 · Before the long gap (from a standing start, only a held push carries it)');
+checkpoint([41.9, 21.8, ROW_B - 1.4], 'C7 · Switch ledge: the middle of the upper row, on its widest floor');
+checkpoint([-24, SUMMIT_Y, ROW_B], 'C8 · Summit: board from here');
+checkpoint(on(RUN2, 281, 0), 'C9 · Powderkeg Run, past the first crevasse');
+checkpoint(on(RUN2, 384, 0), 'C10 · Mid-run, before the fast boulder');
+checkpoint(on(RUN2, 548, 0), 'C11 · Before the long gap (from a standing start, charge the ollie: a tap falls short)');
 add({ t: 'crystal', p: [-19, SUMMIT_Y + .5, ROW_B], grp: G.course, nm: 'The crystal, on the top of the mountain' });
 add({ t: 'gate', p: [FINISH[0], FINISH[1], FINISH[2] + 20], yaw: 180, grp: G.course, nm: 'Powder works gate' });
 crate(FINISH[0] + 5.5, FINISH[1], FINISH[2] + 9, 'nitrobang', 'Green switch in the works yard, on foot after the ride: it counts every Nitro on the mountain');
