@@ -35,7 +35,7 @@ record citing where it was read:
 |---|---|
 | `VG` | VGMaps / VGCartography isometric renders of the original level geometry, annotated with named gaps, S-K-A-T-E letters, goal objects and the tape. THPS1 and THPS2 are the PS1 games; the THPS3 maps are the PS1 edition (Canada also has a PS2 edition); the THPS4 maps are the PS1 edition of THPS4. |
 | `G1 pNNN` | *Tony Hawk's Pro Skater Official Strategy Guide* (THPS1), scanned on archive.org. |
-| `G3 pNNN` | BradyGames *Tony Hawk's Pro Skater 3* official strategy guide (PS2 era). Book page = scan page − 2. |
+| `G3 pNNN` | BradyGames *Tony Hawk's Pro Skater 3* official strategy guide (PS2 era); citations use scan numbers (the scan number is one more than the printed page). |
 | `J3 pNNN` | *Joypad* 114 supplement (French, December 2001): THPS3 walkthrough. |
 | `G4m pNNN` | THPS4 (PS2) in-box mini guide. |
 | `PS12 <level>` | Push Square's THPS 1+2 (2020) per-level guides: goals, letters, tape locations and gap lists. |

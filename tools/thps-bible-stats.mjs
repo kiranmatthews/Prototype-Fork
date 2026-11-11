@@ -23,7 +23,12 @@ for (const name of (await readdir(DATA)).filter(f => /^thps\d-.*\.json$/.test(f)
   let json;
   try { json = JSON.parse(await readFile(path.join(DATA, name), 'utf8')); } catch (e) { console.warn(`skip ${name}: ${e.message}`); continue; }
   if (!json || !Array.isArray(json.collectibles)) { console.warn(`skip ${name}: no collectibles array`); continue; }
-  levels.push({ file: name, ...json });
+  // Some files record per-version headers as objects ({original2002: 6, remake2025: 8}); keep the
+  // original's value for the statistics and the full object for display.
+  const first = v => (v && typeof v === 'object' ? Object.values(v).find(x => x !== null && x !== undefined) : v);
+  const career = json.careerPosition && typeof json.careerPosition === 'object'
+    ? (json.careerPosition.original2002 ?? json.careerPosition.original ?? first(json.careerPosition)) : json.careerPosition;
+  levels.push({ file: name, ...json, careerPosition: career, type: first(json.type), typeByVersion: json.type });
 }
 
 const text = v => (Array.isArray(v) ? v.map(x => (typeof x === 'object' ? JSON.stringify(x) : x)).join(' ') : typeof v === 'object' && v ? JSON.stringify(v) : String(v ?? '')).toLowerCase();
@@ -54,6 +59,7 @@ const KIND_BY_TYPE = [
   [/reach|objective|target/, 'reach goal'],
   [/secret-area|secret area/, 'secret area'],
 ];
+const OBJECT = /box|barrel|wing|valve|bell|bum|cones?\b|hat|ball|turtle|fish|ghost|security|balloon|gong|tire|tyre|trash|light|sign|lamp|sprinkler|rings?\b|tiki|item|object|collect|pickup|money|cash|bag|piece/;
 const LAYER = [
   [/roof gap|gap between|\bair (off|above|past|beyond|over)|outside (the |a )?(wall|window)|past (the |an? )?(edge|end)/, 'mid-air over a gap'],
   [/inside-?room|inside (a |the )?room|sky ?box|secret room/, 'inside a room / secret area'],
@@ -212,7 +218,39 @@ md.push(table(['Game', 'Levels', 'Level types', 'Collectibles by kind', 'Gaps (o
   GAMES.map(g => { const p = perGame.get(g); return [`THPS${g}`, String(p.levels), sorted(p.types).map(([k, n]) => `${k} ${n}`).join(', ') || '—', sorted(p.collectibles).map(([k, n]) => `${k} ${n}`).join(', ') || '—', `${p.gaps} (${p.gapsOnRoute})`, String(p.lines), String(p.unlocks)]; })), '');
 md.push(table(['Level', 'Game', 'Type', 'Career #', 'Collectibles', 'Gaps', 'Lines', 'Tape layer; height', 'Tape difficulty'], levelRows), '');
 
+// Tapes: the curated index (one row per tape and version) is the source; the free-text tape
+// fields in the level files vary too much between agents to classify reliably.
+let index = [];
+try { index = JSON.parse(await readFile(path.join(DATA, 'tape-index.json'), 'utf8')); } catch { /* optional */ }
 md.push('## Secret tapes', '');
+if (index.length) {
+  const mid = v => (Array.isArray(v) ? (v[0] + v[1]) / 2 : NaN);
+  const byGameCol = (key, label = k => k) => {
+    const all = new Map(), per = new Map(GAMES.map(g => [g, new Map()]));
+    for (const t of index) { const g = String(t.game).slice(4); const k = String(t[key]); count(all, k); count(per.get(g), k); }
+    const tot = new Map(GAMES.map(g => [g, index.filter(t => String(t.game).slice(4) === g).length]));
+    return sorted(all).map(([k, n]) => [label(k), String(n), pct(n, index.length), ...GAMES.map(g => `${per.get(g).get(k) ?? 0}/${tot.get(g)}`)]);
+  };
+  md.push(`${index.length} tape records in ${new Set(index.map(t => t.level)).size} levels, from \`data/tape-index.json\` (THPS4 levels have a PS1 2002 and a 2025 version).`, '');
+  md.push('### Placement family', '', table(['Family', 'Tapes', 'Share', ...GAMES.map(g => `THPS${g}`)], byGameCol('family')), '');
+  const h = index.map(t => mid(t.groundM));
+  const bands = [[3, 5], [5, 8], [8, 12], [12, 30]];
+  md.push('### Height', '', `Above the ground below (midpoint of each estimate): ${numberSummary(h)} m.`, '',
+    table(['Band (m)', 'Tapes'], bands.map(([lo, hi]) => [`${lo}–${hi}`, String(h.filter(x => x >= lo && x < hi).length)])), '');
+  const al = index.map(t => mid(t.aboveLaunchM)).filter(Number.isFinite);
+  md.push(`Above the surface the final move leaves: ${numberSummary(al)} m; below it ${al.filter(x => x < 0).length}, 0–3 m above ${al.filter(x => x >= 0 && x <= 3).length}, more than 3 m above ${al.filter(x => x > 3).length}.`, '');
+  md.push('### Final move and first sighting', '', table(['Final move', 'Tapes', 'Share', ...GAMES.map(g => `THPS${g}`)], byGameCol('finalMove')), '',
+    table(['First seen', 'Tapes', 'Share', ...GAMES.map(g => `THPS${g}`)], byGameCol('seenClass')), '',
+    `Visible from spawn: ${index.filter(t => t.fromSpawn === true).length} confirmed, ${index.filter(t => t.fromSpawn === 'likely').length} likely, ${index.filter(t => t.fromSpawn === false).length} not, ${index.filter(t => t.fromSpawn === null).length} unknown.`, '');
+  const known = index.filter(t => t.moves && t.moves.length);
+  const mv = new Map(); for (const t of known) for (const m of new Set(t.moves)) count(mv, m);
+  const anyGrind = known.filter(t => t.moves.some(m => ['grind', 'wire', 'ledge', 'rail-transfer'].includes(m))).length;
+  md.push('### Route', '', `Route steps: ${numberSummary(index.map(t => t.steps))}. Distinct moves: ${numberSummary(known.map(t => t.moves.length))}. Any grind on the route: ${anyGrind}/${known.length}.`, '',
+    table(['Move', 'Routes', 'Share'], sorted(mv).map(([k, n]) => [k, String(n), pct(n, known.length)])), '',
+    `Unlock needed: ${index.filter(t => t.unlock).length}. One-way course: ${index.filter(t => t.oneWay).length}.`, '');
+  md.push('### Difficulty', '', table(['Game', 'Tapes', 'Mean difficulty', 'Mean steps'], GAMES.map(g => { const ts = index.filter(t => String(t.game).slice(4) === g); return [`THPS${g}`, String(ts.length), fmt(mean(ts.map(t => t.difficulty))), fmt(mean(ts.map(t => t.steps)))]; })), '',
+    table(['Pattern (bible Part XII)', 'Tapes'], sorted(index.reduce((m, t) => { for (const p of t.patterns ?? []) count(m, p); return m; }, new Map())).map(([k, n]) => [k, String(n)])), '');
+} else {
 md.push(`${tapes.length} tapes across ${new Set(tapes.map(t => t.level)).size} levels.`, '');
 md.push('### Layer', '', table(['Layer', 'Tapes', 'Share', ...GAMES.map(g => `THPS${g}`)], distRows(tapes, 'layer')), '');
 md.push('### Height above the ground below', '', `Heights: ${numberSummary(tapes.map(t => t.height?.mid))}.`, '', table(['Band', 'Tapes', 'Share'], heightBands(tapes)), '');
@@ -229,6 +267,7 @@ const early = tapes.filter(t => t.careerPosition <= 3), late = tapes.filter(t =>
 md.push(`Career position 1–3: mean difficulty ${fmt(mean(early.map(t => t.difficulty)))}, mean steps ${fmt(mean(early.map(t => t.steps)))} (n ${early.length}); position 6+: mean difficulty ${fmt(mean(late.map(t => t.difficulty)))}, mean steps ${fmt(mean(late.map(t => t.steps)))} (n ${late.length}).`, '');
 md.push(table(['Role', 'Tapes', 'Share', ...GAMES.map(g => `THPS${g}`)], distRows(tapes, 'roles')), '');
 
+}
 md.push('## Letters (S-K-A-T-E and C-O-M-B-O)', '');
 md.push(`${letters.length} letter records.`, '', table(['Layer', 'Letters', 'Share', ...GAMES.map(g => `THPS${g}`)], distRows(letters, 'layer')), '',
   `Heights: ${numberSummary(letters.map(t => t.height?.mid))}. Visible from spawn: ${letters.filter(t => t.fromSpawn).length}/${letters.length}.`, '',

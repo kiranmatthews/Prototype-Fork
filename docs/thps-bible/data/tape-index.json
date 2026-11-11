@@ -1,0 +1,971 @@
+[
+ {
+  "game": "THPS1",
+  "level": "thps1-warehouse",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 1,
+  "where": "glass sky box hung over the halfpipe",
+  "family": "room or podium",
+  "layer": "inside a room",
+  "groundM": [
+   5.5,
+   8
+  ],
+  "aboveLaunchM": [
+   1,
+   2.5
+  ],
+  "launcher": "vert / transfer",
+  "finalMove": "vert air or transfer",
+  "fromSpawn": false,
+  "firstSeen": "main floor (silhouette)",
+  "seenClass": "silhouette from the floor",
+  "steps": 6,
+  "moves": [
+   "break-glass",
+   "transfer",
+   "vert-air"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 1,
+  "patterns": [
+   "P8",
+   "P2"
+  ]
+ },
+ {
+  "game": "THPS1",
+  "level": "thps1-school",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 2,
+  "where": "just past the lower end of the long awning over the S stair rail",
+  "family": "past an edge",
+  "layer": "mid-air past an edge",
+  "groundM": [
+   4,
+   6
+  ],
+  "aboveLaunchM": [
+   1,
+   2
+  ],
+  "launcher": "ollie off an edge",
+  "finalMove": "off an edge",
+  "fromSpawn": false,
+  "firstSeen": "from below (kicker court)",
+  "seenClass": "from below",
+  "steps": 8,
+  "moves": [
+   "bank",
+   "lip",
+   "grind",
+   "manual",
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 2,
+  "patterns": [
+   "P7",
+   "P3"
+  ]
+ },
+ {
+  "game": "THPS1",
+  "level": "thps1-mall",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 3,
+  "where": "between two hanging light rods at their far end, over the water hazard",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   3,
+   5
+  ],
+  "aboveLaunchM": [
+   -2,
+   0
+  ],
+  "launcher": "ollie onto a high rail",
+  "finalMove": "onto a high rail",
+  "fromSpawn": false,
+  "firstSeen": "from below (A under the rods)",
+  "seenClass": "from below",
+  "steps": 8,
+  "moves": [
+   "kicker",
+   "ollie",
+   "grind",
+   "rail-transfer"
+  ],
+  "unlock": false,
+  "oneWay": true,
+  "difficulty": 3,
+  "patterns": [
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS1",
+  "level": "thps1-downtown",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 5,
+  "where": "between two roofs, directly above the start alley",
+  "family": "mid-air over a gap",
+  "layer": "mid-air over a gap",
+  "groundM": [
+   10,
+   15
+  ],
+  "aboveLaunchM": [
+   0,
+   2
+  ],
+  "launcher": "vert / transfer",
+  "finalMove": "vert air or transfer",
+  "fromSpawn": false,
+  "firstSeen": "from its launch (roof bowl exit)",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 9,
+  "moves": [
+   "kicker",
+   "break-glass",
+   "grind",
+   "rail-transfer",
+   "vert-air",
+   "transfer"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P2",
+   "P9"
+  ]
+ },
+ {
+  "game": "THPS1",
+  "level": "thps1-downhill-jam",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 6,
+  "where": "four-rail podium on a rock pillar in the canyon below the dam",
+  "family": "room or podium",
+  "layer": "high object",
+  "groundM": [
+   4,
+   8
+  ],
+  "aboveLaunchM": [
+   -1,
+   0
+  ],
+  "launcher": "gap jump into a grind",
+  "finalMove": "jump into a grind",
+  "fromSpawn": false,
+  "firstSeen": "from its approach (high road)",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 10,
+  "moves": [
+   "vert-air",
+   "grind",
+   "rail-transfer",
+   "transfer",
+   "boneless"
+  ],
+  "unlock": false,
+  "oneWay": true,
+  "difficulty": 5,
+  "patterns": [
+   "P9"
+  ]
+ },
+ {
+  "game": "THPS1",
+  "level": "thps1-streets",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 8,
+  "where": "over the Pagoda's glass roof in the plaza, taken dropping through the glass",
+  "family": "mid-air over a gap",
+  "layer": "mid-air over a landmark",
+  "groundM": [
+   5,
+   8
+  ],
+  "aboveLaunchM": [
+   -12,
+   -8
+  ],
+  "launcher": "kicker off a roof",
+  "finalMove": "kicker",
+  "fromSpawn": false,
+  "firstSeen": "from below (plaza)",
+  "seenClass": "from below",
+  "steps": 9,
+  "moves": [
+   "vert-air",
+   "ollie",
+   "transfer",
+   "ledge",
+   "kicker",
+   "break-glass"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 4,
+  "patterns": [
+   "P7",
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS2",
+  "level": "thps2-hangar",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 1,
+  "where": "above the helipad quarter pipe, outdoors past a door the helicopter opens",
+  "family": "above vert",
+  "layer": "above vert",
+  "groundM": [
+   4.5,
+   6.5
+  ],
+  "aboveLaunchM": [
+   2,
+   3
+  ],
+  "launcher": "vert",
+  "finalMove": "vert air or transfer",
+  "fromSpawn": false,
+  "firstSeen": "after the unlock",
+  "seenClass": "after an unlock",
+  "steps": 6,
+  "moves": [
+   "kicker",
+   "grind",
+   "unlock",
+   "bank",
+   "vert-air"
+  ],
+  "unlock": true,
+  "oneWay": false,
+  "difficulty": 2,
+  "patterns": [
+   "P10",
+   "P1"
+  ]
+ },
+ {
+  "game": "THPS2",
+  "level": "thps2-school-ii",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 2,
+  "where": "in the roof gap beyond the library roof, at the door into the hidden Carlsbad area",
+  "family": "mid-air over a gap",
+  "layer": "mid-air over a gap",
+  "groundM": [
+   6,
+   8
+  ],
+  "aboveLaunchM": [
+   0.5,
+   1.5
+  ],
+  "launcher": "ollie off an edge",
+  "finalMove": "off an edge",
+  "fromSpawn": false,
+  "firstSeen": "from its launch (library roof)",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 6,
+  "moves": [
+   "vert-air",
+   "kicker",
+   "ollie",
+   "grind"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 4,
+  "patterns": [
+   "P2",
+   "P9"
+  ]
+ },
+ {
+  "game": "THPS2",
+  "level": "thps2-ny-city",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 4,
+  "where": "off the end of a drooping rebar in the walled-off Brooklyn Banks",
+  "family": "past an edge",
+  "layer": "mid-air past an edge",
+  "groundM": [
+   3,
+   4.5
+  ],
+  "aboveLaunchM": [
+   0,
+   1
+  ],
+  "launcher": "grind exit",
+  "finalMove": "grind exit",
+  "fromSpawn": false,
+  "firstSeen": "while grinding to it",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 10,
+  "moves": [
+   "grind",
+   "rail-transfer",
+   "ollie",
+   "manual"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P3",
+   "P9"
+  ]
+ },
+ {
+  "game": "THPS2",
+  "level": "thps2-venice-beach",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 5,
+  "where": "just above the High Wire over the table plaza",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   6,
+   7
+  ],
+  "aboveLaunchM": [
+   -3,
+   -1
+  ],
+  "launcher": "ollie off an edge",
+  "finalMove": "off an edge",
+  "fromSpawn": "likely",
+  "firstSeen": "from spawn (sightline, ≈ 30 m)",
+  "seenClass": "from spawn",
+  "steps": 8,
+  "moves": [
+   "ledge",
+   "manual",
+   "vert-air",
+   "transfer",
+   "wire",
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P7",
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS2",
+  "level": "thps2-philadelphia",
+  "tape": "TAPE",
+  "version": "original (kept in 2020)",
+  "careerPosition": 7,
+  "where": "60% along the wire from a planter over the fountain up to a roof",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   5,
+   7
+  ],
+  "aboveLaunchM": [
+   3,
+   5
+  ],
+  "launcher": "ollie onto a high rail",
+  "finalMove": "onto a high rail",
+  "fromSpawn": false,
+  "firstSeen": "from the plaza",
+  "seenClass": "from below",
+  "steps": 8,
+  "moves": [
+   "ollie",
+   "wire",
+   "grind"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 2,
+  "patterns": [
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS3",
+  "level": "thps3-foundry",
+  "tape": "TAPE",
+  "version": "original",
+  "careerPosition": 1,
+  "where": "on a dark beam in the rafters, level with the observation platform",
+  "family": "wire, rail or rafter",
+  "layer": "rafters",
+  "groundM": [
+   6,
+   9
+  ],
+  "aboveLaunchM": [
+   -1,
+   0
+  ],
+  "launcher": "gap jump into a grind",
+  "finalMove": "jump into a grind",
+  "fromSpawn": false,
+  "firstSeen": "from the observation platform / from below",
+  "seenClass": "from a vantage on the route",
+  "steps": 6,
+  "moves": [
+   "bank",
+   "vert-air",
+   "grind",
+   "transfer",
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS3",
+  "level": "thps3-canada",
+  "tape": "TAPE",
+  "version": "original",
+  "careerPosition": 2,
+  "where": "at a fork in the mine-cart track on the mountainside",
+  "family": "wire, rail or rafter",
+  "layer": "rail at the top of the climb",
+  "groundM": [
+   15,
+   25
+  ],
+  "aboveLaunchM": [
+   0,
+   2
+  ],
+  "launcher": "gap jump into a grind",
+  "finalMove": "jump into a grind",
+  "fromSpawn": false,
+  "firstSeen": "top of the climb (behind the spawn)",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 11,
+  "moves": [
+   "grind",
+   "unlock",
+   "bank",
+   "vert-air",
+   "transfer",
+   "ollie"
+  ],
+  "unlock": true,
+  "oneWay": false,
+  "difficulty": 4,
+  "patterns": [
+   "P10",
+   "P11",
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS3",
+  "level": "thps3-suburbia",
+  "tape": "TAPE",
+  "version": "original",
+  "careerPosition": 4,
+  "where": "on the haunted house's flagpole, reached out of the top-floor front window",
+  "family": "wire, rail or rafter",
+  "layer": "flagpole on the haunted house facade",
+  "groundM": [
+   5,
+   7
+  ],
+  "aboveLaunchM": [
+   -1,
+   0
+  ],
+  "launcher": "gap jump into a grind",
+  "finalMove": "jump into a grind",
+  "fromSpawn": false,
+  "firstSeen": "from below (the cul-de-sac)",
+  "seenClass": "from below",
+  "steps": 10,
+  "moves": [
+   "unlock",
+   "ollie",
+   "transfer",
+   "vert-air",
+   "kicker",
+   "break-glass",
+   "grind"
+  ],
+  "unlock": true,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P10",
+   "P8",
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS3",
+  "level": "thps3-airport",
+  "tape": "TAPE",
+  "version": "original",
+  "careerPosition": 5,
+  "where": "top rail of the red window lattice on the north glass wall",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   5,
+   8
+  ],
+  "aboveLaunchM": [
+   2,
+   5
+  ],
+  "launcher": "vert / transfer",
+  "finalMove": "vert air or transfer",
+  "fromSpawn": false,
+  "firstSeen": "on entering the gates",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 5,
+  "moves": [
+   "transfer",
+   "vert-air",
+   "grind",
+   "wallride",
+   "wallie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P6",
+   "P5"
+  ]
+ },
+ {
+  "game": "THPS3",
+  "level": "thps3-los-angeles",
+  "tape": "TAPE",
+  "version": "original",
+  "careerPosition": 7,
+  "where": "on a black pipe off the top of the purple tower",
+  "family": "roof or landmark top",
+  "layer": "landmark top",
+  "groundM": [
+   12,
+   18
+  ],
+  "aboveLaunchM": [
+   0,
+   1
+  ],
+  "launcher": "grind exit",
+  "finalMove": "grind exit",
+  "fromSpawn": false,
+  "firstSeen": "from below (half pipe)",
+  "seenClass": "from below",
+  "steps": 8,
+  "moves": [
+   "unlock",
+   "wire",
+   "ollie",
+   "kicker",
+   "ledge",
+   "grind",
+   "rail-transfer"
+  ],
+  "unlock": true,
+  "oneWay": false,
+  "difficulty": 4,
+  "patterns": [
+   "P11",
+   "P10"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-college",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 1,
+  "where": "roof-to-roof wire near the brick plaza",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": null,
+  "aboveLaunchM": null,
+  "launcher": "grind from a roof",
+  "finalMove": "onto a high rail",
+  "fromSpawn": null,
+  "firstSeen": "unknown",
+  "seenClass": "unknown",
+  "steps": 2,
+  "moves": [
+   "ledge",
+   "wire"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-college",
+  "tape": "TAPE-R",
+  "version": "remake 2025",
+  "careerPosition": 1,
+  "where": "on the clock-tower wire",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   12,
+   16
+  ],
+  "aboveLaunchM": [
+   -4,
+   0
+  ],
+  "launcher": "portal to the top, grind down",
+  "finalMove": "onto a high rail",
+  "fromSpawn": false,
+  "firstSeen": "intro flythrough; tower visible down the street",
+  "seenClass": "intro flythrough",
+  "steps": 7,
+  "moves": [
+   "grind",
+   "ledge",
+   "wire"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 2,
+  "patterns": [
+   "P6",
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-san-francisco",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 2,
+  "where": "second terrace line above the glass entrance",
+  "family": "roof or landmark top",
+  "layer": "roof",
+  "groundM": null,
+  "aboveLaunchM": null,
+  "launcher": "unknown",
+  "finalMove": "unknown",
+  "fromSpawn": null,
+  "firstSeen": "unknown",
+  "seenClass": "unknown",
+  "steps": null,
+  "moves": [],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": null,
+  "patterns": [
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-san-francisco",
+  "tape": "TAPE-R",
+  "version": "remake 2025",
+  "careerPosition": 2,
+  "where": "above a planter on the hotel's top terrace",
+  "family": "roof or landmark top",
+  "layer": "roof",
+  "groundM": [
+   10,
+   12
+  ],
+  "aboveLaunchM": [
+   2,
+   3
+  ],
+  "launcher": "wallride + wallie",
+  "finalMove": "wallride + wallie",
+  "fromSpawn": false,
+  "firstSeen": "from below (hotel patio)",
+  "seenClass": "from below",
+  "steps": 7,
+  "moves": [
+   "transfer",
+   "wallride",
+   "wallie",
+   "ledge"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P5",
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-alcatraz",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 3,
+  "where": "water-tower roof rim",
+  "family": "roof or landmark top",
+  "layer": "roof",
+  "groundM": null,
+  "aboveLaunchM": null,
+  "launcher": "kicker off a roof",
+  "finalMove": "kicker",
+  "fromSpawn": null,
+  "firstSeen": "while grinding it",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 3,
+  "moves": [
+   "grind",
+   "kicker",
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 4,
+  "patterns": [
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-alcatraz",
+  "tape": "TAPE-R",
+  "version": "remake 2025",
+  "careerPosition": 3,
+  "where": "just outside the cell block's top-tier window, above the water tower",
+  "family": "past an edge",
+  "layer": "mid-air past an edge",
+  "groundM": [
+   10,
+   14
+  ],
+  "aboveLaunchM": [
+   0,
+   1
+  ],
+  "launcher": "grind exit",
+  "finalMove": "grind exit",
+  "fromSpawn": false,
+  "firstSeen": "intro flythrough; through the window from inside",
+  "seenClass": "intro flythrough",
+  "steps": 8,
+  "moves": [
+   "unlock",
+   "vert-air",
+   "grind",
+   "ledge",
+   "ollie"
+  ],
+  "unlock": true,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P10",
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-kona",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 4,
+  "where": "end of the large building's roof ridge",
+  "family": "roof or landmark top",
+  "layer": "roof",
+  "groundM": [
+   6,
+   8
+  ],
+  "aboveLaunchM": [
+   0,
+   1
+  ],
+  "launcher": "grind exit",
+  "finalMove": "grind exit",
+  "fromSpawn": false,
+  "firstSeen": "from the roof",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 4,
+  "moves": [
+   "wallride",
+   "wire",
+   "ledge",
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P5",
+   "P3"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-shipyard",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 5,
+  "where": "rooftop block on the central building",
+  "family": "roof or landmark top",
+  "layer": "roof",
+  "groundM": null,
+  "aboveLaunchM": null,
+  "launcher": "unknown",
+  "finalMove": "unknown",
+  "fromSpawn": null,
+  "firstSeen": "unknown",
+  "seenClass": "unknown",
+  "steps": 4,
+  "moves": [
+   "grind",
+   "manual",
+   "ollie",
+   "ledge"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P11"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-shipyard",
+  "tape": "TAPE-R",
+  "version": "remake 2025",
+  "careerPosition": 5,
+  "where": "beyond the end of a roof duct, over an alley",
+  "family": "past an edge",
+  "layer": "mid-air past an edge",
+  "groundM": [
+   8,
+   12
+  ],
+  "aboveLaunchM": [
+   -1.5,
+   -0.5
+  ],
+  "launcher": "roll off an edge",
+  "finalMove": "off an edge",
+  "fromSpawn": false,
+  "firstSeen": "on arriving on the roof",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 6,
+  "moves": [
+   "ollie"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 2,
+  "patterns": [
+   "P7"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-london",
+  "tape": "TAPE-PS1",
+  "version": "PS1 2002",
+  "careerPosition": 6,
+  "where": "wire above the parked double-decker",
+  "family": "wire, rail or rafter",
+  "layer": "wire",
+  "groundM": [
+   4,
+   6
+  ],
+  "aboveLaunchM": null,
+  "launcher": "grind from a balcony",
+  "finalMove": "onto a high rail",
+  "fromSpawn": null,
+  "firstSeen": "unknown",
+  "seenClass": "unknown",
+  "steps": 4,
+  "moves": [
+   "vert-air",
+   "grind",
+   "wire"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P6"
+  ]
+ },
+ {
+  "game": "THPS4",
+  "level": "thps4-london",
+  "tape": "TAPE-R",
+  "version": "remake 2025",
+  "careerPosition": 6,
+  "where": "air above an upper-roof quarter pipe or spine",
+  "family": "above vert",
+  "layer": "above vert",
+  "groundM": [
+   14,
+   24
+  ],
+  "aboveLaunchM": [
+   2,
+   4
+  ],
+  "launcher": "vert",
+  "finalMove": "vert air or transfer",
+  "fromSpawn": false,
+  "firstSeen": "from the wire grind up",
+  "seenClass": "on the route (launch or approach)",
+  "steps": 5,
+  "moves": [
+   "vert-air",
+   "wire",
+   "grind",
+   "spine-transfer"
+  ],
+  "unlock": false,
+  "oneWay": false,
+  "difficulty": 3,
+  "patterns": [
+   "P1",
+   "P11"
+  ]
+ }
+]
