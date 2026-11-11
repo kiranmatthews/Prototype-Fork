@@ -1,0 +1,2670 @@
+{
+ "id": "thps4-kona",
+ "game": "THPS4",
+ "level": "Kona",
+ "location": "Kona Skatepark, Jacksonville, Florida (in-game \"Kona USA\"; LP4 1:06:24 loading card)",
+ "type": "career-park",
+ "careerPosition": 4,
+ "timeLimit": "original: none (free roam, per-goal clocks; two competition goals); remake: competition, three 1:00 heats",
+ "versions": [
+  "PS2 2002 (Neversoft) — THG and LP4",
+  "PS1 2002 (Vicarious Visions) — VG and CC1",
+  "THPS 3+4 2025 (Iron Galaxy) — PS34, LP34"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater4-Kona.png and (Unmarked)",
+  "THG pro-skater-4/kona and gaps",
+  "CC1 Kona USA 34846",
+  "LP4 1:06:24-1:25:30",
+  "PS34 kona",
+  "LP34 1:40:50-1:44:20"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 60,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the S-K-A-T-E letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Place 3rd or better - Street Competition",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Find the 4 Missing Rental Gear Items",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Show off for the locals at the mini spine",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Snake Run Slalom",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Save the birds on the power lines",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Misty Flip over the Big Hut Gap",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Impress Ollie and the bums with combos",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Pro Score: 125,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the Skate Camp waivers",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Place 3rd or better - Vert Competition",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Ollie the Magic Bum 5X... Again",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Show off your tech on the manual box",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "50K combo the bowl - No hitting bottles",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Sick Score: 500,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Show off for the locals at the tombstone",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Find and get all 7 channel gaps",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Rodney Mullen's pro challenge",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Steve Caballero's pro challenge",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Rune Glifberg's pro challenge",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "5. Rookie Score 55,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "11. High Score 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "10. Pro Score 180,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "7. Extreme Score 250,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "20. High Score Combo 80,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "16. Pro Score Combo 180,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "19. Sick Score Combo 250,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "1. S-K-A-T-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "14. S-K-A-T-E Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "15. C-O-M-B-O",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "6. C-O-M-B-O Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "18. Horse",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "8. Liptrick the tombstone",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "17. Nosegrab over the spine",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "2. Perform a vert trick 30 feet up",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "3. Perform a vert trick 60 feet up",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "9. Cannonball the spine snake head",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "4. Varial halfpipe to pool",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "13. Do a triple flip trick over the roll-in",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "12. Competition",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Get a Medal in the Competition (best two of three heats)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Platinum: Save 4 Bird Groups (pro)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  }
+ ],
+ "size": {
+  "class": "medium",
+  "footprint": "≈ 150-220 m across (estimate)",
+  "evidence": "VG PS1 render scaled by the big wooden halfpipe (≈ 15-20 m from deck to deck) spanning ≈ 1/10 of the park; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Snake runs (first and second)",
+   "layer": "ground; concrete snake channels with blue coping; hips",
+   "features": [
+    "first snake run starting near the spawn (S on the rail leading to it, PS1)",
+    "blue-line snake with gates for the slalom goal (LP4 1:06:44-1:07:00)",
+    "second snake run ending near the big pool",
+    "snake head (PS1 \"Cannonball the spine snake head\")"
+   ],
+   "notes": "Downhill channels that feed speed into the rest of the park (\"Snake - Head 2 Tail\", \"Blue Line Turn 1-3!\", \"2 Wheelin' the Blue Line\")."
+  },
+  {
+   "id": "Z2",
+   "name": "Pools and bowls",
+   "layer": "bowls (≈ 2-4 m deep); hut roofs between them",
+   "features": [
+    "pink (red) pool with the tombstone extension",
+    "kidney bowl (Channel - Kidney Roll-In; Redline 2 Kidney Coping)",
+    "big shallow grey \"Freestyle\" pool and a blue pool (VG)",
+    "concrete bowl with bottles (50K combo goal)",
+    "big hut and little hut beside the pools (Big/Little Hut Gap; A on the hut roof)"
+   ],
+   "notes": "The heart of Kona; hut roofs are reached by airing out of a pool side."
+  },
+  {
+   "id": "Z3",
+   "name": "Big wooden halfpipe and mini ramps",
+   "layer": "vert ramp (≈ 3.5-4 m coping); deck; power lines above both sides",
+   "features": [
+    "big wooden halfpipe with a roll-in (\"Over the Roll-In\", PS1)",
+    "power lines above both decks with birds (save-the-birds goal; remake bird groups, IG logo)",
+    "mini spine (two small halfpipes back to back)",
+    "wooden QPs and the vert competition"
+   ],
+   "notes": "E of S-K-A-T-E floats above it in the original."
+  },
+  {
+   "id": "Z4",
+   "name": "Street course / big open area",
+   "layer": "ground; red boxes, grey ramps, rails, manual box; QPs round the edge",
+   "features": [
+    "red boxes and funboxes (T on a red box)",
+    "grey ramps for channel gaps",
+    "manual box (tech goal)",
+    "street competition area",
+    "perimeter QPs (rental helmet above one)"
+   ],
+   "notes": "Lowest, flattest part of the park (\"big open area\", THG)."
+  },
+  {
+   "id": "Z5",
+   "name": "Buildings, judges stand and fence path",
+   "layer": "ground path; fence; wires to roofs; roof (≈ 6-8 m)",
+   "features": [
+    "large building/warehouse at the edge of the grey pool (PS1 tape roof; VG)",
+    "judges stand roof (PS1 stat point; COMBO Hard B)",
+    "pathway behind the large building with a fence to wallride (PS1 COMBO Hard)",
+    "wire from the roof down toward the huts/judges stand",
+    "GIGA KONA structure by the cement half pipe (VG; PS1 music track)"
+   ],
+   "notes": "The only roof layer in the park; PS1 uses it for the tape."
+  }
+ ],
+ "landmarks": [
+  "snake runs",
+  "pink pool and tombstone",
+  "big wooden halfpipe and its power lines",
+  "huts between the pools",
+  "large building / warehouse",
+  "GIGA KONA (PS1)",
+  "judges stand"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the pathway toward the first snake run (THG: \"Head down the pathway that you're facing\")",
+  "visibleCollectibles": [],
+  "notes": "LP4 1:06:32: spawn at the top of the snake area beside Martin Ramos (Snake Run Slalom). PS1 VG: START at the left edge by the S."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-PS1",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "zone": "Z5",
+   "landmark": "end of the raised ridge on the large building's roof, by the grey Freestyle pool",
+   "layer": "roof",
+   "heightM": "roof height ≈ 6-8 m (estimate from VG: building ≈ 2 storeys)",
+   "launchFrom": "roof of the large building, reached by wallriding the fence on the path behind it and grinding the wire up to the roof (CC1 COMBO Hard route)",
+   "visibility": {
+    "firstSight": "from the large building's roof the tape is visible (CC1)",
+    "fromSpawn": false,
+    "reads": "tape beyond the end of the roof ridge; VG draws it at the roof corner over the pool edge",
+    "distanceFromFirstSightM": "roof length (≈ 20-30)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "pathway behind the large building",
+     "to": "fence",
+     "geometry": "Ride into the path that goes behind the large building."
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "fence",
+     "to": "wire",
+     "geometry": "Wallride on the fence and grind the wire that leads up to the roof (CC1 COMBO Hard C)."
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "roof",
+     "to": "raised ridge",
+     "geometry": "On the roof, grind the raised part on the left (CC1)."
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "ridge end",
+     "to": "tape",
+     "geometry": "Jump at the end to get the tape (CC1)."
+    }
+   ],
+   "moves": [
+    "wallride",
+    "wire",
+    "ledge",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride into a wire grind"
+   ],
+   "coupling": "none",
+   "failure": "A miss drops off the roof into the pool area; the fence path is close.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE",
+    "TEST"
+   ],
+   "why": "In a skatepark with no buildings to climb, the tape goes on the one roof, reached by the park's only wire-from-fence trick.",
+   "evidence": "CC1 \"SECRET TAPE\" and COMBO Hard; VG icon",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "above the QP on the bend of the path ahead of the spawn",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "QP on the bend",
+   "visibility": {
+    "firstSight": "while heading down the path the spawn faces (THG)",
+    "fromSpawn": null,
+    "reads": "letter over a QP",
+    "distanceFromFirstSightM": "≈ 20-40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "spawn path",
+     "to": "bend QP",
+     "geometry": "Head down the path."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "S",
+     "geometry": "Air the QP on the bend."
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock 2:00",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "S at 1:52 (LP4 1:22:40)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "First letter on the first line.",
+   "evidence": "THG; LP4 1:22:35-1:22:40",
+   "confidence": "high"
+  },
+  {
+   "id": "O-K",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "on blue benches beyond the concrete bowl",
+   "layer": "ledges",
+   "heightM": "≈ 0.5 m",
+   "launchFrom": "concrete bowl",
+   "visibility": {
+    "firstSight": "through the bowl",
+    "fromSpawn": false,
+    "reads": "letter on benches",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "landing",
+     "to": "concrete bowl",
+     "geometry": "Head forward to the concrete bowl and ollie through it."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "blue benches",
+     "to": "K",
+     "geometry": "Take the K on the benches."
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "K at 1:47 (LP4 1:22:45; \"Double Impossible + FS Boardslide + Kickflip\" in the pink pool area)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Links bowl and street furniture.",
+   "evidence": "THG; LP4 1:22:45",
+   "confidence": "high"
+  },
+  {
+   "id": "O-A",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z2",
+   "landmark": "on the hut roof beside the pink bowl",
+   "layer": "hut roof",
+   "heightM": "≈ 3 m (hut roof; estimate)",
+   "launchFrom": "pink bowl side",
+   "visibility": {
+    "firstSight": "from the pink bowl",
+    "fromSpawn": false,
+    "reads": "letter on a roof",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "slalom",
+     "to": "pink bowl",
+     "geometry": "Cross the slalom into the pink bowl."
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "bowl side",
+     "to": "hut roof",
+     "geometry": "Ollie out through its side up onto the hut roof for the A."
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "airing out of a bowl onto a roof"
+   ],
+   "coupling": "goal clock",
+   "failure": "A miss lands back in the bowl; cheap.",
+   "timeFromSpawnS": "A at 1:42 (LP4 1:22:50)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Teaches the pool-to-roof transfer reused by the Misty Flip goal.",
+   "evidence": "THG; LP4 1:22:50",
+   "confidence": "high"
+  },
+  {
+   "id": "O-T",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z4",
+   "landmark": "on a red box in the big open area",
+   "layer": "ledges",
+   "heightM": "≈ 0.5-1 m",
+   "launchFrom": "red box",
+   "visibility": {
+    "firstSight": "from the path into the open area",
+    "fromSpawn": false,
+    "reads": "letter on a box",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "hut",
+     "to": "open area",
+     "geometry": "Carry on down into the open area with the red boxes."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "red box",
+     "to": "T",
+     "geometry": "Grind the box."
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "T at 1:33 (LP4 1:23:00, BS Boardslide)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Street-course letter.",
+   "evidence": "THG; LP4 1:23:00",
+   "confidence": "high"
+  },
+  {
+   "id": "O-E",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z3",
+   "landmark": "above the big wooden halfpipe",
+   "layer": "vert",
+   "heightM": "above coping (≈ 4-6 m above flat; estimate)",
+   "launchFrom": "halfpipe",
+   "visibility": {
+    "firstSight": "across the grass from the open area",
+    "fromSpawn": false,
+    "reads": "letter above a halfpipe",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "open area",
+     "to": "halfpipe",
+     "geometry": "Head back across the grass to the big wooden halfpipe."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "halfpipe",
+     "to": "E",
+     "geometry": "Air for the E."
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "vert speed"
+   ],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "E at 1:28; whole run ≈ 35 s (record 0:32.69, LP4 1:23:20)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A tour of the park's five terrain types: QP, benches, hut roof, box, vert.",
+   "evidence": "THG; LP4 1:23:05-1:23:20",
+   "confidence": "high"
+  },
+  {
+   "id": "O-COMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (amateur)",
+   "zone": "Z4",
+   "landmark": "box → manual → spine → revert manual → rail line → steps bannister",
+   "layer": "ledges, spine, rails",
+   "heightM": "≈ 0.5-1.5 m",
+   "launchFrom": "grind box",
+   "visibility": {
+    "firstSight": "letters in a straight line",
+    "fromSpawn": false,
+    "reads": "letters on boxes and rails",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "box",
+     "to": "C",
+     "geometry": "Grind the box where the C is."
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "box end",
+     "to": "spine",
+     "geometry": "Hop right into a manual."
+    },
+    {
+     "step": 3,
+     "move": "spine-transfer",
+     "from": "ramp",
+     "to": "O",
+     "geometry": "Spine transfer over the ramp for the O."
+    },
+    {
+     "step": 4,
+     "move": "revert",
+     "from": "landing",
+     "to": "manual",
+     "geometry": "Revert to a manual."
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "rails in a straight line",
+     "to": "M, B",
+     "geometry": "Grind the rails, manual between gaps."
+    },
+    {
+     "step": 6,
+     "move": "rail-transfer",
+     "from": "last rail bend",
+     "to": "steps bannister",
+     "geometry": "Where the last rail bends right, transfer to the steps bannister for the final O."
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "spine-transfer",
+    "revert",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "revert to manual"
+   ],
+   "coupling": "one combo",
+   "failure": "Restart at the box.",
+   "timeFromSpawnS": "record 46,376 points (LP4 1:23:20)",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Teaches the spine-revert-manual link used across the park.",
+   "evidence": "THG; LP4 1:23:20",
+   "confidence": "high"
+  },
+  {
+   "id": "O-PROCOMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "Pro C-O-M-B-O",
+   "zone": "Z1",
+   "landmark": "all the way down the slalom snake run",
+   "layer": "snake run walls",
+   "heightM": "coping height",
+   "launchFrom": "snake run",
+   "visibility": {
+    "firstSight": "letters down the snake",
+    "fromSpawn": false,
+    "reads": "letters along the snake",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "left side of the slalom",
+     "to": "C",
+     "geometry": "Grind the left side."
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "channel floor",
+     "to": "right side",
+     "geometry": "Jump into a manual."
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "right side",
+     "to": "O",
+     "geometry": "Air up the right side."
+    },
+    {
+     "step": 4,
+     "move": "revert",
+     "from": "landing",
+     "to": "manual",
+     "geometry": "Revert to a manual and repeat down the run."
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "vert-air",
+    "revert"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "revert manual rhythm"
+   ],
+   "coupling": "one combo",
+   "failure": "A fall restarts at the top of the snake.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Pro letters turn the slalom course into a combo course.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-RENTAL",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "4 missing rental gear items (2 helmets, 2 pads)",
+   "zone": "Z4/Z3/Z2",
+   "landmark": "helmet above a park-side QP; pads behind the wooden halfpipe; helmet in a concrete bowl over a wall; pads behind the building by the grey pool",
+   "layer": "mixed",
+   "heightM": "QP air; ground behind ramps",
+   "launchFrom": "handrail into the park",
+   "visibility": {
+    "firstSight": "helmet visible above a QP; pads hidden behind ramps and a building",
+    "fromSpawn": false,
+    "reads": "red helmet icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "handrail",
+     "to": "park",
+     "geometry": "From the start grind the handrail down into the park."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "side QP",
+     "to": "helmet 1",
+     "geometry": "Cross in front of the red ramps and air the QP with the helmet."
+    },
+    {
+     "step": 3,
+     "move": "ride",
+     "from": "landing",
+     "to": "behind the halfpipe",
+     "geometry": "Continue to the wooden halfpipe; pads behind it."
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "halfpipe back",
+     "to": "concrete bowl",
+     "geometry": "Ride along its back, ollie the wall into the bowl area: helmet 2."
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "blue ledge",
+     "to": "pads 2",
+     "geometry": "Up to the grey pool; grind the blue ledge behind the building."
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air",
+    "ollie",
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap; open park.",
+   "timeFromSpawnS": "0:35.94 (LP4 1:23:20 record)",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Hides items behind ramps and buildings: teaches players to look behind structures.",
+   "evidence": "THG; LP4 1:23:20",
+   "confidence": "high"
+  },
+  {
+   "id": "O-BIRDS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "7 birds on the power lines",
+   "zone": "Z3",
+   "landmark": "wires above both sides of the big halfpipe",
+   "layer": "wires",
+   "heightM": "≈ 2-3 m above the coping (estimate)",
+   "launchFrom": "halfpipe; white stains on the ramp mark each launch spot",
+   "visibility": {
+    "firstSight": "birds sit on the wires; stains on the ramp below each one (THG)",
+    "fromSpawn": null,
+    "reads": "birds on a wire",
+    "distanceFromFirstSightM": "local"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "halfpipe at a stain",
+     "to": "wire",
+     "geometry": "Air at the stain under a bird."
+    },
+    {
+     "step": 2,
+     "move": "lip",
+     "from": "wire",
+     "to": "bird scared",
+     "geometry": "Hold a lip trick on the wire until the bird flies."
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "lip",
+    "wire"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "lip on a wire",
+    "vert height"
+   ],
+   "coupling": "goal clock",
+   "failure": "Cheap: land back in the halfpipe.",
+   "timeFromSpawnS": "1:15.96 (LP4 record)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Uses marks on the ramp as aim points for an overhead target.",
+   "evidence": "THG; LP4 1:23:20",
+   "confidence": "high"
+  },
+  {
+   "id": "O-WAIVERS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Skate camp waivers",
+   "zone": "Z2→Z4",
+   "landmark": "grey pool → pink pool → slalom → path handrail → park wall → QP → railing → QP",
+   "layer": "pool copings, snake, rails, QPs",
+   "heightM": "coping to QP height",
+   "launchFrom": "grey pool left side",
+   "visibility": {
+    "firstSight": "waivers strung along a route",
+    "fromSpawn": false,
+    "reads": "paper icons",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "grey pool left side",
+     "to": "bend",
+     "geometry": "Grind and jump off after the bend."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "pink pool wall",
+     "to": "waivers",
+     "geometry": "Collect on the flat, then grind its wall."
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "pink pool",
+     "to": "blue slalom",
+     "geometry": "Hop right and grind the slalom."
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "path handrail",
+     "to": "park",
+     "geometry": "Jump to the path and grind the handrail down."
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "park wall",
+     "to": "waivers",
+     "geometry": "Grind the wall alongside the park."
+    },
+    {
+     "step": 6,
+     "move": "vert-air",
+     "from": "corner QP",
+     "to": "waiver",
+     "geometry": "Cut the corner and air the QP."
+    },
+    {
+     "step": 7,
+     "move": "grind",
+     "from": "railing",
+     "to": "waiver",
+     "geometry": "Grind the railing."
+    },
+    {
+     "step": 8,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "last waiver",
+     "geometry": "Air the oncoming QP."
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "ledge",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Moderate: long chain.",
+   "timeFromSpawnS": "0:27.06 (LP4 record)",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A park-wide line drawn by collectibles.",
+   "evidence": "THG; LP4 1:23:20",
+   "confidence": "high"
+  },
+  {
+   "id": "R-BIRDS",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "goal-object",
+   "label": "Save 4 bird groups (platinum)",
+   "zone": "Z3/Z5",
+   "landmark": "wires above either side of the large halfpipe (2); wire above a QP on the concreted area up the hill; wire above the pipe nearest the building with the large pool",
+   "layer": "wires",
+   "heightM": "above copings",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the halfpipe"
+    },
+    {
+     "step": 2,
+     "move": "lip",
+     "from": "",
+     "to": "",
+     "geometry": "grind or lip the wires"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "QP with a wire above"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "pipe by the building: grind the wire"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "lip",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "inside a competition heat",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-IGLOGO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "logo",
+   "label": "Iron Galaxy logo",
+   "zone": "Z3",
+   "landmark": "on a wire above one side of the large halfpipe",
+   "layer": "wires",
+   "heightM": "above the coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "launch up the halfpipe"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the wire to the logo"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEASE",
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "hidden-deck",
+   "label": "Hidden deck",
+   "zone": "Z2",
+   "landmark": "floating above the large pool next to a building",
+   "layer": "air",
+   "heightM": "high air above the pool",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "use the pool to launch up"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEASE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:42:30 \"HIDDEN DECK\" by the snake/hut area",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "plush",
+   "label": "Panda plushie",
+   "zone": "Z3",
+   "landmark": "behind a dumpster beside a QP just beyond the large halfpipe",
+   "layer": "ground (hidden)",
+   "heightM": "ground",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "look behind the dumpster"
+    }
+   ],
+   "moves": [
+    "ride"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "2 stat points",
+   "zone": "Z1/Z4",
+   "landmark": "wire above a QP near the pools and winding halfpipes; red benches opposite the main park",
+   "layer": "wire; benches",
+   "heightM": "above a QP; bench height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "QP then grind the wire"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "red benches"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "cash",
+   "label": "4 cash bundles",
+   "zone": "Z2/Z3/Z4",
+   "landmark": "over a hut from the pool next to it; above a rail beside the large wooden halfpipes; top of a large corner QP; over the central ramp of the large halfpipe",
+   "layer": "mixed",
+   "heightM": "hut-roof to QP height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "pool over the hut"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "rail beside the halfpipes"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "large corner QP"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump the central ramp"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "P-SKATE",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E",
+   "zone": "Z1/Z2",
+   "landmark": "S on the rail to the first snake run; K above the hip on its left side; A off its end; T on the lip of the small pool past it; E opposite on the blue-edged ledges",
+   "layer": "snake and pool",
+   "heightM": "coping height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "down the first snake run"
+    }
+   ],
+   "moves": [
+    "grind",
+    "hip",
+    "vert-air",
+    "lip"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-SKATEH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "S-K-A-T-E Hard",
+   "zone": "Z3/Z4",
+   "landmark": "S above the mini-ramp lip by the big halfpipe; K by spine-transferring the mini spine; A on the far mini-ramp deck; T on the red rail over the funbox; E off the QP ahead",
+   "layer": "mini ramps and street",
+   "heightM": "deck height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "mini-ramp and street line"
+    }
+   ],
+   "moves": [
+    "lip",
+    "spine-transfer",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-COMBO",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O",
+   "zone": "Z3/Z4",
+   "landmark": "curved rail by the mini ramp → fence rail → picnic table → QP → revert manual to the funbox ledge",
+   "layer": "rails",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "curved rail"
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "to the fence rail"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "to the picnic table"
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "QP"
+    },
+    {
+     "step": 5,
+     "move": "revert",
+     "from": "",
+     "to": "",
+     "geometry": "manual to the funbox ledge"
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "rail-transfer",
+    "vert-air",
+    "revert"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-COMBOH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O Hard",
+   "zone": "Z5",
+   "landmark": "fence wallride → wire to the roof → roof ridge → wire off the roof → judges stand roof → cement ledge",
+   "layer": "wires and roofs",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "",
+     "to": "",
+     "geometry": "fence on the path behind the large building"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "wire up to the roof (C)"
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "raised part of the roof (O)"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "wire off the roof (M)"
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "judges stand roof (B), drop to the cement ledge (O)"
+    }
+   ],
+   "moves": [
+    "wallride",
+    "wire",
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-DECK",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "hidden-deck",
+   "label": "New deck",
+   "zone": "Z2",
+   "landmark": "top of the small building by the red pool (VG: hut roof beside the blue pool, under the roof wire)",
+   "layer": "hut roof",
+   "heightM": "≈ 3 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "air out of the pool onto the roof"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-CD",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "music-cd",
+   "label": "New music track",
+   "zone": "Z5",
+   "landmark": "high on the GIGA KONA gap (cement half pipe to the big pool)",
+   "layer": "air",
+   "heightM": "high",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "go high on the Giga Kona transfer"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-STAT",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "stat-point",
+   "label": "2 stat points",
+   "zone": "Z5",
+   "landmark": "side of the cement pipe with the awning; roof of the judges stand",
+   "layer": "mixed",
+   "heightM": "awning / roof",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "as listed"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "CC1; VG yellow balls",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Big Block Extension",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "big block (grind/lip extension)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Blue Line Turn 1",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "snake run blue line, turn 1",
+   "moves": [
+    "ride"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Kidney Roll-In",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "kidney bowl roll-in (first of the 7 channel gaps)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Crusty Connections",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge 2 Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge 2 Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "unknown",
+   "moves": [
+    "grind",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge 2 Rail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail 2 Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail 2 Rail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Robot Line Gaps!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown line",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Sidestep the Snake",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "hip",
+   "location": "across the snake run",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Tombstone Extension",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "tombstone in the pink pool",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Wild Man's Bomb Drop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "drop from height",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Blue Line Turn 2!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "snake turn 2",
+   "moves": [
+    "ride"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Double Roll-In!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "big wooden halfpipe area (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Monster Pipe Roll-In!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "big wooden halfpipe roll-in (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Ramp 2 Ramp!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "open area grey ramps (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Single Wedge!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "open area wedge (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Highwire Act",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "a high wire (probably the power lines over the halfpipe)",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "O-BIRDS"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Lamp Extension",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "lamp post",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Redline 2 Kidney Coping",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "red line to the kidney coping",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "TC's Deck Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "deck to deck",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "The Crusty Transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "unknown",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Way Transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "unknown",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Blue Line Turn 3!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "snake turn 3",
+   "moves": [
+    "ride"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "10 Point Landing!!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "2 Wheelin' the Blue Line",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "manual along the snake blue line",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Double Wedge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "two wedges in the open area",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Snake - Head 2 Tail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "the whole snake run",
+   "moves": [
+    "ride"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Triple Roll-In",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "open area (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Channel - Huge Bank N' Roll",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "open area bank (channel gap)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Big Hut Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "over the big hut from the pink pool (Misty Flip goal)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "O-A"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Little Hut Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "over the little hut",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Air Over",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "unknown",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Giga Kona",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "pool-transfer",
+   "location": "cement half pipe to the big pool (VG label; CD high on it)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "P-CD"
+   ],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Over the Roll-In",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "over-object",
+   "location": "over the big halfpipe roll-in (VG label)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Pool to Pool Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "big pool to the end of the second snake run",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Adding Vert",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "channel",
+   "location": "vert extension to vert extension behind the street course",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Spinal Grooves",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "spine",
+   "location": "mini-ramp spine (VG label)",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Momos Style",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "manual",
+   "location": "path from the second snake run to the street course",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Judges Like",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "manual",
+   "location": "deck of the curved QP beside the mini ramp",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Fun Box Rail",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "ledge over the funbox",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-COMBO"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Short Ramp Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "between the two vert extensions",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Picnic Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "fence rail to the picnic table",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-COMBO"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Picnic Table Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "grind box to the picnic table",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Skate Park Access",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "handrail from the second snake run to the street course",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Concrete Block Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "skinny blue ledge by the judges stand",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Hip Pool Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "round the pool past the first snake run",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Banana Smasher",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "rail over the funbox",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-SKATEH"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Rocks In My Pocket",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "roof",
+   "location": "across the front of the large building",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Ramp to Rail",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "mini-ramp end into the rail by the big halfpipe",
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Rail to Rail",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "mini-ramp rail to the snake-run rail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Reaching the Ramp",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "snake-run rail into a mini-ramp deck grind",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Wooden Snake",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "wooden shelf in the grass from the smallest pool to the second snake run",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Wood Concrete Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "lowest wooden ledge to a small concrete ledge",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Three Step Program",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 300,
+   "kind": "rail-transfer",
+   "location": "blue-tipped ledge → ledge above → rail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Fancy Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "mini-ramp deck to the red rail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Step Outside Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "blue-edged ledges either side of the ramp to the smallest pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Alternate One Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "snake-turn rail to the fence rail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Alternate Two Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "snake-turn rail to the rail behind the big halfpipe",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Behind Half Pipe Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "rail behind the big halfpipe to the next rail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Red Pool Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "round the red pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Inspecting Pool",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "all the way round the big pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Tombstone",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "lip",
+   "location": "lip on the red-pool extension (VG label)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Extra Height",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "lip",
+   "location": "awning above the cement half pipe",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [
+    "P-STAT"
+   ],
+   "evidence": "CC1"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Talk to a giver",
+   "opens": "starts goals (Martin Ramos: snake slalom; local skater: S-K-A-T-E)",
+   "neededFor": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E"
+   ],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "LP4 1:06:32, 1:22:30"
+  },
+  {
+   "trigger": "Unlock pro goals (all regular goals in every level)",
+   "opens": "adds the platinum goal Save 4 Bird Groups to the competition",
+   "neededFor": [
+    "R-BIRDS"
+   ],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "none",
+   "opens": "the PS1 tape needs no unlock, only the fence-wallride wire route to the roof",
+   "neededFor": [
+    "TAPE-PS1"
+   ],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "CC1"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Park tour letters",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "spawn path QP (S)",
+    "concrete bowl",
+    "blue benches (K)",
+    "slalom",
+    "pink bowl side to hut roof (A)",
+    "open area red box (T)",
+    "big halfpipe (E)"
+   ],
+   "links": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E"
+   ],
+   "why": "One letter per terrain type.",
+   "evidence": "THG; LP4 1:22:35-1:23:10"
+  },
+  {
+   "id": "L2",
+   "name": "Box-spine-rail combo",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "grind box",
+    "manual",
+    "spine transfer",
+    "revert manual",
+    "rails with manual gaps",
+    "bannister"
+   ],
+   "links": [
+    "manual",
+    "spine-transfer",
+    "revert"
+   ],
+   "collectibles": [
+    "O-COMBO"
+   ],
+   "why": "Teaches manual links.",
+   "evidence": "THG"
+  },
+  {
+   "id": "L3",
+   "name": "Slalom combo",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "snake left wall grind",
+    "manual",
+    "right wall air",
+    "revert manual",
+    "repeat"
+   ],
+   "links": [
+    "revert",
+    "manual"
+   ],
+   "collectibles": [
+    "O-PROCOMBO"
+   ],
+   "why": "Pro use of the snake.",
+   "evidence": "THG"
+  },
+  {
+   "id": "L4",
+   "name": "Waiver route",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "grey pool",
+    "pink pool",
+    "slalom",
+    "path handrail",
+    "park wall",
+    "QP",
+    "railing",
+    "QP"
+   ],
+   "links": [
+    "rail-transfer",
+    "vert-air"
+   ],
+   "collectibles": [
+    "O-WAIVERS"
+   ],
+   "why": "Park-wide loop.",
+   "evidence": "THG"
+  },
+  {
+   "id": "L5",
+   "name": "Fence to roof (PS1 tape)",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "sequence": [
+    "path behind the large building",
+    "fence wallride",
+    "wire up",
+    "roof ridge",
+    "jump"
+   ],
+   "links": [
+    "wallride",
+    "wire"
+   ],
+   "collectibles": [
+    "TAPE-PS1",
+    "P-COMBOH"
+   ],
+   "why": "The only roof route in the park.",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L6",
+   "name": "Halfpipe wires",
+   "version": "both",
+   "sequence": [
+    "halfpipe air",
+    "lip or grind on the overhead wire"
+   ],
+   "links": [
+    "vert-air",
+    "lip"
+   ],
+   "collectibles": [
+    "O-BIRDS",
+    "R-BIRDS",
+    "R-IGLOGO"
+   ],
+   "why": "Collectibles above the vert ramp.",
+   "evidence": "THG; PS34"
+  },
+  {
+   "id": "L7",
+   "name": "Pool to hut",
+   "version": "both",
+   "sequence": [
+    "pink pool",
+    "air out of the side",
+    "hut roof or over the hut"
+   ],
+   "links": [
+    "transfer"
+   ],
+   "collectibles": [
+    "O-A",
+    "R-CASH"
+   ],
+   "why": "Bowl-exit transfer.",
+   "evidence": "THG; PS34"
+  }
+ ],
+ "guidance": [
+  "The first line from the spawn (the path ahead) holds the first letter (THG; LP4 1:22:40).",
+  "White stains on the halfpipe mark where to air for each bird (THG) - a rare explicit aim mark.",
+  "The large building's roof is the only high vantage, and CC1 notes the PS1 tape is visible from it.",
+  "Remake: as a competition level, guidance is the heat timer and the judges; collectibles are found by free exploration (PS34).",
+  "Hidden on purpose: rental pads behind ramps and a building, the bum under ramps, the PS1 tape on the roof, the remake panda behind a dumpster."
+ ],
+ "designLogic": [
+  "In a pure skatepark the hard-to-reach layer is above the ramps: wires over the halfpipe (birds, IG logo), hut roofs between pools, and the one building roof.",
+  "The PS1 tape uses the only roof in the park and the only fence-wallride-to-wire route, so the tape still demands a non-ramp skill in a ramp level.",
+  "Letters tour terrain types (QP, benches, hut roof, box, vert) rather than a route, which suits a compact park; the run is short (record 32.69 s).",
+  "Aim marks (stains under birds) make an overhead target readable from the ramp.",
+  "Kona has two competition goals in the original (street and vert); the remake turns the whole level into a competition, so the tape is dropped and collectibles stay as optional exploration.",
+  "Hiding behind structures (rental pads, bum, panda) is Kona's \"secret\" grammar: the park has few closed rooms, so occlusion replaces doors.",
+  "Failure is always cheap: everything lands in a bowl or on flat ground, so difficulty comes from timing and combo links, not falls.",
+  "Pool-to-roof transfers (A on the hut, Misty Flip over the big hut, remake cash over a hut) teach a vert-to-street exit that later levels use for roofs.",
+  "The LP4 records size the park's \"hard-to-reach\" layer in seconds: waivers 27 s, S-K-A-T-E 33 s, rental gear 36 s, birds 76 s, slalom 78 s (LP4 1:23:20). In a compact park a hidden item is never more than about a minute of riding away.",
+  "The PS1 port makes height itself the goal (vert tricks 30 and 60 feet up at GIGA KONA) and puts the music CD high on the Giga Kona transfer: in a park the hardest pickup is simply the highest air.",
+  "Remake pickups sit where the original's goals were (bird wires → IG logo wire and platinum birds; hut transfer → cash over the hut), so the competition level keeps the original's hard spots as optional collectibles."
+ ],
+ "remakeChanges": [
+  "Level role: original career park with 21+ goals including two competitions; remake competition level with three 1:00 heats and a platinum goal (PS34; LP34 1:41:00-1:44:00).",
+  "Tape: none in either main version; the PS1 port hid one on the large building roof (CC1). Kona is absent from the remake tape list (PS34).",
+  "Save the birds on the power lines (7 birds, lip tricks) becomes the platinum goal Save 4 Bird Groups (grind or lip four wires) (THG vs PS34).",
+  "Original letters, waivers, rental gear and bum spots are not present as goals in the remake; the remake adds 4 cash, 2 stat points, a hidden deck above the pool, an IG logo on a halfpipe wire, and a panda behind a dumpster (PS34)."
+ ],
+ "transfer": [
+  "Overhead-wire crystal in a park: string a cable 2-3 m above a halfpipe deck and put the crystal on it; mark the launch spot on the ramp surface (paint or decal), as Kona's bird stains do. Our lip stall and grind snap (2.1 m) make a wire 2-3 m above the coping reachable from a pumped vert air.",
+  "Pool-to-roof hop: a small hut between two bowls whose roof is ≈ 3 m above the bowl coping; air out of the bowl side to land on the roof (crystal shard or letter there).",
+  "One-roof secret: give a skatepark one building with a roof reachable only by wallride up a fence into a cable; put the crystal at the end of the roof ridge so the player must grind the ridge and jump.",
+  "Hide behind, not inside: in open parks put optional pickups behind ramps or dumpsters; cheap to find, rewards camera curiosity.",
+  "If a level is a timed competition, keep the crystal off the scoring path but near it (above a halfpipe) so it can be grabbed between tricks."
+ ],
+ "openQuestions": [
+  "Exact remake Kona layout differences from the original (LP34 shows a concrete park with shade sails, a KONA-logo bowl and wooden ramps; no map was available).",
+  "Whether the remake Kona contains any letters at all (PS34 lists none).",
+  "Original \"Highwire Act\" gap location (assumed to be the halfpipe power lines).",
+  "Original LP4 S-K-A-T-E dialogue says the letters are \"on the loose again\", which may mark a second (pro) letter goal; the View Goals list shows only one S-K-A-T-E entry.",
+  "Footprint estimate depends on the halfpipe length assumed on VG."
+ ],
+ "sourceKey": {
+  "VG": "VGMaps/VGCartography isometric render of the PS1 edition of THPS4 (Vicarious Visions, 2002), marked and unmarked versions",
+  "G4m": "THPS4 (PS2) in-box mini guide (BradyGames Signature Series excerpt); covers College only",
+  "THG": "tonyhawkguide.com THPS4 walkthrough and gap list pages (original PS2 game, recorded by the site author \"Sulig\")",
+  "CC1": "CheatCodes.com PS1 level guides for THPS4 by Jeffrey Hartman (2003): College 34859, Alcatraz 34847, Kona 34846 (no San Francisco guide found)",
+  "LP4": "archive.org PS2 longplay of THPS4 (played by Spazbo4); times h:mm:ss into the video",
+  "LP34": "archive.org Xbox Series longplay of THPS 3+4 (2025); times h:mm:ss into the video",
+  "PS34": "Push Square THPS 3+4 per-level walkthroughs and all-secret-tapes page (Stephen Tailby, July 2025), text plus its tape screenshots",
+  "WEB": "other permitted text guides for THPS 3+4: pcgamesn, gamerant, screenrant, thegamer, operationsports, hardcoregamer; ofzenandcomputing refused the request (HTTP 403) and was skipped",
+  "MAR": "mariteaux.somnolescent.net review of the PS1 port (free roam, about thirty goals per stage, no skitching)"
+ }
+}

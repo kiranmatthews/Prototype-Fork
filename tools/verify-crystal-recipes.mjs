@@ -103,6 +103,38 @@ const RECIPES = [
       { label: 'pad, kicker, no wallride (Grind not held)', expect: false, drive: ctx => ctx.wall({ pump: 0.75, grind: false }) },
     ],
   },
+  {
+    id: 'C6', name: 'High wire: crystal on a wire strung between roofs',
+    note: 'Roof A (top 5 m) and roof B (top 5 m) 30 m apart across a plaza; a wire 6 m up joins them. The crystal sits on the wire 60% of the way across (collected while grinding). From the plaza it is out of reach; from roof A a charged ollie with Grind held catches the wire.',
+    data: () => ({ spawn: [0, 5.2, -5], components: [
+      floor(10, -90, 0, 30),
+      { t: 'platform', p: [0, 2.5, -10], s: [10, 5, 20] },
+      { t: 'rail', p: [0, 6.0, -35], len: 30, yaw: 0 },
+      { t: 'platform', p: [0, 2.5, -60], s: [10, 5, 20] },
+      { t: 'crystal', p: [0, 6.6, -38] },
+      { t: 'gate', p: [0, 5, -66] },
+    ] }),
+    runs: [
+      { label: 'from roof A: charged ollie, catch the wire, grind across (intended)', expect: true, drive: ctx => ctx.wire({ start: [0, 5.05, -8], speed: 12, takeoffZ: -16 }) },
+      { label: 'from the plaza under the crystal: charged ollie', expect: false, drive: ctx => ctx.flatOllie({ start: [0, 0.05, -24], speed: 12, takeoffZ: -36 }) },
+    ],
+    noDrift: true,
+  },
+  {
+    id: 'C7', name: 'Roof drop: crystal hanging past the highest roof edge',
+    note: 'A roof 8 m up; the crystal floats 7 m past its edge at roof height (p.y 8.0). A charged ollie off the edge carries the rider through it; rolling off drops under it; nothing on the street reaches it.',
+    data: () => ({ spawn: [0, 8.2, -3], components: [
+      floor(10, -100, 0, 30),
+      { t: 'platform', p: [0, 4, -15], s: [10, 8, 30] },
+      { t: 'crystal', p: [0, 8.0, -37] },
+      { t: 'gate', p: [0, 0, -90] },
+    ] }),
+    runs: [
+      { label: 'charged ollie off the roof edge at 12 m/s (intended)', expect: true, drive: ctx => ctx.flatOllie({ start: [0, 8.05, -12], speed: 12, takeoffZ: -29.8 }) },
+      { label: 'roll off the roof edge at 12 m/s', expect: false, drive: ctx => ctx.rollOff({ start: [0, 8.05, -12], speed: 12 }) },
+      { label: 'from the street under the crystal: charged ollie', expect: false, drive: ctx => ctx.flatOllie({ start: [0, 0.05, -46], speed: 12, takeoffZ: -38, heading: [0, 1] }) },
+    ],
+  },
 ];
 // C5 geometry (shared with its driver)
 const WDIR = [Math.sin(35 * DEG), -Math.cos(35 * DEG)];
@@ -183,13 +215,13 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
           }
           return { speedAtEnd: r2(Math.abs(p.speed)) };
         },
-        flatOllie: ({ start, speed, takeoffZ }) => {
-          place(start, [0, -1], { speed });
+        flatOllie: ({ start, speed, takeoffZ, heading = [0, -1] }) => {
+          place(start, heading, { speed });
           let held = false, phase = 'approach';
           for (let i = 0; i < 600 && p.state !== 'dead'; i++) {
             let input = makeInput();
             if (phase === 'approach') {
-              const left = p.pos.z - takeoffZ;
+              const left = (p.pos.z - takeoffZ) * -Math.sign(heading[1] || -1);
               if (!held && left <= Math.abs(p.speed) * 0.4) { input = makeInput({ jumpPressed: true, jumpHeld: true }); held = true; }
               else if (held && left <= 0.1) { input = makeInput({ jumpReleased: true }); held = false; phase = 'air'; }
               else if (held) input = makeInput({ jumpHeld: true });
@@ -198,6 +230,30 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
             if (phase === 'air' && p.grounded) break;
           }
           return {};
+        },
+        rollOff: ({ start, speed, heading = [0, -1] }) => {
+          place(start, heading, { speed });
+          let left = false;
+          for (let i = 0; i < 600 && p.state !== 'dead'; i++) { tick(makeInput()); if (!p.grounded) left = true; if (left && p.grounded) break; }
+          return {};
+        },
+        // Charged ollie toward a wire, Grind held once airborne; ride the wire to its far end.
+        wire: ({ start, speed, takeoffZ }) => {
+          place(start, [0, -1], { speed });
+          let held = false, phase = 'approach', grinded = false;
+          for (let i = 0; i < 900 && p.state !== 'dead'; i++) {
+            let input = makeInput({ grindHeld: phase !== 'approach' && p.state !== 'ride' });
+            if (phase === 'approach') {
+              const left = p.pos.z - takeoffZ;
+              if (!held && left <= Math.abs(p.speed) * 0.4) { input = makeInput({ jumpPressed: true, jumpHeld: true }); held = true; }
+              else if (held && left <= 0.1) { input = makeInput({ jumpReleased: true }); held = false; phase = 'air'; }
+              else if (held) input = makeInput({ jumpHeld: true });
+            } else if (phase === 'air' && !grinded && !p.grounded) input = makeInput({ grindHeld: true, grindPressed: i % 2 === 0 });
+            tick(input);
+            if (p.state === 'grind') grinded = true;
+            if (phase === 'air' && p.grounded && i > 5) break;
+          }
+          return { grinded };
         },
         // Join the rail near its start, grind to the end, exit with a tap or a charged ollie.
         railEnd: ({ speed, holdFrames }) => {

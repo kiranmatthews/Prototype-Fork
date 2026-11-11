@@ -1,0 +1,2725 @@
+{
+ "id": "thps4-san-francisco",
+ "game": "THPS4",
+ "level": "San Francisco",
+ "location": "San Francisco, California: the Embarcadero waterfront with a hotel/plaza block, streetcar road, overhead walkway, warehouses and a Pier 39-style wharf (remake loading card: \"Visit Pier 39 today!\", LP34 1:12:50)",
+ "type": "career-street",
+ "careerPosition": 2,
+ "timeLimit": "original: none (free roam, per-goal clocks); remake: 10:00 run",
+ "versions": [
+  "PS2 2002 (Neversoft) — THG and LP4",
+  "PS1 2002 (Vicarious Visions) — VG only (no CC1 guide for this level was found)",
+  "THPS 3+4 2025 (Iron Galaxy) — PS34, LP34, WEB"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater4-SanFrancisco.png and (Unmarked)",
+  "THG pro-skater-4/san-francisco and gaps",
+  "LP4 0:25:30-0:47:00",
+  "PS34 san-francisco + all-secret-tapes (and its tape screenshots 29-32)",
+  "LP34 1:12:50-1:17:35",
+  "WEB pcgamesn, gamerant (san francisco tape), screenrant, thegamer, operationsports"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 50,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the S-K-A-T-E letters (Painter Bob)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Find the messenger's 5 missing packages",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "BS Boneless the 3 pier signs",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Feed the 4 angry sea lions",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Manual the overhead walkway",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Beat Muska's 3 best combos",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Darkslide the waterside railing",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Medal the competition",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Pro Score: 100,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Save Painter Neal",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Race the bike messenger",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Race to get the camera",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Manual, gap and manual the setup",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Nail the tricks they yell out",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Sick Score: 300,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Manual the pad in both directions",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Do the spine transfer transfer",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Grind the blockers off the ledges",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Kareem Campbell's pro challenge (roof gap tricks)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Andrew Reynolds's pro challenge (five kicker gaps)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "5. Rookie Score 25,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "6. High Score 50,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "19. Pro Score 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "11. Extreme Score 150,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "4. High Score Combo 30,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "7. Pro Score Combo 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "12. Sick Score Combo 150,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "9. S-K-A-T-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "1. S-K-A-T-E Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "16. C-O-M-B-O",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "13. C-O-M-B-O Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "18. Horse",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "3. Collect 5 shopping bags",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "2. Knock over 5 trash cans",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "17. Perform lip tricks on pier gaps",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "8. Heelflip between trolley lines",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "15. Perform two grind extensions",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "14. Collect 10 sardines",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "10. Competition",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "High Score 35,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro Score 65,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Sick Score 110,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "High Combo 10,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "BS Boneless a Pier Sign",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Collect the 5 Missing Packages",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Manual the Overhead Walkway",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Save Painter Neal!!!",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Platinum Score 400,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Collect C-O-M-B-O",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Manual the Setup",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Retrieve the Stolen Camera",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Get Rid of the Rude Dudes",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 250-350 m along the waterfront × 150-250 m deep (estimate)",
+  "evidence": "VG PS1 render: the curving road and pier together span about 30-40 bus lengths (bus ≈ 12 m) by eye; no top-down map with a known reference; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Hotel block and stepped plaza",
+   "layer": "ground plaza; spiral ramps; patio level 2 (≈ 4-5 m); upper terrace (≈ 8-9 m); planter ledges; roofs",
+   "features": [
+    "big hotel / municipal building (\"Boardwalk View Hotel\" sign in the remake, PS34 screenshot 29; LP34 1:14:12)",
+    "curved concrete spiral ramps with glass rails up to the patio",
+    "patio with planters, café tables and a corner quarter pipe",
+    "upper terrace walkways with planters, glass panels and a ladder",
+    "the hotel sign slab and planter ledges (tape route)"
+   ],
+   "notes": "Layered like a wedding cake: each terrace is reached by a ramp, a QP transfer or a wallride, and the top planter carries the remake tape. VG shows the PS1 tape icon on the same building's upper ledge above its plaza."
+  },
+  {
+   "id": "Z2",
+   "name": "Fountain square and courtyard",
+   "layer": "ground; curved steps; benches; fountain ramps",
+   "features": [
+    "red angular sculpture fountain (remake LP34 1:14:07)",
+    "curved steps grindable along their edge (original K)",
+    "benches and wooden boards set out as a manual \"setup\"",
+    "Nokia shop with benches (camera goal film)"
+   ],
+   "notes": "Open civic plaza between the hotel and the waterfront; \"Fountain Ramp To Ramp\" gap."
+  },
+  {
+   "id": "Z3",
+   "name": "Embarcadero road",
+   "layer": "ground road with streetcar tracks; tram stops; overhead wires (≈ 5-6 m); elevated walkway (≈ 5-6 m)",
+   "features": [
+    "curving waterfront road with streetcar (trolley) lines and stops (LP4 0:36:30 yellow streetcar)",
+    "electrical wires over the road reached from stone slopes (pro COMBO, camera race)",
+    "overhead pedestrian walkway with cones (manual goal)",
+    "parked and moving cars (skitch; bike messenger race)",
+    "a bus (Gap the Bus)",
+    "tram-stop kicker to the wires (remake COMBO, stat point)"
+   ],
+   "notes": "Spine of the level: it links hotel, square, warehouses and pier and doubles as the skitching lane."
+  },
+  {
+   "id": "Z4",
+   "name": "Pier and wharf",
+   "layer": "wooden decks; railings; signs over QPs; wires across the water; pilings",
+   "features": [
+    "Pier 39-style wharf with shops and the Aquarium sign",
+    "three big wooden pier signs above QPs (BS boneless goal)",
+    "fishermen, benches and sea lions",
+    "Painter Neal on a deck over the water (shark event)",
+    "wires strung between pilings and across the water (PS1 COMBO; remake Rude Dudes)",
+    "waterside railing (darkslide goal)"
+   ],
+   "notes": "Water around the pier is a hazard: falling in resets the skater (\"WATER... BAAAD!\", LP4 0:37:36)."
+  },
+  {
+   "id": "Z5",
+   "name": "Warehouse and wharf-building roofs",
+   "layer": "roofs (≈ 6-10 m); roof gaps; lamp-post wire",
+   "features": [
+    "warehouse with a QP at its base that launches onto the roof (original A; remake \"Ishmael's Wharf\" roof)",
+    "roof gaps between neighbouring buildings (TC's Roof Gap Too; Kareem's roof gap)",
+    "electrical wire from a lamp post across to the next roof (original T; remake T)",
+    "Pier 18 warehouse (bike-messenger race)"
+   ],
+   "notes": "The SKATE letters in both versions climb onto this roof chain and stay up for three letters."
+  },
+  {
+   "id": "Z6",
+   "name": "Skate-park area and bowl",
+   "layer": "ground; QPs; bowl; water feature",
+   "features": [
+    "bowl reached by a kicker over the road (Andrew's pro challenge)",
+    "quarter pipes beneath a water feature (remake package, cash)",
+    "ramp with painted arrows that launches to the hidden deck (remake)"
+   ],
+   "notes": "Vert pocket of the level (\"Bowl Transfer\")."
+  },
+  {
+   "id": "Z7",
+   "name": "Under the bridge: alarm button and blocked ledges",
+   "layer": "ground; upper area with ledges down steps",
+   "features": [
+    "red alarm button on a wall under the bridge (wallride it)",
+    "officer guarding ledges with blockers",
+    "QP up to the upper area"
+   ],
+   "notes": "Pro goal built on a timed unlock: wallride the button, the guard runs off, grind the ledges before he returns (THG)."
+  }
+ ],
+ "landmarks": [
+  "Boardwalk View Hotel and spiral ramps",
+  "red sculpture fountain",
+  "streetcar road and tram stops",
+  "overhead walkway",
+  "Pier 39-style wharf and Aquarium sign",
+  "pier signs",
+  "warehouse roofs (Ishmael's Wharf in the remake)",
+  "stone spheres (Painter Neal wire)"
+ ],
+ "spawn": {
+  "zone": "Z3/Z2",
+  "facing": "see spawnText",
+  "visibleCollectibles": [
+   "hotel block (tape landmark) to the left in the remake"
+  ],
+  "notes": "PS34: \"from level start, go left\" to the hotel; \"go forward\" for the alley and the rooftop QPs."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-R",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "tape",
+   "label": "Secret tape (remake)",
+   "zone": "Z1",
+   "landmark": "above a planter ledge on the hotel's upper terrace, overlooking the patio and the plaza",
+   "layer": "roof/terrace ledge",
+   "heightM": "≈ 10-12 m above the street plaza; ≈ 2-3 m above the upper walkway it is launched from (two terrace levels ≈ 4-5 m each against the 1.8 m skater; estimate)",
+   "launchFrom": "upper terrace walkway: wallride the wall beside the planter and wallie, or grind the hotel sign and transfer to the planter",
+   "visibility": {
+    "firstSight": "from the hotel patio (level 2) the glowing tape is visible high on the terrace above (LP34 1:14:15-1:14:16)",
+    "fromSpawn": false,
+    "reads": "glowing cassette icon above a planter on a higher terrace edge, silhouetted against the building",
+    "distanceFromFirstSightM": "≈ 25-40 (patio sighting to pickup)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "remake spawn plaza",
+     "to": "hotel steps",
+     "geometry": "From the start go left to the hotel (PS34); LP34 arrives across the fountain plaza (1:14:07-1:14:10)."
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "spiral ramp",
+     "to": "patio (level 2)",
+     "geometry": "Ride up the curved concrete spiral ramp under the hotel sign to the patio (LP34 1:14:11-1:14:13; PS34 screenshot 29)."
+    },
+    {
+     "step": 3,
+     "move": "ride",
+     "from": "patio",
+     "to": "corner QP",
+     "geometry": "Cross the patio left to the quarter pipe in the corner; the tape is visible above (LP34 1:14:14-1:14:19; package 4 sits on this QP)."
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "corner QP",
+     "to": "upper terrace",
+     "geometry": "Air the QP and transfer right onto the upper terrace walkway (PS34: \"use the quarter pipe to transfer to an upper level to the right\"; LP34 1:14:20-1:14:23)."
+    },
+    {
+     "step": 5,
+     "move": "ride",
+     "from": "upper terrace walkway",
+     "to": "tape corner",
+     "geometry": "Ride the walkway past the planters and glass panels; LP34 airs a QP at the end (540 Melon, 1:14:30) to turn back along the facade."
+    },
+    {
+     "step": 6,
+     "move": "wallride",
+     "from": "stone wall beside the planter",
+     "to": "tape",
+     "geometry": "Wallride the wall and wallie off it into the tape above the planter (LP34 1:14:35 \"Wallride + Wallie + Impossible\", COMPLETE at 8:45; WEB gamerant method)."
+    },
+    {
+     "step": 7,
+     "move": "ledge",
+     "from": "planter ledge",
+     "to": "patio edge",
+     "geometry": "Land in a nosegrind on the planter ledge (LP34 1:14:36) and continue."
+    }
+   ],
+   "moves": [
+    "transfer",
+    "wallride",
+    "wallie",
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "QP transfer between levels",
+    "wallride + wallie for height (WEB gamerant calls the wallride the key skill)"
+   ],
+   "coupling": "none (no unlock); pedestrians on the patio",
+   "failure": "A miss drops one terrace (≈ 4-5 m) or to the plaza; the spiral ramp brings you back in ≈ 15 s.",
+   "timeFromSpawnS": "≈ 75 s into the 10:00 run (8:45 left at 1:14:35) with a package grabbed on the way; ≈ 25 s from the plaza at the base of the hotel (1:14:10 → 1:14:35)",
+   "difficulty": 3,
+   "roles": [
+    "TEASE",
+    "TEST"
+   ],
+   "why": "The first building the player is sent to is a layered \"cake\" whose top tier is visible but not directly reachable: the tape teaches that each tier has its own entry move (ramp, QP transfer, wallride). It is on the main route from spawn, so it is a skill check, not a search.",
+   "evidence": "PS34 san-francisco \"Get the Secret Tape\" and screenshots 29-32; WEB gamerant SF tape; WEB pcgamesn; WEB thegamer; WEB screenrant; LP34 1:14:07-1:14:37",
+   "confidence": "high (route), medium (height)",
+   "altRoutes": [
+    {
+     "name": "hotel sign → planter (Push Square, TheGamer, Screen Rant)",
+     "evidence": "PS34; WEB thegamer; WEB screenrant; WEB operationsports",
+     "route": [
+      {
+       "step": 1,
+       "move": "transfer",
+       "from": "patio corner QP",
+       "to": "upper level to the right",
+       "geometry": "Transfer up as above."
+      },
+      {
+       "step": 2,
+       "move": "ollie",
+       "from": "upper level",
+       "to": "hotel sign",
+       "geometry": "Hop the gap and grind the angled hotel sign slab."
+      },
+      {
+       "step": 3,
+       "move": "rail-transfer",
+       "from": "hotel sign",
+       "to": "planter",
+       "geometry": "Hop the next gap into a grind on the planter; the tape sits over it (PS34 screenshot 32 shows a BS 50-50 on the planter with the pier beyond)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "TAPE-PS1",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "zone": "Z1",
+   "landmark": "upper ledge of the big hotel/government building, above the glass entrance and its plaza",
+   "layer": "roof/terrace ledge",
+   "heightM": "unknown; on VG it is drawn at the building's second terrace line above the stepped plaza (≈ 2-3 storeys by eye)",
+   "launchFrom": "unknown (no text guide found)",
+   "visibility": {
+    "firstSight": "VG icon above the glass entrance of the big building at the back of the plaza",
+    "fromSpawn": null,
+    "reads": "tape icon on a ledge line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "unknown",
+     "from": "stepped plaza",
+     "to": "upper ledge",
+     "geometry": "Route not documented in permitted sources; VG shows stepped terraces and ramps leading up to the ledge."
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "unknown",
+   "skillGates": [],
+   "coupling": "unknown",
+   "failure": "unknown",
+   "timeFromSpawnS": "not timed",
+   "difficulty": "unknown",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Same building and tier as the remake tape: suggests the remake inherited the PS1 placement idea.",
+   "evidence": "VG",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1/Z3",
+   "landmark": "off the side of a walkway quarter pipe, landing on the lower level",
+   "layer": "vert (QP launch to a lower level)",
+   "heightM": "unknown (QP air off a raised walkway)",
+   "launchFrom": "walkway QP",
+   "visibility": {
+    "firstSight": "from the walkway",
+    "fromSpawn": false,
+    "reads": "letter beside a QP over a drop",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "walkway",
+     "to": "QP",
+     "geometry": "Head down the walkway to the quarter pipe."
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "QP",
+     "to": "lower level",
+     "geometry": "Launch out to the right through the S and land on the lower level."
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock 2:00",
+   "failure": "Lands on the lower level; cheap.",
+   "timeFromSpawnS": "S held at 1:55 (LP4 0:36:51, \"540 Boneless + Stiffy\")",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Starts the letter run by leaving the walkway level.",
+   "evidence": "THG; LP4 0:36:48-0:36:51",
+   "confidence": "high"
+  },
+  {
+   "id": "O-K",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "along the curved steps across the courtyard",
+   "layer": "ledges",
+   "heightM": "≈ 0.5-1 m (step edge)",
+   "launchFrom": "curved step edge",
+   "visibility": {
+    "firstSight": "from the courtyard",
+    "fromSpawn": false,
+    "reads": "letter over a curved ledge",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "lower level",
+     "to": "courtyard",
+     "geometry": "Cross the courtyard."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "curved steps",
+     "to": "K",
+     "geometry": "Grind the curved steps."
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "K by 1:49 (LP4 0:36:57)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A curved ledge letter keeps the run flowing toward the warehouse.",
+   "evidence": "THG; LP4 0:36:57",
+   "confidence": "high"
+  },
+  {
+   "id": "O-A",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z5",
+   "landmark": "above the QP at the warehouse base, landing on the roof",
+   "layer": "roof",
+   "heightM": "roof height ≈ 6-8 m (estimate)",
+   "launchFrom": "QP at the warehouse base",
+   "visibility": {
+    "firstSight": "from the street",
+    "fromSpawn": false,
+    "reads": "letter above a QP against a building",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "courtyard",
+     "to": "warehouse",
+     "geometry": "Carry on toward the warehouse."
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "QP at its base",
+     "to": "roof",
+     "geometry": "Air the QP through the A and land on the roof."
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "QP-to-roof transfer"
+   ],
+   "coupling": "goal clock",
+   "failure": "Missing the roof drops you to the street; LP4 bailed once here (0:37:12).",
+   "timeFromSpawnS": "A by 1:40 (LP4 0:37:06)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Moves the run up to the roof layer.",
+   "evidence": "THG; LP4 0:37:06-0:37:12",
+   "confidence": "high"
+  },
+  {
+   "id": "O-T",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z5",
+   "landmark": "on the electrical wire from a lamp post between roofs",
+   "layer": "wires",
+   "heightM": "≈ 7-9 m (roof-height wire; estimate)",
+   "launchFrom": "next roof after an ollie gap",
+   "visibility": {
+    "firstSight": "from the first roof",
+    "fromSpawn": false,
+    "reads": "letter on a wire",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "first roof",
+     "to": "next roof",
+     "geometry": "Turn left and ollie the gap onto the next roof."
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "lamp post",
+     "to": "wire",
+     "geometry": "Jump toward the lamp post and grind the electrical wire for the T."
+    }
+   ],
+   "moves": [
+    "ollie",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "roof gap",
+    "wire balance"
+   ],
+   "coupling": "goal clock",
+   "failure": "Falling off over the pier puts you in the water (LP4 0:37:36 \"WATER... BAAAD!\"), a reset of ≈ 20 s.",
+   "timeFromSpawnS": "T by 1:17 (LP4 0:37:30)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Wire letter over a fall that ends in water: the first real risk.",
+   "evidence": "THG; LP4 0:37:30-0:37:36",
+   "confidence": "high"
+  },
+  {
+   "id": "O-E",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z5",
+   "landmark": "off the right edge of the building opposite",
+   "layer": "roof edge",
+   "heightM": "roof height",
+   "launchFrom": "roof edge grind",
+   "visibility": {
+    "firstSight": "from the roof",
+    "fromSpawn": false,
+    "reads": "letter beyond a roof edge",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "roof",
+     "to": "far side",
+     "geometry": "Drop onto the roof and roll across."
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "roof edge",
+     "to": "building opposite",
+     "geometry": "Jump and grind the right side of the building opposite."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "grind",
+     "to": "E",
+     "geometry": "Jump off when you can reach the E."
+    }
+   ],
+   "moves": [
+    "ollie",
+    "ledge"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "A miss drops to the street.",
+   "timeFromSpawnS": "E at ≈ 0:42 left; whole run 78 s with two falls (LP4 0:36:48-0:38:09)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Ends the run on a roof-to-roof grind.",
+   "evidence": "THG; LP4 0:38:06-0:38:09",
+   "confidence": "high"
+  },
+  {
+   "id": "O-COMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (amateur)",
+   "zone": "Z3",
+   "landmark": "long wall with intersections, last O after a left curve",
+   "layer": "ledges (wall top)",
+   "heightM": "≈ 1 m",
+   "launchFrom": "wall",
+   "visibility": {
+    "firstSight": "letters in a line along a wall",
+    "fromSpawn": false,
+    "reads": "letters along a wall",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "wall",
+     "to": "intersections",
+     "geometry": "Grind the wall and hop over each intersection."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "curve",
+     "to": "last O",
+     "geometry": "The last O is on the same line after the curve to the left; if the grind breaks, manual and swerve back onto the wall."
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie",
+    "manual"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "hopping intersections without dropping the combo"
+   ],
+   "coupling": "one combo",
+   "failure": "Restart at the wall.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A street-wall line with gaps as rhythm.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PROCOMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "Pro C-O-M-B-O",
+   "zone": "Z3",
+   "landmark": "electrical wires over the road, then a QP",
+   "layer": "wires (≈ 5-6 m) then ground",
+   "heightM": "≈ 5-6 m",
+   "launchFrom": "stone slope up to the left wire",
+   "visibility": {
+    "firstSight": "letters on parallel wires",
+    "fromSpawn": false,
+    "reads": "letters above the road",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "stone slope",
+     "to": "left wire",
+     "geometry": "Use the stone slope to get up onto the left electrical wire (C)."
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "left wire",
+     "to": "right wire",
+     "geometry": "Hop back and forth between the wires for O and M."
+    },
+    {
+     "step": 3,
+     "move": "manual",
+     "from": "ground",
+     "to": "QP",
+     "geometry": "Drop to the ground and manual toward the B."
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "B",
+     "geometry": "Launch straight up the QP for B."
+    },
+    {
+     "step": 5,
+     "move": "revert",
+     "from": "QP landing",
+     "to": "manual",
+     "geometry": "Land in a revert to a manual, turn right and head for the last O."
+    }
+   ],
+   "moves": [
+    "rail-transfer",
+    "wire",
+    "manual",
+    "vert-air",
+    "revert"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wire-to-wire hops",
+    "revert to manual"
+   ],
+   "coupling": "one combo",
+   "failure": "A fall resets; the slope is close.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Reuses the camera-race wire shortcut as a pro letter line.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PACKAGES",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Messenger's 5 missing packages",
+   "zone": "Z3",
+   "landmark": "along the building fronts by the road: across the QP gap from the start, red-topped QPs at the pier start, and on ledges of brown buildings across gaps",
+   "layer": "ledges and QPs",
+   "heightM": "ledge height (≈ 1-3 m)",
+   "launchFrom": "QP transfer; building ledges",
+   "visibility": {
+    "firstSight": "in a fairly apparent line along the building fronts (THG)",
+    "fromSpawn": false,
+    "reads": "packages in a row",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start",
+     "to": "QP across the road",
+     "geometry": "Cross from the start and transfer the gap between the QPs (package 1)."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "red-topped QPs at the pier start",
+     "to": "package 2",
+     "geometry": "Air the red-topped QPs."
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "brown building ledge",
+     "to": "package 3",
+     "geometry": "Go under the white-columned porch, grind the ledge, hop the gap for the package and grind the other side."
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "next two buildings",
+     "to": "packages 4-5",
+     "geometry": "Repeat on the next two buildings."
+    }
+   ],
+   "moves": [
+    "transfer",
+    "ledge",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap; everything is at street level.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A collectible line that teaches ledge-gap-ledge on building fronts.",
+   "evidence": "THG; LP4 0:33:00",
+   "confidence": "high"
+  },
+  {
+   "id": "O-NEAL",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Save Painter Neal (wire around the stone sphere)",
+   "zone": "Z4/Z2",
+   "landmark": "stone sphere with a wire around it, after the shark attack",
+   "layer": "wire",
+   "heightM": "unknown",
+   "launchFrom": "grind the birdshit rail first",
+   "visibility": {
+    "firstSight": "Painter Neal on a deck over the water",
+    "fromSpawn": false,
+    "reads": "painter on a sign deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "rail around Neal",
+     "to": "event",
+     "geometry": "Grind the dirty rail around Neal: a shark attack resets you to Painter Bob."
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "stone sphere wire",
+     "to": "rescue",
+     "geometry": "One stone sphere now has a wire around it; grind it and \"unlikely physics\" do the rest."
+    }
+   ],
+   "moves": [
+    "grind",
+    "wire",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "scripted event",
+   "failure": "unknown",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "A goal that changes the level (a new wire appears).",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-BLOCKERS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Grind the blockers off the ledges",
+   "zone": "Z7",
+   "landmark": "ledges either side of steps in the upper area under the bridge",
+   "layer": "ledges",
+   "heightM": "upper area",
+   "launchFrom": "QP across from the alarm button",
+   "visibility": {
+    "firstSight": "ledges guarded by an officer",
+    "fromSpawn": null,
+    "reads": "blockers on ledges",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "wall under the bridge",
+     "to": "red button",
+     "geometry": "Wallride over the red button to set off the alarm; the officer runs to turn it off."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "QP across from the button",
+     "to": "upper area",
+     "geometry": "Launch up onto the upper area."
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "wall beside the steps",
+     "to": "bottom",
+     "geometry": "Grind down one side, slow at the bottom, grind up the other side before he sprints back."
+    }
+   ],
+   "moves": [
+    "wallride",
+    "unlock",
+    "vert-air",
+    "ledge"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallride trigger"
+   ],
+   "coupling": "timed guard: the officer returns",
+   "failure": "If he gets back, restart from the button.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "A timing unlock that turns a guard into a moving gate.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "R-S",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "above a quarter pipe on the hotel's spiral-slope level",
+   "layer": "patio level",
+   "heightM": "≈ 4-5 m + QP air",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "from start go left to the hotel with the spiral slopes"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "up and right; air the QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:13:05 flythrough",
+   "confidence": "high"
+  },
+  {
+   "id": "R-K",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "above a wooden rail in the square",
+   "layer": "ledges",
+   "heightM": "≈ 1-2 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "continue straight to the square and grind the wooden rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-A",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z5",
+   "landmark": "roof of the building marked Ishmael's Wharf",
+   "layer": "roof",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "use the QPs to get onto the roof"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:13:35 (A visible from a roof)",
+   "confidence": "high"
+  },
+  {
+   "id": "R-T",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z5",
+   "landmark": "on a wire ahead from the next rooftop to the right",
+   "layer": "wires",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump to the next rooftop to the right"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the wire ahead"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z5",
+   "landmark": "next rooftop forward-right",
+   "layer": "roof",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump off the wire end to the next rooftop"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump to the next rooftop and go forward-right"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:16:05 \"COMPLETE! Collect S-K-A-T-E\" on a pier roof",
+   "confidence": "high"
+  },
+  {
+   "id": "R-COMBO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (pro)",
+   "zone": "Z3",
+   "landmark": "wires from the tram-stop ramp",
+   "layer": "wires",
+   "heightM": "≈ 5-6 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "small ramp next to the tram stop"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the wire (C)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "hop to the next wire right, and again (O, M)"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "keep the grind for B"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump at the end to the final O"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "wire",
+    "rail-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PACKAGES",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "goal-object",
+   "label": "5 missing packages",
+   "zone": "Z3/Z6/Z1",
+   "landmark": "over a bus in an alley; in front of a building; between two QPs; under the water feature; above a QP on the hotel's spiral level",
+   "layer": "mixed",
+   "heightM": "ground to patio level",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "small ramp over the bus in the alley"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "follow the road to two more"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "QPs beneath the water feature"
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "hotel spiral level, left, above a QP"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:13:30-1:14:19",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "hidden-deck",
+   "label": "Hidden deck",
+   "zone": "Z6",
+   "landmark": "above the large water feature",
+   "layer": "air",
+   "heightM": "high air",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "from start go left to the large water feature; use the ramp with painted arrows to launch up"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEASE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-IGLOGO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "logo",
+   "label": "Iron Galaxy logo",
+   "zone": "Z1",
+   "landmark": "behind glass at the top of a stair rail",
+   "layer": "ledges",
+   "heightM": "stair-top",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "from start go left and left again; grind the rail up the stairs to the top"
+    }
+   ],
+   "moves": [
+    "grind",
+    "break-glass"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "medium"
+  },
+  {
+   "id": "R-PANDA",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "plush",
+   "label": "Panda plushie",
+   "zone": "Z4",
+   "landmark": "roof of the large building left of the pier area",
+   "layer": "roof",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "use the QPs to get onto the roof"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "3 stat points",
+   "zone": "Z5/Z3/Z4",
+   "landmark": "roof via QPs and a roof jump; above the tram stop (kicker); between two QPs at the pier front",
+   "layer": "mixed",
+   "heightM": "roof; tram-stop height; QP air",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "rooftop QPs then jump across to another roof"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "tram-stop kicker"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "pier QPs"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "kicker",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:13:40 \"2/3 stat points\"",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "cash",
+   "label": "5 cash bundles",
+   "zone": "various",
+   "landmark": "roof via QPs; wire from a tram-line kicker; kicker over a pier walkway; between water-feature QPs; rail above the water",
+   "layer": "mixed",
+   "heightM": "mostly 3-6 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "short local lines"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "kicker",
+    "wire",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "P-SKATE",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E (normal, blue-gold on VG)",
+   "zone": "Z3/Z1/Z5",
+   "landmark": "S by the left pier stub; K by the bus shelter on the road; A in the plaza between planters; T by the tram stop near the \"Wire 2 Wire\" label; E on the warehouse face at the right",
+   "layer": "mixed",
+   "heightM": "ground to shelter height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "positions only, from VG"
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "VG",
+   "confidence": "low"
+  },
+  {
+   "id": "P-SKATEH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "S-K-A-T-E Hard (orange on VG)",
+   "zone": "Z3/Z4",
+   "landmark": "S and K on the shelters along the road; A at the pier entrance; T over the water on the wire field; E at the pier's far end",
+   "layer": "mixed; wires over water",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "positions only, from VG"
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "VG",
+   "confidence": "low"
+  },
+  {
+   "id": "P-COMBO",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (green, blue outline on VG)",
+   "zone": "Z4",
+   "landmark": "C, O and M on wires strung between pilings beside the pier; B and O at the pier end (\"Pier Sights\")",
+   "layer": "wires over water",
+   "heightM": "wire height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the piling wires, hopping between them"
+    }
+   ],
+   "moves": [
+    "wire",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "VG",
+   "confidence": "low"
+  },
+  {
+   "id": "P-COMBOH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O Hard (green, red glow on VG)",
+   "zone": "Z1/Z3/Z4",
+   "landmark": "O at the hotel's left facade, B and M on the left-side wharf building, C at the pier entrance, O on the pier roofline",
+   "layer": "roofs and facades",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "positions only, from VG"
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "VG",
+   "confidence": "low"
+  },
+  {
+   "id": "P-OTHER",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "misc",
+   "label": "Deck (on the pier water wires), music CD (by goal 10 on the road), 3 stat points, 5 shopping bags, 5 trash cans, 10 sardines",
+   "zone": "Z3/Z4",
+   "landmark": "deck icon floats among the piling wires; sardines line the pier edge and decks",
+   "layer": "mixed",
+   "heightM": "unknown",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "positions only, from VG"
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "VG legend and icons",
+   "confidence": "low"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Down The Stairs",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "stair set",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "EMB Ledge Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "Embarcadero ledges",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Wire Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "between the electrical wires over the road",
+   "moves": [
+    "wire",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "O-PROCOMBO"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "3rd n Army Hop n Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "\"3rd and Army\" ledge spot (a real SF skate spot)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "rd n Army Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "3rd and Army spot (name truncated in the list)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bench grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "benches (Nokia shop / camera film line)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bowl Transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "bowl in the skate-park area (Andrew's step 4 lands in it)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Cleared the Stair Set",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "big stair set",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Down the Spiral",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "hotel spiral ramp",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Fountain Ramp To Ramp",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "kickers either side of the fountain (Andrew's step 3)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Gap the Bus",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "over a bus",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Gone High",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "hangtime",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Hubba Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "\"Hubba Hideout\" ledges (real SF spot)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "unknown",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Manualin'",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "unknown",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Mechanic Pop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ramp To Ramp",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "unknown",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Overhead Grind Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "overhead walkway rails",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rampin' up",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "unknown",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "TC's Roof Gap Too",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "roof gap between buildings (Kareem's pro challenge jumps a roof gap)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-T"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Up the Stairs",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "ollie up a stair set",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "3rd Army Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "3rd and Army ledge",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Almost",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "part of the manual setup sequence (assumed)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Cleared the Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "gap in the manual setup (named by PS34 for the remake goal)",
+   "moves": [
+    "manual",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Halfway There!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "manual setup sequence (assumed)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Heading Back",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "manual pad, return direction (assumed)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Hubba Spine!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "spine",
+   "location": "Hubba Hideout spine",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Hubba Transfer!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "Hubba Hideout transfer",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Made It!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "end of the manual setup (named by PS34)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "On the Way",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "start of the manual setup (named by PS34)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pad Manual East",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "manual pad, one direction",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pad Manual West",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "manual pad, other direction",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Wire Breakin!!!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "unknown wire",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Manual Pleasure",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "unknown",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pier Perch",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "pier sign / pier edge lip (assumed)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Andrew's Pro Challenge Pier",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "kicker over the water (step 1)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Andrew's Pro Challenge Walkway",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "kicker over the walkway (step 2)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Andrew's Pro Challenge Bowl",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "kicker over the road into the bowl (step 4)",
+   "moves": [
+    "kicker",
+    "boneless"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Andrew's Pro Challenge Fountain",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "kicker over the fountain (step 3)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Andrew's Pro Challenge Street",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "roof gap then kicker over the road (step 5)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Wire 2 Wire",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "wire",
+   "location": "wires by the tram stop on the curving road",
+   "moves": [
+    "wire",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "VG label"
+  },
+  {
+   "name": "Pier Heights",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "other",
+   "location": "far end of the right-hand pier",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "VG label"
+  },
+  {
+   "name": "Pier Sights",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "other",
+   "location": "pier end by the sardines",
+   "moves": [],
+   "onRouteOf": [
+    "P-COMBO"
+   ],
+   "evidence": "VG label"
+  },
+  {
+   "name": "Pier Smells",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "other",
+   "location": "left side of the pier buildings",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "VG label"
+  },
+  {
+   "name": "Pier Tastes",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "other",
+   "location": "between the pier buildings",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "VG label"
+  },
+  {
+   "name": "Pier Sounds",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": null,
+   "kind": "other",
+   "location": "lower pier deck",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "VG label"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Grind the birdshit rail around Painter Neal",
+   "opens": "shark attack; a stone sphere gains a wire around it",
+   "neededFor": [
+    "O-NEAL"
+   ],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "THG"
+  },
+  {
+   "trigger": "Wallride the red button under the bridge",
+   "opens": "alarm: the guard leaves the ledges for a few seconds",
+   "neededFor": [
+    "O-BLOCKERS"
+   ],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "THG"
+  },
+  {
+   "trigger": "Grind a fisherman's bench",
+   "opens": "fisherman turns away; grinding his rail drops his fish to a sea lion",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "THG"
+  },
+  {
+   "trigger": "Disturb the seagulls and grab the seed bag",
+   "opens": "enables the wire-across-the-water finish of \"Get Rid of the Rude Dudes\"",
+   "neededFor": [],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "Grind the wire round the ball, then wallplant it",
+   "opens": "completes Save Painter Neal!!!",
+   "neededFor": [],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "Tape: none",
+   "opens": "the remake tape needs no unlock",
+   "neededFor": [
+    "TAPE-R"
+   ],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34; LP34"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Hotel cake (tape line)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "plaza",
+    "spiral ramp",
+    "patio",
+    "corner QP transfer",
+    "upper walkway",
+    "wallride + wallie",
+    "planter nosegrind"
+   ],
+   "links": [
+    "transfer",
+    "wallride",
+    "wallie"
+   ],
+   "collectibles": [
+    "TAPE-R",
+    "R-S",
+    "R-PACKAGES"
+   ],
+   "why": "Three tiers, three entry moves; the tape crowns the top tier.",
+   "evidence": "LP34 1:14:07-1:14:37; PS34"
+  },
+  {
+   "id": "L2",
+   "name": "Hotel sign line",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "upper level",
+    "ollie gap",
+    "hotel sign grind",
+    "ollie gap",
+    "planter grind"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "TAPE-R"
+   ],
+   "why": "Alternate tape route by grind transfers.",
+   "evidence": "PS34; WEB thegamer"
+  },
+  {
+   "id": "L3",
+   "name": "Roof chain letters",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "walkway QP (S)",
+    "courtyard curved steps (K)",
+    "warehouse QP to roof (A)",
+    "roof gap",
+    "lamp-post wire (T)",
+    "roof",
+    "building-opposite edge (E)"
+   ],
+   "links": [
+    "transfer",
+    "ollie",
+    "wire"
+   ],
+   "collectibles": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E"
+   ],
+   "why": "The letters climb from ground to roofs and stay up.",
+   "evidence": "THG; LP4 0:36:48-0:38:09"
+  },
+  {
+   "id": "L4",
+   "name": "Roof chain letters (remake)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "hotel spiral QP (S)",
+    "square wooden rail (K)",
+    "Ishmael's Wharf QPs to roof (A)",
+    "roof jump",
+    "wire (T)",
+    "roof jumps (E)"
+   ],
+   "links": [
+    "vert-air",
+    "wire",
+    "ollie"
+   ],
+   "collectibles": [
+    "R-S",
+    "R-K",
+    "R-A",
+    "R-T",
+    "R-E"
+   ],
+   "why": "Same shape as the original letter chain.",
+   "evidence": "PS34"
+  },
+  {
+   "id": "L5",
+   "name": "Road wires",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "stone slope",
+    "left wire",
+    "wire hop",
+    "right wire",
+    "drop",
+    "manual",
+    "QP",
+    "revert manual"
+   ],
+   "links": [
+    "rail-transfer",
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "O-PROCOMBO"
+   ],
+   "why": "Wires above the road double as a fast lane (camera race shortcut).",
+   "evidence": "THG"
+  },
+  {
+   "id": "L6",
+   "name": "Tram-stop wires",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "tram-stop kicker",
+    "wire",
+    "wire hop ×2",
+    "wire end ollie"
+   ],
+   "links": [
+    "kicker",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "R-COMBO",
+    "R-STAT"
+   ],
+   "why": "Remake version of the road wires.",
+   "evidence": "PS34"
+  },
+  {
+   "id": "L7",
+   "name": "Manual setup",
+   "version": "both",
+   "sequence": [
+    "wooden boards",
+    "manual",
+    "gap between concrete ledges",
+    "manual"
+   ],
+   "links": [
+    "manual",
+    "ollie"
+   ],
+   "collectibles": [],
+   "why": "Benches and boards laid as a manual course (On the Way → Cleared the Gap → Made It!).",
+   "evidence": "THG; PS34"
+  },
+  {
+   "id": "L8",
+   "name": "Building-front ledges",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "QP gap at the start",
+    "red-topped QPs",
+    "porch ledge",
+    "gap",
+    "ledge ×2 buildings"
+   ],
+   "links": [
+    "transfer",
+    "ollie"
+   ],
+   "collectibles": [
+    "O-PACKAGES"
+   ],
+   "why": "Packages strung on facades.",
+   "evidence": "THG"
+  }
+ ],
+ "guidance": [
+  "Remake flythrough shows S, a package and the Painter Neal event before the run (LP34 1:13:05-1:13:15).",
+  "The tape is visible from the hotel patio above the next tier (LP34 1:14:15-1:14:16): the player sees the goal and must work out the tier change.",
+  "Big signage frames the tape building: the \"Boardwalk View Hotel\" sign over the spiral ramp (PS34 screenshot 29; LP34 1:14:12).",
+  "Spiral ramps with glass rails read as an invitation upward; planters and glass panels mark the terrace edges as grindable.",
+  "Original goal givers stand at the waterfront (Painter Bob, judges, fishermen); the first pier sign sits in front of the spawn (THG).",
+  "Water is the fail plane and is always visible, which makes the pier wires and the T wire feel risky (LP4 0:37:36).",
+  "Hidden on purpose: hotel terraces (reachable only by transfer or wallride), the warehouse roof chain, the remake IG logo behind glass."
+ ],
+ "designLogic": [
+  "The remake tape is on the first building the spawn points the player to (\"go left immediately\"), so it is a skill test rather than a search: visible, close, one tier out of reach.",
+  "Tiered building: each level of the hotel has a different entry move (ramp, QP transfer, wallride + wallie), and the tape sits on the last tier; this teaches vertical route-reading in a city level.",
+  "Two valid tape solutions (wallride + wallie up the wall, or grind sign → planter): the tape accepts either a vertical or a horizontal approach.",
+  "The PS1 port drew its tape on the same building's upper ledge (VG); the remake keeps the building and the idea, which suggests Iron Galaxy reused the earlier tape concept.",
+  "Original letters build a roof chain from the waterfront: QP → curved ledge → QP-to-roof → roof gap → wire → roof edge. The only fall risk is water, which costs ≈ 20 s on a 2:00 clock (LP4 0:37:36).",
+  "Wires are placed over the road (pro COMBO, camera race, remake COMBO) and over the water (PS1 COMBO, remake Rude Dudes): the higher the stakes below, the later in the career the goal.",
+  "Goal-object routes (packages) teach the facade ledge grammar later reused by pro goals (manual setup, pads).",
+  "Timed unlocks (red alarm button) make the pro goal a race against a guard, a different kind of difficulty from height.",
+  "The level is long and linear along the waterfront; the remake's 10:00 run gives time to commute, and LP34 cleared all goals with ≈ 6 minutes to spare (1:17:35).",
+  "Lines repeat at different heights (benches → ledges → walkway → wires → roofs), so a player learns one grammar and climbs it.",
+  "The pier is a cul-de-sac with high-value goals (signs, sea lions, Neal); the remake routes its pro wire across the water to make the cul-de-sac a loop.",
+  "THPS4's new verbs stay off the tape routes: the remake tapes in College, San Francisco and Alcatraz need grinds, QP transfers, wallride + wallie, a window rail and (College) a portal door, while skitching drives goals (bike-messenger race here, the Professor's car, Ranger Ron) and the wallplant appears only in Save Painter Neal!!! (PS34; THG). Big maps are handled by flythroughs, portals and 10:00 runs rather than by harder moves."
+ ],
+ "remakeChanges": [
+  "Tape: none in the 2002 PS2 career; the PS1 port drew one on the hotel's upper ledge (VG); the remake places it above an upper-terrace planter of the \"Boardwalk View Hotel\" (LP34 1:14:35).",
+  "S moves from a walkway QP launch (original) to a QP on the hotel's spiral level (remake); K from the curved steps to a wooden rail in the square; A, T and E keep the roof-QP → wire → roof-jump chain (THG vs PS34).",
+  "C-O-M-B-O becomes a pro goal on wires from the tram-stop kicker (remake), similar to the original's pro wires from a stone slope.",
+  "BS Boneless the 3 pier signs becomes BS Boneless a (single) Pier Sign; Feed the sea lions becomes Get Rid of the Rude Dudes (seagulls); Save Painter Neal adds a wallplant on the ball (THG vs PS34).",
+  "Race to get the camera becomes Retrieve the Stolen Camera; the manual setup keeps the named gaps On the Way, Cleared the Gap and Made It! (PS34).",
+  "Remake adds cash, stat points, hidden deck (ramp with arrows), an IG logo behind glass, and a panda on a roof."
+ ],
+ "transfer": [
+  "Tiered-terrace crystal: build a three-tier building facing the spawn; tier 1 by a curved ramp, tier 2 by a quarter-pipe transfer, tier 3 only by wallride + wallie (or a grind hop along a sign). Put the crystal 2-3 m above the tier-3 planter so a wallie (not a plain ollie, ≈ 1.78 m) is required.",
+  "Show it early: make the crystal visible from tier 2 against the facade so the player plans the last move; keep the fall short (one tier, ≈ 4 m) so retries are cheap.",
+  "Horizontal alternative: a slanted sign slab as a grind rail from the tier-2 roof edge to the planter, crossing one gap with a grind ollie (≈ 2.4 m pop).",
+  "Water fail plane: put a mid-level collectible on a cable over water; falling costs a respawn, raising stakes without raising height.",
+  "Guard gate: a wallride-triggered switch that opens a ledge line for a few seconds (alarm and returning guard) works as a timed trick gate in our toolkit."
+ ],
+ "openQuestions": [
+  "Original PS2 first view toward the hotel: the LP4 spawn frame shows the waterfront plaza; whether the hotel block is in view from the spawn is not confirmed.",
+  "PS1 tape access route (no text guide for PS1 San Francisco was found; CheatCodes IDs 34838-34862 tried).",
+  "Height of the remake terraces measured only by eye against the skater.",
+  "Several PS2 gap names (Gone High, Mechanic Pop, Wire Breakin!!!) have no location in the permitted sources."
+ ],
+ "sourceKey": {
+  "VG": "VGMaps/VGCartography isometric render of the PS1 edition of THPS4 (Vicarious Visions, 2002), marked and unmarked versions",
+  "G4m": "THPS4 (PS2) in-box mini guide (BradyGames Signature Series excerpt); covers College only",
+  "THG": "tonyhawkguide.com THPS4 walkthrough and gap list pages (original PS2 game, recorded by the site author \"Sulig\")",
+  "CC1": "CheatCodes.com PS1 level guides for THPS4 by Jeffrey Hartman (2003): College 34859, Alcatraz 34847, Kona 34846 (no San Francisco guide found)",
+  "LP4": "archive.org PS2 longplay of THPS4 (played by Spazbo4); times h:mm:ss into the video",
+  "LP34": "archive.org Xbox Series longplay of THPS 3+4 (2025); times h:mm:ss into the video",
+  "PS34": "Push Square THPS 3+4 per-level walkthroughs and all-secret-tapes page (Stephen Tailby, July 2025), text plus its tape screenshots",
+  "WEB": "other permitted text guides for THPS 3+4: pcgamesn, gamerant, screenrant, thegamer, operationsports, hardcoregamer; ofzenandcomputing refused the request (HTTP 403) and was skipped",
+  "MAR": "mariteaux.somnolescent.net review of the PS1 port (free roam, about thirty goals per stage, no skitching)"
+ }
+}

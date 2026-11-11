@@ -385,6 +385,141 @@
           }
         ]
       }
+    },
+    {
+      "id": "C6",
+      "name": "High wire: crystal on a wire strung between roofs",
+      "note": "Roof A (top 5 m) and roof B (top 5 m) 30 m apart across a plaza; a wire 6 m up joins them. The crystal sits on the wire 60% of the way across (collected while grinding). From the plaza it is out of reach; from roof A a charged ollie with Grind held catches the wire.",
+      "data": {
+        "spawn": [
+          0,
+          5.2,
+          -5
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -40
+            ],
+            "s": [
+              30,
+              1,
+              100
+            ]
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              2.5,
+              -10
+            ],
+            "s": [
+              10,
+              5,
+              20
+            ]
+          },
+          {
+            "t": "rail",
+            "p": [
+              0,
+              6,
+              -35
+            ],
+            "len": 30,
+            "yaw": 0
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              2.5,
+              -60
+            ],
+            "s": [
+              10,
+              5,
+              20
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              0,
+              6.6,
+              -38
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              5,
+              -66
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "C7",
+      "name": "Roof drop: crystal hanging past the highest roof edge",
+      "note": "A roof 8 m up; the crystal floats 7 m past its edge at roof height (p.y 8.0). A charged ollie off the edge carries the rider through it; rolling off drops under it; nothing on the street reaches it.",
+      "data": {
+        "spawn": [
+          0,
+          8.2,
+          -3
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -45
+            ],
+            "s": [
+              30,
+              1,
+              110
+            ]
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              4,
+              -15
+            ],
+            "s": [
+              10,
+              8,
+              30
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              0,
+              8,
+              -37
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -90
+            ]
+          }
+        ]
+      }
     }
   ],
   "results": [
@@ -683,6 +818,97 @@
       ],
       "entry": null,
       "release": null
+    },
+    {
+      "recipe": "C6",
+      "name": "High wire: crystal on a wire strung between roofs",
+      "run": "from roof A: charged ollie, catch the wire, grind across (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 0,
+        "y": 6.15,
+        "z": -36.73,
+        "state": "grind"
+      },
+      "maxY": 6.6,
+      "died": false,
+      "crystal": [
+        0,
+        6.6,
+        -38
+      ],
+      "grinded": true
+    },
+    {
+      "recipe": "C6",
+      "name": "High wire: crystal on a wire strung between roofs",
+      "run": "from the plaza under the crystal: charged ollie",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 1.6,
+      "died": false,
+      "crystal": [
+        0,
+        6.6,
+        -38
+      ]
+    },
+    {
+      "recipe": "C7",
+      "name": "Roof drop: crystal hanging past the highest roof edge",
+      "run": "charged ollie off the roof edge at 12 m/s (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 0,
+        "y": 9.56,
+        "z": -35.62,
+        "state": "air"
+      },
+      "maxY": 9.6,
+      "died": false,
+      "crystal": [
+        0,
+        8,
+        -37
+      ]
+    },
+    {
+      "recipe": "C7",
+      "name": "Roof drop: crystal hanging past the highest roof edge",
+      "run": "roll off the roof edge at 12 m/s",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 8,
+      "died": false,
+      "crystal": [
+        0,
+        8,
+        -37
+      ]
+    },
+    {
+      "recipe": "C7",
+      "name": "Roof drop: crystal hanging past the highest roof edge",
+      "run": "from the street under the crystal: charged ollie",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 1.6,
+      "died": false,
+      "crystal": [
+        0,
+        8,
+        -37
+      ]
     }
   ]
 }

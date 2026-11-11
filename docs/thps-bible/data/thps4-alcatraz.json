@@ -1,0 +1,3461 @@
+{
+ "id": "thps4-alcatraz",
+ "game": "THPS4",
+ "level": "Alcatraz",
+ "location": "Alcatraz Island, San Francisco Bay, California (remake card: \"Tours STILL running from Pier 39!\", LP34 1:22:38)",
+ "type": "career-street",
+ "careerPosition": 3,
+ "timeLimit": "original: none (free roam, per-goal clocks); remake: 10:00 run",
+ "versions": [
+  "PS2 2002 (Neversoft) — THG and LP4",
+  "PS1 2002 (Vicarious Visions) — VG and CC1",
+  "THPS 3+4 2025 (Iron Galaxy) — PS34, LP34, WEB"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater4-Alcatraz.png and (Unmarked)",
+  "THG pro-skater-4/alcatraz and gaps",
+  "CC1 Alcatraz 34847",
+  "LP4 0:46:20-1:06:20",
+  "PS34 alcatraz + all-secret-tapes",
+  "LP34 1:22:38-1:29:40",
+  "WEB pcgamesn, gamerant (alcatraz goals), screenrant, thegamer, operationsports, hardcoregamer"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 55,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the S-K-A-T-E letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Take the Alcatraz Tour",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Revert Madness",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Dunk 30 Tourists",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Distract the Guards",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Semi Flip the Bulldozer",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Find the Guard's Keys (16)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Medal in the Competition",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Pro Score: 100,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Pull off Mullen's Tech Trick",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Ranger Ron's Skitch Launch",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Escape From Alcatraz",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Nail the Tricks They Yell Out (jail-cell ghosts)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Bullseye Launch",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Sick Score: 400,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Pose for 6 Pictures",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Manual the Switchbacks",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Nail the Mega Combos They Yell Out",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Bam Margera's pro challenge (shopping cart down the switchbacks)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Elissa Steamer's pro challenge",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Rune Glifberg's pro challenge (pools and water tower)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "12. Rookie Score 40,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "13. High Score 75,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "15. Pro Score 140,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "18. Extreme Score 200,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "16. High Score Combo 60,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "10. Pro Score Combo 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "3. Sick Score Combo 200,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "14. S-K-A-T-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "8. S-K-A-T-E Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "6. C-O-M-B-O",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "5. C-O-M-B-O Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "7. Horse",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "2. Ollie the bump into a manual",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "1. Kickflip over crumblin' rocks",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "17. Collect 5 cell keys",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "19. Grind all 4 light gaps",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "11. Melon grab over the broken wall",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "4. Perform 5 grind extensions",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "9. Slide the cell block switch",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "20. Competition",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "High Score 55,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro Score 100,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Sick Score 175,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "High Combo 15,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Nosegrind the Foghorn Rail",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Photobomb 3 Groups of Tourists",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Spine Transfer into the Water Tower",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Release the Prisoner",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Platinum Score 500,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Collect C-O-M-B-O",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Sal Flip over the Bulldozer",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Double Heelflip the Massive Crumbling Stairset",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Listen to Ranger Ron's Story",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 250-350 m × 150-220 m island with ≈ 30-40 m of vertical relief from dock to cell-block roof (estimate)",
+  "evidence": "by eye on the VG PS1 render against road width (≈ 6-8 m) and the cell block (≈ 60-70 m long); relief from LP34 views down the switchbacks; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Dock, ferry and parade ground",
+   "layer": "ground at the waterline; ferry deck; restrooms; bulldozer",
+   "features": [
+    "ferry moored at the dock (QP transfer onto it; tourists to dunk or photobomb)",
+    "dock buildings and the Administration Building door (original keys hand-in, LP4 0:54:40)",
+    "parade ground with a bank and the bulldozer (Semi/Sal Flip goal)",
+    "restrooms (\"Bathroom Break\", \"Who Bombed the Bathroom? Spine!!!\")",
+    "Ranger Ron's tram / tourist cart (skitch goals)"
+   ],
+   "notes": "Lowest tier; the remake and PS2 runs start here (PS34 \"from level start, turn around and use the quarter pipe to transfer onto the ferry\"; LP4 0:46:26-0:46:32)."
+  },
+  {
+   "id": "Z2",
+   "name": "Switchbacks (north and south)",
+   "layer": "sloped road in hairpins; ledges; tunnel",
+   "features": [
+    "hairpin road climbing the island (\"Switchbacks - North Side\" / \"South Side\" zone captions in LP4 and the remake)",
+    "tunnel through the rock (\"Tunnel Clearance\", \"Tunnel manual\")",
+    "ledges along the bends (PS1 Switchback Grind, Short/Long Term)",
+    "gutter/sewer pipe and a drainage half-pipe (\"Gutter Punk\", \"Rising from the gutter\", Elissa step 3)"
+   ],
+   "notes": "The climb from dock to prison; manuals and shopping-cart races use it as a downhill course."
+  },
+  {
+   "id": "Z3",
+   "name": "Lighthouse courtyard and foghorn",
+   "layer": "upper plateau; lighthouse base; foghorn railing; massive crumbling staircase down",
+   "features": [
+    "lighthouse with a QP on one side",
+    "foghorn with a railing to nosegrind around",
+    "massive crumbling staircase down to the lower level (Double Heelflip goal; \"Massive Crumbling Staircase\" gap)",
+    "wheelie bins (key search)"
+   ],
+   "notes": "Remake caption \"Lighthouse Courtyard\"; the cell-block doors that open after Release the Prisoner are to the right of its door (PS34)."
+  },
+  {
+   "id": "Z4",
+   "name": "Cell block (exterior, roof and interior)",
+   "layer": "roof (≈ 12-15 m above the yard; estimate); three interior tiers; skylights; flagpole",
+   "features": [
+    "cell block doors (closed until a goal or switch)",
+    "interior: a large halfpipe-shaped floor with spiral staircases and two upper cell tiers with railings (LP34 1:28:48-1:29:03; VG inset)",
+    "top-tier end wall with two open windows; a rail/pipe runs out of the left one toward the water tower (remake tape)",
+    "roof with skylights, pipes, wedge ramps and a trap door into the interior (PS1)",
+    "a door in the exercise yard that leads to the prison roof (original: Pose for 6 pictures)",
+    "\"Rooftop - North Side\" caption on the roof (LP34 1:28:45)"
+   ],
+   "notes": "The level's dominant mass; the remake tape is its interior-to-exterior payoff."
+  },
+  {
+   "id": "Z5",
+   "name": "Water tower and exercise yard",
+   "layer": "yard ground; yard walls (≈ 4-6 m); water tower tank (≈ 10-14 m) with a conical roof; cables from the tank",
+   "features": [
+    "timber-trestle water tower beside the cell block (LP34 1:28:39-1:28:42)",
+    "open tank roof: spine transfer into it (PS2 \"Super-High Water tower Spine\"; remake goal \"Spine Transfer into the Water Tower\")",
+    "cables strung from the tank to the yard wall and roof (VG)",
+    "exercise yard with walkways on its walls, a water channel and big pipes over the water (PS1 Look Out Below, Stepping Stones, Pipe Grind)"
+   ],
+   "notes": "The landmark every version hangs a secret on: PS1 tape on the tank roof, PS2 pro spine into the tank, remake tape just outside the cell-block window above the tank."
+  },
+  {
+   "id": "Z6",
+   "name": "Pools and overgrown path",
+   "layer": "drained pools (bowls) below the lighthouse; valve; plank from a window",
+   "features": [
+    "two pools; grind around the first to knock a valve that drains the second (remake)",
+    "kids hold a plank out of a building window over the pool (Rune step 3)",
+    "roof above the plank for an Eggplant (Rune step 4)"
+   ],
+   "notes": "Vert pocket that feeds the water-tower spine."
+  },
+  {
+   "id": "Z7",
+   "name": "South rooftops",
+   "layer": "roofs; loop-de-loop ramp; target; rails to the water tower; tall tower with a small platform",
+   "features": [
+    "\"Rooftops - South Side\" (LP4 1:00:09; PS34)",
+    "ramp into a loop-de-loop that launches onto a giant target (remake IG logo; original \"Bullseye Launch\")",
+    "rail to the water tower and a wire on to a tall tower (remake panda)"
+   ],
+   "notes": "The original S-K-A-T-E goal is given here by a tourist (LP4 1:00:12)."
+  }
+ ],
+ "landmarks": [
+  "cell block",
+  "water tower",
+  "lighthouse",
+  "foghorn",
+  "ferry",
+  "switchbacks",
+  "massive crumbling staircase",
+  "bulldozer on the parade ground",
+  "loop-de-loop and target (remake)"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "remake: inland toward the tunnel to the switchbacks with the ferry behind; original: by the dock buildings and Ranger Ron",
+  "visibleCollectibles": [],
+  "notes": "PS34: \"from level start, turn around ... onto the ferry\"; \"go left through the tunnel ... Switchbacks - South Side\"; \"the COMBO chain begins straight ahead\"; \"a tourist cart ahead\". LP34 1:23:08-1:23:14."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-R",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "tape",
+   "label": "Secret tape (remake)",
+   "zone": "Z4/Z5",
+   "landmark": "just outside the left-hand window at the end of the cell block's top tier, over the rail/pipe that runs from the window toward the water tower",
+   "layer": "outside wall at top-tier height",
+   "heightM": "≈ 10-14 m above the yard; level with or just above the water-tower roof (LP34 1:29:10 shows the skater above the conical tank roof; three-storey cell block ≈ 10-12 m to the top tier)",
+   "launchFrom": "top-tier walkway inside the cell block, through the open left window onto the rail",
+   "visibility": {
+    "firstSight": "flythrough shows it beside a ruined wall with a pipe and the bay (LP34 1:23:02); from inside the top tier it shows through the left window (LP34 1:29:05, small blue icon)",
+    "fromSpawn": false,
+    "reads": "glowing cassette framed by a window opening against the sky and water",
+    "distanceFromFirstSightM": "≈ 30-40 (length of the top tier to the window)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "unlock",
+     "from": "five wheelie bins around the island",
+     "to": "cell-block keys",
+     "geometry": "Knock over the 5 bins; the key is in the last (LP34 1:24:08 \"1 of 5 ... no cellblock keys here\", 1:27:50 \"5 of 5 You found the cellblock keys!\")."
+    },
+    {
+     "step": 2,
+     "move": "unlock",
+     "from": "closed cell-block doors right of the Lighthouse Courtyard door",
+     "to": "open cell block",
+     "geometry": "Approach the doors with the key; the cut-scene releases the prisoner (LP34 1:27:56 \"COMPLETE! Release the Prisoner\")."
+    },
+    {
+     "step": 3,
+     "move": "ride",
+     "from": "yard / Rooftop - North Side",
+     "to": "cell-block interior",
+     "geometry": "Enter the cell block (LP34 enters from the north rooftop and drops in, 1:28:44-1:28:48; PS34 uses the opened doors)."
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "interior halfpipe floor or spiral stair rail",
+     "to": "second/top tier",
+     "geometry": "Use the interior quarter pipes or grind the spiral staircase to reach the upper tier (PS34; WEB gamerant; LP34 1:28:49-1:28:58)."
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "top-tier walkway railing",
+     "to": "end wall",
+     "geometry": "Ride or grind the railing along the top tier (LP34 1:28:59-1:29:03 \"BS Tailslide + Kickflip\")."
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "left window",
+     "to": "rail outside",
+     "geometry": "Go through the left of the two open windows and grind the rail/pipe outside (LP34 1:29:04-1:29:09, FS 50-50)."
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "rail end",
+     "to": "tape",
+     "geometry": "Jump at the end into the tape above the water tower (LP34 1:29:10 \"COMPLETE! Get the secret tape\"; PS34 \"jump at the end\")."
+    },
+    {
+     "step": 8,
+     "move": "ledge",
+     "from": "air over the tank",
+     "to": "yard wall",
+     "geometry": "Land in a grind on the yard wall beside the tower (LP34 1:29:11-1:29:12)."
+    }
+   ],
+   "moves": [
+    "unlock",
+    "vert-air",
+    "grind",
+    "ledge",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "finishing another goal first (the prisoner)",
+    "riding up the interior tiers",
+    "committing to a window exit over a long drop"
+   ],
+   "coupling": "Release the Prisoner must be completed first (PS34; WEB pcgamesn, thegamer, operationsports, hardcoregamer); HardcoreGamer says it is theoretically possible without opening the prison but much easier with it.",
+   "failure": "Missing the jump drops ≈ 10 m into the yard or onto the water-tower cables; the window is ≈ 30 s back via the interior. The gating goal itself took LP34 ≈ 3:40 of the run.",
+   "timeFromSpawnS": "≈ 32 s from the yard to the tape (LP34 1:28:37 → 1:29:09); ≈ 74 s after the release (1:27:56 → 1:29:10, with a Sick Score detour); ≈ 5:50 into the 10:00 run (4:09 left)",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "REWARD",
+    "TEST"
+   ],
+   "why": "The tape is the reward for opening the level's biggest locked building: the player earns the interior, climbs it, and exits through a window to the landmark outside. It uses the opened space once and points back at the water tower that other goals feature.",
+   "evidence": "PS34 alcatraz \"Get the Secret Tape\"; WEB pcgamesn, thegamer, operationsports, hardcoregamer, gamerant; LP34 1:23:02, 1:27:50-1:29:12",
+   "confidence": "high (route), medium (height)"
+  },
+  {
+   "id": "TAPE-PS1",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "zone": "Z5",
+   "landmark": "on the water tower roof",
+   "layer": "water-tower roof (grindable rim)",
+   "heightM": "unknown (tank roof ≈ cell-block roof height on VG)",
+   "launchFrom": "kicker with a rail on it off the far end of the cell-block roof",
+   "visibility": {
+    "firstSight": "seen while grinding the water-tower roof (CC1); VG draws the icon on the tank",
+    "fromSpawn": null,
+    "reads": "tape beside the tank roof",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "portal",
+     "from": "portal door",
+     "to": "cell-block roof",
+     "geometry": "Go through the portal door that leads to the cell-block roof (CC1 \"Ova De Door\" gap references it)."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "rail on the kicker at the far end of the roof",
+     "to": "water-tower roof",
+     "geometry": "Grind the rail on the kicker and carry the grind onto the water-tower roof (CC1 cell key 5)."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "water-tower roof grind",
+     "to": "tape",
+     "geometry": "When the tape comes into view, jump to the side and grab it (CC1)."
+    }
+   ],
+   "moves": [
+    "grind",
+    "kicker",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "kicker-to-grind transfer onto a round roof rim"
+   ],
+   "coupling": "portal door to the cell-block roof",
+   "failure": "A miss falls to the exercise yard; climb back via the portal.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "SECRET-AREA",
+    "TEST"
+   ],
+   "why": "Same landmark as the remake: the water tower is the island's secret-holder.",
+   "evidence": "CC1 \"SECRET TAPE\" and cell key 5; VG icon",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z7",
+   "landmark": "off the kicker in front of the tourist on the south rooftops",
+   "layer": "air off a kicker over the cliff edge",
+   "heightM": "unknown",
+   "launchFrom": "kicker",
+   "visibility": {
+    "firstSight": "from the goal giver on the south rooftops",
+    "fromSpawn": null,
+    "reads": "letter ahead of a kicker",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "south rooftops",
+     "to": "S",
+     "geometry": "Launch off the kicker in front of you."
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock 2:00",
+   "failure": "Landing short drops down the cliff.",
+   "timeFromSpawnS": "S at 1:58 (LP4 1:00:15)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Starts the run with a launch toward the lower island.",
+   "evidence": "THG; LP4 1:00:12-1:00:18",
+   "confidence": "high"
+  },
+  {
+   "id": "O-K",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "left of a dark doorway along the road",
+   "layer": "ground",
+   "heightM": "unknown",
+   "launchFrom": "road",
+   "visibility": {
+    "firstSight": "from the road after landing",
+    "fromSpawn": false,
+    "reads": "letter by a doorway",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "landing",
+     "to": "road",
+     "geometry": "Turn left and follow the road."
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "road",
+     "to": "K",
+     "geometry": "Take the K to the left of the dark doorway."
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "K by 1:25 (LP4 1:00:48)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Simple road letter.",
+   "evidence": "THG; LP4 1:00:48",
+   "confidence": "high"
+  },
+  {
+   "id": "O-A",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z3",
+   "landmark": "around the left side of the tower",
+   "layer": "ledges round a tower",
+   "heightM": "unknown",
+   "launchFrom": "kicker ramp at the slope bottom",
+   "visibility": {
+    "firstSight": "from the slope",
+    "fromSpawn": false,
+    "reads": "letter round a tower",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "road",
+     "to": "slope",
+     "geometry": "Head down the slope."
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "kicker ramp",
+     "to": "tower ledge",
+     "geometry": "Use the kicker to get into a grind on the left side of the tower."
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "tower ledge",
+     "to": "A",
+     "geometry": "Grind round for the A, then jump off."
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "kicker-to-grind"
+   ],
+   "coupling": "goal clock",
+   "failure": "A miss leaves you below the tower.",
+   "timeFromSpawnS": "part of a ≈ 60 s run",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Kicker-to-grind onto a curved ledge.",
+   "evidence": "THG",
+   "confidence": "high"
+  },
+  {
+   "id": "O-T",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z1/Z2",
+   "landmark": "on a wall between buildings toward the water",
+   "layer": "wall top",
+   "heightM": "unknown",
+   "launchFrom": "wall grind",
+   "visibility": {
+    "firstSight": "heading between the buildings",
+    "fromSpawn": false,
+    "reads": "letter on a wall",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "tower",
+     "to": "between buildings",
+     "geometry": "Point left and head between the buildings toward the water."
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "wall",
+     "to": "T",
+     "geometry": "Grind the wall with the T."
+    }
+   ],
+   "moves": [
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Falling into the bay costs a reset (\"You big drip!\", LP4 1:01:00).",
+   "timeFromSpawnS": "part of the run",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Pulls the run down toward the water.",
+   "evidence": "THG; LP4 1:01:00",
+   "confidence": "high"
+  },
+  {
+   "id": "O-E",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z1",
+   "landmark": "above the sloped end of a roof after the wall bend",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "sloped roof end",
+   "visibility": {
+    "firstSight": "from the wall",
+    "fromSpawn": false,
+    "reads": "letter above a roof end",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "wall bend end",
+     "to": "roof",
+     "geometry": "Follow the wall to the bend and jump to the roof; wallride if needed."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "roof edge",
+     "to": "sloped end",
+     "geometry": "Grind the roof."
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "sloped end",
+     "to": "E",
+     "geometry": "Use the sloped end to launch up for the E."
+    }
+   ],
+   "moves": [
+    "ledge",
+    "wallride",
+    "grind",
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallride as recovery"
+   ],
+   "coupling": "goal clock",
+   "failure": "A miss drops off the roof.",
+   "timeFromSpawnS": "run complete ≈ 1:01:12 (≈ 60 s)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Ends on a roof with the roof itself as the kicker.",
+   "evidence": "THG; LP4 1:01:12",
+   "confidence": "high"
+  },
+  {
+   "id": "O-COMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (amateur)",
+   "zone": "Z1",
+   "landmark": "QP coping → silver railing → roof edge → manual to the water → QP",
+   "layer": "ledges, roof edge, ground",
+   "heightM": "roof edge",
+   "launchFrom": "QP on the left",
+   "visibility": {
+    "firstSight": "letters in a chain",
+    "fromSpawn": false,
+    "reads": "letters along coping, rail and roof",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "lip",
+     "from": "QP on the left",
+     "to": "C",
+     "geometry": "Grind the QP coping for the C."
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "QP end",
+     "to": "O",
+     "geometry": "Ollie near its end for the O and land in a manual."
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "silver railing",
+     "to": "bend",
+     "geometry": "Grind the silver railing."
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "roof edge",
+     "to": "M, B",
+     "geometry": "After the bend jump and grind the roof edge."
+    },
+    {
+     "step": 5,
+     "move": "manual",
+     "from": "roof end",
+     "to": "water edge",
+     "geometry": "Jump off and manual down toward the water."
+    },
+    {
+     "step": 6,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "last O",
+     "geometry": "Launch up the QP for the final O and land it."
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "ledge",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "manual links"
+   ],
+   "coupling": "one combo",
+   "failure": "Restart at the QP.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Uses the downhill to the water as the combo's spine.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-PROCOMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "Pro C-O-M-B-O",
+   "zone": "Z2/Z5/Z4",
+   "landmark": "bannister → wall → lamp → brown roof → yard → roof → tower → through a window",
+   "layer": "ledges, roofs, tower, window",
+   "heightM": "roof and tower height",
+   "launchFrom": "bannister on the right",
+   "visibility": {
+    "firstSight": "letters across roofs",
+    "fromSpawn": false,
+    "reads": "letters on roof peaks and a tower",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "bannister",
+     "to": "C",
+     "geometry": "Grind the bannister on the right."
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "left wall",
+     "to": "wall grind",
+     "geometry": "After the corner ollie and wallride into a grind on the left wall."
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "protruding lamp",
+     "to": "brown roof",
+     "geometry": "Use the lamp to get onto the brown roof for the O."
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "roof peak",
+     "to": "M",
+     "geometry": "Grind the peak and jump at the M into the yard."
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "yard QP",
+     "to": "roof",
+     "geometry": "Launch left from the QP and grind the roof."
+    },
+    {
+     "step": 6,
+     "move": "rail-transfer",
+     "from": "roof",
+     "to": "tower",
+     "geometry": "Jump to the tower and grind around it for the B."
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "tower line",
+     "to": "window",
+     "geometry": "Ollie the gaps on the same line and fly through a window for the last O."
+    }
+   ],
+   "moves": [
+    "grind",
+    "wallride",
+    "rail-transfer",
+    "ledge",
+    "vert-air",
+    "ollie",
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long one-combo roof route"
+   ],
+   "coupling": "one combo",
+   "failure": "Expensive: any fall restarts a long route.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 5,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Pro letters climb to the tower and exit through a window, the same kind of window exit the remake tape uses.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-KEYS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Guard's 16 orange keys",
+   "zone": "Z6/Z1",
+   "landmark": "grass wedge, curved ledge, wall by Ranger Bob's truck, two pools",
+   "layer": "ledges and bowls",
+   "heightM": "ground to wall top",
+   "launchFrom": "curved ledge",
+   "visibility": {
+    "firstSight": "keys strung along a line",
+    "fromSpawn": false,
+    "reads": "orange keys",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "grass wedge",
+     "to": "curved ledge",
+     "geometry": "Hop the grass wedge and grind round the curved ledge."
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "wall past the truck",
+     "to": "wall top",
+     "geometry": "Wallride up the wall on the left."
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "pool",
+     "to": "centre key",
+     "geometry": "Drop into the pool and grind toward the middle key."
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "pool",
+     "to": "second pool",
+     "geometry": "Go round once, hop the gap, grind round the other pool."
+    }
+   ],
+   "moves": [
+    "ollie",
+    "ledge",
+    "wallride",
+    "grind",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap.",
+   "timeFromSpawnS": "handed in at the Administration Building (LP4 0:54:40)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Keys draw a line into the pools.",
+   "evidence": "THG; LP4 0:54:40",
+   "confidence": "high"
+  },
+  {
+   "id": "O-TOOLS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "Escape From Alcatraz tools",
+   "zone": "Z4→Z1",
+   "landmark": "wire down to the roof → pool transfer → curved fencing → yard → fat pipe → ruined building → railing → wall to the ferry",
+   "layer": "wire, roof, pools, ledges, ferry",
+   "heightM": "roof to waterline",
+   "launchFrom": "wire down onto the roof",
+   "visibility": {
+    "firstSight": "tools along a descending route",
+    "fromSpawn": false,
+    "reads": "tool icons",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "wire",
+     "to": "roof",
+     "geometry": "Grind down the wire onto the roof."
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "roof QP",
+     "to": "pool",
+     "geometry": "Transfer right down into the pool."
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "pools",
+     "to": "exit",
+     "geometry": "Grind round the pools and leave."
+    },
+    {
+     "step": 4,
+     "move": "wallride",
+     "from": "right wall",
+     "to": "grind",
+     "geometry": "Wallride up and grind it."
+    },
+    {
+     "step": 5,
+     "move": "rail-transfer",
+     "from": "curved fencing",
+     "to": "path",
+     "geometry": "Grind the long curved fencing, hopping the gap."
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "fat pipe",
+     "to": "tools",
+     "geometry": "In the yard grind the fat pipe; ollie as it slopes up for an air tool."
+    },
+    {
+     "step": 7,
+     "move": "ledge",
+     "from": "QP and ruined building",
+     "to": "railing",
+     "geometry": "Grind the QP on the left, hop the intersection, grind inside the ruined building and onto the railing."
+    },
+    {
+     "step": 8,
+     "move": "ledge",
+     "from": "left wall",
+     "to": "ferry",
+     "geometry": "Grind the wall down to the ferry; the last tool is on the ferry (sloped walkway at its back)."
+    }
+   ],
+   "moves": [
+    "wire",
+    "transfer",
+    "ledge",
+    "wallride",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "very long descending line"
+   ],
+   "coupling": "goal clock",
+   "failure": "Missing a tool means re-climbing the island.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "A top-to-bottom escape line that uses the island's fall as speed.",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "R-S",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z3",
+   "landmark": "on a rail just inside the Lighthouse Courtyard door",
+   "layer": "ledges",
+   "heightM": "≈ 1-2 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "from start go left through the tunnel to Switchbacks - South Side, then right through the door to Lighthouse Courtyard"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "turn left and grind the rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:22:50 flythrough",
+   "confidence": "high"
+  },
+  {
+   "id": "R-K",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z3",
+   "landmark": "further along the same rail, after a jump",
+   "layer": "ledges",
+   "heightM": "≈ 2-3 m (jump off the rail)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "keep grinding and jump for the K"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-A",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z3",
+   "landmark": "continuation of the rail",
+   "layer": "ledges",
+   "heightM": "≈ 1-2 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "continue the grind"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-T",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z3",
+   "landmark": "off the top of the slope ahead",
+   "layer": "air",
+   "heightM": "jump height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "go up the slope ahead and jump at the end"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z3",
+   "landmark": "above a quarter pipe ahead",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the QP ahead"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:24:56 \"COMPLETE! Collect S-K-A-T-E\" at 8:08",
+   "confidence": "high"
+  },
+  {
+   "id": "R-COMBO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (pro)",
+   "zone": "Z1",
+   "landmark": "straight ahead of the start: ramp → roof edge → pipe → QP coping → rail",
+   "layer": "roof edge and pipes",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "go up the ramp"
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind the roof edge"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "hop left to grind the pipe"
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "manual over to grind the QP"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "final rail"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ledge",
+    "rail-transfer",
+    "manual",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34; WEB gamerant",
+   "confidence": "high"
+  },
+  {
+   "id": "R-BINS",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "goal-object",
+   "label": "5 wheelie bins (cell-block keys)",
+   "zone": "Z1/Z3/Z2",
+   "landmark": "ahead of the start; up the hill right at Lighthouse Courtyard; foot of the narrow spiral slope; grassy area right; outer edge right",
+   "layer": "ground",
+   "heightM": "ground",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "knock each bin; the last holds the key"
+    }
+   ],
+   "moves": [
+    "ride"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "gates the tape",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:24:08-1:27:50",
+   "confidence": "high"
+  },
+  {
+   "id": "R-TOURISTS",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "goal-object",
+   "label": "3 tourist groups to photobomb",
+   "zone": "Z1/Z2/Z3",
+   "landmark": "ferry deck; switchbacks south path; lighthouse",
+   "layer": "ferry deck; ground",
+   "heightM": "deck",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "",
+     "to": "",
+     "geometry": "turn round at start and QP-transfer onto the ferry"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "switchbacks south, left path"
+    },
+    {
+     "step": 3,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "lighthouse"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:23:14 \"1 of 3 photo bombed\"",
+   "confidence": "high"
+  },
+  {
+   "id": "R-WATERTOWER",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "goal-object",
+   "label": "Spine Transfer into the Water Tower",
+   "zone": "Z6/Z5",
+   "landmark": "water tower beside the pools",
+   "layer": "tank interior",
+   "heightM": "tank rim ≈ 10-14 m (estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "from Lighthouse Courtyard go right down the overgrown path; grind round the first pool to knock the valve and drain the second"
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "from the second pool spine transfer into the tower"
+    }
+   ],
+   "moves": [
+    "grind",
+    "unlock",
+    "spine-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "hidden-deck",
+   "label": "Hidden deck",
+   "zone": "Z2",
+   "landmark": "tower beside Switchbacks - North Side",
+   "layer": "tower ledges",
+   "heightM": "tower height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "through the tunnel to Switchbacks - North Side, turn right and use the ramp at the end of the slope onto the tower"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "grind the rail, hop to the next ledge, follow it round, jump at the end"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "rail-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:27:26 \"HIDDEN DECK\"",
+   "confidence": "high"
+  },
+  {
+   "id": "R-IGLOGO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "logo",
+   "label": "Iron Galaxy logo",
+   "zone": "Z7",
+   "landmark": "centre of a giant target",
+   "layer": "air",
+   "heightM": "launch from a loop",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "Rooftops - South Side, far left corner"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "ramp into a loop-de-loop that launches onto the target"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "plush",
+   "label": "Panda plushie",
+   "zone": "Z7/Z5",
+   "landmark": "small platform on a tall tower",
+   "layer": "wire to a tower platform",
+   "heightM": "tower top",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "Rooftops - South Side, far end: grind the rail to the water tower"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "do not jump at the end; hold grind onto the wire to the tall tower"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "land on the small platform"
+    }
+   ],
+   "moves": [
+    "grind",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "EXPLORE",
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "4 stat points",
+   "zone": "Z2/Z4",
+   "landmark": "deck route; just past the tunnel to Switchbacks - South Side; above steps in a corner after grinding up stairs; QP at a roof edge on Rooftop - North Side",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "short local lines"
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:27:26 \"4/4 stat points\"",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "cash",
+   "label": "5 cash bundles",
+   "zone": "various",
+   "landmark": "rail jump after a narrow path; lighthouse QP; spine transfer off the bathroom QP; lower building roof; narrow walkway handrail",
+   "layer": "mixed",
+   "heightM": "mixed",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "short local lines"
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air",
+    "spine-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "P-SKATE",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E (normal)",
+   "zone": "Z1/Z2",
+   "landmark": "S: air the QP at the left end of the lowest courtyard; K: rail round that courtyard; A: handrail of the path up to the guards' quarters; T: right end of the courtyard; E: through the portal, air the first QP on the cell-block front",
+   "layer": "mixed",
+   "heightM": "ground to QP",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "per letter as listed"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-SKATEH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "S-K-A-T-E Hard",
+   "zone": "Z4/Z5",
+   "landmark": "S: kicker off the cell-block roof opposite the trap door; K: walkway on the exercise-yard wall; A: grind transfer over the water channel; T: QP in the yard opposite the channel; E: big pipe at the right end of the yard out over the water",
+   "layer": "roof, yard walls, pipe over water",
+   "heightM": "roof and wall height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "per letter as listed"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ledge",
+    "rail-transfer",
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG (E on a cable by the water tower)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-COMBO",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O",
+   "zone": "Z3",
+   "landmark": "staircase opposite the cell-block front: middle rail down the stairs, rail-to-rail over the crumbling walkway",
+   "layer": "stair rails",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "C in front of the staircase, O on the middle rail, hold for M and B"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "jump rail to rail over the crumbling walkway for the last O (\"Over Crumblin Rocks\" 320)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-COMBOH",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O Hard (\"Someone Is Digging\")",
+   "zone": "Z4/Z6",
+   "landmark": "ledge on the cell block's right side toward the pool, lower ledge, QP, small pipe",
+   "layer": "ledges",
+   "heightM": "wall height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind the ledge toward the swimming pool (C), jump across and keep grinding, drop to the lower ledge (O)"
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "manual to the QP and air it (M)"
+    },
+    {
+     "step": 3,
+     "move": "revert",
+     "from": "",
+     "to": "",
+     "geometry": "revert to manual, manual left (B)"
+    },
+    {
+     "step": 4,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "jump right into a grind on the small pipe to the end (O)"
+    }
+   ],
+   "moves": [
+    "ledge",
+    "manual",
+    "vert-air",
+    "revert",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG (letters on cables near the water tower)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-KEYS",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "goal-object",
+   "label": "5 cell keys",
+   "zone": "Z6/Z4/Z5",
+   "landmark": "swimming pool; wedge ramp on the cell-block roof; water-channel walkway transfer; kicker with a rail at the roof's far end; rail from the water-tower roof down to the yard wall",
+   "layer": "mixed",
+   "heightM": "up to tank height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "per key as listed"
+    }
+   ],
+   "moves": [
+    "grind",
+    "kicker",
+    "rail-transfer",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG key icons",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-DECK",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "hidden-deck",
+   "label": "New deck",
+   "zone": "Z1",
+   "landmark": "roof of the guards' quarters (dock-side building on VG)",
+   "layer": "roof",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "reach the roof (VG draws a WARP line ending near it)"
+    }
+   ],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-CD",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "music-cd",
+   "label": "New music track",
+   "zone": "Z5",
+   "landmark": "on the rail from the yard-wall walkway to the water-tower roof",
+   "layer": "cable",
+   "heightM": "tank height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the walkway rail on the exercise-yard wall"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "jump into a grind on the rail up to the water-tower roof"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump left for the track"
+    }
+   ],
+   "moves": [
+    "grind",
+    "wire",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "CC1; VG CD icon",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-STAT",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "stat-point",
+   "label": "3 stat points",
+   "zone": "Z2/Z5/Z4",
+   "landmark": "above the cement bump; yard-wall grind across the water channel; on the lights at the top of the cell-block interior",
+   "layer": "mixed",
+   "heightM": "up to ceiling lights",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "per point as listed"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "rail-transfer",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Lip Extension",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "any lip extension (THPS4 feature)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Watertower Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "water-tower rim",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Wired",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "a wire (location unknown)",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bathroom Break",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "over/onto the restrooms (Ranger Ron launch clears \"both those restrooms\", LP4 0:46:32)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bleacher Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "bleachers",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Broken Walk",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "broken walkway (PS34 cash route also hops it)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Cellblock transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "transfer onto/over the cell block",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Cellblock roof 2 exercise yard wall transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "cell-block roof to the yard wall",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Down the hatch",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "drop through a hatch (into the cell block?)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ferry",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "onto the ferry",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Gutter Punk",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "gutter / sewer pipe",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "How'd you get up there",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "a hard-to-reach high spot",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge to Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge to pipe",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pipe to pipe",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "roof pipes",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail 2 Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pipe 2 Ledge",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Over dock stairs",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "dock stairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pipe smoker",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown pipe",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Pool Change",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "between the two pools",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "O-KEYS"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail 2 Rail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rising from the gutter",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "out of the gutter/sewer",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Roof to rail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rooftop hero",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "unknown roof",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Sik Sewer Ledge Manual",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "sewer ledge",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Skate Attic",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "an attic space (inside a building)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Swamp Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "swampy patch",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Switchback Shuffle",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "switchback ledges",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Tunnel Clearance",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "over the tunnel mouth",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Tunnel manual",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "through the tunnel",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Watertower Roof Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "water-tower roof (Rune: blunt to fakie on the railing around it)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Who Bombed the Bathroom? Spine!!!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "spine",
+   "location": "spine over the restroom building",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bomb Drop Professional",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "drop-in from height",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Super-High Water tower Spine",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "spine",
+   "location": "spine transfer from pool 2 into the open water-tower tank (Rune step 5)",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rune's Grommet Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "Rune Glifberg challenge",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rune's Plank Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "melon over the plank held out of a window above the pool (Rune step 3)",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Sludge Bomb",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Tin Roof Manual",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "tin roof",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Guard Walk 2 Step Planks",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "guard walk to plank steps",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Switchback 1st Leg",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "switchbacks (Manual the Switchbacks)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Switchback 2nd Leg",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "switchbacks",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Manualed the whole thing",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "manual",
+   "location": "whole switchback road",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ellisa's Switchback 2 Sewer Pipe",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "kicker from the switchbacks into the drainage half-pipe (Elissa step 3)",
+   "moves": [
+    "grind",
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Massive Crumbling Staircase",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "clear the broken staircase below the lighthouse",
+   "moves": [
+    "ollie",
+    "boneless"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Foghorn",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "railing around the foghorn",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Ledge 2 Rail",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Skylight 2 Skylight",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "cell-block roof skylights",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Look Out Below",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "channel",
+   "location": "air over the water in the exercise yard (VG label)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Spinal Gap",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 300,
+   "kind": "spine",
+   "location": "spine transfer from the cell-block roof into the swimming pool",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Bunney Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 110,
+   "kind": "other",
+   "location": "launch off the bump opposite the cell-block front (VG \"Bunny Hop\")",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Ova De Door",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "over-object",
+   "location": "transfer over the portal door to the cell-block roof",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Big Air Gap!",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "transfer over the closed cell-block door",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Roof Air One",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "kicker",
+   "location": "wedge ramp on the cell-block roof",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Roof Air Two",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "kicker",
+   "location": "wedge ramp off the far end of the cell-block roof",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Freedumb Hill",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "manual",
+   "location": "first part of the hill from the cell block to the guards' quarters",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Shawshank Hill",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "manual",
+   "location": "second part of that hill",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Over Crumblin Rocks",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 320,
+   "kind": "rail-transfer",
+   "location": "rail to rail over the broken walkway (VG label)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "P-COMBO"
+   ],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Three Five-O Cell",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "ledge round the cement-bump area",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Swimming Team",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "perimeter of the swimming pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Escape Route",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "middle stair rail plus the broken-walkway transfer",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-COMBO"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Switchback Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "ledge down the right side of the hill",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Short Term",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "ledge down the left side of the hill",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Long Term",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 300,
+   "kind": "ledge-to-ledge",
+   "location": "Short Term held to the QP left of the guards' quarters",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Pipe Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "wire",
+   "location": "big pipe out over the water (SKATE Hard E)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-SKATEH"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Guards Quarters",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "handrail on top of the rounded QP at the guards' quarters",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Roofin Job",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "roof",
+   "location": "overhang of the guards' quarters roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Perimeter Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "ledge-to-ledge",
+   "location": "across the lowest courtyard",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Access Ramp",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "handrail of the ramp to the lowest courtyard",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Stepping Stones",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "grind transfer over the yard water channel",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Someone Is Digging",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "the COMBO-Hard line",
+   "moves": [
+    "ledge",
+    "manual"
+   ],
+   "onRouteOf": [
+    "P-COMBOH"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Doing Time",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "yard-wall walkway handrail across the water channel",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-CD"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Hoppin Roof",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "pipe to pipe on the cell-block roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Scout Above",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 300,
+   "kind": "roof",
+   "location": "cell-block roof perimeter, hopping the two wedge ramps",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "New Arrivals",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "ledge up to the yard-wall walkway, drop to its handrail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Courtyard Pipe Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "pipe into the exercise yard through the wall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Another Pipe",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "pipe of the COMBO-Hard O",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-COMBOH"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Lip Test",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 350,
+   "kind": "lip",
+   "location": "pipe above the yard QP used to transfer the channel",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Cement Lips",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "lip",
+   "location": "ledge above the cement QP opposite the channel",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Knock over 5 wheelie bins (key in the last) and approach the closed doors",
+   "opens": "Release the Prisoner: opens the cell block",
+   "neededFor": [
+    "TAPE-R"
+   ],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34; LP34 1:27:50-1:27:56"
+  },
+  {
+   "trigger": "Grind round the first pool",
+   "opens": "knocks a valve and drains the second pool",
+   "neededFor": [
+    "R-WATERTOWER"
+   ],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "Door in the exercise yard",
+   "opens": "leads up to the prison roof (Pose for 6 Pictures)",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "THG"
+  },
+  {
+   "trigger": "Portal door",
+   "opens": "leads to the cell-block roof",
+   "neededFor": [
+    "TAPE-PS1",
+    "P-SKATE"
+   ],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "CC1 (SKATE E, \"Ova De Door\")"
+  },
+  {
+   "trigger": "Trap door on the cell-block roof",
+   "opens": "drops into the cell-block interior (competition)",
+   "neededFor": [],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "CC1"
+  },
+  {
+   "trigger": "Slide the cell block switch",
+   "opens": "PS1 goal 9 (\"SWITCH\" label on the VG roof)",
+   "neededFor": [],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "VG"
+  },
+  {
+   "trigger": "WARP line",
+   "opens": "VG draws a yellow WARP link from the area in front of the cell block down to the dock-side roof with the deck",
+   "neededFor": [
+    "P-DECK"
+   ],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "VG (function not described)"
+  },
+  {
+   "trigger": "Skitch Ranger Ron's tram and let go before his kicker",
+   "opens": "launches the skater over the restrooms toward the parade-ground bank",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "THG; LP4 0:46:32-0:47:26"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Prison break-in to window (tape)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "yard",
+    "Rooftop - North Side",
+    "drop into the cell block",
+    "interior QP / spiral rail",
+    "top tier railing",
+    "left window",
+    "outside rail",
+    "jump",
+    "yard wall"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE-R"
+   ],
+   "why": "Uses the newly opened building once, inside out.",
+   "evidence": "LP34 1:28:37-1:29:12"
+  },
+  {
+   "id": "L2",
+   "name": "Cell-block roof to water tower",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "sequence": [
+    "portal door",
+    "cell-block roof",
+    "kicker with rail",
+    "water-tower roof grind",
+    "jump to tape"
+   ],
+   "links": [
+    "unlock",
+    "kicker",
+    "grind"
+   ],
+   "collectibles": [
+    "TAPE-PS1",
+    "P-KEYS"
+   ],
+   "why": "Roof to tank by a kicker-rail.",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L3",
+   "name": "Yard wall walkway to tower",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "sequence": [
+    "yard-wall walkway rail",
+    "channel transfer",
+    "rail up to the tank roof",
+    "jump left"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "P-CD",
+    "P-SKATEH"
+   ],
+   "why": "The tower is fed from two sides by cables.",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L4",
+   "name": "Lighthouse rail chain (letters)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "Lighthouse Courtyard door",
+    "long rail (S, K, A)",
+    "slope jump (T)",
+    "QP (E)"
+   ],
+   "links": [
+    "grind",
+    "ollie",
+    "vert-air"
+   ],
+   "collectibles": [
+    "R-S",
+    "R-K",
+    "R-A",
+    "R-T",
+    "R-E"
+   ],
+   "why": "All five letters on one rail line.",
+   "evidence": "PS34"
+  },
+  {
+   "id": "L5",
+   "name": "South rooftops letter run",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "kicker (S)",
+    "road (K)",
+    "slope kicker to tower ledge (A)",
+    "wall (T)",
+    "roof with sloped end (E)"
+   ],
+   "links": [
+    "kicker",
+    "grind",
+    "wallride"
+   ],
+   "collectibles": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E"
+   ],
+   "why": "Descends the island toward the water.",
+   "evidence": "THG; LP4 1:00:12-1:01:12"
+  },
+  {
+   "id": "L6",
+   "name": "Escape line",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "wire to roof",
+    "pool transfer",
+    "pools",
+    "wallride wall",
+    "curved fencing",
+    "fat pipe",
+    "ruined building",
+    "railing",
+    "wall to ferry"
+   ],
+   "links": [
+    "wire",
+    "transfer",
+    "wallride"
+   ],
+   "collectibles": [
+    "O-TOOLS"
+   ],
+   "why": "Top-to-bottom line.",
+   "evidence": "THG"
+  },
+  {
+   "id": "L7",
+   "name": "Pools to water tower",
+   "version": "both",
+   "sequence": [
+    "pool 1",
+    "valve/pool change",
+    "pool 2",
+    "spine into the tank",
+    "spine back out"
+   ],
+   "links": [
+    "spine-transfer"
+   ],
+   "collectibles": [
+    "R-WATERTOWER"
+   ],
+   "why": "Vert route into the landmark.",
+   "evidence": "THG (Rune); PS34"
+  },
+  {
+   "id": "L8",
+   "name": "Switchback manual",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "switchback leg 1",
+    "leg 2",
+    "whole road"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [],
+   "why": "Long downhill manual with named stages.",
+   "evidence": "THG gap list"
+  },
+  {
+   "id": "L9",
+   "name": "Rooftops wire to the tall tower",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "south rooftops rail",
+    "water tower rim",
+    "held grind onto the wire",
+    "tall tower platform"
+   ],
+   "links": [
+    "grind",
+    "wire"
+   ],
+   "collectibles": [
+    "R-PANDA"
+   ],
+   "why": "Highest collectible line in the remake.",
+   "evidence": "PS34"
+  }
+ ],
+ "guidance": [
+  "Zone captions on entry (\"Switchbacks - North Side\", \"Lighthouse Courtyard\", \"Rooftop - North Side\") name areas so text directions work (LP4 1:00:09, 1:01:27; LP34 1:28:45; PS34).",
+  "The flythrough shows the tape beside a ruined wall with a pipe and the bay (LP34 1:23:02), the same view the player gets when leaving the left window.",
+  "The water tower is a skyline landmark from the yard and the switchbacks (LP34 1:28:39-1:28:42).",
+  "Closed doors with a guard are shown in the flythrough (LP34 1:22:56) and sit beside the courtyard the letter line uses, so the lock is seen long before the key.",
+  "Inside the cell block, light through the two open windows at the end of the top tier draws the eye; the tape is visible through the left one (LP34 1:29:05).",
+  "Bins carry their own text feedback (\"1 of 5 ... no cellblock keys here!\", LP34 1:24:08), so the search has a visible counter.",
+  "Hidden on purpose: the cell-block interior, the tank interior, the south-rooftop loop, the tall tower platform."
+ ],
+ "designLogic": [
+  "The remake gates the tape behind another goal (Release the Prisoner): the tape is the reward for opening the level's biggest locked building, and its route uses that building once.",
+  "The search goal (5 bins) is spread across the island, so by the time the cell block opens the player knows the island; the tape then needs only ≈ 30 s.",
+  "Inside-out route: climb a closed interior (tiers, spiral stairs) and exit through a window to the outside landmark. It reverses the usual outside-in climb and gives a dramatic reveal of the bay.",
+  "The water tower is the island's secret-holder in every version: PS1 tape on its roof, PS2 pro spine into its open tank, remake spine goal plus tape beside it.",
+  "Height comes from the island itself: the tape is \"high\" because the cell block sits on the summit; no extra structure was needed.",
+  "Letters stay on one readable line in the remake (one rail for S-K-A, a slope jump, a QP), whereas the original spreads them down the hill; the remake keeps the teaching letters simple and moves the challenge to the tape.",
+  "Falling into the bay is the main failure (LP4 \"You big drip!\"); routes near the shore are low-cost practice, routes on the summit cost a climb.",
+  "PS1 relies on portals (to the cell-block roof) and a warp link (VG) to make a tall island navigable on weaker hardware; the remake replaces them with opened doors and roof captions.",
+  "Pro COMBO in the original ends by flying through a window, the same move the remake tape uses: a late-career original idea became the remake's tape.",
+  "Remake runs are 10:00; LP34 used ≈ 4:50 for every regular goal including the gated tape (1:23:08 → 1:29:10)."
+ ],
+ "remakeChanges": [
+  "Tape: none in the PS2 career; PS1 put it on the water-tower roof via a kicker-rail from the cell-block roof (CC1); the remake puts it outside the cell block's top-tier window above the water tower, behind Release the Prisoner (PS34; LP34).",
+  "Find the Guard's Keys (16 keys) and Distract the Guards (bins) merge into Release the Prisoner (5 bins with a key) (THG vs PS34).",
+  "Semi Flip the Bulldozer becomes a pro Sal Flip over the Bulldozer; a Double Heelflip of the Massive Crumbling Stairset reuses the original gap name (THG gap list vs PS34).",
+  "Rune Glifberg's water-tower spine (original pro challenge step) becomes a regular goal \"Spine Transfer into the Water Tower\" with a drain-the-pool valve (THG vs PS34).",
+  "Take the Alcatraz Tour (skitch) becomes Listen to Ranger Ron's Story (skitch for ≈ 20 s); Bullseye Launch's target returns as the IG-logo target (THG vs PS34).",
+  "S-K-A-T-E moves from a hill-descending run (original) to one rail line in Lighthouse Courtyard (remake)."
+ ],
+ "transfer": [
+  "Gated crystal: lock a tall building with a door that a search goal (five bins, last one holds a key) opens; put the crystal just outside an upper window of that building, so the route is interior climb → window → rail → jump. Use a travelling-rail-free static rail out of the window; our grind ollie (≈ 2.4 m pop) clears the crystal height above the rail.",
+  "Inside-out climb: interior quarter pipes and a spiral handrail up three tiers (≈ 3-4 m each) give vert air and grind practice in a closed room before the exposed exit.",
+  "Landmark cable network: hang several cables from a water tower to roofs and walls (PS1 layout), then put lesser collectibles on the cables and the crystal at the tank.",
+  "Spine into a tank: a drained pool beside a tower whose tank has an open top; spine transfer from the pool rim into the tank (our spine transfer works pipe to pipe).",
+  "Make failure geographic: put early collectibles near the shore (cheap water reset) and the crystal on the summit (costly climb), so difficulty rises with altitude.",
+  "Caption zones on entry so directions in hints can name them, as the remake does."
+ ],
+ "openQuestions": [
+  "Whether the remake tape can be reached from outside without releasing the prisoner (HardcoreGamer says \"theoretically\"; no route documented).",
+  "Exact interior route LP34 used to get from the floor to the top tier (frames at 1 s show a ride up the halfpipe and a steep rail view; could be the spiral stair rail).",
+  "Original PS2 water tower: THG calls it a \"watchtower\" in Rune's challenge; the gap list says \"water tower\"; treated as the same structure.",
+  "Meaning of the VG \"WARP\" line and PS1 \"SWITCH\" goal (CC1 does not mention them).",
+  "Gap points for the PS2 list are not published in permitted sources."
+ ],
+ "sourceKey": {
+  "VG": "VGMaps/VGCartography isometric render of the PS1 edition of THPS4 (Vicarious Visions, 2002), marked and unmarked versions",
+  "G4m": "THPS4 (PS2) in-box mini guide (BradyGames Signature Series excerpt); covers College only",
+  "THG": "tonyhawkguide.com THPS4 walkthrough and gap list pages (original PS2 game, recorded by the site author \"Sulig\")",
+  "CC1": "CheatCodes.com PS1 level guides for THPS4 by Jeffrey Hartman (2003): College 34859, Alcatraz 34847, Kona 34846 (no San Francisco guide found)",
+  "LP4": "archive.org PS2 longplay of THPS4 (played by Spazbo4); times h:mm:ss into the video",
+  "LP34": "archive.org Xbox Series longplay of THPS 3+4 (2025); times h:mm:ss into the video",
+  "PS34": "Push Square THPS 3+4 per-level walkthroughs and all-secret-tapes page (Stephen Tailby, July 2025), text plus its tape screenshots",
+  "WEB": "other permitted text guides for THPS 3+4: pcgamesn, gamerant, screenrant, thegamer, operationsports, hardcoregamer; ofzenandcomputing refused the request (HTTP 403) and was skipped",
+  "MAR": "mariteaux.somnolescent.net review of the PS1 port (free roam, about thirty goals per stage, no skitching)"
+ }
+}

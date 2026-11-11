@@ -1,0 +1,3830 @@
+{
+ "id": "thps4-college",
+ "game": "THPS4",
+ "level": "College",
+ "location": "Fictional California college campus and the streets around it (G4m p001 calls it a corner of the \"California College campus\"; the PS1 bowl floor is painted \"California College\", VG)",
+ "type": "career-street",
+ "careerPosition": 1,
+ "timeLimit": "original: none (free roam, each goal has its own clock, usually 2:00); remake: 10:00 run",
+ "versions": [
+  "PS2 2002 (Neversoft) — goal list and routes from G4m, THG and LP4",
+  "PS1 2002 (Vicarious Visions port) — VG maps and CC1 text",
+  "THPS 3+4 2025 (Iron Galaxy remake) — PS34, LP34 and WEB"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater4-College.png and (Unmarked)",
+  "G4m p001-p014",
+  "THG pro-skater-4/college and gaps/pro-skater-4/college",
+  "CC1 College 34859",
+  "LP4 0:05:15-0:25:20",
+  "PS34 college + all-secret-tapes",
+  "LP34 1:06:20-1:12:30",
+  "WEB pcgamesn, gamerant (college tape; college goals), screenrant, thegamer, operationsports"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 40,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the S-K-A-T-E letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect the C-O-M-B-O letters (all in one combo, from Ollie the Bum)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Race the Inline Skater",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Nail the tricks they yell out",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get back at the 5 frat boys",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Spine Transfer over the wall",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Warn the other skaters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Skitch the Professor's car",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Grind down Officer Tom's Banners",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Pro Score: 75,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Stop all of the Pink Elephants",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Medal the High-Combo Competition",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Nail a 360 Varial McTwist",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Clock 5 jocks in one combo",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Gap between floats 10 times",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Combo the benches, stairs and flagpole (50,000)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get all 4 Master's lip gaps",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O letters",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Beat Bob's 3 best combos",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Get a Sick Score: 250,000 points",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Tony Hawk's pro challenge (roof halfpipe gap transfers)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Jamie Thomas's pro challenge (a day-in-the-life trick line)",
+   "version": "original PS2 2002 (Neversoft)"
+  },
+  {
+   "text": "Rookie Score 10,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Collect 5 party fliers",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "S-K-A-T-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Revert tutorial",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Horse",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Perform 2 lip extensions",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "High Score Combo 10,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Pro Score 60,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "C-O-M-B-O",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Pro Score Combo 60,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Fingerflip over the grass",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Pivot across the bridge",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "50-50 grind the highwire",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Extreme Score 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "S-K-A-T-E Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "High Score 25,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Sick Score Combo 100,000",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Wallride 5 graffiti tags",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "Competition",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "C-O-M-B-O Hard",
+   "version": "PS1 edition 2002 (Vicarious Visions)"
+  },
+  {
+   "text": "High Score 10,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro Score 30,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Sick Score 60,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "High Combo 7,500",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Boneless Spine Transfer Between the Courts",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Get Back at the Frat",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Skitch the Professor's Car",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Grind Down Officer Dick's Banners",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Platinum Score 300,000",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Collect C-O-M-B-O",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Collect the Pink Elephants (13)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Impress the Skaters (5)",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  },
+  {
+   "text": "Pro: Gap Between the Floats",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 300-400 m × 250-300 m including the outer streets and the hill",
+  "evidence": "G4m p013-p014 top-down map scaled by its two tennis courts taken as regulation 23.8 m long (146 px on the page, so ≈ 0.16 m/px); game courts may be smaller than regulation, so treat as an upper bound; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "West street and Woodland School",
+   "layer": "ground street; school steps and handrail; awnings",
+   "features": [
+    "two-lane road with crossings and a green steel arch spanning the street near the spawn (LP4 0:05:26)",
+    "Woodland (elementary) School with a blue handrail down its entrance steps and the S above its door",
+    "Tony's wooden spine and a concrete ramp set against the school as a makeshift halfpipe (Nail the tricks)",
+    "shops along the outer side (Billy's Sporting Goods, Schnitzel World further south)"
+   ],
+   "notes": "Outer ring road that wraps the campus on the west and south; the school roof carries a halfpipe reached by the \"Class Transfer\" (G4m p007). Remake keeps the Woodland School facade (LP34 1:06:45 flythrough)."
+  },
+  {
+   "id": "Z2",
+   "name": "South-west corner: parking garage",
+   "layer": "ground; garage deck 2 (≈ 3-4 m); power lines above the road",
+   "features": [
+    "multi-level parking garage with ramps (yellow steel truss in LP4)",
+    "red rail and raised barrier gate at the garage corner",
+    "power lines strung over the road (High Road Hop to the K)",
+    "the Professor's car on the second level (remake)"
+   ],
+   "notes": "Highest street-side structure; its barrier gate is the stepping stone from ground to the wire layer. Skate Rat stands on this corner (G4m p013-p014)."
+  },
+  {
+   "id": "Z3",
+   "name": "South street: frat house, garbage truck, campus wall",
+   "layer": "ground; awnings and balconies (≈ 3-6 m); top of the campus wall (≈ 3-4 m)",
+   "features": [
+    "frat house with a balcony and windows you can ollie, grind or manual through (Through the Frat Window gaps)",
+    "Schnitzel World's striped awning reached from plywood on a pickup truck",
+    "garbage truck parked outside the frat house (spine transfer into it for the A; Garbage Day side job)",
+    "large beige campus wall with blue arches carrying 7 election banners",
+    "parade floats circulating on the road (pro goal)",
+    "shipping containers with a quarter pipe (remake)"
+   ],
+   "notes": "The campus wall is a long grindable ledge reached only by wallride or wallie: the level's first lesson in leaving the ground without a ramp."
+  },
+  {
+   "id": "Z4",
+   "name": "Campus core: plaza, fountain, river and stone bridge",
+   "layer": "ground; benches, kiosks, curved benches; culvert (≈ 1-2 m below plaza)",
+   "features": [
+    "central plaza with fountain/flagpole, trees, benches and blue kiosks",
+    "concrete river/culvert with a stone bridge (Into/Out of/Over the River gaps)",
+    "silver railing and wooden fence beside the bridge (COMBO line, Skippin' Over gap; Ollie the Bum stands here, LP4 0:10:06)",
+    "logs in the grass (Log Hop; pink-elephant line)"
+   ],
+   "notes": "Hub that every route crosses; G4m map shows the plaza as a cross-shaped brick square with tree clumps."
+  },
+  {
+   "id": "Z5",
+   "name": "Tennis and basketball courts",
+   "layer": "ground; court fences; silver quarter pipes (remake)",
+   "features": [
+    "two tennis courts (Bjorn side job) and a basketball court inside the wall",
+    "paired silver quarter pipes between the courts (remake Boneless Spine Transfer goal)"
+   ],
+   "notes": "South-west inside the wall; the remake run starts close to here (LP34 1:07:10-1:07:25)."
+  },
+  {
+   "id": "Z6",
+   "name": "North: clock tower and green hill",
+   "layer": "ground terrace around the tower; tower top (≈ 25-30 m, estimated); wires from the top",
+   "features": [
+    "clock tower on a raised brick terrace with stairs and curved handrails",
+    "open door at the back of the tower base: a portal that puts you at the top (Clock tower Grind gap; PS1 \"Clock Tower\" 350 points)",
+    "long wires from the tower top down to a rooftop (PS1 \"High Wire Act\" to Central Hall; remake tape wire)",
+    "green hill and wooden fence along the north edge"
+   ],
+   "notes": "Tallest landmark, visible from the spawn and from the street axis (LP4 0:05:30; LP34 1:09:46)."
+  },
+  {
+   "id": "Z7",
+   "name": "East academic buildings",
+   "layer": "ground; quarter pipes at building bases; roofs (≈ 8-14 m)",
+   "features": [
+    "Fine Arts building (glass front, concrete QP with the T)",
+    "Engineering building with the purple and gold \"Swallow Pride\" banner over a QP and a handrail that wraps the corner (E)",
+    "English building",
+    "white Philosophy building with picnic tables",
+    "purple and gold concrete pool / bowl (\"California College\" bowl in PS1)",
+    "the Coliseum: the jocks' sunken area (Coliseum Transfer)"
+   ],
+   "notes": "Building-front quarter pipes double as lip-trick spots on the roof edges (Masters in X Lip/Grind gaps)."
+  },
+  {
+   "id": "Z8",
+   "name": "Rooftops",
+   "layer": "roofs (≈ 8-14 m); roof halfpipes; wires between roofs",
+   "features": [
+    "two wooden halfpipes on a roof with a gap between them (Tony Hawk pro challenge; Sick Score start)",
+    "school-roof halfpipe (Class Transfer)",
+    "wires linking roofs (remake: banner string, black wires, brick building, tape wire)"
+   ],
+   "notes": "The remake turns the roofs into a continuous wire network that ends at the tape (WEB gamerant)."
+  }
+ ],
+ "landmarks": [
+  "clock tower",
+  "Woodland School",
+  "parking garage",
+  "frat house and Schnitzel World awning",
+  "garbage truck",
+  "beige campus wall with election banners",
+  "stone bridge over the river",
+  "central plaza and fountain",
+  "Fine Arts building quarter pipe",
+  "Engineering \"Swallow Pride\" banner",
+  "purple statue (remake)",
+  "brick building at the end of the tower wire (remake)"
+ ],
+ "spawn": {
+  "zone": "Z1 (original) / Z1-Z3 outer road at the campus edge (remake)",
+  "facing": "Original: on the outer-road sidewalk facing up the street toward a green steel arch that spans the road, clock tower above the roofs beyond (LP4 0:05:26). Remake: beside the outer road; banner wall to the right, clock tower ahead along the axis (PS34; WEB gamerant).",
+  "visibleCollectibles": [
+   "clock tower (tape landmark, remake)",
+   "no letter confirmed visible from spawn"
+  ],
+  "notes": "LP4 0:05:26-0:05:30: first frame of play shows the skater on the sidewalk of the outer road, a tutorial box about talking to people with arrows over their heads, a green steel arch spanning the street ahead and the clock tower above the roofs; at 0:05:36 a Skate Rat with a blue arrow stands by the shops. LP34 1:07:10: run starts on a curving concrete walk with grass; 1:07:15 is already at the tennis courts. PS34 directions (\"from level start go left down the street\", \"turn right and spine transfer into the shipping containers\", \"look to the right and wallride up to grind the first banner\") place the remake start beside the outer road and the banner wall."
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-R",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "tape",
+   "label": "Secret tape (remake)",
+   "zone": "Z6/Z8",
+   "landmark": "wire from the clock-tower top down to the flat roof of a three-storey brick building beside the bowl",
+   "layer": "wire",
+   "heightM": "≈ 12-16 m above the plaza; ≈ 2-4 m above the brick roof at the wire's lower end (estimated from LP34 1:10:03-1:10:04: three rows of windows ≈ 10 m against a 1.8 m skater)",
+   "launchFrom": "the clock-tower portal (door at the back of the tower base) drops the skater on the wire at the top",
+   "visibility": {
+    "firstSight": "level-start goal flythrough shows the tape beside the brick building corner with a pennant string (LP34 1:07:05); the tower is visible down the street axis (LP34 1:09:46) and from the plaza (PS34 screenshot)",
+    "fromSpawn": false,
+    "reads": "small glowing cassette icon on a thin black wire high above the campus; the wire itself reads against the sky",
+    "distanceFromFirstSightM": "≈ 30-60 from the tower terrace (route length), but the tape is first identifiable only from the wire or the flythrough"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "outer street below the campus gate",
+     "to": "campus gate",
+     "geometry": "Ride up the outer street toward the gate; the clock tower stands at the end of the axis (LP34 1:09:46-1:09:49)."
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "campus gate",
+     "to": "central plaza",
+     "geometry": "Cross the plaza and its fountain ring (LP34 1:09:50-1:09:54)."
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "plaza steps",
+     "to": "tower terrace",
+     "geometry": "Grind the curved handrail up the steps toward the tower (LP34 1:09:55-1:09:57)."
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "tower terrace",
+     "to": "back of the tower",
+     "geometry": "Ride or grind the terrace ledge round to the rear of the tower (LP34 1:09:58-1:09:59)."
+    },
+    {
+     "step": 5,
+     "move": "portal",
+     "from": "open green double door with a small wooden kicker at its threshold",
+     "to": "tower top",
+     "geometry": "Roll through the door: a portal relocates the skater to the top of the tower and launches him onto the wire (LP34 1:10:00-1:10:01; PS34 screenshot of the door)."
+    },
+    {
+     "step": 6,
+     "move": "wire",
+     "from": "tower top",
+     "to": "tape",
+     "geometry": "Hold a 50-50 down the long descending wire; the tape registers as the wire nears the brick building (LP34 1:10:02-1:10:04, \"COMPLETE! Get the secret tape\" at 7:19)."
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "wire end",
+     "to": "brick roof",
+     "geometry": "Land on the brick building's flat roof (LP34 1:10:05) and drop back to the plaza."
+    }
+   ],
+   "moves": [
+    "grind",
+    "ledge",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wire balance on a long descending grind",
+    "knowing the tower door is a portal (not signposted in text; the open door and kicker are the cue)"
+   ],
+   "coupling": "portal door at the tower base; no goal unlock needed (used in the first run of LP34; PS34 lists no prerequisite)",
+   "failure": "Falling off the wire drops 10-20 m onto the bowl/plaza area; a bail costs a few seconds and the door is ≈ 10 s away, so retries are cheap inside a 10:00 run.",
+   "timeFromSpawnS": "≈ 18 s from the street below the gate, ≈ 4 s from the door (LP34 1:09:46 → 1:10:04); the run had started 2:54 earlier (1:07:10) because the player did other goals first",
+   "difficulty": 2,
+   "roles": [
+    "TEASE",
+    "EXPLORE",
+    "REWARD"
+   ],
+   "why": "The level's tallest landmark is the tape's home: the tower is seen from the street and the plaza, the flythrough shows the tape, and the player only has to ask \"what is behind the tower?\". The portal turns a 25 m climb into a free ride and rewards the climb with the best view of the campus; a harder uphill approach exists for players who arrive by the rooftop wires.",
+   "evidence": "PS34 college \"Get the Secret Tape\"; WEB pcgamesn, thegamer, operationsports, screenrant, gamerant; LP34 1:07:05, 1:09:46-1:10:05; PS34 screenshots 31-33",
+   "confidence": "high (route), medium (height)",
+   "altRoutes": [
+    {
+     "name": "uphill rooftop chain (hard)",
+     "evidence": "WEB gamerant college tape guide; WEB screenrant",
+     "route": [
+      {
+       "step": 1,
+       "move": "wallride",
+       "from": "outer street left of spawn",
+       "to": "campus wall top",
+       "geometry": "Wallride the wall before the first pillar and grind its top for about a second."
+      },
+      {
+       "step": 2,
+       "move": "rail-transfer",
+       "from": "wall top",
+       "to": "banner (bunting) string",
+       "geometry": "Jump right into a grind on the bunting string over the street."
+      },
+      {
+       "step": 3,
+       "move": "wire",
+       "from": "bunting string",
+       "to": "first rooftop",
+       "geometry": "Halfway along, hop left onto a black wire and grind up to a rooftop; trick during the grind to keep speed and jump off before the wire ends."
+      },
+      {
+       "step": 4,
+       "move": "ledge",
+       "from": "first rooftop halfpipe lip",
+       "to": "second black wire",
+       "geometry": "Grind the right-hand lip of the rooftop halfpipes; the grind continues onto a second wire across the campus."
+      },
+      {
+       "step": 5,
+       "move": "ollie",
+       "from": "end of second wire",
+       "to": "brick building roof",
+       "geometry": "Jump left, turn sharply and drop onto the brick building (a gap in its roof punishes an over-turn)."
+      },
+      {
+       "step": 6,
+       "move": "wire",
+       "from": "brick roof edge",
+       "to": "tape",
+       "geometry": "Start a grind on the roof's left edge, which links into the steep, long uphill wire; flip and grab while grinding to keep momentum until the tape."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "TAPE-PS1",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "zone": "Z7/Z4",
+   "landmark": "wire from the right-hand top of the big white building to the building opposite the library",
+   "layer": "wire",
+   "heightM": "unknown (a roof-to-roof wire, so roughly roof height ≈ 2-3 storeys; not measurable on VG)",
+   "launchFrom": "top of the white building (reached by grinding across its top, the \"Quiet Please\" line)",
+   "visibility": {
+    "firstSight": "VG draws a tape icon at the edge of the brick plaza under a wire line near goal 17",
+    "fromSpawn": null,
+    "reads": "tape icon on a wire between buildings",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "big white building roof",
+     "to": "its right-hand top corner",
+     "geometry": "Grind across the top of the white building (CC1 \"Quiet Please\" 250)."
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "white building top",
+     "to": "building opposite the library",
+     "geometry": "Grind the wire that leaves the right side of the top; the tape sits on this wire (CC1)."
+    }
+   ],
+   "moves": [
+    "ledge",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "getting onto the white building top (method not described)"
+   ],
+   "coupling": "none listed",
+   "failure": "A miss drops to the plaza; free roam means no clock, so the only cost is the climb back.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE",
+    "REWARD"
+   ],
+   "why": "Same idea as the remake: a wire between tall buildings over the plaza, reached only from a roof.",
+   "evidence": "CC1 College \"SECRET TAPE\"; VG icon",
+   "confidence": "medium (location), low (geometry)"
+  },
+  {
+   "id": "O-S",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "above the door of the Woodland School across the street",
+   "layer": "ledges/stairs",
+   "heightM": "≈ 3-3.5 m above the street (hovers above a ≈ 2.1 m doorway; estimate)",
+   "launchFrom": "blue handrail down the school steps",
+   "visibility": {
+    "firstSight": "from the street outside the school once the goal is active",
+    "fromSpawn": false,
+    "reads": "floating yellow/red letter above the doorway",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "outer street",
+     "to": "school steps",
+     "geometry": "Cross the street to the Woodland School."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "blue handrail",
+     "to": "end of rail",
+     "geometry": "Grind the blue handrail on the entrance steps."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "end of rail",
+     "to": "S",
+     "geometry": "Ollie off the rail into the S above the door."
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "handrail grind"
+   ],
+   "coupling": "goal clock (2:00)",
+   "failure": "A miss lands on the pavement; ride back up the steps, ≈ 5 s.",
+   "timeFromSpawnS": "SKATE goal run took 56.37 s for all five letters (LP4 0:23:45 record)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "First letter teaches that rails point at letters.",
+   "evidence": "G4m p003; THG; G4m p013 map; LP4 0:13:38 (S held at 1:55 after a wallie into an FS 50-50)",
+   "confidence": "high"
+  },
+  {
+   "id": "O-K",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "over the road at the parking-garage corner, on the power line",
+   "layer": "wires",
+   "heightM": "≈ 5-7 m above the road (power line above a raised barrier gate; estimate)",
+   "launchFrom": "raised barrier gate at the garage corner",
+   "visibility": {
+    "firstSight": "from the street corner; the wire is above the gate",
+    "fromSpawn": false,
+    "reads": "letter on a wire over the road",
+    "distanceFromFirstSightM": "≈ 20-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "red rail in the garage corner",
+     "to": "barrier gate",
+     "geometry": "Grind the red rail outside the parking garage."
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "raised barrier gate (sloped arm)",
+     "to": "power line",
+     "geometry": "Use the slope of the raised gate to pop up onto the power line (\"High Road Hop\" gap)."
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "power line",
+     "to": "K",
+     "geometry": "Grind the wire through the K."
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wire grind; using a sloped object as a launch into a higher grind"
+   ],
+   "coupling": "goal clock",
+   "failure": "Falling off the wire lands in the road (traffic); restart from the red rail, ≈ 10 s.",
+   "timeFromSpawnS": "part of the 56.37 s run",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "TEACH-LINE"
+   ],
+   "why": "Introduces the wire layer: the gate arm is a visible ramp to a rail you cannot reach from the ground.",
+   "evidence": "G4m p003; THG; THG gap list \"High Road Hop\"; LP4 0:13:40-0:13:52 (Higher Learnin' grind, yellow truss frame, K at 1:42)",
+   "confidence": "high"
+  },
+  {
+   "id": "O-A",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z3",
+   "landmark": "above the garbage truck parked outside the frat house",
+   "layer": "ground vehicle",
+   "heightM": "≈ 4-6 m above the street (above a ≈ 3 m truck; estimate)",
+   "launchFrom": "the truck's rear hopper used as a quarter pipe",
+   "visibility": {
+    "firstSight": "from the south street",
+    "fromSpawn": false,
+    "reads": "letter hovering over the truck",
+    "distanceFromFirstSightM": "≈ 20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "south street",
+     "to": "back of truck",
+     "geometry": "Roll up the back of the garbage truck."
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "truck rear",
+     "to": "other side",
+     "geometry": "Spine transfer (or hold up and ollie) into and out of the truck to fly through the A."
+    }
+   ],
+   "moves": [
+    "spine-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "spine transfer button (new in THPS4)"
+   ],
+   "coupling": "parked vehicle; the Garbage Day side job uses moving trucks on the same street",
+   "failure": "Misses are common (THG: \"this might take a few tries\"); retry immediately from the street.",
+   "timeFromSpawnS": "part of the 56.37 s run",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Teaches the new spine transfer on an everyday object. LP4 shows a second way in: from the Schnitzel World awning through the frat window (\"Boneless + Through the Frat Window Olling\") straight into the A, so the letter sits where the truck line and the window line cross.",
+   "evidence": "G4m p003; THG; G4m p012 (Garbage Day); LP4 0:13:54-0:14:02",
+   "confidence": "high"
+  },
+  {
+   "id": "O-T",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z7",
+   "landmark": "above the concrete quarter pipe in front of the Fine Arts building",
+   "layer": "vert",
+   "heightM": "≈ 2-3 m above the QP coping (estimate)",
+   "launchFrom": "concrete QP",
+   "visibility": {
+    "firstSight": "from the campus slopes (three slopes up from the street, THG)",
+    "fromSpawn": false,
+    "reads": "letter above a quarter pipe",
+    "distanceFromFirstSightM": "≈ 20-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "street",
+     "to": "campus",
+     "geometry": "Head up the three slopes into the open area with the college buildings."
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "Fine Arts QP",
+     "to": "T",
+     "geometry": "Air straight up the QP for the T."
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "Cheap: land back in the QP.",
+   "timeFromSpawnS": "part of the 56.37 s run",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Classic letter-over-the-quarter-pipe placement; marks the building-front QPs as launchers.",
+   "evidence": "G4m p003; THG; G4m p013 map; LP4 0:14:16 (T at 1:18, Boneless + Indy 900 + FS Revert)",
+   "confidence": "high"
+  },
+  {
+   "id": "O-E",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z7",
+   "landmark": "off the end of the handrail that wraps the Engineering building corner",
+   "layer": "ledges (handrail atop a QP)",
+   "heightM": "≈ 3-5 m above ground (handrail on the QP deck; estimate)",
+   "launchFrom": "QP below the purple and gold \"Swallow Pride\" banner",
+   "visibility": {
+    "firstSight": "from the plaza after the T (turn right toward the purple banner)",
+    "fromSpawn": false,
+    "reads": "letter beyond a rail corner",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP under the banner",
+     "to": "handrail",
+     "geometry": "Go up the QP and drop into a grind on the handrail (Bachelor's in Engineering Grind gap)."
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "handrail",
+     "to": "corner",
+     "geometry": "Grind round the corner."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "rail",
+     "to": "E",
+     "geometry": "Ollie off the rail when the E comes into view."
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "air-to-grind (landing a grind from a QP)"
+   ],
+   "coupling": "goal clock",
+   "failure": "A miss drops beside the building; retry from the QP, ≈ 5-10 s.",
+   "timeFromSpawnS": "part of the 56.37 s run; LP4 0:14:30 shows \"Bachelors in Engineering Grind + FS Boardslide\" with S-K-A-T collected",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "Last letter chains three verbs (air, grind, ollie) and pays off with a named gap.",
+   "evidence": "G4m p003; THG; LP4 0:14:30",
+   "confidence": "high"
+  },
+  {
+   "id": "O-COMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (amateur, from Ollie the Bum)",
+   "zone": "Z4",
+   "landmark": "silver railing by the stone bridge → wooden fence → over the bridge",
+   "layer": "ledges (rail and fence)",
+   "heightM": "≈ 1 m (rail and fence tops)",
+   "launchFrom": "silver railing curling off to the left by the stone bridge",
+   "visibility": {
+    "firstSight": "letters strung along the fence line once the goal starts",
+    "fromSpawn": false,
+    "reads": "five letters in a row along a fence",
+    "distanceFromFirstSightM": "along a ≈ 40-60 m fence line"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "silver railing",
+     "to": "wooden fence",
+     "geometry": "Hop into a grind on the curling silver railing and hold it onto the wooden fence (letters C-O-M-B)."
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "fence corner",
+     "to": "fence across the bridge",
+     "geometry": "After rounding the corner, ollie over the bridge (Skippin' Over gap)."
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "far fence",
+     "to": "last O",
+     "geometry": "Continue the grind for the final O, then jump down and land cleanly on the walkway."
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "holding one grind through a corner",
+    "grind-to-grind ollie over a gap"
+   ],
+   "coupling": "must stay in one combo and land it",
+   "failure": "Any fall resets the letters; restart at the railing a few metres away.",
+   "timeFromSpawnS": "record 15,534 points (LP4 0:23:45)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A whole line laid out as letters: shows the player that a fence plus a gap is one combo.",
+   "evidence": "G4m p004; THG; LP4 0:10:00-0:10:15",
+   "confidence": "high"
+  },
+  {
+   "id": "O-PROCOMBO",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "combo-letters",
+   "label": "Pro C-O-M-B-O",
+   "zone": "Z3/Z4",
+   "landmark": "campus park wall, inner corner, opposite wall, outer wall",
+   "layer": "wall tops (≈ 3 m) and ground manuals",
+   "heightM": "≈ 3 m wall tops",
+   "launchFrom": "wallride onto the park wall",
+   "visibility": {
+    "firstSight": "letters along wall tops",
+    "fromSpawn": false,
+    "reads": "letters on top of walls",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "ground",
+     "to": "park wall top",
+     "geometry": "Wallride up onto the park wall on the left and grind along the top."
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "wall end after the O",
+     "to": "corner",
+     "geometry": "Hop right and manual across the corner."
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "quarter pipe",
+     "to": "opposite wall",
+     "geometry": "Use the QP to get back up onto the opposite wall and continue grinding."
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "wall end",
+     "to": "outer wall",
+     "geometry": "Manual across the floor to the outer wall."
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "outer wall",
+     "to": "last O",
+     "geometry": "Get up and grind for the last O."
+    }
+   ],
+   "moves": [
+    "wallride",
+    "ledge",
+    "manual",
+    "vert-air",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallride to grind",
+    "manual links",
+    "rail balance stat"
+   ],
+   "coupling": "one combo",
+   "failure": "Any fall restarts the letters; walls make re-entry slow.",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "The pro version reuses the amateur wall and banner geometry but demands manual links between walls.",
+   "evidence": "THG \"Collect Pro COMBO Letters\"",
+   "confidence": "medium"
+  },
+  {
+   "id": "R-S",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "on the front of the Woodland School",
+   "layer": "ledges",
+   "heightM": "above the door (estimate ≈ 3 m)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "goal flythrough shows the S on the school facade",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "from start go left down the street, then right"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "use the rail to reach the letter on the building front"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 college; LP34 1:06:45 flythrough",
+   "confidence": "high"
+  },
+  {
+   "id": "R-K",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "over the road beside the car park",
+   "layer": "wires",
+   "heightM": "≈ 5-7 m (wire from deck 2; estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "go up to the second level of the car park"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the wire with the bunting on it to the letter"
+    }
+   ],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 college",
+   "confidence": "high"
+  },
+  {
+   "id": "R-A",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z3",
+   "landmark": "above shipping containers further down the street",
+   "layer": "ground objects",
+   "heightM": "≈ 4-5 m above the containers (estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "quarter pipe up one side of the containers"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "launch over the containers through the A"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 college",
+   "confidence": "high"
+  },
+  {
+   "id": "R-T",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z7",
+   "landmark": "above a large blue quarter pipe next to the abstract purple statue",
+   "layer": "vert",
+   "heightM": "above the coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the blue QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 college; LP34 1:07:55 (T picked from a QP air)",
+   "confidence": "high"
+  },
+  {
+   "id": "R-E",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z7",
+   "landmark": "upper level beyond the mascot quarter pipe opposite the statue",
+   "layer": "upper level",
+   "heightM": "upper terrace (≈ 4-6 m; estimate)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "spine-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "spine transfer from the mascot QP to the upper level"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "go right to the letter"
+    }
+   ],
+   "moves": [
+    "spine-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34 college",
+   "confidence": "high"
+  },
+  {
+   "id": "R-COMBO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (pro goal)",
+   "zone": "Z4",
+   "landmark": "rail chain beyond the bridge, left side",
+   "layer": "ledges",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "from start go straight over the bridge; grind the rail around"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "jump over the ramp"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the next rail"
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "jump off at the end and manual to the next letter"
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "last letter up the quarter pipe"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie",
+    "manual",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo, must land",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34 college",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "above the QP at the end of the street",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-K",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "K",
+   "zone": "Z3",
+   "landmark": "on the wall surrounding the campus",
+   "layer": "wall top",
+   "heightM": "≈ 3 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind the campus wall"
+    }
+   ],
+   "moves": [
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-A",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "A",
+   "zone": "Z4",
+   "landmark": "above the fountain by the message boards",
+   "layer": "ground object",
+   "heightM": "≈ 2 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "ollie over the fountain"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-T",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "T",
+   "zone": "Z4",
+   "landmark": "above the curved cement QP by the main campus entrance",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the curved QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter",
+   "label": "E",
+   "zone": "Z4",
+   "landmark": "on the handrail down the main entrance ramp",
+   "layer": "ledges",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the entrance handrail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-S",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "S (hard)",
+   "zone": "Z7",
+   "landmark": "above the QP on the building opposite the left side of the big white building",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-K",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "K (hard)",
+   "zone": "Z7",
+   "landmark": "into the second storey of Central Hall from the bowl",
+   "layer": "inside-room (second storey)",
+   "heightM": "≈ 4-5 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "launch off the wooden kicker in the California College pool into the second storey of the building ahead (\"Breakin In\" 200)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-A",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "A (hard)",
+   "zone": "Z8",
+   "landmark": "on the wire from Central Hall's second storey to the next building",
+   "layer": "wires",
+   "heightM": "≈ 4-6 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "inside the second storey turn left and grind the wire to the next building"
+    }
+   ],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-T",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "T (hard)",
+   "zone": "Z8",
+   "landmark": "balcony of that building, then the wire down to the campus wall",
+   "layer": "balcony and wire",
+   "heightM": "≈ 4-6 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind across the balcony"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind down the wire to the campus wall"
+    }
+   ],
+   "moves": [
+    "ledge",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-E",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "skate-letter-hard",
+   "label": "E (hard)",
+   "zone": "Z1",
+   "landmark": "small QP in the street corner at the end of the wire",
+   "layer": "vert",
+   "heightM": "above coping (\"Better View\" lip rail above it)",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "at the end of the wire go straight and air off the small corner QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-COMBO",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O (PS1)",
+   "zone": "Z4",
+   "landmark": "walkway inside the wall left of the main entrance",
+   "layer": "ledges and ground",
+   "heightM": "≈ 1 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "C on the rail in the small walkway"
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "O by manual at the rail end"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "M on the handrail ahead"
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "",
+     "to": "",
+     "geometry": "B straight ahead in a manual"
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "O by airing the QP ahead"
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "PH-COMBO",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "combo-letters",
+   "label": "C-O-M-B-O hard (PS1, \"Up Up\" 250)",
+   "zone": "Z7",
+   "landmark": "rails on the wall by the big white building",
+   "layer": "wall rails",
+   "heightM": "≈ 3-5 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "with lots of speed air the QP on the left side of the big white building"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the second rail up on the wall (C) and round the corner (O)"
+    },
+    {
+     "step": 3,
+     "move": "wallride",
+     "from": "",
+     "to": "",
+     "geometry": "wallride up and grind the rail above (M)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "hold to the end for B and O"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-DECK",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "hidden-deck",
+   "label": "New deck",
+   "zone": "Z7",
+   "landmark": "top of the big white building",
+   "layer": "roof",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "",
+     "to": "",
+     "geometry": "grind across the top of the white building"
+    }
+   ],
+   "moves": [
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "CC1; VG deck icon",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-CD",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "music-cd",
+   "label": "New music track (CD)",
+   "zone": "Z7",
+   "landmark": "Central Hall second storey",
+   "layer": "inside-room",
+   "heightM": "≈ 4-5 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "wooden kicker in the pool into the second storey of Central Hall"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "",
+     "to": "",
+     "geometry": "launch off the kicker in front of you"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "CC1; VG CD icon",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-STAT1",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "stat-point",
+   "label": "Stat point 1",
+   "zone": "Z7",
+   "landmark": "rail above the QP left of the library",
+   "layer": "ledges",
+   "heightM": "rail above a QP",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind the rail above the QP"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "CC1; VG yellow ball",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-STAT2",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "stat-point",
+   "label": "Stat point 2",
+   "zone": "Z1",
+   "landmark": "above the elementary school doors",
+   "layer": "ledges",
+   "heightM": "≈ 3 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "ollie at the school doors"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "CC1; VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-STAT3",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "type": "stat-point",
+   "label": "Stat point 3",
+   "zone": "Z8",
+   "landmark": "wire from the very top of Central Hall to the roof left of the white building",
+   "layer": "wires",
+   "heightM": "roof height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the wire from the top of Central Hall"
+    }
+   ],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-FRAT",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "5 frat boys on kegs",
+   "zone": "Z3",
+   "landmark": "campus wall, frat house balcony and windows",
+   "layer": "wall top; awning; inside-room; balcony",
+   "heightM": "wall top ≈ 3 m; awning and balcony ≈ 3-5 m (estimates)",
+   "launchFrom": "wallie into the wall grind; plywood on a pickup truck",
+   "visibility": {
+    "firstSight": "from the walkway across the street from the garbage truck",
+    "fromSpawn": false,
+    "reads": "people standing on kegs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallie",
+     "from": "walkway",
+     "to": "beige wall top",
+     "geometry": "Wallie into a grind on top of the wall and balance toward the blue arch (frat boys 1-2)."
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "plywood on the pickup truck",
+     "to": "Schnitzel World awning",
+     "geometry": "Leap onto the awning."
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "awning",
+     "to": "frat house window",
+     "geometry": "Ollie through the window (Through the Frat Window Ollieing!)."
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "balcony",
+     "to": "distant window",
+     "geometry": "Knock over the balcony frat boy, leap through the far window and land in a grind on the concrete ledge (Through the Frat Window Grinding!)."
+    }
+   ],
+   "moves": [
+    "wallie",
+    "kicker",
+    "ollie",
+    "break-glass",
+    "ledge"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallie (new in THPS3, required here)"
+   ],
+   "coupling": "goal clock; pedestrians",
+   "failure": "Misses drop to the street; LP4 record 0:42.44 for all five.",
+   "timeFromSpawnS": "0:42.44 (LP4 0:23:45 record)",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE",
+    "SECRET-AREA"
+   ],
+   "why": "Routes the player through a building interior: windows are doors for skaters.",
+   "evidence": "G4m p007; THG; LP4 0:19:15-0:19:45",
+   "confidence": "high"
+  },
+  {
+   "id": "O-BANNERS",
+   "version": "original PS2 2002 (Neversoft)",
+   "type": "goal-object",
+   "label": "7 of Officer Tom's banners",
+   "zone": "Z3",
+   "landmark": "beige campus wall either side of the corner arch",
+   "layer": "wall top",
+   "heightM": "≈ 3-4 m wall top (estimate)",
+   "launchFrom": "wallride from the street",
+   "visibility": {
+    "firstSight": "banners hang on the wall facing the frat house",
+    "fromSpawn": null,
+    "reads": "red election banners on a long wall",
+    "distanceFromFirstSightM": "≈ 50-100 along the wall"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "street",
+     "to": "wall top",
+     "geometry": "Wallride, then wallie up and grind the wall top."
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "wall top",
+     "to": "corner",
+     "geometry": "Hold the grind through banners 1-4, ollying over the arches (Banner Gap, Gateway Gap)."
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "QP beyond the next blue arch",
+     "to": "wall top",
+     "geometry": "Drop to the street, use the QP to slide back into a grind and hold it toward the Security Office for the last banners."
+    }
+   ],
+   "moves": [
+    "wallride",
+    "wallie",
+    "ledge",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallride angle"
+   ],
+   "coupling": "goal clock",
+   "failure": "A miss drops to the street; LP4 record 0:18.75.",
+   "timeFromSpawnS": "0:18.75 (LP4 record)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Turns a boundary wall into a grind line and teaches the wallride → wallie → grind entry.",
+   "evidence": "G4m p011; THG; LP4 0:20:15-0:20:30",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT1",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "Stat point 1",
+   "zone": "Z5",
+   "landmark": "quarter pipe left of the basketball and tennis courts",
+   "layer": "vert",
+   "heightM": "above coping",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the QP"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT2",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "Stat point 2",
+   "zone": "Z8",
+   "landmark": "above a glass quarter pipe on a rooftop",
+   "layer": "roof",
+   "heightM": "roof + QP",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "portal",
+     "from": "",
+     "to": "",
+     "geometry": "doorway left of the abstract statue: an elevator warps you to a rooftop"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind a wire to another rooftop"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "air the glass QP"
+    }
+   ],
+   "moves": [
+    "wire",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-STAT3",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "stat-point",
+   "label": "Stat point 3",
+   "zone": "Z3",
+   "landmark": "above an archway on the outer road",
+   "layer": "wall top",
+   "heightM": "≈ 4-5 m",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "nearby blue QP"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "",
+     "to": "",
+     "geometry": "grind to the stat point above the arch"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-DECK",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "hidden-deck",
+   "label": "Hidden deck",
+   "zone": "Z8",
+   "landmark": "rooftop closest to the parking garage",
+   "layer": "roof",
+   "heightM": "roof + wall ramp",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "spine-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "past the car park, spine transfer from a QP up to the roof"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "",
+     "to": "",
+     "geometry": "go up the next QP (boneless off the wall ramp) to the deck"
+    }
+   ],
+   "moves": [
+    "spine-transfer",
+    "boneless",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34; WEB gamerant college goals; LP34 1:08:15",
+   "confidence": "high"
+  },
+  {
+   "id": "R-IGLOGO",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "logo",
+   "label": "Iron Galaxy logo",
+   "zone": "Z6/Z8",
+   "landmark": "end of a second wire across the campus from the tape-wire rooftop",
+   "layer": "wires",
+   "heightM": "roof-to-roof wire",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "portal",
+     "from": "",
+     "to": "",
+     "geometry": "clock-tower door to the top"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the tape wire all the way to the rooftop"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "grind the second wire (with an American flag) across the grounds to the logo"
+    }
+   ],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "PS34; WEB gamerant (both college pages)",
+   "confidence": "high"
+  },
+  {
+   "id": "R-PANDA",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "plush",
+   "label": "Panda plushie",
+   "zone": "Z2/Z8",
+   "landmark": "rooftop reached from the car-park wire",
+   "layer": "wires and roof",
+   "heightM": "deck 2 + wire",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "",
+     "to": "",
+     "geometry": "from the car-park upper level grind the wire parallel with the road"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "",
+     "to": "",
+     "geometry": "hop right onto the purple rail"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "",
+     "to": "",
+     "geometry": "hop right again to the rooftop"
+    }
+   ],
+   "moves": [
+    "wire",
+    "rail-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "R-CASH",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "type": "cash",
+   "label": "5 cash bundles",
+   "zone": "various",
+   "landmark": "blue awning path; stadium QP; QP past the silver pillars; wall left of the clock tower; canal transfer",
+   "layer": "mixed",
+   "heightM": "mostly QP-height",
+   "launchFrom": "",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "",
+     "to": "",
+     "geometry": "each sits on a short local line (awning ramp, QP air, wall grind, canal-side transfer)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "vert-air",
+    "grind",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "",
+   "timeFromSpawnS": "not timed",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "PS34; WEB gamerant",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Plaza Jump!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "central plaza (air across part of the plaza)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Kiosk Hop!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "blue kiosks in the plaza (Jamie Thomas line: ollie onto a kiosk and grind)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Log Hop!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "logs lying in the grass behind the Fine Arts building",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail Cross",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown (rail-to-rail)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Rail Hop!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "unknown (rail-to-rail)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bachelors in Engineering Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "handrail atop the QP under the Swallow Pride banner, Engineering building",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [
+    "O-E"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bachelors in Fine Arts Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "Fine Arts building rail/ledge",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Banner Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "grinding through each election banner on the campus wall",
+   "moves": [
+    "wallride",
+    "ledge"
+   ],
+   "onRouteOf": [
+    "O-BANNERS"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bench to Bench!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "plaza benches",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Class Transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "from the ground ramps at the school up to the school-roof halfpipe (G4m p007)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list; G4m"
+  },
+  {
+   "name": "Coliseum Transfer",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "from the alley between the Coliseum and the Philosophy building down to the ramp below (G4m p010)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list; G4m"
+  },
+  {
+   "name": "Gateway gap!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "ollie over an arch gateway while grinding the campus wall",
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-BANNERS"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Grind hop to the fence",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "railing to wooden fence (COMBO area)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-COMBO"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "High Road Hop",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "raised barrier gate at the garage corner to the power line over the road",
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "wire"
+   ],
+   "onRouteOf": [
+    "O-K"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Higher Learnin",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "grind gap on the outer road near the green arch and the garage (LP4 0:13:40-0:13:42 combo string \"BS 50-50 + Higher Learnin' + BS 50-50\")",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "O-K"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Into the River",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "dropping into the concrete river/culvert",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Nice Equipment",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Off the lil kicker",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "kicker",
+   "location": "small kicker (location unknown)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Over the Stairs",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "stair set (location unknown)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Schnitzels for all!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "over-object",
+   "location": "onto/over the Schnitzel World awning from the pickup-truck plywood",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-FRAT"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Skippin' over",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "fence grind hopped over the stone bridge (G4m p004)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-COMBO"
+   ],
+   "evidence": "THG gap list; G4m"
+  },
+  {
+   "name": "Through the Frat Window Grinding",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "through the far frat-house window into a ledge grind (G4m p007)",
+   "moves": [
+    "ollie",
+    "ledge"
+   ],
+   "onRouteOf": [
+    "O-FRAT"
+   ],
+   "evidence": "THG gap list; G4m"
+  },
+  {
+   "name": "Through the Frat Window Manualing",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "manual through a frat-house window",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Through the Frat Window Olling",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "secret-area",
+   "location": "ollie from the awning through the frat-house window (G4m p007)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "O-FRAT"
+   ],
+   "evidence": "THG gap list; G4m"
+  },
+  {
+   "name": "Bachelors in Engineering Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "lip on the Engineering roof edge above its QP",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Bachelors in Fine Arts Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "lip on the Fine Arts roof edge above its QP",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Engineering Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "roof-edge grind, Engineering",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in English Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "roof-edge grind, English",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Fine Arts Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "roof-edge grind, Fine Arts",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Philosophy Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "roof-edge grind, Philosophy",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "On the Fence!",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "fence grind (COMBO area)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "O-COMBO"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Out of the River",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "airing out of the river/culvert",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Engineering Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "roof-edge lip (one of the 4 Master's lip gaps)",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in English Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "roof-edge lip (one of the 4 Master's lip gaps)",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Fine Arts Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "roof-edge lip (one of the 4 Master's lip gaps)",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Masters in Philosophy Lip",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "lip",
+   "location": "roof-edge lip (one of the 4 Master's lip gaps)",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Traffic Light Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "other",
+   "location": "grind on a traffic-light arm over the road",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Clock tower Grind",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "wire",
+   "location": "grind from the top of the clock tower after the base portal",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "TAPE-R",
+    "R-IGLOGO"
+   ],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Over the River",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "channel",
+   "location": "air across the river/culvert",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Tony's Pro Challenge Gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "points": null,
+   "kind": "roof",
+   "location": "gap between the two roof halfpipes",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gap list"
+  },
+  {
+   "name": "Over the Trench",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "channel",
+   "location": "cement QP to cement QP over the grass with wooden kickers",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Pure Trenching",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "kicker",
+   "location": "over the grass using the two wooden kickers (VG label)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Weezy Transfer",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "pool-transfer",
+   "location": "from the QP on the building opposite the white building into the pool",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Breakin In",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "secret-area",
+   "location": "wooden kicker in the pool up into Central Hall's second storey",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "PH-K",
+    "P-CD"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Across the Courtyard",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "manual",
+   "location": "between brown strips on the courtyard floor",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Bridge Wheelie",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "manual",
+   "location": "across the bridge in front of the clock tower (VG label)",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Rampin Up",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "kicker",
+   "location": "wooden kicker against the handrail left of Central Hall into a balcony grind",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Up Up",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "the COMBO-Hard rail line",
+   "moves": [
+    "vert-air",
+    "grind",
+    "wallride"
+   ],
+   "onRouteOf": [
+    "PH-COMBO"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "High Wire Act",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "wire",
+   "location": "clock-tower top to the roof of Central Hall (VG label)",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  },
+  {
+   "name": "Roommate Wanted",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "grind transfer on the message boards in front of Central Hall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Entrance Exam",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "main entrance handrail",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "P-E"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Undeclared",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "lip",
+   "location": "grind the curved QP coping in the courtyard",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Skates of Steel",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "library handrail to the QP left of the library",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Institutionalized",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "grind around the pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Quiet Please",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "roof",
+   "location": "across the top of the white building",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1",
+    "P-DECK"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Its A Library",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 300,
+   "kind": "roof",
+   "location": "white-building top toward the library, drop to the library planter",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Store Front Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "between the two blue-and-white awnings on the street",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Archway Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "over the main entrance arch",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Another Archway",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "over the other arch",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Overdue Books",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "ledges and stairs at the white building front",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Yay Co-ed Dorms!",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "ledge of the ramp to the second-storey balcony left of the white building",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Access Ramp Hop",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "ledges of the ramps to Central Hall",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Fountain Grind",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "round the fountain by the message boards",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Handrail to Boards",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "Handrail Ride rail into a message-board grind",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Planter2Planter",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "two small planters in front of the white building",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Book Return",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "library planters, hopping the entrance",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Handrail Ride",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "handrail right of Central Hall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "High Bars",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 280,
+   "kind": "lip",
+   "location": "highest rail above the QP between the shops",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Better View",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 240,
+   "kind": "lip",
+   "location": "high rail above the small corner QP",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [
+    "PH-E"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Undergrad",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 200,
+   "kind": "lip",
+   "location": "ledge above the cement QP opposite the white building",
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1"
+  },
+  {
+   "name": "Clock Tower",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "points": 350,
+   "kind": "secret-area",
+   "location": "through the portal on the back of the tower base to the top (VG label)",
+   "moves": [
+    "portal"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1; VG"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Talk to a goal giver (arrow over the head)",
+   "opens": "starts that goal and spawns its objects (letters, banners, frat boys)",
+   "neededFor": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E",
+    "O-COMBO",
+    "O-FRAT",
+    "O-BANNERS"
+   ],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "LP4 0:05:30 tutorial box; LP4 0:10:00, 0:13:30"
+  },
+  {
+   "trigger": "Collect C-O-M-B-O",
+   "opens": "unlocks \"Stop all of the Pink Elephants\"",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "G4m p004"
+  },
+  {
+   "trigger": "Race the inline skater",
+   "opens": "unlocks \"Medal the High-Combo Competition\"",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "G4m p005"
+  },
+  {
+   "trigger": "Get back at the 5 frat boys",
+   "opens": "unlocks \"Clock 5 jocks in one combo\"",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "G4m p007"
+  },
+  {
+   "trigger": "Spine transfer over the wall",
+   "opens": "unlocks \"Gap between floats 10 times\" and ProSet 7",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "G4m p008"
+  },
+  {
+   "trigger": "Enough goal points",
+   "opens": "opens the next level (San Francisco)",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "LP4 0:25:15 \"Congratulations! You have enough goal points\""
+  },
+  {
+   "trigger": "Ride through the open door at the back of the clock-tower base",
+   "opens": "portal to the top of the tower and its wire",
+   "neededFor": [
+    "TAPE-R",
+    "R-IGLOGO"
+   ],
+   "version": "all versions",
+   "evidence": "CC1 \"Clock Tower\" gap; THG \"Clock tower Grind\"; LP34 1:10:00"
+  },
+  {
+   "trigger": "Doorway left of the abstract statue",
+   "opens": "elevator warp to a rooftop",
+   "neededFor": [
+    "R-STAT2"
+   ],
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "Ollie the wooden kicker in the bowl",
+   "opens": "entry to Central Hall's second storey (a room with a kicker and wire)",
+   "neededFor": [
+    "PH-K",
+    "PH-A",
+    "P-CD"
+   ],
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "evidence": "CC1"
+  },
+  {
+   "trigger": "Spine transfer into the garbage truck",
+   "opens": "starts the Garbage Day cash mini-game (trucks drive at each other; 30 × $50 floating)",
+   "neededFor": [],
+   "version": "original PS2 2002 (Neversoft)",
+   "evidence": "G4m p012"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Street-to-wire letter run",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "blue school handrail",
+    "ollie to S",
+    "red garage rail",
+    "raised gate arm",
+    "power line (High Road Hop, K)",
+    "garbage truck spine (A)",
+    "three campus slopes",
+    "Fine Arts QP (T)",
+    "Swallow Pride QP",
+    "handrail around the corner (E)"
+   ],
+   "links": [
+    "spine-transfer",
+    "grind-to-wire hop",
+    "air-to-grind"
+   ],
+   "collectibles": [
+    "O-S",
+    "O-K",
+    "O-A",
+    "O-T",
+    "O-E"
+   ],
+   "why": "The S-K-A-T-E order is a tour of the outer ring then the campus, each letter adding a new entry move.",
+   "evidence": "G4m p003; THG; LP4 0:13:45-0:14:30"
+  },
+  {
+   "id": "L2",
+   "name": "Bridge fence line",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "silver railing",
+    "wooden fence",
+    "corner",
+    "ollie over the stone bridge",
+    "far fence",
+    "land"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "O-COMBO"
+   ],
+   "why": "One continuous fence turned into a combo with a single gap.",
+   "evidence": "G4m p004"
+  },
+  {
+   "id": "L3",
+   "name": "Banner wall",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "wallride",
+    "wallie",
+    "wall top",
+    "arch ollies (Gateway Gap)",
+    "drop",
+    "QP",
+    "wall top again"
+   ],
+   "links": [
+    "wallride",
+    "wallie",
+    "ollie"
+   ],
+   "collectibles": [
+    "O-BANNERS",
+    "O-FRAT"
+   ],
+   "why": "The boundary wall is the longest ledge in the level.",
+   "evidence": "G4m p011; LP4 0:20:30"
+  },
+  {
+   "id": "L4",
+   "name": "Frat house traverse",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "wall grind",
+    "pickup plywood",
+    "Schnitzel World awning",
+    "frat window",
+    "balcony",
+    "far window",
+    "concrete ledge"
+   ],
+   "links": [
+    "kicker",
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [
+    "O-FRAT"
+   ],
+   "why": "Interior pass-through line with three window gaps.",
+   "evidence": "G4m p007"
+  },
+  {
+   "id": "L5",
+   "name": "Plaza-to-tower tape line",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "street axis",
+    "plaza",
+    "curved handrail up the steps",
+    "tower terrace ledge",
+    "back door portal",
+    "tower-top wire",
+    "brick roof"
+   ],
+   "links": [
+    "grind",
+    "portal"
+   ],
+   "collectibles": [
+    "TAPE-R"
+   ],
+   "why": "Uses the plaza's main approach and ends on the highest wire.",
+   "evidence": "LP34 1:09:46-1:10:05"
+  },
+  {
+   "id": "L6",
+   "name": "Rooftop wire chain",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "wallride outer wall",
+    "bunting string",
+    "black wire",
+    "rooftop halfpipe lip",
+    "second wire",
+    "brick building",
+    "uphill tape wire (or flag wire to the logo)"
+   ],
+   "links": [
+    "wallride",
+    "grind-to-wire",
+    "tricks while grinding"
+   ],
+   "collectibles": [
+    "TAPE-R",
+    "R-IGLOGO"
+   ],
+   "why": "A long sky route that keeps the player off the ground for most of the level.",
+   "evidence": "WEB gamerant"
+  },
+  {
+   "id": "L7",
+   "name": "Car-park wires",
+   "version": "THPS 3+4 remake 2025 (Iron Galaxy)",
+   "sequence": [
+    "car park deck 2",
+    "bunting wire over the road (K)",
+    "wire parallel with the road",
+    "purple rail",
+    "rooftop (panda)"
+   ],
+   "links": [
+    "wire",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "R-K",
+    "R-PANDA"
+   ],
+   "why": "Garage deck used as the launch for the wire layer, as in the original's High Road Hop.",
+   "evidence": "PS34"
+  },
+  {
+   "id": "L8",
+   "name": "Central Hall break-in",
+   "version": "PS1 edition 2002 (Vicarious Visions)",
+   "sequence": [
+    "bowl wooden kicker",
+    "Central Hall second storey",
+    "wire to the next building",
+    "balcony",
+    "wire down to the campus wall",
+    "corner QP"
+   ],
+   "links": [
+    "kicker",
+    "wire",
+    "ledge"
+   ],
+   "collectibles": [
+    "PH-K",
+    "PH-A",
+    "PH-T",
+    "PH-E",
+    "P-CD"
+   ],
+   "why": "PS1 hard letters string a building interior and two wires into one line.",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L9",
+   "name": "Roof halfpipe gap",
+   "version": "original PS2 2002 (Neversoft)",
+   "sequence": [
+    "roof halfpipe",
+    "transfer over the gap",
+    "second roof halfpipe"
+   ],
+   "links": [
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "Tony Hawk's pro challenge widens the gap in three steps.",
+   "evidence": "THG"
+  }
+ ],
+ "guidance": [
+  "Clock tower as beacon: visible from the original spawn (LP4 0:05:30) and as the end point of the remake street axis (LP34 1:09:46); the tape is on its wire.",
+  "Goal flythrough (remake): each run starts by showing every goal location, including the tape beside the brick building (LP34 1:06:45-1:07:05); WEB gamerant notes the flythrough hints every tape.",
+  "Open door with a kicker at the back of the tower base is the only cue to the portal (PS34 screenshot); it is out of sight from the front, so finding it is exploration.",
+  "Arrows over goal givers' heads and the tutorial text direct the original player to people, not places (LP4 0:05:30).",
+  "Bunting and pennant strings strung between buildings read as grindable wires in the remake (PS34 screenshot 31; WEB gamerant).",
+  "Letters ride on obvious launchers: S over the door at the end of a handrail, T over a QP, A over a truck, K on a power line above a sloped gate arm (G4m p003).",
+  "Election banners and graffiti mark the long wall as a grind surface (G4m p011; LP34 1:07:00 \"VOTE DICK\" flythrough).",
+  "Hidden on purpose: the tower portal, Central Hall's second storey (PS1), the remake elevator to a rooftop, and the rooftop wire network."
+ ],
+ "designLogic": [
+  "The tape uses the level's tallest and most visible landmark; the challenge is not seeing it but finding the way up (EXPLORE), and the portal makes the way up a secret rather than a feat (remake TAPE-R; PS1 Clock Tower gap).",
+  "A tower-top wire exists in all three versions (PS2 gap \"Clock tower Grind\", PS1 \"High Wire Act\" 200 from the tower top to Central Hall and \"Clock Tower\" 350 for the portal, remake tape wire). Inferred: Iron Galaxy put the tape on a line the 2002 versions already rewarded with gaps, so the tape points players at an old secret.",
+  "Two approaches to one tape: a fast secret (door, downhill wire, ≈ 4 s) and a skilled public route (rooftop wire chain, uphill, tricks to keep speed). The collectible rewards either knowledge or execution.",
+  "Wire placement escalates: K on a power line reached from a gate arm (one hop from the ground), then remake car-park wires, then roof-to-roof wires, then the tower wire. Each wire collectible starts higher than the last.",
+  "Original letters are a guided tour: the S-K-A-T-E order runs from the outer street (S, K, A) into the campus (T, E) and each letter adds one verb (grind, wire, spine transfer, vert air, air-to-grind).",
+  "THPS4 hides nothing until a goal is accepted: letters and goal objects only appear after talking to a giver, so the original's \"hard-to-reach\" layer lives in gaps and pro goals, not in tapes.",
+  "Free roam removes the 2-minute pressure from exploration but each goal still has a clock (S-K-A-T-E 2:00; record 56.37 s), so letter routes stay short and local even in a 300 m map.",
+  "Buildings are permeable: frat windows (three named gaps), Central Hall's second storey (PS1), the tower portal and the remake elevator all turn walls into routes and give secret-area rewards.",
+  "Long boundary walls become grind lines through goals (banners on the campus wall; frat boys on the wall top), which teaches wallride and wallie as entry moves before the rooftop routes need them.",
+  "Failure is cheap near the ground (letters over QPs, rails a few metres up) and only expensive on the wire layer, where a fall costs a climb; the portal caps that cost for the tape.",
+  "Remake runs are 10:00 rather than 2:00 because the THPS4 maps are large: LP34 cleared every College goal with about 5 minutes left (1:12:30), and the tape took ≈ 18 s of that from the street.",
+  "Letters in the remake are rearranged around new props (shipping containers, the purple statue, the mascot QP) but keep the original logic of a street half and a campus half (PS34)."
+ ],
+ "remakeChanges": [
+  "Tape: none in the 2002 PS2 career; PS1 hid one on a wire from the white building's top; the remake puts it on the clock-tower wire reached through the tower portal (LP34 1:10:00-1:10:04).",
+  "Timer: original free roam with per-goal clocks; remake 10:00 runs (LP34 1:07:10).",
+  "S stays on the Woodland School front (both); K moves from a power line reached from the garage gate (original) to a bunting wire from car-park deck 2 (remake); A moves from the garbage truck spine to shipping containers with a QP; T moves from the Fine Arts QP to a blue QP by a new purple statue; E moves from the Engineering handrail corner to an upper level reached by spine transfer from a mascot QP (G4m p003 vs PS34).",
+  "Officer Tom becomes Officer Dick; the banner goal is the same 7-banner wall grind (G4m p011 vs PS34).",
+  "The amateur C-O-M-B-O by the bridge becomes a pro goal in the remake with a similar bridge-side rail start (G4m p004 vs PS34).",
+  "Spine transfer over the wall becomes \"Boneless Spine Transfer Between the Courts\" (G4m p008 vs PS34).",
+  "Remake adds stat points, cash, a hidden deck, an Iron Galaxy logo (second wire from the tape-wire rooftop) and a panda plushie, several of them on the rooftop wire layer (PS34)."
+ ],
+ "transfer": [
+  "Landmark-wire crystal: build the level's tallest tower visible down the main axis, run a long descending rope or rail from its top to a lower roof, and put the crystal two-thirds of the way down. Access by a portal door at the back of the tower base (fast) or by grinding up from the roof end with tricks to hold speed (skilled). Our grind snap radius (2.1 m) and grind-ollie pop (≈ 2.4 m) make a ≈ 1-2 m drop from the door exit to the rail forgiving.",
+  "Gate-arm launch: place a sloped object (gate arm, ramp plank) under an overhead cable so a rail grind up the slope feeds a grind ollie (≈ 2.4 m above the rail) onto the cable; a letter or crystal shard on the cable teaches the wire layer early.",
+  "Teach then test: put an early collectible on a single cable 4-5 m up, a mid-level one on a roof-to-roof cable, and the crystal on the highest cable; each needs the previous lesson.",
+  "Rooftop chain alternative: wallride a boundary wall (wallie off it) into a bunting rope, hop to a second rope, then a roof; with no wallplant in our game, use wallride + wallie and a kicker at the wall base.",
+  "Flythrough tease: show the crystal in the level-intro camera beside a distinctive roof corner so players know where to look, then hide only the entrance (back door), not the crystal.",
+  "Permeable building: an open window on an upper storey reachable from a bowl kicker (PS1 Central Hall) gives a secret room with its own exit cable; good for an on-foot double jump (≈ 4.6 m) alternative if the board launch fails."
+ ],
+ "openQuestions": [
+  "Exact remake tape position along the tower wire (LP34 registers it ≈ 2-3 s after launch, close to the brick building end, but WEB gamerant describes a long uphill grind from the roof to reach it).",
+  "Original PS2 tower portal: THG lists \"Clock tower Grind\" but no source describes the PS2 entrance; CC1 describes the portal for the PS1 port.",
+  "One web search summary claimed the remake tower door unlocks only after specific challenges; LP34 used it in the first run and PS34 lists no prerequisite. Unverified; the claimed source (ofzenandcomputing) refused the request.",
+  "Footprint scale depends on the G4m tennis courts being regulation size; no in-level reference with known size was measured.",
+  "Points for the PS2 gaps are not in the permitted sources.",
+  "PS1 tape access: how a player first reaches the top of the white building is not described in CC1."
+ ],
+ "sourceKey": {
+  "VG": "VGMaps/VGCartography isometric render of the PS1 edition of THPS4 (Vicarious Visions, 2002), marked and unmarked versions",
+  "G4m": "THPS4 (PS2) in-box mini guide (BradyGames Signature Series excerpt); covers College only",
+  "THG": "tonyhawkguide.com THPS4 walkthrough and gap list pages (original PS2 game, recorded by the site author \"Sulig\")",
+  "CC1": "CheatCodes.com PS1 level guides for THPS4 by Jeffrey Hartman (2003): College 34859, Alcatraz 34847, Kona 34846 (no San Francisco guide found)",
+  "LP4": "archive.org PS2 longplay of THPS4 (played by Spazbo4); times h:mm:ss into the video",
+  "LP34": "archive.org Xbox Series longplay of THPS 3+4 (2025); times h:mm:ss into the video",
+  "PS34": "Push Square THPS 3+4 per-level walkthroughs and all-secret-tapes page (Stephen Tailby, July 2025), text plus its tape screenshots",
+  "WEB": "other permitted text guides for THPS 3+4: pcgamesn, gamerant, screenrant, thegamer, operationsports, hardcoregamer; ofzenandcomputing refused the request (HTTP 403) and was skipped",
+  "MAR": "mariteaux.somnolescent.net review of the PS1 port (free roam, about thirty goals per stage, no skitching)"
+ }
+}
