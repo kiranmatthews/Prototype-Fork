@@ -4,6 +4,7 @@ export const siteEntries = {
   labs: 'labs/index.html',
   jakLab: 'jak-lab.html',
   jakParticleStudy: 'jak-particle-study.html',
+  fireSpriteLab: 'fire-sprite-lab.html',
   jumpReview: 'jump-review.html',
   skatePlaytest: 'skate-playtest.html',
   skateReferenceLab: 'skate-reference-lab.html',
