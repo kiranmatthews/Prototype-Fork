@@ -99,7 +99,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
         else sample = doubled && p.vVel > 0 ? { ...aim, jumpHeld: true } : aim;
       }
       step(sample, label);
-      if (!bounced && before < 0 && p.vVel > 8) bounced = true;
+      if (before < 0 && p.vVel > 8) { bounced = true; doubled = false; } // every bounce re-arms the double jump
     }
     if (!(p.grounded && Math.abs(p.pos.y - y) < .4)) fail(`${label} did not reach the landing`);
   };
@@ -198,25 +198,26 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
       // Nitro goes off on the body's whole silhouette, not its feet: leave the ice a good stride before it.
       leap([X + 19.8, z], [X + 27.9, z, A[2].y], { label: 'over the Nitro at the lip', double: true, hold: 3 });
       leap([X + A[2].x1, z], [X + 32.5, z, A[3].y], { label: 'second rotten shelf', tap: true });
-      leap([X + A[3].x1, z], [X + 36.5, z, A[4].y], { label: 'quick stamper gallery', tap: true });
+      leap([X + A[3].x1, z], [X + 36.6, z, A[4].y], { label: 'quick stamper gallery', tap: true });
       // Quick stampers: go as each nears the top of its rise. The second is the run-up to the wide gap, so there is no stopping under it.
-      walk(X + 35.9, z); waitRise(X + 38.2, z, 'quick stamper, first'); walk(X + 40.25, z, { tol: .3 }); spinOnce('pocket crate'); walk(X + 41.7, z, { tol: .3 });
-      waitRise(X + 44, z, 'quick stamper, second');
-      leap([X + A[4].x1, z], [X + 51.3, z, A[5].y], { label: 'the wide gap onto the bristleback pillar', spin: true, hold: 3.4 });
-      leap([X + A[5].x1, z], [X + 57.8, z, A[6].y], { label: 'arrow floor', tap: true });
-      walk(X + 58.6, z - .5, { tol: .35 }); spinOnce('arrow floor pair');
-      walk(X + 60.2, z);
-      arrowLaunch([X + 62.4, z], [X + 66.6, z], PLAN.GEM_Y, 'arrow to the gem shelf', false);
-      walk(X + 68, z, { keep: true }); walk(X + 70.3, z - .5, { tol: .4 });
+      walk(X + 36.9, z); waitRise(X + 39.4, z, 'quick stamper, first'); walk(X + 41.5, z, { tol: .3 }); spinOnce('pocket crate'); walk(X + 42.9, z, { tol: .3 });
+      waitRise(X + 45.2, z, 'quick stamper, second');
+      leap([X + A[4].x1, z], [X + 53.3, z, A[5].y], { label: 'the wide gap onto the bristleback pillar', spin: true, hold: 3.4 });
+      leap([X + A[5].x1, z], [X + 59.8, z, A[6].y], { label: 'arrow floor', tap: true });
+      walk(X + 60.6, z - .5, { tol: .35 }); spinOnce('arrow floor pair');
+      walk(X + 62.2, z); walk(X + 63, z, { tol: .25 }); spinOnce('the box beside the arrow');
+      arrowLaunch([X + 65.06, z], [X + 68.6, z], PLAN.GEM_Y, 'arrow to the gem shelf');
+      walk(X + 70, z, { keep: true }); walk(X + 72.3, z - .5, { tol: .4 });
       for (let k = 0; k < 4; k++) { spinOnce('gem shelf tower'); still(14, 'let the tower settle'); }
-      run('out by the ring', () => p.pos.x < 100, () => toward(X + 75.4, z, 1), 400);
+      run('out by the ring', () => p.pos.x < 100, () => toward(X + 77.4, z, 1), 400);
       still(12, 'back on the shore');
     } },
     { name: 'tarn and hoist', run() {
       walk(0, -560); still(20, 'bank the tarn checkpoint');
-      walk(-3, -598, { keep: true }); walk(-3, -601.6);
+      walk(-3, -598, { keep: true }); walk(-3, -602.4, { tol: .25 });
       const hoist = l.movers.find(q => Math.abs(q.mesh.position.x + 3) < 1 && Math.abs(q.mesh.position.z - (ROW_A + 1)) < 1) ?? fail('no hoist');
-      run('wait for the hoist', () => hoist.mesh.position.y < TARN_Y + .35, () => ({}), 900);
+      // Step aboard only as the deck settles at the bottom of its travel.
+      { let last = hoist.mesh.position.y; run('wait for the hoist', () => { const y = hoist.mesh.position.y, down = y <= last; last = y; return down && y < TARN_Y + .22; }, () => ({}), 1200); }
       walk(-3, ROW_A + 1, { tol: .5 });
       run('ride the hoist', () => p.pos.y > PLAN.A0_Y - .25, () => ({}), 900);
       walk(3.5, ROW_A, { tol: .6 }); still(20, 'bank the hoist landing checkpoint');

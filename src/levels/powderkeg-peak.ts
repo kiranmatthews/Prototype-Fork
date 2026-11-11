@@ -160,19 +160,21 @@ fruitLine([0, 2.5, -56], [0, 2.5, -60], 3);
 add({ t: 'stone', p: [0, 2.5, -62.5], axis: 'x', range: 4.5, speed: 4.5, radius: 1.1, tex: 'snow', color: '#e4edf9', grp: G.hazards, nm: 'Boulder in its trough across the gully (debut: stand and watch, cross behind it)' });
 fruitLine([0, 2.5, -65.5], [3, 2.5, -70], 3); fruitLine([3, 2.5, -71.4], [3, 2.5, -73.6], 2);
 crate(-3, 2.5 - CR * .2, -72.5, 'mystery', 'Over the open half of the crevasse (reward for the risk: jump onto it and bounce across)');
-crate(-3.4, 2.5, -79, 'bouncy', 'Arrow crate on the runway (teach the tool)'); crate(-3.4, 2.5 + 1.152 + 3.2, -79, 'wood', 'Its partner overhead');
+rowOf(-4.36, 2.5, -79, ['wood', 'bouncy', 'wood'], 'Arrow crate between two boxes on the runway (teach the tool; break its neighbours first and it is still there)');
+stack(-3.4, 2.5 + 1.152 + 3.2, -79, ['wood', 'mystery'], 'The pair the arrow reaches');
 fruitLine([0, 2.5, -84.6], [0, 2.5, -88.6], 5, 1.8);
-stack(3.8, 2.5, -95, ['wood', 'wood'], 'Stack on the first landing (marks the landing)');
+stack(3.8, 2.5, -95, ['wood', 'wood', 'mystery'], 'Stack on the first landing (marks the landing; the double jump reaches its top)');
 fruitLine([0, 2.5, -99.6], [0, 5, -105], 4); fruitLine([0, 5, -107], [0, 5, -113], 4); fruitLine([0, 5, -115.6], [0, 5, -119.4], 5, 1.7);
-crate(3.6, 5, -127, 'tnt', 'TNT alone on the powder landing (debut: the whole west half is the refuge)');
+rowOf(3.6, 5, -127, ['tnt', 'wood'], 'TNT with one box beside it on the powder landing (debut: the whole west half is the refuge; harvest the box before the fuse runs out)');
 fruitLine([0, 5, -131.6], [0, 7, -137], 4);
 foe('spiker', 0, 7, -144, 3.6, 2.5, 'Bristleback, alone on a wide shelf (debut: do not stomp)');
-crate(-4.2, 7, -148.6, 'mask', 'Mask before the pillar field');
+stack(-4.2, 7, -148.6, ['wood', 'mask'], 'Mask on a box before the pillar field');
 fruitLine([0, 7, -150.6], [0, 7.5, -154.4], 4, 1.4); fruitLine([0, 7.5, -157], [0, 8, -160.8], 4, 1.4); fruitLine([0, 8, -163.5], [0, 8.5, -167.4], 4, 1.4);
 foe('grunt', 0, 8.5, -169.2, 1.5, 1.6, 'Snow crab on the third pillar (occupied landing: spin as you land)');
 for (const dy of [0, CR]) rowOf(-3.9, 9.4 + dy, -178, ['wood', 'wood'], dy ? 'Lookout block, upper tier' : 'Lookout block (reward after the pillar field)');
 fruitLine([0, 9.4, -184.4], [0, CREST_Y, -189], 3);
-crate(-2.4, CREST_Y, -CREST_S, 'wood', 'Beside the crest checkpoint'); crate(2.6, CREST_Y, -192.4, 'mystery', 'Behind the crest checkpoint, toward the camera (count trap at an attractor)');
+crate(-.96, CREST_Y, -CREST_S, 'wood', 'Flanking the crest checkpoint, west'); crate(.96, CREST_Y, -CREST_S, 'wood', 'Flanking the crest checkpoint, east');
+stack(3.4, CREST_Y, -191.6, ['wood', 'mystery'], 'Behind the crest checkpoint, toward the camera (count trap at an attractor)');
 
 // ───────────────────────────── The two runs ─────────────────────────────
 const RUN1 = new Path('First Tracks', 0, -206, 0,
@@ -296,7 +298,7 @@ runFruit(RUN1, 322, 346, -1.5, -3.4, 5); runFruit(RUN1, 352, 374, -3.4, 0, 4);
 for (const lat of [3.3, 4.26]) { const q = on(RUN1, 388, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the right of the piste (debut: beside the line, the whole left lane is free)'); }
 runRail(RUN1, 396, 424, -3.4, .55, 'Log rail over the first crevasse (the other way across)');
 runFruit(RUN1, 398, 422, -3.4, -3.4, 6, 0); runFruit(RUN1, 402.5, 411.5, 1.6, 1.6, 5, 1.3);
-{ const q = on(RUN1, 416.5, 1.6); crate(q[0], q[1], q[2], 'wood', 'Landing marker past the crevasse'); }
+runStack(RUN1, 416.5, 1.6, ['wood', 'wood'], 'Landing marker past the crevasse');
 runStack(RUN1, 429, -3.4, ['wood', 'wood'], 'Stack at the end of the log rail');
 runFruit(RUN1, 446, 470, 1.5, 3.4, 5); runFruit(RUN1, 476, 498, 3.4, 0, 4);
 runStack(RUN1, 520, -2.8, ['wood', 'wood'], 'Run-out stack, left'); runStack(RUN1, 534, 2.8, ['wood', 'wood'], 'Run-out stack, right');
@@ -315,20 +317,20 @@ runStack(RUN2, 268, -3, ['wood', 'wood', 'wood'], 'Tall stack, left (one contact
 for (const lat of [4.6, 5.56]) { const q = on(RUN2, 312, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the inside of the first chicane bend'); }
 runFruit(RUN2, 296, 326, -1, -2.6, 5); runFruit(RUN2, 332, 362, 2.6, 0, 5);
 for (const lat of [-4.6, -5.56]) { const q = on(RUN2, 346, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the inside of the second chicane bend'); }
-{ const q = on(RUN2, 374, -1.5); crate(q[0], q[1], q[2], 'wood', 'Before the mid-run checkpoint'); }
+runStack(RUN2, 374, -1.5, ['wood', 'wood'], 'Before the mid-run checkpoint');
 runCheckpoint(RUN2, 380, 'C7 · Mid-run, inside its crate group');
-{ const q = on(RUN2, 386, 1.5); crate(q[0], q[1], q[2], 'wood', 'After the mid-run checkpoint'); }
+runStack(RUN2, 386, 1.5, ['wood', 'mystery'], 'After the mid-run checkpoint');
 { // One-way grind bridge: a crate row at deck height across the second crevasse. Ridden, it is consumed behind the rider.
   const lip = on(RUN2, 452, -3.6), far = on(RUN2, 461, -3.6), n = 8, z0 = (lip[2] + far[2]) / 2 + (n - 1) / 2 * CR;
   rowOf(lip[0], lip[1] - .3 - 1.152, z0, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood', 'wood'], 'Crate bridge over the crevasse', true);
 }
 runFruit(RUN2, 450.5, 462.5, 2, 2, 6, 1.5);
 runFruit(RUN2, 484, 512, 1, 2.6, 5); runFruit(RUN2, 520, 540, -2.6, 0, 4);
-{ const q = on(RUN2, 543, -1.5); crate(q[0], q[1], q[2], 'wood', 'Before the last checkpoint'); }
+runStack(RUN2, 543, -1.5, ['wood', 'wood'], 'Before the last checkpoint');
 runCheckpoint(RUN2, 548, 'C8 · Before the charge gap');
-{ const q = on(RUN2, 553, 1.5); crate(q[0], q[1], q[2], 'mystery', 'After the last checkpoint'); }
+runStack(RUN2, 553, 1.5, ['wood', 'mystery'], 'After the last checkpoint');
 runFruit(RUN2, 594.5, 608.5, 0, 0, 7, 1.6);
-{ const q = on(RUN2, 615, 0); crate(q[0], q[1], q[2], 'wood', 'Landing marker past the charge gap'); }
+runStack(RUN2, 615, 0, ['wood', 'wood'], 'Landing marker past the charge gap');
 stack(FINISH[0] - 4.6, FINISH[1], FINISH[2] + 8, ['wood', 'mystery'], 'Works yard stack'); crate(FINISH[0] - 3.64, FINISH[1], FINISH[2] + 8, 'wood', 'Works yard stack: the step beside it');
 
 // ───────────────────────────── The tarn and the hoist ─────────────────────────────
@@ -337,6 +339,7 @@ for (const dx of [0, CR]) rowOf(-.48 + dx, TARN_Y + .17, -581.5, ['wood', 'wood'
 foe('floater', 7, TARN_Y + .17, -584, 4, 2, 'Watcher over the tarn (debut on foot, with room: spin, never stomp)');
 add({ t: 'bonusplatform', p: [13, TARN_Y, -561], to: [13, r3(TARN_Y + .12), -556.5], grp: G.course, nm: 'Cold Storage: the bonus round and its safe return' });
 const ROW_A = -606, ROW_B = -614, A0_Y = 6;
+block(-5.6, -.4, ROW_A - 1.4, ROW_A + 3.6, TARN_Y - .62, 1.2, 'Hoist pit floor: nothing to fall into under a risen deck', { tex: 'plank', color: '#8d6c46', edgeGrinding: false });
 add({ t: 'mover', p: [-3, r3((TARN_Y + A0_Y) / 2), ROW_A + 1], s: [4, .6, 4], axis: 'y', amp: (A0_Y - TARN_Y) / 2, speed: .7, phase: -Math.PI / 2, tex: 'plank', color: '#b98f5e', grp: G.hazards, nm: 'The hoist: rises fourteen metres to the lower ledge row' });
 
 // ───────────────────────────── S3 · The Headwall ─────────────────────────────
@@ -418,7 +421,7 @@ add({ t: 'zone', p: [42, 20, ROW_B], s: [116, 1, 7.98], dir: 'W', grp: G.camera,
 // The Headwall · content.
 const SWITCH = 12;
 groups.push({ id: SWITCH, nm: 'Switch bridge over the long gap: outlines until the ! fires' });
-rowOf(8, 6, ROW_A, ['wood', 'wood'], 'Pair on the hoist landing (open the row)');
+rowOf(8, 6, ROW_A, ['wood', 'wood'], 'Pair on the hoist landing (open the row)'); crate(8.96, 6 + CR, ROW_A, 'mystery', 'On the hoist landing pair');
 stamper(17, 6, ROW_A, 0, 'Ice stamper over solid ledge (debut: eleven metres of floor to watch a full cycle from)');
 fruitLine([25.6, 6, ROW_A], [29, 7, ROW_A], 3, 1.2);
 foe('spiker', 34.4, 7, ROW_A, 2.4, 2, 'Bristleback patrolling the take-off');
@@ -431,18 +434,17 @@ stamper(61, 9, ROW_A, 3.2 - 8 / 9, 'Stamper pair, second: open 0.9 s after the f
 rowOf(74.5, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes against the wall (test: light the fuse, harvest, retreat west)');
 fruitLine([78.6, 9, ROW_A], [82.4, 10.2, ROW_A], 3, 1.6);
 stamper(84.5, 10.2, ROW_A, 0, 'Stamper on the far bank: jump as it rises');
-crate(100.2, 14.6, ROW_A, 'mystery', 'At the dead end of the second buttress tier');
+stack(100.2, 14.6, ROW_A, ['wood', 'mystery'], 'At the dead end of the second buttress tier (reward for going the wrong way first)');
 stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
-crate(68, B0_Y, ROW_B, 'wood', 'On the ice by the far lip (bait: the slide carries you at the gap)');
+rowOf(67.3, B0_Y, ROW_B, ['wood', 'wood'], 'On the ice by the far lip (bait: the slide carries you at the gap)');
 foe('spiker', 61.2, 19.8, ROW_B, .9, 1.4, 'Bristleback on the landing pillar: spin before you land');
-crate(41.7, 21.8, ROW_B - 1.4, 'mask', 'Mask before the twin stampers, against the wall');
+stack(41.7, 21.8, ROW_B - 1.4, ['wood', 'mask'], 'Mask on a box before the twin stampers, against the wall');
 rowOf(36.04, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall: only from above');
 crate(33, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall: it builds the crate bridge', { grp: SWITCH });
 rowOf(27 - 3 * CR, 21.8 - 1.152, ROW_B, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
 stamper(19.5, 22.6, ROW_B, 0, 'Twin stampers, first');
 foe('grunt', 16.5, 22.6, ROW_B, 1, 1.4, 'Snow crab in the pocket between the twin stampers');
 stamper(13.5, 22.6, ROW_B, 1.6, 'Twin stampers, second: half a cycle off, so the pocket is a stop');
-crate(4.8, 23.6 + 2.3, ROW_B, 'mystery', 'Over the last pillar');
 stack(-3.5, APPROACH_Y, ROW_B, ['wood', 'wood', 'wood'], 'Tower on the summit approach (the double jump reaches its top)');
 
 // ───────────────────────────── The Old Adit · the gem route ─────────────────────────────
@@ -462,12 +464,13 @@ const ADIT: Shelf[] = [
   { x0: 13.2, x1: 23, y: .8, ice: true, nm: 'Glazed drift with Nitro at its lip' },
   { x0: 26.4, x1: 29.4, y: 1.6, crumble: true, nm: 'Rotten shelf, first' },
   { x0: 31, x1: 34, y: 2.2, crumble: true, nm: 'Rotten shelf, second' },
-  { x0: 35.6, x1: 46, y: 2.8, nm: 'Quick stamper gallery' },
-  { x0: 50.4, x1: 53.6, y: 3.6, nm: 'Bristleback pillar past the wide gap' },
-  { x0: 56.6, x1: 64, y: 4.4, nm: 'Arrow floor' },
-  { x0: 64.5, x1: 75, y: 8.8, nm: 'Gem shelf' },
+  { x0: 35.6, x1: 48, y: 2.8, nm: 'Quick stamper gallery' },
+  { x0: 52.4, x1: 55.6, y: 3.6, nm: 'Bristleback pillar past the wide gap' },
+  { x0: 58.6, x1: 66, y: 4.4, nm: 'Arrow floor' },
+  { x0: 66.5, x1: 77, y: 12.2, nm: 'Gem shelf' },
 ];
-const GEM_Y = 8.8;
+// 7.8 m above the arrow floor: past a double jump and a grab (6.99 m), inside the arrow's bounce with one (9.06 m).
+const GEM_Y = 12.2;
 for (const q of ADIT) {
   const x0 = CAVE_X + q.x0, x1 = CAVE_X + q.x1;
   if (q.crumble) { add({ t: 'crumble', p: [r3((x0 + x1) / 2), q.y, CAVE_Z], s: [r3(x1 - x0), .5, 4], tex: 'bridge-ice', color: ICE, grp: G.hazards, nm: q.nm }); continue; }
@@ -476,39 +479,39 @@ for (const q of ADIT) {
   C.push(...cliff({ line: [[x0, CAVE_Z - 2], [x0, CAVE_Z + 2], [x1, CAVE_Z + 2], [x1, CAVE_Z - 2]], side: -1, bottom: -6.4, top: q.y - .4, palette: BLUE_ICE, relief: .3, batter: .02, seed: Math.round(q.x0) + 5, ice: 0, nm: `${q.nm}: ice column`, grp: G.rock }));
 }
 // The gallery itself: a wall of blue ice behind, a roof that keeps the sun out, dark floor far below, pit props along the wall.
-block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z - 2.6, 19, 27, 'Adit: ice wall heart', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
-block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z + 3.4, 21, 2.4, 'Adit: roof', { tex: 'solid', color: '#16294a', edgeGrinding: false, grp: G.rock });
-block(CAVE_X - 8, CAVE_X + 83, CAVE_Z - 7, CAVE_Z + 3.4, -6.4, 1.6, 'Adit: the dark below', { tex: 'solid', color: '#0e1a33', edgeGrinding: false, grp: G.rock });
-for (const x of [CAVE_X - 8, CAVE_X + 80.6]) block(x, x + 2.4, CAVE_Z - 7, CAVE_Z + 3.4, 19, 27, 'Adit: end wall', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
-C.push(...cliff({ line: [[CAVE_X - 6, CAVE_Z - 2.4], [CAVE_X + 81, CAVE_Z - 2.4]], side: -1, bottom: -6.4, top: 18.8, palette: BLUE_ICE, relief: .75, batter: 0, seed: 77, ice: 0, nm: 'Adit: ice wall', grp: G.rock }));
+block(CAVE_X - 8, CAVE_X + 85, CAVE_Z - 7, CAVE_Z - 2.6, 19, 27, 'Adit: ice wall heart', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+block(CAVE_X - 8, CAVE_X + 85, CAVE_Z - 7, CAVE_Z + 3.4, 21, 2.4, 'Adit: roof', { tex: 'solid', color: '#16294a', edgeGrinding: false, grp: G.rock });
+block(CAVE_X - 8, CAVE_X + 85, CAVE_Z - 7, CAVE_Z + 3.4, -6.4, 1.6, 'Adit: the dark below', { tex: 'solid', color: '#0e1a33', edgeGrinding: false, grp: G.rock });
+for (const x of [CAVE_X - 8, CAVE_X + 82.6]) block(x, x + 2.4, CAVE_Z - 7, CAVE_Z + 3.4, 19, 27, 'Adit: end wall', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+C.push(...cliff({ line: [[CAVE_X - 6, CAVE_Z - 2.4], [CAVE_X + 83, CAVE_Z - 2.4]], side: -1, bottom: -6.4, top: 18.8, palette: BLUE_ICE, relief: .75, batter: 0, seed: 77, ice: 0, nm: 'Adit: ice wall', grp: G.rock }));
 {
   const props = new Timber('Adit pit props', G.scenery);
-  for (let x = CAVE_X + 5; x < CAVE_X + 78; x += 9.5) { const base = -6.4; props.beam([x, base, CAVE_Z - 2.1], [x, 14.5, CAVE_Z - 2.1], .34); props.beam([x - 1.2, 14.5, CAVE_Z - 2.1], [x + 1.2, 14.5, CAVE_Z - 2.1], .3); }
+  for (let x = CAVE_X + 5; x < CAVE_X + 80; x += 9.5) { const base = -6.4; props.beam([x, base, CAVE_Z - 2.1], [x, 14.5, CAVE_Z - 2.1], .34); props.beam([x - 1.2, 14.5, CAVE_Z - 2.1], [x + 1.2, 14.5, CAVE_Z - 2.1], .3); }
   for (const dx of [-1.75, 1.75]) props.beam([MOUTH[0] + dx, MOUTH[1] - .1, -602.05], [MOUTH[0] + dx, MOUTH[1] + 3.4, -602.05], .3);
   props.beam([MOUTH[0] - 2.1, MOUTH[1] + 3.5, -602.05], [MOUTH[0] + 2.1, MOUTH[1] + 3.5, -602.05], .34);
   C.push(...props.done());
 }
-kill(CAVE_X - 6, CAVE_X + 81, CAVE_Z - 2.6, CAVE_Z + 2.6, -3.4, 'Adit: fall');
-fence(CAVE_X - 6, CAVE_X + 81, CAVE_Z + 2, CAVE_Z + 2.4, -4, 26, 'Adit: lip fence');
-add({ t: 'zone', p: [CAVE_X + 37.5, 0, CAVE_Z], s: [91, 1, 8], dir: 'E', grp: G.camera, nm: 'Old Adit: side-on, heading east' });
-add({ t: 'camnode', p: [CAVE_X + 37.5, 6, CAVE_Z - 2], s: [96, 34, 16], cameraView: true, cameraPresentationOnly: true, cameraPosition: [CAVE_X + 37.5, 8, CAVE_Z + 22], cameraTarget: [CAVE_X + 37.5, 5.4, CAVE_Z],
+kill(CAVE_X - 6, CAVE_X + 83, CAVE_Z - 2.6, CAVE_Z + 2.6, -3.4, 'Adit: fall');
+fence(CAVE_X - 6, CAVE_X + 83, CAVE_Z + 2, CAVE_Z + 2.4, -4, 26, 'Adit: lip fence');
+add({ t: 'zone', p: [CAVE_X + 38.5, 0, CAVE_Z], s: [93, 1, 8], dir: 'E', grp: G.camera, nm: 'Old Adit: side-on, heading east' });
+add({ t: 'camnode', p: [CAVE_X + 38.5, 6, CAVE_Z - 2], s: [98, 34, 16], cameraView: true, cameraPresentationOnly: true, cameraPosition: [CAVE_X + 38.5, 8, CAVE_Z + 22], cameraTarget: [CAVE_X + 38.5, 5.4, CAVE_Z],
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 3, grp: G.camera, nm: 'Old Adit: side view' });
 // Adit content.
 checkpoint([CAVE_X + 4.5, 0, CAVE_Z], 'A1 · Adit landing');
 rowOf(CAVE_X + 7, 0, CAVE_Z - 1.4, ['wood', 'wood'], 'Pair on the adit landing, against the wall (open the route)');
-crate(CAVE_X + 17.5, .8, CAVE_Z, 'wood', 'On the glazed drift (bait: the slide carries you into the Nitro)');
+stack(CAVE_X + 17.5, .8, CAVE_Z, ['wood', 'wood'], 'On the glazed drift (bait: the slide carries you into the Nitro)');
 crate(CAVE_X + 22.3, .8, CAVE_Z, 'nitro', 'Nitro at the lip of the ice: jump before it');
-stamper(CAVE_X + 38.2, 2.8, CAVE_Z, 0, 'Quick stamper, first', { cycle: 2.6 });
-crate(CAVE_X + 41.1, 2.8, CAVE_Z, 'mystery', 'In the pocket between the quick stampers');
-stamper(CAVE_X + 44, 2.8, CAVE_Z, 1.3, 'Quick stamper, second: half a cycle off', { cycle: 2.6 });
-foe('spiker', CAVE_X + 52, 3.6, CAVE_Z, .8, 1.4, 'Bristleback on the pillar past the wide gap');
-rowOf(CAVE_X + 58, 4.4, CAVE_Z - 1.4, ['wood', 'mystery'], 'Pair on the arrow floor, against the wall (rest before the climb)');
-crate(CAVE_X + 62.4, 4.4, CAVE_Z, 'bouncy', 'Arrow to the gem shelf');
-stack(CAVE_X + 70.5, GEM_Y, CAVE_Z - 1.4, ['wood', 'wood', 'life'], 'Tower on the gem shelf: the life on top');
-add({ t: 'colouredgem', gemColour: 'blue', p: [CAVE_X + 68, GEM_Y, CAVE_Z], grp: G.course, nm: 'The blue gem' });
-add({ t: 'returnportal', p: [CAVE_X + 74.2, GEM_Y, CAVE_Z], s: [.9, 3, 3], yaw: 0, to: [-16, r3(TARN_Y + .14), -595.4], exitYaw: 180, grp: G.course, nm: 'Back to the tarn' });
-for (const [x, y] of [[2, 0], [20, .8], [44.8, 2.8], [58, 4.4], [66.5, GEM_Y]] as const) add({ t: 'torch', p: [CAVE_X + x, y, CAVE_Z - 1.6], rise: 2.2, w: 1, grp: G.scenery, nm: 'Adit lamp' });
-fruitLine([CAVE_X + 9.6, 0, CAVE_Z], [CAVE_X + 13.6, .8, CAVE_Z], 3, 1.3); fruitLine([CAVE_X + 46.4, 2.8, CAVE_Z], [CAVE_X + 50.8, 3.6, CAVE_Z], 4, 1.7);
+stamper(CAVE_X + 39.4, 2.8, CAVE_Z, 0, 'Quick stamper, first: two metres of floor to land on before it', { cycle: 2.6 });
+crate(CAVE_X + 42.3, 2.8, CAVE_Z, 'mystery', 'In the pocket between the quick stampers');
+stamper(CAVE_X + 45.2, 2.8, CAVE_Z, 1.3, 'Quick stamper, second: half a cycle off, and the run-up to the wide gap', { cycle: 2.6 });
+foe('spiker', CAVE_X + 54, 3.6, CAVE_Z, .8, 1.4, 'Bristleback on the pillar past the wide gap');
+rowOf(CAVE_X + 60, 4.4, CAVE_Z - 1.4, ['wood', 'mystery'], 'Pair on the arrow floor, against the wall (rest before the climb)');
+rowOf(CAVE_X + 64.1, 4.4, CAVE_Z, ['wood', 'bouncy'], 'Arrow to the gem shelf, a box beside it (the tool: break the box, keep the arrow)');
+stack(CAVE_X + 72.5, GEM_Y, CAVE_Z - 1.4, ['wood', 'wood', 'life'], 'Tower on the gem shelf: the life on top');
+add({ t: 'colouredgem', gemColour: 'blue', p: [CAVE_X + 70, GEM_Y, CAVE_Z], grp: G.course, nm: 'The blue gem' });
+add({ t: 'returnportal', p: [CAVE_X + 76.2, GEM_Y, CAVE_Z], s: [.9, 3, 3], yaw: 0, to: [-16, r3(TARN_Y + .14), -595.4], exitYaw: 180, grp: G.course, nm: 'Back to the tarn' });
+for (const [x, y] of [[2, 0], [20, .8], [47.4, 2.8], [59.4, 4.4], [68.5, GEM_Y]] as const) add({ t: 'torch', p: [CAVE_X + x, y, CAVE_Z - 1.6], rise: 2.2, w: 1, grp: G.scenery, nm: 'Adit lamp' });
+fruitLine([CAVE_X + 9.6, 0, CAVE_Z], [CAVE_X + 13.6, .8, CAVE_Z], 3, 1.3); fruitLine([CAVE_X + 48.4, 2.8, CAVE_Z], [CAVE_X + 52.8, 3.6, CAVE_Z], 4, 1.7);
 
 // ───────────────────────────── Dressing ─────────────────────────────
 const ground = (x: number, z: number, dy = 0): P3 => [r3(x), r3(mountain.y(x, z) + dy), r3(z)];
