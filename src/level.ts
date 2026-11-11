@@ -15448,7 +15448,9 @@ export class Level {
       // not cough in unison the moment the level loads.
       smokeT: (this.torches.length % 7) * 0.31,
     };
-    attachFlameHeat(group,emit=>emit(0,h+1.25*scale,0,.75*scale,1.2*scale,1.8*t.burn,t.seed),flames);
+    // A standing fire lifts a column of hot air above its tip. Keep the lower
+    // edge at the bowl and scale the entire column with this particular torch.
+    attachFlameHeat(group,emit=>emit(0,h+1.7*scale,0,.95*scale,1.65*scale,2.1*t.burn,t.seed),flames);
     this.torches.push(t);
     return t;
   }

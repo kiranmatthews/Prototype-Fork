@@ -242,8 +242,8 @@
       "branches": [
         "codex/jak-whole-game-lab"
       ],
-      "disposition": "partial_unfinished",
-      "note": "Completed catalogue/eco/first-person work is on main; progress-HUD checkpoint explicitly not READY.",
+      "disposition": "recovered_particle_lab",
+      "note": "Initially unfinished at audit. Subsequently recovered at user request as jak-particle-study.html, with source thresholds, actual icon sampling, manifest, builds and browser checks completed. Historical missingPaths below describe the original audit, not current omissions.",
       "nonPatchEquivalentCommits": [
         {
           "commit": "8de60c29aa35877df490d0bfadcb413bf7eac026",

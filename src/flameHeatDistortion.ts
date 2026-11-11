@@ -26,7 +26,15 @@ const vertexShader=/* glsl */`
     float wave=sin(time*7.3+shape.w+position.y*2.4);
     vec2 warp=position.xy*(.62*wave+.24*sin(time*11.1+shape.w*1.7));
     warp.y+=.32*sin(time*5.7+shape.w+position.x*2.1);
-    sourceUV+=warp*inner*shape.z*strength*(viewport.w/720.0)/bufferSize;
+    // Bend a fraction of the visible flame, rather than the same ~one pixel
+    // for a candle, a nearby brazier and a distant jet. The cap is in 720-line
+    // presentation pixels: native resolution and split views keep the same
+    // apparent motion, while small/far pockets naturally become quieter.
+    vec2 projectedHalf=abs(vec2(projectionMatrix[0][0],projectionMatrix[1][1]))
+      *shape.xy*viewport.zw*.5/gl_Position.w;
+    vec2 displacement=min(projectedHalf*vec2(.07,.05)*shape.z*strength,
+      vec2(8.0)*(viewport.w/720.0));
+    sourceUV+=warp*inner*displacement/bufferSize;
   }
 `;
 const fragmentShader=/* glsl */`

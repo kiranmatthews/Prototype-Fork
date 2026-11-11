@@ -11755,3 +11755,40 @@ unchanged. Actual Nightworks heat changes 1,927 pixels at 720 and 8,845 at nativ
 2560×1440 while disabled controls are identical; kart modes show 92/75 heat packets
 with none dropped. No console or WebGL errors. Production build and hosting-size
 check pass at 935,100,007 bytes. No full suite run.
+
+## 2026-11-11 — Separate Jak particle study and visible, context-scaled heat
+
+Brief: merge the preserved Jak particle/HUD study as its own Labs entry, and make
+the existing transparent flame heatwave clearly visible and correctly scaled,
+especially in Torchlight Trouble. Approximately 15 minutes prompt-to-local
+playable; source, GPU, browser and release checks followed.
+
+Recovered only the particle/HUD delta from `8de60c29`, completed its remaining
+extractor and actual icon-rig checks, and added `jak-particle-study.html` to the
+published Labs directory. The study opens the 32-layer progress menu, with six
+pages, both NTSC formats, live/held source icon animation, area/entry/exit
+transitions, isolated layers and Original/Gouraud comparison. It reuses all 453
+packed assets through a small source metadata overlay. The existing effects lab
+remains available. Model loading now accepts both raw and HTTP-decoded gzip.
+
+The recovered heat pass previously displaced roughly one pixel regardless of
+flame size. Displacement now follows the projected flame footprint, capped in
+720-line pixels so native/split rendering stays consistent. Torch columns rise
+farther above the bowl and scale with each torch; advecting kart exhaust uses
+compact packets. Fireballs, breath, wreck fires and burning debris retain their
+existing physical source footprints and now get proportional displacement.
+No new flame particles, level geometry or character movement/animation changes.
+Temple v6 remains preserved for a separate pass.
+
+Validation: independent source/runtime checks (6,720 scalar, 332 orbit, 1,384
+placement cases; 2,712 source-host and 5,772 runtime frames); 20 actual icon-rig
+poses and all 453 asset hashes; existing screen/first-person HUD and particle
+motion regressions. Ten original GPU configurations still pass with zero
+foreground/flame/outside errors. Four optical scaling cases measure peak motion
+of 4.66 px for a nearby torch at 720, 1.82 px distant, 1.43 px small, and 9.32 px
+at native 1440. Real Torchlight Trouble reviewed in lite and full render at
+720/native; real kart jets and wreck fire reviewed with zero WebGL errors.
+Browser checks cover all six HUD layouts, both formats, comparison modes,
+transitions, hidden cleanup, isolated layers and existing health HUD. Normal
+and standalone builds, Labs/offline discovery and hosting-size check pass
+(935,134,926 bytes). No full suite run.

@@ -14,7 +14,7 @@ function cosRad(x:number):number {
   const x2=mul(x,x),x4=mul(x2,x2),x6=mul(x4,x2),x8=mul(x4,x4);
   return [x2,x4,x6,x8].reduce((sum,power,i)=>add(sum,mul(power,COS[i])),1);
 }
-function sinRotation(angle:number):number {
+export function sinRotation(angle:number):number {
   const x=mul(.000095873795,(Math.trunc(angle)<<16)>>16),square=mul(x,x);
   let power=x,result=mul(.999998,x);
   for(const coefficient of [-.16666014,.008326521,-.0001956241,.0000023042373]) {

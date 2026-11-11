@@ -1019,3 +1019,41 @@ The review tab and guarded validation server are closed and the lease released.
 The coordinator owns publication. Thirteen progress-menu callbacks and the
 broader effect-host/rendering/composition audit remain; this is a validated
 increment, not completion of the whole-game fidelity goal.
+
+## 2026-11-11 — Recovered particle / HUD study in Labs
+
+The user requested the preserved progress-menu checkpoint (`8de60c29`) as its
+own lab. `jak-particle-study.html` opens the new progress assembly (effect 31004)
+and starts with the HUD category selected. The original `jak-lab.html` catalogue
+stays at 822 exhibits; the separate study has 823. Both use the same packed
+assets. Only a 17 KB `progress-hud.json` metadata overlay is added, with source
+hashes and line references; no old movement or animation ancestors are merged.
+
+Recovered the 32-layer menu, all 13 callbacks, four animated icon rigs and the
+original 60 Hz owner transitions. Controls expose power cells, orbs, scout flies,
+save slots, autosave and frame/settings layouts; area changes; task/slot facts;
+show/hide/wait; both NTSC display formats; and Original/Gouraud/Both. This is a
+particle study: menu text, sounds, standalone orb meshes and real save actions
+are outside the exhibit. The icon rigs are used as animation drivers only.
+
+Closed the checkpoint's missing validation gates:
+
+- Two Python fixtures and eight source mutation rejections, now including the
+  fixed arrival/departure thresholds, transition range and save departure rate.
+- 6,720 scalar and 332 orbit callback cases, 1,384 independently evaluated
+  placements, 2,712 source-host frames and 5,772 runtime frames / 421,508 samples.
+- `test-progress-rig.mjs` loads the actual packed icon skeleton and checks 20
+  poses against direct key interpolation, including fractional frames 2.5 and
+  15.5, independent clones, looping and transformed source joints. It also
+  rehashes all 453 reused assets against the published manifest.
+- Existing screen/first-person HUD and particle-motion regressions pass.
+- Real browser: all six pages, 4:3/16:9, 720/native, comparison modes, area and
+  entry/exit transitions, hidden cleanup, isolated left layer and existing HUD.
+- Normal production and independent lab builds pass. Labs discovery and offline
+  entries pass; release size is 935,134,926 / 1,000,000,000 bytes.
+
+Fixed source-model loading for servers which already decode HTTP gzip; raw
+packed Pages responses still decode normally. Local browser proof is under
+`heat-scale-particle-lab-2026-11-11` in this chat's visualization directory.
+This completes the recovered progress-particle increment, not the broader
+whole-game fidelity audit. The earlier coordinator notes above are historical.

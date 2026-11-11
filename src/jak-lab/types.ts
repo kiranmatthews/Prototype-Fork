@@ -80,7 +80,7 @@ export interface FuelCellHudLibrary {
   callbacks: {name: string; source: Provenance; formSha256: string}[];
   sources: {file: string; sha256: string}[];
 }
-export type ScreenHudKind='health'|'power'|'buzzers'|'first-person';
+export type ScreenHudKind='health'|'power'|'buzzers'|'first-person'|'progress';
 export interface ScreenHudProfile {
   id:'4:3'|'16:9';
   layers:{group:string;position:[number,number,number];source:Provenance}[];
@@ -98,6 +98,16 @@ export interface ScreenHudLibrary {
 export interface FirstPersonHudDefinition extends ScreenHudDefinition {
   id:'first-person';maximumOffset:number;
   rates:{arrival:number;departure:number;restore:number;suppress:number};
+  callbacks:{name:string;source:Provenance;formSha256:string}[];
+  sources:{file:string;sha256:string}[];
+}
+export type ProgressPage='fuel-cell'|'money'|'buzzer'|'save-game'|'auto-save'|'frame';
+export interface ProgressHudDefinition extends ScreenHudDefinition {
+  id:'progress';states:number[];model:string;clip:string;
+  icons:{index:number;frame:number;held:boolean;yaw:number;x:number;y:number;z:number;scaleX:number;scaleY:number}[];
+  maximumOffset:number;transitionMaximum:number;arrivalThreshold:number;departureThreshold:number;
+  rates:{arrival:number;departure:number;stats:number;other:number;saveDeparture:number};
+  eggStartingX:number[];
   callbacks:{name:string;source:Provenance;formSha256:string}[];
   sources:{file:string;sha256:string}[];
 }
@@ -132,6 +142,7 @@ export interface Catalogue {
   fuelCellHud?: FuelCellHudLibrary | null;
   screenHud?: ScreenHudLibrary | null;
   firstPersonHud?: FirstPersonHudDefinition | null;
+  progressHud?: ProgressHudDefinition | null;
   meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];

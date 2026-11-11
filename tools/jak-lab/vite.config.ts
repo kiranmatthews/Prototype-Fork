@@ -10,6 +10,6 @@ const root=fileURLToPath(new URL('../../',import.meta.url));
 export default defineConfig({
   root,base:'./',publicDir:false,plugins:[localJakLab()],
   build:{outDir:resolve(root,process.env.JAK_LAB_SITE_DIR??'.jak-lab-data/site'),emptyOutDir:true,
-    assetsDir:'runtime',rollupOptions:{input:resolve(root,'jak-lab.html')}},
+    assetsDir:'runtime',rollupOptions:{input:{effects:resolve(root,'jak-lab.html'),particles:resolve(root,'jak-particle-study.html')}}},
   resolve:{dedupe:['three']},
 });
