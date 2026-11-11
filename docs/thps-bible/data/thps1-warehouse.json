@@ -1,0 +1,1344 @@
+{
+ "id": "thps1-warehouse",
+ "game": "THPS1",
+ "level": "Warehouse",
+ "location": "Woodland Hills, California",
+ "type": "career-park",
+ "careerPosition": 1,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Warehouse.png",
+  "G1 p044-p054 (p020 bonus icons)",
+  "LP1 2:20-4:42",
+  "TAS1 0:22-0:38",
+  "PS12 warehouse",
+  "LP12 0:03:00-0:05:30",
+  "WEB thumbsticks (THPS 1+2 tapes)"
+ ],
+ "goals": [
+  {
+   "text": "5,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "Smash the Boxes",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "15,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 10,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 50,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 100,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 7,500",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Hydrants",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Smash the Boxes",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "50-50 the Big Rail Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Ollie a Channel Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "small",
+  "footprint": "≈ 50-60 × 40-50 m overall (main hall ≈ 45-55 × 35-45 m plus a raised start room ≈ 12-15 m across)",
+  "evidence": "VG scale from the taxi (≈ 114 px for a ≈ 4.5-5 m car → ≈ 23-25 px/m); the same scale gives a halfpipe ≈ 18-22 m long and ≈ 9-12 m coping to coping. Iso foreshortening not corrected. Low-medium confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start room",
+   "layer": "raised room (≈ 4-6 m above the hall floor, low confidence)",
+   "features": [
+    "spawn",
+    "quarter pipe behind spawn",
+    "box pile 1",
+    "two glass windows onto the entry ramps"
+   ],
+   "notes": "G1 p046: boxes to the right, quarter pipe behind; G1 p045: 'Break the right window'"
+  },
+  {
+   "id": "Z2",
+   "name": "Entry ramps and channel",
+   "layer": "ramp, vert",
+   "features": [
+    "two long entry slopes",
+    "three quarter pipes between them (two Channel Gaps)",
+    "100 icon"
+   ],
+   "notes": "the right ramp points at the halfpipe (G1 p050)"
+  },
+  {
+   "id": "Z3",
+   "name": "Halfpipe and secret room",
+   "layer": "vert, suspended room",
+   "features": [
+    "halfpipe ≈ 18-22 m long with an outer bank on its south-west wall",
+    "T over the centre",
+    "glass-fronted sky box on chains over the north-west end"
+   ],
+   "notes": "VG tape (790, 810), T (915, 970); Over the Pipe, Secret Room and Taxi Gap all land here"
+  },
+  {
+   "id": "Z4",
+   "name": "Front upper deck",
+   "layer": "second level (≈ 3-4 m)",
+   "features": [
+    "quarter pipe up to the deck",
+    "E",
+    "box pile 5",
+    "deck quarter pipe (Faceplant wall, Transition Grind)"
+   ],
+   "notes": "Deck 2 Rail launches from here"
+  },
+  {
+   "id": "Z5",
+   "name": "Centre floor",
+   "layer": "ground",
+   "features": [
+    "Big Rail (long red rail)",
+    "scattered crates and planks"
+   ],
+   "notes": "1+2 goal: 50-50 the Big Rail Gap"
+  },
+  {
+   "id": "Z6",
+   "name": "Taxi",
+   "layer": "ground, obstacle top",
+   "features": [
+    "yellow taxi ≈ 1.5 m tall",
+    "A above it"
+   ],
+   "notes": "Taxi Gap, Taxi 2 Ledge, Taxi 2 Rail start here"
+  },
+  {
+   "id": "Z7",
+   "name": "Pipe ledge",
+   "layer": "ledge (≈ 1-1.5 m) along the north-west wall",
+   "features": [
+    "ledge with a raised pipe",
+    "box pile 2"
+   ],
+   "notes": "end of Monster Grind and Taxi 2 Ledge; G1 calls it left or right of the halfpipe depending on viewpoint"
+  },
+  {
+   "id": "Z8",
+   "name": "Back quarter pipe and billboard",
+   "layer": "vert, high rail",
+   "features": [
+    "long quarter pipe along the south-west wall with a U-shaped hump (hip)",
+    "K",
+    "box pile 3",
+    "Transworld/Skateboarding billboard with the High Rail"
+   ],
+   "notes": "Holy Shi... = grind the whole coping including the hip"
+  },
+  {
+   "id": "Z9",
+   "name": "Kickers and water ledge",
+   "layer": "ground, ledge",
+   "features": [
+    "two facing kickers (S between)",
+    "ledge by a water hazard with box pile 4"
+   ],
+   "notes": "water hazard per G1 p048; not distinct on VG"
+  }
+ ],
+ "landmarks": [
+  "halfpipe with FIRM logos",
+  "glass sky box hanging on chains over the halfpipe",
+  "yellow taxi",
+  "Transworld Skateboarding billboard with the High Rail",
+  "long red Big Rail",
+  "start-room windows above two big entry ramps",
+  "U-shaped hump in the back quarter pipe"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "towards the two windows over the entry ramps (inferred from G1 p046 and LP1 2:35-2:36)",
+  "visibleCollectibles": [
+   "100 icon on the hall floor (LP1 2:36)"
+  ],
+  "notes": "sky box ≈ 45-50 m away over the far end of the halfpipe; not clearly visible in any spawn frame. The right window and ramp aim the player at the halfpipe; G1 p050: grab the tape first"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z3",
+   "landmark": "glass-fronted sky box hanging over the north-west end of the halfpipe",
+   "layer": "inside-room (suspended, break-glass entry)",
+   "heightM": "room floor ≈ 1-2.5 above the halfpipe coping (≈ 4.5-6.5 above the flat with a ≈ 3.5-4 m coping); tape ≈ 1-1.5 above the room floor → ≈ 5.5-8 above the flat, ≈ 2-4 above the launch lip",
+   "launchFrom": "outer bank and coping of the halfpipe's south-west wall after the right entry ramp (alternatives: vert air inside the halfpipe; hop from the far deck)",
+   "visibility": {
+    "firstSight": "from the hall floor and the descent of the right entry ramp (inferred); icon itself seen through the glass only in the last second (LP1 3:42.5)",
+    "fromSpawn": false,
+    "reads": "dark box on chains with a lit (yellow) window over the biggest ramp; remake level intro shows a camera shot from inside the room with the glowing tape (LP12 0:03:09)",
+    "distanceFromFirstSightM": "≈ 25-40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "break-glass",
+     "from": "spawn in the start room",
+     "to": "right entry ramp",
+     "geometry": "break the right window (G1 p045); optional: ride the quarter pipe behind the spawn and smash box pile 1 on the way (G1 p046)"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "start-room window",
+     "to": "hall floor",
+     "geometry": "roll down the long right entry ramp; the start room is the highest floor surface, so this gives maximum speed without pumping (ramp descent ≈ 4-6 m, low confidence)"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "hall floor",
+     "to": "halfpipe outer bank",
+     "geometry": "veer right towards the sky box before going off the ramp over the halfpipe (G1 p050); LP1 3:42 reaches the hazard-striped coping with the room in view"
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "south-west coping",
+     "to": "air over the halfpipe flat",
+     "geometry": "ollie at the coping and clear ≈ 9-12 m of halfpipe: Over The Pipe (300); T hovers on the same arc"
+    },
+    {
+     "step": 5,
+     "move": "break-glass",
+     "from": "air",
+     "to": "inside the sky box",
+     "geometry": "crash through the room's glass ≈ 1-2.5 m above the far coping; tape collected inside; Secret Room (300). LP1 3:43 'SWITCH OVER THE PIPE + SECRET ROOM 1200'"
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "sky box",
+     "to": "far deck or pipe ledge (Z7)",
+     "geometry": "land on the far deck or, 'if you're really daring', in a grind on the rail or ledge on the other side (G1 p050)"
+    }
+   ],
+   "moves": [
+    "break-glass",
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "aim while rolling (veer towards the room)",
+    "ollie timing at the coping",
+    "know that glass is passable (taught by the spawn window)"
+   ],
+   "coupling": "none",
+   "failure": "a short or wide jump lands in the halfpipe or on its far deck; no pit; pump the halfpipe and vert-air into the room from below (PS12) — retry ≈ 5-10 s of a 120 s run",
+   "timeFromSpawnS": "designed line ≈ 6-8 (inferred; LP1 descent-to-tape segment ≈ 5 s, 3:38-3:43); LP1 70 (timer 0:50, taken after the boxes); TAS1 15 (taken last, timer 2:00→1:45, TAS1 0:37)",
+   "difficulty": 1,
+   "roles": [
+    "TEASE",
+    "TEACH-LINE",
+    "REWARD"
+   ],
+   "why": "The first secret of the series sits on the arc of the level's signature jump inside its most visible feature: it teaches what a tape is (a place you must fly into), that glass is a door, and pays gap bonuses for the same arc",
+   "evidence": "VG; G1 p045, p050, p053; LP1 3:36-3:47; TAS1 0:35-0:37; PS12 warehouse; LP12 0:03:09, 0:04:29-0:04:33; WEB thumbsticks",
+   "confidence": "high (location, route); low-medium (heights)",
+   "alternatives": [
+    {
+     "name": "vert air from inside the halfpipe",
+     "evidence": "PS12 warehouse ('ramping off either side of the half pipe'); WEB thumbsticks"
+    },
+    {
+     "name": "far deck / pipe ledge side entry",
+     "evidence": "TAS1 0:35-0:37: after box 2, along the halfpipe deck, short air into the room ('SWITCH CHRIST AIR 210', no gap)"
+    },
+    {
+     "name": "Taxi Gap into the halfpipe then wall air (inferred)",
+     "evidence": "G1 p052"
+    }
+   ]
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z9",
+   "landmark": "between the two facing kickers",
+   "layer": "air",
+   "heightM": "≈ 1.5-2.5 above the floor",
+   "launchFrom": "either kicker",
+   "visibility": {
+    "firstSight": "from the hall floor near the kickers",
+    "fromSpawn": false,
+    "reads": "floating letter on the kicker-to-kicker line",
+    "distanceFromFirstSightM": "≈ 10-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "back quarter pipe or floor",
+     "to": "kicker",
+     "geometry": "ride either kicker towards the other"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "kicker lip",
+     "to": "other kicker",
+     "geometry": "Kicker Gap (100); 'an easy grab' (G1 p048)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "land on the floor; immediate retry",
+   "timeFromSpawnS": "TAS1 ≈ 9 (0:31)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "teaches that a gap between two ramps is a scored jump",
+   "evidence": "G1 p048; VG (1195, 1450); TAS1 0:31-0:32",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z8",
+   "landmark": "top of the long back quarter pipe, left of the big sign",
+   "layer": "vert air",
+   "heightM": "≈ 1-2 above the coping",
+   "launchFrom": "back quarter pipe",
+   "visibility": {
+    "firstSight": "from the floor facing the back wall",
+    "fromSpawn": false,
+    "reads": "letter hanging above the coping",
+    "distanceFromFirstSightM": "≈ 15-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "floor",
+     "to": "above the back quarter-pipe coping",
+     "geometry": "G1 p049: 'be sure to get enough speed to get high enough to grab it'; TAS1 links it to the Transfer over the hump"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "enough speed for a real vert air"
+   ],
+   "coupling": "none",
+   "failure": "fall back into the quarter pipe; retry immediately",
+   "timeFromSpawnS": "TAS1 ≈ 11 (0:33)",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "the first height check of the career, on the wall that also supplies speed",
+   "evidence": "G1 p049; VG (475, 1450); TAS1 0:33; LP1 2:48",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z6",
+   "landmark": "above the yellow taxi",
+   "layer": "air over an obstacle",
+   "heightM": "≈ 1-2 above the taxi roof (≈ 2.5-3.5 above the floor)",
+   "launchFrom": "taxi / floor",
+   "visibility": {
+    "firstSight": "from most of the west half of the hall",
+    "fromSpawn": false,
+    "reads": "letter over the most recognisable prop",
+    "distanceFromFirstSightM": "≈ 15-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "floor",
+     "to": "over the taxi",
+     "geometry": "G1 p049: 'You don't need much air'; with speed continue as Taxi Gap into the halfpipe (600)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none significant",
+   "timeFromSpawnS": "TAS1 ≈ 13 (0:35)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a small jump over a prop that is also the launch of three graded gaps",
+   "evidence": "G1 p049; VG (589, 1184); TAS1 0:35; LP1 2:50",
+   "confidence": "high"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z3",
+   "landmark": "over the centre of the halfpipe",
+   "layer": "air",
+   "heightM": "≈ 4-6 above the halfpipe flat",
+   "launchFrom": "either halfpipe wall (outer bank)",
+   "visibility": {
+    "firstSight": "from the hall floor and the entry ramps",
+    "fromSpawn": false,
+    "reads": "letter in the middle of the biggest feature",
+    "distanceFromFirstSightM": "≈ 25-40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "halfpipe outer bank",
+     "to": "far deck",
+     "geometry": "clear the halfpipe from either side (Over The Pipe); G1 p049"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "speed into the bank"
+   ],
+   "coupling": "none",
+   "failure": "land in the halfpipe; pump out",
+   "timeFromSpawnS": "LP1 ≈ 34 (3:08); TAS1 ≈ 15 (probably with the tape, inferred)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "rehearses the tape arc; collecting it teaches the jump that the tape needs",
+   "evidence": "G1 p049; VG (915, 970); LP1 3:08",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z4",
+   "landmark": "front upper deck beside box pile 5",
+   "layer": "second-level deck",
+   "heightM": "≈ 3-4 above the floor (on the deck)",
+   "launchFrom": "quarter pipe right of the entry ramp",
+   "visibility": {
+    "firstSight": "only after riding up the quarter pipe (deck hidden behind its lip)",
+    "fromSpawn": false,
+    "reads": "letter on a deck",
+    "distanceFromFirstSightM": "≈ 5-10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "lip",
+     "from": "floor",
+     "to": "upper deck",
+     "geometry": "ride up the quarter pipe and press Up at the top to land on the deck (G1 p048, p050)"
+    }
+   ],
+   "moves": [
+    "lip",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "quarter pipe to deck (press Up)"
+   ],
+   "coupling": "none",
+   "failure": "fall back down the quarter pipe",
+   "timeFromSpawnS": "TAS1 ≈ 5 (0:27); LP1 ≈ 46 (3:20)",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "the only letter on an upper level; teaches that quarter pipes lead up",
+   "evidence": "G1 p050; VG (1750, 965); TAS1 0:27",
+   "confidence": "high"
+  },
+  {
+   "id": "BOX1",
+   "type": "goal-object",
+   "label": "Box pile 1 (Smash the Boxes)",
+   "zone": "Z1",
+   "landmark": "start room, right of the spawn",
+   "layer": "raised room floor",
+   "heightM": "≈ 4-6 above the hall floor (room level)",
+   "launchFrom": "quarter pipe behind the spawn",
+   "visibility": {
+    "firstSight": "from spawn",
+    "fromSpawn": true,
+    "reads": "stack of crates",
+    "distanceFromFirstSightM": "≈ 5"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "spawn",
+     "to": "quarter pipe behind",
+     "geometry": "turn round and ride the quarter pipe"
+    },
+    {
+     "step": 2,
+     "move": "smash",
+     "from": "quarter pipe",
+     "to": "boxes",
+     "geometry": "roll through the boxes on the way out of the right window (G1 p046)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "none",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "TAS1 ≈ 2 (0:24)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "the career's first input: turn round, use a quarter pipe, roll through boxes",
+   "evidence": "G1 p046; VG (1561, 328); TAS1 0:23-0:24",
+   "confidence": "high"
+  },
+  {
+   "id": "BOX2",
+   "type": "goal-object",
+   "label": "Box pile 2",
+   "zone": "Z7",
+   "landmark": "pipe ledge beyond the halfpipe, next to the taxi side",
+   "layer": "ledge",
+   "heightM": "≈ 1-1.5 above the floor",
+   "launchFrom": "floor or the halfpipe jump",
+   "visibility": {
+    "firstSight": "from the halfpipe and taxi area",
+    "fromSpawn": false,
+    "reads": "crates on a ledge",
+    "distanceFromFirstSightM": "≈ 10-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "floor",
+     "to": "ledge",
+     "geometry": "ollie onto the ledge, or jump the entire halfpipe to it for big points (G1 p046)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "TAS1 ≈ 13 (0:35)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "ledges are reached with an ollie; the halfpipe jump leads here",
+   "evidence": "G1 p046; VG (405, 939); PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "BOX3",
+   "type": "goal-object",
+   "label": "Box pile 3",
+   "zone": "Z8",
+   "landmark": "on the hump of the back quarter pipe",
+   "layer": "quarter-pipe deck",
+   "heightM": "≈ coping height (≈ 2.5-3.5)",
+   "launchFrom": "back quarter pipe",
+   "visibility": {
+    "firstSight": "from the floor facing the back wall",
+    "fromSpawn": false,
+    "reads": "crates on top of the hump",
+    "distanceFromFirstSightM": "≈ 15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "hip",
+     "from": "back quarter pipe",
+     "to": "hump deck",
+     "geometry": "transition over the hump without too much speed, or press Up at the top (G1 p046)"
+    }
+   ],
+   "moves": [
+    "hip",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "speed control"
+   ],
+   "coupling": "none",
+   "failure": "overshoot the boxes",
+   "timeFromSpawnS": "TAS1 ≈ 11 (0:33)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "teaches the hip transfer and speed control",
+   "evidence": "G1 p046; VG (740, 1453); TAS1 0:32-0:33",
+   "confidence": "high"
+  },
+  {
+   "id": "BOX4",
+   "type": "goal-object",
+   "label": "Box pile 4",
+   "zone": "Z9",
+   "landmark": "ledge by the water hazard",
+   "layer": "ledge",
+   "heightM": "≈ 1-1.5",
+   "launchFrom": "kicker",
+   "visibility": {
+    "firstSight": "from the kicker area",
+    "fromSpawn": false,
+    "reads": "crates on a ledge",
+    "distanceFromFirstSightM": "≈ 10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "back quarter pipe (speed)",
+     "to": "kicker",
+     "geometry": "G1 p048"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "kicker",
+     "to": "ledge",
+     "geometry": "Kicker 2 Ledge (200)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "TAS1 ≈ 8 (0:30)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "kicker to ledge",
+   "evidence": "G1 p048, p053; VG (1599, 1347)",
+   "confidence": "high"
+  },
+  {
+   "id": "BOX5",
+   "type": "goal-object",
+   "label": "Box pile 5",
+   "zone": "Z4",
+   "landmark": "front upper deck beside E",
+   "layer": "second-level deck",
+   "heightM": "≈ 3-4",
+   "launchFrom": "quarter pipe",
+   "visibility": {
+    "firstSight": "after going up the quarter pipe",
+    "fromSpawn": false,
+    "reads": "crates beside the E",
+    "distanceFromFirstSightM": "≈ 5"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "lip",
+     "from": "floor",
+     "to": "deck",
+     "geometry": "continue along the wall from box 4 and press Up at the top of the quarter pipe (G1 p048)"
+    }
+   ],
+   "moves": [
+    "lip"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "quarter pipe to deck"
+   ],
+   "coupling": "none",
+   "failure": "fall back",
+   "timeFromSpawnS": "TAS1 ≈ 6 (0:28); LP1 64 (3:38)",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "quarter pipe up to a second level",
+   "evidence": "G1 p048; VG (1851, 968); LP1 3:38",
+   "confidence": "high"
+  },
+  {
+   "id": "ICON100-1",
+   "type": "bonus-icon",
+   "label": "100-point icon",
+   "zone": "Z2",
+   "landmark": "back-wall quarter pipe by the entry ramps",
+   "layer": "vert air",
+   "heightM": "unknown (above a coping)",
+   "launchFrom": "halfpipe or quarter pipe",
+   "visibility": {
+    "firstSight": "from the hall",
+    "fromSpawn": false,
+    "reads": "floating 100 disc",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "G1 p020: icons are 'sign posts' for moves; marks the Transition Grind coping",
+   "evidence": "VG (1254, 703); G1 p020",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON100-2",
+   "type": "bonus-icon",
+   "label": "100-point icon",
+   "zone": "Z2",
+   "landmark": "between the entry ramps (channel quarter pipes)",
+   "layer": "vert air",
+   "heightM": "unknown",
+   "launchFrom": "channel quarter pipes",
+   "visibility": {
+    "firstSight": "from the start-room windows (LP1 2:36 shows a 100 icon below)",
+    "fromSpawn": true,
+    "reads": "floating 100 disc",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "marks the Channel Gap",
+   "evidence": "VG (1482, 874); LP1 2:36 (which icon is seen is inferred)",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON100-3",
+   "type": "bonus-icon",
+   "label": "100-point icon",
+   "zone": "Z8",
+   "landmark": "south end of the back quarter pipe",
+   "layer": "vert air",
+   "heightM": "unknown",
+   "launchFrom": "back quarter pipe",
+   "visibility": {
+    "firstSight": "from the kicker area",
+    "fromSpawn": false,
+    "reads": "floating 100 disc",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "marks the back quarter-pipe run",
+   "evidence": "VG (876, 1615)",
+   "confidence": "medium"
+  },
+  {
+   "id": "HYDRANTS",
+   "type": "goal-object",
+   "label": "5 hydrants (THPS 1+2 only)",
+   "zone": "Z1, Z2, Z4, Z8",
+   "landmark": "above five quarter pipes",
+   "layer": "vert air",
+   "heightM": "unknown",
+   "launchFrom": "quarter pipes",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": true,
+    "reads": "floating hydrants",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarter pipes",
+     "to": "hydrants",
+     "geometry": "behind the spawn; centre channel quarter pipe; deck's second quarter pipe; back quarter pipe opposite the kickers; back quarter pipe corner near the taxi (PS12)"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP12 run 1: 1 of 5 at timer 1:52 (0:03:18)",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "remake adds a quarter-pipe tour goal",
+   "evidence": "PS12 warehouse; LP12 0:03:18, 0:04:18",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Transfer",
+   "points": 200,
+   "kind": "hip",
+   "location": "U-shaped hump in the back quarter pipe",
+   "moves": [
+    "hip",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "BOX3",
+    "K"
+   ],
+   "evidence": "G1 p052; VG; PS12"
+  },
+  {
+   "name": "Taxi Gap",
+   "points": 600,
+   "kind": "over-object",
+   "location": "taxi → centre flat of the halfpipe",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "A"
+   ],
+   "evidence": "G1 p052; VG; PS12"
+  },
+  {
+   "name": "Kicker Gap",
+   "points": 100,
+   "kind": "kicker",
+   "location": "kicker to kicker (south)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p052; VG; PS12"
+  },
+  {
+   "name": "Over The Pipe",
+   "points": 300,
+   "kind": "channel",
+   "location": "clear the whole halfpipe from either side",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE",
+    "T"
+   ],
+   "evidence": "G1 p053; VG; LP1 3:43; PS12"
+  },
+  {
+   "name": "Secret Room",
+   "points": 300,
+   "kind": "secret-area",
+   "location": "the sky box above the halfpipe",
+   "moves": [
+    "transfer",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p053; VG; LP1 3:43; PS12"
+  },
+  {
+   "name": "Faceplant",
+   "points": 400,
+   "kind": "wallride",
+   "location": "wall above the deck quarter pipe, launched from the quarter pipe right of the entry ramps",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p053; VG; PS12 ('Face Plant')"
+  },
+  {
+   "name": "Channel Gap",
+   "points": 250,
+   "kind": "channel",
+   "location": "two: quarter pipes over the entry ramps",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p053; VG; PS12 (1+2 goal)"
+  },
+  {
+   "name": "Kicker 2 Ledge",
+   "points": 200,
+   "kind": "kicker",
+   "location": "kicker → ledge with box pile 4",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "BOX4"
+   ],
+   "evidence": "G1 p053; VG; PS12"
+  },
+  {
+   "name": "Big Rail",
+   "points": 200,
+   "kind": "other",
+   "location": "whole red rail in the centre",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p053; VG; PS12 (1+2 goal 50-50 it)"
+  },
+  {
+   "name": "Deck 2 Rail",
+   "points": 300,
+   "kind": "ledge-to-ledge",
+   "location": "deck of the quarter pipe right of the entry ramps → Big Rail",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p053; VG; PS12"
+  },
+  {
+   "name": "Taxi 2 Ledge",
+   "points": 500,
+   "kind": "over-object",
+   "location": "taxi → pipe ledge beside the halfpipe",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "BOX2"
+   ],
+   "evidence": "G1 p054; VG; PS12"
+  },
+  {
+   "name": "Taxi 2 Rail",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "taxi → Big Rail",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p054; VG; not in PS12 list"
+  },
+  {
+   "name": "Monster Grind",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "billboard High Rail → quarter-pipe coping → pipe on the ledge beside the halfpipe",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p054; VG; PS12"
+  },
+  {
+   "name": "High Rail",
+   "points": 200,
+   "kind": "other",
+   "location": "rail on top of the Transworld Skateboarding sign",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p054; VG; PS12"
+  },
+  {
+   "name": "Holy Shi...",
+   "points": 3000,
+   "kind": "lip",
+   "location": "entire coping of the back quarter pipe including the hip",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p054; VG; PS12"
+  },
+  {
+   "name": "Transition Grind",
+   "points": 400,
+   "kind": "lip",
+   "location": "(1) halfpipe → coping of the quarter pipe by the entry ramps; (2) lower quarter pipe → deck quarter-pipe coping",
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p054; VG; PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "break the start-room window",
+   "opens": "exit onto the entry ramps",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G1 p045"
+  },
+  {
+   "trigger": "fly into the sky box",
+   "opens": "glass breaks; tape inside",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G1 p050; LP1 3:42.5; LP12 0:04:29"
+  },
+  {
+   "trigger": "five tapes (LP1 run)",
+   "opens": "School unlocked, new deck, stats increased, Mall unlocked",
+   "neededFor": [],
+   "evidence": "LP1 4:16-4:20"
+  },
+  {
+   "trigger": "4 park goals (THPS 1+2)",
+   "opens": "School",
+   "neededFor": [],
+   "evidence": "PS12 warehouse"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Tony's line (tape line)",
+   "sequence": [
+    "break right window",
+    "right entry ramp",
+    "halfpipe outer bank",
+    "Over The Pipe",
+    "Secret Room",
+    "far deck or pipe-ledge grind"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "TAPE",
+    "T"
+   ],
+   "why": "spawn height spent on one air through the best collectible",
+   "evidence": "G1 p045, p050, p053; LP1 3:40-3:44"
+  },
+  {
+   "id": "L2",
+   "name": "Box run",
+   "sequence": [
+    "quarter pipe behind spawn",
+    "box pile 1",
+    "right window"
+   ],
+   "links": [],
+   "collectibles": [
+    "BOX1"
+   ],
+   "why": "first input teaches turning round and quarter pipes",
+   "evidence": "G1 p046; TAS1 0:22-0:24"
+  },
+  {
+   "id": "L3",
+   "name": "Back wall into kickers",
+   "sequence": [
+    "back quarter pipe",
+    "kicker",
+    "Kicker Gap or Kicker 2 Ledge"
+   ],
+   "links": [
+    "kicker"
+   ],
+   "collectibles": [
+    "S",
+    "BOX4"
+   ],
+   "why": "the back quarter pipe is the speed source for floor features",
+   "evidence": "G1 p048, p053; TAS1 0:29-0:32"
+  },
+  {
+   "id": "L4",
+   "name": "Back quarter pipe",
+   "sequence": [
+    "back quarter pipe air (K)",
+    "Transfer over the hump (box 3)",
+    "Holy Shi... coping grind"
+   ],
+   "links": [
+    "transfer",
+    "lip grind"
+   ],
+   "collectibles": [
+    "K",
+    "BOX3"
+   ],
+   "why": "vert wall that is also a 3,000-point grind",
+   "evidence": "G1 p046, p049, p052, p054; TAS1 0:32-0:33"
+  },
+  {
+   "id": "L5",
+   "name": "Taxi line",
+   "sequence": [
+    "back quarter pipe for speed",
+    "taxi (A)",
+    "Taxi Gap / Taxi 2 Ledge / Taxi 2 Rail"
+   ],
+   "links": [
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [
+    "A",
+    "BOX2"
+   ],
+   "why": "one prop, three graded destinations",
+   "evidence": "G1 p049, p052, p054"
+  },
+  {
+   "id": "L6",
+   "name": "Upper deck",
+   "sequence": [
+    "quarter pipe right of the entry ramps",
+    "deck (E, box 5)",
+    "Faceplant / Transition Grind / Deck 2 Rail"
+   ],
+   "links": [
+    "lip",
+    "grind"
+   ],
+   "collectibles": [
+    "E",
+    "BOX5"
+   ],
+   "why": "second level reached by quarter pipe to deck",
+   "evidence": "G1 p048, p050, p053, p054"
+  },
+  {
+   "id": "L7",
+   "name": "Big Rail",
+   "sequence": [
+    "Deck 2 Rail",
+    "full Big Rail",
+    "trick out"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [],
+   "why": "long grind for the multiplier",
+   "evidence": "G1 p051, p053"
+  },
+  {
+   "id": "L8",
+   "name": "Monster Grind",
+   "sequence": [
+    "billboard High Rail",
+    "quarter-pipe coping",
+    "pipe on the ledge beside the halfpipe"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "expert line ending where the tape line lands",
+   "evidence": "G1 p054"
+  },
+  {
+   "id": "L9",
+   "name": "TAS lap",
+   "sequence": [
+    "box 1",
+    "channel quarter pipes",
+    "deck (E, box 5)",
+    "kicker ledge (box 4)",
+    "kickers (S)",
+    "hump (box 3)",
+    "K",
+    "taxi (A)",
+    "pipe ledge (box 2)",
+    "halfpipe deck",
+    "sky box (tape)"
+   ],
+   "links": [
+    "fastplant",
+    "grind"
+   ],
+   "collectibles": [
+    "E",
+    "BOX5",
+    "BOX4",
+    "S",
+    "BOX3",
+    "K",
+    "A",
+    "BOX2",
+    "TAPE",
+    "T"
+   ],
+   "why": "all collectibles lie on one 15 s loop",
+   "evidence": "TAS1 0:22-0:37"
+  }
+ ],
+ "guidance": [
+  "The tape is in a lit hanging box over the biggest ramp; the feature itself is the sign",
+  "Spawn height and the right window/ramp aim the player at the halfpipe; Over the Pipe is 'hard not to clear' from the start ramp (G1 p053)",
+  "The breakable start window teaches that glass is a door before the sky box asks for it",
+  "T over the halfpipe centre rehearses the tape arc",
+  "Three 100-point icons mark the transition-grind coping, the channel quarter pipes and the back quarter pipe (G1 p020: icons are sign posts)",
+  "THPS 1+2: the level-intro 'GET THE SECRET TAPE' shot is from inside the room (LP12 0:03:09)",
+  "Hidden on purpose: only the deck behind the front quarter pipe (E, box 5) and the billboard High Rail"
+ ],
+ "designLogic": [
+  "The career's first secret is on the level's signature jump, not in a corner",
+  "Spawn → speed → target: the highest floor in the level points at the tape and supplies the speed",
+  "One arc pays three rewards (Over the Pipe, Secret Room, T), so a short attempt still scores",
+  "Glass at both ends of the line (start window, sky box) teaches that panes are doors",
+  "Visible-but-hard is softened: the only skill is speed plus aim, ≈ 5-8 m of height supplied by the drop-in",
+  "Failure is cheap: a miss lands in the halfpipe, which is itself a second route to the room",
+  "One letter per feature: the five letters tour the five things the hall is built around",
+  "Box piles form a curriculum of getting onto ledges and decks, each by a different move",
+  "The taxi launches to three destinations of rising value (600/500/1,000)",
+  "The hall is a loop; TAS1 shows every goal on one 15 s lap",
+  "The expert Monster Grind ends where the tape jump lands, so beginner and expert lines share a destination",
+  "G1 calls the tape 'the first thing you grab': the first level makes the secret the easiest goal",
+  "THPS 1+2 adds a goal-preview camera inside the room, making the silhouette hint explicit (inference: the 1999 cue was considered too subtle)"
+ ],
+ "remakeChanges": [
+  "Tape unchanged: same glass room over the halfpipe (LP12 0:04:29)",
+  "Level intro previews the tape from inside the room (LP12 0:03:09)",
+  "10 park goals: four score goals, letters, 5 hydrants (quarter-pipe tour), boxes, 50-50 the Big Rail Gap, Ollie a Channel Gap, tape",
+  "Letters in the same five spots (PS12)",
+  "Score thresholds 10,000/50,000/100,000 and combo 7,500 instead of 5,000/15,000",
+  "PS12 lists 15 gaps (no Taxi 2 Rail)",
+  "Extras: style-dependent stat points, VV logo (wallride off the right slope), alien plushie (upper deck)",
+  "4 park goals unlock School"
+ ],
+ "transfer": [
+  "Sky-box crystal: a box hung on chains over the far end of a halfpipe with an open or crate-panel front facing a long drop-in ramp from spawn; at the 23 m/s charge cap a full ollie carries ≈ 13.8 m, enough to clear a 9-12 m halfpipe; box floor ≈ 2 m above the coping",
+  "Keep the box floor ≥ ≈ 7.5 m above any walkable surface (double jump 4.6 m + 2.4 m ledge grab) and without a grabbable edge",
+  "Size the halfpipe so a pumped vert air from its near wall also reaches the box, making a miss a pumping lesson",
+  "Put a pickup or trick gate over the halfpipe centre on the same arc (the T role)",
+  "If the box front is a smashable panel, make the spawn exit the same panel type",
+  "Use a parked vehicle as a kicker with three marked destinations of rising difficulty",
+  "End one level-intro camera node inside the crystal box"
+ ],
+ "openQuestions": [
+  "Exact heights of the start room, sky box and halfpipe coping (estimates only)",
+  "Whether the sky box is visible from the spawn camera",
+  "TAS1 0:37: T probably taken in the same air as the tape (not seen)",
+  "The water hazard by the kickers (G1 p048) is not distinct on VG",
+  "Whether THPS 1+2 removed Taxi 2 Rail (absent from PS12)",
+  "G1 p051 pro-score OCR unreadable; 15,000 from LP1 2:26 and VG"
+ ]
+}

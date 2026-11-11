@@ -1,0 +1,1377 @@
+{
+ "id": "thps1-mall",
+ "game": "THPS1",
+ "level": "Mall",
+ "location": "New York",
+ "type": "career-street",
+ "careerPosition": 3,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Mall.png",
+  "G1 p067-p078 (p020 bonus icons)",
+  "LP1 7:56-10:00",
+  "TAS1 1:35-2:08",
+  "PS12 mall",
+  "LP12 0:10:40-0:12:43",
+  "WEB thumbsticks (THPS 1+2 tapes)"
+ ],
+ "goals": [
+  {
+   "text": "10,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "Destroy 5 Directories",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "30,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 20,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 80,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 150,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 15,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Toy Robots",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Destroy 5 Directories",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Nose Grind the Coffee Grind Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "AirWalk the Flying Leap Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "linear course ≈ 300-400 m long, ≈ 20-40 m wide, falling about three storeys",
+  "evidence": "VG START-to-end polyline ≈ 2,700 px; escalators (≈ 15-20 m) measure ≈ 150-160 px → ≈ 8-10 px/m; TAS1 spawn to last directory ≈ 32 s. Low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Parking ramps (start)",
+   "layer": "ramps, rails",
+   "features": [
+    "dim concrete parking-garage ramps",
+    "first quarter pipe/bank",
+    "rails on the final ramp down (S)",
+    "100 icon",
+    "glass doors into the mall"
+   ],
+   "notes": "START ≈ VG (142, 1279)"
+  },
+  {
+   "id": "Z2",
+   "name": "Entry hall and first escalator",
+   "layer": "ground, planters, escalator",
+   "features": [
+    "planters (Planter Gap)",
+    "first escalator up",
+    "directory 1 at its top"
+   ],
+   "notes": "directory 1 ≈ (284, 1112)"
+  },
+  {
+   "id": "Z3",
+   "name": "Fountain atrium",
+   "layer": "ground, balcony, flagpoles",
+   "features": [
+    "fountain with a sculpture and a tunnel (Fountain Gap, 100 icon)",
+    "Trash Core café and Coffee Grind rail (left)",
+    "long planter ledge (K, right)",
+    "quarter pipe with 500 icon",
+    "two flagpoles from the balcony",
+    "16-stair set"
+   ],
+   "notes": "three routes leave the balcony: left flagpole, right flagpole, centre fountain jump (G1 p068)"
+  },
+  {
+   "id": "Z4",
+   "name": "Upper balconies",
+   "layer": "second floor and above",
+   "features": [
+    "second balcony with directory 2",
+    "PARKING structure with 500 icon",
+    "far end of the upstairs section (The Flying Leap, three storeys)",
+    "second escalator (Going Up/Down gaps)"
+   ],
+   "notes": "directory 2 ≈ (629, 808)"
+  },
+  {
+   "id": "Z5",
+   "name": "Right walkway with the car",
+   "layer": "upper walkway (≈ one storey above Z6)",
+   "features": [
+    "wrecked car with a ramp over it",
+    "rail along the walkway's left edge",
+    "jump at the walkway's end",
+    "200 icon in the launch air"
+   ],
+   "notes": "tape launch zone"
+  },
+  {
+   "id": "Z6",
+   "name": "Water hazard and hanging rods",
+   "layer": "lower floor, low rails, suspended rods",
+   "features": [
+    "cyan water channel",
+    "two low rails over it (A on the left)",
+    "two long light rods on cables above",
+    "tape between the rods at the far end",
+    "100 icons over the water and beside the tape"
+   ],
+   "notes": "A ≈ (966, 717); tape ≈ (1134, 667)"
+  },
+  {
+   "id": "Z7",
+   "name": "Directory 3 and the big escalator",
+   "layer": "ground, escalator",
+   "features": [
+    "directory 3 with a jump ramp to its left",
+    "long escalator down (Skater Escalator Gap, 500 icon)"
+   ],
+   "notes": "directory 3 ≈ (1123, 710)"
+  },
+  {
+   "id": "Z8",
+   "name": "Sculpture corridor",
+   "layer": "ground, sculptural rails",
+   "features": [
+    "shops (BOOKS)",
+    "sculptural crossed rails on a planter box (T)",
+    "directory 4 at their front",
+    "200 icon"
+   ],
+   "notes": "T ≈ (1779, 612)"
+  },
+  {
+   "id": "Z9",
+   "name": "Outside atrium",
+   "layer": "ground, coping rails, water",
+   "features": [
+    "bump before a water hazard",
+    "E above the water",
+    "raised coping rails on both sides (For The Whole Atrium)",
+    "quarter pipes at either end",
+    "directory 5 blocking the way to the garage",
+    "200 icon"
+   ],
+   "notes": "the mall's only outside area"
+  },
+  {
+   "id": "Z10",
+   "name": "Final stairs and exit",
+   "layer": "mezzanine, stairs",
+   "features": [
+    "32-stair set (from the lower level or the mezzanine)",
+    "two 500 icons",
+    "parking garage exit"
+   ],
+   "notes": "LP1 9:44 'BONUS 500 + BONUS 500'"
+  }
+ ],
+ "landmarks": [
+  "fountain with sculpture and tunnel",
+  "two flagpoles from the balcony",
+  "Trash Core café",
+  "PARKING structure upstairs",
+  "wrecked car on the right walkway",
+  "two hanging light rods over the water channel",
+  "big escalator",
+  "sculptural crossed rails",
+  "outside atrium with water",
+  "32-stair set"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the parking-garage ramp in a dim concrete tunnel",
+  "visibleCollectibles": [],
+  "notes": "first quarter pipe/bank ahead (LP1 8:14); S and a 100 icon on the next ramps; the tape is ≈ 120-180 m down the course"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z6",
+   "landmark": "between the two hanging light rods at their far end, above the water hazard where A is, beside directory 3",
+   "layer": "wires and beams (suspended rails)",
+   "heightM": "rods' near end ≈ 5-8 above the water-hazard floor, far end ≈ 3-4; tape ≈ 3-5 above the floor; level with or up to ≈ 2 below the launch (walkway end)",
+   "launchFrom": "end of the right walkway (its jump or its left-edge rail) after the car",
+   "visibility": {
+    "firstSight": "from the water-hazard floor (A rails) looking up, or from the second balcony; from the launch the rods appear only once airborne (LP1 8:53)",
+    "fromSpawn": false,
+    "reads": "two long rods on cables high over the hall with a glint at their far end; G1: you 'launch almost blindly'",
+    "distanceFromFirstSightM": "≈ 20-40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "top of the first escalator",
+     "to": "long planter (K)",
+     "geometry": "take the right flagpole to the long planter below (G1 p069); lines you up for the car jump"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "fountain atrium",
+     "to": "right walkway",
+     "geometry": "ride along the right wall 'above and before the hazard' (G1 p074); LP1 8:50-8:52"
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "walkway",
+     "to": "over the wrecked car",
+     "geometry": "ramp over the car, or avoid it but keep a good line (G1 p074; PS12)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "walkway end jump (or the end of the walkway's left-edge rail, G1 'really daring', LP1 8:52-8:53)",
+     "to": "rods",
+     "geometry": "blind launch on a line that crosses the two rods; LP1 passes through the 200 icon ('50 50 GRIND + BONUS 200')"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "air",
+     "to": "near end of a rod",
+     "geometry": "land in a grind ≈ 5-8 m above the water floor (LP1 8:54)"
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "near end",
+     "to": "far end",
+     "geometry": "≈ 30-40 m descending grind, 'a long haul' (G1 p074); LP1 ≈ 4 s"
+    },
+    {
+     "step": 7,
+     "move": "rail-transfer",
+     "from": "one rod",
+     "to": "between the rods",
+     "geometry": "ollie between them at just the right moment to collect the tape (G1 p074); LP1 8:57 timer 1:15"
+    },
+    {
+     "step": 8,
+     "move": "ollie",
+     "from": "rod end",
+     "to": "floor by directory 3",
+     "geometry": "or give the rails below a quick grind (G1 p074)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie",
+    "grind",
+    "rail-transfer",
+    "wire"
+   ],
+   "speed": "moderate-high",
+   "skillGates": [
+    "commit to a blind launch with a pre-planned line",
+    "land a grind on a thin elevated rail",
+    "balance a long grind",
+    "timed hop between parallel rails (G1 p068)"
+   ],
+   "coupling": "none",
+   "failure": "a miss drops to the water-hazard floor past the launch on a one-way course; retry via the escalators and back round ≈ 15-25 s, or a skilled jump from below (TAS); missing the hop at the end loses the attempt",
+   "timeFromSpawnS": "LP1 45 (timer 2:00→1:15, LP1 8:57, with S, directories 1-2, K, fountain on the way); launch-to-tape ≈ 5 (8:52-8:57); TAS1 ≈ 18 (timer 2:00→1:42, TAS1 1:52); LP12 timer 0:49 in a later run (0:11:47)",
+   "difficulty": 3,
+   "roles": [
+    "TEASE",
+    "TEST",
+    "TEACH-LINE"
+   ],
+   "why": "Tests the grind skills taught by the first two levels on the level's signature object (Tony's favourite spot); it hangs over A so every player sees it, but the approach must be chosen a section earlier",
+   "evidence": "VG; G1 p067, p068, p069, p074; LP1 8:48-8:59; TAS1 1:48-1:53; PS12 mall; LP12 0:11:40-0:11:49; WEB thumbsticks",
+   "confidence": "high (location, easier route); low (heights, lengths)",
+   "alternatives": [
+    {
+     "name": "walkway left-edge rail its whole length, then jump to the high rail ('really daring')",
+     "evidence": "G1 p074; LP1 8:52-8:53"
+    },
+    {
+     "name": "second balcony: clear the ledge and the massive gap to the light fixtures with a lot of speed ('hardest', gap bonus)",
+     "evidence": "G1 p074; LP12 0:11:40-0:11:47 (balcony rail into the high rails)"
+    },
+    {
+     "name": "The Flying Leap → A rail over the water → planter → fastplant up between the rods' low end",
+     "evidence": "TAS1 1:48-1:52"
+    },
+    {
+     "name": "1+2: drop below the light rails to the beams (Across The Light Beam 250), a scored near-miss",
+     "evidence": "PS12 mall"
+    }
+   ]
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "left rail of the final ramp down from the start",
+   "layer": "rail on a ramp",
+   "heightM": "≈ 1",
+   "launchFrom": "start ramp",
+   "visibility": {
+    "firstSight": "from the start ramps",
+    "fromSpawn": false,
+    "reads": "letter on the first rail",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "ramp",
+     "to": "left rail",
+     "geometry": "coming off it lines you up for the escalator (G1 p072)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 12 (8:24); TAS1 ≈ 3 (1:38)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "first rail of the level",
+   "evidence": "G1 p072; VG (141, 1322)",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z3",
+   "landmark": "right planter ledge beside the fountain",
+   "layer": "planter ledge",
+   "heightM": "≈ 0.5-1",
+   "launchFrom": "ground or right flagpole",
+   "visibility": {
+    "firstSight": "from the fountain atrium",
+    "fromSpawn": false,
+    "reads": "letter on a long ledge",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "atrium",
+     "to": "planter ledge",
+     "geometry": "pro way: up the first escalator, grind the right flagpole and ollie from it to the planter below (G1 p072)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 34 (8:46); TAS1 ≈ 9 (1:44)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "the right-hand route that also leads to the tape launch",
+   "evidence": "G1 p072; VG (604, 1022); LP1 8:46",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z6",
+   "landmark": "left rail over the water hazard, directly under the tape rods",
+   "layer": "low rail over water",
+   "heightM": "≈ 0.5-1",
+   "launchFrom": "right rail or walkway",
+   "visibility": {
+    "firstSight": "after the route descends a floor",
+    "fromSpawn": false,
+    "reads": "'in plain view' (G1 p073)",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "right rail",
+     "to": "left rail",
+     "geometry": "jump from the right rail to the left before the letter (G1 p073)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall in the water channel",
+   "timeFromSpawnS": "TAS1 ≈ 16 (1:51); LP1 ≈ 60 (9:12)",
+   "difficulty": 1,
+   "roles": [
+    "TEASE"
+   ],
+   "why": "puts every player under the tape rods",
+   "evidence": "G1 p073; VG (966, 717); TAS1 1:50-1:51",
+   "confidence": "high"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z8",
+   "landmark": "middle of the sculptural crossed rails (directory 4)",
+   "layer": "sculptural rail",
+   "heightM": "≈ 1-2",
+   "launchFrom": "corridor",
+   "visibility": {
+    "firstSight": "down the corridor",
+    "fromSpawn": false,
+    "reads": "letter at the crossing of two bars",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "corridor",
+     "to": "lower sculptural rail",
+     "geometry": "take the lower rail to be sure of the letter, or ollie to grab it (G1 p073)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 78 (9:30); TAS1 ≈ 26 (2:01)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a grind on an unusual object",
+   "evidence": "G1 p073; VG (1779, 612)",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z9",
+   "landmark": "mid-air above the water in the outside atrium",
+   "layer": "air over water",
+   "heightM": "≈ 2-3 above the floor",
+   "launchFrom": "bump before the hazard",
+   "visibility": {
+    "firstSight": "entering the outside atrium",
+    "fromSpawn": false,
+    "reads": "letter hanging over water",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "bump",
+     "to": "E",
+     "geometry": "catch air off the bump before the hazard (G1 p073)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "land in the water",
+   "timeFromSpawnS": "LP1 ≈ 84 (9:36); TAS1 ≈ 30 (2:05)",
+   "difficulty": 1,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "last letter on the main line",
+   "evidence": "G1 p073; VG (2020, 355)",
+   "confidence": "high"
+  },
+  {
+   "id": "DIR1",
+   "type": "goal-object",
+   "label": "Directory 1 (Destroy 5 Directories)",
+   "zone": "Z2",
+   "landmark": "top of the first escalator",
+   "layer": "on the route",
+   "heightM": "ground level",
+   "launchFrom": "main route",
+   "visibility": {
+    "firstSight": "ahead on the route",
+    "fromSpawn": false,
+    "reads": "mall map sign standing across the path",
+    "distanceFromFirstSightM": "≈ 10-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "smash",
+     "from": "route",
+     "to": "directory",
+     "geometry": "ride up the first escalator (G1 p070)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "ride past it; backtracking costs time on a one-way course",
+   "timeFromSpawnS": "LP1 ≈ 17 (≈ 8:29)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "waypoints in course order; the last blocks the exit",
+   "evidence": "G1 p070; VG (284, 1112)",
+   "confidence": "high"
+  },
+  {
+   "id": "DIR2",
+   "type": "goal-object",
+   "label": "Directory 2 (Destroy 5 Directories)",
+   "zone": "Z4",
+   "landmark": "second-floor balcony",
+   "layer": "on the route",
+   "heightM": "ground level",
+   "launchFrom": "main route",
+   "visibility": {
+    "firstSight": "ahead on the route",
+    "fromSpawn": false,
+    "reads": "mall map sign standing across the path",
+    "distanceFromFirstSightM": "≈ 10-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "smash",
+     "from": "route",
+     "to": "directory",
+     "geometry": "middle line through the fountain to the next balcony, or the second escalator up (G1 p070)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "ride past it; backtracking costs time on a one-way course",
+   "timeFromSpawnS": "LP1 24 (8:36); TAS1 ≈ 12 (1:47)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "waypoints in course order; the last blocks the exit",
+   "evidence": "G1 p070; VG (629, 808); LP12 0:11:40",
+   "confidence": "high"
+  },
+  {
+   "id": "DIR3",
+   "type": "goal-object",
+   "label": "Directory 3 (Destroy 5 Directories)",
+   "zone": "Z7",
+   "landmark": "left of the walkway past the water hazard, before the long stairs; jump ramp to its left",
+   "layer": "on the route",
+   "heightM": "ground level",
+   "launchFrom": "main route",
+   "visibility": {
+    "firstSight": "ahead on the route",
+    "fromSpawn": false,
+    "reads": "mall map sign standing across the path",
+    "distanceFromFirstSightM": "≈ 10-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "smash",
+     "from": "route",
+     "to": "directory",
+     "geometry": "ride through it; avoid the ramp (G1 p071)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "ride past it; backtracking costs time on a one-way course",
+   "timeFromSpawnS": "TAS1 ≈ 18 (1:53); LP1 56 (9:08)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "waypoints in course order; the last blocks the exit",
+   "evidence": "G1 p071; VG (1123, 710)",
+   "confidence": "high"
+  },
+  {
+   "id": "DIR4",
+   "type": "goal-object",
+   "label": "Directory 4 (Destroy 5 Directories)",
+   "zone": "Z8",
+   "landmark": "front of the sculptural rails on a planter box",
+   "layer": "on the route",
+   "heightM": "ground level",
+   "launchFrom": "main route",
+   "visibility": {
+    "firstSight": "ahead on the route",
+    "fromSpawn": false,
+    "reads": "mall map sign standing across the path",
+    "distanceFromFirstSightM": "≈ 10-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "smash",
+     "from": "route",
+     "to": "directory",
+     "geometry": "requires an ollie (G1 p071)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "ride past it; backtracking costs time on a one-way course",
+   "timeFromSpawnS": "LP1 76 (9:28); TAS1 ≈ 25 (2:00)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "waypoints in course order; the last blocks the exit",
+   "evidence": "G1 p071; VG (1702, 663)",
+   "confidence": "high"
+  },
+  {
+   "id": "DIR5",
+   "type": "goal-object",
+   "label": "Directory 5 (Destroy 5 Directories)",
+   "zone": "Z9",
+   "landmark": "straight ahead after the outside water hazard, blocking the way to the garage",
+   "layer": "on the route",
+   "heightM": "ground level",
+   "launchFrom": "main route",
+   "visibility": {
+    "firstSight": "ahead on the route",
+    "fromSpawn": false,
+    "reads": "mall map sign standing across the path",
+    "distanceFromFirstSightM": "≈ 10-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "smash",
+     "from": "route",
+     "to": "directory",
+     "geometry": "ride straight through (G1 p071)"
+    }
+   ],
+   "moves": [
+    "smash"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "ride past it; backtracking costs time on a one-way course",
+   "timeFromSpawnS": "LP1 88 (9:40)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "waypoints in course order; the last blocks the exit",
+   "evidence": "G1 p071; VG (2145, 237)",
+   "confidence": "high"
+  },
+  {
+   "id": "ICON200-LAUNCH",
+   "type": "bonus-icon",
+   "label": "200 icon at the walkway end",
+   "zone": "Z5",
+   "landmark": "launch air towards the rods",
+   "layer": "air",
+   "heightM": "walkway level + ≈ 1-2",
+   "launchFrom": "walkway end",
+   "visibility": {
+    "firstSight": "from the walkway",
+    "fromSpawn": false,
+    "reads": "200 disc in the launch air",
+    "distanceFromFirstSightM": "≈ 10-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "walkway end",
+     "to": "icon",
+     "geometry": "LP1 8:53 '50 50 GRIND + BONUS 200'"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "confirms the tape line in the air",
+   "evidence": "VG (801, 762); LP1 8:53",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON100-TAPE",
+   "type": "bonus-icon",
+   "label": "100 icon beside the tape",
+   "zone": "Z6",
+   "landmark": "far end of the rods",
+   "layer": "air",
+   "heightM": "≈ rods' far end",
+   "launchFrom": "rods",
+   "visibility": {
+    "firstSight": "from below or along the rods",
+    "fromSpawn": false,
+    "reads": "100 disc",
+    "distanceFromFirstSightM": "≈ 20-40"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEASE"
+   ],
+   "why": "draws the eye to the rods' far end",
+   "evidence": "VG (1177, 641)",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICONS-OTHER",
+   "type": "bonus-icon",
+   "label": "other icons (100 start, 100 fountain tunnel, 500 fountain quarter pipe, 200 balcony stairs, 500 PARKING structure, 100 water, 500 escalator, 200 corridor, 200 atrium, 500 + 500 end)",
+   "zone": "course",
+   "landmark": "along the course",
+   "layer": "mixed",
+   "heightM": "unknown",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "along the route",
+    "fromSpawn": false,
+    "reads": "discs",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "vert-air",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "G1 p020: icons are sign posts; they mark the main features in course order",
+   "evidence": "VG; LP1 8:18, 8:34, 9:44; G1 p075",
+   "confidence": "medium"
+  },
+  {
+   "id": "TOYROBOTS",
+   "type": "goal-object",
+   "label": "5 toy robots (THPS 1+2 only)",
+   "zone": "Z2-Z8",
+   "landmark": "planter after the doors; hole off the slope; long rail right of the fountain; shop near A; centre divider",
+   "layer": "mixed",
+   "heightM": "unknown",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": false,
+    "reads": "floating toy robots",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "varies",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "remake exploration goal",
+   "evidence": "PS12 mall; LP12 0:11:25-0:12:10",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Planter Gap",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "between planters",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p077; PS12"
+  },
+  {
+   "name": "Fountain Gap",
+   "points": 250,
+   "kind": "channel",
+   "location": "between the sculptures and the fountain (through the tunnel), either direction",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "DIR2"
+   ],
+   "evidence": "G1 p067, p077; VG; PS12"
+  },
+  {
+   "name": "Coffee Grind",
+   "points": 1000,
+   "kind": "other",
+   "location": "whole rail outside the Trash Core café",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p077; VG; PS12 (goal: nosegrind it)"
+  },
+  {
+   "name": "Rail Combo",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "flagpole → ollie off the end → rail in the atrium",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "K"
+   ],
+   "evidence": "G1 p077; PS12"
+  },
+  {
+   "name": "Over A 16 Stair Set (1+2: Over A Stair Set)",
+   "points": 250,
+   "kind": "other",
+   "location": "stairs near the fountain atrium",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p077; PS12"
+  },
+  {
+   "name": "The Flying Leap",
+   "points": 100,
+   "kind": "roof",
+   "location": "far end of the upstairs section, three-storey drop",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p077; VG; TAS1 1:49; PS12 (goal: airwalk it)"
+  },
+  {
+   "name": "Going Up Gap",
+   "points": 250,
+   "kind": "other",
+   "location": "gap behind the elevator",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p078; not in PS12 list"
+  },
+  {
+   "name": "Going Down Gap",
+   "points": 250,
+   "kind": "other",
+   "location": "same, other escalator",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p078; not in PS12 list"
+  },
+  {
+   "name": "Skater Escalator Gap",
+   "points": 500,
+   "kind": "over-object",
+   "location": "clear the big escalator without touching rail or ground",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p078; VG; PS12"
+  },
+  {
+   "name": "For The Whole Atrium",
+   "points": 500,
+   "kind": "lip",
+   "location": "coping along either side of the outside atrium end to end",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p076, p078; PS12"
+  },
+  {
+   "name": "Over A Huge 32 Stair Gap (1+2: Over A Huge Stair Set)",
+   "points": 2000,
+   "kind": "other",
+   "location": "final stairs from the lower level",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p078; PS12"
+  },
+  {
+   "name": "32 Steps Off A Mezzanine (1+2: Huge Stair Set Off A Mezzanine)",
+   "points": 2500,
+   "kind": "other",
+   "location": "final stairs from upstairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p078; PS12"
+  },
+  {
+   "name": "Exit Stage Right (1+2 only)",
+   "points": 250,
+   "kind": "channel",
+   "location": "centre → right of three quarter pipes halfway down",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Exit Stage Left (1+2 only)",
+   "points": 250,
+   "kind": "channel",
+   "location": "centre → left of the same three quarter pipes",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Across The Light Beam (1+2 only)",
+   "points": 250,
+   "kind": "wire",
+   "location": "after the car, drop below the light rails and grind a beam below",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "PS12"
+  },
+  {
+   "name": "The Long Rail (1+2 only)",
+   "points": 1500,
+   "kind": "other",
+   "location": "right-hand rail and following ledge at the next big slope",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "The Short Rail (1+2 only)",
+   "points": 1000,
+   "kind": "other",
+   "location": "down the escalator, the rail round the corner",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "glass doors at the foot of the parking ramps",
+   "opens": "entry into the mall (smash through)",
+   "neededFor": [],
+   "evidence": "PS12 mall"
+  },
+  {
+   "trigger": "none for the tape",
+   "opens": "rods always reachable",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G1 p074"
+  },
+  {
+   "trigger": "five tapes (LP1)",
+   "opens": "Downhill Jam unlocked, new deck, stats increased",
+   "neededFor": [],
+   "evidence": "LP1 9:50-9:54"
+  },
+  {
+   "trigger": "8 park goals (THPS 1+2)",
+   "opens": "Skate Park",
+   "neededFor": [],
+   "evidence": "PS12 mall"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Tony's line",
+   "sequence": [
+    "first quarter pipe",
+    "long rail before the escalator",
+    "jump the fountain through the tunnel",
+    "big stairs from the little quarter pipe at the top"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "S",
+    "DIR1"
+   ],
+   "why": "the course in one line",
+   "evidence": "G1 p067"
+  },
+  {
+   "id": "L2",
+   "name": "Left flagpole",
+   "sequence": [
+    "balcony",
+    "left flagpole",
+    "spins down",
+    "Coffee Grind rail",
+    "trick out"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "1,000-point grind via Rail Combo",
+   "evidence": "G1 p068, p077"
+  },
+  {
+   "id": "L3",
+   "name": "Right flagpole and walkway (tape line)",
+   "sequence": [
+    "balcony",
+    "right flagpole",
+    "long planter (K)",
+    "right walkway",
+    "car jump",
+    "walkway end",
+    "rods",
+    "tape"
+   ],
+   "links": [
+    "rail-transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "K",
+    "ICON200-LAUNCH",
+    "TAPE"
+   ],
+   "why": "G1 p069: lines you up for the car jump and balcony jump to the high rails",
+   "evidence": "G1 p069, p074; LP1 8:46-8:57"
+  },
+  {
+   "id": "L4",
+   "name": "Centre fountain",
+   "sequence": [
+    "balcony",
+    "centre route",
+    "through the fountain",
+    "second balcony (directory 2)",
+    "leap to the light fixtures (hardest tape line)"
+   ],
+   "links": [
+    "ollie",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "DIR2",
+    "TAPE"
+   ],
+   "why": "third parallel route",
+   "evidence": "G1 p068, p070, p074; LP12 0:11:40-0:11:47"
+  },
+  {
+   "id": "L5",
+   "name": "Upstairs and Flying Leap",
+   "sequence": [
+    "upstairs section",
+    "The Flying Leap",
+    "A rail over the water",
+    "planter",
+    "fastplant to the rods (TAS)"
+   ],
+   "links": [
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [
+    "A",
+    "TAPE"
+   ],
+   "why": "the drop that rejoins the routes at the water",
+   "evidence": "TAS1 1:48-1:53"
+  },
+  {
+   "id": "L6",
+   "name": "Water rails",
+   "sequence": [
+    "right rail",
+    "left rail over the water (A)",
+    "directory 3",
+    "escalator jump or rail"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "A",
+    "DIR3"
+   ],
+   "why": "combo over a hazard",
+   "evidence": "G1 p071, p073"
+  },
+  {
+   "id": "L7",
+   "name": "Sculpture and outside",
+   "sequence": [
+    "sculptural rails (T, directory 4)",
+    "bump",
+    "E over the water",
+    "directory 5"
+   ],
+   "links": [
+    "grind",
+    "kicker"
+   ],
+   "collectibles": [
+    "T",
+    "E",
+    "DIR4",
+    "DIR5"
+   ],
+   "why": "late letters on the main line",
+   "evidence": "G1 p071, p073"
+  },
+  {
+   "id": "L8",
+   "name": "Atrium and stairs",
+   "sequence": [
+    "outside atrium quarter pipes",
+    "For The Whole Atrium coping grind",
+    "32-stair set from mezzanine or lower level"
+   ],
+   "links": [
+    "lip grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "ICONS-OTHER"
+   ],
+   "why": "end-of-run score options",
+   "evidence": "G1 p075-p076, p078"
+  },
+  {
+   "id": "L9",
+   "name": "TAS",
+   "sequence": [
+    "start ramp (S)",
+    "directory 1",
+    "fountain",
+    "K planter",
+    "balcony (directory 2)",
+    "Flying Leap",
+    "A",
+    "rods (tape)",
+    "directory 3",
+    "escalator",
+    "T, directory 4",
+    "outside",
+    "E",
+    "directory 5"
+   ],
+   "links": [
+    "fastplant",
+    "wallride"
+   ],
+   "collectibles": [
+    "S",
+    "DIR1",
+    "K",
+    "DIR2",
+    "A",
+    "TAPE",
+    "DIR3",
+    "T",
+    "DIR4",
+    "E",
+    "DIR5"
+   ],
+   "why": "whole level in ≈ 32 s",
+   "evidence": "TAS1 1:35-2:07"
+  }
+ ],
+ "guidance": [
+  "The rods hang over the water hazard and the A rail, where every route rejoins, so everyone sees them from below; the tape glints at their far end",
+  "The launch hides the rods: G1 says you launch 'almost blindly'; the level relies on the player having seen them from below",
+  "The approach is chosen a section earlier (right flagpole at the first escalator, or the second balcony)",
+  "A 200 icon in the launch air and a 100 beside the tape confirm the line once on it",
+  "Directories stand across the main route as waypoints in course order",
+  "Hidden on purpose: the walkway launch towards the rods and the second-balcony leap"
+ ],
+ "designLogic": [
+  "Visible from below, reached from above: the tape is over the A rail but reachable only from the walkway or balconies",
+  "The tape uses the level's star feature, the hanging rods (Tony's favourite spot); hopping between them is the skill (G1 p068)",
+  "A linear level makes the choice early: the approach is decided a section before the rods",
+  "Blind launch, readable landing: long paired rods give a wide landing window; the difficulty is commitment",
+  "Precision at the end: the tape sits between the rods at the far end and needs a timed hop",
+  "Failure is expensive on a one-way course (≈ 15-25 s to climb back), after two levels of cheap failure",
+  "Three graded approaches (walkway and car, walkway rail, second balcony) plus the TAS Flying Leap from below",
+  "In a linear level the letter tour equals the course",
+  "Directories are gates in course order; the last blocks the exit",
+  "The level falls about three storeys, so the tape route needs no pumping",
+  "Progression over the first three tapes: one jump from spawn (1) → roof, pipe and canopy (2) → blind launch, long suspended grind, timed hop, costly miss (3)",
+  "THPS 1+2 rewards the neighbourhood: Across The Light Beam and the Flying Leap goal let near-misses score"
+ ],
+ "remakeChanges": [
+  "Tape unchanged (suspended light rails above the water; right-side car ramp approach per PS12)",
+  "Adds lower beams below the light rails with Across The Light Beam (250)",
+  "Goal objects: directories plus 5 toy robots; named-gap goals Coffee Grind (nosegrind) and Flying Leap (airwalk)",
+  "Letters in the same course order",
+  "Gaps: Going Up/Down not listed; new Exit Stage Right/Left, The Long Rail, The Short Rail",
+  "Score thresholds 20,000/80,000/150,000, combo 15,000",
+  "8 park goals unlock Skate Park"
+ ],
+ "transfer": [
+  "Hanging-rod crystal: two parallel static rods on cables over water or a pit, ≈ 30-40 m long, falling ≈ 2-4 m; crystal between them at the far end so the skater must ollie across (a grind ollie pops ≈ 2.4 m, enough for a ≈ 1.5-2 m sideways hop)",
+  "Launch from an elevated side walkway ending in a kicker aimed along the rods; a pickup in the launch air confirms the line; rely on the 2.1 m grind snap at the rods' near end for a slightly blind launch",
+  "Route the main line under the rods (a low rail over the hazard) so every player sees the crystal from below first",
+  "Offer three approaches: walkway kicker, walkway edge rail into the rods, balcony leap from above; one expert approach from below (charged ollie or trampoline)",
+  "On a one-way course give a ≈ 15-20 s return route (ramp or speed pad back up) so a miss costs time but not the attempt",
+  "Keep the rods' far end and the crystal ≥ ≈ 6.5-7 m above any standable surface, or over water/pit"
+ ],
+ "openQuestions": [
+  "Heights of the walkway, rods and tape (rough estimates)",
+  "Exact VG position of the wrecked car (LP1 8:52 shows a red car beside the walkway)",
+  "LP1's path between the tape (8:57), directory 3 (9:08) and A (9:12) suggests a short backtrack; not seen",
+  "Which gap bonus the second-balcony route earns (G1 does not name it; probably The Flying Leap)",
+  "Whether the remake rods are the original pair plus new lower beams",
+  "Course length and scale are low-confidence"
+ ]
+}

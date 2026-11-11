@@ -1,0 +1,1660 @@
+{
+ "id": "thps1-school",
+ "game": "THPS1",
+ "level": "School",
+ "location": "Miami, Florida",
+ "type": "career-street",
+ "careerPosition": 2,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-School.png",
+  "G1 p055-p066 (p020 bonus icons)",
+  "LP1 4:56-7:18",
+  "TAS1 0:49-1:24",
+  "PS12 school",
+  "LP12 0:05:48-0:10:00",
+  "WEB thumbsticks (THPS 1+2 tapes)"
+ ],
+ "goals": [
+  {
+   "text": "7,500 Points",
+   "version": "original"
+  },
+  {
+   "text": "Grind 5 Tables",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "25,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 15,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 70,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 125,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 10,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Textbooks",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Grind 5 Tables",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Wallride 5 Bells",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Heelflip the Kicker Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 100-120 × 80-100 m",
+  "evidence": "VG scale from planters (≈ 60 px for ≈ 3-3.5 m) and tables (≈ 40 px for ≈ 2-2.5 m) → ≈ 16-20 px/m over a ≈ 1900 × 1600 px render; G1 p055 'a ton of space to roam'. Low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start canopy and planter plaza",
+   "layer": "canopy, ground, planter ledges",
+   "features": [
+    "spawn on a sloping green canopy",
+    "table 1 below",
+    "planter rows (Gimme Gap, Planter Gap)",
+    "100 icon"
+   ],
+   "notes": "START ≈ VG (970, 985)"
+  },
+  {
+   "id": "Z2",
+   "name": "Gym and gym roof",
+   "layer": "ground, roof (≈ 5-8 m, low confidence), roof lip",
+   "features": [
+    "chevron-marked concrete ramp with handrail up the gym side",
+    "hazard-striped quarter-pipe lip round the roof",
+    "skylight",
+    "hexagonal funboxes",
+    "AC unit with a ramp",
+    "orange pipe from the AC down to the awning",
+    "dumpster planks (Dumpster Rail Gap)",
+    "lone dumpster (Garbage Ollie)"
+   ],
+   "notes": "gym ≈ VG (1150-1935, 1094-1618)"
+  },
+  {
+   "id": "Z3",
+   "name": "East roof (three icons)",
+   "layer": "second roof",
+   "features": [
+    "three 200 icons",
+    "small ramp",
+    "hazard-striped coping"
+   ],
+   "notes": "Roof 2 Roof gap from the gym roof; hardest way onto the awning"
+  },
+  {
+   "id": "Z4",
+   "name": "Stair rail and tape awning",
+   "layer": "stairs, handrail, canopy",
+   "features": [
+    "long stair run with blue handrail (S)",
+    "planter edge on its left",
+    "long green awning from the gym-roof edge down to the kicker court"
+   ],
+   "notes": "tape ≈ VG (1746, 724); 100 icon ≈ (1811, 776)"
+  },
+  {
+   "id": "Z5",
+   "name": "Kicker court",
+   "layer": "ground, kickers, curved quarter pipe",
+   "features": [
+    "two facing kickers (K)",
+    "table 2",
+    "curved quarter pipe at the foot of the awning",
+    "ridge grind going west (A)"
+   ],
+   "notes": "K ≈ (1611, 635)"
+  },
+  {
+   "id": "Z6",
+   "name": "Ditch and footbridges",
+   "layer": "ditch, bridges",
+   "features": [
+    "two arched footbridges",
+    "launch ramps in the ditch"
+   ],
+   "notes": "Over a Footbridge, Ditch Slap"
+  },
+  {
+   "id": "Z7",
+   "name": "Playground and funbox park",
+   "layer": "ground, funbox, wall top",
+   "features": [
+    "climbing wall",
+    "funbox",
+    "table 4",
+    "mini park quarter pipes",
+    "low building with angled roof rails"
+   ],
+   "notes": "table 4 ≈ (1048, 285); A ≈ (1207, 339)"
+  },
+  {
+   "id": "Z8",
+   "name": "Snake / halfpipe section",
+   "layer": "vert",
+   "features": [
+    "long colourful quarter pipe winding west to the big screen",
+    "T at its end",
+    "500 icon"
+   ],
+   "notes": "Huge Rail (G1), Gigantic Rail (1+2)"
+  },
+  {
+   "id": "Z9",
+   "name": "Pools",
+   "layer": "bowl, rail",
+   "features": [
+    "kidney pool",
+    "square pool",
+    "small rail between them (E)",
+    "table 5",
+    "big video screen"
+   ],
+   "notes": "Swim Team Gap"
+  },
+  {
+   "id": "Z10",
+   "name": "Downhill path",
+   "layer": "sloped path, ledges, rail over the path",
+   "features": [
+    "Long Ass Rail (right edge)",
+    "Ridiculous Rail (left ledge, 1+2)",
+    "Hall Pass rail over the path and gap in a building",
+    "table 3",
+    "500 icon"
+   ],
+   "notes": "links the start level to the pools"
+  }
+ ],
+ "landmarks": [
+  "long green awning over the stair rail",
+  "gym roof with AC unit and skylight",
+  "chevron concrete ramp up the gym side",
+  "two kickers in the court",
+  "two arched footbridges over the ditch",
+  "climbing wall",
+  "long colourful snake quarter pipe",
+  "two pools",
+  "big video screen",
+  "green start canopy"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the green start canopy, roughly east-south-east towards the planter plaza and the gym",
+  "visibleCollectibles": [
+   "TABLE1",
+   "the tape awning (≈ 45-55 m, ahead-left), tape not distinguishable"
+  ],
+  "notes": "the first move (ride off the canopy end onto a planter, Gimme Gap) is the tape route's finishing move; LP1 5:10, LP12 0:06:00"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z4",
+   "landmark": "just beyond the lower end of the long green awning over the stair rail, above the curved quarter pipe at the kicker court",
+   "layer": "air off a canopy end (upper path over the stair line)",
+   "heightM": "≈ 4-6 above the ground below (awning end ≈ 3-4 m + ≈ 1-2 m); ≈ 1-2 above the launch (awning end)",
+   "launchFrom": "lower end of the awning after riding its full length",
+   "visibility": {
+    "firstSight": "the awning from the spawn; the tape from the kicker court below or from the top of the awning",
+    "fromSpawn": false,
+    "reads": "glinting tape at the end of a long bright-green canopy over the most travelled line (LP1 5:37)",
+    "distanceFromFirstSightM": "≈ 25-35 (top of the awning to the tape)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn on the start canopy",
+     "to": "plaza",
+     "geometry": "ride down the canopy and drop right (WEB thumbsticks); LP1 grinds table 1 first (5:17)"
+    },
+    {
+     "step": 2,
+     "move": "bank",
+     "from": "plaza",
+     "to": "gym roof edge",
+     "geometry": "long chevron-marked concrete ramp with handrail up the gym side (LP1 5:21-5:23, ≈ 3 s climb)"
+    },
+    {
+     "step": 3,
+     "move": "lip",
+     "from": "ramp top",
+     "to": "gym roof",
+     "geometry": "pop over the hazard-striped roof-edge coping (LP1 5:24-5:26)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "gym roof",
+     "to": "top of the AC unit",
+     "geometry": "get on the AC 'using either ramp' (G1 p062); LP1 50-50s its edge (5:29-5:31)"
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "AC top",
+     "to": "awning",
+     "geometry": "ride over the orange pipe and grind it down to the awning (G1 p062; LP1 5:33-5:34); pipe descends ≈ 3-5 m (low confidence)"
+    },
+    {
+     "step": 6,
+     "move": "manual",
+     "from": "upper end of the awning",
+     "to": "lower end",
+     "geometry": "ride the full length, ≈ 25-40 m downhill (LP1 ≈ 4 s, LP12 ≈ 6 s); manual optional (Down The Awning 100 in 1+2)"
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "awning end",
+     "to": "tape",
+     "geometry": "'Ollie big at the end of the awning' (G1 p062); LP1 5:39 'HIDDEN TAPE!' timer 1:30"
+    },
+    {
+     "step": 8,
+     "move": "vert-air",
+     "from": "air",
+     "to": "curved quarter pipe / kicker court",
+     "geometry": "landing next to K and table 2; the letter line continues"
+    }
+   ],
+   "moves": [
+    "bank",
+    "lip",
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "know the gym roof is open via the concrete ramp",
+    "grind a descending pipe",
+    "stay on a narrow canopy",
+    "one big ollie at the end"
+   ],
+   "coupling": "none",
+   "failure": "fall off the awning or pipe: ≈ 3-4 m drop onto stairs/planters, bail ≈ 3-5 s, then the climb again (≈ 15-20 s); missing the tape at the end lands in the quarter pipe below (no bail)",
+   "timeFromSpawnS": "LP1 30 (timer 2:00→1:30, LP1 5:39, with table 1); climb-to-tape ≈ 18 (5:21-5:39); TAS1 ≈ 9 (timer 2:00→1:51, wallride shortcut, TAS1 0:57); LP12 awning ride ≈ 6",
+   "difficulty": 2,
+   "roles": [
+    "TEASE",
+    "EXPLORE",
+    "TEACH-LINE",
+    "REWARD"
+   ],
+   "why": "Hangs over the most travelled S-K line but can only be reached from above; teaches the level's upper layer (roof → pipe → canopy) as a copy of the stair line beneath it, finished with the spawn's own move",
+   "evidence": "VG; G1 p056, p062, p063, p066; LP1 5:13-5:42; TAS1 0:53-0:58; PS12 school; LP12 0:09:16-0:09:25; WEB thumbsticks",
+   "confidence": "high (location, designed route); low-medium (heights, lengths)",
+   "alternatives": [
+    {
+     "name": "roof-lip grind to the pipe (rail-to-rail combo bonus)",
+     "evidence": "G1 p062 ('more difficult')"
+    },
+    {
+     "name": "roof to roof via the east roof's three 200 icons and its small ramp (Roof 2 Roof, Roof To Awning 750); 'press down to slow down and stop as to not go over the edge'",
+     "evidence": "G1 p062, p066 ('very tough')"
+    },
+    {
+     "name": "jump from the AC straight to the awning (1+2 Roof To Awning Gap 750)",
+     "evidence": "PS12 school"
+    },
+    {
+     "name": "TAS fastplant + wallride from the plaza onto the side of the awning",
+     "evidence": "TAS1 0:53-0:57"
+    },
+    {
+     "name": "remake: drop from the gym roof onto the awning",
+     "evidence": "LP12 0:09:18-0:09:19"
+    }
+   ]
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z4",
+   "landmark": "long blue stair handrail, two-thirds down, under the awning",
+   "layer": "rail",
+   "heightM": "≈ 1 above the steps",
+   "launchFrom": "top of the stairs",
+   "visibility": {
+    "firstSight": "from the plaza at the top of the stairs",
+    "fromSpawn": false,
+    "reads": "letter on the rail line, framed by the awning above",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "top of the stairs",
+     "to": "S",
+     "geometry": "grind the stair rail; for points grind the left planter ledge and jump across to the rail in time (G1 p060)"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "planter ledge",
+     "to": "stair rail",
+     "geometry": "Rail-To-Rail Transfer 750"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall onto the steps; retry from the top ≈ 5 s",
+   "timeFromSpawnS": "LP1 ≈ 42 (5:52); TAS1 ≈ 15 (1:04)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "the first letter of a single flowing line; exit aims at the kicker gap",
+   "evidence": "G1 p060; VG (1587, 960); LP1 5:52; TAS1 1:03-1:05",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z5",
+   "landmark": "middle of the kicker gap",
+   "layer": "air",
+   "heightM": "≈ 1.5-2.5 above the court",
+   "launchFrom": "either kicker",
+   "visibility": {
+    "firstSight": "from the bottom of the stairs",
+    "fromSpawn": false,
+    "reads": "letter between two big kickers",
+    "distanceFromFirstSightM": "≈ 10-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "court",
+     "to": "other kicker",
+     "geometry": "Kicker Gap 100; 1+2 goal: heelflip it"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 50 (6:00); TAS1 ≈ 12 (1:01)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "continues the stair line; next to the tape's landing",
+   "evidence": "G1 p060; VG (1611, 635); LP1 6:00",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z5",
+   "landmark": "long ridge west of the kicker court, more than halfway down",
+   "layer": "ridge top (grind)",
+   "heightM": "≈ 0.5-1",
+   "launchFrom": "kicker gap exit",
+   "visibility": {
+    "firstSight": "from the kicker court",
+    "fromSpawn": false,
+    "reads": "letter above a long ridge (1+2: 'above a row of triangular blockers near the two bridges')",
+    "distanceFromFirstSightM": "≈ 20-30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "kicker gap",
+     "to": "first ridge",
+     "geometry": "grind the ridge in front of you (G1 p061)"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "first ridge end",
+     "to": "long ridge going left",
+     "geometry": "A is more than halfway down; finish by ollieing to the table at the end"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "drop off the ridge; continue",
+   "timeFromSpawnS": "LP1 ≈ 72 (6:22); TAS1 ≈ 25 (1:14)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "teaches ridge-to-ridge transfers inside the letter line",
+   "evidence": "G1 p061; VG (1207, 339); LP1 6:22",
+   "confidence": "medium (1+2 wording differs)"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z8",
+   "landmark": "top of the right-side ramp at the end of the snake/halfpipe section",
+   "layer": "vert air",
+   "heightM": "small air above the coping",
+   "launchFrom": "snake quarter pipe",
+   "visibility": {
+    "firstSight": "riding the snake",
+    "fromSpawn": false,
+    "reads": "letter above a coping",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "snake",
+     "to": "T",
+     "geometry": "'you actually don't need much air ... be sure to not overshoot it' (G1 p061)"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 82 (6:32); TAS1 ≈ 30 (1:19)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a small vert check at the end of the snake; exit aims at the pools",
+   "evidence": "G1 p061; VG (416, 290); LP1 6:32",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z9",
+   "landmark": "small rail between the two pools",
+   "layer": "rail",
+   "heightM": "≈ 0.5-1",
+   "launchFrom": "T exit",
+   "visibility": {
+    "firstSight": "after T, straight ahead",
+    "fromSpawn": false,
+    "reads": "letter on the rail between pools",
+    "distanceFromFirstSightM": "≈ 15-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "snake exit",
+     "to": "pool rail",
+     "geometry": "'come straight away from the ramp after grabbing the T' (G1 p061)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 88 (6:38); TAS1 ≈ 33 (1:22)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "ends the east-to-west letter line at the pools",
+   "evidence": "G1 p061; VG (392, 565); LP1 6:38",
+   "confidence": "high"
+  },
+  {
+   "id": "TABLE1",
+   "type": "goal-object",
+   "label": "Lunch table 1",
+   "zone": "Z1",
+   "landmark": "right below the start canopy",
+   "layer": "ground object",
+   "heightM": "≈ 0.8",
+   "launchFrom": "start canopy",
+   "visibility": {
+    "firstSight": "from spawn",
+    "fromSpawn": true,
+    "reads": "red lunch table",
+    "distanceFromFirstSightM": "≈ 5-10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "start canopy",
+     "to": "table",
+     "geometry": "veer left and drop down (G1 p058)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "none",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 7 (5:17); TAS1 ≈ 2 (0:51)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "first grind of the level, from the spawn",
+   "evidence": "G1 p058; VG (1170, 999)",
+   "confidence": "high"
+  },
+  {
+   "id": "TABLE2",
+   "type": "goal-object",
+   "label": "Lunch table 2",
+   "zone": "Z5",
+   "landmark": "next to the kickers",
+   "layer": "ground object",
+   "heightM": "≈ 0.8",
+   "launchFrom": "stair rail exit",
+   "visibility": {
+    "firstSight": "from the stairs",
+    "fromSpawn": false,
+    "reads": "table",
+    "distanceFromFirstSightM": "≈ 10-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "stair rail exit",
+     "to": "table",
+     "geometry": "veer left before the jump ramp (G1 p059)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 54 (6:04)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "on the letter line",
+   "evidence": "G1 p059; VG (1542, 719)",
+   "confidence": "high"
+  },
+  {
+   "id": "TABLE3",
+   "type": "goal-object",
+   "label": "Lunch table 3",
+   "zone": "Z10",
+   "landmark": "end of the Hall Pass line",
+   "layer": "ground object",
+   "heightM": "≈ 0.8",
+   "launchFrom": "rail over the path",
+   "visibility": {
+    "firstSight": "from the downhill path",
+    "fromSpawn": false,
+    "reads": "table",
+    "distanceFromFirstSightM": "≈ 15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "left ledge of the path",
+     "to": "rail across the gap",
+     "geometry": "G1 p059"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "rail end",
+     "to": "table",
+     "geometry": "drop down to the table"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 64 (6:14)",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "rewards the left route",
+   "evidence": "G1 p059; VG (1129, 633)",
+   "confidence": "medium"
+  },
+  {
+   "id": "TABLE4",
+   "type": "goal-object",
+   "label": "Lunch table 4",
+   "zone": "Z7",
+   "landmark": "entrance to the big halfpipe section, by the funbox",
+   "layer": "ground object",
+   "heightM": "≈ 0.8",
+   "launchFrom": "funbox or the long grind before it",
+   "visibility": {
+    "firstSight": "from the playground",
+    "fromSpawn": false,
+    "reads": "table",
+    "distanceFromFirstSightM": "≈ 15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "funbox",
+     "to": "table",
+     "geometry": "Funbox To Table Transfer 500; must grind (G1 p059, p064)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 76 (6:26)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a transfer onto an object",
+   "evidence": "G1 p059, p064; VG (1048, 285)",
+   "confidence": "high"
+  },
+  {
+   "id": "TABLE5",
+   "type": "goal-object",
+   "label": "Lunch table 5",
+   "zone": "Z9",
+   "landmark": "corner with the pools",
+   "layer": "ground object",
+   "heightM": "≈ 0.8",
+   "launchFrom": "ledge behind it or a pool",
+   "visibility": {
+    "firstSight": "from the pools",
+    "fromSpawn": false,
+    "reads": "table",
+    "distanceFromFirstSightM": "≈ 15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "ledge behind",
+     "to": "table",
+     "geometry": "or jump to it from out of a pool (G1 p060)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "LP1 ≈ 94 (6:44)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "end of the sweep",
+   "evidence": "G1 p060; VG (748, 592)",
+   "confidence": "high"
+  },
+  {
+   "id": "ICON-PLAZA100",
+   "type": "bonus-icon",
+   "label": "100 icon (planter plaza)",
+   "zone": "Z1",
+   "landmark": "planters",
+   "layer": "air",
+   "heightM": "unknown",
+   "launchFrom": "planters",
+   "visibility": {
+    "firstSight": "from spawn area",
+    "fromSpawn": false,
+    "reads": "100 disc",
+    "distanceFromFirstSightM": "≈ 20"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "none",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "marks the planter line",
+   "evidence": "VG (1412, 1024)",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON-AWNING100",
+   "type": "bonus-icon",
+   "label": "100 icon beside the tape",
+   "zone": "Z5",
+   "landmark": "kicker-court corner under the awning end",
+   "layer": "air",
+   "heightM": "unknown",
+   "launchFrom": "court",
+   "visibility": {
+    "firstSight": "from the court",
+    "fromSpawn": false,
+    "reads": "100 disc",
+    "distanceFromFirstSightM": "≈ 10"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEASE"
+   ],
+   "why": "draws the eye to the corner under the tape",
+   "evidence": "VG (1811, 776)",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON-ROOF200x3",
+   "type": "bonus-icon",
+   "label": "three 200 icons on the east roof",
+   "zone": "Z3",
+   "landmark": "east roof",
+   "layer": "second roof",
+   "heightM": "roof level",
+   "launchFrom": "gym roof (Roof 2 Roof)",
+   "visibility": {
+    "firstSight": "from the gym roof edge",
+    "fromSpawn": false,
+    "reads": "three 200 discs in a row",
+    "distanceFromFirstSightM": "≈ 15-25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "gym roof",
+     "to": "east roof",
+     "geometry": "Roof 2 Roof gap"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "drop to the ground",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "G1 uses them as the landmark for the hardest way to the awning",
+   "evidence": "VG (1880-1932, 1029-1091); G1 p062",
+   "confidence": "high"
+  },
+  {
+   "id": "ICON-500x3",
+   "type": "bonus-icon",
+   "label": "three 500 icons on the 1,000-point lines",
+   "zone": "Z8, Z9, Z10",
+   "landmark": "Hall Pass, snake (Huge Rail), Swim Team Gap",
+   "layer": "air",
+   "heightM": "unknown",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": false,
+    "reads": "500 discs",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "varies",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "mark expert lines (G1 p020: icons are sign posts)",
+   "evidence": "VG (985, 669), (720, 394), (403, 524); G1 p065",
+   "confidence": "medium"
+  },
+  {
+   "id": "TEXTBOOKS",
+   "type": "goal-object",
+   "label": "5 textbooks (THPS 1+2 only)",
+   "zone": "Z2, Z3",
+   "landmark": "gym interior, gym steps, behind the gym, gym roof above the AC, lower roof of a nearby building",
+   "layer": "mixed incl. roofs",
+   "heightM": "unknown",
+   "launchFrom": "quarter pipes and roofs",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": false,
+    "reads": "floating textbooks",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "varies",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "two of five are on the tape's roofs: the remake leads players to the tape route start",
+   "evidence": "PS12 school; LP12 0:08:27, 0:08:39, 0:08:54, 0:09:16",
+   "confidence": "high"
+  },
+  {
+   "id": "BELLS",
+   "type": "goal-object",
+   "label": "5 bells to wallride (THPS 1+2 only)",
+   "zone": "ring",
+   "landmark": "walls round the campus",
+   "layer": "wall",
+   "heightM": "wallride height",
+   "launchFrom": "ground",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": false,
+    "reads": "bells on walls",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "none",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "wallride tour",
+   "evidence": "PS12 school",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Gimme Gap",
+   "points": 50,
+   "kind": "ledge-to-ledge",
+   "location": "start canopy end → right side of the planter",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p063; VG; PS12"
+  },
+  {
+   "name": "Handicap Rail (1+2: All-Access Gap)",
+   "points": 500,
+   "kind": "other",
+   "location": "long stair rail top to bottom",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p063; VG; PS12"
+  },
+  {
+   "name": "Rail-To-Rail Transfer",
+   "points": 750,
+   "kind": "rail-transfer",
+   "location": "stair rail ↔ planter edge on its left, downhill",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p063; VG; PS12"
+  },
+  {
+   "name": "Kicker Gap",
+   "points": 100,
+   "kind": "kicker",
+   "location": "court kickers",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "K"
+   ],
+   "evidence": "G1 p063; VG; PS12"
+  },
+  {
+   "name": "Park Gap",
+   "points": 500,
+   "kind": "channel",
+   "location": "two quarter pipes separated by doors",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064; PS12"
+  },
+  {
+   "name": "Rail-to-Rail (straight rail → curved rail by the kickers)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "kicker court",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064"
+  },
+  {
+   "name": "Playground Rail",
+   "points": 500,
+   "kind": "ledge",
+   "location": "top of the climbing wall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064; PS12"
+  },
+  {
+   "name": "Roof Rails (combo)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "angled roof rails → quarter-pipe lip",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064"
+  },
+  {
+   "name": "Mini Gap",
+   "points": 250,
+   "kind": "channel",
+   "location": "two mini quarter pipes",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064; VG; PS12"
+  },
+  {
+   "name": "Funbox-To-Rail Transfer",
+   "points": 250,
+   "kind": "lip",
+   "location": "funbox → quarter-pipe coping (and a second one off the two-way ramp on the path from the start, G1 p065)",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064-p065; VG; PS12"
+  },
+  {
+   "name": "Funbox To Table Transfer",
+   "points": 500,
+   "kind": "over-object",
+   "location": "funbox → table (must grind)",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [
+    "TABLE4"
+   ],
+   "evidence": "G1 p064; VG; PS12"
+  },
+  {
+   "name": "Long Ass Rail",
+   "points": 2500,
+   "kind": "other",
+   "location": "right edge of the downhill path",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064; VG; PS12"
+  },
+  {
+   "name": "Huge Rail",
+   "points": 1000,
+   "kind": "lip",
+   "location": "coping of the snake quarter pipe end to end",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p064; VG; PS12"
+  },
+  {
+   "name": "Insane Rail To Rail Combos (combo)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "pools → wall edge → snake coping → planters → across the ditch",
+   "moves": [
+    "wallride",
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p065"
+  },
+  {
+   "name": "Swim Team Gap",
+   "points": 1000,
+   "kind": "pool-transfer",
+   "location": "pool → pool across the path",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p065; VG; not in PS12 list"
+  },
+  {
+   "name": "Dumpster Rail Gap",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "planks on dumpsters by the gym",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p065; VG; PS12"
+  },
+  {
+   "name": "Roof 2 Roof (1+2: Roof To Roof Gap 500)",
+   "points": null,
+   "kind": "roof",
+   "location": "gym roof → east roof",
+   "moves": [
+    "ollie",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p065; VG; PS12"
+  },
+  {
+   "name": "Ditch Slap (1+2: Ditchin Class 250?)",
+   "points": 250,
+   "kind": "channel",
+   "location": "over the ditch",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p065; VG; PS12"
+  },
+  {
+   "name": "Rail To Rail (combo)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "start canopy → planters → across the path to the pool",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p066"
+  },
+  {
+   "name": "Garbage Ollie",
+   "points": 50,
+   "kind": "over-object",
+   "location": "dumpster behind the gym",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p066; VG; PS12"
+  },
+  {
+   "name": "Hall Pass",
+   "points": 1000,
+   "kind": "secret-area",
+   "location": "rail over the downhill path → through the gap in the building → planter",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "TABLE3"
+   ],
+   "evidence": "G1 p066; VG; PS12"
+  },
+  {
+   "name": "Over The Air Conditioner",
+   "points": 750,
+   "kind": "over-object",
+   "location": "AC unit on the gym roof",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p066; VG; PS12"
+  },
+  {
+   "name": "Roof To Awning Gap",
+   "points": 750,
+   "kind": "roof",
+   "location": "G1: east roof ramp → awning; 1+2: AC → awning jump",
+   "moves": [
+    "ollie",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p066; PS12"
+  },
+  {
+   "name": "Over A Footbridge",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "ditch launch ramps over a bridge",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p066; VG; PS12"
+  },
+  {
+   "name": "Planter Gap",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "planter to planter near the start",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p066; VG; PS12"
+  },
+  {
+   "name": "Down The Awning (1+2 only)",
+   "points": 100,
+   "kind": "manual",
+   "location": "manual the tape awning to its end",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Downhill Manual (1+2 only)",
+   "points": 1000,
+   "kind": "manual",
+   "location": "downhill path",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Across The Gym (1+2 only)",
+   "points": 100,
+   "kind": "manual",
+   "location": "gym floor",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Roof Hop (1+2 only)",
+   "points": 100,
+   "kind": "roof",
+   "location": "quarter pipe onto the low building's roof",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Perfectly Balanced (1+2 only)",
+   "points": 500,
+   "kind": "other",
+   "location": "gym balance beam",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Gigantic Rail (1+2 only)",
+   "points": 2000,
+   "kind": "lip",
+   "location": "colourful quarter pipe leading to the pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Ridiculous Rail (1+2 only)",
+   "points": 2500,
+   "kind": "other",
+   "location": "left ledge of the downhill path, wall to pool",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "none",
+   "opens": "gym roof, AC, pipe and awning are always open",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G1 p062; LP1 5:21-5:39"
+  },
+  {
+   "trigger": "6 park goals (THPS 1+2)",
+   "opens": "Mall",
+   "neededFor": [],
+   "evidence": "PS12 school"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Tony's line",
+   "sequence": [
+    "start canopy diagonally left",
+    "planter ledges in sequence",
+    "big stair rail",
+    "bridges",
+    "halfpipe session"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "TABLE1",
+    "S"
+   ],
+   "why": "shows planters, rail, bridges and vert in one go",
+   "evidence": "G1 p055"
+  },
+  {
+   "id": "L2",
+   "name": "Gimme line",
+   "sequence": [
+    "canopy end",
+    "planter grind (Gimme Gap)",
+    "nollie kick trick"
+   ],
+   "links": [
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [],
+   "why": "the spawn's own line; same shape as the tape finish",
+   "evidence": "G1 p056, p063"
+  },
+  {
+   "id": "L3",
+   "name": "Stair-rail letter line",
+   "sequence": [
+    "stair rail (S)",
+    "rail-to-rail to the left ledge",
+    "kicker gap (K)",
+    "ridge (A)",
+    "table",
+    "snake (T)",
+    "pool rail (E)"
+   ],
+   "links": [
+    "rail-transfer",
+    "kicker",
+    "grind"
+   ],
+   "collectibles": [
+    "S",
+    "K",
+    "A",
+    "T",
+    "E",
+    "TABLE2",
+    "TABLE4"
+   ],
+   "why": "letters as one flowing east-to-west line, no backtracking",
+   "evidence": "G1 p056, p060-p061; LP1 5:52-6:38"
+  },
+  {
+   "id": "L4",
+   "name": "Roof line (tape)",
+   "sequence": [
+    "concrete ramp",
+    "roof lip",
+    "AC unit",
+    "pipe",
+    "awning",
+    "ollie off the end",
+    "kicker court"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "TAPE"
+   ],
+   "why": "upper layer laid over L3, ending where L3 passes",
+   "evidence": "G1 p062; LP1 5:21-5:40"
+  },
+  {
+   "id": "L5",
+   "name": "Roof-to-roof",
+   "sequence": [
+    "gym roof",
+    "Roof 2 Roof",
+    "east roof (3 × 200)",
+    "small ramp",
+    "Roof To Awning",
+    "awning"
+   ],
+   "links": [
+    "ollie"
+   ],
+   "collectibles": [
+    "TAPE",
+    "ICON-ROOF200x3"
+   ],
+   "why": "expert version of L4",
+   "evidence": "G1 p062, p065-p066"
+  },
+  {
+   "id": "L6",
+   "name": "Downhill path",
+   "sequence": [
+    "top of the path",
+    "Long Ass Rail or Ridiculous Rail",
+    "pools"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "TABLE3"
+   ],
+   "why": "long grinds from the start level to the pools; Hall Pass branch",
+   "evidence": "G1 p058, p064, p066; PS12"
+  },
+  {
+   "id": "L7",
+   "name": "Insane Rail To Rail",
+   "sequence": [
+    "pools",
+    "wallride up and grind the edge",
+    "snake coping (Huge Rail)",
+    "planter",
+    "planter",
+    "across the ditch"
+   ],
+   "links": [
+    "wallride",
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "best scoring line, ≈ 400,000 points",
+   "evidence": "G1 p065"
+  },
+  {
+   "id": "L8",
+   "name": "Ditch and playground",
+   "sequence": [
+    "Over a Footbridge",
+    "Ditch Slap",
+    "funbox transfers",
+    "Playground Rail",
+    "Mini and Park gaps"
+   ],
+   "links": [
+    "kicker",
+    "grind"
+   ],
+   "collectibles": [
+    "TABLE4"
+   ],
+   "why": "dense park section inside a street level",
+   "evidence": "G1 p064-p066"
+  },
+  {
+   "id": "L9",
+   "name": "Pool session",
+   "sequence": [
+    "pool airs",
+    "Swim Team Gap"
+   ],
+   "links": [
+    "vert-air",
+    "transfer"
+   ],
+   "collectibles": [
+    "E",
+    "TABLE5"
+   ],
+   "why": "fallback for the pro score",
+   "evidence": "G1 p058, p062, p065; LP1 6:48-7:12"
+  },
+  {
+   "id": "L10",
+   "name": "TAS",
+   "sequence": [
+    "table 1",
+    "planters",
+    "fastplant + wallride onto the awning",
+    "tape",
+    "table 2",
+    "K",
+    "S",
+    "tables 3-4",
+    "A",
+    "T",
+    "E",
+    "table 5"
+   ],
+   "links": [
+    "fastplant",
+    "wallride"
+   ],
+   "collectibles": [
+    "TABLE1",
+    "TAPE",
+    "TABLE2",
+    "K",
+    "S",
+    "TABLE3",
+    "TABLE4",
+    "A",
+    "T",
+    "E",
+    "TABLE5"
+   ],
+   "why": "speedrun takes the tape third, at 9 s",
+   "evidence": "TAS1 0:49-1:23"
+  }
+ ],
+ "guidance": [
+  "The long green awning over the stairs is visible from the spawn and the S-K line; the tape glints at its end over the kicker court",
+  "The spawn canopy rehearses the finishing move (ollie off a canopy end)",
+  "The way up (chevron concrete ramp with handrail) is plain but leads away from the main lines",
+  "Roof objects (AC unit; in 1+2 a textbook and stat points above it) draw players onto the roof",
+  "Bonus icons mark expert lines: three 500s on the 1,000-point gaps, three 200s on the east roof",
+  "Hidden on purpose: the pipe from the AC to the awning (obvious only on the AC) and the east roof behind the coping"
+ ],
+ "designLogic": [
+  "The tape hangs over the most travelled line but can only be reached from above: the series' first true visible-but-hard tape",
+  "A line above a line: roof → pipe → awning copies the stair-rail → kicker line beneath it",
+  "The spawn pre-teaches the finish (ride down a canopy and ollie off its end)",
+  "The route climbs once and then descends, so the downhill part supplies speed in a two-minute run",
+  "Three graded ways in (AC + pipe, roof-lip grind, roof to roof), the harder ones paying gaps",
+  "The tape jump lands next to K and table 2, so it costs little time; LP1 takes it first and then sweeps the letters",
+  "Failure is soft at the end (quarter pipe) and firm in the middle (climb again ≈ 15-20 s)",
+  "S-K-A-T-E is one east-to-west line with each exit aiming at the next letter",
+  "Four of five tables sit on the letter line so two tapes combine (G1 p058)",
+  "Difficulty step from Warehouse: from one jump off spawn to a climb, a descending grind and a canopy ride",
+  "Scale grows: a large campus ring after a one-room warehouse; the tape route is ≈ 3 times longer",
+  "THPS 1+2 scores and signposts the tape route (Down The Awning, Roof To Awning as AC → awning, textbook above the AC)"
+ ],
+ "remakeChanges": [
+  "Tape unchanged (end of the awning; AC → pipe → awning)",
+  "Textbook and stat points above the AC; Down The Awning manual gap; Roof To Awning redefined as AC → awning jump",
+  "Enterable gym with court, balance beam, textbook and new gaps",
+  "Letters on the same line; A described as above triangular blockers near the bridges",
+  "Goal objects: tables plus textbooks and wallride bells",
+  "Handicap Rail renamed All-Access Gap; Swim Team Gap absent from PS12's list; new manual and long-grind gaps",
+  "Score thresholds 15,000/70,000/125,000, combo 10,000",
+  "6 park goals unlock Mall"
+ ],
+ "transfer": [
+  "Canopy crystal: a long sloping grindable canopy over a stair-rail line from a roof to a plaza; crystal ≈ 1.5-2 m beyond and above its lower end, over a quarter pipe so a miss is a soft landing",
+  "Start the level on a short canopy whose end launches onto a grindable planter, pre-teaching the crystal's last move",
+  "One plain chevron-marked ramp to the roof next to spawn, leading away from the main line; a pickup or trick gate on the roof object",
+  "Connect the roof object to the canopy with a long descending rail; offer a harder second-roof kicker approach",
+  "Out of on-foot reach: a 4.6 m double jump plus ≈ 1.8 m body touches pickups up to ≈ 6.5 m over standable ground, so raise the crystal to ≥ ≈ 7-7.5 m or hang it over a curved transition with nothing to stand on",
+  "Land the crystal jump beside the main trick line so the detour costs seconds"
+ ],
+ "openQuestions": [
+  "Heights of the gym roof, AC unit and awning (estimates only)",
+  "Whether the 1999 gym had an enterable interior",
+  "Whether remake tables moved (PS12 wording differs)",
+  "G1 prints no points for Roof 2 Roof and several combo entries",
+  "Swim Team Gap absent from PS12's list",
+  "The TAS wallride onto the awning may depend on N64 collision"
+ ]
+}
