@@ -1,10 +1,21 @@
 import * as THREE from 'three';
+import {attachFlameHeat} from '../../src/flameHeatSource';
+import {writeTorchHeat} from '../../src/torchHeat';
 const g=(window as unknown as {__game:any}).__game;
 const panel=document.createElement('section');panel.setAttribute('aria-label','Flame review');
 panel.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;z-index:999999;background:#211811e8;color:#f5e8d4;padding:9px 14px;border:1px solid #ba9464;border-radius:8px;font:12px system-ui;display:flex;align-items:center;gap:10px;flex-wrap:wrap';
 panel.innerHTML=`<b>FLAME HEAT · REVIEW</b><label><input type="checkbox" checked aria-label="Flame heat">Heat distortion</label><button>Frame nearest torch</button><button>Frame tiki breath</button><button>Freeze</button><button>Play</button><button>Gameplay camera</button><button>Measure heat pixels</button><button>Benchmark heat</button><label>Resolution <select aria-label="Flame resolution"><option value="720">Normal 720</option><option value="max">MAX native</option></select></label><label>Phase <select aria-label="Flame animation"><option value="live">Animated</option><option value="0">0</option><option value="0.35">0.35</option></select></label><output style="flex-basis:100%;font:11px monospace"></output>`;
 document.body.append(panel);
 const buttons=panel.querySelectorAll('button'),output=panel.querySelector('output')!;
+const torchProfile=document.createElement('label');torchProfile.innerHTML='Torch ripples <select aria-label="Torch ripples"><option value="source">Jak proportions</option><option value="previous">Previous broad plume</option></select>';
+panel.insertBefore(torchProfile,output);
+torchProfile.querySelector('select')!.onchange=e=>{
+  const previous=(e.target as HTMLSelectElement).value==='previous',level=g.getLevel();
+  for(const t of level.torches){const {h,scale}=t.group.userData.torchSpec;
+    attachFlameHeat(t.group,previous?emit=>emit(0,h+1.7*scale,0,.95*scale,1.65*scale,2.1*t.burn,t.seed):
+      emit=>writeTorchHeat(emit,level.vfxT,h,scale,t.burn,t.seed),t.flames);
+  }
+};
 let focus:THREE.Vector3|null=null,eye:THREE.Vector3|null=null,measure:unknown=null,benchmark:unknown=null,tikiReview=false;
 const kartButtons=document.createElement('span');kartButtons.innerHTML='<button>Review kart jets</button> <button>Review kart wreck</button>';panel.insertBefore(kartButtons,output);
 let kartFocus=false,kartFreeze=0;

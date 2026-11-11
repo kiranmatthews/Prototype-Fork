@@ -11792,3 +11792,28 @@ Browser checks cover all six HUD layouts, both formats, comparison modes,
 transitions, hidden cleanup, isolated layers and existing health HUD. Normal
 and standalone builds, Labs/offline discovery and hosting-size check pass
 (935,134,926 bytes). No full suite run.
+
+## 2026-11-11 — Match torch heat ripple proportions to the original Jak example
+
+Brief: make Torchlight Trouble's ripples much smaller relative to the flame,
+using the actual Jak example's proportions. Approximately five minutes to the
+local playable adjustment; source, GPU, full-render and release review followed.
+
+Used Fire Canyon's original heat-44 definitions 1099/1100: a 2 m ripple radius
+beside 8–14 m flame sprites, giving a nominal diameter/flame-width ratio of 4/11.
+Apply that ratio to each torch's own flame width instead of its whole plume.
+The previous broad ellipse becomes eighteen staggered, rising circular pockets,
+about nine times narrower individually. Birth and retirement fade the warp to
+zero. This adapts the source proportions and rise speed through the existing
+shared heat renderer; it does not replace the flame art or claim full emitter
+fidelity. The local heat review includes the previous broad plume for comparison.
+
+Validation: shared heat regression with a ratio check against the actual source
+catalogue; ten GPU configurations retain zero foreground/flame/outside error.
+Fine-patch displacement measures 0.94 px at 720 and 2.03 px at native 1440,
+versus 4.66 px for the old broad patch. Actual Torchlight reviewed in lite and
+full render at 720 and native 2560×1440: 180 visible pockets from ten nearby
+sources, none dropped, one shared heat draw, no console or WebGL errors.
+Native disabled controls are identical; phase changes affect 2,864 pixels.
+Production build and hosting-size check pass (935,135,311 bytes). No full suite
+run. Character animation, other heat sources and Temple v6 are untouched.
