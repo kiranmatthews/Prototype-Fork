@@ -206,7 +206,7 @@ export class Mountain {
 
 const hex = (c: string): P3 => [parseInt(c.slice(1, 3), 16) / 255, parseInt(c.slice(3, 5), 16) / 255, parseInt(c.slice(5, 7), 16) / 255];
 const mix3 = (a: P3, b: P3, t: number): P3 => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-const CREVASSE_TOP = hex('#8fc6e8'), CREVASSE_DEEP = hex('#2c5f9e');
+const CREVASSE_TOP = hex('#79b9e4'), CREVASSE_DEEP = hex('#153a72');
 const SNOW = hex('#f4f7fc'), SNOW_SHADE = hex('#c9d9f0'), PISTE = hex('#e9f0fa'), ROCK_A = hex('#7b7f8e'), ROCK_B = hex('#565a6b'), ICE = hex('#9fd4ee'), PATH = hex('#e2e8f2');
 /** Vertex paint: clean snow, blue in the hollows, bare rock where the face is too steep to hold it. */
 export const paint = (m: Mountain, x: number, z: number, g: GroundSample, n: P3): P3 => {
@@ -215,7 +215,7 @@ export const paint = (m: Mountain, x: number, z: number, g: GroundSample, n: P3)
   if (g.kind === 'piste') c = mix3(c, PISTE, g.cover * (.55 + .2 * Math.sin((x + z) * 2.1)));
   else if (g.kind === 'path') c = mix3(c, PATH, g.cover * .6);
   else if (g.kind === 'ice') c = mix3(c, ICE, g.cover);
-  else if (g.kind === 'crevasse') return mix3(CREVASSE_TOP, CREVASSE_DEEP, clamp(.25 + noise2(x / 2.3, z / 2.3) * .2 + (1 - n[1]) * .5));
+  else if (g.kind === 'crevasse') return mix3(CREVASSE_TOP, CREVASSE_DEEP, clamp(.15 + noise2(x / 2.3, z / 2.3) * .15 + ramp(n[1], .25, .8) * .8));
   const rock = mix3(ROCK_A, ROCK_B, clamp(.5 + noise2(x / 3.1, g.y / 1.7) * .6 + Math.sin(g.y * 1.9) * .2));
   return mix3(c, rock, steep * (1 - g.cover));
 };
@@ -296,7 +296,7 @@ export const slopeMeshes = (m: Mountain, x0: number, z0: number, x1: number, z1:
     const rows = Math.min(tile, rowsAll - rowStart), cols = Math.min(tile, colsAll - colStart), points: [number, number, number][] = [], covered: boolean[] = [];
     for (let row = 0; row <= rows; row++) for (let col = 0; col <= cols; col++) {
       const x = lerp(x0, x1, (colStart + col) / colsAll), z = lerp(z0, z1, (rowStart + row) / rowsAll), cover = m.sample(x, z).cover;
-      points.push([x, z, cover * .5]); covered.push(cover > .98 || (o.wanted ? !o.wanted(x, z) : false));
+      points.push([x, z, cover > .02 ? .9 * smooth(cover * 3) : 0]); covered.push(cover > .98 || (o.wanted ? !o.wanted(x, z) : false));
     }
     const mesh = meshOf(m, points, cols, rows, (row, col) => { const a = row * (cols + 1) + col; return !(covered[a] && covered[a + 1] && covered[a + cols + 1] && covered[a + cols + 2]); }, { ...o, nm: `${o.nm} ${out.length + 1}` });
     if (mesh) out.push(mesh);

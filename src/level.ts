@@ -171,6 +171,7 @@ import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { DESERT_CANYON_LEVEL, SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
 import { POWDERKEG_PEAK_LEVEL } from './levels/powderkeg-peak';
+import { POWDERKEG_KIT_LEVEL } from './levels/powderkeg-kit';
 import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -2646,6 +2647,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: 'powderkeg-peak', name: POWDERKEG_PEAK_LEVEL.name, data: POWDERKEG_PEAK_LEVEL },
+  { id: 'powderkeg-kit', name: POWDERKEG_KIT_LEVEL.name, data: POWDERKEG_KIT_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mayfield-mall', name: MAYFIELD_MALL_LEVEL.name, data: MAYFIELD_MALL_LEVEL },
@@ -8903,6 +8905,11 @@ export class Level {
                 c.speed ?? 6,
                 c.radius ?? 0.9,
               );
+            // Authored surface: `color`/`tex` repaint the boulder (a snowball, a painted barrel). Motion and contact are unchanged.
+            if (c.color !== undefined || c.tex !== undefined) {
+              const tint = c.color ?? "#a08a70", kind = c.tex ?? "dirt";
+              this.stones[this.stones.length - 1].mesh.material = this.baseMat(`stone ${kind} ${tint}`, new THREE.Color(tint).getHex(), kind, 2, 2);
+            }
           } else if (c.t === "crusher") {
             const s = c.s ?? [4, 3, 3];
             this.crusher(
@@ -15659,22 +15666,24 @@ export class Level {
     phase = 0,
     h = 3,
     raise = 4.4,
-    appearance?:Pick<CustomComponent,'dkind'|'color'|'supports'>,
+    appearance?:Pick<CustomComponent,'dkind'|'color'|'supports'|'tex'>,
   ): void {
+    // An authored `tex` keeps the cut block itself (an ice block, a timber ram) painted in that surface and tint.
+    const cutBlock = appearance?.tex !== undefined;
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
       this.patterned(
-        new THREE.MeshLambertMaterial({ color: 0x8f8f98 }),
+        new THREE.MeshLambertMaterial({ color: cutBlock && appearance?.color ? appearance.color : 0x8f8f98 }),
         w,
         h,
-        "stone",
+        appearance?.tex ?? "stone",
       ),
     );
     const restY = deckY + h / 2 - 0.1;
     mesh.position.set(x, restY + raise, z);
     mesh.name = "crusher";
     this.root.add(mesh);
-    if(appearance?.dkind!=='ancientcanyonrock')(this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
+    if(!cutBlock&&appearance?.dkind!=='ancientcanyonrock')(this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
       isJungleAsset(appearance?.dkind)?appearance.dkind:'custardboulder',appearance?.color);
     let frame:THREE.Group|undefined,cables:THREE.Mesh[]|undefined,cableTop:number|undefined;
     if(appearance?.supports){
