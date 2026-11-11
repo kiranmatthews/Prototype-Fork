@@ -157,6 +157,126 @@
     "airs": []
   },
   {
+    "scenario": "halfpipe-carve",
+    "speed": 12,
+    "approachAngleDeg": 0,
+    "lipY": 3.6,
+    "apexAboveLip": 0.567,
+    "driftAlongCoping": 0,
+    "bailed": false,
+    "t": 1.383
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 12,
+    "approachAngleDeg": 15,
+    "lipY": 3.6,
+    "apexAboveLip": 0.146,
+    "driftAlongCoping": 0.668,
+    "bailed": false,
+    "t": 1.333
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 12,
+    "approachAngleDeg": 30,
+    "lipY": 3.6,
+    "apexAboveLip": 0.396,
+    "driftAlongCoping": 2.077,
+    "bailed": false,
+    "t": 1.517
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 12,
+    "approachAngleDeg": 45,
+    "lipY": 3.6,
+    "apexAboveLip": 1.096,
+    "driftAlongCoping": 5.244,
+    "bailed": false,
+    "t": 1.883
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 18,
+    "approachAngleDeg": 0,
+    "lipY": 3.6,
+    "apexAboveLip": 3.846,
+    "driftAlongCoping": 0,
+    "bailed": false,
+    "t": 1.583
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 18,
+    "approachAngleDeg": 15,
+    "lipY": 3.6,
+    "apexAboveLip": 1.822,
+    "driftAlongCoping": 2.475,
+    "bailed": false,
+    "t": 1.35
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 18,
+    "approachAngleDeg": 30,
+    "lipY": 3.6,
+    "apexAboveLip": 1.756,
+    "driftAlongCoping": 5.208,
+    "bailed": false,
+    "t": 1.433
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 18,
+    "approachAngleDeg": 45,
+    "lipY": 3.6,
+    "apexAboveLip": 2.291,
+    "driftAlongCoping": 9.623,
+    "bailed": false,
+    "t": 1.7
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 23,
+    "approachAngleDeg": 0,
+    "lipY": 3.6,
+    "apexAboveLip": 7.101,
+    "driftAlongCoping": 0,
+    "bailed": false,
+    "t": 1.8
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 23,
+    "approachAngleDeg": 15,
+    "lipY": 3.6,
+    "apexAboveLip": 4.007,
+    "driftAlongCoping": 4.732,
+    "bailed": false,
+    "t": 1.517
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 23,
+    "approachAngleDeg": 30,
+    "lipY": 3.6,
+    "apexAboveLip": 3.123,
+    "driftAlongCoping": 8.738,
+    "bailed": false,
+    "t": 1.5
+  },
+  {
+    "scenario": "halfpipe-carve",
+    "speed": 23,
+    "approachAngleDeg": 45,
+    "lipY": 3.6,
+    "apexAboveLip": 3.285,
+    "driftAlongCoping": 13.055,
+    "bailed": false,
+    "t": 1.667
+  },
+  {
     "scenario": "quarter-air",
     "speed": 9,
     "pump": false,

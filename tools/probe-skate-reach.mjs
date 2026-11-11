@@ -91,6 +91,33 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
   results.push({ scenario: 'halfpipe-pumped-session', startSpeed: 9, lipY: r3(lipY), airs: pipeSwings(9, { pump: true, swings: 14 }) });
   results.push({ scenario: 'halfpipe-coast-session', startSpeed: 12, lipY: r3(lipY), airs: pipeSwings(12, { pump: false, swings: 8 }) });
 
+  // Carved airs: hit the wall at an angle and the off-axis share of the speed becomes drift along
+  // the coping (TUNING.hangLateral), conserved through the hang. Record the drift per air.
+  const carve = (speed, angleDeg) => {
+    reset();
+    const a = angleDeg * DEG;
+    place(new THREE.Vector3(hp.cross, 0.05, HP.z + HP.len / 2 - 12), [Math.cos(a), -Math.sin(a)], { speed });
+    let held = false, inAir = false, apex = -Infinity, z0 = null, t = 0;
+    for (let i = 0; i < 900 && p.state !== 'dead'; i++, t += CONST.fixedStep) {
+      const onWall = p.grounded && Math.abs(hp.crossCoord(p.pos.x, p.pos.z) - hp.cross) > hp.flatHalf + 0.05;
+      let input = makeInput();
+      const rising = onWall && p.pos.y > p.prevPos.y + 1e-4;
+      if (rising && !held && p.pos.y < lipY - 0.6) { input = makeInput({ jumpPressed: true, jumpHeld: true }); held = true; }
+      else if (held && (p.pos.y >= lipY - 0.12 || !p.grounded)) { input = makeInput({ jumpReleased: true }); held = false; }
+      else if (held) input = makeInput({ jumpHeld: true });
+      const zBefore = p.pos.z;
+      step(input);
+      const airborne = !p.grounded && p.pos.y > lipY - 0.05;
+      if (airborne && !inAir) { inAir = true; z0 = zBefore; }
+      if (inAir) apex = Math.max(apex, p.pos.y);
+      if (inAir && p.grounded) return { apexAboveLip: r3(apex - lipY), driftAlongCoping: r3(Math.abs(p.pos.z - z0)), bailed: !!p.isBailing, t: r3(t) };
+      if (p.pos.z < HP.z - HP.len / 2 + 2) return { ranOutOfPipe: true, apexAboveLip: r3(apex - lipY) };
+    }
+    return null;
+  };
+  for (const speed of [12, 18, 23]) for (const angle of [0, 15, 30, 45])
+    results.push({ scenario: 'halfpipe-carve', speed, approachAngleDeg: angle, lipY: r3(lipY), ...(carve(speed, angle) ?? {}) });
+
   // ---- B. Decked quarter pipe (mesh vert): air height and where the landing is ----------------
   const qpCopingX = QP.x + 0.5 + QP.R;
   for (const speed of [9, 12, 15, 18, 23]) for (const pump of [false, true]) {
