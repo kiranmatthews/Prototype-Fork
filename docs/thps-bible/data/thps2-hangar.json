@@ -1,0 +1,1861 @@
+{
+  "id": "thps2-hangar",
+  "game": "THPS2",
+  "level": "The Hangar",
+  "location": "Mullet Falls, Montana",
+  "type": "career-park",
+  "careerPosition": 1,
+  "timeLimit": "2:00",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png",
+    "LP2 7:00–9:40 (one run, all ten goals)",
+    "WEB rpgclassics.com THPS2 shrine, Hangar walkthrough",
+    "PS12 hangar",
+    "WEB thumbsticks.com THPS2 tapes (1+2)",
+    "LP12 0:38:57–0:42:30",
+    "REPO docs/warehouse-flow/research-maps.md"
+  ],
+  "goals": [
+    {
+      "text": "High Score 10,000 ($100)",
+      "version": "original"
+    },
+    {
+      "text": "Pro Score 25,000 ($200)",
+      "version": "original"
+    },
+    {
+      "text": "SICK Score 75,000 ($500)",
+      "version": "original"
+    },
+    {
+      "text": "Collect S-K-A-T-E ($150)",
+      "version": "original"
+    },
+    {
+      "text": "Barrel Hunt ($150)",
+      "version": "original"
+    },
+    {
+      "text": "Collect 5 Pilot Wings ($250)",
+      "version": "original"
+    },
+    {
+      "text": "Nosegrind Over The Pipe ($150)",
+      "version": "original"
+    },
+    {
+      "text": "Hit 3 Hangtime Gaps ($150)",
+      "version": "original"
+    },
+    {
+      "text": "Find The Secret Tape ($150)",
+      "version": "original"
+    },
+    {
+      "text": "100% Goals and Cash ($200)",
+      "version": "original"
+    },
+    {
+      "text": "High Score 10,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Pro Score 50,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Sick Score 100,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "High Combo 7,500",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Collect S-K-A-T-E; Collect 5 Pilot Wings; Barrel Hunt; Get 3 Hangtime Gaps; Nosegrind Over the Pipe; Get the Secret Tape (plus stat points, Vicarious Visions logo, alien plushie)",
+      "version": "THPS 1+2"
+    }
+  ],
+  "size": {
+    "class": "small",
+    "footprint": "hangar interior ≈ 60–65 × 45–50 m (two rooms of ≈ 30 × 45 m); helipad ≈ 25 × 20 m outside the west wall; wind tunnel ≈ 15 × 35 m beyond the east wall; overall ≈ 100 × 50 m",
+    "evidence": "VG proportions anchored on the halfpipe (assumed ≈ 12 m coping to coping, iso depth foreshortening ≈ 0.65); cross-check: the F4U-type plane then measures ≈ 10.5 m, close to a real Corsair's 10.2 m. Low–medium confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Start roll-in",
+      "layer": "raised start → ground",
+      "features": [
+        "dark corridor roll-in",
+        "quarter pipes either side (Rollin' Gap)",
+        "pilot wing W5",
+        "barrel B3 to its left"
+      ],
+      "notes": "Enters the halfpipe room from the south wall, pointing north at the halfpipe."
+    },
+    {
+      "id": "Z2",
+      "name": "Halfpipe room (east)",
+      "layer": "ground, vert, raised rail, hanging lights",
+      "features": [
+        "halfpipe on a west–east axis with outer side ramps",
+        "arched rail(s) over it",
+        "back-wall quarter pipe with raised rail and MULLET AIRFIELD sign",
+        "hanging lights",
+        "High Steppin' rail",
+        "propeller wall at the east end"
+      ],
+      "notes": "S, K, $100, barrels B4–B5, wing W1. The halfpipe's channel runs into the wind tunnel once the propeller wall breaks."
+    },
+    {
+      "id": "Z3",
+      "name": "Plane",
+      "layer": "ground, obstacle top",
+      "features": [
+        "F4U-type fighter with ramps onto its wing",
+        "low barrier in front",
+        "Instrument Landing flat"
+      ],
+      "notes": "Sits against the divider in the halfpipe room; A above its tail, wing W4 in front."
+    },
+    {
+      "id": "Z4",
+      "name": "Divider",
+      "layer": "ground, glass wall, hanging lights",
+      "features": [
+        "glass window wall with a framed centre window",
+        "stepped ramp structure",
+        "quarter pipes either side at the south end (Chopper Hop)",
+        "big hanging lights crossing it"
+      ],
+      "notes": "T over the glass; wing W3 at the light crossing. The rooms also connect through open ends of the divider."
+    },
+    {
+      "id": "Z5",
+      "name": "Helicopter room (west)",
+      "layer": "ground, kickers, rotor blades, hanging lights",
+      "features": [
+        "Skycrane on the floor between two wooden kickers",
+        "perimeter quarter pipes",
+        "Light Corner lights (north-west)",
+        "west wall: wooden door ramp flanked by quarter pipes, sign above"
+      ],
+      "notes": "Tape trigger (rotor blades), E over the door, barrels B1–B2, $50 beside the helicopter."
+    },
+    {
+      "id": "Z6",
+      "name": "Helipad (secret)",
+      "layer": "outdoor ground, vert",
+      "features": [
+        "snow, night sky",
+        "chainlink fence",
+        "painted H pad ringed by low curbs",
+        "single wooden quarter pipe on the west edge"
+      ],
+      "notes": "Opened by the helicopter trigger. Holds only the tape in the original (1+2 adds the alien plushie)."
+    },
+    {
+      "id": "Z7",
+      "name": "Wind tunnel (secret)",
+      "layer": "vert channel",
+      "features": [
+        "fan grate at the upwind end",
+        "quarter pipes at both ends",
+        "curved back wall",
+        "entrance from the halfpipe's east end"
+      ],
+      "notes": "Opened by breaking the propeller wall. Holds $250 and four gaps (1+2 adds stat points)."
+    }
+  ],
+  "landmarks": [
+    "halfpipe with arched rails",
+    "F4U-type fighter plane",
+    "Sikorsky Skycrane-type helicopter",
+    "MULLET AIRFIELD sign on the back wall",
+    "glass divider",
+    "hanging light bars",
+    "propeller on the east wall",
+    "snowy helipad with painted H (outside)"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "north, down a dark corridor ramp into the halfpipe room",
+    "visibleCollectibles": [
+      "S",
+      "NOSE (arched rail)",
+      "HANG (halfpipe)"
+    ],
+    "notes": "LP2 7:24–7:27: the run opens inside a dark corridor; the lit hangar appears beyond it, then the halfpipe's near side ramp fills the view with the S floating above the pipe and the graffiti-covered back wall behind. The arched rail sits dead ahead (PS12). Nothing about either secret area is visible: the helipad is behind a closed west door in the other room, the tunnel behind the east wall. The drop invites one obvious move, a straight air over the halfpipe; LP2 takes the S 5 s after spawn and lands in a manual into barrel B4."
+  },
+  "collectibles": [
+    {
+      "id": "TAPE",
+      "type": "tape",
+      "label": "Secret tape above the helipad quarter pipe",
+      "zone": "Z6",
+      "landmark": "wooden quarter pipe on the west edge of the snowy helipad, backed by a chainlink fence (VG label It's Cold Up Here)",
+      "layer": "outdoor secret area; vert air above a quarter-pipe coping",
+      "heightM": "≈ 2–3 m above the coping of a ≈ 2.5–3.5 m quarter pipe, so ≈ 4.5–6.5 m above the helipad (estimated from LP2 8:41–8:43: icon above the coping and fence top, board ≈ 1–1.5 m over the coping at the pickup frame; skater ≈ 1.8 m). Low confidence",
+      "launchFrom": "helipad quarter-pipe coping (straight vert air from a short roll across the pad)",
+      "visibility": {
+        "firstSight": "only after the trigger: the opened west doorway shows night sky but not the tape (LP2 8:34); the glowing icon appears as soon as the skater rolls onto the pad (LP2 8:41)",
+        "fromSpawn": false,
+        "reads": "glowing VHS icon with a yellow halo hanging over the coping, the only lit object against a dark starry sky",
+        "distanceFromFirstSightM": "≈ 15–25 m (pad entry to the quarter pipe; VG proportions)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "helicopter room floor",
+          "to": "one of the two wooden kickers beside the Skycrane",
+          "geometry": "the kickers are the Skycrane Hangtime ramps; LP2 8:20 shows a heelflip off one"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "kicker lip",
+          "to": "a rotor blade",
+          "geometry": "ollie onto a blade (≈ 2–2.5 m above the floor, level with the kicker top; LP2 8:30) and 50-50 it; the $50 beside the helicopter sits on this line (LP2 8:31, timer 0:54–0:53). The helicopter lifts off on its own and the west door opens (shrine; PS12)"
+        },
+        {
+          "step": 3,
+          "move": "ride",
+          "from": "helicopter",
+          "to": "west wall: wooden ramp up to the door between two quarter pipes",
+          "geometry": "≈ 15 m west (VG). LP2 8:33–8:34: the doorway already shows a starry sky"
+        },
+        {
+          "step": 4,
+          "move": "grind/vert-air (optional E)",
+          "from": "west quarter pipe",
+          "to": "the sign rail above the door",
+          "geometry": "the E hangs over the door (VG Air Over The Door); LP2 collects it and completes S-K-A-T-E at 8:35–8:36 on the way out"
+        },
+        {
+          "step": 5,
+          "move": "bank",
+          "from": "door ramp",
+          "to": "helipad",
+          "geometry": "roll up the wooden ramp through the door onto the snow (LP2 8:38–8:40)"
+        },
+        {
+          "step": 6,
+          "move": "vert-air",
+          "from": "helipad, ≈ 20–25 m from the door",
+          "to": "tape",
+          "geometry": "straight air off the only quarter pipe; LP2 kickflip at 8:42–8:43, 'Find the secret tape' at timer 0:41"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "grind",
+        "unlock",
+        "bank",
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "knowing the helicopter is interactive (nothing in the original's goal text says so)",
+        "line up a kicker pop onto a thin rotor blade",
+        "one basic quarter-pipe air"
+      ],
+      "coupling": "unlock: grinding a rotor blade makes the helicopter take off and opens the west door to the helipad; the opening holds for the rest of the run (LP2 re-enters at 8:46 and knocks the door barrel)",
+      "failure": "missing the blade drops you ≈ 2 m to the floor beside the kicker (retry in ≈ 3–5 s); missing the air just rolls you back down a hazard-free quarter pipe (≈ 2–3 s). The only real cost is discovering the trigger",
+      "timeFromSpawnS": "LP2: tape at 8:43 = 80 s after spawn (7:23), but the run collected 15 other pickups first; trigger to tape took 12 s (8:31 → 8:43) including the E. A direct cold route (spawn → helicopter ≈ 45–60 m, blade → tape ≈ 40 m) would take ≈ 25–35 s (inferred)",
+      "difficulty": 2,
+      "roles": [
+        "SECRET-AREA",
+        "EXPLORE",
+        "REWARD"
+      ],
+      "why": "The challenge is curiosity about the level's biggest prop, not execution: one blade grind plus one easy air. Goals and the E letter both pull the player to the trigger zone first.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png (tape icon + It's Cold Up Here); LP2 8:20–8:44; WEB rpgclassics shrine Hangar; PS12 hangar; WEB thumbsticks (1+2)",
+      "confidence": "high for location and trigger; low for heights"
+    },
+    {
+      "id": "S",
+      "type": "letter",
+      "label": "Letter S",
+      "zone": "Z2",
+      "landmark": "above the halfpipe, straight ahead of the roll-in (VG: over the west end of the pipe, next to the $100)",
+      "layer": "vert air above the halfpipe",
+      "heightM": "≈ 4–6 m above the floor (apex of a full hangtime over a ≈ 3.5–4 m vert pipe; estimate)",
+      "launchFrom": "the halfpipe's outer (south) side ramp",
+      "visibility": {
+        "firstSight": "from the roll-in: visible at the top of the screen 3 s after spawn (LP2 7:27)",
+        "fromSpawn": true,
+        "reads": "floating yellow letter centred over the pipe",
+        "distanceFromFirstSightM": "≈ 15–20 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "spawn",
+          "to": "bottom of the roll-in",
+          "geometry": "straight north down the dark start corridor (LP2 7:24–7:26)"
+        },
+        {
+          "step": 2,
+          "move": "transfer",
+          "from": "halfpipe outer side ramp",
+          "to": "over the whole halfpipe",
+          "geometry": "Halfpipe Hangtime; S taken at the apex (LP2 7:28)"
+        },
+        {
+          "step": 3,
+          "move": "manual",
+          "from": "far side floor",
+          "to": "barrel north of the pipe",
+          "geometry": "Perfect 360 indy + Halfpipe Hangtime + manual, barrel 1 of 5 (LP2 7:29–7:30)"
+        }
+      ],
+      "moves": [
+        "transfer",
+        "hangtime",
+        "manual"
+      ],
+      "speed": "moderate (roll-in speed only)",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "a short hangtime lands in the pipe; you roll out and retry in ≈ 5 s",
+      "timeFromSpawnS": "≈ 5 s (LP2 7:23 → 7:28)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE",
+        "TEASE"
+      ],
+      "why": "The first letter sits on the level's headline gap and on the line spawn points at; PS12 (1+2) instead suggests grinding the arched rail under it.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 7:24–7:30; shrine; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "K",
+      "type": "letter",
+      "label": "Letter K",
+      "zone": "Z2",
+      "landmark": "back (north) wall above the quarter pipe, at the raised rail by the MULLET AIRFIELD sign (VG Raildrop label)",
+      "layer": "raised rail above vert",
+      "heightM": "≈ 5.5–7.5 m above the floor: rail ≈ 1.5–2.5 m over a ≈ 3–3.5 m coping, letter at body height above the rail (estimate)",
+      "launchFrom": "back quarter pipe",
+      "visibility": {
+        "firstSight": "from the floor of the halfpipe room; collected while grinding (LP2 7:56)",
+        "fromSpawn": "likely (back wall faces the roll-in)",
+        "reads": "letter over the high rail against the hangar's back wall",
+        "distanceFromFirstSightM": "≈ 25–35 m from spawn"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "back quarter pipe",
+          "to": "raised rail",
+          "geometry": "air up onto the rail that runs above the coping"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "raised rail",
+          "to": "K",
+          "geometry": "BS boardslide along the rail (LP2 7:56–7:57)"
+        },
+        {
+          "step": 3,
+          "move": "rail-transfer",
+          "from": "raised rail",
+          "to": "quarter-pipe coping",
+          "geometry": "drop to the coping (Raildrop, LP2 7:35)"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "grind",
+        "rail-transfer"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "air high enough to reach a rail above the coping"
+      ],
+      "coupling": "none",
+      "failure": "missing the rail lands you back in the quarter pipe; immediate retry",
+      "timeFromSpawnS": "≈ 33 s in LP2 (other pickups first)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the Raildrop line: a higher rail stacked over a lip so a miss falls onto a useful surface.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 7:31–7:41, 7:56; shrine; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "A",
+      "type": "letter",
+      "label": "Letter A",
+      "zone": "Z3",
+      "landmark": "above the F4U-type fighter's tail, by the window divider",
+      "layer": "air above an obstacle",
+      "heightM": "≈ 4.5–6 m above the floor (above a ≈ 4–5 m tail fin; estimate)",
+      "launchFrom": "ramp onto the plane's wing",
+      "visibility": {
+        "firstSight": "from the plane approach (LP2 7:59)",
+        "fromSpawn": "no",
+        "reads": "letter over the tail of the plane",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "wing ramp",
+          "to": "over the plane",
+          "geometry": "Wingtip Hangtime (LP2 8:00)"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "landing",
+          "to": "low barrier in front of the plane",
+          "geometry": "Kissed the rail (LP2 8:01); PS12 lists Wing To Rail for the full version"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "hangtime"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "short airs land on the wing or the floor beside it",
+      "timeFromSpawnS": "≈ 37 s in LP2",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Puts the letter on the plane's named gap so the goal 'Hit 3 Hangtime Gaps' and the letter teach the same move.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 7:59–8:01; shrine; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "T",
+      "type": "letter",
+      "label": "Letter T",
+      "zone": "Z4",
+      "landmark": "over the glass divider between the two rooms, between quarter pipes on either side (VG Chopper Hop)",
+      "layer": "transfer over a wall",
+      "heightM": "≈ 4–6 m above the floor (estimate)",
+      "launchFrom": "quarter pipe on either side of the glass",
+      "visibility": {
+        "firstSight": "from the south part of either room",
+        "fromSpawn": "no",
+        "reads": "letter above the glass wall",
+        "distanceFromFirstSightM": "≈ 10–15 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "quarter pipe on one side of the glass",
+          "to": "quarter pipe on the other side",
+          "geometry": "Chopper Hop; inward heelflip + Chopper Hop with the T (LP2 8:17)"
+        }
+      ],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "a short air comes back down the same quarter pipe",
+      "timeFromSpawnS": "≈ 54 s in LP2",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Makes changing rooms a trick: the divider is crossed through the air, not only through doorways.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:17–8:19; shrine; PS12 (1+2: smash the glass)",
+      "confidence": "high"
+    },
+    {
+      "id": "E",
+      "type": "letter",
+      "label": "Letter E",
+      "zone": "Z5",
+      "landmark": "above the west door (VG Air Over The Door), on the sign over the door ramp flanked by two quarter pipes",
+      "layer": "air or grind above a doorway",
+      "heightM": "≈ 4–6 m above the floor (estimate)",
+      "launchFrom": "the quarter pipes either side of the door ramp",
+      "visibility": {
+        "firstSight": "from the helicopter room; the door is closed until the helicopter flies",
+        "fromSpawn": "no",
+        "reads": "letter hanging over the door",
+        "distanceFromFirstSightM": "≈ 15 m from the helicopter"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "quarter pipe beside the door",
+          "to": "sign above the door",
+          "geometry": "air or grind the sign rail (LP2 8:35–8:36)"
+        },
+        {
+          "step": 2,
+          "move": "transfer",
+          "from": "one quarter pipe",
+          "to": "the other, over the door",
+          "geometry": "Air Over The Door (VG; PS12)"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "grind",
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "misses fall back into the quarter pipe",
+      "timeFromSpawnS": "≈ 73 s in LP2",
+      "difficulty": 2,
+      "roles": [
+        "TEASE",
+        "TEACH-LINE"
+      ],
+      "why": "A breadcrumb: the letter hangs exactly where the secret door opens, so chasing it shows you the open doorway.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:33–8:36; shrine ('on the quarterpipe that faces the helicopter'); PS12 (1+2: Neversoft sign)",
+      "confidence": "medium (pickup move partly inferred)"
+    },
+    {
+      "id": "W1",
+      "type": "goal-object",
+      "label": "Pilot wing at the back of the halfpipe",
+      "zone": "Z2",
+      "landmark": "east end of the halfpipe room by the wind-tunnel wall (VG, near Flyin' High)",
+      "layer": "air above vert",
+      "heightM": "≈ 4–5 m (estimate)",
+      "launchFrom": "east-end quarter pipe",
+      "visibility": {
+        "firstSight": "visible from the halfpipe",
+        "fromSpawn": "no",
+        "reads": "winged badge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "east-end ramp",
+          "to": "wing",
+          "geometry": "PS12: head right from the start; first wing at the back of the half pipe"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "miss rolls back into the pipe",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Leads the player to the propeller wall that hides the wind tunnel.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "W2",
+      "type": "goal-object",
+      "label": "Pilot wing at the north wall, west end",
+      "zone": "Z2",
+      "landmark": "top of the divider's north end, over a wooden ramp by a dark window (VG wing near the Raildrop rail's west end)",
+      "layer": "wallride height",
+      "heightM": "≈ 4–5 m (estimate)",
+      "launchFrom": "wooden ramp along the wall",
+      "visibility": {
+        "firstSight": "from the north floor",
+        "fromSpawn": "no",
+        "reads": "winged badge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "ramp beside the wall",
+          "to": "wall",
+          "geometry": "wall ride + BS 50-50, '2 of 5 pilot wings' (LP2 8:08)"
+        }
+      ],
+      "moves": [
+        "wallride",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "wallride"
+      ],
+      "coupling": "none",
+      "failure": "fall back to the floor",
+      "timeFromSpawnS": "LP2 8:08",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the wallride, THPS2's wall connector.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:04–8:09",
+      "confidence": "medium"
+    },
+    {
+      "id": "W3",
+      "type": "goal-object",
+      "label": "Pilot wing at the big hanging lights",
+      "zone": "Z4",
+      "landmark": "divider centre where the Big Light Hopper lights cross (VG)",
+      "layer": "hanging-light height",
+      "heightM": "≈ 4–6 m (estimate)",
+      "launchFrom": "quarter pipe / glass divider",
+      "visibility": {
+        "firstSight": "from either room",
+        "fromSpawn": "no",
+        "reads": "winged badge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "quarter pipe",
+          "to": "wing over the divider",
+          "geometry": "PS12: from the back quarter pipe, through the glass to the other side"
+        }
+      ],
+      "moves": [
+        "transfer",
+        "break-glass (1+2)"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "land on floor",
+      "timeFromSpawnS": "—",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Marks the crossing between the rooms.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12",
+      "confidence": "low (exact pickup unverified)"
+    },
+    {
+      "id": "W4",
+      "type": "goal-object",
+      "label": "Pilot wing in front of the plane",
+      "zone": "Z3",
+      "landmark": "in front of the plane's nose (VG Wingtip Hangtime)",
+      "layer": "low air",
+      "heightM": "≈ 2–3 m (estimate)",
+      "launchFrom": "floor / wing ramp",
+      "visibility": {
+        "firstSight": "from the halfpipe room",
+        "fromSpawn": "no",
+        "reads": "winged badge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "floor",
+          "to": "wing",
+          "geometry": "PS12: just in front of the plane"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Introduces the plane obstacle.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "W5",
+      "type": "goal-object",
+      "label": "Pilot wing above the roll-in",
+      "zone": "Z1",
+      "landmark": "between the quarter pipes either side of the start ramp (VG Rollin' Gap)",
+      "layer": "air above the start",
+      "heightM": "≈ 4–5 m (estimate)",
+      "launchFrom": "start-side quarter pipes or a wallride",
+      "visibility": {
+        "firstSight": "visible from the floor looking back at the start",
+        "fromSpawn": "no (behind you at spawn)",
+        "reads": "winged badge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "start corridor wall",
+          "to": "wing",
+          "geometry": "PS12: from the start position, wallride and ollie up"
+        },
+        {
+          "step": 2,
+          "move": "transfer",
+          "from": "start-side quarter pipe",
+          "to": "the other one",
+          "geometry": "Rollin' Gap (VG)"
+        }
+      ],
+      "moves": [
+        "wallride",
+        "wallie",
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "wallride"
+      ],
+      "coupling": "none",
+      "failure": "drop to the floor",
+      "timeFromSpawnS": "—",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Turns the spawn ramp into a reusable obstacle.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "B1",
+      "type": "goal-object",
+      "label": "Barrel at the west door",
+      "zone": "Z5",
+      "landmark": "on the ledge in front of the secret door, under the E",
+      "layer": "ground",
+      "heightM": "floor",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "from the helicopter room",
+        "fromSpawn": "no",
+        "reads": "stack of steel drums",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "helicopter room",
+          "to": "barrel",
+          "geometry": "knocked on the way back in from the helipad, '4 of 5 barrels' (LP2 8:46–8:47)"
+        }
+      ],
+      "moves": [
+        "skate into it"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "none",
+      "timeFromSpawnS": "LP2 8:47",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Puts a ground goal at the secret door.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:46; PS12 (below the Neversoft sign)",
+      "confidence": "high"
+    },
+    {
+      "id": "B2",
+      "type": "goal-object",
+      "label": "Barrel near the T",
+      "zone": "Z5",
+      "landmark": "helicopter room, south side by a quarter pipe",
+      "layer": "ground",
+      "heightM": "floor",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "from the room",
+        "fromSpawn": "no",
+        "reads": "drums",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "floor",
+          "to": "barrel",
+          "geometry": "PS12: on the helicopter side next to a quarter pipe"
+        }
+      ],
+      "moves": [
+        "skate into it"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "none",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Draws novices into the second room.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "B3",
+      "type": "goal-object",
+      "label": "Barrel left of the roll-in",
+      "zone": "Z1",
+      "landmark": "floor west of the start ramp (VG near High Steppin')",
+      "layer": "ground",
+      "heightM": "floor",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "first left turn out of the ramp",
+        "fromSpawn": "no",
+        "reads": "drums",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "roll-in",
+          "to": "barrel",
+          "geometry": "PS12: from the start turn left out of the ramp"
+        }
+      ],
+      "moves": [
+        "skate into it"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "none",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Rewards the first turn away from the obvious line.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 8:02–8:03",
+      "confidence": "medium"
+    },
+    {
+      "id": "B4",
+      "type": "goal-object",
+      "label": "Barrel north of the halfpipe",
+      "zone": "Z2",
+      "landmark": "open floor on the far side of the halfpipe",
+      "layer": "ground",
+      "heightM": "floor",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "visible on landing the opening hangtime",
+        "fromSpawn": "no",
+        "reads": "drums",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "manual",
+          "from": "halfpipe hangtime landing",
+          "to": "barrel",
+          "geometry": "'1 of 5 barrels' in the opening manual (LP2 7:30)"
+        }
+      ],
+      "moves": [
+        "manual"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "none",
+      "timeFromSpawnS": "7 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Placed in the run-out of the spawn line so the first combo ends on a goal.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 7:29–7:30; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "B5",
+      "type": "goal-object",
+      "label": "Barrel inside the halfpipe",
+      "zone": "Z2",
+      "landmark": "flat bottom of the halfpipe",
+      "layer": "inside vert",
+      "heightM": "floor of the pipe",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "from any deck",
+        "fromSpawn": "partly",
+        "reads": "drums in the pipe",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "drop-in",
+          "from": "hanging light / deck",
+          "to": "pipe floor",
+          "geometry": "LP2 drops from the Big Light Hopper into the pipe and completes Barrel Hunt (8:53–8:54)"
+        }
+      ],
+      "moves": [
+        "drop-in"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "none",
+      "timeFromSpawnS": "LP2 8:54",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "An obstacle placed where vert skaters must ride past it.",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:53–8:56; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "NOSE",
+      "type": "objective",
+      "label": "Nosegrind Over The Pipe",
+      "zone": "Z2",
+      "landmark": "arched rail(s) over the halfpipe, dead ahead of the roll-in",
+      "layer": "rail over vert",
+      "heightM": "rail apex ≈ 4–5 m (estimate)",
+      "launchFrom": "halfpipe side ramp",
+      "visibility": {
+        "firstSight": "from the roll-in",
+        "fromSpawn": true,
+        "reads": "arched steel rail across the pipe",
+        "distanceFromFirstSightM": "≈ 15–20 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "side ramp",
+          "to": "arched rail",
+          "geometry": "nosegrind the rail across the pipe; LP2 9:20 'No comply + FS nosegrind + Halfpipe Grind'"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "a named grind (nosegrind)"
+      ],
+      "coupling": "none",
+      "failure": "fall into the pipe; retry in seconds",
+      "timeFromSpawnS": "LP2 9:20 (timer 0:05)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Trick-specific gating on the first rail you see.",
+      "evidence": "PS12; LP2 9:20; VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png (Halfpipe Grind)",
+      "confidence": "high"
+    },
+    {
+      "id": "HANG",
+      "type": "objective",
+      "label": "Hit 3 Hangtime Gaps",
+      "zone": "Z2, Z3, Z5",
+      "landmark": "the halfpipe, the plane, the helicopter",
+      "layer": "airs over the three largest objects",
+      "heightM": "—",
+      "launchFrom": "side ramps / wing ramp / kickers",
+      "visibility": {
+        "firstSight": "the three silhouettes are visible from the floor",
+        "fromSpawn": true,
+        "reads": "three landmark objects",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "hangtime",
+          "from": "halfpipe side ramp",
+          "to": "over the halfpipe",
+          "geometry": "Halfpipe Hangtime"
+        },
+        {
+          "step": 2,
+          "move": "hangtime",
+          "from": "wing ramp",
+          "to": "over the plane",
+          "geometry": "Wingtip Hangtime, '1 of 3' (LP2 8:01)"
+        },
+        {
+          "step": 3,
+          "move": "hangtime",
+          "from": "kicker",
+          "to": "over the helicopter",
+          "geometry": "Skycrane Hangtime, '2 of 3' (LP2 8:21–8:22)"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "hangtime"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "goal shown complete at LP2 9:28",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Names the three landmarks as targets; the Skycrane one parks the player on the kickers that reach the tape trigger.",
+      "evidence": "PS12; LP2 8:01, 8:22, 9:28; VG",
+      "confidence": "high"
+    },
+    {
+      "id": "$1",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z2",
+      "landmark": "raised rail above the back quarter pipe (Raildrop)",
+      "layer": "raised rail",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "grind"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "grind the back rail ('50 bucks', LP2 7:34)",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 7:34",
+      "confidence": "high"
+    },
+    {
+      "id": "$2",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z5",
+      "landmark": "beside the helicopter",
+      "layer": "rotor-blade height",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "on the blade line that triggers the tape (LP2 8:31)",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:31",
+      "confidence": "high"
+    },
+    {
+      "id": "$3",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z2",
+      "landmark": "over the west end of the halfpipe, above the S",
+      "layer": "above vert / under the hanging lights",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "wire",
+        "drop-in"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "dropped onto from the Big Light Hopper (LP2 8:53)",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 8:51–8:53",
+      "confidence": "high"
+    },
+    {
+      "id": "$4",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z7",
+      "landmark": "wind-tunnel entrance (Flyin' High)",
+      "layer": "secret area",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "inside the opened tunnel (LP2 9:04)",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 9:04",
+      "confidence": "medium"
+    },
+    {
+      "id": "$5",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z7",
+      "landmark": "upwind quarter pipe by the fan grate",
+      "layer": "secret area, vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 9:08",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 9:05–9:09",
+      "confidence": "medium"
+    },
+    {
+      "id": "$6",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z7",
+      "landmark": "middle of the curved back wall",
+      "layer": "secret area, vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 9:01",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 9:01–9:02",
+      "confidence": "high"
+    },
+    {
+      "id": "$7",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z7",
+      "landmark": "downwind quarter pipe",
+      "layer": "secret area, vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "last icon: 'Cash icons cleared' (LP2 9:12)",
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; LP2 9:11–9:12",
+      "confidence": "high"
+    },
+    {
+      "id": "$8?",
+      "type": "cash",
+      "label": "$50 (not on VG)",
+      "zone": "Z5",
+      "landmark": "probably at the sign/door on the west wall, under the E",
+      "layer": "above the door",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 shows '50 bucks' with 'Collect S-K-A-T-E' at 8:36; the shrine's cash bonus ($500) exceeds VG's seven icons ($450) by exactly $50",
+      "evidence": "LP2 8:35–8:36; shrine",
+      "confidence": "low"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "It's Cold Up Here",
+      "points": 250,
+      "kind": "secret-area",
+      "location": "helipad quarter pipe (tape)",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Skycrane Hangtime",
+      "points": 500,
+      "kind": "hangtime",
+      "location": "over the helicopter via its kickers",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "HANG",
+        "TAPE (same kickers reach the blades)"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 8:21"
+    },
+    {
+      "name": "Air Over The Door",
+      "points": 500,
+      "kind": "channel",
+      "location": "quarter pipes either side of the west door ramp",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "E"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Chopper Hop",
+      "points": 100,
+      "kind": "channel",
+      "location": "quarter pipes either side of the glass divider",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "T"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 8:17, 8:50"
+    },
+    {
+      "name": "Halfpipe Hangtime",
+      "points": 500,
+      "kind": "hangtime",
+      "location": "over the whole halfpipe from its outer side ramps",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "S",
+        "HANG"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 7:29"
+    },
+    {
+      "name": "Wingtip Hangtime",
+      "points": 500,
+      "kind": "hangtime",
+      "location": "over the plane from its wing ramps",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "A",
+        "HANG"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 8:01"
+    },
+    {
+      "name": "Wing To Rail",
+      "points": 500,
+      "kind": "over-object",
+      "location": "right wing ramp over the plane to the low barrier in front",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "A"
+      ],
+      "evidence": "PS12 only (not labelled on VG)"
+    },
+    {
+      "name": "Instrument Landing",
+      "points": 500,
+      "kind": "manual",
+      "location": "ollie off the plane and land in a manual",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png (green); PS12 spells it Instrumental Landing"
+    },
+    {
+      "name": "Rail-Guided Missile",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "frame of the centre glass windows to the barrier in front of the plane",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Raildrop",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "raised rail above the back quarter pipe down to its coping",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "K"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 7:35"
+    },
+    {
+      "name": "Halfpipe Grind",
+      "points": 250,
+      "kind": "other",
+      "location": "arched rail over the halfpipe",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "NOSE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 9:20"
+    },
+    {
+      "name": "Lil Light Hopper",
+      "points": 250,
+      "kind": "wire",
+      "location": "from the halfpipe up to a hanging light",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Big Light Hopper",
+      "points": 500,
+      "kind": "wire",
+      "location": "jump up to the big hanging lights over the divider",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [
+        "$3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12; LP2 8:50"
+    },
+    {
+      "name": "Light Corner",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "off the end of one hanging light onto the perpendicular one (north-west corner)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "High Steppin'",
+      "points": 100,
+      "kind": "lip",
+      "location": "rail above a side quarter pipe, south of the halfpipe",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "One Halfpipe Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "right (south) side of the halfpipe",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "The Other Halfpipe Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "left (north) side of the halfpipe",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Rollin' Gap",
+      "points": 100,
+      "kind": "channel",
+      "location": "quarter pipes either side of the start ramp",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "W5"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Flyin' High",
+      "points": 250,
+      "kind": "channel",
+      "location": "wind tunnel: quarter pipe to quarter pipe over the entrance",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "$4"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Upwind Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "wind tunnel quarter pipe left of the entrance (fan end)",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "$5"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Downwind Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "wind tunnel quarter pipe right of the entrance",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "$7"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    },
+    {
+      "name": "Wind Tunnel Back Wall",
+      "points": 100,
+      "kind": "lip",
+      "location": "wind tunnel's long curved back wall",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "$6"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-Hangar-MulletFalls,MT.png; PS12"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "Grind a rotor blade of the Skycrane (reach it from the wooden kickers beside it)",
+      "opens": "The helicopter lifts off unpiloted (1+2: crashes out through the wall) and the west door opens to the outdoor helipad",
+      "neededFor": [
+        "TAPE"
+      ],
+      "evidence": "WEB rpgclassics shrine Hangar; PS12 hangar; WEB thumbsticks (1+2); LP2 8:30–8:40; LP12 0:40:44–0:40:51"
+    },
+    {
+      "trigger": "Grind the propeller on the wall at the back (east end) of the halfpipe",
+      "opens": "Breaks that wall and opens the wind tunnel (≈ 15 × 35 m vert channel with a fan grate) holding $250 in four icons and four gaps",
+      "neededFor": [
+        "$4",
+        "$5",
+        "$6",
+        "$7",
+        "100% Goals and Cash"
+      ],
+      "evidence": "shrine ('break down the wall with the propellor on it'); PS12 (stat points); LP2 8:56–9:12 (hole already open at 8:56, tunnel cash swept by 9:12)"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Opening straight",
+      "sequence": [
+        "spawn roll-in",
+        "halfpipe outer ramp",
+        "Halfpipe Hangtime (S)",
+        "manual",
+        "barrel B4"
+      ],
+      "links": [
+        "manual"
+      ],
+      "collectibles": [
+        "S",
+        "B4"
+      ],
+      "why": "Spawn faces the halfpipe; the first letter and the first barrel sit on one 7-second line.",
+      "evidence": "LP2 7:24–7:30"
+    },
+    {
+      "id": "L2",
+      "name": "Back-wall raildrop",
+      "sequence": [
+        "back quarter pipe",
+        "air to raised rail",
+        "grind ($1, later K)",
+        "Raildrop to coping",
+        "coping grinds",
+        "manual"
+      ],
+      "links": [
+        "raildrop",
+        "manual"
+      ],
+      "collectibles": [
+        "K",
+        "$1"
+      ],
+      "why": "A high rail stacked over a lip: the miss is the next trick.",
+      "evidence": "LP2 7:31–7:41; VG; PS12"
+    },
+    {
+      "id": "L3",
+      "name": "Plane pass",
+      "sequence": [
+        "wing ramp",
+        "Wingtip Hangtime (A)",
+        "barrier grind (Wing To Rail) or manual (Instrument Landing)"
+      ],
+      "links": [
+        "grind",
+        "manual"
+      ],
+      "collectibles": [
+        "A",
+        "W4",
+        "HANG"
+      ],
+      "why": "One obstacle offers a grind exit and a manual exit.",
+      "evidence": "LP2 7:59–8:01; PS12"
+    },
+    {
+      "id": "L4",
+      "name": "Glass hop",
+      "sequence": [
+        "south quarter pipe",
+        "Chopper Hop over the glass (T)",
+        "helicopter room"
+      ],
+      "links": [
+        "transfer"
+      ],
+      "collectibles": [
+        "T"
+      ],
+      "why": "Changing rooms as a trick.",
+      "evidence": "LP2 8:17–8:19; VG"
+    },
+    {
+      "id": "L5",
+      "name": "Skycrane to helipad (tape line)",
+      "sequence": [
+        "kicker",
+        "Skycrane Hangtime or blade grind ($2)",
+        "west quarter pipes (Air Over The Door, E)",
+        "door ramp",
+        "helipad quarter pipe (It's Cold Up Here)"
+      ],
+      "links": [
+        "grind",
+        "transfer"
+      ],
+      "collectibles": [
+        "TAPE",
+        "E",
+        "$2",
+        "B1",
+        "HANG"
+      ],
+      "why": "The tape line reuses the hangtime kickers and ends at the letter-marked door.",
+      "evidence": "LP2 8:20–8:47"
+    },
+    {
+      "id": "L6",
+      "name": "Light network",
+      "sequence": [
+        "Chopper Hop (boneless)",
+        "Big Light Hopper",
+        "hanging light grind",
+        "drop into the halfpipe ($3)",
+        "barrel B5"
+      ],
+      "links": [
+        "grind",
+        "drop-in"
+      ],
+      "collectibles": [
+        "W3",
+        "$3",
+        "B5"
+      ],
+      "why": "The overhead lights connect the two rooms above the floor routes.",
+      "evidence": "LP2 8:49–8:56; VG; PS12"
+    },
+    {
+      "id": "L7",
+      "name": "Wind-tunnel loop",
+      "sequence": [
+        "halfpipe east end",
+        "broken propeller wall",
+        "Upwind Lip",
+        "Wind Tunnel Back Wall",
+        "Downwind Lip",
+        "Flyin' High"
+      ],
+      "links": [
+        "lip",
+        "transfer"
+      ],
+      "collectibles": [
+        "$4",
+        "$5",
+        "$6",
+        "$7"
+      ],
+      "why": "A secret vert room continuous with the halfpipe's channel: you skate into it without stopping.",
+      "evidence": "LP2 8:57–9:13; VG"
+    },
+    {
+      "id": "L8",
+      "name": "Rail-Guided Missile",
+      "sequence": [
+        "centre window frame grind",
+        "ollie down",
+        "barrier in front of the plane"
+      ],
+      "links": [
+        "rail-transfer"
+      ],
+      "collectibles": [],
+      "why": "Links the divider to the plane at grind height.",
+      "evidence": "PS12; VG"
+    },
+    {
+      "id": "L9",
+      "name": "Rollin' Gap",
+      "sequence": [
+        "start-side quarter pipe",
+        "transfer over the roll-in",
+        "other quarter pipe"
+      ],
+      "links": [
+        "transfer"
+      ],
+      "collectibles": [
+        "W5"
+      ],
+      "why": "Makes the spawn ramp part of the session.",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L10",
+      "name": "Nosegrind finisher",
+      "sequence": [
+        "side ramp",
+        "arched rail over the halfpipe (Halfpipe Grind)",
+        "pipe"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "NOSE"
+      ],
+      "why": "Trick-gated objective on the most visible rail; LP2 saves it for the last 5 seconds.",
+      "evidence": "LP2 9:20; PS12"
+    }
+  ],
+  "guidance": [
+    "The roll-in frames the halfpipe, the S and the arched rail in one view: the first goal is shown before the player can steer (LP2 7:24–7:27).",
+    "The three hangtime targets are the three biggest silhouettes; the goal text names objects the player already sees.",
+    "The helicopter is the only large prop with thin, grindable parts at kicker height; a $50 icon beside it sits on the blade line (VG; LP2 8:20–8:31).",
+    "The E hangs over the door that opens. After the trigger, chasing the E puts the open doorway, showing night sky, in front of the player (LP2 8:34–8:36).",
+    "The tape is hidden on purpose until the player is outside: it is the only glowing object on a dark pad, ≈ 20 m ahead, above the only ramp (LP2 8:41).",
+    "The wind tunnel is advertised by the propeller on the halfpipe's end wall; once open, its cold blue-white light contrasts with the brown hangar (LP2 8:59; LP12 0:40:18 blue).",
+    "Barrels sit at ground level beside every landmark (door, glass, start, halfpipe floor and pit) and act as a novice tour; pilot wings sit one step up, on wallride spots, lights and transfers."
+  ],
+  "designLogic": [
+    "Spawn-to-letter in 5 seconds: the first letter floats over the centrepiece on the exact line spawn points at, so the first input teaches that the roll-in is a launch (LP2 7:24–7:28).",
+    "Each letter sits on a named gap of a different landmark: S on Halfpipe Hangtime, K on Raildrop, A on Wingtip Hangtime, T on Chopper Hop, E on Air Over The Door. Collecting letters teaches the level's gap vocabulary one obstacle at a time.",
+    "The tape is a knowledge test, not an execution test: one grind on the helicopter and one easy air. The original's goal list gives no hint that the helicopter is interactive (difficulty 2 once known).",
+    "Goals converge on the trigger: 'Hit 3 Hangtime Gaps' sends the player to the helicopter's kickers, the same ramps that reach the blades, and the helicopter's $50 lies on the blade line.",
+    "The E is a breadcrumb: it marks the door before it opens and pays the player for looking at it after it opens.",
+    "Two secret areas with two jobs: the helipad holds the tape and nothing else, while the wind tunnel holds $250 of the ≈ $450–500 cash plus four gaps. 100% therefore requires discovering both.",
+    "Both secrets are opened by an aircraft part (rotor, propeller) on an aircraft-themed prop, so the unlock grammar is learnable inside the level's own fiction.",
+    "The secrets extend the long axis at both ends (helipad west, tunnel east), adding ≈ 50% footprint without new routes inside the box. The tunnel continues the halfpipe's channel, so entering it costs no momentum.",
+    "Height layering stays close to the floor: kickers, plane wing and blades ≈ 1–2.5 m, vert ≈ 3.5–4 m, raised rails and hanging lights above (estimates). Letters sit at the top of vert airs (S, A, T, E) or on the high rail (K); the lights carry only cash and connections.",
+    "Failure is cheap everywhere: every miss lands on open floor or back on the ramp in the same room, and the tape quarter pipe stands on a flat, hazard-free pad.",
+    "Density supports single-run completion: LP2 clears all ten goals, the tape and all cash in one 2:00 run (7:23–9:28), with pickups usually less than 10 s apart.",
+    "As career level 1 the Hangar introduces the THPS2 secret-area idea (an object trigger opening a hidden room) with the gentlest possible execution; in this study, School II then gates its tape by speed and Venice leaves its tape in plain sight (inference across the three files).",
+    "Nosegrind Over The Pipe gates a named trick on the first rail the player sees, teaching that goals can ask for a specific trick, not only a location."
+  ],
+  "remakeChanges": [
+    "Score goals: Pro 25,000 → 50,000, Sick 75,000 → 100,000; a High Combo goal (7,500) is added (LP2 checklist vs PS12).",
+    "S: the original LP2 run takes it with a halfpipe hangtime; PS12 (1+2) says to grind the arched rail to get it. Probably the same position with a different suggested line (inference).",
+    "T: original = a quarter-pipe transfer over the glass divider (Chopper Hop, LP2 8:17); 1+2 = use the quarter pipe to smash through the glass (PS12), and LP12 0:40:30 shows glass shards around Chopper Hop. Breakable glass turns a transfer into a smash-through line.",
+    "E: original = over the west door between quarter pipes (VG; the shrine calls it the quarter pipe facing the helicopter); 1+2 = on the giant NEVERSOFT sign over the door, reached by grinding the sign (PS12; LP12 0:40:45). The letter moves onto a grindable sign, making the breadcrumb a rail.",
+    "Tape: same trigger and place in both. Grind a blade and the helicopter flies (1+2: crashes out through the wall per Thumbsticks), the door under the sign opens, and the tape is at the top of the snowy quarter pipe. LP12 0:40:48–0:40:51: out the door onto a painted H pad with an orange ring, tape about 2 s later.",
+    "Wind tunnel: same propeller trigger (PS12); the remake lights it blue (LP12 0:40:18).",
+    "1+2 loads extra collectibles into both secrets: stat points inside the wind tunnel and above the helicopter, the alien plushie in the helipad's left corner, the Vicarious Visions logo above the suspended lights. The secrets' reward value rises without changing their triggers.",
+    "Gap names: VG 'Instrument Landing' is 'Instrumental Landing' in PS12; PS12 adds 'Wing To Rail' (500), which has no VG label."
+  ],
+  "transfer": [
+    "Rotor-grind gate: make a large landmark machine (crane jib, ceiling fan, rotor) a travelling rail or trick rail reachable from two kickers beside it; grinding it opens a trick gate to an annex. Put the crystal there ≈ 1.5–2.5 m above a small quarter pipe's coping, inside this game's vert-air range.",
+    "Breadcrumb over the gate: hang a visible pickup row or crate line directly over the gate that will open, so the player looks at the doorway before and after the unlock.",
+    "Goal convergence: if the level has named-air challenges, put one of them on the kickers that reach the trigger so ordinary play parks the player beside the secret.",
+    "Opening-line pickup: put a non-crystal collectible over the first halfpipe straight out of spawn, taken with one vert air or spine transfer within 5 s, to teach that the spawn slope is a launch.",
+    "Second machine, second annex: a breakable wall at the end of the main halfpipe's axis, opened by grinding a propeller-like trick rail, leading to a lip-trick channel (quarter pipes both ends) as a reward room. Keep it continuous with the halfpipe so momentum carries in.",
+    "Keep crystal execution easy and failure cheap when the difficulty is discovery: flat apron, single quarter pipe, no hazards; a miss returns the player to the ramp within 2–3 s."
+  ],
+  "openQuestions": [
+    "Original point values of the gaps: only the 1+2 values (PS12) were verified; GameRevolution's original gap list sits behind a bot check and was not used.",
+    "When exactly the LP2 player broke the propeller wall: not isolated in 1-s samples (the wall is already open at 8:56).",
+    "Whether the helipad door and the wind-tunnel wall stay open across runs in the original (1+2 guides say the School II gym stays open; no statement found for the Hangar).",
+    "Is there a $50 icon by the west door that VG does not mark? Evidence for: the LP2 '50 bucks' message at 8:36 and the shrine's $500 cash total against VG's $450. Not seen directly.",
+    "All heights are estimates from VG proportions and LP2 frames; no measured values exist.",
+    "Which VG pilot-wing icon each LP2 pickup (7:52, 8:08, 8:14, 8:28) corresponds to is only partly established."
+  ]
+}

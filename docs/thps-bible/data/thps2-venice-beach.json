@@ -1,0 +1,2066 @@
+{
+  "id": "thps2-venice-beach",
+  "game": "THPS2",
+  "level": "Venice Beach",
+  "location": "Venice Beach, California",
+  "type": "career-street",
+  "careerPosition": 5,
+  "timeLimit": "2:00",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+    "LP2 34:20–41:00 (three runs; tape in run 1)",
+    "WEB rpgclassics.com THPS2 shrine, Venice Beach walkthrough",
+    "PS12 venice-beach",
+    "WEB thumbsticks, screenrant (1+2 tapes)",
+    "LP12 0:55:20–1:02:20"
+  ],
+  "goals": [
+    {
+      "text": "High Score 40,000 ($1,500)",
+      "version": "original"
+    },
+    {
+      "text": "Pro Score 100,000 ($1,750)",
+      "version": "original"
+    },
+    {
+      "text": "SICK Score 200,000 ($2,000)",
+      "version": "original"
+    },
+    {
+      "text": "Collect S-K-A-T-E ($1,250)",
+      "version": "original"
+    },
+    {
+      "text": "Ollie the Magic Bum 5x ($1,500)",
+      "version": "original"
+    },
+    {
+      "text": "Collect 5 Spray Cans ($1,250)",
+      "version": "original"
+    },
+    {
+      "text": "Tailslide Venice Ledge ($1,000)",
+      "version": "original"
+    },
+    {
+      "text": "Hit 4 VB Transfers ($1,500)",
+      "version": "original"
+    },
+    {
+      "text": "Find The Secret Tape ($1,250)",
+      "version": "original"
+    },
+    {
+      "text": "100% Goals and Cash ($500)",
+      "version": "original"
+    },
+    {
+      "text": "High Score 40,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Pro Score 100,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Sick Score 200,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "High Combo 20,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Collect S-K-A-T-E; Collect 5 Spray Cans; Ollie the Magic Bum 5x; Hit 4 VB Transfers; Tailslide Venice Ledge; Get the Secret Tape (plus stat points, Vicarious Visions logo, alien plushie)",
+      "version": "THPS 1+2"
+    }
+  ],
+  "size": {
+    "class": "medium",
+    "footprint": "≈ 105–125 × 55–70 m between the beach and the back fence; the table plaza ≈ 25 × 30 m",
+    "evidence": "VG scale anchored on the hexagonal concrete tables (assumed ≈ 2–2.5 m across, ≈ 50–55 map px), giving ≈ 0.04–0.045 m/px, the same scale that fits the Hangar render. Stair counts give heights: Massive 20 Set ≈ 3–3.5 m, Big Double 5 Set ≈ 1.7 m, Ledge 9 Set ≈ 1.5 m (≈ 0.17 m per step). Low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Start walkway",
+      "layer": "raised walkway above the plaza",
+      "features": [
+        "START",
+        "palm planters (Planter Pop, Shorty Planter Pop) behind",
+        "two stair sets down (Big Double 5 Set)",
+        "chainlink fence (Fence To Roof)",
+        "Bum spot 5"
+      ],
+      "notes": "North-east; faces south-west across the plaza."
+    },
+    {
+      "id": "Z2",
+      "name": "Pool",
+      "layer": "sunken bowl",
+      "features": [
+        "stair ledge entry",
+        "spray can over its wall",
+        "rim ('Round The Horn)",
+        "exits onto the roofs (Wee Lil'/Nice Mid Size/Siiiiiick Roof Gaps)"
+      ],
+      "notes": "Immediately left of spawn; the elevator to the roof ring."
+    },
+    {
+      "id": "Z3",
+      "name": "Central roofs",
+      "layer": "multi-level roofs (≈ 4–9 m)",
+      "features": [
+        "vents used as ramps",
+        "highest roof with a quarter pipe and the T",
+        "Roof 2 Ramp / Ramp 2 Roof link to the plaza",
+        "Uphill Canyon Jump, Canyon Jump"
+      ],
+      "notes": "The launch roof for the tape."
+    },
+    {
+      "id": "Z4",
+      "name": "Round building",
+      "layer": "round roof (≈ 5–7 m)",
+      "features": [
+        "skylight pyramid",
+        "central poles with radial cables",
+        "E on the rim",
+        "$250"
+      ],
+      "notes": "East; just below the highest roof."
+    },
+    {
+      "id": "Z5",
+      "name": "Table plaza",
+      "layer": "ground; wire layer above",
+      "features": [
+        "hexagonal concrete tables",
+        "palms",
+        "two utility poles with the High Wire and the tape",
+        "boarded tables (manual gaps)",
+        "benches",
+        "narrow quarter pipe (Up!/Up!!/And Away!!!)",
+        "wooden quarter pipe (Ramp 2 Roof)",
+        "star sculpture ($250)",
+        "graffiti wall"
+      ],
+      "notes": "The level's centre and the target under the tape."
+    },
+    {
+      "id": "Z6",
+      "name": "North-west roofs and courtyard",
+      "layer": "roofs (≈ 4–5 m), sunken grass courtyard",
+      "features": [
+        "S roof above the graffiti wall",
+        "Muska's Gap with the K",
+        "Lil' Vent Gap",
+        "grass courtyard under a banner (Bum 4, $100)",
+        "VB! Pit Transfer quarter pipes ($100)"
+      ],
+      "notes": "Second roof chain, opposite the central roofs."
+    },
+    {
+      "id": "Z7",
+      "name": "Beach edge, north and west",
+      "layer": "ground, perimeter vert",
+      "features": [
+        "Cake Transfer quarter pipes (can)",
+        "Tight Landing Transfer",
+        "VB! Huge Transfer!!!",
+        "West Side Transfer (can)",
+        "Bum spot 3",
+        "$50 planter"
+      ],
+      "notes": "Outer lap along the sand; the sand itself is the boundary."
+    },
+    {
+      "id": "Z8",
+      "name": "South beach-side roof and pit",
+      "layer": "long low roof; sunken pit",
+      "features": [
+        "candy-cane vent (manual)",
+        "Huge Roof 2 Ramp",
+        "pit with Bum spot 1",
+        "VB! Skinny / Fatty Transfers",
+        "Big Vent Gap",
+        "$250 + 2×$100"
+      ],
+      "notes": "Richest cash corner."
+    },
+    {
+      "id": "Z9",
+      "name": "South-east terrace",
+      "layer": "raised terrace (≈ 3–3.5 m) and stairs",
+      "features": [
+        "curved blue-and-white rail with the A",
+        "Massive 20 Set",
+        "Seaside Handrail",
+        "10 Point Landing (from the roof above)"
+      ],
+      "notes": "Steps down toward the beach level and the Venice Ledge court."
+    },
+    {
+      "id": "Z10",
+      "name": "Venice Ledge court",
+      "layer": "octagonal court and stairs",
+      "features": [
+        "Ledge 9 Set",
+        "The Venice Ledge ($100)",
+        "VB! Ledge Transfer",
+        "alcove with Bum spot 2 and a spray can"
+      ],
+      "notes": "South-east; the tailslide goal's real-world spot."
+    }
+  ],
+  "landmarks": [
+    "table plaza with palms and the High Wire poles",
+    "round building with radial cables",
+    "highest roof with its quarter pipe",
+    "pool beside the start",
+    "graffiti walls",
+    "Venice Ledge stairs",
+    "beach and ocean (boundary)"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "south-west, toward the table plaza (graffiti building on the left, fence and funbox on the right)",
+    "visibleCollectibles": [
+      "TAPE (likely; PS12)",
+      "CAN1 (pool, after turning left)"
+    ],
+    "notes": "LP2 34:38: the run opens on the start walkway with the plaza ahead, a graffitied building to the left, a fence and small ramp to the right and palms behind. PS12 says the tape becomes visible going straight down from the start, which makes it the first teaser (≈ 30 m away); this is not confirmed in LP2's small frames. Turning left drops into the pool within 2 s (LP2 34:39–34:41); from there the roof ring is 10 s away. Turning right leads along the fence to the north-west roofs (S, K)."
+  },
+  "collectibles": [
+    {
+      "id": "TAPE",
+      "type": "tape",
+      "label": "Secret tape over the High Wire above the table plaza",
+      "zone": "Z5",
+      "landmark": "above a cable strung between two utility poles across the table plaza (VG label The High Wire); the icon sits near the northern pole, on the side facing the central roofs",
+      "layer": "wire layer over the plaza; between the plaza and the top roof",
+      "heightM": "≈ 6–7 m above the plaza: wire ≈ 5–6 m at the poles, tape ≈ 1 m above it, ≈ 1–3 m below the edge of the highest roof it is reached from. Estimated from LP2 35:07–35:09 against the palms, the hexagonal tables (≈ 0.7 m tall) and the skater, and from the Big Drop bonus on landing. Low confidence",
+      "launchFrom": "the plaza-side edge of the highest roof (original, LP2); or a table top, ollieing up to grind the wire (1+2 guides)",
+      "visibility": {
+        "firstSight": "from the start: PS12 (1+2) says going straight down from the start shows the tape above the wire. In LP2 it is clearly framed from the highest roof's edge (35:07)",
+        "fromSpawn": "likely (on the main sightline ≈ 30 m ahead; not confirmed in LP2 frames)",
+        "reads": "glowing VHS icon against the sky just above a thin black cable; the cable, poles and palms are the plaza's only tall vertical objects",
+        "distanceFromFirstSightM": "≈ 20 m from the highest roof's edge; ≈ 30 m from spawn (VG proportions)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ledge",
+          "from": "spawn (turn left)",
+          "to": "stair ledge into the pool",
+          "geometry": "BS tailslide down the ledge beside the stairs (LP2 34:39–34:41)"
+        },
+        {
+          "step": 2,
+          "move": "manual + vert-air",
+          "from": "pool floor",
+          "to": "pool wall",
+          "geometry": "manual across, then a varial heelflip out of the wall for spray can 1 (LP2 34:42–34:45, '1 of 5 spray cans' at 34:43)"
+        },
+        {
+          "step": 3,
+          "move": "transfer",
+          "from": "pool's far wall",
+          "to": "low roof",
+          "geometry": "no comply + BS 50-50 up onto the roof: Wee Lil' Roof Gap (LP2 34:46–34:48). Nice Mid Size and Siiiiiick Roof Gaps are longer versions of the same exit"
+        },
+        {
+          "step": 4,
+          "move": "ollie",
+          "from": "low roof",
+          "to": "round building's roof",
+          "geometry": "rim of the round roof; letter E at 34:51 (timer 1:46)"
+        },
+        {
+          "step": 5,
+          "move": "wire",
+          "from": "round roof edge",
+          "to": "central roofs",
+          "geometry": "air off the rim, FS 50-50 up a cable to a white cylindrical vent, then FS tailslide and FS 50-50 along roof rails, landing in a manual (LP2 34:52–35:01)"
+        },
+        {
+          "step": 6,
+          "move": "vert-air",
+          "from": "quarter pipe on the highest roof",
+          "to": "T",
+          "geometry": "varial heelflip for the T, then a 540 varial heelflip + stalefish (LP2 35:02–35:06)"
+        },
+        {
+          "step": 7,
+          "move": "ride",
+          "from": "quarter pipe",
+          "to": "plaza-side edge of the highest roof",
+          "geometry": "≈ 15–20 m roll; the plaza, poles, wire and glowing tape are framed below (LP2 35:07)"
+        },
+        {
+          "step": 8,
+          "move": "ollie (drop)",
+          "from": "roof edge",
+          "to": "tape and then the plaza",
+          "geometry": "fly over the wire through the tape: 'Find the secret tape' with the Big Drop icon at timer 1:29, landing for Big Drop 1,200 (LP2 35:08–35:09)"
+        }
+      ],
+      "moves": [
+        "ledge",
+        "manual",
+        "vert-air",
+        "transfer",
+        "wire",
+        "ollie"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "holding speed across several roofs",
+        "a cable grind between roofs",
+        "landing a big drop (THPS2 tip: press X at impact)"
+      ],
+      "coupling": "none (no trigger)",
+      "failure": "Missing the tape from the roof costs the high ground: the drop lands safely in the plaza, but getting back to the highest roof takes ≈ 20–30 s (pool and roofs, or the plaza's wooden quarter pipe via Ramp 2 Roof and Vent 2 Roof Gap). From the plaza, the table/wire attempt can be retried in ≈ 3–5 s",
+      "timeFromSpawnS": "31 s from spawn (LP2 34:37 → 35:08), collecting spray can 1, E and T on the way; the final roll and drop take ≈ 2–3 s",
+      "difficulty": 3,
+      "roles": [
+        "TEASE",
+        "TEST",
+        "REWARD"
+      ],
+      "why": "The tape hangs where the plaza and the top roof meet, so one object answers two routes. The obvious ground route (table to wire) is precise; the long roof route is forgiving but teaches the level's main line.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 34:38–35:12 (1 s samples); shrine ('look around after you get the T'); PS12 venice-beach; WEB thumbsticks, screenrant (1+2)",
+      "confidence": "high for location and the LP2 route; low for heights"
+    },
+    {
+      "id": "E",
+      "type": "letter",
+      "label": "Letter E",
+      "zone": "Z4",
+      "landmark": "rim of the round building's roof (radial cables, skylight pyramid), just below the highest roof",
+      "layer": "roof edge",
+      "heightM": "≈ 1–2 m above the round roof, which is ≈ 5–7 m above the plaza (estimate)",
+      "launchFrom": "round roof",
+      "visibility": {
+        "firstSight": "from the low roof after the pool (LP2 34:49)",
+        "fromSpawn": "no",
+        "reads": "letter on the rim against sea and sky",
+        "distanceFromFirstSightM": "≈ 10–15 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "low roof",
+          "to": "round roof",
+          "geometry": "LP2 34:49–34:51 (timer 1:46)"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "speed control"
+      ],
+      "coupling": "none",
+      "failure": "The shrine warns that going too fast overshoots this roof and drops you to the ground (long climb back)",
+      "timeFromSpawnS": "14 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First letter on the roof ring; teaches that the round roof is a stepping stone.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 34:49–34:51; shrine",
+      "confidence": "high"
+    },
+    {
+      "id": "T",
+      "type": "letter",
+      "label": "Letter T",
+      "zone": "Z3",
+      "landmark": "above the quarter pipe on the highest roof",
+      "layer": "vert air on a roof",
+      "heightM": "≈ 3 m above the roof's quarter pipe; roof ≈ 7–9 m above the plaza (estimate)",
+      "launchFrom": "roof quarter pipe",
+      "visibility": {
+        "firstSight": "from the central roofs; a T icon floats at the top of the screen (LP2 35:02)",
+        "fromSpawn": "no",
+        "reads": "letter over a rooftop quarter pipe",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "roof quarter pipe",
+          "to": "T",
+          "geometry": "LP2 35:03–35:04 (timer 1:33)"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "fall back into the quarter pipe; a miss off the roof's side drops to a lower roof",
+      "timeFromSpawnS": "27 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE",
+        "TEASE"
+      ],
+      "why": "Puts the player on the tape's launch roof; the shrine's tape hint is literally to look around after the T.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 35:02–35:06; shrine",
+      "confidence": "high"
+    },
+    {
+      "id": "S",
+      "type": "letter",
+      "label": "Letter S",
+      "zone": "Z6",
+      "landmark": "roof of the long north-west building above the graffiti wall",
+      "layer": "roof",
+      "heightM": "≈ 1–2 m above a ≈ 4–5 m roof (estimate)",
+      "launchFrom": "chainlink fence grind / wallride up the graffiti wall",
+      "visibility": {
+        "firstSight": "from the plaza's north-west corner (LP2 35:17)",
+        "fromSpawn": "no",
+        "reads": "letter on a roof edge",
+        "distanceFromFirstSightM": "≈ 15 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "fence by the start walkway",
+          "to": "roof",
+          "geometry": "shrine: grind the fence to get to it; PS12: grind the chainlink fence, ollie up to the building"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "roof",
+          "to": "S",
+          "geometry": "LP2 35:15–35:19 (timer 1:19)"
+        }
+      ],
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "fall to the plaza or walkway",
+      "timeFromSpawnS": "42 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Opens the north-west roof chain (S → K).",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 35:13–35:21; shrine; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "K",
+      "type": "letter",
+      "label": "Letter K",
+      "zone": "Z6",
+      "landmark": "hanging over the gap between the S roof and the next roof (Muska's Gap)",
+      "layer": "roof gap",
+      "heightM": "≈ 1–2 m above roof level over a ≈ 4–5 m drop (estimate)",
+      "launchFrom": "S roof edge",
+      "visibility": {
+        "firstSight": "from the S roof (LP2 35:25)",
+        "fromSpawn": "no",
+        "reads": "letter over a gap between roofs",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "S roof",
+          "to": "next roof",
+          "geometry": "jump the gap through the K; LP2 35:27 (timer 1:11), Muska's Gap scored at 35:28"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "fall into the alley between buildings",
+      "timeFromSpawnS": "50 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEST"
+      ],
+      "why": "A letter as gap marker: the K says 'jump here'.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 35:25–35:29; shrine; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "A",
+      "type": "letter",
+      "label": "Letter A",
+      "zone": "Z9",
+      "landmark": "above the curved blue-and-white rail on the raised south-east terrace at the head of the Massive 20 Set",
+      "layer": "rail on a terrace",
+      "heightM": "≈ 1–2 m above the rail; terrace ≈ 3–3.5 m above the foot of the 20-step stairs (≈ 0.17 m per step)",
+      "launchFrom": "curved rail",
+      "visibility": {
+        "firstSight": "from the terrace",
+        "fromSpawn": "no",
+        "reads": "letter over a curved rail",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "terrace",
+          "to": "curved rail",
+          "geometry": "no comply onto the rail, BS 50-50 along it, 'Collect S-K-A-T-E' (LP2 36:11–36:13, timer 0:25)"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "fall off the terrace or down the stairs",
+      "timeFromSpawnS": "96 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Shows the south-east terrace and its 20-set. The shrine places the A on a roof reached from the plaza's wooden quarter pipe, and 1+2 puts it in the roof chain.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 36:11–36:13; shrine; PS12",
+      "confidence": "medium (positions differ between sources)"
+    },
+    {
+      "id": "CAN1",
+      "type": "goal-object",
+      "label": "Spray can over the pool",
+      "zone": "Z2",
+      "landmark": "pool's quarter-pipe wall, left of spawn",
+      "layer": "vert air",
+      "heightM": "≈ 1.5–2.5 m above the coping (estimate)",
+      "launchFrom": "pool wall",
+      "visibility": {
+        "firstSight": "turning left at spawn",
+        "fromSpawn": "likely",
+        "reads": "floating spray can",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "pool floor",
+          "to": "can",
+          "geometry": "'1 of 5 spray cans' (LP2 34:43, 6 s after spawn)"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "roll back into the pool",
+      "timeFromSpawnS": "6 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First pickup sits on the tape's roof route.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 34:43",
+      "confidence": "high"
+    },
+    {
+      "id": "CAN2",
+      "type": "goal-object",
+      "label": "Spray can at the west beach quarter pipes",
+      "zone": "Z7",
+      "landmark": "between two quarter pipes by the beach (West Side Transfer)",
+      "layer": "vert air",
+      "heightM": "≈ 2 m (estimate)",
+      "launchFrom": "quarter pipes",
+      "visibility": {
+        "firstSight": "from the west walkway",
+        "fromSpawn": "no",
+        "reads": "spray can",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "quarter pipe",
+          "to": "can",
+          "geometry": "West Side Transfer, '2 of 5' (LP2 35:35)"
+        }
+      ],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "58 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches a beach transfer pair.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 35:35",
+      "confidence": "high"
+    },
+    {
+      "id": "CAN3",
+      "type": "goal-object",
+      "label": "Spray can at the north-west wooden quarter pipe",
+      "zone": "Z7",
+      "landmark": "end of the beach walkway (Cake Transfer)",
+      "layer": "vert air",
+      "heightM": "≈ 2 m (estimate)",
+      "launchFrom": "quarter pipes",
+      "visibility": {
+        "firstSight": "from the north walkway",
+        "fromSpawn": "no",
+        "reads": "spray can",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "quarter pipe",
+          "to": "can",
+          "geometry": "Cake Transfer, '3 of 5' (LP2 35:47)"
+        }
+      ],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "70 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the Cake/Tight Landing/VB Huge transfer cluster.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 35:47",
+      "confidence": "high"
+    },
+    {
+      "id": "CAN4",
+      "type": "goal-object",
+      "label": "Spray can over the low ledge below the start steps",
+      "zone": "Z5",
+      "landmark": "north edge of the plaza, right of the steps from spawn (VG CAN by the bench and palm)",
+      "layer": "ledge",
+      "heightM": "≈ 1.5 m (estimate)",
+      "launchFrom": "ledge",
+      "visibility": {
+        "firstSight": "from spawn going down the steps",
+        "fromSpawn": "likely",
+        "reads": "spray can",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ledge",
+          "from": "plaza",
+          "to": "can",
+          "geometry": "'4 of 5' (LP2 36:03)"
+        }
+      ],
+      "moves": [
+        "ledge"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "86 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Rewards turning right at the bottom of the start steps.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 36:01–36:03",
+      "confidence": "medium"
+    },
+    {
+      "id": "CAN5",
+      "type": "goal-object",
+      "label": "Spray can at the graffiti quarter pipe by the Venice Ledge",
+      "zone": "Z10",
+      "landmark": "alcove beside Bum 2, left of the wooden quarter pipe's slope",
+      "layer": "vert air",
+      "heightM": "≈ 2 m (estimate)",
+      "launchFrom": "graffiti quarter pipe",
+      "visibility": {
+        "firstSight": "from the south-east",
+        "fromSpawn": "no",
+        "reads": "spray can",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "quarter pipe",
+          "to": "can",
+          "geometry": "'Collect 5 spray cans' (LP2 36:21)"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "104 s (LP2)",
+      "difficulty": 2,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Leads to the Venice Ledge court (tailslide goal next door).",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 36:21",
+      "confidence": "medium"
+    },
+    {
+      "id": "BUM",
+      "type": "goal-object",
+      "label": "Ollie the Magic Bum 5x (one moving target)",
+      "zone": "Z8 → Z10 → Z7 → Z6 → Z1",
+      "landmark": "a homeless man who moves to the next spot after each ollie, in a fixed order",
+      "layer": "ground",
+      "heightM": "standing figure ≈ 1.8 m (ollie over him)",
+      "launchFrom": "ground",
+      "visibility": {
+        "firstSight": "spot 1 from the long graffiti wall",
+        "fromSpawn": "no",
+        "reads": "pedestrian character",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "south pit (spot 1)",
+          "to": "over the bum",
+          "geometry": "PS12: small area at the end of the long graffitied wall"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "bottom of the slope by the Venice Ledge (spot 2)",
+          "to": "over the bum",
+          "geometry": "PS12"
+        },
+        {
+          "step": 3,
+          "move": "ollie",
+          "from": "north fence by the S building (spot 3)",
+          "to": "over the bum",
+          "geometry": "PS12"
+        },
+        {
+          "step": 4,
+          "move": "ollie",
+          "from": "grass under the big banner (spot 4)",
+          "to": "over the bum",
+          "geometry": "PS12"
+        },
+        {
+          "step": 5,
+          "move": "ollie",
+          "from": "next to spawn (spot 5)",
+          "to": "over the bum",
+          "geometry": "PS12; VG numbers the spots 1–5 in this order"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "moving-object: sequential relocation",
+      "failure": "a missed ollie only costs a turn; the travel between spots is the real cost",
+      "timeFromSpawnS": "LP2 shows '2 of 5 bums' at 39:52 (run 3)",
+      "difficulty": 2,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "A moving goal object that walks the player through five districts in order.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (Bum 1–5); PS12; LP2 39:52",
+      "confidence": "high"
+    },
+    {
+      "id": "VBT",
+      "type": "objective",
+      "label": "Hit 4 VB Transfers",
+      "zone": "Z7, Z8, Z10",
+      "landmark": "VB! Huge Transfer!!!, VB! Pit Transfer, VB! Skinny Transfer, VB! Ledge Transfer",
+      "layer": "vert transfers",
+      "heightM": "—",
+      "launchFrom": "quarter-pipe pairs",
+      "visibility": {
+        "firstSight": "perimeter quarter pipes",
+        "fromSpawn": "partly",
+        "reads": "named transfer pairs",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "north-west wooden quarter pipe",
+          "to": "over the middle one into the next",
+          "geometry": "VB! Huge Transfer!!! (needs lots of speed; PS12)"
+        },
+        {
+          "step": 2,
+          "move": "transfer",
+          "from": "beach quarter pipe",
+          "to": "opposite pair",
+          "geometry": "VB! Pit Transfer (LP2 40:08)"
+        },
+        {
+          "step": 3,
+          "move": "transfer",
+          "from": "pit quarter pipe",
+          "to": "over the skinny wall",
+          "geometry": "VB! Skinny Transfer"
+        },
+        {
+          "step": 4,
+          "move": "transfer",
+          "from": "upper quarter pipe",
+          "to": "lower quarter pipe",
+          "geometry": "VB! Ledge Transfer at the Venice Ledge court"
+        }
+      ],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "high",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap individually; spread over the level",
+      "timeFromSpawnS": "goal complete at LP2 38:36 (run 2)",
+      "difficulty": 3,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Tours the beach and pit vert spots.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 37:16–38:36",
+      "confidence": "high"
+    },
+    {
+      "id": "TAIL",
+      "type": "objective",
+      "label": "Tailslide Venice Ledge",
+      "zone": "Z10",
+      "landmark": "the ledge running down the stairs in the octagonal south-east court",
+      "layer": "ledge",
+      "heightM": "ledge ≈ 0.5 m",
+      "launchFrom": "top of the stairs",
+      "visibility": {
+        "firstSight": "from the court",
+        "fromSpawn": "no",
+        "reads": "long stair ledge",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ledge",
+          "from": "top of the 9-set",
+          "to": "bottom",
+          "geometry": "BS tailslide, goal plus $100 (LP2 36:31–36:33)"
+        }
+      ],
+      "moves": [
+        "ledge"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "a named grind (tailslide)"
+      ],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "LP2 36:33",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "A named trick on a named real-world spot; the $100 rides on the same ledge.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; shrine; LP2 36:31–36:33",
+      "confidence": "high"
+    },
+    {
+      "id": "$1",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z7",
+      "landmark": "palm planter on the north beach walkway (Planter Pop)",
+      "layer": "ground",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$2",
+      "type": "cash",
+      "label": "$250",
+      "zone": "Z5",
+      "landmark": "star-shaped sculpture at the plaza's north side",
+      "layer": "above a sculpture",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie",
+        "kicker"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$3",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z1",
+      "landmark": "start walkway, by the fence and shorty planter",
+      "layer": "ground",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$4",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z7",
+      "landmark": "west beach edge by a quarter pipe",
+      "layer": "ground",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "low"
+    },
+    {
+      "id": "$5",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z6",
+      "landmark": "sunken grass courtyard under the banner (Bum 4)",
+      "layer": "ground",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$6",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z6",
+      "landmark": "VB! Pit Transfer quarter pipes",
+      "layer": "vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 40:08 '100 bucks!' with VB! Pit Transfer",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 40:08",
+      "confidence": "high"
+    },
+    {
+      "id": "$7",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z8",
+      "landmark": "candy-cane vent on the beach-side roof",
+      "layer": "roof",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "manual"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$8",
+      "type": "cash",
+      "label": "$250",
+      "zone": "Z8",
+      "landmark": "sunken pit with Bum 1 (Huge Roof 2 Ramp landing)",
+      "layer": "pit / vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$9",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z8",
+      "landmark": "Fatty Transfer quarter pipes in the pit",
+      "layer": "vert",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "transfer"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$10",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z9",
+      "landmark": "Canyon Jump between the central and south-east roofs",
+      "layer": "roof gap",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$11",
+      "type": "cash",
+      "label": "$250",
+      "zone": "Z4",
+      "landmark": "centre of the round roof by the skylight",
+      "layer": "roof",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$12",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z10",
+      "landmark": "on The Venice Ledge",
+      "layer": "ledge",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ledge"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "taken with the tailslide goal (LP2 36:33)",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; LP2 36:33",
+      "confidence": "high"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "The High Wire",
+      "points": 1000,
+      "kind": "wire",
+      "location": "cable between the plaza's utility poles (tape)",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Wee Lil' Roof Gap",
+      "points": 250,
+      "kind": "roof",
+      "location": "out of the pool onto the roof, close to the wall",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 34:47"
+    },
+    {
+      "name": "Nice Mid Size Roof Gap",
+      "points": 500,
+      "kind": "roof",
+      "location": "out of the pool onto the roof, a few feet from the walls",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Siiiiiick Roof Gap!!!",
+      "points": 1000,
+      "kind": "roof",
+      "location": "out of the pool onto the roof, far from the walls",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (as 'Siiiick'); PS12"
+    },
+    {
+      "name": "'Round The Horn",
+      "points": 2500,
+      "kind": "other",
+      "location": "grind the pool's entire rim",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Big Double 5 Set",
+      "points": 500,
+      "kind": "other",
+      "location": "both start stair sets in one jump (≈ 10 steps ≈ 1.7 m)",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Planter Pop",
+      "points": 500,
+      "kind": "over-object",
+      "location": "palm planter lengthways, behind the start",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$1"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Shorty Planter Pop",
+      "points": 200,
+      "kind": "over-object",
+      "location": "palm planter widthways, behind the start",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Table Pop",
+      "points": 200,
+      "kind": "over-object",
+      "location": "over a plaza table",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 39:12"
+    },
+    {
+      "name": "He Could Go...",
+      "points": 250,
+      "kind": "manual",
+      "location": "tables bridged by boards: first stage",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (green); PS12"
+    },
+    {
+      "name": "All The Way...",
+      "points": 500,
+      "kind": "manual",
+      "location": "boarded tables: second stage",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (green); PS12"
+    },
+    {
+      "name": "Touchdown!!!",
+      "points": 1000,
+      "kind": "manual",
+      "location": "boarded tables: full length",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (green); PS12"
+    },
+    {
+      "name": "Bench Trippin!",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "two benches at the back of the table area",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Ledge 2 Ledge",
+      "points": 500,
+      "kind": "ledge-to-ledge",
+      "location": "two more benches near them",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Up! / Up!! / And Away!!!",
+      "points": "100 / 250 / 500",
+      "kind": "lip",
+      "location": "narrow quarter pipe on the right of the table area (height thresholds)",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Ramp 2 Roof",
+      "points": 500,
+      "kind": "channel",
+      "location": "plaza wooden quarter pipe up to the roof quarter pipe",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "A (shrine route)"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Roof 2 Ramp",
+      "points": 500,
+      "kind": "channel",
+      "location": "highest roof's quarter pipe down to the plaza's wooden quarter pipe",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Vent 2 Roof Gap",
+      "points": 750,
+      "kind": "kicker",
+      "location": "vent used as a ramp up to the higher roof",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "T"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; shrine"
+    },
+    {
+      "name": "Uphill Canyon Jump",
+      "points": 750,
+      "kind": "roof",
+      "location": "from the ramp roof up to the roof on the right",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 39:36"
+    },
+    {
+      "name": "Canyon Jump",
+      "points": 250,
+      "kind": "roof",
+      "location": "curved-quarter-pipe roof across to the lower roof",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$10"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "10 Point Landing!",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "roof drop onto the Seaside rail",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Seaside Handrail",
+      "points": 200,
+      "kind": "other",
+      "location": "blue rail down the slope beside the Massive 20 Set",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Massive 20 Set!",
+      "points": 1000,
+      "kind": "other",
+      "location": "20-step stair set (≈ 3–3.5 m drop)",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "A"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Big Vent Gap",
+      "points": 1000,
+      "kind": "kicker",
+      "location": "vent as a ramp to the next roof (south side)",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Lil' Vent Gap",
+      "points": 500,
+      "kind": "kicker",
+      "location": "vent as a ramp over a small gap on the north-west roofs",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "S",
+        "K"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Muska's Gap",
+      "points": 500,
+      "kind": "roof",
+      "location": "S roof to the next roof (K)",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "K"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 35:28"
+    },
+    {
+      "name": "Candy Cane Manual",
+      "points": 750,
+      "kind": "manual",
+      "location": "manual across the curved vent on the beach-side roof",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [
+        "$7"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png (green); PS12"
+    },
+    {
+      "name": "Huge Roof 2 Ramp",
+      "points": 1000,
+      "kind": "channel",
+      "location": "beach-side roof's quarter pipe down into the pit",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "$8"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Huge Ramp 2 Roof",
+      "points": "unknown",
+      "kind": "channel",
+      "location": "pit quarter pipe back up to the roof",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png only (not in PS12)"
+    },
+    {
+      "name": "VB! Skinny Transfer",
+      "points": 100,
+      "kind": "channel",
+      "location": "two pit quarter pipes over the skinny wall",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "VBT"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Fatty Transfer",
+      "points": 1000,
+      "kind": "channel",
+      "location": "the opposite, wider pit quarter pipes",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "$9"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "VB! Pit Transfer",
+      "points": 500,
+      "kind": "channel",
+      "location": "beach quarter pipe over to the opposite pair",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "VBT",
+        "$6"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 40:08"
+    },
+    {
+      "name": "VB! Huge Transfer!!!",
+      "points": 1000,
+      "kind": "channel",
+      "location": "north-west wooden quarter pipe over the middle one into the next",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "VBT"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Cake Transfer",
+      "points": 250,
+      "kind": "channel",
+      "location": "two small quarter pipes separated by a block",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "CAN3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 35:47"
+    },
+    {
+      "name": "Tight Landing Transfer",
+      "points": 500,
+      "kind": "channel",
+      "location": "from the quarter pipe ahead to the small one below on the left",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "West Side Transfer",
+      "points": 250,
+      "kind": "channel",
+      "location": "two adjacent beach quarter pipes",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "CAN2"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 35:35"
+    },
+    {
+      "name": "VB! Ledge Transfer",
+      "points": 500,
+      "kind": "channel",
+      "location": "upper to lower quarter pipe at the Venice Ledge court",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "VBT"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "Ledge 9 Set",
+      "points": 250,
+      "kind": "other",
+      "location": "steps at the Venice Ledge (≈ 1.5 m)",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "name": "The Venice Ledge",
+      "points": 250,
+      "kind": "ledge",
+      "location": "ledge down the stairs",
+      "moves": [
+        "ledge"
+      ],
+      "onRouteOf": [
+        "TAIL",
+        "$12"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 36:31"
+    },
+    {
+      "name": "On The Fence",
+      "points": 500,
+      "kind": "other",
+      "location": "from the wooden quarter pipe, grind the right-hand walls and fences down to the pool",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "PS12 only"
+    },
+    {
+      "name": "Fence To Roof",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "chainlink fence at the start up onto the roof on the left",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "S"
+      ],
+      "evidence": "PS12 only"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "Ollie the magic bum",
+      "opens": "He walks to the next of five fixed spots (south pit → Venice Ledge slope → north fence → banner grass → start)",
+      "neededFor": [
+        "BUM"
+      ],
+      "evidence": "PS12; VG TonyHawk_sProSkater2-VeniceBeach,California.png (Bum 1–5)"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Pool to roof ring (tape line)",
+      "sequence": [
+        "spawn",
+        "stair ledge",
+        "pool (can 1)",
+        "Wee Lil' Roof Gap",
+        "round roof (E)",
+        "cable and rail grinds",
+        "highest-roof quarter pipe (T)",
+        "roof edge",
+        "drop through the tape"
+      ],
+      "links": [
+        "manual",
+        "transfer",
+        "grind"
+      ],
+      "collectibles": [
+        "CAN1",
+        "E",
+        "T",
+        "TAPE"
+      ],
+      "why": "The level's main line: 4 pickups in 31 s, from ground to top roof and back to the plaza.",
+      "evidence": "LP2 34:38–35:09"
+    },
+    {
+      "id": "L2",
+      "name": "Fence to north-west roofs",
+      "sequence": [
+        "start walkway",
+        "chainlink fence grind (Fence To Roof / On The Fence)",
+        "S roof",
+        "Muska's Gap (K)",
+        "Lil' Vent Gap"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "S",
+        "K"
+      ],
+      "why": "A second roof chain, entered by grinding a fence.",
+      "evidence": "LP2 35:13–35:29; PS12; shrine"
+    },
+    {
+      "id": "L3",
+      "name": "Boarded tables",
+      "sequence": [
+        "boarded table",
+        "He Could Go...",
+        "All The Way...",
+        "Touchdown!!!"
+      ],
+      "links": [
+        "manual"
+      ],
+      "collectibles": [],
+      "why": "A three-stage manual threshold on one object, in the middle of the plaza.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "id": "L4",
+      "name": "Benches and tables",
+      "sequence": [
+        "Table Pop",
+        "Bench Trippin!",
+        "Ledge 2 Ledge"
+      ],
+      "links": [
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [],
+      "why": "Low street line under the wire.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; LP2 39:12"
+    },
+    {
+      "id": "L5",
+      "name": "Plaza up to the top roof and back",
+      "sequence": [
+        "plaza wooden quarter pipe",
+        "Ramp 2 Roof",
+        "Vent 2 Roof Gap",
+        "highest roof",
+        "Roof 2 Ramp"
+      ],
+      "links": [
+        "transfer"
+      ],
+      "collectibles": [
+        "T"
+      ],
+      "why": "The quick lift from the plaza to the top roof; the tape's retry path from the ground.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12; shrine (T via the vent)"
+    },
+    {
+      "id": "L6",
+      "name": "Beach transfer chain",
+      "sequence": [
+        "Cake Transfer",
+        "Tight Landing Transfer",
+        "VB! Huge Transfer!!!",
+        "West Side Transfer",
+        "VB! Pit Transfer"
+      ],
+      "links": [
+        "transfer"
+      ],
+      "collectibles": [
+        "CAN2",
+        "CAN3",
+        "VBT",
+        "$6"
+      ],
+      "why": "Perimeter vert along the sand, carrying 2 cans and 2 VB transfers.",
+      "evidence": "LP2 35:35–35:53, 37:16–38:36, 40:08"
+    },
+    {
+      "id": "L7",
+      "name": "South roof and pit",
+      "sequence": [
+        "Candy Cane Manual",
+        "Huge Roof 2 Ramp",
+        "pit (Bum 1)",
+        "VB! Skinny / Fatty Transfer",
+        "Big Vent Gap"
+      ],
+      "links": [
+        "manual",
+        "transfer"
+      ],
+      "collectibles": [
+        "$7",
+        "$8",
+        "$9",
+        "VBT"
+      ],
+      "why": "Roof manual into a vert pit; the richest cash corner ($450).",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    },
+    {
+      "id": "L8",
+      "name": "South-east terrace",
+      "sequence": [
+        "curved rail (A)",
+        "Massive 20 Set or Seaside Handrail",
+        "10 Point Landing (from the roof above)"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "A"
+      ],
+      "why": "Stairs and rails descending to the beach level.",
+      "evidence": "LP2 36:11–36:13; PS12"
+    },
+    {
+      "id": "L9",
+      "name": "Venice Ledge court",
+      "sequence": [
+        "Ledge 9 Set",
+        "The Venice Ledge (tailslide)",
+        "VB! Ledge Transfer"
+      ],
+      "links": [
+        "grind",
+        "transfer"
+      ],
+      "collectibles": [
+        "TAIL",
+        "$12",
+        "CAN5"
+      ],
+      "why": "Named real-world spot with a trick-specific goal.",
+      "evidence": "LP2 36:21–36:33; PS12"
+    },
+    {
+      "id": "L10",
+      "name": "Pool rim",
+      "sequence": [
+        "'Round The Horn (whole rim)",
+        "roof gaps out of the pool"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "CAN1"
+      ],
+      "why": "The pool next to spawn is both a score loop and the elevator to the roofs.",
+      "evidence": "VG TonyHawk_sProSkater2-VeniceBeach,California.png; PS12"
+    }
+  ],
+  "guidance": [
+    "The plaza and its two utility poles lie straight ahead of spawn; the cable is the plaza's only overhead line and the tape glows above it (PS12; LP2 35:07).",
+    "The pool beside the spawn walkway visibly backs onto low roofs, inviting the roof ring (LP2 34:39–34:48).",
+    "Letters on roof edges and rims read against the sky and the sea (E at the round roof's rim, LP2 34:49–34:51; T above the top roof's quarter pipe, LP2 35:02).",
+    "From the highest roof the whole plaza and the wire are framed below, and the roof edge points at the tape: the shrine's hint is to look around after the T.",
+    "Spray cans float above perimeter quarter pipes and teach where the VB transfer pairs are.",
+    "The magic bum relocates to the next spot after each ollie, so the goal itself guides the player around the level (PS12).",
+    "Heights are the only hazard seen: overshooting a roof drops the player to a lower layer (shrine warning at the E). LP2 shows no water or kill hazard; the beach is the outer boundary on VG."
+  ],
+  "designLogic": [
+    "A two-way tape: the High Wire hangs between the plaza (tables) and the top roof, so the tape can be taken bottom-up (table → wire grind, the 1+2 guides' route) or top-down (drop from the highest roof, the LP2 route). One placement serves a short precise route and a long forgiving one.",
+    "The tape is the first teaser: on the main sightline from spawn, ≈ 30 m away (PS12), long before the player knows how to reach it. The roof ring around the plaza is the answer.",
+    "The roof ring is the level's spine: pool → low roof → round roof → cables → highest roof gathers one can, two letters and the tape in 31 s (LP2). The letters E and T mark it.",
+    "The pool next to spawn works as an elevator: three named exits (Wee Lil', Nice Mid Size, Siiiiiick Roof Gap) grade the same move by distance from the wall.",
+    "Graded thresholds on single objects recur: planters (two pops), the narrow quarter pipe (Up!/Up!!/And Away!!!), boarded tables (He Could Go.../All The Way.../Touchdown!!!), pool exits. One object yields several difficulty steps.",
+    "Cables are a navigation layer: radial cables on the round roof carry the player between roofs (LP2 34:55–34:58), and the tape sits on the plaza's cable. Wire grinds are introduced as connectors before the tape asks for one (1+2 route).",
+    "No unlocks at career position 5: after the Hangar's trigger-gated tape and School II's speed-gated roof, Venice's tape is in plain sight and is gated only by chaining roofs at speed.",
+    "Failure cost scales with height: plaza misses are cheap, but losing the roof ring costs ≈ 20–30 s, so the top-down route gives one attempt per climb. The plaza route (Ramp 2 Roof → Vent 2 Roof) is the designed way back up.",
+    "Goal objects teach the perimeter: spray cans on four perimeter vert spots and the pool; the bum's five spots cover the pit, the south-east, the north fence, the banner courtyard and spawn.",
+    "Cash rewards hard corners: three $250 icons sit at the plaza sculpture, the round roof and the south pit, and the 12 icons total $1,500 (VG; matches the shrine's '$500 + $1500').",
+    "Scores scale with the career: Pro 100,000 and Sick 200,000, against the Hangar's 25,000/75,000, assume the long roof lines and manual chains the layout offers.",
+    "Letter placement maps the two roof chains: E and T on the central/round roofs, S and K on the north-west roofs, A on the south-east terrace. Collecting S-K-A-T-E means touring every raised zone."
+  ],
+  "remakeChanges": [
+    "Goals unchanged except for the added High Combo 20,000 (PS12).",
+    "Letters: PS12 (1+2) describes a single roof chain S → K → A → T → E (fence onto a building; K over a gap; grind the graffitied wall to the next roof for A; kicker to a roof with T over a quarter pipe; drop to the lower roof for E above a short ramp). In the original, A sits on the south-east terrace's curved rail (VG; LP2 36:13) and E on the round roof's rim (LP2 34:51). The remake appears to move A into the roof chain (inferred from text; not verified in LP12).",
+    "Tape: the 1+2 guides all describe the ground-up route. PS12: from a table, ollie up and grind the wire, which is precise. Thumbsticks: boost off the ramp, land, skate back to the second table on the left and ramp off it. Screenrant: max Speed, Air and Ollie stats help. LP2's original run uses the top-down roof drop instead. 1+2 keeps the top-down option: its street stat point is reached by ollieing off the end of the highest roof toward the wire.",
+    "Lighting: midday in the original (LP2) vs sunset in 1+2 (LP12 0:55–1:02), with denser graffiti. The wire still crosses the plaza's sky (LP12 0:55:38).",
+    "Gap list: PS12 adds On The Fence and Fence To Roof (not labelled on VG); VG's Huge Ramp 2 Roof is absent from PS12.",
+    "1+2 adds stat points (by the wire, on the roofs, above a banner rail and over a beach fence), the Vicarious Visions logo (up a wooden quarter pipe onto a wall, then a ramp) and the alien plushie (end of the wooden beach path)."
+  ],
+  "transfer": [
+    "High-wire crystal: string a rope or travelling rail from a roof edge down to a pole over a picnic plaza and hang the crystal ≈ 1 m above it near the high end. Bottom-up: from a ≈ 0.8 m table a full ollie peaks at ≈ 2.6 m, and the 2.1 m snap radius catches a wire up to ≈ 4.5 m, so drop the wire's low end to ≈ 4 m and let the grind carry up to the crystal. Top-down: the roof ring ends at an edge facing the crystal; ollie off through it.",
+    "Pool-as-elevator beside spawn: a bowl whose far wall transfers onto a low roof, with three graded exits (near, mid, far from the wall) that later serve as score gaps.",
+    "Roof ring with breadcrumbs: place 2–3 secondary pickups (crates or letters) on the ring before the crystal's launch roof (rim of a round roof, a rooftop quarter pipe) so the ring is learned before it is needed.",
+    "Visible tease: put the crystal on the spawn sightline ≈ 30 m away, above the plaza, so the level's first question is 'how do I get up there?'.",
+    "Moving pickup tour: a collectible that hops to the next of five fixed spots each time it is touched, leading the player through the districts in a fixed order.",
+    "Height-scaled failure: keep plaza retries cheap (table and wire within 3–5 s) and give the top-down route a designed lift back up (quarter pipe → roof → vent kicker) of ≈ 20 s."
+  ],
+  "openQuestions": [
+    "The original A position: VG and LP2 put it on the south-east terrace rail, the shrine says 'a different roof, use the quarterpipe where all the tables are', and PS12 (1+2) puts it in the roof chain. Two editions or two readings of one spot?",
+    "Wire heights and the tape's exact height are estimates. Whether the original wire's low end is reachable from a table with stock stats is not shown (1+2 guides say it is precise and stat-dependent).",
+    "Original gap point values (only 1+2 values verified) and the points for VG's Huge Ramp 2 Roof.",
+    "Whether the bum's five spots and order are identical in the original (VG numbering matches PS12's order).",
+    "Which roof is the 'highest' in the shrine's T description: LP2 confirms the T over a quarter pipe on the roof facing the plaza; its height relative to the round roof is estimated only."
+  ]
+}

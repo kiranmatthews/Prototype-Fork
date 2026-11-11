@@ -1,0 +1,2274 @@
+{
+  "id": "thps2-school-ii",
+  "game": "THPS2",
+  "level": "School II",
+  "location": "Southern California (a composite of real San Diego-area school spots: Rancho Buena Vista crest, the Carlsbad gap and 11-set)",
+  "type": "career-street",
+  "careerPosition": 2,
+  "timeLimit": "2:00",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+    "LP2 11:20–18:20 (four runs; tape in run 3)",
+    "WEB rpgclassics.com THPS2 shrine, School II walkthrough",
+    "PS12 school-ii",
+    "WEB halfglassgaming, thumbsticks, screenrant (1+2 tapes)",
+    "WEB steamcommunity THPS HD 'The Gym in School II'",
+    "WEB gamertweak (1+2 gym)",
+    "LP12 0:42:30–0:48:40",
+    "REPO docs/warehouse-flow/research-maps.md"
+  ],
+  "goals": [
+    {
+      "text": "High Score 15,000 ($200)",
+      "version": "original"
+    },
+    {
+      "text": "Pro Score 40,000 ($350)",
+      "version": "original"
+    },
+    {
+      "text": "SICK Score 100,000 ($500)",
+      "version": "original"
+    },
+    {
+      "text": "Collect S-K-A-T-E ($400)",
+      "version": "original"
+    },
+    {
+      "text": "Wallride 5 Bells ($500)",
+      "version": "original"
+    },
+    {
+      "text": "Collect 5 Hall Passes ($400)",
+      "version": "original"
+    },
+    {
+      "text": "Kickflip TC's Roof Gap ($400)",
+      "version": "original"
+    },
+    {
+      "text": "Grind 3 Roll Call Rails ($500)",
+      "version": "original"
+    },
+    {
+      "text": "Find The Secret Tape ($500)",
+      "version": "original"
+    },
+    {
+      "text": "100% Goals and Cash ($500)",
+      "version": "original"
+    },
+    {
+      "text": "High Score 15,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Pro Score 70,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Sick Score 125,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "High Combo 10,000",
+      "version": "THPS 1+2"
+    },
+    {
+      "text": "Collect S-K-A-T-E; Collect 5 Hall Passes; Grind 3 Roll Call Rails; Kickflip TC's Roof Gap; Get the Secret Tape; Wallride 5 Bells (plus stat points, Vicarious Visions logo, alien plushie)",
+      "version": "THPS 1+2"
+    }
+  ],
+  "size": {
+    "class": "large",
+    "footprint": "≈ 150–200 × 100–140 m walkable bounding box across nine districts; the library courtyard alone ≈ 60–70 × 35–40 m",
+    "evidence": "VG scale anchored on the TC's Roof portables (≈ 7–8 m wide, typical portable classroom) giving ≈ 0.08 m per map pixel; cross-check: the gym court then measures ≈ 26 m, a regulation high-school court; the K quarter pipe to library planter run-up then measures ≈ 39 m, matching LP2's ≈ 4 s at skating speed (17:07–17:11). Low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Start terrace",
+      "layer": "raised terrace (≈ 2–3 m over the table court)",
+      "features": [
+        "START",
+        "planter (Planter On Edge)",
+        "arch quarter pipe (Arch Extension)",
+        "bell 1 over a small ramp",
+        "hall-pass rail",
+        "stairs with the Nightmare rail",
+        "terrace edge (Leap Of Faith!!!)"
+      ],
+      "notes": "South-east corner; three exits: right into the narrow hall, down the stairs or drop to the table court, up onto the roofs."
+    },
+    {
+      "id": "Z2",
+      "name": "Narrow hall",
+      "layer": "ground corridor",
+      "features": [
+        "ledge/rail with the S",
+        "lockers"
+      ],
+      "notes": "Runs north from the start to the library courtyard (the shrine's 'tunnel')."
+    },
+    {
+      "id": "Z3",
+      "name": "Library courtyard",
+      "layer": "ground, raised stage, awnings",
+      "features": [
+        "figure-eight raised stage of two octagons with rails",
+        "large wooden quarter pipe with the K in front of the Rancho Buena Vista crest",
+        "tire treads across the stage",
+        "grass",
+        "planters, benches",
+        "north and south covered walkways with awnings"
+      ],
+      "notes": "The tape line's run-up; the library façade closes its west end."
+    },
+    {
+      "id": "Z4",
+      "name": "Library and East Wing roofs",
+      "layer": "two-storey roofs, wall-mounted flagpoles",
+      "features": [
+        "library roof ($50)",
+        "raised block at its far edge",
+        "gap with the tape",
+        "angled flagpoles on the East Wing wall",
+        "flag roof",
+        "bell tower (bell 5)"
+      ],
+      "notes": "Highest layer used by a goal; the gateway to Carlsbad."
+    },
+    {
+      "id": "Z5",
+      "name": "Carlsbad",
+      "layer": "walled lower district (grass banks, walkways)",
+      "features": [
+        "Carlsbad 11 Set",
+        "grass bank (Carlsbad Gap)",
+        "quarter pipe + kicker + hook rail (Kicker 2 Hook)",
+        "exit ramp over the wall (Over The Wall..., And Down The Bank!)",
+        "$100, $50"
+      ],
+      "notes": "Entered from the roofs, left over the south wall into the lower courtyard."
+    },
+    {
+      "id": "Z6",
+      "name": "Table court and library stairs",
+      "layer": "ground (red brick), stairs",
+      "features": [
+        "two angled tables",
+        "hall pass 2",
+        "bell 2 and $100 on the north building",
+        "Opunsezmee rail stairs (A)",
+        "south-edge ramp to the awning (Balcony 2 Awning!!!)"
+      ],
+      "notes": "Central hub between the start, the library side and the gym."
+    },
+    {
+      "id": "Z7",
+      "name": "Gym front and gym (secret)",
+      "layer": "ground; interior court and pool",
+      "features": [
+        "slope and overhang",
+        "two rails (Gym Rail 2 Rail)",
+        "hall pass 3",
+        "blue gym doors",
+        "inside: basketball court with a hoop between quarter pipes",
+        "inside: pool with three diving boards and starting blocks"
+      ],
+      "notes": "Doors stay shut unless the timed bell switch is hit."
+    },
+    {
+      "id": "Z8",
+      "name": "Lower courtyard",
+      "layer": "ground, low roofs (≈ 3 m)",
+      "features": [
+        "TC's two portables with kickers",
+        "T quarter pipe on the brick wall",
+        "E quarter pipe (Huge Transfer!!!)",
+        "Rack 'Em Up barriers",
+        "Bendy's curved dumpster platform",
+        "basketball pole",
+        "Gonz rail stairs with kicker",
+        "west planter",
+        "bells 3 and 4",
+        "hall passes 4 and 5"
+      ],
+      "notes": "The largest open street court; the Carlsbad wall forms its north edge."
+    },
+    {
+      "id": "Z9",
+      "name": "Centre roofs",
+      "layer": "one-storey roofs (≈ 4 m)",
+      "features": [
+        "roof chain from the start through glass (Crazy/Drop Out Roof Gaps)",
+        "air-conditioning units (Are You Serious?!!)",
+        "roof edge over TC's roofs (Suicidal Roof Gap!!!)"
+      ],
+      "notes": "An upper route parallel to the ground route from the start to the lower courtyard."
+    }
+  ],
+  "landmarks": [
+    "Rancho Buena Vista crest wall with the big wooden quarter pipe",
+    "figure-eight courtyard stage",
+    "library façade with blue doors and planter",
+    "East Wing with angled flagpoles",
+    "gym (Neversoft High court, diving pool)",
+    "TC's portables",
+    "Bendy's dumpster curb",
+    "Carlsbad 11-set and grass gap"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "north-west along the terrace, the hall entrance to the right and the stairs down to the left (LP2 11:40)",
+    "visibleCollectibles": [
+      "BELL1",
+      "PASS1",
+      "ROLL (Nightmare rail)"
+    ],
+    "notes": "LP2 11:40–11:43: the run opens on the raised terrace with a kicker and quarter pipe ahead, buildings close around, and a bell on the right-hand wall that LP2 wallrides 5 s after spawn. The tape is far away (≈ 100 m) behind two rows of buildings and is not visible; nor is any letter. The opening invites three choices: right into the hall (bell, pass, S), down the Nightmare stairs or Leap Of Faith into the table court, or a wallride onto the roofs (Crazy Roof Gap line)."
+  },
+  "collectibles": [
+    {
+      "id": "TAPE",
+      "type": "tape",
+      "label": "Secret tape in the gap between the library roof and the East Wing",
+      "zone": "Z4",
+      "landmark": "in the air beyond the far edge of the library roof, above the angled flagpoles on the East Wing wall, on the path into Carlsbad (VG icon at Flyin' The Flag! / Mad Skeelz Roof Gap)",
+      "layer": "roof gap between two-storey buildings",
+      "heightM": "≈ 6–8 m above the courtyard (library roof level: the façade shows doors ≈ 2.1 m plus a storey of windows above, LP2 17:11) and ≈ 0.5–1.5 m above the library roof it is launched from. It hangs over a much deeper drop: THPS2 flags a Big Drop at the pickup (LP2 17:15). Low confidence",
+      "launchFrom": "far edge of the library roof (a raised block at the edge, LP2 17:14), after reaching the roof off a planter",
+      "visibility": {
+        "firstSight": "from the library roof, 1 s after landing 2 Da Roof!!! (LP2 17:14): a small glowing icon over the gap ahead. Not seen in any LP2 frame from the courtyard (17:00–17:11) or from spawn",
+        "fromSpawn": false,
+        "reads": "small floating VHS icon against the sky between two building walls, with a red-flagged pole jutting from the wall below it",
+        "distanceFromFirstSightM": "≈ 10–15 m (roof landing to the gap; VG proportions, LP2 2 s at roof-rolling speed)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "courtyard stage",
+          "to": "the large wooden quarter pipe in front of the Rancho Buena Vista crest building (the K ramp)",
+          "geometry": "two airs to pump speed and fill the special bar: FS shove-it, then 360 FS shove-it + stalefish (LP2 17:00–17:07, timer 1:09–1:02). Shrine: use the quarter pipe with the K to gain speed"
+        },
+        {
+          "step": 2,
+          "move": "ride",
+          "from": "quarter pipe",
+          "to": "west end of the stage",
+          "geometry": "straight across the stage over the faint tire treads, which point at the library (shrine; LP2 17:08–17:10). The run-up is ≈ 35–45 m (VG)"
+        },
+        {
+          "step": 3,
+          "move": "kicker",
+          "from": "low planter at the base of the library façade (two shrubs between blue doors)",
+          "to": "library roof",
+          "geometry": "the planter edge works as a launcher: airborne at door-top height in front of the façade (LP2 17:11–17:12), landing on the roof for 2 Da Roof!!! (750) plus a $50 (LP2 17:13). Height gain ≈ 6–8 m"
+        },
+        {
+          "step": 4,
+          "move": "ride",
+          "from": "roof landing",
+          "to": "far roof edge (raised block)",
+          "geometry": "≈ 10–15 m; the tape appears over the gap ahead (LP2 17:14)"
+        },
+        {
+          "step": 5,
+          "move": "ollie",
+          "from": "roof edge",
+          "to": "tape",
+          "geometry": "launch into the gap: 'Find the secret tape' with the Big Drop icon at timer 0:54 (LP2 17:15)"
+        },
+        {
+          "step": 6,
+          "move": "grind (exit)",
+          "from": "air",
+          "to": "an angled flagpole on the East Wing wall",
+          "geometry": "Flyin' The Flag! + FS 50-50 (LP2 17:16), then down into Carlsbad (LP2 17:17–17:20). Clearing the gap onto the flag roof instead scores Mad Skeelz Roof Gap!!! (1,000; PS12)"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "kicker",
+        "ollie",
+        "grind"
+      ],
+      "speed": "maximum",
+      "skillGates": [
+        "pumping speed on a quarter pipe",
+        "reading a planter as a kicker",
+        "holding a straight 35–45 m line onto a small launcher",
+        "committing to a roof-edge gap"
+      ],
+      "coupling": "none (no trigger; pure line)",
+      "failure": "A weak or misaligned planter launch bounces off the library wall into the courtyard: re-pump at the quarter pipe ≈ 40 m back, ≈ 8–12 s. A missed tape drops into the gap or Carlsbad, a walled lower district whose exits (Over The Wall..., And Down The Bank!) lead to the lower courtyard far from the library: ≈ 30+ s and usually the rest of the run (LP2 ends that run in Carlsbad, 17:40)",
+      "timeFromSpawnS": "LP2 run 3: spawn 16:10, tape 17:15 (65 s, with a detour along the awning for a $100). First quarter-pipe contact to tape = 15 s (17:00 → 17:15); launch to tape ≈ 3–4 s",
+      "difficulty": 4,
+      "roles": [
+        "TEST",
+        "EXPLORE",
+        "TEACH-LINE"
+      ],
+      "why": "The tape is the entrance exam for Carlsbad, the level's last district. It reuses the courtyard's own features (letter ramp, stage, planter) as one straight speed line, then asks for a second commitment off the roof edge.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; LP2 16:48–17:20 (1 s samples); WEB rpgclassics shrine School II; PS12 school-ii; WEB halfglassgaming, thumbsticks, screenrant (1+2)",
+      "confidence": "high for location and route; low for heights"
+    },
+    {
+      "id": "S",
+      "type": "letter",
+      "label": "Letter S",
+      "zone": "Z2",
+      "landmark": "end of the narrow tunnel/hall right of the start, over its ledge rail",
+      "layer": "ledge",
+      "heightM": "≈ 1–2 m above the hall floor (estimate)",
+      "launchFrom": "ledge in the hall",
+      "visibility": {
+        "firstSight": "from the hall entrance, a few seconds from spawn",
+        "fromSpawn": "no",
+        "reads": "letter over a ledge between walls",
+        "distanceFromFirstSightM": "≈ 15–25 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ledge",
+          "from": "hall entrance",
+          "to": "end of the ledge",
+          "geometry": "grind the hall ledge (shrine; PS12); LP2 darkslides it at 13:09–13:11 and completes S-K-A-T-E"
+        }
+      ],
+      "moves": [
+        "ledge"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "fall off the ledge into the hall; retry within seconds",
+      "timeFromSpawnS": "LP2 13:11 (late in run 1); ≈ 5–8 s from spawn on the shrine's route",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First stop of the S→K→A line that, skated fast, opens the gym.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; PS12; LP2 13:09–13:11",
+      "confidence": "high"
+    },
+    {
+      "id": "K",
+      "type": "letter",
+      "label": "Letter K",
+      "zone": "Z3",
+      "landmark": "above the large wooden quarter pipe on the courtyard stage (Rancho Buena Vista crest behind it)",
+      "layer": "vert air",
+      "heightM": "≈ 4–5 m above the stage (estimate)",
+      "launchFrom": "stage quarter pipe",
+      "visibility": {
+        "firstSight": "from the hall exit into the courtyard",
+        "fromSpawn": "no",
+        "reads": "letter above a big quarter pipe in front of a crest",
+        "distanceFromFirstSightM": "≈ 20–30 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "stage",
+          "to": "K",
+          "geometry": "straight air (LP2 ≈ 13:01)"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "roll back down",
+      "timeFromSpawnS": "LP2 ≈ 13:01",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE",
+        "TEASE"
+      ],
+      "why": "The letter marks the quarter pipe that later powers the tape line.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; LP2 12:59–13:03",
+      "confidence": "high"
+    },
+    {
+      "id": "A",
+      "type": "letter",
+      "label": "Letter A",
+      "zone": "Z6",
+      "landmark": "over the Opunsezmee Roll Call rail (rail between stairs and a ramp beside the library)",
+      "layer": "rail",
+      "heightM": "≈ 1–2 m above the rail (estimate)",
+      "launchFrom": "stairs/ramp",
+      "visibility": {
+        "firstSight": "leaving the stage by the left of two tunnels",
+        "fromSpawn": "no",
+        "reads": "letter over a stair rail",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "top or bottom of the stairs",
+          "to": "A",
+          "geometry": "grind the Opunsezmee rail (shrine); LP2 grinds it upward at 12:45 (timer 0:55)"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "time window: grinding this same rail while the school bell rings opens the gym (VG; 1+2 guides)",
+      "failure": "fall onto the stairs",
+      "timeFromSpawnS": "LP2 12:45",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Puts a letter on the gym switch, so the switch gets ridden often.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; PS12; LP2 12:43–12:47",
+      "confidence": "high"
+    },
+    {
+      "id": "T",
+      "type": "letter",
+      "label": "Letter T",
+      "zone": "Z8",
+      "landmark": "quarter pipe against the brick north wall of the lower courtyard (VG, near And Down The Bank!)",
+      "layer": "vert air",
+      "heightM": "≈ 4 m above the courtyard (estimate)",
+      "launchFrom": "quarter pipe",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "letter over a wall quarter pipe",
+        "distanceFromFirstSightM": "≈ 20 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "lower courtyard",
+          "to": "T",
+          "geometry": "shrine: after the A rail turn right along the ledge to a brick wall; LP2 varial heelflip ≈ 12:31"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "roll back",
+      "timeFromSpawnS": "LP2 ≈ 12:31",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Draws the player to the Carlsbad wall's landing zone.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; LP2 12:31–12:33",
+      "confidence": "medium"
+    },
+    {
+      "id": "E",
+      "type": "letter",
+      "label": "Letter E",
+      "zone": "Z8",
+      "landmark": "quarter pipe west of the gym, past the two portables (VG, at Huge Transfer!!!)",
+      "layer": "vert air",
+      "heightM": "≈ 4 m (estimate)",
+      "launchFrom": "quarter pipe",
+      "visibility": {
+        "firstSight": "between the portables",
+        "fromSpawn": "no",
+        "reads": "letter over a quarter pipe",
+        "distanceFromFirstSightM": "≈ 15 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "between the portables",
+          "to": "E",
+          "geometry": "shrine: turn around at the T and go between the two portables"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "roll back",
+      "timeFromSpawnS": "LP2 ≈ 12:31–12:33",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Marks one end of the Huge Transfer pair.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; LP2 12:33",
+      "confidence": "medium"
+    },
+    {
+      "id": "BELL1",
+      "type": "goal-object",
+      "label": "School bell at the start",
+      "zone": "Z1",
+      "landmark": "east wall of the start terrace, over a small ramp (VG Rock The Bells!)",
+      "layer": "wallride height",
+      "heightM": "≈ 2.5–3.5 m (estimate)",
+      "launchFrom": "small ramp/funbox",
+      "visibility": {
+        "firstSight": "from spawn (turn right)",
+        "fromSpawn": true,
+        "reads": "brass bell on the wall",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "funbox",
+          "to": "bell",
+          "geometry": "wall ride + Rock the Bells! + wallie, '1 of 5 school bells' (LP2 11:44, 5 s after spawn)"
+        }
+      ],
+      "moves": [
+        "wallride",
+        "wallie"
+      ],
+      "speed": "low",
+      "skillGates": [
+        "wallride"
+      ],
+      "coupling": "none",
+      "failure": "drop to the terrace",
+      "timeFromSpawnS": "5 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the wallride within 5 s of spawn.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; shrine; LP2 11:40–11:45",
+      "confidence": "high"
+    },
+    {
+      "id": "BELL2",
+      "type": "goal-object",
+      "label": "Bell north of the table court",
+      "zone": "Z6",
+      "landmark": "wall of the long building north of the table court, by a $100 (VG)",
+      "layer": "wallride height",
+      "heightM": "≈ 3 m (estimate)",
+      "launchFrom": "court floor",
+      "visibility": {
+        "firstSight": "from the table court",
+        "fromSpawn": "no",
+        "reads": "bell",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "court",
+          "to": "bell",
+          "geometry": "PS12: past the tables, turn right, bell on the wall near an outbuilding"
+        }
+      ],
+      "moves": [
+        "wallride"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "—",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Pairs a bell with a $100.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "BELL3",
+      "type": "goal-object",
+      "label": "Bell at Bendy's Curb",
+      "zone": "Z8",
+      "landmark": "south-west corner of the lower courtyard, above the dumpster platform (VG)",
+      "layer": "wallride height",
+      "heightM": "≈ 3 m (estimate)",
+      "launchFrom": "curved ledge platform",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "bell",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "Bendy's platform",
+          "to": "bell",
+          "geometry": "shrine: past all the portables to Bendy's Curb; PS12: far corner above a dumpster"
+        }
+      ],
+      "moves": [
+        "wallride"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "—",
+      "difficulty": 2,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Sends the player into the level's far corner.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "BELL4",
+      "type": "goal-object",
+      "label": "Bell at the Carlsbad wall corner",
+      "zone": "Z8",
+      "landmark": "north-west corner of the lower courtyard where the brick wall meets the Carlsbad wall (VG)",
+      "layer": "wallride height",
+      "heightM": "≈ 3 m (estimate)",
+      "launchFrom": "courtyard floor",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "bell",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "courtyard",
+          "to": "bell",
+          "geometry": "shrine: follow the brick wall past the lamp post and planter"
+        }
+      ],
+      "moves": [
+        "wallride"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "—",
+      "difficulty": 2,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Marks the wall that hides Carlsbad.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine",
+      "confidence": "medium"
+    },
+    {
+      "id": "BELL5",
+      "type": "goal-object",
+      "label": "Bell by the flags",
+      "zone": "Z4",
+      "landmark": "tall East Wing tower beside the flagpoles, above the passage north of the Opunsezmee rail (VG)",
+      "layer": "wallride height",
+      "heightM": "≈ 3 m above the passage (estimate)",
+      "launchFrom": "passage floor",
+      "visibility": {
+        "firstSight": "from the A stairs",
+        "fromSpawn": "no",
+        "reads": "bell",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "passage",
+          "to": "bell",
+          "geometry": "shrine: up the ramp where you got the A, along the left wall"
+        }
+      ],
+      "moves": [
+        "wallride"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "LP2 completes the goal at 13:24",
+      "difficulty": 2,
+      "roles": [
+        "TEASE"
+      ],
+      "why": "Brings the player under the tape's flagpoles before they know the tape is there.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; shrine; LP2 13:24–13:25",
+      "confidence": "medium"
+    },
+    {
+      "id": "PASS1",
+      "type": "goal-object",
+      "label": "Hall pass over the start rail",
+      "zone": "Z1",
+      "landmark": "north side of the start terrace, above a rail at the hall entrance",
+      "layer": "rail",
+      "heightM": "≈ 1.5–2 m",
+      "launchFrom": "rail",
+      "visibility": {
+        "firstSight": "from spawn",
+        "fromSpawn": true,
+        "reads": "orange HALL PASS sign on a post",
+        "distanceFromFirstSightM": "≈ 10 m"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "terrace",
+          "to": "pass",
+          "geometry": "FS noseslide, '1 of 5 hall passes' (LP2 11:46–11:47)"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "8 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First goal object on the S hall line.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 11:46–11:48",
+      "confidence": "high"
+    },
+    {
+      "id": "PASS2",
+      "type": "goal-object",
+      "label": "Hall pass in the table court",
+      "zone": "Z6",
+      "landmark": "beside the two angled tables (red-brick court)",
+      "layer": "ground/table",
+      "heightM": "≈ 1.5–2 m",
+      "launchFrom": "tables",
+      "visibility": {
+        "firstSight": "from the court",
+        "fromSpawn": "no",
+        "reads": "HALL PASS sign",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "table",
+          "to": "pass",
+          "geometry": "'2 of 5' (LP2 11:52–11:53)"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "14 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Tours the table court.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 11:52–11:53",
+      "confidence": "high"
+    },
+    {
+      "id": "PASS3",
+      "type": "goal-object",
+      "label": "Hall pass at the gym front",
+      "zone": "Z7",
+      "landmark": "in front of the gym building, over the slope/rails",
+      "layer": "slope",
+      "heightM": "≈ 2 m",
+      "launchFrom": "slope",
+      "visibility": {
+        "firstSight": "from the gym front",
+        "fromSpawn": "no",
+        "reads": "HALL PASS sign",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "gym rails",
+          "to": "pass",
+          "geometry": "darkslide + pop shove-it, '3 of 5' (LP2 11:57–11:58)"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "19 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Shows the closed gym doors to everyone collecting passes.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 11:57–11:59",
+      "confidence": "high"
+    },
+    {
+      "id": "PASS4",
+      "type": "goal-object",
+      "label": "Hall pass by the Gonz stairs",
+      "zone": "Z8",
+      "landmark": "lower courtyard, near the Gonz rail stairs and kicker",
+      "layer": "kicker",
+      "heightM": "≈ 2 m",
+      "launchFrom": "kicker/quarter pipe",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "HALL PASS sign",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "courtyard",
+          "to": "pass",
+          "geometry": "'4 of 5' on a striped kicker box (LP2 12:07)"
+        }
+      ],
+      "moves": [
+        "kicker"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "28 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Marks the third Roll Call rail.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 12:07–12:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "PASS5",
+      "type": "goal-object",
+      "label": "Hall pass at the west planter",
+      "zone": "Z8",
+      "landmark": "planter along the west building (VG near Pole 2 Brix!)",
+      "layer": "ledge",
+      "heightM": "≈ 1.5–2 m",
+      "launchFrom": "planter / raised barrier",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "HALL PASS sign",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ledge",
+          "from": "planter",
+          "to": "pass",
+          "geometry": "'Collect 5 hall passes' (LP2 12:19)"
+        }
+      ],
+      "moves": [
+        "ledge"
+      ],
+      "speed": "low",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "40 s (LP2)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Ends the pass tour in the far corner.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 12:19",
+      "confidence": "medium"
+    },
+    {
+      "id": "ROLL",
+      "type": "objective",
+      "label": "Grind 3 Roll Call Rails",
+      "zone": "Z1/Z6, Z6, Z8",
+      "landmark": "Nightmare rail (stairs from the start terrace), Opunsezmee rail (stairs by the library), Gonz rail (lower-courtyard stairs with a kicker)",
+      "layer": "stair rails",
+      "heightM": "—",
+      "launchFrom": "stairs / kicker",
+      "visibility": {
+        "firstSight": "Nightmare rail is visible from spawn",
+        "fromSpawn": true,
+        "reads": "named rails announced as 'Roll Call!' gaps",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "lower courtyard kicker",
+          "to": "Gonz rail",
+          "geometry": "LP2 15:08 (timer 0:46)"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "library stairs",
+          "to": "Opunsezmee rail",
+          "geometry": "'2 of 3 roll call rails' LP2 15:28 (0:26)"
+        },
+        {
+          "step": 3,
+          "move": "grind",
+          "from": "start terrace",
+          "to": "Nightmare rail",
+          "geometry": "down the stairs at LP2 15:52 (0:02)"
+        }
+      ],
+      "moves": [
+        "grind",
+        "kicker"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "cheap",
+      "timeFromSpawnS": "run 2",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Three stair rails in three courts, each with a different entry (top of the stairs, library stairs/ramp, kicker).",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; shrine; LP2 15:08–15:56",
+      "confidence": "high"
+    },
+    {
+      "id": "TCKF",
+      "type": "objective",
+      "label": "Kickflip TC's Roof Gap",
+      "zone": "Z8",
+      "landmark": "two portables with kickers either side in the lower courtyard",
+      "layer": "low roofs ≈ 3 m",
+      "heightM": "≈ 3 m (estimate)",
+      "launchFrom": "kicker",
+      "visibility": {
+        "firstSight": "from the lower courtyard",
+        "fromSpawn": "no",
+        "reads": "two flat-roofed portables",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "courtyard",
+          "to": "portable roof",
+          "geometry": "kicker up"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "roof edge",
+          "to": "next portable",
+          "geometry": "kickflip across (LP2 14:56, timer 0:58)"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "a named trick over a gap"
+      ],
+      "coupling": "none",
+      "failure": "drop to the courtyard; cheap",
+      "timeFromSpawnS": "run 2",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "A low, safe roof gap that teaches roof gaps before the library roofs.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; shrine; LP2 14:56",
+      "confidence": "high"
+    },
+    {
+      "id": "$1",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z1",
+      "landmark": "start terrace, by the hall-pass rail",
+      "layer": "terrace",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "grind"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "on the S hall line",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$2",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z1",
+      "landmark": "start terrace, by the arch quarter pipe (Arch Extension)",
+      "layer": "terrace / quarter pipe",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "near spawn",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$3",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z9",
+      "landmark": "roof corner above the narrow hall (Drop Out Roof Gap!)",
+      "layer": "one-storey roof",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "wallride",
+        "roof"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "roof line from the start",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$4",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z3",
+      "landmark": "south awning of the library courtyard (over Big Rancho Bench Gap)",
+      "layer": "awning top ≈ 3 m",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "wallride",
+        "wallie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 wall rides up onto the awning and rides it to this icon ('100 bucks!', 16:55)",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; LP2 16:48–16:55",
+      "confidence": "high"
+    },
+    {
+      "id": "$5",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z3",
+      "landmark": "north side of the courtyard by the awning (Awning Hop)",
+      "layer": "awning",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "kicker"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$6",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z3",
+      "landmark": "east end of the courtyard",
+      "layer": "ground/ledge",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "low"
+    },
+    {
+      "id": "$7",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z4",
+      "landmark": "library roof (2 Da Roof!!!)",
+      "layer": "two-storey roof",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "kicker"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "on the tape line ('50 bucks', LP2 17:13)",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; LP2 17:13",
+      "confidence": "high"
+    },
+    {
+      "id": "$8",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z6",
+      "landmark": "long building north of the table court, by bell 2",
+      "layer": "wall / ledge",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "wallride"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$9",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z6",
+      "landmark": "south edge of the table court (Balcony 2 Awning!!! / Leap Of Faith)",
+      "layer": "drop / awning",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "LP2 takes a $50 with a Big Drop at 14:08",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; LP2 14:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "$10",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z9",
+      "landmark": "roof edge above TC's roofs (Suicidal Roof Gap!!!)",
+      "layer": "roof",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "roof",
+        "ollie"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "end of the long roof line",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    },
+    {
+      "id": "$11",
+      "type": "cash",
+      "label": "$50",
+      "zone": "Z5",
+      "landmark": "Carlsbad, by Kicker 2 Hook",
+      "layer": "Carlsbad ground",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "only reachable after entering Carlsbad via the tape line; LP2 17:32",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; LP2 17:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "$12",
+      "type": "cash",
+      "label": "$100",
+      "zone": "Z5",
+      "landmark": "Carlsbad, high ledge of the tall north building",
+      "layer": "ledge",
+      "heightM": "see layer",
+      "launchFrom": "—",
+      "visibility": {
+        "firstSight": "not recorded",
+        "fromSpawn": null,
+        "reads": "floating bill icon",
+        "distanceFromFirstSightM": "—"
+      },
+      "route": [],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "—",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "—",
+      "timeFromSpawnS": "—",
+      "difficulty": 1,
+      "roles": [
+        "REWARD"
+      ],
+      "why": "last district's top prize",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png",
+      "confidence": "medium"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "2 Da Roof!!!",
+      "points": 750,
+      "kind": "roof",
+      "location": "planter at the base of the library onto its roof",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 17:13"
+    },
+    {
+      "name": "Mad Skeelz Roof Gap!!!",
+      "points": 1000,
+      "kind": "roof",
+      "location": "library roof to the flag (East Wing) roof",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Flyin' The Flag!",
+      "points": 750,
+      "kind": "other",
+      "location": "grind an angled flagpole on the East Wing wall",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 17:16"
+    },
+    {
+      "name": "Stage Rail 2 Rail",
+      "points": 750,
+      "kind": "rail-transfer",
+      "location": "rails on the courtyard stage",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "K"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Big Rancho Bench Gap",
+      "points": 500,
+      "kind": "ledge-to-ledge",
+      "location": "low ledges under the south awning",
+      "moves": [
+        "ledge",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$4"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Awning Hop",
+      "points": 500,
+      "kind": "kicker",
+      "location": "small ramp up onto the north awning",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "$5"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Roll Call! Opunsezmee Rail!",
+      "points": 250,
+      "kind": "other",
+      "location": "stair rail beside the library (A; gym switch)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "A",
+        "ROLL"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 12:45, 15:28"
+    },
+    {
+      "name": "Roll Call! Nightmare Rail!",
+      "points": 500,
+      "kind": "other",
+      "location": "stair rail from the start terrace to the table court",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "ROLL"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 15:52"
+    },
+    {
+      "name": "Roll Call! Gonz Rail",
+      "points": 250,
+      "kind": "other",
+      "location": "lower-courtyard stair rail entered from a small kicker",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "ROLL"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 15:08"
+    },
+    {
+      "name": "Leap Of Faith!!!",
+      "points": 500,
+      "kind": "other",
+      "location": "drop from the start terrace down to the table court",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$9"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 14:08 (Big Drop)"
+    },
+    {
+      "name": "Table Transfer",
+      "points": 250,
+      "kind": "over-object",
+      "location": "between the two angled tables",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "PASS2"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Balcony 2 Awning!!!",
+      "points": 1000,
+      "kind": "roof",
+      "location": "narrow ledge past the start rail, ramp at its end onto the awning",
+      "moves": [
+        "ollie",
+        "kicker"
+      ],
+      "onRouteOf": [
+        "$9"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Planter On Edge",
+      "points": 250,
+      "kind": "manual",
+      "location": "planter ledge on the start terrace",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png (green); PS12"
+    },
+    {
+      "name": "Arch Extension",
+      "points": 500,
+      "kind": "lip",
+      "location": "lip trick on the arch quarter pipe left of the start",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "$2"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Rock The Bells",
+      "points": 500,
+      "kind": "wallride",
+      "location": "wallride over any bell",
+      "moves": [
+        "wallride"
+      ],
+      "onRouteOf": [
+        "BELL1",
+        "BELL2",
+        "BELL3",
+        "BELL4",
+        "BELL5"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 11:44"
+    },
+    {
+      "name": "Drop Out Roof Gap!",
+      "points": 500,
+      "kind": "roof",
+      "location": "from the start roof, through the glass, onto the next roof",
+      "moves": [
+        "wallride",
+        "break-glass",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Crazy Roof Gap!!",
+      "points": 750,
+      "kind": "roof",
+      "location": "start roof → glass → next roof → box → rail → next roof",
+      "moves": [
+        "wallride",
+        "grind",
+        "break-glass",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Suicidal Roof Gap!!!",
+      "points": 1000,
+      "kind": "roof",
+      "location": "end of the Crazy Roof Gap roofs over to a portable",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "$10"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Are You Serious?!!",
+      "points": "unknown",
+      "kind": "roof",
+      "location": "roof with the white air-conditioning units between the lower courtyard and the centre",
+      "moves": [],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png only (not in the PS12 1+2 list)"
+    },
+    {
+      "name": "Overhang Air",
+      "points": 500,
+      "kind": "over-object",
+      "location": "slope outside the gym over the overhang",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Overhang Stomp!",
+      "points": 250,
+      "kind": "rail-transfer",
+      "location": "gym-entrance rail up to the overhang",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Gym Rail 2 Rail",
+      "points": 250,
+      "kind": "rail-transfer",
+      "location": "both rails in front of the gym",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "PASS3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 11:59–12:01"
+    },
+    {
+      "name": "3 Points!!!",
+      "points": 500,
+      "kind": "channel",
+      "location": "gym: quarter pipe to quarter pipe over the basketball hoop",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Backboard Dance!",
+      "points": 1000,
+      "kind": "other",
+      "location": "gym: kicker up to grind the hoop's backboard",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Lil' Guppy Extension!",
+      "points": 1000,
+      "kind": "lip",
+      "location": "gym pool: lowest diving board",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Mid Squid Extension!!",
+      "points": 2500,
+      "kind": "lip",
+      "location": "gym pool: middle diving board",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "High Dive Extension!!!",
+      "points": 5000,
+      "kind": "lip",
+      "location": "gym pool: highest diving board",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Starting Blocks Extension!!!",
+      "points": 500,
+      "kind": "lip",
+      "location": "gym pool: starting blocks",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "TC's Roof Gap",
+      "points": 250,
+      "kind": "roof",
+      "location": "between the two portables",
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TCKF"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 14:56"
+    },
+    {
+      "name": "2 Wheelin' TC's Roof",
+      "points": 500,
+      "kind": "manual",
+      "location": "manual on one portable, ollie across, manual on the other",
+      "moves": [
+        "manual",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TCKF"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png (green); PS12"
+    },
+    {
+      "name": "Huge Transfer!!!",
+      "points": 750,
+      "kind": "channel",
+      "location": "two far-apart quarter pipes against the lowest wall",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "E"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Rack 'Em Up",
+      "points": 250,
+      "kind": "rail-transfer",
+      "location": "two barriers on a raised part near the lowest area",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12; LP2 12:43"
+    },
+    {
+      "name": "Bank 2 Ledge",
+      "points": 500,
+      "kind": "over-object",
+      "location": "over the red-and-white barriers to the wall ledge",
+      "moves": [
+        "ollie",
+        "ledge"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Ledge On Edge",
+      "points": 500,
+      "kind": "manual",
+      "location": "manual across the narrow ledge by the barriers",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png (green); PS12"
+    },
+    {
+      "name": "Bendy's Curb",
+      "points": 500,
+      "kind": "ledge",
+      "location": "curved edge of the dumpster platform",
+      "moves": [
+        "ledge"
+      ],
+      "onRouteOf": [
+        "BELL3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Bendy's Flat",
+      "points": 500,
+      "kind": "manual",
+      "location": "manual on the curved dumpster platform",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [
+        "BELL3"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png (green); PS12"
+    },
+    {
+      "name": "Pole Stomp!",
+      "points": 250,
+      "kind": "rail-transfer",
+      "location": "curved ledge to the knocked-over basketball pole",
+      "moves": [
+        "ledge",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Pole 2 Brix!",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "pole up to the brick ledge",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "PASS5"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Carlsbad 11 Set",
+      "points": 500,
+      "kind": "other",
+      "location": "Carlsbad stair set",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Carlsbad Gap",
+      "points": 750,
+      "kind": "over-object",
+      "location": "over the grassy bank beside the Carlsbad steps",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Kicker 2 Hook",
+      "points": 750,
+      "kind": "kicker",
+      "location": "Carlsbad: quarter pipe for speed, kicker to a hook rail",
+      "moves": [
+        "vert-air",
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "$11"
+      ],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "Over The Wall...",
+      "points": 250,
+      "kind": "kicker",
+      "location": "Carlsbad exit ramp over the wall into the lower courtyard",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    },
+    {
+      "name": "And Down The Bank!",
+      "points": 500,
+      "kind": "kicker",
+      "location": "same ramp, clearing the wall and the bank below",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "Grind the Opunsezmee rail while the school bell rings at the start of a run: VG says within 19 s of starting; THPS HD users report timer 1:44–1:40; 1+2 guides say start grinding as the bell starts",
+      "opens": "Gym doors open: basketball court (3 Points!!!, Backboard Dance!) and diving pool (four Extension lips worth 500–5,000). 1+2/HD sources say the gym then stays open for that skater",
+      "neededFor": [],
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png annotation; WEB steamcommunity THPS HD thread; WEB gamertweak (1+2); LP2 run 1 never opens it (doors shut at 11:57) yet reaches 100% at 18:16"
+    },
+    {
+      "trigger": "Reach the library roof (planter launch) and cross toward the East Wing: tape gap, flagpoles or Mad Skeelz roof gap",
+      "opens": "Access to Carlsbad, the walled north-west district (Carlsbad 11 Set and Gap, Kicker 2 Hook); its exit ramps clear the wall into the lower courtyard",
+      "neededFor": [
+        "$11",
+        "$12",
+        "100% Goals and Cash"
+      ],
+      "evidence": "PS12 ('via the library roof'); LP2 17:15–17:36; VG"
+    },
+    {
+      "trigger": "Ollie through the glass on the roof line from the start",
+      "opens": "Breaks the window so the roof chain continues (Drop Out Roof Gap!, Crazy Roof Gap!!)",
+      "neededFor": [
+        "$3"
+      ],
+      "evidence": "PS12 gap descriptions; VG"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Bell and hall start",
+      "sequence": [
+        "spawn",
+        "funbox",
+        "wallride bell 1 (Rock The Bells)",
+        "wallie",
+        "manual",
+        "hall rail (pass 1)",
+        "hall ledge (S)"
+      ],
+      "links": [
+        "wallride",
+        "manual"
+      ],
+      "collectibles": [
+        "BELL1",
+        "PASS1",
+        "S"
+      ],
+      "why": "Three collectible types inside the first 10 s, each teaching a different move.",
+      "evidence": "LP2 11:40–11:48; PS12"
+    },
+    {
+      "id": "L2",
+      "name": "Letter line / gym switch",
+      "sequence": [
+        "hall ledge (S)",
+        "courtyard stage quarter pipe (K)",
+        "left tunnel",
+        "Opunsezmee rail (A)"
+      ],
+      "links": [
+        "grind",
+        "vert-air"
+      ],
+      "collectibles": [
+        "S",
+        "K",
+        "A"
+      ],
+      "why": "The shrine's letter order traces this line. Skated in ≈ 16–19 s, it ends on the gym switch while the bell rings.",
+      "evidence": "shrine; VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png gym note; Steam (HD); gamertweak (1+2)"
+    },
+    {
+      "id": "L3",
+      "name": "Library launch (tape line)",
+      "sequence": [
+        "K quarter pipe ×2 airs",
+        "stage (tire treads)",
+        "planter",
+        "2 Da Roof!!!",
+        "roof edge",
+        "tape",
+        "Flyin' The Flag!",
+        "Carlsbad"
+      ],
+      "links": [
+        "vert-air pump",
+        "grind exit"
+      ],
+      "collectibles": [
+        "TAPE",
+        "$7"
+      ],
+      "why": "One straight speed line built from the courtyard's own features.",
+      "evidence": "LP2 16:59–17:20; shrine; PS12"
+    },
+    {
+      "id": "L4",
+      "name": "Awning ride",
+      "sequence": [
+        "hall",
+        "wallride + wallie onto the south awning",
+        "awning ($100)",
+        "drop to courtyard"
+      ],
+      "links": [
+        "wallride",
+        "wallie"
+      ],
+      "collectibles": [
+        "$4"
+      ],
+      "why": "Turns the covered walkway into an elevated lane over the courtyard; 1+2 guides use the awnings as an alternative route to the library roof.",
+      "evidence": "LP2 16:48–16:56; WEB thumbsticks/screenrant (1+2)"
+    },
+    {
+      "id": "L5",
+      "name": "Roof chain",
+      "sequence": [
+        "start wallride + grind onto the roof",
+        "through the glass",
+        "next roof",
+        "box",
+        "rail",
+        "next roof (Crazy Roof Gap!!)",
+        "portable (Suicidal Roof Gap!!!)"
+      ],
+      "links": [
+        "wallride",
+        "grind",
+        "break-glass"
+      ],
+      "collectibles": [
+        "$3",
+        "$10"
+      ],
+      "why": "A roof route from spawn to the lower courtyard above the ground route.",
+      "evidence": "PS12; VG; LP2 18:04–18:16"
+    },
+    {
+      "id": "L6",
+      "name": "Table court",
+      "sequence": [
+        "start terrace",
+        "Leap Of Faith!!! or Nightmare rail",
+        "Table Transfer",
+        "Balcony 2 Awning!!!"
+      ],
+      "links": [
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [
+        "PASS2",
+        "$9",
+        "ROLL"
+      ],
+      "why": "The terrace drop and stair rail give two ways down into the central court.",
+      "evidence": "PS12; LP2 11:49–11:53, 14:08"
+    },
+    {
+      "id": "L7",
+      "name": "Gym front",
+      "sequence": [
+        "slope",
+        "Gym Rail 2 Rail",
+        "Overhang Stomp!/Air",
+        "(gym, if opened)"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "PASS3"
+      ],
+      "why": "Puts the closed gym doors at the end of a scoring line.",
+      "evidence": "LP2 11:57–12:01; PS12"
+    },
+    {
+      "id": "L8",
+      "name": "Lower courtyard loop",
+      "sequence": [
+        "TC's kickers",
+        "TC's Roof Gap",
+        "2 Wheelin' TC's Roof",
+        "Huge Transfer (E)",
+        "T quarter pipe",
+        "Rack 'Em Up",
+        "Bank 2 Ledge",
+        "Ledge On Edge"
+      ],
+      "links": [
+        "manual",
+        "grind"
+      ],
+      "collectibles": [
+        "T",
+        "E",
+        "TCKF"
+      ],
+      "why": "A dense street court with low roofs and transfer pairs.",
+      "evidence": "LP2 12:27–12:47, 14:44–15:08; PS12"
+    },
+    {
+      "id": "L9",
+      "name": "Bendy's corner",
+      "sequence": [
+        "Bendy's Curb",
+        "Pole Stomp!",
+        "Pole 2 Brix!"
+      ],
+      "links": [
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [
+        "BELL3",
+        "PASS5"
+      ],
+      "why": "Knocking over the basketball hoop creates the rail this line uses.",
+      "evidence": "PS12; VG"
+    },
+    {
+      "id": "L10",
+      "name": "Carlsbad descent",
+      "sequence": [
+        "flagpole/roof",
+        "Carlsbad 11 Set or Carlsbad Gap",
+        "Kicker 2 Hook",
+        "Over The Wall... / And Down The Bank!",
+        "lower courtyard"
+      ],
+      "links": [
+        "kicker"
+      ],
+      "collectibles": [
+        "$11",
+        "$12"
+      ],
+      "why": "The tape line's continuation: a one-way district that drains back into the lower courtyard.",
+      "evidence": "LP2 17:17–17:36; PS12"
+    },
+    {
+      "id": "L11",
+      "name": "Gym session (secret)",
+      "sequence": [
+        "court quarter pipes",
+        "3 Points!!!",
+        "Backboard Dance!",
+        "pool",
+        "diving-board lips"
+      ],
+      "links": [
+        "lip",
+        "transfer"
+      ],
+      "collectibles": [],
+      "why": "Score reward room; no goal or cash inside in the original.",
+      "evidence": "VG TonyHawk_sProSkater2-SchoolII-SoutherCali.png; PS12"
+    }
+  ],
+  "guidance": [
+    "Hall passes are big orange signs on posts readable from across a court (LP2 11:46, 11:52); the shrine calls them 'big and obvious'.",
+    "Bells sit on walls at wallride height, each beside a small ramp or flat run-up; the first is 5 s from spawn.",
+    "The letter order S→K→A→T→E follows one continuous path through the hall, stage, library stairs and lower courtyard (shrine).",
+    "The courtyard's crest wall and big quarter pipe are the K landmark; faint tire treads on the stage point toward the library and its planter, a built-in arrow for the tape line (shrine).",
+    "The tape is deliberately hidden from the ground: it appears only after the player is on the library roof (LP2 17:14).",
+    "Carlsbad is walled off and seen from the roofs as a green lower district (LP2 17:17); its exit ramp is visible from the lower courtyard as a ramp over the wall.",
+    "The gym's closed blue doors are shown to everyone collecting pass 3. The only in-game clue to opening them is the bell ringing at the run's start; the rule itself comes from guides (the VG annotation)."
+  ],
+  "designLogic": [
+    "Letters teach the route and the gym tests it: the S→K→A order runs from spawn to the Opunsezmee rail. Skated within ≈ 19 s, while the bell rings, that same line opens the gym.",
+    "The tape is the entrance exam to Carlsbad: getting it and discovering the level's last district are one action, and a miss drops you into that district anyway (exploration as consolation).",
+    "The tape line reuses the main court's furniture: the letter K's quarter pipe for speed, the stage for a straight run-up (tire treads as guide), the planter as a kicker. Nothing new is built for it; the target is simply higher.",
+    "Two commitments in sequence: the launch (2 Da Roof!!!) is the hard part but fails cheaply; the roof-edge gap is easier but fails expensively (Carlsbad). Risk is pushed after the skill check.",
+    "Roofs are a second reading of the school: a low roof chain from the start (Crazy and Suicidal Roof Gaps) and a high pair (library, East Wing). The tape uses the highest pair; the TC's Roof kickflip goal teaches roof gaps first on ≈ 3 m portables.",
+    "Wallride is taught by goal: five bells, the first beside spawn. THPS2's new move becomes navigation for the awning route (LP2 16:48–16:49).",
+    "Goal objects tour the districts: hall passes cover start, table court, gym front and lower courtyard (twice); bells cover start, centre, two far corners and the tape's flagpole area; roll-call rails cover three courts.",
+    "The secret gym is timing-gated and optional: failing it costs a whole new run because the window is at the run's start. It holds no goal or cash in the original, only the level's biggest lip gaps (High Dive Extension 5,000).",
+    "Cash forces exploration: Carlsbad holds $150 of the $750, so 100% requires the tape line or a roof crossing; LP2's final cash comes off the centre roofs (18:04–18:16).",
+    "Size and the 2:00 limit force run planning: LP2 needs four runs (scores, letters, bells and passes; TC's gap and rails; tape; leftover cash), against one run for the Hangar.",
+    "Spawn is a decision point with three exits (hall, stairs/drop, roofs), each starting a different line within 5 s.",
+    "The tape is placed over a big drop: THPS2 shows its Big Drop warning at the pickup (LP2 17:15), so the reward moment is also the moment of greatest exposure."
+  ],
+  "remakeChanges": [
+    "Scores: Pro 40,000 → 70,000, Sick 100,000 → 125,000; a High Combo goal (10,000) is added (LP2 checklist vs PS12).",
+    "Tape: PS12 describes the original line (raised quarter pipe for speed, straight at the library, planter launch, tape between the flags). Thumbsticks and Screenrant (1+2) describe another: boost off a planter ramp onto the awning, wallride/grind up to the library roof, stop, then ride a ramp off the roof to the tape. Halfglass places it between the library and the East Wing. The remake keeps the location and supports a slower, more controllable approach via the awnings (inference from the texts).",
+    "LP12 shows an EAST WING sign over a door (0:46:28), naming the building the tape gap faces.",
+    "Gym: 1+2 still opens it by grinding the Opunsezmee rail as the bell rings, and it stays unlocked afterwards (Gamertweak; the THPS HD Steam thread reports the same for HD). LP12's last School II run is inside the pool (0:48:28).",
+    "1+2 adds collectibles inside the formerly empty secret: stat points above the gym pool and on its wall ledge, and the Vicarious Visions logo above the gym hoop. The secret gym gains collectible value in the remake.",
+    "1+2 adds an alien plushie on the courtyard awning and several roof-top stat points, including one reached by jumping from the library roof across to the next roof.",
+    "Gap list: VG's 'Are You Serious?!!' (AC-unit roof) is absent from PS12's 1+2 list; all other VG names appear in PS12."
+  ],
+  "transfer": [
+    "Roof-doorway crystal: hang the crystal ≈ 0.5–1 m above roof level in the gap between two tall roofs that lead into a walled bonus district. The approach is a quarter-pipe pump (two vert airs), a straight 35–45 m run (a speed pad can stand in for THPS2's special), a launch onto the first roof, a 10–15 m roll, then an ollie off the edge. This game's full ollie (≈ 9.4 m long at cruise, ≈ 13.8 m at charge) can cover a 6–10 m gap.",
+    "Height budget: THPS2 jumps ≈ 6–8 m from a planter. Here, put a vert quarter pipe or kicker ramp against the façade (or a trampoline disguised as a planter) to reach the first roof; do not rely on a flat ollie (1.78 m).",
+    "Angled flagpoles as exit rails: two or three trick rails jutting from the far wall below the crystal give a grind catch for a short jump, and the grind dumps the player into the bonus district.",
+    "Timed bell gate: a trick gate that opens only if a named rail is ground during a window early in the run, announced by an audio cue (the bell). Mark the rail with a pickup so players ride it anyway.",
+    "Breadcrumbs that become a speed test: place 3 pickups along the route from spawn to that rail (hall ledge, stage quarter pipe, stair rail) so collecting them teaches the line the timed gate later demands.",
+    "Wallride targets as teachers: put the first wallride target within 5 s of spawn, then use wallride-plus-wallie onto an awning as a real route to the crystal's roof.",
+    "Asymmetric failure: make the launch the hard part with a short retry (≈ 10 s) and the final gap the easy part with a long consequence (dropped into the bonus district), so failure still shows new space."
+  ],
+  "openQuestions": [
+    "The exact gym window: VG says within 19 s of starting the run, HD users report timer 1:44–1:40, and 1+2 guides tie it to the bell's ring. Whether the original's window is exactly the bell's duration was not verified (LP2 never opens the gym).",
+    "Whether the original gym, once opened, stays open in later runs (claimed for HD and 1+2 only).",
+    "Original gap point values (only 1+2 values from PS12) and the value of 'Are You Serious?!!'.",
+    "Heights and the footprint are estimates (VG scale assumption ≈ 0.08 m/px).",
+    "Which bell description in the shrine and PS12 matches which VG bell icon is partly ambiguous (two texts mention a dumpster).",
+    "Whether the remake's awning route to the tape (Thumbsticks/Screenrant) also works in the PS1 original (awning wallrides exist in LP2 16:48–16:56, but no PS1 source describes reaching the library roof that way)."
+  ]
+}
