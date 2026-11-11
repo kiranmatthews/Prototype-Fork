@@ -91,7 +91,7 @@ const RECIPES = [
     note: 'Speed pad 18 m/s, 1.8 × 4 m kicker yawed 35° at a straight wall that runs along Z, 3.6 m beside the kicker. Wallride (caught ≈ 4.3 m up), pump the wallie 0.75 s. Crystal in the wallie lane: 1.4 m off the face, ≈ 19 m downstream of the catch, 12.5 m up.',
     data: () => ({ spawn: [0, 0.2, 20], components: [
       floor(30, -120, 0, 60),
-      { t: 'speedpad', p: [WK.x - WDIR[0] * 12, 0.05, WK.z - WDIR[1] * 12], s: [3, 0.1, 3], speed: 18, yaw: -35 },
+      { t: 'speedpad', p: [-6.9, 0.05, -10.2], s: [3, 0.1, 3], speed: 18, yaw: -35 }, // on the kicker line, 12 m before it
       { t: 'ramp', p: [WK.x, 0, WK.z], len: 4, rise: 1.8, w: 4, yaw: -35 },
       { t: 'wall', p: [WALL.faceX + 0.5, 0, WALL.z], s: [WALL.len, WALL.h, 1], yaw: 90 },
       { t: 'crystal', p: C5_CRYSTAL },
