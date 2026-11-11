@@ -11,7 +11,7 @@ export const POWDERKEG_STARTS = {
   summit: { position: [-24, 28.12, -614], heading: [-1, 0, 0], beat: 'powderkeg run' },
 };
 
-export async function runPowderkegJourney(r, { from = null, log = console.log } = {}) {
+export async function runPowderkegJourney(r, { from = null, log = console.log, collect = false } = {}) {
   const { p, l } = r, m = r.sourceModule, { RUN1, RUN2 } = m.POWDERKEG_PATHS, PLAN = m.POWDERKEG_PLAN;
   const dt = r.CONST.fixedStep;
   const dead = () => p.isBailing || ['dead', 'gameover'].includes(p.state);
@@ -28,12 +28,12 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     if (cp || ((plain || foe) && !explosive)) { const held = p.spinning || !lastSpin; lastSpin = held; return { ...sample, spinHeld: held }; }
     lastSpin = false; return sample;
   };
-  const debug = process.env.POWDERKEG_DEBUG === '1';
+  const debug = process.env.POWDERKEG_DEBUG === 'all' ? 'all' : process.env.POWDERKEG_DEBUG === '1';
   const step = (sample, label) => {
     const out = autoSpin(sample);
     if (out.grabHeld && !p.grounded) out.grabHeld = false;
     r.tick(out);
-    if (debug) log('dbg', label, JSON.stringify(pose()));
+    if (debug === 'all') log('dbg', label, JSON.stringify(pose()));
     if (dead()) fail(`${label}: lost control`);
   };
   // A stick held along one axis reads exactly zero on the other (the input layer's dead zone); the engine treats any
@@ -49,13 +49,14 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
 
   // ---- foot ----
   /** Walk to a point and stop there. `keep` leaves the walker moving. */
-  const walk = (x, z, { tol = .3, label = 'walk', pace = 1, keep = false, max = 1500 } = {}) => {
-    run(label, () => dist(x, z) < tol, () => { const d = dist(x, z); return toward(x, z, keep ? pace : clamp((d - .15) / 1.4, .14, pace)); }, max);
-    if (!keep) run(`${label} stop`, () => p.grounded && p.walkVelocity.length() < .3, () => ({}), 240);
+  const walk = (x, z, { tol = .3, label = 'walk', pace = 1, keep = false, max = 1500, noSpin = false } = {}) => {
+    const hold = noSpin ? { spinHeld: false } : {};
+    run(label, () => dist(x, z) < tol, () => { const d = dist(x, z); return { ...toward(x, z, keep ? pace : clamp((d - .15) / 1.4, .14, pace)), ...hold }; }, max);
+    if (!keep) run(`${label} stop`, () => p.grounded && p.walkVelocity.length() < .3, () => ({ ...hold }), 240);
   };
   /** Standing charged jump toward a landing point. */
-  const jump = (x, z, y, { double = false, label = 'jump', charge = 24, tol = 1.9, spin = false } = {}) => {
-    for (let i = 0; i < charge; i++) step({ jumpHeld: true }, `${label} charge`);
+  const jump = (x, z, y, { double = false, label = 'jump', charge = 24, tol = 1.9, spin = false, noSpin = false } = {}) => {
+    for (let i = 0; i < charge; i++) step({ jumpHeld: true, ...(noSpin ? { spinHeld: false } : {}) }, `${label} charge`);
     step({ ...toward(x, z, 1), jumpHeld: false, jumpReleased: true }, `${label} release`);
     if (p.grounded) fail(`${label} did not launch`);
     fly(x, z, y, { double, label, tol, spin });
@@ -114,7 +115,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
   };
   /** A rider reads the next boulder trough ahead and takes the lane its boulders will be furthest from on arrival. */
   const boulderLane = (path, s, lat) => {
-    const ahead = l.stones.map(st => ({ st, q: path.nearest(st.mesh.position.x, st.mesh.position.z, 16) })).filter(o => o.q && o.q.s - s > -2.5 && o.q.s - s < 50);
+    const ahead = l.stones.map(st => ({ st, q: path.nearest(st.mesh.position.x, st.mesh.position.z, 16) })).filter(o => o.q && o.q.s - s > -2.5 && o.q.s - s < 30);
     if (!ahead.length) return null;
     const station = Math.min(...ahead.map(o => o.q.s)), group = ahead.filter(o => o.q.s - station < 3), f = path.at(station);
     const arrive = Math.max(0, station - s) / Math.max(8, Math.abs(p.speed));
@@ -123,22 +124,37 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     return lanes.sort((a, b) => b.clear - a.clear)[0].c;
   };
   const mount = (x, z, label = 'mount') => run(label, () => p.freeSkate, () => ({ ...toward(x, z, 1), jumpHeld: true }), 300);
-  /** Ride a path to station `to`: steer at the lane a few metres ahead, hold X to push when `push`, brake above `cap`, ollie at `pops`. */
-  const ride = (path, to, { lane = () => 0, cap = 60, push = false, pops = [], label = 'ride', look = 9 } = {}) => {
+  /**
+   * Ride a path to station `to`: steer at the lane a few metres ahead, hold X to push when `push`, brake above `cap`,
+   * ollie at `pops`, and for each of `grinds` ({ pop, end }) ollie at `pop` holding Grind to catch the rail in that lane
+   * and ride it to `end`, spinning any watcher that swoops while on it.
+   */
+  const ride = (path, to, { lane = () => 0, cap = 60, push = false, pops = [], grinds = [], label = 'ride', look = 9 } = {}) => {
     const popped = new Set(); let braking = false;
     const here = () => path.nearest(p.pos.x, p.pos.z, 40) ?? fail(`${label}: left the piste`);
     run(label, () => here().s >= to, () => {
-      const q = here(), s = q.s, dodge = boulderLane(path, s, q.lat);
+      const q = here(), s = q.s, rail = grinds.find(g => s >= g.pop - 14 && s < g.end);
+      const dodge = rail ? null : boulderLane(path, s, q.lat);
       const target = path.w(Math.min(path.length + 20, s + look), dodge ?? (typeof lane === 'function' ? lane(s) : lane));
-      if (p.state === 'grind') { const c = clamp(-p.balance * 5 - p.balanceVel * .7, -1, 1); return { moveY: 1, moveX: c, grindHeld: true }; }
+      if (p.state === 'grind') {
+        const c = clamp(-p.balance * 5 - p.balanceVel * .7, -1, 1), watcher = l.enemies.some(e => e.alive && e.kind === 'floater' && e.box.distanceToPoint(p.pos) < 4.5);
+        return { moveY: 1, moveX: c, grindHeld: true, ...(watcher ? { spinHeld: true } : {}) };
+      }
+      const steer = p.grounded || !p.airFromSkate ? toward(target[0], target[2], 1) : {};
+      if (rail) {
+        if (s < rail.pop - .4) return { ...steer, jumpHeld: true };
+        if (!popped.has(rail) && p.grounded) { popped.add(rail); return { ...steer, jumpHeld: false, grindHeld: true }; }
+        return { ...steer, jumpHeld: false, grindHeld: true };
+      }
       const pop = pops.find(q2 => !popped.has(q2) && s >= q2 - .4 && s < q2 + 4 && p.grounded);
       if (pop !== undefined) popped.add(pop);
       if (p.speed > cap) braking = true; else if (p.speed < cap - 3) braking = false;
-      const steer = p.grounded || !p.airFromSkate ? toward(target[0], target[2], 1) : {};
       const charging = pops.some(q2 => !popped.has(q2) && s >= q2 - 26 && s < q2);
       return { ...steer, jumpHeld: pop === undefined && (push || charging) && !braking, grabHeld: pop === undefined && braking && p.grounded };
     }, Math.round((to - here().s + 80) * 60 / 5) + 1200);
   };
+  /** A lane as a list of [station, lateral] knots, linear between them. */
+  const laneOf = knots => s => { if (s <= knots[0][0]) return knots[0][1]; for (let i = 1; i < knots.length; i++) if (s <= knots[i][0]) { const [a, la] = knots[i - 1], [b, lb] = knots[i]; return la + (lb - la) * (s - a) / (b - a); } return knots[knots.length - 1][1]; };
   const dismount = (label = 'dismount') => {
     run(`${label} brake`, () => Math.abs(p.speed) < .3 && p.grounded, () => ({ grabHeld: p.grounded }), 600);
     run(`${label} settle`, () => !p.freeSkate && p.grounded, () => ({}), 120);
@@ -157,30 +173,52 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
   const spinOnce = label => { for (let i = 0; i < 16; i++) step({ spinHeld: i < 8 }, label); };
   const beats = [
     { name: 'kindling steps', run() {
-      walk(0, Z(13), { keep: true }); walk(0, Z(22), { keep: true }); walk(0, Z(35.4));
+      if (collect) { walk(-2.7, Z(8.2), { tol: .3 }); for (let k = 0; k < 3; k++) { spinOnce('yard stack'); still(12, 'settle'); } }
+      walk(0, Z(13), { keep: true }); walk(0, Z(22), { keep: true });
+      if (collect) { walk(2.6, Z(33.4), { tol: .35 }); spinOnce('pair past the crab'); walk(0, Z(33), { tol: .4 }); }
+      walk(0, Z(35.4));
       jump(0, Z(39.2), 2.5, { label: 'onto the mill pond' });
       walk(0, Z(52), { keep: true }); walk(-2.6, Z(58.5));
       // Boulder trough: go as the boulder passes the walker's side heading away.
       const stone = stoneAt(0, Z(62.5));
       run('wait for the boulder to roll away', () => stone.mesh.position.x > .4 && stone.dir > 0, () => ({}), 900);
       walk(-2.6, Z(66), { keep: true });
-      walk(3, Z(70), { keep: true }); walk(3, Z(75.5), { keep: true }); walk(0, Z(80), { keep: true });
+      if (collect) {
+        // The box over the open half of the crevasse hangs above a spin from the bank: jump the gap through it.
+        walk(-3, Z(66.4)); leap([-3, Z(71)], [-3, Z(75.4), 2.5], { label: 'the open half, through the box over it' });
+        // Arrow: bounce to break the pair overhead, then the row, the arrow last.
+        walk(-3.4, Z(76.9), { tol: .3 });
+        for (let i = 0; i < 12; i++) step({ ...toward(-3.4, Z(79), 1), jumpHeld: true }, 'hop onto the arrow'); step({ ...toward(-3.4, Z(79), 1), jumpHeld: false, jumpReleased: true }, 'hop onto the arrow');
+        run('bounce on the arrow until the pair overhead is gone', () => !l.crates.some(c => c.alive && Math.abs(c.mesh.position.x + 3.4) < .4 && Math.abs(c.mesh.position.z - Z(79)) < .4 && c.mesh.position.y > 6), () => toward(-3.4, Z(79), clamp(dist(-3.4, Z(79)) / 1, 0, .7)), 900);
+        run('down off the arrow', () => p.grounded && p.pos.y < 2.7, () => toward(-3.4, Z(76.6), 1), 300);
+        walk(-3.4, Z(77.2), { tol: .3 }); for (let k = 0; k < 3; k++) { spinOnce('arrow row'); still(10, 'settle'); }
+        walk(0, Z(80), { tol: .5 });
+      } else { walk(3, Z(70), { keep: true }); walk(3, Z(75.5), { keep: true }); walk(0, Z(80), { keep: true }); }
       leap([0, Z(85)], [0, Z(90.4), 2.5], { label: 'first crevasse' });
+      if (collect) { walk(2.7, Z(94.6), { tol: .35 }); for (let k = 0; k < 4; k++) { spinOnce('first landing stack'); still(12, 'settle'); } walk(0, Z(96), { tol: .5 }); }
       walk(0, Z(98), { keep: true }); walk(0, Z(107), { keep: true });
       leap([0, Z(116)], [0, Z(121.2), 5], { label: 'second crevasse off the ice shelf' });
       walk(-3.4, Z(123.4)); still(20, 'bank the powder landing checkpoint');
-      walk(-1, Z(130), { keep: true }); walk(0, Z(139), { keep: true }); walk(0, Z(146.5), { keep: true });
+      walk(-1, Z(130), { keep: true }); walk(0, Z(139), { keep: true });
+      if (collect) { walk(-3.1, Z(148.3), { tol: .35 }); for (let k = 0; k < 3; k++) { spinOnce('mask stack'); still(12, 'settle'); } walk(0, Z(146.2), { tol: .4 }); }
+      walk(0, Z(146.5), { keep: true });
       leap([0, Z(151)], [0, Z(155.4), 7.5], { label: 'first pillar' });
       leap([0, Z(157.3)], [0, Z(161.6), 8], { label: 'glazed pillar', tap: true });
       leap([0, Z(163.8)], [0, Z(168.4), 8.5], { label: 'third pillar', tap: true, spin: true });
       walk(0, Z(169.6));
       jump(0, Z(173.4), 9.4, { label: 'onto the lookout shelf' });
-      walk(0, Z(183), { keep: true }); walk(0, Z(191), { keep: true }); walk(0, Z(196.2));
+      if (collect) { walk(-1.8, Z(177.6), { tol: .35 }); for (let k = 0; k < 4; k++) { spinOnce('lookout block'); still(12, 'settle'); } }
+      walk(0, Z(183), { keep: true }); walk(0, Z(190), { keep: true });
+      if (collect) { walk(2.3, Z(191.3), { tol: .35 }); for (let k = 0; k < 3; k++) { spinOnce('count trap'); still(12, 'settle'); } }
+      walk(0, Z(193), { tol: .5 }); walk(0, Z(196.2));
       still(20, 'bank the crest checkpoint');
     } },
     { name: 'first tracks', run() {
       mount(0, -212);
-      ride(RUN1, RUN1.length - 34, { label: 'first tracks', pops: [403] });
+      // The collector's line pushes all the way (a board trips on a box below 12.5 m/s), takes each stack in its lane and the log rail over the crevasse.
+      if (collect) ride(RUN1, RUN1.length - 34, { label: 'first tracks, every box', push: true, grinds: [{ pop: 394.6, end: 425 }],
+        lane: laneOf([[100, 0], [116, -2.6], [128, -2.6], [146, 2.6], [158, 2.6], [176, 0], [298, 0], [306, -3], [316, -3], [330, 0], [372, 0], [384, -3.4], [432, -3.4], [446, 0], [484, 0], [492, -2.8], [500, -2.8], [514, 2.8], [524, 2.8], [532, 0]]) });
+      else ride(RUN1, RUN1.length - 34, { label: 'first tracks', pops: [403] });
       ride(RUN1, RUN1.length - 8, { cap: 9, label: 'slow for the shore' });
       dismount('tarn shore');
     } },
@@ -249,12 +287,14 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
       leap([B[2].x0, z], [50.3, z, B[3].y], { label: 'rotten shelf two', tap: true });
       leap([B[3].x0, z], [45.8, z, B[4].y], { label: 'rotten shelf three', tap: true });
       leap([B[4].x0, z], [41.4, z + .6, B[5].y], { label: 'switch ledge', tap: true });
-      walk(41.4, z - .5, { tol: .3 }); spinOnce('break the mask crate');
       walk(39, z + 1); walk(34.4, z + 1); walk(33.2, z - .1, { tol: .25 }); spinOnce('hit the switch');
       if (!l.crates.some(c => c.alive && !c.pending && Math.abs(c.box.min.x - 26.4) < .7 && Math.abs(c.mesh.position.z - z) < .5)) fail('the switch did not build the bridge');
       // Walk the lids: a jump onto a wooden lid is a stomp and would break the footing.
-      walk(31.6, z, { keep: true }); walk(24, z, { tol: .35 });
-      jump(21, z, B[6].y, { label: 'off the bridge', charge: 12, tol: 1.8 });
+      if (debug) log(`bridge: masks ${p.masks} uber ${p.uberTimer.toFixed(1)} crates ${l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 23 && c.mesh.position.x < 31).length}`);
+      walk(31.6, z, { keep: true }); walk(24, z, { tol: .35, noSpin: true });
+      if (debug) log(`bridge end: crates ${l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 23 && c.mesh.position.x < 31).map(c => c.mesh.position.x.toFixed(1)).join(',')} at ${p.pos.x.toFixed(2)},${p.pos.y.toFixed(2)}`);
+      jump(21.6, z, B[6].y, { label: 'off the bridge', charge: 12, tol: 1.8, noSpin: true });
+      walk(22.1, z - .45, { tol: .3 }); for (let k = 0; k < 2; k++) { spinOnce('mask stack past the bridge'); still(12, 'settle'); } walk(21.7, z, { tol: .3 });
       waitStamper(19.5, z, .8, 'twin stampers, first'); walk(16.6, z);
       waitStamper(13.5, z, .8, 'twin stampers, second'); walk(11, z, { keep: true });
       leap([B[6].x0, z], [4.8, z, B[7].y], { label: 'last pillar', hold: 1 });
@@ -263,10 +303,13 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     } },
     { name: 'powderkeg run', run() {
       mount(-36, -614);
-      ride(RUN2, RUN2.length - 40, { label: 'powderkeg run', pops: [239, 451, 595] });
+      if (collect) ride(RUN2, RUN2.length - 40, { label: 'powderkeg run, every box', push: true, pops: [221, 595], grinds: [{ pop: 50.6, end: 85 }, { pop: 450.6, end: 462 }],
+        lane: laneOf([[30, 0], [44, 0], [50, 3.2], [96, 3.2], [110, 0], [238, 0], [248, -2.2], [258, -2.2], [272, 2.2], [281, 2.2], [292, 0], [354, 0], [360, -1.5], [366, -1.5], [378, 0], [402, 0], [426, 0], [438, -3.6], [464, -3.6], [476, 0], [524, 0], [530, -1.5], [536, -1.5], [546, 0], [568, 0]]) });
+      else ride(RUN2, RUN2.length - 40, { label: 'powderkeg run', pops: [221, 451, 595] });
       ride(RUN2, RUN2.length - 4, { cap: 9, label: 'slow for the works yard' });
       dismount('works yard');
       const [fx, , fz] = PLAN.FINISH;
+      if (collect) { walk(fx - 3, fz + 7.6, { tol: .35 }); for (let k = 0; k < 3; k++) { spinOnce('works yard stack'); still(12, 'settle'); } }
       walk(fx + 4.4, fz + 8.4, { tol: .35 }); spinOnce('hit the green switch');
       walk(fx, fz + 14, { keep: true });
       run('through the gate', () => p.state === 'finished', () => toward(fx, fz + 30, 1), 900);
