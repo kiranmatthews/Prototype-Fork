@@ -17,7 +17,7 @@ const vertexShader=/* glsl */`
   attribute vec2 size;
   attribute vec4 state;
   uniform float time, frameCount, fps;
-  uniform vec2 anchors[16];
+  uniform vec2 anchors[64];
   varying vec2 spriteUV, nextOffset;
   varying float frame, opacity;
   void main(){
@@ -31,21 +31,22 @@ const vertexShader=/* glsl */`
     viewed.xy+=mat2(c,s,-s,c)*local;gl_Position=projectionMatrix*viewed;
   }
 `;
-const fragmentShader=/* glsl */`
-  uniform sampler2D atlas, atlasNext;
-  uniform vec2 grid, nextGrid, atlasSize, nextAtlasSize;
-  uniform float firstPageCount, frameCount, hue, blendFrames;
+const fragmentShader=(pages:FireCycleData['pages'])=>/* glsl */`
+  ${pages.map((_,i)=>'uniform sampler2D atlas'+i+';').join('\n')}
+  uniform float frameCount, hue, blendFrames;
   varying vec2 spriteUV, nextOffset;
   varying float frame, opacity;
   vec4 sampleFrame(float f,vec2 uv){
     if(any(lessThan(uv,vec2(0.)))||any(greaterThan(uv,vec2(1.))))return vec4(0.);
-    if(f<firstPageCount){
-      vec2 cell=vec2(mod(f,grid.x),grid.y-1.-floor(f/grid.x)),inset=.5/atlasSize;
-      return texture2D(atlas,cell/grid+inset+uv*(1./grid-2.*inset));
-    }
-    f-=firstPageCount;
-    vec2 cell=vec2(mod(f,nextGrid.x),nextGrid.y-1.-floor(f/nextGrid.x)),inset=.5/nextAtlasSize;
-    return texture2D(atlasNext,cell/nextGrid+inset+uv*(1./nextGrid-2.*inset));
+    ${pages.map((p,i)=>`
+    if(f<${(p.first+p.count).toFixed(1)}){
+      float localFrame=f-${p.first.toFixed(1)};
+      vec2 grid=vec2(${p.columns.toFixed(1)},${p.rows.toFixed(1)});
+      vec2 cell=vec2(mod(localFrame,grid.x),grid.y-1.-floor(localFrame/grid.x));
+      vec2 inset=.5/vec2(${p.width.toFixed(1)},${p.height.toFixed(1)});
+      return texture2D(atlas${i},cell/grid+inset+uv*(1./grid-2.*inset));
+    }`).join('\n')}
+    return vec4(0.);
   }
   vec3 rgb2hsv(vec3 c){
     vec4 K=vec4(0.,-1./3.,2./3.,-1.),p=mix(vec4(c.bg,K.wz),vec4(c.gb,K.xy),step(c.b,c.g));
@@ -96,9 +97,9 @@ export class SpriteFire extends THREE.Group {
     this.sizes=new THREE.InstancedBufferAttribute(new Float32Array(this.tongues.length*2),2).setUsage(THREE.DynamicDrawUsage);
     this.states=new THREE.InstancedBufferAttribute(new Float32Array(this.tongues.length*4),4).setUsage(THREE.DynamicDrawUsage);
     geometry.setAttribute('centre',this.centres);geometry.setAttribute('size',this.sizes);geometry.setAttribute('state',this.states);geometry.instanceCount=this.tongues.length;
-    const [a,b=a]=cycle.pages;
-    this.uniforms={atlas:{value:cycle.textures[0]},atlasNext:{value:cycle.textures[1]??cycle.textures[0]},atlasSize:{value:new THREE.Vector2(a.width,a.height)},nextAtlasSize:{value:new THREE.Vector2(b.width,b.height)},grid:{value:new THREE.Vector2(a.columns,a.rows)},nextGrid:{value:new THREE.Vector2(b.columns,b.rows)},firstPageCount:{value:a.count},frameCount:{value:cycle.frameCount},fps:{value:cycle.fps},anchors:{value:Array.from({length:16},(_,i)=>new THREE.Vector2(...cycle.frames[i%cycle.frameCount].anchor))},time:{value:0},hue:{value:spec.hue},blendFrames:{value:0}};
-    const material=new THREE.ShaderMaterial({name:'Individually drawn flame · '+cycle.id,uniforms:this.uniforms,vertexShader,fragmentShader,transparent:true,blending:THREE.AdditiveBlending,depthTest:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
+    if(cycle.frameCount>64||cycle.pages.length>8)throw new Error('Flame cycle exceeds native atlas limits');
+    this.uniforms={atlas:{value:cycle.textures[0]},...Object.fromEntries(cycle.textures.map((texture,i)=>['atlas'+i,{value:texture}])),frameCount:{value:cycle.frameCount},fps:{value:cycle.fps},anchors:{value:Array.from({length:64},(_,i)=>new THREE.Vector2(...cycle.frames[i%cycle.frameCount].anchor))},time:{value:0},hue:{value:spec.hue},blendFrames:{value:0}};
+    const material=new THREE.ShaderMaterial({name:'Individually drawn flame · '+cycle.id,uniforms:this.uniforms,vertexShader,fragmentShader:fragmentShader(cycle.pages),transparent:true,blending:THREE.AdditiveBlending,depthTest:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
     this.mesh=new THREE.Mesh(geometry,material);this.mesh.frustumCulled=false;this.add(this.mesh);
     // Existing Jak framebuffer pass and rising pocket writer, unchanged.
     attachFlameHeat(this,emit=>{

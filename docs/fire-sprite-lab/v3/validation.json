@@ -1,0 +1,72 @@
+{
+  "reviewedAt": "2026-11-11T10:53:47.141416+00:00",
+  "revision": "v3",
+  "framesPerFamily": 36,
+  "families": 3,
+  "totalUniqueFrames": 108,
+  "newAcceptedImagegenCels": 72,
+  "baseFps": 36,
+  "baseDurationMs": 1000,
+  "sourceCanvases": {
+    "narrow": [
+      1254,
+      1254
+    ],
+    "medium": [
+      1254,
+      1254
+    ],
+    "broad": [
+      1774,
+      887
+    ]
+  },
+  "atlasPages": 13,
+  "losslessVerification": "Exact alpha and every RGB value with nonzero alpha in all 108 decoded atlas cells match the original native PNGs. Hidden RGB at alpha zero may be normalized by WebP.",
+  "browser": {
+    "lite": "pass",
+    "fullNative": "pass",
+    "all108FramesStepped": true,
+    "allThree36to01Wraps": "pass",
+    "allEightArrangements": "pass",
+    "quarterSpeed": "pass",
+    "frameBlendingDuringReview": false,
+    "resolution720": [
+      1431,
+      720
+    ],
+    "resolutionNative": [
+      1972,
+      992
+    ],
+    "heatPixels": {
+      "heat": {
+        "changed": 1101,
+        "peak": 29
+      },
+      "zero": {
+        "changed": 0,
+        "peak": 0
+      },
+      "hue": {
+        "changed": 17271,
+        "peak": 207
+      }
+    },
+    "production": "pass",
+    "productionStamp": "Codex/sol fork \u00b7 11-11 10:47 UTC",
+    "consoleWarningsAndErrors": []
+  },
+  "checks": {
+    "build": "pass",
+    "releaseSizeBytes": 991918868,
+    "releaseLimitBytes": 1000000000,
+    "toolDirectory": "pass",
+    "authoringScriptSyntax": "pass"
+  },
+  "notes": [
+    "The one-second 36 fps base cadence is authored, not measured from the supplied game recordings.",
+    "No extra gameplay or level checks were needed; runtime changes are scoped to the standalone fire exhibit.",
+    "Source and native renderer contact sheets are retained for visual review; numeric differences alone do not establish artistic fidelity."
+  ]
+}

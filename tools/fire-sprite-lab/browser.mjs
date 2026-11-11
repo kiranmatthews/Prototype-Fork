@@ -44,7 +44,7 @@ try{
   await page.locator('#reset').click();assert.equal(await page.evaluate(()=>window.__fireLab.state.hues[0]),0);
   await page.locator('#grid').uncheck();await snapshot('plain-backdrop');await page.locator('#grid').check();
   await page.locator('#source-only').check();assert.ok(await page.evaluate(()=>window.__fireLab.fires.every(f=>f.sourceOnly)));
-  for(let i=0;i<3;i++){await page.locator('.exhibit').nth(i).click();await settle();await page.locator('#drawing-frame').fill('11');await page.locator('#drawing-frame').dispatchEvent('input');await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),11);await page.locator('#step').click();await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),0);}
+  for(let i=0;i<3;i++){await page.locator('.exhibit').nth(i).click();await settle();const last=Number(await page.locator('#drawing-frame').getAttribute('max'));await page.locator('#drawing-frame').fill(String(last));await page.locator('#drawing-frame').dispatchEvent('input');await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),last);await page.locator('#step').click();await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),0);}
   await page.locator('#source-only').uncheck();
   await page.locator('#interpolate').uncheck();assert.ok(await page.evaluate(()=>window.__fireLab.fires.every(f=>f.uniforms.blendFrames.value===0)));await page.locator('#interpolate').check();
   report.checks.push('Pixel-exact pause, advancing frames, playback, hue change, heat on/off, zero-strength identity, frame blend toggle');

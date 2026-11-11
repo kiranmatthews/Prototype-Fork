@@ -167,7 +167,7 @@ function draw(){
 }
 async function start(){
   try{
-    const base=new URL('./fire-sprites/v2/',document.baseURI);
+    const base=new URL('./fire-sprites/v3/',document.baseURI);
     const response=await fetch(new URL('cycles.json',base));
     if(!response.ok)throw Error('Flame cycle manifest: '+response.status);
     const data=await response.json() as Record<FireFamily,FireCycleData>;
