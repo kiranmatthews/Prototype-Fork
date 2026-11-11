@@ -1,0 +1,1392 @@
+{
+  "id": "thps2-skate-heaven",
+  "game": "THPS2",
+  "level": "Skate Heaven",
+  "location": "fictional floating islands in space (skate-history spots)",
+  "type": "bonus",
+  "careerPosition": null,
+  "timeLimit": "none in free skate; 2:00 single session",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-SkateHeaven.png",
+    "PS12 skate-heaven",
+    "LP12 1:12:50-1:14:00",
+    "WEB absolutcheats",
+    "WEB gamegenie",
+    "WEB trophy-tom"
+  ],
+  "goals": [
+    {
+      "text": "No goals (bonus level; no checklist on VG)",
+      "version": "original"
+    },
+    {
+      "text": "No goals; pickups: Vicarious Visions logo and alien plushie in the volcano secret area",
+      "version": "remake"
+    },
+    {
+      "text": "Unlock: complete all career objectives with the original characters, Spider-Man, Officer Dick and a custom skater (gamegenie); absolutcheats: $150,000 in career with all characters except Private Carrera",
+      "version": "original"
+    },
+    {
+      "text": "Unlock: finish every park goal (trophy-tom)",
+      "version": "remake"
+    }
+  ],
+  "size": {
+    "class": "very large",
+    "footprint": "≈ 200-300 m across three linked floating islands plus a high snake run and a separate secret island",
+    "evidence": "scaled from Tony's house (assumed ≈ 20 m long) on VG; low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Start island: radramp and Combi bowl",
+      "layer": "tall halfpipe; deep clover pool; bleachers",
+      "features": [
+        "radramp halfpipe (translucent purple end)",
+        "Combi bowl",
+        "two bleachers"
+      ],
+      "notes": "VG START at the foot of the radramp"
+    },
+    {
+      "id": "Z2",
+      "name": "Snake run and full pipe",
+      "layer": "long twisting halfpipe climbing away; full pipe at its end",
+      "features": [
+        "Zig/Zag/Wussy curves",
+        "full pipe loop",
+        "side rails"
+      ],
+      "notes": "Longest flow line"
+    },
+    {
+      "id": "Z3",
+      "name": "Tony's island: House of Tony and wooden halfpipes",
+      "layer": "ground; two wooden halfpipes; house roof ≈ 1 storey with neon-blue gutter",
+      "features": [
+        "wooden halfpipes with deck rails and signs",
+        "corner gap (Airs Hole)",
+        "house roof gutter (volcano trigger)"
+      ],
+      "notes": "Remake signage BONES, Independent (LP12)"
+    },
+    {
+      "id": "Z4",
+      "name": "San Dieguito (SD) hall",
+      "layer": "portal hallway with stairs, window, high small platform, roof",
+      "features": [
+        "10-stair set",
+        "window",
+        "small platform on the wall",
+        "roof"
+      ],
+      "notes": "VG abbreviates San Dieguito to SD"
+    },
+    {
+      "id": "Z5",
+      "name": "Volcano and kicker platform",
+      "layer": "lava crater on a lower tier; platform with kicker and angled pink neon rail",
+      "features": [
+        "crater",
+        "kicker",
+        "pink rails"
+      ],
+      "notes": "Door to the secret island"
+    },
+    {
+      "id": "Z6",
+      "name": "Sadlands island",
+      "layer": "dirt hills with a winding stone snake channel; deep pit; swings; neon dome; basketball court; benches; pink neon edges",
+      "features": [
+        "snake channel 4-way crossings",
+        "Pit O Doom",
+        "swing rails",
+        "neon dome",
+        "court hub",
+        "bench rows"
+      ],
+      "notes": "Low island"
+    },
+    {
+      "id": "Z7",
+      "name": "Secret area: Animal Chin ramp island ('Enima Chen island')",
+      "layer": "separate island reached by teleport",
+      "features": [
+        "Chin ramp halfpipe with roll-in and hole",
+        "tunnel"
+      ],
+      "notes": "Labels drawn on the Z3 halfpipe complex in VG; PS12 places them in the secret area"
+    }
+  ],
+  "landmarks": [
+    "ringed planet in the sky",
+    "volcano",
+    "House of Tony",
+    "wooden halfpipes",
+    "San Dieguito hall",
+    "snake run and full pipe",
+    "Combi bowl",
+    "neon dome",
+    "swing set",
+    "Animal Chin ramp (secret)"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "down the radramp halfpipe toward the snake run (PS12: 'head down the half pipe in front of you and follow it to the right')",
+    "visibleCollectibles": [],
+    "notes": "The volcano is visible smoking from the start (LP12 1:13:11); no collectibles in the original"
+  },
+  "collectibles": [
+    {
+      "id": "SECRET",
+      "type": "secret-area",
+      "label": "Volcano -> Animal Chin ramp island",
+      "zone": "Z5",
+      "landmark": "lava crater below the SD hall",
+      "layer": "trigger on the house roof; entry by dropping into the crater",
+      "heightM": "trigger roof ≈ 3-4 above Tony's island (estimate); crater depth unknown",
+      "launchFrom": "platform with the kicker and angled pink neon rail",
+      "visibility": {
+        "firstSight": "volcano smoking from spawn; erupts with orange plume, rumble and (original) screen shake when triggered",
+        "fromSpawn": true,
+        "reads": "volcano as a standing tease; gap names spell the instruction ('Time 2 Feed the Volcano!!!', 'Feed Me!!!')",
+        "distanceFromFirstSightM": "≈ 50-100 (inferred)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "start radramp",
+          "to": "Combi bowl / wooden halfpipes",
+          "geometry": "LP12: Combi bowl at 1:56, wooden-halfpipe spine transfers at 1:49-1:46. Original (absolutcheats): follow the snake run, go through the full pipe, jump off the hip to the top of the halfpipe"
+        },
+        {
+          "step": 2,
+          "move": "wallride",
+          "from": "house wall",
+          "to": "house roof",
+          "geometry": "LP12: BS wallride + wallie up the wall (1:44-1:43). Original: grind the rail on top of the halfpipe to your right, then jump onto the roof"
+        },
+        {
+          "step": 3,
+          "move": "grind",
+          "from": "house roof gutter",
+          "to": "second roof",
+          "geometry": "grind the neon-blue gutter: 'Time 2 Feed the Volcano!!!' (4000) at 1:40; the volcano erupts"
+        },
+        {
+          "step": 4,
+          "move": "ride",
+          "from": "roof",
+          "to": "kicker platform",
+          "geometry": "drop off; down and left past a neon-blue pole and a neon-pink pole (PS12); original: 'proceed to the Combibowl area but do not enter'"
+        },
+        {
+          "step": 5,
+          "move": "ollie",
+          "from": "platform / channel side",
+          "to": "crater centre",
+          "geometry": "with lots of speed ollie into the middle ('Feed Me!!!', 2000) within ≈ 30 s (remake); PS12 suggests a boneless"
+        },
+        {
+          "step": 6,
+          "move": "transfer",
+          "from": "arrival",
+          "to": "Chin ramp",
+          "geometry": "Blowin It Out the Hole! opens the Tunnel of Luvin; leave by hitting the clock or skating toward the Neversoft sign (absolutcheats)"
+        }
+      ],
+      "moves": [
+        "wallride",
+        "wallie",
+        "grind",
+        "ollie",
+        "transfer"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "knowing the two-step chain",
+        "long roof-edge grind",
+        "committed high-speed jump into a hazard-looking crater"
+      ],
+      "coupling": "timed window after the trigger (≈ 30 s in the remake, PS12; original unknown)",
+      "failure": "miss the crater: wait out or re-trigger (≈ 20 s from spawn in LP12); return from the island via the clock",
+      "timeFromSpawnS": "trigger ≈ 20 (LP12 remake, 1:40); crater entry not shown; original unknown",
+      "difficulty": 4,
+      "roles": [
+        "SECRET-AREA",
+        "EXPLORE",
+        "REWARD"
+      ],
+      "why": "A goal-less bonus level still keeps one big secret, opened by a joke-named trigger chain built from its signature verbs (rooftop rail, drop, commit jump)",
+      "evidence": "VG; PS12; LP12 1:13:07-1:13:29; WEB absolutcheats",
+      "confidence": "high (existence, trigger); medium (original route); low (window length)"
+    },
+    {
+      "id": "VV",
+      "type": "remake-pickup",
+      "label": "Vicarious Visions logo (remake)",
+      "zone": "Z7",
+      "landmark": "hovering above the end of the Chin halfpipe",
+      "layer": "air above a halfpipe end",
+      "heightM": "not stated",
+      "launchFrom": "Chin halfpipe",
+      "visibility": {
+        "firstSight": "straight ahead on arrival",
+        "fromSpawn": false,
+        "reads": "floating VV logo",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "unlock",
+          "from": "volcano chain",
+          "to": "secret island",
+          "geometry": "as SECRET"
+        },
+        {
+          "step": 2,
+          "move": "vert-air",
+          "from": "halfpipe end",
+          "to": "logo",
+          "geometry": "air at the end of the halfpipe"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "unlock"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "the volcano chain"
+      ],
+      "coupling": "volcano window",
+      "failure": "re-trigger the volcano",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 4,
+      "roles": [
+        "SECRET-AREA",
+        "REWARD"
+      ],
+      "why": "The remake hangs its new pickup behind the old secret",
+      "evidence": "PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "PLUSH",
+      "type": "remake-pickup",
+      "label": "Alien plushie (remake)",
+      "zone": "Z7",
+      "landmark": "behind the quarter pipe left of the halfpipe on the secret island",
+      "layer": "ground behind geometry",
+      "heightM": "≈ 0",
+      "launchFrom": "n/a",
+      "visibility": {
+        "firstSight": "hidden behind the quarter pipe",
+        "fromSpawn": false,
+        "reads": "small plush toy",
+        "distanceFromFirstSightM": "≈ 5"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "unlock",
+          "from": "volcano chain",
+          "to": "secret island",
+          "geometry": "as SECRET"
+        },
+        {
+          "step": 2,
+          "move": "ride",
+          "from": "halfpipe",
+          "to": "behind the left QP",
+          "geometry": "ride behind it"
+        }
+      ],
+      "moves": [
+        "unlock"
+      ],
+      "speed": "none",
+      "skillGates": [
+        "the volcano chain"
+      ],
+      "coupling": "volcano window",
+      "failure": "re-trigger the volcano",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 4,
+      "roles": [
+        "SECRET-AREA",
+        "EXPLORE"
+      ],
+      "why": "Exploration reward behind the secret",
+      "evidence": "PS12",
+      "confidence": "medium"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "Time 2 Feed the Volcano!!!",
+      "points": 4000,
+      "kind": "roof",
+      "location": "Z3 house-roof neon-blue gutter -> second roof (triggers the eruption)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET",
+        "VV",
+        "PLUSH"
+      ],
+      "evidence": "VG; PS12; LP12 1:13:26"
+    },
+    {
+      "name": "Feed Me!!!",
+      "points": 2000,
+      "kind": "secret-area",
+      "location": "Z5 ollie into the erupting crater from the platform with the angled pink neon rail",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "SECRET",
+        "VV",
+        "PLUSH"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Gutter 2 SD Roof",
+      "points": 800,
+      "kind": "roof",
+      "location": "Z3 -> Z4 house gutter -> hall roof (PS12 also lists 600)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Off the Roof 2 Rail",
+      "points": 2000,
+      "kind": "roof",
+      "location": "Z3 house roof -> blue rail",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "SD Roof 2 Edge",
+      "points": 1600,
+      "kind": "roof",
+      "location": "Z4 hall roof -> neon edge rail",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "House of Tony 2 Sadlands",
+      "points": 500,
+      "kind": "roof",
+      "location": "Z3 roof -> Sadlands",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Ramp 2 Rail",
+      "points": 300,
+      "kind": "rail-transfer",
+      "location": "Z3 halfpipe deck signs -> blue rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Longrail",
+      "points": 2000,
+      "kind": "rail-transfer",
+      "location": "Z3 halfpipe rail -> blue rail -> lower halfpipe",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Up 2 Pipe Rail",
+      "points": 1000,
+      "kind": "other",
+      "location": "Z2 out of the snake run onto the full pipe's side rail",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Cleaning the Pipes",
+      "points": 5000,
+      "kind": "other",
+      "location": "Z2 loop inside the full pipe",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Rail 2 Snakerun",
+      "points": 50,
+      "kind": "rail-transfer",
+      "location": "Z2 blue rail -> snake lip",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Zig Gap",
+      "points": 1500,
+      "kind": "channel",
+      "location": "Z2 snake curve 1, wide, heading down",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Reverse Zig Gap",
+      "points": 2000,
+      "kind": "channel",
+      "location": "Z2 snake curve 1, wide, heading up",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Weak Sauce Zig Gap",
+      "points": 50,
+      "kind": "channel",
+      "location": "Z2 snake curve 1, narrow",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Zag Gap",
+      "points": 2000,
+      "kind": "channel",
+      "location": "Z2 snake curve 2, wide",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Reverse Zag Gap",
+      "points": 2000,
+      "kind": "channel",
+      "location": "Z2 snake curve 2, wide, heading up",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Weak Sauce Zag Gap",
+      "points": 50,
+      "kind": "channel",
+      "location": "Z2 snake curve 2, narrow",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Wussy Snake Gap",
+      "points": 800,
+      "kind": "channel",
+      "location": "Z2 snake curve 3, wide, heading down",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Reverse Wussy Snake Gap",
+      "points": 1000,
+      "kind": "channel",
+      "location": "Z2 snake curve 3, wide, heading up",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Weak Sauce Wussy Snake Gap",
+      "points": 50,
+      "kind": "channel",
+      "location": "Z2 snake curve 3, narrow",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Radramp 2 Snakerun",
+      "points": 2000,
+      "kind": "rail-transfer",
+      "location": "Z1 radramp lip -> two bleachers -> snake lip",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Radramp 2 Islands Edge",
+      "points": 400,
+      "kind": "other",
+      "location": "Z1 radramp lip -> pink island edge",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Fence 2 Radramp",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "Z1 tall halfpipe top -> lower halfpipe lip",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Up 2 Combi",
+      "points": 1000,
+      "kind": "other",
+      "location": "Z3 -> Z1 small wooden halfpipe -> start deck",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Down 2 Tonys Island",
+      "points": 50,
+      "kind": "other",
+      "location": "Z1 -> Z3 drop",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Dropping In On Tony",
+      "points": 250,
+      "kind": "other",
+      "location": "Z1 -> Z3 drop into the wooden halfpipe",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Airs Hole",
+      "points": 300,
+      "kind": "channel",
+      "location": "Z3 over the corner gap of the big wooden halfpipe",
+      "moves": [
+        "vert-air",
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Platform Gap",
+      "points": 300,
+      "kind": "channel",
+      "location": "Z3 across the same gap on top of the halfpipe",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Ramp Rail Gap",
+      "points": 75,
+      "kind": "rail-transfer",
+      "location": "Z3 lip -> over the gap -> lip",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "90 Degree Ramp Rail Gap",
+      "points": 500,
+      "kind": "rail-transfer",
+      "location": "Z3 taller pipe -> lower pipe",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Blowin It Out the Hole!",
+      "points": 500,
+      "kind": "secret-area",
+      "location": "Z7 transfer across the Chin halfpipe; opens the Tunnel of Luvin",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "SECRET",
+        "VV"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Tunnel of Luvin",
+      "points": 1000,
+      "kind": "secret-area",
+      "location": "Z7 ride through the opened tunnel",
+      "moves": [
+        "ride"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "The Holy Crail",
+      "points": 500,
+      "kind": "secret-area",
+      "location": "Z7 air over the roll-in",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Chen Rail Series",
+      "points": 300,
+      "kind": "secret-area",
+      "location": "Z7 lip grind over the roll-in",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Woohooo Oh Ho Yeehee!!!",
+      "points": 2500,
+      "kind": "wallride",
+      "location": "Z4 wallride the hall wall -> wallie onto the small platform",
+      "moves": [
+        "wallride",
+        "wallie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Tight Landing",
+      "points": 1500,
+      "kind": "kicker",
+      "location": "Z4 small ramp with a sign -> small platform",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "SD 10 Set",
+      "points": 100,
+      "kind": "other",
+      "location": "Z4 hall steps",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Grassy Gap",
+      "points": 50,
+      "kind": "other",
+      "location": "Z4 out at the bottom of the hall steps (PS12 'Portal Gap')",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Big Fat Grassy Gap",
+      "points": 400,
+      "kind": "other",
+      "location": "Z4 as above, far (PS12 'Big Fat Portal Gap')",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "SD Window 2 Sadlands",
+      "points": 500,
+      "kind": "other",
+      "location": "Z4 -> Z6 through the window",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "SD Hall 2 Sadlands",
+      "points": 50,
+      "kind": "other",
+      "location": "Z4 -> Z6 drop",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "SD Hall 2 Edge",
+      "points": 500,
+      "kind": "other",
+      "location": "Z4 drop to the edge rail",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Sadlands 2 SD Hall",
+      "points": 500,
+      "kind": "kicker",
+      "location": "Z6 -> Z4 up the grass bank into the hall",
+      "moves": [
+        "bank",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Sadlands Up 2 Isle of Tony",
+      "points": 1000,
+      "kind": "kicker",
+      "location": "Z6 -> Z3 up the grass bank",
+      "moves": [
+        "bank",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Isle of Tony 2 Sadlands",
+      "points": 300,
+      "kind": "other",
+      "location": "Z3 -> Z6 drop",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Isle of Tony 2 Edge",
+      "points": 600,
+      "kind": "other",
+      "location": "Z3 drop to the edge rail",
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Kicker 2 Railspan",
+      "points": 1500,
+      "kind": "kicker",
+      "location": "Z5 air over the kicker -> pink rail",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Kicker 2 Rail",
+      "points": null,
+      "kind": "kicker",
+      "location": "Z5 kicker -> rail (VG only)",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "SECRET"
+      ],
+      "evidence": "VG"
+    },
+    {
+      "name": "Rail 2 Kicker 2 Rail 2 Bench",
+      "points": 1500,
+      "kind": "kicker",
+      "location": "Z5/Z6 blue rail -> kicker -> pink rail -> bench",
+      "moves": [
+        "grind",
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Bench Gap",
+      "points": 2000,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 two benches below Tony's island",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Bench Gap Series",
+      "points": 5000,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 perimeter bench row",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Jumpin Da Hub",
+      "points": 1000,
+      "kind": "spine",
+      "location": "Z6 over the court's wooden hub",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Rimrail Gap",
+      "points": 450,
+      "kind": "rail-transfer",
+      "location": "Z6 pink rails either side of the court",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Clearing the Swings",
+      "points": 1000,
+      "kind": "over-object",
+      "location": "Z6 bank -> over the swing rail",
+      "moves": [
+        "bank",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Swinging the Set",
+      "points": 2000,
+      "kind": "other",
+      "location": "Z6 bank -> grind the swing rail",
+      "moves": [
+        "bank",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Northern Swingrail",
+      "points": 900,
+      "kind": "other",
+      "location": "Z6 arched neon rail (north)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Southern Swingrail",
+      "points": 900,
+      "kind": "other",
+      "location": "Z6 arched neon rail (south)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Over the Dome",
+      "points": 1000,
+      "kind": "over-object",
+      "location": "Z6 banks -> over the neon dome",
+      "moves": [
+        "bank",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Top of Da World Ma!!!",
+      "points": 700,
+      "kind": "other",
+      "location": "Z6 grind over the top of the spherical rails",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Pit O Doom!!!",
+      "points": null,
+      "kind": "other",
+      "location": "Z6 deep round pit (VG only)",
+      "moves": [],
+      "onRouteOf": [],
+      "evidence": "VG"
+    },
+    {
+      "name": "Sadlands Path Gap",
+      "points": 800,
+      "kind": "channel",
+      "location": "Z6 over the path, bank to bank",
+      "moves": [
+        "bank",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Northeast Snake Gap",
+      "points": 800,
+      "kind": "channel",
+      "location": "Z6 over the stone channel (north-east)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Northwest Snake Gap",
+      "points": 800,
+      "kind": "channel",
+      "location": "Z6 over the stone channel (north-west)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Southern Snake Gap",
+      "points": null,
+      "kind": "channel",
+      "location": "Z6 over the stone channel (south; VG only)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG"
+    },
+    {
+      "name": "Northern Crossover Sad Gap",
+      "points": 300,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 channel walls",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Southern Crossover Sad Gap",
+      "points": 300,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 channel walls",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Mid Intersect Sad Gap",
+      "points": 350,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 4-way crossing walls",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Northern Intersect Sad Gap",
+      "points": 200,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 4-way crossing walls",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Southern Intersect Sad Gap",
+      "points": 200,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 4-way crossing walls",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "90 Degree Sadlands Rail Gap",
+      "points": 300,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 wall -> opposite wall round a 90-degree turn",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "Time 2 Feed the Volcano!!! (grind the house-roof gutter to the next roof)",
+      "opens": "volcano eruption; crater enterable for a timed window (≈ 30 s in the remake)",
+      "neededFor": [
+        "SECRET",
+        "VV",
+        "PLUSH"
+      ],
+      "evidence": "PS12; WEB absolutcheats; LP12 1:13:25"
+    },
+    {
+      "trigger": "Feed Me!!! (ollie into the erupting crater)",
+      "opens": "teleport to the Animal Chin ramp island",
+      "neededFor": [
+        "SECRET",
+        "VV",
+        "PLUSH"
+      ],
+      "evidence": "PS12; WEB absolutcheats"
+    },
+    {
+      "trigger": "Blowin It Out the Hole! on the Chin ramp",
+      "opens": "Tunnel of Luvin (the ramp 'smashes open')",
+      "neededFor": [],
+      "evidence": "PS12; WEB absolutcheats"
+    },
+    {
+      "trigger": "hit the clock / skate toward the Neversoft sign",
+      "opens": "return from the secret island",
+      "neededFor": [],
+      "evidence": "WEB absolutcheats"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Radramp to snake",
+      "sequence": [
+        "radramp lip",
+        "two bleachers",
+        "snake lip (Radramp 2 Snakerun)"
+      ],
+      "links": [
+        "rail-transfer"
+      ],
+      "collectibles": [],
+      "why": "Spawn launches into a 2000 chain",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L2",
+      "name": "Snake run and full pipe",
+      "sequence": [
+        "Zig",
+        "Zag",
+        "Wussy (each wide/narrow/reverse)",
+        "full pipe loop (Cleaning the Pipes)",
+        "Up 2 Pipe Rail"
+      ],
+      "links": [
+        "channel transfers",
+        "loop"
+      ],
+      "collectibles": [],
+      "why": "Long flow line with width and direction ladders",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L3",
+      "name": "Wooden halfpipes to roof",
+      "sequence": [
+        "Dropping In On Tony",
+        "Airs Hole / Platform Gap",
+        "Ramp Rail Gap",
+        "Ramp 2 Rail",
+        "Longrail"
+      ],
+      "links": [
+        "air",
+        "lip",
+        "rail-transfer"
+      ],
+      "collectibles": [
+        "SECRET"
+      ],
+      "why": "Original route up to the roof",
+      "evidence": "VG; PS12; WEB absolutcheats"
+    },
+    {
+      "id": "L4",
+      "name": "Volcano chain",
+      "sequence": [
+        "house roof gutter (Time 2 Feed the Volcano!!!)",
+        "drop",
+        "kicker platform",
+        "Feed Me!!!",
+        "Chin island"
+      ],
+      "links": [
+        "roof grind",
+        "drop",
+        "commit jump"
+      ],
+      "collectibles": [
+        "SECRET",
+        "VV",
+        "PLUSH"
+      ],
+      "why": "Trigger chain to the secret",
+      "evidence": "PS12; LP12; WEB absolutcheats"
+    },
+    {
+      "id": "L5",
+      "name": "Chin island line",
+      "sequence": [
+        "Blowin It Out the Hole!",
+        "Tunnel of Luvin",
+        "The Holy Crail",
+        "Chen Rail Series"
+      ],
+      "links": [
+        "transfer",
+        "roll-in air",
+        "lip grind"
+      ],
+      "collectibles": [
+        "VV",
+        "PLUSH"
+      ],
+      "why": "The secret island's own line that opens a tunnel",
+      "evidence": "PS12; WEB absolutcheats"
+    },
+    {
+      "id": "L6",
+      "name": "SD hall precision",
+      "sequence": [
+        "Sadlands 2 SD Hall",
+        "SD 10 Set",
+        "Grassy/Portal Gap",
+        "wallride -> wallie -> Woohooo platform",
+        "Tight Landing"
+      ],
+      "links": [
+        "wallride",
+        "wallie",
+        "kicker"
+      ],
+      "collectibles": [],
+      "why": "Small-platform landings high on a wall",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L7",
+      "name": "Kicker platform rails",
+      "sequence": [
+        "Rail 2 Kicker 2 Rail 2 Bench",
+        "Kicker 2 Railspan"
+      ],
+      "links": [
+        "rail",
+        "kicker",
+        "rail",
+        "bench"
+      ],
+      "collectibles": [],
+      "why": "The crater's launch platform also hosts a rail-kicker line",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L8",
+      "name": "Sadlands channel maze",
+      "sequence": [
+        "crossover/intersect wall gaps",
+        "90 Degree Sadlands Rail Gap",
+        "Sadlands Path Gap",
+        "snake gaps"
+      ],
+      "links": [
+        "wall grinds",
+        "channel airs"
+      ],
+      "collectibles": [],
+      "why": "Grind maze cut into a dirt hill",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L9",
+      "name": "Sadlands set pieces",
+      "sequence": [
+        "Clearing/Swinging the Set",
+        "swingrails",
+        "Over the Dome / Top of Da World",
+        "Jumpin Da Hub / Rimrail",
+        "Bench Gap Series"
+      ],
+      "links": [
+        "over-object",
+        "rails",
+        "spine"
+      ],
+      "collectibles": [],
+      "why": "A walk through playground objects",
+      "evidence": "VG; PS12"
+    }
+  ],
+  "guidance": [
+    "The volcano is the tease: visible and smoking from spawn, erupting with plume and rumble once triggered; the gap names spell the instruction",
+    "Neon outlines mark grindable edges and island borders",
+    "Hidden: the secret island has no visible link to the map (teleport); the remake pickups are there",
+    "Gap names double as signposts (Up 2 Combi, Down 2 Tonys Island, Sadlands Up 2 Isle of Tony)"
+  ],
+  "designLogic": [
+    "A bonus level with no checklist still keeps one secret; the hidden island takes the tape's role",
+    "The secret opens through a two-step chain (trigger, timed entry), both named gaps worth 4000 and 2000",
+    "A timed window (≈ 30 s in the remake) turns discovery into a planned route",
+    "The entry is a commit jump into a hazard-looking crater: the game rewards trust",
+    "The level is an anthology of famous skate spots and objects; it rewards with places, not pickups (inference)",
+    "Gap ladders teach transfer width and direction (Weak Sauce 50 / normal 800-2000 / Reverse 1000-2000)",
+    "Climbing pays more than dropping (Sadlands Up 2 Isle of Tony 1000 vs Isle of Tony 2 Sadlands 300)",
+    "Highest values for sustained or rare lines: full-pipe loop 5000, bench series 5000, volcano trigger 4000, wallride-to-platform 2500",
+    "Island edges are rails, so falling-off risk is also a line",
+    "The remake hangs both new collectibles behind the old secret"
+  ],
+  "remakeChanges": [
+    "Unlock: all career objectives with all skaters / $150,000 with all characters (original) -> finish every park goal (remake)",
+    "Remake adds a VV logo and an alien plushie, both in the volcano's secret area; still no goals",
+    "Same volcano chain; remake guide gives a ≈ 30 s window and the hint 'use the side of the channel'; LP12 reaches the roof by wallride + wallie",
+    "Gap names: Grassy Gap / Big Fat Grassy Gap -> Portal Gap / Big Fat Portal Gap; Pit O Doom!!!, Southern Snake Gap and Kicker 2 Rail not in PS12; PS12 lists Gutter 2 SD Roof twice (800 and 600)",
+    "Look: dark space with purple/pink islands -> neon outlines, nebula sky, palms, BONES and Independent signage"
+  ],
+  "transfer": [
+    "Timed secret door: grinding a rooftop gutter (or a trick rail locked to a named trick) starts a ≈ 30 s eruption; during it a crater acts as a trampoline/launcher to a floating secret island holding the crystal",
+    "Commit jump: make the crater look dangerous and approach it from a platform with a kicker and angled rail so a full-speed ollie (≈ 13.8 m at the charge maximum) clears the rim",
+    "Reward the place: float the crystal above the end of a halfpipe on the secret island, visible on arrival but needing a vert air at the far end",
+    "Return device: an exit object (clock or sign) that teleports back, so the timed trip never soft-locks",
+    "Gap ladder for practice: a snake run with a narrow and a wide transfer at each bend, teaching spine transfers before the crystal route needs one"
+  ],
+  "openQuestions": [
+    "World-space position of the Chin ramp island and whether VG draws it (its labels sit on the Z3 halfpipe complex)",
+    "Eruption window in the original; whether the trigger repeats within a run",
+    "Whether falling off an island edge respawns you or ends the run",
+    "Original gap points; status of Pit O Doom!!!, Southern Snake Gap and Kicker 2 Rail in the remake"
+  ]
+}

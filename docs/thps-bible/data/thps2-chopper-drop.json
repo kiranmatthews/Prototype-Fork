@@ -1,0 +1,624 @@
+{
+  "id": "thps2-chopper-drop",
+  "game": "THPS2",
+  "level": "Chopper Drop",
+  "location": "Hawaii",
+  "type": "bonus",
+  "careerPosition": null,
+  "timeLimit": "none in free skate; 2:00 single session",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-ChopperDrop-Hawaii.png",
+    "PS12 chopper-drop",
+    "LP12 1:12:05-1:12:45",
+    "WEB absolutcheats",
+    "WEB gamegenie",
+    "WEB trophy-tom"
+  ],
+  "goals": [
+    {
+      "text": "No goals (bonus level; no checklist on VG)",
+      "version": "original"
+    },
+    {
+      "text": "No goals; pickups: Vicarious Visions logo (top of the huge vert ramp) and alien plushie (on the low part of the halfpipe)",
+      "version": "remake"
+    },
+    {
+      "text": "Unlock: 3 gold medals with every character (gamegenie; absolutcheats)",
+      "version": "original"
+    },
+    {
+      "text": "Unlock: a gold medal with one skater in every competition (trophy-tom)",
+      "version": "remake"
+    }
+  ],
+  "size": {
+    "class": "small",
+    "footprint": "one halfpipe ≈ 35-50 m long + hovering helicopter + detached deck",
+    "evidence": "VG: halfpipe ≈ 2.9x the helicopter's length along the same axis (helicopter assumed 12-17 m); low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Giant halfpipe",
+      "layer": "flat bottom; two long vert walls; decks; tall tower section at one end (≈ one extra wall height above the deck on VG); lower section; roll-in wedge",
+      "features": [
+        "coping",
+        "roll-in",
+        "tall vert tower"
+      ],
+      "notes": "Everything happens here"
+    },
+    {
+      "id": "Z2",
+      "name": "Mast and potato rungs",
+      "layer": "mast on the far deck with guy wires; three yellow rungs above the coping",
+      "features": [
+        "1/2/3 Potato rungs"
+      ],
+      "notes": "Calibrated height ladder"
+    },
+    {
+      "id": "Z3",
+      "name": "Helicopter",
+      "layer": "hovering above/beside the halfpipe at the start",
+      "features": [
+        "cabin",
+        "skids/body"
+      ],
+      "notes": "Remake: orange-and-white rescue helicopter over the mast (LP12)"
+    },
+    {
+      "id": "Z4",
+      "name": "Detached deck (remake 'finish line')",
+      "layer": "separate raised deck with posts and a net frame",
+      "features": [
+        "70/80/90 ft markers"
+      ],
+      "notes": "Calibrated distance ladder"
+    },
+    {
+      "id": "Z5",
+      "name": "Container stacks (remake only)",
+      "layer": "container tops level with the decks",
+      "features": [
+        "containers",
+        "ship superstructure"
+      ],
+      "notes": "LP12 1:12:30"
+    }
+  ],
+  "landmarks": [
+    "helicopter",
+    "mast with guy wires and yellow rungs",
+    "tall vert tower",
+    "detached deck with net",
+    "container ship (remake)"
+  ],
+  "spawn": {
+    "zone": "Z3",
+    "facing": "dropped from the helicopter into the halfpipe (VG START at the helicopter; LP12 intro from the cabin, then in the pipe at 1:56)",
+    "visibleCollectibles": [
+      "HELI",
+      "POT",
+      "FT"
+    ],
+    "notes": "Every target is visible from the start"
+  },
+  "collectibles": [
+    {
+      "id": "HELI",
+      "type": "reach-target",
+      "label": "Into the Heli (also Heli Grind, Whoomah)",
+      "zone": "Z3",
+      "landmark": "hovering helicopter at the start end",
+      "layer": "air above the deck",
+      "heightM": "not measurable from the sources",
+      "launchFrom": "halfpipe coping (pumped vert)",
+      "visibility": {
+        "firstSight": "from spawn",
+        "fromSpawn": true,
+        "reads": "a hovering helicopter with an open cabin",
+        "distanceFromFirstSightM": "≈ 10-30"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "halfpipe",
+          "to": "pump",
+          "geometry": "pump the walls for maximum speed"
+        },
+        {
+          "step": 2,
+          "move": "transfer",
+          "from": "coping",
+          "to": "cabin",
+          "geometry": "air out of the pipe into the cabin (Into the Heli), onto it (Heli Grind) or lip it (Whoomah)"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "transfer",
+        "grind",
+        "lip"
+      ],
+      "speed": "maximum",
+      "skillGates": [
+        "pumping to max vert",
+        "aiming a transfer at a floating object"
+      ],
+      "coupling": "none known (helicopter appears static)",
+      "failure": "fall back into the pipe; nil cost",
+      "timeFromSpawnS": "unknown (no footage)",
+      "difficulty": 4,
+      "roles": [
+        "TEASE",
+        "TEST"
+      ],
+      "why": "A hovering vehicle is the level's showpiece target: air into an object, not just over it",
+      "evidence": "VG; PS12; LP12",
+      "confidence": "medium"
+    },
+    {
+      "id": "POT",
+      "type": "reach-target",
+      "label": "1 / 2 / 3 Potato rungs",
+      "zone": "Z2",
+      "landmark": "three yellow bars stacked above the far coping by the mast",
+      "layer": "air above the coping",
+      "heightM": "rising in steps; absolute heights not measurable",
+      "launchFrom": "far wall",
+      "visibility": {
+        "firstSight": "from spawn",
+        "fromSpawn": true,
+        "reads": "bright yellow rungs",
+        "distanceFromFirstSightM": "≈ 20-30"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "far wall",
+          "to": "rung",
+          "geometry": "air up to the chosen rung"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "rung",
+          "to": "rung",
+          "geometry": "grind it (100/200/400)"
+        }
+      ],
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "height control"
+      ],
+      "coupling": "none",
+      "failure": "fall back into the pipe; nil cost",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 3,
+      "roles": [
+        "TEST"
+      ],
+      "why": "Calibrated height ladder",
+      "evidence": "VG; PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "FT",
+      "type": "reach-target",
+      "label": "70 / 80 / 90 ft distance gaps",
+      "zone": "Z4",
+      "landmark": "detached deck; 70 ft at its near end, 90 ft at its far end",
+      "layer": "deck",
+      "heightM": "unknown",
+      "launchFrom": "halfpipe (exact launch point unknown)",
+      "visibility": {
+        "firstSight": "from spawn",
+        "fromSpawn": true,
+        "reads": "separate deck with a net/finish frame",
+        "distanceFromFirstSightM": "≈ 30-60"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "transfer",
+          "from": "halfpipe",
+          "to": "deck",
+          "geometry": "launch across: 21 / 24 / 27 m of travel (feet converted)"
+        }
+      ],
+      "moves": [
+        "transfer",
+        "vert-air"
+      ],
+      "speed": "maximum",
+      "skillGates": [
+        "max-speed launch"
+      ],
+      "coupling": "none",
+      "failure": "short landing; nil cost",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 4,
+      "roles": [
+        "TEST"
+      ],
+      "why": "Calibrated distance ladder",
+      "evidence": "VG; PS12",
+      "confidence": "medium (launch point unknown)"
+    },
+    {
+      "id": "VV",
+      "type": "remake-pickup",
+      "label": "Vicarious Visions logo (remake)",
+      "zone": "Z1",
+      "landmark": "very top of the huge vert ramp to the left after dropping in",
+      "layer": "air at the top of the tower",
+      "heightM": "not stated",
+      "launchFrom": "tall vert tower",
+      "visibility": {
+        "firstSight": "after dropping in",
+        "fromSpawn": true,
+        "reads": "logo at the top of the tower",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "tall section",
+          "to": "logo",
+          "geometry": "maximum vert straight up the tower"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "maximum",
+      "skillGates": [
+        "max pump"
+      ],
+      "coupling": "none",
+      "failure": "nil",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 4,
+      "roles": [
+        "TEST",
+        "REWARD"
+      ],
+      "why": "Pickup at the structure's highest point",
+      "evidence": "PS12",
+      "confidence": "medium"
+    },
+    {
+      "id": "PLUSH",
+      "type": "remake-pickup",
+      "label": "Alien plushie (remake)",
+      "zone": "Z1",
+      "landmark": "on top of the low part of the halfpipe, on the right as you head left",
+      "layer": "low deck",
+      "heightM": "deck level",
+      "launchFrom": "halfpipe",
+      "visibility": {
+        "firstSight": "on the low deck",
+        "fromSpawn": false,
+        "reads": "small plush toy",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "halfpipe",
+          "to": "low deck",
+          "geometry": "ride or air up onto the low deck"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "nil",
+      "timeFromSpawnS": "unknown",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Pickup on the structure's lowest deck",
+      "evidence": "PS12",
+      "confidence": "medium"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "Into the Heli",
+      "points": 500,
+      "kind": "other",
+      "location": "Z3 air into the hovering helicopter's cabin",
+      "moves": [
+        "vert-air",
+        "transfer"
+      ],
+      "onRouteOf": [
+        "HELI"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Heli Grind",
+      "points": 500,
+      "kind": "other",
+      "location": "Z3 grind the helicopter",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [
+        "HELI"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Whoomah",
+      "points": 500,
+      "kind": "lip",
+      "location": "Z3 lip trick on the helicopter",
+      "moves": [
+        "vert-air",
+        "lip"
+      ],
+      "onRouteOf": [
+        "HELI"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "1 Potato",
+      "points": 100,
+      "kind": "other",
+      "location": "Z2 lowest rung above the coping by the mast",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [
+        "POT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "2 Potato",
+      "points": 200,
+      "kind": "other",
+      "location": "Z2 middle rung",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [
+        "POT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "3 Potato",
+      "points": 400,
+      "kind": "other",
+      "location": "Z2 highest rung",
+      "moves": [
+        "vert-air",
+        "grind"
+      ],
+      "onRouteOf": [
+        "POT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "70 ft",
+      "points": 100,
+      "kind": "other",
+      "location": "Z4 distance launch to the detached deck (21 m)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "FT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "80 ft",
+      "points": 200,
+      "kind": "other",
+      "location": "Z4 distance launch (24 m)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "FT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "90 ft",
+      "points": 300,
+      "kind": "other",
+      "location": "Z4 distance launch (27 m)",
+      "moves": [
+        "transfer"
+      ],
+      "onRouteOf": [
+        "FT"
+      ],
+      "evidence": "VG; PS12"
+    },
+    {
+      "name": "Rail Hop",
+      "points": 300,
+      "kind": "rail-transfer",
+      "location": "Z1 helicopter-side lip grind over the roll-in (remake list only)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "PS12"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "none in level",
+      "opens": "the level itself is the unlock reward (see goals)",
+      "neededFor": [],
+      "evidence": "WEB gamegenie; WEB absolutcheats; WEB trophy-tom"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Pump and air",
+      "sequence": [
+        "drop from the helicopter",
+        "pump the main walls",
+        "airs and reverts"
+      ],
+      "links": [
+        "vert-air",
+        "revert"
+      ],
+      "collectibles": [],
+      "why": "The whole level is a pumping test",
+      "evidence": "VG; LP12"
+    },
+    {
+      "id": "L2",
+      "name": "Rail hop",
+      "sequence": [
+        "helicopter-side lip grind",
+        "hop the roll-in",
+        "keep grinding"
+      ],
+      "links": [
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [],
+      "why": "The one coping line",
+      "evidence": "PS12"
+    },
+    {
+      "id": "L3",
+      "name": "Height ladder",
+      "sequence": [
+        "1 Potato",
+        "2 Potato",
+        "3 Potato"
+      ],
+      "links": [
+        "vert-air",
+        "grind"
+      ],
+      "collectibles": [
+        "POT"
+      ],
+      "why": "Explicit height targets",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L4",
+      "name": "Helicopter",
+      "sequence": [
+        "Whoomah (lip)",
+        "Heli Grind",
+        "Into the Heli"
+      ],
+      "links": [
+        "vert-air",
+        "lip",
+        "grind"
+      ],
+      "collectibles": [
+        "HELI"
+      ],
+      "why": "Showpiece floating target",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L5",
+      "name": "Distance ladder",
+      "sequence": [
+        "launch toward the deck",
+        "70 ft",
+        "80 ft",
+        "90 ft"
+      ],
+      "links": [
+        "transfer"
+      ],
+      "collectibles": [
+        "FT"
+      ],
+      "why": "Calibrates distance",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L6",
+      "name": "Remake extremes",
+      "sequence": [
+        "max vert on the tall tower (VV)",
+        "low deck (plushie)"
+      ],
+      "links": [
+        "vert-air"
+      ],
+      "collectibles": [
+        "VV",
+        "PLUSH"
+      ],
+      "why": "Pickups at both height extremes",
+      "evidence": "PS12"
+    }
+  ],
+  "guidance": [
+    "Every target is visible from the start: bright yellow rungs, a hovering helicopter, a labelled distance deck",
+    "Gap names describe the action ('Into the Heli'); potato count rises with rung height"
+  ],
+  "designLogic": [
+    "One structure, many calibrated targets: height (rungs), distance (deck), precision (cabin)",
+    "Ladders make progress readable: 100/200/400 and 100/200/300",
+    "A hovering vehicle as the showpiece target: air into an object",
+    "Failure cost is nil: a miss falls back into the pipe, so the level is a max-vert practice space",
+    "The remake places its pickups at the structure's extremes (top of the tower, top of the low deck)"
+  ],
+  "remakeChanges": [
+    "Unlock: 3 golds with every character (original) -> gold in every competition with one skater (remake)",
+    "Setting: halfpipe under a sunset sky (VG) -> on a container ship at sea with containers and a superstructure (LP12)",
+    "Gaps: 9 on VG -> 10 in PS12 (adds Rail Hop)",
+    "Pickups added: VV logo at the top of the tall vert section; alien plushie on the low deck"
+  ],
+  "transfer": [
+    "Height-ladder crystal stand: three trick-rail rungs above a pumpable halfpipe's coping; crystal just above the top rung so only a pumped vert air plus a grind ollie (≈ 2.4 m pop) reaches it",
+    "Air into a moving object: a moving platform (helicopter) hovering beside the halfpipe on a short loop with the crystal in its cabin",
+    "Distance deck: a detached landing deck with marked distances; crystal at the far mark (≈ 27 m) needing a speed pad or ramp lip plus a full charged ollie (≈ 13.8 m)",
+    "Use the structure's extremes: crystal at the tallest point, small pickup on the lowest deck"
+  ],
+  "openQuestions": [
+    "Launch point for the 70/80/90 ft gaps in the original and what the deck represents",
+    "Wall, tower and rung heights in metres (no usable side view)",
+    "Whether the helicopter moves during play",
+    "Original gap points"
+  ]
+}

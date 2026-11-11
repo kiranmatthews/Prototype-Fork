@@ -1,0 +1,1818 @@
+{
+  "id": "thps2-ny-city",
+  "game": "THPS2",
+  "level": "NY City",
+  "location": "New York, New York",
+  "type": "career-street",
+  "careerPosition": 4,
+  "timeLimit": "2:00",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-NYCity,NewYork.png",
+    "LP2 0:25:30-0:33:00",
+    "PS12 ny-city",
+    "LP12 0:49:40-0:55:00",
+    "WEB rpgclassics newyorkwalkthrough",
+    "WEB absolutcheats",
+    "WEB thumbsticks (remake tapes)",
+    "WEB halfglassgaming (remake NY tape)"
+  ],
+  "goals": [
+    {
+      "text": "High Score - 20,000 ($750)",
+      "version": "original"
+    },
+    {
+      "text": "Pro Score - 50,000 ($1000)",
+      "version": "original"
+    },
+    {
+      "text": "SICK Score! - 150,000 ($1250)",
+      "version": "original"
+    },
+    {
+      "text": "Collect S-K-A-T-E ($800)",
+      "version": "original"
+    },
+    {
+      "text": "Ollie the Hydrants ($700)",
+      "version": "original"
+    },
+    {
+      "text": "5 Subway Tokens ($800)",
+      "version": "original"
+    },
+    {
+      "text": "50-50 Joey's Sculpture ($900)",
+      "version": "original"
+    },
+    {
+      "text": "Grind the Subway Rails ($1100)",
+      "version": "original"
+    },
+    {
+      "text": "Find The Secret Tape ($1200)",
+      "version": "original"
+    },
+    {
+      "text": "100% Goals and Cash ($500)",
+      "version": "original"
+    },
+    {
+      "text": "High Score 20,000; Pro Score 90,000; Sick Score 150,000; High Combo 15,000",
+      "version": "remake"
+    },
+    {
+      "text": "Collect S-K-A-T-E; Collect 5 Subway Cards; Ollie the Hydrants; Grind Subway Rails; 50-50 Joey's Sculpture; Get the Secret Tape",
+      "version": "remake"
+    },
+    {
+      "text": "Remake-only pickups: 4 stat points (by style), Vicarious Visions logo, alien plushie",
+      "version": "remake"
+    }
+  ],
+  "size": {
+    "class": "large",
+    "footprint": "≈ 250-350 m end to end (Banks river fence to the east street); park/plaza block ≈ 100-150 m across",
+    "evidence": "LP2 traversal times (station to Banks ≈ 17 s on the tracks; Banks fence to street ≈ 11 s) and the El's double track as a width reference on VG; low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "Start street under the El",
+      "layer": "ground; elevated subway overhead",
+      "features": [
+        "road with yellow centre line",
+        "low park wall",
+        "El pillars",
+        "kicker ramps (Kick It)",
+        "hydrants",
+        "taxi traffic"
+      ],
+      "notes": "Spawn. The El's tracks lead to the station and on to the Banks (VG; LP2 0:29:20)"
+    },
+    {
+      "id": "Z2",
+      "name": "Joey's plaza (the pit)",
+      "layer": "sunken courtyard ≈ 1 storey below the street; ledges; awnings",
+      "features": [
+        "Joey's Sculpture (A-shaped rail)",
+        "pit stair rails",
+        "quarter pipes",
+        "red awning between QPs",
+        "high ledge",
+        "bent parking meter"
+      ],
+      "notes": "Right of spawn; Joey's Sculpture is a 6 s goal (LP2 0:29:25)"
+    },
+    {
+      "id": "Z3",
+      "name": "Park",
+      "layer": "ground; low walls; ramp deck above the fountain",
+      "features": [
+        "statue fountain + ramp deck",
+        "brick-wall quarter pipe",
+        "snack bar counter and benches",
+        "path rails",
+        "footbridge over a pond",
+        "big rock"
+      ],
+      "notes": "All five letters and all five tokens"
+    },
+    {
+      "id": "Z4",
+      "name": "Subway station and El tracks",
+      "layer": "escalator -> elevated platform (≈ 2 storeys) -> twin tracks descending to the Banks",
+      "features": [
+        "escalator (Going Down?)",
+        "station wall and awning (Sidewalk Bomb)",
+        "twin tracks (Ride the Rails, Changin Trains)"
+      ],
+      "notes": "Opened by the 5 tokens (RPGC; absolutcheats); trains run on the tracks (absolutcheats)"
+    },
+    {
+      "id": "Z5",
+      "name": "Brooklyn Banks (secret area)",
+      "layer": "brick banks and plaza below street level; curving concrete road climbing ≈ 3 m and ending broken in mid-air with rebar; basketball court; river fence",
+      "features": [
+        "benches",
+        "girder pile",
+        "rebar bars",
+        "stair rails",
+        "basketball hoop",
+        "pillar banks",
+        "river fence (BIG DROP)",
+        "blue exit kicker"
+      ],
+      "notes": "RPGC calls it the Secret Area; the tape is here"
+    },
+    {
+      "id": "Z6",
+      "name": "East street and awning barrier",
+      "layer": "ground; barrier under a long awning; damaged road",
+      "features": [
+        "The Easy Way / The Hard Way barrier",
+        "hydrant",
+        "road-closed barricades"
+      ],
+      "notes": "Outer loop for the hydrant goal"
+    }
+  ],
+  "landmarks": [
+    "elevated subway (the El) and 25th Street Station",
+    "Joey's Sculpture",
+    "statue fountain",
+    "brick-wall quarter pipe",
+    "snack bar",
+    "footbridge and pond",
+    "big rock",
+    "Brooklyn Banks",
+    "Brooklyn Bridge (backdrop)",
+    "broken road with rebar",
+    "Upper Bank building (remake name)"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "along the start road, park wall on the left, El pillars overhead; Joey's Sculpture ahead-right",
+    "visibleCollectibles": [
+      "S"
+    ],
+    "notes": "S floats above the park wall/entrance a few metres ahead (LP2 0:26:36). The tape is not visible from spawn or anywhere on the main level"
+  },
+  "collectibles": [
+    {
+      "id": "TAPE",
+      "type": "tape",
+      "label": "Secret tape",
+      "zone": "Z5",
+      "landmark": "beyond the end of the second (left) rebar at the broken end of the curving concrete road, above the brick plaza between the benches (Bench-Hoppin') and the girder pile",
+      "layer": "air above the Banks plaza",
+      "heightM": "≈ 3-4.5 above the Banks plaza floor; ≈ 0-1 above the end of the rebar launched from (estimated against the skater, LP2 0:30:05-0:30:09; low-medium confidence)",
+      "launchFrom": "end of the second rebar (grind ollie)",
+      "visibility": {
+        "firstSight": "while grinding the second rebar (LP2 0:30:08, 1:12 on the clock); inferred also visible looking up from the Banks plaza",
+        "fromSpawn": false,
+        "reads": "floating glowing VHS tape icon in the air off the end of a drooping rebar",
+        "distanceFromFirstSightM": "≈ 5-10 (≈ 1 s of grinding)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "spawn (Z1)",
+          "to": "Joey's Sculpture (Z2)",
+          "geometry": "optional 6 s detour used in LP2: 50-50 the sculpture in the pit right of spawn (goal at 1:52)"
+        },
+        {
+          "step": 2,
+          "move": "ride",
+          "from": "pit",
+          "to": "station platform (Z4)",
+          "geometry": "roll back up past the 25th Street Station sign and ride the escalator up ≈ 2 storeys ($50 on it); needs the 5 tokens"
+        },
+        {
+          "step": 3,
+          "move": "grind",
+          "from": "platform",
+          "to": "El tracks",
+          "geometry": "turn onto the twin tracks and grind them downhill (Ride the Rails at 1:36; Grind the Subway Rails goal at 1:35)"
+        },
+        {
+          "step": 4,
+          "move": "manual",
+          "from": "El tracks",
+          "to": "track end over the Banks",
+          "geometry": "nose manual between the rails down the descending El past a hotel facade (1:34-1:25)"
+        },
+        {
+          "step": 5,
+          "move": "ollie",
+          "from": "track end",
+          "to": "Banks brick plaza",
+          "geometry": "drop off the end of the track into the Banks ($100, VG Big Air Out of the Banks spot) at 1:24"
+        },
+        {
+          "step": 6,
+          "move": "ride",
+          "from": "Banks plaza",
+          "to": "top of the curving concrete road",
+          "geometry": "≈ 30-40 m curving road with parapets climbing ≈ 3 m; BS 50-50 on its edge for a $50 at 1:19; Brooklyn Bridge comes into view"
+        },
+        {
+          "step": 7,
+          "move": "grind",
+          "from": "broken road end",
+          "to": "right rebar",
+          "geometry": "two rebar bars jut from the broken slab and droop toward the plaza; BS tailslide the right bar (1:15-1:14)"
+        },
+        {
+          "step": 8,
+          "move": "rail-transfer",
+          "from": "right rebar",
+          "to": "left rebar",
+          "geometry": "Re-Rebar (50) at 1:13 with a $50 on the hop; the left bar's start is hidden until you are nearly on it (halfglassgaming) and it curves inward (thumbsticks)"
+        },
+        {
+          "step": 9,
+          "move": "grind",
+          "from": "left rebar",
+          "to": "its end",
+          "geometry": "FS tailslide; tape on screen ahead at 1:12"
+        },
+        {
+          "step": 10,
+          "move": "ollie",
+          "from": "left rebar end",
+          "to": "TAPE",
+          "geometry": "grind ollie off the end; tape collected in the air at 1:11; land on the plaza by the benches at 1:10 (or on the rail below: Rebar to Rail Gap)"
+        }
+      ],
+      "moves": [
+        "grind",
+        "rail-transfer",
+        "ollie",
+        "manual"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "knowing the Banks exist and how to enter (low wall, fallen pole, or subway after 5 tokens)",
+        "early blind hop to a second bar whose start is hidden",
+        "rail balance on short bars"
+      ],
+      "coupling": "subway route needs all 5 tokens; taxi traffic on the start street; trains on the El; token-free entries exist (low brick wall per RPGC; fallen pole per absolutcheats/thumbsticks)",
+      "failure": "a missed hop drops ≈ 3 m to the Banks plaza; re-climbing the road takes ≈ 8-10 s (LP2 climb 0:29:58-0:30:05). Leaving the Banks (≈ 11 s via low wall/kicker) and returning by subway costs ≈ 30-40 s of a 120 s run",
+      "timeFromSpawnS": "≈ 49 (LP2 run 2, spawn 1:59 at 0:29:20, tape 1:11 at 0:30:09, including the Joey's and subway-rails goals); escalator top -> tape ≈ 32; Banks landing -> tape ≈ 13",
+      "difficulty": 3,
+      "roles": [
+        "SECRET-AREA",
+        "EXPLORE",
+        "TEST",
+        "REWARD"
+      ],
+      "why": "The tape is the payoff for finding the hidden district; the earned access route (tokens -> subway) chains goals and lands at the foot of the tape road; once inside, the local test is a short, cheap-to-retry blind rail-to-rail hop",
+      "evidence": "VG; LP2 0:29:20-0:30:12 and 0:30:33-0:30:44; PS12 ny-city; WEB rpgclassics; WEB absolutcheats; WEB thumbsticks; WEB halfglassgaming",
+      "confidence": "high (location, route); medium (timing); low-medium (heights)"
+    },
+    {
+      "id": "S",
+      "type": "letter",
+      "label": "S",
+      "zone": "Z3",
+      "landmark": "above the park wall at the entrance, left of the start road",
+      "layer": "air above a ≈ 1 m wall",
+      "heightM": "≈ 2-3 above the street (estimate)",
+      "launchFrom": "park wall grind",
+      "visibility": {
+        "firstSight": "from spawn",
+        "fromSpawn": true,
+        "reads": "floating yellow letter with blue glow above the wall",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "wallride",
+          "from": "start road",
+          "to": "park wall",
+          "geometry": "wallride onto the wall"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "park wall",
+          "to": "entrance gap",
+          "geometry": "BS tailslide; ollie over the entrance (Park Entrance Gap) and keep grinding; S by 1:50"
+        }
+      ],
+      "moves": [
+        "wallride",
+        "grind",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial; re-approach in seconds",
+      "timeFromSpawnS": "≈ 10 (LP2 run 1, 1:50)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First line from spawn teaches wallride-to-grind and the park wall",
+      "evidence": "VG; LP2 0:26:36-0:26:42; PS12; RPGC",
+      "confidence": "high"
+    },
+    {
+      "id": "K",
+      "type": "letter",
+      "label": "K",
+      "zone": "Z3",
+      "landmark": "above the brick-wall quarter pipe by the statue fountain (Pouncer Was Here / Phat Lip)",
+      "layer": "vert air above a quarter pipe",
+      "heightM": "not measured",
+      "launchFrom": "brick-wall quarter pipe",
+      "visibility": {
+        "firstSight": "from the fountain plaza",
+        "fromSpawn": false,
+        "reads": "floating letter above the QP",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "brick-wall QP",
+          "to": "K",
+          "geometry": "air out of the QP"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "basic vert air"
+      ],
+      "coupling": "none",
+      "failure": "fall back into the QP",
+      "timeFromSpawnS": "≈ 14 (LP2 run 1, between 1:50 and 1:44; inferred)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Marks the level's best scoring wall (RPGC)",
+      "evidence": "VG; PS12; RPGC; LP2 0:26:44-0:26:48",
+      "confidence": "high"
+    },
+    {
+      "id": "A",
+      "type": "letter",
+      "label": "A",
+      "zone": "Z3",
+      "landmark": "above the statue fountain",
+      "layer": "air above the fountain",
+      "heightM": "not measured",
+      "launchFrom": "fountain rim/base used as a ramp",
+      "visibility": {
+        "firstSight": "from the ramp deck / K area (seen ahead at 1:44 in LP2)",
+        "fromSpawn": false,
+        "reads": "floating letter over the statue",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "fountain edge/base",
+          "to": "A",
+          "geometry": "use the fountain's edge as a ramp (PS12; RPGC)"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "bank"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "land in the fountain plaza; retry quickly",
+      "timeFromSpawnS": "≈ 16-18 (LP2 run 1; inferred)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Shows the fountain base as a launch",
+      "evidence": "VG; LP2 0:26:48; PS12; RPGC",
+      "confidence": "high"
+    },
+    {
+      "id": "T",
+      "type": "letter",
+      "label": "T",
+      "zone": "Z3",
+      "landmark": "above a rail on the pond path (south of the park)",
+      "layer": "low air over a path rail",
+      "heightM": "≈ 1-2 (estimate)",
+      "launchFrom": "path / rail",
+      "visibility": {
+        "firstSight": "ahead along the pond path (LP2 1:36)",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "≈ 15-25"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "pond path",
+          "to": "T",
+          "geometry": "grind or ollie along the path rail by the pond"
+        }
+      ],
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 24 (LP2 run 1, ≈ 1:36-1:34)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Leads the player round the pond loop",
+      "evidence": "VG; LP2 0:26:56-0:26:58; PS12; RPGC",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "E",
+      "type": "letter",
+      "label": "E",
+      "zone": "Z3",
+      "landmark": "by the big rock and a quarter pipe at the south end of the park",
+      "layer": "air above a quarter pipe",
+      "heightM": "not measured",
+      "launchFrom": "quarter pipe",
+      "visibility": {
+        "firstSight": "near the rock",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "quarter pipe",
+          "to": "E",
+          "geometry": "air from the QP; Collect S-K-A-T-E completes at 1:30"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 30 (LP2 run 1, 1:30)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Completes the park letters inside 30 s; easiest goal is nearest",
+      "evidence": "VG; LP2 0:27:02; PS12; RPGC ('far corner', conflicting)",
+      "confidence": "medium"
+    },
+    {
+      "id": "TOK1",
+      "type": "goal-object",
+      "label": "Subway token 1",
+      "zone": "Z3",
+      "landmark": "in the air off the big rock inside the park entrance",
+      "layer": "air",
+      "heightM": "not measured",
+      "launchFrom": "the rock (Rock It Air)",
+      "visibility": {
+        "firstSight": "from the park entrance",
+        "fromSpawn": false,
+        "reads": "large spinning gold token",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "rock",
+          "to": "token",
+          "geometry": "air off the rock"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "part of the subway unlock",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 first token at 1:27 (≈ 33)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Token on a launch feature",
+      "evidence": "VG; PS12; LP2 0:27:06",
+      "confidence": "medium"
+    },
+    {
+      "id": "TOK2",
+      "type": "goal-object",
+      "label": "Subway token 2",
+      "zone": "Z3",
+      "landmark": "on the footbridge over the pond (The Bridge)",
+      "layer": "ground/bridge",
+      "heightM": "≈ 1",
+      "launchFrom": "bridge deck",
+      "visibility": {
+        "firstSight": "from the park paths",
+        "fromSpawn": false,
+        "reads": "large spinning gold token",
+        "distanceFromFirstSightM": "≈ 15-25"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "manual",
+          "from": "path",
+          "to": "bridge",
+          "geometry": "ride or manual across (The Bridge manual gap)"
+        }
+      ],
+      "moves": [
+        "manual"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "part of the subway unlock",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 2 of 5 at 1:21",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the bridge manual",
+      "evidence": "VG; PS12; LP2 0:27:12",
+      "confidence": "medium"
+    },
+    {
+      "id": "TOK3",
+      "type": "goal-object",
+      "label": "Subway token 3",
+      "zone": "Z3",
+      "landmark": "by the snack bar and benches (Buuurp!)",
+      "layer": "low",
+      "heightM": "≈ 1-2",
+      "launchFrom": "counter or benches",
+      "visibility": {
+        "firstSight": "from the park paths",
+        "fromSpawn": false,
+        "reads": "large spinning gold token",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "counter/benches",
+          "to": "token",
+          "geometry": "grind the snack-bar furniture"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "part of the subway unlock",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 3 of 5 at 1:19",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the snack-bar grind loop",
+      "evidence": "VG; PS12; LP2 0:27:14",
+      "confidence": "medium"
+    },
+    {
+      "id": "TOK4",
+      "type": "goal-object",
+      "label": "Subway token 4",
+      "zone": "Z3",
+      "landmark": "above the quarter pipe against the west building at the park exit",
+      "layer": "vert air",
+      "heightM": "not measured",
+      "launchFrom": "quarter pipe",
+      "visibility": {
+        "firstSight": "on exiting the park",
+        "fromSpawn": false,
+        "reads": "large spinning gold token",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "vert-air",
+          "from": "quarter pipe",
+          "to": "token",
+          "geometry": "air from the QP"
+        }
+      ],
+      "moves": [
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "part of the subway unlock",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 4 of 5 at 1:13",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Token on a QP",
+      "evidence": "VG; PS12; LP2 0:27:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "TOK5",
+      "type": "goal-object",
+      "label": "Subway token 5",
+      "zone": "Z3",
+      "landmark": "hovering off the ramp back into the park (Ramp to Park Gap / Phat Lip area)",
+      "layer": "air",
+      "heightM": "not measured",
+      "launchFrom": "ramp",
+      "visibility": {
+        "firstSight": "from the opposite QP",
+        "fromSpawn": false,
+        "reads": "large spinning gold token",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "ramp",
+          "to": "token",
+          "geometry": "ollie off the ramp"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "completes the subway unlock",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 51 (LP2 run 1, goal at 1:09)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Completing tokens opens the subway (mobility reward)",
+      "evidence": "VG; PS12; LP2 0:27:24",
+      "confidence": "medium"
+    },
+    {
+      "id": "H1",
+      "type": "goal-object",
+      "label": "Hydrant 1",
+      "zone": "Z1",
+      "landmark": "west street sidewalk by the park's north-west corner",
+      "layer": "ground",
+      "heightM": "≈ 0.8 object",
+      "launchFrom": "sidewalk",
+      "visibility": {
+        "firstSight": "from the street",
+        "fromSpawn": false,
+        "reads": "red hydrant on the sidewalk",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "sidewalk",
+          "to": "over hydrant",
+          "geometry": "plain ollie over it"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "traffic",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 1 of 3 at 1:01",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Perimeter tour",
+      "evidence": "VG; PS12; RPGC; LP2 0:27:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "H2",
+      "type": "goal-object",
+      "label": "Hydrant 2",
+      "zone": "Z1",
+      "landmark": "north end of the road past the plaza",
+      "layer": "ground",
+      "heightM": "≈ 0.8 object",
+      "launchFrom": "sidewalk",
+      "visibility": {
+        "firstSight": "from the junction",
+        "fromSpawn": false,
+        "reads": "hydrant",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "sidewalk",
+          "to": "over hydrant",
+          "geometry": "plain ollie"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "traffic",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 2 of 3 at 0:48 (by road-closed barricades)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Perimeter tour",
+      "evidence": "VG; PS12; LP2 0:27:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "H3",
+      "type": "goal-object",
+      "label": "Hydrant 3",
+      "zone": "Z6",
+      "landmark": "east street under the long awning (near The Hard Way)",
+      "layer": "ground",
+      "heightM": "≈ 0.8 object",
+      "launchFrom": "sidewalk",
+      "visibility": {
+        "firstSight": "along the east street",
+        "fromSpawn": false,
+        "reads": "hydrant",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "sidewalk",
+          "to": "over hydrant",
+          "geometry": "plain ollie"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "traffic",
+      "failure": "trivial",
+      "timeFromSpawnS": "LP2 run 1 ≈ 0:33",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Perimeter tour",
+      "evidence": "VG; PS12; LP2 0:28:00",
+      "confidence": "medium"
+    },
+    {
+      "id": "JOEY",
+      "type": "reach-goal",
+      "label": "50-50 Joey's Sculpture",
+      "zone": "Z2",
+      "landmark": "triangular (A-shaped) rail sculpture in the pit",
+      "layer": "sunken plaza",
+      "heightM": "sculpture rail ≈ 1-3 (estimate)",
+      "launchFrom": "pit floor",
+      "visibility": {
+        "firstSight": "from spawn, ahead-right",
+        "fromSpawn": true,
+        "reads": "large blue A-shaped rail",
+        "distanceFromFirstSightM": "≈ 20-30"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "slope into the pit",
+          "to": "sculpture",
+          "geometry": "50-50 (only) on the sculpture"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "50-50 specifically"
+      ],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 6 (LP2 run 2, 1:54)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Instant goal that shows the pit",
+      "evidence": "LP2 0:29:25-0:29:28; RPGC; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "RAILS",
+      "type": "reach-goal",
+      "label": "Grind the Subway Rails",
+      "zone": "Z4",
+      "landmark": "El tracks from the station toward the Banks",
+      "layer": "elevated (≈ 2 storeys)",
+      "heightM": "≈ 6-8 above the street (estimate)",
+      "launchFrom": "station platform",
+      "visibility": {
+        "firstSight": "the El is visible overhead from spawn",
+        "fromSpawn": true,
+        "reads": "long twin rails",
+        "distanceFromFirstSightM": "≈ 10-50"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "escalator",
+          "to": "platform",
+          "geometry": "needs the 5 tokens"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "platform",
+          "to": "down the tracks",
+          "geometry": "grind a track a long way (Ride the Rails)"
+        }
+      ],
+      "moves": [
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "rail balance"
+      ],
+      "coupling": "needs the 5 tokens; trains on the tracks",
+      "failure": "fall between rails; can manual on the track bed",
+      "timeFromSpawnS": "≈ 25 (LP2 run 2, goal at 1:35)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE",
+        "EXPLORE"
+      ],
+      "why": "Goal that points the player along the route to the Banks",
+      "evidence": "LP2 0:29:38-0:29:45; RPGC; PS12",
+      "confidence": "high"
+    }
+  ],
+  "cashIcons": [
+    {
+      "value": 100,
+      "zone": "Z5",
+      "location": "river fence (Banks Fence Gap)",
+      "evidence": "VG; LP2 0:30:21"
+    },
+    {
+      "value": 50,
+      "zone": "Z5",
+      "location": "Re-Rebar (tape line)",
+      "evidence": "VG; LP2 0:30:07"
+    },
+    {
+      "value": 50,
+      "zone": "Z5",
+      "location": "Banks Road Gap",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z5",
+      "location": "curving road (Take It to the Bridge)",
+      "evidence": "VG; LP2 0:30:02"
+    },
+    {
+      "value": 100,
+      "zone": "Z5",
+      "location": "track landing (Big Air Out of the Banks)",
+      "evidence": "VG; LP2 0:29:56"
+    },
+    {
+      "value": 250,
+      "zone": "Z3",
+      "location": "statue (Pigeon Puddin' Gap)",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z3",
+      "location": "snack bar (Grab a Snack and Sit Down)",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z4",
+      "location": "escalator (Going Down?)",
+      "evidence": "VG; LP2 0:29:33"
+    },
+    {
+      "value": 50,
+      "zone": "Z4",
+      "location": "El by Kick It",
+      "evidence": "VG; LP2 0:29:38"
+    },
+    {
+      "value": 100,
+      "zone": "Z2",
+      "location": "east building by the awning QPs",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z6",
+      "location": "east street (The Easy Way)",
+      "evidence": "VG"
+    }
+  ],
+  "remakeCollectibles": [
+    {
+      "id": "VV",
+      "label": "Vicarious Visions logo",
+      "location": "off the El tracks: head left from the station, drop onto an awning past the left-hand wall",
+      "needs": "subway cards",
+      "evidence": "PS12"
+    },
+    {
+      "id": "PLUSH",
+      "label": "Alien plushie",
+      "location": "behind a quarter pipe in the plaza below the Upper Bank building",
+      "evidence": "PS12"
+    },
+    {
+      "id": "STAT-street",
+      "label": "Stat point (street style)",
+      "location": "grind the right rebar at the top of the Banks road (tape line)",
+      "evidence": "PS12"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "Pillar Air",
+      "points": 500,
+      "kind": "channel",
+      "location": "Z5 pillar bank to pillar bank",
+      "moves": [
+        "vert-air",
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Banks Fence Gap",
+      "points": 100,
+      "kind": "other",
+      "location": "Z5 bank -> river fence grind (BIG DROP)",
+      "moves": [
+        "bank",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12; LP2 0:30:21"
+    },
+    {
+      "name": "Jamie's Steps",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z5 stairs by the court",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Banks Spank",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z5 court outer rail -> next rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Slam Dunk",
+      "points": 500,
+      "kind": "wallride",
+      "location": "Z5 wallride up to the hoop and grind it",
+      "moves": [
+        "wallride",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Bench-Hoppin'",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z5 benches under the tape",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Banks Barrier Wallride",
+      "points": 100,
+      "kind": "wallride",
+      "location": "Z5 girder pile",
+      "moves": [
+        "wallride"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Over the Banks Barrier",
+      "points": 100,
+      "kind": "over-object",
+      "location": "Z5 girder pile",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Re-Rebar",
+      "points": 50,
+      "kind": "rail-transfer",
+      "location": "Z5 broken road end: right rebar -> left rebar",
+      "moves": [
+        "grind",
+        "rail-transfer"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12; LP2 0:30:07"
+    },
+    {
+      "name": "Rebar to Rail Gap",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z5 second rebar -> rail below (continuation past the tape)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Banks Road Gap",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z5 downhill rail by the benches -> next rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Take It to the Bridge",
+      "points": 150,
+      "kind": "kicker",
+      "location": "Z5 QP speed -> grass verge -> land on the curving road",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Over the Road",
+      "points": 250,
+      "kind": "over-object",
+      "location": "Z5 verge -> over the curving road",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Big Air Out of the Banks",
+      "points": 250,
+      "kind": "kicker",
+      "location": "Z5 blue kicker over the wall back to the street (exit)",
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12; WEB absolutcheats"
+    },
+    {
+      "name": "Changin' Trains",
+      "points": 1000,
+      "kind": "rail-transfer",
+      "location": "Z4 El track -> other track",
+      "moves": [
+        "grind",
+        "rail-transfer"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Ride the Rails",
+      "points": 100,
+      "kind": "other",
+      "location": "Z4 station -> down the El (long grind)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE",
+        "RAILS"
+      ],
+      "evidence": "VG; PS12; LP2 0:29:44"
+    },
+    {
+      "name": "Pouncer Was Here",
+      "points": 250,
+      "kind": "other",
+      "location": "Z3 brick-wall QP by the fountain (QP air; exact requirement unclear)",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [
+        "K"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Phat Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z3 brick-wall QP",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "K"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Pigeon Puddin' Gap",
+      "points": 100,
+      "kind": "over-object",
+      "location": "Z3 over the statue",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "A"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Ramp to Statue Shorty Gap",
+      "points": 250,
+      "kind": "kicker",
+      "location": "Z3 ramp deck -> into the fountain",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "A"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Ramp to Park Gap",
+      "points": 100,
+      "kind": "kicker",
+      "location": "Z3 ramp deck -> park",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TOK5"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Corner Cut",
+      "points": 100,
+      "kind": "kicker",
+      "location": "Z3 ramp deck -> path on the right",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Buuurp! Now Go Skate.",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z3 snack bar benches -> rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TOK3"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Path Less Traveled",
+      "points": 500,
+      "kind": "ledge-to-ledge",
+      "location": "Z3 outer rail -> benches",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "The Bridge",
+      "points": 250,
+      "kind": "manual",
+      "location": "Z3 footbridge (manual)",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [
+        "TOK2"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Grab a Snack and Sit Down.",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z3 counter -> benches",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "TOK3"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "You're Next in Line",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z3 outer rail -> counter",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Rock It Air",
+      "points": 50,
+      "kind": "kicker",
+      "location": "Z3 the big rock",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TOK1",
+        "E"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Park Entrance Gap",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z1/Z3 park wall over an entrance",
+      "moves": [
+        "wallride",
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "S"
+      ],
+      "evidence": "VG; PS12; LP2 0:26:38"
+    },
+    {
+      "name": "Kick It",
+      "points": 50,
+      "kind": "kicker",
+      "location": "Z1 small kickers near spawn",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Parking Meter Gap",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z2 ledge rail -> bent parking meter",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Left Side Pit Rail Stomp",
+      "points": 100,
+      "kind": "other",
+      "location": "Z2 drop into the pit onto the stair rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Right Side Pit Rail Stomp",
+      "points": 100,
+      "kind": "other",
+      "location": "Z2 drop into the pit onto the stair rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12; LP2 0:28:06"
+    },
+    {
+      "name": "Across the Pit",
+      "points": 100,
+      "kind": "wallride",
+      "location": "Z2 wallride -> grind the ledge above the pit",
+      "moves": [
+        "wallride",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Waaay Up There",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z2 lip trick on a high ledge from the pit QPs",
+      "moves": [
+        "vert-air",
+        "lip"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Awning Air",
+      "points": 100,
+      "kind": "channel",
+      "location": "Z2 QP -> QP over the red awning",
+      "moves": [
+        "vert-air",
+        "transfer"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Joey's Sculpture",
+      "points": 100,
+      "kind": "other",
+      "location": "Z2 grind the sculpture",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "JOEY"
+      ],
+      "evidence": "VG; PS12; LP2 0:29:25"
+    },
+    {
+      "name": "Going Down?",
+      "points": 250,
+      "kind": "manual",
+      "location": "Z4 escalator (manual)",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "Sidewalk Bomb",
+      "points": 1000,
+      "kind": "roof",
+      "location": "Z4 station wall -> awning or barrier below",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "The Hard Way",
+      "points": 500,
+      "kind": "other",
+      "location": "Z6 barrier under the awning toward the damaged road (long grind)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "H3"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "The Easy Way",
+      "points": 100,
+      "kind": "other",
+      "location": "Z6 same barrier away from the damaged road",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [
+        "H3"
+      ],
+      "evidence": "VG; PS12 ny-city"
+    },
+    {
+      "name": "One Side",
+      "points": 100,
+      "kind": "rail-transfer",
+      "location": "Z4 escalator handrail -> other handrail (remake list only)",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "PS12"
+    },
+    {
+      "name": "Downhill Jam",
+      "points": 250,
+      "kind": "manual",
+      "location": "Z1/Z2 manual down a slope to Joey's building (remake list only)",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "PS12"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "collect the 5 subway tokens in the park",
+      "opens": "subway station and El tracks (fast scenic descent into the Banks)",
+      "neededFor": [
+        "RAILS",
+        "TAPE (one of three routes)"
+      ],
+      "evidence": "WEB rpgclassics; WEB absolutcheats; PS12 (remake: permanent); LP2 run 2"
+    },
+    {
+      "trigger": "none (geometry): low brick wall off the start road, or a fallen lamp pole leaning on the curb/fence",
+      "opens": "Brooklyn Banks without tokens",
+      "neededFor": [
+        "TAPE (token-free routes)"
+      ],
+      "evidence": "WEB rpgclassics; WEB absolutcheats; WEB thumbsticks (remake)"
+    },
+    {
+      "trigger": "moving objects: taxi on the start street; trains on the El",
+      "opens": "nothing (hazards)",
+      "neededFor": [],
+      "evidence": "WEB halfglassgaming; WEB absolutcheats; LP2 0:28:30"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Park wall line",
+      "sequence": [
+        "spawn",
+        "wallride park wall",
+        "BS tailslide",
+        "Park Entrance Gap",
+        "keep grinding"
+      ],
+      "links": [
+        "wallride",
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [
+        "S"
+      ],
+      "why": "First line from spawn teaches wall-to-grind and carries the first letter",
+      "evidence": "LP2 0:26:34-0:26:44; VG"
+    },
+    {
+      "id": "L2",
+      "name": "Fountain ramp deck hub",
+      "sequence": [
+        "ramp deck",
+        "Ramp to Statue Shorty Gap / Pigeon Puddin' / Ramp to Park / Corner Cut"
+      ],
+      "links": [
+        "kicker"
+      ],
+      "collectibles": [
+        "A",
+        "TOK5"
+      ],
+      "why": "One deck fans out into four landings",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L3",
+      "name": "Brick-wall QP",
+      "sequence": [
+        "Pouncer Was Here",
+        "Phat Lip"
+      ],
+      "links": [
+        "vert-air",
+        "lip",
+        "revert"
+      ],
+      "collectibles": [
+        "K"
+      ],
+      "why": "Best scoring wall (RPGC); the letter teaches it",
+      "evidence": "VG; RPGC"
+    },
+    {
+      "id": "L4",
+      "name": "Snack bar loop",
+      "sequence": [
+        "You're Next in Line",
+        "Grab a Snack and Sit Down",
+        "Buuurp! Now Go Skate",
+        "Path Less Traveled"
+      ],
+      "links": [
+        "grind"
+      ],
+      "collectibles": [
+        "TOK3"
+      ],
+      "why": "Furniture loop",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L5",
+      "name": "Pond loop",
+      "sequence": [
+        "The Bridge (manual)",
+        "pond path rail",
+        "Rock It Air"
+      ],
+      "links": [
+        "manual",
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [
+        "TOK2",
+        "T",
+        "TOK1",
+        "E"
+      ],
+      "why": "South park loop",
+      "evidence": "VG; PS12; LP2 run 1"
+    },
+    {
+      "id": "L6",
+      "name": "Pit line",
+      "sequence": [
+        "Joey's Sculpture 50-50",
+        "Left/Right Side Pit Rail Stomp",
+        "Across the Pit",
+        "Waaay Up There",
+        "Awning Air"
+      ],
+      "links": [
+        "grind",
+        "wallride",
+        "transfer"
+      ],
+      "collectibles": [
+        "JOEY"
+      ],
+      "why": "Sunken plaza as a vert and rail pocket beside spawn",
+      "evidence": "VG; PS12; LP2 0:28:04-0:28:56"
+    },
+    {
+      "id": "L7",
+      "name": "Subway line",
+      "sequence": [
+        "Going Down? / escalator",
+        "station",
+        "Sidewalk Bomb or Ride the Rails",
+        "Changin' Trains",
+        "descend the El"
+      ],
+      "links": [
+        "manual",
+        "grind",
+        "rail-transfer"
+      ],
+      "collectibles": [
+        "RAILS"
+      ],
+      "why": "Mobility line unlocked by the tokens; delivers you to the Banks",
+      "evidence": "LP2 0:29:30-0:29:56; VG; PS12"
+    },
+    {
+      "id": "L8",
+      "name": "Banks tape line",
+      "sequence": [
+        "Banks landing",
+        "curving road",
+        "rebar 1",
+        "Re-Rebar",
+        "rebar 2",
+        "TAPE",
+        "Rebar to Rail Gap / Bench-Hoppin'",
+        "Banks Road Gap"
+      ],
+      "links": [
+        "grind",
+        "rail-transfer",
+        "ollie"
+      ],
+      "collectibles": [
+        "TAPE"
+      ],
+      "why": "The tape sits at the peak of a scoring line",
+      "evidence": "LP2 0:29:56-0:30:10; VG; PS12"
+    },
+    {
+      "id": "L9",
+      "name": "Banks court line",
+      "sequence": [
+        "Jamie's Steps",
+        "Banks Spank",
+        "Slam Dunk",
+        "Banks Fence Gap",
+        "Pillar Air"
+      ],
+      "links": [
+        "rail-transfer",
+        "wallride",
+        "bank"
+      ],
+      "collectibles": [],
+      "why": "Second Banks line round the court and fence",
+      "evidence": "VG; PS12; LP2 0:30:21"
+    },
+    {
+      "id": "L10",
+      "name": "Perimeter barrier and hydrants",
+      "sequence": [
+        "The Easy Way / The Hard Way",
+        "hydrant ollies"
+      ],
+      "links": [
+        "grind",
+        "ollie"
+      ],
+      "collectibles": [
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "why": "Outer street tour",
+      "evidence": "VG; PS12; LP2 run 1"
+    }
+  ],
+  "guidance": [
+    "S visible from spawn above the park wall; the opening wall line collects it",
+    "Letters and tokens sit on park features visible from the park paths",
+    "The El overhead from spawn is a standing landmark to the station and the Banks",
+    "The goal list itself (tokens open the subway; Grind the Subway Rails) points to the El, which ends in the Banks",
+    "The Banks are walled off and lower; the tape is not seen until the rebar line (LP2 0:30:08); the second bar's start is hidden",
+    "A road that stops in mid-air with rebar pointing outward signposts the tape line",
+    "BIG DROP sign at the river fence; taxi and trains are the hazards"
+  ],
+  "designLogic": [
+    "The tape lives in the level's hidden district; entering it is the main challenge and the local line is short (13 s from the landing)",
+    "Several entries with different prices: free but knowledge-gated (low wall, fallen pole) or earned (5 tokens -> subway)",
+    "Goal chaining: tokens -> subway -> subway-rails goal en route -> lands at the foot of the tape road; LP2 clears three goals in a 49 s opening",
+    "Construction motif marks the tape line: an unfinished road with rebar says 'go to the end'",
+    "The skill test is one blind, early rail-to-rail hop (knowledge + timing, not speed or height)",
+    "The tape sits inside a scoring line (Rebar to Rail Gap, Bench-Hoppin'); 4 of 5 Banks cash icons are on the approach",
+    "Failure is cheap locally (≈ 8-10 s re-climb) and expensive globally (≈ 30-40 s to leave and return)",
+    "The pocket has its own exits (blue kicker, low wall), so it never traps the player",
+    "All five letters are in the park near spawn and complete within 30 s; the easiest goal is nearest",
+    "Tokens use the park's furniture and pay off with mobility, not just cash",
+    "Hydrants drag the player around the outer streets against traffic",
+    "Goal cash rises with distance: tape $1200 > subway rails $1100 > Joey's $900 > tokens/SKATE $800 > hydrants $700",
+    "Moving hazards (taxi, trains) add timing to both access routes"
+  ],
+  "remakeChanges": [
+    "Tape unchanged: rebar right -> rebar left -> jump off (PS12; thumbsticks; halfglassgaming)",
+    "Banks access: remake guides route via the subway after the 5 subway cards; thumbsticks grinds up a pipe leaning on a fence (both versions keep several entries)",
+    "Tokens renamed Subway Cards; subway stays unlocked permanently (PS12)",
+    "Pro Score 50,000 -> 90,000; High Combo 15,000 added",
+    "Added pickups: 4 stat points (one on the tape's rebar line), VV logo on an awning off the El tracks, alien plushie behind a QP",
+    "Gap list: 41 on VG -> 43 in PS12 (adds One Side, Downhill Jam)"
+  ],
+  "transfer": [
+    "Broken-road rebar crystal: a ≈ 3 m climbing curved ramp ending in mid-air with two short drooping rails; rail B starts hidden behind the parapet; crystal ≈ 1-1.5 m above and ≈ 1 m beyond B's end so only the grind ollie (≈ 2.4 m pop) reaches it; 2.1 m snap radius keeps the blind hop forgiving",
+    "Earned fast route + free hard route: tokens or a trick gate open a long descending elevated rail to the crystal ramp; keep a token-free entry (30° fallen pole grind or a wall within the ≈ 4.6 m on-foot double jump)",
+    "Moving hazard on the access rail: a travelling rail or moving-platform train on the descent",
+    "Pocket with exits: a kicker or speed pad that throws the rider back over the wall to the main street",
+    "Silhouette as signpost: an unfinished structure whose open end points at the crystal; crystal hidden until the final rail",
+    "Scoring line beyond the crystal: a landing rail or bench row under it"
+  ],
+  "openQuestions": [
+    "Exact tape height (no side view; 3-4.5 m is from the rider camera in LP2)",
+    "Whether RPGC's low-brick-wall entry and absolutcheats' fallen-pole entry are the same feature",
+    "One cash icon ($100) may be missing from VG given RPGC's '$500 + $1000' (Philadelphia's figure matches its icon total)",
+    "Original (PS1) gap point values; only remake values are listed",
+    "RPGC places the E 'on the far corner from where you started', unlike VG/LP2"
+  ]
+}

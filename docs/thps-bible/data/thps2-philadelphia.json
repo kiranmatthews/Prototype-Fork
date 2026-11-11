@@ -1,0 +1,1757 @@
+{
+  "id": "thps2-philadelphia",
+  "game": "THPS2",
+  "level": "Philadelphia",
+  "location": "Philadelphia, Pennsylvania",
+  "type": "career-street",
+  "careerPosition": 7,
+  "timeLimit": "2:00",
+  "versions": [
+    "PS1 2000",
+    "THPS 1+2 2020"
+  ],
+  "sources": [
+    "VG TonyHawk_sProSkater2-Philadelphia,Pennsylvania.png",
+    "LP2 0:47:20-0:55:30",
+    "PS12 philadelphia",
+    "LP12 1:06:00-1:11:00",
+    "WEB rpgclassics philadelphiawalkthrough",
+    "WEB absolutcheats",
+    "WEB thumbsticks (remake tapes)",
+    "WEB halfglassgaming (remake Philadelphia tape)"
+  ],
+  "goals": [
+    {
+      "text": "High Score - 50,000 ($2500)",
+      "version": "original"
+    },
+    {
+      "text": "Pro Score - 125,000 ($3000)",
+      "version": "original"
+    },
+    {
+      "text": "SICK Score! - 250,000 ($4000)",
+      "version": "original"
+    },
+    {
+      "text": "Collect S-K-A-T-E ($2000)",
+      "version": "original"
+    },
+    {
+      "text": "Drain the Fountain ($2500)",
+      "version": "original"
+    },
+    {
+      "text": "Collect 5 Bells ($2000)",
+      "version": "original"
+    },
+    {
+      "text": "Bluntside the Awning ($2000)",
+      "version": "original"
+    },
+    {
+      "text": "Liptrick 4 Skatepark Lips ($2500)",
+      "version": "original"
+    },
+    {
+      "text": "Find The Secret Tape ($2000)",
+      "version": "original"
+    },
+    {
+      "text": "100% Goals and Cash ($500)",
+      "version": "original"
+    },
+    {
+      "text": "High Score 50,000; Pro Score 125,000; Sick Score 250,000; High Combo 40,000",
+      "version": "remake"
+    },
+    {
+      "text": "Collect S-K-A-T-E; Collect 5 Liberty Bells; Drain the Fountain; Bluntside the Awning; Liptrick 4 Skatepark Lips; Get the Secret Tape",
+      "version": "remake"
+    },
+    {
+      "text": "Remake-only pickups: 4 stat points (by style), Vicarious Visions logo, alien plushie",
+      "version": "remake"
+    }
+  ],
+  "size": {
+    "class": "large",
+    "footprint": "≈ 120-160 m across the plaza plus a skatepark strip of similar length along the west street",
+    "evidence": "fountain ≈ 20 m across (skater crossing time on the wire, LP2) ≈ 1/8 of the VG map width; low confidence"
+  },
+  "zones": [
+    {
+      "id": "Z1",
+      "name": "South plaza (start)",
+      "layer": "ground; low stairs",
+      "features": [
+        "funbox",
+        "Flatlands Techin' manual pad",
+        "two kicker ramps",
+        "short stairs and rails",
+        "bench planters"
+      ],
+      "notes": "Spawn by the south street"
+    },
+    {
+      "id": "Z2",
+      "name": "West planter grid and street",
+      "layer": "ground; raised planters ≈ 0.5-1 m",
+      "features": [
+        "T-shaped planter grid",
+        "small step set",
+        "telephone poles",
+        "chain-link fence and white pillars hiding the skatepark"
+      ],
+      "notes": "B5; street side of the unlock"
+    },
+    {
+      "id": "Z3",
+      "name": "Central fountain",
+      "layer": "sunken bowl ≈ 2-3 m below the plaza with three tiers of curved stair ledges",
+      "features": [
+        "Long/Medium/Short Stair ledges",
+        "centre sculpture (yellow disc)",
+        "red THPS sign",
+        "floor rails when drained"
+      ],
+      "notes": "Two states: water / drained"
+    },
+    {
+      "id": "Z4",
+      "name": "North: octagonal pavilion and curved elevated planter",
+      "layer": "pavilion steps; ramp with teal/blue handrail; curved elevated planter with trees",
+      "features": [
+        "Up the Small Step Set",
+        "Just Visiting",
+        "T stair rail",
+        "overhead line (unlock)",
+        "long wire's low anchor at the planter tip"
+      ],
+      "notes": "B4 at the planter tip"
+    },
+    {
+      "id": "Z5",
+      "name": "North-east: blue-awning building",
+      "layer": "awning ≈ 3-4 m; two curved ramps; bollards; planters",
+      "features": [
+        "Awning Grind",
+        "Statue Hop ramps",
+        "Post Ollie / Easy Post Ollie",
+        "Planter Double Pillar Hop"
+      ],
+      "notes": "K, Bluntside goal, B3; S and B2 on the east planters"
+    },
+    {
+      "id": "Z6",
+      "name": "South-east: two-storey brick building",
+      "layer": "ground -> balustraded balcony (≈ 1 storey) -> roof (≈ 2 storeys; the wire's high anchor)",
+      "features": [
+        "valve wheel on the balcony",
+        "balcony railing",
+        "telephone wire to the street",
+        "curved rail across the road (Little Corner Grind)"
+      ],
+      "notes": "The roof network"
+    },
+    {
+      "id": "Z7",
+      "name": "Phillyside skatepark (secret area)",
+      "layer": "sunken park under a highway",
+      "features": [
+        "pillars",
+        "bowls",
+        "halfpipe",
+        "funbox",
+        "humps",
+        "rails",
+        "American-flag corner QP"
+      ],
+      "notes": "Closed until the overhead line is ground"
+    }
+  ],
+  "landmarks": [
+    "long wire over the fountain",
+    "fountain with water jets and red THPS sign",
+    "brick building with balcony",
+    "octagonal glass pavilion",
+    "blue-awning building",
+    "curved elevated planter",
+    "Phillyside skatepark pillars",
+    "telephone poles"
+  ],
+  "spawn": {
+    "zone": "Z1",
+    "facing": "north-east across the plaza: funbox left, long kicker ahead, fountain jets and red THPS sign in the distance",
+    "visibleCollectibles": [
+      "B1"
+    ],
+    "notes": "B1 floats between the kicker ramps ahead-right (LP2 1:56). The tape is not visible from spawn in LP2"
+  },
+  "collectibles": [
+    {
+      "id": "TAPE",
+      "type": "tape",
+      "label": "Secret tape",
+      "zone": "Z3",
+      "landmark": "on the long wire over the fountain, just past the fountain's south-east rim, ≈ 55-65% of the way from the curved planter's tip (Z4) to the brick building's roof (Z6); a $250 hangs just beyond it",
+      "layer": "on a wire",
+      "heightM": "≈ 5-7 above the plaza/steps beneath it; ≈ 3-5 above the planter top where the grind starts (wire starts ≈ 2-3 m above the plaza and rises to a roof ≈ 7-8 m); low-medium confidence",
+      "launchFrom": "grass top of the curved elevated planter (≈ 1 m), ollie from its tip onto the wire",
+      "visibility": {
+        "firstSight": "from the fountain area (inferred); on screen from the wire ≈ 1 s before pickup (LP2 0:52:04)",
+        "fromSpawn": false,
+        "reads": "glowing VHS tape on a long wire above the fountain; the wire leads the eye to the planter where it starts",
+        "distanceFromFirstSightM": "≈ 20-40 from the plaza (inferred); ≈ 8-10 on the wire (observed)"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "pavilion side of the plaza (Z4)",
+          "to": "pavilion steps",
+          "geometry": "$50 by the pavilion at 1:12"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "plaza",
+          "to": "top of the small step set",
+          "geometry": "Up the Small Step Set (100) at 1:11-1:09"
+        },
+        {
+          "step": 3,
+          "move": "grind",
+          "from": "planter edges",
+          "to": "toward the fountain",
+          "geometry": "no comply -> wall ride -> BS 5-0 -> BS 50-50 -> manual along planter edges heading south-east (1:08-1:03)"
+        },
+        {
+          "step": 4,
+          "move": "ollie",
+          "from": "plaza",
+          "to": "curved elevated planter top",
+          "geometry": "ollie up onto the grass and ride it to its tip at the fountain's north-west rim (1:02-1:00); PS12: from spawn 'head left and find the planter that curves around to the right'"
+        },
+        {
+          "step": 5,
+          "move": "ollie",
+          "from": "planter tip",
+          "to": "wire",
+          "geometry": "ollie onto the wire start ≈ 2-3 m above the plaza (0:59)"
+        },
+        {
+          "step": 6,
+          "move": "wire",
+          "from": "wire start",
+          "to": "fountain's south-east rim",
+          "geometry": "grind up the wire over the fountain bowl, re-catching with small hops (BS 50-50 x3), ≈ 3 s"
+        },
+        {
+          "step": 7,
+          "move": "wire",
+          "from": "past the rim",
+          "to": "TAPE",
+          "geometry": "tape collected mid-wire at 0:55 (≈ 4 s after leaving the planter)"
+        },
+        {
+          "step": 8,
+          "move": "wire",
+          "from": "tape",
+          "to": "brick building roof",
+          "geometry": "$250 then $100 (Fly by Wire) on the way up; from the roof drop right to the valve balcony (absolutcheats) or, in the remake, ollie right onto the roof for the VV logo"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "wire",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "holding a long uphill wire grind (rail balance; halfglassgaming)",
+        "getting onto a wire from a planter tip"
+      ],
+      "coupling": "none required; the same wire is the original's main roof access to the valve (absolutcheats), so tape and drain share a line; fountain below is water or drained",
+      "failure": "fall into the fountain bowl (≈ 2-3 m below the plaza) or onto the steps; back on the planter in ≈ 5-10 s",
+      "timeFromSpawnS": "LP2 run 2: tape at 0:55 (≈ 65 s, after draining the fountain at 1:39 and the Telephone Co. Gap); dedicated segment ≈ 16 (1:11 -> 0:55); wire -> tape ≈ 4; inferred direct ≈ 20-25",
+      "difficulty": 2,
+      "roles": [
+        "TEASE",
+        "TEST",
+        "TEACH-LINE"
+      ],
+      "why": "The tape hangs on the level's signature line above its centrepiece: discovery is easy, execution (commit to a long uphill wire grind high over a pit) is the test; mid-span placement makes the grind itself the challenge, and the line doubles as the roof access for the drain goal",
+      "evidence": "VG; LP2 0:51:47-0:52:07; PS12 philadelphia; WEB rpgclassics; WEB absolutcheats; WEB thumbsticks; WEB halfglassgaming",
+      "confidence": "high (location, route); medium (timing); low-medium (heights)"
+    },
+    {
+      "id": "S",
+      "type": "letter",
+      "label": "S",
+      "zone": "Z5",
+      "landmark": "east planter run right of the start, by the bollards (Easy Post Ollie)",
+      "layer": "low air off a planter end",
+      "heightM": "≈ 1-2 (estimate)",
+      "launchFrom": "planter edge",
+      "visibility": {
+        "firstSight": "seen ahead from the big planter (LP2 1:48)",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "planter edge",
+          "to": "planter end",
+          "geometry": "grind the edge"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "planter end",
+          "to": "S",
+          "geometry": "ollie off the end (PS12)"
+        }
+      ],
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 14 (LP2 run 1, ≈ 1:46)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First letter on the opening loop",
+      "evidence": "VG; PS12; LP2 0:49:02-0:49:04",
+      "confidence": "high"
+    },
+    {
+      "id": "K",
+      "type": "letter",
+      "label": "K",
+      "zone": "Z5",
+      "landmark": "above the blue awning",
+      "layer": "awning",
+      "heightM": "≈ 3-4 (awning height, estimate)",
+      "launchFrom": "ramp in front of the awning",
+      "visibility": {
+        "firstSight": "from the east plaza",
+        "fromSpawn": false,
+        "reads": "floating letter over the awning",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "ramp",
+          "to": "awning",
+          "geometry": "ollie up from the ramp"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "awning edge",
+          "to": "K",
+          "geometry": "grind the awning edge (PS12)"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "shares the feature with Bluntside the Awning",
+      "failure": "drop to the plaza; retry in seconds",
+      "timeFromSpawnS": "≈ 28 (LP2 run 1, awning grind at 1:32)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Same feature as a goal and a bell",
+      "evidence": "VG; PS12; LP2 0:49:18",
+      "confidence": "high"
+    },
+    {
+      "id": "A",
+      "type": "letter",
+      "label": "A",
+      "zone": "Z4/Z5",
+      "landmark": "low planter next to the awning (PS12); VG draws it on the north planter by Just Visiting",
+      "layer": "low",
+      "heightM": "≈ 1-2 (estimate)",
+      "launchFrom": "planter",
+      "visibility": {
+        "firstSight": "seen ahead (LP2 1:12)",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "plaza",
+          "to": "planter / A",
+          "geometry": "ride or ollie over the planter"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 48 (LP2 run 1, ≈ 1:12)",
+      "difficulty": 1,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Leads toward the pavilion",
+      "evidence": "VG; PS12; LP2 0:49:38",
+      "confidence": "medium"
+    },
+    {
+      "id": "T",
+      "type": "letter",
+      "label": "T",
+      "zone": "Z4",
+      "landmark": "off the blue stair rail at the pavilion steps",
+      "layer": "above the steps",
+      "heightM": "≈ 2-3 (estimate)",
+      "launchFrom": "blue stair rail",
+      "visibility": {
+        "firstSight": "floating over the steps (LP2 1:06)",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "≈ 10-15"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "grind",
+          "from": "steps",
+          "to": "blue rail",
+          "geometry": "get up and grind the blue rail"
+        },
+        {
+          "step": 2,
+          "move": "ollie",
+          "from": "rail",
+          "to": "T",
+          "geometry": "jump off to the left (PS12)"
+        }
+      ],
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 54 (LP2 run 1, ≈ 1:06)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Teaches the rail family that leads to the skatepark unlock",
+      "evidence": "VG; PS12; LP2 0:49:44",
+      "confidence": "high"
+    },
+    {
+      "id": "E",
+      "type": "letter",
+      "label": "E",
+      "zone": "Z2/Z4",
+      "landmark": "end of the raised planter on the west, by the street and overhead line",
+      "layer": "low-mid",
+      "heightM": "≈ 1-2 (estimate)",
+      "launchFrom": "raised planter",
+      "visibility": {
+        "firstSight": "unknown",
+        "fromSpawn": false,
+        "reads": "floating letter",
+        "distanceFromFirstSightM": "unknown"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "T area",
+          "to": "raised planter",
+          "geometry": "get up on the raised planter"
+        },
+        {
+          "step": 2,
+          "move": "ride",
+          "from": "planter",
+          "to": "E",
+          "geometry": "follow it right; E at its end (PS12)"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 85 (LP2 run 1, S-K-A-T-E complete at 0:35)",
+      "difficulty": 2,
+      "roles": [
+        "EXPLORE"
+      ],
+      "why": "Closes the letter loop at the street (counter-clockwise on the VG image)",
+      "evidence": "VG; PS12; LP2 0:50:16; RPGC",
+      "confidence": "medium"
+    },
+    {
+      "id": "B1",
+      "type": "goal-object",
+      "label": "Bell 1",
+      "zone": "Z1",
+      "landmark": "between the two kicker ramps right of the start (World's Most Obvious Gap)",
+      "layer": "air between kickers",
+      "heightM": "≈ 1.5-2.5 (estimate)",
+      "launchFrom": "kicker",
+      "visibility": {
+        "firstSight": "from spawn (LP2 1:56)",
+        "fromSpawn": true,
+        "reads": "bronze bell icon",
+        "distanceFromFirstSightM": "≈ 15-25"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "kicker A",
+          "to": "kicker B",
+          "geometry": "kicker to kicker air"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 6 (LP2 run 1, 1 of 5 at 1:54)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "First bell teaches the kicker pair",
+      "evidence": "VG; PS12; LP2 0:48:54-0:48:56",
+      "confidence": "high"
+    },
+    {
+      "id": "B2",
+      "type": "goal-object",
+      "label": "Bell 2",
+      "zone": "Z5",
+      "landmark": "off the planter beside the kickers: ride over it and drop right (PS12); VG puts it on the east planter by the S",
+      "layer": "low",
+      "heightM": "≈ 1-2",
+      "launchFrom": "planter",
+      "visibility": {
+        "firstSight": "from the kickers",
+        "fromSpawn": false,
+        "reads": "bell icon",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "planter",
+          "to": "bell",
+          "geometry": "ride over and drop right"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 22 (LP2 run 1, 2 of 5 at 1:38)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Planter drop",
+      "evidence": "VG; PS12; LP2 0:49:12",
+      "confidence": "medium"
+    },
+    {
+      "id": "B3",
+      "type": "goal-object",
+      "label": "Bell 3",
+      "zone": "Z5",
+      "landmark": "at the blue-awning building, off the curved ramps (Statue Hop)",
+      "layer": "air off a ramp",
+      "heightM": "≈ 2-3",
+      "launchFrom": "curved ramp",
+      "visibility": {
+        "firstSight": "from the east plaza",
+        "fromSpawn": false,
+        "reads": "bell icon",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "curved ramp",
+          "to": "bell",
+          "geometry": "ollie up from the ramp"
+        }
+      ],
+      "moves": [
+        "kicker"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 34 (LP2 run 1, 3 of 5 at 1:26)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Bell on the awning feature",
+      "evidence": "VG; PS12; LP2 0:49:24",
+      "confidence": "high"
+    },
+    {
+      "id": "B4",
+      "type": "goal-object",
+      "label": "Bell 4",
+      "zone": "Z4",
+      "landmark": "at the end (tip) of the curved elevated planter: the launch point of the tape's wire",
+      "layer": "planter top",
+      "heightM": "≈ 1-2",
+      "launchFrom": "planter top",
+      "visibility": {
+        "firstSight": "from the pavilion steps",
+        "fromSpawn": false,
+        "reads": "bell icon",
+        "distanceFromFirstSightM": "≈ 15-25"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ride",
+          "from": "steps",
+          "to": "planter",
+          "geometry": "go up the steps, turn round, get on the planter"
+        },
+        {
+          "step": 2,
+          "move": "ride",
+          "from": "planter",
+          "to": "tip",
+          "geometry": "ride to its end"
+        }
+      ],
+      "moves": [
+        "ollie",
+        "wallride"
+      ],
+      "speed": "moderate",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 46 (LP2 run 1, 4 of 5 at 1:14 after a wall ride + wallie)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE",
+        "TEASE"
+      ],
+      "why": "Brings the player to the wire's anchor before the tape is sought",
+      "evidence": "VG; PS12; LP2 0:49:36",
+      "confidence": "high"
+    },
+    {
+      "id": "B5",
+      "type": "goal-object",
+      "label": "Bell 5",
+      "zone": "Z2",
+      "landmark": "over the T-shaped planter in the west grid (Up the Small Step Set)",
+      "layer": "planter",
+      "heightM": "≈ 1-2",
+      "launchFrom": "planter / step set",
+      "visibility": {
+        "firstSight": "from the pavilion side",
+        "fromSpawn": false,
+        "reads": "bell icon",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "ollie",
+          "from": "steps",
+          "to": "planter",
+          "geometry": "ollie over the planter"
+        }
+      ],
+      "moves": [
+        "ollie"
+      ],
+      "speed": "none",
+      "skillGates": [],
+      "coupling": "none",
+      "failure": "trivial",
+      "timeFromSpawnS": "≈ 73 (LP2 run 1, goal at 0:47)",
+      "difficulty": 1,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Last bell in the west grid",
+      "evidence": "VG; PS12; LP2 0:50:04",
+      "confidence": "high"
+    },
+    {
+      "id": "VALVE",
+      "type": "goal-object",
+      "label": "Drain the Fountain (valve wheel)",
+      "zone": "Z6",
+      "landmark": "valve wheel lying on the brick building's balcony",
+      "layer": "balcony ≈ 1 storey",
+      "heightM": "≈ 3-4 above the plaza (estimate)",
+      "launchFrom": "balcony floor",
+      "visibility": {
+        "firstSight": "not visible from the plaza (on the balcony)",
+        "fromSpawn": false,
+        "reads": "large wheel valve on the balcony floor",
+        "distanceFromFirstSightM": "≈ 5-10 once on the balcony"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "spawn",
+          "to": "kickers/planter",
+          "geometry": "right from spawn along the funbox and kickers"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "stair rail",
+          "to": "planter",
+          "geometry": "grind down the stairs, ollie from a planter"
+        },
+        {
+          "step": 3,
+          "move": "grind",
+          "from": "balustrade",
+          "to": "balcony",
+          "geometry": "BS noseblunt onto the balcony balustrade (Chillin' on the Balcony) at 1:44-1:43"
+        },
+        {
+          "step": 4,
+          "move": "ride",
+          "from": "balcony",
+          "to": "valve",
+          "geometry": "ride over the wheel: DRAIN THE FOUNTAIN at 1:39; alternative: wire up to the roof and drop right to the balcony"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "grind",
+        "ollie"
+      ],
+      "speed": "high",
+      "skillGates": [
+        "roof-chain knowledge"
+      ],
+      "coupling": "draining persists; exposes Grind of Faith rails and floor cash",
+      "failure": "fall to the plaza; ≈ 10-15 s to retry",
+      "timeFromSpawnS": "≈ 20 (LP2 run 2, 1:39)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Roof chain teaches the balcony; state change rewards it",
+      "evidence": "LP2 0:51:00-0:51:21; RPGC; WEB absolutcheats; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "AWNING",
+      "type": "reach-goal",
+      "label": "Bluntside the Awning",
+      "zone": "Z5",
+      "landmark": "the blue awning (same as K)",
+      "layer": "awning",
+      "heightM": "≈ 3-4 (estimate)",
+      "launchFrom": "ramp",
+      "visibility": {
+        "firstSight": "from the east plaza",
+        "fromSpawn": false,
+        "reads": "long blue awning edge",
+        "distanceFromFirstSightM": "≈ 10-20"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "kicker",
+          "from": "ramp",
+          "to": "awning",
+          "geometry": "ollie up"
+        },
+        {
+          "step": 2,
+          "move": "grind",
+          "from": "awning",
+          "to": "awning",
+          "geometry": "bluntslide it"
+        }
+      ],
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "named grind (bluntslide)"
+      ],
+      "coupling": "none",
+      "failure": "drop and retry",
+      "timeFromSpawnS": "≈ 32 (LP2 run 1, goal at 1:28)",
+      "difficulty": 2,
+      "roles": [
+        "TEACH-LINE"
+      ],
+      "why": "Feature reuse: a goal, a letter, a bell and a 500 gap on one awning",
+      "evidence": "LP2 0:49:18-0:49:22; PS12",
+      "confidence": "high"
+    },
+    {
+      "id": "LIPS",
+      "type": "reach-goal",
+      "label": "Liptrick 4 Skatepark Lips",
+      "zone": "Z7",
+      "landmark": "Big Bowl (American-flag corner QP), Mid Bowl, HP and New Bowl lips",
+      "layer": "skatepark copings",
+      "heightM": "QP/bowl lips; heights not measured",
+      "launchFrom": "skatepark transitions",
+      "visibility": {
+        "firstSight": "inside the park after the unlock",
+        "fromSpawn": false,
+        "reads": "four distinct pipes",
+        "distanceFromFirstSightM": "n/a"
+      },
+      "route": [
+        {
+          "step": 1,
+          "move": "unlock",
+          "from": "pavilion ramp",
+          "to": "overhead line",
+          "geometry": "blue handrail onto the overhead line; poles fall and flatten the fence"
+        },
+        {
+          "step": 2,
+          "move": "lip",
+          "from": "each pipe",
+          "to": "each lip",
+          "geometry": "lip trick on four different lips"
+        }
+      ],
+      "moves": [
+        "unlock",
+        "lip",
+        "vert-air"
+      ],
+      "speed": "moderate",
+      "skillGates": [
+        "lip tricks"
+      ],
+      "coupling": "needs the skatepark unlock",
+      "failure": "cheap inside the park",
+      "timeFromSpawnS": "LP2 run 3: 1 of 4 at 0:49, last at 0:24 (park entered by 1:46)",
+      "difficulty": 3,
+      "roles": [
+        "SECRET-AREA",
+        "TEST"
+      ],
+      "why": "The secret area holds a goal list item rather than the tape",
+      "evidence": "VG; PS12; LP2 0:53:20-0:54:55; RPGC",
+      "confidence": "high"
+    }
+  ],
+  "cashIcons": [
+    {
+      "value": 250,
+      "zone": "Z7",
+      "location": "skatepark top deck / HP",
+      "evidence": "VG"
+    },
+    {
+      "value": 250,
+      "zone": "Z7",
+      "location": "Phillyside HP Transfer",
+      "evidence": "VG"
+    },
+    {
+      "value": 250,
+      "zone": "Z7",
+      "location": "Phillyside Mid Bowl Lip",
+      "evidence": "VG"
+    },
+    {
+      "value": 100,
+      "zone": "Z7",
+      "location": "Pillar Fight",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z2/Z4",
+      "location": "overhead line (unlock)",
+      "evidence": "VG; LP2 0:49:52"
+    },
+    {
+      "value": 50,
+      "zone": "Z4",
+      "location": "Just Visiting / pavilion",
+      "evidence": "VG; LP2 0:51:48"
+    },
+    {
+      "value": 100,
+      "zone": "Z3",
+      "location": "fountain north rim",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z3",
+      "location": "fountain centre (Fountain Ping!)",
+      "evidence": "VG"
+    },
+    {
+      "value": 50,
+      "zone": "Z3",
+      "location": "drained floor (Grind of Faith)",
+      "evidence": "VG; WEB absolutcheats"
+    },
+    {
+      "value": 250,
+      "zone": "Z3/Z6",
+      "location": "on the long wire just past the tape",
+      "evidence": "VG; LP2 0:52:06"
+    },
+    {
+      "value": 100,
+      "zone": "Z6",
+      "location": "on the long wire near the roof (Fly by Wire)",
+      "evidence": "VG"
+    },
+    {
+      "value": 250,
+      "zone": "Z6",
+      "location": "balcony (Chillin' on the Balcony)",
+      "evidence": "VG; LP2 0:51:16"
+    },
+    {
+      "value": 250,
+      "zone": "Z6",
+      "location": "telephone wire (Telephone Co. Gap)",
+      "evidence": "VG; LP2 0:51:26"
+    }
+  ],
+  "remakeCollectibles": [
+    {
+      "id": "VV",
+      "label": "Vicarious Visions logo",
+      "location": "roof at the top of the long wire: grind it all the way up and ollie off right",
+      "evidence": "PS12"
+    },
+    {
+      "id": "STAT-street",
+      "label": "Stat point (street style)",
+      "location": "on the long wire, same location as the secret tape",
+      "evidence": "PS12"
+    },
+    {
+      "id": "PLUSH",
+      "label": "Alien plushie",
+      "location": "skatepark, behind the right side of the halfpipe, under the steps",
+      "evidence": "PS12"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "Bench Gap",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z1 planters over the benches",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Chillin' on the Balcony",
+      "points": 500,
+      "kind": "roof",
+      "location": "Z6 stairs grind -> planter ollie -> balcony",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "VALVE"
+      ],
+      "evidence": "VG; PS12; LP2 0:51:16"
+    },
+    {
+      "name": "Easy Post Ollie",
+      "points": 10,
+      "kind": "over-object",
+      "location": "Z5 over a bollard from a planter",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "S"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Phillyside Hop",
+      "points": 100,
+      "kind": "secret-area",
+      "location": "Z7 ramp -> over the wall into the park",
+      "moves": [
+        "kicker",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Phillyside HP Transfer",
+      "points": 250,
+      "kind": "pool-transfer",
+      "location": "Z7 HP -> bowl",
+      "moves": [
+        "vert-air",
+        "transfer"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Pillar Fight",
+      "points": 250,
+      "kind": "other",
+      "location": "Z7 QP between two pillars (ollie up a pillar)",
+      "moves": [
+        "vert-air"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Post Ollie",
+      "points": 50,
+      "kind": "over-object",
+      "location": "Z5 over a bollard from the ground",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Stair Set",
+      "points": 100,
+      "kind": "other",
+      "location": "Z1 short stairs (ollie down)",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Statue Hop",
+      "points": 50,
+      "kind": "channel",
+      "location": "Z5 curved ramp -> curved ramp at the awning",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "B3",
+        "K"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "THPS Fountain Gap",
+      "points": 500,
+      "kind": "other",
+      "location": "Z3 drop into the fountain in one jump (PS12 'THPS Statue Gap')",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Up the Small Step Set",
+      "points": 100,
+      "kind": "other",
+      "location": "Z4/Z2 ollie up small stairs",
+      "moves": [
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TAPE",
+        "B5"
+      ],
+      "evidence": "VG; PS12; LP2 0:51:50"
+    },
+    {
+      "name": "World's Most Obvious Gap",
+      "points": 100,
+      "kind": "kicker",
+      "location": "Z1 kicker -> kicker",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "B1"
+      ],
+      "evidence": "VG; PS12; LP2 0:48:54"
+    },
+    {
+      "name": "World's Second Most Obvious Gap",
+      "points": null,
+      "kind": "kicker",
+      "location": "Z1 by the stairs and kickers (VG only; kind inferred)",
+      "moves": [
+        "kicker"
+      ],
+      "onRouteOf": [
+        "VALVE"
+      ],
+      "evidence": "VG"
+    },
+    {
+      "name": "Awning Grind",
+      "points": 500,
+      "kind": "other",
+      "location": "Z5 awning grind",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [
+        "K",
+        "AWNING"
+      ],
+      "evidence": "VG; PS12; LP2 0:49:18"
+    },
+    {
+      "name": "Death from Above",
+      "points": 500,
+      "kind": "wire",
+      "location": "Z3/Z6 down the wire -> drop -> grind the fountain centre",
+      "moves": [
+        "wire",
+        "ollie",
+        "grind"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Fly by Wire",
+      "points": 500,
+      "kind": "wire",
+      "location": "Z6 -> Z4 the whole long wire top to bottom",
+      "moves": [
+        "wire"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Fountain Ping!",
+      "points": 750,
+      "kind": "kicker",
+      "location": "Z3 wooden ramp -> fountain centre grind",
+      "moves": [
+        "kicker",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Funbox Transfer",
+      "points": 250,
+      "kind": "rail-transfer",
+      "location": "Z7 funbox ledge -> curved rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Grind of Faith",
+      "points": 1500,
+      "kind": "rail-transfer",
+      "location": "Z3 drained-floor rails over the middle (needs the drain)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "VALVE"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Grind Up Dem Stairs",
+      "points": 500,
+      "kind": "other",
+      "location": "Z1 uphill stair rail",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Hobo Grind",
+      "points": 100,
+      "kind": "other",
+      "location": "Z7 long curving rail (PS12 'Hobo Gap')",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Just Visiting",
+      "points": 150,
+      "kind": "ledge-to-ledge",
+      "location": "Z4 planter edge -> veer -> lower planter (curved planter area)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "TAPE"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Little Corner Grind",
+      "points": 500,
+      "kind": "wallride",
+      "location": "Z6 wallride -> curved rail across the road",
+      "moves": [
+        "wallride",
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Long Stair",
+      "points": 500,
+      "kind": "other",
+      "location": "Z3 lowest curved stair ledge",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Medium Stair",
+      "points": 250,
+      "kind": "other",
+      "location": "Z3 middle curved ledge",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Short Stair",
+      "points": 150,
+      "kind": "other",
+      "location": "Z3 top curved ledge",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Pillar Hop",
+      "points": 150,
+      "kind": "rail-transfer",
+      "location": "Z7 back QP rim over a pillar",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Planter Double Pillar Hop",
+      "points": 150,
+      "kind": "ledge-to-ledge",
+      "location": "Z5 planter -> over two posts -> planter (PS12 '... Gap')",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Planter Transfer",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 planter -> planter",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Railing to Planter",
+      "points": 100,
+      "kind": "ledge-to-ledge",
+      "location": "Z6 balcony railing -> planter below (roof exit)",
+      "moves": [
+        "grind",
+        "ollie"
+      ],
+      "onRouteOf": [
+        "VALVE"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Telephone Co. Gap",
+      "points": 250,
+      "kind": "wire",
+      "location": "Z6 balcony railing -> telephone wire to the street (roof exit)",
+      "moves": [
+        "grind",
+        "wire"
+      ],
+      "onRouteOf": [
+        "VALVE"
+      ],
+      "evidence": "VG; PS12; LP2 0:51:26"
+    },
+    {
+      "name": "Track Smack",
+      "points": 50,
+      "kind": "rail-transfer",
+      "location": "Z7 parallel rails",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Train Hard",
+      "points": 500,
+      "kind": "other",
+      "location": "Z7 grind the back QP rim all along",
+      "moves": [
+        "grind"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Flatlands Techin'",
+      "points": 500,
+      "kind": "manual",
+      "location": "Z1 top of the stairs -> past the funbox -> other stairs",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Funbox Wheelie",
+      "points": 100,
+      "kind": "manual",
+      "location": "Z1 over the funbox",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Manual Stimulation",
+      "points": 500,
+      "kind": "manual",
+      "location": "Z7 over the humps",
+      "moves": [
+        "manual"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Rockin' the Stairs",
+      "points": 2500,
+      "kind": "manual",
+      "location": "Z3 manual up the small flights, hopping between",
+      "moves": [
+        "manual",
+        "ollie"
+      ],
+      "onRouteOf": [],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Phillyside Big Bowl Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z7 American-flag corner QP",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12; LP2 0:54:40"
+    },
+    {
+      "name": "Phillyside Mid Bowl Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z7 curved QP beside it",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12; LP2 0:54:45"
+    },
+    {
+      "name": "Phillyside HP Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z7 halfpipe",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12 philadelphia"
+    },
+    {
+      "name": "Phillyside New Bowl Lip",
+      "points": 100,
+      "kind": "lip",
+      "location": "Z7 bowl by the humps",
+      "moves": [
+        "lip"
+      ],
+      "onRouteOf": [
+        "LIPS"
+      ],
+      "evidence": "VG; PS12; LP2 0:54:55"
+    }
+  ],
+  "unlocks": [
+    {
+      "trigger": "ride up the pavilion ramp and grind its blue handrail out onto the overhead line by a telephone pole",
+      "opens": "telephone poles fall and flatten the chain-link fence: the Phillyside skatepark (persists across runs)",
+      "neededFor": [
+        "LIPS"
+      ],
+      "evidence": "VG orange label; LP2 0:49:48-0:49:54; PS12; WEB absolutcheats"
+    },
+    {
+      "trigger": "ride over / grind the valve wheel on the brick building's balcony",
+      "opens": "fountain drains and stays drained; floor rails (Grind of Faith) and floor cash appear",
+      "neededFor": [
+        "VALVE"
+      ],
+      "evidence": "LP2 0:51:20; WEB rpgclassics; WEB absolutcheats; PS12"
+    },
+    {
+      "trigger": "moving objects: bus and traffic on the west street",
+      "opens": "nothing (hazard)",
+      "neededFor": [],
+      "evidence": "LP2 0:49:54"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "name": "Opening kicker loop",
+      "sequence": [
+        "spawn",
+        "World's Most Obvious Gap",
+        "east planters",
+        "S"
+      ],
+      "links": [
+        "kicker",
+        "grind"
+      ],
+      "collectibles": [
+        "B1",
+        "S"
+      ],
+      "why": "First loop from spawn carries a bell and a letter",
+      "evidence": "LP2 0:48:50-0:49:04; VG"
+    },
+    {
+      "id": "L2",
+      "name": "Balcony roof chain",
+      "sequence": [
+        "kickers",
+        "stair rail",
+        "planter ollie",
+        "Chillin' on the Balcony",
+        "valve"
+      ],
+      "links": [
+        "grind",
+        "kicker",
+        "ollie"
+      ],
+      "collectibles": [
+        "VALVE"
+      ],
+      "why": "Low-tech roof chain to the drain (≈ 20 s from spawn)",
+      "evidence": "LP2 0:51:00-0:51:21"
+    },
+    {
+      "id": "L3",
+      "name": "Roof exits",
+      "sequence": [
+        "balcony railing",
+        "Telephone Co. Gap or Railing to Planter"
+      ],
+      "links": [
+        "grind",
+        "wire"
+      ],
+      "collectibles": [],
+      "why": "What goes up comes down as a line",
+      "evidence": "LP2 0:51:23-0:51:28; VG; PS12"
+    },
+    {
+      "id": "L4",
+      "name": "Awning line",
+      "sequence": [
+        "Statue Hop",
+        "Awning Grind / bluntslide"
+      ],
+      "links": [
+        "kicker",
+        "grind"
+      ],
+      "collectibles": [
+        "K",
+        "AWNING",
+        "B3"
+      ],
+      "why": "Two goals and a bell on one feature",
+      "evidence": "LP2 0:49:16-0:49:24; VG; PS12"
+    },
+    {
+      "id": "L5",
+      "name": "Fountain tiers",
+      "sequence": [
+        "Short/Medium/Long Stair ledges",
+        "Rockin' the Stairs",
+        "THPS Fountain Gap",
+        "Fountain Ping!",
+        "Grind of Faith (drained)"
+      ],
+      "links": [
+        "grind",
+        "manual",
+        "drop"
+      ],
+      "collectibles": [],
+      "why": "Central bowl as a multi-tier line that changes after the drain",
+      "evidence": "VG; PS12"
+    },
+    {
+      "id": "L6",
+      "name": "Wire line (tape)",
+      "sequence": [
+        "Up the Small Step Set",
+        "curved planter top",
+        "planter tip",
+        "wire",
+        "TAPE",
+        "$250",
+        "$100",
+        "roof",
+        "balcony valve / remake VV logo"
+      ],
+      "links": [
+        "ollie",
+        "wire"
+      ],
+      "collectibles": [
+        "TAPE",
+        "B4"
+      ],
+      "why": "The tape line doubles as the main roof access",
+      "evidence": "LP2 0:51:47-0:52:07; VG; PS12; WEB absolutcheats"
+    },
+    {
+      "id": "L7",
+      "name": "Pavilion rails and unlock",
+      "sequence": [
+        "pavilion steps blue rail",
+        "pavilion ramp",
+        "blue handrail",
+        "overhead line (poles fall)",
+        "west raised planter"
+      ],
+      "links": [
+        "grind",
+        "wire"
+      ],
+      "collectibles": [
+        "T",
+        "E"
+      ],
+      "why": "Rail-to-wire line that changes the map",
+      "evidence": "LP2 0:49:44-0:49:54; VG; PS12"
+    },
+    {
+      "id": "L8",
+      "name": "Phillyside park",
+      "sequence": [
+        "Phillyside Hop",
+        "Hobo Grind / Track Smack",
+        "Funbox Transfer",
+        "Train Hard / Pillar Hop",
+        "HP Transfer",
+        "four lips",
+        "Manual Stimulation"
+      ],
+      "links": [
+        "transfer",
+        "lip",
+        "manual"
+      ],
+      "collectibles": [
+        "LIPS"
+      ],
+      "why": "Whole vert zone behind the unlock",
+      "evidence": "LP2 0:53:20-0:55:15; VG; PS12"
+    },
+    {
+      "id": "L9",
+      "name": "Little corner grind",
+      "sequence": [
+        "wallride behind the brick building",
+        "curved rail across the road"
+      ],
+      "links": [
+        "wallride",
+        "grind"
+      ],
+      "collectibles": [],
+      "why": "Side line round the roof block",
+      "evidence": "VG; PS12"
+    }
+  ],
+  "guidance": [
+    "The long wire leads the eye from the planter, over the fountain, to a roof; the tape glows on it above the busiest space (thumbsticks: follow the wire to its source)",
+    "B4 at the curved planter's tip puts the player on the wire's launch point before the tape is sought",
+    "Fountain jets and the red THPS sign are visible from spawn and pull the player to the centre under the wire",
+    "The skatepark unlock is shown by consequence: telephone poles fall across the fence; fence and white pillars hint at a hidden space",
+    "Hidden on purpose: the skatepark (until the poles fall) and the valve on the balcony"
+  ],
+  "designLogic": [
+    "The tape hangs over the centrepiece; challenge is execution (balance, commitment), fitting career level 7",
+    "Mid-span placement (≈ 2/3 along the wire) makes the sustained grind the test",
+    "One line serves two goals: the wire is the original's main route to the valve roof",
+    "Two directions: grind up from the planter (LP2, PS12) or down from the roof (RPGC)",
+    "A small skill step first: ollie onto a raised grass planter and ride its top",
+    "Cheap failure: a fall lands in the fountain bowl a few seconds from the planter (≈ 10 s retry)",
+    "The wire family is taught in the same level: overhead line (unlock), telephone wire (exit), long wire (tape)",
+    "State change as reward: draining turns the water feature into a rail arena and releases floor cash",
+    "The secret area (Phillyside) holds a goal list item and $850, not the tape",
+    "Bells and letters sit on basic features in one loop from the start (counter-clockwise on the VG image)",
+    "Feature reuse: the awning carries the K, the Bluntside goal, a bell and a 500-point gap",
+    "Cash scales with demand; the tape ($2000) is a mid-value goal here",
+    "The roof network loops (wire/balcony chain up; telephone wire, railing-to-planter or drop down)"
+  ],
+  "remakeChanges": [
+    "Tape unchanged: mid-wire over the fountain, reached from the planter end (PS12; thumbsticks; halfglassgaming)",
+    "Remake stacks a street stat point at the tape spot and the VV logo on the roof at the wire's top",
+    "Valves: LP2 shows one wheel on the balcony; PS12 describes three valves (grind one)",
+    "Skatepark unlock unchanged (blue handrail -> wire -> poles fall)",
+    "Bells renamed Liberty Bells in the goal; High Combo 40,000 added",
+    "Gap names: Hobo Grind -> Hobo Gap; Planter Double Pillar Hop -> ... Gap; THPS Fountain Gap -> THPS Statue Gap; World's Second Most Obvious Gap missing from PS12",
+    "Look: overcast PS1 plaza vs bright autumn daylight with dense trees (LP12)"
+  ],
+  "transfer": [
+    "Rising wire over a pit: a 30-40 m sloped rail/rope from a ≈ 1 m planter tip up to a ≈ 7 m roof across a sunken pool; crystal ≈ 60% along, ≈ 5 m above ground; add a mid-span break needing a grind ollie (≈ 2.4 m pop) or make it a snapping rope so the rider must keep moving",
+    "Shared roof chain: the rope ends at a roof whose balcony holds a trick-gate switch that drains the pool and reveals rails and a bonus",
+    "Teach the launch point first: a minor pickup at the planter tip where the rope starts",
+    "Two directions: a second roof route (stair rail -> kicker -> planter -> balcony ledge, or an on-foot ledge grab <= 2.4 m) so the crystal can also be taken grinding down",
+    "Wire that changes the world: grinding an overhead line drops poles (moving objects) that flatten a fence and open a vert park",
+    "Cheap retry under a visible target: crystal over the busiest space, launch planter a few seconds from any fall"
+  ],
+  "openQuestions": [
+    "Exact heights of the wire's anchors and of the tape (no side view)",
+    "Valve count in the original (LP2 one wheel; remake guide three valves)",
+    "Location of A (PS12 'next to the blue awning' vs VG north planter)",
+    "Original (PS1) gap points; details of World's Second Most Obvious Gap (VG only)"
+  ]
+}
