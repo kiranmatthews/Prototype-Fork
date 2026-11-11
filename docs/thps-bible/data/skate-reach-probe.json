@@ -1,0 +1,2969 @@
+[
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 6,
+    "lipY": 3.6,
+    "coast": null,
+    "pumped": {
+      "apexAboveLip": 6.367,
+      "apexAboveFloor": 9.967,
+      "t": 3.65
+    }
+  },
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 9,
+    "lipY": 3.6,
+    "coast": null,
+    "pumped": {
+      "apexAboveLip": 7.158,
+      "apexAboveFloor": 10.758,
+      "t": 3.467
+    }
+  },
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 12,
+    "lipY": 3.6,
+    "coast": null,
+    "pumped": {
+      "apexAboveLip": 0.567,
+      "apexAboveFloor": 4.167,
+      "t": 1.383
+    }
+  },
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 15,
+    "lipY": 3.6,
+    "coast": null,
+    "pumped": {
+      "apexAboveLip": 1.995,
+      "apexAboveFloor": 5.595,
+      "t": 1.45
+    }
+  },
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 18,
+    "lipY": 3.6,
+    "coast": {
+      "apexAboveLip": 0.914,
+      "apexAboveFloor": 4.514,
+      "t": 1.217
+    },
+    "pumped": {
+      "apexAboveLip": 3.846,
+      "apexAboveFloor": 7.446,
+      "t": 1.583
+    }
+  },
+  {
+    "scenario": "halfpipe-first-air",
+    "speed": 23,
+    "lipY": 3.6,
+    "coast": {
+      "apexAboveLip": 4.541,
+      "apexAboveFloor": 8.141,
+      "t": 1.567
+    },
+    "pumped": {
+      "apexAboveLip": 7.101,
+      "apexAboveFloor": 10.701,
+      "t": 1.8
+    }
+  },
+  {
+    "scenario": "halfpipe-pumped-session",
+    "startSpeed": 9,
+    "lipY": 3.6,
+    "airs": [
+      {
+        "apexAboveLip": 7.158,
+        "apexAboveFloor": 10.758,
+        "t": 3.467
+      },
+      {
+        "apexAboveLip": 7.902,
+        "apexAboveFloor": 11.502,
+        "t": 5.667
+      },
+      {
+        "apexAboveLip": 8.389,
+        "apexAboveFloor": 11.989,
+        "t": 7.9
+      },
+      {
+        "apexAboveLip": 8.547,
+        "apexAboveFloor": 12.147,
+        "t": 10.133
+      },
+      {
+        "apexAboveLip": 8.758,
+        "apexAboveFloor": 12.358,
+        "t": 12.367
+      },
+      {
+        "apexAboveLip": 8.615,
+        "apexAboveFloor": 12.215,
+        "t": 14.6
+      },
+      {
+        "apexAboveLip": 8.743,
+        "apexAboveFloor": 12.343,
+        "t": 16.833
+      },
+      {
+        "apexAboveLip": 8.614,
+        "apexAboveFloor": 12.214,
+        "t": 19.067
+      },
+      {
+        "apexAboveLip": 8.721,
+        "apexAboveFloor": 12.321,
+        "t": 21.3
+      },
+      {
+        "apexAboveLip": 8.545,
+        "apexAboveFloor": 12.145,
+        "t": 23.533
+      },
+      {
+        "apexAboveLip": 8.482,
+        "apexAboveFloor": 12.082,
+        "t": 25.75
+      },
+      {
+        "apexAboveLip": 8.685,
+        "apexAboveFloor": 12.285,
+        "t": 27.983
+      },
+      {
+        "apexAboveLip": 8.488,
+        "apexAboveFloor": 12.088,
+        "t": 30.217
+      },
+      {
+        "apexAboveLip": 8.296,
+        "apexAboveFloor": 11.896,
+        "t": 32.417
+      }
+    ]
+  },
+  {
+    "scenario": "halfpipe-coast-session",
+    "startSpeed": 12,
+    "lipY": 3.6,
+    "airs": []
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 9,
+    "pump": false,
+    "copingY": 3.6,
+    "apexAboveCoping": null,
+    "maxPastCoping": null,
+    "landing": null,
+    "t": 10
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 9,
+    "pump": true,
+    "copingY": 3.6,
+    "apexAboveCoping": null,
+    "maxPastCoping": null,
+    "landing": null,
+    "t": 10
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 12,
+    "pump": false,
+    "copingY": 3.6,
+    "apexAboveCoping": null,
+    "maxPastCoping": null,
+    "landing": null,
+    "t": 10
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 12,
+    "pump": true,
+    "copingY": 3.6,
+    "apexAboveCoping": -0.033,
+    "maxPastCoping": -0.064,
+    "landing": {
+      "x": -0.064,
+      "y": 2.928,
+      "onDeck": false
+    },
+    "t": 2.217
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 15,
+    "pump": false,
+    "copingY": 3.6,
+    "apexAboveCoping": null,
+    "maxPastCoping": null,
+    "landing": null,
+    "t": 10
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 15,
+    "pump": true,
+    "copingY": 3.6,
+    "apexAboveCoping": 1.635,
+    "maxPastCoping": -0.062,
+    "landing": {
+      "x": -0.062,
+      "y": 2.939,
+      "onDeck": false
+    },
+    "t": 2.133
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 18,
+    "pump": false,
+    "copingY": 3.6,
+    "apexAboveCoping": null,
+    "maxPastCoping": null,
+    "landing": null,
+    "t": 10
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 18,
+    "pump": true,
+    "copingY": 3.6,
+    "apexAboveCoping": 3.245,
+    "maxPastCoping": -0.069,
+    "landing": {
+      "x": -0.069,
+      "y": 2.901,
+      "onDeck": false
+    },
+    "t": 2.133
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 23,
+    "pump": false,
+    "copingY": 3.6,
+    "apexAboveCoping": 3.536,
+    "maxPastCoping": -0.064,
+    "landing": {
+      "x": -0.064,
+      "y": 2.929,
+      "onDeck": false
+    },
+    "t": 1.933
+  },
+  {
+    "scenario": "quarter-air",
+    "speed": 23,
+    "pump": true,
+    "copingY": 3.6,
+    "apexAboveCoping": 6.647,
+    "maxPastCoping": -0.043,
+    "landing": {
+      "x": -0.043,
+      "y": 3.057,
+      "onDeck": false
+    },
+    "t": 2.233
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 9,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 9,
+    "mode": "ollie",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 12,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 12,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 10.914,
+    "apexAboveFloor": 2.473,
+    "apexAboveLip": 1.673,
+    "distanceFromLip": 8.891,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 18,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 18,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 18.454,
+    "apexAboveFloor": 2.992,
+    "apexAboveLip": 2.192,
+    "distanceFromLip": 16.204,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 23,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 0.8,
+    "len": 4,
+    "angleDeg": 11.31,
+    "speed": 23,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 22.853,
+    "apexAboveFloor": 3.364,
+    "apexAboveLip": 2.564,
+    "distanceFromLip": 21.177,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 9,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 9,
+    "mode": "ollie",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 12,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": 0,
+    "apexAboveFloor": 0.371,
+    "apexAboveLip": -0.829,
+    "distanceFromLip": 0.307,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 12,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 9.302,
+    "apexAboveFloor": 3.616,
+    "apexAboveLip": 2.416,
+    "distanceFromLip": 8.474,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 18,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": 0,
+    "apexAboveFloor": 1.109,
+    "apexAboveLip": -0.091,
+    "distanceFromLip": 0.424,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 18,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 18.049,
+    "apexAboveFloor": 3.78,
+    "apexAboveLip": 2.58,
+    "distanceFromLip": 17.784,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 23,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.2,
+    "len": 4,
+    "angleDeg": 16.699,
+    "speed": 23,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 22.753,
+    "apexAboveFloor": 4.445,
+    "apexAboveLip": 3.245,
+    "distanceFromLip": 24.362,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 9,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 9,
+    "mode": "ollie",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 12,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 12,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 6.327,
+    "apexAboveFloor": 4.481,
+    "apexAboveLip": 2.681,
+    "distanceFromLip": 5.925,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 18,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 18,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 16.717,
+    "apexAboveFloor": 5.807,
+    "apexAboveLip": 4.007,
+    "distanceFromLip": 19.267,
+    "landedY": 0
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 23,
+    "mode": "roll",
+    "launched": false,
+    "speedAtTakeoff": null,
+    "apexAboveFloor": null,
+    "apexAboveLip": null,
+    "distanceFromLip": null,
+    "landedY": null
+  },
+  {
+    "scenario": "kicker",
+    "rise": 1.8,
+    "len": 4,
+    "angleDeg": 24.228,
+    "speed": 23,
+    "mode": "ollie",
+    "launched": true,
+    "speedAtTakeoff": 21.355,
+    "apexAboveFloor": 6.987,
+    "apexAboveLip": 5.187,
+    "distanceFromLip": 26.557,
+    "landedY": 0
+  },
+  {
+    "scenario": "grind-balance-no-correction",
+    "speed": 6,
+    "balanceDrift": 0.7,
+    "caught": true,
+    "secondsUntilOff": 1.233,
+    "speedAfter": 1.8,
+    "state": "air"
+  },
+  {
+    "scenario": "grind-balance-no-correction",
+    "speed": 9,
+    "balanceDrift": 0.7,
+    "caught": true,
+    "secondsUntilOff": 1.433,
+    "speedAfter": 2.7,
+    "state": "air"
+  },
+  {
+    "scenario": "grind-balance-no-correction",
+    "speed": 12,
+    "balanceDrift": 0.7,
+    "caught": true,
+    "secondsUntilOff": 1.433,
+    "speedAfter": 3.6,
+    "state": "air"
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 6,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 3.239,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 6,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 3.237,
+    "lateralAtRailHeight": 1.964
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 6,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 6.66,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 6,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 6.66,
+    "lateralAtRailHeight": 3.248
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 12,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 6.477,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 12,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 6.475,
+    "lateralAtRailHeight": 1.964
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 12,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 13.32,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 12,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 13.32,
+    "lateralAtRailHeight": 3.248
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 18,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 9.716,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 18,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 9.712,
+    "lateralAtRailHeight": 1.964
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 18,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 19.98,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 18,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 19.98,
+    "lateralAtRailHeight": 3.248
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 23,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 12.415,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 23,
+    "jump": "tap",
+    "grinding": true,
+    "apexAboveRailTop": 1.229,
+    "alongAtRailHeight": 12.41,
+    "lateralAtRailHeight": 1.964
+  },
+  {
+    "scenario": "grind-ollie",
+    "speed": 23,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 25.53,
+    "lateralAtRailHeight": 0
+  },
+  {
+    "scenario": "grind-ollie-side",
+    "speed": 23,
+    "jump": "full",
+    "grinding": true,
+    "apexAboveRailTop": 2.301,
+    "alongAtRailHeight": 25.53,
+    "lateralAtRailHeight": 3.248
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 8,
+    "mode": "roll-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 1.249,
+    "distancePastRailEnd": 14.4
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 8,
+    "mode": "ollie-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 2.379,
+    "distancePastRailEnd": 27.383
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 12,
+    "mode": "roll-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 1.249,
+    "distancePastRailEnd": 14.4
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 12,
+    "mode": "ollie-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 2.379,
+    "distancePastRailEnd": 27.45
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 18,
+    "mode": "roll-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 1.249,
+    "distancePastRailEnd": 14.4
+  },
+  {
+    "scenario": "slipstream",
+    "railLen": 24,
+    "entrySpeed": 18,
+    "mode": "ollie-off",
+    "exitSpeed": 48,
+    "boosted": true,
+    "apexAboveFloor": 2.379,
+    "distancePastRailEnd": 27.75
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": "none",
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": 0,
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": 0.25,
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": 0.5,
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": 1,
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 9,
+    "wallieHoldS": 1.5,
+    "caught": false,
+    "wallEntryY": null,
+    "wallEntryVVel": null,
+    "wallEntrySpeed": null,
+    "rideSeconds": 0,
+    "end": null,
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": null,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": null,
+    "maxYWholeRun": 0.69,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.933,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 4.481,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        4.364
+      ],
+      [
+        0.5,
+        3.58
+      ],
+      [
+        0.75,
+        1.797
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 4.193,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 5.872,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1.375,
+    "landingAlongWall": 4.049,
+    "landingY": 0,
+    "maxYWholeRun": 5.872,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 4.364,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 6.983,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.575,
+    "landingAlongWall": 4.467,
+    "landingY": 0,
+    "maxYWholeRun": 6.983,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        4.364
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 3.58,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 7.443,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.725,
+    "landingAlongWall": 4.691,
+    "landingY": 0,
+    "maxYWholeRun": 7.443,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        4.364
+      ],
+      [
+        0.5,
+        3.58
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.933,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 4.481,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        4.364
+      ],
+      [
+        0.5,
+        3.58
+      ],
+      [
+        0.75,
+        1.797
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 12,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 4.147,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 6.327,
+    "rideSeconds": 0.933,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 4.481,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        4.364
+      ],
+      [
+        0.5,
+        3.58
+      ],
+      [
+        0.75,
+        1.797
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 1.683,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 7.81,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.225
+      ],
+      [
+        0.5,
+        7.506
+      ],
+      [
+        0.75,
+        7.787
+      ],
+      [
+        1,
+        7.067
+      ],
+      [
+        1.25,
+        5.348
+      ],
+      [
+        1.5,
+        2.629
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 4.127,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 5.806,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1.375,
+    "landingAlongWall": 10.716,
+    "landingY": 0,
+    "maxYWholeRun": 5.806,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 6.225,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 8.844,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.675,
+    "landingAlongWall": 12.872,
+    "landingY": 0,
+    "maxYWholeRun": 8.844,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.225
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 7.506,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 11.368,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.95,
+    "landingAlongWall": 14.758,
+    "landingY": 0,
+    "maxYWholeRun": 11.368,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.225
+      ],
+      [
+        0.5,
+        7.506
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 1.017,
+    "end": "wallie",
+    "releaseY": 7.067,
+    "releaseAfterS": 1,
+    "apexAboveFloor": 14.146,
+    "apexAboveRelease": 7.078,
+    "landingAwayFromWall": 2.35,
+    "landingAlongWall": 17.237,
+    "landingY": 0,
+    "maxYWholeRun": 14.146,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.225
+      ],
+      [
+        0.5,
+        7.506
+      ],
+      [
+        0.75,
+        7.787
+      ],
+      [
+        1,
+        7.067
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 18,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 3.944,
+    "wallEntryVVel": 11.257,
+    "wallEntrySpeed": 16.717,
+    "rideSeconds": 1.517,
+    "end": "wallie",
+    "releaseY": 2.629,
+    "releaseAfterS": 1.5,
+    "apexAboveFloor": 13.896,
+    "apexAboveRelease": 11.267,
+    "landingAwayFromWall": 2.575,
+    "landingAlongWall": 18.286,
+    "landingY": 0,
+    "maxYWholeRun": 13.896,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.225
+      ],
+      [
+        0.5,
+        7.506
+      ],
+      [
+        0.75,
+        7.787
+      ],
+      [
+        1,
+        7.067
+      ],
+      [
+        1.25,
+        5.348
+      ],
+      [
+        1.5,
+        2.629
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 1.767,
+    "end": "left-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 4.448,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 10.388,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.956
+      ],
+      [
+        0.5,
+        9.076
+      ],
+      [
+        0.75,
+        10.196
+      ],
+      [
+        1,
+        10.316
+      ],
+      [
+        1.25,
+        9.436
+      ],
+      [
+        1.5,
+        7.556
+      ],
+      [
+        1.75,
+        4.676
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 4.075,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 5.754,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1.375,
+    "landingAlongWall": 13.692,
+    "landingY": 0,
+    "maxYWholeRun": 5.754,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 6.956,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 9.575,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.725,
+    "landingAlongWall": 16.99,
+    "landingY": 0,
+    "maxYWholeRun": 9.575,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.956
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 9.076,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 12.938,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 2.025,
+    "landingAlongWall": 19.708,
+    "landingY": 0,
+    "maxYWholeRun": 12.938,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.956
+      ],
+      [
+        0.5,
+        9.076
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 1.017,
+    "end": "wallie",
+    "releaseY": 10.316,
+    "releaseAfterS": 1,
+    "apexAboveFloor": 17.394,
+    "apexAboveRelease": 7.078,
+    "landingAwayFromWall": 2.475,
+    "landingAlongWall": 23.51,
+    "landingY": 0,
+    "maxYWholeRun": 17.394,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.956
+      ],
+      [
+        0.5,
+        9.076
+      ],
+      [
+        0.75,
+        10.196
+      ],
+      [
+        1,
+        10.316
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "kicker",
+    "speed": 23,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 3.836,
+    "wallEntryVVel": 14.613,
+    "wallEntrySpeed": 21.355,
+    "rideSeconds": 1.517,
+    "end": "wallie",
+    "releaseY": 7.556,
+    "releaseAfterS": 1.5,
+    "apexAboveFloor": 18.822,
+    "apexAboveRelease": 11.267,
+    "landingAwayFromWall": 2.8,
+    "landingAlongWall": 25.944,
+    "landingY": 0,
+    "maxYWholeRun": 18.822,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        6.956
+      ],
+      [
+        0.5,
+        9.076
+      ],
+      [
+        0.75,
+        10.196
+      ],
+      [
+        1,
+        10.316
+      ],
+      [
+        1.25,
+        9.436
+      ],
+      [
+        1.5,
+        7.556
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.417,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.659,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.441
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 0.27,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 1.949,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 0.925,
+    "landingAlongWall": 3.424,
+    "landingY": 0,
+    "maxYWholeRun": 1.949,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 0.441,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 3.06,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.125,
+    "landingAlongWall": 4.042,
+    "landingY": 0,
+    "maxYWholeRun": 3.06,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.441
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.417,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.659,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.441
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.417,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.659,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.441
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 9,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 0.224,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 7.949,
+    "rideSeconds": 0.417,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.659,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.441
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.914,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.874
+      ],
+      [
+        0.5,
+        0.091
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 0.703,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 2.382,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 0.95,
+    "landingAlongWall": 4.918,
+    "landingY": 0,
+    "maxYWholeRun": 2.382,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 0.874,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 3.494,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.15,
+    "landingAlongWall": 5.828,
+    "landingY": 0,
+    "maxYWholeRun": 3.494,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.874
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 0.091,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 3.953,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.325,
+    "landingAlongWall": 6.561,
+    "landingY": 0,
+    "maxYWholeRun": 3.953,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.874
+      ],
+      [
+        0.5,
+        0.091
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.914,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.874
+      ],
+      [
+        0.5,
+        0.091
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 12,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 0.658,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.11,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.914,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.874
+      ],
+      [
+        0.5,
+        0.091
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.5,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.855,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.815
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 0.644,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 2.323,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 0.95,
+    "landingAlongWall": 7.61,
+    "landingY": 0,
+    "maxYWholeRun": 2.323,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 0.815,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 3.434,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.15,
+    "landingAlongWall": 9.087,
+    "landingY": 0,
+    "maxYWholeRun": 3.434,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.815
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.5,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.855,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.815
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.5,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.855,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.815
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 18,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 0.598,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 17.181,
+    "rideSeconds": 0.5,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.855,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.815
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.812,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.796
+      ],
+      [
+        0.5,
+        0.116
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 0.529,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 2.208,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 0.925,
+    "landingAlongWall": 9.545,
+    "landingY": 0,
+    "maxYWholeRun": 2.208,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 0.796,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 3.416,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.15,
+    "landingAlongWall": 11.741,
+    "landingY": 0,
+    "maxYWholeRun": 3.416,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.796
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 0.116,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 3.978,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.325,
+    "landingAlongWall": 13.373,
+    "landingY": 0,
+    "maxYWholeRun": 3.978,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.796
+      ],
+      [
+        0.5,
+        0.116
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.812,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.796
+      ],
+      [
+        0.5,
+        0.116
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-tap",
+    "speed": 23,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 0.477,
+    "wallEntryVVel": 3.412,
+    "wallEntrySpeed": 22.128,
+    "rideSeconds": 0.517,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 0.812,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        0.796
+      ],
+      [
+        0.5,
+        0.116
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.754,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.714
+      ],
+      [
+        0.5,
+        0.931
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 1.543,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 3.222,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1.025,
+    "landingAlongWall": 5.256,
+    "landingY": 0,
+    "maxYWholeRun": 3.222,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 1.714,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 4.333,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.2,
+    "landingAlongWall": 6.023,
+    "landingY": 0,
+    "maxYWholeRun": 4.333,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.714
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 0.931,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 4.793,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.375,
+    "landingAlongWall": 6.74,
+    "landingY": 0,
+    "maxYWholeRun": 4.793,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.714
+      ],
+      [
+        0.5,
+        0.931
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.754,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.714
+      ],
+      [
+        0.5,
+        0.931
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 9,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 1.497,
+    "wallEntryVVel": 3,
+    "wallEntrySpeed": 11.005,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.754,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.714
+      ],
+      [
+        0.5,
+        0.931
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.672,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.642
+      ],
+      [
+        0.5,
+        0.895
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 1.436,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 3.115,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1,
+    "landingAlongWall": 6.62,
+    "landingY": 0,
+    "maxYWholeRun": 3.115,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 1.642,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 4.261,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.2,
+    "landingAlongWall": 7.813,
+    "landingY": 0,
+    "maxYWholeRun": 4.261,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.642
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 0.895,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 4.758,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.375,
+    "landingAlongWall": 8.792,
+    "landingY": 0,
+    "maxYWholeRun": 4.758,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.642
+      ],
+      [
+        0.5,
+        0.895
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.672,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.642
+      ],
+      [
+        0.5,
+        0.895
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 12,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 1.388,
+    "wallEntryVVel": 3.149,
+    "wallEntrySpeed": 14.202,
+    "rideSeconds": 0.65,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 1.672,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        1.642
+      ],
+      [
+        0.5,
+        0.895
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.917,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.246,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.11
+      ],
+      [
+        0.5,
+        2.132
+      ],
+      [
+        0.75,
+        1.155
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 1.186,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 2.865,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 1,
+    "landingAlongWall": 9.642,
+    "landingY": 0,
+    "maxYWholeRun": 2.865,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 2.11,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 4.729,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.225,
+    "landingAlongWall": 11.678,
+    "landingY": 0,
+    "maxYWholeRun": 4.729,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.11
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 2.132,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 5.995,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.425,
+    "landingAlongWall": 13.418,
+    "landingY": 0,
+    "maxYWholeRun": 5.995,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.11
+      ],
+      [
+        0.5,
+        2.132
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.917,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.246,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.11
+      ],
+      [
+        0.5,
+        2.132
+      ],
+      [
+        0.75,
+        1.155
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 18,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 1.087,
+    "wallEntryVVel": 6.225,
+    "wallEntrySpeed": 20.677,
+    "rideSeconds": 0.917,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.246,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.11
+      ],
+      [
+        0.5,
+        2.132
+      ],
+      [
+        0.75,
+        1.155
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": "none",
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.983,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.462,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.212
+      ],
+      [
+        0.5,
+        2.419
+      ],
+      [
+        0.75,
+        1.627
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": 0,
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.033,
+    "end": "wallie",
+    "releaseY": 1.116,
+    "releaseAfterS": 0.017,
+    "apexAboveFloor": 2.795,
+    "apexAboveRelease": 1.679,
+    "landingAwayFromWall": 0.975,
+    "landingAlongWall": 10.483,
+    "landingY": 0,
+    "maxYWholeRun": 2.795,
+    "rideHeightEvery250ms": []
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": 0.25,
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.267,
+    "end": "wallie",
+    "releaseY": 2.212,
+    "releaseAfterS": 0.25,
+    "apexAboveFloor": 4.831,
+    "apexAboveRelease": 2.619,
+    "landingAwayFromWall": 1.225,
+    "landingAlongWall": 13.037,
+    "landingY": 0,
+    "maxYWholeRun": 4.831,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.212
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": 0.5,
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.517,
+    "end": "wallie",
+    "releaseY": 2.419,
+    "releaseAfterS": 0.5,
+    "apexAboveFloor": 6.282,
+    "apexAboveRelease": 3.862,
+    "landingAwayFromWall": 1.45,
+    "landingAlongWall": 15.263,
+    "landingY": 0,
+    "maxYWholeRun": 6.282,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.212
+      ],
+      [
+        0.5,
+        2.419
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": 1,
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.983,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.462,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.212
+      ],
+      [
+        0.5,
+        2.419
+      ],
+      [
+        0.75,
+        1.627
+      ]
+    ]
+  },
+  {
+    "scenario": "wallride",
+    "entry": "flat-full",
+    "speed": 23,
+    "wallieHoldS": 1.5,
+    "caught": true,
+    "wallEntryY": 1.005,
+    "wallEntryVVel": 6.962,
+    "wallEntrySpeed": 23.056,
+    "rideSeconds": 0.983,
+    "end": "landed-from-wall",
+    "releaseY": null,
+    "releaseAfterS": null,
+    "apexAboveFloor": 0,
+    "apexAboveRelease": null,
+    "landingAwayFromWall": null,
+    "landingAlongWall": null,
+    "landingY": 0,
+    "maxYWholeRun": 2.462,
+    "rideHeightEvery250ms": [
+      [
+        0.25,
+        2.212
+      ],
+      [
+        0.5,
+        2.419
+      ],
+      [
+        0.75,
+        1.627
+      ]
+    ]
+  },
+  {
+    "scenario": "trampoline",
+    "mode": "foot",
+    "apexAboveFloor": 4.046,
+    "apexAboveDeck": 3.746,
+    "travelAlong": null
+  },
+  {
+    "scenario": "trampoline",
+    "mode": "foot-held",
+    "apexAboveFloor": 6.195,
+    "apexAboveDeck": 5.895,
+    "travelAlong": null
+  },
+  {
+    "scenario": "trampoline",
+    "mode": "board-land-6",
+    "apexAboveFloor": 4.046,
+    "apexAboveDeck": 3.746,
+    "travelAlong": null
+  },
+  {
+    "scenario": "trampoline",
+    "mode": "board-land-6-held",
+    "apexAboveFloor": 6.195,
+    "apexAboveDeck": 5.895,
+    "travelAlong": null
+  },
+  {
+    "scenario": "crystal-pickup-envelope",
+    "crystalP": [
+      -50,
+      0,
+      -430
+    ],
+    "pickupBox": {
+      "min": [
+        -51,
+        -0.4,
+        -431
+      ],
+      "max": [
+        -49,
+        3,
+        -429
+      ]
+    },
+    "riderBox": {
+      "feetToTop": 0.936,
+      "halfWidth": 0.5
+    },
+    "feetMayBeAsLowAs": -1.336,
+    "feetMayBeAsHighAs": 3,
+    "horizontalReach": 1.5,
+    "note": "feet height range (relative to crystal p.y = 0) and horizontal centre distance at which the rider collects the crystal"
+  },
+  {
+    "scenario": "crystal-death",
+    "collectedMidAir": true,
+    "died": true,
+    "respawned": true,
+    "afterDeath": {
+      "hasCrystal": true,
+      "levelCollected": true,
+      "visible": false
+    },
+    "afterHardReset": {
+      "levelCollected": false,
+      "visible": true
+    },
+    "note": "A soft death keeps a crystal taken this run; it is banked only when the run clears the gate (main.ts commitClear). A restart before clearing returns it to the level."
+  }
+]
