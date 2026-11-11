@@ -1,5 +1,5 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
-import { Mountain, Path, bed, pad, rectPad, padMeshes, pisteMeshes, profile, slopeMeshes, r3, type Knoll, type P3 } from './powderkeg-terrain';
+import { Mountain, Path, bed, pad, rectPad, padMeshes, pisteMeshes, profile, slopeMeshes, r3, type Carve, type Gap, type Knoll, type P3 } from './powderkeg-terrain';
 
 /**
  * POWDERKEG PEAK
@@ -45,6 +45,7 @@ const kill = (x0: number, x1: number, z0: number, z1: number, y: number, nm: str
 const fence = (x0: number, x1: number, z0: number, z1: number, y0: number, h: number, nm: string): CustomComponent =>
   add({ t: 'wall', p: [r3((x0 + x1) / 2), r3(y0), r3((z0 + z1) / 2)], s: [r3(Math.max(.4, x1 - x0)), r3(h), r3(Math.max(.4, z1 - z0))], invisible: true, grp: G.bounds, nm });
 
+const checkpoint = (p: P3, nm: string) => add({ t: 'checkpoint', p, grp: G.course, nm });
 // Crates are authored on the engine's 0.96 m grid; touching formations are enlarged to 1.152 m when the level is built.
 const CR = .96;
 const crate = (x: number, y: number, z: number, kind: Kind, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
@@ -152,6 +153,25 @@ const CLIMB = new Path('Kindling Steps', 0, 0, 0, [{ len: CREST_S + 9 }],
   profile([[0, 3.2], [12, 4.4], [37, 5.2], [99, 6], [131, 8.4], [151, 10.4], [191, 13], [206, CREST_Y + 1.2]]));
 const finish = RUN2.at(RUN2.length), FINISH: P3 = [r3(finish.x), -12, r3(finish.z)];
 
+// Run features that shape the ground: crevasses to ollie and level troughs for the boulders to roll in.
+const RUN_HALF = 6.5, BANK_RUN = 3.5;
+const RUN1_GAPS: Gap[] = [{ a: 404, b: 410, depth: 7 }];
+const RUN2_GAPS: Gap[] = [{ a: 240, b: 249, depth: 8 }, { a: 452, b: 461, depth: 8 }, { a: 596, b: 607, depth: 9 }];
+interface Trough { path: Path; s: number; centre: number; range: number; speed: number; radius: number; nm: string; }
+const TROUGHS: Trough[] = [
+  { path: RUN1, s: 258, centre: 0, range: 8.4, speed: 5, radius: 1.2, nm: 'First boulder on the board: the whole straight to read it from' },
+  { path: RUN1, s: 292, centre: 0, range: 8.4, speed: 6.5, radius: 1.2, nm: 'Second boulder, quicker' },
+  { path: RUN2, s: 185, centre: -4.2, range: 3.6, speed: 5, radius: 1.2, nm: 'Twin boulders rolling in step, left: the clear lane between them moves' },
+  { path: RUN2, s: 185, centre: 4.2, range: 3.6, speed: 5, radius: 1.2, nm: 'Twin boulders rolling in step, right' },
+  { path: RUN2, s: 412, centre: 0, range: 8.4, speed: 8, radius: 1.3, nm: 'Fast boulder before the crate bridge' },
+];
+const troughRect = (t: Trough): [number, number, number, number] => {
+  const f = t.path.at(t.s), reach = RUN_HALF + 4.2, along = 1.9;
+  const xs = [-1, 1].flatMap(a => [-1, 1].map(b => f.x + f.fx * along * a + f.rx * reach * b)), zs = [-1, 1].flatMap(a => [-1, 1].map(b => f.z + f.fz * along * a + f.rz * reach * b));
+  return [Math.min(...xs), Math.min(...zs), Math.max(...xs), Math.max(...zs)];
+};
+const troughCarves: Carve[] = TROUGHS.map(t => { const [x0, z0, x1, z1] = troughRect(t); return rectPad(x0, z0, x1, z1, t.path.elev(t.s), 2.4, 'piste'); });
+
 // ───────────────────────────── The mountain ─────────────────────────────
 const knolls: Knoll[] = [];
 const flank = (path: Path, from: number, to: number, every: number, lat: number, rise: number, r: number, sides: readonly number[] = [-1, 1]) => {
@@ -169,13 +189,13 @@ knolls.push(
   { x: 0, z: -578, y: TARN_Y, r: 30 }, { x: 60, z: -640, y: 38, r: 34 }, { x: 130, z: -650, y: 52, r: 44 }, { x: -20, z: -650, y: 33, r: 30 },
   { x: -70, z: -640, y: 22, r: 26 }, { x: 150, z: -600, y: 30, r: 36 }, { x: -90, z: -540, y: 16, r: 30 }, { x: FINISH[0], z: FINISH[2] + 60, y: -16, r: 34 },
 );
-const RUN_HALF = 6.5, BANK_RUN = 3.5;
 const mountain = new Mountain({
   knolls, rough: 6,
   carves: [
     bed(CLIMB, { half: HALF + 3, bank: 0, bankRun: 1, blend: 13, kind: 'snow', from: 12, to: CREST_S - 6 }),
-    bed(RUN1, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2 }),
-    bed(RUN2, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2 }),
+    bed(RUN1, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2, gaps: RUN1_GAPS }),
+    bed(RUN2, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2, gaps: RUN2_GAPS }),
+    ...troughCarves,
     rectPad(-HALF - 3, -191, HALF + 3, -12, undefined),
     pad(0, 2, 15, 15, 0, 12),
     pad(0, -CREST_S, 10, 10, CREST_Y, 9),
@@ -187,8 +207,17 @@ const mountain = new Mountain({
 });
 const BOUNDS = { x0: -250, z0: -690, x1: 200, z1: 60 };
 const lats = () => [-(RUN_HALF + BANK_RUN + .9), -(RUN_HALF + BANK_RUN), -(RUN_HALF + BANK_RUN * .5), -RUN_HALF, -RUN_HALF * .5, 0, RUN_HALF * .5, RUN_HALF, RUN_HALF + BANK_RUN * .5, RUN_HALF + BANK_RUN, RUN_HALF + BANK_RUN + .9];
-C.push(...pisteMeshes(mountain, RUN1, 0, RUN1.length, lats, { nm: 'First Tracks piste', grp: G.ground, gravityTrack: true, tex: 'snow' }));
-C.push(...pisteMeshes(mountain, RUN2, 0, RUN2.length, lats, { nm: 'Powderkeg Run piste', grp: G.ground, gravityTrack: true, tex: 'snow' }));
+C.push(...pisteMeshes(mountain, RUN1, 0, RUN1.length, lats, { nm: 'First Tracks piste', grp: G.ground, gravityTrack: true, tex: 'snow', gaps: RUN1_GAPS }));
+C.push(...pisteMeshes(mountain, RUN2, 0, RUN2.length, lats, { nm: 'Powderkeg Run piste', grp: G.ground, gravityTrack: true, tex: 'snow', gaps: RUN2_GAPS }));
+for (const t of TROUGHS) {
+  const [x0, z0, x1, z1] = troughRect(t), f = t.path.at(t.s), acrossX = Math.abs(f.rx) > .5, c = t.path.w(t.s, t.centre);
+  C.push(...padMeshes(mountain, x0 - 1.2, z0 - 1.2, x1 + 1.2, z1 + 1.2, 1.1, { nm: `Boulder trough ${t.path.name} ${t.s}`, grp: G.ground, tex: 'snow' }));
+  add({ t: 'stone', p: [c[0], r3(t.path.elev(t.s)), c[2]], ...(acrossX ? { axis: 'x' as const } : {}), range: t.range, speed: t.speed, radius: t.radius, grp: G.hazards, nm: t.nm });
+}
+for (const [path, gaps] of [[RUN1, RUN1_GAPS], [RUN2, RUN2_GAPS]] as const) for (const g of gaps) {
+  const reach = RUN_HALF + BANK_RUN + 2, corners = [g.a, g.b].flatMap(st => [-reach, reach].map(lat => path.w(st, lat)));
+  kill(Math.min(...corners.map(q => q[0])), Math.max(...corners.map(q => q[0])), Math.min(...corners.map(q => q[2])), Math.max(...corners.map(q => q[2])), path.elev((g.a + g.b) / 2) - 3.2, `${path.name}: crevasse ${g.a}`);
+}
 C.push(...padMeshes(mountain, -17, -14, 17, 19, 1.6, { nm: 'Lodge yard', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, -11, -208, 11, -188, 1.6, { nm: 'First crest', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, -33, -603, 33, -552, 2, { nm: 'Tarn shore', grp: G.ground, tex: 'snow' }));
@@ -204,7 +233,72 @@ for (const path of [RUN1, RUN2]) for (const side of [-1, 1]) for (let from = 0; 
   add({ t: 'wallpath', p: origin, pts, w: .5, rise: 9, collisionHeight: 9, containment: true, invisible: true, grp: G.bounds, nm: `${path.name}: bank fence` });
 }
 
+// ───────────────────────────── Run content ─────────────────────────────
+/** A point on a run's snow: station, metres right of the centreline, lift above the ground. */
+const on = (path: Path, s: number, lat = 0, dy = 0): P3 => { const q = path.w(s, lat); return [q[0], r3(mountain.y(q[0], q[2]) + dy), q[2]]; };
+const runStack = (path: Path, s: number, lat: number, kinds: readonly Kind[], nm: string) => { const q = on(path, s, lat, -.03); stack(q[0], q[1], q[2], kinds, nm); };
+const runFruit = (path: Path, s0: number, s1: number, lat0: number, lat1: number, n: number, rise = 0) => {
+  for (let i = 0; i < n; i++) { const t = n === 1 ? .5 : i / (n - 1), q = on(path, s0 + (s1 - s0) * t, lat0 + (lat1 - lat0) * t); fruit(q[0], q[1] + Math.sin(t * Math.PI) * rise, q[2]); }
+};
+/** A straight grind rail between two stations of a run, `lift` above the snow at each end. */
+const runRail = (path: Path, s0: number, s1: number, lat: number, lift: number, nm: string): CustomComponent => {
+  const a = on(path, s0, lat, lift), b = on(path, s1, lat, lift);
+  return add({ t: 'rail', p: a, pts: [[0, 0, 0, 0], [r3(b[0] - a[0]), r3(b[2] - a[2]), 0, r3(b[1] - a[1])]], grp: G.course, nm });
+};
+const runCheckpoint = (path: Path, s: number, nm: string) => checkpoint(on(path, s, 0), nm);
+
+// First Tracks: one decision every two seconds or so. Speed is the key to every box on a run: below 12.5 m/s a crate trips the board.
+runFruit(RUN1, 8, 44, 0, 0, 7); runFruit(RUN1, 56, 82, -2, 3.4, 5); runFruit(RUN1, 88, 108, 3.4, 0, 4);
+runStack(RUN1, 124, -2.6, ['wood', 'wood'], 'First stack to ride through (teach: a board at speed smashes a whole stack)');
+runFruit(RUN1, 130, 146, -2.6, 2.6, 4);
+runStack(RUN1, 152, 2.6, ['wood', 'mystery'], 'Second stack, across the piste (slalom)');
+runFruit(RUN1, 180, 204, 1.5, -3.4, 5); runFruit(RUN1, 210, 232, -3.4, 0, 4);
+runFruit(RUN1, 240, 250, 0, 0, 3); runFruit(RUN1, 266, 284, 0, 0, 4);
+runStack(RUN1, 311, -3, ['wood', 'wood'], 'Stack past the boulders (reward on the exit line)');
+runFruit(RUN1, 322, 346, -1.5, -3.4, 5); runFruit(RUN1, 352, 374, -3.4, 0, 4);
+for (const lat of [3.3, 4.26]) { const q = on(RUN1, 388, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the right of the piste (debut: beside the line, the whole left lane is free)'); }
+runRail(RUN1, 396, 424, -3.4, .55, 'Log rail over the first crevasse (the other way across)');
+runFruit(RUN1, 398, 422, -3.4, -3.4, 6, 0); runFruit(RUN1, 402.5, 411.5, 1.6, 1.6, 5, 1.3);
+{ const q = on(RUN1, 416.5, 1.6); crate(q[0], q[1], q[2], 'wood', 'Landing marker past the crevasse'); }
+runStack(RUN1, 429, -3.4, ['wood', 'wood'], 'Stack at the end of the log rail');
+runFruit(RUN1, 446, 470, 1.5, 3.4, 5); runFruit(RUN1, 476, 498, 3.4, 0, 4);
+runStack(RUN1, 520, -2.8, ['wood', 'wood'], 'Run-out stack, left'); runStack(RUN1, 534, 2.8, ['wood', 'wood'], 'Run-out stack, right');
+runFruit(RUN1, 540, 556, 0, 0, 3);
+
+// Powderkeg Run: everything the mountain has taught, at speed.
+runFruit(RUN2, 6, 30, 0, 0, 5);
+for (const lat of [-.48, .48]) runStack(RUN2, 40, lat, ['wood', 'wood'], 'Block to ram through at the mount (charge: hold the push)');
+runRail(RUN2, 52, 84, 3.2, .6, 'Ridge fence rail');
+runFruit(RUN2, 54, 82, 3.2, 3.2, 6);
+foe('floater', on(RUN2, 68, 3.2)[0], on(RUN2, 68, 3.2)[1], on(RUN2, 68, 3.2)[2], 8, 3, 'Watcher over the ridge rail (spin from the grind)');
+runStack(RUN2, 88.5, 3.2, ['wood', 'wood'], 'Stack at the end of the ridge rail');
+runFruit(RUN2, 96, 124, -1.5, -3.6, 5); runFruit(RUN2, 130, 154, -3.6, 0, 4);
+runFruit(RUN2, 162, 176, 0, 0, 3); runFruit(RUN2, 238.5, 250.5, 0, 0, 6, 1.5);
+runStack(RUN2, 268, -3, ['wood', 'wood', 'wood'], 'Tall stack, left (one contact clears it)'); runStack(RUN2, 282, 3, ['wood', 'wood', 'mystery'], 'Tall stack, right (slalom)');
+for (const lat of [4.6, 5.56]) { const q = on(RUN2, 312, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the inside of the first chicane bend'); }
+runFruit(RUN2, 296, 326, -1, -2.6, 5); runFruit(RUN2, 332, 362, 2.6, 0, 5);
+for (const lat of [-4.6, -5.56]) { const q = on(RUN2, 346, lat); crate(q[0], q[1], q[2], 'nitro', 'Nitro on the inside of the second chicane bend'); }
+{ const q = on(RUN2, 374, -1.5); crate(q[0], q[1], q[2], 'wood', 'Before the mid-run checkpoint'); }
+runCheckpoint(RUN2, 380, 'C7 · Mid-run, inside its crate group');
+{ const q = on(RUN2, 386, 1.5); crate(q[0], q[1], q[2], 'wood', 'After the mid-run checkpoint'); }
+{ // One-way grind bridge: a crate row at deck height across the second crevasse. Ridden, it is consumed behind the rider.
+  const lip = on(RUN2, 452, -3.6), far = on(RUN2, 461, -3.6), n = 8, z0 = (lip[2] + far[2]) / 2 + (n - 1) / 2 * CR;
+  rowOf(lip[0], lip[1] - .3 - 1.152, z0, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood', 'wood'], 'Crate bridge over the crevasse', true);
+}
+runFruit(RUN2, 450.5, 462.5, 2, 2, 6, 1.5);
+runFruit(RUN2, 484, 512, 1, 2.6, 5); runFruit(RUN2, 520, 540, -2.6, 0, 4);
+{ const q = on(RUN2, 543, -1.5); crate(q[0], q[1], q[2], 'wood', 'Before the last checkpoint'); }
+runCheckpoint(RUN2, 548, 'C8 · Before the charge gap');
+{ const q = on(RUN2, 553, 1.5); crate(q[0], q[1], q[2], 'mystery', 'After the last checkpoint'); }
+runFruit(RUN2, 594.5, 608.5, 0, 0, 7, 1.6);
+{ const q = on(RUN2, 615, 0); crate(q[0], q[1], q[2], 'wood', 'Landing marker past the charge gap'); }
+stack(FINISH[0] - 4.6, FINISH[1], FINISH[2] + 8, ['wood', 'mystery'], 'Works yard stack'); crate(FINISH[0] - 3.64, FINISH[1], FINISH[2] + 8, 'wood', 'Works yard stack: the step beside it');
+
 // ───────────────────────────── The tarn and the hoist ─────────────────────────────
+add({ t: 'platform', p: [0, TARN_Y - .13, -582], s: [34, .3, 22], pts: [[-17, -11, 9], [17, -11, 9], [17, 11, 9], [-17, 11, 9]], tex: 'ice', color: ICE, slip: true, edgeGrinding: false, grp: G.ground, nm: 'Tarn ice' });
+for (const dx of [0, CR]) rowOf(-.48 + dx, TARN_Y + .17, -581.5, ['wood', 'wood'], 'Block in the middle of the tarn ice (slide and spin)', true);
+foe('floater', 7, TARN_Y + .17, -584, 4, 2, 'Watcher over the tarn (debut on foot, with room: spin, never stomp)');
+add({ t: 'bonusplatform', p: [13, TARN_Y, -561], to: [13, r3(TARN_Y + .12), -556.5], grp: G.course, nm: 'Cold Storage: the bonus round and its safe return' });
 const ROW_A = -606, ROW_B = -614, A0_Y = 6;
 add({ t: 'mover', p: [-3, r3((TARN_Y + A0_Y) / 2), ROW_A + 1], s: [4, .6, 4], axis: 'y', amp: (A0_Y - TARN_Y) / 2, speed: .7, phase: -Math.PI / 2, tex: 'plank', color: '#b98f5e', grp: G.hazards, nm: 'The hoist: rises fourteen metres to the lower ledge row' });
 
@@ -284,7 +378,7 @@ crate(100.2, 14.6, ROW_A, 'mystery', 'At the dead end of the second buttress tie
 stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
 crate(68, B0_Y, ROW_B, 'wood', 'On the ice by the far lip (bait: the slide carries you at the gap)');
 foe('spiker', 61.2, 19.8, ROW_B, .9, 1.4, 'Bristleback on the landing pillar: spin before you land');
-crate(40.5, 21.8, ROW_B, 'mask', 'Mask before the twin stampers');
+crate(41.7, 21.8, ROW_B - 1.4, 'mask', 'Mask before the twin stampers, against the wall');
 rowOf(36.04, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall: only from above');
 crate(33, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall: it builds the crate bridge', { grp: SWITCH });
 rowOf(27 - 3 * CR, 21.8 - 1.152, ROW_B, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
@@ -301,7 +395,6 @@ const laneNodes: { p: P3; radius: number }[] = [
   { p: [FINISH[0], FINISH[1], FINISH[2] + 26], radius: 0 },
 ];
 for (const node of laneNodes) add({ t: 'camnode', p: node.p, radius: node.radius, grp: G.camera });
-const checkpoint = (p: P3, nm: string) => add({ t: 'checkpoint', p, grp: G.course, nm });
 checkpoint([-3.4, 5, -124], 'C1 · Powder landing');
 checkpoint([0, CREST_Y, -CREST_S], 'C2 · First crest: board from here');
 checkpoint([0, TARN_Y, -560], 'C3 · Tarn shore');

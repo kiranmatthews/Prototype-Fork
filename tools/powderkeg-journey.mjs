@@ -84,13 +84,31 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
   const still = (frames, label = 'wait') => { for (let i = 0; i < frames; i++) step({}, label); };
 
   // ---- board ----
+  /** Where a boulder will be along its own axis `t` seconds from now (constant speed, turning at both ends). */
+  const stoneIn = (st, t) => {
+    const lo = st.axis === 'x' ? st.x1 : st.z1, hi = st.axis === 'x' ? st.x0 : st.z0;
+    let v = st.axis === 'x' ? st.mesh.position.x : st.mesh.position.z, dir = st.dir, left = t * st.speed;
+    while (left > 0 && hi > lo) { const room = dir > 0 ? hi - v : v - lo; if (left <= room) { v += dir * left; left = 0; } else { v = dir > 0 ? hi : lo; left -= room; dir = -dir; } }
+    return v;
+  };
+  /** A rider reads the next boulder trough ahead and takes the lane its boulders will be furthest from on arrival. */
+  const boulderLane = (path, s, lat) => {
+    const ahead = l.stones.map(st => ({ st, q: path.nearest(st.mesh.position.x, st.mesh.position.z, 16) })).filter(o => o.q && o.q.s - s > -2.5 && o.q.s - s < 50);
+    if (!ahead.length) return null;
+    const station = Math.min(...ahead.map(o => o.q.s)), group = ahead.filter(o => o.q.s - station < 3), f = path.at(station);
+    const arrive = Math.max(0, station - s) / Math.max(8, Math.abs(p.speed));
+    const stoneLats = group.map(({ st }) => { const v = stoneIn(st, arrive), sx = st.axis === 'x' ? v : st.mesh.position.x, sz = st.axis === 'x' ? st.mesh.position.z : v; return (sx - f.x) * f.rx + (sz - f.z) * f.rz; });
+    const lanes = [-4.8, -2.4, 0, 2.4, 4.8].map(c => ({ c, clear: Math.min(...stoneLats.map(v => Math.abs(c - v))) - Math.abs(c - lat) * .1 }));
+    return lanes.sort((a, b) => b.clear - a.clear)[0].c;
+  };
   const mount = (x, z, label = 'mount') => run(label, () => p.freeSkate, () => ({ ...toward(x, z, 1), jumpHeld: true }), 300);
   /** Ride a path to station `to`: steer at the lane a few metres ahead, hold X to push when `push`, brake above `cap`, ollie at `pops`. */
   const ride = (path, to, { lane = () => 0, cap = 60, push = false, pops = [], label = 'ride', look = 9 } = {}) => {
     const popped = new Set(); let braking = false;
     const here = () => path.nearest(p.pos.x, p.pos.z, 40) ?? fail(`${label}: left the piste`);
     run(label, () => here().s >= to, () => {
-      const q = here(), s = q.s, target = path.w(Math.min(path.length + 20, s + look), typeof lane === 'function' ? lane(s) : lane);
+      const q = here(), s = q.s, dodge = boulderLane(path, s, q.lat);
+      const target = path.w(Math.min(path.length + 20, s + look), dodge ?? (typeof lane === 'function' ? lane(s) : lane));
       if (p.state === 'grind') { const c = clamp(-p.balance * 5 - p.balanceVel * .7, -1, 1); return { moveY: 1, moveX: c, grindHeld: true }; }
       const pop = pops.find(q2 => !popped.has(q2) && s >= q2 - .4 && s < q2 + 4 && p.grounded);
       if (pop !== undefined) popped.add(pop);
@@ -139,7 +157,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     } },
     { name: 'first tracks', run() {
       mount(0, -212);
-      ride(RUN1, RUN1.length - 34, { label: 'first tracks' });
+      ride(RUN1, RUN1.length - 34, { label: 'first tracks', pops: [403] });
       ride(RUN1, RUN1.length - 8, { cap: 9, label: 'slow for the shore' });
       dismount('tarn shore');
     } },
@@ -178,8 +196,9 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
       leap([B[1].x0, z], [54.8, z, B[2].y], { label: 'rotten shelf one', tap: true });
       leap([B[2].x0, z], [50.3, z, B[3].y], { label: 'rotten shelf two', tap: true });
       leap([B[3].x0, z], [45.8, z, B[4].y], { label: 'rotten shelf three', tap: true });
-      leap([B[4].x0, z], [41.4, z + .8, B[5].y], { label: 'switch ledge', tap: true });
-      walk(34.4, z + .9); walk(33.2, z - .1, { tol: .25 }); spinOnce('hit the switch');
+      leap([B[4].x0, z], [41.4, z + .6, B[5].y], { label: 'switch ledge', tap: true });
+      walk(41.4, z - .5, { tol: .3 }); spinOnce('break the mask crate');
+      walk(39, z + 1); walk(34.4, z + 1); walk(33.2, z - .1, { tol: .25 }); spinOnce('hit the switch');
       if (!l.crates.some(c => c.alive && !c.pending && Math.abs(c.box.min.x - 26.4) < .7 && Math.abs(c.mesh.position.z - z) < .5)) fail('the switch did not build the bridge');
       // Walk the lids: a jump onto a wooden lid is a stomp and would break the footing.
       walk(31.6, z, { keep: true }); walk(24, z, { tol: .35 });
@@ -192,7 +211,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log } 
     } },
     { name: 'powderkeg run', run() {
       mount(-36, -614);
-      ride(RUN2, RUN2.length - 40, { label: 'powderkeg run' });
+      ride(RUN2, RUN2.length - 40, { label: 'powderkeg run', pops: [239, 451, 595] });
       ride(RUN2, RUN2.length - 4, { cap: 9, label: 'slow for the works yard' });
       dismount('works yard');
       const [fx, , fz] = PLAN.FINISH;

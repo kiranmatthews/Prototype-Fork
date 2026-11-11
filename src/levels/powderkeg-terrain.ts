@@ -127,8 +127,9 @@ export class Path {
 /** A carve reshapes the mountain near a route or pad. `w` blends 0..1 toward `y`; `cover` 0..1 marks ground a fine solid patch owns. */
 export interface CarveHit { y: number; w: number; cover: number; kind: Ground; }
 export type Carve = (x: number, z: number) => CarveHit | null;
-export type Ground = 'snow' | 'piste' | 'ice' | 'rock' | 'path';
+export type Ground = 'snow' | 'piste' | 'ice' | 'rock' | 'path' | 'crevasse';
 
+export interface Gap { a: number; b: number; depth: number; }
 export interface BedOptions {
   /** Half-width of the flat bed at a station. */ half: number | ((s: number) => number);
   /** Rise of the side banks above the bed, and their run. */ bank?: number; bankRun?: number;
@@ -136,6 +137,7 @@ export interface BedOptions {
   /** Depth of the bed's cup across its width. */ cup?: number;
   from?: number; to?: number; kind?: Ground;
   /** Run past either end over which the bed fades out. */ fade?: number;
+  /** Crevasses: the bed drops `depth` between stations `a` and `b`, sheer at both lips. */ gaps?: readonly Gap[];
   /** Bank height override per side and station (negative lat = left). */ bankAt?: (s: number, side: -1 | 1) => number;
 }
 /** A route bed: flat (or cupped) core, raised snow banks, then a blend back into the mountain. */
@@ -149,7 +151,9 @@ export const bed = (path: Path, o: BedOptions): Carve => {
     const over = q.s < from ? from - q.s : q.s > to ? q.s - to : 0;
     if (over > fade) return null;
     const s = clamp(q.s, from, to), u = Math.abs(q.lat), open = 1 - smooth(over / fade);
-    const h = half(s), side = q.lat < 0 ? -1 : 1, rise = o.bankAt ? o.bankAt(s, side) : bank, y0 = path.elev(s);
+    const gap = o.gaps?.find(g => q.s > g.a + .03 && q.s < g.b - .03);
+    const h = half(s), side = q.lat < 0 ? -1 : 1, rise = o.bankAt ? o.bankAt(s, side) : bank, y0 = path.elev(s) - (gap ? gap.depth : 0);
+    if (gap) { if (u > h + bankRun + blend) return null; const edge = u <= h + bankRun ? 1 : 1 - smooth((u - h - bankRun) / blend); return { y: y0 + (u > h ? rise * smooth((u - h) / bankRun) * .4 : 0), w: edge * open, cover: u <= h + bankRun ? 1 : 0, kind: 'crevasse' }; }
     if (u > h + bankRun + blend) return null;
     if (u <= h) return { y: y0 + cup * (u / h) ** 2, w: open, cover: over > 0 ? 0 : 1, kind };
     if (u <= h + bankRun) { const t = (u - h) / bankRun; return { y: y0 + cup + rise * smooth(t), w: open, cover: over > 0 ? 0 : smooth((1 - t) * 2.5), kind: t < .35 ? kind : 'snow' }; }
@@ -202,6 +206,7 @@ export class Mountain {
 
 const hex = (c: string): P3 => [parseInt(c.slice(1, 3), 16) / 255, parseInt(c.slice(3, 5), 16) / 255, parseInt(c.slice(5, 7), 16) / 255];
 const mix3 = (a: P3, b: P3, t: number): P3 => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+const CREVASSE_TOP = hex('#8fc6e8'), CREVASSE_DEEP = hex('#2c5f9e');
 const SNOW = hex('#f4f7fc'), SNOW_SHADE = hex('#c9d9f0'), PISTE = hex('#e9f0fa'), ROCK_A = hex('#7b7f8e'), ROCK_B = hex('#565a6b'), ICE = hex('#9fd4ee'), PATH = hex('#e2e8f2');
 /** Vertex paint: clean snow, blue in the hollows, bare rock where the face is too steep to hold it. */
 export const paint = (m: Mountain, x: number, z: number, g: GroundSample, n: P3): P3 => {
@@ -210,15 +215,17 @@ export const paint = (m: Mountain, x: number, z: number, g: GroundSample, n: P3)
   if (g.kind === 'piste') c = mix3(c, PISTE, g.cover * (.55 + .2 * Math.sin((x + z) * 2.1)));
   else if (g.kind === 'path') c = mix3(c, PATH, g.cover * .6);
   else if (g.kind === 'ice') c = mix3(c, ICE, g.cover);
+  else if (g.kind === 'crevasse') return mix3(CREVASSE_TOP, CREVASSE_DEEP, clamp(.25 + noise2(x / 2.3, z / 2.3) * .2 + (1 - n[1]) * .5));
   const rock = mix3(ROCK_A, ROCK_B, clamp(.5 + noise2(x / 3.1, g.y / 1.7) * .6 + Math.sin(g.y * 1.9) * .2));
   return mix3(c, rock, steep * (1 - g.cover));
 };
 
 export interface PatchOptions { nm: string; grp: number; solid?: boolean; tex?: string; gravityTrack?: boolean; }
-const meshOf = (m: Mountain, points: readonly (readonly [number, number, number])[], cols: number, rows: number, keep: (row: number, col: number) => boolean, o: PatchOptions, alongPath = false): CustomComponent | null => {
+/** Points are `[x, z, drop]` plus an optional `[nx, nz]`: where to read the surface normal when the point sits on a sheer lip. */
+const meshOf = (m: Mountain, points: readonly (readonly number[])[], cols: number, rows: number, keep: (row: number, col: number) => boolean, o: PatchOptions, alongPath = false): CustomComponent | null => {
   const vertices: number[] = [], colors: number[] = [], normals: number[] = [], uvs: number[] = [], indices: number[] = [];
-  for (const [x, z, drop] of points) {
-    const g = m.sample(x, z), n = m.normal(x, z), c = paint(m, x, z, g, n);
+  for (const [x, z, drop, nx, nz] of points) {
+    const g = m.sample(x, z), n = m.normal(nx ?? x, nz ?? z), c = paint(m, x, z, g, n);
     vertices.push(r3(x), r3(g.y - drop), r3(z)); normals.push(r3(n[0]), r3(n[1]), r3(n[2])); colors.push(r3(c[0]), r3(c[1]), r3(c[2])); uvs.push(r3(x / 6), r3(z / 6));
   }
   for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) {
@@ -237,17 +244,33 @@ const meshOf = (m: Mountain, points: readonly (readonly [number, number, number]
  * `lats` lateral stations (metres right of the centreline). The outer column on
  * each side is a skirt that dips under the coarse slopes.
  */
-export const pisteMeshes = (m: Mountain, path: Path, from: number, to: number, lats: (s: number) => readonly number[], o: PatchOptions & { step?: number }): CustomComponent[] => {
-  const step = o.step ?? 1.5, total = Math.max(1, Math.round((to - from) / step)), out: CustomComponent[] = [];
-  const cols = lats(from).length - 1, perMesh = Math.max(1, Math.floor(Math.min(4096 / (cols + 1) - 1, 4096 / (cols * 2))));
-  for (let start = 0; start < total; start += perMesh) {
-    const rows = Math.min(perMesh, total - start), points: [number, number, number][] = [];
-    for (let row = 0; row <= rows; row++) {
-      const s = from + (to - from) * (start + row) / total, f = path.at(s), ls = lats(s);
-      ls.forEach((lat, i) => points.push([f.x + f.rx * lat, f.z + f.rz * lat, i === 0 || i === cols ? .45 : 0]));
+export const pisteMeshes = (m: Mountain, path: Path, from: number, to: number, lats: (s: number) => readonly number[], o: PatchOptions & { step?: number; gaps?: readonly Gap[] }): CustomComponent[] => {
+  const step = o.step ?? 1.5, out: CustomComponent[] = [], cols = lats(from).length - 1;
+  const gaps = [...(o.gaps ?? [])].filter(g => g.b > from && g.a < to).sort((a, b) => a.a - b.a);
+  const perMesh = Math.max(1, Math.floor(Math.min(4096 / (cols + 1) - 1, 4096 / (cols * 2))));
+  const emit = (stations: readonly number[], solid: boolean, nm: string) => {
+    for (let start = 0; start < stations.length - 1; start += perMesh) {
+      const rows = Math.min(perMesh, stations.length - 1 - start), points: number[][] = [];
+      for (let row = 0; row <= rows; row++) {
+        const st = stations[start + row], f = path.at(st), ls = lats(st);
+        // Beside a crevasse the ridden surface keeps the slope's own normal: read it a stride back from the lip.
+        const lip = solid ? gaps.find(g => Math.abs(st - g.a) < 1.6 || Math.abs(st - g.b) < 1.6) : undefined;
+        const back = lip ? path.at(Math.abs(st - lip.a) < 1.6 ? lip.a - 1.7 : lip.b + 1.7) : null;
+        ls.forEach((lat, i) => points.push([f.x + f.rx * lat, f.z + f.rz * lat, solid && (i === 0 || i === cols) ? .45 : 0, ...(back ? [back.x + back.rx * lat, back.z + back.rz * lat] : [])]));
+      }
+      const mesh = meshOf(m, points, cols, rows, () => true, { ...o, solid, gravityTrack: solid && o.gravityTrack, nm }, true);
+      if (mesh) out.push(mesh);
     }
-    const mesh = meshOf(m, points, cols, rows, () => true, { ...o, solid: true, nm: `${o.nm} ${out.length + 1}` }, true);
-    if (mesh) out.push(mesh);
+  };
+  let cursor = from, part = 1;
+  const span = (a: number, b: number) => { const n = Math.max(1, Math.round((b - a) / step)); return Array.from({ length: n + 1 }, (_, i) => a + (b - a) * i / n); };
+  for (const g of [...gaps, null]) {
+    const end = g ? g.a : to;
+    if (end > cursor + .01) emit(span(cursor, end), true, `${o.nm} ${part++}`);
+    if (!g) break;
+    // The crevasse itself is seen, never stood on: sheer lips, then the floor.
+    emit([g.a, g.a + .06, ...span(g.a + .06, g.b - .06).slice(1, -1), g.b - .06, g.b], false, `${o.nm}: crevasse ${g.a.toFixed(0)}`);
+    cursor = g.b;
   }
   return out;
 };
