@@ -1,0 +1,1628 @@
+{
+ "id": "thps1-streets",
+ "game": "THPS1",
+ "level": "Streets",
+ "location": "San Francisco, California",
+ "type": "career-street",
+ "careerPosition": 8,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Streets.png",
+  "G1 p115-p128",
+  "LP1 23:08-26:41",
+  "TAS1 4:26-5:22",
+  "PS12 streets",
+  "LP12 0:30:00-0:36:30",
+  "WEB thumbsticks"
+ ],
+ "goals": [
+  {
+   "text": "25,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "Wreck 5 Cop Cars",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "50,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 50,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 125,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 250,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 40,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Wreck 5 Cop Cars",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Life Preservers",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Nosegrab the Hubba Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "5-0 Around the Fountain",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 250-280 × 180-200 m ('enormous', G1 p115)",
+  "evidence": "VG isometric; cop cars ≈ 35-45 px for ≈ 4.5 m → ≈ 8 px/m ± 25 %; heights from storeys; low-medium confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Lombard (start)",
+   "layer": "street, ledges, balconies, display windows",
+   "features": [
+    "cop car 1 behind spawn",
+    "left ledge line",
+    "right balconies with rails",
+    "Lombard Gap kicker",
+    "donut shop with cop car 2",
+    "K display window",
+    "handicap walkway quarter pipes"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z2",
+   "name": "Hubba Hideout",
+   "layer": "street, bridge, ledges, makeshift halfpipe",
+   "features": [
+    "bridge with S",
+    "Hubba Ledge",
+    "Hubba Gap kickers",
+    "Hook Rail",
+    "Acid Drop-in",
+    "large halfpipe by the back wall"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z3",
+   "name": "Embarcadero plaza",
+   "layer": "brick plaza, grass, steps, sculpture, pavilion",
+   "features": [
+    "fountain sculpture with a trench",
+    "concrete flat-top structure",
+    "C-block",
+    "planters",
+    "glass-roofed Pagoda with the tape above"
+   ],
+   "notes": "Tony's favourite spot (G1 p115)"
+  },
+  {
+   "id": "Z4",
+   "name": "Fountain-side buildings and rooftops",
+   "layer": "second-storey walkways ≈ 4-7 m, narrow ramps, roofs ≈ 12-18 m (low confidence)",
+   "features": [
+    "walkways on three blocks",
+    "narrow ramp to the third building",
+    "scaffold ski jump aimed at the Pagoda"
+   ],
+   "notes": "tape route"
+  },
+  {
+   "id": "Z5",
+   "name": "Embarcadero street and Bendy's Lip",
+   "layer": "street, corner quarter pipe",
+   "features": [
+    "cable cars",
+    "Bendy's Lip corner quarter pipe",
+    "cop car 3 in the shadows",
+    "Ramp 2 Ramp quarter pipes"
+   ],
+   "notes": "tape speed source"
+  },
+  {
+   "id": "Z6",
+   "name": "Clocktower and bowl room",
+   "layer": "inside a building",
+   "features": [
+    "clocktower",
+    "windows",
+    "sun-mosaic bowl with E",
+    "Rail 2 Rail planters"
+   ],
+   "notes": "secret area"
+  },
+  {
+   "id": "Z7",
+   "name": "Spiral tower and T room",
+   "layer": "inside a building, spiral ramp",
+   "features": [
+    "spiral tower",
+    "Backwoods Ledge behind trees",
+    "T secret room",
+    "small door to the spiral top"
+   ],
+   "notes": "secret area; TAS alternative launch"
+  },
+  {
+   "id": "Z8",
+   "name": "Chinatown",
+   "layer": "hill, alleys, display window, crime scene",
+   "features": [
+    "two hilltop quarter pipes with A",
+    "alley (Porch Gap)",
+    "display window (Street Gap)",
+    "crime scene with cop cars 4-5"
+   ],
+   "notes": ""
+  }
+ ],
+ "landmarks": [
+  "Lombard Street",
+  "donut shop",
+  "Hubba Hideout bridge",
+  "Embarcadero plaza",
+  "fountain sculpture",
+  "glass-roofed Pagoda",
+  "scaffold ski jump",
+  "clocktower",
+  "spiral tower",
+  "Chinatown hilltop",
+  "cable cars"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down Lombard (LP1 23:10-23:11); cop car 1 directly behind",
+  "visibleCollectibles": [
+   "CAR1 (behind)"
+  ],
+  "notes": "tape not visible: ≈ 100-120 m north-west behind the fountain-side blocks; K is found at the bottom of Lombard (LP1 23:23)"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z3",
+   "landmark": "hanging above the glass roof of the octagonal Pagoda at the Embarcadero plaza's north-east corner (VG 958, 445)",
+   "layer": "mid-air above the Pagoda's glass roof (taken by dropping through the glass)",
+   "heightM": "≈ 5-8 above the plaza; ≈ 8-12 below the ski-jump lip (low confidence)",
+   "launchFrom": "lip of the long wooden ski-jump ramp on the scaffolding of the third building's roof",
+   "visibility": {
+    "firstSight": "from the plaza (inferred; the Pagoda is the centrepiece); from the ski jump it is straight ahead and below",
+    "fromSpawn": false,
+    "reads": "glowing tape over the pavilion's dome on a plinth; the rooftop ski jump points at it (remake: red/green edge stripes)",
+    "distanceFromFirstSightM": "≈ 20-80 from the plaza; ≈ 15-20 from the ski-jump lip"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "street",
+     "to": "corner quarter pipe (Bendy's Lip area)",
+     "geometry": "'hit it to get up some speed' (G1 p122; LP1 25:20-25:24)"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "plaza",
+     "to": "trench at the back of the fountain sculpture",
+     "geometry": "big ollie into the groove (G1 p122-p123; LP1 25:29-25:31)"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "trench lip",
+     "to": "first building's second-storey walkway",
+     "geometry": "cruise up then down without losing speed, ollie across the gap: Fountain Gap 750 (G1 p122, p126; LP1 25:33)"
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "first walkway",
+     "to": "its left end",
+     "geometry": "press down to slow, follow the path left (G1 p122)"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "first walkway",
+     "to": "second building's walkway",
+     "geometry": "regain speed, ollie across (G1 p122; LP1 25:35-25:37)"
+    },
+    {
+     "step": 6,
+     "move": "ledge",
+     "from": "second walkway",
+     "to": "narrow ramp to the third building",
+     "geometry": "along the second building's back and up the narrow ramp (G1 p122)"
+    },
+    {
+     "step": 7,
+     "move": "ledge",
+     "from": "third building",
+     "to": "its roof",
+     "geometry": "left, up the ramp, round right; keep pressing Down so you don't fly off (G1 p122; LP1 25:40-25:47)"
+    },
+    {
+     "step": 8,
+     "move": "kicker",
+     "from": "scaffold ski jump",
+     "to": "air over the Embarcadero",
+     "geometry": "hefty ollie off the lip 'as straight as possible' (G1 p122; LP1 25:47-25:50)"
+    },
+    {
+     "step": 9,
+     "move": "break-glass",
+     "from": "air",
+     "to": "through the Pagoda roof",
+     "geometry": "fall through the glass, tape on the way: Pagoda Gap 1000 (G1 p122, p127; LP1 25:52)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "ollie",
+    "transfer",
+    "ledge",
+    "kicker",
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "stats: 'attributes built up' (G1 p122)",
+    "speed control on narrow walkways",
+    "ledge-to-ledge ollie between buildings",
+    "straight launch",
+    "knowing the fountain is the entrance"
+   ],
+   "coupling": "none",
+   "failure": "off a walkway: fall ≈ 4-15 m to the street, back to the fountain (≈ 20-30 s); short ski jump: land in the plaza beside the Pagoda and climb again; 'every second of time on the clock' (G1 p122), so a miss usually costs the run",
+   "timeFromSpawnS": "≈ 52 (LP1 run 2, 25:52, clock 1:08; fountain → tape ≈ 23); ≈ 32 (LP12 34:33; fountain → tape ≈ 15); 36 (TAS1 5:02, via the T room)",
+   "difficulty": 4,
+   "roles": [
+    "TEASE",
+    "TEST",
+    "EXPLORE"
+   ],
+   "why": "climb then drop: the tape hangs over the visible centrepiece but its route starts at another landmark (the fountain), climbs three buildings by walkways and ends with a falling launch from a ski jump aimed at the target; speed management is the skill",
+   "evidence": "VG; G1 p115, p122-p124, p126-p127; LP1 25:17-25:56; TAS1 4:56-5:03; PS12 streets; LP12 34:01-34:35; WEB thumbsticks",
+   "confidence": "high (location, route); low (heights, distances)"
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z2",
+   "landmark": "top of the Hubba Hideout bridge (VG 317, 1453)",
+   "layer": "bridge top",
+   "heightM": "≈ 3-5 above the street (low confidence)",
+   "launchFrom": "bridge ramp or small kickers",
+   "visibility": {
+    "firstSight": "Hubba Hideout",
+    "fromSpawn": false,
+    "reads": "floating letter on the bridge",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "street",
+     "to": "bridge top",
+     "geometry": "ramp up to the bridge or the small kickers; daring: from the large halfpipe by the back wall (G1 p120)"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "retry in the same district (≈ 10-20 s); G1 p120 suggests a dedicated run for S-K-A-T-E",
+   "timeFromSpawnS": "≈ 93 (LP1 run 1)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "one of the two easy letters (G1 p120)",
+   "evidence": "VG; G1 p120; LP1 24:43",
+   "confidence": "medium"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z1",
+   "landmark": "behind a display window one storey above and right of the donut shop at the bottom of Lombard (VG 1092, 1210)",
+   "layer": "inside a window (one storey up)",
+   "heightM": "≈ 4-5 above the street",
+   "launchFrom": "last balcony / sign above the donut shop",
+   "visibility": {
+    "firstSight": "end of the balcony descent (LP1 23:23)",
+    "fromSpawn": false,
+    "reads": "glowing letter behind glass",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "spawn",
+     "to": "right-side balconies",
+     "geometry": "ride between the wall and the rail so the rail keeps you in control (G1 p121)"
+    },
+    {
+     "step": 2,
+     "move": "break-glass",
+     "from": "last balcony",
+     "to": "display window",
+     "geometry": "K through the glass; alt: handicap walkway bank → grind the donut-shop sign → ollie through the window (G1 p121)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "break-glass"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "speed control on the balconies"
+   ],
+   "coupling": "none",
+   "failure": "retry in the same district (≈ 10-20 s); G1 p120 suggests a dedicated run for S-K-A-T-E",
+   "timeFromSpawnS": "≈ 13 (LP1 run 1)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "teaches 'windows are doors' at the start",
+   "evidence": "VG; G1 p121; LP1 23:23-23:24",
+   "confidence": "medium"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z8",
+   "landmark": "between the two small quarter pipes at the top of the Chinatown hill",
+   "layer": "above vert",
+   "heightM": "≈ 2-3 (low confidence)",
+   "launchFrom": "hilltop quarter pipes",
+   "visibility": {
+    "firstSight": "Chinatown hilltop",
+    "fromSpawn": false,
+    "reads": "letter between two facing quarter pipes",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "quarter pipe",
+     "to": "opposite quarter pipe",
+     "geometry": "ramp to ramp through A: Ramp 2 Ramp 500 (G1 p121)"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "retry in the same district (≈ 10-20 s); G1 p120 suggests a dedicated run for S-K-A-T-E",
+   "timeFromSpawnS": "≈ 36 (LP1 run 1)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "one of the two easy letters (G1 p120)",
+   "evidence": "G1 p121; LP1 ≈ 23:46",
+   "confidence": "medium"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z7",
+   "landmark": "secret room leading to the top of the spiral (VG 1125, 110)",
+   "layer": "inside a secret room",
+   "heightM": "≈ 2-3 above the room floor (an ollie)",
+   "launchFrom": "Backwoods Ledge into the window",
+   "visibility": {
+    "firstSight": "inside the room",
+    "fromSpawn": false,
+    "reads": "letter in a closed room",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "street",
+     "to": "ledge behind the trees",
+     "geometry": "ramps along the wall right of the spiral (G1 p121)"
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "ledge",
+     "to": "window",
+     "geometry": "grind left: Backwoods Ledge 250; crash through the window"
+    },
+    {
+     "step": 3,
+     "move": "break-glass",
+     "from": "window",
+     "to": "secret room",
+     "geometry": "ollie to reach T; exit the small door to the spiral top (G1 p121)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ledge",
+    "break-glass",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "ledge direction (grind left)"
+   ],
+   "coupling": "none",
+   "failure": "retry in the same district (≈ 10-20 s); G1 p120 suggests a dedicated run for S-K-A-T-E",
+   "timeFromSpawnS": "≈ 56 (LP1 run 1)",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "a secret room that is also the spiral's start (and the TAS's launch to the Pagoda)",
+   "evidence": "VG; G1 p121; LP1 24:05-24:06; TAS1 4:57-4:58",
+   "confidence": "medium"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z6",
+   "landmark": "inside the clocktower building above a little bowl (VG 405, 115)",
+   "layer": "inside a secret room, above vert",
+   "heightM": "unknown (a high air at the back of the bowl)",
+   "launchFrom": "bowl wall",
+   "visibility": {
+    "firstSight": "through the windows in front of the clocktower",
+    "fromSpawn": false,
+    "reads": "letter in a hidden bowl room",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "street with speed",
+     "to": "through the clocktower windows",
+     "geometry": "launch through the windows (G1 p122)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "bowl",
+     "to": "high air at the back of the bowl",
+     "geometry": "E (G1 p122)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "break-glass",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "speed to reach the windows"
+   ],
+   "coupling": "none",
+   "failure": "retry in the same district (≈ 10-20 s); G1 p120 suggests a dedicated run for S-K-A-T-E",
+   "timeFromSpawnS": "≈ 71 (LP1 run 1)",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "'also kind of hidden away in its own secret area' (G1 p122)",
+   "evidence": "VG; G1 p122; LP1 24:16-24:21",
+   "confidence": "medium"
+  },
+  {
+   "id": "CAR1",
+   "type": "goal-object",
+   "label": "Cop car 1",
+   "zone": "Z1",
+   "landmark": "right behind the spawn",
+   "layer": "ground (parked police cruiser)",
+   "heightM": "≈ 1.5 (car roof)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "street",
+    "fromSpawn": true,
+    "reads": "parked police car",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "street",
+     "to": "car hood/roof",
+     "geometry": "turn round, quick ollie onto its hood (G1 p119)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; retry at once",
+   "timeFromSpawnS": "≈ 3 (LP1 23:13)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "cars spread over districts so the goal tours the level",
+   "evidence": "VG; G1 p119-p120; LP1",
+   "confidence": "high"
+  },
+  {
+   "id": "CAR2",
+   "type": "goal-object",
+   "label": "Cop car 2",
+   "zone": "Z1",
+   "landmark": "in front of the donut shop at the bottom of Lombard (VG 1123, 1193)",
+   "layer": "ground (parked police cruiser)",
+   "heightM": "≈ 1.5 (car roof)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "street",
+    "fromSpawn": false,
+    "reads": "parked police car",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "street",
+     "to": "car hood/roof",
+     "geometry": "'an easy tag just around the corner to the right' (G1 p119)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; retry at once",
+   "timeFromSpawnS": "≈ 18 (LP1 23:28)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "cars spread over districts so the goal tours the level",
+   "evidence": "VG; G1 p119-p120; LP1",
+   "confidence": "high"
+  },
+  {
+   "id": "CAR3",
+   "type": "goal-object",
+   "label": "Cop car 3",
+   "zone": "Z5",
+   "landmark": "in the shadows off the street by Bendy's Lip (VG 158, 953)",
+   "layer": "ground (parked police cruiser)",
+   "heightM": "≈ 1.5 (car roof)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "street",
+    "fromSpawn": false,
+    "reads": "parked police car",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "street",
+     "to": "car hood/roof",
+     "geometry": "grind it (G1 p119)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; retry at once",
+   "timeFromSpawnS": "≈ 28 (LP1 23:38)",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "cars spread over districts so the goal tours the level",
+   "evidence": "VG; G1 p119-p120; LP1",
+   "confidence": "high"
+  },
+  {
+   "id": "CAR4",
+   "type": "goal-object",
+   "label": "Cop car 4",
+   "zone": "Z8",
+   "landmark": "crime scene with a chalk outline at the base of Chinatown (VG 1755, 870)",
+   "layer": "ground (parked police cruiser)",
+   "heightM": "≈ 1.5 (car roof)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "street",
+    "fromSpawn": false,
+    "reads": "parked police car",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "street",
+     "to": "car hood/roof",
+     "geometry": "combo car to car (G1 p120)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; retry at once",
+   "timeFromSpawnS": "≈ 42 (LP1 23:52)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "cars spread over districts so the goal tours the level",
+   "evidence": "VG; G1 p119-p120; LP1",
+   "confidence": "high"
+  },
+  {
+   "id": "CAR5",
+   "type": "goal-object",
+   "label": "Cop car 5",
+   "zone": "Z8",
+   "landmark": "crime scene next to CAR4 (VG 1800, 910)",
+   "layer": "ground (parked police cruiser)",
+   "heightM": "≈ 1.5 (car roof)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "street",
+    "fromSpawn": false,
+    "reads": "parked police car",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "street",
+     "to": "car hood/roof",
+     "geometry": "combo car to car (G1 p120)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; retry at once",
+   "timeFromSpawnS": "≈ 84 (LP1 24:34)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "cars spread over districts so the goal tours the level",
+   "evidence": "VG; G1 p119-p120; LP1",
+   "confidence": "high"
+  },
+  {
+   "id": "ICON-LOMBARD-WINDOW",
+   "type": "bonus-icon",
+   "label": "bonus icon",
+   "zone": "Z1",
+   "landmark": "through the window off the left-side ramp at the top of Lombard",
+   "layer": "ledge / window",
+   "heightM": "unknown",
+   "launchFrom": "line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a scoring or tape line",
+   "evidence": "G1 p116",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON-LOMBARD-END",
+   "type": "bonus-icon",
+   "label": "bonus icon",
+   "zone": "Z1",
+   "landmark": "at the last curved ledge at the bottom of Lombard",
+   "layer": "ledge / window",
+   "heightM": "unknown",
+   "launchFrom": "line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a scoring or tape line",
+   "evidence": "G1 p116",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON-PORCH",
+   "type": "bonus-icon",
+   "label": "bonus icon",
+   "zone": "Z8",
+   "landmark": "on the Chinatown alley ledge (Porch Gap)",
+   "layer": "ledge / window",
+   "heightM": "unknown",
+   "launchFrom": "line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a scoring or tape line",
+   "evidence": "G1 p127",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON-ROOF",
+   "type": "bonus-icon",
+   "label": "bonus icon",
+   "zone": "Z4",
+   "landmark": "on the third building's roof before the ski jump",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a scoring or tape line",
+   "evidence": "LP1 25:42",
+   "confidence": "medium"
+  },
+  {
+   "id": "PRESERVERS",
+   "type": "goal-object",
+   "label": "5 life preservers (THPS 1+2 only)",
+   "zone": "Z3",
+   "landmark": "start quarter pipe; quarter pipe past the large building and stairs; Chinatown alley; above the plaza centrepiece; between two quarter pipes at the 'San Francisco' building",
+   "layer": "mixed (above vert, air)",
+   "heightM": "unknown",
+   "launchFrom": "quarter pipes",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating life preservers",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "remake collectible tour of the districts",
+   "evidence": "PS12",
+   "confidence": "medium",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "NOSEGRAB",
+   "type": "reach-goal",
+   "label": "Nosegrab the Hubba Gap (THPS 1+2 only)",
+   "zone": "Z2",
+   "landmark": "overpass/bridge with small kickers either side",
+   "layer": "mid-air over the bridge",
+   "heightM": "unknown",
+   "launchFrom": "small kicker",
+   "visibility": {
+    "firstSight": "Hubba Hideout",
+    "fromSpawn": false,
+    "reads": "trick-gap goal",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "small kicker",
+     "to": "far side of the bridge",
+     "geometry": "nosegrab in the air (PS12)"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "named grab"
+   ],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "named trick over the Hubba Gap",
+   "evidence": "PS12",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "FOUNTAIN50",
+   "type": "reach-goal",
+   "label": "5-0 Around the Fountain (THPS 1+2 only)",
+   "zone": "Z3",
+   "landmark": "fountain sculpture's pool edge",
+   "layer": "ledge",
+   "heightM": "≈ 0.5-1 (pool edge, low confidence)",
+   "launchFrom": "plaza",
+   "visibility": {
+    "firstSight": "plaza",
+    "fromSpawn": false,
+    "reads": "trick goal",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ledge",
+     "from": "plaza",
+     "to": "fountain edge",
+     "geometry": "5-0 round the fountain (PS12)"
+    }
+   ],
+   "moves": [
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "named grind"
+   ],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "draws the player to the tape route's entrance object",
+   "evidence": "PS12",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Lombard Gap",
+   "points": 5000,
+   "kind": "kicker",
+   "location": "kicker/planter at the top of Lombard over the entire street to the street at the bottom",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p125 (not in PS12)"
+  },
+  {
+   "name": "Lombard Ledge",
+   "points": 250,
+   "kind": "ledge-to-ledge",
+   "location": "the left ledge down Lombard in its entirety",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p125; VG (1130, 1446); PS12"
+  },
+  {
+   "name": "Hook Rail",
+   "points": 750,
+   "kind": "other",
+   "location": "green curved rail in Hubba Hideout from the bridge top to the bottom (long grind)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p125; VG (480, 1582); PS12"
+  },
+  {
+   "name": "Hubba Ledge",
+   "points": 500,
+   "kind": "other",
+   "location": "either bridge ledge in its entirety (long grind)",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p126; VG (410, 1382); PS12"
+  },
+  {
+   "name": "Hubba Gap",
+   "points": 750,
+   "kind": "over-object",
+   "location": "kickers to clear the entire bridge",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "NOSEGRAB"
+   ],
+   "evidence": "G1 p126; VG (450, 1458); PS12"
+  },
+  {
+   "name": "Fountain Gap",
+   "points": 750,
+   "kind": "ledge-to-ledge",
+   "location": "trench at the back of the fountain sculpture to the second-storey walkway of the building next to it",
+   "moves": [
+    "ollie",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p126; VG (590, 1060); LP1 25:33; PS12"
+  },
+  {
+   "name": "Bendy's Lip",
+   "points": 500,
+   "kind": "lip",
+   "location": "the entire lip of the corner quarter pipe",
+   "moves": [
+    "grind",
+    "lip"
+   ],
+   "onRouteOf": [
+    "CAR3",
+    "TAPE"
+   ],
+   "evidence": "G1 p126; VG (45, 810); PS12"
+  },
+  {
+   "name": "Ramp 2 Ramp",
+   "points": "500 / 750",
+   "kind": "channel",
+   "location": "Chinatown hilltop quarter pipes (500); quarter-pipe section right of the clocktower (750)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "A"
+   ],
+   "evidence": "G1 p126; VG (300, 560); PS12"
+  },
+  {
+   "name": "Spine Gap",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "small kicker over the concrete structure; also from the Pagoda's porch clearing the grass",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p126; VG (520, 637); PS12"
+  },
+  {
+   "name": "Rail 2 Rail",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "in front of the clocktower and the secret bowl room",
+   "moves": [
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "E"
+   ],
+   "evidence": "G1 p126; VG (570, 325); PS12"
+  },
+  {
+   "name": "Down The Spiral",
+   "points": 2000,
+   "kind": "other",
+   "location": "from the top of the spiral, grind it all the way down (long grind)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "T"
+   ],
+   "evidence": "G1 p127; VG (990, 178); PS12"
+  },
+  {
+   "name": "Backwoods Ledge",
+   "points": 250,
+   "kind": "secret-area",
+   "location": "the whole ledge behind the trees leading to the secret room",
+   "moves": [
+    "ledge",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "T"
+   ],
+   "evidence": "G1 p127; VG (1285, 322); PS12"
+  },
+  {
+   "name": "Pagoda Gap",
+   "points": 1000,
+   "kind": "roof",
+   "location": "scaffold ski jump on an Embarcadero building through the Pagoda's roof ('also the way you get the Hidden Tape')",
+   "moves": [
+    "kicker",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "G1 p127; VG (1080, 505); LP1 25:52; PS12"
+  },
+  {
+   "name": "C Block Gap",
+   "points": 500,
+   "kind": "over-object",
+   "location": "kicker over the rising steps in the centre of the Embarcadero",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p127; VG (915, 705); PS12"
+  },
+  {
+   "name": "Handi Gap",
+   "points": 1000,
+   "kind": "channel",
+   "location": "quarter pipes left and right of the handicap ramp, over the ramp",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p127; PS12"
+  },
+  {
+   "name": "Porch Gap",
+   "points": 250,
+   "kind": "over-object",
+   "location": "Chinatown alley: ollie at the ledge (bonus icon), clear the lower porch, land in the street",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "ICON-PORCH"
+   ],
+   "evidence": "G1 p127; PS12"
+  },
+  {
+   "name": "Gonz Gap",
+   "points": 500,
+   "kind": "spine",
+   "location": "high side of the spine over the gap to the flat section of the concrete structure",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p128; VG (610, 645); PS12"
+  },
+  {
+   "name": "Street Gap",
+   "points": 500,
+   "kind": "other",
+   "location": "Chinatown hilltop: right path through the display window to the sidewalk across the street",
+   "moves": [
+    "ollie",
+    "break-glass"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p128; VG (1910, 960); PS12"
+  },
+  {
+   "name": "Oversized 8 Set",
+   "points": 500,
+   "kind": "over-object",
+   "location": "clear every step in the set of stairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p128; VG (1460, 955); PS12"
+  },
+  {
+   "name": "Acid Drop-in",
+   "points": 1000,
+   "kind": "other",
+   "location": "from the ledge into the makeshift halfpipe in Hubba Hideout",
+   "moves": [
+    "acid-drop"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p116, p128; VG (680, 1484); PS12"
+  },
+  {
+   "name": "Planter Gap",
+   "points": 500,
+   "kind": "over-object",
+   "location": "the entire length of either low banked planter near the Pagoda",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p128; VG (1110, 475); PS12"
+  },
+  {
+   "name": "Over The Seven",
+   "points": 100,
+   "kind": "over-object",
+   "location": "west end of the concrete structure's flat top over the westward stairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p128; VG (810, 570); PS12"
+  },
+  {
+   "name": "Around The Fountain (THPS 1+2)",
+   "points": 250,
+   "kind": "other",
+   "location": "grind the length of the fountain",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "FOUNTAIN50"
+   ],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Hubba Hop (THPS 1+2)",
+   "points": 500,
+   "kind": "kicker",
+   "location": "planters against the building near the Hubba kickers up to the upper level",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Ledge Hop (THPS 1+2)",
+   "points": 200,
+   "kind": "kicker",
+   "location": "Chinatown left alley: ramp up to the ledge and grind it",
+   "moves": [
+    "kicker",
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Up The Spiral (THPS 1+2)",
+   "points": 2500,
+   "kind": "other",
+   "location": "grind all the way up the spiral tower",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "grind the Backwoods Ledge leftwards into the window",
+   "opens": "the T secret room; its small door leads to the top of the spiral",
+   "neededFor": [
+    "T",
+    "TAPE (TAS alternative)"
+   ],
+   "evidence": "G1 p121, p127; LP1 24:05-24:09; TAS1 4:56-4:59"
+  },
+  {
+   "trigger": "launch through the clocktower windows",
+   "opens": "the bowl room with E",
+   "neededFor": [
+    "E"
+   ],
+   "evidence": "G1 p122; LP1 24:16-24:21"
+  },
+  {
+   "trigger": "fly through a display window",
+   "opens": "K's window at the bottom of Lombard; the Street Gap window in Chinatown",
+   "neededFor": [
+    "K"
+   ],
+   "evidence": "G1 p121, p128"
+  },
+  {
+   "trigger": "break the Pagoda's glass roof from above",
+   "opens": "the tape",
+   "neededFor": [
+    "TAPE"
+   ],
+   "evidence": "G1 p122; LP1 25:52; TAS1 5:02"
+  },
+  {
+   "trigger": "grind or land on a cop car",
+   "opens": "'N OF 5 COP CARS'",
+   "neededFor": [
+    "CAR1",
+    "CAR2",
+    "CAR3",
+    "CAR4",
+    "CAR5"
+   ],
+   "evidence": "LP1 23:13-24:34"
+  },
+  {
+   "trigger": "tapes collected",
+   "opens": "career messages: Roswell unlocked, 'ONLY 3 TAPES REMAIN IN THE ENTIRE GAME' (LP1 24:54); 'OFFICER DICK HAS ARRIVED!' (LP1 26:41)",
+   "neededFor": [],
+   "evidence": "LP1 24:54, 26:41"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Start (Tony's line)",
+   "sequence": [
+    "break the glass",
+    "three rails at the beginning with a trick between each",
+    "cop car 1 behind the spawn"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "CAR1"
+   ],
+   "why": "'just begging to be thrashed' (G1 p115)",
+   "evidence": "G1 p115, p119; LP1 23:12"
+  },
+  {
+   "id": "L2",
+   "name": "Lombard left ledges",
+   "sequence": [
+    "left-side ramp at low speed",
+    "window (bonus icon)",
+    "ledge-to-ledge drops",
+    "wallride",
+    "last curving ledge (bonus icon)",
+    "Acid Drop-in"
+   ],
+   "links": [
+    "ledge",
+    "wallride"
+   ],
+   "collectibles": [
+    "ICON-LOMBARD-WINDOW",
+    "ICON-LOMBARD-END"
+   ],
+   "why": "10,000-15,000 points (G1 p116)",
+   "evidence": "G1 p116"
+  },
+  {
+   "id": "L3",
+   "name": "Lombard right balconies",
+   "sequence": [
+    "balcony rails",
+    "between the wall and the rail on the last balcony",
+    "K through the display window",
+    "cop car 2"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "K",
+    "CAR2"
+   ],
+   "why": "'a snap to pull off' (G1 p116); the rail keeps you in control (G1 p121)",
+   "evidence": "G1 p116, p119, p121; LP1 23:14-23:28"
+  },
+  {
+   "id": "L4",
+   "name": "Hubba Hideout",
+   "sequence": [
+    "halfpipe session",
+    "launch out of the back to the bridge (S)",
+    "Hubba Gap / Hubba Ledge / Hook Rail",
+    "Acid Drop-in"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "S",
+    "NOSEGRAB"
+   ],
+   "why": "'This is something worth doing twice' (G1 p117)",
+   "evidence": "G1 p117, p120, p125-p126, p128"
+  },
+  {
+   "id": "L5",
+   "name": "Embarcadero plaza",
+   "sequence": [
+    "Spine Gap",
+    "Gonz Gap",
+    "Over The Seven",
+    "C Block Gap",
+    "Planter Gap",
+    "Bendy's Lip (cop car 3)"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "CAR3",
+    "FOUNTAIN50"
+   ],
+   "why": "'could have been a level on its own' (G1 p124)",
+   "evidence": "G1 p124, p126-p128"
+  },
+  {
+   "id": "L6",
+   "name": "Clocktower",
+   "sequence": [
+    "launch through the windows",
+    "bowl session",
+    "high air at the back (E)",
+    "Rail 2 Rail in front"
+   ],
+   "links": [
+    "vert-air",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "E"
+   ],
+   "why": "a secret bowl as a letter room",
+   "evidence": "G1 p122, p126; LP1 24:16-24:21"
+  },
+  {
+   "id": "L7",
+   "name": "Spiral",
+   "sequence": [
+    "wall ramps right of the spiral",
+    "Backwoods Ledge going left",
+    "secret room (T)",
+    "small door",
+    "Down The Spiral"
+   ],
+   "links": [
+    "ledge",
+    "break-glass",
+    "grind"
+   ],
+   "collectibles": [
+    "T"
+   ],
+   "why": "'a score near 10,000 points for the section' (G1 p118)",
+   "evidence": "G1 p118, p121, p127; LP1 24:05-24:09"
+  },
+  {
+   "id": "L8",
+   "name": "Chinatown",
+   "sequence": [
+    "hilltop quarter pipes (A, Ramp 2 Ramp)",
+    "left alley (Porch Gap) or right display window (Street Gap)",
+    "crime scene, car to car"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "A",
+    "CAR4",
+    "CAR5",
+    "ICON-PORCH"
+   ],
+   "why": "two exits off one hilltop",
+   "evidence": "G1 p120-p121, p127-p128; LP1 23:43-23:52"
+  },
+  {
+   "id": "L9",
+   "name": "Tape line",
+   "sequence": [
+    "Bendy's corner quarter pipe",
+    "trench behind the fountain",
+    "Fountain Gap",
+    "first walkway left",
+    "ollie to the second walkway",
+    "narrow ramp",
+    "round the third building",
+    "scaffold ski jump",
+    "Pagoda Gap (tape)"
+   ],
+   "links": [
+    "vert-air",
+    "transfer",
+    "ledge",
+    "kicker",
+    "break-glass"
+   ],
+   "collectibles": [
+    "TAPE",
+    "ICON-ROOF"
+   ],
+   "why": "the level's longest vertical chain, ending at its centrepiece",
+   "evidence": "G1 p122-p124, p126-p127; LP1 25:17-25:53"
+  }
+ ],
+ "guidance": [
+  "The centrepiece holds the tape: a glass dome on a plinth at the plaza corner with the tape glowing above it, seen while working the plaza",
+  "The rooftop ski jump points straight down at the Pagoda; the remake adds red and green edge stripes (LP12 34:29)",
+  "The fountain sculpture's trench runs towards the neighbouring walkway, and Fountain Gap is on the checklist",
+  "Letters behind glass (K in a display window; T and E in rooms entered through windows) teach that windows are doors",
+  "Hidden on purpose: the walkway climb, the T room, the clocktower bowl, cop car 3 'tucked away in the shadows'",
+  "The guide frames the level as several dedicated runs: all five tapes in one run 'will be impossible' (G1 p115)"
+ ],
+ "designLogic": [
+  "Climb then drop: the tape is lower than its launch; height is earned on walkways and spent in one falling air through glass",
+  "Show the target, hide the door: the tape is on the most visible object, but the entrance is the fountain a block away",
+  "A named gap opens the route (Fountain Gap) and another closes it (Pagoda Gap)",
+  "Speed management is the skill: gain (corner quarter pipe), keep (trench), brake (walkways), regain, then the ski jump's drop",
+  "Stats gate on top of the skill gate: 'Only characters with their attributes built up will be able to get to the tape' (G1 p122)",
+  "Time gate: 'every second of time on the clock to get into position' (G1 p122); the level is built for dedicated runs",
+  "Secret rooms interlock: the T room and spiral top give the TAS a second high platform to the Pagoda",
+  "One letter per district tours the whole level; G1's efficient order is K, S, E, T, A",
+  "Failure is visible: a short ski jump lands the skater beneath the tape he just missed",
+  "The career's synthesis: quarter-pipe speed, walkway precision, hidden roof access (as in Downtown), a long committed launch (as in Downhill Jam) and flying through glass (as in Warehouse)",
+  "Scores are not the reward: Lombard Gap 5000 and the spiral grinds outscore Pagoda Gap 1000",
+  "The remake keeps the route, stripes the ski jump and hangs a stat point and the VV logo on its first leg"
+ ],
+ "remakeChanges": [
+  "Tape unchanged: sculpture → building ledge → next building → roof → 'the big ramp' (PS12); ski jump edged in red and green (LP12 34:29)",
+  "S described as 'at the top of the stairs to the tall building' (probably the same bridge top)",
+  "K inside the final balcony room; T via a planter quarter pipe → ledge → building; E via a ramp to a large window, above a small pool (same rooms)",
+  "New goals: 5 life preservers, Nosegrab the Hubba Gap, 5-0 Around the Fountain",
+  "New gaps: Around The Fountain, Hubba Hop, Ledge Hop, Up The Spiral; Lombard Gap not listed",
+  "Scores 25,000/50,000 → 50,000/125,000/250,000 and a 40,000 combo"
+ ],
+ "transfer": [
+  "Climb-then-drop crystal ≈ 0.5-1 m above a glass dome ≈ 5-6 m up at the plaza centre; rooftop launch ramp ≈ 10-12 m higher and ≈ 15-20 m back aimed at it",
+  "Walkway chain: second-storey ledges ≈ 1.5-2 m wide, ollie gaps ≤ 6-8 m between buildings (within the ≈ 9.4 m cruise ollie), one narrow ramp; an edge rail so a grind (2.1 m snap) can rescue a drifting line",
+  "Sculpture trench as the readable entrance, launching onto the first walkway (named gap)",
+  "Speed phases: corner quarter pipe, trench, braking walkways, downhill roof ramp; a speed pad on the roof instead of a stats gate",
+  "Arrow geometry: point the final ramp at the crystal and stripe its edges",
+  "Interlocking secret rooms: a letter room's exit door onto a high platform from which experts reach the dome directly",
+  "Dedicated-run design or a checkpoint at the fountain so the climb stays repeatable"
+ ],
+ "openQuestions": [
+  "Heights of the walkways (≈ 4-7 m), the ski-jump roof (≈ 12-18 m) and the Pagoda (≈ 5-8 m), all inferred",
+  "Whether the tape is taken by the glass break or by an icon just above it",
+  "How the TAS gets from the T room's exit to the Pagoda roof",
+  "Whether stats really gate the tape (G1 says so; LP1's stats unknown)",
+  "Whether the remake removed Lombard Gap or Push Square omitted it"
+ ]
+}

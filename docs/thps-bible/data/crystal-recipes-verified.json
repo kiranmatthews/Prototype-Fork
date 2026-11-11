@@ -520,6 +520,77 @@
           }
         ]
       }
+    },
+    {
+      "id": "C8",
+      "name": "Carve transfer: off the end of a quarter pipe onto a roof",
+      "note": "A decked quarter pipe (coping 3.6 m) runs along Z for 12 m and stops 4 m short of a roof at coping height. Carve up the face at 40° toward its end: the air leaves the end of the ramp and lands on the roof. Crystal over the gap, 2.5 m past the ramp end, p.y 5.5.",
+      "data": {
+        "spawn": [
+          -8,
+          0.2,
+          -10
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -40
+            ],
+            "s": [
+              60,
+              1,
+              100
+            ]
+          },
+          {
+            "t": "vertramp",
+            "p": [
+              0,
+              0,
+              -26
+            ],
+            "len": 12,
+            "w": 0.5,
+            "rise": 3.6,
+            "vkind": "quarter",
+            "arc": 90,
+            "arcSteps": 24,
+            "deck": 2
+          },
+          {
+            "t": "platform",
+            "p": [
+              3,
+              1.8,
+              -49
+            ],
+            "s": [
+              10,
+              3.6,
+              26
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              4.1,
+              5.5,
+              -34.5
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -85
+            ]
+          }
+        ]
+      }
     }
   ],
   "results": [
@@ -909,6 +980,77 @@
         8,
         -37
       ]
+    },
+    {
+      "recipe": "C8",
+      "name": "Carve transfer: off the end of a quarter pipe onto a roof",
+      "run": "carve at 40° from 18 m/s toward the ramp end (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 4.09,
+        "y": 4.23,
+        "z": -33.23,
+        "state": "air"
+      },
+      "maxY": 5.3,
+      "died": false,
+      "crystal": [
+        4.1,
+        5.5,
+        -34.5
+      ],
+      "land": {
+        "x": 4.09,
+        "y": 3.6,
+        "z": -40.42
+      },
+      "bailed": false
+    },
+    {
+      "recipe": "C8",
+      "name": "Carve transfer: off the end of a quarter pipe onto a roof",
+      "run": "straight pumped air at the ramp end, 23 m/s",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 10.75,
+      "died": false,
+      "crystal": [
+        4.1,
+        5.5,
+        -34.5
+      ],
+      "land": {
+        "x": 4.08,
+        "y": 3.2,
+        "z": -31.4
+      },
+      "bailed": false
+    },
+    {
+      "recipe": "C8",
+      "name": "Carve transfer: off the end of a quarter pipe onto a roof",
+      "run": "slow carve: 45° from 15 m/s",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 3.65,
+      "died": false,
+      "crystal": [
+        4.1,
+        5.5,
+        -34.5
+      ],
+      "land": {
+        "x": 4.01,
+        "y": 0,
+        "z": -35.47
+      },
+      "bailed": false
     }
   ]
 }

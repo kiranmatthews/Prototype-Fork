@@ -135,6 +135,22 @@ const RECIPES = [
       { label: 'from the street under the crystal: charged ollie', expect: false, drive: ctx => ctx.flatOllie({ start: [0, 0.05, -46], speed: 12, takeoffZ: -38, heading: [0, 1] }) },
     ],
   },
+  {
+    id: 'C8', name: 'Carve transfer: off the end of a quarter pipe onto a roof',
+    note: 'A decked quarter pipe (coping 3.6 m) runs along Z for 12 m and stops 4 m short of a roof at coping height. Carve up the face at 40° toward its end: the air leaves the end of the ramp and lands on the roof. Crystal over the gap, 2.5 m past the ramp end, p.y 5.5.',
+    data: () => ({ spawn: [-8, 0.2, -10], components: [
+      { t: 'platform', p: [0, -0.5, -40], s: [60, 1, 100] },
+      { t: 'vertramp', p: [0, 0, -26], len: 12, w: 0.5, rise: 3.6, vkind: 'quarter', arc: 90, arcSteps: 24, deck: 2 },
+      { t: 'platform', p: [3, 1.8, -49], s: [10, 3.6, 26] },
+      { t: 'crystal', p: [4.1, 5.5, -34.5] },
+      { t: 'gate', p: [0, 0, -85] },
+    ] }),
+    runs: [
+      { label: 'carve at 40° from 18 m/s toward the ramp end (intended)', expect: true, drive: ctx => ctx.carve({ speed: 18, angle: 40, z0: -14 }) },
+      { label: 'straight pumped air at the ramp end, 23 m/s', expect: false, drive: ctx => ctx.carve({ speed: 23, angle: 0, z0: -31.4 }) },
+      { label: 'slow carve: 45° from 15 m/s', expect: false, drive: ctx => ctx.carve({ speed: 15, angle: 45, z0: -16 }) },
+    ],
+  },
 ];
 // C5 geometry (shared with its driver)
 const WDIR = [Math.sin(35 * DEG), -Math.cos(35 * DEG)];
@@ -176,6 +192,9 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
         p.axisF.copy(fwd); p.axisL.set(fwd.z, 0, -fwd.x);
         p.freeSkate = true; p.airFromSkate = air; p.state = air ? 'air' : 'ride'; p.grounded = !air; p.speed = speed; p.vVel = 0;
         p.hasCrystal = false;
+        // Every level floats a time-trial stopwatch near its spawn; touching it starts a timed run,
+        // which hides the crystal. Keep it out of the way so a route cannot trip it by accident.
+        if (level.clockPickup) { level.clockPickup.collected = true; level.clockPickup.group.visible = false; }
       };
       const ctx = {
         // Halfpipe swings from the pipe floor, heading +X; pump = hold Jump on the way up, release at the coping.
@@ -291,6 +310,24 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
           }
           return { exitSpeed };
         },
+        // Carve up a quarter pipe that rises toward +X (coping 3.6 m): start on the flat at x = -8, heading
+        // `angle` degrees off +X toward -Z, pump on the face, and see where the air lands.
+        carve: ({ speed, angle, z0 }) => {
+          const a = angle * DEG;
+          place([-8, 0.05, z0], [Math.cos(a), -Math.sin(a)], { speed });
+          let held = false, airborne = false, land = null;
+          for (let i = 0; i < 600 && p.state !== 'dead'; i++) {
+            const onWall = p.grounded && p.pos.x > 0.5 && p.pos.y > 0.05;
+            let input = makeInput();
+            if (onWall && !held && p.pos.y < 3.0 && p.pos.y > p.prevPos.y) { input = makeInput({ jumpPressed: true, jumpHeld: true }); held = true; }
+            else if (held && (p.pos.y >= 3.48 || !p.grounded)) { input = makeInput({ jumpReleased: true }); held = false; }
+            else if (held) input = makeInput({ jumpHeld: true });
+            tick(input);
+            if (!p.grounded && p.pos.y > 3.5) airborne = true;
+            if (airborne && p.grounded) { land = { x: r2(p.pos.x), y: r2(p.pos.y), z: r2(p.pos.z) }; break; }
+          }
+          return { land, bailed: !!p.isBailing };
+        },
         // Speed pad → kicker aimed 35° at the wall → wallride (Grind held once airborne) → wallie.
         wall: ({ pump, grind = true }) => {
           const lip = { x: WK.x + WDIR[0] * 2, z: WK.z + WDIR[1] * 2 };
@@ -319,6 +356,7 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
       };
       const info = run.drive(ctx) ?? {};
       const collected = !!p.hasCrystal;
+      if (level.runMode) throw new Error(`${recipe.id} ${run.label}: a timed run started; the result would be meaningless`);
       results.push({ recipe: recipe.id, name: recipe.name, run: run.label, expectCollect: run.expect, collected, pass: collected === run.expect,
         collectedAt, maxY: r2(maxY), died, crystal: crystal ? [r2(crystal.box.min.x + 1), r2(crystal.box.min.y + 0.4), r2(crystal.box.min.z + 1)] : null, ...info });
       level.dispose();
@@ -330,7 +368,7 @@ await withSkateRuntime(async ({ THREE, scene, Level, player: p, CONST, TUNING })
 let failures = 0;
 for (const r of results) {
   if (!r.pass) failures++;
-  console.log(`${r.pass ? 'PASS' : 'FAIL'} ${r.recipe} ${r.run}: collected=${r.collected} (expected ${r.expectCollect}) maxY=${r.maxY}${r.collectedAt ? ` at ${JSON.stringify(r.collectedAt)}` : ''}${r.died ? ' died' : ''} ${JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => ['entry', 'release', 'exitSpeed', 'exited', 'airs', 'speedAtEnd'].includes(k))))}`);
+  console.log(`${r.pass ? 'PASS' : 'FAIL'} ${r.recipe} ${r.run}: collected=${r.collected} (expected ${r.expectCollect}) maxY=${r.maxY}${r.collectedAt ? ` at ${JSON.stringify(r.collectedAt)}` : ''}${r.died ? ' died' : ''} ${JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => ['entry', 'release', 'exitSpeed', 'exited', 'airs', 'speedAtEnd', 'land', 'bailed'].includes(k))))}`);
 }
 if (out) await writeFile(out, JSON.stringify({ recipes: RECIPES.map(r => ({ id: r.id, name: r.name, note: r.note, data: r.data() })), results }, null, 2) + '\n');
 console.log(failures ? `${failures} run(s) did not behave as the recipe expects` : 'all recipe runs behave as expected');

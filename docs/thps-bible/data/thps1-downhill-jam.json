@@ -1,0 +1,1361 @@
+{
+ "id": "thps1-downhill-jam",
+ "game": "THPS1",
+ "level": "Downhill Jam",
+ "location": "Phoenix, Arizona",
+ "type": "career-street",
+ "careerPosition": 6,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-DownhillJam.png",
+  "G1 p099-p110",
+  "LP1 16:40-18:54",
+  "TAS1 3:19.5-3:52",
+  "PS12 downhill-jam",
+  "LP12 0:21:30-0:27:06",
+  "WEB thumbsticks"
+ ],
+ "goals": [
+  {
+   "text": "20,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "Open 5 Valves",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "40,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 40,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 100,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 200,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 20,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Open 5 Valves",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Hard Hats",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Madonna the Huge Water Hazard Gap",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Air Walk the Hydrophobic Gap",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "one-way course ribbon ≈ 500-650 m long, ≈ 15-40 m wide, in a ≈ 350-400 × 400-440 m box",
+  "evidence": "VG ski-jump distance labels ≈ 39 px per 25 ft → ≈ 5 px/m; course centreline ≈ 3,000 px; isometric render; low confidence"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start chute and high rails",
+   "layer": "ground, high rails",
+   "features": [
+    "START banner",
+    "hip on the right",
+    "two high rails",
+    "valve 1",
+    "yellow/black curved rail"
+   ],
+   "notes": "Tony's favourite spot (G1 p099)"
+  },
+  {
+   "id": "Z2",
+   "name": "Jump ramps",
+   "layer": "ground, kickers, natural rock bridge",
+   "features": [
+    "three large jump ramps",
+    "valve 2",
+    "S beside a large kicker",
+    "natural rock bridge with a rail"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z3",
+   "name": "Huge Water Hazard",
+   "layer": "rails over a ravine",
+   "features": [
+    "two long rails over water",
+    "kicker on the left"
+   ],
+   "notes": "Tony's 'death gap' (G1 p099)"
+  },
+  {
+   "id": "Z4",
+   "name": "East bend and K rails",
+   "layer": "ground, rock arch rail, rail pair",
+   "features": [
+    "rock arch with a rail",
+    "rail pair with K",
+    "kicker under the arch"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z5",
+   "name": "Dam",
+   "layer": "dam top ≈ 10-15 m above the path (low confidence), halfpipe",
+   "features": [
+    "curved concrete dam",
+    "reservoir",
+    "valve 3 rail",
+    "long rail over the path",
+    "Mountain Dew sign",
+    "back quarter pipe with A"
+   ],
+   "notes": "tape branch point"
+  },
+  {
+   "id": "Z6",
+   "name": "Canyon bowl ('toilet bowl')",
+   "layer": "rim path and natural arch (high road), rock pillar with rails, lower path",
+   "features": [
+    "round rock canyon ≈ 60 m across",
+    "natural arch",
+    "500 icon over the arch",
+    "rock pillar with four stepped rails",
+    "tape",
+    "Mountain Dew sign"
+   ],
+   "notes": "tape visible from the rim (thumbsticks)"
+  },
+  {
+   "id": "Z7",
+   "name": "Gully and pillar",
+   "layer": "lower path, rock pillar top",
+   "features": [
+    "gully",
+    "large rock pillar with valve 4"
+   ],
+   "notes": "tape exit lines up with V4 (G1 p103)"
+  },
+  {
+   "id": "Z8",
+   "name": "Ski jump and tunnel",
+   "layer": "ramp, tunnel, air",
+   "features": [
+    "long narrow ramp",
+    "rock ski jump",
+    "tunnel",
+    "distance markers 25-225 ft",
+    "T"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z9",
+   "name": "Generator and hydro pool",
+   "layer": "rails, quarter pipes, shallow pool",
+   "features": [
+    "hips",
+    "quarter pipes both sides",
+    "long generator rail with E",
+    "shallow pool (Hydrophobic)"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z10",
+   "name": "Finish",
+   "layer": "ramp, wall valve, pier",
+   "features": [
+    "valve 5 on a wall",
+    "FINISH banner on a pier",
+    "pool"
+   ],
+   "notes": "turn round before the finish for V5"
+  }
+ ],
+ "landmarks": [
+  "START banner",
+  "high rails",
+  "Huge Water Hazard ravine",
+  "rock arches",
+  "dam and reservoir",
+  "Mountain Dew billboards",
+  "canyon bowl with the rail podium",
+  "rock ski jump and tunnel",
+  "generator building",
+  "finish pier"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "down the first hill (east on VG), towards the hip on the right and the high rails",
+  "visibleCollectibles": [],
+  "notes": "LP1 16:56 / TAS1 3:19.5: start banner, first slope, tip 'GRIND EVERY LIP AND EDGE'; tape ≈ 150 m away in a straight line, ≈ 300 m along the course, below the dam and behind terrain"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z6",
+   "landmark": "four stepped rails atop a rock pillar in the centre of the canyon bowl below the dam (VG 1397, 860); Tony's 'triple-rail podium'",
+   "layer": "rail podium on a rock pillar (high object), reached from the high road",
+   "heightM": "≈ 4-8 above the lower main path (LP1 18:11-18:13, low confidence); at or slightly below the launch plateau",
+   "launchFrom": "right-end corner edge of the rock plateau after gap 2 (fastplant across gap 3)",
+   "launchAlternative": "expert: the dam's back quarter pipe straight over the natural arch onto the podium (TAS1 3:36-3:38)",
+   "visibility": {
+    "firstSight": "from the high road above the canyon after gap 1 (thumbsticks: 'the centre of the toilet bowl'); LP1 18:10 glow among the rails",
+    "fromSpawn": false,
+    "reads": "glowing tape above yellow-lit rails in the middle of a round bowl",
+    "distanceFromFirstSightM": "≈ 40-60 along the rim (inferred)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "dam top (after valve 3: small ramp against the left wall → long rail over the path, G1 p103)",
+     "to": "air above the dam's back quarter pipe",
+     "geometry": "pick up A (G1 p105; LP1 17:49-17:50)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "platform below the dam",
+     "to": "rail across the path",
+     "geometry": "turn right; the rail 'extends back across the path' to another plateau ('rail running across the top of the halfpipe section', G1 p106-p107)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "first rail",
+     "to": "second rail back across",
+     "geometry": "hop mid-rail (impossible), grind again; press down to slow before the ollie (G1 p106-p107)"
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "transition",
+     "to": "far side of gap 1",
+     "geometry": "ollie a 360 over the first small gap; steer left on landing to avoid the rail and the cliff (G1 p106)"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "path",
+     "to": "natural arch",
+     "geometry": "head right along the worn dark rock; fastplant impossible through the floating 500 icon (G1 p106; LP1 18:00)"
+    },
+    {
+     "step": 6,
+     "move": "transfer",
+     "from": "left quarter pipe (shallow angle)",
+     "to": "far side of gap 2",
+     "geometry": "stay ≈ 1/3 from the left quarter pipe, hit it just before gap 2 so speed carries you across; steer left on landing (G1 p106-p107; LP1 18:06-18:08)"
+    },
+    {
+     "step": 7,
+     "move": "ollie",
+     "from": "plateau",
+     "to": "right-end corner of the plateau",
+     "geometry": "line up; 'only seconds to make adjustments before the leap' (G1 p108)"
+    },
+    {
+     "step": 8,
+     "move": "boneless",
+     "from": "plateau corner",
+     "to": "air over gap 3",
+     "geometry": "fastplant across the gap with all the speed you can get (G1 p107-p108)"
+    },
+    {
+     "step": 9,
+     "move": "grind",
+     "from": "air",
+     "to": "any of the four podium rails",
+     "geometry": "hold grind; any rail = tape (G1 p107; LP1 18:11 FS boardslide)"
+    },
+    {
+     "step": 10,
+     "move": "ollie",
+     "from": "podium",
+     "to": "lower path, valve 4 line",
+     "geometry": "360 on the drop, straight down the middle to the V4 pillar (G1 p103)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "rail-transfer",
+    "transfer",
+    "ollie",
+    "boneless"
+   ],
+   "speed": "maximum (gravity-fed), with braking on the rail transfer",
+   "skillGates": [
+    "mid-grind hop rail to rail",
+    "speed control (press down)",
+    "steering after landings",
+    "quarter-pipe carry at a shallow angle",
+    "fastplant (boneless-type higher ollie)",
+    "hold grind on landing"
+   ],
+   "coupling": "none",
+   "failure": "any miss drops the skater off the high road to the lower path past the branch; the one-way hill cannot be climbed back, so the tape is lost for the run; retry = new 2-minute run, ≈ 60-75 s to return",
+   "timeFromSpawnS": "≈ 77 (LP1 18:11-18:12, clock 0:42-0:43; A → tape ≈ 21); ≈ 18-20 (TAS1 3:38, one christ air over the arch)",
+   "difficulty": 5,
+   "roles": [
+    "TEST",
+    "TEASE",
+    "EXPLORE"
+   ],
+   "why": "a one-way course has no loops to hide a tape off, so it sits on a parallel high road that branches at the dam (marked by A) and rejoins the main line at valve 4; speed is free downhill, so the test is control; target in a round bowl visible along the rim; four rails as a forgiving catch",
+   "evidence": "VG; G1 p099, p103, p106-p108; LP1 17:45-18:16; TAS1 3:33-3:40; PS12 downhill-jam; WEB thumbsticks",
+   "confidence": "high (location, route order); medium (gap geometry); low (heights, distances)"
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z2",
+   "landmark": "floating left of a large kicker with an orange arrow (VG 1747, 225)",
+   "layer": "air beside a kicker",
+   "heightM": "≈ 2-3 above the path (low confidence)",
+   "launchFrom": "large kicker",
+   "visibility": {
+    "firstSight": "the path ahead",
+    "fromSpawn": false,
+    "reads": "floating letter on the course line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "path",
+     "to": "air left of the kicker",
+     "geometry": "angle left, small uncharged hop, land before the wall (G1 p104)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "missed letters cannot be revisited on the one-way hill; the S-K-A-T-E goal needs a new run",
+   "timeFromSpawnS": "≈ 6-10 (TAS1 3:26)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "restraint: a small hop beats a big one",
+   "evidence": "VG; G1 p104; TAS1 3:26; PS12",
+   "confidence": "medium"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z4",
+   "landmark": "left rail of a pair after the rock arch (VG 1786, 510)",
+   "layer": "rail",
+   "heightM": "≈ 2-4 above the path",
+   "launchFrom": "rock-arch rail or kicker under the arch",
+   "visibility": {
+    "firstSight": "east bend",
+    "fromSpawn": false,
+    "reads": "floating letter on the course line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "rail-transfer",
+     "from": "rock-arch rail",
+     "to": "K rail",
+     "geometry": "dropped onto the correct rail automatically (G1 p105)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "missed letters cannot be revisited on the one-way hill; the S-K-A-T-E goal needs a new run",
+   "timeFromSpawnS": "≈ 25 (LP1)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "rails chained so the course carries you",
+   "evidence": "VG; G1 p105; LP1 17:20; TAS1 3:31-3:32",
+   "confidence": "medium"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z5",
+   "landmark": "above the quarter pipe on the back side of the dam (VG 1490, 595)",
+   "layer": "above vert",
+   "heightM": "≈ 2-4 above the coping (low confidence)",
+   "launchFrom": "dam back quarter pipe",
+   "visibility": {
+    "firstSight": "dam",
+    "fromSpawn": false,
+    "reads": "floating letter on the course line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "dam back quarter pipe",
+     "to": "air above it",
+     "geometry": "'stay in control … the next bit is tricky' (G1 p105)"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "missed letters cannot be revisited on the one-way hill; the S-K-A-T-E goal needs a new run",
+   "timeFromSpawnS": "≈ 55 (LP1); ≈ 15.5 (TAS1)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "marks the tape's branch point",
+   "evidence": "VG; G1 p105; LP1 17:49-17:50; TAS1 3:35",
+   "confidence": "medium"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z8",
+   "landmark": "flight path off the rock ski jump, amid the distance markers (VG 1000, 1322)",
+   "layer": "mid-air over the ski-jump landing",
+   "heightM": "unknown",
+   "launchFrom": "rock ski jump",
+   "visibility": {
+    "firstSight": "tunnel exit",
+    "fromSpawn": false,
+    "reads": "floating letter on the course line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "ski jump",
+     "to": "tunnel",
+     "geometry": "crouch through the tunnel"
+    },
+    {
+     "step": 2,
+     "move": "boneless",
+     "from": "ramp end",
+     "to": "air",
+     "geometry": "fastplant up and out to T (G1 p105)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "boneless"
+   ],
+   "speed": "maximum",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "missed letters cannot be revisited on the one-way hill; the S-K-A-T-E goal needs a new run",
+   "timeFromSpawnS": "≈ 85 (LP1)",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "the level's longest scored air",
+   "evidence": "VG; G1 p105; LP1 18:20",
+   "confidence": "medium"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z9",
+   "landmark": "half way along the long generator-building rail (VG 743, 1450)",
+   "layer": "rail on a building",
+   "heightM": "≈ 5-8 above the path (low confidence)",
+   "launchFrom": "right quarter pipe hit at an angle",
+   "visibility": {
+    "firstSight": "generator section",
+    "fromSpawn": false,
+    "reads": "floating letter on the course line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "left quarter pipe",
+     "to": "path",
+     "geometry": "come down ≈ 15 ft (≈ 4.6 m) from its left edge (G1 p106)"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "right quarter pipe at an angle",
+     "to": "generator rail",
+     "geometry": "hold grind at the top of the flight; don't ollie over the E (G1 p106)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "missed letters cannot be revisited on the one-way hill; the S-K-A-T-E goal needs a new run",
+   "timeFromSpawnS": "≈ 97 (LP1)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "precise approach to the level's long scoring rail",
+   "evidence": "VG; G1 p106; LP1 18:32",
+   "confidence": "medium"
+  },
+  {
+   "id": "V1",
+   "type": "goal-object",
+   "label": "Valve 1",
+   "zone": "Z1",
+   "landmark": "end of the second high rail (VG 1490, 232)",
+   "layer": "on a rail / ramp / pillar / wall",
+   "heightM": "≈ 1-4 above the path (low confidence)",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "on the course line ahead",
+    "fromSpawn": false,
+    "reads": "valve wheel",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "course",
+     "to": "valve",
+     "geometry": "hip fastplant → high rail → ollie to the second → grind to the end (G1 p102)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited on the one-way hill (V5 needs a turn-round)",
+   "timeFromSpawnS": "≈ 5 (LP1 17:00); ≈ 3.5 (TAS1 3:23)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a station on the course line; course order is goal order",
+   "evidence": "VG; G1 p102-p104; LP1; TAS1",
+   "confidence": "medium"
+  },
+  {
+   "id": "V2",
+   "type": "goal-object",
+   "label": "Valve 2",
+   "zone": "Z2",
+   "landmark": "on the second of three large jump ramps (VG 1800, 287)",
+   "layer": "on a rail / ramp / pillar / wall",
+   "heightM": "≈ 1-4 above the path (low confidence)",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "on the course line ahead",
+    "fromSpawn": false,
+    "reads": "valve wheel",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "course",
+     "to": "valve",
+     "geometry": "ride off the ramp centre (G1 p102)"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited on the one-way hill (V5 needs a turn-round)",
+   "timeFromSpawnS": "≈ 13 (LP1 17:08); ≈ 8.5 (TAS1 3:28)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a station on the course line; course order is goal order",
+   "evidence": "VG; G1 p102-p104; LP1; TAS1",
+   "confidence": "medium"
+  },
+  {
+   "id": "V3",
+   "type": "goal-object",
+   "label": "Valve 3",
+   "zone": "Z5",
+   "landmark": "rail at the upper end of the dam (VG 1690, 568)",
+   "layer": "on a rail / ramp / pillar / wall",
+   "heightM": "≈ 1-4 above the path (low confidence)",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "on the course line ahead",
+    "fromSpawn": false,
+    "reads": "valve wheel",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "course",
+     "to": "valve",
+     "geometry": "back up to the Mountain Dew sign (transition left of it, 500 icon), small ramp against the left wall → long rail over the path onto the dam; or a charged ollie from the K rail (G1 p103)"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited on the one-way hill (V5 needs a turn-round)",
+   "timeFromSpawnS": "≈ 50 (LP1 17:45); ≈ 13.5 (TAS1 3:33)",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a station on the course line; course order is goal order",
+   "evidence": "VG; G1 p102-p104; LP1; TAS1",
+   "confidence": "medium"
+  },
+  {
+   "id": "V4",
+   "type": "goal-object",
+   "label": "Valve 4",
+   "zone": "Z7",
+   "landmark": "middle of a large rock pillar (VG 1206, 1124)",
+   "layer": "on a rail / ramp / pillar / wall",
+   "heightM": "≈ 1-4 above the path (low confidence)",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "on the course line ahead",
+    "fromSpawn": false,
+    "reads": "valve wheel",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "course",
+     "to": "valve",
+     "geometry": "after the tape drop, straight down the middle, launch out of the gully onto the pillar (G1 p103)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "boneless"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited on the one-way hill (V5 needs a turn-round)",
+   "timeFromSpawnS": "≈ 81 (LP1 18:16)",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "a station on the course line; course order is goal order",
+   "evidence": "VG; G1 p102-p104; LP1; TAS1",
+   "confidence": "medium"
+  },
+  {
+   "id": "V5",
+   "type": "goal-object",
+   "label": "Valve 5",
+   "zone": "Z10",
+   "landmark": "sticking out of the wall on the left after turning round before the finish (VG 835, 1515)",
+   "layer": "on a rail / ramp / pillar / wall",
+   "heightM": "≈ 1-4 above the path (low confidence)",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "on the course line ahead",
+    "fromSpawn": false,
+    "reads": "valve wheel",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "course",
+     "to": "valve",
+     "geometry": "turn round, back up the ramp, ollie into it (G1 p104)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited on the one-way hill (V5 needs a turn-round)",
+   "timeFromSpawnS": "≈ 109 (LP1 ≈ 18:44)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a station on the course line; course order is goal order",
+   "evidence": "VG; G1 p102-p104; LP1; TAS1",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON500-ARCH",
+   "type": "bonus-icon",
+   "label": "bonus icon (500 points)",
+   "zone": "Z6",
+   "landmark": "floating over the natural arch on the tape's high road",
+   "layer": "mid-air over the arch path",
+   "heightM": "unknown",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "≈ 65 (LP1 18:00)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a line (the tape's high road)",
+   "evidence": "G1 p106; LP1 18:00",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON500-DEW",
+   "type": "bonus-icon",
+   "label": "bonus icon (500 points)",
+   "zone": "Z5",
+   "landmark": "transition left of the Mountain Dew sign on the valve-3 line",
+   "layer": "above a transition / rail",
+   "heightM": "unknown",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a line",
+   "evidence": "G1 p103",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON500-V1",
+   "type": "bonus-icon",
+   "label": "bonus icon (500 points)",
+   "zone": "Z1",
+   "landmark": "over the start of the high rails at valve 1 (VG 1410, 238)",
+   "layer": "above a transition / rail",
+   "heightM": "unknown",
+   "launchFrom": "course line",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb on a line",
+   "evidence": "VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "HATS",
+   "type": "goal-object",
+   "label": "5 hard hats (THPS 1+2 only)",
+   "zone": "Z1",
+   "landmark": "start quarter pipe; big half pipe left side; big warning sign; a left quarter pipe; air off the ramp on the right-hand path before the finish",
+   "layer": "mixed (above vert, sign, air)",
+   "heightM": "unknown",
+   "launchFrom": "quarter pipes, ramps",
+   "visibility": {
+    "firstSight": "course line",
+    "fromSpawn": false,
+    "reads": "floating hard hats",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cannot be revisited downhill",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "remake collectible set laid along the course",
+   "evidence": "PS12",
+   "confidence": "medium",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "MADONNA",
+   "type": "reach-goal",
+   "label": "Madonna the Huge Water Hazard Gap (THPS 1+2 only)",
+   "zone": "Z3",
+   "landmark": "ravine with two rails; kicker on the left",
+   "layer": "mid-air over the ravine",
+   "heightM": "unknown",
+   "launchFrom": "kicker left of the ravine",
+   "visibility": {
+    "firstSight": "upper course",
+    "fromSpawn": false,
+    "reads": "trick-gap goal",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "left kicker",
+     "to": "far side of the ravine",
+     "geometry": "Madonna grab in the air (PS12)"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "named grab"
+   ],
+   "coupling": "none",
+   "failure": "fall into the water hazard",
+   "timeFromSpawnS": "≈ 60 into a remake run (LP12 22:52)",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "teaches the main line's big gap with a named trick",
+   "evidence": "PS12; LP12 22:52",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "AIRWALK",
+   "type": "reach-goal",
+   "label": "Air Walk the Hydrophobic Gap (THPS 1+2 only)",
+   "zone": "Z9",
+   "landmark": "two low ramps either side of a shallow pool",
+   "layer": "mid-air over the pool",
+   "heightM": "unknown",
+   "launchFrom": "low ramp",
+   "visibility": {
+    "firstSight": "after the KEEP CLEAR structure",
+    "fromSpawn": false,
+    "reads": "trick-gap goal",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "low ramp",
+     "to": "far ramp",
+     "geometry": "Air Walk grab in the air (PS12)"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "named grab"
+   ],
+   "coupling": "none",
+   "failure": "land in the pool; cannot be retried downhill",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "second named-trick gap on the main line",
+   "evidence": "PS12",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Huge Water Hazard",
+   "points": 1000,
+   "kind": "kicker",
+   "location": "Z3: across the whole ravine from the kicker on its left, without the rails",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "MADONNA"
+   ],
+   "evidence": "G1 p110; VG (1745, 350); PS12"
+  },
+  {
+   "name": "Ski Jump (25-225 feet)",
+   "points": "25-225",
+   "kind": "hangtime",
+   "location": "Z8: a gap every 25 ft of distance off the rock ski jump; cumulative, multiplied with tricks",
+   "moves": [
+    "kicker",
+    "boneless"
+   ],
+   "onRouteOf": [
+    "T"
+   ],
+   "evidence": "G1 p110; VG; LP1 18:20"
+  },
+  {
+   "name": "Neversoft Electric Company Gap",
+   "points": "not printed in G1 (PS12: 1,500)",
+   "kind": "other",
+   "location": "Z9: uppermost generator rail from start to finish (long grind); cheat: drop onto the rail below",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "E"
+   ],
+   "evidence": "G1 p106, p110; VG (690, 1525); PS12"
+  },
+  {
+   "name": "Pipe Flip (THPS 1+2)",
+   "points": 1000,
+   "kind": "rail-transfer",
+   "location": "before the half pipe: left ramp → rail across → next rail → back down to the main level",
+   "moves": [
+    "kicker",
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "TAPE"
+   ],
+   "evidence": "PS12 (on-route inferred)"
+  },
+  {
+   "name": "Hydrophobic (THPS 1+2)",
+   "points": 250,
+   "kind": "over-object",
+   "location": "Z9: two short ramps either side of a shallow pool",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "AIRWALK"
+   ],
+   "evidence": "PS12"
+  },
+  {
+   "name": "The Downhill Halfpipe (THPS 1+2)",
+   "points": 200,
+   "kind": "other",
+   "location": "Z5: grind the top of the chain-link fence along the half pipe's left side all the way down",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "The Other Downhill Halfpipe (THPS 1+2)",
+   "points": 200,
+   "kind": "lip",
+   "location": "Z5: grind the lip of the half pipe's right side all the way down",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "hit or grind a valve",
+   "opens": "valve opens and sprays water; 'N OF 5 VALVES'",
+   "neededFor": [
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5"
+   ],
+   "evidence": "LP1 17:00, 17:16, 18:16; TAS1 3:23-3:33"
+  },
+  {
+   "trigger": "cross the finish line",
+   "opens": "unknown in the original; G1 warns not to cross it before valve 5",
+   "neededFor": [
+    "V5"
+   ],
+   "evidence": "G1 p104"
+  },
+  {
+   "trigger": "land the named grab over the gap (remake)",
+   "opens": "trick-gap goal complete",
+   "neededFor": [
+    "MADONNA",
+    "AIRWALK"
+   ],
+   "evidence": "PS12; LP12 22:52"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Opening double rails (Tony's spot)",
+   "sequence": [
+    "hip fastplant",
+    "high rail",
+    "ollie to the second high rail",
+    "valve 1",
+    "360 varial onto the yellow/black curved rail",
+    "180 impossible off the end"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "V1",
+    "ICON500-V1"
+   ],
+   "why": "biggest combo of the level, 12,000-18,000 (G1 p102)",
+   "evidence": "G1 p099, p102; LP1 17:00; TAS1 3:23"
+  },
+  {
+   "id": "L2",
+   "name": "Jump ramps",
+   "sequence": [
+    "S (small hop)",
+    "valve 2 (ride off the centre)",
+    "natural rock bridge or its left rail"
+   ],
+   "links": [
+    "ollie"
+   ],
+   "collectibles": [
+    "S",
+    "V2"
+   ],
+   "why": "restraint then commitment on consecutive kickers",
+   "evidence": "G1 p102, p104; TAS1 3:26-3:28"
+  },
+  {
+   "id": "L3",
+   "name": "Water hazard rails",
+   "sequence": [
+    "long rail over the hazard",
+    "ollie to the other rail and back",
+    "or the full jump from the left kicker"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "MADONNA"
+   ],
+   "why": "the 'death gap' as a scoring station",
+   "evidence": "G1 p099, p100, p110"
+  },
+  {
+   "id": "L4",
+   "name": "Arch rail to K",
+   "sequence": [
+    "rock-arch rail",
+    "automatic drop onto the K rail",
+    "(hard way) charged ollie to the dam rail (valve 3)"
+   ],
+   "links": [
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "K",
+    "V3"
+   ],
+   "why": "rails chained so the course carries the player",
+   "evidence": "G1 p103, p105; TAS1 3:31-3:33"
+  },
+  {
+   "id": "L5",
+   "name": "Mountain Dew sign",
+   "sequence": [
+    "spin into a wallride",
+    "grind",
+    "ollie into another grind",
+    "360 kick trick",
+    "transition left of the sign (500)",
+    "small ramp",
+    "long rail over the path onto the dam (valve 3)"
+   ],
+   "links": [
+    "wallride",
+    "grind"
+   ],
+   "collectibles": [
+    "ICON500-DEW",
+    "V3"
+   ],
+   "why": "billboard as a wallride wall",
+   "evidence": "G1 p101, p103; LP1 17:45"
+  },
+  {
+   "id": "L6",
+   "name": "Dam halfpipe",
+   "sequence": [
+    "session the halfpipe along the dam",
+    "A on the back quarter pipe",
+    "rail over the beginning of the halfpipe (Tony)"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [
+    "A"
+   ],
+   "why": "scoring station and the tape's branch point",
+   "evidence": "G1 p099, p100, p105"
+  },
+  {
+   "id": "L7",
+   "name": "Tape high road",
+   "sequence": [
+    "rail across the path",
+    "hop",
+    "second rail back across",
+    "360 over gap 1",
+    "natural arch (500)",
+    "quarter-pipe carry over gap 2",
+    "plateau corner",
+    "fastplant over gap 3",
+    "podium rails (tape)",
+    "drop to the lower path",
+    "valve 4"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer",
+    "transfer"
+   ],
+   "collectibles": [
+    "TAPE",
+    "ICON500-ARCH",
+    "V4"
+   ],
+   "why": "parallel route above the main line that rejoins it at the next objective",
+   "evidence": "G1 p103, p106-p108; LP1 17:50-18:16"
+  },
+  {
+   "id": "L8",
+   "name": "Ski jump",
+   "sequence": [
+    "long narrow ramp from valve 4",
+    "rock ski jump",
+    "tunnel (crouch)",
+    "fastplant out",
+    "distance markers with tricks (T)"
+   ],
+   "links": [
+    "boneless"
+   ],
+   "collectibles": [
+    "T"
+   ],
+   "why": "'enormous points' from distance and tricks (G1 p108)",
+   "evidence": "G1 p105, p108, p110; LP1 18:20"
+  },
+  {
+   "id": "L9",
+   "name": "Generator rail",
+   "sequence": [
+    "hips",
+    "left quarter pipe",
+    "right quarter pipe at an angle",
+    "long generator rail (E, Neversoft Electric Company Gap)",
+    "drop to the lower rail for a cheap multiplier"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "E"
+   ],
+   "why": "precise approach to a long scoring rail",
+   "evidence": "G1 p106, p110; LP1 18:32"
+  },
+  {
+   "id": "L10",
+   "name": "Finish",
+   "sequence": [
+    "Hydrophobic pool",
+    "turn round before the finish",
+    "back up the ramp",
+    "valve 5 on the wall",
+    "pool session"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [
+    "V5",
+    "AIRWALK"
+   ],
+   "why": "the only place the course asks you to turn back",
+   "evidence": "G1 p104, p109"
+  }
+ ],
+ "guidance": [
+  "The course is the guide: one path between walls, a start banner and a finish banner; every goal sits on or above it in course order",
+  "Landmarks: dam, reservoir, Mountain Dew billboards, generator building, yellow/black hazard rails; the tape branches at the dam",
+  "Breadcrumbs on the high road: A over the dam's back quarter pipe, a 500 icon over the natural arch, a darkened strip of worn rock on the arch (G1 p106)",
+  "Target in a bowl: the tape glows over yellow rails in the centre of a round canyon, visible across the curved approach (thumbsticks)",
+  "Hidden on purpose: the entry is a rail 'that extends back across the path', easy to read as part of the main line; the tape is invisible from the start and the upstream main line",
+  "At downhill speed the target is shown late and briefly ('only seconds to make adjustments before the leap', G1 p108), so route knowledge matters"
+ ],
+ "designLogic": [
+  "Course order is goal order: valves V1-V5 and S-K-A-T-E appear in course order, the letters in spelling order",
+  "The tape is a parallel high road branching at the dam (marked by A) and rejoining the main line at valve 4",
+  "On a hill speed is free and control is the test: brake, steer after landings, hit a quarter pipe at a shallow angle",
+  "No retry within a run: a miss drops the skater below the branch and the hill cannot be climbed back (G1 p099 'You can't fight the hill')",
+  "Big catch area at the end: four parallel rails, 'if you hit any of the rails, you're home free' (G1 p107)",
+  "The tape's exit lines the skater up with valve 4 (G1 p103): no dead end",
+  "The target is shown across a curve: a round canyon keeps it in view along the rim at downhill speed",
+  "Worn rock as a path cue, presented as the trace of the developers' own runs (G1 p106)",
+  "The expert line is one air: TAS1 clears the high road with one christ air from the dam quarter pipe over the arch (3 s)",
+  "Few named gaps: three types in the original; the tape's three gaps are unnamed",
+  "Main-line risks (Huge Water Hazard, ski jump) are scored; the tape adds a hidden risk above them",
+  "Difficulty peak of the career: G1 calls it 'by far the most challenging' and ranks Streets' tape second to it (G1 p099, p122)"
+ ],
+ "remakeChanges": [
+  "Tape: same high road; PS12 adds 'the big ramp to get over to the tape, above some rails' for the last gap",
+  "Pipe Flip (1000) names the first leg of the high road (left ramp → rail across → next rail → back down)",
+  "Letters keep their order; E moves from the generator rail to a quarter pipe after T (PS12)",
+  "Valves re-dressed (yellow pipes, big kicker, high pipe, 'KEEP CLEAR' structure, right-hand wall)",
+  "New goals: 5 hard hats, Madonna the Huge Water Hazard Gap, Air Walk the Hydrophobic Gap; VV logo placed on the high road",
+  "Scores 20,000/40,000 → 40,000/100,000/200,000 and a 20,000 combo"
+ ],
+ "transfer": [
+  "High road on a one-way course: after a dam halfpipe, branch an elevated path (rail across, second rail back, arch) ≈ 5-10 m above the main line for ≈ 100 m, ending at a crystal over a rail cluster on a pillar; rejoin at the next objective",
+  "Control not speed: near 23 m/s make braking and steering the test; rail-to-rail hops within the ≈ 2.4 m grind-ollie pop; a quarter pipe at a shallow angle to carry ≈ 6-8 m",
+  "Generous catch: 3-4 parallel rails ≈ 1.5-2 m apart so the 2.1 m grind snap catches any; crystal ≈ 0.5-1 m above the rail line",
+  "Target in a bowl: crystal in the centre of a round canyon with the approach along the rim",
+  "Breadcrumbs: a floating bonus over the arch and a worn-texture strip; a level collectible at the branch point",
+  "Expert shortcut: a big vert air or spine transfer from the dam quarter pipe over the arch onto the podium (≈ 12-14 m)",
+  "Cheaper retry than THPS: a rope swing or moving platform from the main line back up to the branch for one retry"
+ ],
+ "openQuestions": [
+  "Heights of the high road, plateau and podium above the lower path (≈ 4-8 m inferred)",
+  "Widths of gaps 1-3 (not measurable on the isometric render)",
+  "What crossing the finish line does in the original",
+  "Whether the remake's 'big ramp' before the tape is new geometry",
+  "Whether Pipe Flip is exactly the first leg of the tape route (inferred)"
+ ]
+}

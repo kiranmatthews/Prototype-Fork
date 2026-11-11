@@ -1,0 +1,1650 @@
+{
+ "id": "thps1-downtown",
+ "game": "THPS1",
+ "level": "Downtown",
+ "location": "Minneapolis, Minnesota",
+ "type": "career-street",
+ "careerPosition": 5,
+ "timeLimit": "2:00",
+ "versions": [
+  "PS1 1999",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Downtown.png",
+  "G1 p085-p098",
+  "LP1 13:54-16:06",
+  "TAS1 2:37.5-3:07",
+  "PS12 downtown",
+  "LP12 0:14:50-0:21:06",
+  "WEB thumbsticks"
+ ],
+ "goals": [
+  {
+   "text": "15,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "Break 5 No Skating Signs",
+   "version": "original"
+  },
+  {
+   "text": "Get S-K-A-T-E",
+   "version": "original"
+  },
+  {
+   "text": "Hidden Tape",
+   "version": "original"
+  },
+  {
+   "text": "40,000 Points",
+   "version": "original"
+  },
+  {
+   "text": "High Score 25,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Pro Score 90,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Sick Score 175,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "High Combo 18,000",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Collect 5 Popcorn Buckets",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Break 5 \"No Skating\" Signs",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Complete the Rooftop Gaps",
+   "version": "THPS 1+2"
+  },
+  {
+   "text": "Ollie the Parked Cars",
+   "version": "THPS 1+2"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "≈ 210-230 × 160-180 m of streets and two roofs (three city blocks, G1 p085)",
+  "evidence": "VG near top-down render; parked cars 37-42 px for ≈ 4.5 m → ≈ 8.4 px/m; start alley ≈ 12-13 m wide, ≈ 55-60 m long. Medium confidence in plan, heights not measurable"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start alley",
+   "layer": "ground, sidewalk ledges",
+   "features": [
+    "spawn kicker",
+    "Kicker Gap",
+    "Kicker 2 Edge",
+    "Kicker 2 Street",
+    "S on the west ledge"
+   ],
+   "notes": "VG x 980-1090, y 400-900; the tape hangs over its east side at roof height"
+  },
+  {
+   "id": "Z2",
+   "name": "Fountain park",
+   "layer": "ground, rails, planters",
+   "features": [
+    "central fountain (K)",
+    "radial rails and planters",
+    "Wimpy Gap",
+    "signs 1-2",
+    "parked car",
+    "bus stop"
+   ],
+   "notes": "Tony's favourite line (G1 p085)"
+  },
+  {
+   "id": "Z3",
+   "name": "East deck",
+   "layer": "raised deck ≈ 2-3 m (low confidence), quarter pipes",
+   "features": [
+    "sign 3",
+    "Deck/Cheesy/Burly Deck gaps",
+    "Rail 2 Rail Transfer"
+   ],
+   "notes": "low triangular deck where the road forms a V"
+  },
+  {
+   "id": "Z4",
+   "name": "North street",
+   "layer": "ground, high rail, big kickers",
+   "features": [
+    "X kickers in the road",
+    "high rail with E",
+    "sign 4",
+    "bus stop",
+    "billboard",
+    "sucky room in the north building"
+   ],
+   "notes": "'huge jump ramps lining the streets' (G1 p085)"
+  },
+  {
+   "id": "Z5",
+   "name": "West quarter pipes and office",
+   "layer": "vert, raised plateaus, inside a building",
+   "features": [
+    "big curved quarter pipes (Transfer)",
+    "lit NEVERSOFT sign with A",
+    "office plateaus (Glass Gap, Big Ass)",
+    "sign 5",
+    "office interior icons and hanging rail"
+   ],
+   "notes": "remake: a cinema"
+  },
+  {
+   "id": "Z6",
+   "name": "Construction zone (south street)",
+   "layer": "ground, ledges, billboard rail, launch ramp",
+   "features": [
+    "kicker-ledge-billboard combo",
+    "Billboard Grind icon",
+    "Dirty Rail launch"
+   ],
+   "notes": "Dirty Rail also from both roofs"
+  },
+  {
+   "id": "Z7",
+   "name": "Hidden tunnel and glass skyway",
+   "layer": "inside a secret corridor, elevated ≈ 6-12 m (low confidence)",
+   "features": [
+    "car carrier",
+    "tunnel window",
+    "grindable cement barriers",
+    "glass skyway with T"
+   ],
+   "notes": "only designed way up to the roofs"
+  },
+  {
+   "id": "Z8",
+   "name": "Roof A (bowl roof)",
+   "layer": "roof ≈ 10-15 m (low confidence)",
+   "features": [
+    "greenhouse",
+    "kicker to the sucky room",
+    "octagonal wooden bowl",
+    "exit ramps to Roof 2 Roof and Billboard Grind"
+   ],
+   "notes": "speed source for the tape jump"
+  },
+  {
+   "id": "Z9",
+   "name": "Roof B (pool roof)",
+   "layer": "roof",
+   "features": [
+    "pool with rails around it",
+    "Death Grind corner ramp",
+    "Roof 2 Roof landing"
+   ],
+   "notes": "tape hangs just off its west lip"
+  },
+  {
+   "id": "Z10",
+   "name": "Street loop",
+   "layer": "ground",
+   "features": [
+    "streets round the central block and the park",
+    "taxis"
+   ],
+   "notes": "circulation loop; the roof route is a one-way spur"
+  }
+ ],
+ "landmarks": [
+  "start alley",
+  "round fountain park",
+  "east triangular deck",
+  "north street X kickers",
+  "lit NEVERSOFT sign",
+  "office (remake cinema)",
+  "car carrier truck",
+  "glass skyway",
+  "roof-A bowl and greenhouse",
+  "roof-B pool",
+  "video wall billboard"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "south, down the start alley towards the fountain park (inferred from LP1 14:00-14:05, PS12 S description, G1 p088)",
+  "visibleCollectibles": [
+   "S (ahead-right on the ledge, ≈ 35-40 m)"
+  ],
+  "notes": "LP1 14:02 frame: alley walls with lit window strips, street at the end; tape not in frame although it hangs ≈ 16 m down the alley and ≈ 10-15 m up over the left (east) roofline; loading tip 'LOOK FOR GAPS TO JUMP FOR EXTRA POINTS'"
+ },
+ "collectibles": [
+  {
+   "id": "TAPE",
+   "type": "tape",
+   "label": "Hidden tape (secret tape)",
+   "zone": "Z8",
+   "landmark": "mid-air on the Roof 2 Roof line between the bowl roof and the pool roof, over the start alley (VG 1083, 685)",
+   "layer": "mid-air over the gap between two roofs (above the start alley)",
+   "heightM": "≈ 10-15 above the alley floor; ≈ 0-2 above the launch lip (LP1 15:33.5)",
+   "launchFrom": "left-hand exit ramp of the wooden bowl on roof A (remake: ramp with a painted arrow)",
+   "visibility": {
+    "firstSight": "from the bowl exit on roof A (LP1 15:32.5-15:33)",
+    "fromSpawn": false,
+    "reads": "glowing tape icon floating in the night air between two dark roofs",
+    "teaser": "the access is advertised instead: T visible inside the glazed bridge over the north street, and the ramp-like truck bed",
+    "distanceFromFirstSightM": "≈ 15-20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "spawn",
+     "to": "north-west corner",
+     "geometry": "optional spiral S → sign 1 → K → sign 2 → sign 3 → E → sign 4 → A → sign 5; arrive with at least a minute left (G1 p089)"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "street",
+     "to": "car-carrier bed",
+     "geometry": "empty car carrier at the NW corner (VG 340-420 × 395-420) aimed at a window (LP1 15:09-15:10)"
+    },
+    {
+     "step": 3,
+     "move": "break-glass",
+     "from": "car-carrier lip",
+     "to": "hidden tunnel",
+     "geometry": "ollie through the window: T 2 T Gap 500; alternatives Secret Tunnel Entrance 500 / Tunnel Gap 1000 from the large street ramp (LP1 15:11)"
+    },
+    {
+     "step": 4,
+     "move": "rail-transfer",
+     "from": "tunnel floor",
+     "to": "cement barriers",
+     "geometry": "grind the yellow/black barriers, ollie barrier to barrier (G1 p092; LP1 15:11-15:16, 5-6 grinds)"
+    },
+    {
+     "step": 5,
+     "move": "kicker",
+     "from": "corridor ramp",
+     "to": "glass skyway over the north street",
+     "geometry": "T floats inside (LP1 15:21)"
+    },
+    {
+     "step": 6,
+     "move": "ollie",
+     "from": "skyway",
+     "to": "roof A",
+     "geometry": "greenhouse, sucky-room kicker, bowl (LP1 15:22-15:26)"
+    },
+    {
+     "step": 7,
+     "move": "vert-air",
+     "from": "bowl floor",
+     "to": "bowl walls",
+     "geometry": "session the bowl ≈ 6 s for speed (G1 p092; LP1 15:26-15:32)"
+    },
+    {
+     "step": 8,
+     "move": "transfer",
+     "from": "bowl left exit ramp",
+     "to": "air over the alley",
+     "geometry": "launch east across the ≈ 12-13 m alley, ≈ 14-17 m lip to lip; aim to intersect the tape (G1 p092)"
+    },
+    {
+     "step": 9,
+     "move": "transfer",
+     "from": "air",
+     "to": "roof B",
+     "geometry": "tape mid-gap; Roof 2 Roof 2000 on landing (LP1 15:34)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "break-glass",
+    "grind",
+    "rail-transfer",
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "find the truck-to-window entrance",
+    "barrier grind chain at speed (optional)",
+    "pump a bowl for speed",
+    "aim the bowl exit at the tape"
+   ],
+   "coupling": "none on the route; speeding taxis on the street approach (G1 p085)",
+   "failure": "short: fall ≈ 10-15 m into the start alley and bail; re-climb via the truck, tunnel and bowl ≈ 40-50 s, usually the end of the attempt at ≈ 90 s into a run; wide: leave by another bowl exit. Experts wallride up the alley wall (TAS1)",
+   "timeFromSpawnS": "≈ 93 (LP1 15:34, clock 0:27; truck → tape ≈ 25); ≈ 5-7 (TAS1 2:42.5, wallride climb); ≈ 31 to launch (LP12 run 3)",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEST",
+    "REWARD"
+   ],
+   "why": "closes the counterclockwise spiral of goals above the spawn alley; access by a secret corridor marked by T; bowl turns the speed check into a pump; mid-gap placement forces the committed 2000-point transfer",
+   "evidence": "VG; G1 p085, p088-p094, p096-p098; LP1 15:06-15:36; TAS1 2:37.5-2:43; PS12 downtown; LP12 19:40-19:52; WEB thumbsticks",
+   "confidence": "high (location, route); medium (plan distances); low (heights)"
+  },
+  {
+   "id": "S",
+   "type": "letter",
+   "label": "S",
+   "zone": "Z1",
+   "landmark": "west sidewalk ledge and billboard rail at the alley's south mouth (VG 983, 882)",
+   "layer": "rail / ledge",
+   "heightM": "≈ 1.5-2.5 above the road",
+   "launchFrom": "alley kicker",
+   "visibility": {
+    "firstSight": "from spawn (ahead-right, ≈ 35-40 m; inferred)",
+    "fromSpawn": true,
+    "reads": "floating letter over the ledge line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "alley floor",
+     "to": "west ledge",
+     "geometry": "Kicker 2 Edge"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "ledge",
+     "to": "billboard rail",
+     "geometry": "50-50 through S (LP1 14:05-14:06)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "ledge",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "kicker to ledge"
+   ],
+   "coupling": "none",
+   "failure": "miss and loop round the block; cheap (≈ 10-20 s)",
+   "timeFromSpawnS": "≈ 5 (LP1)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "first input of the run teaches kicker-to-ledge and points at the park",
+   "evidence": "VG; G1 p094; LP1 14:05-14:06; PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "letter",
+   "label": "K",
+   "zone": "Z2",
+   "landmark": "above the central fountain (VG 1518, 1220)",
+   "layer": "above the fountain",
+   "heightM": "≈ 2-4 above the fountain rim (low confidence)",
+   "launchFrom": "fountain rim / planters",
+   "visibility": {
+    "firstSight": "entering the park",
+    "fromSpawn": false,
+    "reads": "letter framed by radial planters",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "park path",
+     "to": "air over the fountain",
+     "geometry": "trick over the fountain (G1 p088)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "miss and loop round the block; cheap (≈ 10-20 s)",
+   "timeFromSpawnS": "≈ 13 (LP1)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "centre of the round park, on the rail line",
+   "evidence": "VG; G1 p088; LP1 14:13",
+   "confidence": "medium"
+  },
+  {
+   "id": "E",
+   "type": "letter",
+   "label": "E",
+   "zone": "Z4",
+   "landmark": "high rail above the north road near the alley's north end (VG 985, 400)",
+   "layer": "rail",
+   "heightM": "≈ 3-5 above the street (low confidence)",
+   "launchFrom": "ramp on the left",
+   "visibility": {
+    "firstSight": "north street",
+    "fromSpawn": false,
+    "reads": "letter over a high rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "street",
+     "to": "high rail",
+     "geometry": "ramp on the left (G1 p089)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "high rail",
+     "to": "street",
+     "geometry": "ollie down through sign 4 (LP1 14:36 wallride + 50-50)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind",
+    "wallride"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "ramp-to-rail"
+   ],
+   "coupling": "none",
+   "failure": "miss and loop round the block; cheap (≈ 10-20 s)",
+   "timeFromSpawnS": "≈ 36 (LP1)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "high rail chained into the next sign",
+   "evidence": "VG; G1 p089; LP1 14:36",
+   "confidence": "medium"
+  },
+  {
+   "id": "A",
+   "type": "letter",
+   "label": "A",
+   "zone": "Z5",
+   "landmark": "beside the lit NEVERSOFT sign, above a west quarter pipe (VG 343, 585)",
+   "layer": "above vert",
+   "heightM": "≈ 2-3 above the coping (low confidence)",
+   "launchFrom": "west quarter pipe",
+   "visibility": {
+    "firstSight": "west street",
+    "fromSpawn": false,
+    "reads": "letter next to a lit red sign at night",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarter pipe",
+     "to": "air above the coping",
+     "geometry": "air above the QP (LP1 14:46; PS12)"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "vert air"
+   ],
+   "coupling": "none",
+   "failure": "miss and loop round the block; cheap (≈ 10-20 s)",
+   "timeFromSpawnS": "≈ 46 (LP1)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "lit sign marks the west vert section",
+   "evidence": "VG; G1 p090; LP1 14:46; PS12",
+   "confidence": "medium"
+  },
+  {
+   "id": "T",
+   "type": "letter",
+   "label": "T",
+   "zone": "Z7",
+   "landmark": "inside the glass skyway at the top of the hidden tunnel (VG 628, 360)",
+   "layer": "inside a secret corridor (skyway)",
+   "heightM": "≈ 6-12 above the street (low confidence)",
+   "launchFrom": "car carrier / large street ramp",
+   "visibility": {
+    "firstSight": "from the north street through the skyway glass (VG; inferred)",
+    "fromSpawn": false,
+    "reads": "letter behind glass over the street",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "street",
+     "to": "car carrier",
+     "geometry": "NW corner"
+    },
+    {
+     "step": 2,
+     "move": "break-glass",
+     "from": "carrier",
+     "to": "tunnel",
+     "geometry": "T 2 T Gap"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "tunnel",
+     "to": "barriers",
+     "geometry": "barrier chain"
+    },
+    {
+     "step": 4,
+     "move": "kicker",
+     "from": "corridor ramp",
+     "to": "skyway",
+     "geometry": "T inside (LP1 15:21)"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "break-glass",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "find the entrance"
+   ],
+   "coupling": "none",
+   "failure": "miss and loop round the block; cheap (≈ 10-20 s)",
+   "timeFromSpawnS": "≈ 80 (LP1)",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEACH-LINE"
+   ],
+   "why": "marks the door to the tape route; 'the last letter in the sequence' (G1 p091)",
+   "evidence": "VG; G1 p091; LP1 15:21",
+   "confidence": "high"
+  },
+  {
+   "id": "SIGN1",
+   "type": "goal-object",
+   "label": "No Skating sign 1",
+   "zone": "Z2",
+   "landmark": "north-west park entrance (VG 1185, 1073), diagonal across the intersection after the S",
+   "layer": "ground (on a path)",
+   "heightM": "≈ 0-1 above the path",
+   "launchFrom": "street level",
+   "visibility": {
+    "firstSight": "on the path from the previous goal",
+    "fromSpawn": false,
+    "reads": "No Skating sign on a post",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "previous goal",
+     "to": "sign",
+     "geometry": "skate through from the alley mouth (G1 p088)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; loop back",
+   "timeFromSpawnS": "≈ 9 (LP1 14:09)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb in the counterclockwise spiral (G1 p088)",
+   "evidence": "VG; G1 p088-p089; LP1",
+   "confidence": "medium"
+  },
+  {
+   "id": "SIGN2",
+   "type": "goal-object",
+   "label": "No Skating sign 2",
+   "zone": "Z2",
+   "landmark": "middle of the path out of the park (VG 1803, 1018)",
+   "layer": "ground (on a path)",
+   "heightM": "≈ 0-1 above the path",
+   "launchFrom": "street level",
+   "visibility": {
+    "firstSight": "on the path from the previous goal",
+    "fromSpawn": false,
+    "reads": "No Skating sign on a post",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "previous goal",
+     "to": "sign",
+     "geometry": "veer left after the fountain trick; Wimpy Gap planter → outside ledge (G1 p088)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; loop back",
+   "timeFromSpawnS": "≈ 21 (LP1 14:21)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb in the counterclockwise spiral (G1 p088)",
+   "evidence": "VG; G1 p088-p089; LP1",
+   "confidence": "medium"
+  },
+  {
+   "id": "SIGN3",
+   "type": "goal-object",
+   "label": "No Skating sign 3",
+   "zone": "Z3",
+   "landmark": "centre of the platform between the large corner quarter pipes (VG 1595, 750)",
+   "layer": "raised deck between quarter pipes",
+   "heightM": "≈ 0-1 above the path",
+   "launchFrom": "street level",
+   "visibility": {
+    "firstSight": "on the path from the previous goal",
+    "fromSpawn": false,
+    "reads": "No Skating sign on a post",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "previous goal",
+     "to": "sign",
+     "geometry": "press up at either quarter-pipe lip, ride the deck through it, grind the rail out (G1 p089)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "quarter-pipe lip transfer onto a deck"
+   ],
+   "coupling": "none",
+   "failure": "cheap; loop back",
+   "timeFromSpawnS": "≈ 28 (LP1 14:28)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb in the counterclockwise spiral (G1 p088)",
+   "evidence": "VG; G1 p088-p089; LP1",
+   "confidence": "medium"
+  },
+  {
+   "id": "SIGN4",
+   "type": "goal-object",
+   "label": "No Skating sign 4",
+   "zone": "Z4",
+   "landmark": "north sidewalk after E (VG 970, 315)",
+   "layer": "ground (on a path)",
+   "heightM": "≈ 0-1 above the path",
+   "launchFrom": "street level",
+   "visibility": {
+    "firstSight": "on the path from the previous goal",
+    "fromSpawn": false,
+    "reads": "No Skating sign on a post",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "previous goal",
+     "to": "sign",
+     "geometry": "ollie down from the E rail into it (G1 p089)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; loop back",
+   "timeFromSpawnS": "≈ 65 (LP1 15:05, '4 of 5')",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb in the counterclockwise spiral (G1 p088)",
+   "evidence": "VG; G1 p088-p089; LP1",
+   "confidence": "medium"
+  },
+  {
+   "id": "SIGN5",
+   "type": "goal-object",
+   "label": "No Skating sign 5",
+   "zone": "Z5",
+   "landmark": "in front of the office building after A (VG 340, 760)",
+   "layer": "ground (on a path)",
+   "heightM": "≈ 0-1 above the path",
+   "launchFrom": "street level",
+   "visibility": {
+    "firstSight": "on the path from the previous goal",
+    "fromSpawn": false,
+    "reads": "No Skating sign on a post",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "previous goal",
+     "to": "sign",
+     "geometry": "G1 p089"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap; loop back",
+   "timeFromSpawnS": "≈ 120 (LP1 16:00-16:02, at the buzzer)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "breadcrumb in the counterclockwise spiral (G1 p088)",
+   "evidence": "VG; G1 p088-p089; LP1",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON100-ROOF",
+   "type": "bonus-icon",
+   "label": "bonus icon (100 points)",
+   "zone": "Z8",
+   "landmark": "roof A east lip at the Roof 2 Roof launch (VG 937, 666)",
+   "layer": "roof",
+   "heightM": "≈ 10-15 above the alley (roof level)",
+   "launchFrom": "unknown",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "pays for entering a secret space or taking a launch",
+   "evidence": "VG",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON500-SUCKY",
+   "type": "bonus-icon",
+   "label": "bonus icon (500 points)",
+   "zone": "Z4",
+   "landmark": "inside the sucky room in the north building (VG 770, 280)",
+   "layer": "inside a secret room",
+   "heightM": "unknown (upper floor)",
+   "launchFrom": "unknown",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "pays for entering a secret space or taking a launch",
+   "evidence": "VG; G1 p097",
+   "confidence": "medium"
+  },
+  {
+   "id": "ICON500-OFFICE",
+   "type": "bonus-icon",
+   "label": "bonus icon (500 points)",
+   "zone": "Z5",
+   "landmark": "inside the office; two more in its second-floor windows",
+   "layer": "inside a secret room",
+   "heightM": "unknown",
+   "launchFrom": "unknown",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating points icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "pays for entering a secret space or taking a launch",
+   "evidence": "G1 p087",
+   "confidence": "medium"
+  },
+  {
+   "id": "BUCKETS",
+   "type": "goal-object",
+   "label": "5 popcorn buckets (THPS 1+2 only)",
+   "zone": "Z8",
+   "landmark": "cinema rail; music shop sign; above the fountain-area quarter pipe; inside the greenhouse; in the sucky-room window",
+   "layer": "mixed (rails, sign, roof, inside a room)",
+   "heightM": "unknown",
+   "launchFrom": "wallride, quarter pipe, roof kicker",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating buckets",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "wallride",
+    "grind",
+    "vert-air",
+    "kicker",
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "two of five buckets reuse the tape's roof route",
+   "evidence": "PS12 downtown",
+   "confidence": "medium",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "ROOFGAPS",
+   "type": "reach-goal",
+   "label": "Complete the Rooftop Gaps (THPS 1+2 only)",
+   "zone": "Z8",
+   "landmark": "Roof 2 Roof, Sucky Room Gap, Death Grind",
+   "layer": "roof",
+   "heightM": "≈ 10-15 above the street (low confidence)",
+   "launchFrom": "roof bowl and roof kickers",
+   "visibility": {
+    "firstSight": "roof A",
+    "fromSpawn": false,
+    "reads": "gap goal",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "transfer",
+    "kicker",
+    "break-glass",
+    "grind"
+   ],
+   "speed": "maximum",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall to the street",
+   "timeFromSpawnS": "≈ 32-96 (LP12 19:50, 20:28, 20:54)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "the remake turns the roof hub's spokes into a goal",
+   "evidence": "PS12; LP12 19:51, 20:28, 20:54",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  },
+  {
+   "id": "CARS",
+   "type": "reach-goal",
+   "label": "Ollie the Parked Cars (THPS 1+2 only)",
+   "zone": "Z10",
+   "landmark": "three parked cars on the street loop",
+   "layer": "ground",
+   "heightM": "≈ 1.5 (car height)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "streets",
+    "fromSpawn": false,
+    "reads": "parked cars",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "Car Ollie gap made into a goal",
+   "evidence": "PS12",
+   "confidence": "high",
+   "version": "THPS 1+2 2020"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Car Ollie",
+   "points": 100,
+   "kind": "over-object",
+   "location": "ollie an entire parked car (south curved road, VG 1365, 1494)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "CARS"
+   ],
+   "evidence": "G1 p095; VG; PS12"
+  },
+  {
+   "name": "Truck Gap",
+   "points": 250,
+   "kind": "over-object",
+   "location": "ramp to ramp over the back of the truck half out of a garage (VG 1985, 1118)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p095; VG; PS12"
+  },
+  {
+   "name": "Wimpy Gap",
+   "points": 250,
+   "kind": "ledge-to-ledge",
+   "location": "planter out of the fountain park past the ledge",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "SIGN2"
+   ],
+   "evidence": "G1 p095; VG; PS12"
+  },
+  {
+   "name": "Cheesy Deck Gap / Deck Gap",
+   "points": "50 / 250",
+   "kind": "over-object",
+   "location": "narrow / wide part of the east deck",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "SIGN3"
+   ],
+   "evidence": "G1 p096; VG; PS12"
+  },
+  {
+   "name": "Rail 2 Rail Transfer",
+   "points": 750,
+   "kind": "rail-transfer",
+   "location": "two rails up to the raised east deck (VG 1475, 705)",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "SIGN3"
+   ],
+   "evidence": "G1 p096; VG; PS12"
+  },
+  {
+   "name": "Dirty Rail",
+   "points": 3000,
+   "kind": "kicker",
+   "location": "last construction ramp to the long handrail into the fountain park; also from both roofs (VG 1009, 965)",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p096; VG; PS12"
+  },
+  {
+   "name": "BS Grind",
+   "points": 200,
+   "kind": "kicker",
+   "location": "kicker into a grind on a bus-stop top",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p096; PS12"
+  },
+  {
+   "name": "Kicker Gap",
+   "points": 100,
+   "kind": "kicker",
+   "location": "start alley, kicker to kicker",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p096; VG; PS12"
+  },
+  {
+   "name": "Kicker 2 Street",
+   "points": 100,
+   "kind": "kicker",
+   "location": "north end of the start alley up onto the street above (short cut)",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [
+    "E",
+    "SIGN4"
+   ],
+   "evidence": "G1 p096; VG; PS12"
+  },
+  {
+   "name": "Billboard Grind",
+   "points": 500,
+   "kind": "roof",
+   "location": "roof-A bowl, out of its side onto the rail under the big video wall",
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p096; VG (750, 941); PS12"
+  },
+  {
+   "name": "Kicker 2 Edge",
+   "points": 100,
+   "kind": "kicker",
+   "location": "alley kickers to the ledge",
+   "moves": [
+    "kicker",
+    "ledge"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "G1 p097; VG; PS12"
+  },
+  {
+   "name": "Transfer",
+   "points": 200,
+   "kind": "channel",
+   "location": "west quarter-pipe area, lip transfer to its other side (VG 570, 720)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "A"
+   ],
+   "evidence": "G1 p097; VG; PS12"
+  },
+  {
+   "name": "Glass Gap",
+   "points": 750,
+   "kind": "over-object",
+   "location": "over the top plateau outside the office, through the glass",
+   "moves": [
+    "kicker",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "ICON500-OFFICE"
+   ],
+   "evidence": "G1 p097; PS12 (cinema)"
+  },
+  {
+   "name": "Big Ass",
+   "points": 1500,
+   "kind": "over-object",
+   "location": "over both plateaus to the office, through the glass",
+   "moves": [
+    "kicker",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "ICON500-OFFICE"
+   ],
+   "evidence": "G1 p097; VG; PS12"
+  },
+  {
+   "name": "Sucky Room Gap",
+   "points": 1500,
+   "kind": "secret-area",
+   "location": "roof-A kicker by the greenhouse across the north street through the sucky room's glass",
+   "moves": [
+    "vert-air",
+    "kicker",
+    "transfer",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "ICON500-SUCKY",
+    "BUCKETS",
+    "ROOFGAPS"
+   ],
+   "evidence": "G1 p097; VG; PS12"
+  },
+  {
+   "name": "Secret Tunnel Entrance",
+   "points": 500,
+   "kind": "secret-area",
+   "location": "large street ramp through the window of the secret tunnel (VG 632, 410)",
+   "moves": [
+    "kicker",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "T",
+    "TAPE"
+   ],
+   "evidence": "G1 p097; VG; PS12"
+  },
+  {
+   "name": "Tunnel Gap",
+   "points": 1000,
+   "kind": "secret-area",
+   "location": "as Secret Tunnel Entrance, out of the far end without landing",
+   "moves": [
+    "kicker",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "T",
+    "TAPE"
+   ],
+   "evidence": "G1 p098; VG; PS12"
+  },
+  {
+   "name": "Roof 2 Roof",
+   "points": 2000,
+   "kind": "roof",
+   "location": "roof-A bowl side ramp across the start alley to roof B",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [
+    "TAPE",
+    "ROOFGAPS"
+   ],
+   "evidence": "G1 p098; VG (990, 705); LP1 15:34; PS12"
+  },
+  {
+   "name": "T 2 T Gap",
+   "points": 500,
+   "kind": "secret-area",
+   "location": "empty car carrier into the secret tunnel through the glass (VG 330, 395)",
+   "moves": [
+    "kicker",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "T",
+    "TAPE"
+   ],
+   "evidence": "G1 p098; VG; LP1 15:11; PS12"
+  },
+  {
+   "name": "Over The Tunnel",
+   "points": 2000,
+   "kind": "over-object",
+   "location": "large kicker over the whole secret tunnel ('almost impossible')",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p098 (not in PS12)"
+  },
+  {
+   "name": "Death Grind",
+   "points": 2000,
+   "kind": "roof",
+   "location": "roof-B corner ramp down to a rail in the business park (VG 1150, 805)",
+   "moves": [
+    "kicker",
+    "grind",
+    "rail-transfer"
+   ],
+   "onRouteOf": [
+    "ROOFGAPS"
+   ],
+   "evidence": "G1 p098; VG; PS12"
+  },
+  {
+   "name": "BS Gap",
+   "points": 500,
+   "kind": "over-object",
+   "location": "over a bus stop from a ramp on either side",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p098; PS12"
+  },
+  {
+   "name": "Burly Deck Gap",
+   "points": 2500,
+   "kind": "over-object",
+   "location": "wide part of the low east deck where the road comes to a V; speed from the quarter pipe across the street",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "G1 p098; PS12"
+  },
+  {
+   "name": "Mechanic Gap (THPS 1+2)",
+   "points": 500,
+   "kind": "wallride",
+   "location": "wallride over the truck half out of a garage",
+   "moves": [
+    "wallride"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Box Office Gap (THPS 1+2)",
+   "points": 1000,
+   "kind": "manual",
+   "location": "manual from the back of the cinema out to the street",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Skyway Gap (THPS 1+2)",
+   "points": 1000,
+   "kind": "manual",
+   "location": "from roof A, manual back through the glass skyway",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Super Skyway Gap (THPS 1+2)",
+   "points": 5000,
+   "kind": "manual",
+   "location": "manual from roof A through the skyway and down the corridor to the entrance",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "fly through the tunnel window (car carrier or large street ramp)",
+   "opens": "hidden tunnel → glass skyway → roof A → roof B",
+   "neededFor": [
+    "T",
+    "TAPE"
+   ],
+   "evidence": "G1 p091-p093, p097-p098; LP1 15:11"
+  },
+  {
+   "trigger": "fly through the sucky room's glass from the roof-A kicker",
+   "opens": "the sucky room (500 icon; remake bucket)",
+   "neededFor": [
+    "ICON500-SUCKY",
+    "BUCKETS"
+   ],
+   "evidence": "G1 p097; PS12"
+  },
+  {
+   "trigger": "fly through the office glass (Glass Gap, Big Ass)",
+   "opens": "office interior: 500 icons, windows, hanging rail",
+   "neededFor": [
+    "ICON500-OFFICE"
+   ],
+   "evidence": "G1 p087, p097"
+  },
+  {
+   "trigger": "taxi horn",
+   "opens": "warning before a taxi hits you (street hazard)",
+   "neededFor": [],
+   "evidence": "G1 p085"
+  },
+  {
+   "trigger": "Roof 2 Roof + Sucky Room Gap + Death Grind (remake)",
+   "opens": "Complete the Rooftop Gaps goal",
+   "neededFor": [
+    "ROOFGAPS"
+   ],
+   "evidence": "LP12 19:51, 20:28, 20:54; PS12"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Alley opener",
+   "sequence": [
+    "spawn kicker",
+    "Kicker Gap / Kicker 2 Edge",
+    "west ledge",
+    "billboard rail (S)",
+    "sign 1 across the intersection"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "S",
+    "SIGN1"
+   ],
+   "why": "first seconds teach kicker-to-ledge and point at the park",
+   "evidence": "VG; G1 p088, p094; LP1 14:02-14:09"
+  },
+  {
+   "id": "L2",
+   "name": "Fountain rails (Tony's line)",
+   "sequence": [
+    "park rails and planters",
+    "rail to rail",
+    "air over the fountain (K)",
+    "Wimpy Gap out (sign 2)"
+   ],
+   "links": [
+    "rail-transfer",
+    "ollie"
+   ],
+   "collectibles": [
+    "K",
+    "SIGN1",
+    "SIGN2"
+   ],
+   "why": "dense rail field for multipliers (G1 p094)",
+   "evidence": "G1 p085, p088, p094-p095; LP1 14:09-14:21"
+  },
+  {
+   "id": "L3",
+   "name": "Construction combo",
+   "sequence": [
+    "kicker",
+    "ledge grind",
+    "billboard rail (S)",
+    "construction ramp top grind",
+    "Dirty Rail"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "S"
+   ],
+   "why": "11,000+ points in one combo (G1 p094)",
+   "evidence": "G1 p094, p096"
+  },
+  {
+   "id": "L4",
+   "name": "East deck",
+   "sequence": [
+    "corner quarter pipe",
+    "lip transfer onto the deck (sign 3)",
+    "Rail 2 Rail Transfer out",
+    "Deck / Burly Deck gaps"
+   ],
+   "links": [
+    "transfer",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "SIGN3"
+   ],
+   "why": "teaches quarter-pipe-to-platform transfers before the roof bowl",
+   "evidence": "G1 p089, p096, p098"
+  },
+  {
+   "id": "L5",
+   "name": "North street high rail",
+   "sequence": [
+    "ramp on the left",
+    "high rail (E)",
+    "ollie down through sign 4",
+    "X kickers, bus stops, cars"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "E",
+    "SIGN4"
+   ],
+   "why": "big street kickers make the street a launch strip",
+   "evidence": "G1 p085, p089; VG"
+  },
+  {
+   "id": "L6",
+   "name": "West vert and office",
+   "sequence": [
+    "west quarter pipes (Transfer, A)",
+    "plateaus",
+    "Glass Gap / Big Ass through the office glass",
+    "sign 5, interior icons, hanging rail"
+   ],
+   "links": [
+    "transfer",
+    "break-glass"
+   ],
+   "collectibles": [
+    "A",
+    "SIGN5",
+    "ICON500-OFFICE"
+   ],
+   "why": "vert section with a breakable interior as payoff",
+   "evidence": "G1 p087, p089-p091, p097"
+  },
+  {
+   "id": "L7",
+   "name": "Tape line",
+   "sequence": [
+    "car carrier (T 2 T Gap)",
+    "tunnel barrier grinds",
+    "skyway (T)",
+    "roof A",
+    "bowl session",
+    "Roof 2 Roof (tape)",
+    "roof-B pool and rails"
+   ],
+   "links": [
+    "grind",
+    "vert-air",
+    "transfer"
+   ],
+   "collectibles": [
+    "T",
+    "TAPE",
+    "ICON100-ROOF"
+   ],
+   "why": "the level's longest vertical chain; ends the spiral above spawn",
+   "evidence": "G1 p091-p094; LP1 15:09-15:36"
+  },
+  {
+   "id": "L8",
+   "name": "Roof hub exits",
+   "sequence": [
+    "roof-A bowl",
+    "Billboard Grind / Sucky Room Gap / Roof 2 Roof",
+    "roof B Death Grind",
+    "Dirty Rail from either roof"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "ICON500-SUCKY",
+    "BUCKETS",
+    "ROOFGAPS"
+   ],
+   "why": "one speed source, four spokes; the tape is one of them",
+   "evidence": "G1 p094, p096-p098"
+  },
+  {
+   "id": "L9",
+   "name": "Pro-score finale",
+   "sequence": [
+    "roof bowl 540s with unused grabs",
+    "Roof 2 Roof or billboard",
+    "roof-B pool",
+    "ollie to the pool rails"
+   ],
+   "links": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [],
+   "why": "G1 p094: reach the roof at ≈ 35,000 and finish there",
+   "evidence": "G1 p094; LP1 15:26-15:36"
+  },
+  {
+   "id": "L10",
+   "name": "Skyway manuals (remake)",
+   "sequence": [
+    "roof A",
+    "manual back through the skyway (Skyway Gap)",
+    "down the corridor (Super Skyway Gap)"
+   ],
+   "links": [
+    "manual"
+   ],
+   "collectibles": [],
+   "why": "remake reuses the secret corridor as a manual line",
+   "evidence": "PS12"
+  }
+ ],
+ "guidance": [
+  "Letters and signs form a counterclockwise spiral (G1 p088): spawn → S (south) → park → east deck → north street → west → north-west truck → skyway → roof → tape over the spawn alley",
+  "The car carrier's bed reads as a ramp aimed at the tunnel window ('suspiciously ramp-like', thumbsticks)",
+  "T floats inside the glass skyway over the north street: the secret area advertises itself from below (VG)",
+  "The roof-A bowl is the obvious thing to ride and supplies the jump's speed",
+  "The tape glow is first seen from the bowl exit, 1-2 s before the pickup (LP1 15:32.5-15:33); the remake paints a big green arrow on the correct ramp (LP12 19:48)",
+  "Night lighting: lit windows, the lit NEVERSOFT sign (A), the video screen and glowing icons stand out",
+  "Hidden on purpose: the tunnel, sucky room and office interiors; the tape is never shown from the ground in sampled frames though it is ≈ 20 m from spawn"
+ ],
+ "designLogic": [
+  "The tape closes a spiral: objectives are 'lined up one after the next from the starting point' (G1 p085) and the spiral of letters and signs ends at the tunnel and the tape (G1 p088-p089)",
+  "Close in space, far in route: the tape is ≈ 20 m from spawn but ≈ 90 s of designed play away; the TAS takes it in ≈ 5 s by climbing the alley wall",
+  "A letter marks the door: T sits in the tunnel, so S-K-A-T-E teaches the tape's access (G1 p089, p091)",
+  "The roof bowl is a speed battery that turns a stats check into a pump-then-exit skill",
+  "One hub, several spokes: Roof 2 Roof (tape), Billboard Grind, Sucky Room Gap, Death Grind; the remake labels the tape spoke with an arrow",
+  "Tape on the arc, not on a surface: only a committed transfer takes it, and the same arc pays Roof 2 Roof (2000)",
+  "Gap names hint at secrets: T 2 T Gap, Secret Tunnel Entrance, Tunnel Gap, Over The Tunnel and Roof 2 Roof are on the checklist",
+  "Glass is the door material: tunnel window, office, sucky room (taught in Warehouse: break the start-room window, G1 p045)",
+  "Costly late failure: a short jump drops you into the alley, the farthest point by route from the tunnel; G1 asks for 'at least a minute left' at the last sign",
+  "Layered height: street, ledges and rails (≈ 1-5 m), tunnel and skyway (≈ 6-12 m), roofs (≈ 10-15 m); the tape on the top layer",
+  "Reward on the landing: roof B's pool and rails for the pro score (G1 p094); the remake adds stat points, the plushie and a gap goal there",
+  "Career step: first tape that needs a secret corridor; combines glass, rail chains, vert pumping and a roof transfer",
+  "One-run design: LP1 takes all five tapes in one run, the last sign at the buzzer"
+ ],
+ "remakeChanges": [
+  "Tape unchanged in place and route; THPS 1+2 paints a large green arrow on the launch ramp (LP12 19:48; PS12 'ramp with an arrow on it')",
+  "E moved from a high rail over the north street (G1 p089) to a power line between two roofs reached via the walkway (PS12)",
+  "Office re-themed as a cinema with the same plateaus (Glass Gap, Big Ass) plus Box Office manual gap",
+  "New goals: 5 popcorn buckets (two on the roof route), Complete the Rooftop Gaps, Ollie the Parked Cars; signs moved",
+  "New gaps: Mechanic, Box Office, Skyway, Super Skyway; Over The Tunnel not listed by PS12",
+  "Scores raised from 15,000/40,000 to 25,000/90,000/175,000 and an 18,000 combo"
+ ],
+ "transfer": [
+  "Spiral to the centre: crystal mid-air between two roofs ≈ 10-12 m above the spawn street; other goals ring the blocks and end at a hidden entrance; straight-line ≈ 20 m, route long",
+  "Ramp-shaped truck bed into a breakable window ≈ 2-3 m up, then an inclined corridor with grindable barriers spaced ≤ 2 m so grind ollies (≈ 2.4 m pop) chain them",
+  "Roof bowl as speed battery: roof gap ≈ 11-12 m lip to lip, between the cruise ollie (≈ 9.4 m at 12 m/s) and the charged maximum (≈ 13.8 m at 23 m/s); crystal at the arc apex ≈ 1-1.5 m above lip height, ≈ 4-6 m out",
+  "Door marker: a level collectible inside the corridor, visible through glass from the street",
+  "Hub with three exits (crystal gap, trick rail to a billboard, kicker into a glass room); painted arrow on easier settings",
+  "Expert climb: wallride panels up the alley wall within wallie reach for a TAS-style skip",
+  "Cheaper recovery option: rope swing or speed pad from the alley back to the truck so a miss costs ≈ 15 s, not ≈ 45 s"
+ ],
+ "openQuestions": [
+  "Roof and tape heights (≈ 10-15 m inferred, no side-on measurement)",
+  "Whether the tape glow is visible from the alley floor with the camera tilted up",
+  "N64 TAS frame shows a lit NEVERSOFT sign beside the roof-B grind that VG does not show there",
+  "Where LP1 broke signs 4 and 5 (15:05, ≈ 16:00) relative to G1's order",
+  "Whether the remake removed Over The Tunnel or Push Square omitted it"
+ ]
+}
