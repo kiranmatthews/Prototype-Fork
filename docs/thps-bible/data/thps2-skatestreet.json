@@ -1,0 +1,1879 @@
+{
+ "id": "thps2-skatestreet",
+ "game": "THPS2",
+ "level": "Skatestreet",
+ "location": "Ventura, California",
+ "type": "competition",
+ "careerPosition": 6,
+ "timeLimit": "1:00 per heat; three heats, best two count",
+ "versions": [
+  "PS1 2000 (VG map, LP2)",
+  "THPS 1+2 2020 (PS12, LP12)"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater2-Skatestreet-Ventura.png",
+  "LP2 0:42:20–0:46:52",
+  "PS12 skatestreet (pushsquare.com …-skatestreet-all-gaps-and-collectibles)",
+  "LP12 1:02:25–1:05:40"
+ ],
+ "competition": {
+  "name": "Competition Invite #2: Plywood Paradise",
+  "rules": "3 heats per skater; best 2 heats wins; points deducted for bails",
+  "purse": "Compete for $20,000 in cash & prizes (sponsored by Bluetorch)",
+  "note": "“Find all cash icons to 100% the level”",
+  "evidence": "LP2 0:42:44 invite card; VG legend"
+ },
+ "goals": [
+  {
+   "text": "Competition Invite #2, Plywood Paradise: 3 heats per skater, best 2 heats wins, points deducted for bails; compete for $20,000 in cash & prizes",
+   "version": "original",
+   "evidence": "LP2 0:42:44; VG"
+  },
+  {
+   "text": "Find all cash icons to 100% the level (8 icons, $1000 total on VG)",
+   "version": "original",
+   "evidence": "LP2 0:42:44; VG icon count; LP2 0:46:35 “Cash icons cleared”"
+  },
+  {
+   "text": "Competition Park: to earn a medal finish with one of the top 3 scores; the average of your top two runs is your final score. Collectibles shown: Stat Points 0/2",
+   "version": "remake",
+   "evidence": "LP12 1:02:25 level panel"
+  },
+  {
+   "text": "Remake collectibles: 2 stat points per style, Vicarious Visions logo, alien plushie; both secret-area keys kept",
+   "version": "remake",
+   "evidence": "PS12 skatestreet"
+  }
+ ],
+ "size": {
+  "class": "medium",
+  "footprint": "≈ 60–80 × 40–60 m indoor hall plus two outdoor yards of ≈ 20–30 m each (low confidence)",
+  "evidence": "VG render; no clean scale object (the camper van is hidden under its label), so this is a proportion estimate against Marseille’s and Chicago’s scales"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start roll-in and curved rail (E-centre)",
+   "layer": "deck",
+   "features": [
+    "START on a raised roll-in",
+    "curved yellow rail behind the start (van key)",
+    "small ramp in front of the big halfpipe (High Jumper)"
+   ],
+   "notes": "$50 on the key rail."
+  },
+  {
+   "id": "Z2",
+   "name": "Big halfpipe and pool (N)",
+   "layer": "vert + bowl",
+   "features": [
+    "big halfpipe",
+    "pool beside it with a Birdhouse sign on its rim"
+   ],
+   "notes": "HP Lip, HP to Bowl, Bowl to HP, Nail the Rail, Bowl Envy, Bowl Lip, Extension Transfer, Circle the Pool, Bullet Bowl Hop; remake Over the HP."
+  },
+  {
+   "id": "Z3",
+   "name": "Elevated tables, vending machine and bridge (NE)",
+   "layer": "raised deck",
+   "features": [
+    "raised area with tables and a vending machine",
+    "bridge over the entry with a kicker and a railing at the top"
+   ],
+   "notes": "No Kidding Around, Sodee Pop Gap (wallride), Over the Bridge, Big Air Railing Grind ($100)."
+  },
+  {
+   "id": "Z4",
+   "name": "Shop deck, stairs and east wall",
+   "layer": "raised deck + ground",
+   "features": [
+    "elevated shop area with a stair set",
+    "quarterpipes on the E wall",
+    "low brick wall between two quarterpipes",
+    "low wide halfpipe"
+   ],
+   "notes": "Stairset, Over the Wall (10 points), Gimmie Gap Redux, Mr. Small Lips, HP to Railbox; $50 by the stairs."
+  },
+  {
+   "id": "Z5",
+   "name": "Wave wall (S/SW)",
+   "layer": "vert (huge)",
+   "features": [
+    "huge quarterpipe (“wave wall”)",
+    "yellow rail at its end",
+    "small railing on top",
+    "hanging rail off its top (rail key)"
+   ],
+   "notes": "Surfin U.S.A., Ride the Wave, Railing Hop, Wave Wall Minigap; two $100 icons."
+  },
+  {
+   "id": "Z6",
+   "name": "West hall",
+   "layer": "ground + vert",
+   "features": [
+    "NW corner quarterpipe under the “Skate Street Ventura” sign",
+    "low halfpipe (Gully Lip)",
+    "black rail + low wall",
+    "big “Element” deck",
+    "hexagonal funbox",
+    "wide deck with steps"
+   ],
+   "notes": "High Sticker ($250), Rail to Rail, Cut the Corner, Hexbox Gap, Funbox Wheelie (the only green/manual label on VG), Over the Deck."
+  },
+  {
+   "id": "Z7",
+   "name": "Van secret area (outdoor, W)",
+   "layer": "secret area",
+   "features": [
+    "camper van with a launch ramp",
+    "two benches angled toward each other",
+    "long quarterpipe down a shallow slope",
+    "small quarterpipe in the right corner"
+   ],
+   "notes": "Opened by the van key. $100 over the van (Daaaaay Tripper); Havin a Picnic; Skatin on the Dock of the Bay; remake VV logo."
+  },
+  {
+   "id": "Z8",
+   "name": "Rail secret area (outdoor, S)",
+   "layer": "secret area",
+   "features": [
+    "two quarterpipes against the back wall",
+    "funbox in the middle",
+    "skinny walls/barriers on the right"
+   ],
+   "notes": "Opened by the rail key. $250 over Shoot the Gap; remake Funbox Slap, Over the Barrier, plushie, two stat points."
+  }
+ ],
+ "landmarks": [
+  "huge wave-wall quarterpipe",
+  "“Skate Street Ventura” sign over the NW corner quarterpipe",
+  "Birdhouse sign on the pool",
+  "camper van in the outdoor yard",
+  "daylight and trees beyond the yard doors"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "SW down the roll-in toward the huge quarterpipe (PS12: “the huge vert ramp ahead from the start position”); the curved yellow rail (van key) is behind you",
+  "visibleCollectibles": [
+   "K7 (wave-wall icon) lies straight ahead; LP2 takes a $100 there 8 s into heat 2",
+   "K1 is behind spawn (needs a turn)"
+  ],
+  "notes": "LP2 heat 2: roll-in → wave wall → “100 bucks!” at 0:44:27 (8 s)."
+ },
+ "collectibles": [
+  {
+   "id": "K1",
+   "type": "cash",
+   "label": "Cash icon $50",
+   "value": "$50",
+   "version": "original",
+   "zone": "Z1",
+   "landmark": "curved yellow rail behind spawn (the van key rail)",
+   "layer": "rail",
+   "heightM": "≈ 1–1.5 above the floor (estimate)",
+   "launchFrom": "the curved rail",
+   "visibility": {
+    "firstSight": "behind spawn (turn around)",
+    "fromSpawn": false,
+    "reads": "floating banknote icon ($50)",
+    "distanceFromFirstSightM": "≈ 3–8"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "curved yellow rail behind you",
+     "geometry": "turn around at the start (PS12)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "curved yellow rail",
+     "to": "its far end",
+     "geometry": "grind it all the way: Van Secret Area Key; the door to the van yard (W) opens"
+    }
+   ],
+   "moves": [
+    "grind",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "full-length grind of a curved rail"
+   ],
+   "coupling": "opens the van yard door",
+   "failure": "Falling off before the end does not open the door; regrind (seconds).",
+   "timeFromSpawnS": "≈ 51 (LP2 heat 2: “FS 50-50 + Van Secret Area Key”, “50 bucks” at 0:45:10–0:45:11)",
+   "difficulty": 2,
+   "difficultyWhy": "balance on a curve; next to spawn",
+   "roles": [
+    "TEACH-LINE",
+    "EXPLORE"
+   ],
+   "why": "The easy key carries its own icon, so the first lock teaches itself with a reward.",
+   "evidence": "VG; LP2 0:45:10–0:45:11; PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "K2",
+   "type": "cash",
+   "label": "Cash icon $100",
+   "value": "$100",
+   "version": "original",
+   "zone": "Z7",
+   "landmark": "above the camper van in the outdoor van yard",
+   "layer": "secret area (above a vehicle)",
+   "heightM": "≈ 3–4 above the ground (van ≈ 2.2 m; LP2 0:46:34)",
+   "launchFrom": "launch ramp in front of the van",
+   "visibility": {
+    "firstSight": "through the opened door",
+    "fromSpawn": false,
+    "reads": "floating banknote icon ($100)",
+    "distanceFromFirstSightM": "≈ 15–25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "curved yellow rail behind you",
+     "geometry": "turn around at the start (PS12)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "curved yellow rail",
+     "to": "its far end",
+     "geometry": "grind it all the way: Van Secret Area Key; the door to the van yard (W) opens"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "hall",
+     "to": "van yard",
+     "geometry": "go W through the opened door (LP2 0:46:30–0:46:33)"
+    },
+    {
+     "step": 4,
+     "move": "kicker",
+     "from": "launch ramp",
+     "to": "over the van",
+     "geometry": "ollie over the camper van: Daaaaay Tripper; “100 bucks! Cash icons cleared” (0:46:35)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "unlock",
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "van key done (any earlier heat)"
+   ],
+   "coupling": "needs the van key (stays open across heats in LP2)",
+   "failure": "A short ollie lands on the van roof or beside it; ride back to the ramp.",
+   "timeFromSpawnS": "≈ 59 (LP2 heat 3, 0:46:35; the door was opened in heat 2)",
+   "difficulty": 2,
+   "difficultyWhy": "easy once the door is open",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The yard’s set-piece (the van) holds the yard’s icon, and it was LP2’s last icon.",
+   "evidence": "VG; LP2 0:46:30–0:46:36; PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "K3",
+   "type": "cash",
+   "label": "Cash icon $100",
+   "value": "$100",
+   "version": "original",
+   "zone": "Z5",
+   "landmark": "over the hanging rail off the wave-wall top",
+   "layer": "overhead rail",
+   "heightM": "≈ 4–6 above the floor (estimate)",
+   "launchFrom": "wave-wall top",
+   "visibility": {
+    "firstSight": "from the wave wall",
+    "fromSpawn": "probably (the wave wall is ahead of spawn)",
+    "reads": "floating banknote icon ($100)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall",
+     "to": "huge quarterpipe (wave wall)",
+     "geometry": "ride up the wave wall ahead of the start"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "wave-wall top",
+     "to": "wave-wall top, heading left",
+     "geometry": "land in a grind on the top and go left (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "wave-wall top",
+     "to": "hanging rail",
+     "geometry": "ollie off into a grind on the hanging rail: Wave Wall Minigap + Rail Secret Area Key; a door to the outside opens (LP2 0:45:57–0:45:59)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "rail-transfer",
+    "unlock"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "grind the top of a huge quarterpipe",
+    "grind-ollie onto a hanging rail"
+   ],
+   "coupling": "opens the rail yard door",
+   "failure": "A miss drops you down the wave wall; re-climb.",
+   "timeFromSpawnS": "unresolved: LP2 heat 3 shows the key grind (0:45:57–0:45:59) without a “bucks” caption; a “100 bucks!” at 0:43:44 (heat 1, 45 s) may be this icon",
+   "difficulty": 3,
+   "difficultyWhy": "a grind on a huge quarterpipe’s top, then a transfer to a hanging rail",
+   "roles": [
+    "TEST"
+   ],
+   "why": "The hard key carries a bigger icon than the easy key.",
+   "evidence": "VG; LP2 0:43:44, 0:45:57–0:45:59; PS12",
+   "confidence": "medium (pickup time)"
+  },
+  {
+   "id": "K4",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z8",
+   "landmark": "over the gap between the two back-wall quarterpipes in the rail yard",
+   "layer": "secret area (air between quarterpipes)",
+   "heightM": "≈ 4–5 above the ground (estimate)",
+   "launchFrom": "one of the two back-wall quarterpipes",
+   "visibility": {
+    "firstSight": "through the opened rail-yard door",
+    "fromSpawn": false,
+    "reads": "floating banknote icon ($250)",
+    "distanceFromFirstSightM": "≈ 15–20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall",
+     "to": "huge quarterpipe (wave wall)",
+     "geometry": "ride up the wave wall ahead of the start"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "wave-wall top",
+     "to": "wave-wall top, heading left",
+     "geometry": "land in a grind on the top and go left (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "wave-wall top",
+     "to": "hanging rail",
+     "geometry": "ollie off into a grind on the hanging rail: Wave Wall Minigap + Rail Secret Area Key; a door to the outside opens (LP2 0:45:57–0:45:59)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "hall",
+     "to": "rail yard",
+     "geometry": "go out through the opened door (LP2 0:46:03)"
+    },
+    {
+     "step": 5,
+     "move": "transfer",
+     "from": "back-wall quarterpipe",
+     "to": "the other quarterpipe",
+     "geometry": "transfer across: Shoot the Gap; “250 bucks!!!” (0:46:16–0:46:17)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "unlock",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "rail key done",
+    "quarterpipe-to-quarterpipe transfer"
+   ],
+   "coupling": "needs the rail key",
+   "failure": "A short transfer drops between the ramps; re-pump.",
+   "timeFromSpawnS": "≈ 40 (LP2 heat 3: key at 22 s, yard at 27 s, icon at 40 s; key to icon ≈ 18 s)",
+   "difficulty": 3,
+   "difficultyWhy": "two-stage: hard key, then a transfer",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The hard-to-open yard pays the top value ($250).",
+   "evidence": "VG; LP2 0:45:57–0:46:17; PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "K5",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "high above the NW corner quarterpipe, under the “Skate Street Ventura” sign",
+   "layer": "air above a quarterpipe",
+   "heightM": "≈ 2–4 above the coping (LP2 0:43:51; estimate)",
+   "launchFrom": "NW corner quarterpipe",
+   "visibility": {
+    "firstSight": "from the west hall (the sign marks the spot)",
+    "fromSpawn": "unknown",
+    "reads": "floating banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall ramps",
+     "to": "speed",
+     "geometry": "pump for maximum speed"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "NW corner quarterpipe",
+     "to": "icon",
+     "geometry": "go straight up as high as you can (High Sticker); “250 bucks!!!” (0:43:51)"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "maximum-height vert air"
+   ],
+   "coupling": "none",
+   "failure": "A low air misses; circle back and pump again.",
+   "timeFromSpawnS": "≈ 52 (LP2 heat 1, 0:43:51)",
+   "difficulty": 4,
+   "difficultyWhy": "pure height; needs full speed",
+   "roles": [
+    "TEST"
+   ],
+   "why": "A top-value icon earned by pure skill, with a sign as the height marker.",
+   "evidence": "VG; LP2 0:43:50–0:43:52; PS12 (High Sticker)",
+   "confidence": "high"
+  },
+  {
+   "id": "K6",
+   "type": "cash",
+   "label": "Cash icon $100",
+   "value": "$100",
+   "version": "original",
+   "zone": "Z3",
+   "landmark": "over the railing at the top of the bridge kicker (NE)",
+   "layer": "elevated railing",
+   "heightM": "≈ 3–5 above the floor (estimate)",
+   "launchFrom": "kicker under the bridge",
+   "visibility": {
+    "firstSight": "under the bridge",
+    "fromSpawn": "unknown",
+    "reads": "floating banknote icon ($100)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe under the bridge",
+     "to": "speed",
+     "geometry": "use the quarterpipe for speed (PS12)"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "kicker ramp",
+     "to": "air",
+     "geometry": "air up off the kicker"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "air",
+     "to": "railing at the top",
+     "geometry": "land in a grind: Big Air Railing Grind; “100 bucks!” (0:45:15–0:45:16)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "kicker",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "kicker air into a railing grind"
+   ],
+   "coupling": "none",
+   "failure": "A miss drops you to the floor under the bridge; retry.",
+   "timeFromSpawnS": "≈ 56 (LP2 heat 2, 0:45:15)",
+   "difficulty": 3,
+   "difficultyWhy": "speed + kicker + precise grind landing",
+   "roles": [
+    "TEST"
+   ],
+   "why": "An elevated railing pays for a kicker-to-grind line.",
+   "evidence": "VG; LP2 0:45:15–0:45:18; PS12",
+   "confidence": "high"
+  },
+  {
+   "id": "K7",
+   "type": "cash",
+   "label": "Cash icon $100",
+   "value": "$100",
+   "version": "original",
+   "zone": "Z5",
+   "landmark": "at the wave wall’s top lip (near Ride the Wave)",
+   "layer": "air at the top of a huge quarterpipe",
+   "heightM": "≈ near the top of the huge quarterpipe (estimate)",
+   "launchFrom": "huge quarterpipe face",
+   "visibility": {
+    "firstSight": "straight ahead of spawn",
+    "fromSpawn": true,
+    "reads": "floating banknote icon ($100)",
+    "distanceFromFirstSightM": "≈ 20–30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "roll-in",
+     "to": "hall floor",
+     "geometry": "drop in and head straight for the wave wall"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "wave wall",
+     "to": "top lip",
+     "geometry": "air or lip at its highest point; “100 bucks!” beside the tall wooden wall (0:44:27)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "lip"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "big vert air on a huge quarterpipe"
+   ],
+   "coupling": "none",
+   "failure": "A short air rolls back down the wave; immediate retry.",
+   "timeFromSpawnS": "≈ 8 (LP2 heat 2, 0:44:27; assignment to this icon is inferred)",
+   "difficulty": 2,
+   "difficultyWhy": "straight line from spawn to a big ramp",
+   "roles": [
+    "TEASE",
+    "TEST"
+   ],
+   "why": "The biggest structure, ahead of spawn, carries an early icon that draws you up the wave toward the rail key.",
+   "evidence": "VG; LP2 0:44:20–0:44:28",
+   "confidence": "medium"
+  },
+  {
+   "id": "K8",
+   "type": "cash",
+   "label": "Cash icon $50",
+   "value": "$50",
+   "version": "original",
+   "zone": "Z4",
+   "landmark": "by the stair set at the elevated shop deck (E)",
+   "layer": "raised deck edge",
+   "heightM": "unknown",
+   "launchFrom": "east-wall quarterpipe (inferred)",
+   "visibility": {
+    "firstSight": "from the east side",
+    "fromSpawn": "unknown",
+    "reads": "floating banknote icon ($50)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "east-wall quarterpipe",
+     "to": "shop deck edge",
+     "geometry": "air up toward the stair set; “50 bucks” (0:45:42–0:45:43); route inferred"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss lands on the floor below the deck.",
+   "timeFromSpawnS": "≈ 6 (LP2 heat 3, 0:45:42)",
+   "difficulty": 2,
+   "difficultyWhy": "short air near spawn",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "A low-value icon that pulls you to the east side.",
+   "evidence": "VG; LP2 0:45:41–0:45:43",
+   "confidence": "low (route)"
+  },
+  {
+   "id": "VV",
+   "type": "vv-logo",
+   "label": "Vicarious Visions logo",
+   "version": "remake",
+   "zone": "Z7",
+   "landmark": "above the small quarterpipe in the right corner of the van yard",
+   "layer": "secret area (air above a quarterpipe)",
+   "heightM": "unknown",
+   "launchFrom": "small corner quarterpipe in the van yard",
+   "visibility": {
+    "firstSight": "inside the van yard only",
+    "fromSpawn": false,
+    "reads": "double-V logo over the quarterpipe (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "curved yellow rail behind you",
+     "geometry": "turn around at the start (PS12)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "curved yellow rail",
+     "to": "its far end",
+     "geometry": "grind it all the way: Van Secret Area Key; the door to the van yard (W) opens"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "hall",
+     "to": "van yard",
+     "geometry": "through the opened door"
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "small corner quarterpipe (right)",
+     "to": "logo",
+     "geometry": "ollie up to the logo"
+    }
+   ],
+   "moves": [
+    "grind",
+    "unlock",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "van key"
+   ],
+   "coupling": "needs the van key",
+   "failure": "A low air misses; retry at once.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "easy once the key is known",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The remake hides its logo behind the original’s easy key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "PLUSH",
+   "type": "alien-plushie",
+   "label": "Alien plushie",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "on top of the skinny right-hand wall in the rail yard",
+   "layer": "top of a narrow wall",
+   "heightM": "unknown",
+   "launchFrom": "right-hand quarterpipe in the rail yard",
+   "visibility": {
+    "firstSight": "only once standing on the wall (you must turn around)",
+    "fromSpawn": false,
+    "reads": "plush toy on the wall top (PS12)",
+    "distanceFromFirstSightM": "≈ 0–5"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall",
+     "to": "huge quarterpipe (wave wall)",
+     "geometry": "ride up the wave wall ahead of the start"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "wave-wall top",
+     "to": "wave-wall top, heading left",
+     "geometry": "land in a grind on the top and go left (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "wave-wall top",
+     "to": "hanging rail",
+     "geometry": "ollie off into a grind on the hanging rail: Wave Wall Minigap + Rail Secret Area Key; a door to the outside opens (LP2 0:45:57–0:45:59)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "hall",
+     "to": "rail yard",
+     "geometry": "go out to the rail yard"
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "right-hand quarterpipe",
+     "to": "skinny right wall",
+     "geometry": "get up to the wall and grind it"
+    },
+    {
+     "step": 6,
+     "move": "ollie",
+     "from": "wall grind",
+     "to": "wall top",
+     "geometry": "ollie out of the grind to land on top; turn around: the plushie"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "unlock",
+    "vert-air",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "rail key",
+    "grind a skinny wall and ollie onto its top"
+   ],
+   "coupling": "needs the rail key",
+   "failure": "Falling off the wall drops you into the yard; climb again.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 4,
+   "difficultyWhy": "hard key, then a precise perch on a narrow wall",
+   "roles": [
+    "SECRET-AREA",
+    "TEST"
+   ],
+   "why": "The remake hides its hardest pickup behind the original’s hard key, on a narrow perch facing away from the approach.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V1",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "above a quarterpipe beyond the large pool",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe straight ahead",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "spawn",
+     "to": "large pool",
+     "geometry": "go down the ramp, turn around to the right, up another slope to the large pool"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "quarterpipe straight ahead",
+     "to": "icon",
+     "geometry": "vert air"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V2",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "between two quarterpipes in the rail yard, on the right",
+   "layer": "air between two quarterpipes",
+   "heightM": "unknown",
+   "launchFrom": "one quarterpipe",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall",
+     "to": "huge quarterpipe (wave wall)",
+     "geometry": "ride up the wave wall ahead of the start"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "wave-wall top",
+     "to": "wave-wall top, heading left",
+     "geometry": "land in a grind on the top and go left (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "wave-wall top",
+     "to": "hanging rail",
+     "geometry": "ollie off into a grind on the hanging rail: Wave Wall Minigap + Rail Secret Area Key; a door to the outside opens (LP2 0:45:57–0:45:59)"
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "one quarterpipe",
+     "to": "the other",
+     "geometry": "transfer between the two quarterpipes"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "needs the rail key",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S1",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z3",
+   "landmark": "above the quarterpipe against the wall under the bridge",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe against the wall",
+   "visibility": {
+    "firstSight": "PS12: “go to the left and under the bridge”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe against the wall",
+     "to": "icon",
+     "geometry": "ollie up it"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S2",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z5",
+   "landmark": "above the yellow rail at the end of the huge quarterpipe",
+   "layer": "rail",
+   "heightM": "unknown",
+   "launchFrom": "lip",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "huge quarterpipe lip",
+     "to": "lip, heading right",
+     "geometry": "grind the lip to the right"
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "lip",
+     "to": "yellow rail",
+     "geometry": "jump and grind the yellow rail (Surfin U.S.A.)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P1",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "above the curved yellow rail behind spawn (the van key rail)",
+   "layer": "rail",
+   "heightM": "unknown",
+   "launchFrom": "curved yellow rail",
+   "visibility": {
+    "firstSight": "PS12: “turn around immediately at the start”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "curved yellow rail",
+     "to": "icon",
+     "geometry": "grind the rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P2",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "beside the thin wall in the rail yard",
+   "layer": "thin wall",
+   "heightM": "unknown",
+   "launchFrom": "right-hand quarterpipe",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "hall",
+     "to": "huge quarterpipe (wave wall)",
+     "geometry": "ride up the wave wall ahead of the start"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "wave-wall top",
+     "to": "wave-wall top, heading left",
+     "geometry": "land in a grind on the top and go left (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "wave-wall top",
+     "to": "hanging rail",
+     "geometry": "ollie off into a grind on the hanging rail: Wave Wall Minigap + Rail Secret Area Key; a door to the outside opens (LP2 0:45:57–0:45:59)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "right-hand quarterpipe",
+     "to": "thin wall",
+     "geometry": "ollie up and grind the thin wall, then drop down onto the icon"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "needs the rail key",
+   "failure": "A miss drops you onto the plywood; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup; two of the six sit behind the rail key.",
+   "evidence": "PS12 skatestreet",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Van Secret Area Key",
+   "points": 100,
+   "kind": "other",
+   "location": "grind the curved yellow rail behind spawn all the way",
+   "moves": [
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K1",
+    "K2",
+    "VV",
+    "SP-P1"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:11"
+  },
+  {
+   "name": "Rail Secret Area Key",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "wave-wall top (grind left) → hanging rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K3",
+    "K4",
+    "PLUSH",
+    "SP-V2",
+    "SP-P2"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:58"
+  },
+  {
+   "name": "Wave Wall Minigap",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "wave-wall top → hanging rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K3",
+    "K4",
+    "PLUSH"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:57"
+  },
+  {
+   "name": "Surfin U.S.A.",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "wave-wall top (grind right) → yellow rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "SP-S2"
+   ],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Ride The Wave",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip trick at the highest point of the huge quarterpipe",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K7"
+   ],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Railing Hop",
+   "points": 50,
+   "kind": "over-object",
+   "location": "on the huge quarterpipe, over the small railing on the left",
+   "moves": [
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "High Sticker",
+   "points": 100,
+   "kind": "hangtime",
+   "location": "NW corner quarterpipe against the wall, as high as possible",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K5"
+   ],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Gully Lip",
+   "points": 100,
+   "kind": "lip",
+   "location": "low halfpipe left of the pool",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Rail To Rail",
+   "points": 50,
+   "kind": "rail-transfer",
+   "location": "black rail ↔ the low wall beside it",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Cut The Corner",
+   "points": 100,
+   "kind": "other",
+   "location": "Element deck: higher ramp → over to the outer edge",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Hexbox Gap",
+   "points": 150,
+   "kind": "over-object",
+   "location": "across the hexagonal funbox",
+   "moves": [
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Funbox Wheelie",
+   "points": 100,
+   "kind": "manual",
+   "location": "manual up and over the hex funbox",
+   "moves": [
+    "manual"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG (green label); PS12"
+  },
+  {
+   "name": "Over The Deck",
+   "points": 100,
+   "kind": "over-object",
+   "location": "shallow ramp over the steps of the wide deck",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "HP To Railbox",
+   "points": 100,
+   "kind": "other",
+   "location": "out of the big halfpipe onto the low deck’s ledge",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "High Jumper",
+   "points": 250,
+   "kind": "over-object",
+   "location": "small ramp in front of the big halfpipe, over the curved rail",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "HP Lip",
+   "points": 100,
+   "kind": "lip",
+   "location": "big halfpipe",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "HP To Bowl",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "big halfpipe → pool",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Bowl To HP",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "pool → big halfpipe",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Nail The Rail",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "pool → grind the halfpipe lip",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Bowl Envy",
+   "points": 100,
+   "kind": "lip",
+   "location": "lip trick on the Birdhouse sign in the pool",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Bowl Lip",
+   "points": 100,
+   "kind": "lip",
+   "location": "pool next to the big halfpipe",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Extension Transfer",
+   "points": 100,
+   "kind": "ledge-to-ledge",
+   "location": "grind the Birdhouse sign, drop and grind the pool rim",
+   "moves": [
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Circle The Pool",
+   "points": 500,
+   "kind": "other",
+   "location": "grind the entire pool rim",
+   "moves": [
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Bullet Bowl Hop",
+   "points": 100,
+   "kind": "pool-transfer",
+   "location": "down the start slope, U-turn right, ramp into the pool",
+   "moves": [
+    "kicker",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "No Kidding Around",
+   "points": 150,
+   "kind": "other",
+   "location": "big halfpipe → the elevated tables area",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Sodee Pop Gap",
+   "points": 100,
+   "kind": "wallride",
+   "location": "wallride the vending-machine wall back over to the halfpipe",
+   "moves": [
+    "wallride"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Big Air Railing Grind",
+   "points": 100,
+   "kind": "kicker",
+   "location": "kicker under the bridge → railing at the top",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K6"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:15"
+  },
+  {
+   "name": "Over The Bridge",
+   "points": 50,
+   "kind": "over-object",
+   "location": "kicker → right over the bridge",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Stairset",
+   "points": 150,
+   "kind": "over-object",
+   "location": "down the stairs next to the shop",
+   "moves": [
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Over The Wall",
+   "points": 10,
+   "kind": "spine",
+   "location": "over the low brick wall between two quarterpipes",
+   "moves": [
+    "vert-air",
+    "spine-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12; LP2 0:43:37"
+  },
+  {
+   "name": "Gimmie Gap Redux",
+   "points": 100,
+   "kind": "other",
+   "location": "small halfpipe: air out of the side not against the wall",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Mr. Small Lips",
+   "points": 100,
+   "kind": "lip",
+   "location": "low wide halfpipe",
+   "moves": [
+    "lip"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Havin A Picnic",
+   "points": 100,
+   "kind": "rail-transfer",
+   "location": "van yard: bench to bench",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Skatin On The Dock Of The Bay",
+   "points": 100,
+   "kind": "other",
+   "location": "van yard: grind the whole top of the long quarterpipe down the slope",
+   "moves": [
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Daaaaay Tripper",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "van yard: ollie over the camper van",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K2"
+   ],
+   "evidence": "VG; PS12; LP2 0:46:35"
+  },
+  {
+   "name": "Shoot The Gap",
+   "points": 100,
+   "kind": "secret-area",
+   "location": "rail yard: transfer between the two back-wall quarterpipes",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "K4",
+    "SP-V2"
+   ],
+   "evidence": "VG; PS12; LP2 0:46:16"
+  },
+  {
+   "name": "Over The HP",
+   "points": 150,
+   "kind": "over-object",
+   "location": "from the elevated tables area, over the big halfpipe (needs near-full stats)",
+   "moves": [
+    "ollie",
+    "vert-air"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Funbox Slap",
+   "points": 100,
+   "kind": "over-object",
+   "location": "rail yard: across the funbox",
+   "moves": [
+    "ollie"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Over The Barrier",
+   "points": 250,
+   "kind": "over-object",
+   "location": "rail yard: right-hand quarterpipe up and over the skinny wall",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "remake",
+   "onRouteOf": [
+    "PLUSH",
+    "SP-P2"
+   ],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Grind the curved yellow rail behind spawn all the way (Van Secret Area Key)",
+   "opens": "the door to the outdoor van yard (W)",
+   "neededFor": [
+    "K2",
+    "VV"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:10–0:45:11"
+  },
+  {
+   "trigger": "Grind the wave-wall top to the left and ollie onto the hanging rail (Rail Secret Area Key)",
+   "opens": "a door to the outdoor rail yard (S)",
+   "neededFor": [
+    "K4",
+    "PLUSH",
+    "SP-V2",
+    "SP-P2"
+   ],
+   "evidence": "VG; PS12; LP2 0:45:57–0:46:03"
+  },
+  {
+   "trigger": "Doors stay open across heats",
+   "opens": "LP2 opens the van door in heat 2 and uses it in heat 3 without re-grinding; PS12: “You only need to do this once”",
+   "neededFor": [
+    "K2"
+   ],
+   "evidence": "LP2 0:45:11, 0:46:30–0:46:35; PS12"
+  },
+  {
+   "trigger": "Collect the 8th cash icon",
+   "opens": "“Cash icons cleared” message; counts toward 100%",
+   "neededFor": [],
+   "evidence": "LP2 0:46:35"
+  },
+  {
+   "trigger": "Medal",
+   "opens": "a new level: The Bullring, Mexico",
+   "neededFor": [],
+   "evidence": "LP2 0:46:50 “Congratulations, you opened a new level”"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Drop to the wave wall",
+   "sequence": [
+    "roll-in",
+    "straight across the floor",
+    "big air on the wave wall"
+   ],
+   "links": [
+    "transfer",
+    "vert-air"
+   ],
+   "collectibles": [
+    "K7"
+   ],
+   "why": "The opening line points at the biggest structure and its early icon.",
+   "evidence": "LP2 0:44:20–0:44:28"
+  },
+  {
+   "id": "L2",
+   "name": "Manual-linked hall line",
+   "sequence": [
+    "wallride",
+    "special crooked grind",
+    "manual",
+    "360 varial heelflip + stalefish",
+    "FS lipslide",
+    "FS 50-50",
+    "manual",
+    "darkslide",
+    "Over the Wall"
+   ],
+   "links": [
+    "wallride",
+    "manual",
+    "grind",
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "Dense plywood lets manuals chain every element (× 11 multiplier, ≈ 200,000 points in LP2).",
+   "evidence": "LP2 0:43:25–0:43:37; 0:44:41–0:44:58"
+  },
+  {
+   "id": "L3",
+   "name": "Van key to the van yard",
+   "sequence": [
+    "turn around",
+    "grind the curved yellow rail (key)",
+    "W door",
+    "launch ramp",
+    "over the van"
+   ],
+   "links": [
+    "grind",
+    "kicker"
+   ],
+   "collectibles": [
+    "K1",
+    "K2",
+    "VV",
+    "SP-P1"
+   ],
+   "why": "Easy lock, themed reward yard.",
+   "evidence": "LP2 0:45:10–0:46:36; PS12"
+  },
+  {
+   "id": "L4",
+   "name": "Wave wall to the rail yard",
+   "sequence": [
+    "up the wave wall",
+    "grind its top left",
+    "hanging rail (key)",
+    "S door",
+    "Shoot the Gap transfer"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer",
+    "transfer"
+   ],
+   "collectibles": [
+    "K3",
+    "K4",
+    "PLUSH",
+    "SP-V2",
+    "SP-P2"
+   ],
+   "why": "Hard lock, top-value reward.",
+   "evidence": "LP2 0:45:57–0:46:17; PS12"
+  },
+  {
+   "id": "L5",
+   "name": "Pool circuit",
+   "sequence": [
+    "Bullet Bowl Hop in",
+    "Bowl Envy / Bowl Lip",
+    "Extension Transfer",
+    "Circle the Pool",
+    "Bowl to HP / Nail the Rail"
+   ],
+   "links": [
+    "grind",
+    "lip",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "Bowl–halfpipe pair with eight small gaps.",
+   "evidence": "VG; PS12"
+  },
+  {
+   "id": "L6",
+   "name": "Bridge kicker to the railing",
+   "sequence": [
+    "quarterpipe under the bridge",
+    "kicker",
+    "railing grind at the top"
+   ],
+   "links": [
+    "kicker",
+    "grind"
+   ],
+   "collectibles": [
+    "K6",
+    "SP-S1"
+   ],
+   "why": "Street air into an elevated grind.",
+   "evidence": "LP2 0:45:15; PS12"
+  },
+  {
+   "id": "L7",
+   "name": "High Sticker corner",
+   "sequence": [
+    "pump the west hall",
+    "NW corner quarterpipe",
+    "maximum air"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [
+    "K5"
+   ],
+   "why": "Height test under a sign.",
+   "evidence": "LP2 0:43:50–0:43:52"
+  },
+  {
+   "id": "L8",
+   "name": "Van yard session",
+   "sequence": [
+    "Havin a Picnic benches",
+    "Skatin on the Dock of the Bay quarterpipe grind",
+    "Daaaaay Tripper over the van"
+   ],
+   "links": [
+    "grind",
+    "kicker"
+   ],
+   "collectibles": [
+    "K2"
+   ],
+   "why": "Each yard object is one gap.",
+   "evidence": "VG; PS12"
+  }
+ ],
+ "guidance": [
+  "The roll-in points at the wave wall, the hall’s biggest structure, which also holds two icons and the rail key.",
+  "The “Skate Street Ventura” sign sits above the NW corner quarterpipe and marks the High Sticker icon’s height (LP2 0:43:51).",
+  "Keys announce themselves after the fact: “Van Secret Area Key” and “Rail Secret Area Key” appear in the trick string when you grind the right rail (LP2 0:45:11, 0:45:58).",
+  "Opened doors show daylight and trees, which contrast with the dark indoor hall (LP2 0:46:03, 0:46:31).",
+  "Cash pickups print “50 bucks”, “100 bucks!” or “250 bucks!!!”; the last one prints “Cash icons cleared” (LP2).",
+  "Hidden on purpose: both key rails look like ordinary rails, and nothing in the hall says which one is a key."
+ ],
+ "designLogic": [
+  "An indoor plywood park packed tight enough for manual linking. LP2’s heats chain wallride → crooked grind → manuals → quarterpipe airs → lipslides into × 11 combos, which teaches THPS2’s new verb.",
+  "Two locked outdoor yards, each opened by grinding a specific rail. “Grind X to open Y” is the lock grammar, and the key is itself a named gap.",
+  "Locks are graded and placed at opposite ends: the easy key sits right behind spawn, the hard key on the biggest structure (wave-wall top → hanging rail).",
+  "Keys persist across heats (LP2 opens the van door in heat 2 and uses it in heat 3), so an unlock is progress you keep. One heat can unlock, another can loot.",
+  "Each key carries an icon ($50 on the easy key, $100 over the hard key). The lock teaches itself and pays a deposit up front.",
+  "The two $250 icons show the two routes to value: pure skill (High Sticker, maximum vert under a sign) and exploration (Shoot the Gap, behind the hard lock).",
+  "The icons tour every zone: two yards, two key routes, and four in the main hall (corner, bridge, wave, east stairs).",
+  "Reward yards are themed content: the van yard adds a van, benches and a slope quarterpipe, which means three new gaps plus an icon.",
+  "Completion feedback is explicit: “Cash icons cleared” on the last pickup.",
+  "Gap values are low and jokey (Over the Wall 10, Rail Secret Area Key 50). In this park, gaps name the lines and score comes from combos.",
+  "The wave wall is the hub landmark: Surfin U.S.A., Wave Wall Minigap, Ride the Wave, Railing Hop, the rail key and two icons.",
+  "The remake hides both of its secret collectibles behind the original’s locks (logo in the van yard, plushie on the rail yard’s skinny wall), so the old keys gain new value.",
+  "Failure is cheap: falls land on plywood, and the yards are dead ends a few seconds from the hall. LP2 still took gold while spending heat 3 on yards and keys."
+ ],
+ "remakeChanges": [
+  "Cash icons: PS12 lists none; the remake’s collectibles are 2 stat points per style, the VV logo (van yard) and the alien plushie (rail yard); LP12’s panel shows “Stat Points 0/2”.",
+  "Both keys are kept, with the same rails (PS12).",
+  "New gaps: Over The HP (needs near-full stats), Funbox Slap and Over The Barrier (both in the rail yard).",
+  "Two stat points per style are placed behind the rail key (vert and park).",
+  "LP12’s run ends “You win the silver!” (1:04:49): the remake’s judging is not trivial."
+ ],
+ "transfer": [
+  "Key rail behind spawn: a trick rail directly behind the spawn camera opens a side yard. The crystal floats above a parked van in the yard and is reached from a launch ramp. Set the van height so a flat ollie (≈ 1.78 m) cannot clear it, but the ramp can.",
+  "Wave wall → hanging rail: grind the top of a huge quarterpipe and grind-ollie (≈ 2.4 m pop) onto a hanging rail that opens a back-door yard. The crystal floats over the gap between two quarterpipes on the yard’s back wall and is collected by a transfer.",
+  "High sticker: the crystal sits at the maximum pumped vert height above a corner quarterpipe, with a sign or banner above as the height marker. A miss costs one circuit.",
+  "Persistent locks: if this game restarts runs, keep opened trick gates open, so a crystal attempt never has to repeat the unlock.",
+  "Skinny-wall perch: the crystal on top of a narrow wall in a yard, reached by grinding the wall from a quarterpipe and ollieing out onto its top. Face the crystal away from the approach so the player must turn round (as the remake’s plushie does)."
+ ],
+ "openQuestions": [
+  "Which LP2 pickup is K3 (hanging rail) and which K7 (wave lip)? The “100 bucks!” captions at 0:43:44 (heat 1) and 0:44:27 (heat 2) are both near the wave wall.",
+  "The route to K8 (east stairs, $50) is inferred from VG and one LP2 caption.",
+  "PS12 says “turn left at the starting point and go under the bridge”, but VG places the bridge NE of START. The spawn camera direction needs confirming.",
+  "Are the yard doors visible as closed doors before the keys, or hidden?",
+  "The footprint has no measured scale object."
+ ]
+}

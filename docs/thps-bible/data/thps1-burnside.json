@@ -1,0 +1,1069 @@
+{
+ "id": "thps1-burnside",
+ "game": "THPS1",
+ "level": "Burnside",
+ "location": "Portland, Oregon (under the Burnside Bridge)",
+ "type": "competition",
+ "careerPosition": 7,
+ "timeLimit": "1:00 per heat; three heats, best two count",
+ "versions": [
+  "PS1 1999 (VG map, G1 guide, LP1)",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020 (PS12, LP12)"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Burnside.png",
+  "G1 p111–p114 (scan index; printed pp. 110–113)",
+  "LP1 0:19:40–0:22:49",
+  "TAS1 4:00–4:18",
+  "PS12 burnside (pushsquare.com …-burnside-all-gaps-and-collectibles)",
+  "LP12 0:27:05–0:29:20"
+ ],
+ "competition": {
+  "name": "Competition #2: Asphalt Annihilation (Burnside Skatepark)",
+  "rules": "Three heats per skater; best two heats count; runs judged on style, difficulty and variety; points deducted for falling; bronze, silver and gold medals",
+  "evidence": "VG legend; LP1 0:19:40 loading card"
+ },
+ "goals": [
+  {
+   "text": "Competition #2 Asphalt Annihilation: three heats per skater, best two count, judged on style, difficulty and variety, points off for falling; bronze, silver, gold",
+   "version": "original",
+   "evidence": "VG; LP1 0:19:40"
+  },
+  {
+   "text": "Competition Park: a medal for a top-3 finish; the average of your top two runs is your final score",
+   "version": "remake",
+   "evidence": "LP12 level panel (read on THPS2 parks; inferred for this park)"
+  },
+  {
+   "text": "At least bronze to unlock Streets; collectibles: 2 stat points per style, Vicarious Visions logo, alien plushie",
+   "version": "remake",
+   "evidence": "PS12 burnside"
+  }
+ ],
+ "size": {
+  "class": "medium",
+  "footprint": "≈ 80–110 × 45–60 m of skateable concrete (low confidence)",
+  "evidence": "VG render scaled by a parked pickup outside the fence (≈ 5 m ≈ 100 px, ≈ 20 px/m); isometric depth makes the short axis uncertain"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start deck and bridge-pillar corner (SE)",
+   "layer": "deck",
+   "features": [
+    "START on a raised deck beside a bridge pillar",
+    "funbox with orange graffiti (launch for the girder)",
+    "ZERO skull sign, chain-link fence, AXION banners on the pillars (LP1)"
+   ],
+   "notes": "The deck you start on is also the “obstacle you started the level from” that the Triple Rail line can finish on (G1 p111)."
+  },
+  {
+   "id": "Z2",
+   "name": "Eye pool (N centre)",
+   "layer": "bowl",
+   "features": [
+    "deep round bowl painted as a giant eyeball",
+    "graffiti vert wall with a drain grate on its W side"
+   ],
+   "notes": "Over Da Pool (clear it), Vert Wall Gap (pool → vert wall), remake Something in da Eye (lip)."
+  },
+  {
+   "id": "Z3",
+   "name": "Spine ridge and central flat",
+   "layer": "ground",
+   "features": [
+    "Y-shaped raised concrete spine running from the eye pool toward the bridge",
+    "open flat between the bowls"
+   ],
+   "notes": "The spine between the pool and the U-quarterpipe carries two Transfer bonuses (G1 p112); the “hip” Tony names as his favourite spot."
+  },
+  {
+   "id": "Z4",
+   "name": "U-shaped quarterpipe bowl and barrier deck (NE/E)",
+   "layer": "bowl + deck",
+   "features": [
+    "U-shaped quarterpipe bowl with graffiti walls",
+    "deck above the quarterpipe with three cement barriers (“flip” ads)"
+   ],
+   "notes": "Triple Rail; the U-quarterpipe lip-grind circuit."
+  },
+  {
+   "id": "Z5",
+   "name": "6-foot pool and twinkie (SW/W)",
+   "layer": "bowl",
+   "features": [
+    "rectangular pool, the one “furthest from you” at the start",
+    "the twinkie: a small white bump used as a hip"
+   ],
+   "notes": "Transfer (in/out), Twinkie Transfer; speed comes from the quarterpipe “by the semis” (G1 p114)."
+  },
+  {
+   "id": "Z6",
+   "name": "Bridge pillars, girders and struts (overhead)",
+   "layer": "overhead",
+   "features": [
+    "three or four massive concrete pillars with crossbeams carrying the Burnside Bridge",
+    "girders with vertical struts above them",
+    "small white quarterpipe beside a support (remake)"
+   ],
+   "notes": "Bridge Grind (land on the girder), Bridge Gap (through the struts without touching), remake Lippn’ The Bridge and VV logo."
+  },
+  {
+   "id": "Z7",
+   "name": "Tall quarterpipe wall and tiered ledges",
+   "layer": "vert + ledges",
+   "features": [
+    "the “quarterpipe wall that will launch you extremely high”",
+    "three tiers of ledges: long yellow-black ledge along the back wall, a lower yellow-black ledge on the right, an unmarked top ledge above and behind, broken away in two spots"
+   ],
+   "notes": "G1 p112. The exact wall segment is not resolved on VG; the remake’s koi-fish quarterpipe with two ledges (Top/Bottom Shelf Lip) is the same idea."
+  }
+ ],
+ "landmarks": [
+  "giant eyeball painted in the round pool",
+  "Burnside Bridge deck and pillars overhead",
+  "yellow-black painted coping on every edge",
+  "ZERO skull sign by the start",
+  "port-a-potties and the street outside the fence"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "out under the bridge at first (LP1 camera), then down into the bowls; PS12 puts the eyeball pool to the right and the white quarterpipe and bridge supports to the left",
+  "visibleCollectibles": [
+   "original: none exist",
+   "remake: SP-V1 (“head straight forward and into the pool”) and SP-P1 (white quarterpipe “to the left”) are described as near spawn; visibility not confirmed"
+  ],
+  "notes": "LP1 heat 1: the drop reaches the eye pool in ≈ 6 s (0:19:52 → 0:19:58, 360 Finger Flip). TAS1 heat 1 opens with a crooked grind, a wallride in the eye pool and a 4750 × 4 combo, then ends the heat (4:03–4:06)."
+ },
+ "collectibles": [
+  {
+   "id": "VV",
+   "type": "vv-logo",
+   "label": "Vicarious Visions logo",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "inside the bridge support (between the struts)",
+   "layer": "overhead (inside the support)",
+   "heightM": "unknown; at girder level, reachable by a big air from a quarterpipe",
+   "launchFrom": "the inner quarterpipe left of spawn (or the eyeball pool)",
+   "visibility": {
+    "firstSight": "not filmed",
+    "fromSpawn": "unknown",
+    "reads": "double-V logo inside the support’s opening (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "spawn (turn left)",
+     "to": "quarterpipes",
+     "geometry": "build momentum on the quarterpipes"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "inner quarterpipe",
+     "to": "bridge support opening",
+     "geometry": "ramp off the inner quarterpipe toward the logo inside the support (PS12)"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "eyeball pool (alternative)",
+     "to": "bridge support opening",
+     "geometry": "PS12: it can also be reached from the eyeball pool"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "aimed air out of a quarterpipe through a narrow opening"
+   ],
+   "coupling": "none",
+   "failure": "A miss hits the support or falls short onto the flat; no reset, retry from the quarterpipe.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "one aimed air with speed; the target window is narrow but the approach is short",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The original’s Bridge Gap asks you to pass over the girder and through the struts without touching. The remake turns that threading window into the hiding place.",
+   "evidence": "PS12 burnside; G1 p114 (Bridge Gap)",
+   "confidence": "medium"
+  },
+  {
+   "id": "PLUSH",
+   "type": "alien-plushie",
+   "label": "Alien plushie",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "top of a small white quarterpipe next to a bridge support, left of spawn",
+   "layer": "ramp deck",
+   "heightM": "unknown (a small quarterpipe; low)",
+   "launchFrom": "flat beside the bridge supports",
+   "visibility": {
+    "firstSight": "not filmed",
+    "fromSpawn": "unknown",
+    "reads": "plush toy sitting on the quarterpipe’s deck (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "left of the bridge supports",
+     "geometry": "head left past the supports"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "small white quarterpipe",
+     "to": "its deck",
+     "geometry": "air or ride up onto the top; the plushie sits on it"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "Roll back down the quarterpipe and try again.",
+   "timeFromSpawnS": "unknown (close to spawn)",
+   "difficulty": 1,
+   "difficultyWhy": "near spawn, low, one ramp",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "A low, near-spawn look-around secret that sits under the high one (the logo in the support above).",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V1",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z5",
+   "landmark": "above the pool straight ahead of spawn",
+   "layer": "air above a bowl",
+   "heightM": "unknown",
+   "launchFrom": "pool ahead of spawn",
+   "visibility": {
+    "firstSight": "PS12: “head straight forward and into the pool”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "pool ahead of spawn",
+     "to": "icon",
+     "geometry": "air out of the pool"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V2",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "above the quarterpipe to the left of spawn",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe left of spawn",
+   "visibility": {
+    "firstSight": "PS12: “turn left”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe left of spawn",
+     "to": "icon",
+     "geometry": "vert air"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S1",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "over the high ledge beside the eyeball pool",
+   "layer": "air above a ledge",
+   "heightM": "unknown",
+   "launchFrom": "eyeball pool",
+   "visibility": {
+    "firstSight": "PS12: “head right into the eyeball pool”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "eyeball pool",
+     "to": "high ledge",
+     "geometry": "transfer over the high ledge (cf. Vert Wall Gap)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S2",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z4",
+   "landmark": "blue pool area to the right of spawn",
+   "layer": "air between quarterpipe and pool",
+   "heightM": "unknown",
+   "launchFrom": "high quarterpipe",
+   "visibility": {
+    "firstSight": "PS12: “head to the right to find the blue pool area”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "high quarterpipe",
+     "to": "pool",
+     "geometry": "transfer from the high quarterpipe over into the pool"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P1",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "above the white quarterpipe next to a bridge support, left of spawn",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "white quarterpipe",
+   "visibility": {
+    "firstSight": "PS12: “to the left when you start”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "white quarterpipe",
+     "to": "icon",
+     "geometry": "air above it"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P2",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z7",
+   "landmark": "higher of two ledges on the large blue quarterpipe, right of spawn",
+   "layer": "tiered ledge",
+   "heightM": "unknown",
+   "launchFrom": "ledge",
+   "visibility": {
+    "firstSight": "PS12: “turn right from the start”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "pool on the left of the large blue QP",
+     "to": "ledge",
+     "geometry": "air up to grind the ledge"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "ledge",
+     "to": "higher ledge",
+     "geometry": "hop onto the higher ledge and grind into the icon"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ledge"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the bowl or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 burnside",
+   "confidence": "medium"
+  }
+ ],
+ "signatureSpots": [
+  {
+   "id": "GIRDER",
+   "type": "signature-spot",
+   "label": "Bridge Grind / Bridge Gap (the girder under the bridge)",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "bridge girder with struts, beside the start funbox",
+   "layer": "overhead (girder)",
+   "heightM": "not measured; reachable by a charged ollie off the funbox (G1 p113)",
+   "launchFrom": "the funbox on the right after the big quarterpipe wall",
+   "visibility": {
+    "firstSight": "from spawn (the bridge structure is overhead from the first frame)",
+    "fromSpawn": true,
+    "reads": "grey girders between the pillars",
+    "distanceFromFirstSightM": "≈ 10–20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "big quarterpipe wall",
+     "to": "transition",
+     "geometry": "get speed off the big quarterpipe wall (G1 p113)"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "transition",
+     "to": "funbox on the right",
+     "geometry": "aim for the funbox and hold the ollie to charge it"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "funbox",
+     "to": "girder",
+     "geometry": "ollie and land in a grind on the girder edge: Bridge Grind 800"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "girder",
+     "to": "girder past each strut",
+     "geometry": "struts block the grind: ollie before each strut and keep the board straight"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "funbox (alternative)",
+     "to": "over the girder and through the struts",
+     "geometry": "biggest ollie you can, no wheel contact with the girder: Bridge Gap 1000; also possible in reverse from the quarterpipe on the other side, with no landing transition"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "kicker",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "charged ollie off a funbox",
+    "ollie-hops inside a grind"
+   ],
+   "coupling": "none",
+   "failure": "Falling off the girder drops you onto the flat or into the bowl; no reset. The reverse Bridge Gap has no landing transition, so a bail is likely.",
+   "timeFromSpawnS": "not filmed in LP1 or TAS1",
+   "difficulty": 4,
+   "difficultyWhy": "charged ollie plus rhythmic hops over struts; the clean gap needs threading",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The architecture of the real place (the bridge) becomes the top layer, and its struts turn a plain grind into a rhythm test.",
+   "evidence": "G1 p113–p114; VG labels",
+   "confidence": "high"
+  },
+  {
+   "id": "TIERS",
+   "type": "signature-spot",
+   "label": "Three-tier ledge descent",
+   "version": "original",
+   "zone": "Z7",
+   "landmark": "top unmarked ledge above and behind the main yellow-black ledge",
+   "layer": "ledges (three heights)",
+   "heightM": "not measured",
+   "launchFrom": "huge air from the tall quarterpipe wall",
+   "visibility": {
+    "firstSight": "not filmed",
+    "fromSpawn": "unknown",
+    "reads": "yellow-black painted ledges; the top one unpainted and broken in two places",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "tall quarterpipe wall",
+     "to": "top ledge",
+     "geometry": "huge air and land in a grind on the top, unmarked ledge"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "top ledge",
+     "to": "top ledge beyond the break",
+     "geometry": "ollie over the broken-away section"
+    },
+    {
+     "step": 3,
+     "move": "ledge",
+     "from": "top ledge",
+     "to": "main yellow-black ledge",
+     "geometry": "drop down to the long ledge on the back wall"
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "main ledge",
+     "to": "lower yellow-black ledge on the right",
+     "geometry": "ollie down again and grind the edge round and down the right side of the level"
+    },
+    {
+     "step": 5,
+     "move": "transfer",
+     "from": "ledge",
+     "to": "bowl or vert wall",
+     "geometry": "finish into the bowl, or reverse the line toward the pool and lip-grind the pool, then transfer out"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie",
+    "ledge",
+    "transfer"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "landing a grind from huge air",
+    "ollies inside a grind line"
+   ],
+   "coupling": "none",
+   "failure": "Each break or drop is a place to fall off; you land lower in the same line and can keep grinding.",
+   "timeFromSpawnS": "not filmed",
+   "difficulty": 4,
+   "difficultyWhy": "starts from the biggest air in the park and asks for several precise hops",
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "A staircase of ledges with deliberate breaks turns height into a long, descending combo; failure only drops you a tier.",
+   "evidence": "G1 p112",
+   "confidence": "medium (text only)"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Transfer",
+   "points": 200,
+   "kind": "pool-transfer",
+   "location": "into or out of the rectangular pool; or grind the inside then the outside ledge of the pool spine",
+   "moves": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p114 (A); PS12; VG"
+  },
+  {
+   "name": "Bridge Gap",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "off the funbox, over the bridge girder and through the struts without touching it",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "GIRDER",
+    "VV"
+   ],
+   "evidence": "G1 p114 (B); PS12; VG"
+  },
+  {
+   "name": "Vert Wall Gap",
+   "points": 700,
+   "kind": "spine",
+   "location": "eye pool lip → over the vert wall barrier (PS12: spine transfer to the tall quarterpipe)",
+   "moves": [
+    "vert-air",
+    "spine-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "SP-S1"
+   ],
+   "evidence": "G1 p114 (C); PS12; VG"
+  },
+  {
+   "name": "Twinkie Transfer",
+   "points": 700,
+   "kind": "pool-transfer",
+   "location": "off the twinkie hip into the 6-foot pool; speed from the quarterpipe by the semis",
+   "moves": [
+    "hip",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p114 (D); PS12; VG"
+  },
+  {
+   "name": "Over Da Pool",
+   "points": 800,
+   "kind": "over-object",
+   "location": "clear the eye pool from the tall quarterpipe",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p114 (E); PS12; VG"
+  },
+  {
+   "name": "Over da Pool Landing",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "as Over Da Pool, but further",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Triple Rail",
+   "points": 1000,
+   "kind": "ledge-to-ledge",
+   "location": "three cement barriers on the deck above the quarterpipe, left one first",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p111, p114 (F); PS12; VG; LP1 0:21:34–0:21:37"
+  },
+  {
+   "name": "Bridge Grind",
+   "points": 800,
+   "kind": "other",
+   "location": "grind the edge of the bridge girder (from the funbox)",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "GIRDER"
+   ],
+   "evidence": "G1 p113–p114 (G); PS12; VG"
+  },
+  {
+   "name": "Wall Gap",
+   "points": "unknown",
+   "kind": "other",
+   "location": "S wall between the 6-foot pool and the start area (VG label only)",
+   "moves": [
+    "unknown"
+   ],
+   "version": "PS1 (VG only)",
+   "onRouteOf": [],
+   "evidence": "VG"
+  },
+  {
+   "name": "Lippn’ The Bridge",
+   "points": 500,
+   "kind": "lip",
+   "location": "lip trick on the bridge support",
+   "moves": [
+    "lip"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Top Shelf Lip",
+   "points": 1000,
+   "kind": "lip",
+   "location": "upper ledge of the koi-fish quarterpipe",
+   "moves": [
+    "lip"
+   ],
+   "version": "remake",
+   "onRouteOf": [
+    "SP-P2"
+   ],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Bottom Shelf Lip",
+   "points": 500,
+   "kind": "lip",
+   "location": "koi-fish quarterpipe coping",
+   "moves": [
+    "lip"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Rollin’ The Hill",
+   "points": 500,
+   "kind": "manual",
+   "location": "manual over the small hump near the blue pool",
+   "moves": [
+    "manual"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Something in da Eye",
+   "points": 500,
+   "kind": "lip",
+   "location": "lip trick in the eyeball pool",
+   "moves": [
+    "lip"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Medal (bronze or better)",
+   "opens": "next career level, Streets (San Francisco)",
+   "neededFor": [],
+   "evidence": "PS12 burnside (remake); LP1 0:22:43 and TAS1 4:16 “Congratulations! Next stop San Francisco”"
+  },
+  {
+   "trigger": "none in the level",
+   "opens": "no doors, switches or breakables in the original",
+   "neededFor": [],
+   "evidence": "VG; G1 p111–p114"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Drop into the eye",
+   "sequence": [
+    "roll off the start deck past the pillar and the ZERO sign",
+    "red graffiti bowl wall",
+    "eye pool",
+    "360 Finger Flip / wallride in the pool"
+   ],
+   "links": [
+    "transfer",
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "The opening drop delivers you to the landmark bowl within seconds.",
+   "evidence": "LP1 0:19:49–0:19:58; TAS1 4:03–4:06"
+  },
+  {
+   "id": "L2",
+   "name": "Triple Rail",
+   "sequence": [
+    "trick on the small quarterpipe for speed",
+    "ollie from the ramp onto the first cement barrier",
+    "grind as it kinks left",
+    "trick to the second barrier",
+    "trick and spin to the third",
+    "Triple Rail",
+    "with speed: ollie back to the start obstacle and grind its edge"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [],
+   "why": "Rhythm line of three short grinds with a kink in the first; it ends where you started.",
+   "evidence": "G1 p111; LP1 0:21:34–0:21:37"
+  },
+  {
+   "id": "L3",
+   "name": "U-quarterpipe spine circuit",
+   "sequence": [
+    "barrier deck",
+    "ramp down",
+    "press up at the quarterpipe lip to clear another deck",
+    "lip-grind the U-shaped quarterpipe",
+    "ollie left onto the spine (Transfer)",
+    "continue counter-clockwise",
+    "right side of the spine (Transfer)",
+    "ollie into the pool near the large wall (Transfer)"
+   ],
+   "links": [
+    "grind",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "Three Transfer bonuses from one circuit; G1 quotes 20,000+ per run.",
+   "evidence": "G1 p112"
+  },
+  {
+   "id": "L4",
+   "name": "Three-tier ledges",
+   "sequence": [
+    "huge air from the tall quarterpipe wall",
+    "top unmarked ledge",
+    "ollie the breaks",
+    "main yellow-black ledge",
+    "lower ledge on the right",
+    "grind round the right side",
+    "bowl or vert wall"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "TIERS"
+   ],
+   "why": "A height-to-length conversion: the biggest air becomes the longest grind.",
+   "evidence": "G1 p112"
+  },
+  {
+   "id": "L5",
+   "name": "Bowl 720s and the vert wall",
+   "sequence": [
+    "720 grabs and specials in the bowl",
+    "grind its whole lip",
+    "exit and clear the vert wall (Vert Wall Gap)"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "spine-transfer"
+   ],
+   "collectibles": [],
+   "why": "Vert session spot with a transfer exit.",
+   "evidence": "G1 p113–p114"
+  },
+  {
+   "id": "L6",
+   "name": "Bridge girder",
+   "sequence": [
+    "big quarterpipe wall for speed",
+    "funbox on the right with a charged ollie",
+    "Bridge Grind",
+    "ollie each strut"
+   ],
+   "links": [
+    "kicker",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "GIRDER",
+    "VV"
+   ],
+   "why": "Overhead line built from the real bridge.",
+   "evidence": "G1 p113"
+  },
+  {
+   "id": "L7",
+   "name": "Twinkie to the 6-foot pool",
+   "sequence": [
+    "quarterpipe by the semis for speed",
+    "twinkie hip",
+    "transfer into the 6-foot pool"
+   ],
+   "links": [
+    "hip",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "A small object turns the flat into a pool transfer.",
+   "evidence": "G1 p114"
+  },
+  {
+   "id": "L8",
+   "name": "Koi quarterpipe lip ladder (remake)",
+   "sequence": [
+    "air from the pool on the left of the large blue quarterpipe",
+    "grind or lip the lower ledge (Bottom Shelf Lip)",
+    "hop to the higher ledge (Top Shelf Lip)"
+   ],
+   "links": [
+    "vert-air",
+    "lip",
+    "grind"
+   ],
+   "collectibles": [
+    "SP-P2"
+   ],
+   "why": "The remake scores the same quarterpipe twice by height (500 → 1000).",
+   "evidence": "PS12"
+  }
+ ],
+ "guidance": [
+  "The giant eyeball is the level’s compass: you can see it across the park, and three gaps are named after it.",
+  "Every edge is painted yellow-black (VG): grindable coping and ledges read at a distance.",
+  "The bridge deck, pillars and girders are overhead from the first frame (LP1 0:19:49); the girder grind is in view the whole run, while its access (funbox + charged ollie) is not obvious.",
+  "Brand signage marks key objects: “flip” ads on the Triple Rail barriers, AXION banners on the pillars, the ZERO skull at the start (LP1).",
+  "Remake: dark, rainy lighting (LP12 0:27:10 loading card “It’s raining, it’s pouring …”) makes the lit bowls stand out.",
+  "Hidden on purpose: the top ledge tier is unpainted and broken, so it does not read as a grind line until you are up there."
+ ],
+ "designLogic": [
+  "A real park, game-ified. The layout follows the famous DIY park (bowls, the hip Tony names as his favourite) and adds game objects: the eyeball paint, the twinkie bump and a girder line under the bridge.",
+  "Bowls dominate and transfers connect them. Tony’s favourite line is “transfers … in and out of the bowls”; almost every original gap is a transfer or an air over a bowl.",
+  "The hardest place is the real bridge structure overhead. Bridge Grind 800 and Bridge Gap 1000 make the architecture the challenge, the same idea as Chicago’s rafters.",
+  "Obstacles on a grind line: the struts force ollie-hops while grinding the girder. A rhythm test on a single beam.",
+  "Threading as a gap. Bridge Gap pays for passing through the struts without touching the girder. The remake turns that window into the logo’s hiding place.",
+  "Tiered ledges with deliberate breaks turn the biggest air into the longest descending grind, and a fall only drops you one tier.",
+  "One big launcher, many outcomes: the tall quarterpipe wall feeds Over Da Pool, the vert wall, the tiered ledges and the girder line (via the funbox).",
+  "A tiny object makes a big gap: the twinkie bump turns flat ground into a pool transfer (700).",
+  "Circuits pay for repetition. The U-quarterpipe/spine circuit awards three Transfer bonuses in one loop and is designed to be ridden counter-clockwise (G1 p112).",
+  "The start obstacle is part of a line. The Triple Rail finishes on the obstacle you started on, so the level loops back to its own spawn.",
+  "Remake: vertical tiers on one quarterpipe are scored separately (Bottom Shelf Lip 500 → Top Shelf Lip 1000). Height doubles the value.",
+  "Remake collectibles are paired high/low near the same supports: the plushie on a little white quarterpipe at a support’s foot, the logo inside the support above.",
+  "Failure is cheap everywhere: falls land in bowls or on the flat, never out of bounds, so a 1:00 heat can absorb a missed girder attempt."
+ ],
+ "remakeChanges": [
+  "Setting: the remake’s Burnside is dark and rainy (LP12 0:27:05–0:29:20); the loading card reads “It’s raining, it’s pouring, but my skat[eboard] …”, and its PROTIP warns that the more times you use a trick in a run, the less it is worth (LP12 0:27:10; text partly cut off). That makes the variety judging explicit.",
+  "New gaps: Lippn’ The Bridge, Top Shelf Lip, Bottom Shelf Lip and Something in da Eye (lip tricks), Rollin’ The Hill (manual), Over da Pool Landing (a longer Over Da Pool).",
+  "Collectibles added: 2 stat points per style, the VV logo inside a bridge support and the alien plushie on a white quarterpipe by a support (PS12).",
+  "VG labels a “Wall Gap” that neither G1 nor PS12 lists.",
+  "LP12 shows the remake’s “Overtime!” finish during Burnside heats (0:28:15–0:28:25)."
+ ],
+ "transfer": [
+  "Through the struts: put the crystal inside the opening of a bridge support, between two struts. It is reachable by one aimed vert air from a nearby quarterpipe, or by a charged ollie (≈ 13.8 m reach at maximum charge) off a funbox. Make the window about 1.5–2 times the player’s jump width so it reads as a threading test.",
+  "Strut rhythm: a long girder grind with posts every few metres forces grind-ollie hops (≈ 2.4 m pop). Place the crystal on the girder after the last strut, so the reward follows the rhythm.",
+  "Tiered descent: three ledges stepping down from the top of a tall quarterpipe wall, with breaks shorter than a cruise ollie (≤ 9 m). Put the crystal at the top tier’s first break, so only players who land the huge air reach it; a fall drops them to a lower tier.",
+  "Landmark bowl as compass: give the level one unmistakable bowl (the eyeball) that is visible from everywhere, and orient all secrets relative to it in the level’s hints.",
+  "High/low pair: tease the crystal from a low, easy perch at the foot of the support (as the remake’s plushie does) and put the real crystal in the window above."
+ ],
+ "openQuestions": [
+  "Spawn orientation: G1 calls the twinkie “to the right of where you start” and PS12 puts the eyeball pool to the right; VG places the twinkie far to the W of START. Which way does the spawn camera face after the intro pan?",
+  "Where exactly are the three ledge tiers (G1 p112) on the VG render, and are they the remake’s koi-fish quarterpipe ledges?",
+  "Girder height and strut spacing are not measurable from VG; no LP1 or TAS1 footage of the girder grind.",
+  "VG “Wall Gap” (S wall): points and requirement unknown; not in G1 or PS12.",
+  "The “quarterpipe by the semis” (G1 p114): the parked semis are not identifiable on the VG crop studied."
+ ]
+}

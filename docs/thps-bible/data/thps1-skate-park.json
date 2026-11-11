@@ -1,0 +1,1228 @@
+{
+ "id": "thps1-skate-park",
+ "game": "THPS1",
+ "level": "Skate Park",
+ "location": "Chicago, Illinois",
+ "type": "competition",
+ "careerPosition": 4,
+ "timeLimit": "1:00 per heat; three heats, best two count",
+ "versions": [
+  "PS1 1999 (VG map, G1 guide, LP1)",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020 (PS12, LP12)"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-SkatePark.png",
+  "G1 p079–p084 (scan index; printed pp. 78–83)",
+  "LP1 0:10:20–0:13:47",
+  "TAS1 2:13–2:31",
+  "PS12 skate-park (pushsquare.com …-skate-park-all-gaps-and-collectibles)",
+  "LP12 0:13:05–0:14:35"
+ ],
+ "competition": {
+  "name": "Competition #1: Windy City Slam (Chicago Municipal Skate Park)",
+  "rules": "Three heats per skater; best two heats count; runs judged on style, difficulty and variety; points deducted for falling; bronze, silver and gold medals",
+  "evidence": "VG legend; LP1 0:10:26 loading card"
+ },
+ "goals": [
+  {
+   "text": "Competition #1 Windy City Slam: three heats per skater, best two count, judged on style, difficulty and variety, points off for falling; bronze, silver, gold",
+   "version": "original",
+   "evidence": "VG; LP1 0:10:26"
+  },
+  {
+   "text": "Competition Park: to earn a medal finish with one of the top 3 scores; the average of your top two runs is your final score",
+   "version": "remake",
+   "evidence": "LP12 level panel read on Marseille and Skatestreet (same competition-park template; inferred for this park)"
+  },
+  {
+   "text": "At least bronze to unlock Downtown; collectibles: 2 stat points per style, Vicarious Visions logo, alien plushie",
+   "version": "remake",
+   "evidence": "PS12 skate-park"
+  }
+ ],
+ "size": {
+  "class": "medium",
+  "footprint": "≈ 75 × 70 m single warehouse hall (±25 %)",
+  "evidence": "VG render; scale ≈ 20 px/m taken from the other THPS1 VG renders (a parked pickup in Burnside, a helicopter in Roswell); at that scale the halfpipe is ≈ 31 m long and ≈ 15 m deck to deck, which is plausible"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Spawn and north-east walkway",
+   "layer": "ledge / walkway",
+   "features": [
+    "START on the east side",
+    "raised walkway along the NE wall (Skate Street sign, NO-ON banners)",
+    "small red quarterpipe and a ledge behind spawn (remake)",
+    "room with a door on that ledge (remake)"
+   ],
+   "notes": "Walkway Rail Transfer launches from here (PS12: “turn right” from spawn)."
+  },
+  {
+   "id": "Z2",
+   "name": "Centre street strip",
+   "layer": "ground",
+   "features": [
+    "two-level wall + rail ledge (“high/low double rail”)",
+    "two orange platforms joined by two elevated metal rails (“double metal rails box”)"
+   ],
+   "notes": "Wall Gap, Wall Gap Jr., Whoop Gap, Pool Rail Transfer and Walkway Rail Transfer all sit on these two objects."
+  },
+  {
+   "id": "Z3",
+   "name": "Kidney pool and back walkway",
+   "layer": "bowl + walkway",
+   "features": [
+    "U-shaped pool with yellow-black coping and a hip (a pole near the hip)",
+    "walkway along the SW (back) wall",
+    "corner quarterpipe"
+   ],
+   "notes": "Acid Drop in, Pool 2 Walkway out, Pool Hip across, Pool Rail Transfer to the rails."
+  },
+  {
+   "id": "Z4",
+   "name": "Halfpipe and spine",
+   "layer": "vert",
+   "features": [
+    "long wooden halfpipe along the S wall",
+    "quarterpipe backed onto it (spine)",
+    "small quarterpipe at its W end",
+    "orange hanging lights above"
+   ],
+   "notes": "Transfer, HP Transfer, Over The Pipe; launch point for every overhead gap."
+  },
+  {
+   "id": "Z5",
+   "name": "Funbox corner",
+   "layer": "ground",
+   "features": [
+    "funbox with a small wall in its middle",
+    "box with a rail slide",
+    "quarterpipe against the E wall",
+    "low quarterpipe on the wall left of spawn"
+   ],
+   "notes": "Pipe 2 Box Grind, Over The Box; G1’s speed-building stop between halfpipe and rafters."
+  },
+  {
+   "id": "Z6",
+   "name": "Rafters (ceiling girders)",
+   "layer": "overhead",
+   "features": [
+    "four black steel girders crossing the hall on columns",
+    "dark hanging light fixtures under them"
+   ],
+   "notes": "Reached only by a full-speed transfer from the large quarterpipe; the girders run on over the pool (G1 p084). The remake renders them as lattice trusses."
+  }
+ ],
+ "landmarks": [
+  "NEVERSOFT sign on the W wall",
+  "Skate Street sign on the NE wall",
+  "four black ceiling girders",
+  "kidney pool with yellow-black coping",
+  "long wooden halfpipe under orange hanging lights"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "roughly W/SW, straight at the two-level wall + rail ledge; halfpipe ahead-left, pool ahead-right, funbox and box to the left, NE walkway to the right, small quarterpipe and ledge behind",
+  "visibleCollectibles": [
+   "original: none exist",
+   "remake: SP-S1 (above the halfpipe corner, ahead-left) and SP-P1 (above the pool, ahead-right) are described as “ahead”; visibility not confirmed"
+  ],
+  "notes": "LP1 0:10:34–0:10:44: two 50-50s on the double rail (5 s), the small quarterpipe, then a 540 + Rocket Air transfer into the halfpipe — exactly G1’s scripted opener."
+ },
+ "collectibles": [
+  {
+   "id": "VV",
+   "type": "vv-logo",
+   "label": "Vicarious Visions logo",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "far end of the rafter girder above the halfpipe",
+   "layer": "rafters (overhead)",
+   "heightM": "≈ 7–9 above the floor (estimated from LP12 views of the same truss; not measured on the logo)",
+   "launchFrom": "quarterpipe on the outside of the halfpipe (the spine)",
+   "visibility": {
+    "firstSight": "not filmed; the girder itself is visible from the halfpipe",
+    "fromSpawn": "unknown",
+    "reads": "floating double-V logo on the beam (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "halfpipe",
+     "to": "halfpipe decks",
+     "geometry": "pump the halfpipe for maximum speed (G1 adds a rail between the front-room QP and the large QP as a speed loop)"
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "quarterpipe on the outside of the halfpipe",
+     "to": "rafter girder",
+     "geometry": "ollie off the lip at an angle so the air carries up over the spine onto the beam (LP12 0:13:38 “Spine Transfer”)"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "girder",
+     "to": "girder, heading right",
+     "geometry": "land in a grind; if you land heading left, wallplant against the wall to reverse (PS12)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "girder",
+     "to": "logo",
+     "geometry": "grind the whole length of the rafter; the logo is at the end of the run (PS12)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "spine-transfer",
+    "grind",
+    "wallplant"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "pump a halfpipe to full speed",
+    "angled spine transfer",
+    "land a grind on a beam out of vert air",
+    "wallplant to reverse direction (remake verb)"
+   ],
+   "coupling": "none",
+   "failure": "A short air drops you into the halfpipe or onto the flat with no reset; you can re-pump at once. Landing the beam the wrong way is recoverable with a wallplant.",
+   "timeFromSpawnS": "unknown for the logo; LP12 reaches the same truss and its stat point 34 s into a heat",
+   "difficulty": 4,
+   "difficultyWhy": "maximum speed plus an angled transfer onto a narrow beam; the long beam and the wallplant reverse soften it",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The remake hangs its hidden logo on the original’s hardest scored line (Rafter Rail 1000 / Over The Rafters 2000): the highest layer in the hall, reached by the level’s signature transfer, then a full traverse to the far end.",
+   "evidence": "PS12 skate-park; LP12 0:13:38–0:14:00; G1 p084 (Rafter Rail)",
+   "confidence": "medium"
+  },
+  {
+   "id": "PLUSH",
+   "type": "alien-plushie",
+   "label": "Alien plushie",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "corner of the roof of the small room with a door, on the ledge behind spawn",
+   "layer": "roof",
+   "heightM": "unknown (a room on a ledge; reached by wallride + wallie)",
+   "launchFrom": "small red quarterpipe behind spawn, then the ledge",
+   "visibility": {
+    "firstSight": "not filmed; the room is behind the opening view",
+    "fromSpawn": false,
+    "reads": "plush toy sitting in the roof corner (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "small red quarterpipe behind you",
+     "geometry": "turn around at the start"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "small quarterpipe",
+     "to": "ledge",
+     "geometry": "air up onto the ledge"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "ledge",
+     "to": "room with a door",
+     "geometry": "turn left along the ledge"
+    },
+    {
+     "step": 4,
+     "move": "wallride",
+     "from": "ledge",
+     "to": "room wall",
+     "geometry": "wallride the room’s wall"
+    },
+    {
+     "step": 5,
+     "move": "wallie",
+     "from": "wallride",
+     "to": "room roof",
+     "geometry": "wallie up onto the roof; the plushie sits in the corner"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "wallride",
+    "wallie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride and wallie up onto a roof"
+   ],
+   "coupling": "none",
+   "failure": "A missed wallie drops you back to the ledge; retry in seconds.",
+   "timeFromSpawnS": "unknown (the room is a few seconds behind spawn)",
+   "difficulty": 2,
+   "difficultyWhy": "one wallride + wallie, close to spawn",
+   "roles": [
+    "EXPLORE",
+    "TEST"
+   ],
+   "why": "A behind-spawn secret: you must turn away from the opening line the level points you at, and use a street verb (wallride/wallie) where the logo uses vert.",
+   "evidence": "PS12 skate-park (alien plushie; street and park stat points)",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V1",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z5",
+   "landmark": "low quarterpipe against the wall, left of spawn",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "spawn",
+   "visibility": {
+    "firstSight": "PS12: “turn left” from spawn",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "spawn",
+     "to": "low QP on the wall to the left",
+     "geometry": "air straight up out of the quarterpipe into the icon"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V2",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "rafter girder above the halfpipe",
+   "layer": "rafters (overhead)",
+   "heightM": "≈ 7–9 above the floor (LP12 view of the truss)",
+   "launchFrom": "rafter",
+   "visibility": {
+    "firstSight": "LP12 0:13:40: the icon sits on the truss in the skater’s path",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "halfpipe",
+     "to": "QP on the outside of the halfpipe",
+     "geometry": "build speed first"
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "outside QP",
+     "to": "rafter",
+     "geometry": "transfer over at an angle and land in a grind on the girder"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "rafter",
+     "to": "icon",
+     "geometry": "collected mid-grind (LP12 “1/2 Stat Points” at 0:13:42)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "spine-transfer",
+    "grind"
+   ],
+   "speed": "maximum",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "≈ 34 s into a heat (LP12; the player had been sessioning the halfpipe)",
+   "difficulty": 4,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park; LP12 0:13:38–0:13:42",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S1",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z4",
+   "landmark": "above the halfpipe in the corner, ahead-left of spawn",
+   "layer": "air above the halfpipe",
+   "heightM": "unknown",
+   "launchFrom": "halfpipe corner",
+   "visibility": {
+    "firstSight": "PS12: “ahead of the starting point to the left”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "halfpipe corner",
+     "to": "icon",
+     "geometry": "air out of the corner of the halfpipe"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S2",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "roof of the room on the ledge behind spawn, above its outer edge",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "room wall",
+   "visibility": {
+    "firstSight": "PS12: turn around at the start",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "spawn (turn around)",
+     "to": "ledge",
+     "geometry": "small red quarterpipe up onto the ledge"
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "ledge",
+     "to": "room wall",
+     "geometry": "wallride the room"
+    },
+    {
+     "step": 3,
+     "move": "wallie",
+     "from": "room wall",
+     "to": "room roof",
+     "geometry": "wallie onto the roof; icon above the outer edge"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "wallride",
+    "wallie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P1",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z3",
+   "landmark": "above the pool, ahead-right of spawn",
+   "layer": "air above the pool",
+   "heightM": "unknown",
+   "launchFrom": "pool",
+   "visibility": {
+    "firstSight": "PS12: “ahead on the right when you start”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "pool",
+     "to": "icon",
+     "geometry": "air out of the pool wall"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P2",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "same room roof as SP-S2",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "room wall",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "spawn (turn around)",
+     "to": "ledge",
+     "geometry": "small red QP"
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "ledge",
+     "to": "room wall",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wallie",
+     "from": "room wall",
+     "to": "roof",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "transfer",
+    "wallride",
+    "wallie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you back into the ramp or onto the flat; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that sends each style to its own element type.",
+   "evidence": "PS12 skate-park",
+   "confidence": "medium"
+  }
+ ],
+ "signatureSpots": [
+  {
+   "id": "RAFTER",
+   "type": "signature-spot",
+   "label": "Rafter Rail / Over The Rafters (ceiling girders)",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "girders above the halfpipe, running on over the pool",
+   "layer": "rafters (overhead)",
+   "heightM": "not measured on PS1 (VG is isometric; no side view); remake truss ≈ 7–9",
+   "launchFrom": "the large quarterpipe butted against the halfpipe",
+   "visibility": {
+    "firstSight": "from the halfpipe and the spawn view (girders cross the whole hall)",
+    "fromSpawn": true,
+    "reads": "black beams and hanging lights overhead",
+    "distanceFromFirstSightM": "≈ 15–30 (VG scale)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "front-room quarterpipe",
+     "to": "rail between it and the large quarterpipe",
+     "geometry": "hit this rail on every pass to build speed (G1 p083)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "large quarterpipe",
+     "to": "lip",
+     "geometry": "press up at the lip to transfer toward the halfpipe (G1 p084)"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "air",
+     "to": "girder",
+     "geometry": "fast enough: land on and grind the girders; ollie to other girder sections for multiple grinds (G1 p084)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "girder",
+     "to": "over the pool",
+     "geometry": "grind the length of the girders over the pool, ollying over the rafters; handplants on the rafters are possible (G1 p084)"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "girder",
+     "to": "floor",
+     "geometry": "ollie down with several spins to raise the multiplier (G1 p081)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "vert-air",
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "speed loop: rail + two quarterpipes",
+    "press-up lip transfer",
+    "landing a grind from vert air"
+   ],
+   "coupling": "none",
+   "failure": "Too slow: you only transfer into the halfpipe (Transfer 200 / Over The Pipe 700); no reset or damage.",
+   "timeFromSpawnS": "not filmed in LP1 or TAS1",
+   "difficulty": 5,
+   "difficultyWhy": "the hardest speed requirement in the park; Over The Rafters (2000) needs even more speed",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The top scoring layer of the park is literally the top layer: the further up the overhead structure you get, the more it pays (Light Grind 500 → Rafter Rail 1000 → Over The Rafters 2000).",
+   "evidence": "G1 p081, p083–p084; VG labels",
+   "confidence": "high"
+  },
+  {
+   "id": "WALKPOOL",
+   "type": "signature-spot",
+   "label": "Acid Drop / Pool 2 Walkway loop",
+   "version": "original",
+   "zone": "Z3",
+   "landmark": "walkway along the back wall above the kidney pool",
+   "layer": "walkway ↔ bowl",
+   "heightM": "walkway height not measured",
+   "launchFrom": "the back walkway (reached from the halfpipe or ramps)",
+   "visibility": {
+    "firstSight": "from spawn (pool ahead-right)",
+    "fromSpawn": true,
+    "reads": "raised deck beside the pool",
+    "distanceFromFirstSightM": "≈ 30–40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "halfpipe / ramps",
+     "to": "back walkway",
+     "geometry": "get up to the walkway (G1 p081)"
+    },
+    {
+     "step": 2,
+     "move": "acid-drop",
+     "from": "walkway",
+     "to": "pool",
+     "geometry": "ollie with a trick and a spin into the pool: Acid Drop 1000"
+    },
+    {
+     "step": 3,
+     "move": "hip",
+     "from": "pool",
+     "to": "pool",
+     "geometry": "session the pool, transfer over the hip: Pool Hip 500 (mind the pole)"
+    },
+    {
+     "step": 4,
+     "move": "transfer",
+     "from": "pool back wall",
+     "to": "walkway",
+     "geometry": "press up at the lip with enough speed to land on the walkway: Pool 2 Walkway 700"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "acid-drop",
+    "hip",
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "acid drop",
+    "press-up transfer out of a bowl"
+   ],
+   "coupling": "none",
+   "failure": "Missing the walkway leaves you in the pool; the loop restarts from the pool.",
+   "timeFromSpawnS": "not filmed",
+   "difficulty": 3,
+   "difficultyWhy": "two directed airs between a deck and a bowl",
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "A two-way gap pair teaches that the same edge is both a launch and a landing.",
+   "evidence": "G1 p081, p083; VG labels",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Transfer",
+   "points": 200,
+   "kind": "spine",
+   "location": "quarterpipe backed onto the halfpipe",
+   "moves": [
+    "vert-air",
+    "spine-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "VV",
+    "SP-V2",
+    "RAFTER"
+   ],
+   "evidence": "G1 p082 (A); PS12; VG"
+  },
+  {
+   "name": "HP Transfer",
+   "points": 250,
+   "kind": "channel",
+   "location": "small quarterpipe → halfpipe (W end)",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p083; PS12; VG; LP1 0:12:44 (“… + HP Transfer”)"
+  },
+  {
+   "name": "Over The Pipe",
+   "points": 700,
+   "kind": "over-object",
+   "location": "from the outside quarterpipe over the spine and the whole halfpipe to the opposite deck",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p083; PS12; VG"
+  },
+  {
+   "name": "Light Grind",
+   "points": 500,
+   "kind": "other",
+   "location": "hanging light below the rafter, over the halfpipe",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "RAFTER"
+   ],
+   "evidence": "G1 p084 (M); PS12; VG"
+  },
+  {
+   "name": "Rafter Rail",
+   "points": 1000,
+   "kind": "roof",
+   "location": "ceiling girders (land in a grind from the large quarterpipe)",
+   "moves": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "RAFTER",
+    "VV",
+    "SP-V2"
+   ],
+   "evidence": "G1 p084 (K); PS12; VG; LP12 0:13:50"
+  },
+  {
+   "name": "Over The Rafters",
+   "points": 2000,
+   "kind": "over-object",
+   "location": "clear the rafters (and light) completely from the large quarterpipe",
+   "moves": [
+    "vert-air"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "RAFTER"
+   ],
+   "evidence": "G1 p083 (F); PS12; VG"
+  },
+  {
+   "name": "Pipe 2 Box Grind",
+   "points": 1000,
+   "kind": "other",
+   "location": "out of the halfpipe onto the small wall in the funbox, or grind the funbox edges",
+   "moves": [
+    "transfer",
+    "grind"
+   ],
+   "version": "original (absent from PS12 list)",
+   "onRouteOf": [],
+   "evidence": "G1 p084 (L); VG"
+  },
+  {
+   "name": "Over The Box",
+   "points": 100,
+   "kind": "over-object",
+   "location": "the box with the rail slide (SE corner on VG)",
+   "moves": [
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p083 (E); PS12; VG"
+  },
+  {
+   "name": "Whoop Gap",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "ollie the whole two-rail platform pair lengthways; speed from the corner quarterpipe",
+   "moves": [
+    "ollie",
+    "kicker"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p082 (C); PS12; VG"
+  },
+  {
+   "name": "Walkway Rail Transfer",
+   "points": 700,
+   "kind": "rail-transfer",
+   "location": "NE walkway → either elevated rail",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p084 (N); PS12; VG"
+  },
+  {
+   "name": "Pool Rail Transfer",
+   "points": 1000,
+   "kind": "pool-transfer",
+   "location": "from inside the pool to an elevated rail (or the corner quarterpipe’s edge)",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p083 (D); PS12; VG"
+  },
+  {
+   "name": "Acid Drop",
+   "points": 1000,
+   "kind": "pool-transfer",
+   "location": "back walkway → pool",
+   "moves": [
+    "acid-drop"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "WALKPOOL"
+   ],
+   "evidence": "G1 p082 (B); PS12; VG"
+  },
+  {
+   "name": "Pool Hip",
+   "points": 500,
+   "kind": "hip",
+   "location": "the hip of the U-shaped pool",
+   "moves": [
+    "vert-air",
+    "hip"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "WALKPOOL"
+   ],
+   "evidence": "G1 p083; PS12; VG"
+  },
+  {
+   "name": "Pool 2 Walkway",
+   "points": 700,
+   "kind": "pool-transfer",
+   "location": "pool back wall → walkway",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "WALKPOOL"
+   ],
+   "evidence": "G1 p083; PS12; VG"
+  },
+  {
+   "name": "Wall Gap",
+   "points": 100,
+   "kind": "over-object",
+   "location": "hop the low wall of the wall + rail pair from the side",
+   "moves": [
+    "ollie"
+   ],
+   "version": "PS1 (VG label) and remake",
+   "onRouteOf": [],
+   "evidence": "VG; PS12 (not in G1)"
+  },
+  {
+   "name": "Wall Gap Jr.",
+   "points": 50,
+   "kind": "over-object",
+   "location": "hop the rail of the same pair",
+   "moves": [
+    "ollie"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Across The Park",
+   "points": 500,
+   "kind": "manual",
+   "location": "manual from the corner by the pool to the opposite wall",
+   "moves": [
+    "manual"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Around The Bend",
+   "points": 500,
+   "kind": "other",
+   "location": "grind the entire outside of the pool",
+   "moves": [
+    "grind"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Medal (bronze or better) in the competition",
+   "opens": "next career level, Downtown (Minneapolis)",
+   "neededFor": [],
+   "evidence": "PS12 skate-park (remake); LP1 0:13:41 course select moves to Downtown; TAS1 2:28 “Next stop, the Downtown level”"
+  },
+  {
+   "trigger": "Medal in all three THPS1 competitions",
+   "opens": "endings (see thps1-roswell)",
+   "neededFor": [],
+   "evidence": "G1 p135"
+  },
+  {
+   "trigger": "none in the level",
+   "opens": "no doors, switches or breakables in the original (VG and G1 show none)",
+   "neededFor": [],
+   "evidence": "VG; G1 p079–p084"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Opening double rail",
+   "sequence": [
+    "charge the ollie during the countdown",
+    "50-50 the high rail of the wall + rail pair",
+    "drop to the low ledge (50-50 / 5-0)",
+    "small quarterpipe",
+    "HP Transfer into the halfpipe with a 540 grab"
+   ],
+   "links": [
+    "grind",
+    "ollie",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "The first input is a designed two-level grind aimed at the spawn view; Tony’s favourite line is the same (“Nosegrind to 5-0 on the two-level ledge in the beginning then jump the channel to the halfpipe”).",
+   "evidence": "G1 p079–p080; LP1 0:10:40–0:10:44"
+  },
+  {
+   "id": "L2",
+   "name": "Halfpipe special build",
+   "sequence": [
+    "different grabs in the halfpipe",
+    "special meter full",
+    "two specials",
+    "transfer out toward the box"
+   ],
+   "links": [
+    "vert-air",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "Vert area as the special-meter charger before the street part of the run.",
+   "evidence": "G1 p080"
+  },
+  {
+   "id": "L3",
+   "name": "Box to rafters",
+   "sequence": [
+    "Over The Box or grind the box",
+    "quarterpipe against the wall for speed",
+    "grind the box again",
+    "press up at the large quarterpipe",
+    "Rafter Rail",
+    "spins on the way down"
+   ],
+   "links": [
+    "grind",
+    "vert-air",
+    "transfer"
+   ],
+   "collectibles": [
+    "RAFTER"
+   ],
+   "why": "A street element is used as the speed step before the overhead layer.",
+   "evidence": "G1 p081"
+  },
+  {
+   "id": "L4",
+   "name": "Speed loop to the overhead layer",
+   "sequence": [
+    "rail between the front-room quarterpipe and the large quarterpipe",
+    "repeat each pass",
+    "large quarterpipe lip",
+    "Light Grind / Rafter Rail / Over The Rafters"
+   ],
+   "links": [
+    "grind",
+    "vert-air"
+   ],
+   "collectibles": [
+    "RAFTER",
+    "VV",
+    "SP-V2"
+   ],
+   "why": "A short circuit that exists to accumulate the speed the rafters demand.",
+   "evidence": "G1 p083–p084"
+  },
+  {
+   "id": "L5",
+   "name": "Walkway–pool loop",
+   "sequence": [
+    "ramps up to the back walkway",
+    "skate along the back wall",
+    "Acid Drop",
+    "pool session",
+    "Pool Hip",
+    "Pool 2 Walkway"
+   ],
+   "links": [
+    "acid-drop",
+    "hip",
+    "transfer"
+   ],
+   "collectibles": [
+    "WALKPOOL"
+   ],
+   "why": "Deck–bowl–deck loop that can repeat.",
+   "evidence": "G1 p081"
+  },
+  {
+   "id": "L6",
+   "name": "Double metal rails",
+   "sequence": [
+    "grind the double rails with kick tricks",
+    "corner quarterpipe with a new grab",
+    "Whoop Gap over the platform pair"
+   ],
+   "links": [
+    "grind",
+    "vert-air",
+    "ollie"
+   ],
+   "collectibles": [],
+   "why": "Ends the scripted run with an air over the object you just ground.",
+   "evidence": "G1 p081"
+  },
+  {
+   "id": "L7",
+   "name": "Rails from both sides",
+   "sequence": [
+    "NE walkway → Walkway Rail Transfer",
+    "or pool → Pool Rail Transfer",
+    "grind the elevated rail"
+   ],
+   "links": [
+    "ollie",
+    "grind"
+   ],
+   "collectibles": [],
+   "why": "One target, two launch layers (walkway above, bowl below).",
+   "evidence": "G1 p083–p084"
+  },
+  {
+   "id": "L8",
+   "name": "Rafter traverse (remake)",
+   "sequence": [
+    "spine transfer from the outside quarterpipe",
+    "FS 5-0 on the truss (stat point)",
+    "FS 50-50",
+    "wallplant at the wall",
+    "BS boardslide / BS 50-50 back along the truss",
+    "drop to the halfpipe coping"
+   ],
+   "links": [
+    "spine-transfer",
+    "grind",
+    "wallplant"
+   ],
+   "collectibles": [
+    "SP-V2",
+    "VV"
+   ],
+   "why": "The remake turns the original’s scoring layer into its collectible route and adds wallplant reversals.",
+   "evidence": "LP12 0:13:38–0:14:00; PS12"
+  },
+  {
+   "id": "L9",
+   "name": "Behind-spawn roof (remake)",
+   "sequence": [
+    "turn around",
+    "small red quarterpipe up to the ledge",
+    "left to the room",
+    "wallride",
+    "wallie onto the roof"
+   ],
+   "links": [
+    "transfer",
+    "wallride",
+    "wallie"
+   ],
+   "collectibles": [
+    "PLUSH",
+    "SP-S2",
+    "SP-P2"
+   ],
+   "why": "A street route hidden behind the camera.",
+   "evidence": "PS12"
+  }
+ ],
+ "guidance": [
+  "The spawn camera frames the two-level wall + rail ledge: the first scripted line is the first thing you see (LP1 0:10:34).",
+  "Girders and hanging lights cross the whole ceiling and stay in view from the halfpipe: the overhead goal is always visible but out of reach until you have speed.",
+  "Bright orange floors (halfpipe, rail platforms, funbox) separate skate objects from the dark concrete (VG render).",
+  "Gap names describe the target (“Over The Rafters”, “Light Grind”, “Pool 2 Walkway”), so the gap list is also a hint list.",
+  "No HUD markers in the original: the competition’s style/difficulty/variety judging is the only push to visit every element.",
+  "Remake: style-specific stat points float over the ramps near spawn; the rafter stat point sits in the path of the beam grind (LP12 0:13:40).",
+  "Hidden on purpose: the ledge and room behind spawn (remake plushie) are outside the opening view."
+ ],
+ "designLogic": [
+  "One room holds the whole skill set: halfpipe with spine (vert), kidney pool with hip (bowl), wall + rail ledge, elevated rails and a funbox (street). Variety judging rewards touching all of them, so the layout spreads one example of each element type around the hall.",
+  "Spawn faces a designed line. G1 even scripts the input: hold the ollie during the countdown to reach the high rail. The first second of play is a lesson.",
+  "Height is the scoring ladder: Transfer 200 and HP Transfer 250 at the coping, Over The Pipe 700 across the halfpipe, Light Grind 500 on the lowest overhead object, Rafter Rail 1000 on the girders, Over The Rafters 2000 above them.",
+  "The hardest place is overhead and reachable from only one launcher (the large quarterpipe on the spine), and only at full speed. A single gate keeps the secret readable.",
+  "The level supplies its own speed source: a rail between two quarterpipes that you hit every pass (G1 p083). A hard-to-reach spot needs a nearby, repeatable way to build speed.",
+  "The girders run on over the pool, so the overhead layer is also a route between the vert zone and the bowl zone (G1 p084).",
+  "Two-way gap pairs (Acid Drop in, Pool 2 Walkway out) teach that a ledge next to a bowl is both a launch and a landing.",
+  "One object, three verbs: the rail platforms are ground into from the walkway (700), from the pool (1000) or cleared entirely (Whoop Gap 1000). Approach, not object count, makes variety.",
+  "The remake puts its hardest collectibles (vert stat point and VV logo) on the original’s hardest line, the rafters, and adds wallplant as a recovery for landing the beam the wrong way.",
+  "The remake hides its other collectible behind the camera (room roof behind spawn, wallride + wallie). This pairs a vert secret with a street secret, and a far one with a near one.",
+  "Failure is cheap. A fall costs judges’ points, not position, and with three 1:00 heats where the best two count, one heat can be spent on a risky overhead attempt.",
+  "TAS1 wins gold with one ≈ 3 s combo per heat and only two heats. The judged score rewards a single strong combo, not time on the clock, so a competition park needs a few dense combo spots rather than a long route.",
+  "No collectibles in the original: the competition itself is the objective, and the named gaps and the overhead layer do the job of a tape (aspiration, a visible but hard target)."
+ ],
+ "remakeChanges": [
+  "Collectibles added to a former contest-only park: two stat points per style (vert, street, park), a Vicarious Visions logo and an alien plushie (PS12).",
+  "Gap list: PS12 adds Across The Park (manual), Around The Bend (pool grind) and Wall Gap Jr.; Pipe 2 Box Grind is not in PS12’s list. Wall Gap is on the PS1 VG map but not in G1.",
+  "The ceiling girders are lattice trusses in the remake and are skated with wallplant reversals (LP12 0:13:44–0:13:56).",
+  "Competition rules restated: a medal for a top-3 finish, the final score is the average of the top two runs; LP12 shows the remake’s “Overtime!” finish on THPS1 parks.",
+  "LP1 vs LP12: the PS1 run opens on the double rail; the LP12 heat includes a long halfpipe → spine transfer → rafter sequence (0:13:36–0:14:00), which is where the remake put its vert pickups. The remake loading card reads “That there bowl’s deeper than a couple …” (LP12 0:13:05; text partly cut off)."
+ ],
+ "transfer": [
+  "Rafter crystal: put the crystal at the far end of a ceiling beam above a halfpipe. The only way up is a spine transfer from a quarterpipe backed onto the halfpipe, at pumped maximum speed. A miss lands in the halfpipe and costs seconds. Tune the beam height in-engine so that cruise speed reaches only the lower rung (below).",
+  "Ladder of rungs: hang a light or a short bar under the beam about 2.4 m below it, so a grind-ollie from the rung (≈ 2.4 m pop) reaches the beam. This gives an intermediate step that teaches the vertical line before the full transfer.",
+  "Speed loop beside the goal: place a rail between two quarterpipes on the approach (as G1’s Over The Rafters setup does) or a speed pad, so the player can repeat the build-up without crossing the level.",
+  "Behind-spawn roof: a small quarterpipe up to a ledge behind the spawn camera, then wallride + wallie onto a room roof. Use it as the crystal for an easier level, or as the tease that shows the crystal’s glint from the roof.",
+  "Two-way bowl edge: a walkway beside a bowl with gaps in both directions. A crystal floating just past the walkway edge can only be taken by the vert air out of the bowl (Pool 2 Walkway), not by walking along the walkway."
+ ],
+ "openQuestions": [
+  "PS1 girder height is not measurable from VG’s isometric render; LP12 suggests ≈ 7–9 m in the remake.",
+  "Is the “room with a door” behind spawn (remake plushie) present in the PS1 geometry? VG shows dark box structures on the NE walkway but no clear room.",
+  "Wall Gap is labelled on VG but missing from G1; PS12 lists it at 100. Was it added in a later PS1 build than the guide used?",
+  "Pipe 2 Box Grind is absent from PS12’s list: removed, renamed, or an omission in the guide?",
+  "G1 places the Over The Box box “in the left corner of the room”; VG shows it in the SE corner. The wording depends on viewpoint."
+ ]
+}

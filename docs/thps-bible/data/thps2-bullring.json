@@ -1,0 +1,2005 @@
+{
+ "id": "thps2-bullring",
+ "game": "THPS2",
+ "level": "The Bullring",
+ "location": "Mexico",
+ "type": "competition",
+ "careerPosition": 8,
+ "timeLimit": "1:00 per heat; three heats, best two count",
+ "versions": [
+  "PS1 2000 (VG map, LP2)",
+  "THPS 1+2 2020 (PS12, LP12)"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater2-Bullring-Mexico.png",
+  "LP2 0:57:20–1:01:49",
+  "PS12 bullring (pushsquare.com …-bullring-all-gaps-and-collectibles)",
+  "LP12 1:10:15–1:12:00"
+ ],
+ "competition": {
+  "name": "Competition Invite #3: The Bullhorn Brawl",
+  "rules": "3 heats per skater; best 2 heats wins; points deducted for bails",
+  "purse": "Compete for $65,000 in cash & prizes (Bluetorch)",
+  "note": "“Find all cash icons to 100% the level”",
+  "evidence": "LP2 0:57:26 invite card; VG legend"
+ },
+ "goals": [
+  {
+   "text": "Competition Invite #3, The Bullhorn Brawl: 3 heats per skater, best 2 heats wins, points deducted for bails; compete for $65,000 in cash & prizes",
+   "version": "original",
+   "evidence": "LP2 0:57:26; VG"
+  },
+  {
+   "text": "Find all cash icons to 100% the level (9 icons × $250 = $2250 on VG)",
+   "version": "original",
+   "evidence": "LP2 0:57:26; VG icon count; LP2 1:01:25 “Cash icons cleared”"
+  },
+  {
+   "text": "Competition Park: a medal for a top-3 finish; the average of your top two runs is your final score",
+   "version": "remake",
+   "evidence": "LP12 level panel template (read on Marseille and Skatestreet)"
+  },
+  {
+   "text": "Remake collectibles: 3 stat points per style, Vicarious Visions logo, alien plushie",
+   "version": "remake",
+   "evidence": "PS12 bullring"
+  }
+ ],
+ "size": {
+  "class": "medium-large",
+  "footprint": "circular arena; floor ≈ 80–130 m across (upper bound), ringed by a channel ≈ 3–4 m wide and tiers of stands (low confidence)",
+  "evidence": "VG render scaled by the halfpipe (≈ 12–15 m deck to deck) and the loop; LP2 crosses from the start to the barrier in ≈ 4 s; channel width from LP2 1:00:47 (skater ≈ 1.8 m)"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start roll-in and long halfpipe (centre)",
+   "layer": "vert",
+   "features": [
+    "long wooden halfpipe crossing the arena",
+    "roll-in at mid-length on its S side (START)",
+    "a second roll-in ramp behind it",
+    "supports under the roll-in"
+   ],
+   "notes": "Lil Wee Wussy (1), Wussy Rollin (50), Rollin (300), Air Toro (400), Tight Gap (1000), Threadin the Needle (2000)."
+  },
+  {
+   "id": "Z2",
+   "name": "Loop-de-loop (W end of the halfpipe)",
+   "layer": "vert set-piece",
+   "features": [
+    "full loop",
+    "ramp on the loop’s outside"
+   ],
+   "notes": "Way to Go Gringo!!! (5000), Launchin the Pipe (300), Grindin the Pipe (450)."
+  },
+  {
+   "id": "Z3",
+   "name": "Halfpipe rails (E part)",
+   "layer": "rails on the halfpipe",
+   "features": [
+    "long rail up the halfpipe’s side, shorter rail down",
+    "kinked rail near the loop-side ramp",
+    "shallower ramp next to the loop"
+   ],
+   "notes": "Rail Plat Gap (750), Plat Gap (100), Kink (400), Nailin da Rail (500)."
+  },
+  {
+   "id": "Z4",
+   "name": "Humps (SW)",
+   "layer": "ground",
+   "features": [
+    "two large humps"
+   ],
+   "notes": "Big Enchilada Mama (600); “Jumpin da Humps” label on VG only."
+  },
+  {
+   "id": "Z5",
+   "name": "South and east street objects",
+   "layer": "ground",
+   "features": [
+    "funbox + rail",
+    "banana-shaped curved wall",
+    "gate against the side with ramps either side",
+    "NE quarterpipe and funbox"
+   ],
+   "notes": "Box/Launch/Ramp Rail to Rail and to Banana (500–1000), Gate Gap (150), Launchin on Up (200)."
+  },
+  {
+   "id": "Z6",
+   "name": "Lighting wires (overhead)",
+   "layer": "wires",
+   "features": [
+    "two wires spanning the arena with lights at their middles"
+   ],
+   "notes": "Way to Go Amigo (500), Friggin a Hombre (500, over the lights), Clenchfest! (1500, sign → wire); 4 icons drawn on the two wire lines on VG; remake VV logo above."
+  },
+  {
+   "id": "Z7",
+   "name": "Barrier signs (upper ring)",
+   "layer": "signs on the barrier",
+   "features": [
+    "big signs/banners along the arena barrier with sets of flags"
+   ],
+   "notes": "Takin the High Road (650), Enjoyin the View (250, flags to flags), Nice Friggin Ankles (500, sign → stands ledge); icon(s) on the E/NE signs."
+  },
+  {
+   "id": "Z8",
+   "name": "Stands (upper tier)",
+   "layer": "stands",
+   "features": [
+    "side ramps up from the arena",
+    "launch ramps",
+    "a quarterpipe and a large ramp behind spawn"
+   ],
+   "notes": "Up to the Stands (50), Finesse Test (1500), Launch to Rail/Banana (1000); remake plushie, stat points and the VV logo launch."
+  },
+  {
+   "id": "Z9",
+   "name": "Bull channel (lower ring behind the barrier)",
+   "layer": "hidden corridor",
+   "features": [
+    "corridor ≈ 3–4 m wide between the barrier and the stands, with banked sides",
+    "the bull runs here"
+   ],
+   "notes": "4 icons collected here in LP2 heat 3; “Bull plant 2000”; remake street stat point."
+  }
+ ],
+ "landmarks": [
+  "loop-de-loop at the halfpipe’s W end",
+  "lighting wires with lamps over the arena",
+  "red-and-white arena barrier with bunting",
+  "tiered stands under a roof ring",
+  "the bull"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "N into the halfpipe; the loop down-left (W), the gate to the right (SE), the second roll-in and the stands behind",
+  "visibleCollectibles": [
+   "the lighting wires and their icons are overhead and visible from the halfpipe (LP2 0:57:54 shows a $250 note on the wire above the skater)",
+   "remake: SP-V1 is described as visible at the start (PS12)"
+  ],
+  "notes": "LP2 heat 1: drop-in, Nailin da Rail, onto the wire, first $250 ≈ 8 s after the clock starts (0:57:47–0:57:55)."
+ },
+ "collectibles": [
+  {
+   "id": "W1",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "E lighting wire, N half (near Kink)",
+   "layer": "wire",
+   "heightM": "≈ 8–10 above the arena floor (LP2 0:57:54–0:57:55; estimate)",
+   "launchFrom": "halfpipe rail (Nailin da Rail)",
+   "vgPosition": "(0.611, 0.462)",
+   "visibility": {
+    "firstSight": "from the halfpipe (wires overhead)",
+    "fromSpawn": true,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "≈ 10–25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "halfpipe",
+     "geometry": "drop in"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "shallower ramp next to the loop",
+     "to": "halfpipe rail",
+     "geometry": "ollie off it to the right into a grind on the halfpipe rail: Nailin da Rail (LP2 0:57:53)"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "halfpipe rail",
+     "to": "lighting wire",
+     "geometry": "pop up from the rail into a grind on the lighting wire"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "lighting wire",
+     "to": "over the lights",
+     "geometry": "grind across the lights: Friggin a Hombre; “250 bucks!!!” on the wire (0:57:55)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "rail-to-wire pop"
+   ],
+   "coupling": "none",
+   "failure": "Falling off the wire drops you to the arena floor; walk back to the halfpipe rail (≈ 5–10 s).",
+   "timeFromSpawnS": "≈ 8 (LP2 heat 1: clock starts 0:57:47, pickup 0:57:55)",
+   "difficulty": 3,
+   "difficultyWhy": "rail → wire pop and balance at height",
+   "roles": [
+    "TEACH-LINE",
+    "TEST"
+   ],
+   "why": "The opening line from the start leads straight up to the top layer and pays the first icon.",
+   "evidence": "VG (0.611, 0.462); LP2 0:57:50–0:57:57; PS12 (Nailin da Rail, Friggin a Hombre)",
+   "confidence": "medium"
+  },
+  {
+   "id": "W2",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "E lighting wire, S half (over the halfpipe’s E end)",
+   "layer": "wire",
+   "heightM": "≈ 8–10 (estimate)",
+   "launchFrom": "E wire",
+   "vgPosition": "(0.648, 0.679)",
+   "visibility": {
+    "firstSight": "from the halfpipe",
+    "fromSpawn": true,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "≈ 10–25"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "halfpipe",
+     "geometry": "drop in"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "shallower ramp next to the loop",
+     "to": "halfpipe rail",
+     "geometry": "ollie off it to the right into a grind on the halfpipe rail: Nailin da Rail (LP2 0:57:53)"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "halfpipe rail",
+     "to": "lighting wire",
+     "geometry": "pop up from the rail into a grind on the lighting wire"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "lighting wire",
+     "to": "over the lights",
+     "geometry": "grind across the lights: Friggin a Hombre; “250 bucks!!!” on the wire (0:57:55)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long wire grind"
+   ],
+   "coupling": "none",
+   "failure": "As W1.",
+   "timeFromSpawnS": "LP2 heat 1 or heat 2 (inferred: 0:58:42 or 1:00:13)",
+   "difficulty": 3,
+   "difficultyWhy": "as W1",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Two icons per wire reward grinding the full span past the lights.",
+   "evidence": "VG (0.648, 0.679); LP2",
+   "confidence": "low (pickup moment)"
+  },
+  {
+   "id": "W3",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "W lighting wire, N half (near Way to Go Amigo)",
+   "layer": "wire",
+   "heightM": "≈ 8–10 (LP2 0:58:17 view; estimate)",
+   "launchFrom": "launch ramp in the stands",
+   "vgPosition": "(0.401, 0.442)",
+   "visibility": {
+    "firstSight": "from the stands",
+    "fromSpawn": true,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "≈ 15–30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start",
+     "to": "stands",
+     "geometry": "side ramps up to the stands (Up to the Stands)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "quarterpipe in the stands",
+     "to": "speed",
+     "geometry": "build speed on the stands’ quarterpipe (PS12, VV logo route)"
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "large launch ramp in the stands",
+     "to": "lighting wire",
+     "geometry": "ollie off the ramp and land in a grind on the wire: Way to Go Amigo (LP2 0:58:15–0:58:17)"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "lighting wire",
+     "to": "icon",
+     "geometry": "grind along the wire into the icon (0:58:20)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air",
+    "kicker",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "stands launch ramp into a wire grind"
+   ],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor.",
+   "timeFromSpawnS": "≈ 33 (LP2 heat 1, 0:58:20)",
+   "difficulty": 3,
+   "difficultyWhy": "precise landing on a wire from a launch ramp",
+   "roles": [
+    "TEST"
+   ],
+   "why": "A second access to the wire layer, from the stands rather than the halfpipe.",
+   "evidence": "VG (0.401, 0.442); LP2 0:58:15–0:58:22; PS12",
+   "confidence": "medium"
+  },
+  {
+   "id": "W4",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "W lighting wire, S half (over the loop and humps)",
+   "layer": "wire",
+   "heightM": "≈ 8–10 (estimate)",
+   "launchFrom": "W wire",
+   "vgPosition": "(0.366, 0.620)",
+   "visibility": {
+    "firstSight": "from the loop side",
+    "fromSpawn": true,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "≈ 15–30"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start",
+     "to": "stands",
+     "geometry": "side ramps up to the stands (Up to the Stands)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "quarterpipe in the stands",
+     "to": "speed",
+     "geometry": "build speed on the stands’ quarterpipe (PS12, VV logo route)"
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "large launch ramp in the stands",
+     "to": "lighting wire",
+     "geometry": "ollie off the ramp and land in a grind on the wire: Way to Go Amigo (LP2 0:58:15–0:58:17)"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "lighting wire",
+     "to": "icon",
+     "geometry": "grind along the wire into the icon (0:58:20)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "kicker",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long wire grind"
+   ],
+   "coupling": "none",
+   "failure": "As W3.",
+   "timeFromSpawnS": "LP2 heat 1 (inferred: 0:58:42, “Friggin a Hombre × 3” combo)",
+   "difficulty": 3,
+   "difficultyWhy": "as W3",
+   "roles": [
+    "TEST"
+   ],
+   "why": "As W2.",
+   "evidence": "VG (0.366, 0.620); LP2 0:58:41–0:58:43",
+   "confidence": "low (pickup moment)"
+  },
+  {
+   "id": "G1",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z7",
+   "landmark": "NE barrier sign (by Up to the Stands)",
+   "layer": "sign on the barrier",
+   "heightM": "≈ 3–5 above the arena floor (estimate)",
+   "launchFrom": "quarterpipe below the sign",
+   "vgPosition": "(0.768, 0.474)",
+   "visibility": {
+    "firstSight": "from the arena floor",
+    "fromSpawn": "unknown",
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe below the signs",
+     "to": "sign",
+     "geometry": "use the quarterpipe to get up (PS12)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "sign",
+     "to": "icon",
+     "geometry": "grind the sign: Takin the High Road; “250 bucks!!!” (LP2 0:59:47)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "air from a quarterpipe into a sign grind"
+   ],
+   "coupling": "none",
+   "failure": "A miss drops you back into the quarterpipe.",
+   "timeFromSpawnS": "≈ 37 (LP2 heat 2, 0:59:47)",
+   "difficulty": 3,
+   "difficultyWhy": "air into a grind on a raised sign",
+   "roles": [
+    "TEST"
+   ],
+   "why": "The sign ring is the middle layer between the floor and the wires.",
+   "evidence": "VG (0.768, 0.474); LP2 0:59:44–0:59:49; PS12",
+   "confidence": "medium"
+  },
+  {
+   "id": "C1",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z9",
+   "landmark": "N section of the bull channel",
+   "layer": "hidden corridor",
+   "heightM": "floor level (≈ 0–1)",
+   "launchFrom": "channel floor",
+   "vgPosition": "(0.427, 0.374)",
+   "visibility": {
+    "firstSight": "inside the channel only",
+    "fromSpawn": false,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "arena edge",
+     "geometry": "head out of the halfpipe to the arena’s barrier (LP2 1:00:41–1:00:44)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "barrier top",
+     "to": "barrier",
+     "geometry": "grind the barrier by the bunting; PS12: “head to the left out of the quarter pipe and get into the channel”"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "barrier",
+     "to": "bull channel",
+     "geometry": "drop into the channel behind the barrier; the bull runs here (“Bull plant 2000” at 1:00:45)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "channel",
+     "to": "icon",
+     "geometry": "ride the corridor; pickups at 1:00:55, 1:01:03, 1:01:10 and 1:01:25 (order vs. map position unresolved)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "finding the way into the channel"
+   ],
+   "coupling": "moving object: the bull runs in the channel",
+   "failure": "A bail costs seconds; contact with the bull was not observed.",
+   "timeFromSpawnS": "17–47 (LP2 heat 3; channel entry at ≈ 7 s, four icons over ≈ 40 s)",
+   "difficulty": 2,
+   "difficultyWhy": "easy moves; knowledge plus the moving bull",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "A hidden lower ring behind the barrier holds almost half the cash.",
+   "evidence": "VG (0.427, 0.374) band; LP2 1:00:41–1:01:26",
+   "confidence": "low (system assignment inferred)"
+  },
+  {
+   "id": "C2",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z9",
+   "landmark": "W section of the bull channel (VG “BULL” label)",
+   "layer": "hidden corridor",
+   "heightM": "floor level",
+   "launchFrom": "channel floor",
+   "vgPosition": "(0.199, 0.528)",
+   "visibility": {
+    "firstSight": "inside the channel only",
+    "fromSpawn": false,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "arena edge",
+     "geometry": "head out of the halfpipe to the arena’s barrier (LP2 1:00:41–1:00:44)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "barrier top",
+     "to": "barrier",
+     "geometry": "grind the barrier by the bunting; PS12: “head to the left out of the quarter pipe and get into the channel”"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "barrier",
+     "to": "bull channel",
+     "geometry": "drop into the channel behind the barrier; the bull runs here (“Bull plant 2000” at 1:00:45)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "channel",
+     "to": "icon",
+     "geometry": "ride the corridor"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "as C1"
+   ],
+   "coupling": "the bull",
+   "failure": "As C1.",
+   "timeFromSpawnS": "17–47 (LP2 heat 3)",
+   "difficulty": 2,
+   "difficultyWhy": "as C1",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "As C1.",
+   "evidence": "VG (0.199, 0.528); LP2 1:00:41–1:01:26",
+   "confidence": "medium"
+  },
+  {
+   "id": "C3",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z9",
+   "landmark": "S section of the bull channel",
+   "layer": "hidden corridor",
+   "heightM": "floor level",
+   "launchFrom": "channel floor",
+   "vgPosition": "(0.626, 0.853)",
+   "visibility": {
+    "firstSight": "inside the channel only",
+    "fromSpawn": false,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "arena edge",
+     "geometry": "head out of the halfpipe to the arena’s barrier (LP2 1:00:41–1:00:44)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "barrier top",
+     "to": "barrier",
+     "geometry": "grind the barrier by the bunting; PS12: “head to the left out of the quarter pipe and get into the channel”"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "barrier",
+     "to": "bull channel",
+     "geometry": "drop into the channel behind the barrier; the bull runs here (“Bull plant 2000” at 1:00:45)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "channel",
+     "to": "icon",
+     "geometry": "ride the corridor"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "as C1"
+   ],
+   "coupling": "the bull",
+   "failure": "As C1.",
+   "timeFromSpawnS": "17–47 (LP2 heat 3)",
+   "difficulty": 2,
+   "difficultyWhy": "as C1",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "As C1.",
+   "evidence": "VG (0.626, 0.853); LP2 1:00:41–1:01:26",
+   "confidence": "medium"
+  },
+  {
+   "id": "C4",
+   "type": "cash",
+   "label": "Cash icon $250",
+   "value": "$250",
+   "version": "original",
+   "zone": "Z9 (or Z7)",
+   "landmark": "E section of the band behind the barrier (drawn by the Takin the High Road label)",
+   "layer": "hidden corridor or sign",
+   "heightM": "floor level if channel; ≈ 3–5 if sign",
+   "launchFrom": "channel floor (inferred)",
+   "vgPosition": "(0.802, 0.522)",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": false,
+    "reads": "floating green banknote icon ($250)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "arena edge",
+     "geometry": "head out of the halfpipe to the arena’s barrier (LP2 1:00:41–1:00:44)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "barrier top",
+     "to": "barrier",
+     "geometry": "grind the barrier by the bunting; PS12: “head to the left out of the quarter pipe and get into the channel”"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "barrier",
+     "to": "bull channel",
+     "geometry": "drop into the channel behind the barrier; the bull runs here (“Bull plant 2000” at 1:00:45)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "channel",
+     "to": "icon",
+     "geometry": "ride the corridor (inferred)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "as C1"
+   ],
+   "coupling": "the bull",
+   "failure": "As C1.",
+   "timeFromSpawnS": "≈ 47 (LP2 1:01:25, last icon, “Cash icons cleared”, bull beside the skater; inferred)",
+   "difficulty": 2,
+   "difficultyWhy": "as C1",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The last icon is placed where the bull catches up: the final pickup is also the hazard’s climax.",
+   "evidence": "VG (0.802, 0.522); LP2 1:01:24–1:01:27",
+   "confidence": "low (system assignment inferred)"
+  },
+  {
+   "id": "VV",
+   "type": "vv-logo",
+   "label": "Vicarious Visions logo",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "above the middle of a lighting wire",
+   "layer": "above a wire",
+   "heightM": "unknown (above a wire ≈ 8–10 m up)",
+   "launchFrom": "the lighting wire, mid-span",
+   "visibility": {
+    "firstSight": "not filmed",
+    "fromSpawn": "unknown",
+    "reads": "double-V logo above the wire (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "start (turn around)",
+     "to": "stands",
+     "geometry": "get into the stands where there is a quarterpipe and a large ramp"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "stands quarterpipe",
+     "to": "speed",
+     "geometry": "gain speed"
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "large ramp",
+     "to": "lighting wire",
+     "geometry": "ollie off the ramp and grind the lighting wire"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "wire",
+     "to": "middle",
+     "geometry": "grind to the middle"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "wire (mid-span)",
+     "to": "logo",
+     "geometry": "ollie up out of the grind to the logo"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "kicker",
+    "wire",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "ramp-to-wire landing",
+    "ollie out of a wire grind and land back on it"
+   ],
+   "coupling": "none",
+   "failure": "Falling off the wire drops you ≈ 8–10 m to the arena floor; climb back to the stands.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 4,
+   "difficultyWhy": "the highest layer, plus an ollie off a wire",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The remake crowns the original’s top cash layer (the wires) with its logo, adding one extra vertical step above it.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "PLUSH",
+   "type": "alien-plushie",
+   "label": "Alien plushie",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "tucked by the outside ledge of the stands",
+   "layer": "stands",
+   "heightM": "stands level (unknown)",
+   "launchFrom": "side ramps up to the stands",
+   "visibility": {
+    "firstSight": "from the stands walkway",
+    "fromSpawn": false,
+    "reads": "plush toy by the outside ledge (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "arena",
+     "to": "stands",
+     "geometry": "use one of the side ramps to ollie up to the stands"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "stands",
+     "to": "outside ledge",
+     "geometry": "follow the stands round until you see it"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "No fall risk; it sits on the stands walkway.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "exploration only",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "A reward for touring the spectator layer.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V1",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "above the railing on the halfpipe, to the right",
+   "layer": "air above a halfpipe railing",
+   "heightM": "unknown",
+   "launchFrom": "halfpipe",
+   "visibility": {
+    "firstSight": "PS12: “as you start, you can see the first stat point”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "halfpipe",
+     "to": "icon",
+     "geometry": "air above the railing"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V2",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "top of the loop-de-loop",
+   "layer": "loop top",
+   "heightM": "unknown",
+   "launchFrom": "start (down-left)",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start (down-left)",
+     "to": "loop",
+     "geometry": "skate through the loop (Way to Go Gringo!!!)"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V3",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "above the large quarterpipe in the stands, behind spawn",
+   "layer": "stands",
+   "heightM": "unknown",
+   "launchFrom": "large quarterpipe",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "start (turn around)",
+     "to": "other roll-in ramp",
+     "geometry": "ollie over to the other roll-in ramp"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "red-and-white side ramp",
+     "to": "stands",
+     "geometry": "up to the stands"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "large quarterpipe",
+     "to": "icon",
+     "geometry": "air"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S1",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z1",
+   "landmark": "hovering between the start ramp and another ramp behind spawn",
+   "layer": "air between ramps",
+   "heightM": "unknown",
+   "launchFrom": "start ramp",
+   "visibility": {
+    "firstSight": "PS12: “turn around immediately”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "start ramp",
+     "to": "other ramp",
+     "geometry": "gap between the two roll-in ramps (cf. Tight Gap)"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S2",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "stands ledge, reached from the right of spawn",
+   "layer": "stands ledge",
+   "heightM": "unknown",
+   "launchFrom": "stands ledge",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "halfpipe (turn right)",
+     "to": "side ramps",
+     "geometry": "up to the stands"
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "stands ledge",
+     "to": "icon",
+     "geometry": "grind the ledge"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "ledge"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S3",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z9",
+   "landmark": "in the bull channel",
+   "layer": "channel",
+   "heightM": "unknown",
+   "launchFrom": "barrier",
+   "visibility": {
+    "firstSight": "PS12: “in the channel where the bull is running”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start roll-in",
+     "to": "arena edge",
+     "geometry": "head out of the halfpipe to the arena’s barrier (LP2 1:00:41–1:00:44)"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "barrier top",
+     "to": "barrier",
+     "geometry": "grind the barrier by the bunting; PS12: “head to the left out of the quarter pipe and get into the channel”"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "barrier",
+     "to": "bull channel",
+     "geometry": "drop into the channel behind the barrier; the bull runs here (“Bull plant 2000” at 1:00:45)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "the bull runs in the channel",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P1",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "top of the loop-de-loop",
+   "layer": "loop top",
+   "heightM": "unknown",
+   "launchFrom": "start (down-left)",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start (down-left)",
+     "to": "loop",
+     "geometry": "through the loop"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P2",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "up on the stands, down-left of spawn",
+   "layer": "stands",
+   "heightM": "unknown",
+   "launchFrom": "side ramp",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "side ramp",
+     "to": "stands",
+     "geometry": "up to the stands"
+    }
+   ],
+   "moves": [
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P3",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z8",
+   "landmark": "above the large ramp in the stands behind spawn",
+   "layer": "stands (air)",
+   "heightM": "unknown",
+   "launchFrom": "large ramp",
+   "visibility": {
+    "firstSight": "PS12",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "start (behind)",
+     "to": "stands",
+     "geometry": "up onto the stands"
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "large ramp",
+     "to": "icon",
+     "geometry": "air off the large ramp"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you to the arena floor or the stands; retry.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Three per style here: one each on the loop, the stands and the channel layers.",
+   "evidence": "PS12 bullring",
+   "confidence": "medium"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Lil Wee Wussy Gap",
+   "points": 1,
+   "kind": "rail-transfer",
+   "location": "grind the halfpipe lip, ollie over the roll-in, grind the other side",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Wussy Rollin Gap",
+   "points": 50,
+   "kind": "channel",
+   "location": "transfer over the roll-in inside the halfpipe",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Rollin Gap",
+   "points": 300,
+   "kind": "channel",
+   "location": "the same from further away",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Tight Gap",
+   "points": 1000,
+   "kind": "other",
+   "location": "from the top of the start ramp over to the other roll-in ramp",
+   "moves": [
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "SP-S1"
+   ],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Threadin The Needle",
+   "points": 2000,
+   "kind": "channel",
+   "location": "behind the halfpipe: quarterpipe to quarterpipe either side of the roll-in, through the supports",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Air Toro",
+   "points": 400,
+   "kind": "over-object",
+   "location": "behind the halfpipe: quarterpipes either side of the high ramp, over it",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Way To Go Gringo!!!",
+   "points": 5000,
+   "kind": "other",
+   "location": "skate through the loop-de-loop",
+   "moves": [
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "SP-V2",
+    "SP-P1"
+   ],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Launchin The Pipe",
+   "points": 300,
+   "kind": "over-object",
+   "location": "ramp outside the loop → over it",
+   "moves": [
+    "kicker",
+    "vert-air"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Grindin The Pipe",
+   "points": 450,
+   "kind": "other",
+   "location": "ramp outside the loop → grind its outer edge",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Plat Gap",
+   "points": 100,
+   "kind": "other",
+   "location": "loop side of the halfpipe: transfer out and over its side",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Kink",
+   "points": 400,
+   "kind": "other",
+   "location": "ramp next to the loop → over, grind the rail on the way down",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Nailin Da Rail",
+   "points": 500,
+   "kind": "other",
+   "location": "shallower ramp next to the loop → ollie right into a grind on the halfpipe rail",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "W1",
+    "W2"
+   ],
+   "evidence": "VG; PS12; LP2 0:57:53"
+  },
+  {
+   "name": "Rail Plat Gap",
+   "points": 750,
+   "kind": "rail-transfer",
+   "location": "long rail up the halfpipe’s side → short rail down",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Big Enchilada Mama",
+   "points": 600,
+   "kind": "other",
+   "location": "transfer between the two humps",
+   "moves": [
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Jumpin Da Humps",
+   "points": "unknown",
+   "kind": "other",
+   "location": "the humps (VG label only)",
+   "moves": [
+    "unknown"
+   ],
+   "version": "PS1 (VG only)",
+   "onRouteOf": [],
+   "evidence": "VG"
+  },
+  {
+   "name": "Box To Rail",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "funbox → nearby rail",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Launch To Rail",
+   "points": 1000,
+   "kind": "kicker",
+   "location": "large ramp in the stands → down into a grind on the arena rail",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Ramp Rail To Rail",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "halfpipe lip (right side) → lower rail",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Box To Banana",
+   "points": 1000,
+   "kind": "rail-transfer",
+   "location": "funbox → top of the banana wall",
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Launch To Banana",
+   "points": 1000,
+   "kind": "kicker",
+   "location": "stands ramp → grind the banana",
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Ramp Rail To Banana",
+   "points": 500,
+   "kind": "rail-transfer",
+   "location": "halfpipe rail → banana ledge",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Gate Gap",
+   "points": 150,
+   "kind": "over-object",
+   "location": "ramps either side of the gate, transfer over it",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Launchin On Up",
+   "points": 200,
+   "kind": "kicker",
+   "location": "small ramp in front of the gate → over the high ramp above",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Up To The Stands",
+   "points": 50,
+   "kind": "kicker",
+   "location": "any side ramp up into the stands",
+   "moves": [
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "W3",
+    "W4",
+    "PLUSH",
+    "SP-S2",
+    "SP-P2",
+    "SP-V3"
+   ],
+   "evidence": "VG; PS12; LP2 0:58:02"
+  },
+  {
+   "name": "Finesse Test",
+   "points": 1500,
+   "kind": "ledge-to-ledge",
+   "location": "stands launcher: grind the ledge on one side, ollie over the ramp, grind the other ledge",
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Takin The High Road",
+   "points": 650,
+   "kind": "other",
+   "location": "grind one of the big signs around the arena (from the quarterpipe below)",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "G1"
+   ],
+   "evidence": "VG; PS12; LP2 0:59:44"
+  },
+  {
+   "name": "Enjoyin The View",
+   "points": 250,
+   "kind": "other",
+   "location": "grind a sign from one set of flags to the next",
+   "moves": [
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Nice Friggin Ankles",
+   "points": 500,
+   "kind": "ledge-to-ledge",
+   "location": "sign → drop and grind the stands ledge",
+   "moves": [
+    "grind",
+    "ledge"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  },
+  {
+   "name": "Way To Go Amigo",
+   "points": 500,
+   "kind": "wire",
+   "location": "grind a lighting wire",
+   "moves": [
+    "wire"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "W3",
+    "W4",
+    "VV"
+   ],
+   "evidence": "VG; PS12; LP2 0:58:17"
+  },
+  {
+   "name": "Friggin A Hombre",
+   "points": 500,
+   "kind": "wire",
+   "location": "grind a lighting wire over the lights",
+   "moves": [
+    "wire"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "W1",
+    "W2",
+    "W4"
+   ],
+   "evidence": "VG; PS12; LP2 0:57:53–0:58:43"
+  },
+  {
+   "name": "Clenchfest!",
+   "points": 1500,
+   "kind": "wire",
+   "location": "grind a sign, follow it, jump off into a grind on the lighting wire",
+   "moves": [
+    "grind",
+    "wire"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "VG; PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "none in the level",
+   "opens": "no doors, keys or breakables; the channel is open from the arena edge",
+   "neededFor": [],
+   "evidence": "VG; LP2 1:00:41–1:00:47; PS12"
+  },
+  {
+   "trigger": "Collect the 9th cash icon",
+   "opens": "“Cash icons cleared”; counts toward 100%",
+   "neededFor": [],
+   "evidence": "LP2 1:01:25"
+  },
+  {
+   "trigger": "Medal in all three THPS2 competitions",
+   "opens": "“Not bad… you’ve medaled in every competition. Take a break and enjoy the show.” and a video",
+   "neededFor": [],
+   "evidence": "LP2 1:01:40–1:01:49"
+  },
+  {
+   "trigger": "The bull (moving object)",
+   "opens": "runs in the channel; planting on it scores “Bull plant 2000”",
+   "neededFor": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "SP-S3"
+   ],
+   "evidence": "LP2 1:00:45, 1:01:25–1:01:26; PS12; VG “BULL” label"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Drop-in to the wire",
+   "sequence": [
+    "roll-in",
+    "shallower ramp by the loop",
+    "Nailin da Rail",
+    "pop to the lighting wire",
+    "Friggin a Hombre over the lights",
+    "Up to the Stands",
+    "big drop"
+   ],
+   "links": [
+    "grind",
+    "wire",
+    "transfer"
+   ],
+   "collectibles": [
+    "W1",
+    "W2"
+   ],
+   "why": "The first line goes from the start straight to the top layer.",
+   "evidence": "LP2 0:57:47–0:58:02"
+  },
+  {
+   "id": "L2",
+   "name": "Stands launcher to the wire",
+   "sequence": [
+    "side ramp to the stands",
+    "stands quarterpipe for speed",
+    "large launch ramp",
+    "Way to Go Amigo",
+    "Friggin a Hombre",
+    "BS 50-50"
+   ],
+   "links": [
+    "kicker",
+    "wire"
+   ],
+   "collectibles": [
+    "W3",
+    "W4",
+    "VV"
+   ],
+   "why": "A second entry to the wires from the spectator tier.",
+   "evidence": "LP2 0:58:15–0:58:26; PS12"
+  },
+  {
+   "id": "L3",
+   "name": "Sign ring",
+   "sequence": [
+    "quarterpipe below the signs",
+    "Takin the High Road",
+    "FS 50-50 along",
+    "Nice Friggin Ankles or Up to the Stands",
+    "big drop"
+   ],
+   "links": [
+    "vert-air",
+    "grind"
+   ],
+   "collectibles": [
+    "G1"
+   ],
+   "why": "The middle layer, ridden round the arena.",
+   "evidence": "LP2 0:59:44–0:59:53, 1:00:10–1:00:21"
+  },
+  {
+   "id": "L4",
+   "name": "Bull channel lap",
+   "sequence": [
+    "out of the halfpipe to the barrier",
+    "grind the barrier",
+    "drop into the channel",
+    "ride the corridor",
+    "Bull plant"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "SP-S3"
+   ],
+   "why": "Hidden lower ring with a moving hazard; one heat is enough for a lap and four icons.",
+   "evidence": "LP2 1:00:38–1:01:27"
+  },
+  {
+   "id": "L5",
+   "name": "Loop set-piece",
+   "sequence": [
+    "halfpipe speed",
+    "through the loop (Way to Go Gringo!!!)",
+    "or the outside ramp: Launchin the Pipe / Grindin the Pipe"
+   ],
+   "links": [
+    "transfer",
+    "kicker"
+   ],
+   "collectibles": [
+    "SP-V2",
+    "SP-P1"
+   ],
+   "why": "The highest-value gap in the level (5000) is a commitment test.",
+   "evidence": "VG; PS12"
+  },
+  {
+   "id": "L6",
+   "name": "Roll-in ladder",
+   "sequence": [
+    "Lil Wee Wussy (1)",
+    "Wussy Rollin (50)",
+    "Rollin (300)",
+    "Tight Gap (1000)",
+    "Threadin the Needle (2000)"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "SP-S1"
+   ],
+   "why": "One obstacle scored five ways by precision.",
+   "evidence": "VG; PS12"
+  },
+  {
+   "id": "L7",
+   "name": "Banana and rail triads",
+   "sequence": [
+    "funbox / stands ramp / halfpipe rail",
+    "→ banana wall or arena rail"
+   ],
+   "links": [
+    "kicker",
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [],
+   "why": "The same two targets from three launch types (Box, Launch, Ramp Rail To …).",
+   "evidence": "VG; PS12"
+  },
+  {
+   "id": "L8",
+   "name": "Humps",
+   "sequence": [
+    "speed",
+    "hump to hump (Big Enchilada Mama)"
+   ],
+   "links": [
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "Low-layer transfer filler between the loop and the barrier.",
+   "evidence": "VG; PS12"
+  },
+  {
+   "id": "L9",
+   "name": "Clenchfest",
+   "sequence": [
+    "sign grind",
+    "follow it",
+    "jump into a grind on the lighting wire"
+   ],
+   "links": [
+    "grind",
+    "wire"
+   ],
+   "collectibles": [],
+   "why": "Connects the middle layer to the top layer (1500).",
+   "evidence": "PS12; VG"
+  }
+ ],
+ "guidance": [
+  "Wires and lamps hang over the halfpipe in plain view from the start, and LP2 shows a $250 note on the wire above the skater (0:57:54). The top layer is a visible tease.",
+  "Bunting and flag sets mark the signs that can be ground (Enjoyin the View: “from one set of flags to the next”).",
+  "The red-and-white barrier hides the channel. Nothing shows the way in except the barrier’s top edge and the bull’s presence (PS12, LP2).",
+  "The loop is the arena’s centrepiece silhouette, and its 5000-point gap is the obvious aspiration.",
+  "Each pickup prints “250 bucks!!!”; the last prints “Cash icons cleared” (LP2 1:01:25).",
+  "Hidden on purpose: the channel and its icons are below the arena’s eye line."
+ ],
+ "designLogic": [
+  "A single dominant structure (the long halfpipe with a mid-length roll-in and a loop at one end) sits inside a ring of layered perimeter systems: lighting wires overhead, banner signs on the barrier, a hidden channel behind it and stands above.",
+  "All nine icons are worth the same ($250), so value does not rank them; the layer they sit on does. Each layer has its own access verb: rail → wire pop, quarterpipe → sign grind, barrier → drop into the channel.",
+  "Height runs both ways from the floor: the wires are the visible top layer (≈ 8–10 m), and the channel is the hidden bottom layer behind the barrier. The level’s secret is below you, not above.",
+  "The channel holds a moving hazard that is also a trick object (“Bull plant 2000”). LP2’s last icon is taken just as the bull arrives, so the climax of the collection is the hazard.",
+  "Opening line to the top: from the start, Nailin da Rail leads onto the wire and the first icon in ≈ 10 s. The level shows its top layer first.",
+  "Two entries to the same layer (halfpipe rail, stands launch ramp) make the wires reachable from both the floor and the stands.",
+  "The roll-in is scored as a precision ladder: 1, 50, 300, 1000, 2000 points for increasingly tight lines over the same obstacle.",
+  "Triads teach approach variety: Box / Launch / Ramp Rail to Rail and to Banana hit the same two targets from three launch types.",
+  "The loop is the big commitment set-piece (Way to Go Gringo!!! 5000, the most valuable gap in all three THPS2 competition parks studied).",
+  "The stands are a second skateable level (Up to the Stands, Finesse Test, launch ramps) that turns spectator space into a launch deck.",
+  "One heat, one layer. LP2 spends heat 1 on wires, heat 2 on signs and heat 3 on the channel: the three-heat format maps onto the three icon layers.",
+  "The remake keeps the layering: its logo sits above a wire (one step higher than the original’s top icons), a street stat point sits in the bull channel, and the plushie is on the stands.",
+  "Failure is cheap on the floor and costly at height: a wire fall drops ≈ 8–10 m to the arena and costs the climb back, but no time penalty beyond that."
+ ],
+ "remakeChanges": [
+  "Cash icons: PS12 lists none; the remake’s collectibles are 3 stat points per style (one more than other parks), the VV logo above a lighting wire and the alien plushie in the stands.",
+  "The bull channel keeps a role: a street stat point is “in the channel where the bull is running” (PS12).",
+  "Gap list: PS12 has 30 gaps, all also labelled on VG; VG adds “Jumpin da Humps”, which PS12 does not list.",
+  "LP12 shows the remake’s arena with branded stands and the channel lined with red-and-white walls (1:11:00–1:11:15)."
+ ],
+ "transfer": [
+  "Wire crystal: string a cable from the stands to the arena centre over a lamp cluster. The crystal is at mid-span, reached by grinding a halfpipe rail and grind-ollieing (≈ 2.4 m pop) up to the cable, or by a launch ramp in the stands. A fall drops to the floor and costs the climb back.",
+  "Channel crystal with a runner: a narrow perimeter corridor behind the arena barrier, entered by grinding the barrier top and dropping in. A moving platform or patrolling enemy runs laps in it (the bull), and the crystal sits where the runner’s lap brings it back to the player about 40 s after entry.",
+  "Layer = verb: give each height layer one access verb (rail → cable, quarterpipe → sign, barrier → corridor) and put the crystal on the least obvious one (below the eye line).",
+  "Precision ladder on one obstacle: score or gate the crystal behind the tightest version of a line over the start roll-in (through the supports). Earlier, wider versions teach the line first.",
+  "Loop commitment: a loop at the end of a halfpipe with a speed pad before it. The crystal at the loop’s top is collected only by riding the full loop."
+ ],
+ "openQuestions": [
+  "Icon systems: VG draws four icons on the two wire lines, three in the N/W/S perimeter band and two on the E/NE signs, but LP2 collects 3 on wires (heat 1), 2 in sign combos (heat 2) and 4 in the channel (heat 3). The mapping used here (4 wire, 1 sign, 4 channel, with the 1:00:13 pickup on a wire) is the only consistent split, but it is inferred.",
+  "What happens on contact with the bull? Not observed. “Bull plant” shows the bull can be planted on.",
+  "The footprint is an upper bound; the true arena diameter needs a better scale object.",
+  "“Jumpin da Humps” (VG) is not in PS12: a PS1-only gap, or omitted from the guide?",
+  "In which direction does the bull run, and at what speed? Its lap time sets the channel’s timing window."
+ ]
+}

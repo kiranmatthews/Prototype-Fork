@@ -1,0 +1,1194 @@
+{
+ "id": "thps1-roswell",
+ "game": "THPS1",
+ "level": "Roswell",
+ "location": "Roswell, New Mexico",
+ "type": "competition",
+ "careerPosition": 9,
+ "timeLimit": "1:00 per heat; three heats, best two count",
+ "versions": [
+  "PS1 1999 (VG map, G1 guide, LP1)",
+  "N64 2000 (TAS1)",
+  "THPS 1+2 2020 (PS12, LP12)"
+ ],
+ "sources": [
+  "VG TonyHawk_sProSkater-Roswell.png",
+  "G1 p129–p134 (scan index; printed pp. 128–133)",
+  "G1 p135 (endings)",
+  "LP1 0:27:24–0:30:48",
+  "TAS1 5:26–5:50",
+  "PS12 roswell (pushsquare.com …-roswell-all-gaps-and-collectibles)",
+  "LP12 0:36:55–0:38:25"
+ ],
+ "competition": {
+  "name": "Competition #3: Concrete Conspiracy ’99 (Roswell, New Mexico)",
+  "rules": "Three heats per skater; best two heats count; runs judged on style, difficulty and variety; points deducted for falling; bronze, silver and gold medals",
+  "evidence": "VG legend; LP1 0:27:30 loading card"
+ },
+ "goals": [
+  {
+   "text": "Competition #3 Concrete Conspiracy ’99: three heats per skater, best two count, judged on style, difficulty and variety, points off for falling; bronze, silver, gold",
+   "version": "original",
+   "evidence": "VG; LP1 0:27:30"
+  },
+  {
+   "text": "Competition Park: a medal for a top-3 finish; the average of your top two runs is your final score",
+   "version": "remake",
+   "evidence": "LP12 level panel (read on THPS2 parks; inferred for this park)"
+  },
+  {
+   "text": "At least bronze to beat the stage; collectibles: 2 stat points per style, Vicarious Visions logo, alien plushie",
+   "version": "remake",
+   "evidence": "PS12 roswell"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "main hall ≈ 105–120 × 50–60 m, plus a pool room ≈ 25 × 25 m, a tunnel and an alien room (low confidence)",
+  "evidence": "VG render scaled by a helicopter on a pad outside the fence (≈ 9 m ≈ 180 px, ≈ 20 px/m)"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start roll-in (N wall)",
+   "layer": "deck",
+   "features": [
+    "START on a raised deck at the top of a roll-in",
+    "quarterpipes either side of the roll-in (the roll-in channel)"
+   ],
+   "notes": "Roll-in Channel Gap 1000."
+  },
+  {
+   "id": "Z2",
+   "name": "Central high deck and side halfpipes",
+   "layer": "deck + vert",
+   "features": [
+    "raised deck with a light-blue floor",
+    "two inward quarterpipes and kicker ramps with white chevrons on the deck",
+    "quarterpipe on top of the deck",
+    "long grey halfpipes on either side"
+   ],
+   "notes": "High Deck Gap, Deck Gap (kickers), MB Emerson launch; remake Cover Up and the VV logo."
+  },
+  {
+   "id": "Z3",
+   "name": "Low deck and the kinked rail (W of centre)",
+   "layer": "deck",
+   "features": [
+    "lower deck",
+    "rail in its centre with a turned-up end, continuing below to the floor"
+   ],
+   "notes": "Low Deck Gap, Deck Grind; remake Nasty in the Pasty (hook-shaped rail)."
+  },
+  {
+   "id": "Z4",
+   "name": "Wrap-around halfpipe and back ramp deck (E)",
+   "layer": "vert + deck",
+   "features": [
+    "big halfpipe wrapping the E side of the hall",
+    "back ramp deck with three rails at staggered heights along a yellow-black striped edge",
+    "door between two quarterpipes across from spawn (remake park stat point)"
+   ],
+   "notes": "B-House Rail 1000; landing of MB Emerson Grind 2000."
+  },
+  {
+   "id": "Z5",
+   "name": "West floor",
+   "layer": "ground",
+   "features": [
+    "raised octagonal “NO STEP” hatch",
+    "long bank along the W wall",
+    "curved rail in a corner (remake)",
+    "ET Grind label at the NW corner (VG)"
+   ],
+   "notes": "Open flat for setting up lines."
+  },
+  {
+   "id": "Z6",
+   "name": "Tunnel and ET operation room (SW, under the rock arch)",
+   "layer": "inside rooms",
+   "features": [
+    "green-lit corridor",
+    "an alien on a gurney behind glass (“The Prisoner” inset on VG)",
+    "biohazard doors",
+    "three rails just outside the second set of doors"
+   ],
+   "notes": "ET Grind (remake: Grey Grind). G1: slow down, the set-up after the doors is “extremely quick”."
+  },
+  {
+   "id": "Z7",
+   "name": "Pool room (SE)",
+   "layer": "inside room / bowl",
+   "features": [
+    "square pool with a hazard-striped channel",
+    "floor grate",
+    "tank in a side alcove; crates and a vehicle in the other (VG)",
+    "UFO and plushie (remake)"
+   ],
+   "notes": "G1 calls it a “secret room”, reached through the doors between the halfpipe channel in the corner. Channel Gap 500, Pool Grind 2000."
+  },
+  {
+   "id": "Z8",
+   "name": "Outside the fence",
+   "layer": "scenery",
+   "features": [
+    "two helipads with helicopters",
+    "satellite dish",
+    "floodlights",
+    "cliffs"
+   ],
+   "notes": "VG only; whether any of it is skateable is unknown."
+  }
+ ],
+ "landmarks": [
+  "central high deck with light-blue floor and white chevrons",
+  "floodlights on poles (night)",
+  "alien on a gurney behind glass",
+  "military tank in the pool room",
+  "helicopters on pads outside the fence"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "S, down the roll-in into the hall; central deck ahead, the alien room down-right (W) and the pool room down-left (E) in PS12’s directions",
+  "visibleCollectibles": [
+   "original: none exist",
+   "remake: SP-V1 (quarterpipe on the right) and SP-S1 (quarterpipe in front) are next to the roll-in; visibility not confirmed"
+  ],
+  "notes": "LP1: the first air (720 kickflip to indy + Madonna) comes 6 s after the start (0:27:39 → 0:27:45); G1’s scripted line starts at “the ramp opposite the roll-in point”."
+ },
+ "collectibles": [
+  {
+   "id": "VV",
+   "type": "vv-logo",
+   "label": "Vicarious Visions logo",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "above the quarterpipe on the middle (high) deck",
+   "layer": "air above the deck-top quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe on top of the middle deck",
+   "visibility": {
+    "firstSight": "not filmed",
+    "fromSpawn": "unknown (the deck is in the spawn view)",
+    "reads": "double-V logo floating above the quarterpipe (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "spawn",
+     "to": "hall floor",
+     "geometry": "drop the roll-in"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "side halfpipe",
+     "to": "middle deck",
+     "geometry": "get onto the deck: G1’s way is to press up at a side halfpipe’s lip and land on the back edge of the deck’s quarterpipe"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "deck",
+     "to": "deck quarterpipe",
+     "geometry": "build speed on the deck"
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "deck quarterpipe",
+     "to": "logo",
+     "geometry": "air out of the quarterpipe into the logo"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "getting onto a raised deck from a halfpipe",
+    "vert air from a short deck-top quarterpipe"
+   ],
+   "coupling": "none",
+   "failure": "Falling off the deck drops you into a side halfpipe; you can pump straight back up.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "two stages (onto the deck, then build speed on a small structure)",
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "The central landmark’s top is the vertical reach target, and the logo crowns the object that every major gap uses.",
+   "evidence": "PS12 roswell; G1 p132",
+   "confidence": "medium"
+  },
+  {
+   "id": "PLUSH",
+   "type": "alien-plushie",
+   "label": "Alien plushie",
+   "version": "remake",
+   "zone": "Z7",
+   "landmark": "right-hand side of the pool’s top, by the door, in the room with the UFO and the pool",
+   "layer": "pool deck inside a room",
+   "heightM": "unknown (pool deck level)",
+   "launchFrom": "pool-room floor or pool",
+   "visibility": {
+    "firstSight": "not filmed; only inside the pool room",
+    "fromSpawn": false,
+    "reads": "plush toy on the pool’s top by the door (PS12)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "spawn",
+     "to": "hall floor",
+     "geometry": "drop the roll-in, head down and to the left"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "hall",
+     "to": "pool room",
+     "geometry": "enter the room with the UFO and the pool (G1: through the doors between the halfpipe channel in the corner)"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "pool",
+     "to": "top of the pool",
+     "geometry": "get up on top of the pool (its deck)"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "pool deck",
+     "to": "plushie",
+     "geometry": "right-hand side, by the door"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "knowing the pool room exists"
+   ],
+   "coupling": "none",
+   "failure": "Roll back into the pool and climb out again.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "easy moves; the challenge is finding the room",
+   "roles": [
+    "EXPLORE",
+    "SECRET-AREA"
+   ],
+   "why": "The original’s secret room gets the remake’s secret collectible, and the alien theme gets its own plushie.",
+   "evidence": "PS12 roswell; G1 p132",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V1",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z4",
+   "landmark": "above a quarterpipe on the right of spawn",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe on the right",
+   "visibility": {
+    "firstSight": "PS12: “from starting position … on the right”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe on the right",
+     "to": "icon",
+     "geometry": "vert air"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-V2",
+   "type": "stat-point",
+   "label": "Stat point (vert)",
+   "version": "remake",
+   "zone": "Z7",
+   "landmark": "inside the room with the UFO (pool room), down-left of spawn",
+   "layer": "inside room",
+   "heightM": "unknown",
+   "launchFrom": "door",
+   "visibility": {
+    "firstSight": "PS12: “go down and to the left. Enter the door”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "spawn",
+     "to": "pool-room door",
+     "geometry": "down and to the left"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "door",
+     "to": "icon",
+     "geometry": "inside the room with the UFO"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S1",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z2",
+   "landmark": "above the quarterpipe right in front of the roll-in",
+   "layer": "air above a quarterpipe",
+   "heightM": "unknown",
+   "launchFrom": "quarterpipe in front of the roll-in",
+   "visibility": {
+    "firstSight": "PS12: “head down and use the quarter pipe right in front of you”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "quarterpipe in front of the roll-in",
+     "to": "icon",
+     "geometry": "ollie over it with enough air"
+    }
+   ],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-S2",
+   "type": "stat-point",
+   "label": "Stat point (street)",
+   "version": "remake",
+   "zone": "Z6",
+   "landmark": "between two rails at the back, by the alien room",
+   "layer": "rails",
+   "heightM": "unknown",
+   "launchFrom": "first rail",
+   "visibility": {
+    "firstSight": "PS12: “head to the right. At the back …”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "first rail",
+     "to": "second rail",
+     "geometry": "grind and hop between the two rails; the icon is between them"
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P1",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z4",
+   "landmark": "above the door between two quarterpipes, across from spawn",
+   "layer": "air above a deck ramp",
+   "heightM": "unknown",
+   "launchFrom": "ramp above the door",
+   "visibility": {
+    "firstSight": "PS12: “across from the starting point is a door between two quarter pipes”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "floor",
+     "to": "top of the two quarterpipes",
+     "geometry": "get on top of the quarterpipes"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "ramp above the door",
+     "to": "icon",
+     "geometry": "air up off the ramp above the door"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "difficultyWhy": "",
+   "roles": [
+    "TEST"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  },
+  {
+   "id": "SP-P2",
+   "type": "stat-point",
+   "label": "Stat point (park)",
+   "version": "remake",
+   "zone": "Z5",
+   "landmark": "above a curved rail in the corner, right of spawn",
+   "layer": "air/grind above a rail",
+   "heightM": "unknown",
+   "launchFrom": "curved rail in the corner",
+   "visibility": {
+    "firstSight": "PS12: “turn right from the start”",
+    "fromSpawn": "unknown",
+    "reads": "floating stat-point icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "curved rail in the corner",
+     "to": "icon",
+     "geometry": "the icon is above the curved rail"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "A miss drops you into the ramp or onto the floor; retry in seconds.",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "difficultyWhy": "",
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "Style-specific pickup that points each style at its own element.",
+   "evidence": "PS12 roswell",
+   "confidence": "medium"
+  }
+ ],
+ "signatureSpots": [
+  {
+   "id": "POOLROOM",
+   "type": "signature-spot",
+   "label": "Secret pool room and Pool Grind",
+   "version": "original",
+   "zone": "Z7",
+   "landmark": "square pool behind doors at the halfpipe corner",
+   "layer": "inside room / bowl",
+   "heightM": "not measured",
+   "launchFrom": "the channel at the pool-room entrance",
+   "visibility": {
+    "firstSight": "not visible until you go through the doors",
+    "fromSpawn": false,
+    "reads": "doors between the halfpipe channel in the corner",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "hall",
+     "to": "SE corner of the big halfpipe",
+     "geometry": "follow the halfpipe to its corner"
+    },
+    {
+     "step": 2,
+     "move": "transfer",
+     "from": "halfpipe channel",
+     "to": "pool room",
+     "geometry": "through the doors; Channel Gap 500 if you air the gap and land on the transition beyond (G1 p134)"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "pool",
+     "to": "pool",
+     "geometry": "session the pool; “an easy channel to ollie over” (G1 p132)"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "pool coping at the channel",
+     "to": "all the way round",
+     "geometry": "grind the whole coping from the channel back to the channel, ollying the channel if needed: Pool Grind 2000 (+ Channel Gap)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "finding the room",
+    "long balance on a coping grind with an ollie mid-grind"
+   ],
+   "coupling": "none",
+   "failure": "Falling off the coping drops you into the pool; restart the lap.",
+   "timeFromSpawnS": "not filmed",
+   "difficulty": 4,
+   "difficultyWhy": "the full lap is a long balance with a channel ollie",
+   "roles": [
+    "SECRET-AREA",
+    "REWARD"
+   ],
+   "why": "The hidden room holds one of the two highest-value gaps (2000): exploration pays more than the open hall.",
+   "evidence": "G1 p132, p134; VG labels",
+   "confidence": "high"
+  },
+  {
+   "id": "ETRAILS",
+   "type": "signature-spot",
+   "label": "Tunnel to the ET Grind triple rail",
+   "version": "original",
+   "zone": "Z6",
+   "landmark": "three rails just outside the second set of tunnel doors",
+   "layer": "rails outside an inside-room corridor",
+   "heightM": "rail height (≈ 0.5–1)",
+   "launchFrom": "tunnel exit",
+   "visibility": {
+    "firstSight": "the tunnel mouth is visible from the hall; the rails only once you exit the doors",
+    "fromSpawn": false,
+    "reads": "short rail, a second rail, a third that curves right",
+    "distanceFromFirstSightM": "immediately outside the doors"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "hall",
+     "to": "tunnel",
+     "geometry": "“head into the tunnel on your right”; slow down (G1 p131)"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "tunnel",
+     "to": "ET operation room",
+     "geometry": "pass the alien behind glass (LP1 0:29:36–0:29:40)"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "second set of doors",
+     "to": "short rail",
+     "geometry": "immediately jump into a grind"
+    },
+    {
+     "step": 4,
+     "move": "rail-transfer",
+     "from": "short rail",
+     "to": "next rail",
+     "geometry": "pop a kick trick into a different grind"
+    },
+    {
+     "step": 5,
+     "move": "rail-transfer",
+     "from": "next rail",
+     "to": "final rail (curves right)",
+     "geometry": "kick trick into the last rail; ride it to the end: ET Grind 1000"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind",
+    "rail-transfer"
+   ],
+   "speed": "moderate (deliberately slowed)",
+   "skillGates": [
+    "speed control",
+    "rail-to-rail transfers"
+   ],
+   "coupling": "none",
+   "failure": "A missed rail ends the combo on the floor; the tunnel can be re-entered.",
+   "timeFromSpawnS": "LP1 heat 2 reaches the tunnel at ≈ 24 s and exits at ≈ 38 s (0:29:30–0:29:44) without doing the rails",
+   "difficulty": 3,
+   "difficultyWhy": "tight set-up window right after a corridor",
+   "roles": [
+    "TEACH-LINE",
+    "SECRET-AREA"
+   ],
+   "why": "A narrative room works as a speed-control corridor in front of a tight rail chain; G1 quotes 30k–50k (≈ 80k with special grinds) for this line.",
+   "evidence": "G1 p129, p131, p133; LP1 0:29:30–0:29:46",
+   "confidence": "medium (rail position vs. VG label unresolved)"
+  },
+  {
+   "id": "MBE",
+   "type": "signature-spot",
+   "label": "MB Emerson Grind onto the B-House rail",
+   "version": "original (not in PS12)",
+   "zone": "Z2→Z4",
+   "landmark": "deck-top quarterpipe → B-House rail on the back ramp deck",
+   "layer": "deck → rail",
+   "heightM": "not measured",
+   "launchFrom": "quarterpipe on top of the high deck",
+   "visibility": {
+    "firstSight": "both ends visible from the deck",
+    "fromSpawn": "unknown",
+    "reads": "yellow-black striped back deck edge with rails",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "side halfpipe",
+     "to": "high deck",
+     "geometry": "get onto the deck"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "deck-top quarterpipe",
+     "to": "air",
+     "geometry": "press up at its lip"
+    },
+    {
+     "step": 3,
+     "move": "transfer",
+     "from": "air",
+     "to": "over the flat and over the lip of the next ramp",
+     "geometry": "clear the flat below and the next ramp’s lip"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "air",
+     "to": "B-House rail",
+     "geometry": "land in a grind: MB Emerson Grind 2000"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air",
+    "grind"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "long press-up transfer",
+    "landing a grind at the end of a long air"
+   ],
+   "coupling": "none",
+   "failure": "Short: you land in the ramp or on the flat; no reset.",
+   "timeFromSpawnS": "not filmed",
+   "difficulty": 5,
+   "difficultyWhy": "G1: “you’re going to have to be an acrobat”",
+   "roles": [
+    "TEST"
+   ],
+   "why": "The landing target of the longest transfer is a rail, not a ramp: precision at the end of maximum distance.",
+   "evidence": "G1 p134; VG label",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Roll-in Channel Gap",
+   "points": 1000,
+   "kind": "channel",
+   "location": "over the roll-in between its flanking quarterpipes",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p130, p133 (A); PS12; VG"
+  },
+  {
+   "name": "High Deck Gap",
+   "points": 1000,
+   "kind": "over-object",
+   "location": "press up at a halfpipe lip and clear the whole high deck into the other halfpipe",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p129, p133 (B); PS12; VG"
+  },
+  {
+   "name": "Low Deck Gap",
+   "points": 500,
+   "kind": "over-object",
+   "location": "the same over the low deck (its rail sticks up in the centre)",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p130–p131, p133 (C); PS12; VG"
+  },
+  {
+   "name": "ET Grind (remake: Grey Grind)",
+   "points": 1000,
+   "kind": "rail-transfer",
+   "location": "out of the tunnel: three rails in a row",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both (renamed)",
+   "onRouteOf": [
+    "ETRAILS",
+    "SP-S2"
+   ],
+   "evidence": "G1 p131, p133 (D); PS12 (Grey Grind); VG"
+  },
+  {
+   "name": "Deck Gap",
+   "points": 1500,
+   "kind": "kicker",
+   "location": "off the high deck’s kickers, over the low deck and past its outer banks",
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p133 (E); PS12"
+  },
+  {
+   "name": "MB Emerson Grind",
+   "points": 2000,
+   "kind": "other",
+   "location": "deck-top quarterpipe → over the flat and the next ramp’s lip → B-House rail",
+   "moves": [
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "version": "original (not in PS12)",
+   "onRouteOf": [
+    "MBE"
+   ],
+   "evidence": "G1 p134 (F); VG"
+  },
+  {
+   "name": "B-House Rail",
+   "points": 1000,
+   "kind": "rail-transfer",
+   "location": "three rails at staggered heights on the back ramp deck",
+   "moves": [
+    "grind",
+    "rail-transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "MBE"
+   ],
+   "evidence": "G1 p134 (G); PS12; VG"
+  },
+  {
+   "name": "Channel Gap",
+   "points": 500,
+   "kind": "channel",
+   "location": "the channel at the pool-room entrance",
+   "moves": [
+    "vert-air",
+    "transfer"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "POOLROOM"
+   ],
+   "evidence": "G1 p134 (H); PS12; VG"
+  },
+  {
+   "name": "Pool Grind",
+   "points": 2000,
+   "kind": "other",
+   "location": "grind the pool-room coping from the channel all the way round to the channel",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "version": "both",
+   "onRouteOf": [
+    "POOLROOM"
+   ],
+   "evidence": "G1 p132, p134 (I); PS12; VG"
+  },
+  {
+   "name": "Deck Grind",
+   "points": 800,
+   "kind": "rail-transfer",
+   "location": "centre rail of the low deck to its turned-up end, then land again on the rail below",
+   "moves": [
+    "grind",
+    "ollie",
+    "grind"
+   ],
+   "version": "both",
+   "onRouteOf": [],
+   "evidence": "G1 p132, p134; PS12; VG"
+  },
+  {
+   "name": "Nasty in the Pasty",
+   "points": 1000,
+   "kind": "other",
+   "location": "vault from a quarterpipe on the side of the high deck onto the hook-shaped rail",
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Cover Up",
+   "points": 1000,
+   "kind": "manual",
+   "location": "manual across the quarterpipe on top of the middle deck",
+   "moves": [
+    "manual"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  },
+  {
+   "name": "Roswell That End’s Well",
+   "points": 500,
+   "kind": "manual",
+   "location": "manual past the alien",
+   "moves": [
+    "manual"
+   ],
+   "version": "remake",
+   "onRouteOf": [],
+   "evidence": "PS12"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Medal in all three THPS1 competitions (this is the third)",
+   "opens": "the bails video and the generic ending; gold in all three with one character also opens that character’s video",
+   "neededFor": [],
+   "evidence": "G1 p135; LP1 0:30:27 “Congratulations! You’ve earned a medal in every competition. Now sit back and enjoy the show.”; TAS1 5:50 “You scored all golds!”"
+  },
+  {
+   "trigger": "Remake: at least bronze",
+   "opens": "completes the THPS1 tour stage",
+   "neededFor": [],
+   "evidence": "PS12 roswell"
+  },
+  {
+   "trigger": "none in the level",
+   "opens": "the tunnel and the pool room are open passages (G1 describes going “through the doors”; no switch or breakable)",
+   "neededFor": [
+    "POOLROOM",
+    "ETRAILS",
+    "PLUSH"
+   ],
+   "evidence": "G1 p131–p132; VG"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Roll-in to the opposite ramp",
+   "sequence": [
+    "drop the roll-in",
+    "ramp opposite: air right, fastplant or nollie into a 720 tweaked grab",
+    "other side: air left, kick trick + tweak",
+    "come down lined up for the Low Deck Gap"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "Start speed is spent on the biggest grabs at once; the special meter fills in the first seconds.",
+   "evidence": "G1 p130; LP1 0:27:43–0:27:47"
+  },
+  {
+   "id": "L2",
+   "name": "Low Deck Gap with a special",
+   "sequence": [
+    "fastplant or nollie",
+    "special flip",
+    "grab rotated 720 over the low deck"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "Signature air over the deck; G1 targets a 20k trick.",
+   "evidence": "G1 p131"
+  },
+  {
+   "id": "L3",
+   "name": "Roll-in channel",
+   "sequence": [
+    "speed from the halfpipes",
+    "air the roll-in channel with a big grab and 720"
+   ],
+   "links": [
+    "vert-air"
+   ],
+   "collectibles": [],
+   "why": "The start structure is also a gap.",
+   "evidence": "G1 p130, p133"
+  },
+  {
+   "id": "L4",
+   "name": "Tunnel to the ET rails",
+   "sequence": [
+    "tunnel on your right",
+    "ET operation room",
+    "second set of doors",
+    "short rail",
+    "next rail",
+    "curving final rail to its end"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "ETRAILS"
+   ],
+   "why": "Tony’s favourite street line: “the triple ledge grind … after going through the ET operation room”.",
+   "evidence": "G1 p129, p131"
+  },
+  {
+   "id": "L5",
+   "name": "Deck rail",
+   "sequence": [
+    "onto the deck",
+    "quarterpipe for speed",
+    "ollie to the centre rail",
+    "down to the low deck",
+    "ollie off the turned-up end",
+    "land on the rail below"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [],
+   "why": "Deck Grind: a two-part rail with a gap in it.",
+   "evidence": "G1 p132, p134"
+  },
+  {
+   "id": "L6",
+   "name": "Halfpipe to deck-top coping",
+   "sequence": [
+    "session a side halfpipe",
+    "press up at the lip onto the back edge of the deck’s quarterpipe",
+    "grind or slide to the other side",
+    "trick back into the pipe",
+    "repeat"
+   ],
+   "links": [
+    "transfer",
+    "grind"
+   ],
+   "collectibles": [
+    "VV"
+   ],
+   "why": "A loop between vert and deck; the remake’s logo and Cover Up manual live on this quarterpipe.",
+   "evidence": "G1 p132; PS12"
+  },
+  {
+   "id": "L7",
+   "name": "Pool room",
+   "sequence": [
+    "halfpipe corner",
+    "Channel Gap",
+    "pool session",
+    "Pool Grind (full lap)"
+   ],
+   "links": [
+    "channel",
+    "grind"
+   ],
+   "collectibles": [
+    "POOLROOM",
+    "PLUSH",
+    "SP-V2"
+   ],
+   "why": "A self-contained secret bowl.",
+   "evidence": "G1 p132, p134"
+  },
+  {
+   "id": "L8",
+   "name": "MB Emerson",
+   "sequence": [
+    "high deck",
+    "deck-top quarterpipe press-up",
+    "over the flat and a ramp lip",
+    "B-House rail",
+    "staggered rails"
+   ],
+   "links": [
+    "transfer",
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "MBE"
+   ],
+   "why": "The longest transfer, landing on a rail.",
+   "evidence": "G1 p134"
+  },
+  {
+   "id": "L9",
+   "name": "Tony’s favourite spot",
+   "sequence": [
+    "side halfpipe at speed",
+    "press up",
+    "clear the entire middle section into the other halfpipe (High Deck Gap)"
+   ],
+   "links": [
+    "vert-air",
+    "transfer"
+   ],
+   "collectibles": [],
+   "why": "The designer-endorsed signature move is clearing the central landmark.",
+   "evidence": "G1 p129, p133"
+  }
+ ],
+ "guidance": [
+  "Night scene with floodlights on poles: the light-blue central deck is the brightest surface and draws the eye from the roll-in (LP1 0:27:39–0:27:43).",
+  "White chevrons on the kickers and halfpipe walls point the direction of travel (LP1 frames; VG).",
+  "“NO STEP” markings on the hatch and decks are a joke that also marks raised surfaces (VG).",
+  "The tunnel is lit green and the alien sits behind glass: a show-room that rewards entering the corridor (LP1 0:29:36–0:29:40).",
+  "Hidden on purpose: the pool room is behind doors in a halfpipe corner, out of the main sightline (G1 calls it a secret room).",
+  "Remake: neon-lit hangar look (LP12 0:36:55–0:38:25); stat points float over ramps near spawn."
+ ],
+ "designLogic": [
+  "The final competition summarises vert: a roll-in channel, two halfpipes flanking a deck, a wrap-around halfpipe and a pool room. Street pockets (the deck rail, ET rails, B-House rails) hang off the vert structures rather than standing alone.",
+  "One central object scores many ways: over it (High Deck 1000, Low Deck 500), off its kickers (Deck Gap 1500), along its rail (Deck Grind 800), out of its top quarterpipe onto a far rail (MB Emerson 2000), and in the remake across its top (Cover Up 1000) and onto its hook rail (Nasty in the Pasty 1000).",
+  "Tony’s favourite spot is the High Deck Gap: the level’s signature move is clearing its central landmark.",
+  "The hidden room pays the most: the pool room holds a 2000-point gap, as much as the hardest open-hall gap.",
+  "A narrative room controls speed. The alien operation room sits in the corridor before the ET rails, and G1 tells you to slow down because the set-up after the doors is “extremely quick”.",
+  "Rhythm rails with variation recur twice: three rails out of the tunnel (the last curving right) and three rails at staggered heights on the back deck.",
+  "The longest transfer ends on a rail (MB Emerson). Precision comes at the end of maximum distance, not at the start.",
+  "The start gives speed: the roll-in feeds the ramp opposite, and G1’s line spends that speed on 720 grabs at once to fill the special meter.",
+  "Lighting is guidance in a dark level: floodlit deck, green tunnel, dark corners for the secret room.",
+  "The remake keeps the alien theme as gap anchors (Grey Grind, “Roswell That End’s Well”, a UFO in the pool room) and puts the plushie in the original’s secret room.",
+  "The remake puts the logo on top of the central deck: the most-used structure is crowned with the collectible.",
+  "Failure is cheap in each heat (falls land in halfpipes or on the flat), but the stakes rise across the career: this medal completes the set needed for the ending (G1 p135).",
+  "TAS1 clears the competition with two very short heats (5:32–5:50): judging scores the run’s best tricks, so the level needs a few dense combo spots near spawn."
+ ],
+ "remakeChanges": [
+  "ET Grind is renamed Grey Grind (same three-rail description).",
+  "MB Emerson Grind is not in PS12’s gap list.",
+  "New gaps: Nasty in the Pasty (hook-shaped rail), Cover Up (manual on the deck-top quarterpipe), Roswell That End’s Well (manual past the alien).",
+  "The pool room gains a UFO and the alien plushie; stat points and a VV logo are added (PS12).",
+  "Look: the remake renders a neon-lit hangar; LP12 shows the “Overtime!” finish (0:37:50)."
+ ],
+ "transfer": [
+  "Hidden pool room: put the crystal on the far coping of a pool inside a side room, behind doors at a halfpipe corner. It is taken during a full-lap coping grind that needs one ollie over the entrance channel (the 2.1 m grind snap helps re-catch the coping).",
+  "Corridor before a rail chain: a short themed room (show-piece behind glass) forces a slow, straight approach. Right outside its doors, three rails in a row, the last curving. The crystal sits at the end of the third rail.",
+  "Crown the central deck: the crystal floats above a short quarterpipe built on top of the level’s central deck. Getting onto the deck is the first gate (press-up transfer from a side halfpipe), building speed on the small structure the second.",
+  "Rail at the end of the longest air: a crystal on a rail beyond a ramp lip, reachable only by a long transfer from the deck-top quarterpipe. Tune the distance to a pumped vert air, and make the landing a grind rail, not a ramp."
+ ],
+ "openQuestions": [
+  "Where exactly are the ET/Grey Grind rails? VG labels “ET GRIND” at the NW corner ledge, G1 puts the rails just outside the tunnel’s second doors, and LP1’s tunnel exit (0:29:44) comes out at a chevron kicker.",
+  "Is MB Emerson Grind gone from the remake, or only missing from PS12’s list?",
+  "Heights of the decks and the deck-top quarterpipe are not measured.",
+  "Is the area outside the fence (helipads) skateable in either version?",
+  "TAS1 heats end after one short combo; whether this is by ending the run from the pause menu is not visible."
+ ]
+}
