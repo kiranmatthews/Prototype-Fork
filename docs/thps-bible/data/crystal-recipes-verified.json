@@ -1,0 +1,688 @@
+{
+  "recipes": [
+    {
+      "id": "C1",
+      "name": "Pumped vert ceiling: crystal above a halfpipe coping",
+      "note": "Halfpipe coping 3.6 m; crystal 7.4 m above the +X coping, 1 m inside it. Needs a pumped session: coasting at the 23 m/s maximum peaks 4.5 m above the coping.",
+      "data": {
+        "spawn": [
+          0,
+          0.2,
+          -40
+        ],
+        "cameraRig": {
+          "camDist": 11.5,
+          "camHeight": 7.3,
+          "camPitch": 18,
+          "camFov": 66
+        },
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -60
+            ],
+            "s": [
+              40,
+              1,
+              160
+            ]
+          },
+          {
+            "t": "vertramp",
+            "p": [
+              0,
+              0,
+              -60
+            ],
+            "len": 40,
+            "w": 2,
+            "rise": 3.6,
+            "vkind": "half",
+            "arc": 90,
+            "arcSteps": 24
+          },
+          {
+            "t": "crystal",
+            "p": [
+              4.6,
+              11,
+              -60
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -120
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "name": "Drop-in kicker over a pit: crystal on the far half of a full-speed arc",
+      "note": "Start deck 3 m up (the tease vantage), drop ramp, speed pad (18 m/s), 1.2 × 4 m kicker, 14 m pit, landing deck. Crystal 12 m past the lip, p.y 4.0.",
+      "data": {
+        "spawn": [
+          0,
+          3.2,
+          8
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              1.5,
+              6
+            ],
+            "s": [
+              8,
+              3,
+              8
+            ]
+          },
+          {
+            "t": "ramp",
+            "p": [
+              0,
+              0,
+              -2
+            ],
+            "len": 8,
+            "rise": 3,
+            "w": 8,
+            "yaw": 180
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -20
+            ],
+            "s": [
+              8,
+              1,
+              28
+            ]
+          },
+          {
+            "t": "speedpad",
+            "p": [
+              0,
+              0.05,
+              -14
+            ],
+            "s": [
+              4,
+              0.1,
+              3
+            ],
+            "speed": 18
+          },
+          {
+            "t": "ramp",
+            "p": [
+              0,
+              0,
+              -32
+            ],
+            "len": 4,
+            "rise": 1.2,
+            "w": 4
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -74
+            ],
+            "s": [
+              8,
+              1,
+              52
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              0,
+              4,
+              -46
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -95
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "C3",
+      "name": "Rail-end pop: charged grind exit over a drop",
+      "note": "A 14 m rail 1 m up runs 7 m past the deck edge over a 13 m pit. Crystal 4.5 m past the rail end at 4.45 m (3.3 m above the rail top): a full grind exit reaches it, a tap exit lands safely short of it.",
+      "data": {
+        "spawn": [
+          0,
+          0.2,
+          5
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -15
+            ],
+            "s": [
+              10,
+              1,
+              50
+            ]
+          },
+          {
+            "t": "rail",
+            "p": [
+              0,
+              1,
+              -40
+            ],
+            "len": 14,
+            "yaw": 0
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -76.5
+            ],
+            "s": [
+              10,
+              1,
+              47
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              0,
+              4.45,
+              -51.5
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -95
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "name": "Slipstream across a chasm",
+      "note": "perfectGrindBoost level. A 24 m rail 1 m up ends at the deck edge; 22 m chasm. Ride it end to end and ollie off: 48 m/s, apex 2.4 m. Crystal 13 m past the end at p.y 3.4.",
+      "data": {
+        "spawn": [
+          0,
+          0.2,
+          5
+        ],
+        "perfectGrindBoost": true,
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -12
+            ],
+            "s": [
+              10,
+              1,
+              44
+            ]
+          },
+          {
+            "t": "rail",
+            "p": [
+              0,
+              1,
+              -22
+            ],
+            "len": 24,
+            "yaw": 0
+          },
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -83
+            ],
+            "s": [
+              10,
+              1,
+              54
+            ]
+          },
+          {
+            "t": "crystal",
+            "p": [
+              0,
+              3.4,
+              -47
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              0,
+              0,
+              -105
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "C5",
+      "name": "Kicker, wallride, pumped wallie",
+      "note": "Speed pad 18 m/s, 1.8 × 4 m kicker yawed 35° at a straight wall that runs along Z, 3.6 m beside the kicker. Wallride (caught ≈ 4.3 m up), pump the wallie 0.75 s. Crystal in the wallie lane: 1.4 m off the face, ≈ 19 m downstream of the catch, 12.5 m up.",
+      "data": {
+        "spawn": [
+          0,
+          0.2,
+          20
+        ],
+        "components": [
+          {
+            "t": "platform",
+            "p": [
+              0,
+              -0.5,
+              -45
+            ],
+            "s": [
+              60,
+              1,
+              150
+            ]
+          },
+          {
+            "t": "speedpad",
+            "p": [
+              -6.882917236212553,
+              0.05,
+              -10.170175468532099
+            ],
+            "s": [
+              3,
+              0.1,
+              3
+            ],
+            "speed": 18,
+            "yaw": -35
+          },
+          {
+            "t": "ramp",
+            "p": [
+              0,
+              0,
+              -20
+            ],
+            "len": 4,
+            "rise": 1.8,
+            "w": 4,
+            "yaw": -35
+          },
+          {
+            "t": "wall",
+            "p": [
+              4.1,
+              0,
+              -45
+            ],
+            "s": [
+              50,
+              24,
+              1
+            ],
+            "yaw": 90
+          },
+          {
+            "t": "crystal",
+            "p": [
+              2.2,
+              12.5,
+              -44
+            ]
+          },
+          {
+            "t": "gate",
+            "p": [
+              8,
+              0,
+              -115
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "results": [
+    {
+      "recipe": "C1",
+      "name": "Pumped vert ceiling: crystal above a halfpipe coping",
+      "run": "pump from 9 m/s (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 5.54,
+        "y": 9.81,
+        "z": -60,
+        "state": "air"
+      },
+      "maxY": 10.15,
+      "died": false,
+      "crystal": [
+        4.6,
+        11,
+        -60
+      ],
+      "airs": 1
+    },
+    {
+      "recipe": "C1",
+      "name": "Pumped vert ceiling: crystal above a halfpipe coping",
+      "run": "coast at 23 m/s",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 8.61,
+      "died": false,
+      "crystal": [
+        4.6,
+        11,
+        -60
+      ],
+      "airs": 3
+    },
+    {
+      "recipe": "C1",
+      "name": "Pumped vert ceiling: crystal above a halfpipe coping",
+      "run": "one pumped air from 12 m/s",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 4.16,
+      "died": false,
+      "crystal": [
+        4.6,
+        11,
+        -60
+      ],
+      "airs": 1
+    },
+    {
+      "recipe": "C2",
+      "name": "Drop-in kicker over a pit: crystal on the far half of a full-speed arc",
+      "run": "drop in, speed pad, ollie at the lip (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 0,
+        "y": 3.96,
+        "z": -44.77,
+        "state": "air"
+      },
+      "maxY": 4.04,
+      "died": false,
+      "crystal": [
+        0,
+        4,
+        -46
+      ],
+      "speedAtEnd": 17.99
+    },
+    {
+      "recipe": "C2",
+      "name": "Drop-in kicker over a pit: crystal on the far half of a full-speed arc",
+      "run": "skip the pad: 12 m/s at the kicker",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 1.6,
+      "died": true,
+      "crystal": [
+        0,
+        4,
+        -46
+      ],
+      "speedAtEnd": 14.86
+    },
+    {
+      "recipe": "C2",
+      "name": "Drop-in kicker over a pit: crystal on the far half of a full-speed arc",
+      "run": "roll off the kicker without an ollie",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 3,
+      "died": true,
+      "crystal": [
+        0,
+        4,
+        -46
+      ],
+      "speedAtEnd": 13.77
+    },
+    {
+      "recipe": "C3",
+      "name": "Rail-end pop: charged grind exit over a drop",
+      "run": "grind at 12 m/s, full exit at the rail end (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 0,
+        "y": 3.37,
+        "z": -50.1,
+        "state": "air"
+      },
+      "maxY": 3.45,
+      "died": false,
+      "crystal": [
+        0,
+        4.45,
+        -51.5
+      ],
+      "exited": true
+    },
+    {
+      "recipe": "C3",
+      "name": "Rail-end pop: charged grind exit over a drop",
+      "run": "grind at 12 m/s, tap exit at the rail end",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 2.38,
+      "died": false,
+      "crystal": [
+        0,
+        4.45,
+        -51.5
+      ],
+      "exited": true
+    },
+    {
+      "recipe": "C3",
+      "name": "Rail-end pop: charged grind exit over a drop",
+      "run": "full ollie from the deck edge, no grind",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 1.6,
+      "died": true,
+      "crystal": [
+        0,
+        4.45,
+        -51.5
+      ]
+    },
+    {
+      "recipe": "C4",
+      "name": "Slipstream across a chasm",
+      "run": "whole rail, ollie off the end (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 0,
+        "y": 2.37,
+        "z": -46.25,
+        "state": "air"
+      },
+      "maxY": 2.38,
+      "died": false,
+      "crystal": [
+        0,
+        3.4,
+        -47
+      ],
+      "exitSpeed": 48
+    },
+    {
+      "recipe": "C4",
+      "name": "Slipstream across a chasm",
+      "run": "whole rail, roll off the end",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 1.25,
+      "died": true,
+      "crystal": [
+        0,
+        3.4,
+        -47
+      ],
+      "exitSpeed": 48
+    },
+    {
+      "recipe": "C4",
+      "name": "Slipstream across a chasm",
+      "run": "join halfway (no boost), ollie off the end",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 2.38,
+      "died": true,
+      "crystal": [
+        0,
+        3.4,
+        -47
+      ],
+      "exitSpeed": 12
+    },
+    {
+      "recipe": "C5",
+      "name": "Kicker, wallride, pumped wallie",
+      "run": "pad, kicker, wallride, 0.75 s pump (intended)",
+      "expectCollect": true,
+      "collected": true,
+      "pass": true,
+      "collectedAt": {
+        "x": 2.33,
+        "y": 13.33,
+        "z": -42.65,
+        "state": "air"
+      },
+      "maxY": 13.48,
+      "died": false,
+      "crystal": [
+        2.2,
+        12.5,
+        -44
+      ],
+      "entry": {
+        "y": 4.31,
+        "z": -24.57,
+        "speed": 17.11
+      },
+      "release": {
+        "y": 8.13,
+        "z": -37.11
+      }
+    },
+    {
+      "recipe": "C5",
+      "name": "Kicker, wallride, pumped wallie",
+      "run": "pad, kicker, wallride, tap wallie",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 6.17,
+      "died": false,
+      "crystal": [
+        2.2,
+        12.5,
+        -44
+      ],
+      "entry": {
+        "y": 4.31,
+        "z": -24.57,
+        "speed": 17.11
+      },
+      "release": {
+        "y": 4.49,
+        "z": -24.85
+      }
+    },
+    {
+      "recipe": "C5",
+      "name": "Kicker, wallride, pumped wallie",
+      "run": "pad, kicker, no wallride (Grind not held)",
+      "expectCollect": false,
+      "collected": false,
+      "pass": true,
+      "collectedAt": null,
+      "maxY": 5.68,
+      "died": false,
+      "crystal": [
+        2.2,
+        12.5,
+        -44
+      ],
+      "entry": null,
+      "release": null
+    }
+  ]
+}
