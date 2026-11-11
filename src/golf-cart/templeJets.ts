@@ -50,7 +50,9 @@ export class CartTempleJets extends THREE.Mesh<THREE.BufferGeometry,THREE.MeshBa
       this.packetView.copy(this.viewPoint).applyMatrix4(this.inverse.copy(this.packetMatrix).invert());
       this.heatPoint.set(this.sample.x,this.sample.y+.15,this.sample.z).applyMatrix4(this.packetMatrix);
       const heatRadius=this.sample.radius*this.packetMatrix.getMaxScaleOnAxis();
-      this.heat.add(this.heatPoint.x,this.heatPoint.y,this.heatPoint.z,heatRadius*1.5,heatRadius*1.9,this.sample.heat*p.strength*1.8,p.seed);
+      // These compact packets move with the exhaust; they are not upright
+      // torch plumes. Their long trail comes from advection, not tall cards.
+      this.heat.add(this.heatPoint.x,this.heatPoint.y,this.heatPoint.z,heatRadius*1.25,heatRadius*1.4,this.sample.heat*p.strength*1.8,p.seed);
       writeTempleFlame(this.sample,this.packetView,positions,colors,count,0,this.packetMatrix,p.strength);count++;
     }
     this.diagnostics.active=count;this.visible=count>0;this.geometry.setDrawRange(0,count*TEMPLE_FLAME_INDICES);

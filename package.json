@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "check:flame-heat": "node tools/flame-heat/test.mjs",
+    "check:motion-assets": "node tools/test-motion-study-assets.mjs && node tools/test-gameplay-animation-lifecycle.mjs",
     "check:animation-d": "node tools/check-d-animation.mjs",
     "check:cave-collapse": "node tools/test-cave-collapse-state.mjs && node tools/test-cave-collapse.mjs",
     "check:rally-presentation": "node tools/test-rally-festival-presentation.mjs && node tools/test-stadium-lighting.mjs",
@@ -50,7 +52,7 @@
     "check:air-rescue": "node tools/test-board-abandon-tuning.mjs && node tools/test-board-abandon-steering.mjs && node tools/test-air-rescue.mjs",
     "check:trampoline": "node tools/test-trampoline-contact.mjs && node tools/test-marine-net-weight.mjs && node tools/test-trampoline-controls.mjs && node tools/test-trampoline-air-jump.mjs",
     "check:roll-landing": "node tools/test-board-roll-landing.mjs && node tools/test-trampoline-roll-landing.mjs",
-    "check:crate-types": "node tools/test-life-multihit-crates.mjs && node tools/test-nitro-clear-switch.mjs && node tools/test-explosive-bundles.mjs && node tools/test-crate-shell-batch.mjs",
+    "check:crate-types": "node tools/test-life-multihit-crates.mjs && node --max-old-space-size=8192 tools/test-nitro-clear-switch.mjs && node tools/test-explosive-bundles.mjs && node tools/test-crate-shell-batch.mjs",
     "check:crate-jump": "node tools/test-crate-jump-parity.mjs && node tools/test-crate-fast-landing.mjs",
     "check:nst-port": "python3 -B tools/test_iga_igz_layout.py",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",

@@ -51,7 +51,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
   for(const direction of [-1,1]) {
     reset(direction*8.7);let maxGrip=0,maxHipStep=0,maxPlanarStep=0,travel=0,maxGripFrame;
     const faces=new Set();let hip=point('hips'),position=p.pos.clone();
-    for(let f=0;f<240;f++) {
+    // (As long as the same ground took at two metres a second.)
+    for(let f=0,frames=Math.round(240*2/p.ledgeHands.traverseSpeed);f<frames;f++) {
       const normal=p.ledgeNormal.clone(),oldHip=hip;
       tick({moveX:normal.z*direction,moveY:normal.x*direction});
       assert.equal(p.state,'hang',`corner lost grip at ${f}`);assert.equal(p.ledgePhase,'grip');
@@ -67,6 +68,34 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
     assert.ok(maxPlanarStep<.08,`corner body snapped sideways: ${maxPlanarStep}`);
     assert.ok(maxHipStep<.15,`corner body snapped: ${maxHipStep}`);
     results.push({kind:'corners',direction,maxGrip,maxHipStep,maxPlanarStep,travel,faces:[...faces]});
+  }
+  // The hands keep time with the lip, not the clock: one reach each for every
+  // stride of it at any push of the stick, slowly enough to follow, and with a
+  // beat hanging from both.
+  for(const push of [1,.5]) {
+    reset();const hands=[p.gloveLeft,p.gloveRight],at=()=>hands.map(glove=>glove.gripSocket.getWorldPosition(new THREE.Vector3()).x);
+    let was=at(),reaches=0,moving=[false,false],both=0,from=p.pos.x,longest=0,started=[0,0],apart=[Infinity,0];
+    const frames=360,settle=40;
+    for(let f=0;f<frames;f++) {
+      tick({moveX:push});const now=at();
+      if(f===settle){from=p.pos.x;reaches=0;both=0;}
+      for(const i of [0,1]) {
+        const going=Math.abs(now[i]-was[i])>.005;
+        if(going&&!moving[i]){reaches++;started[i]=was[i];}
+        if(!going&&moving[i])longest=Math.max(longest,Math.abs(was[i]-started[i]));
+        moving[i]=going;
+      }
+      if(f>=settle){if(!moving[0]&&!moving[1])both++;apart=[Math.min(apart[0],Math.abs(now[1]-now[0])),Math.max(apart[1],Math.abs(now[1]-now[0]))];}
+      was=now;
+    }
+    const seconds=(frames-settle)/60,travel=Math.abs(p.pos.x-from),speed=travel/seconds,cycles=reaches/2,stride=travel/cycles;
+    assert.ok(Math.abs(speed-push*p.ledgeHands.traverseSpeed)<.05,`push ${push}: he shimmies at ${speed} m/s`);
+    assert.ok(Math.abs(stride-p.ledgeHands.stride)<.06,`push ${push}: a hand reaches every ${stride} m of lip, not every ${p.ledgeHands.stride}`);
+    assert.ok(cycles/seconds<2.3,`push ${push}: the hands go round ${cycles/seconds} times a second`);
+    assert.ok(longest<p.ledgeHands.stride+.08,`push ${push}: a hand reached ${longest} m`);
+    assert.ok(both/(frames-settle)>.12,`push ${push}: he never hangs from both hands (${both} frames)`);
+    assert.ok(apart[0]>.3&&apart[1]<1.05,`push ${push}: hands ${apart} m apart`);
+    results.push({kind:'rhythm',push,speed,stride,cyclesPerSecond:cycles/seconds,longest,bothPlanted:both/(frames-settle),apart});
   }
   reset();
   p.onFootJumpStudy=null;runtime.setDocument(original);

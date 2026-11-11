@@ -3,6 +3,7 @@ export const siteEntries = {
   index: 'index.html',
   labs: 'labs/index.html',
   jakLab: 'jak-lab.html',
+  jakParticleStudy: 'jak-particle-study.html',
   jumpReview: 'jump-review.html',
   skatePlaytest: 'skate-playtest.html',
   skateReferenceLab: 'skate-reference-lab.html',

@@ -38,6 +38,8 @@ const SCREEN_HUD_CALLBACKS=[...HEALTH_CALLBACKS,...ECO_CALLBACKS,'part-hud-buzze
 for(const name of SCREEN_HUD_CALLBACKS)KNOWN_CALLBACKS.add(name);
 const FIRST_PERSON_CALLBACKS=['part-first-person-hud-left-func','part-first-person-hud-right-func','part-first-person-hud-selector-func'];
 for(const name of FIRST_PERSON_CALLBACKS)KNOWN_CALLBACKS.add(name);
+const PROGRESS_CALLBACKS=["part-progress-hud-left-func", "part-progress-hud-right-func", "part-progress-hud-orb-func", "part-progress-hud-buzzer-func", "part-progress-hud-button-func", "part-progress-hud-tint-func", "part-progress-card-slot-01-func", "part-progress-card-slot-02-func", "part-progress-card-slot-03-func", "part-progress-card-slot-04-func", "part-progress-card-cell-func", "part-progress-save-icon-func", "fuel-cell-progress-hud-orbit-callback"];
+for(const name of PROGRESS_CALLBACKS)KNOWN_CALLBACKS.add(name);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
@@ -85,6 +87,11 @@ export interface ParticleHost {
     health:number|null;frame:number;healthScale:number;buzzerScale:number;
     ecoFraction:number;ecoType:'blue'|'yellow'|'red'|'green';
     ecoScale:number;ecoBackingScale:number;ecoTimerScale:number;
+  };
+  progress?: {
+    owner:number;states:number[];joints:ReadonlyMap<number,Vector3>[];
+    leftScale:[number,number];rightScale:[number,number];xScale:number;
+    slotScale:number;option:number;offset:number;transitionInverse:number;
   };
   firstPerson?: {
     offset:number;movie:boolean;xScale:number;yScale:number;xOffset:number;positions:number[][];
@@ -159,6 +166,7 @@ export class ParticleMotion {
           if (FUEL_CELL_CALLBACKS.includes(name)) this.hostInputs.add('fuel-cell HUD');
           if (SCREEN_HUD_CALLBACKS.includes(name)) this.hostInputs.add('screen HUD');
           if (FIRST_PERSON_CALLBACKS.includes(name)) this.hostInputs.add('first-person HUD');
+          if (PROGRESS_CALLBACKS.includes(name)) this.hostInputs.add('progress HUD');
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -411,6 +419,33 @@ export class ParticleMotion {
       if(v.a!==0)v.a=Math.fround(128*this.host.sunFade);
       if(part===0||part===1||part===2)RGB.forEach((channel,i)=>
         v[channel]=Math.fround(this.host.sunColor.getComponent(i)/(part===0?1:4)));
+    }
+    else if (PROGRESS_CALLBACKS.includes(name)) {
+      const h=this.host.progress,f=Math.fround;
+      if(!h){this.issues.add('Missing progress HUD host');return;}
+      if(name==='part-progress-hud-left-func'||name==='part-progress-hud-right-func') {
+        const scale=name==='part-progress-hud-left-func'?h.leftScale:h.rightScale;
+        [v['scale-x'],v['scale-y']]=scale;
+      } else if(['orb','buzzer','button'].some(part=>name===`part-progress-hud-${part}-func`)) {
+        const base=name.includes('-orb-')?5324.8:name.includes('-buzzer-')?6144:6553.6;
+        v['scale-x']=v['scale-y']=f(f(base)/h.xScale);
+      } else if(name==='part-progress-hud-tint-func')v.a=f(64-((63*h.offset)>>12));
+      else if(name.startsWith('part-progress-card-slot-')) {
+        const slot=Number(name.match(/slot-0([1-4])/)![1])-1;
+        v.a=h.option===slot?64:32;v['scale-y']=h.slotScale;
+      } else if(name==='part-progress-card-cell-func')v.a=f(128*Math.max(0,f(2*f(f(-.5)+h.transitionInverse))));
+      else if(name==='part-progress-save-icon-func')v['scale-x']=v['scale-y']=f(6144*h.transitionInverse);
+      else {
+        const jointIndex=Math.trunc(v.userdata??0),state=h.states[h.owner];
+        if(jointIndex===3)v.a=state===1?42:128;
+        else if(h.owner===-1||state===2||state===1)p.position.x=245760;
+        else if(jointIndex===-1)p.position.x=p.position.y=0;
+        else {
+          const joints=h.joints[h.owner&3],node=joints?.get(jointIndex),center=joints?.get(3);
+          if(!node||!center){this.issues.add(`Missing progress HUD joint ${jointIndex}`);return;}
+          p.position.set(f(48*f(node.x-center.x)),f(60*f(node.y-center.y)),f(32*f(node.z-center.z)));
+        }
+      }
     }
     else if (FIRST_PERSON_CALLBACKS.includes(name)) {
       const h=this.host.firstPerson,f=Math.fround;

@@ -178,6 +178,86 @@ but not crisply. That is the chosen trade; a 4096 override would cost about
   - breaking a crate removes its instance, and a checkpoint respawn restores it;
   - a material swap returns the shell to its native draw, and restoring the
     material re-batches it.
-- `check:crate-types` runs out of memory at Node's default heap on `main` as well
-  (`test-nitro-clear-switch.mjs`). It passes with
-  `NODE_OPTIONS=--max-old-space-size=8192`.
+- `check:crate-types` ran out of memory at Node's default heap, on `main` as
+  well (`test-nitro-clear-switch.mjs`). Its npm script now gives that test an
+  8 GB heap, so the check runs without `NODE_OPTIONS`.
+
+## 10 November follow-up: hosting headroom and what is left
+
+### Desert vista terrain is packed losslessly
+
+The lossless native-geometry stage only covers the pinned
+`NATIVE_GEOMETRY_FILES` list, which held 402 of the release's 623 models. The
+173 `desert-canyon/vista/terrain-*.glb` tiles were not on it and shipped as
+plain float buffers (46,080 unshared vertices each).
+
+| Measure | Before | After |
+| --- | ---: | ---: |
+| The 173 vista tiles, hosted | 101.9 MB | 48.9 MB |
+| Release output | 987.95 MB | 935.05 MB |
+
+The "before" release figure is `main` on 10 November: commits from other chats
+since 8 November had taken it from 975.5 MB to 987.95 MB, 12 MB under the
+limit.
+
+Nothing about the decoded geometry changes:
+
+- `tools/test-release-native-geometry.mjs` decodes every buffer view of all 575
+  listed models and compares bytes (4,994 views), and checks every other glTF
+  field is unchanged.
+- The tiles load through the same `jungleAssets` loader that already decodes
+  the packed `desert-canyon/survey-rim.glb`, so the Meshopt decoder is in the
+  path.
+- In a browser (`bryce-canyon`, lite), every geometry under the level root was
+  fingerprinted (position, index, normal, colour and UV buffers). The previous
+  build with only the tiles packed matched its unpacked run on all 1,813
+  geometries. The shipping build loaded with no console errors or failed
+  requests and matched on all 534 vista/terrain geometries; its 125 other
+  differences are race-fence contacts and boxes from unrelated commits.
+
+One trap for local checks: since the motion-study loader landed, `vite preview`
+cannot start the game. It serves `motion.json.gz` with `Content-Encoding: gzip`,
+so the browser hands `loadMotionStudyBuffer` already-decoded bytes and its own
+`DecompressionStream` fails ("Game startup failed"). GitHub Pages serves `.gz`
+as plain gzip and is unaffected. The checks above used
+`python3 -m http.server --directory dist`. Checking for the gzip magic bytes
+before decompressing would make the loader work on either kind of host.
+
+`tools/native-geometry-candidates.mjs` reports released models outside the list
+and what packing them would save, so new content can be added to it as it
+lands. About 6 MB is still available (other `desert-canyon` models 3.1 MB,
+`props/crate-family` 1.4 MB, one enemy 1.4 MB). Each needs its loader's
+`setMeshoptDecoder` call confirmed before it is listed.
+
+### Remaining texture targets
+
+From `tools/texture-census.py`, an offline census of a built release. GPU
+figures are estimates if the texture is loaded (pixels × 4 bytes × 4/3).
+
+| Target | Textures | Estimated GPU each |
+| --- | --- | ---: |
+| Drowned Crown `excellence/crash-*` colour maps (exterior ship, coastal headland, oak arch, stern gallery, cavern skylight) | 5 at 4096² | 85 MB |
+| `hollowwake/round-cave-bore`, `blockworks-art/flagstone-deck-v3` | 2 at 4096² | 85 MB |
+| `boulder-camera/cracks-a/b/c` | 3 at 3840×2160 | 42 MB |
+| 2048² maps: `jungle-kit` 22, `blockworks-art` 21, `nightworks-kit` 9, `carlisle-kit` 8, `custard-creek` 7, `rooftop-kook` 7, `warehouse` 6, `desert-canyon` 5, `ancient-gates-tripo` 5 | 90 | 21 MB |
+| Crate art (wood and metal crate sculpts) in `__shared_textures`; loads in nearly every level | 5 at 2048² | 21 MB |
+
+The Drowned Crown five are the largest single step, about 320 MB on that level.
+They are the maps the texture README lists as failing "the smaller encoding's
+quality gate"; the `resizedColor` floor now accepts their 2048 encodes, and the
+policy limit is already 2048. Re-run
+`prepare-release-textures.py --resize-drowned --only-prefix` for those five
+models and merge as the Carlisle batch was merged. It is not applied here
+because that level's texture README asks for a native-4K traversal review.
+
+### Checked and not worth doing
+
+- **Font atlases** (six 2048×4046 PNGs, 37 MB hosted): load-bearing.
+  `loadingTitle.ts` uses the uncapped atlas above cap 256, and the on-demand
+  font archive is rebuilt from these exact PNG bytes.
+- **Remaining plain `acceleratedRaycast` uses**: `hollowwakeTunnels.ts` probes
+  once while fitting the bore, and the `worldSurfaceBinding.ts` proxies already
+  sit behind their own broad phase (`prepareRay` / `raySurfaces`).
+- **Unreferenced asset directories**: none. Every shipped directory is
+  referenced by the bundle, or from inside the models for `__shared_textures`.
+

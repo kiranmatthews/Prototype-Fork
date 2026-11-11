@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {FlameHeatDistortion} from '../../src/flameHeatDistortion';
 import {attachFlameHeat} from '../../src/flameHeatSource';
+import {writeTorchHeat} from '../../src/torchHeat';
 const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('canvas')!,antialias:false,preserveDrawingBuffer:true});
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#30271b');
@@ -57,6 +58,48 @@ function compare(a:Float32Array,b:Float32Array,split=false,mask=a){
   }
   return {max,changed,foregroundError,flameError,outsideError};
 }
+// Encode source screen coordinates in a repeated colour ramp. Reading the
+// warped framebuffer then measures actual displacement, independent of the
+// shader's implementation, rather than merely counting changed pixels.
+function contextScaling(){
+  const visibility=scene.children.map(object=>[object,object.visible] as const);
+  const oldPosition=flame.position.clone(),oldMaterial=flame.material;
+  for(const [object] of visibility)object.visible=false;
+  flame.visible=true;flame.material=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
+  const raster={value:new THREE.Vector2()};
+  const material=new THREE.ShaderMaterial({toneMapped:false,uniforms:{raster},
+    vertexShader:'void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    fragmentShader:'uniform vec2 raster;void main(){gl_FragColor=vec4(fract(gl_FragCoord.xy/raster*8.0+vec2(.37,.29)),0.0,1.0);}'});
+  const ramp=new THREE.Mesh(new THREE.PlaneGeometry(400,400),material);ramp.position.z=-80;scene.add(ramp);
+  const results:Record<string,{x:number;y:number}>= {};
+  try{
+    for(const [name,distance,scale,lines] of [['broad',12,1,720],['distant',48,1,720],['candle',12,.2,720],['native',12,1,1440],['fine',12,1,720],['fineNative',12,1,1440]] as const){
+      width=lines*16/9;height=lines;raster.value.set(width,height);renderer.setPixelRatio(1);renderer.setSize(width,height);
+      target?.dispose();target=new THREE.WebGLRenderTarget(width,height,{type:THREE.HalfFloatType});
+      flame.position.set(0,0,-distance);
+      attachFlameHeat(flame,name.startsWith('fine')?emit=>writeTorchHeat(emit,.35,-1.2,scale,1,7):
+        emit=>emit(0,0,0,.95*scale,1.65*scale,2.1,0));scene.updateMatrixWorld(true);
+      heat.strength=1;heat.reviewTime=.35;const baseline=draw(false),warped=draw(true);
+      let x=0,y=0;
+      for(let i=0;i<baseline.length;i+=4){
+        const dx=Math.abs(warped[i]-baseline[i]),dy=Math.abs(warped[i+1]-baseline[i+1]);
+        // Stay away from each ramp's wrap and its interpolation footprint.
+        if(baseline[i]>.2&&baseline[i]<.8)x=Math.max(x,dx*width/8);
+        if(baseline[i+1]>.2&&baseline[i+1]<.8)y=Math.max(y,dy*height/8);
+      }
+      results[name]={x,y};
+    }
+    const peak=(name:string)=>Math.max(results[name].x,results[name].y),near=peak('broad');
+    return {pass:near>=3&&near<=10&&peak('distant')<near*.7&&peak('candle')<near*.6&&
+      Math.abs(peak('native')/2-near)<.6&&peak('fine')>.1&&peak('fine')<near*.45&&
+      Math.abs(peak('fineNative')/2-peak('fine'))<.35,pixels:results};
+  }finally{
+    ramp.removeFromParent();ramp.geometry.dispose();material.dispose();
+    flame.material.dispose();flame.material=oldMaterial;flame.position.copy(oldPosition);
+    for(const [object,visible] of visibility)object.visible=visible;
+    attachFlameHeat(flame,emit=>emit(-1,0,0,6.4,2.6,2,0));scene.updateMatrixWorld(true);
+  }
+}
 document.querySelector<HTMLButtonElement>('#run')!.onclick=()=>{
   const output=document.querySelector('#result')!;
   try{
@@ -70,6 +113,7 @@ document.querySelector<HTMLButtonElement>('#run')!.onclick=()=>{
       const pass=identity.max<.005&&warp.changed>20&&motion.changed>20&&[warp,motion].every(d=>d.foregroundError===0&&d.flameError===0&&d.outsideError===0);
       results.push({hdr,size:[width,height],dpr,split,identity,warp,motion,pass,copy:heat.diagnostics.copySize});
     }
-    output.textContent=JSON.stringify({pass:results.every(r=>r.pass),results},null,2);
+    const scaling=contextScaling();
+    output.textContent=JSON.stringify({pass:results.every(r=>r.pass)&&scaling.pass,results,scaling},null,2);
   }catch(error){output.textContent=String(error);throw error;}
 };

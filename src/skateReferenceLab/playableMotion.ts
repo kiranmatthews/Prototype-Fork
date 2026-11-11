@@ -17,6 +17,42 @@ type FootContact = {side:'Left'|'Right';p:THREE.Vector3;q:THREE.Quaternion};
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
+/** Riding is never a held pose. The source's own ride loops barely move, and
+ * its charge was one frame held still, so the rider stands on a few springs:
+ * how far down he is, which way he leans, and what the road last did to him.
+ *
+ * Down is the ollie crouch, which bounces by itself, folded on toward the low
+ * point of the hard landing as the charge fills. A press dips him, the charge
+ * takes him down on a spring that goes a little past and comes back, and at
+ * full charge he keeps pumping on it. A kick from the road (a kerb, the foot
+ * of a ramp) goes into the same spring. Steering leans him through the
+ * source's own leaned stances, with a spring that swings a little wide, and
+ * presses him down into the turn. With nothing asked of him he still shifts
+ * his weight and drifts between two stances. */
+const RIDE_LIFE = {
+  /** Springs: [rate (1/s), damping ratio]. Under 1 swings past and settles. */
+  crouch: [15, .46], lean: [7, .66], bump: [17, .36],
+  /** How far the charge takes him down: on the press, and when it is full. */
+  press: .36, full: 1,
+  /** Share of the way to the low pose that `down = 1` is, leaving room to swing past it. */
+  depth: .92,
+  /** Share of the hard landing's low point in the low pose: at a dip, and at full charge. */
+  fold: [.25, .78], foldFrame: 14,
+  /** The pump at full charge: two beats that do not line up. [depth, radians per second, phase] */
+  pump: [[.065, 10.4, 0], [.04, 6.3, 1.3]],
+  /** How fast (1/s) he comes round to a change in the lie of the road. */
+  road: 9,
+  /** A kick's change of vertical speed (m/s) to spring speed, the seconds it is taken up over, and how far it may take him down or up. */
+  kick: 3.6, kickSeconds: .045, bumpRange: [-.3, .55],
+  /** At full charge his arms swing with the pump: the source's crouched pump, back and forth between two of its frames. [share, frame, frames, radians per second] */
+  arms: [.34, 17, 13, 5.2],
+  /** The lean a carve asks for per radian of the controller's own lean, how much of the source's leaned stance it is, and how far a turn presses him down. */
+  carve: 1 / .28, tilt: .46, lowTilt: .7, press_into_turn: .2,
+  /** With nothing asked of him: he shifts his weight ([lean, radians per second, phase]), gives at the knees
+   * ([depth, radians per second]), lets his arms ride ([share, frame, frames, radians per second] of the
+   * source's standing pump) and drifts toward the looser stance and back ([share, radians per second]). */
+  sway: [[.4, 1.3, 0], [.24, 2.9, 2.1]], breath: [.085, 6.6], loose: [.42, 24, 12, 3.3], drift: [.3, .37],
+} as const;
 const ordinaryMotionHints = new Set(['player.idle','player.run','player.skate','player.jump-charge',
   'player.jump','player.fall','player.double-jump']);
 // Zero-based 60 Hz source cues, checked against Bone Man's retargeted soles.
@@ -78,7 +114,12 @@ export class PlayableSkateMotion {
   private preparedMount = '';
   private mountStart = 0;
   private idleClock = 0;
+  // What keeps a rider moving: its clock, three springs (value, speed), and the road under him last frame.
+  private readonly life = {clock: 0, down: 0, downSpeed: 0, lean: 0, leanSpeed: 0, bump: 0, bumpSpeed: 0, height: Number.NaN, climb: 0, held: 0, kicked: 0, pumping: 0};
   private clip: SourceClip | null = null;
+  // The lie of the road as the rider has caught up with it.
+  private readonly road = new THREE.Quaternion();
+  private roadKnown = false;
   private readonly clips: Map<string, SourceClip>;
   private readonly rider: THREE.Object3D;
   private readonly body: THREE.Object3D;
@@ -287,6 +328,8 @@ export class PlayableSkateMotion {
     this.speedRecoveryPush=false;
     this.sourceStance=this.previousSkateStance=DEFAULT_SKATE_STANCE;
     this.dismountRunBlend=0;
+    Object.assign(this.life,{down:0,downSpeed:0,lean:0,leanSpeed:0,bump:0,bumpSpeed:0,height:Number.NaN,climb:0,held:0,kicked:0,pumping:0});
+    this.roadKnown=false;
     this.lastPose = this.previousPose = this.fromPose = this.fromPreviousPose = null; this.fade = 1;
     this.transitionAge=0;
     this.wasMounted = false; this.wasGrounded = true; this.opacity(1);
@@ -338,6 +381,95 @@ export class PlayableSkateMotion {
       m.material.depthWrite = alpha < .999 ? false : m.depthWrite;
     }
   }
+  /** Advance the rider's springs. They run whenever he is on the board, so a
+   * push, a landing or an ollie hands back a body that is already moving. */
+  private advanceLife(dt: number, riding: boolean, charging: boolean): void {
+    const p=this.p,life=this.life;
+    if(!(dt>0))return;
+    life.clock+=dt;
+    const charge=charging?THREE.MathUtils.clamp(p.chargePose??0,0,1):0;
+    // A dip on the press, down as the charge fills, and at full charge two beats that never settle.
+    const pumping=life.pumping=smooth((charge-.9)/.1);
+    const pump=RIDE_LIFE.pump.reduce((sum,[depth,rate,phase])=>sum+depth*Math.sin(life.clock*rate+phase),0);
+    const carve=riding?THREE.MathUtils.clamp((p.lean??0)*RIDE_LIFE.carve,-1,1):0;
+    const sway=riding&&!charging?RIDE_LIFE.sway.reduce((sum,[size,rate,phase])=>sum+size*Math.sin(life.clock*rate+phase),0):0;
+    const breath=riding&&!charging?RIDE_LIFE.breath[0]*(1+Math.sin(life.clock*RIDE_LIFE.breath[1])):0;
+    // (A charge taken over from a landing starts where the landing had him, and is not let up to fill again.)
+    if(!charging)life.held=0;
+    const down=charging?Math.max(life.held,RIDE_LIFE.press+(RIDE_LIFE.full-RIDE_LIFE.press)*smooth((charge-.3)/.7))+pumping*pump
+      :breath+Math.abs(carve)*RIDE_LIFE.press_into_turn;
+    // The road: how his climb changed in one frame. Leaving it, or meeting it again, is a landing's business.
+    let kick=0;
+    if(riding&&p.grounded){
+      if(Number.isFinite(life.height)){const climb=(p.pos.y-life.height)/dt;kick=THREE.MathUtils.clamp(climb-life.climb,-4,4);life.climb=climb;}
+      life.height=p.pos.y;
+    }else{life.height=Number.NaN;life.climb=0;}
+    // A kerb is a step in one frame; his knees take it up over a few.
+    life.kicked+=kick;
+    const taken=life.kicked*(1-Math.exp(-dt/RIDE_LIFE.kickSeconds));
+    life.kicked-=taken;life.bumpSpeed+=taken*RIDE_LIFE.kick;
+    const spring=(value:number,speed:number,target:number,[rate,damping]:readonly [number,number]):[number,number]=>{
+      // Small fixed steps: the same swing at 30 Hz as at 120.
+      const steps=Math.max(1,Math.ceil(dt*240)),h=dt/steps;
+      for(let i=0;i<steps;i++){speed+=(rate*rate*(target-value)-2*damping*rate*speed)*h;value+=speed*h;}
+      return [value,speed];
+    };
+    [life.down,life.downSpeed]=spring(life.down,life.downSpeed,down,RIDE_LIFE.crouch);
+    [life.lean,life.leanSpeed]=spring(life.lean,life.leanSpeed,carve+sway,RIDE_LIFE.lean);
+    [life.bump,life.bumpSpeed]=spring(life.bump,life.bumpSpeed,0,RIDE_LIFE.bump);
+    life.bump=THREE.MathUtils.clamp(life.bump,RIDE_LIFE.bumpRange[0],RIDE_LIFE.bumpRange[1]);
+  }
+
+  /** The riding pose, upright or charging: several of the source's stances
+   * mixed by the rider's springs. The last one sampled is always a stance
+   * with both feet on the deck, which is what the contact fit reads. */
+  private sampleRide(): Record<string, number> {
+    const rt=this.retarget,life=this.life,options={travel:false,rest:false};
+    const loop=(name:string,clock=this.idleClock)=>{const clip=this.clips.get(name)!;return rt.apply(clip,clock%clipDuration(clip),options);};
+    const still=(name:string,frame:number)=>{const clip=this.clips.get(name)!;return rt.apply(clip,frame/clip.fps,options);};
+    // The pose just sampled, `weight` of the way from `from`.
+    const mix=(from:Pose,was:Record<string,number>,now:Record<string,number>,weight:number)=>{
+      this.blend(from,weight);
+      const out:Record<string,number>={};
+      for(const key of new Set([...Object.keys(was),...Object.keys(now)]))out[key]=THREE.MathUtils.lerp(was[key]??1,now[key]??1,weight);
+      return out;
+    };
+    // (The controller's lean is positive toward the side the source calls N.)
+    const lean=THREE.MathUtils.clamp(life.lean,-1,1),tilt=Math.abs(lean),toward=lean>=0?'N100':'P100';
+    const down=THREE.MathUtils.clamp(life.down+Math.max(0,life.bump),0,1/RIDE_LIFE.depth);
+    // Upright: the ride loop, drifting toward the looser stance and back, leaned into a turn, lifted off a crest.
+    let scalars=loop(rideNames[this.style]);
+    const drift=this.style==='Relaxed'?RIDE_LIFE.drift[0]*(.5+.5*Math.sin(life.clock*RIDE_LIFE.drift[1]))*(1-smooth(down*2)):0;
+    if(drift>.004){const from=this.capture();scalars=mix(from,scalars,loop(rideNames.Loose),drift);}
+    if(tilt>.004){const from=this.capture();scalars=mix(from,scalars,loop(`R_IDLE_HCOM_${toward}`),tilt*RIDE_LIFE.tilt);}
+    // His arms ride loose while he coasts, and lift off a crest.
+    const swing=(share:number,frame:number,frames:number,rate:number,phase=0)=>[share,frame+frames*Math.sin(life.clock*rate+phase)] as const;
+    const [loose,looseFrame]=swing(...RIDE_LIFE.loose),lifted=Math.min(.6,Math.max(0,-life.bump)*2);
+    const arms=Math.max(lifted,loose*(1-smooth(down*3))*(1-life.pumping));
+    if(arms>.004){
+      const from=this.capture();
+      scalars=mix(from,scalars,still('R_PUMP_STR_HCOM_0_N',THREE.MathUtils.lerp(looseFrame,30,lifted/arms)),arms);
+    }
+    if(down>.004){
+      const upright=this.capture(),uprightScalars=scalars;
+      // Down: the ollie crouch, on its own bounce; leaned as he steers; folded on toward the hard landing's low point.
+      scalars=loop('R_ANTIC_OLLIE_N_0_CYC',life.clock);
+      if(tilt>.004){const from=this.capture();scalars=mix(from,scalars,loop(`R_ANTIC_OLLIE_${lean>=0?'L':'R'}_0_CYC`,life.clock),tilt*RIDE_LIFE.lowTilt);}
+      const fold=THREE.MathUtils.lerp(RIDE_LIFE.fold[0],RIDE_LIFE.fold[1],smooth(life.down));
+      {const from=this.capture();scalars=mix(from,scalars,still('L_LAND_HIGH_AGGR_1_N',RIDE_LIFE.foldFrame),fold);}
+      // At full charge his arms swing with the pump.
+      const [pumped,pumpFrame]=swing(...RIDE_LIFE.arms,.6);
+      if(life.pumping>.004){const from=this.capture();scalars=mix(from,scalars,still('R_PUMP_STR_CROUCH_0_N',pumpFrame),pumped*life.pumping);}
+      scalars=mix(upright,uprightScalars,scalars,down*RIDE_LIFE.depth);
+    }
+    return scalars;
+  }
+  /** For the studies and checks: the rider's springs as they stand. */
+  get lifeDiagnostics() {
+    const life=this.life;
+    return {down:+life.down.toFixed(4),lean:+life.lean.toFixed(4),bump:+life.bump.toFixed(4)};
+  }
+
   private enter(phase: Phase, name = ''): void {
     this.fromPose = this.lastPose ?? this.capture(); this.fade = 0;
     this.fromPreviousPose=this.previousPose;this.transitionDt=this.previousDt;this.transitionAge=0;
@@ -479,6 +611,7 @@ export class PlayableSkateMotion {
     this.wasMounted = mounted; this.wasGrounded = p.grounded;
     this.idleClock += dt; this.time += dt;
     this.fade = Math.min(1, this.fade + dt / (this.phase === 'land' ? .07 : .18));
+    this.advanceLife(dt, wanted && mounted && (this.phase === 'ride' || this.phase === 'charge'), wanted && this.phase === 'charge');
 
     if (!wanted) {
       if (this.phase !== 'foot') this.enter('foot');
@@ -497,6 +630,13 @@ export class PlayableSkateMotion {
       this.enter('land', this.style==='Loose'?'L_LAND_HIGH_LOOSE_1_N':'L_LAND_HIGH_AGGR_1_N');
     } else if (!mounted && !p.grounded) {
       if(this.phase!=='foot')this.enter('foot');
+    } else if (this.phase === 'land' && mounted && this.time >= RIDE_LIFE.foldFrame / this.clip!.fps &&
+        input.jumpHeld && !input.jumpCancelled && !this.speedRecoveryPush) {
+      // Held through a landing, the charge takes him at the landing's own low
+      // point instead of letting him stand up first to crouch again.
+      this.mountHold = false;
+      this.enter('charge','R_ANTIC_OLLIE_N_0_CYC');
+      this.life.down = this.life.held = RIDE_LIFE.full; this.life.downSpeed = 0;
     } else if (this.phase === 'mount' || this.phase === 'dismount' || this.phase === 'land') {
       if (this.time >= clipDuration(this.clip!)-(this.phase==='mount'?this.mountStart:0)) {
         if (mounted) this.ride(); else {
@@ -513,8 +653,13 @@ export class PlayableSkateMotion {
       const charge = input.jumpHeld && !input.jumpCancelled && !this.mountHold && !this.speedRecoveryPush;
       const pushing = !input.grabHeld && (this.speedRecoveryPush || !charge && input.moveY > .25);
       const pushSpeedAllowed = this.speedRecoveryPush || Math.abs(p.speed)<19;
-      if (charge && this.phase !== 'charge') this.enter('charge','R_ANTIC_CROUCH_HIGHOLLIE_N_0_INTO');
-      else if (!charge && this.phase === 'charge') this.ride();
+      // Riding and charging are one body on the same springs: going from one
+      // to the other is not a cut, so nothing is faded.
+      if (charge && this.phase !== 'charge') {
+        const riding = this.phase === 'ride';
+        this.enter('charge','R_ANTIC_OLLIE_N_0_CYC');
+        if (riding) {this.fromPose = null; this.fade = 1;}
+      } else if (!charge && this.phase === 'charge') {this.ride(); this.fromPose = null; this.fade = 1;}
       else if (pushing && pushSpeedAllowed && this.phase === 'ride') {
         this.pushFast = Math.abs(p.speed) > 10; this.enter('push-enter',this.pushName('INTO'));
       } else if (!pushing && (this.phase === 'push' || this.phase === 'push-enter')) {
@@ -543,10 +688,9 @@ export class PlayableSkateMotion {
     // Native skating adds a side-on root turn. Source hips already contain it.
     this.sourceFrame();
     let sampleTime = this.time+(this.phase==='mount'?this.mountStart:0);
-    if (this.phase === 'ride') sampleTime = this.idleClock % clipDuration(this.clip!);
-    if (this.phase === 'charge') sampleTime = Math.min(clipDuration(this.clip!), this.time);
     if (this.phase === 'air') sampleTime = Math.min(clipDuration(this.clip!), this.time);
-    let scalars = this.retarget.apply(this.clip!,sampleTime,{travel:false,rest:false});
+    const riding = this.phase === 'ride' || this.phase === 'charge';
+    let scalars = riding ? this.sampleRide() : this.retarget.apply(this.clip!,sampleTime,{travel:false,rest:false});
     if(this.phase==='air' && p.vVel<0) {
       const airPose=this.capture(),airScalars=scalars;
       const weight=smooth(-p.vVel/7);
@@ -566,8 +710,19 @@ export class PlayableSkateMotion {
     // the native support frame; do not tilt on-foot pickup around a deck axis.
     if (mounted && this.phase!=='mount' && p.grounded && p.groundHit?.normal) {
       const support = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),p.groundHit.normal);
+      const turn = this.body.quaternion.clone();
       this.body.quaternion.premultiply(support);
-    }
+      // The board takes the road as it comes. He takes it late: over the foot
+      // of a ramp or a hump the deck tips under him and he comes round to it
+      // after, where he used to be thrown over with it in a single frame.
+      if (!this.roadKnown) {this.road.copy(support); this.roadKnown = true;}
+      else this.road.slerp(support, 1 - Math.exp(-Math.max(0, dt) * RIDE_LIFE.road));
+      if (this.road.angleTo(support) > 1e-4) {
+        this.rider.quaternion.premultiply(this.body.quaternion.clone().invert().multiply(this.road).multiply(turn));
+        // His soles go back onto the deck as it now lies.
+        this.fitSourceContacts();
+      }
+    } else this.roadKnown = false;
     this.retarget.board.updateWorldMatrix(true,false);
     const mountBoard=this.phase==='mount'?this.retarget.board.matrixWorld.clone():null;
     const mountHips=mountBoard?this.retarget.rig.jointsById.get('hips')!.node.getWorldPosition(new THREE.Vector3()):null;

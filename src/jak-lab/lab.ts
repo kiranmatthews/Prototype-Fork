@@ -6,6 +6,7 @@ import {FuelCellHudExhibit} from './fuelCellHudExhibit';
 import {ScreenHudExhibit} from './screenHudExhibit';
 import {ScreenHud,screenHudDefinition} from './screenHud';
 import {FirstPersonHud} from './firstPersonHud';
+import {ProgressHud} from './progressHud';
 import {ParticleRenderPass} from './distortion';
 import {effectExhibits} from './exhibits';
 import {effectCategories,categoryLabel,type EffectCategory} from './effectCategories';
@@ -18,6 +19,7 @@ function isHud(view:LabView|undefined):view is FuelCellHudExhibit|ScreenHudExhib
 import {configureAssetBase} from './types';
 import './lab.css';
 
+const particleStudy=document.documentElement.dataset.jakStudy==='particles';
 const host=document.querySelector<HTMLDivElement>('#lab')!;
 host.innerHTML=`
   <canvas class="world" aria-label="Explorable Jak and Daxter effects lab" tabindex="0"></canvas>
@@ -27,6 +29,10 @@ host.innerHTML=`
   <aside class="panel inspection" aria-label="Exhibit inspection"><p class="eyebrow" id="selected-kind">Original / Gouraud</p><h2 id="selected-name">Loading…</h2><p class="muted" id="selected-area"></p><div class="mode-switch"><button data-mode="original">Original</button><button data-mode="gouraud">Gouraud</button><button data-mode="compare" aria-pressed="true">Both</button></div><div class="inspection-content"><div class="row"><button id="pause" aria-pressed="false">Pause</button><button id="restart">Restart</button><select id="speed" aria-label="Playback speed"><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1" selected>1× speed</option><option value="2">2× speed</option></select></div><label class="field" id="timeline-field">EFFECT TIME<input id="timeline" type="range" min="0" max="1" step=".001" value="0" aria-label="Effect time"></label><label class="check"><input type="checkbox" id="native-scale">Show at original world scale</label><label class="field">RENDER RESOLUTION<select id="resolution" aria-label="Render resolution"><option value="720">720p</option><option value="native" selected>MAX / native</option></select></label><div class="status" id="status"></div><div class="statline" id="statistics"></div><div class="source" id="provenance"></div></div></aside>
   <div class="loading" role="status" id="loading">Opening the local source archive…</div>
   <footer class="footer"><span><kbd>W A S D</kbd> move · <kbd>Q E</kbd> down / up · <kbd>Shift</kbd> faster · drag to look / orbit</span><div class="legend"><span>Original effects</span><span>Gouraud variants</span></div><span id="render-stats"></span></footer>`;
+if(particleStudy){
+  host.querySelector('h1')!.textContent='JAK & DAXTER / PARTICLE STUDY';
+  host.querySelector('.brand small')!.textContent='Recovered particles, HUD layouts and transitions';
+}
 const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const canvas=host.querySelector<HTMLCanvasElement>('canvas.world')!;
 const loading=element('loading');
@@ -55,6 +61,17 @@ hudControls.innerHTML=`<summary id="hud-summary">Power-cell HUD</summary>
   <label class="check" id="hud-hold-field"><input type="checkbox" id="hud-hold" checked>Hold visible</label>
   <label class="field" id="hud-progress-field">PROGRESS MENU<select id="hud-progress" aria-label="Progress menu state"><option value="absent">Closed</option><option value="open">Open</option><option value="going-out">Closing</option><option value="gone">Gone</option></select></label>
   <label class="check" id="hud-movie-field"><input type="checkbox" id="hud-movie">Cinematic active</label>
+  <div id="hud-menu-fields">
+    <label class="field">MENU PAGE<select id="hud-menu-page" aria-label="Menu page"><option value="fuel-cell">Power cells</option><option value="money">Precursor orbs</option><option value="buzzer">Scout flies</option><option value="save-game">Save slots</option><option value="auto-save">Autosave notice</option><option value="frame">Frame / settings</option></select></label>
+    <label class="field">POWER CELLS (0–8)<input id="hud-menu-count" aria-label="Power cell count" type="number" min="0" max="8" step="1" value="8"></label>
+    <label class="field">SELECTED CELL (1–8)<input id="hud-menu-cell" aria-label="Selected power cell" type="number" min="1" max="8" step="1" value="3"></label>
+    <label class="field">CELL STATE<select id="hud-menu-cell-state" aria-label="Power cell state"><option value="1">Undiscovered</option><option value="2">Available</option><option value="3">Collected</option></select></label>
+    <label class="check"><input id="hud-menu-level-open" type="checkbox" checked>Area discovered</label>
+    <div class="row"><button id="hud-menu-previous">Previous area</button><button id="hud-menu-next">Next area</button></div>
+    <label class="field">SAVE SLOT<select id="hud-menu-slot" aria-label="Save slot"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option><option value="3">Slot 4</option></select></label>
+    <label class="check"><input id="hud-menu-occupied" type="checkbox" checked>Slot occupied</label>
+    <label class="check"><input id="hud-menu-wait" type="checkbox">Other HUD still visible</label>
+  </div>
   <label class="field" id="hud-health-field">HEALTH<select id="hud-health" aria-label="Health"><option value="3">3 · full</option><option value="2">2</option><option value="1">1 · low health</option><option value="0.5">½</option><option value="0">0</option><option value="none">No target</option></select></label>
   <label class="field" id="hud-eco-type-field">ECO TYPE<select id="hud-eco-type" aria-label="Eco type"><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="red">Red</option><option value="green">Green</option></select></label>
   <label class="field" id="hud-eco-charge-field">STARTING ECO (%)<input id="hud-eco-charge" aria-label="Starting eco (%)" type="number" min="0" max="120" step="1" value="100"></label>
@@ -89,6 +106,11 @@ async function boot():Promise<void> {
   const catalogue=await response.json() as Catalogue;
   configureAssetBase(catalogueURL);
   if(catalogue.schemaVersion!==1)throw new Error('Unsupported source catalogue version');
+  if(particleStudy&&!catalogue.progressHud){
+    const progress=await fetch(new URL('progress-hud.json',catalogueURL));
+    if(!progress.ok)throw new Error('The progress-menu study metadata is unavailable');
+    catalogue.progressHud=await progress.json();
+  }
   const areaNames:Record<string,string>={common:'Shared effects',beach:'Sentinel Beach',citadel:'Gol & Maia’s Citadel',darkcave:'Dark Eco Plant',demo:'Demo scenes',finalboss:'Final battle',firecanyon:'Fire Canyon',intro:'Opening scenes',jungle:'Forbidden Jungle',jungleb:'Jungle temple',lavatube:'Lava Tube',maincave:'Spider Cave',misty:'Misty Island',ogre:'Mountain Pass boss',robocave:'Spider Cave machinery',rolling:'Precursor Basin',snow:'Snowy Mountain',sunken:'Lost Precursor City',sunkenb:'Precursor City chambers',swamp:'Boggy Swamp',title:'Title scene',training:'Geyser Rock',village1:'Sandover Village',village2:'Rock Village',village3:'Volcanic Crater',racer_common:'Zoomer',flut_common:'Flut Flut',engine:'Engine & HUD'};
   const pretty=(name:string)=>name.replace(/^group-/,'').replace(/-lod0$/,'').replace(/-/g,' ');
   const exhibits=effectExhibits(catalogue);
@@ -118,7 +140,7 @@ async function boot():Promise<void> {
   });scene.add(pedestal,trim);
   const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=65;controls.maxPolarAngle=Math.PI*.49;
   const loaded=new Map<string,LabView>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
-  let selected=exhibits.find(exhibit=>exhibit.id==='effect:58')??exhibits[0];
+  let selected=exhibits.find(exhibit=>exhibit.id===(particleStudy?'effect:31004':'effect:58'))??exhibits[0];
   let mode:RenderingMode='compare',paused=false,speed=1,exploring=false,page=0,filtered=exhibits,wanted=new Set<string>();
   let tick=0,statsTick=0,frameTime=0;
   const areaSelect=element<HTMLSelectElement>('area'),kindSelect=element<HTMLSelectElement>('kind'),search=element<HTMLInputElement>('search');
@@ -175,8 +197,9 @@ async function boot():Promise<void> {
       const kind=view instanceof ScreenHudExhibit?view.hud.definition.id:'fuel-cell';
       element('hud-summary').textContent=view instanceof ScreenHudExhibit?view.hud.definition.name:'Power-cell HUD';
       element('hud-health-field').hidden=kind!=='health';
-      element('hud-hold-field').hidden=element('hud-full-frame-field').hidden=kind==='first-person';
+      element('hud-hold-field').hidden=element('hud-full-frame-field').hidden=kind==='first-person'||kind==='progress';
       element('hud-progress-field').hidden=element('hud-movie-field').hidden=kind!=='first-person';
+      element('hud-menu-fields').hidden=kind!=='progress';
       for(const id of ['hud-eco-type-field','hud-eco-charge-field','hud-eco-drain-field'])element(id).hidden=kind!=='power';
       element('hud-note').textContent='Restart replays the arrival. Turn off Hold visible to see the original timed departure. The close view crops the same screen without moving its layers. Tally text and sounds are not replayed.'+
         (kind==='power'?' A full eco charge lasts 20 source seconds. A changing charge keeps the HUD visible; Hide also stops the drain.':'');
@@ -190,6 +213,18 @@ async function boot():Promise<void> {
         element<HTMLSelectElement>('hud-progress').value=view.hud.progressState;
         element<HTMLInputElement>('hud-movie').checked=view.hud.movie;
         element('hud-note').textContent='Original first-person frame and selector. Opening the progress menu pushes the overlay away; closing it restores the overlay. Cinematics suppress it immediately. Show HUD replays the original arrival; Hide HUD plays the departure.';
+      }
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof ProgressHud) {
+        const hud=view.hud;
+        element<HTMLSelectElement>('hud-menu-page').value=hud.nextPage;
+        element<HTMLInputElement>('hud-menu-count').value=String(hud.taskStates.length);
+        element<HTMLInputElement>('hud-menu-cell').value=String(hud.taskIndex+1);
+        element<HTMLSelectElement>('hud-menu-cell-state').value=String(hud.taskStates[hud.taskIndex]??1);
+        element<HTMLInputElement>('hud-menu-level-open').checked=hud.levelOpen;
+        element<HTMLSelectElement>('hud-menu-slot').value=String(hud.option);
+        element<HTMLInputElement>('hud-menu-occupied').checked=hud.filledSlots[hud.option];
+        element<HTMLInputElement>('hud-menu-wait').checked=hud.otherHudVisible;
+        element('hud-note').textContent='Source menu particles and transitions. Change pages or replay the area transition; cell and slot controls provide inspection data. Restart waits while Other HUD still visible is checked. Menu text, sounds and standalone orb models are outside this effects exhibit.';
       }
     }
     deathControls.hidden=!(view instanceof ModelExhibit&&view.deathPlayback);
@@ -381,6 +416,7 @@ async function boot():Promise<void> {
     kindSelect.value=value;
   }
   updateCategories();
+  if(particleStudy){kindSelect.value='hud';filter();}
   search.oninput=filter;areaSelect.onchange=()=>{updateCategories();filter();};kindSelect.onchange=filter;
   element('previous').onclick=()=>{page--;renderResults();};element('next').onclick=()=>{page++;renderResults();};
   for(const button of host.querySelectorAll<HTMLButtonElement>('[data-mode]'))button.onclick=()=>{
@@ -416,6 +452,19 @@ async function boot():Promise<void> {
     view.hud.progressState=element<HTMLSelectElement>('hud-progress').value as typeof view.hud.progressState;};
   element('hud-movie').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud)
     view.hud.movie=element<HTMLInputElement>('hud-movie').checked;};
+  const progressHud=()=>{const view=loaded.get(selected.id);return view instanceof ScreenHudExhibit&&view.hud instanceof ProgressHud?view.hud:undefined;};
+  element('hud-menu-page').onchange=()=>{const hud=progressHud();if(hud)hud.selectPage(element<HTMLSelectElement>('hud-menu-page').value as typeof hud.page);};
+  element('hud-menu-count').onchange=()=>{const hud=progressHud(),value=Number(element<HTMLInputElement>('hud-menu-count').value);
+    if(hud&&Number.isFinite(value)){const count=Math.max(0,Math.min(8,Math.trunc(value)));hud.taskStates=Array.from({length:count},(_,i)=>hud.taskStates[i]??1);hud.taskIndex=Math.min(hud.taskIndex,count-1);inspect();}};
+  element('hud-menu-cell').onchange=()=>{const hud=progressHud(),value=Number(element<HTMLInputElement>('hud-menu-cell').value);
+    if(hud&&Number.isFinite(value)){hud.taskIndex=Math.max(-1,Math.min(hud.taskStates.length-1,Math.trunc(value)-1));inspect();}};
+  element('hud-menu-cell-state').onchange=()=>{const hud=progressHud();if(hud&&hud.taskIndex>=0)hud.taskStates[hud.taskIndex]=Number(element<HTMLSelectElement>('hud-menu-cell-state').value);};
+  element('hud-menu-level-open').onchange=()=>{const hud=progressHud();if(hud)hud.levelOpen=element<HTMLInputElement>('hud-menu-level-open').checked;};
+  element('hud-menu-previous').onclick=()=>progressHud()?.changeLevel(2);
+  element('hud-menu-next').onclick=()=>progressHud()?.changeLevel(1);
+  element('hud-menu-slot').onchange=()=>{const hud=progressHud();if(hud){hud.selectOption(Number(element<HTMLSelectElement>('hud-menu-slot').value));inspect();}};
+  element('hud-menu-occupied').onchange=()=>{const hud=progressHud();if(hud)hud.filledSlots[hud.option]=element<HTMLInputElement>('hud-menu-occupied').checked;};
+  element('hud-menu-wait').onchange=()=>{const hud=progressHud();if(hud)hud.otherHudVisible=element<HTMLInputElement>('hud-menu-wait').checked;};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
@@ -527,6 +576,8 @@ async function boot():Promise<void> {
           `\nECO  ${view.hud.ecoType} · ${(view.hud.fraction*100).toFixed(1)}% · ${(view.hud.remaining/300).toFixed(2)} s`:'';
       if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud)element('statistics').textContent+=
         `\nPROGRESS  ${view.hud.progressState}\nCINEMATIC  ${view.hud.movie?'active':'off'}`;
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof ProgressHud)element('statistics').textContent+=
+        `\nPAGE  ${view.hud.page}\nTRANSITION  ${view.hud.transition} / 512\nCELLS  ${view.hud.taskStates.length}`;
       if(view instanceof ModelExhibit&&view.deathPlayback) {
         const death=view.deathPlayback;
         element('statistics').textContent+=`\nDEATH  ${death.phase}${death.profileId?' · '+death.profileId:''}\nPARTICLES  ${death.motion.particles.length} · EMITTED ${death.launched}\nCAPACITY DROPS  ${death.motion.dropped}`;

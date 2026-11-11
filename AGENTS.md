@@ -27,6 +27,10 @@ as ended when that batch is done.
 - Shared runtime files and `public/levels.json` change often. Merge published
   level data by level ID; never overwrite the pack with an older branch's copy.
 - Respect any publication hold the user places on a branch until they lift it.
+- Character movement/animation authority: the user designated Claude's
+  `91fe4413` (11 November 2026) as the current baseline. Preserve it and later
+  mainline animation work when integrating older jump/skate experiments.
+  See `docs/WORKTREE_INTEGRATION_2026-11-11.md` for the audited branch history.
 - `docs/RELEASE_COORDINATION.md` records two one-off coordinated batches
   (October and November 2026). It is history, not current instructions.
 

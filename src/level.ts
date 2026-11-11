@@ -1,6 +1,7 @@
 import {COLOURED_GEMS,colouredGemCollection,isColouredGemColour,type ColouredGemColour} from './colouredGems';
 import {createDesertMaterial} from './desertMaterials';
 import {attachFlameHeat} from './flameHeatSource';
+import {writeTorchHeat} from './torchHeat';
 import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
@@ -15448,7 +15449,7 @@ export class Level {
       // not cough in unison the moment the level loads.
       smokeT: (this.torches.length % 7) * 0.31,
     };
-    attachFlameHeat(group,emit=>emit(0,h+1.25*scale,0,.75*scale,1.2*scale,1.8*t.burn,t.seed),flames);
+    attachFlameHeat(group,emit=>writeTorchHeat(emit,this.vfxT,h,scale,t.burn,t.seed),flames);
     this.torches.push(t);
     return t;
   }

@@ -81,6 +81,38 @@ held soles that stay put while he stands up, a standing touchdown with no
 stock landing in it, and that running on out of the jump keeps run speed from
 the first frame on the ground through the ordinary running landing.
 
+D also carries the body between standing, the crouch and the crawl
+(`jakLowMotion.ts`): the native clips stay, the five-frame enter and exit
+clips and the crossfades go. Between the crouch and the crawl, and up off all
+fours, each foot is carried across the floor by the player while the legs take
+the new motion at once, because half way between those poses a shin points
+straight down through the floor. The crawl moves at 1.1 m/s and plays one
+cycle for every 0.9 m; the three rules that were plain speeds against the old
+3.5 m/s crawl, the one that turns the body to face its travel among them, are
+now shares of the crawl's own pace. The low-pose regression covers 18 runs at
+three frame rates against a native control, ten directions of crawl on both
+suites, thirteen crawls caught at different phases and pushes of the stick,
+nine jumps pressed just after a crawl begins or stops, four hops that land
+back in a crouch or a crawl, and a carry cut short.
+
+D's skid, idle, standing charge and riding are its own as well. The skid
+(`jakSkid.ts`) is keyed and unmirrored, timed from the speed he has left, and
+baked at five sizes for the pace he stops from. Its soles take the floor flat
+and slide on it to the stop, each giving up its lead as the ground left runs
+out so that it is on the idle's mark as he stops (`slideKeyedSoles`), and lay
+dust while they slide; its arms are held out for balance, not thrown. The idle
+(`jakIdle.ts`) is the source idle's swing about the skate study's off-board
+stand, with the legs solved to planted soles. The charge (`jakCharge.ts`)
+winds down over soles held on the idle's marks and gives slowly at the knees
+for as long as it is held, its arms swept back low. On a ledge the hands
+(`ledgeHands.ts`) reach once each for every half metre of lip, at a metre a
+second with the stick right over.
+A rider (`playableMotion.ts`) stands on springs: a deep charge crouch folded
+toward the hard landing's low point that keeps pumping, a lean into turns, a
+knee for the road, and weight shifts while he coasts. `test-jak-skid`,
+`test-jak-charge` and `test-skate-life` cover them at three frame rates
+against native controls.
+
 The follow-up passes nine rubber-motion cases, 18 double-jump transitions,
 12 UI-tuning configurations, source-retarget and precision-jump checks. Paired
 traces retain exact movement parity; the second jump still lifts the head by

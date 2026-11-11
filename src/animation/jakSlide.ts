@@ -43,7 +43,9 @@ export const JAK_SLIDE_JUMP={apex:A,fall:FALL,land:LAND,
 /** Pelvis heights: standing, and seated on the floor. Standing is where the
  * source idle ends up once the on-foot seating has brought it down from its
  * own, higher root, so the handover to it is level. */
-const STAND=.541,SEAT=.12;
+export const JAK_STAND=.56;
+/** And where the run that a slide starts from carries it. */
+const STAND=JAK_STAND,STRIDE=.541,SEAT=.12;
 
 // Degrees unless noted. `pelvis`/`back` are root height/setback in rig units;
 // `reach*` is a thigh's pitch in the body's frame, whatever the hips are
@@ -53,7 +55,9 @@ const CHANNELS=['pelvis','back','hips','yaw','roll','spine','twist','chest','nec
   'armPitchL','armRollL','elbowL','armsL','reachL','splayL','kneeL','ankleL','plantL','legsL',
   'armPitchR','armRollR','elbowR','armsR','reachR','splayR','kneeR','ankleR','plantR','legsR'] as const;
 type Channel=typeof CHANNELS[number];
-type Keys=Partial<Record<Channel,readonly Key[]>>;
+/** One keyed clip: a list of keys for each channel it moves. Shared by D's other keyed clips. */
+export type JakKeys=Partial<Record<Channel,readonly Key[]>>;
+type Keys=JakKeys;
 /** The same value at both ends of the looping sway. */
 const sit=(value:number,drift=0):Key[]=>[[HOLD,value],[(HOLD+RISE)/2,value+drift],[RISE,value]];
 
@@ -61,7 +65,7 @@ const SLIDE:Keys={
   // One sweep down: the hip eases onto the floor instead of hitting it, and
   // the bounce is left to the spine, head and arms above it. The get-up
   // rocks forward onto the feet, rises a little past standing and sinks back.
-  pelvis:[[0,STAND,'out'],[.16,SEAT+.003],[.25,SEAT+.016],[.36,SEAT],...sit(SEAT),[r(.06),SEAT+.004],[r(.22),.215],[r(.36),.425],[r(.50),.582],[r(.66),.518],[r(.84),STAND]],
+  pelvis:[[0,STRIDE,'out'],[.16,SEAT+.003],[.25,SEAT+.016],[.36,SEAT],...sit(SEAT),[r(.06),SEAT+.004],[r(.22),.215],[r(.36),.431],[r(.50),STAND+.041],[r(.66),STAND-.023],[r(.84),STAND]],
   back:[[0,0,'out'],[.17,-.32],[.29,-.30],...sit(-.30),[r(.10),-.25],[r(.27),-.05],[r(.44),0]],
   hips:[[0,6,'out'],[.17,-67],[.28,-60],[.38,-62],...sit(-62,1.5),[r(.07),-57],[r(.19),-14],[r(.29),19],[r(.42),5],[r(.54),-2],[r(.68),.5],[r(.82),0]],
   yaw:[[0,0,'out'],[.19,-27],[.31,-24],...sit(-24),[r(.16),-9],[r(.34),3],[r(.52),0]],
@@ -113,7 +117,7 @@ const SLIDE:Keys={
 // itself is the pelvis running on into the stop (`carry`), so a longer fall
 // gives more.
 const JUMP:Keys={
-  pelvis:[[0,SEAT],[.13,.50],[.24,.575],[.34,.558],[A,.555],[a(.12),.565],[a(.22),.56],[LAND,.56],[l(.27),.576],[l(.45),.522],[l(.64),STAND]],
+  pelvis:[[0,SEAT],[.13,.50],[.24,.575],[.34,.558],[A,.555],[a(.12),.565],[a(.22),.56],[LAND,.56],[l(.27),STAND+.035],[l(.45),STAND-.019],[l(.64),STAND]],
   back:[[0,-.30],[.15,-.04],[.24,0],[LAND,0],[l(.10),.03],[l(.28),-.01],[l(.46),0]],
   hips:[[0,-62],[.14,-8],[.24,6],[.33,4],[A,2],[a(.11),-4],[a(.22),-6],[LAND,-6],[l(.10),16],[l(.26),3],[l(.40),-1.5],[l(.56),.5],[l(.70),0]],
   yaw:[[0,-24],[.15,9],[.27,5],[A,-4],[a(.16),0]],
@@ -164,7 +168,8 @@ function sampler(keys:Keys):(time:number)=>Pose {
   };
 }
 
-function bake(original:AnimationClip,rig:RigDefinition,label:string,keys:Keys,end:number,profile:string):AnimationTrack[] {
+/** Bakes a keyed clip's channels into joint tracks at 120 Hz, with the elastic lengths of `profile`. */
+export function bakeJakKeys(original:AnimationClip,rig:RigDefinition,label:string,keys:Keys,end:number,profile:string):AnimationTrack[] {
   const id=original.id,amplitudes=characterElasticityAmplitudes(profile),sample=sampler(keys);
   const hipsY=rig.joints.find(j=>j.id==='hips')!.rest.position[1],rad=THREE.MathUtils.degToRad;
   const frames=Array.from({length:Math.round(end*120)+1},(_,i)=>{const time=Math.min(end,i/120);return {time,pose:sample(time)};});
@@ -203,10 +208,11 @@ function bake(original:AnimationClip,rig:RigDefinition,label:string,keys:Keys,en
 // `carry` leaves the pelvis behind when the travel itself jumps: the slide's
 // burst pulls his feet out from under him, the leap lifts him off the floor a
 // moment late, and the dead stop of the landing sinks him over his knees.
-const shape=(rates:[number,number,number,number,number],carry:[number,number,number]=[0,0,0],
+export const jakShape=(rates:[number,number,number,number,number],carry:[number,number,number]=[0,0,0],
   zeta:[number,number,number,number,number]=[1,1,1,1,1]):InertiaShape=>({
   root:[rates[0],zeta[0]],legs:[rates[1],zeta[1]],spine:[rates[2],zeta[2]],head:[rates[3],zeta[3]],arms:[rates[4],zeta[4]],
   lengths:[Math.max(rates[0],rates[1]),1],carry});
+const shape=jakShape;
 const ENTER=shape([46,52,40,36,32],[0,0,1]),CROSS=shape([38,40,34,31,28]);
 const LEAP=shape([50,54,43,37,33],[0,.5,.5]),TOUCH=shape([23,60,46,40,34],[0,.3,.35],[.55,1,1,1,1]);
 // Running on out of the jump, the legs are a run's at once and the arms come
@@ -223,7 +229,7 @@ export function createJakSlideClip(original:AnimationClip,rig:RigDefinition):Ani
   const end=RISE+JAK_SLIDE.lock+JAK_SLIDE.tail,id=original.id;
   return {...original,name:'D · Slide · low feet-first skid and an eased rise to the feet',duration:end,range:{start:0,end},
     playbackSpeed:1,loop:{...original.loop,mode:'once',seamless:false},
-    tracks:bake(original,rig,'slide',SLIDE,end,'jak-slide'),proceduralDrivers:[],contacts:[],events:[],
+    tracks:bakeJakKeys(original,rig,'slide',SLIDE,end,'jak-slide'),proceduralDrivers:[],contacts:[],events:[],
     markers:[{id:`${id}:down`,time:.17,name:'Hip down'},{id:`${id}:hold`,time:HOLD,name:'Skid'},
       {id:`${id}:rise`,time:RISE,name:'Rock forward'},{id:`${id}:crouch`,time:r(JAK_SLIDE.crouch),name:'On his feet'},
       {id:`${id}:stand`,time:r(JAK_SLIDE.stand),name:'Up, a little past standing'}],
@@ -245,7 +251,7 @@ export function createJakSlideJumpClip(original:AnimationClip,rig:RigDefinition)
   const end=l(JAK_SLIDE_JUMP.settle),id=original.id;
   return {...original,name:'D · Slide jump · high knees-up jump out of the skid',duration:end,range:{start:0,end},
     playbackSpeed:1,loop:{...original.loop,mode:'once',seamless:false},
-    tracks:bake(original,rig,'slide-jump',JUMP,end,'jak-slide-jump'),proceduralDrivers:[],contacts:[],events:[],
+    tracks:bakeJakKeys(original,rig,'slide-jump',JUMP,end,'jak-slide-jump'),proceduralDrivers:[],contacts:[],events:[],
     markers:[{id:`${id}:push`,time:.06,name:'Push off'},{id:`${id}:tuck`,time:.20,name:'Knees up'},
       {id:`${id}:apex`,time:A,name:'Over the top'},{id:`${id}:reach`,time:a(.22),name:'Legs down'},
       {id:`${id}:land`,time:LAND,name:'Touchdown'},{id:`${id}:dip`,time:l(JAK_SLIDE_JUMP.dip),name:'Give at the knees'},

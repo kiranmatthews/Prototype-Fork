@@ -79,7 +79,11 @@ export async function loadSourceModel(definition: ModelDefinition) {
   if(definition.encoding==='gzip') {
     const response=await fetch(url);
     if(!response.ok||!response.body)throw new Error(`Model transfer failed (${response.status})`);
-    const data=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    // Dev servers can set Content-Encoding: gzip. Fetch decodes that response
+    // before we see it; Pages instead serves the packed bytes verbatim.
+    const transfer=await response.arrayBuffer(),magic=new Uint8Array(transfer,0,Math.min(2,transfer.byteLength));
+    const data=magic[0]===0x1f&&magic[1]===0x8b
+      ?await new Response(new Blob([transfer]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer():transfer;
     if(data.byteLength!==definition.decodedBytes)throw new Error('Incomplete model transfer');
     asset=await loader.parseAsync(data,new URL('./',new URL(url,location.href)).href);
   } else asset=await loader.loadAsync(url);

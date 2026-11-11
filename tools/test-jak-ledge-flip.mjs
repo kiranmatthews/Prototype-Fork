@@ -64,7 +64,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
         if(now.distanceTo(previous)<.002)planted++;
         previous=now;assert.ok(p.ledgeGripError<.025,'shimmy glove contact');
       }
-      assert.ok(p.pos.x>start+.3,'shimmy movement was lost');
+      // (Three fifths of what that push covers in the time, at whatever pace the hands set.)
+      assert.ok(p.pos.x>start+.15*p.ledgeHands.traverseSpeed,'shimmy movement was lost');
       assert.ok(planted>5,'shimmy slid both hands continuously');
       tick({jumpPressed:true,jumpHeld:true});
       for(let f=0;f<90;f++){tick();clips.add(runtime.activeClipId);frames++;}

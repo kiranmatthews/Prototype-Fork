@@ -25,7 +25,16 @@ export function prepareGameplayAnimationAssets():Promise<GameplayAnimationAssets
  * overwritten or repeatedly retargeted each time the game starts. */
 export function gameplayAnimationDocument(base:AnimationSuiteDocument,rig:RigDefinition,bank:JakMotionBank):AnimationSuiteDocument {
   if(base.metadata?.gameplayAnimationScheme===GAMEPLAY_ANIMATION_SCHEME)return base;
-  const suite=createJakDirectSuite(base,rig,bank);
+  // main's authoring binding also contains the skateboard and its scaled
+  // presentation parent. D is authored in the body skeleton's local frame,
+  // exactly as in the comparison lab; its root keys target `root`, not the
+  // outer `skateBody`. Keep the full authoring rig in the saved document.
+  const bodyRig=rig.rootJointId==='skateBody'?{...rig,rootJointId:'root',
+    ...(rig.humanoid?{humanoid:{...rig.humanoid,root:'root'}}:{}),
+    joints:rig.joints.filter(joint=>!['skateBody','skateBoardFrame','skateBoard'].includes(joint.id))
+      .map(joint=>joint.id==='root'?{...joint,parentId:null}:joint),
+  }:rig;
+  const suite=createJakDirectSuite(base,bodyRig,bank);
   suite.metadata={...suite.metadata,gameplayAnimationScheme:GAMEPLAY_ANIMATION_SCHEME};
   return suite;
 }

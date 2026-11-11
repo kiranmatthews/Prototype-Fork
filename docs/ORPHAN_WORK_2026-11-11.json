@@ -1,0 +1,2368 @@
+{
+  "mainAtAudit": "d281ae70f49fdd8d60605fcc4b4fb03d121d768a",
+  "refsExamined": 268,
+  "nonMergeCommitsOutsideMain": 274,
+  "maximalDivergentLineages": 41,
+  "method": "Ancestry, patch equivalence, mainline commit correspondence and source/blob comparison. Missing paths may be historical evidence or intentional supersession, not missing runtime work.",
+  "lineages": [
+    {
+      "tip": "94fd499b6b2274cb4bd731f339dcc63fcbb9ac60",
+      "branches": [
+        "backup/pre-blockworks-cleanup-20260930"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "94fd499b6b2274cb4bd731f339dcc63fcbb9ac60",
+          "subject": "Preserve original rail test with pre-cleanup tracked work",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "dc0880e53bfaec5c83127ad0163366e3d9bb667b",
+      "branches": [
+        "cleanup/pre-sync-20261005"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "dc0880e53bfaec5c83127ad0163366e3d9bb667b",
+          "subject": "Place the three crate courses on the existing main map",
+          "publishedMatches": [
+            "7538e28d Place the three crate courses on the existing main map"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "8e1aba8147d2d8ae843036805ce83ff3b3f31430",
+      "branches": [
+        "codex/ancient-gates-marathon"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "8e1aba8147d2d8ae843036805ce83ff3b3f31430",
+          "subject": "Finish Ancient Gates art and validate the complete production journey",
+          "publishedMatches": [
+            "ca668910 Finish Ancient Gates art and validate the complete production journey"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "e4139bf9591ed14c203ab2ed261270e5ed5a976d",
+          "subject": "Record Ancient Gates gameplay milestone and pending art validation",
+          "publishedMatches": [
+            "d8bea1a2 Record Ancient Gates gameplay milestone and pending art validation"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "67e21ec1f7bc10e2f5b0a5b7507a0c3ad6f0ae84",
+          "subject": "Refine Ancient Gates masonry and bonus visual review coverage",
+          "publishedMatches": [
+            "f614fcb8 Refine Ancient Gates masonry and bonus visual review coverage"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "008bb6d616bc2d3accf61b0b0aecd3c7f0d57a28",
+          "subject": "Expand Ancient Gates with a varied marathon and Gatekeeper bonus",
+          "publishedMatches": [
+            "b7ef2149 Expand Ancient Gates with a varied marathon and Gatekeeper bonus"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "94609eac36c7cab89311b31ce0d8a82060b9aba9",
+      "branches": [
+        "codex/banana-bay"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "94609eac36c7cab89311b31ce0d8a82060b9aba9",
+          "subject": "Record Banana Bay validation and browser evidence",
+          "publishedMatches": [
+            "a1cd3fd0 Record Banana Bay validation and browser evidence"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "a1f1d729aa8a3c757c7c134d6221ce730365ab16",
+      "branches": [
+        "codex/beach-kite-release"
+      ],
+      "disposition": "historical_evidence_only",
+      "note": "Fourteen public-verification evidence files missing from main; kite implementation is published.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "a1f1d729aa8a3c757c7c134d6221ce730365ab16",
+          "subject": "Record live verification of half-speed kite air control",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/beach-street/air-control/public/README.md",
+            "docs/beach-street/air-control/public/browser-full.json",
+            "docs/beach-street/air-control/public/deployment.json",
+            "docs/beach-street/air-control/public/native-canal-flight.png",
+            "docs/beach-street/air-control/public/native-cliff.png",
+            "docs/beach-street/air-control/public/native-festival.png",
+            "docs/beach-street/air-control/public/native-freight.png",
+            "docs/beach-street/air-control/public/native-kite-release.png",
+            "docs/beach-street/air-control/public/native-lighthouse.png",
+            "docs/beach-street/air-control/public/native-tow.png",
+            "docs/beach-street/air-control/public/native-walking-finish.png",
+            "docs/beach-street/air-control/public/presentation-festival.png",
+            "docs/beach-street/air-control/public/presentation-tow.png",
+            "docs/beach-street/air-control/public/verification.json"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "5ddbc4997ce90b1777bce0054f2030563d6a44f4",
+      "branches": [
+        "codex/beach-street-excellence"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "91e97b24d2bf64e576d7b9e44857749692a4fb54",
+          "subject": "Restore kite charge controls, wind and planted bonus contact",
+          "publishedMatches": [
+            "422bb01b Restore kite charge controls, wind and planted bonus contact"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "4b269a846138c229fba36ebf4761c4e168d19b24",
+          "subject": "Build Beach Street kite-towed challenge course",
+          "publishedMatches": [
+            "48a89b22 Build Beach Street kite-towed challenge course"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "886ded9ae1ef53ed535e690195fb69d8d447c575",
+          "subject": "Refine Beach Street freight, ramp edges and pickup clearance",
+          "publishedMatches": [
+            "0f892239 Refine Beach Street freight, ramp edges and pickup clearance"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "bff9425e34d519759f92632180e9c1cec056c572",
+      "branches": [
+        "codex/beach-surface-regression"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "bff9425e34d519759f92632180e9c1cec056c572",
+          "subject": "Record Banana Bay surface regression trace and visual validation",
+          "publishedMatches": [
+            "783e6cfe Record Banana Bay surface regression trace and visual validation"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "15cec91c9c94c27f7552414fa44fef3d4830a64d",
+      "branches": [
+        "codex/bone-head-hud-hero"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "15cec91c9c94c27f7552414fa44fef3d4830a64d",
+          "subject": "Record validated Bone Head HUD presentation and recovery evidence",
+          "publishedMatches": [
+            "6e70570c Record validated Bone Head HUD presentation and recovery evidence"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "f9867ee68f46cf254432cba4ed36c430d9fc9f82",
+      "branches": [
+        "codex/cave-collapse",
+        "codex/rescue-20261025-071123/worktree-13"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "f9867ee68f46cf254432cba4ed36c430d9fc9f82",
+          "subject": "Open Treehouse beach swimming and fit ocean to sand",
+          "publishedMatches": [
+            "8dd3f98d Open Treehouse beach swimming and fit ocean to sand"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "40cc67b47ff552965b56cc20d725e0ad798509b1",
+      "branches": [
+        "codex/crate-art-rebuild"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "5bee927dbbd66b5858515c243d787c62e6aae648",
+          "subject": "Replace crate family with sculpted Tripo assets and matching fracture effects",
+          "publishedMatches": [
+            "fc4f5723 Replace crate family with sculpted Tripo assets and matching fracture effects"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "8de60c29aa35877df490d0bfadcb413bf7eac026",
+      "branches": [
+        "codex/jak-whole-game-lab"
+      ],
+      "disposition": "recovered_particle_lab",
+      "note": "Initially unfinished at audit. Subsequently recovered at user request as jak-particle-study.html, with source thresholds, actual icon sampling, manifest, builds and browser checks completed. Historical missingPaths below describe the original audit, not current omissions.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "8de60c29aa35877df490d0bfadcb413bf7eac026",
+          "subject": "Checkpoint progress menu particle port",
+          "publishedMatches": [],
+          "missingPaths": [
+            "src/jak-lab/progressHud.ts",
+            "src/jak-lab/progressHudRig.ts",
+            "src/jak-lab/progressPlacement.ts",
+            "tools/jak-lab/progress_hud.py",
+            "tools/jak-lab/test-progress-hud.mjs",
+            "tools/jak-lab/test_progress_hud.py",
+            "tools/jak-lab/test_progress_placement.py"
+          ]
+        },
+        {
+          "commit": "672d6f16dc1cb800a5035707af006144b9cf0ab5",
+          "subject": "Record first-person HUD validation",
+          "publishedMatches": [
+            "1abfe4ed Record first-person HUD validation"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "947b247574a0505dbad592f2df9afa228415efe0",
+          "subject": "Assemble source eco beams and sage-cage bars with correct sprite geometry",
+          "publishedMatches": [
+            "7bc3fdd2 Assemble source eco beams and sage-cage bars with correct sprite geometry"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "59b48d691805441f4a9d698fe85b48f8a9805ba4",
+          "subject": "Clarify D live tuning and record served roll completion",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "9ac4db826acfda4fc5ccdf424b360103420cb567",
+      "branches": [
+        "codex/jungle-ruins-flow-20261105"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "9ac4db826acfda4fc5ccdf424b360103420cb567",
+          "subject": "Fix Jungle Ruins alignment, rail crystal and finish foliage",
+          "publishedMatches": [
+            "4f5639b2 Fix Jungle Ruins alignment, rail crystal and finish foliage"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "4f2a6623566a7c7728d52af1a862b013ecb22143",
+      "branches": [
+        "codex/jungle-ruins-polish"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "4f2a6623566a7c7728d52af1a862b013ecb22143",
+          "subject": "Clear foliage from the Jungle ascent camera",
+          "publishedMatches": [
+            "e47c9c71 Clear foliage from the Jungle ascent camera"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "71ed93dfd4b34cb96303ea471c97ecacb6142add",
+          "subject": "Polish Jungle Ruins rockwork, stone platforms and cove",
+          "publishedMatches": [
+            "df6e5c77 Polish Jungle Ruins rockwork, stone platforms and cove"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "77653ba6363349e4d7a168a24465e327a0b01dd6",
+      "branches": [
+        "codex/kart-drivers-thrusters"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "77653ba6363349e4d7a168a24465e327a0b01dd6",
+          "subject": "Parachute rally loaners into the stadium",
+          "publishedMatches": [
+            "6eaa70d7 Parachute rally loaners into the stadium"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "73c946ceb4b24140300adb62f743933a6c0ffdf9",
+          "subject": "Enable rally skating and align cliff item row across track",
+          "publishedMatches": [
+            "8e699c7d Enable rally skating and align cliff item row across track"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "7eb40c5eea433fbdabbcd5a4d53aabcbd5b13a80",
+          "subject": "Balance rally pursuit and silence parked kart engines",
+          "publishedMatches": [
+            "fa7ae069 Balance rally pursuit and silence parked kart engines"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "e94c3377142400c13deb8b19e97184efcd1e39f6",
+      "branches": [
+        "codex/motu-beach-polish"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "e94c3377142400c13deb8b19e97184efcd1e39f6",
+          "subject": "Give Motu palms native contact and stabilize local preview",
+          "publishedMatches": [
+            "5efce981 Give Motu palms native contact and stabilize local preview"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "f428d84f20d0089d11a7fde6cbd247c20318bcd0",
+          "subject": "Finish Motu Reef Loop exterior supports",
+          "publishedMatches": [
+            "54e191a5 Finish Motu Reef Loop exterior supports"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "d4f4e3f0fb7ddfbcdc99d55842d785652527d1f4",
+          "subject": "Polish Motu heat lighting and close skate structures",
+          "publishedMatches": [
+            "db455c1a Polish Motu heat lighting and close skate structures"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "3949b5f278f36610fa3f0e9e4e6bb24009a71375",
+          "subject": "Polish Motu Beach Invitational with coastal skate festival",
+          "publishedMatches": [
+            "257daf57 Polish Motu Beach Invitational with coastal skate festival"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "35caaa8ad7255475b1977c03aa42f92ed8cb7295",
+      "branches": [
+        "codex/nightworks-floating-rocks-20260908"
+      ],
+      "disposition": "already_integrated",
+      "note": "Earlier numeric-roundoff test fix superseded by 4e02a961; current test retains strict structure and numerical tolerance.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "35caaa8ad7255475b1977c03aa42f92ed8cb7295",
+          "subject": "Allow machine roundoff in renderer baseline checks",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "a4ef00bc8333f2a1f3d68cb9b306745d3d9b5d42",
+      "branches": [
+        "codex/pre-merge-snapshot-20261023"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "a4ef00bc8333f2a1f3d68cb9b306745d3d9b5d42",
+          "subject": "Preserve primary working files before current-work integration",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "43f5f471d20c5cb04e68773f899618ba7dbc05b2",
+      "branches": [
+        "codex/release-coordinator-20261027"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "43f5f471d20c5cb04e68773f899618ba7dbc05b2",
+          "subject": "Enrich Beach Street encounters and replace offshore mattes",
+          "publishedMatches": [
+            "076b9a96 Enrich Beach Street encounters and replace offshore mattes"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "361c14b2e2dda3955ba1ffe23c7b8e3b4cb95944",
+          "subject": "Polish Motu Beach Invitational with coastal skate festival",
+          "publishedMatches": [
+            "257daf57 Polish Motu Beach Invitational with coastal skate festival"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "99fd75ce1479d348d51303955f54716e9c71f2c6",
+      "branches": [
+        "codex/release-recovery-20261105"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "99fd75ce1479d348d51303955f54716e9c71f2c6",
+          "subject": "Record Wumpa reference revision and native gameplay validation",
+          "publishedMatches": [
+            "3f16b020 Record Wumpa reference revision and native gameplay validation"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "1ee86618ac026607b81699a95b03ba2c05944d71",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-00"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "1ee86618ac026607b81699a95b03ba2c05944d71",
+          "subject": "Preserve pre-release worktree /Users/kiki/Documents/ChatGPT/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/slipstream-polish/corrective-pass1/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass1/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass1/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass2/entrance.png",
+            "docs/slipstream-polish/corrective-pass2/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/ruined-reservoir.png",
+            "docs/slipstream-polish/corrective-pass3/broken-platform-pools.png",
+            "docs/slipstream-polish/corrective-pass3/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass3/forest-bend.png",
+            "docs/slipstream-polish/corrective/asset-gallery-2.png",
+            "docs/slipstream-polish/corrective/asset-gallery.png",
+            "docs/slipstream-polish/corrective/gallery-far.png",
+            "docs/slipstream-polish/corrective/gallery-near.png"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "642153c4f2e8dc72b8961db5aa122c3768629695",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-14"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "All non-merge changes have patch-equivalent mainline commits.",
+      "nonPatchEquivalentCommits": []
+    },
+    {
+      "tip": "2fa61b63ceeb720b758b03b418c9859e96c8976a",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-17"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "2fa61b63ceeb720b758b03b418c9859e96c8976a",
+          "subject": "Preserve pre-release worktree /Users/kiki/.codex/worktrees/jungle-ruins-finale/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "tools/.jungle-release-race-diagnostic.mjs"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "28473daee2a6e70b84b56ed0466743baba3a9c7f",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-18"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "28473daee2a6e70b84b56ed0466743baba3a9c7f",
+          "subject": "Preserve pre-release worktree /Users/kiki/.codex/worktrees/merchant-wreck-challenges/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "6bf0266b011ce0081d3057b4af1490f4f65b9570",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-25"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "6bf0266b011ce0081d3057b4af1490f4f65b9570",
+          "subject": "Preserve pre-release worktree /Users/kiki/.codex/worktrees/slipstream-island-polish/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/slipstream-polish/continuous-review/course-3210.png",
+            "docs/slipstream-polish/continuous-review/course-3360.png",
+            "docs/slipstream-polish/continuous-review/course-3430.png",
+            "docs/slipstream-polish/continuous-review/course-3590.png",
+            "docs/slipstream-polish/continuous-review/course-3790.png",
+            "docs/slipstream-polish/continuous-review/course-3980.png",
+            "docs/slipstream-polish/corrective-final/course-0.png",
+            "docs/slipstream-polish/corrective-final/course-1580.png",
+            "docs/slipstream-polish/corrective-final/course-260.png",
+            "docs/slipstream-polish/corrective-final/course-2680.png",
+            "docs/slipstream-polish/corrective-final/course-3360.png",
+            "docs/slipstream-polish/corrective-final/course-3430.png",
+            "docs/slipstream-polish/corrective-final/course-3980.png",
+            "docs/slipstream-polish/corrective-final/course-600.png",
+            "docs/slipstream-polish/corrective-pass1/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass1/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass1/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass2/entrance.png",
+            "docs/slipstream-polish/corrective-pass2/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/ruined-reservoir.png",
+            "docs/slipstream-polish/corrective-pass3/broken-platform-pools.png",
+            "docs/slipstream-polish/corrective-pass3/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass3/forest-bend.png",
+            "docs/slipstream-polish/corrective-reviewed/course-0.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1280.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1580.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1950.png",
+            "docs/slipstream-polish/corrective-reviewed/course-2390.png",
+            "docs/slipstream-polish/corrective-reviewed/course-260.png",
+            "docs/slipstream-polish/corrective-reviewed/course-2680.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3210.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3360.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3430.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3590.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3980.png",
+            "docs/slipstream-polish/corrective-reviewed/course-600.png",
+            "docs/slipstream-polish/corrective-reviewed/course-750.png",
+            "docs/slipstream-polish/corrective/asset-gallery-2.png",
+            "docs/slipstream-polish/corrective/asset-gallery.png",
+            "docs/slipstream-polish/corrective/gallery-far.png",
+            "docs/slipstream-polish/corrective/gallery-near.png",
+            "docs/slipstream-polish/corrective/motion/finish-approach.png",
+            "docs/slipstream-polish/corrective/motion/grid.png",
+            "docs/slipstream-polish/corrective/motion/results.png",
+            "docs/slipstream-polish/corrective/motion/section-0.png",
+            "docs/slipstream-polish/corrective/motion/section-1.png",
+            "docs/slipstream-polish/corrective/motion/section-10.png",
+            "docs/slipstream-polish/corrective/motion/section-11.png",
+            "docs/slipstream-polish/corrective/motion/section-12.png",
+            "docs/slipstream-polish/corrective/motion/section-13.png",
+            "docs/slipstream-polish/corrective/motion/section-14.png",
+            "docs/slipstream-polish/corrective/motion/section-15.png",
+            "docs/slipstream-polish/corrective/motion/section-16.png",
+            "docs/slipstream-polish/corrective/motion/section-17.png",
+            "docs/slipstream-polish/corrective/motion/section-18.png",
+            "docs/slipstream-polish/corrective/motion/section-19.png",
+            "docs/slipstream-polish/corrective/motion/section-2.png",
+            "docs/slipstream-polish/corrective/motion/section-20.png",
+            "docs/slipstream-polish/corrective/motion/section-21.png",
+            "docs/slipstream-polish/corrective/motion/section-22.png",
+            "docs/slipstream-polish/corrective/motion/section-23.png",
+            "docs/slipstream-polish/corrective/motion/section-24.png",
+            "docs/slipstream-polish/corrective/motion/section-25.png",
+            "docs/slipstream-polish/corrective/motion/section-26.png",
+            "docs/slipstream-polish/corrective/motion/section-27.png",
+            "docs/slipstream-polish/corrective/motion/section-28.png",
+            "docs/slipstream-polish/corrective/motion/section-29.png",
+            "docs/slipstream-polish/corrective/motion/section-3.png",
+            "docs/slipstream-polish/corrective/motion/section-30.png",
+            "docs/slipstream-polish/corrective/motion/section-31.png",
+            "docs/slipstream-polish/corrective/motion/section-32.png",
+            "docs/slipstream-polish/corrective/motion/section-33.png",
+            "docs/slipstream-polish/corrective/motion/section-34.png",
+            "docs/slipstream-polish/corrective/motion/section-4.png",
+            "docs/slipstream-polish/corrective/motion/section-5.png",
+            "docs/slipstream-polish/corrective/motion/section-6.png",
+            "docs/slipstream-polish/corrective/motion/section-7.png",
+            "docs/slipstream-polish/corrective/motion/section-8.png",
+            "docs/slipstream-polish/corrective/motion/section-9.png",
+            "docs/slipstream-polish/final-lite/course-0.png",
+            "docs/slipstream-polish/final-lite/course-260.png",
+            "docs/slipstream-polish/final-lite/course-3430.png",
+            "docs/slipstream-polish/final-lite/course-3980.png",
+            "docs/slipstream-polish/final-production/course-0.png",
+            "docs/slipstream-polish/final-production/course-1280.png",
+            "docs/slipstream-polish/final-production/course-1580.png",
+            "docs/slipstream-polish/final-production/course-1950.png",
+            "docs/slipstream-polish/final-production/course-2390.png",
+            "docs/slipstream-polish/final-production/course-260.png",
+            "docs/slipstream-polish/final-production/course-2680.png",
+            "docs/slipstream-polish/final-production/course-3210.png",
+            "docs/slipstream-polish/final-production/course-3360.png",
+            "docs/slipstream-polish/final-production/course-3430.png",
+            "docs/slipstream-polish/final-production/course-3590.png",
+            "docs/slipstream-polish/final-production/course-3790.png",
+            "docs/slipstream-polish/final-production/course-3980.png",
+            "docs/slipstream-polish/final-production/course-600.png",
+            "docs/slipstream-polish/final-production/course-750.png",
+            "docs/slipstream-polish/headland-review/course-3360.png",
+            "docs/slipstream-polish/headland-review/course-3430.png",
+            "docs/slipstream-polish/headland-review/course-3790.png",
+            "docs/slipstream-polish/headland-review/course-3980.png",
+            "docs/slipstream-polish/islands-review/course-3360.png",
+            "docs/slipstream-polish/islands-review/course-3430.png",
+            "docs/slipstream-polish/islands-review/course-3790.png",
+            "docs/slipstream-polish/islands-review/course-3980.png",
+            "docs/slipstream-polish/probe/report.json",
+            "docs/slipstream-polish/tier-review/course-3360.png",
+            "docs/slipstream-polish/tier-review/course-3430.png",
+            "docs/slipstream-polish/tier-review/course-3790.png",
+            "docs/slipstream-polish/tier-review/course-3980.png"
+          ]
+        },
+        {
+          "commit": "375a81eeae3c7cffebf4046f64a7599493bea875",
+          "subject": "Finish Slipstream island scenery and production review",
+          "publishedMatches": [
+            "ce5986d6 Finish Slipstream island scenery and production review"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "b783cfe2440a4914edf9a22dcd73a515a4dda982",
+          "subject": "Build Slipstream island scenery and corroded tunnel skylights",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "1975cd8e45362ee80d8f2979abcb9d72d146e025",
+      "branches": [
+        "codex/rescue-20261025-071123/worktree-27",
+        "codex/treehouse-trunk-collision"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "1975cd8e45362ee80d8f2979abcb9d72d146e025",
+          "subject": "Add fitted collision around reachable Treehouse trunks",
+          "publishedMatches": [
+            "f03df4a0 Add fitted collision around reachable Treehouse trunks"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "8a588d2397c58c410d381ddfbcccf24cf5ca8c1e",
+      "branches": [
+        "codex/rescue-20261025/redundant-race-fix"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "8a588d2397c58c410d381ddfbcccf24cf5ca8c1e",
+          "subject": "Isolate race item-hit regression from prior recovery state",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "bde0d0cb0af5b34b2bb96dcc8e88f645aabe7bd6",
+      "branches": [
+        "codex/rescue-20261025/superseded-slipstream"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "bde0d0cb0af5b34b2bb96dcc8e88f645aabe7bd6",
+          "subject": "Build Slipstream island scenery and corroded tunnel skylights",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "7e3d7ac2f78a89b2a3e34790dd7783a3ea9fdfd8",
+      "branches": [
+        "codex/rescue-20261025/worktree-00"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "7e3d7ac2f78a89b2a3e34790dd7783a3ea9fdfd8",
+          "subject": "Preserve pre-consolidation worktree 00: /Users/kiki/Documents/ChatGPT/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/slipstream-polish/corrective-pass1/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass1/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass1/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass2/entrance.png",
+            "docs/slipstream-polish/corrective-pass2/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/ruined-reservoir.png",
+            "docs/slipstream-polish/corrective-pass3/broken-platform-pools.png",
+            "docs/slipstream-polish/corrective-pass3/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass3/forest-bend.png",
+            "docs/slipstream-polish/corrective/asset-gallery-2.png",
+            "docs/slipstream-polish/corrective/asset-gallery.png",
+            "docs/slipstream-polish/corrective/gallery-far.png",
+            "docs/slipstream-polish/corrective/gallery-near.png"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "d7c4df9c2d6ba29757714fada7eab353dcc1bb51",
+      "branches": [
+        "codex/rescue-20261025/worktree-14"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "All non-merge changes have patch-equivalent mainline commits.",
+      "nonPatchEquivalentCommits": []
+    },
+    {
+      "tip": "6fe3cc61763ad1649dd8921e84399c42554299f9",
+      "branches": [
+        "codex/rescue-20261025/worktree-17"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "6fe3cc61763ad1649dd8921e84399c42554299f9",
+          "subject": "Preserve pre-consolidation worktree 17: /Users/kiki/.codex/worktrees/jungle-ruins-finale/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "tools/.jungle-release-race-diagnostic.mjs"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "f656edf80f69088f493e3204e87644a5af846531",
+      "branches": [
+        "codex/rescue-20261025/worktree-18"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "f656edf80f69088f493e3204e87644a5af846531",
+          "subject": "Preserve pre-consolidation worktree 18: /Users/kiki/.codex/worktrees/merchant-wreck-challenges/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "5f9dd4d426835742b00a2eec5044a39dfad539f0",
+      "branches": [
+        "codex/rescue-20261025/worktree-24"
+      ],
+      "disposition": "preserved_snapshot",
+      "note": "Backup of historical work. Runtime features have mainline replacements; see audit for screenshot-only and temporary-diagnostic leftovers.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "5f9dd4d426835742b00a2eec5044a39dfad539f0",
+          "subject": "Preserve pre-consolidation worktree 24: /Users/kiki/.codex/worktrees/slipstream-island-polish/Prototype Fork",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/slipstream-polish/corrective-final/course-0.png",
+            "docs/slipstream-polish/corrective-final/course-1580.png",
+            "docs/slipstream-polish/corrective-final/course-260.png",
+            "docs/slipstream-polish/corrective-final/course-2680.png",
+            "docs/slipstream-polish/corrective-final/course-3360.png",
+            "docs/slipstream-polish/corrective-final/course-3430.png",
+            "docs/slipstream-polish/corrective-final/course-3980.png",
+            "docs/slipstream-polish/corrective-final/course-600.png",
+            "docs/slipstream-polish/corrective-pass1/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass1/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass1/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/enclosed-flume.png",
+            "docs/slipstream-polish/corrective-pass2/entrance.png",
+            "docs/slipstream-polish/corrective-pass2/forest-bend.png",
+            "docs/slipstream-polish/corrective-pass2/ruined-reservoir.png",
+            "docs/slipstream-polish/corrective-pass3/broken-platform-pools.png",
+            "docs/slipstream-polish/corrective-pass3/falling-coils.png",
+            "docs/slipstream-polish/corrective-pass3/forest-bend.png",
+            "docs/slipstream-polish/corrective-reviewed/course-0.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1280.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1580.png",
+            "docs/slipstream-polish/corrective-reviewed/course-1950.png",
+            "docs/slipstream-polish/corrective-reviewed/course-2390.png",
+            "docs/slipstream-polish/corrective-reviewed/course-260.png",
+            "docs/slipstream-polish/corrective-reviewed/course-2680.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3210.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3360.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3430.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3590.png",
+            "docs/slipstream-polish/corrective-reviewed/course-3980.png",
+            "docs/slipstream-polish/corrective-reviewed/course-600.png",
+            "docs/slipstream-polish/corrective-reviewed/course-750.png",
+            "docs/slipstream-polish/corrective/asset-gallery-2.png",
+            "docs/slipstream-polish/corrective/asset-gallery.png",
+            "docs/slipstream-polish/corrective/gallery-far.png",
+            "docs/slipstream-polish/corrective/gallery-near.png",
+            "docs/slipstream-polish/corrective/motion/finish-approach.png",
+            "docs/slipstream-polish/corrective/motion/grid.png",
+            "docs/slipstream-polish/corrective/motion/results.png",
+            "docs/slipstream-polish/corrective/motion/section-0.png",
+            "docs/slipstream-polish/corrective/motion/section-1.png",
+            "docs/slipstream-polish/corrective/motion/section-10.png",
+            "docs/slipstream-polish/corrective/motion/section-11.png",
+            "docs/slipstream-polish/corrective/motion/section-12.png",
+            "docs/slipstream-polish/corrective/motion/section-13.png",
+            "docs/slipstream-polish/corrective/motion/section-14.png",
+            "docs/slipstream-polish/corrective/motion/section-15.png",
+            "docs/slipstream-polish/corrective/motion/section-16.png",
+            "docs/slipstream-polish/corrective/motion/section-17.png",
+            "docs/slipstream-polish/corrective/motion/section-18.png",
+            "docs/slipstream-polish/corrective/motion/section-19.png",
+            "docs/slipstream-polish/corrective/motion/section-2.png",
+            "docs/slipstream-polish/corrective/motion/section-20.png",
+            "docs/slipstream-polish/corrective/motion/section-21.png",
+            "docs/slipstream-polish/corrective/motion/section-22.png",
+            "docs/slipstream-polish/corrective/motion/section-23.png",
+            "docs/slipstream-polish/corrective/motion/section-24.png",
+            "docs/slipstream-polish/corrective/motion/section-25.png",
+            "docs/slipstream-polish/corrective/motion/section-26.png",
+            "docs/slipstream-polish/corrective/motion/section-27.png",
+            "docs/slipstream-polish/corrective/motion/section-28.png",
+            "docs/slipstream-polish/corrective/motion/section-29.png",
+            "docs/slipstream-polish/corrective/motion/section-3.png",
+            "docs/slipstream-polish/corrective/motion/section-30.png",
+            "docs/slipstream-polish/corrective/motion/section-31.png",
+            "docs/slipstream-polish/corrective/motion/section-32.png",
+            "docs/slipstream-polish/corrective/motion/section-33.png",
+            "docs/slipstream-polish/corrective/motion/section-34.png",
+            "docs/slipstream-polish/corrective/motion/section-4.png",
+            "docs/slipstream-polish/corrective/motion/section-5.png",
+            "docs/slipstream-polish/corrective/motion/section-6.png",
+            "docs/slipstream-polish/corrective/motion/section-7.png",
+            "docs/slipstream-polish/corrective/motion/section-8.png",
+            "docs/slipstream-polish/corrective/motion/section-9.png",
+            "docs/slipstream-polish/probe/report.json",
+            "docs/slipstream-polish/tier-review/course-3360.png",
+            "docs/slipstream-polish/tier-review/course-3430.png",
+            "docs/slipstream-polish/tier-review/course-3790.png",
+            "docs/slipstream-polish/tier-review/course-3980.png"
+          ]
+        },
+        {
+          "commit": "b783cfe2440a4914edf9a22dcd73a515a4dda982",
+          "subject": "Build Slipstream island scenery and corroded tunnel skylights",
+          "publishedMatches": [],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "c00bc86e1a0e7fe529cd4991b92332bbcc03a765",
+      "branches": [
+        "codex/skate-boneman-motion-lab"
+      ],
+      "disposition": "already_integrated",
+      "note": "Source study adopted by 9357fd78 and refined on main; old private packaging/retarget test superseded.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "c00bc86e1a0e7fe529cd4991b92332bbcc03a765",
+          "subject": "Expand local Skate reference library and calibrate carried-board motion",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/SKATE_REFERENCE_LAB.md",
+            "tools/test-skate-reference-retarget.mjs"
+          ]
+        },
+        {
+          "commit": "b967f8388510809f56de7d2e15276733d21e6971",
+          "subject": "Add local Skate motion reference lab for Bone Man",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/SKATE_REFERENCE_LAB.md",
+            "tools/test-skate-reference-retarget.mjs",
+            "vite.skate-reference.config.mjs"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "d93e6c27764f4000855b42ad8f1991cf78d630a5",
+      "branches": [
+        "codex/spaghetti-rails"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "d93e6c27764f4000855b42ad8f1991cf78d630a5",
+          "subject": "Keep Spaghetti Rails decision platform camera steady",
+          "publishedMatches": [
+            "7d9e2556 Keep Spaghetti Rails decision platform camera steady"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "79d845c98950ded4552ec27ffbb9b78bee3022b5",
+      "branches": [
+        "codex/treehouse-trail-flow-20261105"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "79d845c98950ded4552ec27ffbb9b78bee3022b5",
+          "subject": "Fix Treehouse flow and add route rewards",
+          "publishedMatches": [
+            "a6105697 Fix Treehouse flow and add route rewards"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "062e3e0a7ba2dddb18676dd57349618f2c91526e",
+      "branches": [
+        "codex/tribal-run"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "062e3e0a7ba2dddb18676dd57349618f2c91526e",
+          "subject": "test: complete Tribal Run validation and handoff evidence",
+          "publishedMatches": [
+            "470c4ce3 test: complete Tribal Run validation and handoff evidence"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "c7806ff652716c5541598e9b178a18a53b856eaf",
+          "subject": "feat: add Tribal Run and the Resonance Vault",
+          "publishedMatches": [
+            "976133f4 feat: add Tribal Run and the Resonance Vault"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "f771761d595b261fd1362788cc98610b1f082385",
+      "branches": [
+        "codex/waterfall-climb"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "f771761d595b261fd1362788cc98610b1f082385",
+          "subject": "Rebuild Waterfall Climb around varied river and skate ascent",
+          "publishedMatches": [
+            "65ddf28a Rebuild Waterfall Climb around varied river and skate ascent"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "a5bd8e6b1d010fd4e99c6fe2037986b1c8ca339e",
+          "subject": "Record complete Waterfall Climb validation and local handoff",
+          "publishedMatches": [
+            "1c88cb4e Record complete Waterfall Climb validation and local handoff"
+          ],
+          "missingPaths": []
+        },
+        {
+          "commit": "7b4bfe676f0d40394838b2a1e398cd967345575d",
+          "subject": "Author Waterfall Climb and its Hidden Spillway bonus",
+          "publishedMatches": [
+            "ec1549ed Author Waterfall Climb and its Hidden Spillway bonus"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "3d4ea064238f3a043026ed4f06b78b80cedeef42",
+      "branches": [
+        "codex/wumpa-reference-polish"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "61b052074a84528d0d6ee8bf58a7f684cc6b461e",
+          "subject": "Record Wumpa reference revision and native gameplay validation",
+          "publishedMatches": [
+            "3f16b020 Record Wumpa reference revision and native gameplay validation"
+          ],
+          "missingPaths": []
+        }
+      ]
+    },
+    {
+      "tip": "706925c27682941c52452b70287779a79bb51ceb",
+      "branches": [
+        "drafts/roo-character-studies"
+      ],
+      "disposition": "unfinished_draft",
+      "note": "Explicitly unfinished local Roo studies and generated artifacts.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "706925c27682941c52452b70287779a79bb51ceb",
+          "subject": "Preserve generated Roo study artifacts in the local draft snapshot",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/ROO_DRAFTS_README.md",
+            "tools/character-study/__pycache__/hair_textures.cpython-312.pyc",
+            "tools/character-study/__pycache__/render_baseline.cpython-313.pyc",
+            "tools/character-study/__pycache__/rig_roo_head.cpython-313.pyc",
+            "tools/character-study/work/baseline/baseline-inspection.blend",
+            "tools/character-study/work/baseline/front.png",
+            "tools/character-study/work/baseline/profile-90.png",
+            "tools/character-study/work/baseline/rear.png",
+            "tools/character-study/work/baseline/roo-blink-benchmark.blend",
+            "tools/character-study/work/baseline/roo-blink-benchmark.blend1",
+            "tools/character-study/work/baseline/roo-head-midpoly-rig-ui.blend",
+            "tools/character-study/work/baseline/roo-head-midpoly-rig-ui.blend1",
+            "tools/character-study/work/baseline/roo-head-ui-sculpt.blend",
+            "tools/character-study/work/baseline/roo-head-ui-sculpt.blend1",
+            "tools/character-study/work/baseline/three-quarter-35.png",
+            "tools/character-study/work/candidate-form-2/front.png",
+            "tools/character-study/work/candidate-form-2/minus35.png",
+            "tools/character-study/work/candidate-form-2/plus35.png",
+            "tools/character-study/work/candidate-form-2/profile90.png",
+            "tools/character-study/work/candidate-form-2/rear.png",
+            "tools/character-study/work/candidate-form-2/roo-head.blend",
+            "tools/character-study/work/candidate-form-2/roo-head.glb",
+            "tools/character-study/work/candidate-form-2/top.png",
+            "tools/character-study/work/candidate-form-3/front.png",
+            "tools/character-study/work/candidate-form-3/minus35.png",
+            "tools/character-study/work/candidate-form-3/plus35.png",
+            "tools/character-study/work/candidate-form-3/profile90.png",
+            "tools/character-study/work/candidate-form-3/rear.png",
+            "tools/character-study/work/candidate-form-3/roo-head.blend",
+            "tools/character-study/work/candidate-form-3/roo-head.glb",
+            "tools/character-study/work/candidate-form-3/top.png",
+            "tools/character-study/work/candidate-neutral/front.png",
+            "tools/character-study/work/candidate-neutral/minus35.png",
+            "tools/character-study/work/candidate-neutral/plus35.png",
+            "tools/character-study/work/candidate-neutral/profile90.png",
+            "tools/character-study/work/candidate-neutral/rear.png",
+            "tools/character-study/work/candidate-neutral/roo-head.blend",
+            "tools/character-study/work/candidate-neutral/roo-head.blend1",
+            "tools/character-study/work/candidate-neutral/roo-head.glb",
+            "tools/character-study/work/candidate-neutral/top.png",
+            "tools/character-study/work/candidate-proportions-1/front.png",
+            "tools/character-study/work/candidate-proportions-1/minus35.png",
+            "tools/character-study/work/candidate-proportions-1/plus35.png",
+            "tools/character-study/work/candidate-proportions-1/profile90.png",
+            "tools/character-study/work/candidate-proportions-1/rear.png",
+            "tools/character-study/work/candidate-proportions-1/roo-head.blend",
+            "tools/character-study/work/candidate-proportions-1/roo-head.glb",
+            "tools/character-study/work/candidate-proportions-1/top.png",
+            "tools/character-study/work/candidate-rig-1/blink-wide-stress.png",
+            "tools/character-study/work/candidate-rig-1/blink.png",
+            "tools/character-study/work/candidate-rig-1/concern.png",
+            "tools/character-study/work/candidate-rig-1/front.png",
+            "tools/character-study/work/candidate-rig-1/jaw-open.png",
+            "tools/character-study/work/candidate-rig-1/minus35.png",
+            "tools/character-study/work/candidate-rig-1/plus35.png",
+            "tools/character-study/work/candidate-rig-1/profile90.png",
+            "tools/character-study/work/candidate-rig-1/rear.png",
+            "tools/character-study/work/candidate-rig-1/roo-head.blend",
+            "tools/character-study/work/candidate-rig-1/roo-head.glb",
+            "tools/character-study/work/candidate-rig-1/smile.png",
+            "tools/character-study/work/candidate-rig-1/surprise.png",
+            "tools/character-study/work/candidate-rig-1/top.png",
+            "tools/character-study/work/candidate-rig-2/blink-wide-stress.png",
+            "tools/character-study/work/candidate-rig-2/blink.png",
+            "tools/character-study/work/candidate-rig-2/concern.png",
+            "tools/character-study/work/candidate-rig-2/front.png",
+            "tools/character-study/work/candidate-rig-2/jaw-open.png",
+            "tools/character-study/work/candidate-rig-2/minus35.png",
+            "tools/character-study/work/candidate-rig-2/plus35.png",
+            "tools/character-study/work/candidate-rig-2/profile90.png",
+            "tools/character-study/work/candidate-rig-2/rear.png",
+            "tools/character-study/work/candidate-rig-2/roo-head.blend",
+            "tools/character-study/work/candidate-rig-2/roo-head.glb",
+            "tools/character-study/work/candidate-rig-2/smile.png",
+            "tools/character-study/work/candidate-rig-2/surprise.png",
+            "tools/character-study/work/candidate-rig-2/top.png",
+            "tools/character-study/work/file1.blend",
+            "tools/character-study/work/reference/head-hero-mask-review.png",
+            "tools/character-study/work/reference/head-hero-measurement.png",
+            "tools/character-study/work/reference/head-landmark-review.png",
+            "tools/character-study/work/textures/hair-base-color.png",
+            "tools/character-study/work/textures/hair-normal.png",
+            "tools/character-study/work/textures/hair-seam-preview.png",
+            "tools/texture-blink/work/front-0.5.png",
+            "tools/texture-blink/work/front-0.png",
+            "tools/texture-blink/work/front-1.png",
+            "tools/texture-blink/work/front-loop.webm",
+            "tools/texture-blink/work/game/game-blink.png",
+            "tools/texture-blink/work/game/game-front-blink.png",
+            "tools/texture-blink/work/game/game-full-render.png",
+            "tools/texture-blink/work/game/in-game-random-blink.webm",
+            "tools/texture-blink/work/profile-0.5.png",
+            "tools/texture-blink/work/profile-0.png",
+            "tools/texture-blink/work/profile-1.png",
+            "tools/texture-blink/work/profile-loop.webm",
+            "tools/texture-blink/work/reset/reset-page.png",
+            "tools/texture-blink/work/review.html",
+            "tools/texture-blink/work/three-quarter-0.5.png",
+            "tools/texture-blink/work/three-quarter-0.png",
+            "tools/texture-blink/work/three-quarter-1.png",
+            "tools/texture-blink/work/three-quarter-loop.webm"
+          ]
+        },
+        {
+          "commit": "646a2dbc1e316ae6cbd404d879dc2cdb1c05d52e",
+          "subject": "Preserve unfinished Roo character and texture studies locally",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/ROO_DRAFTS_PRESERVATION.json",
+            "docs/ROO_DRAFTS_README.md",
+            "public/characters/roo-texture-blink/blink-closed.png",
+            "roo-head-study.html",
+            "roo-texture-blink.html",
+            "src/character-study/candidateSpring.ts",
+            "src/character-study/headRuntime.ts",
+            "src/character-study/main.ts",
+            "src/texture-blink/main.ts",
+            "tools/character-study/assessment.json",
+            "tools/character-study/build_roo_head.py",
+            "tools/character-study/hair_textures.py",
+            "tools/character-study/prepare_references.py",
+            "tools/character-study/reference-analysis.md",
+            "tools/character-study/render_baseline.py",
+            "tools/character-study/rig_roo_head.py",
+            "tools/character-study/roo-head-sculpt-spec.json",
+            "tools/character-study/work/baseline/render-manifest.json",
+            "tools/character-study/work/candidate-form-2/head-study.json",
+            "tools/character-study/work/candidate-form-3/head-study.json",
+            "tools/character-study/work/candidate-neutral/head-study.json",
+            "tools/character-study/work/candidate-proportions-1/head-study.json",
+            "tools/character-study/work/candidate-rig-1/head-study.json",
+            "tools/character-study/work/candidate-rig-2/head-study.json",
+            "tools/character-study/work/reference/admission.json",
+            "tools/character-study/work/reference/reference-set.json",
+            "tools/character-study/work/textures/hair-texture-report.json",
+            "tools/test-roo-head-study.mjs",
+            "tools/texture-blink/README.md",
+            "tools/texture-blink/game-front-review.mjs",
+            "tools/texture-blink/game-review.mjs",
+            "tools/texture-blink/inspect.py",
+            "tools/texture-blink/prepare.py",
+            "tools/texture-blink/published-check.mjs",
+            "tools/texture-blink/review.mjs",
+            "tools/texture-blink/test-data-reset-browser.mjs",
+            "tools/texture-blink/work/.gitignore",
+            "tools/texture-blink/work/game/published.json",
+            "tools/texture-blink/work/game/report.json",
+            "tools/texture-blink/work/reset/report.json",
+            "tools/texture-blink/work/review.json"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "060f0c69141928352457e43130103c18aa05680d",
+      "branches": [
+        "origin/claude/gifted-clarke-d9w70q"
+      ],
+      "disposition": "preserved_by_user_request",
+      "note": "Temple v6 and Ember Reliquary are not on main. User requested a separate integration pass; v6 gameplay validation remains pending.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "634caa3cb010769302a72ee0a6936349883e810d",
+          "subject": "Temple of Embers v6: dressing pass, turn cues and a turning apron",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/v6-corner-court.png",
+            "docs/temple-embers-design/v6-fallen-ledges.png",
+            "docs/temple-embers-design/v6-gallery.png",
+            "docs/temple-embers-design/v6-gate.png",
+            "docs/temple-embers-design/v6-side-view-stair.png",
+            "docs/temple-embers-design/v6-terrace.png",
+            "docs/temple-embers-design/v6-turning-apron.png",
+            "src/levels/temple-of-embers.ts"
+          ]
+        },
+        {
+          "commit": "ebfcf35d9ef8cabfb2cdd2ce85b2bb15509534da",
+          "subject": "Temple of Embers v5: re-plan the course as a seven-leg switchback",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/collision-audit.json",
+            "docs/temple-embers-design/crate-placement-report.json",
+            "docs/temple-embers-design/crate-placement-report.md",
+            "docs/temple-embers-design/encounters.json",
+            "docs/temple-embers-design/full-02-gutter-aqueduct.png",
+            "docs/temple-embers-design/full-03-gutter-row.png",
+            "docs/temple-embers-design/full-06-walkway.png",
+            "docs/temple-embers-design/full-10-landing-one.png",
+            "docs/temple-embers-design/full-13-side-scroll.png",
+            "docs/temple-embers-design/full-14b-stair-slab.png",
+            "docs/temple-embers-design/full-15-fuse-court.png",
+            "docs/temple-embers-design/full-19-ravine-break.png",
+            "docs/temple-embers-design/full-20-ravine-break.png",
+            "docs/temple-embers-design/full-21-abutment-court.png",
+            "docs/temple-embers-design/full-22b-cistern-censer.png",
+            "docs/temple-embers-design/full-25-promise-block.png",
+            "docs/temple-embers-design/full-28-nitro-rows.png",
+            "docs/temple-embers-design/full-31-nitro-rows.png",
+            "docs/temple-embers-design/full-31b-between-the-rows.png",
+            "docs/temple-embers-design/journey.json",
+            "docs/temple-embers-design/level-geometry-report.json",
+            "docs/temple-embers-design/level-geometry-report.md",
+            "docs/temple-embers-design/lite-01-smash-stagger.png",
+            "docs/temple-embers-design/lite-02-gutter-and-aqueduct-overhead.png",
+            "docs/temple-embers-design/lite-03-crabs-and-court-ahead.png",
+            "docs/temple-embers-design/lite-03-gutter-row-and-coping.png",
+            "docs/temple-embers-design/lite-04-corner-court.png",
+            "docs/temple-embers-design/lite-05-gateway-pillar-chain.png",
+            "docs/temple-embers-design/lite-06-walkway-crab.png",
+            "docs/temple-embers-design/lite-07-gateway-crab-and-wall.png",
+            "docs/temple-embers-design/lite-07-hex-pad-wall.png",
+            "docs/temple-embers-design/lite-08-landing-court.png",
+            "docs/temple-embers-design/lite-09-sentinel-balcony-exit.png",
+            "docs/temple-embers-design/lite-10-fallen-ledges.png",
+            "docs/temple-embers-design/lite-11-fuse-court.png",
+            "docs/temple-embers-design/lite-11-sentinel-and-balcony.png",
+            "docs/temple-embers-design/lite-12-climb-first-ledge.png",
+            "docs/temple-embers-design/lite-12-fuse-court-exit.png",
+            "docs/temple-embers-design/lite-13-rest-tier-block.png",
+            "docs/temple-embers-design/lite-13-side-scroll-stair.png",
+            "docs/temple-embers-design/lite-14-second-flight.png",
+            "docs/temple-embers-design/lite-14b-stair-slab.png",
+            "docs/temple-embers-design/lite-15-stair-top.png",
+            "docs/temple-embers-design/lite-16-sluice.png",
+            "docs/temple-embers-design/lite-17-sluice-bend.png",
+            "docs/temple-embers-design/lite-17-stair-top-sandwich.png",
+            "docs/temple-embers-design/lite-18-aqueduct-head-fork.png",
+            "docs/temple-embers-design/lite-18-sluice-smash-lane.png",
+            "docs/temple-embers-design/lite-19-ravine-break-bridge.png",
+            "docs/temple-embers-design/lite-20-far-break.png",
+            "docs/temple-embers-design/lite-20b-third-span-checkpoint.png",
+            "docs/temple-embers-design/lite-21-abutment-court-over-spawn.png",
+            "docs/temple-embers-design/lite-21-far-break.png",
+            "docs/temple-embers-design/lite-22-cistern-entry.png",
+            "docs/temple-embers-design/lite-22b-cistern-censer.png",
+            "docs/temple-embers-design/lite-23-abutment-court.png",
+            "docs/temple-embers-design/lite-23-promise-block.png",
+            "docs/temple-embers-design/lite-24-gallery.png",
+            "docs/temple-embers-design/lite-25-steps.png",
+            "docs/temple-embers-design/lite-26-gallery-stacks.png",
+            "docs/temple-embers-design/lite-26-terrace-lane.png",
+            "docs/temple-embers-design/lite-27-dais.png",
+            "docs/temple-embers-design/lite-28-nitro-rows.png",
+            "docs/temple-embers-design/lite-29-gate.png",
+            "docs/temple-embers-design/lite-29-wall-and-wave.png",
+            "docs/temple-embers-design/lite-32-green-switch-and-gate.png",
+            "docs/temple-embers-design/structure.json",
+            "src/levels/temple-of-embers.ts",
+            "tools/temple-embers-journey.mjs",
+            "tools/test-temple-embers-collisions.mjs",
+            "tools/test-temple-embers-journey.mjs"
+          ]
+        },
+        {
+          "commit": "ef99bf6408c9b42612401545120040ea0937f9b3",
+          "subject": "Temple of Embers v4: re-author the course to the gameplay bible",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/collision-audit.json",
+            "docs/temple-embers-design/crate-placement-report.json",
+            "docs/temple-embers-design/crate-placement-report.md",
+            "docs/temple-embers-design/encounters.json",
+            "docs/temple-embers-design/full-03-gutter-row.png",
+            "docs/temple-embers-design/full-10-landing-one.png",
+            "docs/temple-embers-design/full-11-sluice.png",
+            "docs/temple-embers-design/full-14-abutment-pair.png",
+            "docs/temple-embers-design/full-15-fuse-court.png",
+            "docs/temple-embers-design/full-19-terrace.png",
+            "docs/temple-embers-design/full-20-ravine-break.png",
+            "docs/temple-embers-design/full-25-promise-block.png",
+            "docs/temple-embers-design/full-31-nitro-rows.png",
+            "docs/temple-embers-design/full-31b-between-the-rows.png",
+            "docs/temple-embers-design/journey.json",
+            "docs/temple-embers-design/level-geometry-report.json",
+            "docs/temple-embers-design/level-geometry-report.md",
+            "docs/temple-embers-design/lite-01-smash-stagger.png",
+            "docs/temple-embers-design/lite-02-carving-line-and-shrine.png",
+            "docs/temple-embers-design/lite-03-gutter-row-and-coping.png",
+            "docs/temple-embers-design/lite-03b-gutter-channel.png",
+            "docs/temple-embers-design/lite-03c-sleeping-sentinel.png",
+            "docs/temple-embers-design/lite-05-first-flight-collapse.png",
+            "docs/temple-embers-design/lite-07-gateway-crab-and-wall.png",
+            "docs/temple-embers-design/lite-08-fuse-court.png",
+            "docs/temple-embers-design/lite-09-narrow-stair-censer.png",
+            "docs/temple-embers-design/lite-11-sentinel-and-balcony.png",
+            "docs/temple-embers-design/lite-12-aqueduct-ravine-break.png",
+            "docs/temple-embers-design/lite-12-climb-first-ledge.png",
+            "docs/temple-embers-design/lite-13-colonnade.png",
+            "docs/temple-embers-design/lite-13-rest-tier-block.png",
+            "docs/temple-embers-design/lite-14b-abutment-pair.png",
+            "docs/temple-embers-design/lite-16b-reservoir-entry-lip.png",
+            "docs/temple-embers-design/lite-17-cistern-ramp.png",
+            "docs/temple-embers-design/lite-17-stair-top-sandwich.png",
+            "docs/temple-embers-design/lite-18-gallery-steps.png",
+            "docs/temple-embers-design/lite-18-sluice-smash-lane.png",
+            "docs/temple-embers-design/lite-21-far-break.png",
+            "docs/temple-embers-design/lite-22-sanctuary-gate.png",
+            "docs/temple-embers-design/lite-23-abutment-court.png",
+            "docs/temple-embers-design/lite-26-gallery-stacks.png",
+            "docs/temple-embers-design/lite-29-wall-and-wave.png",
+            "docs/temple-embers-design/lite-32-green-switch-and-gate.png",
+            "docs/temple-embers-design/structure.json",
+            "src/levels/temple-of-embers.ts",
+            "tools/temple-embers-journey.mjs",
+            "tools/test-temple-embers-collisions.mjs",
+            "tools/test-temple-embers-journey.mjs"
+          ]
+        },
+        {
+          "commit": "6053811b17309f82c80dd24c7bb377d202b1e255",
+          "subject": "Rebuild Temple of Embers as seven rooms: foot climbs, board flats, verified floors",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/collision-audit.json",
+            "docs/temple-embers-design/ember-reliquary-journey.json",
+            "docs/temple-embers-design/encounters.json",
+            "docs/temple-embers-design/full-11-sluice.png",
+            "docs/temple-embers-design/full-14-abutment-pair.png",
+            "docs/temple-embers-design/full-19-terrace.png",
+            "docs/temple-embers-design/full-piston-vault.png",
+            "docs/temple-embers-design/full-serpent-gallery.png",
+            "docs/temple-embers-design/full-stone-island.png",
+            "docs/temple-embers-design/journey.json",
+            "docs/temple-embers-design/lite-02-carving-line-and-shrine.png",
+            "docs/temple-embers-design/lite-03b-gutter-channel.png",
+            "docs/temple-embers-design/lite-03c-sleeping-sentinel.png",
+            "docs/temple-embers-design/lite-05-first-flight-collapse.png",
+            "docs/temple-embers-design/lite-08-fuse-court.png",
+            "docs/temple-embers-design/lite-09-narrow-stair-censer.png",
+            "docs/temple-embers-design/lite-12-aqueduct-ravine-break.png",
+            "docs/temple-embers-design/lite-13-colonnade.png",
+            "docs/temple-embers-design/lite-14b-abutment-pair.png",
+            "docs/temple-embers-design/lite-16b-reservoir-entry-lip.png",
+            "docs/temple-embers-design/lite-17-cistern-ramp.png",
+            "docs/temple-embers-design/lite-18-gallery-steps.png",
+            "docs/temple-embers-design/lite-22-sanctuary-gate.png",
+            "docs/temple-embers-design/lite-ash-court.png",
+            "docs/temple-embers-design/lite-censer-hall.png",
+            "docs/temple-embers-design/lite-ember-gauntlet.png",
+            "docs/temple-embers-design/lite-rope-floor.png",
+            "docs/temple-embers-design/reliquary-ember-gate.png",
+            "docs/temple-embers-design/reliquary-switch-shelf.png",
+            "docs/temple-embers-design/shoulder-audit.json",
+            "docs/temple-embers-design/structure.json",
+            "src/levels/temple-of-embers.ts",
+            "tools/temple-embers-journey.mjs",
+            "tools/test-temple-embers-collisions.mjs",
+            "tools/test-temple-embers-journey.mjs"
+          ]
+        },
+        {
+          "commit": "964764f5716c7f875e9a1c9598cfb2c2849af2e1",
+          "subject": "Project instructions: use the owner's Tripo account for modelling and rigging; climbs are on-foot platforming",
+          "publishedMatches": [],
+          "missingPaths": []
+        },
+        {
+          "commit": "213a409b1a3b23a375b194a3fc9049a4b2a56ba7",
+          "subject": "Add Temple of Embers v2 browser evidence: lite and full Chromium reviews with screenshots",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/full-piston-vault.png",
+            "docs/temple-embers-design/full-serpent-gallery.png",
+            "docs/temple-embers-design/full-stone-island.png",
+            "docs/temple-embers-design/lite-ash-court.png",
+            "docs/temple-embers-design/lite-censer-hall.png",
+            "docs/temple-embers-design/lite-ember-gauntlet.png",
+            "docs/temple-embers-design/lite-rope-floor.png"
+          ]
+        },
+        {
+          "commit": "a0d2bceb69b3de255341873160af8bba44b44fba",
+          "subject": "Rebuild Temple of Embers as the Ember Procession: new switchback site, one set piece per chapter",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/collision-audit.json",
+            "docs/temple-embers-design/deep/beat-chart-dump.json",
+            "docs/temple-embers-design/deep/bowl-airs-rerun.json",
+            "docs/temple-embers-design/deep/bowl-airs.json",
+            "docs/temple-embers-design/deep/fairness-caps-flame88-leap.json",
+            "docs/temple-embers-design/deep/fairness-caps-nitro-sanctuary.json",
+            "docs/temple-embers-design/deep/fairness.json",
+            "docs/temple-embers-design/deep/flame-coverage.json",
+            "docs/temple-embers-design/deep/flame-frames.json",
+            "docs/temple-embers-design/deep/rails.json",
+            "docs/temple-embers-design/ember-gauntlet.png",
+            "docs/temple-embers-design/encounters.json",
+            "docs/temple-embers-design/first-flame-terrace.png",
+            "docs/temple-embers-design/journey.json",
+            "docs/temple-embers-design/shoulder-audit.json",
+            "docs/temple-embers-design/structure.json",
+            "src/levels/ember-reliquary-bonus.ts",
+            "src/levels/temple-night-atmosphere.ts",
+            "src/levels/temple-of-embers.ts",
+            "tools/temple-deep-bowl-airs.mjs",
+            "tools/temple-deep-fairness.mjs",
+            "tools/temple-deep-flame-coverage.mjs",
+            "tools/temple-deep-rails.mjs",
+            "tools/temple-deep-skate-lines.mjs",
+            "tools/temple-embers-journey.mjs",
+            "tools/test-temple-embers-collisions.mjs",
+            "tools/test-temple-embers-journey.mjs"
+          ]
+        },
+        {
+          "commit": "fa2db8ba84fbb9c260d07edc34a0248f13132e31",
+          "subject": "Add Temple of Embers deepening-pass probes and evidence (in progress)",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/temple-embers-design/deep/beat-chart-dump.json",
+            "docs/temple-embers-design/deep/bowl-airs-rerun.json",
+            "docs/temple-embers-design/deep/bowl-airs.json",
+            "docs/temple-embers-design/deep/fairness-caps-flame88-leap.json",
+            "docs/temple-embers-design/deep/fairness-caps-nitro-sanctuary.json",
+            "docs/temple-embers-design/deep/fairness.json",
+            "docs/temple-embers-design/deep/flame-coverage.json",
+            "docs/temple-embers-design/deep/flame-frames.json",
+            "docs/temple-embers-design/deep/rails.json",
+            "tools/temple-deep-bowl-airs.mjs",
+            "tools/temple-deep-fairness.mjs",
+            "tools/temple-deep-flame-coverage.mjs",
+            "tools/temple-deep-rails.mjs",
+            "tools/temple-deep-skate-lines.mjs"
+          ]
+        },
+        {
+          "commit": "cbcb2a13c25be553c7b699cb9d3408213a0183d7",
+          "subject": "Re-author Temple of Embers course content, fire arc, enemies and pack sync",
+          "publishedMatches": [],
+          "missingPaths": []
+        },
+        {
+          "commit": "a9b50209476865311b1c4ec69d9bd99429a31062",
+          "subject": "Redesign Temple of Embers and author the Ember Reliquary bonus",
+          "publishedMatches": [],
+          "missingPaths": [
+            "docs/TEMPLE_OF_EMBERS_DESIGN.md",
+            "docs/temple-embers-design/browser-full-review.json",
+            "docs/temple-embers-design/browser-lite-review.json",
+            "docs/temple-embers-design/collision-audit.json",
+            "docs/temple-embers-design/ember-gauntlet.png",
+            "docs/temple-embers-design/ember-reliquary-journey.json",
+            "docs/temple-embers-design/encounters.json",
+            "docs/temple-embers-design/first-flame-terrace.png",
+            "docs/temple-embers-design/journey.json",
+            "docs/temple-embers-design/reliquary-ember-gate.png",
+            "docs/temple-embers-design/reliquary-switch-shelf.png",
+            "src/levels/ember-reliquary-bonus.ts",
+            "tools/ember-reliquary-pilot.mjs",
+            "tools/test-ember-reliquary-bonus.mjs"
+          ]
+        }
+      ]
+    },
+    {
+      "tip": "20bd2634d8451c61951648e733b99f8b96bbb058",
+      "branches": [
+        "origin/codex/haunted-hassle-quality"
+      ],
+      "disposition": "already_integrated",
+      "note": "Published equivalents and subsequent refinements are on main; retain original history.",
+      "nonPatchEquivalentCommits": [
+        {
+          "commit": "20bd2634d8451c61951648e733b99f8b96bbb058",
+          "subject": "Build Haunted Hassle ghost-train finale and optimize its scenery",
+          "publishedMatches": [
+            "0d476fec Build Haunted Hassle ghost-train finale and optimize its scenery"
+          ],
+          "missingPaths": []
+        }
+      ]
+    }
+  ],
+  "unreachableCommitAudit": [
+    {
+      "commit": "f00eb43de887a1af97f4a7fcee7ac4f30a398977",
+      "subject": "Replace milk crates with low-poly Meshy wood and orange fruit",
+      "publishedMatches": [
+        "19a9ebaed8a7cddc3e41373272a9c30c3830e8d8"
+      ],
+      "missingPaths": [
+        "public/hud/milk-bottle/milk_000.png",
+        "public/hud/milk-bottle/milk_001.png",
+        "public/hud/milk-bottle/milk_002.png",
+        "public/hud/milk-bottle/milk_003.png",
+        "public/hud/milk-bottle/milk_004.png",
+        "public/hud/milk-bottle/milk_005.png",
+        "public/hud/milk-bottle/milk_006.png",
+        "public/hud/milk-bottle/milk_007.png",
+        "public/hud/milk-bottle/milk_008.png",
+        "public/hud/milk-bottle/milk_009.png",
+        "public/hud/milk-bottle/milk_010.png",
+        "public/hud/milk-bottle/milk_011.png",
+        "public/hud/milk-bottle/milk_012.png",
+        "public/hud/milk-bottle/milk_013.png",
+        "public/hud/milk-bottle/milk_014.png",
+        "public/hud/milk-bottle/milk_015.png",
+        "public/hud/milk-bottle/milk_016.png",
+        "public/hud/milk-bottle/milk_017.png",
+        "public/hud/milk-bottle/milk_018.png",
+        "public/hud/milk-bottle/milk_019.png",
+        "public/hud/milk-bottle/milk_020.png",
+        "public/hud/milk-bottle/milk_021.png",
+        "public/hud/milk-bottle/milk_022.png",
+        "public/hud/milk-bottle/milk_023.png",
+        "public/hud/milk-bottle/milk_024.png",
+        "public/hud/milk-bottle/milk_025.png",
+        "public/hud/milk-bottle/milk_026.png",
+        "public/hud/milk-bottle/milk_027.png",
+        "public/hud/milk-bottle/milk_028.png",
+        "public/hud/milk-bottle/milk_029.png",
+        "public/hud/milk-bottle/milk_030.png",
+        "public/hud/milk-bottle/milk_031.png",
+        "public/hud/milk-bottle/milk_032.png",
+        "public/hud/milk-bottle/milk_033.png",
+        "public/hud/milk-bottle/milk_034.png",
+        "public/hud/milk-bottle/milk_035.png",
+        "public/hud/milk-bottle/milk_036.png",
+        "public/hud/milk-bottle/milk_037.png",
+        "public/hud/milk-bottle/milk_038.png",
+        "public/hud/milk-bottle/milk_039.png",
+        "public/hud/milk-bottle/milk_040.png",
+        "public/hud/milk-bottle/milk_041.png",
+        "public/hud/milk-bottle/milk_042.png",
+        "public/hud/milk-bottle/milk_043.png",
+        "public/hud/milk-bottle/milk_044.png",
+        "public/hud/milk-bottle/milk_045.png",
+        "public/hud/milk-bottle/milk_046.png",
+        "public/hud/milk-bottle/milk_047.png",
+        "public/hud/milk-bottle/milk_048.png",
+        "public/hud/milk-bottle/milk_049.png",
+        "public/hud/milk-bottle/milk_050.png",
+        "public/hud/milk-bottle/milk_051.png",
+        "public/hud/milk-bottle/milk_052.png",
+        "public/hud/milk-bottle/milk_053.png",
+        "public/hud/milk-bottle/milk_054.png",
+        "public/hud/milk-bottle/milk_055.png",
+        "public/hud/milk-bottle/milk_056.png",
+        "public/hud/milk-bottle/milk_057.png",
+        "public/hud/milk-bottle/milk_058.png",
+        "public/hud/milk-bottle/milk_059.png",
+        "public/hud/milk-bottle/milk_060.png",
+        "public/hud/milk-bottle/milk_061.png",
+        "public/hud/milk-bottle/milk_062.png",
+        "public/hud/milk-bottle/milk_063.png",
+        "public/hud/milk-bottle/milk_064.png",
+        "public/hud/milk-bottle/milk_065.png",
+        "public/hud/milk-bottle/milk_066.png",
+        "public/hud/milk-bottle/milk_067.png",
+        "public/hud/milk-bottle/milk_068.png",
+        "public/hud/milk-bottle/milk_069.png",
+        "public/hud/milk-bottle/milk_070.png",
+        "public/hud/milk-bottle/milk_071.png",
+        "public/hud/milk-bottle/milk_072.png",
+        "public/hud/milk-bottle/milk_073.png",
+        "public/hud/milk-bottle/milk_074.png",
+        "public/hud/milk-bottle/milk_075.png",
+        "public/hud/milk-bottle/milk_076.png",
+        "public/hud/milk-bottle/milk_077.png",
+        "public/hud/milk-bottle/milk_078.png",
+        "public/hud/milk-bottle/milk_079.png",
+        "public/hud/milk-bottle/milk_080.png",
+        "public/hud/milk-bottle/milk_081.png",
+        "public/hud/milk-bottle/milk_082.png",
+        "public/hud/milk-bottle/milk_083.png",
+        "public/hud/milk-bottle/milk_084.png",
+        "public/hud/milk-bottle/milk_085.png",
+        "public/hud/milk-bottle/milk_086.png",
+        "public/hud/milk-bottle/milk_087.png",
+        "public/hud/milk-bottle/milk_088.png",
+        "public/hud/milk-bottle/milk_089.png",
+        "public/hud/milk-bottle/milk_090.png",
+        "public/hud/milk-bottle/milk_091.png",
+        "public/hud/milk-bottle/milk_092.png",
+        "public/hud/milk-bottle/milk_093.png",
+        "public/hud/milk-bottle/milk_094.png",
+        "public/hud/milk-bottle/milk_095.png",
+        "public/hud/milk-bottle/milk_096.png",
+        "public/hud/milk-bottle/milk_097.png",
+        "public/hud/milk-bottle/milk_098.png",
+        "public/hud/milk-bottle/milk_099.png",
+        "public/hud/milk-bottle/milk_100.png",
+        "public/props/milk-crate/blue-crate.glb",
+        "public/props/milk-crate/milk-bottle.glb"
+      ],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/f00eb43de887a1af97f4a7fcee7ac4f30a398977"
+    },
+    {
+      "commit": "cf1452b68190622be2bffcf8a5ce2ee07d8a1103",
+      "subject": "Add Bryce Canyon hoodoo descent with procedural geology",
+      "publishedMatches": [
+        "5e1a233f24a63e1da7dbd2f2eba9df2a03a2f34e"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/cf1452b68190622be2bffcf8a5ce2ee07d8a1103"
+    },
+    {
+      "commit": "931584f4943629b3c698f8ba7bec1964ed60822c",
+      "subject": "Audit OpenGOAL enemy rigs and integrate reference comparison into Enemy Lab",
+      "publishedMatches": [
+        "d5dde53e853615e728561fc6f4c21e93e956febf"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/931584f4943629b3c698f8ba7bec1964ed60822c"
+    },
+    {
+      "commit": "4f1a429a37dac538f7adb4e42f4fc53a931fd46a",
+      "subject": "Record wood crate and orange fruit browser validation",
+      "publishedMatches": [
+        "6673e36488cda51524b1cc2019a004447243a9f6"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/4f1a429a37dac538f7adb4e42f4fc53a931fd46a"
+    },
+    {
+      "commit": "94369e43130a2417746704e3864dc674b1a9f554",
+      "subject": "Render input prompts from vector sheets",
+      "publishedMatches": [
+        "ccabb2059cb6d7aad1a3f11c3e9010fb41833c81"
+      ],
+      "missingPaths": [
+        "public/input-prompts/sprites/keyboard-dark.svg",
+        "public/input-prompts/sprites/ps4-stylized.svg",
+        "public/input-prompts/sprites/ps5-default.svg",
+        "public/input-prompts/sprites/switch-default.svg",
+        "public/input-prompts/sprites/xbox-default.svg"
+      ],
+      "disposition": "superseded_alternative",
+      "note": "Same parent/time as the final Retina-canvas fix; that corrected implementation kept PNG source artwork. Do not restore the discarded vector-sheet approach.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/94369e43130a2417746704e3864dc674b1a9f554"
+    },
+    {
+      "commit": "f63b40649d86ed102ff2e8fdb6b0cab9e8481b17",
+      "subject": "WIP on codex/merge-current-20261023: 311f6aad Merge Warehouse reference alongside the existing warehouse and rooftop courses",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/f63b40649d86ed102ff2e8fdb6b0cab9e8481b17"
+    },
+    {
+      "commit": "b541042c9a9c03e530e21c3f40c1dcce5ef365f2",
+      "subject": "Add the Drowned Crown pirate wreck and Hidden Shores map destinations",
+      "publishedMatches": [
+        "bd59d699974ebf83ab6590892102a0ca2abd809a"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/b541042c9a9c03e530e21c3f40c1dcce5ef365f2"
+    },
+    {
+      "commit": "d44292df67230944b3183318cc35c5a40af99c53",
+      "subject": "WIP on codex/carlisle-tidal-relay: df7c5c9f Record Carlisle rendering audit and reject unproven optimizations",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/d44292df67230944b3183318cc35c5a40af99c53"
+    },
+    {
+      "commit": "3243fcdd1ab60e762976426c52d3c7c2ef46e440",
+      "subject": "Add After Hours skate sequel and Nightworks snot goblins",
+      "publishedMatches": [
+        "f63cc7bb7043debba38881913555b3837e39bcc1"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/3243fcdd1ab60e762976426c52d3c7c2ef46e440"
+    },
+    {
+      "commit": "8a44b885b3f9d5dcb04e4e7de08b92f7a20f1b78",
+      "subject": "Add Rumblewater Run camera-facing boulder chase",
+      "publishedMatches": [
+        "3e54a06a5a8ab2258fc058d36ad505db1d583b81"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/8a44b885b3f9d5dcb04e4e7de08b92f7a20f1b78"
+    },
+    {
+      "commit": "cf4d164d2a4c0c6c08a36a5930c27e9651938db1",
+      "subject": "index on codex/carlisle-tidal-relay: df7c5c9f Record Carlisle rendering audit and reject unproven optimizations",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/cf4d164d2a4c0c6c08a36a5930c27e9651938db1"
+    },
+    {
+      "commit": "2f4e08f45f3b6f817b34937b35dd5a070e1306a5",
+      "subject": "index on codex/merge-current-20261023: 311f6aad Merge Warehouse reference alongside the existing warehouse and rooftop courses",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/2f4e08f45f3b6f817b34937b35dd5a070e1306a5"
+    },
+    {
+      "commit": "9b598c8d8fee4649be0f201311232554e90f64a9",
+      "subject": "Add Rumblewater Run camera-facing boulder chase",
+      "publishedMatches": [
+        "3e54a06a5a8ab2258fc058d36ad505db1d583b81"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/9b598c8d8fee4649be0f201311232554e90f64a9"
+    },
+    {
+      "commit": "b2674e883a8a04f7fd5c6d9b3a838eb93d388228",
+      "subject": "Add Bryce Canyon hoodoo descent with procedural geology",
+      "publishedMatches": [
+        "5e1a233f24a63e1da7dbd2f2eba9df2a03a2f34e"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/b2674e883a8a04f7fd5c6d9b3a838eb93d388228"
+    },
+    {
+      "commit": "377b66474973673d85076525fbfc383f46de8dac",
+      "subject": "Use Roo font for combo text",
+      "publishedMatches": [
+        "db6c1f5078f7a93d05243951938c2617e5ea836e"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/377b66474973673d85076525fbfc383f46de8dac"
+    },
+    {
+      "commit": "56aeec7ae336f080e335ebce1081fe064cfeea45",
+      "subject": "WIP on codex/mayfield-mall: e8e1d67e Rebuild Mayfield Mall from full-scale source architecture",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/56aeec7ae336f080e335ebce1081fe064cfeea45"
+    },
+    {
+      "commit": "21afb4a711677e660b51732e9e78287a9e279982",
+      "subject": "Limit ordinary jump landings to one crate",
+      "publishedMatches": [
+        "68e48cb3b0487b8e8ed159c9dc20ef62f9077609"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/21afb4a711677e660b51732e9e78287a9e279982"
+    },
+    {
+      "commit": "88b1483f6d7816df24a3473e4f94a3bf4c6ef114",
+      "subject": "Enclose Jungle Ruins and seal side and corner escapes",
+      "publishedMatches": [
+        "b5c983851bbb43e218641467655a693591f11539"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/88b1483f6d7816df24a3473e4f94a3bf4c6ef114"
+    },
+    {
+      "commit": "beb1da1854fb48717f82621f36612e8e9b7ca43e",
+      "subject": "Add Roo PNG pair spacing studio with live kerning controls",
+      "publishedMatches": [
+        "088ee17371e23a918905d94c241069b0cd5465fc"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/beb1da1854fb48717f82621f36612e8e9b7ca43e"
+    },
+    {
+      "commit": "0ee444a5deec9fbadc502c75ab9824bf3939c110",
+      "subject": "Fix scrolling in the docked Text Tuning panel",
+      "publishedMatches": [
+        "2417121f57ec07a4dd79c2bd406534b44360767a"
+      ],
+      "missingPaths": [
+        "docs/text-tuning-scroll/native-bottom.png"
+      ],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/0ee444a5deec9fbadc502c75ab9824bf3939c110"
+    },
+    {
+      "commit": "76f0e0df8831bbd9398e34b038a8678090ee60c3",
+      "subject": "Port Jak suspension bridges with moving boards and placeholder creaks",
+      "publishedMatches": [
+        "84fdb6b70c9b92c5e84910e64d8b739bb3526a4c"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/76f0e0df8831bbd9398e34b038a8678090ee60c3"
+    },
+    {
+      "commit": "00f526ba29b478ec7c914278cb28aaabbe921029",
+      "subject": "Give Beach Street side scrapes a recovery window",
+      "publishedMatches": [
+        "78ac9389f9b13885457e4ea260089c3c60a6cc89"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/00f526ba29b478ec7c914278cb28aaabbe921029"
+    },
+    {
+      "commit": "2ff824e5c0382d812dc0500b8c8886e7035a4fc0",
+      "subject": "Animate milk as a shared liquid droplet",
+      "publishedMatches": [
+        "8e2c5d712dc362d1952b5e6fa0988ce56311f9c3"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/2ff824e5c0382d812dc0500b8c8886e7035a4fc0"
+    },
+    {
+      "commit": "fbfdbcd2ce5e135d55bb035672c434db67a3bc9f",
+      "subject": "index on main: 73f9a66b Use portable temporary paths for stair regressions",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/fbfdbcd2ce5e135d55bb035672c434db67a3bc9f"
+    },
+    {
+      "commit": "4104373589f84ad04192d5b41073f247e81fa385",
+      "subject": "Thread the platformer maze with a collectible route and Carlisle launches",
+      "publishedMatches": [
+        "e55d7c264fb911268ce3c8e75773cb179b16ecab"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/4104373589f84ad04192d5b41073f247e81fa385"
+    },
+    {
+      "commit": "412ef373d82273cf38beee62e8561fa7ffd2708a",
+      "subject": "Validate fitted quarry corner lines and record live Nightworks proof",
+      "publishedMatches": [
+        "17fd04f912bfe395e964b1d2afcc52492650d0f9"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/412ef373d82273cf38beee62e8561fa7ffd2708a"
+    },
+    {
+      "commit": "14401bb959b909285044d948301f5ed2783f1f5d",
+      "subject": "index on codex/mayfield-mall: e8e1d67e Rebuild Mayfield Mall from full-scale source architecture",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/14401bb959b909285044d948301f5ed2783f1f5d"
+    },
+    {
+      "commit": "ea40772112b49b30eb04c7d7e1d72d71b64874bd",
+      "subject": "Build forward spaghetti courses in periodic vertical space",
+      "publishedMatches": [
+        "94ffa7271b77662ad0fbbfb5110717bb03fc89c9"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/ea40772112b49b30eb04c7d7e1d72d71b64874bd"
+    },
+    {
+      "commit": "dc414d61fe241ebcfef444e98878f5f7d7c72ce6",
+      "subject": "index on codex/merge-current-20261023: 399292d5 Merge School reconstruction and smooth transitions without losing current controls",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/dc414d61fe241ebcfef444e98878f5f7d7c72ce6"
+    },
+    {
+      "commit": "d845f76c195fbc54ea9bbb281c53cc517101278e",
+      "subject": "Build Carlisle Coast as a grounded modular city",
+      "publishedMatches": [
+        "1e8868c0f62bfe71a686674c1bc727b892d66b88"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/d845f76c195fbc54ea9bbb281c53cc517101278e"
+    },
+    {
+      "commit": "0c4f974f5744e66eec889f2b0b96107cf411c344",
+      "subject": "Build Switchback Run with continuous spline berms",
+      "publishedMatches": [
+        "f7c3c599859cec842de2dbd6d032591585a72bf9"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/0c4f974f5744e66eec889f2b0b96107cf411c344"
+    },
+    {
+      "commit": "3c64656e679a4b2c9c20b23d94087c171258ff2b",
+      "subject": "WIP on main: 73f9a66b Use portable temporary paths for stair regressions",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/3c64656e679a4b2c9c20b23d94087c171258ff2b"
+    },
+    {
+      "commit": "136631feca07fe9102120cea40a518ae64aba314",
+      "subject": "Flow D ledge recovery into running and align skate stance",
+      "publishedMatches": [
+        "093d0e88194245bf3a22ab4f94d36db3d94c2862"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/136631feca07fe9102120cea40a518ae64aba314"
+    },
+    {
+      "commit": "f66ef313476e461dc5d86f8d31f1fb0b984bb46c",
+      "subject": "Rebuild Coastal and Rooftop Deliveries with modular seaside art",
+      "publishedMatches": [
+        "739ce9fb46ce67a10e35b8b929a1fb26d3885153"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/f66ef313476e461dc5d86f8d31f1fb0b984bb46c"
+    },
+    {
+      "commit": "0787adea1669b89db7c878ca5918463aa82240c7",
+      "subject": "Port Jak suspension bridges with moving boards and placeholder creaks",
+      "publishedMatches": [
+        "84fdb6b70c9b92c5e84910e64d8b739bb3526a4c"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/0787adea1669b89db7c878ca5918463aa82240c7"
+    },
+    {
+      "commit": "c68de56f875ecdcf6b17ee6565983efe7b63595a",
+      "subject": "On main: Treehouse publication: preserve pre-existing level edits",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/c68de56f875ecdcf6b17ee6565983efe7b63595a"
+    },
+    {
+      "commit": "1b8e65a800ca95528f310cc875ede7b8a4182950",
+      "subject": "Replace milk crates with low-poly Meshy wood and orange fruit",
+      "publishedMatches": [
+        "19a9ebaed8a7cddc3e41373272a9c30c3830e8d8"
+      ],
+      "missingPaths": [
+        "public/hud/milk-bottle/milk_000.png",
+        "public/hud/milk-bottle/milk_001.png",
+        "public/hud/milk-bottle/milk_002.png",
+        "public/hud/milk-bottle/milk_003.png",
+        "public/hud/milk-bottle/milk_004.png",
+        "public/hud/milk-bottle/milk_005.png",
+        "public/hud/milk-bottle/milk_006.png",
+        "public/hud/milk-bottle/milk_007.png",
+        "public/hud/milk-bottle/milk_008.png",
+        "public/hud/milk-bottle/milk_009.png",
+        "public/hud/milk-bottle/milk_010.png",
+        "public/hud/milk-bottle/milk_011.png",
+        "public/hud/milk-bottle/milk_012.png",
+        "public/hud/milk-bottle/milk_013.png",
+        "public/hud/milk-bottle/milk_014.png",
+        "public/hud/milk-bottle/milk_015.png",
+        "public/hud/milk-bottle/milk_016.png",
+        "public/hud/milk-bottle/milk_017.png",
+        "public/hud/milk-bottle/milk_018.png",
+        "public/hud/milk-bottle/milk_019.png",
+        "public/hud/milk-bottle/milk_020.png",
+        "public/hud/milk-bottle/milk_021.png",
+        "public/hud/milk-bottle/milk_022.png",
+        "public/hud/milk-bottle/milk_023.png",
+        "public/hud/milk-bottle/milk_024.png",
+        "public/hud/milk-bottle/milk_025.png",
+        "public/hud/milk-bottle/milk_026.png",
+        "public/hud/milk-bottle/milk_027.png",
+        "public/hud/milk-bottle/milk_028.png",
+        "public/hud/milk-bottle/milk_029.png",
+        "public/hud/milk-bottle/milk_030.png",
+        "public/hud/milk-bottle/milk_031.png",
+        "public/hud/milk-bottle/milk_032.png",
+        "public/hud/milk-bottle/milk_033.png",
+        "public/hud/milk-bottle/milk_034.png",
+        "public/hud/milk-bottle/milk_035.png",
+        "public/hud/milk-bottle/milk_036.png",
+        "public/hud/milk-bottle/milk_037.png",
+        "public/hud/milk-bottle/milk_038.png",
+        "public/hud/milk-bottle/milk_039.png",
+        "public/hud/milk-bottle/milk_040.png",
+        "public/hud/milk-bottle/milk_041.png",
+        "public/hud/milk-bottle/milk_042.png",
+        "public/hud/milk-bottle/milk_043.png",
+        "public/hud/milk-bottle/milk_044.png",
+        "public/hud/milk-bottle/milk_045.png",
+        "public/hud/milk-bottle/milk_046.png",
+        "public/hud/milk-bottle/milk_047.png",
+        "public/hud/milk-bottle/milk_048.png",
+        "public/hud/milk-bottle/milk_049.png",
+        "public/hud/milk-bottle/milk_050.png",
+        "public/hud/milk-bottle/milk_051.png",
+        "public/hud/milk-bottle/milk_052.png",
+        "public/hud/milk-bottle/milk_053.png",
+        "public/hud/milk-bottle/milk_054.png",
+        "public/hud/milk-bottle/milk_055.png",
+        "public/hud/milk-bottle/milk_056.png",
+        "public/hud/milk-bottle/milk_057.png",
+        "public/hud/milk-bottle/milk_058.png",
+        "public/hud/milk-bottle/milk_059.png",
+        "public/hud/milk-bottle/milk_060.png",
+        "public/hud/milk-bottle/milk_061.png",
+        "public/hud/milk-bottle/milk_062.png",
+        "public/hud/milk-bottle/milk_063.png",
+        "public/hud/milk-bottle/milk_064.png",
+        "public/hud/milk-bottle/milk_065.png",
+        "public/hud/milk-bottle/milk_066.png",
+        "public/hud/milk-bottle/milk_067.png",
+        "public/hud/milk-bottle/milk_068.png",
+        "public/hud/milk-bottle/milk_069.png",
+        "public/hud/milk-bottle/milk_070.png",
+        "public/hud/milk-bottle/milk_071.png",
+        "public/hud/milk-bottle/milk_072.png",
+        "public/hud/milk-bottle/milk_073.png",
+        "public/hud/milk-bottle/milk_074.png",
+        "public/hud/milk-bottle/milk_075.png",
+        "public/hud/milk-bottle/milk_076.png",
+        "public/hud/milk-bottle/milk_077.png",
+        "public/hud/milk-bottle/milk_078.png",
+        "public/hud/milk-bottle/milk_079.png",
+        "public/hud/milk-bottle/milk_080.png",
+        "public/hud/milk-bottle/milk_081.png",
+        "public/hud/milk-bottle/milk_082.png",
+        "public/hud/milk-bottle/milk_083.png",
+        "public/hud/milk-bottle/milk_084.png",
+        "public/hud/milk-bottle/milk_085.png",
+        "public/hud/milk-bottle/milk_086.png",
+        "public/hud/milk-bottle/milk_087.png",
+        "public/hud/milk-bottle/milk_088.png",
+        "public/hud/milk-bottle/milk_089.png",
+        "public/hud/milk-bottle/milk_090.png",
+        "public/hud/milk-bottle/milk_091.png",
+        "public/hud/milk-bottle/milk_092.png",
+        "public/hud/milk-bottle/milk_093.png",
+        "public/hud/milk-bottle/milk_094.png",
+        "public/hud/milk-bottle/milk_095.png",
+        "public/hud/milk-bottle/milk_096.png",
+        "public/hud/milk-bottle/milk_097.png",
+        "public/hud/milk-bottle/milk_098.png",
+        "public/hud/milk-bottle/milk_099.png",
+        "public/hud/milk-bottle/milk_100.png",
+        "public/props/milk-crate/blue-crate.glb",
+        "public/props/milk-crate/milk-bottle.glb"
+      ],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/1b8e65a800ca95528f310cc875ede7b8a4182950"
+    },
+    {
+      "commit": "ffaaff5e621d93b69e7b5ee4f79c23eda24a0aff",
+      "subject": "Give Beach Street side scrapes a recovery window",
+      "publishedMatches": [
+        "78ac9389f9b13885457e4ea260089c3c60a6cc89"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/ffaaff5e621d93b69e7b5ee4f79c23eda24a0aff"
+    },
+    {
+      "commit": "1eb19d08490afe1c8d0ee8632e7c92dc5620bb3d",
+      "subject": "WIP on codex/merge-current-20261023: 399292d5 Merge School reconstruction and smooth transitions without losing current controls",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/1eb19d08490afe1c8d0ee8632e7c92dc5620bb3d"
+    },
+    {
+      "commit": "dec52bebcc84cecb37d7288a7749951b69cfe5fc",
+      "subject": "Add Image Blaster splat scenery and playable Splat Valley",
+      "publishedMatches": [
+        "6a374c8c8ff1db82f08a52bdaa7b338c415f2c8d"
+      ],
+      "missingPaths": [
+        "public/level-previews/splat-valley.jpg",
+        "public/splat-scenery/LICENSE-image-blaster.txt",
+        "public/splat-scenery/LICENSE-renderer.txt",
+        "public/splat-scenery/provenance.json",
+        "public/splat-scenery/valley-150k.spz",
+        "public/splat-scenery/valley-250k.spz",
+        "src/gaussianSplats.d.ts",
+        "src/levels/splat-valley.ts",
+        "src/splatScenery.ts",
+        "tools/import-splat-scenery.py",
+        "tools/splat-valley-browser.mjs",
+        "tools/splat-valley-extra-browser.mjs",
+        "tools/splat-valley-pilot.mjs",
+        "tools/test-splat-valley.mjs"
+      ],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/dec52bebcc84cecb37d7288a7749951b69cfe5fc"
+    },
+    {
+      "commit": "7ecfbb5a6d97bc76b9a04899ffcef68c53adb08b",
+      "subject": "Record wood crate and orange fruit browser validation",
+      "publishedMatches": [
+        "6673e36488cda51524b1cc2019a004447243a9f6"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/7ecfbb5a6d97bc76b9a04899ffcef68c53adb08b"
+    },
+    {
+      "commit": "84d82129daa97062a27ad413bb96587aeb2573bf",
+      "subject": "Build Carlisle Coast as a grounded modular city",
+      "publishedMatches": [
+        "1e8868c0f62bfe71a686674c1bc727b892d66b88"
+      ],
+      "missingPaths": [],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/84d82129daa97062a27ad413bb96587aeb2573bf"
+    },
+    {
+      "commit": "addf3b66487e2e8289898f9331cc31db2eb246ae",
+      "subject": "index on main: 73f9a66b Use portable temporary paths for stair regressions",
+      "publishedMatches": [],
+      "missingPaths": [],
+      "disposition": "historical_stash",
+      "note": "Preserved WIP/index snapshot, not a completed feature delivery. Relevant beacon, camera and board-test changes exist on main.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/addf3b66487e2e8289898f9331cc31db2eb246ae"
+    },
+    {
+      "commit": "2deef95c2b637a565e89e8e3f0f86e6746776664",
+      "subject": "Replace milk crates with low-poly Meshy wood and orange fruit",
+      "publishedMatches": [
+        "19a9ebaed8a7cddc3e41373272a9c30c3830e8d8"
+      ],
+      "missingPaths": [
+        "public/hud/milk-bottle/milk_000.png",
+        "public/hud/milk-bottle/milk_001.png",
+        "public/hud/milk-bottle/milk_002.png",
+        "public/hud/milk-bottle/milk_003.png",
+        "public/hud/milk-bottle/milk_004.png",
+        "public/hud/milk-bottle/milk_005.png",
+        "public/hud/milk-bottle/milk_006.png",
+        "public/hud/milk-bottle/milk_007.png",
+        "public/hud/milk-bottle/milk_008.png",
+        "public/hud/milk-bottle/milk_009.png",
+        "public/hud/milk-bottle/milk_010.png",
+        "public/hud/milk-bottle/milk_011.png",
+        "public/hud/milk-bottle/milk_012.png",
+        "public/hud/milk-bottle/milk_013.png",
+        "public/hud/milk-bottle/milk_014.png",
+        "public/hud/milk-bottle/milk_015.png",
+        "public/hud/milk-bottle/milk_016.png",
+        "public/hud/milk-bottle/milk_017.png",
+        "public/hud/milk-bottle/milk_018.png",
+        "public/hud/milk-bottle/milk_019.png",
+        "public/hud/milk-bottle/milk_020.png",
+        "public/hud/milk-bottle/milk_021.png",
+        "public/hud/milk-bottle/milk_022.png",
+        "public/hud/milk-bottle/milk_023.png",
+        "public/hud/milk-bottle/milk_024.png",
+        "public/hud/milk-bottle/milk_025.png",
+        "public/hud/milk-bottle/milk_026.png",
+        "public/hud/milk-bottle/milk_027.png",
+        "public/hud/milk-bottle/milk_028.png",
+        "public/hud/milk-bottle/milk_029.png",
+        "public/hud/milk-bottle/milk_030.png",
+        "public/hud/milk-bottle/milk_031.png",
+        "public/hud/milk-bottle/milk_032.png",
+        "public/hud/milk-bottle/milk_033.png",
+        "public/hud/milk-bottle/milk_034.png",
+        "public/hud/milk-bottle/milk_035.png",
+        "public/hud/milk-bottle/milk_036.png",
+        "public/hud/milk-bottle/milk_037.png",
+        "public/hud/milk-bottle/milk_038.png",
+        "public/hud/milk-bottle/milk_039.png",
+        "public/hud/milk-bottle/milk_040.png",
+        "public/hud/milk-bottle/milk_041.png",
+        "public/hud/milk-bottle/milk_042.png",
+        "public/hud/milk-bottle/milk_043.png",
+        "public/hud/milk-bottle/milk_044.png",
+        "public/hud/milk-bottle/milk_045.png",
+        "public/hud/milk-bottle/milk_046.png",
+        "public/hud/milk-bottle/milk_047.png",
+        "public/hud/milk-bottle/milk_048.png",
+        "public/hud/milk-bottle/milk_049.png",
+        "public/hud/milk-bottle/milk_050.png",
+        "public/hud/milk-bottle/milk_051.png",
+        "public/hud/milk-bottle/milk_052.png",
+        "public/hud/milk-bottle/milk_053.png",
+        "public/hud/milk-bottle/milk_054.png",
+        "public/hud/milk-bottle/milk_055.png",
+        "public/hud/milk-bottle/milk_056.png",
+        "public/hud/milk-bottle/milk_057.png",
+        "public/hud/milk-bottle/milk_058.png",
+        "public/hud/milk-bottle/milk_059.png",
+        "public/hud/milk-bottle/milk_060.png",
+        "public/hud/milk-bottle/milk_061.png",
+        "public/hud/milk-bottle/milk_062.png",
+        "public/hud/milk-bottle/milk_063.png",
+        "public/hud/milk-bottle/milk_064.png",
+        "public/hud/milk-bottle/milk_065.png",
+        "public/hud/milk-bottle/milk_066.png",
+        "public/hud/milk-bottle/milk_067.png",
+        "public/hud/milk-bottle/milk_068.png",
+        "public/hud/milk-bottle/milk_069.png",
+        "public/hud/milk-bottle/milk_070.png",
+        "public/hud/milk-bottle/milk_071.png",
+        "public/hud/milk-bottle/milk_072.png",
+        "public/hud/milk-bottle/milk_073.png",
+        "public/hud/milk-bottle/milk_074.png",
+        "public/hud/milk-bottle/milk_075.png",
+        "public/hud/milk-bottle/milk_076.png",
+        "public/hud/milk-bottle/milk_077.png",
+        "public/hud/milk-bottle/milk_078.png",
+        "public/hud/milk-bottle/milk_079.png",
+        "public/hud/milk-bottle/milk_080.png",
+        "public/hud/milk-bottle/milk_081.png",
+        "public/hud/milk-bottle/milk_082.png",
+        "public/hud/milk-bottle/milk_083.png",
+        "public/hud/milk-bottle/milk_084.png",
+        "public/hud/milk-bottle/milk_085.png",
+        "public/hud/milk-bottle/milk_086.png",
+        "public/hud/milk-bottle/milk_087.png",
+        "public/hud/milk-bottle/milk_088.png",
+        "public/hud/milk-bottle/milk_089.png",
+        "public/hud/milk-bottle/milk_090.png",
+        "public/hud/milk-bottle/milk_091.png",
+        "public/hud/milk-bottle/milk_092.png",
+        "public/hud/milk-bottle/milk_093.png",
+        "public/hud/milk-bottle/milk_094.png",
+        "public/hud/milk-bottle/milk_095.png",
+        "public/hud/milk-bottle/milk_096.png",
+        "public/hud/milk-bottle/milk_097.png",
+        "public/hud/milk-bottle/milk_098.png",
+        "public/hud/milk-bottle/milk_099.png",
+        "public/hud/milk-bottle/milk_100.png",
+        "public/props/milk-crate/blue-crate.glb",
+        "public/props/milk-crate/milk-bottle.glb"
+      ],
+      "disposition": "published_revision_or_later_retired",
+      "note": "Main contains the completed counterpart; missing paths may reflect later removal.",
+      "archiveRef": "refs/archive/orphan-audit-20261111/2deef95c2b637a565e89e8e3f0f86e6746776664"
+    }
+  ]
+}

@@ -18,9 +18,13 @@ export async function loadMotionStudyBuffer(kind: StudyAsset, file: string): Pro
   const url = motionStudyAsset(kind, file);
   const response = await fetch(url);
   if (!response.ok || !response.body) throw new Error(`Motion study asset unavailable (${response.status}): ${url}`);
-  return url.endsWith('.gz')
-    ? new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()
-    : response.arrayBuffer();
+  const bytes=await response.arrayBuffer(),header=new Uint8Array(bytes,0,Math.min(2,bytes.byteLength));
+  // Vite serves .gz with Content-Encoding: gzip, so fetch has already decoded
+  // it. Pages may serve the same file as raw gzip. Inspect the payload rather
+  // than decoding a second time merely because the URL ends in .gz.
+  return header[0]===0x1f&&header[1]===0x8b
+    ? new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()
+    : bytes;
 }
 
 export async function loadMotionStudyJson<T>(kind: 'jak-motion' | 'skate-motion'): Promise<T> {

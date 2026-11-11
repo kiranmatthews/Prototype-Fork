@@ -8,10 +8,15 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const {GameplayAnimationPresentation,gameplayAnimationDocument}=await server.ssrLoadModule('/src/gameplayAnimationScheme.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const {RigBinding,createPlayerStarterAnimationSuite}=await server.ssrLoadModule('/src/animation/index.ts');
+  const {withSkatePresentationRig}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
   const assets={jak,skate,ink:new THREE.Texture()},camera=new THREE.PerspectiveCamera(50,16/9,.1,1000);
   const create=()=>{
     const p=new Player(scene),rig=RigBinding.fromSculptRuntime(p.animationRig.root).definition;
     const base=createPlayerStarterAnimationSuite(rig),doc=gameplayAnimationDocument(base,rig,jak);
+    const authoringRig=withSkatePresentationRig(rig),authoringBase=createPlayerStarterAnimationSuite(authoringRig);
+    const adopted=gameplayAnimationDocument(authoringBase,authoringRig,jak);
+    assert.deepEqual(adopted.clips,doc.clips,'ordinary game must use the exact same D clips as the comparison lab');
+    assert.equal(adopted.rigs[0].rootJointId,'skateBody','preserve the full editable authoring binding');
     const runtime=createCharacterAnimationRuntime(p,doc),presentation=new GameplayAnimationPresentation(p,scene,assets);
     // Uncovered native families must survive adopting the default scheme.
     // It keys its own slide and slide jump; the downhill shoe glide stays native.

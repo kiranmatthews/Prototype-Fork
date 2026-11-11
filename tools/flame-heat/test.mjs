@@ -1,11 +1,28 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'vite';
 import * as THREE from 'three';
+import {readFile} from 'node:fs/promises';
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 try{
   const {FlameHeatDistortion,FLAME_HEAT_LIMIT}=await server.ssrLoadModule('/src/flameHeatDistortion.ts');
   const {FlameHeatSamples,attachFlameHeat,getFlameHeatSource}=await server.ssrLoadModule('/src/flameHeatSource.ts');
   const samples=object=>{const out=[];getFlameHeatSource(object)?.write((...p)=>out.push(p));return out;};
+  const {writeTorchHeat}=await server.ssrLoadModule('/src/torchHeat.ts');
+  const catalogue=JSON.parse(await readFile(new URL('../../public/jak-lab/catalogue.json',import.meta.url),'utf8'));
+  const field=(id,name)=>catalogue.particles.find(p=>p.id===id).fields.find(f=>f.field===name);
+  const sourceFlame=field(1100,'scale-x'),sourceRadius=field(1099,'r').base;
+  const sourceRatio=sourceRadius/(sourceFlame.base+sourceFlame.range*.5);
+  for(const scale of [.2,1,2.5]){
+    const frames=[0,.17,.99,1,1.01].map(time=>{const result=[];writeTorchHeat((...p)=>result.push(p),time,2,scale,1,7);return result;});
+    assert.ok(frames.every(frame=>frame.length>1&&frame.length<=24),'bounded fine ripple stream');
+    for(const frame of frames)for(const p of frame){
+      assert.ok(Math.abs(p[3]/(.6*scale)-sourceRatio)<1e-8,'ripple/flame ratio matches original Jak definitions 1099/1100');
+      assert.equal(p[4],p[3],'source ripples are circular, not whole-plume ellipses');
+      assert.ok(p.every(Number.isFinite));
+    }
+    assert.notDeepEqual(frames[0],frames[1],'ripples travel instead of a stationary whole-flame warp');
+  }
+  let cold=0;writeTorchHeat(()=>cold++,1,2,1,0,7);assert.equal(cold,0,'extinguished torches have no ripples');
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(50,16/9,.1,500);
   camera.updateMatrixWorld();scene.background=new THREE.Color('#334455');
   const owner=new THREE.Group(),flame=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());

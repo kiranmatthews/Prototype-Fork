@@ -16,6 +16,7 @@ const descriptions = {
   'tools/enemies/reference-review.html': ['Enemy lab · Jak 1 characters', 'Browse 72 Jak 1 enemies, bystanders and wildlife, with 111 model variants and their original action clips.', 'Labs & studios'],
   'tools/enemies/motion-review.html': ['Enemy lab · current roster', 'Inspect our enemy models, skeletons, combat cycles and defeat states; browse Jak 1 character references.', 'Labs & studios'],
   'jak-lab.html': ['Jak & Daxter effects lab', 'Browse the effects preview by category, including particle, HUD and disappearance effects.', 'Labs & studios'],
+  'jak-particle-study.html': ['Jak particle / HUD study', 'Recovered progress-menu particles: six layouts, original transitions, source icon animation and Original / Gouraud comparison.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
   'public/update-game.html': ['Update game', 'Load the latest published build while retaining saves and settings.', 'Maintenance'],
@@ -41,6 +42,7 @@ function category(file) {
 function reviewQuery(file) {
   if (file === 'skate-playtest.html' || file === 'skate-reference-lab.html') return '';
   if (file === 'jump-review.html') return '?playtest&level=codex-lab&nocrt&lite';
+  if (file === 'tools/flame-heat/review.html') return '?playtest&level=dark&launchReview&nocrt&lite';
   if (file.includes('/') && file !== 'tools/carton-game-review.html') return '';
   let level = 'codex-lab';
   if (/park-|competition|jungle-cup|cup-performance|trick-|grind-|balance-|spin-review|interaction|milk-bottle/.test(file)) level = 'jungle-cup';

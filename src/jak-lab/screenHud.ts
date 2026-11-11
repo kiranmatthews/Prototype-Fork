@@ -3,14 +3,17 @@ import type {ParticleMotion} from './particleMotion';
 import type {Catalogue,EffectDefinition,ScreenHudDefinition,ScreenHudProfile} from './types';
 
 export interface ScreenHudLayer {motion:ParticleMotion;origin:Vector3;sourceIndex:number}
-const entries=(catalogue:Catalogue)=>[...(catalogue.screenHud?.entries??[]),...(catalogue.firstPersonHud?[catalogue.firstPersonHud]:[])];
+const entries=(catalogue:Catalogue)=>[...(catalogue.screenHud?.entries??[]),...(catalogue.firstPersonHud?[catalogue.firstPersonHud]:[]),
+  ...(catalogue.progressHud?[catalogue.progressHud]:[])];
+const assemblyIds={health:31001,power:31002,'first-person':31003,progress:31004,buzzers:31005};
 export function screenHudDefinitions(catalogue:Catalogue):EffectDefinition[] {
-  return entries(catalogue).filter(entry=>entry.profiles[0].layers.length>1).map((entry,index)=>({
-    id:31001+index,name:`${entry.name} · source HUD assembly`,source:entry.source,screenHud:entry.id,items:[],
+  return entries(catalogue).filter(entry=>entry.profiles[0].layers.length>1).map(entry=>({
+    id:assemblyIds[entry.id],name:`${entry.name} · source HUD assembly`,source:entry.source,screenHud:entry.id,items:[],
   }));
 }
 export function screenHudDefinition(effect:EffectDefinition,catalogue:Catalogue):ScreenHudDefinition|undefined {
   return entries(catalogue).find(entry=>effect.screenHud===entry.id||
+    entry.id==='progress'&&effect.name==='group-part-progress-hud-power-cell-center'||
     entry.profiles[0].layers.some(layer=>layer.group===effect.name));
 }
 

@@ -16,11 +16,12 @@ const jak=bank('jak'),skate=bank('skate');
 const tests=[
   ...['direct-motion','double-jump','idle','locomotion','ledge-flip','ledge-traverse','precision-jumps','rubber-motion','ui-tuning']
     .map(name=>[`test-jak-${name}.mjs`,jak]),
+  ['test-jak-skid.mjs'],['test-jak-charge.mjs'],['test-skate-life.mjs'],
   ['test-playable-skate-motion.mjs',skate],
   ['test-jump-skate-integration.mjs',skate,jak],
   ['test-skate-equipment-ground.mjs',skate],
   ...['skate-native-actions','skate-abandon-presentation','skate-stance-continuity','skate-dismount-flow',
-    'skate-mount-reveal','skate-speed-recovery-motion','gameplay-animation-lifecycle','pancake-slam','keyed-slide','animation-ik','character-animation-runtime','character-elasticity']
+    'skate-mount-reveal','skate-speed-recovery-motion','gameplay-animation-lifecycle','pancake-slam','keyed-slide','low-pose-carry','animation-ik','character-animation-runtime','character-elasticity']
     .map(name=>[`test-${name}.mjs`]),
 ];
 // Existing scenario tests that do not replace their player's animation runtime

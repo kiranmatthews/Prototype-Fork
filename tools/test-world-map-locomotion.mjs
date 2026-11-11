@@ -104,8 +104,10 @@ try{
   for(let f=0;f<300;f++){map.step(1/60,input);assert.equal(runtime.activeClipId,'player.idle');}
   map.deactivate();assert.equal(p.animationIntent.presentation,'gameplay');
   startGameplaySkid();
-  for(let f=0;f<70;f++){p.step(1/60,input,flat);flat.update(1/60);}
-  assert.equal(runtime.activeClipId,'player.idle');
+  // D's skid digs in, teeters and stands up: a second and a quarter from a
+  // full run (74 frames), where the starter suite's is over in two thirds of one.
+  for(let f=0;f<90;f++){p.step(1/60,input,flat);flat.update(1/60);}
+  assert.equal(runtime.activeClipId,'player.idle','the restored skid did not settle to Idle');
   presentation?.dispose();ink?.dispose();runtime.dispose();flat.dispose();level.dispose();
   console.log('PASS fresh startup without gameplay input, recorded map taps, island pan visibility and endings, active-skid entry, idle hold and restored gameplay skids');
 }finally{await server.close();console.warn=warn;console.error=error;}
