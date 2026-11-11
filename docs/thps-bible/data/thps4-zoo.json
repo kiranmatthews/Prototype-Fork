@@ -1,0 +1,1695 @@
+{
+ "id": "thps4-zoo",
+ "game": "THPS4",
+ "level": "Zoo",
+ "location": "A zoo ('Welcome to The Zoo', 2002; no city named in 2002 sources); remake labels it 'Zoo - London' / 'THE ROYAL ZOO' (LP34 4:29:50), card 'ZOO - GO WILD!'",
+ "type": {
+  "PS2 2002": "career-street",
+  "THPS 3+4 2025": "competition"
+ },
+ "careerPosition": {
+  "original2002": 7,
+  "of2002": 9,
+  "remake2025": 9,
+  "of2025": 10
+ },
+ "timeLimit": {
+  "PS2 2002": "none for the level; per-goal clocks (S-K-A-T-E 2:00)",
+  "THPS 3+4 2025": "competition heats ~1:00 (LP34)"
+ },
+ "versions": [
+  "PS2 2002 (Neversoft)",
+  "THPS 3+4 2025 (Iron Galaxy, competition)",
+  "no PS1-edition Zoo in the VGMaps PS1 set"
+ ],
+ "sources": [
+  "LP4 2:06:06-2:26:44",
+  "LP4 3:10:48-3:18:00",
+  "THG pro-skater-4/zoo",
+  "THG gaps/pro-skater-4/zoo",
+  "PS34 zoo",
+  "PS34 all-secret-tapes",
+  "LP34 4:29:40-4:35:20",
+  "skipped (bot check): retroachievements.org, supercheats.com, walkthrough.freeola.com"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 80,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect C-O-M-B-O",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Hardflip and Heelflip over Kenny",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Nail the tricks they yell out",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Help the Lion Tamer escape",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Beat Bob's 3 best combos",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Stop the monkey from escaping",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Feed the Hippos",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Skitch the Elephant",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Catch the 5 runaway Penguins",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Get a Pro Score: 200,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Medal the Competition",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Grind the 4 Zoo banners",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Lure the lions back to the cage",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Do a Sit Down Air over the Lion's cage",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Combo scare 40 Birds",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Get Kong back in his cage",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Get a Sick Score: 800,000 points",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Transfer over Elephant Rock",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Bob Burnquist pro-specific challenge (Broken Loop Gap)",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Get a Medal in the Competition",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Platinum goal: Collect 5 Stuffed Penguins",
+   "version": "remake (2025)"
+  }
+ ],
+ "size": {
+  "class": "large (2002); competition arena (2025)",
+  "footprint": "not measured; estimate ~250-350 m long side (low confidence)",
+  "evidence": "2002 S-K-A-T-E ~1:36 across entrance, hippo water, brown pools and monkey cages (LP4 2:08:20-2:09:56)"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Entrance plaza, gates and banners",
+   "layer": "plaza/roofs",
+   "features": [
+    "main gate",
+    "tram gate",
+    "Welcome to The Zoo banners on roofs",
+    "snack bar",
+    "Kenny mascot"
+   ],
+   "notes": "start; banner goal; Snack Bar Hop"
+  },
+  {
+   "id": "Z2",
+   "name": "Hippo water and grassy banks",
+   "layer": "water/fence/logs",
+   "features": [
+    "fence",
+    "logs on grass",
+    "wet bridge",
+    "two hippos (boost)"
+   ],
+   "notes": "S, A, pumpkins"
+  },
+  {
+   "id": "Z3",
+   "name": "Brown pools",
+   "layer": "bowls",
+   "features": [
+    "linked concrete bowls"
+   ],
+   "notes": "K above the back of pool 2"
+  },
+  {
+   "id": "Z4",
+   "name": "Monkey cages, booth and aviary",
+   "layer": "cage walls/roof",
+   "features": [
+    "outer-wall QPs",
+    "cage roof",
+    "booth wall",
+    "aviary",
+    "octagonal cage room"
+   ],
+   "notes": "T, E, C-O-M-B-O, birds"
+  },
+  {
+   "id": "Z5",
+   "name": "Lion house and lion's cage",
+   "layer": "roof/kicker",
+   "features": [
+    "little roof between QPs",
+    "kicker over the fence",
+    "sand floor"
+   ],
+   "notes": "Sit Down Air; lions"
+  },
+  {
+   "id": "Z6",
+   "name": "Elephant island and the snack hut",
+   "layer": "sand island/sloped roof",
+   "features": [
+    "elephant",
+    "snack hut sloped roof"
+   ],
+   "notes": "aquarium trigger (Elephant Hop)"
+  },
+  {
+   "id": "Z7",
+   "name": "Aquarium (locked)",
+   "layer": "interior",
+   "features": [
+    "glass doors",
+    "blue-green tanks",
+    "slopes"
+   ],
+   "notes": "2 of 5 penguins"
+  },
+  {
+   "id": "Z8",
+   "name": "Big halfpipe and Elephant Rock",
+   "layer": "vert",
+   "features": [
+    "wooden halfpipe",
+    "rock with a tunnel"
+   ],
+   "notes": "competition; pro transfer"
+  },
+  {
+   "id": "Z9",
+   "name": "Kong's cage and chimney",
+   "layer": "chute",
+   "features": [
+    "two switches at the top"
+   ],
+   "notes": "pro lip-trick lock"
+  },
+  {
+   "id": "Z10",
+   "name": "Bridge, wires and rooftops",
+   "layer": "roofs/wire",
+   "features": [
+    "roof grinds",
+    "wire down to the bridge",
+    "handrail",
+    "little hut"
+   ],
+   "notes": "pro C-O-M-B-O"
+  },
+  {
+   "id": "Z11",
+   "name": "Bob's broken loop",
+   "layer": "loop",
+   "features": [
+    "loop with top removed"
+   ],
+   "notes": "pro challenge"
+  },
+  {
+   "id": "R1",
+   "name": "2025 competition arena",
+   "layer": "night arena",
+   "features": [
+    "elephant statue at start",
+    "aviary QP",
+    "big half pipe",
+    "animal enclosure",
+    "clock tower with GO WILD screen",
+    "red-lit bowls",
+    "rocks",
+    "barricaded path"
+   ],
+   "notes": "stuffed penguins"
+  }
+ ],
+ "landmarks": [
+  "entrance buildings with Welcome to The Zoo banners",
+  "hippo water",
+  "brown pools",
+  "monkey cages and aviary",
+  "lion house",
+  "elephant island and snack hut",
+  "aquarium",
+  "Elephant Rock",
+  "Kong's chimney",
+  "2025 clock tower with GO WILD screen"
+ ],
+ "spawn": {
+  "PS2 2002": {
+   "zone": "Z1",
+   "facing": "entrance with Kenny and the banners",
+   "visibleCollectibles": [
+    "S (over the fence ahead, per THG)"
+   ],
+   "notes": "three banners visible from the banner goal start (THG)"
+  },
+  "remake 2025": {
+   "zone": "R1",
+   "facing": "elephant statue, paths left and right",
+   "visibleCollectibles": [],
+   "notes": "competition heat"
+  }
+ },
+ "collectibles": [
+  {
+   "id": "AQUARIUM-02",
+   "type": "secret-area",
+   "label": "Locked aquarium (tape-equivalent, 2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z6/Z7",
+   "landmark": "snack-hut roof beside the elephant enclosure -> aquarium",
+   "layer": "roof -> animal -> interior",
+   "heightM": "snack-hut roof ~3-4 (low confidence)",
+   "launchFrom": "snack-hut roof edge",
+   "visibility": {
+    "firstSight": "trainer hint at the elephant (LP4 2:24:00); aquarium doors visible from the plaza (2:25:10)",
+    "fromSpawn": false,
+    "reads": "NPC warning about the elephant's head; glass doors",
+    "distanceFromFirstSightM": "~20-40"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "elephant plaza",
+     "to": "snack-hut sloped roof",
+     "geometry": "ramp up (LP4 2:24:39-2:24:45)"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "roof edge",
+     "to": "elephant",
+     "geometry": "THG: grind on her back; LP4: 'Pop Shove-It - Elephant Hop' 2:25:03"
+    },
+    {
+     "step": 3,
+     "move": "unlock",
+     "from": "elephant rears up",
+     "to": "aquarium open",
+     "geometry": "LP4 2:25:03-2:25:05"
+    },
+    {
+     "step": 4,
+     "move": "ride",
+     "from": "plaza",
+     "to": "aquarium interior",
+     "geometry": "LP4 2:25:32"
+    },
+    {
+     "step": 5,
+     "move": "ride",
+     "from": "inside",
+     "to": "penguins 1-2",
+     "geometry": "top of the slope and below (THG)"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind",
+    "moving-object",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "finding the trigger",
+    "jumping onto a moving animal"
+   ],
+   "coupling": "elephant (moving); unlock needed for penguins",
+   "failure": "instant retry: LP4 circles the roof and jumps 3 times in ~25 s",
+   "timeFromSpawnS": "LP4 trainer 2:23:56 -> trigger 2:25:03 (~1:07) -> inside 2:25:32 -> penguins done 2:26:20",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "EXPLORE"
+   ],
+   "why": "the biggest animal guards the one locked room; dialogue hints the spot",
+   "evidence": "THG 'Get into the Aquarium'; LP4 2:23:56-2:26:20",
+   "confidence": "high (order); low (exact contact)"
+  },
+  {
+   "id": "S",
+   "type": "skate-letter",
+   "label": "S (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "over the fence in front of the goal start",
+   "layer": "fence",
+   "heightM": "~1",
+   "launchFrom": "ground",
+   "visibility": {
+    "firstSight": "goal start",
+    "fromSpawn": true,
+    "reads": "letter over a fence",
+    "distanceFromFirstSightM": "~5"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "goal start",
+     "to": "fence",
+     "geometry": "hop the fence"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "S-K-A-T-E 2:00",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 2:08:44",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "skate-letter",
+   "label": "K (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "above the back end of the second brown pool",
+   "layer": "pool air",
+   "heightM": "~2-3 above coping",
+   "launchFrom": "first pool",
+   "visibility": {
+    "firstSight": "from the pools",
+    "fromSpawn": null,
+    "reads": "letter over a bowl",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "wet bridge",
+     "to": "pools",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "pool 1",
+     "to": "pool 2 (K)",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "spine-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "spine transfer"
+   ],
+   "coupling": "same clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 2:09:08",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "skate-letter",
+   "label": "A (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "above two hippos in the water",
+   "layer": "air over water",
+   "heightM": "boost height (unknown)",
+   "launchFrom": "hippos",
+   "visibility": {
+    "firstSight": "from the pools exit",
+    "fromSpawn": null,
+    "reads": "letter over animals in water",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "bank",
+     "to": "hippos",
+     "geometry": "hippos boost you over the water"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "using an animal boost"
+   ],
+   "coupling": "hippos (moving)",
+   "failure": "water bail",
+   "timeFromSpawnS": "LP4 2:09:20 (after a lost combo at 2:08:56)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "animal as trampoline",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "T",
+   "type": "skate-letter",
+   "label": "T (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "right-hand wall by a little booth before the monkey cages",
+   "layer": "wall",
+   "heightM": "wallride height",
+   "launchFrom": "ground",
+   "visibility": {
+    "firstSight": "approaching the cages",
+    "fromSpawn": null,
+    "reads": "letter on a wall",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "ground",
+     "to": "wall (T)",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride"
+   ],
+   "coupling": "same clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 last (~2:09:56)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "skate-letter",
+   "label": "E (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "air at the edge of the monkey-cage roof",
+   "layer": "cage roof + air",
+   "heightM": "~5-7",
+   "launchFrom": "cage roof",
+   "visibility": {
+    "firstSight": "from the cage roof",
+    "fromSpawn": null,
+    "reads": "letter beyond the roof edge",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "outer-wall QP",
+     "to": "grind",
+     "geometry": "launch right"
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "grind",
+     "to": "cage roof",
+     "geometry": "hop on"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "roof edge",
+     "to": "E",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "fall into the cages area",
+   "timeFromSpawnS": "LP4 2:09:44",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "highest letter crowns the cage climb",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "octagonal cage room: central-cage QP then the low rail around the room",
+   "layer": "room",
+   "heightM": "low",
+   "launchFrom": "central cage QP",
+   "visibility": {
+    "firstSight": "inside the room",
+    "fromSpawn": null,
+    "reads": "letters around the room",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 2:10:08-2:10:56",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "closed-room loop",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PCOMBO",
+   "type": "combo-letter",
+   "label": "Pro C-O-M-B-O (2002)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z10",
+   "landmark": "roofs -> wire -> bridge -> handrail -> hut roof -> pole -> lion-den wall -> small roof QP",
+   "layer": "roofs/wire",
+   "heightM": "roof heights",
+   "launchFrom": "roof",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters on roofs and wires",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "wire",
+    "manual",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "pro goal; one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 3:15:00",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "highest end-to-end line",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PENGUINS-02",
+   "type": "goal-object",
+   "label": "5 runaway penguins (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z7/Z1",
+   "landmark": "2 in the aquarium; after the benches outside; main bridge; bird-sanctuary entrance",
+   "layer": "interior/paths/bridge",
+   "heightM": "ground",
+   "launchFrom": "various",
+   "visibility": {
+    "firstSight": "goal givers",
+    "fromSpawn": null,
+    "reads": "penguins",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "aquarium unlock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 2:25:36-2:26:20",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "unlock pays off at once",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "PUMPKINS",
+   "type": "goal-object",
+   "label": "4 pumpkins (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "around the hippo water on a fence/log/wall circuit",
+   "layer": "fence/logs",
+   "heightM": "low",
+   "launchFrom": "fence",
+   "visibility": {
+    "firstSight": "around the water",
+    "fromSpawn": null,
+    "reads": "pumpkins",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 2:07:56-2:08:08",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "BANNERS",
+   "type": "goal-object",
+   "label": "4 zoo banners (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z1",
+   "landmark": "entrance roofs; 4th lower on a building",
+   "layer": "roofs",
+   "heightM": "roof height",
+   "launchFrom": "roof",
+   "visibility": {
+    "firstSight": "3 visible from the goal start",
+    "fromSpawn": true,
+    "reads": "banners",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "fall",
+   "timeFromSpawnS": "LP4 2:22:32-2:23:32",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "CASH-02",
+   "type": "cash",
+   "label": "Loose cash icons (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "various",
+   "landmark": "in foliage on a grind; over a flowerbed by Elephant Rock",
+   "layer": "varies",
+   "heightM": "low",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "$ icon / green $ bill",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 2:19:20, 3:16:30",
+   "difficulty": 1,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "",
+   "evidence": "LP4",
+   "confidence": "high (seen)",
+   "count": ">=2 seen"
+  },
+  {
+   "id": "STUFFPENG-25",
+   "type": "goal-object",
+   "label": "5 stuffed penguins (2025 platinum)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "aviary QP; big half pipe; enclosure middle; clock-tower QP; past a smashed barricade, QP and grind right",
+   "layer": "arena",
+   "heightM": "QP air heights",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "within a heat",
+    "fromSpawn": null,
+    "reads": "penguin toys",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind",
+    "break-glass"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "competition heat (~1:00)",
+   "failure": "heat ends",
+   "timeFromSpawnS": "LP34 4:34:20-4:35:15",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "EXPLORE"
+   ],
+   "why": "collect-five circuit in a 1-minute heat",
+   "evidence": "PS34; LP34",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "DECK-25",
+   "type": "hidden-deck",
+   "label": "Hidden deck (2025)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "wire between two rooftops reached from a wire up from the bridge",
+   "layer": "wire",
+   "heightM": "roof height",
+   "launchFrom": "bridge",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "deck",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "start",
+     "to": "bridge",
+     "geometry": "past the elephant statue"
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "bridge",
+     "to": "rooftop",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "rooftop",
+     "to": "wire between rooftops (deck)",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "wire layer",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "IGLOGO-25",
+   "type": "logo",
+   "label": "IG logo (2025)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "upper platform via wallride/wallie, over the roof, back QP",
+   "layer": "upper platform",
+   "heightM": "unknown",
+   "launchFrom": "wall",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "logo",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "left path wall",
+     "to": "upper platform",
+     "geometry": "wallie"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "left QP",
+     "to": "over the roof",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "back QP",
+     "to": "logo",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wallride",
+    "wallie",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallie"
+   ],
+   "coupling": "none",
+   "failure": "fall",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "wall layer",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "PANDA-25",
+   "type": "plushie",
+   "label": "Panda (2025)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "corner reached by grinding the top of a wall left from QPs at the far right",
+   "layer": "wall top",
+   "heightM": "unknown",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "plushie",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "CASH-25",
+   "type": "cash",
+   "label": "4 cash (2025)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "small ramp past the statue; log right of a QP; above a tree past a railing; above a QP through wooden boards",
+   "layer": "varies",
+   "heightM": "varies",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "cash",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "vert-air",
+    "break-glass"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "STAT-25",
+   "type": "stat-point",
+   "label": "2 stat points (2025)",
+   "version": "remake (2025)",
+   "zone": "R1",
+   "landmark": "above the elephant-face QP; between two QPs right of the clock tower",
+   "layer": "QP air",
+   "heightM": "QP air",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "stat icon",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 1,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 2
+  },
+  {
+   "id": "ROCK",
+   "type": "reach-goal",
+   "label": "Transfer over Elephant Rock (pro)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z8",
+   "landmark": "rock with a tunnel beside the halfpipe; sharp-angled air with full special",
+   "layer": "air over a rock",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4 3:15:36-3:16:12",
+   "confidence": "high"
+  },
+  {
+   "id": "KONG",
+   "type": "reach-goal",
+   "label": "Get Kong back in his cage (pro)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z9",
+   "landmark": "lip tricks on two switches at the top of a chimney/chute",
+   "layer": "chute",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "lip",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4 3:12:18",
+   "confidence": "high"
+  },
+  {
+   "id": "LIONS",
+   "type": "goal-object",
+   "label": "Lure the lions back to the cage",
+   "version": "original (PS2 2002)",
+   "zone": "Z5/Z7",
+   "landmark": "both lions at the aquarium entrance; ride so each chases you back",
+   "layer": "paths",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4 2:17:08-2:18:32",
+   "confidence": "high",
+   "count": 2
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Elephant Hop",
+   "points": null,
+   "kind": "other",
+   "location": "snack-hut roof to the elephant (unlock)",
+   "moves": [
+    "ollie",
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "AQUARIUM-02"
+   ],
+   "evidence": "LP4 2:25:03",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "All Exhibits Open",
+   "points": null,
+   "kind": "secret-area",
+   "location": "probably on opening the aquarium (inferred from name)",
+   "moves": [],
+   "onRouteOf": [
+    "AQUARIUM-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Snack Bar Hop",
+   "points": null,
+   "kind": "roof",
+   "location": "snack-bar roof",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "LP4 2:15:32",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "You want fries with that?",
+   "points": null,
+   "kind": "other",
+   "location": "snack bar (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Hippo Plant",
+   "points": null,
+   "kind": "other",
+   "location": "off the hippos",
+   "moves": [
+    "ollie",
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "A"
+   ],
+   "evidence": "LP4 2:08:56",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Hungry, Hungry Hippo Pool",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "hippo pool (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Pop Rock",
+   "points": null,
+   "kind": "other",
+   "location": "rock on the S-K-A-T-E line",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "A"
+   ],
+   "evidence": "LP4 2:09:20",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Banner Gap 1! / 2! / 3! / 4!",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "rooftop banners",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "BANNERS"
+   ],
+   "evidence": "THG gaps; LP4 2:22:56-2:23:32",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Bank Gap",
+   "points": null,
+   "kind": "other",
+   "location": "by the entrance banners",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "LP4 2:21:32",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Bridge Roof Grind",
+   "points": null,
+   "kind": "roof",
+   "location": "bridge roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "PCOMBO",
+    "BANNERS"
+   ],
+   "evidence": "LP4 2:22:32, 3:15:00",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "zOOrOOfgAp",
+   "points": null,
+   "kind": "roof",
+   "location": "zoo roofs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "PCOMBO"
+   ],
+   "evidence": "LP4 3:15:00; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Take it to the bridge",
+   "points": null,
+   "kind": "other",
+   "location": "bridge",
+   "moves": [],
+   "onRouteOf": [
+    "PCOMBO"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Lions Den Hop",
+   "points": null,
+   "kind": "over-object",
+   "location": "lion's den",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "PCOMBO"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Hold On! Lions Below",
+   "points": null,
+   "kind": "wire",
+   "location": "over the lion cage (inferred)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Over Elephant Rock",
+   "points": null,
+   "kind": "hip",
+   "location": "rock with a tunnel by the halfpipe",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "ROCK"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Big Moat Transfer",
+   "points": null,
+   "kind": "channel",
+   "location": "over a moat",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Birdhouse Rail",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "aviary",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Move Like a Monkey! / You Big Gorilla! / You Drive Me Ape! / Arf! Arf! Arf! / Long Neck Gap",
+   "points": null,
+   "kind": "other",
+   "location": "monkey cages, gorilla, seals, giraffes (names)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Shark Tank Trip / Aqua Sign Gap / Big Surf / Tidal Wave / Wave 2 Wave",
+   "points": null,
+   "kind": "other",
+   "location": "aquarium and water features (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Grind Over It / Manual Over It / Grind The Whole Planter / Picnic Pop / Backwoods Path / Over The Hills / Welcome to the Zoo",
+   "points": null,
+   "kind": "other",
+   "location": "paths, planters, picnic tables, hills, entrance",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "snack-hut roof -> jump onto the elephant ('Elephant Hop'; elephant rears)",
+   "opens": "aquarium",
+   "neededFor": [
+    "PENGUINS-02"
+   ],
+   "evidence": "THG; LP4 2:25:03-2:25:32"
+  },
+  {
+   "trigger": "Lion Tamer 'lions escaped'",
+   "opens": "lions roam and chase",
+   "neededFor": [
+    "LIONS"
+   ],
+   "evidence": "LP4 2:17:08"
+  },
+  {
+   "trigger": "lip tricks on two chimney switches (pro)",
+   "opens": "Kong falls into his cage",
+   "neededFor": [
+    "KONG"
+   ],
+   "evidence": "LP4 3:12:18"
+  },
+  {
+   "trigger": "Tony's Pro Challenge",
+   "opens": "red-arrow pro goals",
+   "neededFor": [
+    "PCOMBO"
+   ],
+   "evidence": "LP4 2:28:32"
+  },
+  {
+   "trigger": "smash the barricade (2025)",
+   "opens": "last penguin path",
+   "neededFor": [
+    "STUFFPENG-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "wallride/wallie (2025)",
+   "opens": "upper platform",
+   "neededFor": [
+    "IGLOGO-25"
+   ],
+   "evidence": "PS34"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Hippo-water letter line",
+   "sequence": [
+    "fence",
+    "logs",
+    "wet bridge",
+    "brown pools spine",
+    "ollie over the hippos"
+   ],
+   "links": [
+    "grind",
+    "spine-transfer",
+    "ollie"
+   ],
+   "collectibles": [
+    "S",
+    "K",
+    "A"
+   ],
+   "why": "water edge, pools and hippo boost in one pass",
+   "evidence": "THG; LP4 2:08:20-2:09:20"
+  },
+  {
+   "id": "L2",
+   "name": "Cage climb",
+   "sequence": [
+    "booth wall wallride",
+    "outer-wall QP launch right",
+    "grind",
+    "hop onto cage roof",
+    "ollie off the edge"
+   ],
+   "links": [
+    "wallride",
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "T",
+    "E"
+   ],
+   "why": "climb to the highest letter",
+   "evidence": "THG"
+  },
+  {
+   "id": "L3",
+   "name": "Pumpkin fence circuit",
+   "sequence": [
+    "fence",
+    "logs",
+    "log down",
+    "wall",
+    "wooden fence",
+    "hop the entrance",
+    "fence"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "PUMPKINS"
+   ],
+   "why": "ring of grinds around the water",
+   "evidence": "THG; LP4 2:07:56"
+  },
+  {
+   "id": "L4",
+   "name": "Cage-room loop",
+   "sequence": [
+    "central cage QP",
+    "revert-manual",
+    "low rail around the room"
+   ],
+   "links": [
+    "vert-air",
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "collectibles": [
+    "COMBO"
+   ],
+   "why": "closed-room loop",
+   "evidence": "THG; LP4 2:10:08"
+  },
+  {
+   "id": "L5",
+   "name": "Roof-wire-bridge pro line",
+   "sequence": [
+    "roof",
+    "roof",
+    "wire down",
+    "bridge",
+    "handrail",
+    "manual",
+    "hut QP",
+    "roof",
+    "pole",
+    "lion-den wall",
+    "small roof QP"
+   ],
+   "links": [
+    "grind",
+    "wire",
+    "manual",
+    "vert-air"
+   ],
+   "collectibles": [
+    "PCOMBO"
+   ],
+   "why": "highest end-to-end line",
+   "evidence": "THG; LP4 3:15:00"
+  },
+  {
+   "id": "L6",
+   "name": "Banner roofs",
+   "sequence": [
+    "entrance roofs back and forth",
+    "angled ollie onto a lower banner"
+   ],
+   "links": [
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "BANNERS"
+   ],
+   "why": "roof layer above the start",
+   "evidence": "THG; LP4 2:22:32"
+  },
+  {
+   "id": "L7",
+   "name": "Snack hut to elephant (secret)",
+   "sequence": [
+    "ramp",
+    "sloped snack-hut roof",
+    "jump to the elephant",
+    "aquarium doors"
+   ],
+   "links": [
+    "ollie",
+    "moving-object",
+    "unlock"
+   ],
+   "collectibles": [
+    "AQUARIUM-02",
+    "PENGUINS-02"
+   ],
+   "why": "hidden-room trigger",
+   "evidence": "THG; LP4 2:24:36-2:25:32"
+  },
+  {
+   "id": "L8",
+   "name": "Lion-house launch",
+   "sequence": [
+    "QP",
+    "little roof between QPs",
+    "kicker over the fence"
+   ],
+   "links": [
+    "transfer",
+    "kicker"
+   ],
+   "collectibles": [],
+   "why": "roof-to-air launch over a cage wall",
+   "evidence": "THG; LP4 2:16:32"
+  }
+ ],
+ "guidance": [
+  "NPC hint: the Elephant Trainer warns about Stompy's head, which is where the aquarium trigger is (LP4 2:24:00)",
+  "three of four banners visible from the banner-goal start (THG)",
+  "animals mark places: hippos (A), elephant (aquarium), lions and Kong (pro events)",
+  "2025: night arena with lit bowls and a clock tower; penguins above QPs and in open spaces"
+ ],
+ "designLogic": [
+  "no tape in either version; the locked aquarium plays the secret-area role in 2002; remake Zoo is a tape-less competition",
+  "animals are the machinery: hippo boost, elephant skitch/trigger, lion chase, Kong switches, birds, moving mascot",
+  "the hint is in dialogue: the trainer warns away from the exact trigger",
+  "one locked room used once: 2 of 5 penguins inside",
+  "the highest letter (E) crowns the cage climb taught by the letter order",
+  "water and pools are soft failure",
+  "pro goals climb to the roof and wire layer",
+  "remake secrets still teach wire (deck) and wall (logo via wallride/wallie) layers",
+  "remake platinum penguins are a collect-five arena circuit inside a 1-minute heat",
+  "goal starts and skitches fold a big map: Pro Score starts on the snack-bar roof; LP4 skitches a zoo cart to the aquarium",
+  "escape stories (penguins, lions, monkey, Kong) justify roaming targets"
+ ],
+ "remakeChanges": [
+  "2002 free-roam street level (16 + 5 goals) -> 2025 competition arena with a platinum penguin hunt",
+  "no tape in either; no S-K-A-T-E in 2025",
+  "remake brands Zoo as London's Royal Zoo ('Zoo - London', 'THE ROYAL ZOO', 'SAVE STOMPY' banner) tying it to London's Free Stompy goal"
+ ],
+ "transfer": [
+  "Animal trampoline: moving creatures in a pool as trampolines; crystal ~1-2 m above a plain ollie's 1.78 m",
+  "Gate behind a big animal: jump from a sloped roof onto a large moving platform to trigger an unlock to a closed room with the crystal; an NPC warns away from the spot",
+  "Cage-roof crown: wallride, QP into grind, hop to the cage roof, crystal in the air past the far edge (grind ollie ~2.4 m)",
+  "Lion-house launch: QP transfer to a small roof, kicker over a 6-8 m cage (charged ollie 9.4-13.8 m long) with the crystal above the cage",
+  "Chimney switches: two lip-stall trick gates in a chute that open a hatch to the crystal"
+ ],
+ "openQuestions": [
+  "2002 Zoo city (unnamed in 2002 sources)",
+  "exact aquarium opening contact (THG grind on the back vs LP4 'Elephant Hop' and rearing cut)",
+  "2002 gap points; aquarium gap locations",
+  "2002 cash-icon positions",
+  "2025 arena layout (studied from text and few frames)"
+ ]
+}

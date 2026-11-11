@@ -1,0 +1,2486 @@
+{
+ "id": "thps4-london",
+ "game": "THPS4",
+ "level": "London",
+ "location": "London, England (Trafalgar Square analogue with Nelson's column, National Gallery, Admiralty Arch, Thames riverside, South Bank undercroft); remake card 'LONDON - Beautiful night, innit?' (LP34 4:23:50)",
+ "type": "career-street",
+ "careerPosition": {
+  "original2002": 6,
+  "of2002": 9,
+  "remake2025": 8,
+  "of2025": 10
+ },
+ "timeLimit": {
+  "PS2 2002": "none for the level; per-goal clocks (S-K-A-T-E 2:00)",
+  "THPS 3+4 2025": "10:00 run",
+  "PS1 2002": "unknown"
+ },
+ "versions": [
+  "PS2 2002 (Neversoft)",
+  "PS1 2002 edition (Vicarious Visions, different layout)",
+  "THPS 3+4 2025 (Iron Galaxy; night, rain)"
+ ],
+ "sources": [
+  "LP4 1:46:12-2:06:06",
+  "LP4 3:03:00-3:10:30",
+  "THG pro-skater-4/london",
+  "THG gaps/pro-skater-4/london",
+  "VG TonyHawk_sProSkater4-London.png",
+  "VG TonyHawk_sProSkater4-London(Unmarked).png",
+  "CC1 London 34972 (cheatcodes.com, J. Hartman 2003, PS1)",
+  "PS34 london",
+  "PS34 all-secret-tapes",
+  "LP34 1:54:00-2:11:20",
+  "LP34 4:23:20-4:29:30",
+  "WEB pcgamesn",
+  "WEB finalboss",
+  "WEB operationsports",
+  "skipped (bot check): retroachievements.org, supercheats.com, walkthrough.freeola.com"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 75,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect the S-K-A-T-E letters",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect the C-O-M-B-O letters",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Wallride tag 5 buses",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Grab 5 Coppers hats",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Land a 100,000 point combo",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Rodney's Flatland training",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Do a Japan over the fountains",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Race the Coppers around London",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Free Stompy! Destroy the traps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Get a Pro Score: 175,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Ghetto Tag the SB light line",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Skitch the Police Bike",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Nail the combos as they come up",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Land the Flatland tricks as they appear",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Medal in the Competition",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Pro C-O-M-B-O letters",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Get a Sick Score: 700,000 points",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Trick on every object in the Southbank",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Grind the American cars in one combo, in order",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Beat Muska's best 6 combos",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Geoff Rowley pro-specific challenge",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Rookie Score",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Pro Score",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Extreme Score",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score Combo",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Pro Score Combo",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Sick Score Combo",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "S-K-A-T-E",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "S-K-A-T-E Hard",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "C-O-M-B-O",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "C-O-M-B-O Hard",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Horse",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Collect 5 umbrellas",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Collect 5 underground passes",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Perform feeble on top of bus",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Kickflip fountain entrance",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Boneless over 2 phone booths",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "720 over the Supa Spine",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Cannonball over the fountain",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Competition (200,000)",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score 125,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Pro Score 200,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Sick Score 400,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "High Combo 40,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Benihana over the Fountains",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Grab 4 Copper Hats",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Wallride 2 Buses in One Combo",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Free Stompy the Elephant",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Platinum Score 800,000",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Collect C-O-M-B-O",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Grind the Full Southbank Lights Gap",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Impress the Pro Skaters",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Collect the Stompy Plushies",
+   "version": "remake (2025, pro goal)"
+  }
+ ],
+ "size": {
+  "class": "large (PS2/remake); medium (PS1)",
+  "footprint": "not measured; estimate ~300-400 m long side (low confidence)",
+  "evidence": "2002 S-K-A-T-E ~1:38 across square, arch, rooftop pools and river lights (LP4 1:49:22-1:51:00); PS1 one square + road loop on one VG render"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "The square (Trafalgar analogue)",
+   "layer": "plaza/plinth/wire",
+   "features": [
+    "two fountains",
+    "Nelson's column on a stepped plinth",
+    "QP at the plinth base (2025)",
+    "wire from the plinth top to the rooftops (2025)"
+   ],
+   "notes": "hub of the 2025 tape route; gaps Ring Around the Column, Nelson's Lip, Yet Another Wire"
+  },
+  {
+   "id": "Z2",
+   "name": "Gallery front and the arch",
+   "layer": "ledges/awnings",
+   "features": [
+    "National Gallery facade",
+    "Admiralty Arch analogue",
+    "curved ledge around the arched building"
+   ],
+   "notes": "2002 K"
+  },
+  {
+   "id": "Z3",
+   "name": "Rooftops around the square",
+   "layer": "roofs ~10-20 m",
+   "features": [
+    "Shell building roofs (2002)",
+    "rooftop pools/spines",
+    "glowing skylight roof",
+    "searchlights",
+    "O2 and YETI/NIXON billboards (2025)"
+   ],
+   "notes": "2025 tape above an upper rooftop QP near the O2 billboard"
+  },
+  {
+   "id": "Z4",
+   "name": "Riverside rooftop pools",
+   "layer": "roof with upper and lower pools",
+   "features": [
+    "sloped concrete walkway up the building",
+    "two rooftop pools",
+    "facing building ledge"
+   ],
+   "notes": "2002 T between pools; E by wallride"
+  },
+  {
+   "id": "Z5",
+   "name": "Thames riverside and South Bank light line",
+   "layer": "walkway/bulb string/river",
+   "features": [
+    "bridge",
+    "coloured bulb string",
+    "lamp posts",
+    "river (bail)"
+   ],
+   "notes": "2002 A and a $100 cash icon on the bulb string"
+  },
+  {
+   "id": "Z6",
+   "name": "South Bank undercroft",
+   "layer": "flat ground",
+   "features": [
+    "ledges",
+    "stairs",
+    "red banks",
+    "NOKIA banners"
+   ],
+   "notes": "flatland competition; 40 trick objects (pro)"
+  },
+  {
+   "id": "Z7",
+   "name": "Streets, bus stop, car park",
+   "layer": "street",
+   "features": [
+    "road loop",
+    "red buses",
+    "bus shelter",
+    "car park with booth and glass (2025 elevators)"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "Z8",
+   "name": "Halfpipe between buildings",
+   "layer": "QPs",
+   "features": [
+    "two QPs facing"
+   ],
+   "notes": "Nail the combos"
+  },
+  {
+   "id": "P1",
+   "name": "PS1: square with fountains and the big column",
+   "layer": "plaza/column/wires",
+   "features": [
+    "two blue fountains",
+    "big column with QP",
+    "wires radiating from the column"
+   ],
+   "notes": "spawn in the middle of the fountain"
+  },
+  {
+   "id": "P2",
+   "name": "PS1: big stone building",
+   "layer": "awnings/cables",
+   "features": [
+    "three entrances with awning QPs",
+    "cables between awnings",
+    "planters"
+   ],
+   "notes": "S-K-A-T-E Hard, C-O-M-B-O"
+  },
+  {
+   "id": "P3",
+   "name": "PS1: balcony building",
+   "layer": "balcony",
+   "features": [
+    "balcony area",
+    "rail above the A's QP",
+    "red wire to the column"
+   ],
+   "notes": "E, new deck, tape wire (YES ITS RED! 1,500)"
+  },
+  {
+   "id": "P4",
+   "name": "PS1: bus stop and parked bus",
+   "layer": "street/bus top",
+   "features": [
+    "bus-stop ledge and benches",
+    "parked double-decker"
+   ],
+   "notes": "BUS GRIND, DOUBLE DECKER AIR, feeble on top of bus"
+  },
+  {
+   "id": "P5",
+   "name": "PS1: green fountain area",
+   "layer": "sunken area",
+   "features": [
+    "skinny QP",
+    "benches",
+    "light-pole wires",
+    "Supa Spine"
+   ],
+   "notes": ""
+  }
+ ],
+ "landmarks": [
+  "Nelson's column and plinth",
+  "two fountains",
+  "National Gallery front",
+  "Admiralty Arch analogue",
+  "red double-decker buses",
+  "Thames and the South Bank bulb string",
+  "South Bank undercroft",
+  "O2 billboard (2025)",
+  "PS1 red wire (YES ITS RED!)"
+ ],
+ "spawn": {
+  "PS2 2002": {
+   "zone": "Z1",
+   "facing": "fountain square, gallery and fountains in view",
+   "visibleCollectibles": [],
+   "notes": "Atiba's fountain goal at the start (LP4 1:46:24); S-K-A-T-E giver points 'up there'"
+  },
+  "remake 2025": {
+   "zone": "Z1",
+   "facing": "column plinth with its QP; wire to the right",
+   "visibleCollectibles": [],
+   "notes": "tape not in the spawn image; visible from the wire (PS34 #32-#33)"
+  },
+  "PS1 2002": {
+   "zone": "P1",
+   "facing": "fountain area, bus, column, stone building",
+   "visibleCollectibles": [],
+   "notes": "start in the middle of the fountain (CC1)"
+  }
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-R",
+   "type": "tape",
+   "label": "Secret tape (remake)",
+   "version": "remake (2025)",
+   "zone": "Z3",
+   "landmark": "above the coping of an upper-rooftop QP/spine near 'The O2' billboard",
+   "layer": "upper rooftop air",
+   "heightM": "~2-4 above the coping; roofs ~12-20 above the square (low confidence)",
+   "launchFrom": "upper-roof QP or spine",
+   "visibility": {
+    "firstSight": "from the wire grind (PS34 #33)",
+    "fromSpawn": false,
+    "reads": "small blue glowing cassette over a lit building against the night sky",
+    "distanceFromFirstSightM": "~40-80 (estimate)"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "spawn",
+     "to": "QP at the base of the column plinth",
+     "geometry": "straight ahead (PS34 #32)"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "plinth QP",
+     "to": "wire",
+     "geometry": "launch up and right, catch the wire at the apex (WEB pcgamesn)"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "plinth top",
+     "to": "far rooftop",
+     "geometry": "'Yet Another Wire' up and right; tape visible ahead (PS34 #33)"
+    },
+    {
+     "step": 4,
+     "move": "spine-transfer",
+     "from": "rooftop pool",
+     "to": "next higher rooftop",
+     "geometry": "PS34 #34"
+    },
+    {
+     "step": 5,
+     "move": "spine-transfer",
+     "from": "upper-roof QP",
+     "to": "tape",
+     "geometry": "tape above the coping (PS34 #35)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire",
+    "grind",
+    "spine-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "catching a wire at the apex of a QP air",
+    "long uphill wire grind",
+    "rooftop spine transfers"
+   ],
+   "coupling": "none; Constable Richard later uses the same line",
+   "failure": "missing the wire costs seconds; falling from the roofs ~12-20 m, ~10-20 s back to the plinth in a 10:00 run",
+   "timeFromSpawnS": "~35-55 from the plinth (PS34 59:30 -> 58:38 with stops); LP34 ~38 s from the plaza (2:00:44 -> 2:01:22), 6:51 into the run",
+   "difficulty": 3,
+   "roles": [
+    "TEASE",
+    "TEST",
+    "TEACH-LINE"
+   ],
+   "why": "the central landmark becomes a lift (QP + wire) to the roofs and shows the tape mid-route",
+   "evidence": "PS34 london + #32-#35; WEB pcgamesn, finalboss, operationsports; LP34 2:00:44-2:01:25",
+   "confidence": "high (route); medium (location); low (heights)",
+   "lp34Variant": "pavement rails 'Kissed the Rail - Varial Heelflip' -> 'Boneless' up a building face -> '540 Indy' at a rooftop edge -> balustraded roof -> 'Spine Transfer - Indy' with The O2 billboard in view -> pickup mid-air -> skylight roof (LP34 2:00:58-2:01:23)"
+  },
+  {
+   "id": "TAPE-PS1",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "on the red wire from the balcony area (E) to the big column",
+   "layer": "wire",
+   "heightM": "~4-6 above the road (wire passes above the parked double-decker on VG; low confidence)",
+   "launchFrom": "balcony area (rail above the A's QP)",
+   "visibility": {
+    "firstSight": "probably from the bus/fountain (inferred); VG label 'YES IT IS RED!'",
+    "fromSpawn": null,
+    "reads": "cassette on a red wire; gap worth 1,500",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "street",
+     "to": "wooden kicker, turn right",
+     "geometry": "QP of the S-K-A-T-E A"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "A's QP",
+     "to": "rail above it",
+     "geometry": "grind the rail; arrive on the balcony area (E, deck)"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "balcony",
+     "to": "big column",
+     "geometry": "'YES ITS RED!' 1,500"
+    },
+    {
+     "step": 4,
+     "move": "ride",
+     "from": "red wire",
+     "to": "tape",
+     "geometry": "tape on the wire (CC1)"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "reaching the balcony via a rail above a QP",
+    "holding a wire across the road"
+   ],
+   "coupling": "none",
+   "failure": "fall to the street/bus; balcony one QP and rail away (inferred)",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "REWARD",
+    "TEST"
+   ],
+   "why": "the tape sits on the level's most valuable gap from a hidden balcony to the central landmark",
+   "evidence": "CC1 London 'SECRET TAPE', 'YES ITS RED!', S-K-A-T-E E, NEW DECK; VG icon",
+   "confidence": "high (location); medium (route)"
+  },
+  {
+   "id": "S-02",
+   "type": "skate-letter",
+   "label": "S (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "in the air above the square from the Shell roofs",
+   "layer": "roof air",
+   "heightM": "~10-15",
+   "launchFrom": "rooftop",
+   "visibility": {
+    "firstSight": "from the street, high above the square (LP4 1:49:24)",
+    "fromSpawn": null,
+    "reads": "letter high in the air",
+    "distanceFromFirstSightM": "~30-60"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP between buildings",
+     "to": "grind",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "grind",
+     "to": "next roof",
+     "geometry": "sideways hop ('Shell Building Hop')"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "roof",
+     "to": "S",
+     "geometry": "jump into the air over the square"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "S-K-A-T-E clock 2:00",
+   "failure": "fall to the square",
+   "timeFromSpawnS": "LP4 ~1:49:40-1:50:00",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "first letter teaches the roof layer",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "K-02",
+   "type": "skate-letter",
+   "label": "K (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "ledge around the arched building",
+   "layer": "building ledge",
+   "heightM": "~6-10",
+   "launchFrom": "QP launch left",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letter on a ledge line",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP across the road",
+     "to": "ledge",
+     "geometry": "launch left"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "ledge",
+     "to": "K",
+     "geometry": "ride around"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long ledge balance"
+   ],
+   "coupling": "same clock",
+   "failure": "fall to the street",
+   "timeFromSpawnS": "LP4 1:50:10",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "ledge tour of a landmark",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "A-02",
+   "type": "skate-letter",
+   "label": "A (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "South Bank bulb string by the bridge",
+   "layer": "bulb string over the riverside",
+   "heightM": "~4-6",
+   "launchFrom": "bridge",
+   "visibility": {
+    "firstSight": "from the riverside walkway (LP4 1:50:36)",
+    "fromSpawn": null,
+    "reads": "letter over the walkway",
+    "distanceFromFirstSightM": "~20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "ledge",
+     "to": "bridge",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "bridge",
+     "to": "lights line",
+     "geometry": "jump onto the string"
+    }
+   ],
+   "moves": [
+    "wire",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wire balance over water"
+   ],
+   "coupling": "same clock",
+   "failure": "water bail ('No swimming', 'All wet')",
+   "timeFromSpawnS": "LP4 ~1:51:00 (after two water bails)",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "letter on the failure line",
+   "evidence": "THG; LP4 1:50:34-1:51:00",
+   "confidence": "high"
+  },
+  {
+   "id": "T-02",
+   "type": "skate-letter",
+   "label": "T (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "between the upper and lower rooftop pools",
+   "layer": "high air between pools",
+   "heightM": "~3-5 above the lower pool coping (estimate)",
+   "launchFrom": "upper pool",
+   "visibility": {
+    "firstSight": "from the roof",
+    "fromSpawn": null,
+    "reads": "letter high between pools",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "riverside",
+     "to": "sloped concrete walkway",
+     "geometry": "up the building"
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "walkway QP",
+     "to": "roof",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "upper pool",
+     "to": "lower pool through T",
+     "geometry": "boneless for height"
+    }
+   ],
+   "moves": [
+    "spine-transfer",
+    "vert-air",
+    "boneless"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "pool-to-pool air"
+   ],
+   "coupling": "same clock",
+   "failure": "fall into the lower pool / off the roof",
+   "timeFromSpawnS": "LP4 1:50:24",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "the original's hardest letter",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "E-02",
+   "type": "skate-letter",
+   "label": "E (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "ledge of the building across from the pools",
+   "layer": "building ledge (wallride)",
+   "heightM": "roof height",
+   "launchFrom": "upper pool exit",
+   "visibility": {
+    "firstSight": "from the upper pool",
+    "fromSpawn": null,
+    "reads": "letter on a facing wall",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "upper pool",
+     "to": "far side",
+     "geometry": "ollie out"
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "landing",
+     "to": "building ledge",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wallride",
+     "from": "ledge",
+     "to": "E",
+     "geometry": "turn right"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "ledge",
+    "wallride"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "wallride"
+   ],
+   "coupling": "same clock",
+   "failure": "fall to the street",
+   "timeFromSpawnS": "LP4 by 1:50:16",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "pool exit onto a facing ledge",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "SKATE-25",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E (2025)",
+   "version": "remake (2025)",
+   "zone": "Z3",
+   "landmark": "S ledge left of a colourful QP; K roof after a wire; A lower roof after a spine down; T above a rooftop-edge wire; E above a QP on the road",
+   "layer": "ledge->wire->roofs->road",
+   "heightM": "roof heights",
+   "launchFrom": "colourful QP",
+   "visibility": {
+    "firstSight": "near spawn",
+    "fromSpawn": null,
+    "reads": "letters along the roof chain",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind",
+    "wire",
+    "spine-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall to the street",
+   "timeFromSpawnS": "LP34 S,K at 1:57:05-1:57:15; complete 2:09:35 (run 2)",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "same QP-wire-roof-spine grammar as the tape",
+   "evidence": "PS34; LP34",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO-02",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z7",
+   "landmark": "wall -> bus shelter -> wall -> manual across road -> QP -> upper ledge",
+   "layer": "street furniture to upper ledge",
+   "heightM": "varies",
+   "launchFrom": "wall",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters along street furniture",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "wall",
+     "to": "C",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "sloped wall end",
+     "to": "bus shelter",
+     "geometry": "launch"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "shelter",
+     "to": "wall (O)",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "manual",
+     "from": "wall end",
+     "to": "across the road",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "upper ledge (M, B, O)",
+     "geometry": "launch right"
+    }
+   ],
+   "moves": [
+    "grind",
+    "kicker",
+    "manual",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 1:54:24-1:54:48",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "street-furniture chain",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PCOMBO-02",
+   "type": "combo-letter",
+   "label": "Pro C-O-M-B-O (2002)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z3",
+   "landmark": "upper ramp -> high wire -> balcony gap -> second wire -> bowls",
+   "layer": "roof/wires/bowls",
+   "heightM": "high",
+   "launchFrom": "QP",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters on wires",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "QP",
+     "to": "upper ramp (C)",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "revert",
+     "from": "landing",
+     "to": "manual",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "grind left (O)",
+     "to": "high wire",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "balcony gap",
+     "to": "grind (M)",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "wire",
+     "from": "bend",
+     "to": "other wire (B)",
+     "geometry": "jump left"
+    },
+    {
+     "step": 6,
+     "move": "manual",
+     "from": "bowl",
+     "to": "across",
+     "geometry": ""
+    },
+    {
+     "step": 7,
+     "move": "spine-transfer",
+     "from": "bowl",
+     "to": "next bowl (O)",
+     "geometry": "launch"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "revert",
+    "manual",
+    "wire",
+    "spine-transfer"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "revert-manual",
+    "wire balance"
+   ],
+   "coupling": "pro goal; one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 3:03:18",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "wire layer later used by the remake's tape route",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO-PS1",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P2/P3/P4",
+   "landmark": "awning -> wire to balcony -> balcony railing -> cable over street -> bus-stop ledge",
+   "layer": "awning/wire/balcony",
+   "heightM": "varies",
+   "launchFrom": "awning QP",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters on wires",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "wire",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "teaches the balcony that holds the tape wire",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "HCOMBO-PS1",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O Hard (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1",
+   "landmark": "fountain ledges -> line to column -> B on column -> wire to bus stop",
+   "layer": "ledges/wires",
+   "heightM": "varies",
+   "launchFrom": "ledge",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters on the column hub",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ledge",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "column-hub wiring",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "HATS-25",
+   "type": "goal-object",
+   "label": "Copper hats + Constable Richard (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z3",
+   "landmark": "4 coppers; Richard on a pillar in the square's corner (QP) and atop the building behind the fountains (large QP to the roof)",
+   "layer": "street/pillar/roof",
+   "heightM": "varies",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "moving NPCs",
+    "fromSpawn": true,
+    "reads": "police officers",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "ollie",
+    "vert-air",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "moving targets",
+   "failure": "he relocates; 'ALMOST GOT HIM!'",
+   "timeFromSpawnS": "LP34 1:54:59-2:03:31",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "rehearses the tape's roof line",
+   "evidence": "PS34; LP34",
+   "confidence": "high"
+  },
+  {
+   "id": "BUSES",
+   "type": "goal-object",
+   "label": "Buses to wallride",
+   "version": "original + remake",
+   "zone": "Z7",
+   "landmark": "moving buses on loops",
+   "layer": "street",
+   "heightM": "~4.4 (bus)",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "moving",
+    "fromSpawn": true,
+    "reads": "red double-deckers",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "wallride",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "interception"
+   ],
+   "coupling": "moving vehicles",
+   "failure": "retry next loop",
+   "timeFromSpawnS": "LP4 1:56:36-1:57:12",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "collectible-like targets that move",
+   "evidence": "THG; PS34",
+   "confidence": "high",
+   "count": "5 (2002) / 2 in one combo (2025)"
+  },
+  {
+   "id": "TRAPS-02",
+   "type": "goal-object",
+   "label": "Stompy trap nets (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z7",
+   "landmark": "nets across roads",
+   "layer": "street",
+   "heightM": "~2-3",
+   "launchFrom": "rope grinds",
+   "visibility": {
+    "firstSight": "from the road",
+    "fromSpawn": null,
+    "reads": "nets with red frames",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 1:52:24-1:54:12",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "TRICKOBS-02",
+   "type": "goal-object",
+   "label": "South Bank trick objects (2002 pro)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z6",
+   "landmark": "40 objects in the undercroft",
+   "layer": "flat ground",
+   "heightM": "low",
+   "launchFrom": "undercroft",
+   "visibility": {
+    "firstSight": "in the undercroft",
+    "fromSpawn": null,
+    "reads": "ledges/stairs/banks",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "manual",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "speed of routing"
+   ],
+   "coupling": "goal clock",
+   "failure": "LP4 39/40 at 0:01",
+   "timeFromSpawnS": "LP4 3:04:30-3:06:36",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "exhaustive-coverage goal",
+   "evidence": "LP4",
+   "confidence": "high",
+   "count": 40
+  },
+  {
+   "id": "CASH-02",
+   "type": "cash",
+   "label": "Loose cash icon (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "on the South Bank bulb string",
+   "layer": "bulb string",
+   "heightM": "~4-6",
+   "launchFrom": "bridge",
+   "visibility": {
+    "firstSight": "on the line",
+    "fromSpawn": null,
+    "reads": "$ icon",
+    "distanceFromFirstSightM": "on line"
+   },
+   "route": [],
+   "moves": [
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "water bail",
+   "timeFromSpawnS": "LP4 1:50:42 ($100)",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "cash marks the line",
+   "evidence": "LP4",
+   "confidence": "high (one seen)"
+  },
+  {
+   "id": "CASH-25",
+   "type": "cash",
+   "label": "5 cash (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z2/Z3/Z7",
+   "landmark": "wire to the left building's narrow path; above a water feature; car park; upper level via rooftop QP transfer; arch ledge and lampposts",
+   "layer": "mixed",
+   "heightM": "varies",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "cash",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "wire",
+    "vert-air",
+    "transfer",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "cash ends lines",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "DECK-25",
+   "type": "hidden-deck",
+   "label": "Hidden deck (2025)",
+   "version": "remake (2025)",
+   "zone": "Z7",
+   "landmark": "car-park elevators behind glass",
+   "layer": "interior",
+   "heightM": "n/a",
+   "launchFrom": "car-park entrance",
+   "visibility": {
+    "firstSight": "behind glass",
+    "fromSpawn": null,
+    "reads": "deck at the elevator exit",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "break-glass",
+     "from": "car-park entrance",
+     "to": "elevators",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "portal",
+     "from": "elevator",
+     "to": "deck",
+     "geometry": "collected as you come out"
+    }
+   ],
+   "moves": [
+    "break-glass",
+    "unlock"
+   ],
+   "speed": "none",
+   "skillGates": [
+    "knowing glass breaks"
+   ],
+   "coupling": "glass",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "transition-hidden secret",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "IGLOGO-25",
+   "type": "logo",
+   "label": "IG logo (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1",
+   "landmark": "scaffolding reached by wires from a corner pillar via the column",
+   "layer": "wires/scaffold",
+   "heightM": "unknown",
+   "launchFrom": "corner pillar QP",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "logo",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "corner pillar",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "wire",
+     "from": "pillar",
+     "to": "column",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "column",
+     "to": "scaffolding",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "column as wire hub (2025)",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "STAT-25",
+   "type": "stat-point",
+   "label": "3 stat points (2025)",
+   "version": "remake (2025)",
+   "zone": "Z5/Z7",
+   "landmark": "ledge off a yellow QP by the car park; behind restaurant glass; flagpole in the raining area",
+   "layer": "mixed",
+   "heightM": "varies",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "stat icon",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind",
+    "break-glass"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "glass",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 3
+  },
+  {
+   "id": "PLUSH-25",
+   "type": "goal-object",
+   "label": "Stompy plushies (2025 pro)",
+   "version": "remake (2025, pro goal)",
+   "zone": "Z1/Z2/Z7",
+   "landmark": "over the bus stop behind the start; Canada-flags building QP; QP right of the arch; ledge up the road; QP down a straight road",
+   "layer": "mixed",
+   "heightM": "varies",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "plushies",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "pro goals",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "DECK-PS1",
+   "type": "hidden-deck",
+   "label": "New deck (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "on the balcony area",
+   "layer": "balcony",
+   "heightM": "unknown",
+   "launchFrom": "rail above the A's QP",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "deck icon (VG green capsule)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "unknown",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "shares the tape's balcony",
+   "evidence": "CC1; VG",
+   "confidence": "high"
+  },
+  {
+   "id": "MUSIC-PS1",
+   "type": "music-track",
+   "label": "New music track (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1",
+   "landmark": "on the cable of the C-O-M-B-O Hard M (line to the big column)",
+   "layer": "wire",
+   "heightM": "unknown",
+   "launchFrom": "fountain-area ledges",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "disc icon beside the column (VG)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "unknown",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "column hub again",
+   "evidence": "CC1; VG",
+   "confidence": "high"
+  },
+  {
+   "id": "UMBRELLAS-PS1",
+   "type": "goal-object",
+   "label": "5 umbrellas (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1/P4",
+   "landmark": "bus-stop ledge; big column; A's spot; ledge above the curved QP the bus faces; above the K's QP",
+   "layer": "ledges/column",
+   "heightM": "varies",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "VG icons",
+    "fromSpawn": null,
+    "reads": "umbrellas",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "two umbrellas on the tape circuit",
+   "evidence": "CC1; VG",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "COMBO-25",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (2025 pro)",
+   "version": "remake (2025, pro goal)",
+   "zone": "Z1/Z7",
+   "landmark": "right of the start: ledge -> road above -> manual -> ledge -> manual -> QP -> grind right all the way around",
+   "layer": "ledges",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "manual",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "STOMPY-25",
+   "type": "goal-object",
+   "label": "Free Stompy van doors (2025)",
+   "version": "remake (2025)",
+   "zone": "Z7",
+   "landmark": "skitch the van on each side to unlock both doors",
+   "layer": "street (moving van)",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "skitch",
+    "moving-object",
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 1:55:47-1:56:07",
+   "confidence": "high",
+   "count": 2
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Yet Another Wire",
+   "points": null,
+   "kind": "wire",
+   "location": "column plinth to the rooftops (2025)",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "TAPE-R"
+   ],
+   "evidence": "THG gaps; PS34 #33",
+   "version": "original + remake"
+  },
+  {
+   "name": "Ring Around the Column",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "around the column plinth (inferred)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Nelson's Lip",
+   "points": null,
+   "kind": "lip",
+   "location": "column plinth (inferred)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Shell Building Hop",
+   "points": null,
+   "kind": "roof",
+   "location": "rooftops beside the square",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "S-02"
+   ],
+   "evidence": "LP4 1:49:34-1:49:40",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Shell Building Pop / Shell Edge / Shell Transfer / Shell Mega Wire",
+   "points": null,
+   "kind": "roof/wire",
+   "location": "Shell building roofs",
+   "moves": [
+    "ollie",
+    "wire"
+   ],
+   "onRouteOf": [
+    "S-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Ye Old Fountain",
+   "points": null,
+   "kind": "over-object",
+   "location": "over a fountain",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "LP4 1:46:36; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Gallery Gap / Top 'O Gallery",
+   "points": null,
+   "kind": "ledge/roof",
+   "location": "gallery front and roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Admiralty / Round the Arches",
+   "points": null,
+   "kind": "ledge",
+   "location": "arch building",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "K-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Eh? Canada / Canada Bomb / South Afrika / EH? Nokia",
+   "points": null,
+   "kind": "other",
+   "location": "Canada House, South Africa House, Nokia banner (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Bus Stop",
+   "points": null,
+   "kind": "ledge",
+   "location": "bus shelter",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "COMBO-02"
+   ],
+   "evidence": "LP4 1:54:48; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "South Bank Lights",
+   "points": null,
+   "kind": "wire",
+   "location": "riverside bulb string end to end",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "A-02",
+    "CASH-02"
+   ],
+   "evidence": "THG gaps; PS34",
+   "version": "original + remake (pro)"
+  },
+  {
+   "name": "Bench Gap / Cheese Ledge / Ledge to Ledge / Rail 2 Rail / Big Rail 2 Rail / Garage hop / Lip Gap / Me Scaffolding / Off the Flags / Onto the Flags",
+   "points": null,
+   "kind": "various",
+   "location": "street furniture, car park, scaffolding, flags",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps; LP4 3:09:00",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Netting Destroyed",
+   "points": null,
+   "kind": "other",
+   "location": "breaking a trap net",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TRAPS-02"
+   ],
+   "evidence": "LP4 1:52:48",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Bloody tourists!",
+   "points": null,
+   "kind": "wallride",
+   "location": "bus wallride",
+   "moves": [
+    "wallride"
+   ],
+   "onRouteOf": [
+    "BUSES"
+   ],
+   "evidence": "LP4 1:56:48",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Oi, gimme me hat!",
+   "points": null,
+   "kind": "over-object",
+   "location": "grab over a copper",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "LP4 2:04:18",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "YES ITS RED!",
+   "points": 1500,
+   "kind": "wire",
+   "location": "red wire from the balcony to the big column",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1; VG label",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "HIGH CLASS CIRCUS",
+   "points": 250,
+   "kind": "wire",
+   "location": "column -> bus stop cable",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "HCOMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TOWER GRIND",
+   "points": 250,
+   "kind": "wire",
+   "location": "C-O-M-B-O Hard M wire across the column and down to the bus stop",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "MUSIC-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "BUILDING CHECK",
+   "points": 200,
+   "kind": "wire",
+   "location": "cables between the stone building's awnings",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "BUS GRIND",
+   "points": 150,
+   "kind": "over-object",
+   "location": "top of the bus",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "DOUBLE DECKER AIR",
+   "points": 200,
+   "kind": "kicker",
+   "location": "kicker to kicker over the bus",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "SIR NERGETS / MEDIEVAL AIR / QUEENS KNIGHT",
+   "points": 150,
+   "kind": "transfer",
+   "location": "QPs to the stone building's awning QPs",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "COMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "SUPA SPINE",
+   "points": 250,
+   "kind": "spine",
+   "location": "green fountain area street-side QP",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "WHATS UP HERE? / LONDON CALL IN",
+   "points": 150,
+   "kind": "transfer",
+   "location": "skinny QP to the QP above; over the back ramp of the fountain area (200)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TWO WHEELIN ROAD",
+   "points": 200,
+   "kind": "manual",
+   "location": "across the road in front of the stone building",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "BETWEEN THE FOUNTAINS",
+   "points": 250,
+   "kind": "manual",
+   "location": "between the two fountains",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "BALCONY HOP",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "break in the balcony railing",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "COMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "PERPENDICULAR TRANSFER",
+   "points": 300,
+   "kind": "rail-transfer",
+   "location": "stone building wall rail to a perpendicular ledge",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "EXTREME ENTRANCE",
+   "points": 300,
+   "kind": "rail-transfer",
+   "location": "alley rail into a grind on the green fountain edge",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "NO CABLES",
+   "points": 250,
+   "kind": "lip",
+   "location": "curved QP lip onto the ledge over a building gap",
+   "moves": [
+    "lip",
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "MONARCHY IN THE UK / TRANSCONTINENTAL CABLE",
+   "points": 200,
+   "kind": "ledge/wire",
+   "location": "balcony building front ledge; light-pole wires",
+   "moves": [
+    "grind",
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "PIP PIP CHIREO / NO TEA PARTY / SAND CASTLES / EAST SIDEWALK / WEST SIDEWALK / NO SEATING / NO DIVING / WILL THE REAL MOMO / PLEASE STAND UP / FIRST HOP / SECOND HOP",
+   "points": 150,
+   "kind": "ledge",
+   "location": "fountain-area ledges, sidewalks, benches, planters (100-150 each)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "HCOMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "EAST LONDON LEDGE / SOUTH LONDON BAR LEDGE / LONDONS BUS STOP LEDGE / LONDON PILLAR LEDGE",
+   "points": 200,
+   "kind": "lip",
+   "location": "rails above the K and A QPs; bus-stop QP; column QP",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "skitch the van on both sides (2025)",
+   "opens": "van doors (Free Stompy)",
+   "neededFor": [
+    "STOMPY-25"
+   ],
+   "evidence": "LP34 1:55:47-1:56:07; PS34"
+  },
+  {
+   "trigger": "smash car-park glass and ride an elevator (2025)",
+   "opens": "elevators",
+   "neededFor": [
+    "DECK-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "smash restaurant glass (2025)",
+   "opens": "restaurant interior",
+   "neededFor": [
+    "STAT-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "catch Constable Richard (2025)",
+   "opens": "he respawns on a corner pillar, then atop the building behind the fountains",
+   "neededFor": [
+    "HATS-25"
+   ],
+   "evidence": "PS34; LP34 2:03:25-2:03:31"
+  },
+  {
+   "trigger": "finish all regular goals in every level (2025)",
+   "opens": "pro goals",
+   "neededFor": [
+    "PLUSH-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "break 4 trap nets (2002)",
+   "opens": "Stompy freed",
+   "neededFor": [
+    "TRAPS-02"
+   ],
+   "evidence": "LP4 1:54:12"
+  },
+  {
+   "trigger": "Tony's Pro Challenge (2002)",
+   "opens": "red-arrow pro goals",
+   "neededFor": [
+    "PCOMBO-02",
+    "TRICKOBS-02"
+   ],
+   "evidence": "LP4 2:28:32"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Column lift to the rooftops (2025)",
+   "sequence": [
+    "plinth QP",
+    "wire up-right ('Yet Another Wire')",
+    "rooftop pool",
+    "spine transfer up",
+    "upper-roof QP/spine"
+   ],
+   "links": [
+    "grind",
+    "spine-transfer",
+    "vert-air"
+   ],
+   "collectibles": [
+    "TAPE-R",
+    "HATS-25"
+   ],
+   "why": "tape line and goal line share the route",
+   "evidence": "PS34 #32-#35; LP34 2:02:56-2:03:31"
+  },
+  {
+   "id": "L2",
+   "name": "Shell rooftops S line (2002)",
+   "sequence": [
+    "QP between buildings",
+    "grind",
+    "sideways hop to next roof",
+    "jump to S above the square"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "S-02"
+   ],
+   "why": "first letter teaches the roof layer",
+   "evidence": "THG; LP4 1:49:24-1:49:40"
+  },
+  {
+   "id": "L3",
+   "name": "Arch ledge (2002)",
+   "sequence": [
+    "QP launch left",
+    "curved ledge around the arched building"
+   ],
+   "links": [
+    "vert-air",
+    "grind"
+   ],
+   "collectibles": [
+    "K-02"
+   ],
+   "why": "long ledge around a landmark",
+   "evidence": "THG; LP4 1:50:08"
+  },
+  {
+   "id": "L4",
+   "name": "Bridge to the river lights (2002)",
+   "sequence": [
+    "ledge",
+    "bridge",
+    "bulb string",
+    "riverside grind"
+   ],
+   "links": [
+    "grind",
+    "wire",
+    "ollie"
+   ],
+   "collectibles": [
+    "A-02",
+    "CASH-02"
+   ],
+   "why": "letter, cash and goal on one sagging line over water",
+   "evidence": "THG; LP4 1:50:34-1:51:00"
+  },
+  {
+   "id": "L5",
+   "name": "Rooftop pools T/E (2002)",
+   "sequence": [
+    "sloped walkway",
+    "spine transfer onto roof",
+    "upper pool",
+    "ollie into lower pool through T",
+    "ollie out far side",
+    "ledge",
+    "wallride E"
+   ],
+   "links": [
+    "spine-transfer",
+    "vert-air",
+    "wallride"
+   ],
+   "collectibles": [
+    "T-02",
+    "E-02"
+   ],
+   "why": "hardest letter pair",
+   "evidence": "THG; LP4 1:50:16-1:50:28"
+  },
+  {
+   "id": "L6",
+   "name": "Bus-shelter C-O-M-B-O (2002)",
+   "sequence": [
+    "wall",
+    "sloped end launch",
+    "bus-shelter grind",
+    "wall",
+    "manual across road",
+    "QP right",
+    "upper ledge around building"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "vert-air"
+   ],
+   "collectibles": [
+    "COMBO-02"
+   ],
+   "why": "street-furniture chain",
+   "evidence": "THG; LP4 1:54:24-1:54:48"
+  },
+  {
+   "id": "L7",
+   "name": "High-wire pro C-O-M-B-O (2002)",
+   "sequence": [
+    "QP to upper ramp",
+    "revert-manual",
+    "high wire",
+    "balcony gap",
+    "second wire",
+    "bowl manual",
+    "spine transfer",
+    "second bowl"
+   ],
+   "links": [
+    "revert",
+    "manual",
+    "wire",
+    "spine-transfer"
+   ],
+   "collectibles": [
+    "PCOMBO-02"
+   ],
+   "why": "wire layer later used by the remake's tape",
+   "evidence": "THG; LP4 3:03:18"
+  },
+  {
+   "id": "L8",
+   "name": "South Bank light line",
+   "sequence": [
+    "QP against the wall",
+    "grind its top",
+    "ollie onto the lights",
+    "Ghetto Tag",
+    "ollie the gap",
+    "Ghetto Tag",
+    "end"
+   ],
+   "links": [
+    "grind",
+    "wire",
+    "ollie"
+   ],
+   "collectibles": [],
+   "why": "long balance-heavy wire line",
+   "evidence": "LP4 1:59:12; PS34"
+  },
+  {
+   "id": "L9",
+   "name": "PS1 balcony red wire",
+   "sequence": [
+    "A's QP",
+    "rail above",
+    "balcony (E, deck)",
+    "red wire (1,500)",
+    "big column (umbrella, B)",
+    "wire to bus stop (250)",
+    "bus-stop ledge (umbrella, O)"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "wire"
+   ],
+   "collectibles": [
+    "TAPE-PS1",
+    "DECK-PS1",
+    "UMBRELLAS-PS1"
+   ],
+   "why": "tape, deck, letter and umbrellas on one circuit through the hub",
+   "evidence": "CC1; VG"
+  },
+  {
+   "id": "L10",
+   "name": "PS1 column hub (C-O-M-B-O Hard)",
+   "sequence": [
+    "fountain ledges",
+    "line to the column (M, music)",
+    "B on the column",
+    "wire to bus stop (O)"
+   ],
+   "links": [
+    "ledge",
+    "wire"
+   ],
+   "collectibles": [
+    "HCOMBO-PS1",
+    "MUSIC-PS1"
+   ],
+   "why": "the hub pattern from the plaza side",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L11",
+   "name": "2025 C-O-M-B-O loop",
+   "sequence": [
+    "ledge",
+    "road above",
+    "manual",
+    "ledge",
+    "manual",
+    "QP",
+    "grind right all the way around"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "vert-air"
+   ],
+   "collectibles": [
+    "COMBO-25"
+   ],
+   "why": "long balance line",
+   "evidence": "PS34"
+  }
+ ],
+ "guidance": [
+  "the column is the beacon in every version: on the 2002 load card, the PS1 wire hub, and the 2025 first QP and wire",
+  "2025 tape shown mid-route from the wire (PS34 #33), not from spawn",
+  "2025 night lighting (glowing skylights, searchlights, O2/YETI billboards) marks the roof route (LP34 2:01:08-2:01:24)",
+  "2002 S-K-A-T-E giver: 'Why don't you try and get those letters up there?' (LP4 1:49:12)",
+  "PS1 uses score as signpost: the red wire is worth 1,500 vs 100-300 for other gaps (CC1)",
+  "hidden on purpose: PS1 balcony via a rail above a QP; 2025 deck behind car-park glass and an elevator; 2025 stat point behind restaurant glass"
+ ],
+ "designLogic": [
+  "all versions build their best line on Nelson's column (2002 wire/column gaps; PS1 tape on the column wire; 2025 tape route starts at the column QP and wire)",
+  "2025: a QP + wire lift turns flat speed into rooftop height from the spawn (London's version of Shipyard's door)",
+  "tease while riding: the tape becomes visible during the uphill wire grind",
+  "the vert finish happens on rooftop ramps (spine transfers) above the city",
+  "PS1: tape on the 1,500-point wire; score and secret reinforce each other",
+  "2002 hardest letters use two-pool rooftop geometry and a wallride exit",
+  "the river is the failure line under the A and a cash icon",
+  "cash marks lines (mid-line in 2002, line ends in 2025)",
+  "London's events are moving people and vehicles: buses, coppers, police bike, van, relocating constable",
+  "goals rehearse the tape route (Constable Richard, 2025 S-K-A-T-E use QP-wire-roof-spine)",
+  "2025 hides secrets behind breakable glass and transitions (elevators)",
+  "day (2002) to night (2025): lighting becomes route guidance"
+ ],
+ "remakeChanges": [
+  "Tape: none in 2002; PS1 unlisted tape on the red balcony-to-column wire (1,500); 2025 listed tape above an upper-rooftop QP reached via the column QP and wire",
+  "Goals kept: S-K-A-T-E, buses (5 -> 2 in one combo), coppers (5 -> 4 + moving Constable Richard), Free Stompy (nets -> van skitch), fountains (Japan -> Benihana), South Bank lights (amateur -> pro full gap)",
+  "Goals dropped: race, flatland goals, competition, Nail the combos, police-bike skitch, 100k combo; added: tape, Impress the Pro Skaters, Stompy plushies",
+  "Setting: daytime 2002 -> rainy night 2025",
+  "Remake associates the Zoo with London ('WELCOME TO THE ROYAL ZOO' sign in London LP34 1:54:40; 'Zoo - London' heat LP34 4:29:50)"
+ ],
+ "transfer": [
+  "Monument lift: QP at a monument base -> sloped cable to rooftops; crystal visible from the cable; rooftop spine transfer apex ~2-3 m above coping reaches it",
+  "Red wire: crystal on the most valuable/decorated cable from a hidden balcony (vert air into a rail above a QP) to the central landmark",
+  "Two-pool drop: crystal ~3-4 m above the lower pool coping between upper and lower rooftop pools; charged ollie (1.78 m high, up to 13.8 m long) from the upper pool lip",
+  "River bulb string: long sagging grindable light string over water; crystal at the lowest sag; water respawn on the embankment",
+  "Moving bus platform on a loop to wallride/wallie from; crystal on a bus-stop roof reachable only from the bus's height"
+ ],
+ "openQuestions": [
+  "exact 2025 tape building (near the O2 billboard; not identified by name)",
+  "is the 2025 tape visible from the spawn?",
+  "2002 cash-icon positions other than the light string",
+  "2002 gap points; locations of Cheese Ledge, Off/Onto the Flags, Me Scaffolding",
+  "PS1 balcony height and the red wire's slope"
+ ]
+}

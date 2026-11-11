@@ -1,0 +1,3526 @@
+{
+ "id": "thps4-shipyard",
+ "game": "THPS4",
+ "level": "Shipyard",
+ "location": "Industrial harbour shipyard; remake tour card 'SHIPYARD / CALIFORNIA', level card 'Moving Junk Since 1978' (LP34 4:14:40, 4:23:40)",
+ "type": "career-street",
+ "careerPosition": {
+  "original2002": 5,
+  "of2002": 9,
+  "remake2025": 7,
+  "of2025": 10
+ },
+ "timeLimit": {
+  "PS2 2002": "none for the level (free roam); each goal has its own clock, S-K-A-T-E 2:00",
+  "THPS 3+4 2025": "10:00 run",
+  "PS1 2002": "unknown"
+ },
+ "versions": [
+  "PS2 2002 (Neversoft)",
+  "PS1 2002 edition (Vicarious Visions, different layout)",
+  "THPS 3+4 2025 (Iron Galaxy)"
+ ],
+ "sources": [
+  "LP4 1:25:50-1:46:14",
+  "LP4 3:35:22-3:36:58",
+  "THG pro-skater-4/shipyard",
+  "THG gaps/pro-skater-4/shipyard",
+  "VG TonyHawk_sProSkater4-Shipyard.png",
+  "VG TonyHawk_sProSkater4-Shipyard(Unmarked).png",
+  "CC1 Shipyard 39980 (cheatcodes.com, J. Hartman 2003, PS1)",
+  "PS34 shipyard",
+  "PS34 all-secret-tapes",
+  "LP34 1:44:40-1:53:40",
+  "LP34 4:14:20-4:23:00",
+  "WEB pcgamesn",
+  "WEB finalboss",
+  "WEB operationsports",
+  "WEB hardcoregamer",
+  "WEB cheatcodes 33996 (PS2 overview)",
+  "skipped (bot check): retroachievements.org, supercheats.com, walkthrough.freeola.com"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 65,000 Points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect C-O-M-B-O",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Varial kickflip the shack water gap",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Gap across the suspended containers",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Slap the buoy",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Welder lunch delivery",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Dog Chase",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Inventory the freight containers",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Get a Pro Score: 150,000 Points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect High C-O-M-B-O",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Heelflip FS Invert the freight container",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Manual combo the train",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Bust tricks across the rooftop gap",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect the rivets",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Competition: Medal the barges",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Gap the suspended containers",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Get a Sick Score: 600,000 points",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Collect Pro C-O-M-B-O letters",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Rat Race: Catch the rat",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Liptrick Transfer",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Bucky Lasek pro challenge (Rusty Old Ramp: 5 combos 10,000-250,000)",
+   "version": "original (PS2 2002, pro goal)"
+  },
+  {
+   "text": "Rookie Score 85,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score 150,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Pro Score 260,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Extreme Score 350,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score Combo 120,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Pro Score Combo 260,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Sick Score Combo 350,000",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "S-K-A-T-E",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "S-K-A-T-E Hard",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "C-O-M-B-O",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "C-O-M-B-O Hard",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Horse",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Knock over 5 oil drums",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Collect the 5 keys",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Perform a 540 spine transfer",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "360 cannonball over the water",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Perform 5 lip extensions",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Kickflip over the rafters",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "Competition",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "text": "High Score 100,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Pro Score 170,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Sick Score 325,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "High Combo 30,000",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Hardflip off the Buoy",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Collect 7 Rivets",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Deliver Lunch to 5 Welders",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Manual Combo the Train",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Get the Secret Tape",
+   "version": "remake (2025)"
+  },
+  {
+   "text": "Platinum Score 700,000",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Collect C-O-M-B-O",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Ollie North across the Warehouse Roofs",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Judo across the Containers",
+   "version": "remake (2025, pro goal)"
+  },
+  {
+   "text": "Gap all of the Vent Rails",
+   "version": "remake (2025, pro goal)"
+  }
+ ],
+ "size": {
+  "class": "large (PS2/remake); medium (PS1 edition)",
+  "footprint": "not measured; estimate ~250-350 m on the long side (low confidence)",
+  "evidence": "2002 S-K-A-T-E used 1:48 of its 2:00 clock across waterline, wire, three roofs, cabins, tracks and scaffolding (LP4 1:29:02-1:30:50); PS1 edition is one yard + secret warehouse on one VG render"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start dock and rail tracks",
+   "layer": "ground",
+   "features": [
+    "drop-in start",
+    "rail tracks in the dock road",
+    "flatbed train",
+    "stair/ramp with yellow rail (2025)"
+   ],
+   "notes": "2025 S up the ramp left of spawn; gaps Track 2 Rail / Track 2 Track"
+  },
+  {
+   "id": "Z2",
+   "name": "Waterfront railing and wire to the roofs",
+   "layer": "ground/rail/wire",
+   "features": [
+    "curved waterside railing",
+    "moving machine",
+    "wire rising onto a roof",
+    "wires across the water (2025)"
+   ],
+   "notes": "water = bail ('You big drip!')"
+  },
+  {
+   "id": "Z3",
+   "name": "Warehouse rooftops",
+   "layer": "roofs ~9-12 m",
+   "features": [
+    "walkways",
+    "roof-edge QP",
+    "rooftop gap with two wooden kicker QPs",
+    "vent ducts with internal rails (2025)",
+    "Rooftops door destination (2025)"
+   ],
+   "notes": "2025 tape in the alley gap below a duct end"
+  },
+  {
+   "id": "Z4",
+   "name": "Cabins and big wooden kicker",
+   "layer": "cabin roofs ~3 m",
+   "features": [
+    "cabin walls (wallride)",
+    "big wooden kicker"
+   ],
+   "notes": "A-02; amateur C-O-M-B-O"
+  },
+  {
+   "id": "Z5",
+   "name": "Twin QPs, shack roof and scaffolding",
+   "layer": "QP/roof/scaffold",
+   "features": [
+    "two QPs with a shack roof between",
+    "metal scaffolding"
+   ],
+   "notes": "T-02, E-02, High C-O-M-B-O start"
+  },
+  {
+   "id": "Z6",
+   "name": "Buoy basin",
+   "layer": "water",
+   "features": [
+    "buoy with bell",
+    "wooden kickers"
+   ],
+   "notes": "Slap the buoy / Hardflip off the Buoy"
+  },
+  {
+   "id": "Z7",
+   "name": "Shack over the water",
+   "layer": "interior",
+   "features": [
+    "QP",
+    "floor hatch",
+    "interior corridor with rails",
+    "kicker over the water"
+   ],
+   "notes": "2002 secret entrance: QP air into the hatch"
+  },
+  {
+   "id": "Z8",
+   "name": "Container yard",
+   "layer": "ground/container tops/interiors",
+   "features": [
+    "21 freight containers",
+    "container QPs and spines",
+    "cash inside a stacked container (2025)"
+   ],
+   "notes": "LP34 tape approach starts here"
+  },
+  {
+   "id": "Z9",
+   "name": "Cranes and suspended containers",
+   "layer": "high moving pieces",
+   "features": [
+    "three hanging containers (ONARABANA)",
+    "crane-carried container bowl to bowl",
+    "crane lip transfer",
+    "moving container by the pool (2025)"
+   ],
+   "notes": "moving-object vert"
+  },
+  {
+   "id": "Z10",
+   "name": "Barges and boats",
+   "layer": "bowls on barges",
+   "features": [
+    "barge bowls (competition)",
+    "boat bowl",
+    "raised platform above the boat (2025 hidden deck)"
+   ],
+   "notes": "Into the Barges, More Barge Fun"
+  },
+  {
+   "id": "Z11",
+   "name": "Low walls around buildings",
+   "layer": "ledge",
+   "features": [
+    "low walls with step gaps"
+   ],
+   "notes": "Dog Chase; Ledge 2 Ledge"
+  },
+  {
+   "id": "Z12",
+   "name": "Rusty Old Ramp (pro challenge)",
+   "layer": "vert ramp in the water",
+   "features": [
+    "broken vert ramp",
+    "holes appear"
+   ],
+   "notes": "Bucky Lasek pro challenge"
+  },
+  {
+   "id": "P1",
+   "name": "PS1: water gap and two square buildings",
+   "layer": "roofs",
+   "features": [
+    "spawn on a square building",
+    "wire across (NO EFFECTS)",
+    "QP-to-QP air (NOW THATS O TWO! 300)"
+   ],
+   "notes": "PS1 music track on the square building nearer the secret area"
+  },
+  {
+   "id": "P2",
+   "name": "PS1: crate building",
+   "layer": "roof",
+   "features": [
+    "roof halfpipe",
+    "roof rail",
+    "crate stack"
+   ],
+   "notes": "S, K; NICE CLIMB"
+  },
+  {
+   "id": "P3",
+   "name": "PS1: brick-structure building",
+   "layer": "roof + rooftop blocks",
+   "features": [
+    "railed roof",
+    "two raised brick structures",
+    "catwalk ramp to crate tops",
+    "incline down"
+   ],
+   "notes": "PS1 tape on top of one brick structure"
+  },
+  {
+   "id": "P4",
+   "name": "PS1: trailers and secret-area entrance",
+   "layer": "trailer roofs",
+   "features": [
+    "office trailer kicker",
+    "BUNGALOW HERO kickers",
+    "tunnel"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "P5",
+   "name": "PS1: barges and crane",
+   "layer": "barge decks/crane beam",
+   "features": [
+    "barge-to-barge grind",
+    "wire over the water",
+    "crane-lifted beam"
+   ],
+   "notes": "PS1 new deck on the lifted beam (TILT!)"
+  },
+  {
+   "id": "P6",
+   "name": "PS1: secret area (warehouse interior)",
+   "layer": "interior, rafters",
+   "features": [
+    "walkway on QPs",
+    "stacked wall ledges/rails",
+    "cement rafters with gap"
+   ],
+   "notes": "opened by 5 managerial keys"
+  }
+ ],
+ "landmarks": [
+  "rail tracks and flatbed train",
+  "cranes with hanging containers (ONARABANA)",
+  "buoy with bell",
+  "shack on the water with a floor hatch",
+  "barges with concrete bowls",
+  "warehouse roofs with vent ducts",
+  "Rooftops door (2025)",
+  "PS1 crate building and brick-structure building"
+ ],
+ "spawn": {
+  "PS2 2002": {
+   "zone": "Z1",
+   "facing": "along the tracks; drop-in",
+   "visibleCollectibles": [],
+   "notes": "drop-in at the start, flatbed train ahead (THG); goal-givers nearby (LP4 1:26:02, 1:27:02)"
+  },
+  "remake 2025": {
+   "zone": "Z1",
+   "facing": "dock road with rail tracks, ramp on the left",
+   "visibleCollectibles": [
+    "S"
+   ],
+   "notes": "tape not visible; Rooftops door ~10-15 s away (PS34 #37-#39)"
+  },
+  "PS1 2002": {
+   "zone": "P1",
+   "facing": "across the water gap",
+   "visibleCollectibles": [],
+   "notes": "start on top of a square building (CC1 S-K-A-T-E Hard S)"
+  }
+ },
+ "collectibles": [
+  {
+   "id": "TAPE-R",
+   "type": "tape",
+   "label": "Secret tape (remake)",
+   "version": "remake (2025)",
+   "zone": "Z3",
+   "landmark": "mid-air in the alley gap between the central warehouse roofs, just past the end of a ventilation duct",
+   "layer": "roof level over an alley",
+   "heightM": "~0.5-1.5 below the duct top (duct ~1-1.5 above the roof deck); alley floor ~8-12 below; ~3-5 beyond the duct end",
+   "launchFrom": "end of the duct (roll-off)",
+   "visibility": {
+    "firstSight": "on arrival on the roof, turning right (PS34 #40)",
+    "fromSpawn": false,
+    "reads": "blue glowing cassette floating in the gap in front of a corrugated wall with yellow graffiti",
+    "distanceFromFirstSightM": "~5-10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "spawn",
+     "to": "rail tracks to the left",
+     "geometry": "dock road with tracks set in the ground"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "tracks",
+     "to": "narrow alley on the right",
+     "geometry": "cones, yellow hatching"
+    },
+    {
+     "step": 3,
+     "move": "portal",
+     "from": "alley",
+     "to": "warehouse roof",
+     "geometry": "open doorway with green arrow sign 'leads you to Rooftops'; 2-3 s transition (LP34)"
+    },
+    {
+     "step": 4,
+     "move": "ride",
+     "from": "roof arrival",
+     "to": "ventilation duct on the right",
+     "geometry": "duct runs off the roof edge across the alley"
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "duct end",
+     "to": "tape",
+     "geometry": "roll slowly off the end; tape just beyond and below"
+    },
+    {
+     "step": 6,
+     "move": "ride",
+     "from": "tape",
+     "to": "alley or lower roof",
+     "geometry": "~8-12 m drop if you fall to the alley"
+    }
+   ],
+   "moves": [
+    "ollie"
+   ],
+   "speed": "low (speed control)",
+   "skillGates": [
+    "knowing the door reaches the roofs",
+    "slowing down at the edge"
+   ],
+   "coupling": "none known (PS34/WEB name no prerequisite)",
+   "failure": "overshoot or fall drops ~8-12 m into the alley; back to the door ~10-20 s of a 10:00 run",
+   "timeFromSpawnS": "~15-25 from spawn (PS34 screenshot timer 59:55 -> 59:30); LP34 picked at 6:04 into the run (1:50:58.5), ~4.5 s after leaving the container yard",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA",
+    "TEST",
+    "EXPLORE"
+   ],
+   "why": "a doorway replaces the long climb on a big map; the tape rewards restraint (roll-off) over air",
+   "evidence": "PS34 shipyard + images #37-#40; WEB pcgamesn, finalboss, operationsports, hardcoregamer; LP34 1:50:26-1:51:01",
+   "confidence": "high (route); medium (heights)",
+   "altRoute": "WEB hardcoregamer: 'You can drop to collect it, or maneuver through the ventilation' (the vent ducts carry rails)",
+   "doorCue": "WEB hardcoregamer: ramp up to cargo in-between the two main buildings, marked by a green square with an arrow, teleports you to the roof",
+   "lp34Variant": "container yard spine transfers -> BS wallride on teal container -> wallie -> Kissed the Rail -> pop shove-it -> BS 50-50 along the panda-graffiti wall -> door -> airborne off the vent box ('Impossible') through the tape (LP34 1:50:54-1:50:58.8)"
+  },
+  {
+   "id": "TAPE-PS1",
+   "type": "tape",
+   "label": "Secret tape (PS1, not a listed goal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "on top of one of the two brick structures on the roof of the brick-structure building (next to the crate building)",
+   "layer": "rooftop block on a roof",
+   "heightM": "unknown; ~1-2 storeys above the yard by eye on VG (low confidence)",
+   "launchFrom": "the railed brick-structure roof / catwalk ramp",
+   "visibility": {
+    "firstSight": "unknown in game; VG draws the cassette on top of the central building",
+    "fromSpawn": null,
+    "reads": "cassette on a rooftop block",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "crate-building roof halfpipe and rail",
+     "to": "crate tops",
+     "geometry": "S/K roof (CC1)"
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "crate tops",
+     "to": "brick-structure roof",
+     "geometry": "catwalk ramp down (CATWALK MANUAL 250 / CATWALK GRIND 150)"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "railed roof",
+     "to": "top of a brick structure",
+     "geometry": "edges scored OCEAN PARK ROOF / THREE FIFTY ROOF (200)"
+    },
+    {
+     "step": 4,
+     "move": "ride",
+     "from": "block top",
+     "to": "tape",
+     "geometry": "tape on top (CC1)"
+    }
+   ],
+   "moves": [
+    "grind",
+    "manual",
+    "ollie",
+    "ledge"
+   ],
+   "speed": "moderate (inferred)",
+   "skillGates": [
+    "reaching the upper roof tier",
+    "landing on a small block"
+   ],
+   "coupling": "none known (outside the keyed secret area)",
+   "failure": "falls to the roof or yard; short climb back (inferred)",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE",
+    "REWARD"
+   ],
+   "why": "the tape crowns the highest open-air stack; its pedestal edges are scored gaps",
+   "evidence": "CC1 Shipyard 'SECRET TAPE' and gaps; VG icon",
+   "confidence": "high (location); low (route, height)"
+  },
+  {
+   "id": "S-02",
+   "type": "skate-letter",
+   "label": "S (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "curved railing at the water's edge past the moving machine",
+   "layer": "waterside rail",
+   "heightM": "~1",
+   "launchFrom": "rail",
+   "visibility": {
+    "firstSight": "on the line from the goal start",
+    "fromSpawn": null,
+    "reads": "floating letter on the rail",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "goal start",
+     "to": "curved waterside railing",
+     "geometry": "through the moving machine"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "S-K-A-T-E clock 2:00",
+   "failure": "water bail",
+   "timeFromSpawnS": "LP4 1:29:14 (12 s into the goal)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "first waypoint of the vertical tour",
+   "evidence": "THG; LP4 1:29:14",
+   "confidence": "high"
+  },
+  {
+   "id": "K-02",
+   "type": "skate-letter",
+   "label": "K (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "next roof after the wire and walkway",
+   "layer": "roof edge",
+   "heightM": "~9-12",
+   "launchFrom": "roof grind",
+   "visibility": {
+    "firstSight": "at the top of the wire climb",
+    "fromSpawn": null,
+    "reads": "letter over a roof gap",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "waterside rail",
+     "to": "roof",
+     "geometry": "rail becomes a wire up onto a roof"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "roof",
+     "to": "adjacent roof",
+     "geometry": "walkway"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "roof-edge QP (left)",
+     "to": "roof gap",
+     "geometry": "grind along the QP"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "gap",
+     "to": "grind on next roof",
+     "geometry": "K"
+    }
+   ],
+   "moves": [
+    "wire",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "holding a long climbing grind"
+   ],
+   "coupling": "same clock",
+   "failure": "fall to the yard",
+   "timeFromSpawnS": "LP4 ~1:29:26",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "wire is the 2002 way onto the roofs",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "A-02",
+   "type": "skate-letter",
+   "label": "A (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "above the big wooden kicker on the cabin roofs",
+   "layer": "air over cabins",
+   "heightM": "~4-6",
+   "launchFrom": "big wooden kicker",
+   "visibility": {
+    "firstSight": "ahead on the cabin roofs",
+    "fromSpawn": null,
+    "reads": "letter above a kicker",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "roof line",
+     "to": "cabin roofs",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "big wooden kicker",
+     "to": "A",
+     "geometry": "drop to ground after"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "drop to ground",
+   "timeFromSpawnS": "LP4 ~1:29:40",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "steps the tour down a layer",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "T-02",
+   "type": "skate-letter",
+   "label": "T (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "gap after the shack roof between the twin QPs",
+   "layer": "roof gap",
+   "heightM": "~3-5",
+   "launchFrom": "QP launch right",
+   "visibility": {
+    "firstSight": "from the tracks",
+    "fromSpawn": null,
+    "reads": "letter over a roof gap",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "train tracks",
+     "to": "twin QPs",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "shack roof grind",
+     "geometry": "launch right"
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "roof grind",
+     "to": "T",
+     "geometry": "hop the gap"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "QP launch into a grind"
+   ],
+   "coupling": "same clock",
+   "failure": "fall to the ground",
+   "timeFromSpawnS": "LP4 1:30:14",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "same launch that opens High C-O-M-B-O",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "E-02",
+   "type": "skate-letter",
+   "label": "E (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "metal structure just after its bend",
+   "layer": "scaffold rail",
+   "heightM": "~4-6",
+   "launchFrom": "scaffold grind",
+   "visibility": {
+    "firstSight": "along the scaffold line",
+    "fromSpawn": null,
+    "reads": "letter beside the scaffold",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "roof",
+     "to": "metal structure",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "ollie",
+     "from": "after the bend",
+     "to": "E",
+     "geometry": "hop right"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "balance through a bend"
+   ],
+   "coupling": "same clock",
+   "failure": "fall",
+   "timeFromSpawnS": "LP4 done 1:30:50 (1:48 of 2:00)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "ends the tour on the highest structure near the boats",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "SKATE-25",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z8",
+   "landmark": "S ramp top left of spawn; K above a QP below; A above a ledge ahead; T above a QP by the containers; E on the top of the building opposite (QP then grind left)",
+   "layer": "ramp/QP/ledge/roof edge",
+   "heightM": "QP-air heights",
+   "launchFrom": "ramp, QPs",
+   "visibility": {
+    "firstSight": "S visible from spawn",
+    "fromSpawn": true,
+    "reads": "letters in a row",
+    "distanceFromFirstSightM": "~5-60"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "spawn",
+     "to": "S",
+     "geometry": "up the ramp left"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "K",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "ledge",
+     "to": "A",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "QP by containers",
+     "to": "T",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "grind",
+     "from": "building top",
+     "to": "E",
+     "geometry": "QP up then grind left"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "short (near spawn)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "remake opens with a short readable letter row",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO-02",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (2002 amateur)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "cabin wall, roof, wooden kicker, roof, railing, wood smash",
+   "layer": "roofs ~3 m",
+   "heightM": "~3-5",
+   "launchFrom": "cabin wall",
+   "visibility": {
+    "firstSight": "goal start",
+    "fromSpawn": null,
+    "reads": "letters along the cabin roofs",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "cabin wall",
+     "to": "roof grind (C)",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "manual",
+     "from": "roof",
+     "to": "wooden kicker (O)",
+     "geometry": "keep left"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "landing",
+     "to": "roof (M)",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "hop right",
+     "to": "railing (B)",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "rail end",
+     "to": "O",
+     "geometry": "crash through wood"
+    }
+   ],
+   "moves": [
+    "wallride",
+    "grind",
+    "manual",
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride into grind (new in THPS4)"
+   ],
+   "coupling": "one combo",
+   "failure": "combo loss restarts",
+   "timeFromSpawnS": "LP4 1:26:02-1:26:38",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "teaches wallride-to-grind on the first goal",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "HCOMBO-02",
+   "type": "combo-letter",
+   "label": "High C-O-M-B-O (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5/Z10",
+   "landmark": "twin QP roof -> scaffolding -> boat bowl -> barge -> spine over intersection -> slope -> track",
+   "layer": "roof to bowl to ground",
+   "heightM": "varies",
+   "launchFrom": "QP launch right",
+   "visibility": {
+    "firstSight": "goal start",
+    "fromSpawn": null,
+    "reads": "letters along roof/scaffold/boat",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "roof grind, hop gap (C)",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "scaffold",
+     "to": "boat bowl left side (O)",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "manual",
+     "from": "turn",
+     "to": "next barge",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "spine-transfer",
+     "from": "intersection",
+     "to": "M",
+     "geometry": "revert to manual"
+    },
+    {
+     "step": 5,
+     "move": "manual",
+     "from": "slope (B)",
+     "to": "ground",
+     "geometry": ""
+    },
+    {
+     "step": 6,
+     "move": "grind",
+     "from": "ramp",
+     "to": "track along the floor (O)",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "manual",
+    "spine-transfer",
+    "revert"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "revert-manual links"
+   ],
+   "coupling": "one combo",
+   "failure": "combo loss restarts",
+   "timeFromSpawnS": "LP4 1:35:50-1:36:14",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "TEACH-LINE"
+   ],
+   "why": "every link type in one line",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PCOMBO-02",
+   "type": "combo-letter",
+   "label": "Pro C-O-M-B-O (2002)",
+   "version": "original (PS2 2002, pro goal)",
+   "zone": "Z3/Z5",
+   "landmark": "QP, roof bump, through O, low wall, spine onto brown building, air up-left onto raised half-pipe platform",
+   "layer": "roof + raised platform",
+   "heightM": "unknown",
+   "launchFrom": "QP",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters ending on a raised platform",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "C",
+     "geometry": "launch right"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "next piece",
+     "to": "roof via bump",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "roof",
+     "to": "through O",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "ground",
+     "to": "low wall (M)",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "spine-transfer",
+     "from": "ground QP",
+     "to": "brown building roof",
+     "geometry": ""
+    },
+    {
+     "step": 6,
+     "move": "vert-air",
+     "from": "roof",
+     "to": "raised half-pipe platform (B?)",
+     "geometry": "launch up left; revert-manual"
+    },
+    {
+     "step": 7,
+     "move": "ride",
+     "from": "platform",
+     "to": "final O",
+     "geometry": "far side"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "spine-transfer",
+    "revert",
+    "manual"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "spine onto a roof",
+    "reading a hidden platform"
+   ],
+   "coupling": "pro goal; one combo",
+   "failure": "combo loss restarts",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 4,
+   "roles": [
+    "TEST",
+    "SECRET-AREA"
+   ],
+   "why": "ends on the level's most hidden platform",
+   "evidence": "THG",
+   "confidence": "medium"
+  },
+  {
+   "id": "COMBO-25",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (2025 pro goal)",
+   "version": "remake (2025)",
+   "zone": "Z8",
+   "landmark": "container -> ramp -> rail -> next rail -> jump off the end",
+   "layer": "container/rails",
+   "heightM": "unknown",
+   "launchFrom": "container",
+   "visibility": {
+    "firstSight": "right of the start",
+    "fromSpawn": true,
+    "reads": "letter chain",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "container",
+     "to": "ramp",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "ramp",
+     "to": "rail beyond",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "rail-transfer",
+     "from": "rail",
+     "to": "next rail right",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "rail end",
+     "to": "last letter",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "pro goals unlock after all regular goals",
+   "failure": "combo loss restarts",
+   "timeFromSpawnS": "short",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "pro letters next to spawn",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO-PS1",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O (PS1, inside secret area)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P6",
+   "landmark": "stacked wall ledge -> rail -> rail -> rafter -> jump off",
+   "layer": "interior wall up to rafters",
+   "heightM": "rafter height",
+   "launchFrom": "QP walkway",
+   "visibility": {
+    "firstSight": "inside the secret area",
+    "fromSpawn": false,
+    "reads": "letters stacked up a wall",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "walkway",
+     "to": "wall ledge (C)",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "wallride",
+     "from": "ledge end",
+     "to": "rail above (O)",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "wallride",
+     "from": "rail end",
+     "to": "next rail (M)",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "wallride",
+     "from": "rail end",
+     "to": "cement rafter (B)",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "ollie",
+     "from": "rafter end",
+     "to": "O",
+     "geometry": "after the turn"
+    }
+   ],
+   "moves": [
+    "unlock",
+    "wallride",
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride-to-grind ladder"
+   ],
+   "coupling": "managerial keys (secret area)",
+   "failure": "fall to the floor",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEST"
+   ],
+   "why": "wallride ladder climbs a closed room",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "RIVETS-02",
+   "type": "goal-object",
+   "label": "21 rivets (2002)",
+   "version": "original (PS2 2002)",
+   "zone": "Z2/Z8/Z10",
+   "landmark": "one level-crossing grind line",
+   "layer": "rails/walls/pool edge/QPs",
+   "heightM": "varies",
+   "launchFrom": "cable over the water",
+   "visibility": {
+    "firstSight": "glowing orange",
+    "fromSpawn": null,
+    "reads": "bright orange glow ('can't really miss them')",
+    "distanceFromFirstSightM": "line"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wire",
+     "from": "cable over the water",
+     "to": "wall",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "wall",
+     "to": "hop gap",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "kicker",
+     "from": "sloped wall end",
+     "to": "higher wall",
+     "geometry": "use the slope as a launcher"
+    },
+    {
+     "step": 4,
+     "move": "grind",
+     "from": "pool",
+     "to": "left edge",
+     "geometry": ""
+    },
+    {
+     "step": 5,
+     "move": "ledge",
+     "from": "ollie left",
+     "to": "concrete edge",
+     "geometry": ""
+    },
+    {
+     "step": 6,
+     "move": "vert-air",
+     "from": "QP",
+     "to": "rivet",
+     "geometry": ""
+    },
+    {
+     "step": 7,
+     "move": "grind",
+     "from": "QP launch right",
+     "to": "walkway handrail",
+     "geometry": ""
+    },
+    {
+     "step": 8,
+     "move": "grind",
+     "from": "silver QP top",
+     "to": "ledge -> ground rail",
+     "geometry": ""
+    },
+    {
+     "step": 9,
+     "move": "grind",
+     "from": "container",
+     "to": "curved edge",
+     "geometry": "last rivet"
+    }
+   ],
+   "moves": [
+    "wire",
+    "grind",
+    "ledge",
+    "vert-air",
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long balance"
+   ],
+   "coupling": "goal clock",
+   "failure": "drops cost seconds",
+   "timeFromSpawnS": "LP4 1:44:02-1:44:38",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a pickup line that is the level's longest designed line",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 21
+  },
+  {
+   "id": "RIVETS-25",
+   "type": "goal-object",
+   "label": "7 rivets (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z2/Z10",
+   "landmark": "yellow rail above small QP; by a building; above a QP at start; narrow path behind a building; on the boat; above a short wall; above a wire across the water",
+   "layer": "mixed",
+   "heightM": "varies",
+   "launchFrom": "QPs, ramp",
+   "visibility": {
+    "firstSight": "near spawn",
+    "fromSpawn": true,
+    "reads": "rivet icons",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "vert-air",
+    "wire"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "fewer, readable pickups",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 7
+  },
+  {
+   "id": "WELDERS",
+   "type": "goal-object",
+   "label": "5 welders (2002/2025)",
+   "version": "original + remake",
+   "zone": "Z3",
+   "landmark": "on one roof-edge line",
+   "layer": "roofs",
+   "heightM": "~9-12",
+   "launchFrom": "road QP",
+   "visibility": {
+    "firstSight": "from the road",
+    "fromSpawn": null,
+    "reads": "people on roofs",
+    "distanceFromFirstSightM": "line"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie",
+    "manual"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock (2002)",
+   "failure": "fall to the road",
+   "timeFromSpawnS": "LP4 1:27:02-1:27:14 (2002 short)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "targets strung on one line",
+   "evidence": "THG; PS34; WEB hardcoregamer",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "CASH-25",
+   "type": "cash",
+   "label": "4 cash bundles (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z2/Z8",
+   "landmark": "rail above QP behind spawn; wire from yellow rail; next yellow rail; inside a stacked container",
+   "layer": "rails/wire/container interior",
+   "heightM": "varies",
+   "launchFrom": "QPs",
+   "visibility": {
+    "firstSight": "near spawn",
+    "fromSpawn": true,
+    "reads": "cash icon",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "wire",
+    "spine-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE",
+    "TEASE"
+   ],
+   "why": "teaches wire and container-interior layers",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "DECK-25",
+   "type": "hidden-deck",
+   "label": "Hidden deck (2025)",
+   "version": "remake (2025)",
+   "zone": "Z10",
+   "landmark": "raised platform above the boat",
+   "layer": "platform",
+   "heightM": "unknown",
+   "launchFrom": "boat (special meter for height)",
+   "visibility": {
+    "firstSight": "from the boat",
+    "fromSpawn": null,
+    "reads": "deck icon",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "delivery man",
+     "to": "boat",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "boat",
+     "to": "raised platform",
+     "geometry": "special meter for extra height"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "platform",
+     "to": "end",
+     "geometry": "grind right"
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "end",
+     "to": "deck",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "special meter"
+   ],
+   "coupling": "special meter",
+   "failure": "fall into water",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "height gate via special",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "IGLOGO-25",
+   "type": "logo",
+   "label": "Iron Galaxy logo (2025)",
+   "version": "remake (2025)",
+   "zone": "Z9",
+   "landmark": "inside a container moving back and forth beside the pool",
+   "layer": "moving container",
+   "heightM": "QP air inside",
+   "launchFrom": "pool",
+   "visibility": {
+    "firstSight": "from the pool",
+    "fromSpawn": null,
+    "reads": "moving container",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "spine-transfer",
+     "from": "pool",
+     "to": "moving container",
+     "geometry": "when it is close"
+    },
+    {
+     "step": 2,
+     "move": "moving-object",
+     "from": "inside",
+     "to": "",
+     "geometry": "container moves back"
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "container QP",
+     "to": "logo",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "spine-transfer",
+    "moving-object",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "timing"
+   ],
+   "coupling": "moving object",
+   "failure": "retry when it returns",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "collectible on a moving room",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "PANDA-25",
+   "type": "plushie",
+   "label": "Panda plushie (2025)",
+   "version": "remake (2025)",
+   "zone": "Z3",
+   "landmark": "platform beyond a QP past the first vent rail",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "vent rail",
+   "visibility": {
+    "firstSight": "from the roofs",
+    "fromSpawn": null,
+    "reads": "plushie",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "portal",
+     "from": "alley",
+     "to": "roof",
+     "geometry": "Rooftops"
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "vent rail",
+     "to": "narrow path",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "ollie",
+     "from": "path",
+     "to": "over the QP",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "ollie",
+     "from": "",
+     "to": "platform slightly right",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "door",
+   "failure": "fall",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "shares the tape's door",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "STAT-25",
+   "type": "stat-point",
+   "label": "3 stat points (2025)",
+   "version": "remake (2025)",
+   "zone": "Z1/Z2",
+   "landmark": "above a rail past the moving walkway; above a wire over the water; above a QP near the start",
+   "layer": "rail/wire/QP",
+   "heightM": "varies",
+   "launchFrom": "walkway",
+   "visibility": {
+    "firstSight": "varies",
+    "fromSpawn": null,
+    "reads": "stat icon",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "moving-object",
+    "grind",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "walkway timing"
+   ],
+   "coupling": "moving walkway",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "one stat point on a moving walkway",
+   "evidence": "PS34",
+   "confidence": "high",
+   "count": 3
+  },
+  {
+   "id": "DECK-PS1",
+   "type": "hidden-deck",
+   "label": "New deck (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P5",
+   "landmark": "on the beam lifted by the crane (gap TILT! 250)",
+   "layer": "moving crane beam",
+   "heightM": "unknown",
+   "launchFrom": "unknown",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "deck icon (VG green capsule by the crane)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "moving-object",
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "moving beam",
+   "failure": "unknown",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "pickup on a moving piece",
+   "evidence": "CC1; VG",
+   "confidence": "high (location)"
+  },
+  {
+   "id": "MUSIC-PS1",
+   "type": "music-track",
+   "label": "New music track (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1",
+   "landmark": "roof of the square building by the water gap nearest the secret area",
+   "layer": "roof",
+   "heightM": "unknown",
+   "launchFrom": "unknown",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "disc icon (VG)",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "unknown"
+   ],
+   "speed": "unknown",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "unknown",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "a roof pickup next to the spawn's twin building",
+   "evidence": "CC1; VG",
+   "confidence": "high (location)"
+  },
+  {
+   "id": "KEYS-PS1",
+   "type": "goal-object",
+   "label": "5 managerial keys (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1/P4/P5",
+   "landmark": "barge transfer; wire over the water; trailer gap; former T and S spots",
+   "layer": "mixed",
+   "heightM": "varies",
+   "launchFrom": "varies",
+   "visibility": {
+    "firstSight": "VG key icons",
+    "fromSpawn": null,
+    "reads": "keys",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "open the secret area",
+   "failure": "cheap",
+   "timeFromSpawnS": "unknown",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA"
+   ],
+   "why": "keys reuse the S-K-A-T-E spots",
+   "evidence": "CC1; VG",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "S-PS1",
+   "type": "skate-letter",
+   "label": "S (PS1 normal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P2",
+   "landmark": "above the crate-building roof halfpipe",
+   "layer": "roof halfpipe air",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "K-PS1",
+   "type": "skate-letter",
+   "label": "K (PS1 normal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P2",
+   "landmark": "other side of the crate-building roof halfpipe",
+   "layer": "roof halfpipe air",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "A-PS1",
+   "type": "skate-letter",
+   "label": "A (PS1 normal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "railing around the brick-structure roof",
+   "layer": "roof railing",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "T-PS1",
+   "type": "skate-letter",
+   "label": "T (PS1 normal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "opposite side of the same roof railing",
+   "layer": "roof railing",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "E-PS1",
+   "type": "skate-letter",
+   "label": "E (PS1 normal)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P3",
+   "landmark": "rail left of the ramp to the crate tops, jump right at the turn",
+   "layer": "rail",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "S-PS1H",
+   "type": "skate-letter",
+   "label": "S-K-A-T-E Hard set (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P1/P3/P4",
+   "landmark": "water-gap line; brick-structure roof; ramp to crate tops; office-trailer kicker; kicker to kicker over the water gap",
+   "layer": "mixed",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "kicker",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1; VG blue letters",
+   "confidence": "high"
+  },
+  {
+   "id": "HCOMBO-PS1",
+   "type": "combo-letter",
+   "label": "C-O-M-B-O Hard (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P4/P1/P5",
+   "landmark": "rusty U-beam -> secret-area building ledges (wallride) -> rail -> wire over the water gap -> barge to barge",
+   "layer": "beam/ledges/wire/barges",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "wallride",
+    "wire",
+    "rail-transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1 (FROM END TO END 250)",
+   "confidence": "high"
+  },
+  {
+   "id": "RAFTERS-PS1",
+   "type": "reach-goal",
+   "label": "Kickflip over the rafters (PS1)",
+   "version": "PS1 (2002 edition)",
+   "zone": "P6",
+   "landmark": "gap between two cement rafters at the top of the secret area",
+   "layer": "rafters",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "unlock",
+    "wallride",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "CC1",
+   "confidence": "high"
+  },
+  {
+   "id": "WATERGAP-02",
+   "type": "reach-goal",
+   "label": "Varial kickflip the shack water gap",
+   "version": "original (PS2 2002)",
+   "zone": "Z7",
+   "landmark": "QP air into a floor hatch -> shack interior -> kicker over the water",
+   "layer": "interior -> air over water",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "kicker"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "SECRET-AREA",
+    "TEST"
+   ],
+   "why": "secret entrance by aiming a QP air into a hole",
+   "evidence": "THG; LP4 1:38:38-1:39:38",
+   "confidence": "high"
+  },
+  {
+   "id": "SUSP-02",
+   "type": "reach-goal",
+   "label": "Gap across the suspended containers",
+   "version": "original (PS2 2002)",
+   "zone": "Z9",
+   "landmark": "three containers hanging from cranes; the third spins",
+   "layer": "hanging containers",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "spine-transfer",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "moving-object spine chain",
+   "evidence": "LP4 1:31:26-1:32:14; THG",
+   "confidence": "high"
+  },
+  {
+   "id": "INVERT-02",
+   "type": "reach-goal",
+   "label": "Heelflip FS Invert the freight container",
+   "version": "original (PS2 2002)",
+   "zone": "Z9",
+   "landmark": "hold the invert on a container lip while the crane moves it bowl to bowl",
+   "layer": "crane-carried container",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "lip",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "ride a held lip trick",
+   "evidence": "LP4 1:36:38-1:37:02; THG",
+   "confidence": "high"
+  },
+  {
+   "id": "BONES-02",
+   "type": "goal-object",
+   "label": "5 bones (Dog Chase)",
+   "version": "original (PS2 2002)",
+   "zone": "Z11",
+   "landmark": "low walls around buildings; one in the air via a QP transfer",
+   "layer": "ledges",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ledge",
+    "ollie",
+    "transfer"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4 1:27:38-1:28:02",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "OLLIENORTH-25",
+   "type": "reach-goal",
+   "label": "Ollie North across the Warehouse Roofs",
+   "version": "remake (2025, pro goal)",
+   "zone": "Z3",
+   "landmark": "Rooftops door -> ramp jump to the other roof",
+   "layer": "roofs",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "portal",
+    "kicker",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34; LP34 4:16:50",
+   "confidence": "high"
+  },
+  {
+   "id": "JUDO-25",
+   "type": "reach-goal",
+   "label": "Judo across the Containers",
+   "version": "remake (2025, pro goal)",
+   "zone": "Z8",
+   "landmark": "yellow container QP -> spine into red -> spine into green -> Judo to blue",
+   "layer": "container tops",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "spine-transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "PS34",
+   "confidence": "high"
+  },
+  {
+   "id": "VENTS-25",
+   "type": "reach-goal",
+   "label": "Gap all of the Vent Rails",
+   "version": "remake (2025, pro goal)",
+   "zone": "Z3",
+   "landmark": "three rails inside vent ducts; third via container-top grinds and a jump into the vent",
+   "layer": "vent ducts",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "portal",
+    "grind",
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "pro goal sends you back through the tape's duct area",
+   "evidence": "PS34; LP34 4:17:30, 4:21:30",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Dirty Water",
+   "points": null,
+   "kind": "other",
+   "location": "waterside line",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps; LP4 1:41:14",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Ledge 2 Ledge",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "low walls around buildings",
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "BONES-02"
+   ],
+   "evidence": "THG gaps; LP4 1:28:02",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Onarabana",
+   "points": null,
+   "kind": "spine",
+   "location": "suspended containers (ONARABANA lettering)",
+   "moves": [
+    "spine-transfer"
+   ],
+   "onRouteOf": [
+    "SUSP-02"
+   ],
+   "evidence": "THG gaps; LP4 1:31:50",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Track 2 Rail",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "dock rail tracks",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "HCOMBO-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Track 2 Track",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "dock rail tracks",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Ventilation Claustrophobia",
+   "points": null,
+   "kind": "channel",
+   "location": "vent duct (inferred)",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Warehouse Ledge Madness",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "warehouse roof ledges (inferred)",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [
+    "K-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Roof Smash Transfer",
+   "points": null,
+   "kind": "roof",
+   "location": "roof; smash through wood (inferred)",
+   "moves": [
+    "ollie",
+    "break-glass"
+   ],
+   "onRouteOf": [
+    "COMBO-02"
+   ],
+   "evidence": "THG gaps; THG COMBO",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Conveyor QP Transfer",
+   "points": null,
+   "kind": "transfer",
+   "location": "conveyor QP (inferred)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Into the Barges",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "barge bowls (inferred)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "More Barge Fun",
+   "points": null,
+   "kind": "pool-transfer",
+   "location": "barge bowls (inferred)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Dock Transfer",
+   "points": null,
+   "kind": "transfer",
+   "location": "dock (inferred)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "5 Bones 1 Combo",
+   "points": null,
+   "kind": "other",
+   "location": "Dog Chase in one combo",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "BONES-02"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Awning Hop",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "awning (inferred)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Building Hop",
+   "points": null,
+   "kind": "roof",
+   "location": "between buildings (inferred)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Trailer Hop",
+   "points": null,
+   "kind": "over-object",
+   "location": "trailers (inferred)",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Rusty Lip",
+   "points": null,
+   "kind": "lip",
+   "location": "rusty coping (inferred)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Rail 2 Rail / Ledge 2 Rail / Rail 2 Ledge",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "yard lines",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Transfer",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Circle \"T\"",
+   "points": null,
+   "kind": "other",
+   "location": "unknown",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Run1! / Run 2!! / Run 3!!!",
+   "points": null,
+   "kind": "other",
+   "location": "Rusty Old Ramp pro challenge",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002, pro challenge)"
+  },
+  {
+   "name": "Rusty Roost / Rusty Roost 2 / Big Hole Gap / Rusty Old Ramp Channel Gap",
+   "points": null,
+   "kind": "lip/channel",
+   "location": "Rusty Old Ramp",
+   "moves": [
+    "lip",
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps; LP4 3:35:22",
+   "version": "original (PS2 2002, pro challenge)"
+  },
+  {
+   "name": "Vent rail gaps (3)",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "rails inside vent ducts on the roofs",
+   "moves": [
+    "grind",
+    "wallride"
+   ],
+   "onRouteOf": [
+    "VENTS-25",
+    "PANDA-25"
+   ],
+   "evidence": "PS34; LP34 4:17:30, 4:21:30",
+   "version": "remake (2025)"
+  },
+  {
+   "name": "NOW THATS O TWO!",
+   "points": 300,
+   "kind": "channel",
+   "location": "QP to QP across the water gap",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "LORD OF THE AIR",
+   "points": 150,
+   "kind": "over-object",
+   "location": "over the roofless building's wall",
+   "moves": [
+    "vert-air"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "BUNGALOW HERO",
+   "points": 200,
+   "kind": "kicker",
+   "location": "trailer-top kickers either side of the secret-area entrance",
+   "moves": [
+    "kicker"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "CATWALK MANUAL",
+   "points": 250,
+   "kind": "manual",
+   "location": "ramp from crate tops down to the brick-structure roof",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "CATWALK GRIND",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "handrail of the same ramp",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "HIGH SLOPE MANUAL",
+   "points": 200,
+   "kind": "manual",
+   "location": "incline off the brick-structure roof",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TUNNEL MANUAL",
+   "points": 200,
+   "kind": "manual",
+   "location": "tunnel into the secret area",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "U TURN GRIND",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "rusty U-beam above the QP",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "HCOMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "USE THE HANDRAIL",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "handrail on the ramp to the crate roof",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "RAIL HOP",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "crate-roof rail over the entrance gap",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TILT!",
+   "points": 250,
+   "kind": "other",
+   "location": "crane's lifted beam (new deck)",
+   "moves": [
+    "grind",
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "DECK-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "NICE CLIMB",
+   "points": 250,
+   "kind": "rail-transfer",
+   "location": "crate-roof rail -> metal container",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "WANNA SWIM?",
+   "points": 250,
+   "kind": "ledge",
+   "location": "ledge by the sea behind the crate building",
+   "moves": [
+    "ledge"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "THERES NO ROPE",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "barge to barge",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "KEYS-PS1",
+    "HCOMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "OCEAN PARK ROOF",
+   "points": 200,
+   "kind": "ledge",
+   "location": "top of the brick structure nearest the barges",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "THREE FIFTY ROOF",
+   "points": 200,
+   "kind": "ledge",
+   "location": "top of the other brick structure",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "TAPE-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "SHIPYADS GUARD",
+   "points": 150,
+   "kind": "rail-transfer",
+   "location": "brick-structure roof rail over the entrance gap",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "A-PS1",
+    "T-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "SHIPYARDS BACKYARD",
+   "points": 200,
+   "kind": "rail-transfer",
+   "location": "brick-structure roof rail over the ramp gap",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "NO EFFECTS",
+   "points": 200,
+   "kind": "wire",
+   "location": "wire between the square buildings",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [
+    "S-PS1H"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "FROM END TO END",
+   "points": 250,
+   "kind": "other",
+   "location": "whole C-O-M-B-O Hard line",
+   "moves": [
+    "grind",
+    "wallride"
+   ],
+   "onRouteOf": [
+    "HCOMBO-PS1"
+   ],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TUNNEL HOP",
+   "points": 150,
+   "kind": "ledge-to-ledge",
+   "location": "tunnel ledges",
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "HIGH ABOVE GRIND",
+   "points": 300,
+   "kind": "rail-transfer",
+   "location": "gap in the rafters (secret area)",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "COMBO-PS1"
+   ],
+   "evidence": "CC1; VG label",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "FAR WALL GRIND",
+   "points": 200,
+   "kind": "ledge",
+   "location": "metal ledge on the secret area's wall",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "TWO HOPS",
+   "points": 200,
+   "kind": "ledge-to-ledge",
+   "location": "ledge around the brick-structure building over two small ramps",
+   "moves": [
+    "ledge",
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "A LITLE RUSTY",
+   "points": 200,
+   "kind": "lip",
+   "location": "U-turn rail",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "NEXT SHIPMENT",
+   "points": 200,
+   "kind": "lip",
+   "location": "crate-roof rail",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "IMPRESS THE BOSS",
+   "points": 200,
+   "kind": "lip",
+   "location": "crate-roof halfpipe",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "ANY WORKERS HERE?",
+   "points": 200,
+   "kind": "lip",
+   "location": "railing on the secret-area QP deck",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  },
+  {
+   "name": "FIRST EDGE / SECOND EDGE",
+   "points": 200,
+   "kind": "lip",
+   "location": "the two square buildings",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "CC1",
+   "version": "PS1 (2002 edition)"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "Rooftops doorway in the alley (2025)",
+   "opens": "2-3 s transition onto the warehouse roofs",
+   "neededFor": [
+    "TAPE-R",
+    "PANDA-25",
+    "OLLIENORTH-25",
+    "VENTS-25"
+   ],
+   "evidence": "PS34; LP34 1:50:56-1:50:58.5; WEB pcgamesn"
+  },
+  {
+   "trigger": "complete every regular goal in every level (2025)",
+   "opens": "pro goals incl. C-O-M-B-O",
+   "neededFor": [
+    "COMBO-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "moving walkway up/down (2025)",
+   "opens": "timed crossing",
+   "neededFor": [
+    "STAT-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "container moving back and forth by the pool (2025)",
+   "opens": "timed spine into a moving room",
+   "neededFor": [
+    "IGLOGO-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "full special meter (2025)",
+   "opens": "height from boat to raised platform",
+   "neededFor": [
+    "DECK-25"
+   ],
+   "evidence": "PS34"
+  },
+  {
+   "trigger": "QP air into the shack floor hatch (2002)",
+   "opens": "shack interior and kicker over the water",
+   "neededFor": [
+    "WATERGAP-02"
+   ],
+   "evidence": "THG"
+  },
+  {
+   "trigger": "Bucky's goal spins the third suspended container (2002)",
+   "opens": "moving targets",
+   "neededFor": [
+    "SUSP-02"
+   ],
+   "evidence": "LP4 1:31:26"
+  },
+  {
+   "trigger": "crane carries a container bowl to bowl (2002)",
+   "opens": "ride inside a held lip trick",
+   "neededFor": [
+    "INVERT-02"
+   ],
+   "evidence": "LP4 1:36:38; THG"
+  },
+  {
+   "trigger": "Tony's Pro Challenge (2002)",
+   "opens": "red-arrow pro goals",
+   "neededFor": [
+    "PCOMBO-02"
+   ],
+   "evidence": "LP4 2:28:32"
+  },
+  {
+   "trigger": "5 managerial keys (PS1)",
+   "opens": "secret area",
+   "neededFor": [
+    "COMBO-PS1",
+    "RAFTERS-PS1"
+   ],
+   "evidence": "CC1"
+  },
+  {
+   "trigger": "crane lifts a beam (PS1)",
+   "opens": "moving grind with the new deck",
+   "neededFor": [
+    "DECK-PS1"
+   ],
+   "evidence": "CC1"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Waterfront-to-roofs letter line (2002)",
+   "sequence": [
+    "moving machine",
+    "curved waterside rail",
+    "wire up to a roof",
+    "walkway",
+    "roof-edge QP",
+    "ollie roof gap",
+    "cabin roofs",
+    "big wooden kicker",
+    "ground"
+   ],
+   "links": [
+    "grind",
+    "wire",
+    "ollie",
+    "kicker"
+   ],
+   "collectibles": [
+    "S-02",
+    "K-02",
+    "A-02"
+   ],
+   "why": "climbs waterline to roofs on one grind, then steps down",
+   "evidence": "THG; LP4 1:29:02-1:29:50"
+  },
+  {
+   "id": "L2",
+   "name": "Twin-QP roof and scaffold line (2002)",
+   "sequence": [
+    "tracks",
+    "QP launch right",
+    "shack roof grind",
+    "hop gap",
+    "metal scaffolding",
+    "hop right after bend"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "ollie"
+   ],
+   "collectibles": [
+    "T-02",
+    "E-02",
+    "HCOMBO-02"
+   ],
+   "why": "shared opening of S-K-A-T-E's end and High C-O-M-B-O",
+   "evidence": "THG"
+  },
+  {
+   "id": "L3",
+   "name": "Scaffold-to-boat combo (2002)",
+   "sequence": [
+    "scaffolding",
+    "boat bowl",
+    "left edge",
+    "manual to barge",
+    "spine over intersection",
+    "revert-manual",
+    "slope",
+    "ground manual",
+    "track grind"
+   ],
+   "links": [
+    "manual",
+    "revert",
+    "spine-transfer"
+   ],
+   "collectibles": [
+    "HCOMBO-02"
+   ],
+   "why": "every link type in one line",
+   "evidence": "THG; LP4 1:35:50"
+  },
+  {
+   "id": "L4",
+   "name": "Cabin-wall C-O-M-B-O (2002)",
+   "sequence": [
+    "wallride cabin wall",
+    "roof grind",
+    "manual",
+    "wooden kicker",
+    "roof grind",
+    "railing",
+    "ollie through wood"
+   ],
+   "links": [
+    "wallride",
+    "manual"
+   ],
+   "collectibles": [
+    "COMBO-02"
+   ],
+   "why": "teaches wallride-to-grind first",
+   "evidence": "THG; LP4 1:26:02"
+  },
+  {
+   "id": "L5",
+   "name": "Rivet chain (2002)",
+   "sequence": [
+    "cable over water",
+    "wall top",
+    "hop",
+    "sloped wall end launcher",
+    "next wall",
+    "pool edge",
+    "concrete edge",
+    "QP",
+    "walkway handrail",
+    "silver QP top",
+    "ledge",
+    "ground rail",
+    "container edge"
+   ],
+   "links": [
+    "grind",
+    "ollie",
+    "vert-air"
+   ],
+   "collectibles": [
+    "RIVETS-02"
+   ],
+   "why": "21 pickups on one level-crossing line",
+   "evidence": "THG; LP4 1:44:02"
+  },
+  {
+   "id": "L6",
+   "name": "Rooftops door and duct (2025)",
+   "sequence": [
+    "dock tracks",
+    "alley",
+    "Rooftops door",
+    "roof",
+    "duct",
+    "roll off"
+   ],
+   "links": [
+    "door",
+    "roll-off"
+   ],
+   "collectibles": [
+    "TAPE-R",
+    "VENTS-25",
+    "PANDA-25"
+   ],
+   "why": "one doorway carries three secrets",
+   "evidence": "PS34; LP34"
+  },
+  {
+   "id": "L7",
+   "name": "Container spine chain (2025)",
+   "sequence": [
+    "yellow container QP",
+    "spine into red",
+    "spine into green",
+    "Judo to blue",
+    "container wallrides"
+   ],
+   "links": [
+    "spine-transfer",
+    "wallride",
+    "wallie"
+   ],
+   "collectibles": [
+    "JUDO-25",
+    "CASH-25",
+    "IGLOGO-25"
+   ],
+   "why": "containers as stacked mini halfpipes; LP34 tape approach",
+   "evidence": "PS34; LP34 1:50:26-1:50:54"
+  },
+  {
+   "id": "L8",
+   "name": "Welder roof line",
+   "sequence": [
+    "road QP",
+    "roof grind",
+    "rail",
+    "wall above",
+    "roof",
+    "gap",
+    "roof"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "ollie",
+    "manual"
+   ],
+   "collectibles": [
+    "WELDERS"
+   ],
+   "why": "five targets on one roof-edge line",
+   "evidence": "PS34; THG"
+  },
+  {
+   "id": "L9",
+   "name": "Start-wire cash line (2025)",
+   "sequence": [
+    "QP left of spawn",
+    "yellow rail",
+    "wire",
+    "next yellow rail"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer"
+   ],
+   "collectibles": [
+    "CASH-25",
+    "RIVETS-25"
+   ],
+   "why": "wire layer shown near spawn",
+   "evidence": "PS34"
+  },
+  {
+   "id": "L10",
+   "name": "PS1 crate roof to brick structures",
+   "sequence": [
+    "crate-roof halfpipe",
+    "roof rail",
+    "catwalk ramp",
+    "railed roof",
+    "brick structures"
+   ],
+   "links": [
+    "vert-air",
+    "grind",
+    "manual",
+    "ollie"
+   ],
+   "collectibles": [
+    "S-PS1",
+    "K-PS1",
+    "A-PS1",
+    "T-PS1",
+    "E-PS1",
+    "TAPE-PS1"
+   ],
+   "why": "S-K-A-T-E line tours the tape's roofs",
+   "evidence": "CC1"
+  },
+  {
+   "id": "L11",
+   "name": "PS1 secret-area wallride ladder",
+   "sequence": [
+    "walkway on QPs",
+    "wall ledge",
+    "rail",
+    "rail",
+    "rafter",
+    "jump off"
+   ],
+   "links": [
+    "wallride",
+    "grind"
+   ],
+   "collectibles": [
+    "COMBO-PS1"
+   ],
+   "why": "four stacked wallride-to-grind steps",
+   "evidence": "CC1"
+  }
+ ],
+ "guidance": [
+  "2002: people hand out goals (cyan arrows over givers); chase/race goals show a red arrow; View Goals can jump to a goal's start (LP4 1:39:50)",
+  "2002: S-K-A-T-E letters sit on layer transitions of one climbing line (rail->wire, roof->roof, roof->kicker, QP->roof, scaffold bend) (THG)",
+  "2002: rivets glow bright orange and draw their own line (THG)",
+  "2025: tape hidden from spawn, alley and door; revealed only by turning right on the roof (PS34 #40)",
+  "2025: door marked by a green arrow sign and a lit opening at the end of a coned alley (PS34 #38-#39)",
+  "2025: pause-screen protip says other goals may unlock the way to tapes (generic; LP34 4:14:40)",
+  "PS1: the S-K-A-T-E Hard letters ring the tape's building on the VG render (inferred sightline)"
+ ],
+ "designLogic": [
+  "2002 has no tape; its secrets are entrances (QP into a floor hatch) and goals on moving machinery",
+  "2025 tape: a doorway does the climb, placing the tape ~15-25 s from spawn on a large map",
+  "the tape rewards restraint: slow roll-off catches it, a fast launch overshoots",
+  "one door serves the tape, the panda and two vent-rail gaps: a single discovery pays three times",
+  "the remake promotes existing 2002 geometry (vents: 'Ventilation Claustrophobia') into the tape landmark and a pro goal",
+  "moving machinery is the level theme: crane lip ride, swinging/spinning containers, train manual, moving walkway, moving container",
+  "2002 S-K-A-T-E is a tour of every vertical layer (1:48 of 2:00)",
+  "combo sets graduate: wallride+kicker -> bowls+spine+revert -> spine onto a roof and an air to a hidden platform",
+  "water is the cheap failure line; the alley drop under the 2025 tape is the only long fall and the door undoes it",
+  "PS1: one keyed room and a tape on the highest open-air rooftop block whose edges are scored gaps",
+  "both later lineages put one collectible on a moving object (PS1 deck on crane beam; 2025 logo in shuttling container)",
+  "2025 cash teaches the wire and container-interior layers the bigger secrets use"
+ ],
+ "remakeChanges": [
+  "Tape: none in PS2 2002; PS1 edition hides an unlisted tape on a rooftop brick structure; 2025 lists 'Get the Secret Tape' mid-air under a duct between the central warehouse roofs",
+  "2025 adds a Rooftops door (transition) that no 2002 source mentions (low-confidence negative evidence)",
+  "2025 keeps S-K-A-T-E, welders, rivets (21 -> 7), train manual, buoy (5 bell grinds -> one Hardflip grind); drops Dog Chase, container inventory, shack water gap, competition; adds tape, Ollie North across roofs, Judo across containers, vent rails",
+  "2025 S-K-A-T-E is a short row beside the spawn instead of the 2002 1:48 vertical tour",
+  "2002 free roam with per-goal clocks -> 2025 10:00 runs"
+ ],
+ "transfer": [
+  "Slow drop-off crystal: crystal ~1.5-2.5 m beyond and ~1 m below the end of a grindable duct over a 6-10 m alley; a 4 m/s roll-off passes through it (1.8 m travel per 1 m drop) while a 12 m/s launch overshoots (~5.4 m); respawn ledge or lift makes a miss cost ~10 s",
+  "Shortcut lift/ramp from near the spawn onto the roof layer; hide the crystal opposite the arrival view",
+  "Hatch entrance: aim a QP air into a roof hatch -> interior corridor with rails -> kicker over water with the crystal in the arc",
+  "Swinging-container spine chain: three moving mini-halfpipe platforms in a row, crystal over the third",
+  "Waterside rail -> sloped cable up to a roof; shards at each transition; crystal one grind-ollie (~2.4 m pop) hop past the last roof gap",
+  "Pedestal crystal on a raised rooftop block whose top edges are grindable, approached by a ramp from a higher stack (PS1 style)"
+ ],
+ "openQuestions": [
+  "2002 PS2 cash-icon positions in Shipyard",
+  "Did a door/transition to the roofs exist in 2002 PS2 Shipyard?",
+  "PS1 tape route onto the brick structure (CC1 gives only the spot)",
+  "exact 2025 duct/alley dimensions (one screenshot)",
+  "2002 gap points (THG has names only)",
+  "2002 load-card text/location"
+ ]
+}

@@ -1,0 +1,1324 @@
+{
+ "id": "thps4-chicago",
+ "game": "THPS4",
+ "level": "Chicago",
+ "location": "Chicago, Illinois (El train on red pillars, raising drawbridges, river ferry, red Calder-like sculpture, green lion statues); load card 'Featured in... Mat Hoffman's Pro BMX 2' (LP4 4:24:24)",
+ "type": "bonus",
+ "typeNote": "bought secret level ($15,000) with its own 14-goal list; no pro goals; final level of the 2002 career",
+ "careerPosition": {
+  "original2002": 9,
+  "of2002": 9,
+  "remake2025": null
+ },
+ "timeLimit": {
+  "PS2 2002": "none for the level; per-goal clocks (S-K-A-T-E 2:00; 900 off bridge 1:00; Distract the Guards 1:00)"
+ },
+ "versions": [
+  "PS2 2002 (Neversoft)",
+  "not in THPS 3+4 (2025)",
+  "not in the VGMaps PS1 set"
+ ],
+ "sources": [
+  "LP4 4:24:24-4:45:58",
+  "THG pro-skater-4/chicago",
+  "THG gaps/pro-skater-4/chicago",
+  "WEB cheatcodes 33996",
+  "PS34 guide index (absence)",
+  "skipped (bot check): retroachievements.org, supercheats.com, walkthrough.freeola.com"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 900,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect C-O-M-B-O (amateur)",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Nail the tricks they yell out",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "The Bridge Challenge",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Pro C-O-M-B-O",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "900 off bridge to the ferry's top deck",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Grind 5 Fire Hydrants",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Knock Over 10 Ballplayers in one combo",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Deliver the Pizzas",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Put Bugs on 5 Mafiosos",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Distract the Guards",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Get a Sick Score: 1,500,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Do a 100,000 point combo on the ledge",
+   "version": "original (PS2 2002)"
+  }
+ ],
+ "size": {
+  "class": "large",
+  "footprint": "estimate ~250-350 m (low confidence)",
+  "evidence": "city blocks, river, drawbridges and El; S-K-A-T-E ~64 s (LP4 4:26:36-4:27:40)"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Start plaza with grey QP and upper ramp",
+   "layer": "plaza/ramp",
+   "features": [
+    "grey QP",
+    "upper ramp with an open end"
+   ],
+   "notes": "S visible at goal start"
+  },
+  {
+   "id": "Z2",
+   "name": "Streets with school buses and the brown building",
+   "layer": "street/interior",
+   "features": [
+    "yellow school buses",
+    "brown building with three doors"
+   ],
+   "notes": "K inside via the middle door"
+  },
+  {
+   "id": "Z3",
+   "name": "Raised plateau with kickers",
+   "layer": "plateau",
+   "features": [
+    "slope",
+    "kickers",
+    "red rail on the facing building"
+   ],
+   "notes": "A"
+  },
+  {
+   "id": "Z4",
+   "name": "Steps, building ledge and climbing wire",
+   "layer": "ledge/wire",
+   "features": [
+    "steps with a QP",
+    "building ledge",
+    "uphill wire"
+   ],
+   "notes": "T at the top; $100 cash on the line"
+  },
+  {
+   "id": "Z5",
+   "name": "Under the El",
+   "layer": "street/El tracks",
+   "features": [
+    "red steel pillars",
+    "elevated tracks",
+    "three-tree planter",
+    "wall"
+   ],
+   "notes": "E; El grind via kicker"
+  },
+  {
+   "id": "Z6",
+   "name": "River, drawbridges and the ferry",
+   "layer": "river/bridge leaves/ferry decks",
+   "features": [
+    "raising drawbridge leaves",
+    "tollbooth plaza with fountain",
+    "ferry with a top deck",
+    "riverside railings"
+   ],
+   "notes": "Bridge Challenge; 900 to ferry; ballplayers"
+  },
+  {
+   "id": "Z7",
+   "name": "Federal-style plaza and red sculpture",
+   "layer": "plaza",
+   "features": [
+    "red steel arch sculpture",
+    "building door"
+   ],
+   "notes": "mafioso 4"
+  },
+  {
+   "id": "Z8",
+   "name": "Rooftops with the helipad",
+   "layer": "roofs",
+   "features": [
+    "helipad",
+    "wooden kicker",
+    "opposite roof"
+   ],
+   "notes": "mafioso 1; Roof Topper"
+  },
+  {
+   "id": "Z9",
+   "name": "Enclosed half-pipe area",
+   "layer": "vert",
+   "features": [
+    "half-pipe",
+    "blue awning",
+    "steps",
+    "QP against a wall"
+   ],
+   "notes": "pro C-O-M-B-O; Nail the tricks"
+  },
+  {
+   "id": "Z10",
+   "name": "Plaza ledges, benches and planters",
+   "layer": "street furniture",
+   "features": [
+    "ledges",
+    "benches",
+    "planters",
+    "rails"
+   ],
+   "notes": "100k ledge combo"
+  },
+  {
+   "id": "Z11",
+   "name": "Lion-statue building and coffee stand",
+   "layer": "street",
+   "features": [
+    "green lion statues",
+    "latte stand"
+   ],
+   "notes": "mafioso 5"
+  }
+ ],
+ "landmarks": [
+  "El tracks on red pillars",
+  "raising drawbridges",
+  "ferry",
+  "red sculpture",
+  "green lion statues",
+  "yellow school buses",
+  "helipad roof",
+  "tollbooth plaza fountain"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "plaza with the grey QP and upper ramp",
+  "visibleCollectibles": [
+   "S"
+  ],
+  "notes": "Mat Hoffman's High Score first; S visible from the S-K-A-T-E giver (LP4 4:26:36)"
+ },
+ "collectibles": [
+  {
+   "id": "FERRY900",
+   "type": "reach-goal",
+   "label": "900 off the raised bridge onto the ferry's top deck (tape-equivalent)",
+   "version": "original (PS2 2002)",
+   "zone": "Z6",
+   "landmark": "raised drawbridge leaf near its top -> ferry top deck below",
+   "layer": "bridge leaf -> moving ferry deck",
+   "heightM": "drop ~10-20 (estimate, low confidence)",
+   "launchFrom": "raised bridge leaf",
+   "visibility": {
+    "firstSight": "the Tollbooth Operator points from the plaza (LP4 4:31:22-4:31:28); ferry visible from the bridge",
+    "fromSpawn": null,
+    "reads": "boat below a raised bridge",
+    "distanceFromFirstSightM": "~50-100"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "manual",
+     "from": "flatland",
+     "to": "full special",
+     "geometry": "LP4 4:31:40-4:31:42"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "bridge approach",
+     "to": "raised leaf",
+     "geometry": ""
+    },
+    {
+     "step": 3,
+     "move": "vert-air",
+     "from": "near the top of the leaf",
+     "to": "air to the right",
+     "geometry": ""
+    },
+    {
+     "step": 4,
+     "move": "vert-air",
+     "from": "air",
+     "to": "The 900",
+     "geometry": "LP4 4:31:46"
+    },
+    {
+     "step": 5,
+     "move": "moving-object",
+     "from": "air",
+     "to": "ferry top deck",
+     "geometry": "must land on the (moving) top deck"
+    }
+   ],
+   "moves": [
+    "manual",
+    "vert-air"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "special meter via flatland",
+    "choosing the launch point",
+    "landing on a moving target"
+   ],
+   "coupling": "ferry (moving, inferred)",
+   "failure": "miss = river ('You big drip!'); costs ~10-15 s of the 1:00 clock",
+   "timeFromSpawnS": "LP4 4:31:30 -> 4:31:48 (~18 s incl. one fail)",
+   "difficulty": 4,
+   "roles": [
+    "TEST"
+   ],
+   "why": "the city's largest drop onto a moving boat as the finale's showpiece",
+   "evidence": "THG; LP4 4:31:16-4:31:52",
+   "confidence": "high (route); low (height)"
+  },
+  {
+   "id": "T",
+   "type": "skate-letter",
+   "label": "T at the top of the climbing wire (tape-equivalent)",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "top end of a wire reached from a building ledge beside steps",
+   "layer": "wire",
+   "heightM": "~6-10 (estimate, low confidence)",
+   "launchFrom": "QP left of the steps",
+   "visibility": {
+    "firstSight": "from the ledge before the wire (LP4 4:27:22)",
+    "fromSpawn": null,
+    "reads": "letter at the end of a wire against the sky; $100 cash after it",
+    "distanceFromFirstSightM": "~20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "QP left of the steps",
+     "to": "building ledge",
+     "geometry": "transfer left"
+    },
+    {
+     "step": 2,
+     "move": "ledge",
+     "from": "ledge",
+     "to": "wire",
+     "geometry": "the ledge leads onto a wire"
+    },
+    {
+     "step": 3,
+     "move": "wire",
+     "from": "wire",
+     "to": "T",
+     "geometry": "ollie once or twice to keep climbing"
+    },
+    {
+     "step": 4,
+     "move": "wire",
+     "from": "T",
+     "to": "cash icon",
+     "geometry": "$100 (LP4 4:27:26)"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "ledge",
+    "wire",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "grind-ollie boost on an uphill wire"
+   ],
+   "coupling": "none",
+   "failure": "fall to the street; ~10 s back",
+   "timeFromSpawnS": "LP4 ~46 s into S-K-A-T-E (4:26:36 -> 4:27:24)",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "REWARD"
+   ],
+   "why": "teaches the grind-ollie boost; highest letter plus cash",
+   "evidence": "THG; LP4 4:27:22-4:27:26",
+   "confidence": "high"
+  },
+  {
+   "id": "S",
+   "type": "skate-letter",
+   "label": "S",
+   "version": "original (PS2 2002)",
+   "zone": "Z1",
+   "landmark": "air off the end of the upper ramp",
+   "layer": "air",
+   "heightM": "~4-6",
+   "launchFrom": "grey QP",
+   "visibility": {
+    "firstSight": "visible at the goal start (LP4 4:26:36)",
+    "fromSpawn": true,
+    "reads": "letter above the ramp end",
+    "distanceFromFirstSightM": "~15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "grey QP",
+     "to": "upper ramp",
+     "geometry": "transfer right"
+    },
+    {
+     "step": 2,
+     "move": "vert-air",
+     "from": "ramp end",
+     "to": "S",
+     "geometry": "fly off"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "S-K-A-T-E 2:00",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 ~6 s (4:26:42)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "skate-letter",
+   "label": "K",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "inside the brown building (middle door)",
+   "layer": "interior",
+   "heightM": "floor",
+   "launchFrom": "street",
+   "visibility": {
+    "firstSight": "not visible from the street (inside)",
+    "fromSpawn": false,
+    "reads": "letter in an interior",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "road",
+     "to": "brown building",
+     "geometry": "turn left"
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "middle door",
+     "to": "K",
+     "geometry": "through the doorway into the interior"
+    }
+   ],
+   "moves": [
+    "unlock"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "picking the right door"
+   ],
+   "coupling": "none",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:26:46-4:26:50",
+   "difficulty": 2,
+   "roles": [
+    "SECRET-AREA",
+    "EXPLORE"
+   ],
+   "why": "a letter hidden in an interior",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "skate-letter",
+   "label": "A",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "red rail on the building opposite the plateau",
+   "layer": "wall rail",
+   "heightM": "~3-5",
+   "launchFrom": "plateau kickers",
+   "visibility": {
+    "firstSight": "from the plateau (LP4 4:26:54)",
+    "fromSpawn": null,
+    "reads": "letter on a red rail",
+    "distanceFromFirstSightM": "~15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ride",
+     "from": "road",
+     "to": "slope up to plateau",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "kicker",
+     "from": "far-side kickers",
+     "to": "red rail",
+     "geometry": "grind"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "fall",
+   "timeFromSpawnS": "LP4 4:26:54",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "skate-letter",
+   "label": "E",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "wall by the three-tree planter where the El crosses above",
+   "layer": "wall",
+   "heightM": "~2-3",
+   "launchFrom": "ground",
+   "visibility": {
+    "firstSight": "under the El",
+    "fromSpawn": null,
+    "reads": "letter on a wall",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "wallride",
+     "from": "ground",
+     "to": "wall (E)",
+     "geometry": ""
+    }
+   ],
+   "moves": [
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride"
+   ],
+   "coupling": "same clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:27:40 (complete)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letter",
+   "label": "Amateur C-O-M-B-O",
+   "version": "original (PS2 2002)",
+   "zone": "Z10",
+   "landmark": "wall -> steps grind -> red railing -> curved wall -> barrier hop -> ramp grind",
+   "layer": "street furniture",
+   "heightM": "low",
+   "launchFrom": "wall",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "manual",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 4:27:52-4:28:16",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PCOMBO",
+   "type": "combo-letter",
+   "label": "Pro C-O-M-B-O",
+   "version": "original (PS2 2002)",
+   "zone": "Z9",
+   "landmark": "half-pipe -> blue awning -> steps -> wall -> QP -> lower wall",
+   "layer": "vert/awning/ledges",
+   "heightM": "varies",
+   "launchFrom": "half-pipe",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "revert-manual",
+    "ollie up onto an awning"
+   ],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 4:30:40-4:31:04",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "19-trick chain with every link type",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "HYDRANTS",
+   "type": "goal-object",
+   "label": "5 fire hydrants",
+   "version": "original (PS2 2002)",
+   "zone": "Z2/Z6",
+   "landmark": "along roads, under bridges, in a lay-by by a yellow bus",
+   "layer": "street",
+   "heightM": "~0.8",
+   "launchFrom": "road",
+   "visibility": {
+    "firstSight": "roadside",
+    "fromSpawn": null,
+    "reads": "hydrants",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "skitch"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock; cars to skitch",
+   "failure": "restart",
+   "timeFromSpawnS": "LP4 4:32:40-4:33:16",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "skitching as traversal",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "BALLPLAYERS",
+   "type": "goal-object",
+   "label": "10 ballplayers in one combo",
+   "version": "original (PS2 2002)",
+   "zone": "Z6",
+   "landmark": "along the riverside railing",
+   "layer": "railing",
+   "heightM": "~1",
+   "launchFrom": "railing",
+   "visibility": {
+    "firstSight": "riverside",
+    "fromSpawn": null,
+    "reads": "players",
+    "distanceFromFirstSightM": "line"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "rail-transfer",
+    "manual",
+    "revert"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 4:33:40-4:34:52",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "targets strung on one rail",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 10
+  },
+  {
+   "id": "MAFIOSOS",
+   "type": "goal-object",
+   "label": "5 mafiosos (flip over each)",
+   "version": "original (PS2 2002)",
+   "zone": "Z8/Z7/Z11",
+   "landmark": "opposite roof from the helipad; sloped walkway; outside a door; red sculpture building; lion-statue building entrance",
+   "layer": "roof/street",
+   "heightM": "varies",
+   "launchFrom": "helipad roof kicker",
+   "visibility": {
+    "firstSight": "NPCs",
+    "fromSpawn": null,
+    "reads": "mob bosses",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "kicker",
+    "ollie"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "restart",
+   "timeFromSpawnS": "LP4 4:36:28-4:38:04",
+   "difficulty": 3,
+   "roles": [
+    "EXPLORE"
+   ],
+   "why": "a city tour",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 5
+  },
+  {
+   "id": "CARS",
+   "type": "goal-object",
+   "label": "4 black cars",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "lined up on a road",
+   "layer": "street",
+   "heightM": "~1.5",
+   "launchFrom": "road",
+   "visibility": {
+    "firstSight": "in a row",
+    "fromSpawn": null,
+    "reads": "cars",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "1:00 clock",
+   "failure": "restart",
+   "timeFromSpawnS": "LP4 4:38:40-4:39:52",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "PIZZAS",
+   "type": "goal-object",
+   "label": "Pizzas (follow the red arrow)",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "first via a kicker onto the El track",
+   "layer": "El track",
+   "heightM": "~6-8 (estimate)",
+   "launchFrom": "kicker",
+   "visibility": {
+    "firstSight": "red arrow",
+    "fromSpawn": null,
+    "reads": "pizza boxes",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "street",
+     "to": "El track",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "El track",
+     "to": "pizza 1",
+     "geometry": "follow the track"
+    }
+   ],
+   "moves": [
+    "kicker",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "restart",
+   "timeFromSpawnS": "LP4 4:35:16-4:36:04",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "El as fast upper layer",
+   "evidence": "THG; LP4",
+   "confidence": "medium",
+   "count": "unknown"
+  },
+  {
+   "id": "CASH",
+   "type": "cash",
+   "label": "Loose cash icon",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "on the T's wire line",
+   "layer": "wire",
+   "heightM": "~6-10",
+   "launchFrom": "wire",
+   "visibility": {
+    "firstSight": "after the T",
+    "fromSpawn": null,
+    "reads": "$ icon",
+    "distanceFromFirstSightM": "~5"
+   },
+   "route": [],
+   "moves": [
+    "wire"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "none",
+   "failure": "fall",
+   "timeFromSpawnS": "LP4 4:27:26",
+   "difficulty": 2,
+   "roles": [
+    "REWARD"
+   ],
+   "why": "rewards holding the grind past the letter",
+   "evidence": "LP4",
+   "confidence": "high (one seen)"
+  },
+  {
+   "id": "BRIDGE",
+   "type": "reach-goal",
+   "label": "The Bridge Challenge",
+   "version": "original (PS2 2002)",
+   "zone": "Z6",
+   "landmark": "drawbridge gap at three rising heights with listed tricks",
+   "layer": "air over the bridge gap",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "ollie",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "grade one obstacle by raising it",
+   "evidence": "THG; LP4 4:29:52-4:30:28",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Bridge gap 1 / 2 / 3",
+   "points": null,
+   "kind": "channel",
+   "location": "drawbridge gap at three heights",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "BRIDGE"
+   ],
+   "evidence": "THG gaps; LP4 4:30:04 'BridgeGap 2!'",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Take it to the bridge",
+   "points": null,
+   "kind": "other",
+   "location": "onto a bridge",
+   "moves": [],
+   "onRouteOf": [
+    "FERRY900"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Ferry Princess / Ferry to Surface / Jump Ship!",
+   "points": null,
+   "kind": "over-object",
+   "location": "onto, off, from the ferry",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "FERRY900"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Light Rail / Over the El / Over TWO Tracks / Jumping Track",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "El tracks",
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "onRouteOf": [
+    "PIZZAS"
+   ],
+   "evidence": "THG gaps; LP4 4:43:34",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Roof Topper",
+   "points": null,
+   "kind": "roof",
+   "location": "roof to roof",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "MAFIOSOS"
+   ],
+   "evidence": "LP4 4:40:28; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Blue Awning / Up to Awning",
+   "points": null,
+   "kind": "ledge",
+   "location": "blue awning in the enclosed area",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "PCOMBO"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Rail-2-Rail / Ledge-2-Ledge / Bench-2-Planter / Bench-2-Rail / Ledge-2-Planter / Ledge-2-Rail / Planter-2-Bench / Planter-2-Rail / Rail-2-bench / Rail-2-Ledge / Rail-2-Planter / Bench-2-bench / Planter-2-Planter",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "plaza and riverside furniture",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "BALLPLAYERS",
+    "PCOMBO",
+    "COMBO"
+   ],
+   "evidence": "THG gaps; LP4 4:34:04, 4:31:04",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "River Barrier Manual / River Side Manual / Tight ledge manual / Grassy Manuel",
+   "points": null,
+   "kind": "manual",
+   "location": "riverside, ledges, grass",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "BALLPLAYERS"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "High art transfer / Modern Gap",
+   "points": null,
+   "kind": "transfer",
+   "location": "probably the red sculpture (inferred)",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Yellow to Yellow",
+   "points": null,
+   "kind": "other",
+   "location": "probably yellow buses (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Latte-2-go / Latté Mocha Air / Frothy lip",
+   "points": null,
+   "kind": "other",
+   "location": "coffee stand",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Lip Extension",
+   "points": null,
+   "kind": "lip",
+   "location": "unknown",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Mob Hit!",
+   "points": null,
+   "kind": "over-object",
+   "location": "flip over a mafioso",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "MAFIOSOS"
+   ],
+   "evidence": "LP4 4:36:40",
+   "version": "original (PS2 2002)"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "buy 'Chicago Level $15000'",
+   "opens": "the level",
+   "neededFor": [
+    "all"
+   ],
+   "evidence": "LP4 4:04:52"
+  },
+  {
+   "trigger": "Bridge Challenge steps",
+   "opens": "drawbridge leaves rise higher each step",
+   "neededFor": [
+    "BRIDGE"
+   ],
+   "evidence": "LP4 4:30:04"
+  },
+  {
+   "trigger": "ferry on the river",
+   "opens": "moving landing deck (inferred)",
+   "neededFor": [
+    "FERRY900"
+   ],
+   "evidence": "THG; THG gaps"
+  },
+  {
+   "trigger": "cars on the roads",
+   "opens": "skitchable vehicles",
+   "neededFor": [
+    "HYDRANTS"
+   ],
+   "evidence": "THG"
+  },
+  {
+   "trigger": "complete all 190 goals",
+   "opens": "ending message; final secret character held until minigames/gaps/cash are found",
+   "neededFor": [],
+   "evidence": "LP4 4:45:58"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "City letter line",
+   "sequence": [
+    "grey QP",
+    "upper ramp",
+    "air off the end",
+    "street",
+    "brown-building door",
+    "plateau",
+    "kicker",
+    "red rail",
+    "steps QP",
+    "ledge",
+    "climbing wire",
+    "down",
+    "El planter wallride"
+   ],
+   "links": [
+    "transfer",
+    "ollie",
+    "kicker",
+    "grind",
+    "wire",
+    "wallride"
+   ],
+   "collectibles": [
+    "S",
+    "K",
+    "A",
+    "T",
+    "E",
+    "CASH"
+   ],
+   "why": "~64 s city tour mixing an interior (K) and a high wire (T)",
+   "evidence": "THG; LP4 4:26:36-4:27:40"
+  },
+  {
+   "id": "L2",
+   "name": "Amateur C-O-M-B-O",
+   "sequence": [
+    "wall",
+    "manual",
+    "steps grind with ollies",
+    "manual",
+    "red railing",
+    "curved wall",
+    "manual",
+    "barrier hop",
+    "manual",
+    "ramp grind"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "ollie"
+   ],
+   "collectibles": [
+    "COMBO"
+   ],
+   "why": "grinds and manuals alternate",
+   "evidence": "THG; LP4 4:27:52"
+  },
+  {
+   "id": "L3",
+   "name": "Enclosed-area pro line",
+   "sequence": [
+    "half-pipe C",
+    "revert-manual",
+    "ollie onto blue awning",
+    "manual",
+    "steps",
+    "manual",
+    "steps",
+    "wall",
+    "manual",
+    "QP",
+    "launch right",
+    "lower wall"
+   ],
+   "links": [
+    "vert-air",
+    "revert",
+    "manual",
+    "grind"
+   ],
+   "collectibles": [
+    "PCOMBO"
+   ],
+   "why": "every link type",
+   "evidence": "THG; LP4 4:30:40"
+  },
+  {
+   "id": "L4",
+   "name": "Riverside rail line",
+   "sequence": [
+    "railing rail-to-rail",
+    "manual",
+    "QP revert-manual",
+    "back along the railing"
+   ],
+   "links": [
+    "grind",
+    "rail-transfer",
+    "manual",
+    "revert"
+   ],
+   "collectibles": [
+    "BALLPLAYERS"
+   ],
+   "why": "ten targets on one there-and-back rail",
+   "evidence": "THG; LP4 4:33:40"
+  },
+  {
+   "id": "L5",
+   "name": "El track line",
+   "sequence": [
+    "kicker",
+    "El track grind",
+    "follow the track"
+   ],
+   "links": [
+    "kicker",
+    "grind"
+   ],
+   "collectibles": [
+    "PIZZAS"
+   ],
+   "why": "elevated rail as cross-city shortcut",
+   "evidence": "THG; LP4 4:43:34"
+  },
+  {
+   "id": "L6",
+   "name": "Bridge-to-ferry drop",
+   "sequence": [
+    "flatland for special",
+    "raised leaf",
+    "launch right",
+    "900",
+    "ferry top deck"
+   ],
+   "links": [
+    "manual",
+    "vert-air"
+   ],
+   "collectibles": [
+    "FERRY900"
+   ],
+   "why": "biggest drop onto a moving target",
+   "evidence": "THG; LP4 4:31:30-4:31:48"
+  },
+  {
+   "id": "L7",
+   "name": "Mafioso roof line",
+   "sequence": [
+    "helipad roof",
+    "wooden kicker",
+    "opposite roof",
+    "drop",
+    "sloped walkway",
+    "street"
+   ],
+   "links": [
+    "kicker",
+    "ollie"
+   ],
+   "collectibles": [
+    "MAFIOSOS"
+   ],
+   "why": "roof layer then down",
+   "evidence": "THG; LP4 4:36:28"
+  }
+ ],
+ "guidance": [
+  "givers point at goals: Tollbooth Operator gestures toward the ferry (LP4 4:31:22-4:31:28); S visible from the S-K-A-T-E giver (4:26:36)",
+  "the El's red pillars and tracks are a navigational spine; E where the railtrack crosses above",
+  "cyan arrows over givers; red arrows for the pizza run",
+  "letters on visible structure (A red rail, T end of a wire); K hidden inside a building"
+ ],
+ "designLogic": [
+  "the finale is about scale: 900 off a raised drawbridge onto a moving ferry",
+  "rising geometry: the drawbridge leaves rise each Bridge Challenge step",
+  "one letter inside a building, one at the top of a climbing wire",
+  "the uphill wire teaches the grind-ollie boost",
+  "cash rides the hard line just after the T",
+  "the El is a second street (kicker to elevated rail)",
+  "targets strung on rails (ballplayers, black cars)",
+  "late-career thresholds (900k, 1.5M); last goal is a flatland ledge combo",
+  "the river is the failure plane under the bridge and ferry goals",
+  "skitching is the big-map answer (THG: skitch a car if low on time for the hydrants)",
+  "the city cast stages each challenge at a landmark, anchoring goals to places"
+ ],
+ "remakeChanges": [
+  "absent from THPS 3+4 (2025); only the 2002 PS2 design exists; no PS1 edition map"
+ ],
+ "transfer": [
+  "Bridge-to-boat crystal: tilting bridge leaf (rising moving platform) over water, boat-shaped moving platform below with the crystal on its top deck; charged ollie (~13.8 m at 23 m/s) sets reach; water respawn",
+  "Rising gap: one channel gap whose banks rise between stages; crystal over the top stage",
+  "Climbing cable with grind-ollie boosts (~2.4 m pop); crystal at the top, a shard just past it",
+  "Interior letter: shard or crystal inside a building through one of three doors (the middle one marked)",
+  "Elevated track shortcut: kicker to an El rail crossing the map; crystal at a junction of two tracks; optional passing-train hazard"
+ ],
+ "openQuestions": [
+  "pizza count and locations",
+  "does the ferry move or is it moored?",
+  "cash-icon positions beyond the T wire",
+  "locations of High art transfer, Modern Gap, Yellow to Yellow, Lip Extension",
+  "drawbridge leaf and ferry deck heights"
+ ]
+}

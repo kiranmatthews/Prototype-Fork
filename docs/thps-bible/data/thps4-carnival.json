@@ -1,0 +1,1312 @@
+{
+ "id": "thps4-carnival",
+ "game": "THPS4",
+ "level": "Carnival",
+ "location": "Rural county fair at dusk: 'Mullet County Fair with rides and games' (shop text, LP4 4:04:52); banner '2002 Deep South BareBack Championships' (LP4 4:11:36)",
+ "type": "bonus",
+ "typeNote": "bought secret level ($15,000) with its own 14-goal career list; no pro goals",
+ "careerPosition": {
+  "original2002": 8,
+  "of2002": 9,
+  "remake2025": null
+ },
+ "timeLimit": {
+  "PS2 2002": "none for the level; per-goal clocks (S-K-A-T-E 2:00; ride tickets ~0:30)"
+ },
+ "versions": [
+  "PS2 2002 (Neversoft)",
+  "not in THPS 3+4 (2025)",
+  "not in the VGMaps PS1 set"
+ ],
+ "sources": [
+  "LP4 4:04:52-4:24:24",
+  "THG pro-skater-4/carnival",
+  "THG gaps/pro-skater-4/carnival",
+  "WEB cheatcodes 33996",
+  "PS34 guide index (absence)",
+  "skipped (bot check): retroachievements.org, supercheats.com, walkthrough.freeola.com"
+ ],
+ "goals": [
+  {
+   "text": "Get a High Score: 750,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect S-K-A-T-E",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Amateur C-O-M-B-O letters",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Hit the tricks and ring the bell",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect 6 souvenir photos",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Do a 500,000 point combo",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Try not to boot",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Medal the Competition",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Get a Sick Score: 1,500,000 points",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Pro C-O-M-B-O letters",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Grind the whole coaster",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Nail a 900 on the Rocket ride",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Tear Down 4 Stockade Banners with Lip Trick",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "text": "Collect 10 ride tickets",
+   "version": "original (PS2 2002)"
+  }
+ ],
+ "size": {
+  "class": "medium",
+  "footprint": "estimate ~150-200 m (low confidence)",
+  "evidence": "S-K-A-T-E ~36 s across midway, swamp, rides, barn and arena roof (LP4 4:06:09-4:06:45)"
+ },
+ "zones": [
+  {
+   "id": "Z1",
+   "name": "Spawn yard and the midway",
+   "layer": "ground/counters",
+   "features": [
+    "farmhouse with porch",
+    "food stalls with grindable counters",
+    "bunting"
+   ],
+   "notes": "S visible from the giver at spawn"
+  },
+  {
+   "id": "Z2",
+   "name": "Swamp and logs",
+   "layer": "logs",
+   "features": [
+    "marsh grass",
+    "logs",
+    "wall"
+   ],
+   "notes": "K"
+  },
+  {
+   "id": "Z3",
+   "name": "The rides",
+   "layer": "moving rides",
+   "features": [
+    "spinning black bowl ride (Abductor) with twin QPs",
+    "ferris wheel",
+    "Rocket ride",
+    "Thundercups",
+    "rollercoaster"
+   ],
+   "notes": "moving vert and rail pieces"
+  },
+  {
+   "id": "Z4",
+   "name": "Barns",
+   "layer": "roofs ~4-6 m",
+   "features": [
+    "lower barn roof",
+    "kicker",
+    "barn bowl",
+    "barn opening under green banner"
+   ],
+   "notes": "T"
+  },
+  {
+   "id": "Z5",
+   "name": "Competition arena",
+   "layer": "arena/roof ring",
+   "features": [
+    "wooden roof ringing the arena",
+    "stockade banners",
+    "ramps"
+   ],
+   "notes": "E; vert comp; banners"
+  },
+  {
+   "id": "Z6",
+   "name": "Castle",
+   "layer": "walls",
+   "features": [
+    "castle walls with crests and flames",
+    "window",
+    "kicker onto the castle",
+    "bowl"
+   ],
+   "notes": "C-O-M-B-O B; tickets 9-10"
+  },
+  {
+   "id": "Z7",
+   "name": "Animal pens and photo cutouts",
+   "layer": "fences",
+   "features": [
+    "chicken/pig/cow/sheep/goat pens",
+    "cartoon cutouts"
+   ],
+   "notes": "photos"
+  },
+  {
+   "id": "Z8",
+   "name": "Car park with the bell",
+   "layer": "QPs",
+   "features": [
+    "two facing QPs",
+    "bell between"
+   ],
+   "notes": "Win a Prize"
+  },
+  {
+   "id": "Z9",
+   "name": "Portacabins and portaloos",
+   "layer": "wall",
+   "features": [
+    "portaloo row",
+    "portacabin outer wall"
+   ],
+   "notes": "ticket route"
+  }
+ ],
+ "landmarks": [
+  "ferris wheel",
+  "spinning bowl ride",
+  "rollercoaster",
+  "castle with flames",
+  "red barns",
+  "BareBack Championships arena",
+  "farmhouse",
+  "water tower"
+ ],
+ "spawn": {
+  "zone": "Z1",
+  "facing": "farmhouse; food stalls to the side",
+  "visibleCollectibles": [
+   "S"
+  ],
+  "notes": "S-K-A-T-E giver at the spawn ('Hey bub', LP4 4:06:09)"
+ },
+ "collectibles": [
+  {
+   "id": "TICKETS",
+   "type": "goal-object",
+   "label": "10 ride tickets (tape-equivalent)",
+   "version": "original (PS2 2002)",
+   "zone": "Z1/Z3/Z9/Z6",
+   "landmark": "drop-in -> spine obstacles -> coaster track -> portacabin wall -> Rocket ride -> castle -> bowl",
+   "layer": "ramps/track/walls/castle/bowl",
+   "heightM": "~1-5",
+   "launchFrom": "wooden drop-in",
+   "visibility": {
+    "firstSight": "from the drop-in; each ticket visible from the previous",
+    "fromSpawn": null,
+    "reads": "blue-yellow ticket discs with HUD counter",
+    "distanceFromFirstSightM": "line"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "drop-in",
+     "from": "wooden platform",
+     "to": "spine obstacles",
+     "geometry": "LP4 4:23:29"
+    },
+    {
+     "step": 2,
+     "move": "spine-transfer",
+     "from": "obstacle 1",
+     "to": "obstacle 2",
+     "geometry": "tickets 1-2"
+    },
+    {
+     "step": 3,
+     "move": "grind",
+     "from": "jump",
+     "to": "coaster track",
+     "geometry": "hop off after the corner (3)"
+    },
+    {
+     "step": 4,
+     "move": "ledge",
+     "from": "outer wall",
+     "to": "behind the portacabins",
+     "geometry": "4-6"
+    },
+    {
+     "step": 5,
+     "move": "ride",
+     "from": "Rocket ride",
+     "to": "hop down left",
+     "geometry": "7"
+    },
+    {
+     "step": 6,
+     "move": "kicker",
+     "from": "swerve left",
+     "to": "castle",
+     "geometry": "8-9"
+    },
+    {
+     "step": 7,
+     "move": "vert-air",
+     "from": "bowl",
+     "to": "last ticket",
+     "geometry": "opposite side"
+    }
+   ],
+   "moves": [
+    "spine-transfer",
+    "grind",
+    "ledge",
+    "kicker",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "linking at speed"
+   ],
+   "coupling": "coaster car on the track",
+   "failure": "goal restart (~0:30)",
+   "timeFromSpawnS": "~25 s for all 10 (LP4 4:23:29-4:23:50)",
+   "difficulty": 3,
+   "roles": [
+    "TEST",
+    "TEACH-LINE"
+   ],
+   "why": "the fair's one long line delivered as a tight timed run",
+   "evidence": "THG; LP4 4:23:21-4:23:50",
+   "confidence": "high",
+   "count": 10
+  },
+  {
+   "id": "FERRIS",
+   "type": "reach-goal",
+   "label": "Top of the ferris wheel (tape-equivalent)",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "ferris wheel top via a lip trick on a moving carriage",
+   "layer": "moving carriage lip",
+   "heightM": "~15-25 (estimate, low confidence)",
+   "launchFrom": "ground air into a carriage lip",
+   "visibility": {
+    "firstSight": "skyline landmark from most of the fair",
+    "fromSpawn": true,
+    "reads": "big wheel",
+    "distanceFromFirstSightM": "~50-100"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "vert-air",
+     "from": "ground",
+     "to": "carriage",
+     "geometry": "get some air"
+    },
+    {
+     "step": 2,
+     "move": "lip",
+     "from": "carriage",
+     "to": "wheel top",
+     "geometry": "hold the lip while the wheel turns"
+    }
+   ],
+   "moves": [
+    "vert-air",
+    "lip",
+    "moving-object"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "lip balance on a moving carriage",
+    "chained timed goal"
+   ],
+   "coupling": "moving wheel; Try not to boot chain",
+   "failure": "fall to ground; short step clocks",
+   "timeFromSpawnS": "LP4 4:08:36 start -> 4:09:12 wheel step",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "a height reached by letting a ride carry you",
+   "evidence": "THG; LP4 4:08:36-4:09:24",
+   "confidence": "medium"
+  },
+  {
+   "id": "S",
+   "type": "skate-letter",
+   "label": "S",
+   "version": "original (PS2 2002)",
+   "zone": "Z1",
+   "landmark": "over the food-stall counters",
+   "layer": "counter",
+   "heightM": "~1-2",
+   "launchFrom": "counter",
+   "visibility": {
+    "firstSight": "from the giver at spawn (LP4 4:06:09)",
+    "fromSpawn": true,
+    "reads": "letter over the stalls",
+    "distanceFromFirstSightM": "~15"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "spawn",
+     "to": "stall counters",
+     "geometry": "Counter Grind"
+    }
+   ],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "S-K-A-T-E 2:00",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:06:17 (~8 s)",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "K",
+   "type": "skate-letter",
+   "label": "K",
+   "version": "original (PS2 2002)",
+   "zone": "Z2",
+   "landmark": "gap between two swamp logs",
+   "layer": "logs",
+   "heightM": "~1-2",
+   "launchFrom": "log grind",
+   "visibility": {
+    "firstSight": "from the wall",
+    "fromSpawn": null,
+    "reads": "letter between logs",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "wall",
+     "to": "log",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "rail-transfer",
+     "from": "log",
+     "to": "next log (K)",
+     "geometry": "jump the gap"
+    }
+   ],
+   "moves": [
+    "grind",
+    "ollie"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:06:23",
+   "difficulty": 1,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "A",
+   "type": "skate-letter",
+   "label": "A",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "between two QPs in front of the spinning bowl ride",
+   "layer": "QP transfer air",
+   "heightM": "~3-5",
+   "launchFrom": "QP",
+   "visibility": {
+    "firstSight": "across the park",
+    "fromSpawn": null,
+    "reads": "letter between QPs",
+    "distanceFromFirstSightM": "~20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "transfer",
+     "from": "QP",
+     "to": "QP (A)",
+     "geometry": "540 Melon"
+    }
+   ],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:06:33",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "T",
+   "type": "skate-letter",
+   "label": "T",
+   "version": "original (PS2 2002)",
+   "zone": "Z4",
+   "landmark": "lower barn roof",
+   "layer": "roof",
+   "heightM": "~4-6",
+   "launchFrom": "kicker",
+   "visibility": {
+    "firstSight": "from the A landing",
+    "fromSpawn": null,
+    "reads": "letter on a roof",
+    "distanceFromFirstSightM": "~10"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "kicker",
+     "from": "opposite the ride",
+     "to": "lower barn roof",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "ride",
+     "from": "roof",
+     "to": "T",
+     "geometry": "turn left"
+    }
+   ],
+   "moves": [
+    "kicker"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "fall",
+   "timeFromSpawnS": "LP4 4:06:39",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "E",
+   "type": "skate-letter",
+   "label": "E",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "far side of the wooden roof ringing the arena",
+   "layer": "roof ring",
+   "heightM": "~5-8",
+   "launchFrom": "barn roof",
+   "visibility": {
+    "firstSight": "from the barn roof",
+    "fromSpawn": null,
+    "reads": "letter on the roof ring",
+    "distanceFromFirstSightM": "~20"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "ollie",
+     "from": "barn",
+     "to": "arena roof",
+     "geometry": ""
+    },
+    {
+     "step": 2,
+     "move": "grind",
+     "from": "roof ring",
+     "to": "E",
+     "geometry": "around to the far side"
+    }
+   ],
+   "moves": [
+    "ollie",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [],
+   "coupling": "same clock",
+   "failure": "fall into the arena",
+   "timeFromSpawnS": "LP4 4:06:45 (~36 s total)",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "COMBO",
+   "type": "combo-letter",
+   "label": "Amateur C-O-M-B-O",
+   "version": "original (PS2 2002)",
+   "zone": "Z1/Z6/Z4",
+   "landmark": "rail -> wall -> manual -> wall U-bend -> manual -> wallride onto castle wall -> through a window -> barn roof",
+   "layer": "walls/castle/roof",
+   "heightM": "varies",
+   "launchFrom": "rail",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters on walls",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "grind",
+    "manual",
+    "wallride"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "wallride into grind"
+   ],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 4:08:00-4:08:24",
+   "difficulty": 3,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "a 'through the window' beat inside a combo",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PCOMBO",
+   "type": "combo-letter",
+   "label": "Pro C-O-M-B-O",
+   "version": "original (PS2 2002)",
+   "zone": "Z3/Z4/Z6/Z7",
+   "landmark": "fence -> Thundercups base launch -> barn opening ledge -> castle fence -> sheep pens",
+   "layer": "ride base/ledges",
+   "heightM": "varies",
+   "launchFrom": "fence",
+   "visibility": {
+    "firstSight": "unknown",
+    "fromSpawn": null,
+    "reads": "letters",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "manual",
+    "vert-air",
+    "revert",
+    "grind"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "revert-manual"
+   ],
+   "coupling": "one combo",
+   "failure": "combo loss",
+   "timeFromSpawnS": "LP4 4:13:54-4:14:18",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "ride bases as launchers",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "PHOTOS",
+   "type": "goal-object",
+   "label": "6 souvenir photo spots",
+   "version": "original (PS2 2002)",
+   "zone": "Z1/Z4/Z7/Z9",
+   "landmark": "fences behind cartoon cutouts (Muscle Man, Spaceman, Superhero, Fat Bikini Woman, Elvis, chicken pens)",
+   "layer": "fences",
+   "heightM": "~1",
+   "launchFrom": "fences",
+   "visibility": {
+    "firstSight": "cutouts",
+    "fromSpawn": null,
+    "reads": "oversized cartoon boards",
+    "distanceFromFirstSightM": "varies"
+   },
+   "route": [],
+   "moves": [
+    "grind"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "goal clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:14:42-4:16:54",
+   "difficulty": 2,
+   "roles": [
+    "TEACH-LINE"
+   ],
+   "why": "decorations mark fences",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 6
+  },
+  {
+   "id": "BANNERS",
+   "type": "goal-object",
+   "label": "4 stockade banners",
+   "version": "original (PS2 2002)",
+   "zone": "Z5",
+   "landmark": "hanging over the arena; some angled",
+   "layer": "lip targets",
+   "heightM": "QP lip heights",
+   "launchFrom": "arena QPs",
+   "visibility": {
+    "firstSight": "in the arena",
+    "fromSpawn": null,
+    "reads": "banners",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [],
+   "moves": [
+    "lip",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [
+    "lip balance"
+   ],
+   "coupling": "goal clock",
+   "failure": "cheap",
+   "timeFromSpawnS": "LP4 4:22:00-4:22:48",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "arena dressing as targets",
+   "evidence": "THG; LP4",
+   "confidence": "high",
+   "count": 4
+  },
+  {
+   "id": "COASTER",
+   "type": "reach-goal",
+   "label": "Grind the whole coaster",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "coaster track to the bottom of the big hill",
+   "layer": "travelling rail",
+   "heightM": "track height",
+   "launchFrom": "track",
+   "visibility": {
+    "firstSight": "visible coaster",
+    "fromSpawn": true,
+    "reads": "track",
+    "distanceFromFirstSightM": "long"
+   },
+   "route": [
+    {
+     "step": 1,
+     "move": "grind",
+     "from": "track behind the car",
+     "to": "bottom of the big hill",
+     "geometry": "camera click ends it"
+    }
+   ],
+   "moves": [
+    "grind",
+    "moving-object"
+   ],
+   "speed": "high",
+   "skillGates": [
+    "long balance"
+   ],
+   "coupling": "coaster car on the track",
+   "failure": "restart",
+   "timeFromSpawnS": "LP4 4:19:54-4:20:36",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "travelling rail with a moving hazard",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "ROCKET",
+   "type": "reach-goal",
+   "label": "900 on the Rocket ride",
+   "version": "original (PS2 2002)",
+   "zone": "Z3",
+   "landmark": "inside a rocket car",
+   "layer": "moving vert",
+   "heightM": "unknown",
+   "launchFrom": "slope into the rocket",
+   "visibility": {
+    "firstSight": "ride",
+    "fromSpawn": true,
+    "reads": "star-painted rocket",
+    "distanceFromFirstSightM": "short"
+   },
+   "route": [],
+   "moves": [
+    "vert-air",
+    "moving-object"
+   ],
+   "speed": "maximum",
+   "skillGates": [
+    "special meter"
+   ],
+   "coupling": "moving ride",
+   "failure": "retry",
+   "timeFromSpawnS": "LP4 4:21:00-4:21:12",
+   "difficulty": 3,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4",
+   "confidence": "high"
+  },
+  {
+   "id": "BELL",
+   "type": "goal-object",
+   "label": "Bell between two QPs (Hit the tricks and ring the bell)",
+   "version": "original (PS2 2002)",
+   "zone": "Z8",
+   "landmark": "car park; transfer between facing QPs hitting the bell with listed tricks",
+   "layer": "QP transfer air",
+   "heightM": "see level file",
+   "launchFrom": "see level file",
+   "visibility": {
+    "firstSight": "see level file",
+    "fromSpawn": null,
+    "reads": "see level file",
+    "distanceFromFirstSightM": "unknown"
+   },
+   "route": [],
+   "moves": [
+    "transfer",
+    "vert-air"
+   ],
+   "speed": "moderate",
+   "skillGates": [],
+   "coupling": "see level file",
+   "failure": "see level file",
+   "timeFromSpawnS": "see level file",
+   "difficulty": 2,
+   "roles": [
+    "TEST"
+   ],
+   "why": "",
+   "evidence": "THG; LP4 4:12:24-4:13:12",
+   "confidence": "high"
+  }
+ ],
+ "gaps": [
+  {
+   "name": "Counter Grind",
+   "points": null,
+   "kind": "ledge",
+   "location": "food-stall counters",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "S"
+   ],
+   "evidence": "LP4 4:06:17; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Swamp escape",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "swamp logs",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "K"
+   ],
+   "evidence": "LP4 4:06:25; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Log",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "logs",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "K"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Stair Hop",
+   "points": null,
+   "kind": "over-object",
+   "location": "stairs",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [
+    "PHOTOS"
+   ],
+   "evidence": "LP4 4:16:30; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Rail 2 Rail",
+   "points": null,
+   "kind": "rail-transfer",
+   "location": "midway rails",
+   "moves": [
+    "grind"
+   ],
+   "onRouteOf": [
+    "COMBO"
+   ],
+   "evidence": "LP4 4:08:12; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Win a Prize",
+   "points": null,
+   "kind": "transfer",
+   "location": "bell between the car-park QPs",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [
+    "BELL"
+   ],
+   "evidence": "LP4 4:12:36; THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Thrill ride / Ride and Puke / WHAT A TRIP",
+   "points": null,
+   "kind": "other",
+   "location": "rides (inferred)",
+   "moves": [
+    "moving-object"
+   ],
+   "onRouteOf": [
+    "FERRIS",
+    "ROCKET"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Nice View up here",
+   "points": null,
+   "kind": "other",
+   "location": "a high point, probably the ferris wheel top (inferred)",
+   "moves": [],
+   "onRouteOf": [
+    "FERRIS"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "High Wire Act",
+   "points": null,
+   "kind": "wire",
+   "location": "unknown wire",
+   "moves": [
+    "wire"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Midway Transfer / Shine Bowl Transfer",
+   "points": null,
+   "kind": "transfer",
+   "location": "midway; a bowl",
+   "moves": [
+    "transfer"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "High lip gap / Low Lip Gap",
+   "points": null,
+   "kind": "lip",
+   "location": "lips (unknown)",
+   "moves": [
+    "lip"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Over the Barn Doors",
+   "points": null,
+   "kind": "over-object",
+   "location": "barn",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Shiny lights",
+   "points": null,
+   "kind": "other",
+   "location": "midway lights (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Chicken Sh.. Manual / Pig Stop Manual / 3 cow manual",
+   "points": null,
+   "kind": "manual",
+   "location": "animal pens",
+   "moves": [
+    "manual"
+   ],
+   "onRouteOf": [
+    "PHOTOS"
+   ],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Billy Goat Gap / Cock to ledge",
+   "points": null,
+   "kind": "ledge-to-ledge",
+   "location": "animal pens",
+   "moves": [
+    "ollie"
+   ],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Planter Pop / Ledge Hop",
+   "points": null,
+   "kind": "other",
+   "location": "planters; ledges",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "From The Charity Stripe / From Downtown",
+   "points": null,
+   "kind": "other",
+   "location": "basketball booths (inferred)",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  },
+  {
+   "name": "Almost Neversoft / Congrats on your first ollie",
+   "points": null,
+   "kind": "other",
+   "location": "joke gaps",
+   "moves": [],
+   "onRouteOf": [],
+   "evidence": "THG gaps",
+   "version": "original (PS2 2002)"
+  }
+ ],
+ "unlocks": [
+  {
+   "trigger": "buy 'Carnival Level $15000' in the Buy Secrets van",
+   "opens": "the level",
+   "neededFor": [
+    "all"
+   ],
+   "evidence": "LP4 4:04:52"
+  },
+  {
+   "trigger": "Try not to boot chain (food -> soda -> Abductor -> ferris wheel top -> Cups fence)",
+   "opens": "each step opens the next",
+   "neededFor": [
+    "FERRIS"
+   ],
+   "evidence": "LP4 4:08:36-4:09:24; THG"
+  },
+  {
+   "trigger": "coaster car runs on the track",
+   "opens": "moving hazard/rail",
+   "neededFor": [
+    "COASTER",
+    "TICKETS"
+   ],
+   "evidence": "THG"
+  },
+  {
+   "trigger": "ferris wheel and Rocket ride move",
+   "opens": "moving lip and vert surfaces",
+   "neededFor": [
+    "FERRIS",
+    "ROCKET"
+   ],
+   "evidence": "THG"
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "name": "Midway-to-arena letter line",
+   "sequence": [
+    "stall counters",
+    "railing",
+    "wall hop",
+    "swamp logs",
+    "twin QPs at the spinning ride",
+    "kicker to barn roof",
+    "barn to arena roof",
+    "roof ring"
+   ],
+   "links": [
+    "grind",
+    "ollie",
+    "vert-air",
+    "kicker"
+   ],
+   "collectibles": [
+    "S",
+    "K",
+    "A",
+    "T",
+    "E"
+   ],
+   "why": "~36 s tour of every layer",
+   "evidence": "THG; LP4 4:06:09-4:06:45"
+  },
+  {
+   "id": "L2",
+   "name": "Ticket run",
+   "sequence": [
+    "drop-in",
+    "spine x2",
+    "coaster track",
+    "outer wall",
+    "behind portacabins",
+    "Rocket ride",
+    "kicker to castle",
+    "bowl"
+   ],
+   "links": [
+    "spine-transfer",
+    "grind",
+    "kicker",
+    "vert-air"
+   ],
+   "collectibles": [
+    "TICKETS"
+   ],
+   "why": "long line in a 0:30 window",
+   "evidence": "THG; LP4 4:23:21-4:23:50"
+  },
+  {
+   "id": "L3",
+   "name": "Castle-window C-O-M-B-O",
+   "sequence": [
+    "rail",
+    "wall",
+    "manual",
+    "wall U-bend",
+    "manual",
+    "wallride onto castle wall",
+    "through window",
+    "barn roof"
+   ],
+   "links": [
+    "grind",
+    "manual",
+    "wallride"
+   ],
+   "collectibles": [
+    "COMBO"
+   ],
+   "why": "wallride-through-window move",
+   "evidence": "THG; LP4 4:08:00"
+  },
+  {
+   "id": "L4",
+   "name": "Thundercups pro line",
+   "sequence": [
+    "fence",
+    "manual",
+    "Thundercups base launch",
+    "revert-manual",
+    "barn opening",
+    "low ledge",
+    "manual",
+    "castle fence",
+    "manual to pens"
+   ],
+   "links": [
+    "manual",
+    "vert-air",
+    "revert",
+    "grind"
+   ],
+   "collectibles": [
+    "PCOMBO"
+   ],
+   "why": "ride bases as launchers",
+   "evidence": "THG; LP4 4:13:54"
+  },
+  {
+   "id": "L5",
+   "name": "Photo-spot fence circuit",
+   "sequence": [
+    "stall railing",
+    "barn wall",
+    "fence",
+    "portacabin fence",
+    "barn-corner fence",
+    "chicken pens"
+   ],
+   "links": [
+    "grind"
+   ],
+   "collectibles": [
+    "PHOTOS"
+   ],
+   "why": "fences behind cutouts",
+   "evidence": "THG; LP4 4:14:42"
+  },
+  {
+   "id": "L6",
+   "name": "Coaster grind",
+   "sequence": [
+    "coaster track behind the car",
+    "bottom of the big hill"
+   ],
+   "links": [
+    "grind",
+    "moving-object"
+   ],
+   "collectibles": [
+    "COASTER"
+   ],
+   "why": "travelling rail with hazard",
+   "evidence": "THG; LP4 4:19:54"
+  },
+  {
+   "id": "L7",
+   "name": "Ride chain (Try not to boot)",
+   "sequence": [
+    "food stall",
+    "soda",
+    "Abductor",
+    "ferris carriage lip to top",
+    "Cups slope",
+    "fence"
+   ],
+   "links": [
+    "grind",
+    "vert-air",
+    "lip",
+    "moving-object"
+   ],
+   "collectibles": [
+    "FERRIS"
+   ],
+   "why": "tour of the moving rides",
+   "evidence": "THG; LP4 4:08:36"
+  }
+ ],
+ "guidance": [
+  "goal giver at the spawn with the S in view (LP4 4:06:09)",
+  "ride landmarks (ferris wheel, spinning bowl, coaster, castle flames, water tower) anchor navigation",
+  "each ride ticket is visible from the previous one; HUD counter confirms",
+  "photo cutouts are oversized boards in front of fences",
+  "nothing structurally hidden: challenge is time"
+ ],
+ "designLogic": [
+  "a bought level without a tape whose hardest content is timed lines on moving rides",
+  "rides replace architecture as vert and rail pieces",
+  "the letter tour is short (~36 s) and teaches the vertical stack",
+  "tight clocks make failure cheap but frequent",
+  "moving surfaces carry you to height (ferris wheel lip), echoing Shipyard's crane, Zoo's elephant, Chicago's bridge",
+  "cutouts turn fences into collectibles",
+  "the castle window is the one 'through' moment inside a combo",
+  "arena dressing (banners) doubles as targets",
+  "late-career score thresholds (750k / 1.5M) assume a finished main career",
+  "easy line first (36 s S-K-A-T-E from spawn), hard line later on the same ground (0:30 ticket run)",
+  "the theme supplies the collectibles: bell, photo cutouts, ride tickets read in-world"
+ ],
+ "remakeChanges": [
+  "absent from THPS 3+4 (2025); only the 2002 PS2 design exists; no PS1 edition map"
+ ],
+ "transfer": [
+  "Ferris-wheel crystal: lip-stall on a rotating wheel carriage (moving platform) from the bottom; crystal above the top carriage",
+  "Coaster travelling rail with a moving car hazard following the hero; crystal at the bottom of the big hill",
+  "Ticket line: 25-30 s line of shards ending in the crystal across a bowl",
+  "Rocket-ride vert: swinging vert car with the crystal above the rim at the swing peak",
+  "Castle window: wallride onto a castle wall whose grind passes through a window into an inner yard with the crystal"
+ ],
+ "openQuestions": [
+  "cash-icon positions",
+  "ferris wheel height and carriage geometry",
+  "locations of High Wire Act, Nice View up here, Almost Neversoft, basketball gaps",
+  "photo-spot order relative to spawn"
+ ]
+}
