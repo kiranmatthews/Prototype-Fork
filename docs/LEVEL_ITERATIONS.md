@@ -11935,7 +11935,10 @@ Validation: input-only pilots finish with no deaths (main route 175.2 s, with
 the gem route 204.4 s, collector's line 217.6 s with every run crate taken;
 bonus round 39.5 s, 17 of 17). Crate report: 143 crates, 54 clusters, mean
 2.59, 9 % singles, 10 checkpoints. `npm run check:levels` passes; production
-build and hosting-size check pass (935,213,498 bytes). Reviewed in the browser
+build and hosting-size check pass, before the merge with main (935,213,498
+bytes) and after it (936,287,972 bytes). In this container the merged tree's
+first build ran out of memory in the release-packaging step at Node's default
+heap and passed with `--max-old-space-size=4096`. Reviewed in the browser
 in lite render at 720 across all sections and in full render at five places,
 with no console errors. No full suite run, no human play test yet, and no
 second independent review.
