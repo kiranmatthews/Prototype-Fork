@@ -766,7 +766,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 3.239,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 3.039,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -775,7 +777,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 3.237,
-    "lateralAtRailHeight": 1.964
+    "flightFromReleaseAtRailHeight": 3.037,
+    "lateralAtRailHeight": 1.964,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -784,7 +788,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 6.66,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 4.06,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -793,7 +799,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 6.66,
-    "lateralAtRailHeight": 3.248
+    "flightFromReleaseAtRailHeight": 4.06,
+    "lateralAtRailHeight": 3.248,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -802,7 +810,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 6.477,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 6.077,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -811,7 +821,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 6.475,
-    "lateralAtRailHeight": 1.964
+    "flightFromReleaseAtRailHeight": 6.075,
+    "lateralAtRailHeight": 1.964,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -820,7 +832,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 13.32,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 8.12,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -829,7 +843,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 13.32,
-    "lateralAtRailHeight": 3.248
+    "flightFromReleaseAtRailHeight": 8.12,
+    "lateralAtRailHeight": 3.248,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -838,7 +854,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 9.716,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 9.116,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -847,7 +865,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 9.712,
-    "lateralAtRailHeight": 1.964
+    "flightFromReleaseAtRailHeight": 9.112,
+    "lateralAtRailHeight": 1.964,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -856,7 +876,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 19.98,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 12.18,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -865,7 +887,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 19.98,
-    "lateralAtRailHeight": 3.248
+    "flightFromReleaseAtRailHeight": 12.18,
+    "lateralAtRailHeight": 3.248,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -874,7 +898,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 12.415,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 11.648,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -883,7 +909,9 @@
     "grinding": true,
     "apexAboveRailTop": 1.229,
     "alongAtRailHeight": 12.41,
-    "lateralAtRailHeight": 1.964
+    "flightFromReleaseAtRailHeight": 11.644,
+    "lateralAtRailHeight": 1.964,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie",
@@ -892,7 +920,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 25.53,
-    "lateralAtRailHeight": 0
+    "flightFromReleaseAtRailHeight": 15.564,
+    "lateralAtRailHeight": 0,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "grind-ollie-side",
@@ -901,7 +931,9 @@
     "grinding": true,
     "apexAboveRailTop": 2.301,
     "alongAtRailHeight": 25.53,
-    "lateralAtRailHeight": 3.248
+    "flightFromReleaseAtRailHeight": 15.564,
+    "lateralAtRailHeight": 3.248,
+    "note": "alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame"
   },
   {
     "scenario": "slipstream",

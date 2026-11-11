@@ -76,9 +76,9 @@ checked against this engine (Part XI). Part XV turns them into a review checklis
 4. **Show it, then make the player work out the way.** The crystal is seen before it can be reached,
    and the place it is seen from is not the place it is reached from. Seeing is free; reaching is the
    puzzle.
-5. **In this engine, show it from at or above its height.** The default camera cannot look up: a
-   crystal more than ≈ 3 m above the rider's floor is off screen (XI.2). Tease it from a higher
-   vantage (spawn deck, drop-in, roof across the street), or author the level's camera rig.
+5. **In this engine, show it from at or above its height.** The course camera is pitched down: with
+   no stick peek, a crystal more than ≈ 3 m above the rider's floor is off screen (XI.2). Tease it from
+   a higher vantage (spawn deck, drop-in, roof across the street), or author the level's camera rig.
 6. **Reuse the level's own lines, one layer higher.** The route is built from the lines, gaps and
    launchers the level already has, raised a layer: a roof line above the street line, a wire above
    the roofs. No geometry exists only for the crystal except, at most, its final perch.
@@ -106,11 +106,13 @@ checked against this engine (Part XI). Part XV turns them into a review checklis
 15. **Feed the landing back into the line.** After the crystal, the player lands on or rejoins a
     scoring line, not a dead end.
 16. **Unlocks are paid once and shown.** A trigger that opens the way shows its effect where it
-    happens (a door opens, a bridge deploys) and stays open for the run.
+    happens (a door opens, a bridge deploys). In this engine a death restores outline crates and spin
+    bridges to the last checkpoint, so bank a checkpoint after the trigger, or keep the trigger close
+    enough to repeat cheaply.
 17. **Escalate across the campaign.** Early crystals: two or three moves, visible, cheap to retry. Late
     crystals: six to ten steps, a blind commitment or a trigger, and a costlier miss.
 18. **Engine truths are design rules.** Ollie at the lip (kickers never launch a roll-off); vert airs
-    come home; wallride walls on the 90° grid; one wallride per air; balance is a ≈ 1.3 s clock.
+    come home; wallride walls on the 90° grid; one wallride per air; balance is a ≈ 1.2–1.4 s clock.
 19. **Keep the crystal off the main floor.** The fallback crystal 6 m before the gate is a
     placeholder, not a challenge. Every level should author its crystal.
 20. **Play it before you ship it.** Verify the intended route collects the crystal and the
@@ -134,8 +136,8 @@ The 2020 remake kept every THPS1 and THPS2 tape where it was.
 The goal list shapes what the tape is for. It shares a two-minute run with five or more other goals,
 so it is **a destination, not a hunt**: players take it early (the THPS1 guide tells you to grab the
 Warehouse tape first, `thps1-warehouse`) or on the way to something else (`thps1-mall`), and a TAS
-collects most tapes 3–36 s after leaving spawn (`thps1-downtown` 5 s, `thps1-downhill-jam` 3 s from the
-A, `thps1-streets` 36 s). What takes time for a human is finding and executing the route, not
+collects most tapes 5–36 s after spawn (`thps1-downtown` 5–7 s, `thps1-school` 9 s, `thps3-canada` 8 s,
+`thps1-streets` 36 s; the Airport's 64 s is the outlier). What takes time for a human is finding and executing the route, not
 travelling to it.
 
 ### I.2 What the developers said
@@ -145,7 +147,7 @@ Neversoft's own statements (DEVELOPER_EVIDENCE.md) frame the tape the same way:
 - Mick West compared collecting tapes to collecting stars in Mario 64, and the goal list was
   brainstormed against a drawn level; Scott Pease said the tapes-and-goals structure was taken from
   Diddy Kong Racing.
-- Pease (2000) said collectibles were hidden "all over the level and in hard-to-reach places" so the
+- Pease (2000) said THPS2's cash was hidden "all over the level and in hard-to-reach places" so the
   levels would be hard to clean out; Chris Rausch wanted constant discovery.
 - Aaron Cammarata (2001) and Pease (2002) described goals that change a level's structure — opening
   secret areas, adding geometry that "will change the lines". That is the THPS3–4 unlock tape
@@ -164,7 +166,7 @@ Across the 27 tape records (22 levels; the THPS4 levels have a PS1 and a 2025 ve
 - **Not in clutter.** Big street levels hide the tape by *district* (the walled-off Brooklyn Banks in
   `thps2-ny-city`, Carlsbad in `thps2-school-ii`), never under props or in a dark corner.
 - **Not in a dead end.** The landing feeds back into a scoring line: Monster Grind's landing in the
-  Warehouse, Around the Horn below the Canada tape, the bench and plaza after NY's rebar (IV.6).
+  Warehouse, Around the Horn below the Canada tape, the bench and plaza after NY's rebar (VI.4).
 - **Not a speed test for its own sake.** Most tape routes need moderate speed; THPS1 routes take it
   from height. Maximum vert belongs to the bonus levels (Chopper Drop's height ladder).
 
@@ -172,12 +174,12 @@ Across the 27 tape records (22 levels; the THPS4 levels have a PS1 and a 2025 ve
 
 | Game | What changed | Examples |
 |---|---|---|
-| THPS1 (1999) | Tapes over the level's signature feature; speed from height; routes of 2–10 steps; difficulty climbs 1 → 5 over the career | Warehouse sky box, School awning, Mall rods, Downtown roof gap, Downhill Jam podium, Streets Pagoda |
+| THPS1 (1999) | Tapes over the level's signature feature; speed from height; routes of 6–10 steps; difficulty climbs 1 → 5 over the career | Warehouse sky box, School awning, Mall rods, Downtown roof gap, Downhill Jam podium, Streets Pagoda |
 | THPS2 (2000) | Larger levels and districts; the first object trigger (Hangar's helicopter); tapes on the level's signature wire or rail | Hangar helipad, NY Banks rebar, Philadelphia wire, Venice High Wire |
 | THPS3 (2001) | Goal unlocks gate the tape route (Canada's generator rope, LA's earthquake); vertical "upper loops" in rafters and window lattices; wallride and wallie steps | Foundry rafters, Canada mountain track, Airport lattice, LA tower |
 | THPS4 PS1 (2002) | Tapes as non-goal pickups on roofs and wires | College wire, Kona ridge, Alcatraz water tower |
 | THPS 1+2 (2020) | Every tape kept; added guidance (intro camera, painted arrows, near-miss gaps, pickups on the tape line) | Warehouse room camera, Downtown arrow, Streets ski-jump stripes, Mall Across The Light Beam |
-| THPS 3+4 (2025) | Tapes added to THPS4 levels, on or beside the tallest landmark, shown in the level-start flythrough | College clock-tower wire, San Francisco hotel terrace, Alcatraz window |
+| THPS 3+4 (2025) | Tapes added to THPS4 levels, on or beside each level's central structure or tallest landmark; College's and Alcatraz's are shown in the level-start flythrough | College clock-tower wire, San Francisco hotel terrace, Alcatraz window |
 
 ## Part II — Showing the tape
 
@@ -187,7 +189,7 @@ Across the 27 tape records (22 levels; the THPS4 levels have a PS1 and a 2025 ve
   sightline (`thps2-venice-beach`, ≈ 30 m ahead), 21 are recorded as not visible, and the rest (PS1
   pickups) are unknown; none is confirmed visible from spawn in the longplays.
   Letters are not much different (12 of 260).
-- **First seen on the route, 5–40 m away (median ≈ 20 m).** Of the 23 tapes with a known first
+- **First seen on the route, 5–80 m away (median ≈ 20 m).** Of the 23 tapes with a known first
   sighting, 10 appear only once the player is on the route itself (on the launch surface or its
   approach), 7 are seen from below, 2 in the remake's level-start flythrough, and one each after an
   unlock, from a vantage, from spawn and as a silhouette from the floor.
@@ -209,7 +211,7 @@ smaller collectibles and named gaps **point at it**.
 | **Seen from its launch** | It appears only when the player is already committed to the right surface | `thps2-school-ii` (1 s after landing on the library roof), `thps1-downtown` (bowl exit), `thps2-ny-city` (while grinding the second bar), `thps4-shipyard` (on arriving on the roof) |
 | **On the main sightline** | A teaser in the direction the level invites you to go | `thps2-venice-beach` |
 | **Revealed by an unlock** | A trigger opens a door or district; the tape glows the moment you enter | `thps2-hangar` (the west door shows night sky; the icon appears on the pad) |
-| **Intro flythrough** | The remakes' level-start camera passes the tape | `thps4-college`, `thps4-alcatraz` (2025); the 2020 Warehouse intro shows the inside of the sky box |
+| **Intro flythrough** | The remake's level-start camera passes the tape | `thps4-college`, `thps4-alcatraz` (2025); the 2020 Warehouse intro shows the inside of the sky box |
 | **Lit pointer** | A light, sign or painted mark points at the launch | Downtown's painted arrow (2020), Streets' striped ski jump (2020), Downhill Jam's yellow-lit rails |
 
 ### II.3 Pointers: the small things that say "this way"
@@ -236,9 +238,9 @@ subway, the planter launch, the A).
 
 ### II.5 What this means here
 
-This engine's camera cannot look up (XI.2), so two THPS techniques need care: **seen from below**
-does not work in the default rig (a crystal more than ≈ 3 m above the rider's floor is off screen),
-and the **intro flythrough** does not exist. The other techniques transfer directly:
+This engine's course camera is pitched down (XI.2), so two THPS techniques need care: **seen from
+below** does not work in the default rig (with no stick peek, a crystal more than ≈ 3 m above the
+rider's floor is off screen), and the **intro flythrough** does not exist. The other techniques transfer directly:
 
 - Show the crystal **from a vantage at or above its height**: the spawn deck, a drop-in, a roof across
   the street, the top of the run-in, an earlier ledge. THPS already does this whenever a tape is
@@ -269,10 +271,12 @@ Three things stand out:
    tape hangs exactly where a ridden surface stops. The player sees the end of the awning, the end of
    the rebar, the end of the roof, and the tape says "keep going".
 2. **Wires dominate.** A wire is a line, a balance test and a pointer at once, and it lifts the route
-   into a layer the floor cannot reach. Wires, rails, poles and rafters hold 10 of the 27 tapes, the
-   most common perch in all four games, and 24 of the 26 known routes include a grind of some kind.
-3. **The landmark is the crown.** Every THPS 3+4 remake tape is on or beside its level's tallest
-   landmark, and most THPS1–2 tapes are over the level's signature feature (the Warehouse halfpipe,
+   into a layer the floor cannot reach. Wires, rails, poles and rafters hold 10 of the 27 tapes — the
+   most common perch overall and in THPS2 and THPS3 (THPS1 favours mid-air and rooms, the THPS4
+   versions roofs) — and 24 of the 26 known routes include a grind of some kind.
+3. **The landmark is the crown.** The THPS 3+4 remake tapes sit on or beside each level's central
+   structure or tallest landmark (clock tower, hotel terrace, cell block, the central warehouse roofs,
+   the column's wires), and most THPS1–2 tapes are over the level's signature feature (the Warehouse halfpipe,
    the School awning, the Mall's hanging rods, the Streets Pagoda).
 
 ### III.2 Height
@@ -299,7 +303,7 @@ higher than the surface the route reaches.**
 
 ### III.3 Above vert
 
-Only two tapes need a straight vert air (Hangar, London 2025), and both are easy airs (2–3 m above
+Only two tapes need a straight vert air (Hangar, London 2025), and both are easy airs (2–4 m above
 the coping). THPS keeps big vert for the bonus levels: Chopper Drop's helicopter and its 100/200/400
 height ladder. When vert does appear on a tape route it is usually a *speed source* (Downtown's roof
 bowl, School II's quarter pipe, Canada's log loader) or a *transfer* (the Warehouse's Over the Pipe).
@@ -309,8 +313,8 @@ bowl, School II's quarter pipe, Canada's log loader) or a *transfer* (the Wareho
 Tapes in mid-air are only ever collected by a committed move: you cannot stop under them. School II's
 tape hangs in the gap between the library roof and the East Wing; Downtown's between two roofs over
 the start alley; NY's off the end of a drooping rebar. The generosity is in the catch, not the
-target: Downhill Jam's tape sits over four parallel rails, Streets' over a whole glass roof that you
-fall through, NY's landing is a plaza.
+target: Downhill Jam's tape sits over four parallel rails (the guide: hit any of them and "you're home
+free"), Streets' over a whole glass roof that you fall through, NY's landing is a plaza.
 
 ### III.5 Rooms, districts and podiums
 
@@ -329,11 +333,11 @@ them have a visible boundary (glass, wall, the high road's edge) that says "insi
 | Distinct moves per route | 26 | median 4 | 1 (Shipyard 2025: roll off a duct) – 7 (LA, Suburbia) |
 | Route length (THPS1, measured on the maps) | 6 | 100–160 m | 40–50 m (Warehouse) – 160 m (School) |
 | Human time, natural start → tape | 15 | 15–30 s | 6–8 s (Warehouse) – 45 s (Mall, from spawn) |
-| TAS time from spawn | 6 | 5–36 s | 3 s (Downhill Jam from the A) – 64 s (Airport) |
+| TAS time from spawn | 10 | 8–36 s | 5–7 s (Downtown) – 64 s (Airport) |
 
-The length grows across a career, not across a game: THPS1 goes from 2–3 moves (Warehouse) to 5–6
-(School) to 6–7 including a timed hop (Mall), and Downtown, Downhill Jam and Streets run 9–10 steps
-with six distinct moves each.
+The length grows across a career, not across a game: THPS1 goes from 6 steps and 3 distinct moves
+(Warehouse) to 8 steps and 5 moves (School) and 8 steps with a timed hop (Mall); Downtown, Downhill Jam
+and Streets run 9–10 steps with 5–6 distinct moves each.
 
 ### IV.2 The chain every long route follows
 
@@ -391,12 +395,13 @@ School II).
 
 - **One commit per route.** Before it, misses are cheap and retries short; after it, the attempt is
   decided.
-- **Blind commits come late.** The Mall's ollie onto the rods is "almost blind" (the rods appear only
-  once airborne); Downhill Jam's fastplant leaves "only seconds to make adjustments"; NY's second
-  rebar is hidden until you are on the first. These are career positions 3, 6 and 4.
-- **The catch is generous.** Four parallel rails under the Downhill Jam tape ("any rail = tape"), a
-  whole glass roof under Streets', a plaza under NY's, the halfpipe under the Warehouse room (a short
-  jump lands you in a second route to the room).
+- **Blind commits come after the first two levels.** The guide says you launch onto the Mall's rods
+  "almost blindly" (they appear only once airborne); Downhill Jam's fastplant leaves "only seconds to
+  make adjustments"; NY's second rebar is hidden until you are on the first. These are career
+  positions 3, 6 and 4.
+- **The catch is generous.** Four parallel rails under the Downhill Jam tape (any of them catches
+  it), a whole glass roof under Streets', a plaza under NY's, the halfpipe under the Warehouse room (a
+  short jump lands you in a second route to the room).
 
 ### IV.6 Two ways up, and the expert shortcut
 
@@ -407,8 +412,8 @@ upper loop reachable from both ends, and Venice has a precise ground route (tabl
 forgiving roof route. Tool-assisted runs show the expert shortcuts the designers left open: a
 wallride up Downtown's alley wall straight to the roofs, a fastplant from below onto the Mall's rods,
 a boneless-wallride-wallie climb of LA's tower. **Access, not distance, sets a tape's difficulty**
-(T2's observation): the TAS reaches Downtown's tape 5 s after spawn because it found a different way
-up, not because it skated faster.
+(`thps1-downtown` design logic): the TAS reaches Downtown's tape 5 s after spawn because it found a
+different way up, not because it skated faster.
 
 ### IV.7 One layer higher
 
@@ -421,7 +426,7 @@ earthquake lap runs round. The goals **rehearse the tape on the same geometry on
 
 ### V.1 Lines
 
-The 36 levels record 322 designed lines (7–11 per level); four in five (79%) carry at least one
+The 36 levels record 322 designed lines (6–11 per level); four in five (79%) carry at least one
 collectible.
 Lines are linked mostly by grinds, ollies and manuals, with reverts and wallrides joining vert to
 street. The tape route is always one of the level's lines — often the one the level is famous for
@@ -447,7 +452,7 @@ lie on a collectible's route, and roof and wire gaps are on one about half the t
 2. **They name the secret.** Downtown's T 2 T, Secret Tunnel Entrance and Roof 2 Roof; School II's
    "2 Da Roof!!!" and "Flyin' The Flag!"; Skate Heaven's "Feed Me!!!".
 3. **They grade one object.** The Warehouse taxi launches to three destinations worth 600, 500 and
-   1,000; Airport's Economy/Business/1st Class rails; Tokyo's Wire Ridin' 1–3. One prop serves beginners
+   1,000; Airport's Economy/Business/1st Class rails; LA's Wire Ridin' 1–3. One prop serves beginners
    and experts, and the tape is usually the top rung.
 
 ### V.3 Transfers
@@ -478,7 +483,7 @@ rods.
 | **A letter shares the tape's space** | Warehouse T on the tape's arc; School S and K under the awning; Mall A under the rods; Downtown T in the skyway |
 | **A letter marks the access** | Downtown T marks the tunnel; Downhill Jam A marks the branch to the high road; Hangar E over the door that opens |
 | **A letter teaches the tape's move earlier** | College K on a power line, San Francisco T on a wire over water (2025); Airport's letter above the same doorway launcher |
-| **Near spawn the letters teach the launcher; the last letters lead to the tape's district** | THPS3 career levels (T7) |
+| **Near spawn the letters teach the launcher; the last letters lead to the tape's district** | THPS3 career levels (`thps3-airport`, `thps3-los-angeles`) |
 
 Letters sit lower than tapes (median ≈ 3 m against ≈ 6.8 m) and are rarely visible from spawn (12 of
 260), but they are on lines: half of all letters are reached by a grind and a third by a vert air.
@@ -488,9 +493,10 @@ Letters sit lower than tapes (median ≈ 3 m against ≈ 6.8 m) and are rarely v
 The THPS1 object goals each teach one family of moves on five different props: the Warehouse boxes
 teach five ways onto a ledge, School's tables teach grinds, the Mall's directories are smash-through
 gates. THPS2's cash is hidden "in hard-to-reach places" (Pease) and the 100% cash goal pulls players
-into every secret area; THPS3's stat points and decks move with the skater group, while the tape
-never moves (T7). Bonus icons (100/200/500 discs) are **signposts** — the THPS1 guide says the 500s
-mark the 1,000-point lines — and one often floats in a tape's launch air (the Mall's 200).
+into every secret area; THPS3's letters, stat points and decks move with the skater group, while the
+tape never moves (`thps3-airport`). Bonus icons (100/200/500 discs) are **signposts** — the THPS1 guide
+calls them that, and in School the 500s sit on the 1,000-point lines — and one often floats in a tape's
+launch air (the Mall's 200).
 
 ### VI.3 C-O-M-B-O letters
 
@@ -565,16 +571,18 @@ spend one of three heats exploring. The crystal analogue: a skate arena's crysta
 | THPS trigger | Engine equivalent |
 |---|---|
 | Break glass, smash through | crates and breakable scenery on the line; a crate wall as the "glass" of a room |
-| Ride an object to open a door | `!` crate in a group (makes `outline` crates solid: a staircase or bridge appears), `spinbridge` (spin to deploy timber; latches until reset) |
+| Ride an object to open a door | `!` crate in a group (makes `outline` crates solid: a staircase or bridge appears), `spinbridge` (spin to deploy timber; latches until a death or reset) |
 | Prove a move to get through | a `trickgate` is a wall with a condition: its aperture lets you through only while you perform its named deck trick, on every crossing; a `trickrail` can be ground only once its trick has started |
 | One-way door into a secret area | `returnportal` (one-way, optionally `airOnly` — enter it in the air), `crumble` pads that fall away behind you |
 | Moving object | `mover` platforms, travelling `rail`s, `ropeswing` |
 
 Keep the THPS rules: the trigger on a visible prop, the effect visible where it happens, trigger and
-crystal close in route, and the opening held for the run (outline crates stay solid once their `!`
-crate has made them; a spin bridge without a `hold` time stays deployed until the level resets). A
-trick gate is different: it is a test repeated at every crossing, not a door that stays open, so use
-it as a skill gate on the route rather than as the unlock.
+crystal close in route. Persistence works differently here: outline crates stay solid and a spin
+bridge without a `hold` time stays deployed **until the player dies**, and a death restores both to
+the state saved when the last checkpoint was banked (`Level.reset`). So either bank a checkpoint after
+the trigger (the THPS "paid once") or keep the trigger close enough to the crystal that repeating it is
+cheap. A trick gate is different again: it is a test repeated at every crossing, not a door that stays
+open, so use it as a skill gate on the route rather than as the unlock.
 
 ## Part VIII — The level around the collectible
 
@@ -608,7 +616,7 @@ at the top of the screen 3 s after spawn"; NY S on the first wall line).
 
 Large levels split into districts joined by a few entries, and hide a tape in one district. NY City's
 Banks have three entries at three prices; School II's Carlsbad is entered from the tape's own roof
-gap ("a miss drops you into that new area anyway"); Downhill Jam's high road branches at the A and
+gap (a miss drops you into the new district anyway); Downhill Jam's high road branches at the A and
 rejoins at valve 4. The rule is the same at every scale: **close in space, far in route** — Downtown's
 tape hangs directly over the spawn alley and is the last stop of a spiral route.
 
@@ -625,11 +633,14 @@ Recorded tape difficulties (1–5, with reasons in the level files):
 | THPS3 | Foundry 3 → Canada 4 → Suburbia 3 → Airport 3 → LA 4 |
 | THPS 3+4 (THPS4 levels) | College 2 → San Francisco 3 → Alcatraz 3 → Shipyard 2 → London 3 |
 
-Difficulty rises fastest at the start of THPS1 and then plateaus at 3–4, with the hardest tapes in the
-middle-late career (Downhill Jam 5, Streets 4, School II 4, LA 4). What grows is the *kind* of
-challenge: THPS2's first three tapes go knowledge (Hangar's trigger) → commitment (School II's roof
-gap) → chaining (Venice's 6–8-move route); THPS3's go one launch plus balance (Airport) → an event plus
-a four-link roof chain (LA) → a full cable lap to a secret area (Tokyo's sign).
+Difficulty rises fastest at the start of THPS1 and then plateaus at 3–4. The hardest tapes are spread
+through the careers: School II (4) and Canada (4) are both second levels; Downhill Jam (5), Streets (4)
+and LA (4) come later. What grows is the *kind* of challenge: THPS2's tapes go knowledge (Hangar's
+trigger) → commitment (School II's roof gap) → a hidden district (NY) → chaining (Venice's 8-step
+route); THPS3's go one route with no gate (Foundry) → a switch on the route (Canada) → an errand across
+the level and an indoor route (Suburbia), with one launch plus balance at the Airport and an event plus
+a four-link roof chain in LA. The competitions take it further: a full cable lap opens Tokyo's secret
+area.
 
 ### IX.2 What a miss costs
 
@@ -638,7 +649,7 @@ a four-link roof chain (LA) → a full cable lap to a secret area (Tokyo's sign)
 | Before the commit | seconds; the route's start is close | Hangar blade miss 3–5 s; Warehouse short jump 5–10 s (lands in the halfpipe, itself a second route); NY hop 8–10 s; Philadelphia 5–10 s |
 | After the commit | the climb back | School awning 15–20 s; Venice 20–30 s back to the highest roof; Downtown 40–50 s via truck, tunnel and bowl; LA a 3–5 storey fall |
 | On a one-way course | the run | Mall and Downhill Jam: a new run, 60–75 s back to the branch |
-| In a 10-minute remake run | proportionally little | THPS4 remake tape legs take 18–32 s of 600 |
+| In a 10-minute remake run | proportionally little | THPS4 remake tape legs take 15–40 s of 600 |
 
 The pattern is consistent: **misses are cheap at the launch and expensive after the commitment, and
 they get more expensive with altitude and with career position.** Water is the fail plane in San
@@ -660,8 +671,8 @@ thing to keep the same"). What it added is guidance:
 
 - an intro camera shot inside the Warehouse's sky box;
 - a painted arrow on Downtown's launch ramp and stripes on Streets' ski jump;
-- near-miss gaps that reward almost making it (the Mall's Across The Light Beam, School's Down The
-  Awning);
+- new gaps that score the tape lines: a near-miss gap beside the Mall's rods (Across The Light Beam)
+  and a manual gap on School's awning route (Down The Awning);
 - new pickups placed on the tape lines (a School textbook above the AC unit).
 
 The lesson is that the 1999 silhouettes were considered too subtle for new players, but the routes
@@ -669,9 +680,10 @@ were not too hard: the fix was to point, not to simplify.
 
 ### X.2 THPS 3+4 (2025): tapes for the THPS4 levels
 
-Iron Galaxy added tapes to the THPS4 levels and placed every one on or beside the level's tallest
-landmark (the College clock tower, the San Francisco hotel's top terrace, the Alcatraz cell block and
-water tower), shown in the level-start flythrough. Several reuse 2002 secrets: the PS1 port's tapes sat
+Iron Galaxy added tapes to the THPS4 levels and placed them on or beside each level's central
+structure or tallest landmark (the College clock tower, the San Francisco hotel's top terrace, the
+Alcatraz cell block and water tower, Shipyard's central warehouse roofs, London's column wires); the
+College and Alcatraz level-start flythroughs pass the tape. Several reuse 2002 secrets: the PS1 port's tapes sat
 on the same hotel ledge and water tower, and the College tower wire was already a named gap. The
 routes avoid THPS4's new moves and use grinds, quarter-pipe transfers, wallride + wallie, a window rail
 and a teleport door. Iron Galaxy also reworked Alcatraz's S-K-A-T-E line around whether players
@@ -682,8 +694,8 @@ naturally reach where the line starts, and kept bugged gaps because players reme
 1. **Routes age well; signposts do not.** Both remakes kept the geometry and changed the pointers.
 2. **Show the crown early.** A flythrough is the remakes' answer to "where is it?"; this game's
    answer is a vantage on the route (II.5).
-3. **The start of a line must be where players already go.** Iron Galaxy moved a letter line for that
-   reason; a crystal route that starts somewhere nobody rides will not be found.
+3. **The start of a line must be where players already go.** Iron Galaxy reworked Alcatraz's letter
+   line for that reason; a crystal route that starts somewhere nobody rides will not be found.
 
 ## Part XI — This engine: the crystal, the verbs and how far they reach
 
@@ -707,7 +719,7 @@ pumped wallies).
 | Death | a soft death **keeps** a crystal taken this run; the rider respawns still holding it | probe `crystal-death` |
 | Banking | it is saved only when the run **reaches the gate** (`campaign.commitClear`); a restart before the gate puts it back | `src/main.ts` |
 | Absent | boss levels have none; skate races get no fallback crystal; time-trial and combo runs hide it | `allowsCrystal`, `skateRace`, `runMode` |
-| Stopwatch | every level with a gate floats a time-trial stopwatch just off the racing line at its spawn; touching it starts a timed run, which hides the crystal — keep crystal routes that leave the spawn clear of it | `Level.placeClock` |
+| Stopwatch | standard courses float a time-trial stopwatch just off the racing line at the spawn; touching it starts a timed run, which hides the crystal. In the campaign the stopwatch appears only after the level has been cleared with its crystal banked, and touching the crystal locks it, so it cannot spoil a first attempt; in editor and lab levels it is live from the start | `Level.placeClock`, `Campaign.runModesUnlocked` |
 
 Three consequences shape every challenge in this bible:
 
@@ -727,8 +739,9 @@ Three consequences shape every challenge in this bible:
 THPS follows the skater with a low, nearly level chase camera, so a tape hanging high above a pipe or
 a rooftop is visible from the street below. This game's course camera is a Crash rig: it sits behind
 and above the rider, **pitched down**, and its height is anchored to the ground under the rider, not
-to the rider (`src/main.ts` camera update; `camAirLift` 0 by default). With the default rig (`camDist`
-5.05 m, `camHeight` 5.1 m, `camPitch` 25.35°, `camFov` 49°) the top edge of the frame is 0.85°
+to the rider (`src/main.ts` camera update; `camAirLift` 0 by default; on a rail it anchors to the rider,
+which helps wire crystals). With the default rig (`camDist` 5.05 m, `camHeight` 5.1 m, `camPitch`
+25.35°, `camFov` 49°), no stick input and at or below cruise speed, the top edge of the frame is 0.85°
 *below* horizontal. A crystal is on screen only while its centre is below that edge:
 
 > `p.y + 1.75 ≤ groundY + camHeight + (camDist + d) · tan(camFov/2 − camPitch)`
@@ -737,11 +750,17 @@ to the rider (`src/main.ts` camera update; `camAirLift` 0 by default). With the 
 | Camera rig (dist / height / pitch / fov) | Highest visible crystal `p.y` above the rider's floor, crystal 0 m ahead | 10 m | 20 m | 40 m |
 |---|---|---|---|---|
 | Default course rig (5.05 / 5.1 / 25.35° / 49°) | **3.3** | 3.1 | 3.0 | 2.7 |
-| Country Club style (11.5 / 7.3 / 18° / 66°) | 8.6 | 11.3 | 14.0 | 19.4 |
+| Country Club style (11.5 / 7.3 / 18° / 66°) | 8.6 | 11.3 | 14.0 | 19.3 |
 | Coconut Cart Rally (13 / 7.5 / 18° / 68°) | 9.5 | 12.3 | 15.2 | 20.9 |
 | Cave Collapse (15 / 7 / 18° / 55°) | 7.8 | 9.4 | 11.1 | 14.5 |
-| Rooftop Relay (11.5 / 7 / 30° / 66°) | 5.9 | 6.4 | 6.9 | 8.0 |
+| Rooftop Relay (11.5 / 7 / 30° / 66°) | 5.9 | 6.4 | 6.9 | 7.9 |
 | Example low skate rig (6.5 / 3.2 / 12° / 60°) | 3.6 | 6.8 | 10.1 | 16.6 |
+
+Two things widen the default frame a little, and neither should be relied on for a tease: the right
+stick **peeks** the camera up by up to 7° (`src/cameraLook.ts`; then the default row becomes 3.9 /
+5.0 / 6.0 / 8.2 m), and above cruise speed the lens **widens** by up to 6° at top speed
+(`camSpeedFovBoost`; 3.5 / 3.9 / 4.3 / 5.0 m). Design to the no-peek row; treat the peek as a way for a
+curious player to confirm what the level already promised.
 
 The rig starts to rise only when the rider climbs more than `maxRise` ≈ 3.45 m above the floor under
 it (default lens), so during a big air the frame follows the rider with a lag and the crystal at the
@@ -749,10 +768,11 @@ apex sits near the top edge.
 
 What this means for showing a crystal THPS-style:
 
-- **In the default rig a crystal is seen from at or above its own height, never from below.** A
-  crystal 6 m up a wall is invisible from the floor beside that wall at any distance. Tease it from a
-  vantage at its level or higher: the spawn deck, a drop-in, a roof across the street, an earlier
-  ledge, the far rim of a pit, or the top of the run-in to the launcher (Part II.6).
+- **In the default rig a crystal is seen from at or above its own height, not from below.** Without
+  a peek, a crystal 6 m up a wall is invisible from the floor beside that wall at any distance (with a
+  full peek, only from 20 m or more away). Tease it from a vantage at its level or higher: the spawn
+  deck, a drop-in, a roof across the street, an earlier ledge, the far rim of a pit, or the top of the
+  run-in to the launcher (Part II.5).
 - **Levels built as skate arenas should author a rig.** `cameraRig` and `cameraAirLift` are level
   data, and several courses already set them (Country Club, Coconut Cart Rally, Cave Collapse, the
   Codex lab's Rooftop Relay). A rig with an 18° pitch and a 66° lens
@@ -767,14 +787,14 @@ What this means for showing a crystal THPS-style:
 | THPS verb | Here | Engine rule that matters for crystals |
 |---|---|---|
 | Ollie | charged ollie | full charge ≈ 1.78 m feet apex on the flat (tap ≈ 0.6 m); 9.36 m long from cruise 12 m/s, 13.8 m at the 23 m/s charge maximum; holding Jump accelerates the board (GAMEPLAY_DESIGN_BIBLE XV.3) |
-| Kicker / launch ramp | `ramp` | **you must ollie at the lip**: rolling off a kicker never launches (0 of 12 roll-offs left the ground); a kicker of rise *h* needs ≳ √(90·h) m/s to crest |
+| Kicker / launch ramp | `ramp` | **you must ollie at the lip**: rolling off a kicker never launches (0 of 12 roll-offs left the ground); with a charged ollie (charging accelerates the board) every probed kicker, 0.8–1.8 m high, launched from 12 m/s and none from 9 m/s |
 | Grind, ledge, rail transfer | `rail`, platform and road edges (grind by default), crate rows, `rope`, travelling rails, `trickrail` | snap radius 2.1 m; balance drifts (0.7) — with no stick correction the rider tips off after ≈ 1.2–1.4 s, losing 70% of its speed |
-| Grind exit (ollie off a rail) | Jump on a rail | tap pops 1.23 m, full 2.30 m above the rail top; holding a direction on the release frame and the frame before throws you 1.96 m (tap) or 3.25 m (full) sideways |
+| Grind exit (ollie off a rail) | Jump on a rail | tap pops 1.23 m, full 2.30 m above the rail top; the charge is held on the rail (a full exit needs ≈ 0.43 s, 5.2 m at 12 m/s, before the release); holding a direction on the release frame and the frame before throws you 1.96 m (tap) or 3.25 m (full) sideways |
 | "Perfect" long grind | level flag `perfectGrindBoost` | ride ≥ 90% of a rail and you leave at 48 m/s whatever your entry: 14.4 m rolling off a 1 m rail, ≈ 27.5 m ollieing off |
 | Manual | manual / nose manual | links lines across flat; minimum 3.5 m/s |
 | Vert air | `vertramp` (half, quarter, bowl, pool), analytic halfpipes | pumping builds speed swing by swing; straight airs land back where they left; carved airs drift along the coping (XI.4) |
-| Transfer (pipe to pipe) | spine transfer; carve off a pipe end | spine: only between **two analytic halfpipes on the same axis whose copings touch** (the far mouth within 0.7 m of a point 1 m past the near coping), by a second Jump release in the air with the stick over the ridge; the rider is mirrored onto the far face at the same height. Pipe end: a carved air that drifts past a pipe's end becomes plain flight; landing on another transition, steep face, rail or wall saves it, flat ground is a bail |
-| Transfer (pipe to deck or roof) | carve off the end of a quarter pipe | a straight vert air lands back on the same face, also from a decked quarter pipe; a 40–45° carve off the **end** of a mesh-tracked quarter pipe flies on and lands on a deck or roof beside that end (recipe C8). Kickers and banks launch ballistic street transfers |
+| Transfer (pipe to pipe) | spine transfer; carve off a pipe end | spine: only between **two analytic halfpipes on the same axis whose copings touch** (the far coping at most 0.7 m beyond the near one, and the rider within the far pipe's length), by a second Jump release in the air with the stick over the ridge; the rider is mirrored onto the far face at the same height. Pipe end: a carved air that drifts past a pipe's end becomes plain flight; landing on another transition, steep face, rail or wall saves it, flat ground is a bail |
+| Transfer (pipe to deck or roof) | carve off the end of a quarter pipe | a straight vert air lands back on the same face, also from a decked quarter pipe; a carve off the **end** of a mesh-tracked quarter pipe flies on and can land on a deck or roof beside that end (40° at 18 m/s and 45° at 23 m/s landed; 45° at 15 m/s carried only ≈ 2.5 m; recipe C8). Kickers and banks launch ballistic street transfers |
 | Lip trick, revert | lip stall, revert | revert links a vert landing into a manual line |
 | Wallride, wallie | wallride, wallie | straight walls on the 90° grid, or wall paths drawn with `pts`; a wall yawed off the grid is built from axis-aligned collision slabs and an angled approach reads as a head-on smack. Catch needs air, Grind held, ≥ 7.5 m/s and facing within 76° of the wall; one wallride per air (land or grind to re-arm); 12 s maximum |
 | Wallplant, boneless, acid drop | — | absent. Acid drop = roll into the pipe from its deck; boneless = on-foot jump where the level allows walking; wallplant = wallie |
@@ -801,7 +821,7 @@ Design to the margins in XI.6, not to these limits.
 
 A pumped session from 9 m/s climbs 7.16 → 7.90 → 8.39 → 8.55 → 8.76 m above the coping and then
 holds ≈ 8.3–8.8 m: **the vert ceiling is ≈ 8.7 m above the coping (≈ 12.3 m above the floor, crystal
-reach ≈ 13.6 m)** and it takes 3–4 swings (≈ 4–6 s) to get there. Coasting from 12 m/s never clears
+reach ≈ 13.6 m)**, reached on the third to fifth air, 8–12 s after dropping in. Coasting from 12 m/s never clears
 the coping. Rows 6 and 9 are slower starts that pump for several swings before the first air, which is
 why their first air is higher than row 12's.
 
@@ -839,10 +859,14 @@ deck at the far end of a pipe) wants a carve.
 
 #### Grind exits (any speed; distances scale with speed)
 
-| Exit | Apex above rail top | Crystal reach above rail top | Distance at rail height, 6 / 12 / 18 / 23 m/s | Sideways throw |
+| Exit | Apex above rail top | Crystal reach above rail top | Flight from the release to rail height, 6 / 12 / 18 / 23 m/s | Sideways throw |
 |---|---|---|---|---|
-| Tap | 1.23 m | 2.6 m | 3.2 / 6.5 / 9.7 / 12.4 m | 1.96 m |
-| Full | 2.30 m | 3.6 m | 6.7 / 13.3 / 20.0 / 25.5 m | 3.25 m |
+| Tap | 1.23 m | 2.6 m | 3.0 / 6.1 / 9.1 / 11.6 m | 1.96 m |
+| Full | 2.30 m | 3.6 m | 4.1 / 8.1 / 12.2 / 15.6 m | 3.25 m |
+
+The charge is held while still grinding: a full exit spends ≈ 0.43 s on the rail between the press and
+the release (2.6 / 5.2 / 7.8 / 10.0 m at those speeds), so start charging that far before the rail's
+end. The apex comes about 60% of the way through the flight (≈ 4.9 m after the release at 12 m/s).
 
 #### Slipstream (`perfectGrindBoost`; 24 m rail ridden end to end)
 
@@ -882,7 +906,7 @@ staying on the wall, so the pump is limited by how high and how fast you arrive:
 The wallie carries the rider **along** the wall (it lands 3.4–25.9 m downstream) and only 0.9–2.8 m
 out from the face. A wallie crystal sits close to the wall and downstream of the release, never
 straight out from it. The kicker-into-wallride-into-pumped-wallie chain is the tallest thing this
-engine does: at full speed it out-reaches a pumped halfpipe session by 5–6 m.
+engine does: at full speed it out-reaches a pumped halfpipe session by about 6.5 m.
 
 #### Bounce and on foot
 
@@ -902,16 +926,17 @@ engine does: at full speed it out-reaches a pumped halfpipe session by 5–6 m.
    coping takes a carve (along the pipe, or off the end of a quarter pipe onto a deck beside it), a
    spine (into a touching halfpipe), a halfpipe-end fly-off (into another transition, rail or wall), or
    a street launcher.
-4. **Walls on the grid.** A wallride wall runs along X or Z, or is a `pts` wall path. Approach at 20–60°,
-   not head-on and not grazing.
+4. **Walls on the grid.** A wallride wall runs along X or Z, or is a `pts` wall path. The engine accepts
+   any approach within 76° of straight in (head-on included) and turns the speed along the wall; the
+   probe measured 35°, and a glancing approach beyond 76° is not caught.
 5. **One wallride per air.** Land or grind to re-arm; a chain of walls needs a landing or a rail
    between them.
-6. **Balance is a clock.** An uncorrected grind lasts ≈ 1.3 s; long rails ask the player to balance.
+6. **Balance is a clock.** An uncorrected grind lasts ≈ 1.2–1.4 s; long rails ask the player to balance.
    A crystal at the end of a long rail tests balance as much as the grind.
 7. **A crystal touched counts.** Mid-air pickups over drops are allowed; plan the respawn so the gate
    stays reachable.
-8. **Out of frame is out of mind.** With the default rig, anything more than ≈ 3 m above the rider's
-   floor is off screen (XI.2).
+8. **Out of frame is out of mind.** With the default rig and no peek, anything more than ≈ 3 m above
+   the rider's floor is off screen (XI.2).
 
 ### XI.6 Margins
 
@@ -964,8 +989,9 @@ pattern. Recipes (Part XIV) are played-through examples.
 - Give the pipe a flat run-in so the player arrives with speed, and enough length (≥ 20 m) that a
   carve does not run out of pipe.
 
-**Rule out the cheap way.** Coasting at the 23 m/s maximum reaches only 4.5 m above the coping; a
-straight first air from 12 m/s only 0.6 m. Above 5 m over the coping, only pumping gets there.
+**Rule out the cheap way.** Coasting at the 23 m/s maximum peaks 4.5 m above the coping on the first
+air and ≈ 5.0 m after a few airs, so it collects crystals up to ≈ 6.3 m above the coping; a pumped first
+air from 12 m/s peaks only 0.6 m above it. Above ≈ 6.5 m over the coping, only pumping gets there.
 
 **Camera.** A crystal 7 m above a 3.6 m coping is ≈ 11 m above the pipe floor: invisible from the
 floor in the default rig. Tease it from a deck above the pipe, or author a rig (C1 uses 11.5 / 7.3 /
@@ -982,11 +1008,11 @@ passes through it.
 **Build.**
 - A kicker (`ramp`) at the edge, with a speed pad or a drop-in before it. Ollie at the lip: roll-offs
   never launch.
-- **To test speed, put the crystal on the far half of the arc.** A kicker's height barely changes
-  with speed (1.2 × 4 m: 3.6 m at 12 m/s, 3.8 m at 18 m/s) but its distance doubles (8.5 → 17.8 m). C2
-  puts the crystal 12 m past the lip at `p.y` 4.0: the 18 m/s arc collects it; the 12 m/s arc falls
-  short into the pit.
-- **To test the ollie, put it at the apex** (≈ 40% of the flight).
+- **To test speed, put the crystal beyond where a too-slow arc lands.** A kicker's distance grows with
+  speed much faster than its height (1.2 × 4 m: 3.6 → 3.8 m high but 8.5 → 17.8 m long from 12 to
+  18 m/s). C2 puts the crystal 12 m past the lip at `p.y` 4.0, near the 18 m/s apex and well past the
+  12 m/s landing: the fast arc collects it; the slow arc falls short into the pit.
+- **To test the ollie, put it at the apex**, near the middle of the flight, close to the lip.
 - Size the gap so the intended arc lands with margin: landing distances in XI.4.
 
 **Camera.** Start the route from a deck above the kicker floor (C2's 3 m start deck) so the crystal
@@ -1002,12 +1028,13 @@ ride the whole line and pop at the right moment.
 
 **Build.**
 - A full grind exit pops 2.30 m above the rail top (tap 1.23 m). Put the crystal **2.6–3.3 m above the
-  rail top** to need the full exit (C3: 3.3 m), and **4–6 m past the end** at 12 m/s (the apex of a full
-  exit is ≈ 4.9 m on).
+  rail top** to need the full exit (C3: 3.3 m), and **4–6 m past the release** at 12 m/s (the apex of a
+  full exit is ≈ 4.9 m on). The charge is held on the rail, ≈ 5 m at 12 m/s, so the player starts it
+  well before the end.
 - Hang the rail's end over a drop so the line has to be ridden out (C3's rail runs 7 m past the deck
   edge).
-- Size the landing so a tap exit falls safely short and a full exit lands (C3: the tap lands short of
-  the crystal on the far deck; the full exit lands past it).
+- Size the landing so both exits land safely and only the full one collects (C3: the tap passes under
+  the crystal and lands on the far deck; the full exit passes through it).
 
 **Variants.** A sideways exit throws the rider 1.96 m (tap) or 3.25 m (full): a crystal beside the
 line's end, not in front, asks for a sideways pop. The NY rebar adds a blind early hop between two bars
@@ -1045,8 +1072,9 @@ anything a jump reaches.
 - **Place the crystal in the wallie lane**: 1–2 m off the face, downstream of the catch by (wall speed
   × pump time) + (0.7 × wall speed × ≈ 0.6 s). Never straight out from the wall.
 
-**THPS note.** The San Francisco remake tape and the Airport lattice use wallride + wallie as the last
-step of a climb, not as the whole route. Use P5 for one decisive step.
+**THPS note.** The San Francisco remake tape uses wallride + wallie as the last step of a climb, not as
+the whole route (the Airport's designed route is a quarter-pipe transfer onto its lattice; wallride +
+wallie appear there only in the remake run and the TAS). Use P5 for one decisive step.
 
 ### P6 · High wire
 
@@ -1058,12 +1086,13 @@ on the wire; the challenge is getting on, and staying on.
   above the surface you board from, reachable by a charged ollie with Grind held (C6).
 - Crystal **on the wire** (`p.y` ≈ wire height + 0.4–0.6 m), collected while grinding, placed
   **past the point where balance starts to matter**: at 12 m/s an uncorrected grind tips off after
-  ≈ 1.3 s, ≈ 16 m. Philadelphia's tape is 60% along its wire.
+  ≈ 1.4 s, ≈ 17 m. Philadelphia's tape is 60% along its wire.
 - Under the wire: a drop the player can recover from (a plaza, a fountain bowl) or a lethal one for
   late levels.
 
-**Camera.** The crystal is in frame from the boarding roof (it sits ≈ 1 m above it) and invisible from
-the plaza below in the default rig; the *wire* is the long-range pointer.
+**Camera.** The crystal is in frame from the boarding roof (1.6 m above it in C6) and invisible from
+the plaza below in the default rig; on the wire the camera rides with the rider; the *wire* is the
+long-range pointer.
 
 ### P7 · Roof drop
 
@@ -1072,7 +1101,8 @@ charged ollie off the edge carries the rider through it.
 
 **Build.**
 - Crystal at roof height (`p.y` = roof top), **5–8 m past the edge** (C7: 7 m). A charged ollie at
-  12 m/s passes at feet ≈ 9.6 m (roof 8 m); a roll-off has dropped 6–7 m by then.
+  12 m/s passes at feet ≈ 9.6 m (roof 8 m); a roll-off has fallen far below roof height by then and
+  never comes within reach.
 - The climb reuses the level: a kicker onto a lower roof, a wire up (P6), a wallride (P5).
 
 **Variants.** Shipyard's 2025 tape inverts it: the tape is just *below* a duct's end and the skill is
@@ -1085,8 +1115,11 @@ charged ollie off the edge carries the rider through it.
 feature. The player sees the room, flies into it, smashes in.
 
 **Build.**
-- The room's floor 1–2.5 m above the coping or kicker apex that reaches it (Warehouse: 1–2.5 m over the
-  far coping). The "glass" is a wall of crates on the line; the crystal 1 m above the room floor.
+- Reach the room with a kicker or bank arc whose apex clears the room's floor by ≥ 0.5 m, or with a
+  carve off a quarter pipe's end (C8): a straight vert air comes home and cannot enter a room set back
+  from the coping. (In the Warehouse the room floor is 1–2.5 m over the far coping, reached by a
+  transfer over the pipe.) The "glass" is a wall of crates on the line; the crystal 1 m above the room
+  floor.
 - The start of the route is the highest floor of the level (Warehouse's start room), so height becomes
   speed with no pumping.
 
@@ -1113,8 +1146,8 @@ at different prices; the crystal rewards finding it.
 **Build.**
 - Trigger on a visible prop: a `!` crate that materialises outline crates into a staircase or deck
   (`codex-lab` already does this), a `spinbridge` the player spins open.
-- Show the effect where it happens; keep it open for the run (outline crates stay solid; a spin
-  bridge without `hold` stays down).
+- Show the effect where it happens. A death restores outline crates and spin bridges to the last
+  checkpoint, so bank a checkpoint after the trigger or keep the trigger close to the crystal.
 - Trigger-to-crystal time ≈ 10–15 s (Hangar: 12 s).
 - Make goals converge on the trigger (Hangar's hangtime kickers reach the helicopter blades).
 
@@ -1138,7 +1171,8 @@ between them. Carve up the face toward the end and fly off the end onto the roof
 **Build.**
 - A decked, mesh-tracked quarter pipe (not a plain analytic halfpipe), 10–14 m long, ending 2–4 m short
   of a roof at coping height.
-- Carve at 40–45° from 15–23 m/s toward the end (C8: 18 m/s, 40°, lands 8.4 m past the ramp end).
+- Carve at about 40° from 18 m/s toward the end (C8: lands 8.4 m past the ramp end); 45° from 23 m/s
+  also landed in a probe run, 45° from 15 m/s carried only ≈ 2.5 m past the end.
 - Crystal over the gap, **2–3 m past the ramp end** (out of reach of a straight air at the very end)
   and ≈ 1.5–2 m above the coping (C8: `p.y` 5.5 with a 3.6 m coping).
 
@@ -1158,13 +1192,13 @@ routes as the crate and geometry audits. Set against Parts I–X, the gap is wid
 
 ### XIII.1 The numbers side by side
 
-| Measure | THPS secret tapes (25) | This game's crystals (21 in play) |
+| Measure | THPS secret tapes (27 records) | This game's crystals (21 in play) |
 |---|---|---|
 | Where on the route | at the level's signature feature or tallest landmark; mid-route or on a branch | median **99%** of the way to the gate; 11 of 21 within 20 m of it |
 | Height above the floor below | 3–25 m, mostly 5–8 m | median **1.3 m** above the route floor (highest 4 m) |
 | Collectable by standing still | none | **13 of 21** from the route floor itself, 15 of 21 from somewhere |
-| Easiest way in | a 4–6-move route; grind, ollie off an edge, vert air, transfer | walk 13, ollie 5, grind 3 |
-| Moves a route needs | grind ≈ 85%, ollie ≈ 70%, vert ≈ 50%, transfer ≈ 35%, kicker ≈ 30% | no crystal needs a jump, double jump, ledge grab, vert air or wallride as its easiest way |
+| Easiest way in | a median 7-step route; grind, ollie off an edge, vert air, transfer | walk 13, ollie 5, grind 3 |
+| Moves a route needs | any grind 92%, ollie 62%, vert 54%, transfer 38%, kicker 31% (26 known routes) | no crystal needs a jump, double jump, ledge grab, vert air or wallride as its easiest way |
 | Launchers near the perch | always (it is the route) | **no kicker within 25 m of any crystal**; a vert coping within 25 m of 3 |
 | Seen before reached | from the launch, from below, or from a vantage, ≈ 20 m out | 17 of 21 in the camera frame from the approach (median lead 39 m) |
 | Off the main line | most tapes are a layer above or a district beside it | 15 on the path, 3 off-line, 3 detours |
@@ -1178,7 +1212,7 @@ has, and the levels already contain the parts: 24 of 27 courses have authored ra
 
 | Course | What it does right | THPS parallel |
 |---|---|---|
-| `jungle` (Jungle Ruins) | the crystal sits on the fallen-trunk grind rail over a 68 m ravine, 14% into the course; the grind is the only way to it | the Mall's rods: a high line over a drop, the line is the route |
+| `jungle` (Jungle Ruins) | the crystal sits on the 68 m fallen-trunk grind rail across the ravine, 14% into the course; the grind is the only way to it | the Mall's rods: a high line over a drop, the line is the route |
 | `treehouse-trail` | on a single taut rope across a missing bridge over the river | Philadelphia's wire |
 | `tribal-run` | on the final crossing rail over a pit, 1.85 m up | NY's rebar line |
 | `rooftop-relay` | on a branch roof 36 m off the route, two ollie gaps out, 4 m above the route floor | a district beside the main line (NY Banks, School II) |
@@ -1201,9 +1235,9 @@ Each diagnosis names the law (Part 0) it breaks and the fix (Part XII patterns, 
    route sample, 47 rails, 38 kickers, yet its crystal is a walk-in 65 m before the gate). Breaks law 6:
    the level's lines are not used. *Fix:* put the crystal at the end of one of those rails (P3) or over
    one of its kickers' far arcs (P2); recipes C2 and C3.
-4. **No launcher near any crystal.** Breaks law 9. *Fix:* every crystal route needs a readable
-   launcher in view of the perch: a quarter pipe at the end of a run-up, a kicker with a pad, a rail
-   pointed at the gap, a lit wall.
+4. **Almost no launcher near the crystals** (no kicker within 25 m of any crystal; a vert coping near
+   only 3). Breaks law 9. *Fix:* every crystal route needs a readable launcher in view of the perch: a
+   quarter pipe at the end of a run-up, a kicker with a pad, a rail pointed at the gap, a lit wall.
 5. **The fallback crystal** (`hollowwake-descent` has no authored crystal; the engine's
    6 m-before-gate fallback lands it 6 m *past* the gate because the course's camera lane is authored
    from the finish backwards). Breaks law 19. *Fix:* author a crystal; do not rely on the fallback for
@@ -1236,7 +1270,8 @@ The cheapest wins, in order:
 4. The **near-misses** (`custard-creek`, `codex-lab`): move the crystal 0.5 m to one side of the
    envelope so the intended move is unambiguous.
 
-The audit tool re-measures every change (`node tools/crystal-placement-report.mjs --levels <id>`).
+The audit tool re-measures every change (`node tools/crystal-placement-report.mjs --levels <id> --json
+<scratch>.json --md <scratch>.md`; without the output paths it overwrites the committed audit).
 
 ### XIII.5 Raw material per course
 
@@ -1310,8 +1345,9 @@ ladder (Part III.3).
 - **Camera**: 11 m is far above the default rig's 3.3 m (XI.2); the recipe sets a rig that shows the
   crystal from 10 m away (visible up to 11.3 m there). Without a rig, tease it from a deck above the
   pipe.
-- **Tune**: crystal 7.4 m above the floor = one 15 m/s pumped air (early career); 12.5 m = a full
-  pumped session (expert; reach 13.6 m).
+- **Tune**: crystal ≈ 6.5 m above the floor = one 15 m/s pumped air (reach 6.9 m, early career);
+  ≈ 8.5 m = one 18 m/s pumped air (reach 8.8 m); 12.5 m = a full pumped session (expert; reach
+  13.6 m).
 
 **C2 · Drop-in kicker over a pit** — THPS precedent: School II's roof launch, the tape "in the air in
 the gap" (Part III.4), and the Warehouse drop-in tease.
@@ -1331,9 +1367,9 @@ the gap" (Part III.4), and the Warehouse drop-in tease.
   rolling off the kicker without an ollie never launches and falls.
 - **Camera**: from the start deck the crystal is 1 m above the rider's floor and in frame; on the
   run-in it is 4 m up and out of frame, so the kicker and the pad are the cue.
-- **Why on the far half**: the 1.2 m kicker's *height* hardly changes with speed (3.6 m at 12 m/s,
-  3.8 m at 18 m/s); its *distance* doubles. A crystal past the apex tests speed; one at the apex would
-  only test the ollie.
+- **Why past the slow arc**: the 1.2 m kicker's *height* hardly changes from 12 to 18 m/s (3.6 → 3.8 m)
+  but its *distance* doubles (8.5 → 17.8 m). The crystal sits near the fast arc's apex and well past
+  where the slow arc lands, so it tests speed; a crystal close to the lip would only test the ollie.
 
 **C3 · Rail-end pop** — THPS precedent: NY City's rebar (tape just past the end of the bar), School's
 awning end (Part III.2).
@@ -1346,10 +1382,12 @@ awning end (Part III.2).
 
 - **Route**: grind at 12 m/s, charge Jump on the rail and release just before its end. Collected at
   feet 3.37 m; lands on the far deck.
-- **Ruled out**: a tap exit at the rail end peaks at 2.38 m and lands safely short of the crystal (a
-  miss that does not kill); a charged ollie from the deck edge without the grind falls into the pit.
+- **Ruled out**: a tap exit at the rail end peaks at 2.38 m, passes under the crystal and lands safely
+  on the far deck (a miss that does not kill); a charged ollie from the deck edge without the grind
+  falls into the pit.
 - **Tune**: the full exit adds 2.30 m above the rail top whatever the speed, so the crystal height is
-  fixed by the rail; its distance past the end scales with grind speed (4.9 m to the apex at 12 m/s).
+  fixed by the rail; its distance past the release scales with grind speed (4.9 m to the apex at
+  12 m/s). The charge is held on the rail for ≈ 0.43 s, so the player starts it ≈ 5 m before the end.
 
 **C4 · Slipstream across a chasm** — THPS precedent: long-rail lines that end at a gap (Part V.4); this
 engine's perfect-grind launch.
@@ -1365,12 +1403,12 @@ engine's perfect-grind launch.
   48 m/s; collected at feet 2.37 m, 12 m past the end; lands 27 m out on the far deck.
 - **Ruled out**: rolling off the end (apex 1.25 m) passes under the crystal and drops into the chasm;
   joining halfway (no boost, 12 m/s) falls short.
-- **Note**: the boost needs ≥ 90% of the rail, so the rail's first metre is the skill gate. Make the
+- **Note**: the boost needs ≥ 90% of the rail, so the rail's first 10% (2.4 m here) is the skill gate. Make the
   start of the rail easy to catch (low, at the end of a run-up) and the chasm obviously too wide for an
   ordinary ollie (22 m against 9–14 m).
 
 **C5 · Kicker, wallride, pumped wallie** — THPS precedent: San Francisco's hotel terrace (wallride +
-wallie to the tape), Kona's fence wallride (Part III.5).
+wallie to the tape), Kona's fence wallride (Appendix B).
 
 ```js
 { t: 'speedpad', p: [-6.9, 0.05, -10.2], s: [3, 0.1, 3], speed: 18, yaw: -35 },  // on the kicker line, 12 m before it
@@ -1402,7 +1440,7 @@ Venice Beach's High Wire (Part III.1).
 - **Ruled out**: from the plaza under it, a charged ollie peaks at 1.6 m.
 - **Note**: a 30 m wire at 12 m/s lasts 2.5 s, past the ≈ 1.3 s an uncorrected grind survives: the wire
   is a balance test, which is exactly what Philadelphia's uphill wire asks for. The crystal is visible
-  from roof A (0.6 m above its floor) and invisible from the plaza (6.6 m above it).
+  from roof A (1.6 m above its floor) and invisible from the plaza (6.6 m above it).
 
 **C7 · Roof drop through the crystal** — THPS precedent: Venice Beach's original route (drop off the
 highest roof through the tape), School's awning end (Part III.4).
@@ -1431,13 +1469,14 @@ a roof or deck beside it (Part V.3), channel and hip gaps.
   pump. The air drifts along the coping, leaves the end of the ramp, passes through the crystal (feet
   4.23 m) and lands on the roof 8.4 m past the ramp end. No bail.
 - **Ruled out**: a straight pumped air at the very end of the ramp (even at 23 m/s, feet 10.75 m) comes
-  back down on the face and never gets within reach; a 15 m/s carve falls into the gap, short of both
-  the crystal and the roof.
+  back down on the face and never gets within reach; a 45° carve from 15 m/s passes under the crystal
+  and drops into the gap, short of the roof.
 - **Engine rule**: this works on *mesh-tracked* vert (quarter pipes, bowls, anything that is not a plain
   analytic halfpipe). A carved air off the end of an analytic halfpipe instead counts as a pipe-end
   fly-off and bails on flat ground unless it lands on another transition, a rail or a wall (XI.3).
-- **Tune**: 40–45° carves worked from 15–23 m/s; 55–60° approaches clipped the roof's side or never
-  reached vert air. The roof's height sets the landing; keep it at or below the coping.
+- **Tune**: 40° from 18 m/s (verified here) and 45° from 23 m/s (a probe run) landed on the roof; 45°
+  from 15 m/s fell short; 55–60° approaches clipped the roof's side or never reached vert air. Test
+  other speed and angle pairs before relying on them. Keep the roof at or below the coping.
 
 ## Part XV — Review checklist
 
@@ -1459,9 +1498,9 @@ numbers are.
 **Show**
 
 5. Is it seen before it can be reached, from a different place than it is reached from? (law 4)
-6. Is it in the camera frame from that place? With the default rig, `p.y` ≤ the viewing floor + 3.3 m
-   at close range (3.0 m at 20 m). If not, add a vantage at or above its height, or author the level's
-   `cameraRig`. (law 5; XI.2)
+6. Is it in the camera frame from that place? With the default rig and no stick peek, `p.y` ≤ the
+   viewing floor + 3.3 m at close range (3.0 m at 20 m). If not, add a vantage at or above its
+   height, or author the level's `cameraRig`. (law 5; XI.2)
 7. Is the launcher readable on its own for the stretch where the crystal is out of frame? (law 9)
 8. Do smaller pickups (wumpa lines, crate rows, a colored gem) sit on the route or at its start? Is
    there an icon-equivalent in the launch air? (law 8; II.3)
@@ -1477,9 +1516,11 @@ numbers are.
 12. Does every height and distance sit inside the margin for its career band (75% / 85% / 95% of the
     measured maximum)? (law 11; XI.6)
 13. Does the route respect the engine rules: ollie at the lip, vert airs come home, wallride walls on
-    the 90° grid approached at 20–60°, one wallride per air, balance on long rails? (law 18; XI.5)
+    the 90° grid approached within 76° of straight in, one wallride per air, balance on long rails?
+    (law 18; XI.5)
 14. Is there a second way up — an easier route, or an expert shortcut? (law 14; IV.6)
-15. Does a route that starts at the spawn stay clear of the time-trial stopwatch? (XI.1)
+15. In a lab or editor level, does a route that starts at the spawn stay clear of the time-trial
+    stopwatch? (In the campaign it appears only after the crystal is banked.) (XI.1)
 
 **Fail and exit**
 
@@ -1487,13 +1528,14 @@ numbers are.
 17. If the crystal hangs over a lethal drop, is there a checkpoint before the commit and is the gate
     reachable from the respawn? (law 13; XI.1)
 18. Does the landing rejoin a line toward the gate? (law 15; VI.4)
-19. If an unlock is needed: is the trigger on a visible prop, its effect visible where it happens, held
-    for the run, and close in route to the crystal? (law 16; VII.2)
+19. If an unlock is needed: is the trigger on a visible prop, its effect visible where it happens,
+    close in route to the crystal, and protected by a checkpoint after it (a death restores outline
+    crates and spin bridges to the last checkpoint)? (law 16; VII.2, VII.4)
 
 **Campaign**
 
-20. Does the crystal's difficulty fit its place in the island and the campaign (one or two moves early;
-    four to eight, a blind commit or a trigger late)? (law 17; IX.1)
+20. Does the crystal's difficulty fit its place in the island and the campaign (two or three moves
+    early; six to ten steps, a blind commit or a trigger late)? (law 17; IX.1)
 21. Is it the only crystal-like challenge in the level, so the level has one clear "hardest thing"?
     (law 1)
 
@@ -1721,17 +1763,17 @@ Each level file holds the full route-by-route map; the JSON twin is in `thps-bib
 |---|---|---|
 | Crystal pickup | feet between `p.y − 1.34` and `p.y + 3.0`; centre within 1.5 m per horizontal axis | XI.1 |
 | Crystal reach of a move | feet apex + 1.34 m | XI.1 |
-| Default camera: highest visible crystal | `p.y` ≤ viewing floor + 3.3 m (0 m ahead), + 3.0 m (20 m ahead) | XI.2 |
+| Default camera: highest visible crystal | `p.y` ≤ viewing floor + 3.3 m (0 m ahead), + 3.0 m (20 m ahead), with no stick peek at cruise speed; a full 7° peek raises this to 3.9 / 6.0 m | XI.2 |
 | Flat full ollie / tap | 1.78 m / ≈ 0.6 m feet apex; 9.4 m long at 12 m/s, 13.8 m at 23 m/s | XI.3 |
 | On foot jump / double | 2.85 m / 4.59 m | XI.4 |
-| Grind exit tap / full | +1.23 m / +2.30 m above the rail top; sideways 1.96 m / 3.25 m | XI.4 |
+| Grind exit tap / full | +1.23 m / +2.30 m above the rail top; flight from the release 6.1 / 8.1 m at 12 m/s; sideways 1.96 m / 3.25 m; a full charge spends ≈ 0.43 s on the rail | XI.4 |
 | Grind balance, no correction | tips off after ≈ 1.2–1.4 s | XI.3 |
 | Slipstream | ≥ 90% of a rail → 48 m/s exit; roll-off 14.4 m, ollie-off ≈ 27.5 m | XI.4 |
 | Kicker 0.8 / 1.2 / 1.8 m (ollie at lip, 18 m/s) | feet apex 3.0 / 3.8 / 5.8 m; lands 16 / 18 / 19 m past the lip | XI.4 |
 | Kicker roll-off | never launches | XI.5 |
-| Halfpipe, coping 3.6 m | coast clears from 18 m/s; pumped first air 2.0 m (15 m/s), 3.9 m (18), 7.1 m (23) above the coping; session cap ≈ 8.7 m | XI.4 |
+| Halfpipe, coping 3.6 m | coast clears from 18 m/s; pumped first air 2.0 m (15 m/s), 3.8 m (18), 7.1 m (23) above the coping; session cap ≈ 8.7 m | XI.4 |
 | Carved air (23 m/s) | 15° / 30° / 45°: 4.0 / 3.1 / 3.3 m above the coping, drifting 4.7 / 8.7 / 13.1 m along it | XI.4 |
-| Quarter-pipe carve off the end | 40–45° from 15–23 m/s lands on a deck beside the end (C8) | XIV |
+| Quarter-pipe carve off the end | 40° from 18 m/s and 45° from 23 m/s land on a deck beside the end; 45° from 15 m/s falls short (C8) | XIV |
 | Spine transfer | analytic halfpipes on one axis, copings touching; second Jump release in the air with the stick over the ridge | XI.3 |
 | Wallride catch | air, Grind held, ≥ 7.5 m/s, facing within 76°; straight walls on the 90° grid; one per air | XI.3 |
 | Wallie pop above release | tap 1.68, 0.25 s 2.62, 0.5 s 3.86, 1.0 s 7.08, 1.5 s 11.27 m | XI.4 |

@@ -202,19 +202,25 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
     step(makeInput({ ...(holdFrames === 0 ? move : {}), jumpPressed: true, jumpHeld: true, grindHeld: false }));
     for (let i = 0; i < holdFrames; i++) step(makeInput({ ...(i === holdFrames - 1 ? move : {}), jumpHeld: true }));
     step(makeInput({ ...move, jumpReleased: true }));
+    // The charge is held on the rail, so the rider is still grinding until the release: measure the
+    // flight from where the rider is after the release frame as well as from the press.
+    const zr = p.pos.z;
     let apex = -Infinity, cross = null, prev = null;
     for (let i = 0; i < 400 && p.state !== 'dead'; i++) {
       step(makeInput(side ? { moveX: side } : {}));
       apex = Math.max(apex, p.pos.y);
       if (prev && prev.y >= y0 && p.pos.y < y0 && apex > y0 + 0.05) {
         const f = (prev.y - y0) / Math.max(1e-6, prev.y - p.pos.y);
-        cross = { along: z0 - (prev.z + (p.pos.z - prev.z) * f), lateral: (prev.x + (p.pos.x - prev.x) * f) - x0 };
+        const zc = prev.z + (p.pos.z - prev.z) * f;
+        cross = { along: z0 - zc, flight: zr - zc, lateral: (prev.x + (p.pos.x - prev.x) * f) - x0 };
         break;
       }
       prev = { x: p.pos.x, y: p.pos.y, z: p.pos.z };
       if (p.grounded) break;
     }
-    return { grinding, apexAboveRailTop: r3(apex - y0), alongAtRailHeight: cross ? r3(cross.along) : null, lateralAtRailHeight: cross ? r3(cross.lateral) : null };
+    return { grinding, apexAboveRailTop: r3(apex - y0), alongAtRailHeight: cross ? r3(cross.along) : null,
+      flightFromReleaseAtRailHeight: cross ? r3(cross.flight) : null, lateralAtRailHeight: cross ? r3(cross.lateral) : null,
+      note: 'alongAtRailHeight is measured from the Jump press and includes the charge held on the rail; flightFromRelease starts after the release frame' };
   };
   for (const speed of [6, 12, 18, 23]) for (const [label, hold] of [['tap', 0], ['full', 24]]) {
     results.push({ scenario: 'grind-ollie', speed, jump: label, ...grindJump(speed, hold, 0) });

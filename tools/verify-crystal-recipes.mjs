@@ -20,7 +20,7 @@ const floor = (z0, z1, x = 0, w = 12, top = 0) => ({ t: 'platform', p: [x, top -
 const RECIPES = [
   {
     id: 'C1', name: 'Pumped vert ceiling: crystal above a halfpipe coping',
-    note: 'Halfpipe coping 3.6 m; crystal 7.4 m above the +X coping, 1 m inside it. Needs a pumped session: coasting at the 23 m/s maximum peaks 4.5 m above the coping.',
+    note: 'Halfpipe coping 3.6 m; crystal 7.4 m above the +X coping, 1 m inside it. Needs pumping: coasting at the 23 m/s maximum peaks about 5 m above the coping (feet 8.6 m), which reaches crystals up to about 6.3 m above it.',
     data: () => ({ spawn: [0, 0.2, -40], cameraRig: { camDist: 11.5, camHeight: 7.3, camPitch: 18, camFov: 66 }, components: [
       floor(20, -140, 0, 40),
       { t: 'vertramp', p: [0, 0, -60], len: 40, w: 2, rise: 3.6, vkind: 'half', arc: 90, arcSteps: 24 },
