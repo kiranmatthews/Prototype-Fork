@@ -170,6 +170,7 @@ import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { DESERT_CANYON_LEVEL, SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
+import { POWDERKEG_PEAK_LEVEL } from './levels/powderkeg-peak';
 import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -1127,6 +1128,7 @@ export const TEX_KINDS = [
   "moss",
   "dirt",
   "sand",
+  "snow",
   "sunsoil",
   "stone",
   "wood",
@@ -2643,6 +2645,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
+  { id: 'powderkeg-peak', name: POWDERKEG_PEAK_LEVEL.name, data: POWDERKEG_PEAK_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mayfield-mall', name: MAYFIELD_MALL_LEVEL.name, data: MAYFIELD_MALL_LEVEL },
@@ -5057,6 +5060,7 @@ export class Level {
       kind === "jungle" ||
       kind === "dirt" ||
       kind === "sand" ||
+      kind === "snow" ||
       kind === "wood" ||
       kind === "moss";
     const S = soft ? 128 : 64;
@@ -5223,6 +5227,24 @@ export class Level {
           6 + Math.random() * 9,
           "rgba(255,246,220,0.32)",
         );
+    } else if (kind === "snow") {
+      // wind-packed snow: near-white ground, cold hollows, bright crusts, a
+      // scatter of ice glints. Pale enough that vertex paint and tint own the hue.
+      ctx.fillStyle = "#f3f6fb";
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 22; i++) {
+        const v = 214 + Math.floor(Math.random() * 16);
+        blob(Math.random() * S, Math.random() * S, 10 + Math.random() * 16, `rgba(${v - 12},${v},${v + 22},0.34)`);
+      }
+      for (let i = 0; i < 16; i++)
+        blob(Math.random() * S, Math.random() * S, 6 + Math.random() * 10, "rgba(255,255,255,0.55)");
+      for (let i = 0; i < 9; i++) {
+        // sastrugi: long soft drift streaks, all on one wind heading
+        const x = Math.random() * S, y = Math.random() * S;
+        for (let k = 0; k < 6; k++) blob(x + k * 5, y + k * 1.4, 4.5, "rgba(190,206,232,0.2)");
+      }
+      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      for (let i = 0; i < 70; i++) ctx.fillRect(Math.random() * S, Math.random() * S, 0.6, 0.6);
     } else if (kind === "moss") {
       // grown-over stonework: pale block courses drowning under soft green
       // creep — the lush-ruin wall the jungle levels want
@@ -5507,7 +5529,7 @@ export class Level {
             ? 3.2
             : kind === "plank"
               ? 3.4
-              : kind === "sand" || kind === "sunsoil"
+              : kind === "sand" || kind === "sunsoil" || kind === "snow"
                 ? 7.5
                   : kind === "dirt"
                     ? 7

@@ -1,0 +1,320 @@
+import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+import { Mountain, Path, bed, pad, rectPad, padMeshes, pisteMeshes, profile, slopeMeshes, r3, type Knoll, type P3 } from './powderkeg-terrain';
+
+/**
+ * POWDERKEG PEAK
+ *
+ * A mountain you climb on foot and come down on the board. Its shape follows the
+ * Crash 2 mountain levels in the bible's record (into the screen, a vertical join
+ * with a checkpoint, side-scroll rows up a wall, a one-way turn, into the screen
+ * again) and Air Crash's strict alternation of boots and board, sized like a
+ * Crash 2/3 course: four main sections of about ten beats.
+ *
+ *   S1  Kindling Steps   on foot, north up a walled gully in terraces      (new: ice underfoot)
+ *   S2  First Tracks     board, a square-wave descent to the frozen tarn   (new: rolling boulders)
+ *       the tarn, the hoist: the camera turns side-on on the way up
+ *   S3  The Headwall     on foot, side-on: east along the lower ledge row, up
+ *                        the east buttress, back west along the upper row   (new: ice stampers)
+ *   S4  Powderkeg Run    board, west along the summit ridge and south down
+ *                        the long face to the powder works                  (everything, combined)
+ *
+ * World: X east, Z south, so "into the screen" is −Z. Engine yaw 0 faces −Z,
+ * +90 faces −X. Climbs are played on foot and carry the pits, ledges and
+ * enemies; speed lives on the two descents.
+ */
+type Kind = NonNullable<CustomComponent['kind']>;
+type Foe = NonNullable<CustomComponent['foe']>;
+
+const G = { course: 1, ground: 2, slopes: 3, scenery: 4, bounds: 5, crates: 6, hazards: 7, enemies: 8, camera: 9, fruit: 10, rock: 11 } as const;
+const groups: CustomGroup[] = [
+  { id: G.course, nm: 'Course: spawn, checkpoints, gate' }, { id: G.ground, nm: 'Ridden and walked ground' }, { id: G.slopes, nm: 'Mountain slopes' },
+  { id: G.scenery, nm: 'Scenery' }, { id: G.bounds, nm: 'Bounds and kill volumes' }, { id: G.crates, nm: 'Crates' }, { id: G.hazards, nm: 'Hazards' },
+  { id: G.enemies, nm: 'Enemies' }, { id: G.camera, nm: 'Camera lane and zones' }, { id: G.fruit, nm: 'Fruit lines' }, { id: G.rock, nm: 'Rock and ice structure' },
+];
+const C: CustomComponent[] = [];
+const add = (c: CustomComponent): CustomComponent => { C.push(c); return c; };
+const SNOW = '#f2f6fc', ROCK = '#6f7688', ICE = '#a9dcf2', DEEP = '#27456e';
+
+/** A solid block given by its top face: x0..x1 east, z0..z1 south (z0 < z1), top at `y`, `thick` deep. */
+const block = (x0: number, x1: number, z0: number, z1: number, y: number, thick: number, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
+  add({ t: 'platform', p: [r3((x0 + x1) / 2), r3(y - thick / 2), r3((z0 + z1) / 2)], s: [r3(x1 - x0), r3(thick), r3(z1 - z0)], tex: 'snow', color: SNOW, grp: G.ground, nm, ...o });
+/** A touch-kill sheet at height `y` (the engine's box reaches 0.25 m above and 1.75 m below it). */
+const kill = (x0: number, x1: number, z0: number, z1: number, y: number, nm: string): CustomComponent =>
+  add({ t: 'pit', p: [r3((x0 + x1) / 2), r3(y), r3((z0 + z1) / 2)], s: [r3(x1 - x0), 1, r3(z1 - z0)], invisible: true, grp: G.bounds, nm });
+/** An invisible barrier from `y0` up `h` metres. */
+const fence = (x0: number, x1: number, z0: number, z1: number, y0: number, h: number, nm: string): CustomComponent =>
+  add({ t: 'wall', p: [r3((x0 + x1) / 2), r3(y0), r3((z0 + z1) / 2)], s: [r3(Math.max(.4, x1 - x0)), r3(h), r3(Math.max(.4, z1 - z0))], invisible: true, grp: G.bounds, nm });
+
+// Crates are authored on the engine's 0.96 m grid; touching formations are enlarged to 1.152 m when the level is built.
+const CR = .96;
+const crate = (x: number, y: number, z: number, kind: Kind, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
+  add({ t: 'crate', p: [r3(x), r3(y), r3(z)], kind, grp: G.crates, nm, ...o });
+/** A column of crates, bottom first. */
+const stack = (x: number, y: number, z: number, kinds: readonly Kind[], nm: string) => kinds.forEach((kind, i) => crate(x, y + i * CR, z, kind, i ? `${nm}: tier ${i + 1}` : nm));
+/** A touching row of crates from (x, z), stepping along +X (`dz` false) or −Z (`dz` true). */
+const rowOf = (x: number, y: number, z: number, kinds: readonly Kind[], nm: string, alongZ = false, o: Partial<CustomComponent> = {}) =>
+  kinds.forEach((kind, i) => crate(alongZ ? x : x + i * CR, y, alongZ ? z - i * CR : z, kind, `${nm} ${i + 1}`, o));
+const fruit = (x: number, y: number, z: number) => add({ t: 'wumpa', p: [r3(x), r3(y + 1), r3(z)], grp: G.fruit });
+/** Fruit from one floor point to another; `rise` bows the line into a jump arc. */
+const fruitLine = (a: P3, b: P3, n: number, rise = 0) => { for (let i = 0; i < n; i++) { const t = n === 1 ? .5 : i / (n - 1); fruit(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t + Math.sin(t * Math.PI) * rise, a[2] + (b[2] - a[2]) * t); } };
+const foe = (kind: Foe, x: number, y: number, z: number, range: number, speed: number, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
+  add({ t: 'enemy', foe: kind, p: [r3(x), r3(y), r3(z)], range, speed, terrainSupports: true, grp: G.enemies, nm, ...o });
+/** An ice stamper over a deck: `w` along the ledge, the full lane deep. Hangs 38 % of its cycle, slams, rests as a wall, rises. */
+const stamper = (x: number, y: number, z: number, phase: number, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
+  add({ t: 'crusher', p: [r3(x), r3(y), r3(z)], s: [3, 3, 4], cycle: 3.2, phase: r3(phase), color: '#bfe2f4', grp: G.hazards, nm, ...o });
+
+// ───────────────────────────── S1 · Kindling Steps ─────────────────────────────
+// Stations run north from the lodge yard: z = −s. The gully is twelve metres wide between two rock walls.
+const HALF = 6, CREST_Y = 10.5, CREST_S = 197;
+interface Terrace { a: number; b: number; y: number; x?: number; w?: number; ice?: boolean; nm: string; }
+const TERRACES: Terrace[] = [
+  { a: 20, b: 37, y: 1.6, nm: 'Crab shelf' },
+  { a: 37, b: 54, y: 2.5, ice: true, nm: 'Mill pond: the first ice' },
+  { a: 54, b: 71, y: 2.5, nm: 'Boulder terrace' },
+  { a: 71, b: 74, y: 2.5, x: 3, w: 6, nm: 'Half bridge beside the first open crevasse' },
+  { a: 74, b: 85, y: 2.5, nm: 'Arrow runway' },
+  { a: 88.2, b: 99, y: 2.5, nm: 'First landing' },
+  { a: 105, b: 116, y: 5, ice: true, nm: 'Ice shelf above the second crevasse' },
+  { a: 119, b: 131, y: 5, nm: 'Powder landing' },
+  { a: 137, b: 151, y: 7, nm: 'Bristleback shelf' },
+  { a: 153.8, b: 157.3, y: 7.5, x: 0, w: 5, nm: 'First pillar' },
+  { a: 160.3, b: 163.8, y: 8, x: 0, w: 5, ice: true, nm: 'Glazed pillar' },
+  { a: 167, b: 171, y: 8.5, x: 0, w: 6, nm: 'Third pillar' },
+  { a: 171, b: 184, y: 9.4, nm: 'Lookout shelf' },
+];
+const RAMPS: { a: number; b: number; y0: number; y1: number; w: number; nm: string }[] = [
+  { a: 14, b: 20, y0: 0, y1: 1.6, w: 8, nm: 'Yard ramp' },
+  { a: 99, b: 105, y0: 2.5, y1: 5, w: 8, nm: 'Drift ramp to the ice shelf' },
+  { a: 131, b: 137, y0: 5, y1: 7, w: 8, nm: 'Drift ramp to the bristleback shelf' },
+  { a: 184, b: 189, y0: 9.4, y1: CREST_Y, w: 8, nm: 'Last rise to the crest' },
+];
+/** Open ground in the gully: [from, to, floor it interrupts]. Each gets a kill sheet and a blue-black floor. */
+const CREVASSES: { a: number; b: number; y: number; x0?: number; x1?: number; nm: string }[] = [
+  { a: 71, b: 74, y: 2.5, x0: -HALF, x1: 0, nm: 'Half crevasse' },
+  { a: 85, b: 88.2, y: 2.5, nm: 'First crevasse' },
+  { a: 116, b: 119, y: 5, nm: 'Second crevasse' },
+  { a: 151, b: 171, y: 7, nm: 'Pillar field' },
+];
+for (const t of TERRACES) {
+  const w = t.w ?? HALF * 2, x = t.x ?? 0;
+  block(x - w / 2, x + w / 2, -t.b, -t.a, t.y, t.w ? 9 : 8, t.nm, t.ice ? { tex: 'ice', color: ICE, slip: true } : {});
+}
+for (const q of RAMPS) {
+  add({ t: 'ramp', p: [0, q.y0, r3(-(q.a + q.b) / 2)], len: q.b - q.a, rise: r3(q.y1 - q.y0), w: q.w, yaw: 0, tex: 'snow', color: SNOW, grp: G.ground, nm: q.nm });
+  for (const side of [-1, 1]) block(side > 0 ? q.w / 2 : -HALF, side > 0 ? HALF : -q.w / 2, -q.b, -q.a, q.y1 + .9, 9, `${q.nm}: shoulder`, { tex: 'stone', color: ROCK, grp: G.rock });
+}
+for (const q of CREVASSES) {
+  const x0 = q.x0 ?? -HALF, x1 = q.x1 ?? HALF;
+  kill(x0, x1, -q.b, -q.a, q.y - 3.6, `${q.nm}: fall`);
+  block(x0, x1, -q.b, -q.a, q.y - 8, 1, `${q.nm}: depths`, { tex: 'ice', color: DEEP, grp: G.rock, edgeGrinding: false });
+}
+// Gully walls: rock to either side, stepped with the climb, and a tall unseen fence along each lip.
+const WALLS: [number, number, number][] = [[12, 37, 5.2], [37, 99, 6.2], [99, 131, 8.8], [131, 151, 10.8], [151, 191, 13.6]];
+for (const [a, b, top] of WALLS) for (const side of [-1, 1])
+  block(side > 0 ? HALF : -HALF - 3, side > 0 ? HALF + 3 : -HALF, -b, -a, top, top + 9, `Gully wall ${a}-${b}`, { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+for (const side of [-1, 1]) fence(side * (HALF + .2) - .2, side * (HALF + .2) + .2, -191, -12, -2, 30, 'Gully lip fence');
+
+// Kindling Steps · content. Jobs are named per cluster (bible, law 3).
+stack(-4, 0, -8, ['wood', 'mystery'], 'Yard stack (teach: top first or the fruit crate drops)'); crate(-4.96, 0, -8, 'wood', 'Yard stack: the step beside it');
+fruitLine([0, 0, -10], [0, 1.6, -20], 5); fruitLine([0, 1.6, -22], [0, 1.6, -26], 3);
+foe('grunt', 0, 1.6, -29, 3.6, 2.5, 'Snow crab, alone on a wide shelf (debut)');
+rowOf(3.5, 1.6, -34, ['wood', 'wood'], 'Pair past the crab (reward)');
+fruitLine([0, 1.6, -35.6], [0, 2.5, -38.8], 3, .9);
+fruitLine([0, 2.5, -41], [0, 2.5, -47], 4);
+rowOf(-.96, 2.5, -50, ['wood', 'mystery', 'wood'], 'Row at the far end of the mill pond (teach: spin while you slide)');
+fruitLine([0, 2.5, -56], [0, 2.5, -60], 3);
+add({ t: 'stone', p: [0, 2.5, -62.5], axis: 'x', range: 4.5, speed: 4.5, radius: 1.1, grp: G.hazards, nm: 'Boulder in its trough across the gully (debut: stand and watch, cross behind it)' });
+fruitLine([0, 2.5, -65.5], [3, 2.5, -70], 3); fruitLine([3, 2.5, -71.4], [3, 2.5, -73.6], 2);
+crate(-3, 2.5 - CR * .2, -72.5, 'mystery', 'Over the open half of the crevasse (reward for the risk: jump onto it and bounce across)');
+crate(-3.4, 2.5, -79, 'bouncy', 'Arrow crate on the runway (teach the tool)'); crate(-3.4, 2.5 + 1.152 + 3.2, -79, 'wood', 'Its partner overhead');
+fruitLine([0, 2.5, -84.6], [0, 2.5, -88.6], 5, 1.8);
+stack(3.8, 2.5, -95, ['wood', 'wood'], 'Stack on the first landing (marks the landing)');
+fruitLine([0, 2.5, -99.6], [0, 5, -105], 4); fruitLine([0, 5, -107], [0, 5, -113], 4); fruitLine([0, 5, -115.6], [0, 5, -119.4], 5, 1.7);
+crate(3.6, 5, -127, 'tnt', 'TNT alone on the powder landing (debut: the whole west half is the refuge)');
+fruitLine([0, 5, -131.6], [0, 7, -137], 4);
+foe('spiker', 0, 7, -144, 3.6, 2.5, 'Bristleback, alone on a wide shelf (debut: do not stomp)');
+crate(-4.2, 7, -148.6, 'mask', 'Mask before the pillar field');
+fruitLine([0, 7, -150.6], [0, 7.5, -154.4], 4, 1.4); fruitLine([0, 7.5, -157], [0, 8, -160.8], 4, 1.4); fruitLine([0, 8, -163.5], [0, 8.5, -167.4], 4, 1.4);
+foe('grunt', 0, 8.5, -169.2, 1.5, 1.6, 'Snow crab on the third pillar (occupied landing: spin as you land)');
+for (const dy of [0, CR]) rowOf(-3.9, 9.4 + dy, -178, ['wood', 'wood'], dy ? 'Lookout block, upper tier' : 'Lookout block (reward after the pillar field)');
+fruitLine([0, 9.4, -184.4], [0, CREST_Y, -189], 3);
+crate(-2.4, CREST_Y, -CREST_S, 'wood', 'Beside the crest checkpoint'); crate(2.6, CREST_Y, -192.4, 'mystery', 'Behind the crest checkpoint, toward the camera (count trap at an attractor)');
+
+// ───────────────────────────── The two runs ─────────────────────────────
+const RUN1 = new Path('First Tracks', 0, -206, 0,
+  [{ len: 50 }, { turn: -90, r: 40 }, { len: 60 }, { turn: 90, r: 40 }, { len: 80 }, { turn: 90, r: 40 }, { len: 60 }, { turn: -90, r: 40 }, { len: 60 }],
+  profile([[0, CREST_Y], [8, 10.3], [50, 5.2], [113, 3.6], [173, 2.2], [236, .6], [316, -3.2], [379, -4.6], [439, -6.2], [502, -7.4], [545, -8], [561.4, -8]]));
+const TARN_Y = -8, SUMMIT_Y = 28;
+const RUN2 = new Path('Powderkeg Run', -30, -614, 90,
+  [{ len: 90 }, { turn: 90, r: 44 }, { len: 130 }, { turn: -45, r: 50 }, { turn: 45, r: 50 }, { len: 110 }, { turn: 45, r: 50 }, { turn: -45, r: 50 }, { len: 100 }],
+  profile([[0, SUMMIT_Y], [14, 27.8], [90, 26.5], [159, 21], [289, 11], [368, 6], [478, -3], [556, -8.5], [640, -12], [656.2, -12]]));
+const CLIMB = new Path('Kindling Steps', 0, 0, 0, [{ len: CREST_S + 9 }],
+  profile([[0, 3.2], [12, 4.4], [37, 5.2], [99, 6], [131, 8.4], [151, 10.4], [191, 13], [206, CREST_Y + 1.2]]));
+const finish = RUN2.at(RUN2.length), FINISH: P3 = [r3(finish.x), -12, r3(finish.z)];
+
+// ───────────────────────────── The mountain ─────────────────────────────
+const knolls: Knoll[] = [];
+const flank = (path: Path, from: number, to: number, every: number, lat: number, rise: number, r: number, sides: readonly number[] = [-1, 1]) => {
+  for (let s = from; s <= to; s += every) for (const side of sides) { const f = path.at(s); knolls.push({ x: f.x + f.rx * lat * side, z: f.z + f.rz * lat * side, y: f.y + rise, r }); }
+};
+flank(CLIMB, 0, 200, 40, 26, 1.5, 22);
+flank(CLIMB, 0, 200, 50, 70, 9, 36);
+flank(RUN1, 0, RUN1.length, 36, 30, 5, 24);
+flank(RUN1, 0, RUN1.length, 60, 75, 13, 40);
+flank(RUN2, 100, RUN2.length, 36, 30, 5, 24);
+flank(RUN2, 100, RUN2.length, 60, 80, 12, 40);
+flank(RUN2, 0, 90, 30, 26, -9, 22); // the summit ridge falls away on both sides
+knolls.push(
+  { x: 0, z: 46, y: -5, r: 34 }, { x: 0, z: 0, y: 1, r: 22 },
+  { x: 0, z: -578, y: TARN_Y, r: 30 }, { x: 60, z: -640, y: 38, r: 34 }, { x: 130, z: -650, y: 52, r: 44 }, { x: -20, z: -650, y: 33, r: 30 },
+  { x: -70, z: -640, y: 22, r: 26 }, { x: 150, z: -600, y: 30, r: 36 }, { x: -90, z: -540, y: 16, r: 30 }, { x: FINISH[0], z: FINISH[2] + 60, y: -16, r: 34 },
+);
+const RUN_HALF = 6.5, BANK_RUN = 3.5;
+const mountain = new Mountain({
+  knolls, rough: 6,
+  carves: [
+    bed(CLIMB, { half: HALF + 3, bank: 0, bankRun: 1, blend: 13, kind: 'snow', from: 12, to: CREST_S - 6 }),
+    bed(RUN1, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2 }),
+    bed(RUN2, { half: RUN_HALF, bank: 1.4, bankRun: BANK_RUN, blend: 15, cup: .2 }),
+    rectPad(-HALF - 3, -191, HALF + 3, -12, undefined),
+    pad(0, 2, 15, 15, 0, 12),
+    pad(0, -CREST_S, 10, 10, CREST_Y, 9),
+    pad(0, -578, 31, 27, TARN_Y, 12),
+    rectPad(-42, -627, 110, -602.5, undefined),
+    pad(-28, -614, 14, 11, SUMMIT_Y, 8),
+    pad(FINISH[0], FINISH[2] + 10, 13, 18, FINISH[1], 10),
+  ],
+});
+const BOUNDS = { x0: -250, z0: -690, x1: 200, z1: 60 };
+const lats = () => [-(RUN_HALF + BANK_RUN + .9), -(RUN_HALF + BANK_RUN), -(RUN_HALF + BANK_RUN * .5), -RUN_HALF, -RUN_HALF * .5, 0, RUN_HALF * .5, RUN_HALF, RUN_HALF + BANK_RUN * .5, RUN_HALF + BANK_RUN, RUN_HALF + BANK_RUN + .9];
+C.push(...pisteMeshes(mountain, RUN1, 0, RUN1.length, lats, { nm: 'First Tracks piste', grp: G.ground, gravityTrack: true, tex: 'snow' }));
+C.push(...pisteMeshes(mountain, RUN2, 0, RUN2.length, lats, { nm: 'Powderkeg Run piste', grp: G.ground, gravityTrack: true, tex: 'snow' }));
+C.push(...padMeshes(mountain, -17, -14, 17, 19, 1.6, { nm: 'Lodge yard', grp: G.ground, tex: 'snow' }));
+C.push(...padMeshes(mountain, -11, -208, 11, -188, 1.6, { nm: 'First crest', grp: G.ground, tex: 'snow' }));
+C.push(...padMeshes(mountain, -33, -603, 33, -552, 2, { nm: 'Tarn shore', grp: G.ground, tex: 'snow' }));
+C.push(...padMeshes(mountain, -44, -626, -14, -602, 1.6, { nm: 'Summit', grp: G.ground, tex: 'snow' }));
+C.push(...padMeshes(mountain, FINISH[0] - 14, FINISH[2] - 8, FINISH[0] + 14, FINISH[2] + 28, 1.6, { nm: 'Powder works yard', grp: G.ground, tex: 'snow' }));
+const routes = [CLIMB, RUN1, RUN2];
+const nearRoute = (x: number, z: number): boolean => routes.some(path => path.nearest(x, z, 85) !== null) || (Math.abs(x - 34) < 120 && z < -520 && z > -690);
+C.push(...slopeMeshes(mountain, BOUNDS.x0, BOUNDS.z0, BOUNDS.x1, BOUNDS.z1, 3.6, { nm: 'Slopes', grp: G.slopes, tex: 'snow', wanted: nearRoute }));
+// Piste bounds: a tall unseen fence along each bank crest.
+for (const path of [RUN1, RUN2]) for (const side of [-1, 1]) for (let from = 0; from < path.length; from += 120) {
+  const to = Math.min(path.length, from + 120), origin = path.w(from, side * (RUN_HALF + 2.4)), pts: [number, number, number, number][] = [];
+  for (let s = from; s <= to + .01; s += 6) { const q = path.w(Math.min(s, to), side * (RUN_HALF + 2.4)); pts.push([r3(q[0] - origin[0]), r3(q[2] - origin[2]), 0, r3(q[1] - origin[1])]); }
+  add({ t: 'wallpath', p: origin, pts, w: .5, rise: 9, collisionHeight: 9, containment: true, invisible: true, grp: G.bounds, nm: `${path.name}: bank fence` });
+}
+
+// ───────────────────────────── The tarn and the hoist ─────────────────────────────
+const ROW_A = -606, ROW_B = -614, A0_Y = 6;
+add({ t: 'mover', p: [-3, r3((TARN_Y + A0_Y) / 2), ROW_A + 1], s: [4, .6, 4], axis: 'y', amp: (A0_Y - TARN_Y) / 2, speed: .7, phase: -Math.PI / 2, tex: 'plank', color: '#b98f5e', grp: G.hazards, nm: 'The hoist: rises fourteen metres to the lower ledge row' });
+
+// ───────────────────────────── S3 · The Headwall ─────────────────────────────
+// Side-on. Row A runs east along z = ROW_A, row B west along z = ROW_B, eight metres behind and above it.
+interface Ledge { x0: number; x1: number; y: number; ice?: boolean; crumble?: boolean; /** A shelf pinned to the wall rather than a column from the floor. */ shelf?: boolean; nm: string; }
+const ROW_A_LEDGES: Ledge[] = [
+  { x0: -1, x1: 26, y: 6, nm: 'Hoist landing and the first stamper' },
+  { x0: 28.6, x1: 38, y: 7, nm: 'Bristleback ledge' },
+  { x0: 41, x1: 44.5, y: 8, nm: 'Lone pillar' },
+  { x0: 47.7, x1: 66, y: 9, nm: 'Stamper gallery' },
+  { x0: 66, x1: 69, y: 9, crumble: true, nm: 'Rotten ice plank (debut: level with both banks)' },
+  { x0: 69, x1: 79, y: 9, nm: 'Rest ledge' },
+  { x0: 82, x1: 90, y: 10.2, nm: 'Far bank under the stamper' },
+  { x0: 91.5, x1: 95.5, y: 12.4, nm: 'Buttress tier one' },
+  { x0: 97, x1: 101, y: 14.6, nm: 'Buttress tier two' },
+  { x0: 91.5, x1: 95.5, y: 16.8, shelf: true, nm: 'Buttress tier three' },
+];
+const B0_Y = 19;
+const ROW_B_LEDGES: Ledge[] = [
+  { x0: 66, x1: 80, y: B0_Y, ice: true, nm: 'Glazed gallery under the stamper' },
+  { x0: 59.5, x1: 63, y: 19.8, nm: 'Bristleback pillar' },
+  { x0: 53.3, x1: 56.3, y: 20.2, crumble: true, nm: 'Rotten shelf one' },
+  { x0: 48.8, x1: 51.8, y: 20.7, crumble: true, nm: 'Rotten shelf two' },
+  { x0: 44.3, x1: 47.3, y: 21.2, crumble: true, nm: 'Rotten shelf three' },
+  { x0: 31, x1: 43, y: 21.8, nm: 'Switch ledge' },
+  { x0: 10, x1: 23, y: 22.6, nm: 'Twin stamper gallery' },
+  { x0: 3, x1: 6.6, y: 23.6, nm: 'Last pillar' },
+  { x0: -14, x1: 0, y: 24.6, nm: 'Summit approach' },
+];
+const APPROACH_Y = 24.6;
+const row = (ledges: readonly Ledge[], z: number, floor: number) => {
+  for (const l of ledges) {
+    if (l.crumble) { add({ t: 'crumble', p: [r3((l.x0 + l.x1) / 2), l.y, z], s: [r3(l.x1 - l.x0), .5, 4], tex: 'bridge-ice', color: ICE, grp: G.hazards, nm: l.nm }); continue; }
+    block(l.x0, l.x1, z - 2, z + 2, l.y, l.shelf ? .8 : l.y - floor, l.nm, l.ice ? { tex: 'ice', color: ICE, slip: true } : {});
+  }
+};
+row(ROW_A_LEDGES, ROW_A, -12);
+row(ROW_B_LEDGES, ROW_B, 4);
+block(80, 90, ROW_B - 2, ROW_A + 2, B0_Y, 3, 'East landing: the turn back west');
+// The wall itself: behind row A up to row B's floor, behind row B up to the ridge, and the two end buttresses.
+block(-8, 30, ROW_A - 6, ROW_A - 2, 22.4, 34.4, 'Headwall behind the lower row, west', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(30, 60, ROW_A - 6, ROW_A - 2, 19.6, 31.6, 'Headwall behind the lower row, middle', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(60, 104, ROW_A - 6, ROW_A - 2, 18.8, 30.8, 'Headwall behind the lower row, east', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(-16, 104, ROW_B - 8, ROW_B - 2, 36, 48, 'Headwall behind the upper row', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(104, 110, ROW_B - 8, ROW_A + 3.4, 30, 42, 'East buttress', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(-42, -14, ROW_B - 12, ROW_A + 3.4, SUMMIT_Y - .12, 40, 'Summit block', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(-14, -6, ROW_A - 6, ROW_A + 3.4, SUMMIT_Y - .12, 40, 'Rock beside the hoist', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+block(90, 104, ROW_B - 2, ROW_B + 2, 30, 42, 'Rock closing the east landing', { tex: 'stone', color: ROCK, grp: G.rock, edgeGrinding: false });
+add({ t: 'ramp', p: [-10, APPROACH_Y, ROW_B], len: 8, rise: r3(SUMMIT_Y - APPROACH_Y), w: 4, yaw: 90, tex: 'snow', color: SNOW, grp: G.ground, nm: 'Drift ramp onto the summit' });
+// Falls: one sheet under each row, and an unseen fence along each row's open (south) edge.
+kill(-1, 104, ROW_A - 2, ROW_A + 2, 1.5, 'Lower row: fall');
+kill(-16, 80, ROW_B - 2, ROW_B + 2, 14, 'Upper row: fall');
+fence(-1, 104, ROW_A + 2, ROW_A + 2.4, 4, 40, 'Lower row: lip fence');
+fence(-16, 80, ROW_B + 2, ROW_B + 2.4, 18, 30, 'Upper row: lip fence');
+fence(90, 104, ROW_B + 2, ROW_B + 2.4, 18, 30, 'East landing: lip fence');
+add({ t: 'zone', p: [46, 6, ROW_A], s: [108, 1, 8], dir: 'E', grp: G.camera, nm: 'Lower row: side-on, heading east' });
+add({ t: 'zone', p: [42, 20, ROW_B], s: [116, 1, 7.98], dir: 'W', grp: G.camera, nm: 'Upper row: side-on, heading west' });
+
+// The Headwall · content.
+const SWITCH = 12;
+groups.push({ id: SWITCH, nm: 'Switch bridge over the long gap: outlines until the ! fires' });
+rowOf(8, 6, ROW_A, ['wood', 'wood'], 'Pair on the hoist landing (open the row)');
+stamper(17, 6, ROW_A, 0, 'Ice stamper over solid ledge (debut: eleven metres of floor to watch a full cycle from)');
+fruitLine([25.6, 6, ROW_A], [29, 7, ROW_A], 3, 1.2);
+foe('spiker', 34.4, 7, ROW_A, 2.4, 2, 'Bristleback patrolling the take-off');
+fruitLine([37.6, 7, ROW_A], [41.4, 8, ROW_A], 3, 1.3);
+crate(42.75, 8 + 2.3, ROW_A, 'mystery', 'Over the lone pillar (marks the landing; a jump collects it)');
+fruitLine([44.2, 8, ROW_A], [48.1, 9, ROW_A], 3, 1.3);
+stamper(53, 9, ROW_A, 0, 'Stamper pair, first');
+crate(57, 9, ROW_A, 'wood', 'In the pocket between the stampers (one crate per safe window)');
+stamper(61, 9, ROW_A, 3.2 - 8 / 9, 'Stamper pair, second: open 0.9 s after the first for a walker who keeps going');
+rowOf(74.5, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes against the wall (test: light the fuse, harvest, retreat west)');
+fruitLine([78.6, 9, ROW_A], [82.4, 10.2, ROW_A], 3, 1.6);
+stamper(84.5, 10.2, ROW_A, 0, 'Stamper on the far bank: jump as it rises');
+crate(100.2, 14.6, ROW_A, 'mystery', 'At the dead end of the second buttress tier');
+stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
+crate(68, B0_Y, ROW_B, 'wood', 'On the ice by the far lip (bait: the slide carries you at the gap)');
+foe('spiker', 61.2, 19.8, ROW_B, .9, 1.4, 'Bristleback on the landing pillar: spin before you land');
+crate(40.5, 21.8, ROW_B, 'mask', 'Mask before the twin stampers');
+rowOf(36.04, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall: only from above');
+crate(33, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall: it builds the crate bridge', { grp: SWITCH });
+rowOf(27 - 3 * CR, 21.8 - 1.152, ROW_B, ['wood', 'wood', 'wood', 'mystery', 'wood', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
+stamper(19.5, 22.6, ROW_B, 0, 'Twin stampers, first');
+foe('grunt', 16.5, 22.6, ROW_B, 1, 1.4, 'Snow crab in the pocket between the twin stampers');
+stamper(13.5, 22.6, ROW_B, 1.6, 'Twin stampers, second: half a cycle off, so the pocket is a stop');
+crate(4.8, 23.6 + 2.3, ROW_B, 'mystery', 'Over the last pillar');
+stack(-3.5, APPROACH_Y, ROW_B, ['wood', 'wood', 'wood'], 'Tower on the summit approach (the double jump reaches its top)');
+
+// ───────────────────────────── Course frame ─────────────────────────────
+const laneNodes: { p: P3; radius: number }[] = [
+  { p: [0, 0, 16], radius: 0 }, { p: [0, CREST_Y, -CREST_S], radius: 0 },
+  ...RUN1.lane(), { p: [0, TARN_Y, -598], radius: 0 }, { p: [-24, SUMMIT_Y, ROW_B], radius: 0 }, ...RUN2.lane(),
+  { p: [FINISH[0], FINISH[1], FINISH[2] + 26], radius: 0 },
+];
+for (const node of laneNodes) add({ t: 'camnode', p: node.p, radius: node.radius, grp: G.camera });
+const checkpoint = (p: P3, nm: string) => add({ t: 'checkpoint', p, grp: G.course, nm });
+checkpoint([-3.4, 5, -124], 'C1 · Powder landing');
+checkpoint([0, CREST_Y, -CREST_S], 'C2 · First crest: board from here');
+checkpoint([0, TARN_Y, -560], 'C3 · Tarn shore');
+checkpoint([4, A0_Y, ROW_A], 'C4 · Hoist landing');
+checkpoint([85, B0_Y, ROW_B + 3.4], 'C5 · East landing');
+checkpoint([-24, SUMMIT_Y, ROW_B], 'C6 · Summit: board from here');
+add({ t: 'gate', p: [FINISH[0], FINISH[1], FINISH[2] + 20], yaw: 180, grp: G.course, nm: 'Powder works gate' });
+crate(FINISH[0] + 5.5, FINISH[1], FINISH[2] + 9, 'nitrobang', 'Green switch in the works yard, on foot after the ride: it counts every Nitro on the mountain');
+
+export const POWDERKEG_PATHS = { CLIMB, RUN1, RUN2 };
+export const POWDERKEG_MOUNTAIN = mountain;
+export const POWDERKEG_BOUNDS = BOUNDS;
+export const POWDERKEG_PLAN = { HALF, CREST_Y, CREST_S, TARN_Y, SUMMIT_Y, ROW_A, ROW_B, A0_Y, B0_Y, APPROACH_Y, FINISH, TERRACES, RAMPS, CREVASSES, ROW_A_LEDGES, ROW_B_LEDGES, RUN_HALF };
+export const POWDERKEG_PEAK_LEVEL: CustomLevelData = {
+  v: 1, name: 'Powderkeg Peak', spawn: [0, .14, 8], killY: -44, sky: 'day', groups, components: C,
+};
