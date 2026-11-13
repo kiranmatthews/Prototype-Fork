@@ -54,8 +54,11 @@ const cycles={narrow:{id:'narrow',...motions.Flame03},medium:{id:'medium',...mot
 for(const [family,data]of Object.entries(cycles)){
   await mkdir(resolve(output,family),{recursive:true});await copyFile(resolve(root,data.frames[0].file),resolve(output,family,'key.png'));
 }
+// The independent broad simulation is rendered/packed by pack-basin-source.mjs.
+// Retain it when rebuilding the two original Unity flipbooks.
+cycles.basin=JSON.parse(await readFile(resolve(output,'basin/cycle.json')));
 await writeFile(resolve(output,'cycles.json'),JSON.stringify(cycles,null,2)+'\n');
 await copyFile(resolve(root,'art/fire-sprites/v5/source/NOTICE.txt'),resolve(output,'NOTICE.txt'));
-await writeFile(resolve(output,'provenance.json'),JSON.stringify({version:5,uniqueMotionSequences:2,uniqueSourceFrames:128,sourcePage,license,paint:{...paint,method:'One built-in image_gen painting, sampled once for the fixed palette shared by every source frame',original:painting,prompt:'docs/fire-sprite-lab/v5/prompts/clean-120.txt',samplePixels:points},sources:checks},null,2)+'\n');
+await writeFile(resolve(output,'provenance.json'),JSON.stringify({version:5,uniqueMotionSequences:3,uniqueSourceFrames:128+cycles.basin.frameCount,sourcePage,license,paint:{...paint,method:'One built-in image_gen painting, sampled once for the fixed palette shared by every source frame',original:painting,prompt:'docs/fire-sprite-lab/v5/prompts/clean-120.txt',samplePixels:points},sources:[...checks,{source:cycles.basin.motionId,...cycles.basin.source,frameCount:cycles.basin.frameCount,nativeFrame:[cycles.basin.width,cycles.basin.height]}]},null,2)+'\n');
 await writeFile(resolve(root,'docs/fire-sprite-lab/v5/native-audit.json'),JSON.stringify({status:'Pixel preservation only — browser motion review required',painting:{file:painting,width:paintSize.width,height:paintSize.height,sha256:paint.sha256,samplePixels:points},checks},null,2)+'\n');
 console.log(JSON.stringify({uniqueFrames:128,paint:painting,checks},null,2));

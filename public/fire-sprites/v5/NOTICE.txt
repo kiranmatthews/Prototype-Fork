@@ -17,3 +17,13 @@ image_gen tool. Its six sampled colours are shared by all source frames.
 It is not part of the Unity CC0 release. See provenance.json for its hash,
 original workspace path and prompt. Crash Bandicoot 4 recordings were visual
 references only; no game footage or extracted game textures are shipped.
+
+The basin uses a separate source: Small Camp Fire by JangaFX, released as
+CC0 (Public Domain) on https://jangafx.com/software/embergen/download/free-vdb-animations
+Download: https://www.mediafire.com/file/9xx9icyomy2txv7/SmallCampfireVDB.zip/file
+Its flames channel is rendered through a fixed orthographic camera with
+uniform scale. Only constant transparent padding is cropped for packing;
+the flame is not stretched, warped or assembled from repeated torch sprites.
+Source hashes and render settings are retained in
+art/fire-sprites/basin-source/provenance.json. Runtime source/interval metadata
+is in basin/cycle.json. The shared imagegen palette remains the same.

@@ -1,7 +1,7 @@
 {
   "version": 5,
-  "uniqueMotionSequences": 2,
-  "uniqueSourceFrames": 128,
+  "uniqueMotionSequences": 3,
+  "uniqueSourceFrames": 328,
   "sourcePage": "https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks",
   "license": "https://creativecommons.org/publicdomain/zero/1.0/",
   "paint": {
@@ -111,6 +111,50 @@
       "exactTgaPixels": true,
       "exactRuntimeAlphaAndVisibleRGB": true,
       "runtimeBytes": 437878
+    },
+    {
+      "source": "JangaFX-SmallCampfire",
+      "author": "JangaFX",
+      "license": "CC0-1.0",
+      "page": "https://jangafx.com/software/embergen/download/free-vdb-animations",
+      "download": "https://www.mediafire.com/file/9xx9icyomy2txv7/SmallCampfireVDB.zip/file",
+      "archiveSha256": "fce2ad670a4738957f15b742410162e26bb84790e8bddb72ec2a4bd64bcebe30",
+      "firstFrame": 0,
+      "lastFrame": 199,
+      "crop": {
+        "left": 82,
+        "top": 21,
+        "width": 403,
+        "height": 416
+      },
+      "projection": {
+        "camera": "orthographic",
+        "centre": [
+          -0.07999999821186066,
+          1.5149999856948853,
+          -1.0499999523162842
+        ],
+        "verticalSpan": 1.6,
+        "resolution": [
+          512,
+          512
+        ],
+        "volumeScale": [
+          0.01,
+          0.01,
+          0.01
+        ],
+        "channel": "flames",
+        "density": 0.1,
+        "emission": 0.1,
+        "volumeSamples": 256,
+        "renderSamples": 64
+      },
+      "frameCount": 200,
+      "nativeFrame": [
+        403,
+        416
+      ]
     }
   ]
 }

@@ -11875,6 +11875,8 @@ Evidence: [integration checks](fire-sprite-lab/game-integration/validation.json)
 
 ### 2026-11-13 — One broad flame for the temple basin
 
+**Rejected by the user:** this used a stretched Flame02 sheet and a flared base. The implementation is superseded by the independent broad source correction below. Build/browser checks did not establish aesthetic acceptance.
+
 Approximately six minutes from the brief to the first playable single-body basin with a fitted base. Replaced the bonfire's three independently timed source copies with one continuous billboard sheet. It has an authored width of 4.0 relative to a height of 3.8 and a fixed lower flare that spreads across the bowl while tapering into the upper plume. All 64 source poses share exactly the same spatial profile and timing; there is no extra phase, regenerated art or animated geometric wobble. The source-only authoring view resets width and flare to the original proportions. The wider heat footprint uses the existing Jak heat writer and renderer.
 
 The other arrangements keep their original dimensions and animation behavior. The exhibition now has 32 flame bodies, or 39 including the court torches. The native source atlases and shared imagegen palette are unchanged.
@@ -11882,3 +11884,12 @@ The other arrangements keep their original dimensions and animation behavior. Th
 Validation: `npm run build`, `npm run check:release` (935,951,410 / 1,000,000,000 bytes), and `git diff --check` passed. Real-browser review covered lite and full production rendering, 720p and native resolution, multiple live poses, the front and both sides of the basin, correct seating/occlusion against the bowl, and a clean console. No gameplay geometry, movement or level data changed, so unrelated level and system audits were not rerun.
 
 Evidence: [review record](fire-sprite-lab/wide-basin/validation.json), [native view](fire-sprite-lab/wide-basin/native-resolution.jpg), [right side](fire-sprite-lab/wide-basin/basin-right.jpg), [left side](fire-sprite-lab/wide-basin/basin-left.jpg).
+
+
+### 2026-11-13 — Replace the distorted basin with an independent broad source
+
+About 31 minutes from the first recorded correction work at 06:11 UTC to the playable basin review around 06:42 UTC; the exact prompt timestamp is not recorded. The prior width override and flared mesh were rejected and are removed. The new basin uses JangaFX’s CC0 Small Camp Fire: all 200 source volume frames projected with one fixed orthographic camera, uniform unit scale and fixed flame-only material. The source is naturally broad. It is not a widened Flame02 or an arrangement of repeated narrow fires. The same accepted imagegen palette supplies its colour treatment.
+
+The runtime uses one four-vertex billboard at source aspect, 200 poses at 30 fps (6⅔ seconds), and the existing Jak heat attachment. Native 512×512 renders and source hashes are retained; packing removes constant transparent padding to 403×416 and preserves every visible RGB/alpha value losslessly. The 199→0 alpha change (0.006054) is comparable to the median adjacent change (0.006078), and the actual material was stepped through the join and all 200 frames. The other source atlases and painting are unchanged. Normal Bone Man gameplay, level layout, movement, camera and debug panels are unchanged.
+
+Validation: type-check, production build, release-size check (943,398,871 / 1,000,000,000 bytes) and diff check passed. Real-browser review covered lite running/jumping, full rendering at native and fixed 720p, the basin from both sides and close up, and the existing LOOK/M debug controls. Consoles were clean. No level geometry changed; unrelated level/system suites were not rerun. [Source/render notes](fire-sprite-lab/basin-source/README.md), [validation](fire-sprite-lab/basin-source/validation.json), [native basin](fire-sprite-lab/basin-source/basin-native-close.jpg), [motion preview](fire-sprite-lab/basin-source/source-loop-review.mp4). The preview encodes the actual stepped browser poses at 30 fps and repeats the cycle once; it is not a live performance recording.

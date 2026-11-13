@@ -1,0 +1,32 @@
+{
+  "sourceFrames": 200,
+  "crop": {
+    "left": 82,
+    "top": 21,
+    "width": 403,
+    "height": 416
+  },
+  "consecutive": {
+    "min": 0.004342830882352941,
+    "median": 0.006077665441176471,
+    "p95": 0.007245710784313726,
+    "max": 0.008070044424019608
+  },
+  "fullSequenceJoin": 0.006053730085784314,
+  "selected": {
+    "first": 0,
+    "last": 199,
+    "count": 200,
+    "join": 0.006053730085784314,
+    "nativeFrame": [
+      403,
+      416
+    ],
+    "anchor": [
+      0.4952853598014889,
+      0.08894230769230771
+    ],
+    "exactVisiblePixels": true,
+    "worldAspect": "width / height, with one uniform scale"
+  }
+}
