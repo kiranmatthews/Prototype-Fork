@@ -1,0 +1,80 @@
+[
+  {
+    "id": "broad-03-r2",
+    "family": "broad",
+    "celId": "03-r2",
+    "phase": 3,
+    "prompt": "Create exactly ONE broad fire animation cel, phase3/48, halfway in time between image1 phase2 and image2 phase4. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. Draw the true halfway contours and internal colours. The previous output was accidentally1774×886. The output MUST be the same native1774×887 canvas as BOTH references. Do not trim or rescale it. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-03-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/02-r2.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png"
+    ],
+    "reason": "One-pixel native canvas mismatch"
+  },
+  {
+    "id": "broad-21-r2",
+    "family": "broad",
+    "celId": "21-r2",
+    "phase": 21,
+    "prompt": "Create exactly ONE broad fire animation cel, phase21/48, halfway in time between image1 phase20 and image2 phase22. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. Draw the true halfway contours and internal colours. The previous output was accidentally1774×886. The output MUST be the same native1774×887 canvas as BOTH references. Do not trim or rescale it. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-21-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/22.png"
+    ],
+    "reason": "One-pixel native canvas mismatch"
+  },
+  {
+    "id": "broad-05-r2",
+    "family": "broad",
+    "celId": "05-r2",
+    "phase": 5,
+    "prompt": "Create exactly ONE broad fire animation cel, phase5/48, halfway in time between image1 phase4 and image2 phase6. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. The old upper-left hollow is closed in image1 and opens through its crown in image2. At this intermediate moment its bridge must be barely connected: a very thin tapering orange membrane, becoming faint near the tear. Do NOT open the full wide gap already present in image2. The young mid-right lobe grows only halfway toward image2. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-05-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png"
+    ],
+    "reason": "Correct the reviewed inbetween contour or duplicate hole"
+  },
+  {
+    "id": "broad-13-r2",
+    "family": "broad",
+    "celId": "13-r2",
+    "phase": 13,
+    "prompt": "Create exactly ONE broad fire animation cel, phase13/48, halfway in time between image1 phase12 and image2 phase14. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. There is exactly ONE growing INTERNAL HOLE in the young mid-right orange sheet in BOTH references. Keep just ONE intermediate aperture, approximately centred at x1025,y530, midway in size and position. Do NOT draw both endpoint holes at once. No extra small hole underneath it. The old central-left crown burns down halfway, its highest tip aroundy215. Each corresponding shoulder must remain between its two references. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-13-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png"
+    ],
+    "reason": "Correct the reviewed inbetween contour or duplicate hole"
+  },
+  {
+    "id": "broad-29-r2",
+    "family": "broad",
+    "celId": "29-r2",
+    "phase": 29,
+    "prompt": "Create exactly ONE broad fire animation cel, phase29/48, halfway in time between image1 phase28 and image2 phase30. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. The old tall left edge and crown of the large upper hollow are being consumed; at this middle moment retain only a VERY THIN FAINT connected remnant of that left edge and its top curl, approximately half as substantial as image1. The right-hand tall stem remains attached to the low source and its top extends left only halfway. Do not regrow a thick closed crown, and do not leave any detached fragment. Fade the thin old membrane as part of the single cel while new lower-left material grows halfway toward image2. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-29-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/30-r3.png"
+    ],
+    "reason": "Correct the reviewed inbetween contour or duplicate hole"
+  },
+  {
+    "id": "broad-41-r2",
+    "family": "broad",
+    "celId": "41-r2",
+    "phase": 41,
+    "prompt": "Create exactly ONE broad fire animation cel, phase41/48, halfway in time between image1 phase40 and image2 phase42. Exact1774×887 native canvas, fixed low source aroundy830 and original transparent padding. The young central-left head is rising from image1 toward the taller spike in image2. Place the tip at exactly the midpoint of those two heights, NOT already at the height in image2. Keep the left shoulder and central hollow strictly intermediate in position too; do not suddenly extend the whole new head to its final height. Same softly luminous warm cream/lemon low source, orange large cel-painted masses, thin reddish tips. Evolve internal light shapes halfway too. No nested logo outlines, no blurry double exposure, no sparks, tiny detached flames, text, props, or exterior glow. Everything visible is attached to the low source. All exterior and holes must be truly alpha0, with no grey/white veil or background noise. Output a single native transparent PNG only.",
+    "promptFile": "prompts/broad-41-r2.txt",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/42.png"
+    ],
+    "reason": "Correct the reviewed inbetween contour or duplicate hole"
+  }
+]

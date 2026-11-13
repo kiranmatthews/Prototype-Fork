@@ -1,0 +1,20 @@
+{
+  "screenshotSize": [
+    1280,
+    720
+  ],
+  "comparisonRegion": {
+    "x": 250,
+    "y": 190,
+    "width": 470,
+    "height": 325
+  },
+  "heatOnVsOff": {
+    "changedPixelsAbove2": 1484,
+    "maxChannelDifference": 18
+  },
+  "zeroVsOff": {
+    "changedPixelsAbove2": 0,
+    "maxChannelDifference": 0
+  }
+}

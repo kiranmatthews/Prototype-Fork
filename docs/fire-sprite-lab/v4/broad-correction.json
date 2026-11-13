@@ -1,0 +1,12 @@
+{
+  "id": "broad-14-r2",
+  "family": "broad",
+  "celId": "14-r2",
+  "phase": 14,
+  "promptFile": "prompts/broad-14-r2.txt",
+  "prompt": "Create ONE transparent cel at phase14/48 exactly halfway in time between image1 (phase12) and image2 (phase16). This is a precise animation inbetween, not a new design. Preserve the exact native1774×887 canvas and stable bottom source near y830. The previous attempt stayed much too close to image1. The old CENTRAL-LEFT CROWN must visibly burn down: its tall left spike moves from y175 to approximately y250 on its way to y325 in image2. Thin and shorten the old narrow right twig so only a small remnant remains near y270; it is being consumed, not translated into the new head. The young MIDDLE-RIGHT sheet grows a small leftward hook at its upper edge, halfway to the hooked head in image2. Its lower internal hole must expand upward to span approximately y460..560, halfway from the tiny hole in image1 toward the large aperture in image2. Put the far-left and far-right contours and the flowing inner light shapes halfway between the references too. Do not hold their poses. Keep all fire connected to the long low source. Same bright warm white/lemon source, broad orange cel-painted colour masses, thin reddish tips, restrained soft transitions, no dark outline. Do not introduce additional tongues, particles, haze, specks, blurred double edges, glow outside the silhouette, or miniature flames. All exterior and hole pixels must be genuinely transparent alpha0. Output ONE newly drawn native-resolution transparent PNG only.",
+  "refs": [
+    "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+    "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png"
+  ]
+}

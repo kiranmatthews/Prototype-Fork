@@ -1,0 +1,5 @@
+Use case: precise-object-edit for a sequential flame animation.
+Image 1 is the EDIT TARGET, stylized cel 120. Image 2 is the underlying source pose 120. Image 3 is the next source pose 122, only two simulation frames later.
+Advance image 1 by ONLY the motion visible between source images 2 and 3. Match the new source pose: the left middle sheet lifts upward, the hot lower tongue extends slightly upward into the stem, and the upper sheets continue rising and thinning. Preserve continuity of the same sheets as they move, not a new flame design.
+Keep image 1's exact palette, soft cel shading, low-source brightness, foot position, overall framing and square native 1254×1254 canvas. Keep unchanged areas visually unchanged. No extra detailing, new highlights, new decorative curls, spontaneous new holes or extra sparks. The source's small shape evolution is the only change.
+Return ONE transparent RGBA animation cel, frame 122. Do not include the source images, a comparison board or any background.

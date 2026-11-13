@@ -1,0 +1,425 @@
+{
+  "note": "Diagnostic only; inspect flagged poses visually. Not an art approval.",
+  "results": [
+    {
+      "family": "broad",
+      "phase": 1,
+      "file": "art/fire-sprites/v4/broad/01.png",
+      "ratio": 0.436,
+      "differenceA": 0.012801753809657368,
+      "differenceB": 0.016546396063037577,
+      "endpointDifference": 0.018226153655813558,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/broad/02-r2.png",
+      "ratio": 0.379,
+      "differenceA": 0.018226153655813558,
+      "differenceB": 0.029872838224159533,
+      "endpointDifference": 0.038367762842153375,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 3,
+      "file": "art/fire-sprites/v4/broad/03-r2.png",
+      "ratio": 0.482,
+      "differenceA": 0.021079030968676166,
+      "differenceB": 0.02265084479300372,
+      "endpointDifference": 0.029872838224159533,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 4,
+      "file": "art/fire-sprites/v4/broad/04.png",
+      "ratio": 0.328,
+      "differenceA": 0.038367762842153375,
+      "differenceB": 0.07856275650542935,
+      "endpointDifference": 0.08822189533981341,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 5,
+      "file": "art/fire-sprites/v4/broad/05-r2.png",
+      "ratio": 0.35,
+      "differenceA": 0.03483517058540764,
+      "differenceB": 0.06456874353105978,
+      "endpointDifference": 0.07082597661513057,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 6,
+      "file": "art/fire-sprites/v4/broad/06.png",
+      "ratio": 0.706,
+      "differenceA": 0.07082597661513057,
+      "differenceB": 0.02950329979509148,
+      "endpointDifference": 0.07856275650542935,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 7,
+      "file": "art/fire-sprites/v4/broad/07-r2.png",
+      "ratio": 0.305,
+      "differenceA": 0.013574940871810668,
+      "differenceB": 0.030938787754156236,
+      "endpointDifference": 0.02950329979509148,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 9,
+      "file": "art/fire-sprites/v4/broad/09.png",
+      "ratio": 0.697,
+      "differenceA": 0.027605267610929005,
+      "differenceB": 0.011993260845285465,
+      "endpointDifference": 0.03166459725791384,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/broad/10.png",
+      "ratio": 0.437,
+      "differenceA": 0.03166459725791384,
+      "differenceB": 0.040807513491721785,
+      "endpointDifference": 0.05174799663946434,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 11,
+      "file": "art/fire-sprites/v4/broad/11.png",
+      "ratio": 0.55,
+      "differenceA": 0.03133681905321203,
+      "differenceB": 0.02561668060736627,
+      "endpointDifference": 0.040807513491721785,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/broad/12-r2.png",
+      "ratio": 0.374,
+      "differenceA": 0.05174799663946434,
+      "differenceB": 0.0867035317009659,
+      "endpointDifference": 0.10602895981658897,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/broad/13-r3.png",
+      "ratio": 0.666,
+      "differenceA": 0.05816522724013965,
+      "differenceB": 0.029116946712533204,
+      "endpointDifference": 0.06214558132409121,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/broad/14-r2.png",
+      "ratio": 0.545,
+      "differenceA": 0.06214558132409121,
+      "differenceB": 0.05194025982532851,
+      "endpointDifference": 0.0867035317009659,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 15,
+      "file": "art/fire-sprites/v4/broad/15.png",
+      "ratio": 0.369,
+      "differenceA": 0.02406951391513745,
+      "differenceB": 0.04117789412234752,
+      "endpointDifference": 0.05194025982532851,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 17,
+      "file": "art/fire-sprites/v4/broad/17.png",
+      "ratio": 0.672,
+      "differenceA": 0.03954701902388597,
+      "differenceB": 0.019261271490389625,
+      "endpointDifference": 0.03686762025344343,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/broad/18.png",
+      "ratio": 0.666,
+      "differenceA": 0.03686762025344343,
+      "differenceB": 0.018469355714815148,
+      "endpointDifference": 0.046488468665793155,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 19,
+      "file": "art/fire-sprites/v4/broad/19.png",
+      "ratio": 0.416,
+      "differenceA": 0.011503587901124749,
+      "differenceB": 0.016160104618083135,
+      "endpointDifference": 0.018469355714815148,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/broad/20.png",
+      "ratio": 0.368,
+      "differenceA": 0.046488468665793155,
+      "differenceB": 0.07997797479770385,
+      "endpointDifference": 0.07768096295532487,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 21,
+      "file": "art/fire-sprites/v4/broad/21-r2.png",
+      "ratio": 0.632,
+      "differenceA": 0.048464808892577434,
+      "differenceB": 0.02824446936327391,
+      "endpointDifference": 0.04856755698486356,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 22,
+      "file": "art/fire-sprites/v4/broad/22.png",
+      "ratio": 0.414,
+      "differenceA": 0.04856755698486356,
+      "differenceB": 0.0686584432664422,
+      "endpointDifference": 0.07997797479770385,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 23,
+      "file": "art/fire-sprites/v4/broad/23.png",
+      "ratio": 0.323,
+      "differenceA": 0.02957443976966589,
+      "differenceB": 0.06204196380857025,
+      "endpointDifference": 0.0686584432664422,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 25,
+      "file": "art/fire-sprites/v4/broad/25.png",
+      "ratio": 0.604,
+      "differenceA": 0.03699964236590468,
+      "differenceB": 0.02429890858272665,
+      "endpointDifference": 0.04854084965773446,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 26,
+      "file": "art/fire-sprites/v4/broad/26.png",
+      "ratio": 0.638,
+      "differenceA": 0.04854084965773446,
+      "differenceB": 0.02750998903263162,
+      "endpointDifference": 0.06155076028871554,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 27,
+      "file": "art/fire-sprites/v4/broad/27.png",
+      "ratio": 0.481,
+      "differenceA": 0.018935607622480234,
+      "differenceB": 0.020461079516427595,
+      "endpointDifference": 0.02750998903263162,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/broad/28.png",
+      "ratio": 0.444,
+      "differenceA": 0.06155076028871554,
+      "differenceB": 0.07709557814196458,
+      "endpointDifference": 0.10242786567001676,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/broad/29-r3.png",
+      "ratio": 0.639,
+      "differenceA": 0.05542805693457015,
+      "differenceB": 0.03134220738836199,
+      "endpointDifference": 0.058585438387339546,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/broad/30-r3.png",
+      "ratio": 0.57,
+      "differenceA": 0.058585438387339546,
+      "differenceB": 0.04415361788954942,
+      "endpointDifference": 0.07709557814196458,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 31,
+      "file": "art/fire-sprites/v4/broad/31.png",
+      "ratio": 0.482,
+      "differenceA": 0.028782717742954315,
+      "differenceB": 0.030905882097680783,
+      "endpointDifference": 0.04415361788954942,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 33,
+      "file": "art/fire-sprites/v4/broad/33.png",
+      "ratio": 0.709,
+      "differenceA": 0.037120277834773736,
+      "differenceB": 0.0152025210912935,
+      "endpointDifference": 0.03621289604962508,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 34,
+      "file": "art/fire-sprites/v4/broad/34-r2.png",
+      "ratio": 0.513,
+      "differenceA": 0.03621289604962508,
+      "differenceB": 0.03434887111001915,
+      "endpointDifference": 0.04916708539693405,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 35,
+      "file": "art/fire-sprites/v4/broad/35.png",
+      "ratio": 0.53,
+      "differenceA": 0.026562218963712386,
+      "differenceB": 0.023545379217862768,
+      "endpointDifference": 0.03434887111001915,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 36,
+      "file": "art/fire-sprites/v4/broad/36.png",
+      "ratio": 0.37,
+      "differenceA": 0.04916708539693405,
+      "differenceB": 0.08375800861644911,
+      "endpointDifference": 0.09470623219010314,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 37,
+      "file": "art/fire-sprites/v4/broad/37-r2.png",
+      "ratio": 0.473,
+      "differenceA": 0.04118219769179533,
+      "differenceB": 0.04586624711031596,
+      "endpointDifference": 0.06667857715355052,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 38,
+      "file": "art/fire-sprites/v4/broad/38.png",
+      "ratio": 0.663,
+      "differenceA": 0.06667857715355052,
+      "differenceB": 0.03388950202606759,
+      "endpointDifference": 0.08375800861644911,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 39,
+      "file": "art/fire-sprites/v4/broad/39.png",
+      "ratio": 0.378,
+      "differenceA": 0.022351128532350457,
+      "differenceB": 0.03672074260906906,
+      "endpointDifference": 0.03388950202606759,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 41,
+      "file": "art/fire-sprites/v4/broad/41-r2.png",
+      "ratio": 0.433,
+      "differenceA": 0.023925121480950377,
+      "differenceB": 0.03132093734129107,
+      "endpointDifference": 0.03702334919645016,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 42,
+      "file": "art/fire-sprites/v4/broad/42.png",
+      "ratio": 0.574,
+      "differenceA": 0.03702334919645016,
+      "differenceB": 0.027421533472205308,
+      "endpointDifference": 0.04046704423148219,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 43,
+      "file": "art/fire-sprites/v4/broad/43.png",
+      "ratio": 0.328,
+      "differenceA": 0.010769329109706063,
+      "differenceB": 0.02201538696493064,
+      "endpointDifference": 0.027421533472205308,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 44,
+      "file": "art/fire-sprites/v4/broad/44.png",
+      "ratio": 0.522,
+      "differenceA": 0.04046704423148219,
+      "differenceB": 0.037108231687111616,
+      "endpointDifference": 0.06051916509298529,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 45,
+      "file": "art/fire-sprites/v4/broad/45.png",
+      "ratio": 0.566,
+      "differenceA": 0.01590575885828586,
+      "differenceB": 0.012214654574297204,
+      "endpointDifference": 0.017310273565025493,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/broad/46-r2.png",
+      "ratio": 0.308,
+      "differenceA": 0.017310273565025493,
+      "differenceB": 0.03891447769816575,
+      "endpointDifference": 0.037108231687111616,
+      "reviewSuggested": false
+    },
+    {
+      "family": "broad",
+      "phase": 47,
+      "file": "art/fire-sprites/v4/broad/47-r2.png",
+      "ratio": 0.304,
+      "differenceA": 0.015511613052749494,
+      "differenceB": 0.035572178017150624,
+      "endpointDifference": 0.03891447769816575,
+      "reviewSuggested": false
+    }
+  ]
+}

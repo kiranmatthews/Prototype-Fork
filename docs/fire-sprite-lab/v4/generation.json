@@ -1,0 +1,3832 @@
+{
+  "tool": "built-in imagegen",
+  "status": "REJECTED BY USER — unacceptable flicker; technical checks are not visual approval",
+  "fps": 40,
+  "targetFrames": 48,
+  "frames": [
+    {
+      "family": "broad",
+      "id": "k00",
+      "phase": 0,
+      "file": "art/fire-sprites/v4/broad/k00.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-9662ce0d-0ec8-4d90-bade-6f4998df020e.png",
+      "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071",
+      "prompt": "prompts/broad-k00.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+          "sha256": "02cecf11191a8b7a84ba3977d3cb098a83b5113523f70b32752992a6eddcd75d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "01",
+      "phase": 1,
+      "file": "art/fire-sprites/v4/broad/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-baa75c99-4e64-4c16-8a8d-75f6138a7cd4.png",
+      "sha256": "576dfb24d2c01b4b0d08ab03764bdd0244a6a9009b7f6ffd871d6da412a977c0",
+      "prompt": "prompts/broad-01.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/02-r2.png",
+          "sha256": "81f67760829690a0bfdec65a3d89c9b3aa29e8726b0775d9d4cd3d1cad350cef"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "02-r2",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/broad/02-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ef5b2216-fea1-467c-9c97-600f7bcb8ae6.png",
+      "sha256": "81f67760829690a0bfdec65a3d89c9b3aa29e8726b0775d9d4cd3d1cad350cef",
+      "prompt": "prompts/broad-02-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k00.png",
+        "art/fire-sprites/v4/broad/04.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "03-r2",
+      "phase": 3,
+      "file": "art/fire-sprites/v4/broad/03-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ed855abc-1190-4cda-9c45-8083ad67b2c8.png",
+      "sha256": "eb2ed0c70236d3e1791d87dcdc7e0a4595295cfeeba6545eaa96e741b83a298d",
+      "prompt": "prompts/broad-03-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/02-r2.png",
+          "sha256": "81f67760829690a0bfdec65a3d89c9b3aa29e8726b0775d9d4cd3d1cad350cef"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "04",
+      "phase": 4,
+      "file": "art/fire-sprites/v4/broad/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3077ce41-d61b-4834-b74f-538d2163f9ea.png",
+      "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966",
+      "prompt": "prompts/broad-04.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k00.png",
+        "art/fire-sprites/v4/broad/k08-r2.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "05-r2",
+      "phase": 5,
+      "file": "art/fire-sprites/v4/broad/05-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ce9214d8-8f62-462c-bafa-7b4939087cc3.png",
+      "sha256": "80156bd881f414b7b30f961304a5fe0d159f8e6acf9fe9d07acb7fa0b82012ae",
+      "prompt": "prompts/broad-05-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png",
+          "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "06",
+      "phase": 6,
+      "file": "art/fire-sprites/v4/broad/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d3f3a219-32d6-45f7-8e5d-400568c08ebe.png",
+      "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396",
+      "prompt": "prompts/broad-06.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "07-r2",
+      "phase": 7,
+      "file": "art/fire-sprites/v4/broad/07-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0e7d789e-3810-43c3-a774-5bedbf2548fc.png",
+      "sha256": "daff3d76abaecd96f6873fb287dd15734761d242920e5fdaea4a2f0f205c7e88",
+      "prompt": "prompts/broad-07-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png",
+          "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "k08-r2",
+      "phase": 8,
+      "file": "art/fire-sprites/v4/broad/k08-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fba1cee0-a7aa-440f-8f5e-52bafefd12be.png",
+      "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664",
+      "prompt": "prompts/broad-k08-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/studies/broad-k08-clipped.png",
+          "sha256": "98dc23941b4a4fef8d022d40651590dd36d829c958bf8a924c69f780f0e15b0c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "09",
+      "phase": 9,
+      "file": "art/fire-sprites/v4/broad/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a9eaf55d-e027-4330-bc08-4e603986ba72.png",
+      "sha256": "2d6b8432c8e9908a7ead3c23b3ab8271bae20d20e643495715849d7439f4a091",
+      "prompt": "prompts/broad-09.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/10.png",
+          "sha256": "57b9bb92ce5cfc237ce71973f2b48c885cdd9bfde4a796b593b93f79347b4a00"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "10",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/broad/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1076fde2-7b87-4ff1-a9ff-7000e97d5ed9.png",
+      "sha256": "57b9bb92ce5cfc237ce71973f2b48c885cdd9bfde4a796b593b93f79347b4a00",
+      "prompt": "prompts/broad-10.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "11",
+      "phase": 11,
+      "file": "art/fire-sprites/v4/broad/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-f323f255-e97e-4988-a83f-c475e8959e7d.png",
+      "sha256": "d51e0c7650db6f4f4e6718036c34ccf28e1fa1dc1b8b8a265ec48ca14da62f8e",
+      "prompt": "prompts/broad-11.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/10.png",
+          "sha256": "57b9bb92ce5cfc237ce71973f2b48c885cdd9bfde4a796b593b93f79347b4a00"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "12-r2",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/broad/12-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-9b71f278-79b9-423b-9aee-9bb435171c38.png",
+      "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace",
+      "prompt": "prompts/broad-12-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12.png",
+          "sha256": "a8db57298f2cf8ce08240782e7a12d5958db6df73668c5554cdfacd7dd28f8cf"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user",
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k08-r2.png",
+        "art/fire-sprites/v4/broad/k16.png"
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "13-r3",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/broad/13-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-488eb4a4-16d3-46bb-bd87-2a0631f52a0e.png",
+      "sha256": "310f93fc6cfb1a6d0fa1371fb6a5b69f6ef2bbeaad2e0738b30c5708b42e7862",
+      "prompt": "prompts/broad-13-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png",
+          "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "14-r2",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/broad/14-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b957d9c2-f6d9-4682-880f-73b4449697ab.png",
+      "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184",
+      "prompt": "prompts/broad-14-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "15",
+      "phase": 15,
+      "file": "art/fire-sprites/v4/broad/15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4f67e527-32a0-4cfb-b2b6-107d6fb76f74.png",
+      "sha256": "524e0cf01835f291779129b25f0e8d31840fd3397aeb4601e7509e0b1c29c1d8",
+      "prompt": "prompts/broad-15.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png",
+          "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "k16",
+      "phase": 16,
+      "file": "art/fire-sprites/v4/broad/k16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-523c5d69-2996-47ad-9386-3509f9822eb2.png",
+      "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37",
+      "prompt": "prompts/broad-k16.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "17",
+      "phase": 17,
+      "file": "art/fire-sprites/v4/broad/17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7a4cbdf1-7ba6-423f-886a-c7605466e57d.png",
+      "sha256": "861497574810818fa666358f15c00aac2811f2a52881d560fa2f3d6f0757689f",
+      "prompt": "prompts/broad-17.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/18.png",
+          "sha256": "84d7be4f2883c20780ed7eb0c34740fb86ea98843b120522c78790b46915718e"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "18",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/broad/18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-843d4e02-8a2b-44d1-b71d-e67e3d3224c4.png",
+      "sha256": "84d7be4f2883c20780ed7eb0c34740fb86ea98843b120522c78790b46915718e",
+      "prompt": "prompts/broad-18.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+          "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "19",
+      "phase": 19,
+      "file": "art/fire-sprites/v4/broad/19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-95465aed-f7a4-489c-9c95-86debf3ebbc2.png",
+      "sha256": "119770dfb1fc470aab69acd18af00fa3af1db435a80328c736c6fa12eb4dbc1e",
+      "prompt": "prompts/broad-19.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/18.png",
+          "sha256": "84d7be4f2883c20780ed7eb0c34740fb86ea98843b120522c78790b46915718e"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+          "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "20",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/broad/20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-33c4fdc7-7e11-4934-a6bc-9c4d2bf1dcb0.png",
+      "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9",
+      "prompt": "prompts/broad-20.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k16.png",
+        "art/fire-sprites/v4/broad/k24.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "21-r2",
+      "phase": 21,
+      "file": "art/fire-sprites/v4/broad/21-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-efe68299-c8b7-4b68-b020-d88ced25e63f.png",
+      "sha256": "bacf28377565974e020b6a623d9c691cf1fd74168f3d4649606110fdd5ed002b",
+      "prompt": "prompts/broad-21-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+          "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/22.png",
+          "sha256": "668ce33f2b55b17ae0801e8c1779bb17a0da726b17329dff37967ef0cdb570f7"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "22",
+      "phase": 22,
+      "file": "art/fire-sprites/v4/broad/22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-5d462800-2de5-4081-8a86-f1a3666c6ea6.png",
+      "sha256": "668ce33f2b55b17ae0801e8c1779bb17a0da726b17329dff37967ef0cdb570f7",
+      "prompt": "prompts/broad-22.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+          "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "23",
+      "phase": 23,
+      "file": "art/fire-sprites/v4/broad/23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3320fde9-d6b7-483c-a100-ab963cad629f.png",
+      "sha256": "82449921a6345f521483ec8a87b1af5a0ade3ce8e0065c62bc6143753a009895",
+      "prompt": "prompts/broad-23.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/22.png",
+          "sha256": "668ce33f2b55b17ae0801e8c1779bb17a0da726b17329dff37967ef0cdb570f7"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "k24",
+      "phase": 24,
+      "file": "art/fire-sprites/v4/broad/k24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cd6c65c4-97bc-4571-bfc9-802d9c01e28c.png",
+      "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7",
+      "prompt": "prompts/broad-k24.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "25",
+      "phase": 25,
+      "file": "art/fire-sprites/v4/broad/25.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8b5ff1ba-0cdc-406c-be76-9725dab77783.png",
+      "sha256": "68860ad996d3d1fa7525c52eb56c2f4e2117fff548fce42b5c1f7a80b7cc8610",
+      "prompt": "prompts/broad-25.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/26.png",
+          "sha256": "3907054a37f71b03253b0603be166db69a10763aab360dcea0a076e6474a017e"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "26",
+      "phase": 26,
+      "file": "art/fire-sprites/v4/broad/26.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-5567da93-ede4-4af6-8bec-7bc90f58c9b7.png",
+      "sha256": "3907054a37f71b03253b0603be166db69a10763aab360dcea0a076e6474a017e",
+      "prompt": "prompts/broad-26.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "27",
+      "phase": 27,
+      "file": "art/fire-sprites/v4/broad/27.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-38215eb6-574f-414f-b8a0-015091a4eb64.png",
+      "sha256": "01d55fd4dc84fa163dbd0eb17f5122c2097b9ba46d62d35b35fb7b48f06e0aae",
+      "prompt": "prompts/broad-27.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/26.png",
+          "sha256": "3907054a37f71b03253b0603be166db69a10763aab360dcea0a076e6474a017e"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "28",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/broad/28.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-746f117f-50fb-4037-b3a7-f708bc516278.png",
+      "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c",
+      "prompt": "prompts/broad-28.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k24.png",
+        "art/fire-sprites/v4/broad/k32.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "29-r3",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/broad/29-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-9eca9226-f1ab-4101-b127-8101e1c0b748.png",
+      "sha256": "b783cc2b8c20067d1b6c1c13cfa8a737b1b53d763612d05365b0b13d49b7282e",
+      "prompt": "prompts/broad-29-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/29-r2.png",
+          "sha256": "ef8de9d73e6d7028bae44733dfa1880f1ba07b457807307f082fe63cec5fb828"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user",
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/28.png",
+        "art/fire-sprites/v4/broad/30-r3.png"
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "30-r3",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/broad/30-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cbe3159a-c39e-4c89-bdff-615204c26e2f.png",
+      "sha256": "124b6d0436f83c798e5742ed7662bc60a45cf5b5880e2cb2932763d01b00ec9b",
+      "prompt": "prompts/broad-30-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/30-r2.png",
+          "sha256": "a9664ec65916044409857437d5fd4575a38cea3b58f1d240bc30a4b4ceb7a4e8"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "31",
+      "phase": 31,
+      "file": "art/fire-sprites/v4/broad/31.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-01fff87d-2936-49de-8b9e-ddeb3ba44da0.png",
+      "sha256": "fa94b7030dfd5a3f081747ed637f36c9a4fbc218a5280b1526093c7b74e8483a",
+      "prompt": "prompts/broad-31.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/30-r3.png",
+          "sha256": "124b6d0436f83c798e5742ed7662bc60a45cf5b5880e2cb2932763d01b00ec9b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "k32",
+      "phase": 32,
+      "file": "art/fire-sprites/v4/broad/k32.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-76cbfca9-51ea-49cf-9e65-0eed9b59442b.png",
+      "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f",
+      "prompt": "prompts/broad-k32.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "33",
+      "phase": 33,
+      "file": "art/fire-sprites/v4/broad/33.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c1336804-2e43-4274-8f1d-b74cb4321598.png",
+      "sha256": "feef756fdfbbefe1e63bc153af5a14b258a786b4e742b1ae23560e79f5c3ddba",
+      "prompt": "prompts/broad-33.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/34-r2.png",
+          "sha256": "ab1d622ba4f56082f93295267449f4ea0b3c8b5e1a7cf0d417730541f3c1ad16"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "34-r2",
+      "phase": 34,
+      "file": "art/fire-sprites/v4/broad/34-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-16efa7da-6ae4-4d93-817e-f676dce40afb.png",
+      "sha256": "ab1d622ba4f56082f93295267449f4ea0b3c8b5e1a7cf0d417730541f3c1ad16",
+      "prompt": "prompts/broad-34-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "35",
+      "phase": 35,
+      "file": "art/fire-sprites/v4/broad/35.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-292960f1-17ed-4b18-bb9e-6a422c22c9f9.png",
+      "sha256": "3e100ffc705040917cc9a8015660134dde5e66be6398fad0fc968d25ddd8faab",
+      "prompt": "prompts/broad-35.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/34-r2.png",
+          "sha256": "ab1d622ba4f56082f93295267449f4ea0b3c8b5e1a7cf0d417730541f3c1ad16"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "36",
+      "phase": 36,
+      "file": "art/fire-sprites/v4/broad/36.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e01b1570-45bd-4abc-af46-477ad7fffc48.png",
+      "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec",
+      "prompt": "prompts/broad-36.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k32.png",
+        "art/fire-sprites/v4/broad/k40.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "37-r2",
+      "phase": 37,
+      "file": "art/fire-sprites/v4/broad/37-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bb9b8f4d-1594-4c6b-af8b-d54c96ce7c58.png",
+      "sha256": "ce1dce80de4bbc2e629d183e1800292c74379d69e2c7a70d84b20f279203f24d",
+      "prompt": "prompts/broad-37-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/38.png",
+          "sha256": "1e429d6a554382b37b8aed832c7ac5f4da27e40bde04db0170f939929bd6254f"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "38",
+      "phase": 38,
+      "file": "art/fire-sprites/v4/broad/38.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e0772000-cd03-4f5b-aba0-288525b6ee3b.png",
+      "sha256": "1e429d6a554382b37b8aed832c7ac5f4da27e40bde04db0170f939929bd6254f",
+      "prompt": "prompts/broad-38.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "39",
+      "phase": 39,
+      "file": "art/fire-sprites/v4/broad/39.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2d4c1705-4bde-4121-81f0-c137fa15aa6d.png",
+      "sha256": "d79238e978bf88700be257e61c45dfd5186e1272364de962887457d9e3cad464",
+      "prompt": "prompts/broad-39.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/38.png",
+          "sha256": "1e429d6a554382b37b8aed832c7ac5f4da27e40bde04db0170f939929bd6254f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "k40",
+      "phase": 40,
+      "file": "art/fire-sprites/v4/broad/k40.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4df92ee4-5ad3-4d19-a073-30ccaabce3f2.png",
+      "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063",
+      "prompt": "prompts/broad-k40.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k24.png",
+          "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "41-r2",
+      "phase": 41,
+      "file": "art/fire-sprites/v4/broad/41-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c1665d83-25a4-4414-a2da-74f47c03c460.png",
+      "sha256": "4bbed7032c315d61db4818c964518f09568c7fb00ac8fc9500dbfae3d6478979",
+      "prompt": "prompts/broad-41-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/42.png",
+          "sha256": "1ba8c456ffb8c8094f612ce57d4751570b0f353753059f7e1d31d11776822e55"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "42",
+      "phase": 42,
+      "file": "art/fire-sprites/v4/broad/42.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cc33a59a-db09-4c85-bf43-e889042c93f3.png",
+      "sha256": "1ba8c456ffb8c8094f612ce57d4751570b0f353753059f7e1d31d11776822e55",
+      "prompt": "prompts/broad-42.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/44.png",
+          "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "43",
+      "phase": 43,
+      "file": "art/fire-sprites/v4/broad/43.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6b925881-c4db-4e5d-aab0-d9f90a07fcc8.png",
+      "sha256": "80c7527a922c4d993a25ce4ba6b4ebb1f07ed675feecd4d932caeaf94404dc53",
+      "prompt": "prompts/broad-43.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/42.png",
+          "sha256": "1ba8c456ffb8c8094f612ce57d4751570b0f353753059f7e1d31d11776822e55"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/44.png",
+          "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "44",
+      "phase": 44,
+      "file": "art/fire-sprites/v4/broad/44.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-21e3a063-f103-48f1-9c42-0f32a12aa881.png",
+      "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51",
+      "prompt": "prompts/broad-44.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "45",
+      "phase": 45,
+      "file": "art/fire-sprites/v4/broad/45.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2f48ec34-78fd-4e33-b9c1-5145477002cd.png",
+      "sha256": "e111279d660a448f5cc3fe0db2557610859d7259a2175c83bdd5b56c33308e3c",
+      "prompt": "prompts/broad-45.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/44.png",
+          "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/46-r2.png",
+          "sha256": "76ffe347aebfe8c0be6bcf74dd8085b11aaf2f060196df34f57cfd9d42f16e7c"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "46-r2",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/broad/46-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-26b2c1ec-07dc-4e00-9444-a83363125b3c.png",
+      "sha256": "76ffe347aebfe8c0be6bcf74dd8085b11aaf2f060196df34f57cfd9d42f16e7c",
+      "prompt": "prompts/broad-46-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/46.png",
+          "sha256": "47f24ee892cdf5c207547f12930be26dfc271f370e19cbc9ae31df461db38538"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/44.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "broad",
+      "id": "47-r2",
+      "phase": 47,
+      "file": "art/fire-sprites/v4/broad/47-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-86551faf-7858-4f6c-99dc-fe5d70f79e5b.png",
+      "sha256": "0c29eb4612b5c6545be44edba57085ad31b48759f0e905d2c77fa47af7601304",
+      "prompt": "prompts/broad-47-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/46-r2.png",
+          "sha256": "76ffe347aebfe8c0be6bcf74dd8085b11aaf2f060196df34f57cfd9d42f16e7c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k00-r2",
+      "phase": 0,
+      "file": "art/fire-sprites/v4/medium/k00-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e70a0229-d67d-4725-a85e-12be16662d09.png",
+      "sha256": "085c0739b64694b6dec2f6820ca5fe8904dc994c95f751b09179bb17f83cc366",
+      "prompt": "prompts/medium-k00-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/47.png",
+          "sha256": "e782dfe2f3cc9dfe55e7efedf7a305ab0ab9ddcf2f12e6deb377132feafaec9d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "01",
+      "phase": 1,
+      "file": "art/fire-sprites/v4/medium/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8837b214-1d87-4b02-b528-6098619918d7.png",
+      "sha256": "8450b890a74b3e7ac4e2d34398ff83679b350da12c58b3ee28713f67b67fd914",
+      "prompt": "prompts/medium-01.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/02.png",
+          "sha256": "5c409d0a9969320b592354fa1905f463ba76a4e1424ba902b5176902c2c8e639"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "02",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/medium/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7e47f2e6-da3c-408a-abf7-f22633656232.png",
+      "sha256": "5c409d0a9969320b592354fa1905f463ba76a4e1424ba902b5176902c2c8e639",
+      "prompt": "prompts/medium-02.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/04.png",
+          "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "03",
+      "phase": 3,
+      "file": "art/fire-sprites/v4/medium/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-35868f57-b67d-413b-9b15-45fb2928a63a.png",
+      "sha256": "6729d4378f79c8a15a4f66c7d363c7dae50e1ebd306ac07e9821248873c53700",
+      "prompt": "prompts/medium-03.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/02.png",
+          "sha256": "5c409d0a9969320b592354fa1905f463ba76a4e1424ba902b5176902c2c8e639"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/04.png",
+          "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "04",
+      "phase": 4,
+      "file": "art/fire-sprites/v4/medium/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-27b5eaeb-7d17-4ec5-9e97-bfd3d6fe655f.png",
+      "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133",
+      "prompt": "prompts/medium-04.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "05",
+      "phase": 5,
+      "file": "art/fire-sprites/v4/medium/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-37633bee-5f5e-402f-b212-f60606425c91.png",
+      "sha256": "6a03bb956518e07cc5df84c7697cc2799f587de13d50ac4ea34010cd825d2be0",
+      "prompt": "prompts/medium-05.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/04.png",
+          "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/06.png",
+          "sha256": "89b8316e678594bac41f0737f3fa0935d83e3fbcaef941df6ef043282942758b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "06",
+      "phase": 6,
+      "file": "art/fire-sprites/v4/medium/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-47ac67e7-b2bf-4e6a-a04d-c01d3aa7da72.png",
+      "sha256": "89b8316e678594bac41f0737f3fa0935d83e3fbcaef941df6ef043282942758b",
+      "prompt": "prompts/medium-06.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/04.png",
+          "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "07",
+      "phase": 7,
+      "file": "art/fire-sprites/v4/medium/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b1c263cc-0967-409d-bfa8-89aaa6024e90.png",
+      "sha256": "86720a7d6e146f874b420e6a35a53343ca58aa948ba976bc556dce7ba5fab02a",
+      "prompt": "prompts/medium-07.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/06.png",
+          "sha256": "89b8316e678594bac41f0737f3fa0935d83e3fbcaef941df6ef043282942758b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k08-r2",
+      "phase": 8,
+      "file": "art/fire-sprites/v4/medium/k08-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-da0fb9ca-f345-4636-bcd6-358399396c11.png",
+      "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006",
+      "prompt": "prompts/medium-k08-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08.png",
+          "sha256": "7854fd530aa28b22900ecae16a17e6ce53012195061e0153e87d0e862fa22d67"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "09",
+      "phase": 9,
+      "file": "art/fire-sprites/v4/medium/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-147c7a53-32da-48ba-9020-244e5fb6e8a5.png",
+      "sha256": "ee71c859a0be67264ee780393a0c01afc89fb62cda341b7e4573feba5c54a1d3",
+      "prompt": "prompts/medium-09.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/10-r2.png",
+          "sha256": "67a8413d1e04f50498c56449d43b11a2e30a6e7fa2dad26d178c4e7d28b40295"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "10-r2",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/medium/10-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b8b5c945-5cff-453c-8d3a-77eff79da86d.png",
+      "sha256": "67a8413d1e04f50498c56449d43b11a2e30a6e7fa2dad26d178c4e7d28b40295",
+      "prompt": "prompts/medium-10-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/medium/k08-r2.png",
+        "art/fire-sprites/v4/medium/12-r2.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "11",
+      "phase": 11,
+      "file": "art/fire-sprites/v4/medium/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1d144f16-cf61-4f5e-afd4-f4b2c93cc396.png",
+      "sha256": "cb65ddee896a408b4c203968235f77fac0ad821e62a1f9ce026383434fea59a3",
+      "prompt": "prompts/medium-11.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/10-r2.png",
+          "sha256": "67a8413d1e04f50498c56449d43b11a2e30a6e7fa2dad26d178c4e7d28b40295"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/12-r2.png",
+          "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "12-r2",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/medium/12-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-060d1b25-1d24-4cca-a480-83ef58c6d31f.png",
+      "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937",
+      "prompt": "prompts/medium-12-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "13-r2",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/medium/13-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-892fcd3a-4fb7-441f-9609-0a9b3d95bce8.png",
+      "sha256": "1ef6b197df76e210f87ca4c5c1badbfdbe6ef6cf970566868206e2e8e5c106e6",
+      "prompt": "prompts/medium-13-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/12-r2.png",
+          "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/14.png",
+          "sha256": "e20c784cbd8e87857b764d8f8a1dcf56d569945678d662a0c87d9dd0c749c57b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "14",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/medium/14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4134d2a1-42d1-4c40-98ce-64bf584b244b.png",
+      "sha256": "e20c784cbd8e87857b764d8f8a1dcf56d569945678d662a0c87d9dd0c749c57b",
+      "prompt": "prompts/medium-14.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/12-r2.png",
+          "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "15",
+      "phase": 15,
+      "file": "art/fire-sprites/v4/medium/15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-41bf4fbf-02b5-4060-b625-75a938e3fd9c.png",
+      "sha256": "bd2a5f4677dca36f97413da2df4a8bc26858934423b3dd956b3b7abf0669daa6",
+      "prompt": "prompts/medium-15.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/14.png",
+          "sha256": "e20c784cbd8e87857b764d8f8a1dcf56d569945678d662a0c87d9dd0c749c57b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k16",
+      "phase": 16,
+      "file": "art/fire-sprites/v4/medium/k16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-64b49826-e94c-447a-a934-142d015717cd.png",
+      "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315",
+      "prompt": "prompts/medium-k16.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "17",
+      "phase": 17,
+      "file": "art/fire-sprites/v4/medium/17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cbf1612e-e282-4db9-bb66-6f82975d3587.png",
+      "sha256": "b0fdbc2f9031829166e2eeed5af614d6453bb9ba6628c26cd74009ba5165fee8",
+      "prompt": "prompts/medium-17.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/18-r2.png",
+          "sha256": "fee77d457795d3c4064a1f6789c57c36189c186c012dbcf9298a622aa0dee437"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "18-r2",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/medium/18-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a0d6e530-b46f-4fa7-afad-3c5ceb7ba5fa.png",
+      "sha256": "fee77d457795d3c4064a1f6789c57c36189c186c012dbcf9298a622aa0dee437",
+      "prompt": "prompts/medium-18-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/medium/k16.png",
+        "art/fire-sprites/v4/medium/20-r2.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "19",
+      "phase": 19,
+      "file": "art/fire-sprites/v4/medium/19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a341b202-6d3d-4e69-a791-39bd2481995d.png",
+      "sha256": "1036be9686d5be6f2806b07998f121c3bcb02df7ad3f9e1c591e3949d8542868",
+      "prompt": "prompts/medium-19.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/18-r2.png",
+          "sha256": "fee77d457795d3c4064a1f6789c57c36189c186c012dbcf9298a622aa0dee437"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/20-r2.png",
+          "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "20-r2",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/medium/20-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4a8c8f0d-84ce-4f9e-a9e0-9f00a803b4d1.png",
+      "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678",
+      "prompt": "prompts/medium-20-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/medium/k16.png",
+        "art/fire-sprites/v4/medium/k24.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "21",
+      "phase": 21,
+      "file": "art/fire-sprites/v4/medium/21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-05e2ccef-9d24-4bc0-bb6a-d308135b3141.png",
+      "sha256": "2682aa4a13f1c9c5e2c7b6998017b2ed899f4717a14ec005c392b1812885db60",
+      "prompt": "prompts/medium-21.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/20-r2.png",
+          "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/22.png",
+          "sha256": "10fc378312d6f0b751eb7c4c69edb3d09ecb0552de6b66f8aa7a7ff8af980712"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "22",
+      "phase": 22,
+      "file": "art/fire-sprites/v4/medium/22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1f342ae3-9794-4a18-a63e-a3531ea0e749.png",
+      "sha256": "10fc378312d6f0b751eb7c4c69edb3d09ecb0552de6b66f8aa7a7ff8af980712",
+      "prompt": "prompts/medium-22.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/20-r2.png",
+          "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "23",
+      "phase": 23,
+      "file": "art/fire-sprites/v4/medium/23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c28fd534-5f24-403e-a3ba-3aca5f6e41b0.png",
+      "sha256": "a358cb8b11108a5af73cd1401ae6e0b5ceaf282e36626643d18728d7b8f42060",
+      "prompt": "prompts/medium-23.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/22.png",
+          "sha256": "10fc378312d6f0b751eb7c4c69edb3d09ecb0552de6b66f8aa7a7ff8af980712"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k24",
+      "phase": 24,
+      "file": "art/fire-sprites/v4/medium/k24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b49472cf-0766-417c-adb4-ba13d8272091.png",
+      "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6",
+      "prompt": "prompts/medium-k24.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08.png",
+          "sha256": "7854fd530aa28b22900ecae16a17e6ce53012195061e0153e87d0e862fa22d67"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "25",
+      "phase": 25,
+      "file": "art/fire-sprites/v4/medium/25.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7dfd796b-31f6-4639-8c7a-e6f84fefef3c.png",
+      "sha256": "0d77c468b15ed2009846e26de99e27dd0428bf022c83c3e799e0a8c6c2a359c2",
+      "prompt": "prompts/medium-25.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/26.png",
+          "sha256": "c089d48bdb238e1653c46ed4047d0a1797473fc7c1c970ba55192b3f4c1686bc"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "26",
+      "phase": 26,
+      "file": "art/fire-sprites/v4/medium/26.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-02531774-da0f-412d-a65c-de96c92880b8.png",
+      "sha256": "c089d48bdb238e1653c46ed4047d0a1797473fc7c1c970ba55192b3f4c1686bc",
+      "prompt": "prompts/medium-26.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/28-r2.png",
+          "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "27",
+      "phase": 27,
+      "file": "art/fire-sprites/v4/medium/27.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a3d32619-949a-4b08-82ab-378cc148cdfb.png",
+      "sha256": "2a03a318638c4e897635aff548aec8046d0bf9e723649bbed62c77979f941774",
+      "prompt": "prompts/medium-27.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/26.png",
+          "sha256": "c089d48bdb238e1653c46ed4047d0a1797473fc7c1c970ba55192b3f4c1686bc"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/28-r2.png",
+          "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "28-r2",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/medium/28-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a556d0ac-9df9-4ac5-a05f-cd93963c261b.png",
+      "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d",
+      "prompt": "prompts/medium-28-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/medium/k24.png",
+        "art/fire-sprites/v4/medium/k32.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "29-r2",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/medium/29-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-175fbb20-f13b-4a54-beda-a67381ed3371.png",
+      "sha256": "de839d29dd45810208dee42572d172302b19cf3e9d1ab2cc1a7fae10a5dd79ca",
+      "prompt": "prompts/medium-29-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/28-r2.png",
+          "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/30.png",
+          "sha256": "646245d5fd829eee619175925d76e77aee61d3943331eb3fa8d75a693c01cd79"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "30",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/medium/30.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cd3a9f03-bb98-4d19-ad8b-5903ce039d9b.png",
+      "sha256": "646245d5fd829eee619175925d76e77aee61d3943331eb3fa8d75a693c01cd79",
+      "prompt": "prompts/medium-30.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/28-r2.png",
+          "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "31",
+      "phase": 31,
+      "file": "art/fire-sprites/v4/medium/31.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e4a22764-709c-4d3d-88d1-4aa70de68670.png",
+      "sha256": "caf2d43a0ad0a50c987eeee0ada23d133a62a6c67ed17d63a1a76038b1faa08f",
+      "prompt": "prompts/medium-31.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/30.png",
+          "sha256": "646245d5fd829eee619175925d76e77aee61d3943331eb3fa8d75a693c01cd79"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k32",
+      "phase": 32,
+      "file": "art/fire-sprites/v4/medium/k32.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-539dbe96-d42e-43ff-b65c-ae546b25730f.png",
+      "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f",
+      "prompt": "prompts/medium-k32.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "33-r2",
+      "phase": 33,
+      "file": "art/fire-sprites/v4/medium/33-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-01a2b5a0-0a8b-44bd-b83d-9090c4a171cb.png",
+      "sha256": "46822ff096c1508af4d5f56f412f3ff9997c4196f80c6df8edaad236b47e6b75",
+      "prompt": "prompts/medium-33-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/34.png",
+          "sha256": "4004cdb796cd1a354fca215f309755ca5dfcd761f55e850bcabb46391bbaff84"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "34",
+      "phase": 34,
+      "file": "art/fire-sprites/v4/medium/34.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0bd072d8-b200-4183-bfb1-c69dc93b88fb.png",
+      "sha256": "4004cdb796cd1a354fca215f309755ca5dfcd761f55e850bcabb46391bbaff84",
+      "prompt": "prompts/medium-34.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/36.png",
+          "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "35",
+      "phase": 35,
+      "file": "art/fire-sprites/v4/medium/35.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-18ed8666-75ca-4cf0-bed4-cac942e82875.png",
+      "sha256": "8edc383092964edb048013b541e68a637b3b89281bb5b8090686b73485fe3192",
+      "prompt": "prompts/medium-35.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/34.png",
+          "sha256": "4004cdb796cd1a354fca215f309755ca5dfcd761f55e850bcabb46391bbaff84"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/36.png",
+          "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "36",
+      "phase": 36,
+      "file": "art/fire-sprites/v4/medium/36.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6bc00df6-d0af-4c58-bb54-7af54876668f.png",
+      "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436",
+      "prompt": "prompts/medium-36.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/medium/k32.png",
+        "art/fire-sprites/v4/medium/k40.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "37",
+      "phase": 37,
+      "file": "art/fire-sprites/v4/medium/37.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-39760681-d7dd-4694-9545-fdea58efbd50.png",
+      "sha256": "00f0a9c65536d041ceae6872a774822daae65ee6fb10d15a62e1102eef13e181",
+      "prompt": "prompts/medium-37.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/36.png",
+          "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/38.png",
+          "sha256": "dcd977c77c5a79c8073bbaaa9fa5a453b5143078f01f28004e5fbaff1b3512d8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "38",
+      "phase": 38,
+      "file": "art/fire-sprites/v4/medium/38.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-700f7354-6c4f-458f-9f03-67e8edc83482.png",
+      "sha256": "dcd977c77c5a79c8073bbaaa9fa5a453b5143078f01f28004e5fbaff1b3512d8",
+      "prompt": "prompts/medium-38.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/36.png",
+          "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "39",
+      "phase": 39,
+      "file": "art/fire-sprites/v4/medium/39.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-95e95b78-1d6d-4622-9e05-20711ad5bc04.png",
+      "sha256": "234c05eb85868204403d2f7da956b942198950db9e5561c2cda31bc88b10e914",
+      "prompt": "prompts/medium-39.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/38.png",
+          "sha256": "dcd977c77c5a79c8073bbaaa9fa5a453b5143078f01f28004e5fbaff1b3512d8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "k40",
+      "phase": 40,
+      "file": "art/fire-sprites/v4/medium/k40.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-55e78e15-969c-41cc-b426-2e258a96c524.png",
+      "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0",
+      "prompt": "prompts/medium-k40.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "41",
+      "phase": 41,
+      "file": "art/fire-sprites/v4/medium/41.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fa56cd59-0a27-4ef3-9cda-d0e1fbf47fdc.png",
+      "sha256": "ceaed1f95d69ae3c9281eac5b0a519260c6d544504fbf6a417d5689cc6b17e7d",
+      "prompt": "prompts/medium-41.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/42.png",
+          "sha256": "7c1f682d9ca94610c44ce025bee3895e5516f32ecdb47d200266cff462176f26"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "42",
+      "phase": 42,
+      "file": "art/fire-sprites/v4/medium/42.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d7ea8921-56ae-489e-87cd-bdd285436112.png",
+      "sha256": "7c1f682d9ca94610c44ce025bee3895e5516f32ecdb47d200266cff462176f26",
+      "prompt": "prompts/medium-42.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/44.png",
+          "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "43",
+      "phase": 43,
+      "file": "art/fire-sprites/v4/medium/43.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-32fc8438-7140-48ab-86eb-3a9cbb88d8fb.png",
+      "sha256": "db075f613993e4e33a67ae9e98e45b77fa3cd81789d3e8728bfb10c5d0ee65e7",
+      "prompt": "prompts/medium-43.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/42.png",
+          "sha256": "7c1f682d9ca94610c44ce025bee3895e5516f32ecdb47d200266cff462176f26"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/44.png",
+          "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "44",
+      "phase": 44,
+      "file": "art/fire-sprites/v4/medium/44.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8d6bc0de-9361-4011-ba12-c2752c68167b.png",
+      "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968",
+      "prompt": "prompts/medium-44.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k40.png",
+          "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "45",
+      "phase": 45,
+      "file": "art/fire-sprites/v4/medium/45.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-038739d2-6d5d-4f3b-ad3f-cc6e252cc34c.png",
+      "sha256": "21a25260e6cb647f75c2e862ed439917447b7ab8e5cbf10cd92c6dc29cd74b3a",
+      "prompt": "prompts/medium-45.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/44.png",
+          "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/46.png",
+          "sha256": "e5085c54ff62006c4cad74d6107a8ba40919d3e108c10dd4880c9e7ee911a113"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "46",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/medium/46.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d02627d8-fb29-47e2-b0ac-5c8423e96639.png",
+      "sha256": "e5085c54ff62006c4cad74d6107a8ba40919d3e108c10dd4880c9e7ee911a113",
+      "prompt": "prompts/medium-46.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/44.png",
+          "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "medium",
+      "id": "47",
+      "phase": 47,
+      "file": "art/fire-sprites/v4/medium/47.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-edbeb8d3-0dc8-4a3e-b7b8-b6f61f812dfb.png",
+      "sha256": "e782dfe2f3cc9dfe55e7efedf7a305ab0ab9ddcf2f12e6deb377132feafaec9d",
+      "prompt": "prompts/medium-47.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/46.png",
+          "sha256": "e5085c54ff62006c4cad74d6107a8ba40919d3e108c10dd4880c9e7ee911a113"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k00",
+      "phase": 0,
+      "file": "art/fire-sprites/v4/narrow/k00.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-90b864e2-f07e-420a-9421-620332a1adc2.png",
+      "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d",
+      "prompt": "prompts/narrow-k00-r2.txt",
+      "references": [
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4429/frame-001.png",
+          "sha256": "a908d1a7dd8d1b2e828abd07c618df013325179aeb2e2755900e287b96169343"
+        },
+        {
+          "file": "/private/tmp/fire-v4-reference/reel-fire/still-25-5.png",
+          "sha256": "4d3cd2491ba4da17f1b5d8ef1d79f8d439e592bd39f9ea92bd3d51cffc0108f1"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "01",
+      "phase": 1,
+      "file": "art/fire-sprites/v4/narrow/01.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-adc57ac6-1e21-4ca7-8c58-152c4f5bdf20.png",
+      "sha256": "faaa7c8211a441835c866fead7216efcd2a7cffce582934523c3a17fe8487ef2",
+      "prompt": "prompts/narrow-01.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/02-r2.png",
+          "sha256": "b9d224243942aa648e4d48b36a6c703851d99113ee800ae5e7ec5cbd718d46b5"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "02-r2",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/narrow/02-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ad7ce445-74be-4354-895f-89672e3a2a04.png",
+      "sha256": "b9d224243942aa648e4d48b36a6c703851d99113ee800ae5e7ec5cbd718d46b5",
+      "prompt": "prompts/narrow-02-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/04.png",
+          "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "03",
+      "phase": 3,
+      "file": "art/fire-sprites/v4/narrow/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6f04ae35-b7ce-455b-b902-65a7596ed337.png",
+      "sha256": "91827a944dc6563df16753706b244c26c7fe34af62f69de3872ef4c02fe08599",
+      "prompt": "prompts/narrow-03.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/02-r2.png",
+          "sha256": "b9d224243942aa648e4d48b36a6c703851d99113ee800ae5e7ec5cbd718d46b5"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/04.png",
+          "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "04",
+      "phase": 4,
+      "file": "art/fire-sprites/v4/narrow/04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e0118f1b-1c93-40fc-b6d7-b3f52afce75b.png",
+      "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da",
+      "prompt": "prompts/narrow-04.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "05",
+      "phase": 5,
+      "file": "art/fire-sprites/v4/narrow/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bf216086-d789-436e-9df3-ec99bdce253b.png",
+      "sha256": "b4ee235b5c14b72babb7072fcd39561c1647956f794edab62231309532cba054",
+      "prompt": "prompts/narrow-05.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/04.png",
+          "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/06.png",
+          "sha256": "7c4e308308b1e351acbc89f550473f7b2331bd0e4a380038836f48e54225f56f"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "06",
+      "phase": 6,
+      "file": "art/fire-sprites/v4/narrow/06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fe9f9f4e-66e6-4fd6-9065-0f5ee2101554.png",
+      "sha256": "7c4e308308b1e351acbc89f550473f7b2331bd0e4a380038836f48e54225f56f",
+      "prompt": "prompts/narrow-06.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/04.png",
+          "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "07",
+      "phase": 7,
+      "file": "art/fire-sprites/v4/narrow/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d17ee4e0-33d5-49e4-917f-239fbfdbfb25.png",
+      "sha256": "3addeea512e3763aeb9e9b45043f616e53b769e09595548c855c65807f244e21",
+      "prompt": "prompts/narrow-07.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/06.png",
+          "sha256": "7c4e308308b1e351acbc89f550473f7b2331bd0e4a380038836f48e54225f56f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k08",
+      "phase": 8,
+      "file": "art/fire-sprites/v4/narrow/k08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b49cbb93-294a-45d0-bff0-9ff973d1024b.png",
+      "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33",
+      "prompt": "prompts/narrow-k08.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "09",
+      "phase": 9,
+      "file": "art/fire-sprites/v4/narrow/09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-23713f4d-726a-4d46-b3e0-d2d680bc50f5.png",
+      "sha256": "69a321fe34f48c3701d33673c9babf7d8ddbeed2aba23dade1e96578848278a4",
+      "prompt": "prompts/narrow-09.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/10-r2.png",
+          "sha256": "70c68014fae12f071ea916e55f91a3f208cebc67b1de9601a948f49513e67bdc"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "10-r2",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/narrow/10-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a8ae5de8-490f-4787-afa2-da0867e95599.png",
+      "sha256": "70c68014fae12f071ea916e55f91a3f208cebc67b1de9601a948f49513e67bdc",
+      "prompt": "prompts/narrow-10-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "11",
+      "phase": 11,
+      "file": "art/fire-sprites/v4/narrow/11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-5f09f2a7-9a0d-4f74-bdc3-d395ec41ad8b.png",
+      "sha256": "27b95a547f66813ca2154ca7b1a45df222ae307829795b5b6f0598e0f70f7944",
+      "prompt": "prompts/narrow-11.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/10-r2.png",
+          "sha256": "70c68014fae12f071ea916e55f91a3f208cebc67b1de9601a948f49513e67bdc"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "12",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/narrow/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-989cbc5a-c147-4639-8ba9-51d511caa49a.png",
+      "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba",
+      "prompt": "prompts/narrow-12.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "13",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/narrow/13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d4a0b38a-2641-48fc-94b3-27654948756d.png",
+      "sha256": "f924dfb663b366da92ddebc82433551b33e3eae973b9595722d4aaefb510359a",
+      "prompt": "prompts/narrow-13.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/14-r3.png",
+          "sha256": "b663f52888018f940f7b7672d46f75f9fc74918cccef30c61cfc2dd805dd2e24"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "14-r3",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/narrow/14-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e1d5540a-a49b-43c3-a848-411f104d3ccb.png",
+      "sha256": "b663f52888018f940f7b7672d46f75f9fc74918cccef30c61cfc2dd805dd2e24",
+      "prompt": "prompts/narrow-14-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/14-r2.png",
+          "sha256": "420577be9457ba5b2387c568eb05cc0b25f33f378a213c8c58d61024259a7a46"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "15",
+      "phase": 15,
+      "file": "art/fire-sprites/v4/narrow/15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d93b4aac-b417-4ab6-83bf-36655bea818e.png",
+      "sha256": "7eb326beb9e8999024e37cb740953b1e8ae7337286ddcacdeae60d63223f3b70",
+      "prompt": "prompts/narrow-15.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/14-r3.png",
+          "sha256": "b663f52888018f940f7b7672d46f75f9fc74918cccef30c61cfc2dd805dd2e24"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16-r2.png",
+          "sha256": "152e044ee34271c9295ad2baa35e985c7d28f25ae26555e37667b1196e9ad908"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k16-r2",
+      "phase": 16,
+      "file": "art/fire-sprites/v4/narrow/k16-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c87cc527-01e4-4585-82c3-61fdfe1d3f7c.png",
+      "sha256": "152e044ee34271c9295ad2baa35e985c7d28f25ae26555e37667b1196e9ad908",
+      "prompt": "prompts/narrow-k16-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "17",
+      "phase": 17,
+      "file": "art/fire-sprites/v4/narrow/17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d9a9757a-5e34-4fec-98a4-4d101afa5d83.png",
+      "sha256": "9d235db0b4b3aa63165db0afbb13ea78fac4617de3e06282632440b61bb5de0d",
+      "prompt": "prompts/narrow-17.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16-r2.png",
+          "sha256": "152e044ee34271c9295ad2baa35e985c7d28f25ae26555e37667b1196e9ad908"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/18-r4.png",
+          "sha256": "0f181fb9bf01e89bf8dd59eb0a5d65886023ae0abbc0131a74b01f685b3ddbe4"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "18-r4",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/narrow/18-r4.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ebcaaa5b-9dca-4d85-8d52-c8107b0bf6a5.png",
+      "sha256": "0f181fb9bf01e89bf8dd59eb0a5d65886023ae0abbc0131a74b01f685b3ddbe4",
+      "prompt": "prompts/narrow-18-r4.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/18-r3.png",
+          "sha256": "ec74146a56433517aa1b510822ff7c51fc5da2067197ab4484c5999a4a02b50c"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/narrow/k16.png",
+        "art/fire-sprites/v4/narrow/20.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "19",
+      "phase": 19,
+      "file": "art/fire-sprites/v4/narrow/19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-79c5468c-be27-45c5-b322-1836bdb3fcc5.png",
+      "sha256": "7337c9ef193359489b1392e9fa345c5ed58b59c8f11a1f123e4825ce05b297fa",
+      "prompt": "prompts/narrow-19.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/18-r4.png",
+          "sha256": "0f181fb9bf01e89bf8dd59eb0a5d65886023ae0abbc0131a74b01f685b3ddbe4"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20-r2.png",
+          "sha256": "ea060bb443d7a5243465b6cd71eaf5b6da0ab85b8438697b546c0a221a2bf146"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "20-r2",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/narrow/20-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d1847066-ec43-400d-a6b7-f58260eda248.png",
+      "sha256": "ea060bb443d7a5243465b6cd71eaf5b6da0ab85b8438697b546c0a221a2bf146",
+      "prompt": "prompts/narrow-20-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20.png",
+          "sha256": "af8dbd2dcdd9ed6e70676994b6dd58ee20aaf11cf83b044b0ab05f59a8e221c3"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "21",
+      "phase": 21,
+      "file": "art/fire-sprites/v4/narrow/21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-34d753d5-9bed-4335-8ac7-1bc41c989b45.png",
+      "sha256": "e2fd3be421bff4ecd96ae5fd439c6a24571ac5a4a94d5b8ebbbad11fd0cf1e03",
+      "prompt": "prompts/narrow-21.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20-r2.png",
+          "sha256": "ea060bb443d7a5243465b6cd71eaf5b6da0ab85b8438697b546c0a221a2bf146"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/22-r2.png",
+          "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "22-r2",
+      "phase": 22,
+      "file": "art/fire-sprites/v4/narrow/22-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8902d17a-3530-48d2-b861-5b7e3ae07d69.png",
+      "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2",
+      "prompt": "prompts/narrow-22-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/22.png",
+          "sha256": "9360be8635446ccaedc4aee86880f2d5bdbecb657e12f885affeec753f162ed8"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "23-r2",
+      "phase": 23,
+      "file": "art/fire-sprites/v4/narrow/23-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-764bcc00-8201-4c83-bc62-114a76ed8ff3.png",
+      "sha256": "c73140523dd1b50b3d4bb11fb27209411db28374ca8e9447c762437ee2d27f18",
+      "prompt": "prompts/narrow-23-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/22-r2.png",
+          "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k24",
+      "phase": 24,
+      "file": "art/fire-sprites/v4/narrow/k24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-f1860692-e803-48b9-88c7-b9d8ae4d2ef2.png",
+      "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1",
+      "prompt": "prompts/narrow-k24.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "25",
+      "phase": 25,
+      "file": "art/fire-sprites/v4/narrow/25.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e39eb3c2-b779-4476-af4d-823e081c88b7.png",
+      "sha256": "0d44f8afaadcc51593e1326346af596db0677891fa3f315f03c6099244efa664",
+      "prompt": "prompts/narrow-25.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/26-r2.png",
+          "sha256": "b468b8843ec55266b454d2c2b7a32d0deb8b052581a191680f324f030ccebd53"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "26-r2",
+      "phase": 26,
+      "file": "art/fire-sprites/v4/narrow/26-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-87f738b4-1818-41b2-be06-121296416244.png",
+      "sha256": "b468b8843ec55266b454d2c2b7a32d0deb8b052581a191680f324f030ccebd53",
+      "prompt": "prompts/narrow-26-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+          "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "27",
+      "phase": 27,
+      "file": "art/fire-sprites/v4/narrow/27.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ede1f44b-13cc-4641-a420-4ec64e6dc743.png",
+      "sha256": "ea1e0e9a13b391ac3a3e8f160b2c78f2fe2fc425489fb3d68838542a350fa78f",
+      "prompt": "prompts/narrow-27.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/26-r2.png",
+          "sha256": "b468b8843ec55266b454d2c2b7a32d0deb8b052581a191680f324f030ccebd53"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+          "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "28-r2",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/narrow/28-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0a8b362a-efd8-45b6-92a4-2f47f50fdb35.png",
+      "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40",
+      "prompt": "prompts/narrow-28-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "29-r2",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/narrow/29-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-58e732a1-7f10-410d-acbf-642e7294a8ef.png",
+      "sha256": "e284c49bf472e2eb91d669d06e738a07121c9a40483fad6ee6f24d6a7085c6cf",
+      "prompt": "prompts/narrow-29-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/29.png",
+          "sha256": "709893fec2ec2661886201f1fe864fe4f4cca335075bca5f6b0a8cfda405727c"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/30.png"
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "30",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/narrow/30.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c1f30a0c-aff4-4886-9e4f-1d7d79f0f483.png",
+      "sha256": "6f31d968ab4d56b51ebfa38da0367eb3ce9e1b8cf46bfc20d7c2f7472531f758",
+      "prompt": "prompts/narrow-30.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+          "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "31",
+      "phase": 31,
+      "file": "art/fire-sprites/v4/narrow/31.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3c6f4b27-b1c5-48e7-9aba-e286639d5c46.png",
+      "sha256": "a9a13085973916b5947a075102404f358fee4f3815eba5a6a4aea7bd19ef0bb0",
+      "prompt": "prompts/narrow-31.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/30.png",
+          "sha256": "6f31d968ab4d56b51ebfa38da0367eb3ce9e1b8cf46bfc20d7c2f7472531f758"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k32",
+      "phase": 32,
+      "file": "art/fire-sprites/v4/narrow/k32.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-45bf019f-59f4-4813-8c77-c21831634061.png",
+      "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b",
+      "prompt": "prompts/narrow-k32.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "33",
+      "phase": 33,
+      "file": "art/fire-sprites/v4/narrow/33.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cb9843ab-f5b5-49dc-8c72-bc2c55ab0ced.png",
+      "sha256": "359087da58b09178c496ffcfc2751613bbb06d880b64f58933afb0bb87c03071",
+      "prompt": "prompts/narrow-33.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/34.png",
+          "sha256": "0df0acc234f363047dddaa41f5dd23ef65ad2b58c509e23303294efa28f7c125"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "34",
+      "phase": 34,
+      "file": "art/fire-sprites/v4/narrow/34.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c5fd017d-d8bc-4a15-ab2f-8c197795afe9.png",
+      "sha256": "0df0acc234f363047dddaa41f5dd23ef65ad2b58c509e23303294efa28f7c125",
+      "prompt": "prompts/narrow-34.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/36.png",
+          "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "35",
+      "phase": 35,
+      "file": "art/fire-sprites/v4/narrow/35.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4549c011-b328-4322-b665-9d2967043688.png",
+      "sha256": "3f4c6f0f07fa83dc3f43f3d7fd222d380bafb8146506be9f6ffc817a0de50dd7",
+      "prompt": "prompts/narrow-35.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/34.png",
+          "sha256": "0df0acc234f363047dddaa41f5dd23ef65ad2b58c509e23303294efa28f7c125"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/36.png",
+          "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "36",
+      "phase": 36,
+      "file": "art/fire-sprites/v4/narrow/36.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-197fce31-de8c-4421-a638-520e2368c988.png",
+      "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54",
+      "prompt": "prompts/narrow-36.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "37",
+      "phase": 37,
+      "file": "art/fire-sprites/v4/narrow/37.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-84e0ac65-49a4-4f26-8c37-98bf5e7b3a71.png",
+      "sha256": "86a85b6906829a7476cc6ab25e70c8ba4a0151f8b0def1abe43b1ad16d15dd73",
+      "prompt": "prompts/narrow-37.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/36.png",
+          "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/38.png",
+          "sha256": "5f3ad2fbfb5508346a9b8e4d41aac6443b931e1cf023b29a48f90a50268eee04"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "38",
+      "phase": 38,
+      "file": "art/fire-sprites/v4/narrow/38.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8b62cc66-834d-489f-b52a-7504120461d5.png",
+      "sha256": "5f3ad2fbfb5508346a9b8e4d41aac6443b931e1cf023b29a48f90a50268eee04",
+      "prompt": "prompts/narrow-38.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/36.png",
+          "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "39",
+      "phase": 39,
+      "file": "art/fire-sprites/v4/narrow/39.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-70b9904e-f84b-45d0-9d6c-bb1eb633fd15.png",
+      "sha256": "3985f4639da6902b5c8968df34a0b8c854e2701c97d61fdde18abd4563de3e9d",
+      "prompt": "prompts/narrow-39.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/38.png",
+          "sha256": "5f3ad2fbfb5508346a9b8e4d41aac6443b931e1cf023b29a48f90a50268eee04"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "k40-r2",
+      "phase": 40,
+      "file": "art/fire-sprites/v4/narrow/k40-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2d73062b-1ff3-4b4f-b7a1-31bcd5a443b2.png",
+      "sha256": "ab3c889fb8e33fc4f409384ae14c883a05a98a27fe3cccda8c69e0ab741bb50c",
+      "prompt": "prompts/narrow-k40-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/39.png",
+          "sha256": "3985f4639da6902b5c8968df34a0b8c854e2701c97d61fdde18abd4563de3e9d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/41.png",
+          "sha256": "12678b6580880364825324a020f5d0b8068dc5a9879be8ad060f7f7e0eb4f58b"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "41",
+      "phase": 41,
+      "file": "art/fire-sprites/v4/narrow/41.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-aa2c806e-2c90-4791-89fe-b71dfcea1641.png",
+      "sha256": "12678b6580880364825324a020f5d0b8068dc5a9879be8ad060f7f7e0eb4f58b",
+      "prompt": "prompts/narrow-41.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/42.png",
+          "sha256": "96c6a5d1d958ed3a813d5e2d1ecff60d088ea214149da4fdf805a1e4e0af4f28"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "42",
+      "phase": 42,
+      "file": "art/fire-sprites/v4/narrow/42.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a9b2dd90-927c-40be-bfd1-93a1cd2b3f54.png",
+      "sha256": "96c6a5d1d958ed3a813d5e2d1ecff60d088ea214149da4fdf805a1e4e0af4f28",
+      "prompt": "prompts/narrow-42.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/44.png",
+          "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "43",
+      "phase": 43,
+      "file": "art/fire-sprites/v4/narrow/43.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-369c2035-aa44-4ea9-af50-9ea92f57a551.png",
+      "sha256": "dbf6958299bb676105df1d1d9f2b488445cf54b5144b5eb7ad54e46ebfde7cd5",
+      "prompt": "prompts/narrow-43.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/42.png",
+          "sha256": "96c6a5d1d958ed3a813d5e2d1ecff60d088ea214149da4fdf805a1e4e0af4f28"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/44.png",
+          "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "44",
+      "phase": 44,
+      "file": "art/fire-sprites/v4/narrow/44.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-53f1c173-7a31-4db9-ae40-ee3d3d18af97.png",
+      "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727",
+      "prompt": "prompts/narrow-44.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k40.png",
+          "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "45",
+      "phase": 45,
+      "file": "art/fire-sprites/v4/narrow/45.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8349400f-4d2e-4554-83a1-17c1997a09fa.png",
+      "sha256": "0762c4cc89317e914abf1d81cf734d367d7e74def111f1dac24ee259d1125f88",
+      "prompt": "prompts/narrow-45.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/44.png",
+          "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/46-r2.png",
+          "sha256": "7270a42619c831201930d2e499a209cf9815f5eff9cd84f3c5ce2db33e64c703"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    },
+    {
+      "family": "narrow",
+      "id": "46-r3",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/narrow/46-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-758a5c4d-3bfd-4bce-ab6f-d20d7941fbfb.png",
+      "sha256": "42089707500cf582020f52f72cc9d4c976dd8062b2bcb925e1910653363faf99",
+      "prompt": "prompts/narrow-46-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/46-r2.png",
+          "sha256": "7270a42619c831201930d2e499a209cf9815f5eff9cd84f3c5ce2db33e64c703"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/45.png",
+          "sha256": "0762c4cc89317e914abf1d81cf734d367d7e74def111f1dac24ee259d1125f88"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user",
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/narrow/45.png",
+        "art/fire-sprites/v4/narrow/47.png"
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "47",
+      "phase": 47,
+      "file": "art/fire-sprites/v4/narrow/47.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-126e07fb-bf15-44c9-8081-6c1347e1b3c8.png",
+      "sha256": "cdad4e78fa6dacd6c781ed4f06241509fdd3c97a4f20086b19fbe918c9b3c46e",
+      "prompt": "prompts/narrow-47.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/46-r2.png",
+          "sha256": "7270a42619c831201930d2e499a209cf9815f5eff9cd84f3c5ce2db33e64c703"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "v4 candidate; full sequence rejected by user"
+    }
+  ],
+  "rejected": [
+    {
+      "family": "narrow",
+      "id": "28",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/narrow/28.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-dea00025-113c-4f70-8c65-107ba15d7ab0.png",
+      "sha256": "1424af7f4cf7c65e936a2097431a1d95b03350d95a28f1a108d980338057e568",
+      "prompt": "prompts/narrow-28.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k32.png",
+          "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Browser pose review: rounded upper-right lobe disappears too early; drawing prematurely adopts the later thin crown."
+    },
+    {
+      "family": "narrow",
+      "id": "02",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/narrow/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e26179a4-134b-424c-bd73-efb7fdb9fa06.png",
+      "sha256": "2be12d3a47852053ec66afce02c2b5c12f356039cd449420641143c51634b99d",
+      "prompt": "prompts/narrow-02.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/04.png",
+          "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Pose comparison: over-advanced toward later drawing; right young lobe appears at nearly the later height instead of the halfway height."
+    },
+    {
+      "family": "narrow",
+      "id": "10",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/narrow/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1470d0ce-3347-4a94-a66a-9be35d04ad89.png",
+      "sha256": "d36efecbcafc1348d39088430a3d85da9ec725bd82c7c68129b91b95c7169c66",
+      "prompt": "prompts/narrow-10.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Pose comparison: over-advanced toward later drawing; right young lobe appears at nearly the later height instead of the halfway height."
+    },
+    {
+      "family": "narrow",
+      "id": "14",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/narrow/14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-91da6861-7c58-4120-9ea9-a9695dfe451e.png",
+      "sha256": "66712239eb6c3bb9b1b763815b731b6d1d1852c8e7a2cac0874e378adcde85b5",
+      "prompt": "prompts/narrow-14.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Old left upper stalk remains too full, too close to phase12; it must thin substantially before disappearing at16."
+    },
+    {
+      "family": "narrow",
+      "id": "18",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/narrow/18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e1f80428-01c1-4156-b4ea-762c5871345c.png",
+      "sha256": "6116283a8e39cdc3b2c3c48dd6fdb912f5bf3c871071314b1af99fdd70ac4e24",
+      "prompt": "prompts/narrow-18.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20.png",
+          "sha256": "af8dbd2dcdd9ed6e70676994b6dd58ee20aaf11cf83b044b0ab05f59a8e221c3"
+        }
+      ],
+      "review": "rejected",
+      "reason": "The young right head jumps almost completely to phase20; redraw at the halfway height and opening size."
+    },
+    {
+      "family": "narrow",
+      "id": "18-r2",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/narrow/18-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-00b55a17-e8c3-4ede-bbc7-2c98ddb4f0f3.png",
+      "sha256": "e055941e258d094385e76ac140daa892c4fc77f7d134bfbc24ecd23ce8d27e53",
+      "prompt": "prompts/narrow-18-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20.png",
+          "sha256": "af8dbd2dcdd9ed6e70676994b6dd58ee20aaf11cf83b044b0ab05f59a8e221c3"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Still advances too far upward; use a restrained single-target edit for the small rise."
+    },
+    {
+      "family": "narrow",
+      "id": "k16",
+      "phase": 16,
+      "file": "art/fire-sprites/v4/narrow/k16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-5c89fd9f-70a9-424d-a55f-6f9dd3119322.png",
+      "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a",
+      "prompt": "prompts/narrow-k16.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k08.png",
+          "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Remove lingering detached upper ribbon; preserve the reviewed main body pose."
+    },
+    {
+      "family": "narrow",
+      "id": "18-r3",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/narrow/18-r3.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-40053f2d-2532-4eaf-8cb8-8d0723c2d040.png",
+      "sha256": "ec74146a56433517aa1b510822ff7c51fc5da2067197ab4484c5999a4a02b50c",
+      "prompt": "prompts/narrow-18-r3.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/narrow/k16.png",
+        "art/fire-sprites/v4/narrow/20.png"
+      ],
+      "review": "rejected",
+      "reason": "Remove lingering detached upper ribbon; preserve the reviewed main body pose."
+    },
+    {
+      "family": "narrow",
+      "id": "20",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/narrow/20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-826536cd-8f02-4984-9268-dccbe79d0607.png",
+      "sha256": "af8dbd2dcdd9ed6e70676994b6dd58ee20aaf11cf83b044b0ab05f59a8e221c3",
+      "prompt": "prompts/narrow-20.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Remove lingering detached upper ribbon; preserve the reviewed main body pose."
+    },
+    {
+      "family": "narrow",
+      "id": "14-r2",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/narrow/14-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a9dff1eb-25cd-4f1a-bff3-976611a891ee.png",
+      "sha256": "420577be9457ba5b2387c568eb05cc0b25f33f378a213c8c58d61024259a7a46",
+      "prompt": "prompts/narrow-14-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/12.png",
+          "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k16.png",
+          "sha256": "b7fe7eb5465a69f526b193f76bed3c2c02a5f06a3f7d859fd6113cbb9b0d7e7a"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Remove isolated old upper ribbon while preserving the main connected pose."
+    },
+    {
+      "family": "narrow",
+      "id": "22",
+      "phase": 22,
+      "file": "art/fire-sprites/v4/narrow/22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1e92b97b-5459-4f18-b01a-d00fcec38bae.png",
+      "sha256": "9360be8635446ccaedc4aee86880f2d5bdbecb657e12f885affeec753f162ed8",
+      "prompt": "prompts/narrow-22.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/20.png",
+          "sha256": "af8dbd2dcdd9ed6e70676994b6dd58ee20aaf11cf83b044b0ab05f59a8e221c3"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Remove isolated old upper ribbon while preserving the main connected pose."
+    },
+    {
+      "family": "narrow",
+      "id": "26",
+      "phase": 26,
+      "file": "art/fire-sprites/v4/narrow/26.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fd3deb67-5943-4637-9387-41c259b0add5.png",
+      "sha256": "55c5867784df81b7e6b40dfc5b1856f970be041356fe011f11b247f03bb3fd67",
+      "prompt": "prompts/narrow-26.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+          "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Opening overshoots neighbours and extra closed hole appears too early."
+    },
+    {
+      "family": "narrow",
+      "id": "46",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/narrow/46.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-161f6055-53eb-499d-8f9e-5fd9fb9f9aca.png",
+      "sha256": "ecc03459ae417a3396c2d136f9e71076da5fe504f541a6bf03635457febf115d",
+      "prompt": "prompts/narrow-46.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/44.png",
+          "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Semi-transparent grey white haze extends across empty canvas."
+    },
+    {
+      "family": "medium",
+      "id": "k08",
+      "phase": 8,
+      "file": "art/fire-sprites/v4/medium/k08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-057deb3b-ea6d-4695-a979-d81745fbdb79.png",
+      "sha256": "7854fd530aa28b22900ecae16a17e6ce53012195061e0153e87d0e862fa22d67",
+      "prompt": "prompts/medium-k08.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k00.png",
+          "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Detached small upper-left ribbon reads as floating flame particle."
+    },
+    {
+      "family": "narrow",
+      "id": "23",
+      "phase": 23,
+      "file": "art/fire-sprites/v4/narrow/23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e8c87745-11e1-45c7-92d5-bfb8eb2b049c.png",
+      "sha256": "cf791f7e6dcc01a940a6131784d9c2f564350758381b0beb846a155a179682fa",
+      "prompt": "prompts/narrow-23.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/22-r2.png",
+          "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Phase23 held phase22 inner shapes and lower opening instead of progressing toward24."
+    },
+    {
+      "family": "narrow",
+      "id": "29",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/narrow/29.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0ab0304f-dc52-4f36-93aa-c221d7c925a8.png",
+      "sha256": "709893fec2ec2661886201f1fe864fe4f4cca335075bca5f6b0a8cfda405727c",
+      "prompt": "prompts/narrow-29.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/28-r2.png",
+          "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/30.png",
+          "sha256": "6f31d968ab4d56b51ebfa38da0367eb3ce9e1b8cf46bfc20d7c2f7472531f758"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Faint broad haze in transparent padding risks additive background flash."
+    },
+    {
+      "family": "narrow",
+      "id": "k40",
+      "phase": 40,
+      "file": "art/fire-sprites/v4/narrow/k40.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-48dfe389-c4c5-428d-8394-cbcd3ec46506.png",
+      "sha256": "ae1fc2b1226dbff52e1cf6c2283a0bbb7776c9ef81f93c37411c3c1dd94afddb",
+      "prompt": "prompts/narrow-k40.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k24.png",
+          "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Old key40 briefly thinned the body between the completed surrounding cels."
+    },
+    {
+      "family": "medium",
+      "id": "12",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/medium/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-001acb31-ff2d-400d-af6b-98378fff0aeb.png",
+      "sha256": "d74bea2b09efb6eccf18aa22799a8ee1a64861d6eea59ab294f66313e1d46979",
+      "prompt": "prompts/medium-12.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Phase12 copied the near-final phase16 shape; old crown and young lobes advanced too far."
+    },
+    {
+      "family": "medium",
+      "id": "20",
+      "phase": 20,
+      "file": "art/fire-sprites/v4/medium/20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-97739256-a487-465f-8297-595f14d80080.png",
+      "sha256": "910cbe83bd254572458e4f42005fbaec673df5a1d29ce471d55223d7e2b1515e",
+      "prompt": "prompts/medium-20.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        }
+      ],
+      "review": "rejected",
+      "reason": "The phase20 right tip reached the phase24 position prematurely."
+    },
+    {
+      "family": "medium",
+      "id": "28",
+      "phase": 28,
+      "file": "art/fire-sprites/v4/medium/28.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8d284e85-2ce4-4ca9-b7b4-a92e00017e49.png",
+      "sha256": "508cec3531ac0d62b9432096e8ad75ec9b4d38df93e3e14febc31b93425711b3",
+      "prompt": "prompts/medium-28.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k24.png",
+          "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Phase28 opened the crown completely and duplicated the later split pose."
+    },
+    {
+      "family": "broad",
+      "id": "12",
+      "phase": 12,
+      "file": "art/fire-sprites/v4/broad/12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-fab6c6da-f9fd-4495-a308-82680b94ba39.png",
+      "sha256": "a8db57298f2cf8ce08240782e7a12d5958db6df73668c5554cdfacd7dd28f8cf",
+      "prompt": "prompts/broad-12.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        }
+      ],
+      "temporalNeighbours": [
+        "art/fire-sprites/v4/broad/k08-r2.png",
+        "art/fire-sprites/v4/broad/k16.png"
+      ],
+      "review": "rejected",
+      "reason": "Native output was1774x886; restore the intended1774x887canvas without changing artwork."
+    },
+    {
+      "family": "medium",
+      "id": "10",
+      "phase": 10,
+      "file": "art/fire-sprites/v4/medium/10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2adb432d-0ea8-4ad5-aabb-681b68755736.png",
+      "sha256": "529120a829b3dbdc0e9f5a952b075318773cfaa1ea07206324ca2271fa46dbc9",
+      "prompt": "prompts/medium-10.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k08-r2.png",
+          "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/12-r2.png",
+          "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Left shoulder and central cleft advanced too close to phase12."
+    },
+    {
+      "family": "broad",
+      "id": "02",
+      "phase": 2,
+      "file": "art/fire-sprites/v4/broad/02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-61ee0bb8-1dfd-4441-b724-006f2e1b7602.png",
+      "sha256": "b336aedda2d7ba57986fee8a4cf36e74ddb7b8e06690ec5b0048321988e46090",
+      "prompt": "prompts/broad-02.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Central hollow expanded almost to phase4 too early."
+    },
+    {
+      "family": "medium",
+      "id": "18",
+      "phase": 18,
+      "file": "art/fire-sprites/v4/medium/18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-09d81ad4-d61c-40a3-a0ea-cf4500dbf60f.png",
+      "sha256": "d14f108903318d1c39b9c434ffc81c28146be4740df79902b7557bf2b89e806c",
+      "prompt": "prompts/medium-18.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k16.png",
+          "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/20-r2.png",
+          "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Right head reaches phase20 height prematurely."
+    },
+    {
+      "family": "broad",
+      "id": "14",
+      "phase": 14,
+      "file": "art/fire-sprites/v4/broad/14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e9844d14-8972-4a73-b42d-8feff477dcb3.png",
+      "sha256": "c09d58776c3b4774a65e694feffcd86939202fe7ceb4905bf2481fad4231d74c",
+      "prompt": "prompts/broad-14.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k16.png",
+          "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Old crown held too close to phase12; redraw actual halfway consumption."
+    },
+    {
+      "family": "medium",
+      "id": "33",
+      "phase": 33,
+      "file": "art/fire-sprites/v4/medium/33.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6b104c63-cd2a-4229-b5b9-8ddab43befcd.png",
+      "sha256": "4f0f08c32fa977ae600372ef352dc5497df304be7927eb8d89aa8d521d18fb34",
+      "prompt": "prompts/medium-33.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/k32.png",
+          "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/34.png",
+          "sha256": "4004cdb796cd1a354fca215f309755ca5dfcd761f55e850bcabb46391bbaff84"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Intermediate geometry completed too much of the later pose or regrew a dying membrane"
+    },
+    {
+      "family": "medium",
+      "id": "13",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/medium/13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1aa6d671-7871-470c-afd0-fe3e66c19f83.png",
+      "sha256": "6fd45e221b5b4decc725691ad14cb9cf2bf2225651fadd9a42f80ef768ce766a",
+      "prompt": "prompts/medium-13.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/12-r2.png",
+          "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/14.png",
+          "sha256": "e20c784cbd8e87857b764d8f8a1dcf56d569945678d662a0c87d9dd0c749c57b"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Intermediate geometry completed too much of the later pose or regrew a dying membrane"
+    },
+    {
+      "family": "medium",
+      "id": "29",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/medium/29.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8638f3b8-8ab0-4630-ad32-016ff40a7fe9.png",
+      "sha256": "7572648a9632f2c1de21248f25fa48448f864a8389655b414aaa375de21ce1e3",
+      "prompt": "prompts/medium-29.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/28-r2.png",
+          "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/medium/30.png",
+          "sha256": "646245d5fd829eee619175925d76e77aee61d3943331eb3fa8d75a693c01cd79"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Intermediate geometry completed too much of the later pose or regrew a dying membrane"
+    },
+    {
+      "family": "broad",
+      "id": "30",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/broad/30.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6ac873c0-3162-46ae-8814-9b034fa62229.png",
+      "sha256": "5f0ca181eb028e44a60368fd9d62948136f08cc624bd5e6ef367f7b7ff2ca20f",
+      "prompt": "prompts/broad-30.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Intermediate geometry completed too much of the later pose or regrew a dying membrane"
+    },
+    {
+      "family": "broad",
+      "id": "46",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/broad/46.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-87e76337-7b48-4269-a7fb-c0923cdc90d6.png",
+      "sha256": "47f24ee892cdf5c207547f12930be26dfc271f370e19cbc9ae31df461db38538",
+      "prompt": "prompts/broad-46.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/44.png",
+          "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Translucent background haze"
+    },
+    {
+      "family": "broad",
+      "id": "34",
+      "phase": 34,
+      "file": "art/fire-sprites/v4/broad/34.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-214e2c50-2426-4662-8af3-a3a527b12332.png",
+      "sha256": "a23ba8380385d8e8dcf1db5a97f66c704cd8cdf70e46968a2fe26f0401a1d30a",
+      "prompt": "prompts/broad-34.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Lower opening reached the later pose too early"
+    },
+    {
+      "family": "broad",
+      "id": "30-r2",
+      "phase": 30,
+      "file": "art/fire-sprites/v4/broad/30-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0ead6884-729b-4782-bcf7-a4fb75ef8bed.png",
+      "sha256": "a9664ec65916044409857437d5fd4575a38cea3b58f1d240bc30a4b4ceb7a4e8",
+      "prompt": "prompts/broad-30-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k32.png",
+          "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Remove disconnected consumed crown remnant."
+    },
+    {
+      "family": "medium",
+      "id": "k00",
+      "phase": 0,
+      "file": "art/fire-sprites/v4/medium/k00.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-04bf108d-3972-407e-9049-9d98a03a6a57.png",
+      "sha256": "c09bf7a3d18a880c94940e39f52a4613b43a7e41fff5d4cee2ea05a00074c8e8",
+      "prompt": "prompts/medium-k00.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png",
+          "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+        },
+        {
+          "file": "/private/tmp/fire-reference-20261111/IMG_4428-1s.png",
+          "sha256": "02cecf11191a8b7a84ba3977d3cb098a83b5113523f70b32752992a6eddcd75d"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct the low source colour discontinuity near the seam"
+    },
+    {
+      "family": "narrow",
+      "id": "46-r2",
+      "phase": 46,
+      "file": "art/fire-sprites/v4/narrow/46-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-877d7534-9bd6-46d2-9b9f-595c6a13c03c.png",
+      "sha256": "7270a42619c831201930d2e499a209cf9815f5eff9cd84f3c5ce2db33e64c703",
+      "prompt": "prompts/narrow-46-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/46.png",
+          "sha256": "ecc03459ae417a3396c2d136f9e71076da5fe504f541a6bf03635457febf115d"
+        }
+      ],
+      "temporalNeighbours": [
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/44.png",
+        "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/narrow/k00.png"
+      ],
+      "review": "rejected",
+      "reason": "Correct the low source colour discontinuity near the seam"
+    },
+    {
+      "family": "broad",
+      "id": "03",
+      "phase": 3,
+      "file": "art/fire-sprites/v4/broad/03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-910367ec-c813-475b-b3f3-3a930439620c.png",
+      "sha256": "05de245e1e3a1d2bb7ff0e93bc1ba9444c5cf2a427aea17af236679129593b0b",
+      "prompt": "prompts/broad-03.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/02-r2.png",
+          "sha256": "81f67760829690a0bfdec65a3d89c9b3aa29e8726b0775d9d4cd3d1cad350cef"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        }
+      ],
+      "review": "rejected",
+      "reason": "One-pixel native canvas mismatch"
+    },
+    {
+      "family": "broad",
+      "id": "21",
+      "phase": 21,
+      "file": "art/fire-sprites/v4/broad/21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3d647e22-2cca-4fe7-97fd-78689693d9a8.png",
+      "sha256": "8c6e731e4c9bbc2524b9c1ac2b46e892737b51be0de4b7fb0e1bdd5c08f2bbcc",
+      "prompt": "prompts/broad-21.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/20.png",
+          "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/22.png",
+          "sha256": "668ce33f2b55b17ae0801e8c1779bb17a0da726b17329dff37967ef0cdb570f7"
+        }
+      ],
+      "review": "rejected",
+      "reason": "One-pixel native canvas mismatch"
+    },
+    {
+      "family": "broad",
+      "id": "05",
+      "phase": 5,
+      "file": "art/fire-sprites/v4/broad/05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d8368683-29af-4ed0-987a-81e4a79fefdf.png",
+      "sha256": "b1bbcb7cc397efb87fc2e80aec54ec832a95e25c6bb6851b36b6bcc6a5b96922",
+      "prompt": "prompts/broad-05.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/04.png",
+          "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png",
+          "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct the reviewed inbetween contour or duplicate hole"
+    },
+    {
+      "family": "broad",
+      "id": "13",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/broad/13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b258867c-cdc3-4903-8183-a8287e047bf8.png",
+      "sha256": "6b9cfbd381f431f7426d2d32585553346f9851ccf0c97a2702a2ac550c07e3df",
+      "prompt": "prompts/broad-13.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png",
+          "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct the reviewed inbetween contour or duplicate hole"
+    },
+    {
+      "family": "broad",
+      "id": "29",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/broad/29.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-eb989ff9-5b08-4279-80db-7262c9f40915.png",
+      "sha256": "a3d6a31f4b88e353d893925ba8f88c69464510859f5967b83050364304f012d9",
+      "prompt": "prompts/broad-29.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/30-r3.png",
+          "sha256": "124b6d0436f83c798e5742ed7662bc60a45cf5b5880e2cb2932763d01b00ec9b"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct the reviewed inbetween contour or duplicate hole"
+    },
+    {
+      "family": "broad",
+      "id": "41",
+      "phase": 41,
+      "file": "art/fire-sprites/v4/broad/41.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ceb70729-137a-49bb-9aef-e5c593a729d3.png",
+      "sha256": "966bd390090b8850a07041d6f26f3a823fb63aeea811d861ed80776a547a421f",
+      "prompt": "prompts/broad-41.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k40.png",
+          "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/42.png",
+          "sha256": "1ba8c456ffb8c8094f612ce57d4751570b0f353753059f7e1d31d11776822e55"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct the reviewed inbetween contour or duplicate hole"
+    },
+    {
+      "family": "broad",
+      "id": "29-r2",
+      "phase": 29,
+      "file": "art/fire-sprites/v4/broad/29-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-138861c3-f751-4deb-afc1-ac48d5f913eb.png",
+      "sha256": "ef8de9d73e6d7028bae44733dfa1880f1ba07b457807307f082fe63cec5fb828",
+      "prompt": "prompts/broad-29-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png",
+          "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/30-r3.png",
+          "sha256": "124b6d0436f83c798e5742ed7662bc60a45cf5b5880e2cb2932763d01b00ec9b"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Correct one-pixel native canvas mismatch while preserving the accepted intermediate pose"
+    },
+    {
+      "family": "broad",
+      "id": "07",
+      "phase": 7,
+      "file": "art/fire-sprites/v4/broad/07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-19dde569-41b2-4f69-9c00-4749cbf30341.png",
+      "sha256": "fa6d636279604598a9656f48bf8eaedf0bd1280ce499333cb9d3ff526f9532bf",
+      "prompt": "prompts/broad-07.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png",
+          "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png",
+          "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Visual motion review: redraw held/advanced contour at phase 7"
+    },
+    {
+      "family": "broad",
+      "id": "13-r2",
+      "phase": 13,
+      "file": "art/fire-sprites/v4/broad/13-r2.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-56f23d15-ea27-4d23-8d6c-47d40b2ca090.png",
+      "sha256": "6859a882692fde7acd5393f77ff23ea1258cce17b069884cf99fa5e725242913",
+      "prompt": "prompts/broad-13-r2.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+          "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png",
+          "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Visual motion review: redraw held/advanced contour at phase 13"
+    },
+    {
+      "family": "broad",
+      "id": "37",
+      "phase": 37,
+      "file": "art/fire-sprites/v4/broad/37.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-83f1e022-f04d-4933-b0c6-91fa4787b43e.png",
+      "sha256": "eeb03019876a438c973bbebacafba6606c33bc13a5d7c871d6121ded763094d0",
+      "prompt": "prompts/broad-37.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+          "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/38.png",
+          "sha256": "1e429d6a554382b37b8aed832c7ac5f4da27e40bde04db0170f939929bd6254f"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Visual motion review: redraw held/advanced contour at phase 37"
+    },
+    {
+      "family": "broad",
+      "id": "47",
+      "phase": 47,
+      "file": "art/fire-sprites/v4/broad/47.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d0f35cc8-6668-42b8-b3d1-361efc574268.png",
+      "sha256": "36d84a9eac82ad1f5e2b18c4fa186c6d30cd34334c54c6a9c3ae117b18ed39b9",
+      "prompt": "prompts/broad-47.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/46-r2.png",
+          "sha256": "76ffe347aebfe8c0be6bcf74dd8085b11aaf2f060196df34f57cfd9d42f16e7c"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png",
+          "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+        }
+      ],
+      "review": "rejected",
+      "reason": "Visual motion review: redraw held/advanced contour at phase 47"
+    }
+  ],
+  "rejection": "13 November 2026: user rejected the complete v4 motion as flickery and directed source-input frames before imagegen. Preserve cels as rejected iteration; do not publish this runtime set."
+}

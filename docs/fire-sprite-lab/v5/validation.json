@@ -1,0 +1,62 @@
+{
+  "status": "LOCAL PRODUCTION VALIDATED \u2014 publication pending",
+  "version": 5,
+  "buildStamp": "Codex/sol fork \u00b7 11-13 00:43 UTC",
+  "sourceMotionSets": 2,
+  "sourceFramesPerSet": 64,
+  "uniqueSourceFrames": 128,
+  "sourcePlaybackFps": 48,
+  "renderedCollectionSprites": 34,
+  "renderedCourtyardSprites": 41,
+  "validation": {
+    "build": "npm run build \u2014 passed",
+    "release": "npm run check:release \u2014 passed",
+    "releaseBytes": 935986203,
+    "budgetBytes": 1000000000,
+    "toolDirectory": "node tools/test-tool-directory.mjs \u2014 passed",
+    "diff": "git diff --check \u2014 passed",
+    "nativeAssetPacking": "Original TGA pixels and lossless WebP alpha/visible RGB match",
+    "fullSuiteRun": false,
+    "browserHarnessRun": false,
+    "browserTool": "CUA"
+  },
+  "browserChecks": [
+    "Lite and full production URL under /Prototype-Fork/",
+    "MAX/native and 720p",
+    "All eight collection arrangements fit in tall viewport",
+    "Torch and basin source loop joins at normal and quarter speed",
+    "Source frame 63\u21920 step",
+    "Hue presets",
+    "Outlet-rooted jet without travelling whole sprites",
+    "Native hearth and sanctuary torches",
+    "Supported courtyard movement, collision, stairs, checkpoint, altar jump, finish and R return",
+    "Compact 390\u00d7844 movement buttons, paged exhibits and inspector; no page overflow",
+    "No console warnings/errors"
+  ],
+  "heat": {
+    "method": "Actual CUA screenshots; interior scene crop excludes live FPS text and inspector controls",
+    "region": {
+      "left": 100,
+      "top": 100,
+      "width": 690,
+      "height": 680
+    },
+    "pause": {
+      "changedPixelsAbove3": 0,
+      "peak": 0
+    },
+    "heat": {
+      "changedPixelsAbove3": 1592,
+      "peak": 58
+    },
+    "zeroStrength": {
+      "changedPixelsAbove3": 0,
+      "peak": 0
+    }
+  },
+  "limits": [
+    "The source frame sizes are native 128\u00d7256 and 64\u00d7128; enlargement reveals that limit.",
+    "This is a new source-motion/stylization interpretation, not extracted Crash 4 textures or a claim of pixel-identical animation."
+  ],
+  "privateComparison": "docs/fire-sprite-lab/v5/reference-media/final-comparison/normal-speed.mp4"
+}

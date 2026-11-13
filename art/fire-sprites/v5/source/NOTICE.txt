@@ -1,0 +1,19 @@
+Fire Sprite Lab v5 — source assets
+
+Flame02 and Flame03 by Thomas Iché / Unity Technologies, Unity Labs Paris.
+Released under CC0 1.0 in “Free VFX image sequences and flipbooks”, 28 November 2016.
+Source: https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Downloads:
+https://unity3d.com/files/labs/downloads/vfx/assets01/Flame02/Flame02-flipbooks.zip
+https://unity3d.com/files/labs/downloads/vfx/assets01/Flame03/Flame03-flipbooks.zip
+
+Original TGA sheets are retained. Runtime WebP sheets preserve their native
+dimensions, alpha and visible RGB. The shared material remaps colour and
+opacity; arrangement, rate and hue vary between exhibits.
+
+The separate paint-master.png is a project image generated with the built-in
+image_gen tool. Its six sampled colours are shared by all source frames.
+It is not part of the Unity CC0 release. See provenance.json for its hash,
+original workspace path and prompt. Crash Bandicoot 4 recordings were visual
+references only; no game footage or extracted game textures are shipped.

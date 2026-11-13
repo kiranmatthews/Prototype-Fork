@@ -1,0 +1,1462 @@
+{
+  "status": "REFERENCE INPUTS — no imagegen output accepted",
+  "source": "/Users/kiki/Downloads/IMG_4429.MOV",
+  "sourceSha256": "12f287dcb1ee97fd1b7affeb8efec462843f461e66e66d4c458341b66db42594",
+  "crop": {
+    "x": 250,
+    "y": 150,
+    "width": 650,
+    "height": 1300
+  },
+  "sampling": "Every decoded source frame; original timestamps retained. No interpolated motion.",
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "file": "reference-media/torch-frames/0001.png"
+    },
+    {
+      "index": 1,
+      "time": 0.0166667,
+      "file": "reference-media/torch-frames/0002.png"
+    },
+    {
+      "index": 2,
+      "time": 0.0333333,
+      "file": "reference-media/torch-frames/0003.png"
+    },
+    {
+      "index": 3,
+      "time": 0.05,
+      "file": "reference-media/torch-frames/0004.png"
+    },
+    {
+      "index": 4,
+      "time": 0.0666667,
+      "file": "reference-media/torch-frames/0005.png"
+    },
+    {
+      "index": 5,
+      "time": 0.0833333,
+      "file": "reference-media/torch-frames/0006.png"
+    },
+    {
+      "index": 6,
+      "time": 0.1,
+      "file": "reference-media/torch-frames/0007.png"
+    },
+    {
+      "index": 7,
+      "time": 0.116667,
+      "file": "reference-media/torch-frames/0008.png"
+    },
+    {
+      "index": 8,
+      "time": 0.133333,
+      "file": "reference-media/torch-frames/0009.png"
+    },
+    {
+      "index": 9,
+      "time": 0.15,
+      "file": "reference-media/torch-frames/0010.png"
+    },
+    {
+      "index": 10,
+      "time": 0.166667,
+      "file": "reference-media/torch-frames/0011.png"
+    },
+    {
+      "index": 11,
+      "time": 0.183333,
+      "file": "reference-media/torch-frames/0012.png"
+    },
+    {
+      "index": 12,
+      "time": 0.2,
+      "file": "reference-media/torch-frames/0013.png"
+    },
+    {
+      "index": 13,
+      "time": 0.216667,
+      "file": "reference-media/torch-frames/0014.png"
+    },
+    {
+      "index": 14,
+      "time": 0.233333,
+      "file": "reference-media/torch-frames/0015.png"
+    },
+    {
+      "index": 15,
+      "time": 0.25,
+      "file": "reference-media/torch-frames/0016.png"
+    },
+    {
+      "index": 16,
+      "time": 0.266667,
+      "file": "reference-media/torch-frames/0017.png"
+    },
+    {
+      "index": 17,
+      "time": 0.283333,
+      "file": "reference-media/torch-frames/0018.png"
+    },
+    {
+      "index": 18,
+      "time": 0.3,
+      "file": "reference-media/torch-frames/0019.png"
+    },
+    {
+      "index": 19,
+      "time": 0.316667,
+      "file": "reference-media/torch-frames/0020.png"
+    },
+    {
+      "index": 20,
+      "time": 0.333333,
+      "file": "reference-media/torch-frames/0021.png"
+    },
+    {
+      "index": 21,
+      "time": 0.35,
+      "file": "reference-media/torch-frames/0022.png"
+    },
+    {
+      "index": 22,
+      "time": 0.366667,
+      "file": "reference-media/torch-frames/0023.png"
+    },
+    {
+      "index": 23,
+      "time": 0.383333,
+      "file": "reference-media/torch-frames/0024.png"
+    },
+    {
+      "index": 24,
+      "time": 0.4,
+      "file": "reference-media/torch-frames/0025.png"
+    },
+    {
+      "index": 25,
+      "time": 0.416667,
+      "file": "reference-media/torch-frames/0026.png"
+    },
+    {
+      "index": 26,
+      "time": 0.433333,
+      "file": "reference-media/torch-frames/0027.png"
+    },
+    {
+      "index": 27,
+      "time": 0.45,
+      "file": "reference-media/torch-frames/0028.png"
+    },
+    {
+      "index": 28,
+      "time": 0.466667,
+      "file": "reference-media/torch-frames/0029.png"
+    },
+    {
+      "index": 29,
+      "time": 0.483333,
+      "file": "reference-media/torch-frames/0030.png"
+    },
+    {
+      "index": 30,
+      "time": 0.5,
+      "file": "reference-media/torch-frames/0031.png"
+    },
+    {
+      "index": 31,
+      "time": 0.516667,
+      "file": "reference-media/torch-frames/0032.png"
+    },
+    {
+      "index": 32,
+      "time": 0.533333,
+      "file": "reference-media/torch-frames/0033.png"
+    },
+    {
+      "index": 33,
+      "time": 0.55,
+      "file": "reference-media/torch-frames/0034.png"
+    },
+    {
+      "index": 34,
+      "time": 0.566667,
+      "file": "reference-media/torch-frames/0035.png"
+    },
+    {
+      "index": 35,
+      "time": 0.583333,
+      "file": "reference-media/torch-frames/0036.png"
+    },
+    {
+      "index": 36,
+      "time": 0.6,
+      "file": "reference-media/torch-frames/0037.png"
+    },
+    {
+      "index": 37,
+      "time": 0.616667,
+      "file": "reference-media/torch-frames/0038.png"
+    },
+    {
+      "index": 38,
+      "time": 0.633333,
+      "file": "reference-media/torch-frames/0039.png"
+    },
+    {
+      "index": 39,
+      "time": 0.65,
+      "file": "reference-media/torch-frames/0040.png"
+    },
+    {
+      "index": 40,
+      "time": 0.666667,
+      "file": "reference-media/torch-frames/0041.png"
+    },
+    {
+      "index": 41,
+      "time": 0.683333,
+      "file": "reference-media/torch-frames/0042.png"
+    },
+    {
+      "index": 42,
+      "time": 0.7,
+      "file": "reference-media/torch-frames/0043.png"
+    },
+    {
+      "index": 43,
+      "time": 0.716667,
+      "file": "reference-media/torch-frames/0044.png"
+    },
+    {
+      "index": 44,
+      "time": 0.733333,
+      "file": "reference-media/torch-frames/0045.png"
+    },
+    {
+      "index": 45,
+      "time": 0.75,
+      "file": "reference-media/torch-frames/0046.png"
+    },
+    {
+      "index": 46,
+      "time": 0.766667,
+      "file": "reference-media/torch-frames/0047.png"
+    },
+    {
+      "index": 47,
+      "time": 0.783333,
+      "file": "reference-media/torch-frames/0048.png"
+    },
+    {
+      "index": 48,
+      "time": 0.8,
+      "file": "reference-media/torch-frames/0049.png"
+    },
+    {
+      "index": 49,
+      "time": 0.816667,
+      "file": "reference-media/torch-frames/0050.png"
+    },
+    {
+      "index": 50,
+      "time": 0.833333,
+      "file": "reference-media/torch-frames/0051.png"
+    },
+    {
+      "index": 51,
+      "time": 0.85,
+      "file": "reference-media/torch-frames/0052.png"
+    },
+    {
+      "index": 52,
+      "time": 0.866667,
+      "file": "reference-media/torch-frames/0053.png"
+    },
+    {
+      "index": 53,
+      "time": 0.883333,
+      "file": "reference-media/torch-frames/0054.png"
+    },
+    {
+      "index": 54,
+      "time": 0.9,
+      "file": "reference-media/torch-frames/0055.png"
+    },
+    {
+      "index": 55,
+      "time": 0.916667,
+      "file": "reference-media/torch-frames/0056.png"
+    },
+    {
+      "index": 56,
+      "time": 0.933333,
+      "file": "reference-media/torch-frames/0057.png"
+    },
+    {
+      "index": 57,
+      "time": 0.95,
+      "file": "reference-media/torch-frames/0058.png"
+    },
+    {
+      "index": 58,
+      "time": 0.966667,
+      "file": "reference-media/torch-frames/0059.png"
+    },
+    {
+      "index": 59,
+      "time": 0.983333,
+      "file": "reference-media/torch-frames/0060.png"
+    },
+    {
+      "index": 60,
+      "time": 1,
+      "file": "reference-media/torch-frames/0061.png"
+    },
+    {
+      "index": 61,
+      "time": 1.016667,
+      "file": "reference-media/torch-frames/0062.png"
+    },
+    {
+      "index": 62,
+      "time": 1.033333,
+      "file": "reference-media/torch-frames/0063.png"
+    },
+    {
+      "index": 63,
+      "time": 1.05,
+      "file": "reference-media/torch-frames/0064.png"
+    },
+    {
+      "index": 64,
+      "time": 1.066667,
+      "file": "reference-media/torch-frames/0065.png"
+    },
+    {
+      "index": 65,
+      "time": 1.083333,
+      "file": "reference-media/torch-frames/0066.png"
+    },
+    {
+      "index": 66,
+      "time": 1.1,
+      "file": "reference-media/torch-frames/0067.png"
+    },
+    {
+      "index": 67,
+      "time": 1.116667,
+      "file": "reference-media/torch-frames/0068.png"
+    },
+    {
+      "index": 68,
+      "time": 1.133333,
+      "file": "reference-media/torch-frames/0069.png"
+    },
+    {
+      "index": 69,
+      "time": 1.15,
+      "file": "reference-media/torch-frames/0070.png"
+    },
+    {
+      "index": 70,
+      "time": 1.166667,
+      "file": "reference-media/torch-frames/0071.png"
+    },
+    {
+      "index": 71,
+      "time": 1.183333,
+      "file": "reference-media/torch-frames/0072.png"
+    },
+    {
+      "index": 72,
+      "time": 1.2,
+      "file": "reference-media/torch-frames/0073.png"
+    },
+    {
+      "index": 73,
+      "time": 1.216667,
+      "file": "reference-media/torch-frames/0074.png"
+    },
+    {
+      "index": 74,
+      "time": 1.235,
+      "file": "reference-media/torch-frames/0075.png"
+    },
+    {
+      "index": 75,
+      "time": 1.251667,
+      "file": "reference-media/torch-frames/0076.png"
+    },
+    {
+      "index": 76,
+      "time": 1.268333,
+      "file": "reference-media/torch-frames/0077.png"
+    },
+    {
+      "index": 77,
+      "time": 1.285,
+      "file": "reference-media/torch-frames/0078.png"
+    },
+    {
+      "index": 78,
+      "time": 1.301667,
+      "file": "reference-media/torch-frames/0079.png"
+    },
+    {
+      "index": 79,
+      "time": 1.318333,
+      "file": "reference-media/torch-frames/0080.png"
+    },
+    {
+      "index": 80,
+      "time": 1.335,
+      "file": "reference-media/torch-frames/0081.png"
+    },
+    {
+      "index": 81,
+      "time": 1.351667,
+      "file": "reference-media/torch-frames/0082.png"
+    },
+    {
+      "index": 82,
+      "time": 1.368333,
+      "file": "reference-media/torch-frames/0083.png"
+    },
+    {
+      "index": 83,
+      "time": 1.385,
+      "file": "reference-media/torch-frames/0084.png"
+    },
+    {
+      "index": 84,
+      "time": 1.401667,
+      "file": "reference-media/torch-frames/0085.png"
+    },
+    {
+      "index": 85,
+      "time": 1.418333,
+      "file": "reference-media/torch-frames/0086.png"
+    },
+    {
+      "index": 86,
+      "time": 1.435,
+      "file": "reference-media/torch-frames/0087.png"
+    },
+    {
+      "index": 87,
+      "time": 1.451667,
+      "file": "reference-media/torch-frames/0088.png"
+    },
+    {
+      "index": 88,
+      "time": 1.468333,
+      "file": "reference-media/torch-frames/0089.png"
+    },
+    {
+      "index": 89,
+      "time": 1.485,
+      "file": "reference-media/torch-frames/0090.png"
+    },
+    {
+      "index": 90,
+      "time": 1.501667,
+      "file": "reference-media/torch-frames/0091.png"
+    },
+    {
+      "index": 91,
+      "time": 1.518333,
+      "file": "reference-media/torch-frames/0092.png"
+    },
+    {
+      "index": 92,
+      "time": 1.535,
+      "file": "reference-media/torch-frames/0093.png"
+    },
+    {
+      "index": 93,
+      "time": 1.551667,
+      "file": "reference-media/torch-frames/0094.png"
+    },
+    {
+      "index": 94,
+      "time": 1.568333,
+      "file": "reference-media/torch-frames/0095.png"
+    },
+    {
+      "index": 95,
+      "time": 1.585,
+      "file": "reference-media/torch-frames/0096.png"
+    },
+    {
+      "index": 96,
+      "time": 1.601667,
+      "file": "reference-media/torch-frames/0097.png"
+    },
+    {
+      "index": 97,
+      "time": 1.618333,
+      "file": "reference-media/torch-frames/0098.png"
+    },
+    {
+      "index": 98,
+      "time": 1.635,
+      "file": "reference-media/torch-frames/0099.png"
+    },
+    {
+      "index": 99,
+      "time": 1.651667,
+      "file": "reference-media/torch-frames/0100.png"
+    },
+    {
+      "index": 100,
+      "time": 1.668333,
+      "file": "reference-media/torch-frames/0101.png"
+    },
+    {
+      "index": 101,
+      "time": 1.685,
+      "file": "reference-media/torch-frames/0102.png"
+    },
+    {
+      "index": 102,
+      "time": 1.701667,
+      "file": "reference-media/torch-frames/0103.png"
+    },
+    {
+      "index": 103,
+      "time": 1.718333,
+      "file": "reference-media/torch-frames/0104.png"
+    },
+    {
+      "index": 104,
+      "time": 1.735,
+      "file": "reference-media/torch-frames/0105.png"
+    },
+    {
+      "index": 105,
+      "time": 1.751667,
+      "file": "reference-media/torch-frames/0106.png"
+    },
+    {
+      "index": 106,
+      "time": 1.768333,
+      "file": "reference-media/torch-frames/0107.png"
+    },
+    {
+      "index": 107,
+      "time": 1.785,
+      "file": "reference-media/torch-frames/0108.png"
+    },
+    {
+      "index": 108,
+      "time": 1.801667,
+      "file": "reference-media/torch-frames/0109.png"
+    },
+    {
+      "index": 109,
+      "time": 1.818333,
+      "file": "reference-media/torch-frames/0110.png"
+    },
+    {
+      "index": 110,
+      "time": 1.835,
+      "file": "reference-media/torch-frames/0111.png"
+    },
+    {
+      "index": 111,
+      "time": 1.851667,
+      "file": "reference-media/torch-frames/0112.png"
+    },
+    {
+      "index": 112,
+      "time": 1.868333,
+      "file": "reference-media/torch-frames/0113.png"
+    },
+    {
+      "index": 113,
+      "time": 1.885,
+      "file": "reference-media/torch-frames/0114.png"
+    },
+    {
+      "index": 114,
+      "time": 1.901667,
+      "file": "reference-media/torch-frames/0115.png"
+    },
+    {
+      "index": 115,
+      "time": 1.918333,
+      "file": "reference-media/torch-frames/0116.png"
+    },
+    {
+      "index": 116,
+      "time": 1.935,
+      "file": "reference-media/torch-frames/0117.png"
+    },
+    {
+      "index": 117,
+      "time": 1.951667,
+      "file": "reference-media/torch-frames/0118.png"
+    },
+    {
+      "index": 118,
+      "time": 1.968333,
+      "file": "reference-media/torch-frames/0119.png"
+    },
+    {
+      "index": 119,
+      "time": 1.985,
+      "file": "reference-media/torch-frames/0120.png"
+    },
+    {
+      "index": 120,
+      "time": 2.001667,
+      "file": "reference-media/torch-frames/0121.png"
+    },
+    {
+      "index": 121,
+      "time": 2.018333,
+      "file": "reference-media/torch-frames/0122.png"
+    },
+    {
+      "index": 122,
+      "time": 2.035,
+      "file": "reference-media/torch-frames/0123.png"
+    },
+    {
+      "index": 123,
+      "time": 2.051667,
+      "file": "reference-media/torch-frames/0124.png"
+    },
+    {
+      "index": 124,
+      "time": 2.068333,
+      "file": "reference-media/torch-frames/0125.png"
+    },
+    {
+      "index": 125,
+      "time": 2.085,
+      "file": "reference-media/torch-frames/0126.png"
+    },
+    {
+      "index": 126,
+      "time": 2.101667,
+      "file": "reference-media/torch-frames/0127.png"
+    },
+    {
+      "index": 127,
+      "time": 2.118333,
+      "file": "reference-media/torch-frames/0128.png"
+    },
+    {
+      "index": 128,
+      "time": 2.135,
+      "file": "reference-media/torch-frames/0129.png"
+    },
+    {
+      "index": 129,
+      "time": 2.151667,
+      "file": "reference-media/torch-frames/0130.png"
+    },
+    {
+      "index": 130,
+      "time": 2.168333,
+      "file": "reference-media/torch-frames/0131.png"
+    },
+    {
+      "index": 131,
+      "time": 2.185,
+      "file": "reference-media/torch-frames/0132.png"
+    },
+    {
+      "index": 132,
+      "time": 2.201667,
+      "file": "reference-media/torch-frames/0133.png"
+    },
+    {
+      "index": 133,
+      "time": 2.218333,
+      "file": "reference-media/torch-frames/0134.png"
+    },
+    {
+      "index": 134,
+      "time": 2.235,
+      "file": "reference-media/torch-frames/0135.png"
+    },
+    {
+      "index": 135,
+      "time": 2.251667,
+      "file": "reference-media/torch-frames/0136.png"
+    },
+    {
+      "index": 136,
+      "time": 2.268333,
+      "file": "reference-media/torch-frames/0137.png"
+    },
+    {
+      "index": 137,
+      "time": 2.285,
+      "file": "reference-media/torch-frames/0138.png"
+    },
+    {
+      "index": 138,
+      "time": 2.301667,
+      "file": "reference-media/torch-frames/0139.png"
+    },
+    {
+      "index": 139,
+      "time": 2.318333,
+      "file": "reference-media/torch-frames/0140.png"
+    },
+    {
+      "index": 140,
+      "time": 2.335,
+      "file": "reference-media/torch-frames/0141.png"
+    },
+    {
+      "index": 141,
+      "time": 2.351667,
+      "file": "reference-media/torch-frames/0142.png"
+    },
+    {
+      "index": 142,
+      "time": 2.368333,
+      "file": "reference-media/torch-frames/0143.png"
+    },
+    {
+      "index": 143,
+      "time": 2.385,
+      "file": "reference-media/torch-frames/0144.png"
+    },
+    {
+      "index": 144,
+      "time": 2.401667,
+      "file": "reference-media/torch-frames/0145.png"
+    },
+    {
+      "index": 145,
+      "time": 2.418333,
+      "file": "reference-media/torch-frames/0146.png"
+    },
+    {
+      "index": 146,
+      "time": 2.435,
+      "file": "reference-media/torch-frames/0147.png"
+    },
+    {
+      "index": 147,
+      "time": 2.451667,
+      "file": "reference-media/torch-frames/0148.png"
+    },
+    {
+      "index": 148,
+      "time": 2.468333,
+      "file": "reference-media/torch-frames/0149.png"
+    },
+    {
+      "index": 149,
+      "time": 2.485,
+      "file": "reference-media/torch-frames/0150.png"
+    },
+    {
+      "index": 150,
+      "time": 2.501667,
+      "file": "reference-media/torch-frames/0151.png"
+    },
+    {
+      "index": 151,
+      "time": 2.518333,
+      "file": "reference-media/torch-frames/0152.png"
+    },
+    {
+      "index": 152,
+      "time": 2.535,
+      "file": "reference-media/torch-frames/0153.png"
+    },
+    {
+      "index": 153,
+      "time": 2.551667,
+      "file": "reference-media/torch-frames/0154.png"
+    },
+    {
+      "index": 154,
+      "time": 2.568333,
+      "file": "reference-media/torch-frames/0155.png"
+    },
+    {
+      "index": 155,
+      "time": 2.585,
+      "file": "reference-media/torch-frames/0156.png"
+    },
+    {
+      "index": 156,
+      "time": 2.601667,
+      "file": "reference-media/torch-frames/0157.png"
+    },
+    {
+      "index": 157,
+      "time": 2.618333,
+      "file": "reference-media/torch-frames/0158.png"
+    },
+    {
+      "index": 158,
+      "time": 2.635,
+      "file": "reference-media/torch-frames/0159.png"
+    },
+    {
+      "index": 159,
+      "time": 2.651667,
+      "file": "reference-media/torch-frames/0160.png"
+    },
+    {
+      "index": 160,
+      "time": 2.668333,
+      "file": "reference-media/torch-frames/0161.png"
+    },
+    {
+      "index": 161,
+      "time": 2.685,
+      "file": "reference-media/torch-frames/0162.png"
+    },
+    {
+      "index": 162,
+      "time": 2.701667,
+      "file": "reference-media/torch-frames/0163.png"
+    },
+    {
+      "index": 163,
+      "time": 2.718333,
+      "file": "reference-media/torch-frames/0164.png"
+    },
+    {
+      "index": 164,
+      "time": 2.735,
+      "file": "reference-media/torch-frames/0165.png"
+    },
+    {
+      "index": 165,
+      "time": 2.751667,
+      "file": "reference-media/torch-frames/0166.png"
+    },
+    {
+      "index": 166,
+      "time": 2.768333,
+      "file": "reference-media/torch-frames/0167.png"
+    },
+    {
+      "index": 167,
+      "time": 2.785,
+      "file": "reference-media/torch-frames/0168.png"
+    },
+    {
+      "index": 168,
+      "time": 2.801667,
+      "file": "reference-media/torch-frames/0169.png"
+    },
+    {
+      "index": 169,
+      "time": 2.818333,
+      "file": "reference-media/torch-frames/0170.png"
+    },
+    {
+      "index": 170,
+      "time": 2.835,
+      "file": "reference-media/torch-frames/0171.png"
+    },
+    {
+      "index": 171,
+      "time": 2.851667,
+      "file": "reference-media/torch-frames/0172.png"
+    },
+    {
+      "index": 172,
+      "time": 2.868333,
+      "file": "reference-media/torch-frames/0173.png"
+    },
+    {
+      "index": 173,
+      "time": 2.885,
+      "file": "reference-media/torch-frames/0174.png"
+    },
+    {
+      "index": 174,
+      "time": 2.901667,
+      "file": "reference-media/torch-frames/0175.png"
+    },
+    {
+      "index": 175,
+      "time": 2.918333,
+      "file": "reference-media/torch-frames/0176.png"
+    },
+    {
+      "index": 176,
+      "time": 2.935,
+      "file": "reference-media/torch-frames/0177.png"
+    },
+    {
+      "index": 177,
+      "time": 2.951667,
+      "file": "reference-media/torch-frames/0178.png"
+    },
+    {
+      "index": 178,
+      "time": 2.968333,
+      "file": "reference-media/torch-frames/0179.png"
+    },
+    {
+      "index": 179,
+      "time": 2.985,
+      "file": "reference-media/torch-frames/0180.png"
+    },
+    {
+      "index": 180,
+      "time": 3.001667,
+      "file": "reference-media/torch-frames/0181.png"
+    },
+    {
+      "index": 181,
+      "time": 3.018333,
+      "file": "reference-media/torch-frames/0182.png"
+    },
+    {
+      "index": 182,
+      "time": 3.035,
+      "file": "reference-media/torch-frames/0183.png"
+    },
+    {
+      "index": 183,
+      "time": 3.051667,
+      "file": "reference-media/torch-frames/0184.png"
+    },
+    {
+      "index": 184,
+      "time": 3.068333,
+      "file": "reference-media/torch-frames/0185.png"
+    },
+    {
+      "index": 185,
+      "time": 3.085,
+      "file": "reference-media/torch-frames/0186.png"
+    },
+    {
+      "index": 186,
+      "time": 3.101667,
+      "file": "reference-media/torch-frames/0187.png"
+    },
+    {
+      "index": 187,
+      "time": 3.118333,
+      "file": "reference-media/torch-frames/0188.png"
+    },
+    {
+      "index": 188,
+      "time": 3.135,
+      "file": "reference-media/torch-frames/0189.png"
+    },
+    {
+      "index": 189,
+      "time": 3.151667,
+      "file": "reference-media/torch-frames/0190.png"
+    },
+    {
+      "index": 190,
+      "time": 3.168333,
+      "file": "reference-media/torch-frames/0191.png"
+    },
+    {
+      "index": 191,
+      "time": 3.185,
+      "file": "reference-media/torch-frames/0192.png"
+    },
+    {
+      "index": 192,
+      "time": 3.201667,
+      "file": "reference-media/torch-frames/0193.png"
+    },
+    {
+      "index": 193,
+      "time": 3.218333,
+      "file": "reference-media/torch-frames/0194.png"
+    },
+    {
+      "index": 194,
+      "time": 3.235,
+      "file": "reference-media/torch-frames/0195.png"
+    },
+    {
+      "index": 195,
+      "time": 3.251667,
+      "file": "reference-media/torch-frames/0196.png"
+    },
+    {
+      "index": 196,
+      "time": 3.268333,
+      "file": "reference-media/torch-frames/0197.png"
+    },
+    {
+      "index": 197,
+      "time": 3.285,
+      "file": "reference-media/torch-frames/0198.png"
+    },
+    {
+      "index": 198,
+      "time": 3.301667,
+      "file": "reference-media/torch-frames/0199.png"
+    },
+    {
+      "index": 199,
+      "time": 3.318333,
+      "file": "reference-media/torch-frames/0200.png"
+    },
+    {
+      "index": 200,
+      "time": 3.335,
+      "file": "reference-media/torch-frames/0201.png"
+    },
+    {
+      "index": 201,
+      "time": 3.351667,
+      "file": "reference-media/torch-frames/0202.png"
+    },
+    {
+      "index": 202,
+      "time": 3.368333,
+      "file": "reference-media/torch-frames/0203.png"
+    },
+    {
+      "index": 203,
+      "time": 3.385,
+      "file": "reference-media/torch-frames/0204.png"
+    },
+    {
+      "index": 204,
+      "time": 3.401667,
+      "file": "reference-media/torch-frames/0205.png"
+    },
+    {
+      "index": 205,
+      "time": 3.418333,
+      "file": "reference-media/torch-frames/0206.png"
+    },
+    {
+      "index": 206,
+      "time": 3.435,
+      "file": "reference-media/torch-frames/0207.png"
+    },
+    {
+      "index": 207,
+      "time": 3.451667,
+      "file": "reference-media/torch-frames/0208.png"
+    },
+    {
+      "index": 208,
+      "time": 3.468333,
+      "file": "reference-media/torch-frames/0209.png"
+    },
+    {
+      "index": 209,
+      "time": 3.485,
+      "file": "reference-media/torch-frames/0210.png"
+    },
+    {
+      "index": 210,
+      "time": 3.501667,
+      "file": "reference-media/torch-frames/0211.png"
+    },
+    {
+      "index": 211,
+      "time": 3.518333,
+      "file": "reference-media/torch-frames/0212.png"
+    },
+    {
+      "index": 212,
+      "time": 3.535,
+      "file": "reference-media/torch-frames/0213.png"
+    },
+    {
+      "index": 213,
+      "time": 3.551667,
+      "file": "reference-media/torch-frames/0214.png"
+    },
+    {
+      "index": 214,
+      "time": 3.568333,
+      "file": "reference-media/torch-frames/0215.png"
+    },
+    {
+      "index": 215,
+      "time": 3.585,
+      "file": "reference-media/torch-frames/0216.png"
+    },
+    {
+      "index": 216,
+      "time": 3.601667,
+      "file": "reference-media/torch-frames/0217.png"
+    },
+    {
+      "index": 217,
+      "time": 3.618333,
+      "file": "reference-media/torch-frames/0218.png"
+    },
+    {
+      "index": 218,
+      "time": 3.635,
+      "file": "reference-media/torch-frames/0219.png"
+    },
+    {
+      "index": 219,
+      "time": 3.653333,
+      "file": "reference-media/torch-frames/0220.png"
+    },
+    {
+      "index": 220,
+      "time": 3.67,
+      "file": "reference-media/torch-frames/0221.png"
+    },
+    {
+      "index": 221,
+      "time": 3.686667,
+      "file": "reference-media/torch-frames/0222.png"
+    },
+    {
+      "index": 222,
+      "time": 3.703333,
+      "file": "reference-media/torch-frames/0223.png"
+    },
+    {
+      "index": 223,
+      "time": 3.72,
+      "file": "reference-media/torch-frames/0224.png"
+    },
+    {
+      "index": 224,
+      "time": 3.736667,
+      "file": "reference-media/torch-frames/0225.png"
+    },
+    {
+      "index": 225,
+      "time": 3.753333,
+      "file": "reference-media/torch-frames/0226.png"
+    },
+    {
+      "index": 226,
+      "time": 3.77,
+      "file": "reference-media/torch-frames/0227.png"
+    },
+    {
+      "index": 227,
+      "time": 3.786667,
+      "file": "reference-media/torch-frames/0228.png"
+    },
+    {
+      "index": 228,
+      "time": 3.803333,
+      "file": "reference-media/torch-frames/0229.png"
+    },
+    {
+      "index": 229,
+      "time": 3.82,
+      "file": "reference-media/torch-frames/0230.png"
+    },
+    {
+      "index": 230,
+      "time": 3.836667,
+      "file": "reference-media/torch-frames/0231.png"
+    },
+    {
+      "index": 231,
+      "time": 3.853333,
+      "file": "reference-media/torch-frames/0232.png"
+    },
+    {
+      "index": 232,
+      "time": 3.87,
+      "file": "reference-media/torch-frames/0233.png"
+    },
+    {
+      "index": 233,
+      "time": 3.886667,
+      "file": "reference-media/torch-frames/0234.png"
+    },
+    {
+      "index": 234,
+      "time": 3.903333,
+      "file": "reference-media/torch-frames/0235.png"
+    },
+    {
+      "index": 235,
+      "time": 3.92,
+      "file": "reference-media/torch-frames/0236.png"
+    },
+    {
+      "index": 236,
+      "time": 3.936667,
+      "file": "reference-media/torch-frames/0237.png"
+    },
+    {
+      "index": 237,
+      "time": 3.953333,
+      "file": "reference-media/torch-frames/0238.png"
+    },
+    {
+      "index": 238,
+      "time": 3.97,
+      "file": "reference-media/torch-frames/0239.png"
+    },
+    {
+      "index": 239,
+      "time": 3.986667,
+      "file": "reference-media/torch-frames/0240.png"
+    },
+    {
+      "index": 240,
+      "time": 4.003333,
+      "file": "reference-media/torch-frames/0241.png"
+    },
+    {
+      "index": 241,
+      "time": 4.02,
+      "file": "reference-media/torch-frames/0242.png"
+    },
+    {
+      "index": 242,
+      "time": 4.036667,
+      "file": "reference-media/torch-frames/0243.png"
+    },
+    {
+      "index": 243,
+      "time": 4.053333,
+      "file": "reference-media/torch-frames/0244.png"
+    },
+    {
+      "index": 244,
+      "time": 4.07,
+      "file": "reference-media/torch-frames/0245.png"
+    },
+    {
+      "index": 245,
+      "time": 4.086667,
+      "file": "reference-media/torch-frames/0246.png"
+    },
+    {
+      "index": 246,
+      "time": 4.103333,
+      "file": "reference-media/torch-frames/0247.png"
+    },
+    {
+      "index": 247,
+      "time": 4.12,
+      "file": "reference-media/torch-frames/0248.png"
+    },
+    {
+      "index": 248,
+      "time": 4.136667,
+      "file": "reference-media/torch-frames/0249.png"
+    },
+    {
+      "index": 249,
+      "time": 4.153333,
+      "file": "reference-media/torch-frames/0250.png"
+    },
+    {
+      "index": 250,
+      "time": 4.17,
+      "file": "reference-media/torch-frames/0251.png"
+    },
+    {
+      "index": 251,
+      "time": 4.186667,
+      "file": "reference-media/torch-frames/0252.png"
+    },
+    {
+      "index": 252,
+      "time": 4.203333,
+      "file": "reference-media/torch-frames/0253.png"
+    },
+    {
+      "index": 253,
+      "time": 4.22,
+      "file": "reference-media/torch-frames/0254.png"
+    },
+    {
+      "index": 254,
+      "time": 4.236667,
+      "file": "reference-media/torch-frames/0255.png"
+    },
+    {
+      "index": 255,
+      "time": 4.253333,
+      "file": "reference-media/torch-frames/0256.png"
+    },
+    {
+      "index": 256,
+      "time": 4.27,
+      "file": "reference-media/torch-frames/0257.png"
+    },
+    {
+      "index": 257,
+      "time": 4.286667,
+      "file": "reference-media/torch-frames/0258.png"
+    },
+    {
+      "index": 258,
+      "time": 4.303333,
+      "file": "reference-media/torch-frames/0259.png"
+    },
+    {
+      "index": 259,
+      "time": 4.32,
+      "file": "reference-media/torch-frames/0260.png"
+    },
+    {
+      "index": 260,
+      "time": 4.336667,
+      "file": "reference-media/torch-frames/0261.png"
+    },
+    {
+      "index": 261,
+      "time": 4.353333,
+      "file": "reference-media/torch-frames/0262.png"
+    },
+    {
+      "index": 262,
+      "time": 4.37,
+      "file": "reference-media/torch-frames/0263.png"
+    },
+    {
+      "index": 263,
+      "time": 4.386667,
+      "file": "reference-media/torch-frames/0264.png"
+    },
+    {
+      "index": 264,
+      "time": 4.403333,
+      "file": "reference-media/torch-frames/0265.png"
+    },
+    {
+      "index": 265,
+      "time": 4.42,
+      "file": "reference-media/torch-frames/0266.png"
+    },
+    {
+      "index": 266,
+      "time": 4.436667,
+      "file": "reference-media/torch-frames/0267.png"
+    },
+    {
+      "index": 267,
+      "time": 4.453333,
+      "file": "reference-media/torch-frames/0268.png"
+    },
+    {
+      "index": 268,
+      "time": 4.47,
+      "file": "reference-media/torch-frames/0269.png"
+    },
+    {
+      "index": 269,
+      "time": 4.486667,
+      "file": "reference-media/torch-frames/0270.png"
+    },
+    {
+      "index": 270,
+      "time": 4.503333,
+      "file": "reference-media/torch-frames/0271.png"
+    },
+    {
+      "index": 271,
+      "time": 4.52,
+      "file": "reference-media/torch-frames/0272.png"
+    },
+    {
+      "index": 272,
+      "time": 4.536667,
+      "file": "reference-media/torch-frames/0273.png"
+    },
+    {
+      "index": 273,
+      "time": 4.553333,
+      "file": "reference-media/torch-frames/0274.png"
+    },
+    {
+      "index": 274,
+      "time": 4.57,
+      "file": "reference-media/torch-frames/0275.png"
+    },
+    {
+      "index": 275,
+      "time": 4.586667,
+      "file": "reference-media/torch-frames/0276.png"
+    },
+    {
+      "index": 276,
+      "time": 4.603333,
+      "file": "reference-media/torch-frames/0277.png"
+    },
+    {
+      "index": 277,
+      "time": 4.62,
+      "file": "reference-media/torch-frames/0278.png"
+    },
+    {
+      "index": 278,
+      "time": 4.636667,
+      "file": "reference-media/torch-frames/0279.png"
+    },
+    {
+      "index": 279,
+      "time": 4.653333,
+      "file": "reference-media/torch-frames/0280.png"
+    },
+    {
+      "index": 280,
+      "time": 4.67,
+      "file": "reference-media/torch-frames/0281.png"
+    },
+    {
+      "index": 281,
+      "time": 4.686667,
+      "file": "reference-media/torch-frames/0282.png"
+    },
+    {
+      "index": 282,
+      "time": 4.703333,
+      "file": "reference-media/torch-frames/0283.png"
+    },
+    {
+      "index": 283,
+      "time": 4.72,
+      "file": "reference-media/torch-frames/0284.png"
+    },
+    {
+      "index": 284,
+      "time": 4.736667,
+      "file": "reference-media/torch-frames/0285.png"
+    },
+    {
+      "index": 285,
+      "time": 4.753333,
+      "file": "reference-media/torch-frames/0286.png"
+    },
+    {
+      "index": 286,
+      "time": 4.77,
+      "file": "reference-media/torch-frames/0287.png"
+    },
+    {
+      "index": 287,
+      "time": 4.786667,
+      "file": "reference-media/torch-frames/0288.png"
+    }
+  ],
+  "inputCrop": {
+    "x": 180,
+    "y": 0,
+    "width": 800,
+    "height": 1600
+  },
+  "inputDirectory": "reference-media/torch-inputs",
+  "inputPurpose": "Generation pose inputs retaining the full upper wisps; separate from the smaller comparison-video crop."
+}

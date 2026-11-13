@@ -1,0 +1,29 @@
+{
+  "selected": 144,
+  "uniqueHashes": 144,
+  "sourceAndAtlasManifestIssues": [],
+  "nativePages": {
+    "narrow": {
+      "frames": 48,
+      "width": 1254,
+      "height": 1254,
+      "pages": 6,
+      "fps": 40
+    },
+    "medium": {
+      "frames": 48,
+      "width": 1254,
+      "height": 1254,
+      "pages": 6,
+      "fps": 40
+    },
+    "broad": {
+      "frames": 48,
+      "width": 1774,
+      "height": 887,
+      "pages": 6,
+      "fps": 40
+    }
+  },
+  "cornerHazeCandidates": []
+}

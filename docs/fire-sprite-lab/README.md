@@ -1,45 +1,48 @@
-# Fire Sprite Lab
+# Fire Sprite Lab / Ember Court
 
-Open `fire-sprite-lab.html` from **Labs → Fire Sprite Lab**. Eight arrangements reuse three separately authored flame families. Select a card, drag to orbit, and use **Single drawn flame** to inspect its source cycle. Pause, scrub or step the drawings; ¼ speed exposes the sequence and seam. Hue presets, grid, heat strength and 720p/MAX rendering remain available. Frame blending is off by default. Reduced-motion preferences start paused.
+Open **Labs → Fire Sprite Lab**. The default view is a first-person temple courtyard with gateway and wall torches, a central basin, an altar channel, ritual sockets, a fire trap, shrine lantern, offering bowl, camp hearth and an inner sanctuary.
 
-## Longer drawing cycles
+**WASD** moves, **Shift** runs, **Space** jumps and dragging looks around. Arrow keys move/turn. **R** returns to the reached checkpoint; **Entrance** resets the tour. Compact layouts have movement buttons; gamepad sticks and the primary face button are supported. Solid props, stairs, a checkpoint, fall recovery and a reachable temple arch support the tour. Main-game movement and saved level data are unchanged.
 
-The current revision has **108 distinct original PNG cels: 36 narrow, 36 medium and 36 broad**. Each cel was produced in a separate built-in imagegen call. It retains the twelve original keys per family and adds 24 individually generated drawings between neighbouring poses. Larger pose changes received more intermediate drawings, with coverage across the cycle and its closing transition. One narrow cel needed a separate imagegen edit to restore a transparent background; its rejected version and repair input are recorded.
+Choose a study to open its controls while staying in the court. **Collection** and **Focus** open the orbitable exhibition. Pause, scrub and step source frames; **Single source flame** isolates one cycle. Hue presets, heat strength, 720p/MAX and optional frame blending remain available. Blending is off by default. Reduced-motion preferences start animation paused.
 
-The supplied Crash 4 torch and brazier recordings inform the connected bright base, hollow red upper lobes, independent inner colour shapes, pinching necks and rising separated tips. [The reference study](v2/reference-study.md) contains the observations. The footage does not establish the original drawing count, source texture or exact loop period. The drawing direction is Looney Tunes/Tex Avery. These are newly generated interpretations; the supplied recordings remain local.
+## V5: continuous source motion, shared imagegen colour
 
-- Final ordered sequences: [v3/sequence.json](v3/sequence.json).
-- Source contact sheets: [narrow](v3/narrow-contact-sheet.png), [medium](v3/medium-contact-sheet.png), [broad](v3/broad-contact-sheet.png).
-- New file hashes, prompts and reference versions: [v3/generation.json](v3/generation.json), with exact prompts in [v3/prompts](v3/prompts).
-- Original twelve keys per family: `public/fire-sprites/v2/{narrow,medium,broad}/01.png` through `12.png`; provenance in [v2/generation.json](v2/generation.json).
-- New native PNGs: `art/fire-sprites/v3/{narrow,medium,broad}/`.
-- Runtime manifest and lossless pages: `public/fire-sprites/v3/`. Manifest frame paths are repository source paths, not hosted download URLs.
+V4's 144 independently generated cels were rejected for flickering and inconsistent repainting. Further tests using clean input frames still changed neighbouring contours and detail. The user explicitly authorized preserving the source sequence's motion and using imagegen for shared artwork instead of generating every cel independently.
 
-Base playback is **36 drawings per second over one second**, an authoring choice. Arrangements can vary playback rate or phase. The additional frames change the silhouette and internal colour shapes; they are not repeated poses, crossfades or optical-flow images. Optional frame blending remains available for comparison.
+The runtime now uses two supplied **64-frame** flipbooks from [Thomas Iché / Unity Labs](https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks), released under CC0. Flame03 supplies narrow flames; Flame02 supplies medium flames and the wider arrangements. This is **128 unique source frames**, not three independent sequences. The raw 480-frame exports have unsuitable end joins; the author's packaged flipbooks provide the continuous cycles used here.
 
-## Native art and runtime
+The source pixels remain unchanged. One native 1254×1254 built-in imagegen painting supplies six sampled colours, shared by every frame. The material maps source intensity through this fixed palette and alpha curve, keeping colour bands consistent throughout the motion. Screen compositing prevents overlapping flames from washing out to white. Hue transforms reuse this material across the collection.
 
-`tools/fire-sprite-lab/pack-cycles.mjs v3` packs the original full canvases into lossless WebP atlases. Narrow and medium remain 1254 × 1254, broad 1774 × 887. Four pages each serve narrow and medium; five serve broad. Every page is at most 4096 pixels per axis. Packing verifies exact alpha and all RGB values at nonzero alpha against each original. WebP may normalize invisible RGB at alpha zero; the original PNGs are retained unmodified. No trimming, resizing, mipmap replacement or distance-based substitute is used.
+Playback is 48 source frames per second: 64 frames over 1⅓ seconds. This is a lab timing choice, not a claim about Crash 4's asset rate. Varied phases and rates separate the neighbouring flames. No procedural flame silhouettes, frame-by-frame exposure adjustment, imagegen inbetweens, optical flow or default crossfade are used.
 
-The retired v2 atlases and manifest are preserved under `art/fire-sprites/v2/` rather than shipped alongside their replacements. The original v2 PNG keys remain public and also supply the exhibit thumbnails. This keeps the larger native cycles within the existing Pages hosting budget.
+## Native assets and arrangements
 
-Each drawing has a measured foot anchor that registers its quad without changing its silhouette. Canvas aspect ratio is preserved. The material uses luminous additive blending, hue transforms and translucent red tips. Optional interpolation accounts for both frames' foot anchors and blends premultiplied colour; it is off by default. The shader supports up to 64 drawings and eight texture pages per family through static sampler branches.
+The supplied Flame02 sheet is 2048×1024, with 128×256 frames. Flame03 is 1024×512, with 64×128 frames. These are their native packaged resolutions; no upscaling or downscaling is performed. Enlarging them exposes the source's limited detail. Original TGAs, converted PNG sheets and individual native cells are retained under `art/fire-sprites/v5/source/`.
 
-The eight arrangements use 99 camera-facing instances. Body counts are 1 torch, 3 bonfire, 2 curtain, 10 ring, 6 jet, 1 spirit flame, 5 vortex and 1 ember bed; the remaining instances are sparks. Source view shows one unrotated drawing without sparks or arrangement motion.
+`pack-source-cycles.mjs` verifies the complete TGA-to-PNG conversion, then losslessly packs the unchanged sheets as WebP. It decodes the result and checks exact alpha and every visible RGB value. Each cycle uses one constant foot anchor, avoiding per-frame registration jitter. World scale retains the source aspect and scales the heat source. There are no distance-based substitutions.
 
-The shared `FlameHeatDistortion`, `writeTorchHeat` and Jak distortion topology are unchanged. Their framebuffer pass refracts the world behind the sprites with foreground depth protection. The collection uses at most 234 heat pockets and a focused exhibit at most 36, under the existing 512-pocket limit. Pause freezes drawing playback and heat on the same clock.
+The collection has 34 anchored body instances: 1 torch, 3 bonfire, 7 altar tongues, 10 ring flames, 2 outlet-rooted jet tongues, 1 spirit flame, 5 spiral flames and 5 hearth tongues. The courtyard adds 7 torches, for 41 instances. The miniature whole-flame particle emitter is removed. Small natural fragments inside the recorded source frames remain. The jet is rooted at its outlet instead of moving copies of a whole flame through space.
 
-## Validation and reproduction
+The shared `FlameHeatDistortion`, `writeTorchHeat`, heat attachment and Jak distortion implementations are unchanged. Their existing framebuffer refraction retains foreground depth protection. Pause freezes fire and heat on one clock. Point lights follow colour controls.
 
-With an installed `sharp` package, or `SHARP_MODULE` pointing to its entry point:
+## Files and reproduction
+
+- Native shared painting: `art/fire-sprites/v5/clean-pilot/120.png`.
+- Exact built-in imagegen prompt: [clean-120.txt](v5/prompts/clean-120.txt).
+- Selected/rejected imagegen records: [generation.json](v5/generation.json).
+- Current runtime sheets, manifest, painting and attribution: `public/fire-sprites/v5/`.
+- Source pixel audit: [native-audit.json](v5/native-audit.json).
+- Work, visual findings and validation: [WORK.md](v5/WORK.md).
+
+With `sharp` available, or `SHARP_MODULE` pointing to its module entry:
 
 ```sh
-node tools/fire-sprite-lab/pack-cycles.mjs v3
-node tools/fire-sprite-lab/review-cycle.mjs docs/fire-sprite-lab/v3/narrow-cycle.json /tmp/narrow-review
+node tools/fire-sprite-lab/pack-source-cycles.mjs
+npm run build
+npm run check:release
 ```
 
-The review tool produces native animated WebPs, a contact sheet, the last/first comparison and transition measurements. It does not invent, interpolate or align source drawings. `sequence-cycles.mjs` is an authoring aid for selecting gaps and recording generated cels; the completed sequence is protected against accidental reinitialization or extra insertion. The initial `timing-plan.json` is historical; `sequence.json` is authoritative.
+The local [motion comparison](v5/review.html) shows the user's torch recording beside rejected v4 and the actual v5 material, with normal/slow playback and exact frame stepping. The recording is a style and motion target; its phase does not match the new source. Reference footage and comparison captures stay in the ignored `v5/reference-media/` directory and are not shipped. The review page is a local authoring bench, not part of the published site.
 
-All 108 hashes are distinct and match the retained PNGs. All atlas cells passed pixel verification. Every drawing was stepped in the full native browser renderer, including 36→01 for each family. [Browser contact sheets](v3/browser) show all native-rendered poses. Review also covers lite/full rendering, all eight arrangements, source mode, ¼ speed, hue, heat and 720p/MAX. The frozen heat fixture changes 1,101 pixels above a three-channel-value threshold; zero-strength and disabled heat are pixel-identical. The production page reports 108 drawings and has no console warnings or errors.
-
-[Validation details](v3/validation.json) include the production build/type-check, tool-directory check and 991,918,868-byte release-size pass. The standalone browser harness now derives the last frame from the slider instead of assuming twelve frames; this revision was reviewed with the connected browser. Gameplay, level data, movement and existing game torches are unchanged.
+Rejected v4 and superseded v2/v3 assets are retained under `art/fire-sprites/`, outside the published runtime. Historical provenance records retain their original path names. Source fidelity checks, frame counts and performance are technical evidence; they are not substitutes for visual motion review.

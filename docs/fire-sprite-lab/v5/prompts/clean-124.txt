@@ -1,0 +1,5 @@
+Use case: precise-object-edit for sequential fire animation.
+Image 1 is the EDIT TARGET, cel 122. Image 2 is the exact source pose 122; Image 3 is the next source pose 124, two simulation frames later. Apply only that observed motion change to Image 1.
+The left middle lobe rises again and narrows near its connection. The low bright tongue keeps flowing upward through the main stem. At the top the old wisps thin and change shape as in source 124; do not keep a decorative fork unchanged when its source has dissipated. Let consumed material disappear while replenishing lower material.
+Keep the exact cel palette, low-source brightness, smooth shading, anchored foot, scale and square 1254×1254 canvas of Image 1. Preserve paint where its source region did not change. No added folds, patterned highlights, sparks, or new independent flames. This is a small next-frame edit, not a redesigned flame.
+One transparent RGBA cel, frame 124, no background.

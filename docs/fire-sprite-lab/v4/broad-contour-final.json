@@ -1,0 +1,58 @@
+[
+  {
+    "phase": 7,
+    "left": "06",
+    "right": "k08-r2",
+    "detail": "The old tall orange stem stays almost the same height, but both the red/orange shoulder shapes AND the low yellow inner paint advance halfway. Keep the top right twig curvature halfway. The previous phase7 almost repeated image1; this new drawing must visibly advance the contours and internal flowing shapes.",
+    "id": "broad-07-r2",
+    "celId": "07-r2",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/06.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k08-r2.png"
+    ],
+    "prompt": "One separately DRAWN broad fire animation cel, phase 7/48, the exact temporal MIDPOINT between reference1 and reference2, 25 milliseconds after reference1. This is not a crossfade. Draw each contour once in its halfway position. The old tall orange stem stays almost the same height, but both the red/orange shoulder shapes AND the low yellow inner paint advance halfway. Keep the top right twig curvature halfway. The previous phase7 almost repeated image1; this new drawing must visibly advance the contours and internal flowing shapes. Preserve exact native 1774×887 canvas and scale, stable luminous warm cream/yellow low source, large orange cel-painted flame sheets with reddish thin tips, softly changing internal colour masses. All flame structures stay attached to the source; no detached miniature flames or sparks. Do not leave any haze or colour in the transparent exterior or holes. No text, props, duplicate outlines, blurry double exposure, motion blur or extra details. Transparent PNG only.",
+    "promptFile": "prompts/broad-07-r2.txt"
+  },
+  {
+    "phase": 13,
+    "left": "12-r2",
+    "right": "14-r2",
+    "detail": "The old upper-left/central stem has a high curling tip in image1 and a lower shortened tip in image2. Place this old tip HALFWAY between those two heights, not already consumed to image2's height. The top of the young right lobe is halfway between its heights too. There is ONE new aperture in this young right lobe: its midpoint size must be smaller than the long opening in image2 and larger than the tiny opening in image1. Do not draw both apertures. The previous phase13 copied most of image2 too early; preserve more of the old rising left crown while it thins.",
+    "id": "broad-13-r3",
+    "celId": "13-r3",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/12-r2.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/14-r2.png"
+    ],
+    "prompt": "One separately DRAWN broad fire animation cel, phase 13/48, the exact temporal MIDPOINT between reference1 and reference2, 25 milliseconds after reference1. This is not a crossfade. Draw each contour once in its halfway position. The old upper-left/central stem has a high curling tip in image1 and a lower shortened tip in image2. Place this old tip HALFWAY between those two heights, not already consumed to image2's height. The top of the young right lobe is halfway between its heights too. There is ONE new aperture in this young right lobe: its midpoint size must be smaller than the long opening in image2 and larger than the tiny opening in image1. Do not draw both apertures. The previous phase13 copied most of image2 too early; preserve more of the old rising left crown while it thins. Preserve exact native 1774×887 canvas and scale, stable luminous warm cream/yellow low source, large orange cel-painted flame sheets with reddish thin tips, softly changing internal colour masses. All flame structures stay attached to the source; no detached miniature flames or sparks. Do not leave any haze or colour in the transparent exterior or holes. No text, props, duplicate outlines, blurry double exposure, motion blur or extra details. Transparent PNG only.",
+    "promptFile": "prompts/broad-13-r3.txt"
+  },
+  {
+    "phase": 37,
+    "left": "36",
+    "right": "38",
+    "detail": "The central young lobe and internal hole are evolving. The hole starts as a squat lobed shape and ends as a tall kidney. Draw a transitional aperture halfway in height and width, retaining some of the low-left lobe of the hole. The central flame head must be halfway in height and width, not already the broad high head of image2. The previous phase37 prematurely duplicated image2's contours.",
+    "id": "broad-37-r2",
+    "celId": "37-r2",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/36.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/38.png"
+    ],
+    "prompt": "One separately DRAWN broad fire animation cel, phase 37/48, the exact temporal MIDPOINT between reference1 and reference2, 25 milliseconds after reference1. This is not a crossfade. Draw each contour once in its halfway position. The central young lobe and internal hole are evolving. The hole starts as a squat lobed shape and ends as a tall kidney. Draw a transitional aperture halfway in height and width, retaining some of the low-left lobe of the hole. The central flame head must be halfway in height and width, not already the broad high head of image2. The previous phase37 prematurely duplicated image2's contours. Preserve exact native 1774×887 canvas and scale, stable luminous warm cream/yellow low source, large orange cel-painted flame sheets with reddish thin tips, softly changing internal colour masses. All flame structures stay attached to the source; no detached miniature flames or sparks. Do not leave any haze or colour in the transparent exterior or holes. No text, props, duplicate outlines, blurry double exposure, motion blur or extra details. Transparent PNG only.",
+    "promptFile": "prompts/broad-37-r2.txt"
+  },
+  {
+    "phase": 47,
+    "left": "46-r2",
+    "right": "k00",
+    "detail": "This is the final pose immediately before the loop restarts at image2. The central internal hole must be halfway in width and position, and the left and right surrounding lobes must visibly advance halfway too. The previous phase47 held almost image1, creating a jump at the wrap. Move all low yellow inner flowing paint halfway toward image2. Keep the anchored foot stable.",
+    "id": "broad-47-r2",
+    "celId": "47-r2",
+    "refs": [
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/46-r2.png",
+      "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/k00.png"
+    ],
+    "prompt": "One separately DRAWN broad fire animation cel, phase 47/48, the exact temporal MIDPOINT between reference1 and reference2, 25 milliseconds after reference1. This is not a crossfade. Draw each contour once in its halfway position. This is the final pose immediately before the loop restarts at image2. The central internal hole must be halfway in width and position, and the left and right surrounding lobes must visibly advance halfway too. The previous phase47 held almost image1, creating a jump at the wrap. Move all low yellow inner flowing paint halfway toward image2. Keep the anchored foot stable. Preserve exact native 1774×887 canvas and scale, stable luminous warm cream/yellow low source, large orange cel-painted flame sheets with reddish thin tips, softly changing internal colour masses. All flame structures stay attached to the source; no detached miniature flames or sparks. Do not leave any haze or colour in the transparent exterior or holes. No text, props, duplicate outlines, blurry double exposure, motion blur or extra details. Transparent PNG only.",
+    "promptFile": "prompts/broad-47-r2.txt"
+  }
+]

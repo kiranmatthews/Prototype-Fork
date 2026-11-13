@@ -1,0 +1,198 @@
+{
+  "id": "medium",
+  "fps": 40,
+  "frames": [
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k00-r2.png",
+      "phase": 0
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/01.png",
+      "phase": 1
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/02.png",
+      "phase": 2
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/03.png",
+      "phase": 3
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/04.png",
+      "phase": 4
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/05.png",
+      "phase": 5
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/06.png",
+      "phase": 6
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/07.png",
+      "phase": 7
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k08-r2.png",
+      "phase": 8
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/09.png",
+      "phase": 9
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/10-r2.png",
+      "phase": 10
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/11.png",
+      "phase": 11
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/12-r2.png",
+      "phase": 12
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/13-r2.png",
+      "phase": 13
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/14.png",
+      "phase": 14
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/15.png",
+      "phase": 15
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k16.png",
+      "phase": 16
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/17.png",
+      "phase": 17
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/18-r2.png",
+      "phase": 18
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/19.png",
+      "phase": 19
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/20-r2.png",
+      "phase": 20
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/21.png",
+      "phase": 21
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/22.png",
+      "phase": 22
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/23.png",
+      "phase": 23
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k24.png",
+      "phase": 24
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/25.png",
+      "phase": 25
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/26.png",
+      "phase": 26
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/27.png",
+      "phase": 27
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/28-r2.png",
+      "phase": 28
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/29-r2.png",
+      "phase": 29
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/30.png",
+      "phase": 30
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/31.png",
+      "phase": 31
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k32.png",
+      "phase": 32
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/33-r2.png",
+      "phase": 33
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/34.png",
+      "phase": 34
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/35.png",
+      "phase": 35
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/36.png",
+      "phase": 36
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/37.png",
+      "phase": 37
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/38.png",
+      "phase": 38
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/39.png",
+      "phase": 39
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/k40.png",
+      "phase": 40
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/41.png",
+      "phase": 41
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/42.png",
+      "phase": 42
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/43.png",
+      "phase": 43
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/44.png",
+      "phase": 44
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/45.png",
+      "phase": 45
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/46.png",
+      "phase": 46
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/medium/47.png",
+      "phase": 47
+    }
+  ]
+}

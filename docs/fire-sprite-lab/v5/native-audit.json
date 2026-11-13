@@ -1,0 +1,79 @@
+{
+  "status": "Pixel preservation only — browser motion review required",
+  "painting": {
+    "file": "art/fire-sprites/v5/clean-pilot/120.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "66da2d1571bfb406dcdd3b82a9ffa098dc6fccd32247b881ec93d7b1997ec0a5",
+    "samplePixels": [
+      [
+        550,
+        430
+      ],
+      [
+        570,
+        500
+      ],
+      [
+        590,
+        650
+      ],
+      [
+        570,
+        800
+      ],
+      [
+        600,
+        930
+      ],
+      [
+        600,
+        1020
+      ]
+    ]
+  },
+  "checks": [
+    {
+      "source": "Flame02",
+      "tgaSha256": "6ae2158bc06e0b035196db2695c19e7cb29a23f59b345d4c5c2764c6c10ce3a6",
+      "atlasPngSha256": "dcf5759139396d2f9c9b527b11212debf7ca9ed31afb1e2ade2f24cc8e36838d",
+      "nativeAtlas": [
+        2048,
+        1024
+      ],
+      "nativeFrame": [
+        128,
+        256
+      ],
+      "frameCount": 64,
+      "anchor": [
+        0.49476127981392004,
+        0.033203125
+      ],
+      "exactTgaPixels": true,
+      "exactRuntimeAlphaAndVisibleRGB": true,
+      "runtimeBytes": 1139724
+    },
+    {
+      "source": "Flame03",
+      "tgaSha256": "570b4ebb2d15e2ba5f205df34a45db9bdff8d106cbfa07ae9bf6e320a9e5d68f",
+      "atlasPngSha256": "f1b47e974f755701bbe0fa465ef4db608a62c63f26ed0832815b64b99dc83ab2",
+      "nativeAtlas": [
+        1024,
+        512
+      ],
+      "nativeFrame": [
+        64,
+        128
+      ],
+      "frameCount": 64,
+      "anchor": [
+        0.4945499909134965,
+        0.07821113248122125
+      ],
+      "exactTgaPixels": true,
+      "exactRuntimeAlphaAndVisibleRGB": true,
+      "runtimeBytes": 437878
+    }
+  ]
+}
