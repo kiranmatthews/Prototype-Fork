@@ -17,7 +17,7 @@ const descriptions = {
   'tools/enemies/motion-review.html': ['Enemy lab · current roster', 'Inspect our enemy models, skeletons, combat cycles and defeat states; browse Jak 1 character references.', 'Labs & studios'],
   'jak-lab.html': ['Jak & Daxter effects lab', 'Browse the effects preview by category, including particle, HUD and disappearance effects.', 'Labs & studios'],
   'jak-particle-study.html': ['Jak particle / HUD study', 'Recovered progress-menu particles: six layouts, original transitions, source icon animation and Original / Gouraud comparison.', 'Labs & studios'],
-  'fire-sprite-lab.html': ['Fire Sprite Lab', 'Explore the Ember Court: animated torches, temple basins, altar fire, a lantern and camp hearth. Eight colour studies with the game’s Jak heat distortion.', 'Labs & studios'],
+  'fire-sprite-lab.html': ['Fire Sprite Lab', 'Run and jump around Ember Court as Bone Man. Torches, basins and eight fire studies, with normal debug effects tabs and Jak heat distortion.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
   'public/update-game.html': ['Update game', 'Load the latest published build while retaining saves and settings.', 'Maintenance'],

@@ -190,6 +190,8 @@ import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import { EMBER_COURT_LEVEL } from './levels/ember-court';
+import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
 import { bananaBayWaterShore, extendBananaBayBeachSand, BANANA_BAY_OCEAN_WIDTH } from './levels/banana-bay-water';
@@ -1211,6 +1213,8 @@ export interface CustomLevelData {
   kiteTow?: boolean;
   /** Derelict warehouse art owner; all native gameplay surfaces are retained. */
   warehouseArt?: boolean;
+  /** Fire exhibition art; geometry and movement use the ordinary level pipeline. */
+  emberCourt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
   /** Optional source calibration; other levels retain their authored movement. */
@@ -2641,6 +2645,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  {id:'ember-court',name:EMBER_COURT_LEVEL.name,data:EMBER_COURT_LEVEL},
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
@@ -2751,7 +2756,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter', 'kiteTow',
   "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere", "desertHeat",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "orbit", "spin", "bounce",
@@ -3016,7 +3021,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
+  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -5711,7 +5716,7 @@ export class Level {
     if (this.skateCollectathon && this.gateSpec)
       this.skateCollectathon.entrance(this.root, new THREE.Vector3(this.gateSpec.x, this.gateSpec.y, this.gateSpec.z));
     if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.skateRace && !this.boss && !isCompetitionLevel(entry.id)) {
-      this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
+      if(!this.builtFromData?.emberCourt)this.placeClock(); // exhibition remains free exploration
       this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
     if((isCampaignLevel(entry.id)||entry.id==='codex-lab')&&this.hudMode!=='bonus'&&this.hudMode!=='hub'&&!this.isBossLevel&&!this.skatepark&&!this.skateRace)
@@ -5721,6 +5726,7 @@ export class Level {
     this.cityAssets?.flush();
     if(this.builtFromData?.warehouseArt){this.warehouseKit().dress(this.builtFromData.components);if(this.skateCollectathon)this.warehouseKit().goals(this.skateCollectathon);}
     this.warehousePresentation?.flush();
+    if(this.builtFromData?.emberCourt)this.emberCourt=new EmberCourtPresentation(this.root);
     if(this.builtFromData?.components.some(c=>c.nm==='Motu / continuous concrete apron'))
       this.motuBeach=new MotuBeachPresentation(this.root,this.builtFromData.components);
     if (this.jungleAtmosphere) {
@@ -9141,6 +9147,7 @@ export class Level {
     this.blockworksMattes?.dispose();this.blockworksMattes=null;
     this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
     this.warehousePresentation?.dispose();this.warehousePresentation=null;
+    this.emberCourt?.dispose();this.emberCourt=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -16575,6 +16582,7 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.emberCourt?.view(this.time,camera);
     if(this.verticalLoop){
       this.verticalLoopView??=new VerticalLoopView(this.root,this.verticalLoop,index=>{
         const c=this.builtFromData?.components[index];
@@ -16627,11 +16635,12 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.emberCourt?.ready,this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
+  private emberCourt:EmberCourtPresentation|null=null;
   private warehousePresentation:WarehouseArt|null=null;
   private warehouseKit():WarehouseArt {return this.warehousePresentation??=new WarehouseArt(this.root,EDITOR_BUILD);}
   get warehouseDiagnostics(){return this.warehousePresentation?{...this.warehousePresentation.diagnostics,solidProps:this.carlisleScenery.meshes.filter(m=>m.userData.warehouseContact).length}:null;}

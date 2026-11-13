@@ -1,10 +1,12 @@
 # Fire Sprite Lab / Ember Court
 
-Open **Labs → Fire Sprite Lab**. The default view is a first-person temple courtyard with gateway and wall torches, a central basin, an altar channel, ritual sockets, a fire trap, shrine lantern, offering bowl, camp hearth and an inner sanctuary.
+Open **Labs → Fire Sprite Lab**, or use `/?playtest&level=ember-court`. This now opens **Ember Court · Fire Lab** in the normal Bone Man game. The old lab URL redirects into that level; there is no separate movement controller on the published route.
 
-**WASD** moves, **Shift** runs, **Space** jumps and dragging looks around. Arrow keys move/turn. **R** returns to the reached checkpoint; **Entrance** resets the tour. Compact layouts have movement buttons; gamepad sticks and the primary face button are supported. Solid props, stairs, a checkpoint, fall recovery and a reachable temple arch support the tour. Main-game movement and saved level data are unchanged.
+Run, jump, double jump, spin and use the board with the normal game controls. The existing character, movement tuning, camera, input, checkpoint/respawn and finish systems own gameplay. A broad courtyard and low side terraces give room to move around torches, the basin, altar, ritual circle, trap, lantern, offering bowl and hearth. An open entrance, tall temple archway and roofless sanctuary keep the game camera clear. The lab omits the automatic time-trial pickup so exploring cannot accidentally start a timed run. This is an inspection arena, not a campaign challenge or crate collection course.
 
-Choose a study to open its controls while staying in the court. **Collection** and **Focus** open the orbitable exhibition. Pause, scrub and step source frames; **Single source flame** isolates one cycle. Hue presets, heat strength, 720p/MAX and optional frame blending remain available. Blending is off by default. Reduced-motion preferences start animation paused.
+Press **M** to show/hide the ordinary debug tabs. **LOOK** controls Unity bloom/color treatment, **CRT** controls the display effect, and **RENDER** controls resolution (including MAX/native). **TUNER**, **SPIN**, **BOARD** and **TEXT** remain available. The normal game pause menu also offers **Show Debug Menus**. Existing saved effects settings apply.
+
+The accepted v5 assets and shared Jak heat pass are unchanged. `src/levels/ember-court.ts` owns cloneable source-level geometry; `EmberCourtPresentation` owns art/texture loading and disposal only. The previous isolated authoring viewer remains in source for historical reference; it is no longer the Fire Sprite Lab entry point.
 
 ## V5: continuous source motion, shared imagegen colour
 
@@ -24,7 +26,7 @@ The supplied Flame02 sheet is 2048×1024, with 128×256 frames. Flame03 is 1024�
 
 The collection has 34 anchored body instances: 1 torch, 3 bonfire, 7 altar tongues, 10 ring flames, 2 outlet-rooted jet tongues, 1 spirit flame, 5 spiral flames and 5 hearth tongues. The courtyard adds 7 torches, for 41 instances. The miniature whole-flame particle emitter is removed. Small natural fragments inside the recorded source frames remain. The jet is rooted at its outlet instead of moving copies of a whole flame through space.
 
-The shared `FlameHeatDistortion`, `writeTorchHeat`, heat attachment and Jak distortion implementations are unchanged. Their existing framebuffer refraction retains foreground depth protection. Pause freezes fire and heat on one clock. Point lights follow colour controls.
+The shared `FlameHeatDistortion`, `writeTorchHeat`, heat attachment and Jak distortion implementations are unchanged. Their existing framebuffer refraction retains foreground depth protection. Game pause freezes fire and heat on the level clock. Fixed coloured lights illuminate the study contexts.
 
 ## Files and reproduction
 
