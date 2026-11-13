@@ -11872,3 +11872,13 @@ Geometry is a broad inspection arena, intentionally a breather rather than a cam
 Validation: `npm run check:levels`, `npm run build`, `node tools/test-tool-directory.mjs`, `npm run check:release` (935,950,966 / 1,000,000,000 bytes), and `git diff --check` passed. Real browser passes covered the old lab link redirect, supported spawn, normal run/jump/spin, basin collision, checkpoint activation, fall/death/checkpoint recovery, altar access and the native run-complete receipt. Full production rendering covered 720p and native, Gouraud on/off, Unity treatment on/off, CRT on/off, debug chrome hide/show and the normal level-menu entry with no console errors. Source assets and the shared published level pack were not rewritten.
 
 Evidence: [integration checks](fire-sprite-lab/game-integration/validation.json), [native Gouraud panel](fire-sprite-lab/game-integration/native-gouraud.jpg), [Unity effects](fire-sprite-lab/game-integration/unity-effects.jpg), [CRT effects](fire-sprite-lab/game-integration/crt-effects.jpg), [normal jump](fire-sprite-lab/game-integration/normal-jump.jpg).
+
+### 2026-11-13 — One broad flame for the temple basin
+
+Approximately six minutes from the brief to the first playable single-body basin with a fitted base. Replaced the bonfire's three independently timed source copies with one continuous billboard sheet. It has an authored width of 4.0 relative to a height of 3.8 and a fixed lower flare that spreads across the bowl while tapering into the upper plume. All 64 source poses share exactly the same spatial profile and timing; there is no extra phase, regenerated art or animated geometric wobble. The source-only authoring view resets width and flare to the original proportions. The wider heat footprint uses the existing Jak heat writer and renderer.
+
+The other arrangements keep their original dimensions and animation behavior. The exhibition now has 32 flame bodies, or 39 including the court torches. The native source atlases and shared imagegen palette are unchanged.
+
+Validation: `npm run build`, `npm run check:release` (935,951,410 / 1,000,000,000 bytes), and `git diff --check` passed. Real-browser review covered lite and full production rendering, 720p and native resolution, multiple live poses, the front and both sides of the basin, correct seating/occlusion against the bowl, and a clean console. No gameplay geometry, movement or level data changed, so unrelated level and system audits were not rerun.
+
+Evidence: [review record](fire-sprite-lab/wide-basin/validation.json), [native view](fire-sprite-lab/wide-basin/native-resolution.jpg), [right side](fire-sprite-lab/wide-basin/basin-right.jpg), [left side](fire-sprite-lab/wide-basin/basin-left.jpg).

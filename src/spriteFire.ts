@@ -15,13 +15,13 @@ export interface FireCycleData {
 }
 export interface FireCycle extends FireCycleData {textures:THREE.Texture[]}
 export interface SpriteFireSpec {arrangement:FireArrangement;family:FireFamily;hue:number;seed?:number;phase?:number}
-interface Tongue {x:number;y:number;z:number;h:number;phase:number;rate:number;angle:number}
+interface Tongue {x:number;y:number;z:number;w:number;h:number;phase:number;rate:number;angle:number}
 const fract=(n:number)=>n-Math.floor(n),random=(n:number)=>fract(Math.sin(n*127.1+311.7)*43758.5453);
 const vertexShader=/* glsl */`
   attribute vec3 centre;
   attribute vec2 size;
   attribute vec4 state;
-  uniform float time, frameCount, fps;
+  uniform float time, frameCount, fps, baseFlare;
   uniform vec2 anchors[64];
   varying vec2 spriteUV, nextOffset;
   varying float frame, opacity;
@@ -29,10 +29,13 @@ const vertexShader=/* glsl */`
     spriteUV=uv;frame=mod(time*fps*state.z+state.y,frameCount);opacity=state.w;
     vec2 foot=anchors[int(floor(frame))];
     nextOffset=anchors[int(mod(floor(frame)+1.,frameCount))]-foot;
-    // Register the foot without stretching or procedurally wobbling the drawing.
-    // A courtyard torch can use a smaller instance of the same native drawing.
-    // Uniform world scale preserves its aspect and also scales the shared heat source.
+    // Register the foot using one fixed authored width/height for the whole cycle.
+    // The basin uses a broad single body; ordinary tongues keep the native aspect.
+    // World scale also scales the shared heat source.
     vec2 local=(uv-foot)*size*length(modelMatrix[1].xyz);
+    // A fixed flare seats the single basin sheet across its fuel bed while
+    // keeping the upper plume slender. It never changes with frame or time.
+    local.x*=1.+baseFlare*(1.-smoothstep(.08,.6,uv.y));
     float c=cos(state.x),s=sin(state.x);
     vec4 viewed=modelViewMatrix*vec4(centre,1.0);
     viewed.xy+=mat2(c,s,-s,c)*local;gl_Position=projectionMatrix*viewed;
@@ -103,10 +106,12 @@ export class SpriteFire extends THREE.Group {
   private time=0;
   constructor(readonly cycle:FireCycle,readonly spec:SpriteFireSpec){
     super();this.name='Sprite fire · '+spec.arrangement;
-    const add=(x:number,y:number,z:number,h:number,angle=0,rate=1)=>{const n=this.tongues.length;this.tongues.push({x,y,z,h,angle,rate,phase:n===0?(spec.phase??0):random(n+(spec.seed??1)*31)*cycle.frameCount});};
+    const add=(x:number,y:number,z:number,h:number,angle=0,rate=1,w=h*cycle.width/cycle.height)=>{const n=this.tongues.length;this.tongues.push({x,y,z,w,h,angle,rate,phase:n===0?(spec.phase??0):random(n+(spec.seed??1)*31)*cycle.frameCount});};
     switch(spec.arrangement){
       case 'torch':add(0,0,0,3.7);break;
-      case 'bonfire':add(0,0,.25,3.8);add(-.65,0,-.25,2.7,0,.93);add(.65,0,-.15,2.55,0,1.07);break;
+      // One connected source body across the basin, with no repeated feet or
+      // independently timed outlines. Width is constant through all 64 frames.
+      case 'bonfire':add(0,0,0,3.8,0,1,4.0);break;
       case 'wall':
         if(cycle.paint){for(let i=0;i<7;i++)add((i-3)*.48,0,(i%2)*.06,1.8+random(i+4)*.35,0,.94+random(i+19)*.12);}
         else{add(-1.08,0,0,1.9);add(1.08,0,.03,1.8,0,1.04);}break;
@@ -121,14 +126,14 @@ export class SpriteFire extends THREE.Group {
         else add(0,0,0,1.6,0,.8);break;
     }
     const bodies=this.tongues.length;
-    const quad=new THREE.PlaneGeometry(1,1),geometry=new THREE.InstancedBufferGeometry();geometry.index=quad.index;geometry.attributes=quad.attributes;
+    const quad=new THREE.PlaneGeometry(1,1,1,spec.arrangement==='bonfire'?24:1),geometry=new THREE.InstancedBufferGeometry();geometry.index=quad.index;geometry.attributes=quad.attributes;
     this.centres=new THREE.InstancedBufferAttribute(new Float32Array(this.tongues.length*3),3).setUsage(THREE.DynamicDrawUsage);
     this.sizes=new THREE.InstancedBufferAttribute(new Float32Array(this.tongues.length*2),2).setUsage(THREE.DynamicDrawUsage);
     this.states=new THREE.InstancedBufferAttribute(new Float32Array(this.tongues.length*4),4).setUsage(THREE.DynamicDrawUsage);
     geometry.setAttribute('centre',this.centres);geometry.setAttribute('size',this.sizes);geometry.setAttribute('state',this.states);geometry.instanceCount=this.tongues.length;
     if(cycle.frameCount>64||cycle.pages.length>8)throw new Error('Flame cycle exceeds native atlas limits');
     const paintColours=cycle.paint?.swatches.map(c=>new THREE.Color().setRGB(c[0]/255,c[1]/255,c[2]/255,THREE.SRGBColorSpace))??Array.from({length:6},()=>new THREE.Color('white'));
-    this.uniforms={atlas:{value:cycle.textures[0]},...Object.fromEntries(cycle.textures.map((texture,i)=>['atlas'+i,{value:texture}])),frameCount:{value:cycle.frameCount},fps:{value:cycle.fps},anchors:{value:Array.from({length:64},(_,i)=>new THREE.Vector2(...cycle.frames[i%cycle.frameCount].anchor))},time:{value:0},hue:{value:spec.hue},blendFrames:{value:0},sourcePaint:{value:cycle.paint?1:0},screenBlend:{value:cycle.paint?1:0},paintColours:{value:paintColours}};
+    this.uniforms={atlas:{value:cycle.textures[0]},...Object.fromEntries(cycle.textures.map((texture,i)=>['atlas'+i,{value:texture}])),frameCount:{value:cycle.frameCount},fps:{value:cycle.fps},anchors:{value:Array.from({length:64},(_,i)=>new THREE.Vector2(...cycle.frames[i%cycle.frameCount].anchor))},time:{value:0},baseFlare:{value:spec.arrangement==='bonfire'?1.1:0},hue:{value:spec.hue},blendFrames:{value:0},sourcePaint:{value:cycle.paint?1:0},screenBlend:{value:cycle.paint?1:0},paintColours:{value:paintColours}};
     const material=new THREE.ShaderMaterial({name:(cycle.paint?'Sourced flame · ':'Individually drawn flame · ')+cycle.id,uniforms:this.uniforms,vertexShader,fragmentShader:fragmentShader(cycle.pages),transparent:true,blending:cycle.paint?THREE.CustomBlending:THREE.AdditiveBlending,blendEquation:THREE.AddEquation,blendSrc:THREE.OneFactor,blendDst:THREE.OneMinusSrcColorFactor,depthTest:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
     this.mesh=new THREE.Mesh(geometry,material);this.mesh.frustumCulled=false;this.add(this.mesh);
     // Existing Jak framebuffer pass and rising pocket writer, unchanged.
@@ -136,28 +141,29 @@ export class SpriteFire extends THREE.Group {
       const indices=bodies===1?[0]:[0,Math.floor(bodies/2)];
       for(const index of this.sourceOnly?[0]:indices){
         const p=this.tongues[index],scale=this.sourceOnly?1.7:Math.min(2.3,p.h*.55);
+        const footprint=p.w/(p.h*cycle.width/cycle.height);
         writeTorchHeat((x,y,z,w,h,heat,phase)=>{
           if(this.sourceOnly)emit(x,y,z,w,h,heat,phase);
           else if(spec.arrangement==='jet')emit(p.x+y,p.y-x,p.z+z,w,h,heat,phase);
-          else emit(p.x+x,p.y+y,p.z+z,w,h,heat,phase);
+          else emit(p.x+x*footprint,p.y+y,p.z+z*footprint,w*Math.sqrt(footprint),h,heat,phase);
         },this.time,-.25*scale,scale,1,index+(spec.seed??1)*7);
       }
     },[this.mesh]);
   }
   update(time:number,camera:THREE.Camera){
-    this.time=time;this.uniforms.time.value=time;this.updateMatrixWorld();
+    this.time=time;this.uniforms.time.value=time;this.uniforms.baseFlare.value=!this.sourceOnly&&this.spec.arrangement==='bonfire'?1.1:0;this.updateMatrixWorld();
     const jet=this.spec.arrangement==='jet',aspect=this.cycle.width/this.cycle.height;
     let jetAngle=-Math.PI/2;
     if(jet){this.viewDirection.set(1,0,0).transformDirection(camera.matrixWorldInverse);jetAngle=Math.atan2(this.viewDirection.y,this.viewDirection.x)-Math.PI/2;}
     const sorted=(this.sourceOnly?this.tongues.slice(0,1):this.tongues).map((p,i)=>{
-      let {x,y,z,h,angle,rate,phase}=p,alpha=1;
-      if(this.sourceOnly){x=y=z=angle=phase=0;rate=1;h=this.cycle.id==='broad'?2.4:3.7;}
+      let {x,y,z,w,h,angle,rate,phase}=p,alpha=1;
+      if(this.sourceOnly){x=y=z=angle=phase=0;rate=1;h=this.cycle.id==='broad'?2.4:3.7;w=h*aspect;}
       else{
-        if(jet){angle=jetAngle;if(!this.cycle.paint){const age=fract(time*1.65+i/6);x=-1.9+age*3.7;y=1.05;h*=.6+age*.5;alpha=Math.min(1,age/.1,(1-age)/.2);}}
+        if(jet){angle=jetAngle;if(!this.cycle.paint){const age=fract(time*1.65+i/6);x=-1.9+age*3.7;y=1.05;h*=.6+age*.5;w=h*aspect;alpha=Math.min(1,age/.1,(1-age)/.2);}}
         if(this.spec.arrangement==='vortex'){const a=time*.8+i*2.4;x=Math.cos(a)*(.7-i*.05);z=Math.sin(a)*(.7-i*.05);}
       }
       const depth=this.sortPoint.set(x,y,z).applyMatrix4(this.matrixWorld).applyMatrix4(camera.matrixWorldInverse).z;
-      return {x,y,z,w:h*aspect,h,angle,alpha,depth,phase,rate};
+      return {x,y,z,w,h,angle,alpha,depth,phase,rate};
     }).sort((a,b)=>a.depth-b.depth);
     this.mesh.geometry.instanceCount=sorted.length;
     sorted.forEach((v,i)=>{this.centres.setXYZ(i,v.x,v.y,v.z);this.sizes.setXY(i,v.w,v.h);this.states.setXYZW(i,v.angle,v.phase,v.rate,v.alpha);});
