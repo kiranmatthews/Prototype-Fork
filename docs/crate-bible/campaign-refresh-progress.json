@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "rolling-bones",
-  "next_course": "rolling-bones",
+  "current_course": "skystream",
+  "next_course": "skystream",
   "courses": [
     {
       "order": 1,
@@ -602,9 +602,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-rolling-bones",
-        "name": "Bonus: Moonbone Vault"
+        "name": "Bonus: Moonbone Vault",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/rolling-bones/validation.json"
     },
     {
       "order": 36,
@@ -852,15 +854,21 @@
       "bonus": "bonus-jungle-gate",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "rolling-bones",
+      "bonus": "bonus-rolling-bones",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "published-through-course-30",
+    "status": "published-through-course-31",
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
-    "reason": "GitHub Pages run 43634841254 succeeded; public fork label verified. Course 31 validated and awaiting push.",
+    "reason": "GitHub Pages run 43639657508 succeeded; public fork label verified. Course 32 validated and awaiting push.",
     "connection": "Authenticated as kiranmatthews; repository-local Git credential helper and push dry-run verified.",
     "goal_blocked": false,
-    "lastPublishedCommit": "0f49fb2e823994a4e970d301224201d05dd11aba"
+    "lastPublishedCommit": "571c26eab50c6cdcfd1119198117cc728ea86c5d"
   }
 }

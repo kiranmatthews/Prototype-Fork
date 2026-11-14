@@ -8,7 +8,11 @@ await withBlockworksRuntime(async r=>{
   const {RUMBLEWATER_RUN_LEVEL:original}=await r.server.ssrLoadModule('/src/levels/rumblewater-run.ts');
   const copy=normalizeCustomLevelData(r.l.captureData());
   assert.ok(copy,'sculpted moving solids survive capture/export/import');
-  assert.deepEqual(copy.components,JSON.parse(JSON.stringify(r.source.components)));
+  const {migrateCrateLayout}=await r.server.ssrLoadModule('/src/crateDimensions.ts');
+  const expected=JSON.parse(JSON.stringify(r.source));migrateCrateLayout(expected);
+  assert.deepEqual(copy.components,expected.components,'capture keeps the once-migrated crate layout and containment');
+  const capturedAgain=structuredClone(copy);migrateCrateLayout(capturedAgain);
+  assert.deepEqual(capturedAgain,copy,'capture cannot enlarge formations twice');
   for(const c of r.source.components.filter(c=>['mover','crumble'].includes(c.t))){
     assert.ok(c.vertices.length>200,'dynamic surface has a sculpted body');
     const native=(c.t==='mover'?r.l.movers:r.l.crumbles).find(x=>x.mesh.name===c.nm);
@@ -38,8 +42,12 @@ await withBlockworksRuntime(async r=>{
       assert.equal(c.solid,false);assert.equal(c.scenerySolid,false);placements++;
     }
   }
-  const gameplay=d=>d.components.filter(c=>c.t!=='decor'&&c.t!=='torch' || c.scenerySolid===true);
-  assert.deepEqual(gameplay(main),gameplay(original),'main traversal, solids, camera, collectibles and hazards preserved');
+  const gameplay=d=>d.components.filter(c=>c.t!=='crate'&&(c.t!=='decor'&&c.t!=='torch' || c.scenerySolid===true));
+  assert.deepEqual(gameplay(main),gameplay(original),'main traversal, solids, camera and non-crate hazards preserved');
+  const obstacles=d=>d.components.filter(c=>c.t==='crate'&&['metal','nitro','nitrobang'].includes(c.kind));
+  assert.deepEqual(obstacles(main),obstacles(original),'all 48 authored steel/Nitro/cleanup obstacles retain their placements');
+  assert.equal(obstacles(main).length,48);
+  assert.equal(main.components.filter(c=>c.t==='crate').length,118,'reviewed shelter cargo and original smash walls');
   assert.deepEqual(main.boulderChase,original.boulderChase);
   assert.equal(main.components.filter(c=>c.nm?.startsWith('Moonbone landmark ')).filter(c=>files[c.dkind]).length,11);
   assert.ok(normalizeCustomLevelData(main),'main level stays editable within scenery budgets');

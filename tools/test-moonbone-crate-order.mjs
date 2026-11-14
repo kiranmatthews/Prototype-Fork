@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {withBlockworksRuntime} from './blockworks-runner.mjs';
+import {puzzleControls} from './puzzle-controls.mjs';
+const out=process.env.ROLLING_BONES_OUTPUT??'/tmp/rolling-bones-evidence';await mkdir(out,{recursive:true});
+await withBlockworksRuntime(async r=>{
+ const {p,l,THREE,source}=r,results=[];
+ if(process.env.MOONBONE_BASELINE){const before=JSON.parse(await readFile(process.env.MOONBONE_BASELINE,'utf8'));before.groups.find(g=>g.id===2).nm='Moonbone offerings';assert.deepEqual(JSON.parse(JSON.stringify({...source,components:source.components.filter(c=>c.t!=='crate')})),{...before,components:before.components.filter(c=>c.t!=='crate')});}
+ const reset=q=>{p.respawn(l,true,false,{position:new THREE.Vector3(...q),heading:new THREE.Vector3(1,0,0)});r.report={actions:[],evidence:[]};};
+ const run=g=>{let v=g.next();while(!v.done){r.tick(v.value);v=g.next();}return v.value;};const c=puzzleControls(r),box=n=>l.crates.find(b=>source.components[b.mesh.userData.editorIdx]?.nm===n);
+ reset([57.5,6.12,0]);run(c.stepFor(20));run(c.hit(box('Moon-eye arrow'),'wrong order: spend moon-eye arrow'));
+ const reward=box('Moon-eye high life');run(c.charge());r.tick({jumpReleased:true});run(c.until(()=>p.vVel<.65,{}, {limit:100,label:'ordinary jump apex'}));r.tick({jumpHeld:true});r.tick({jumpReleased:true});run(c.until(()=>p.grounded,()=>({...c.steer([60,6,0]),spinHeld:p.pos.y>10}),{limit:220,label:'direct double and air spin without arrow'}));assert.ok(reward.alive);results.push({test:'spending arrow blocks direct double and air-spin reach',lifeAlive:true});
+ run(c.walk([57.6,6,0],'approach alternate cargo donor'));const donor=box('Moonbone delivery / far-crypt / box 5');r.charge(26);r.releaseJump();r.until(()=>!donor.alive&&p.vVel>0,()=>r.steerToward(donor.mesh.position),{maxFrames:200,label:'actual cargo rebound'});r.until(()=>p.vVel<.65,()=>r.steerToward(reward.mesh.position),{maxFrames:100,label:'cargo rebound apex'});r.tick({jumpHeld:true});r.tick({jumpHeld:false});assert.ok(p.doubleJumpAir&&p.airJumpUsed);let maxHead=p.crateBodyBox.max.y,lastSpin=false;
+ r.until(()=>p.grounded||!reward.alive,()=>{maxHead=Math.max(maxHead,p.crateBodyBox.max.y);const spinHeld=p.pos.y>11&&(p.spinning||!lastSpin);lastSpin=spinHeld;return{...r.steerToward(reward.mesh.position),spinHeld};},{maxFrames:260,label:'alternate cargo double and repeated air spins'});results.push({test:'actual cargo rebound, double and repeated air spins',maxHead,capBottom:reward.box.min.y,lifeAlive:reward.alive});await writeFile(out+'/bonus-negative.json',JSON.stringify(results,null,2));assert.ok(reward.alive,'ordinary delivery must not replace the moon-eye arrow');
+ reset([30.5,6.12,0]);run(c.stepFor(20));run(c.charge());r.tick({jumpReleased:true});run(c.until(()=>p.state==='dead',()=>c.steer([40,6,0]),{label:'skip breakaway spine footing',limit:260,allowDeath:true}));results.push({test:'skipping breakaway footing produces real gap death',state:p.state});
+ reset([-7,.12,0]);assert.ok(l.crates.every(b=>b.alive));assert.equal(p.cratesBroken,0);results.push({test:'complete bonus retry',physical:22,counted:22,credit:0});await writeFile(out+'/bonus-negative.json',JSON.stringify(results,null,2));console.log('PASS Moonbone arrow order, actual alternative donor, missed bridge and full retry');
+},{modulePath:'/src/levels/rolling-bones-bonus.ts',source:m=>m.ROLLING_BONES_BONUS_LEVEL,levelId:'bonus-rolling-bones',maxFrames:8000,controlFrame:()=>({x:0,z:-1})});

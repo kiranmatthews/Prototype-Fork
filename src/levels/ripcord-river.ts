@@ -1,4 +1,5 @@
 import { dressRollingBones } from './moonbone-scenery';
+import {arrangeRollingBonesCrates} from './rolling-bones-crates';
 import {BufferGeometry,Float32BufferAttribute} from 'three';
 import type {CustomComponent,CustomLevelData} from '../level';
 import {RUMBLEWATER_RUN_LEVEL,RUMBLEWATER_END,RUMBLEWATER_REFUGES,rumblePoint,rumbleHeight,rumbleProgress,rumbleTangent,rumbleYaw} from './rumblewater-run';
@@ -225,3 +226,4 @@ export const ROLLING_BONES_LEVEL:CustomLevelData={...structuredClone(RUMBLEWATER
 };
 
 dressRollingBones(ROLLING_BONES_LEVEL);
+arrangeRollingBonesCrates(ROLLING_BONES_LEVEL.components);

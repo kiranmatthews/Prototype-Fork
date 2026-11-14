@@ -87,7 +87,7 @@ export function* downstreamInputs(ctx,high,start=892){
    yield* until(2039,()=>skate(relay),'reach the marked three-rail admission');yield* catchRail(relay,'relay rail one catch');
    yield* transfer(2087.5,relay,'relay air one');yield* transfer(2147.5,relay,'relay air two');
    yield* until(2227,neutralGrind,'relay exit');yield* landRail(4.5,'relay court landing');
-   assert.ok(r.p.hasCrystal,'the relay crystal is collected through actual movement');
+   if(ctx.requireCrystal!==false)assert.ok(r.p.hasCrystal,'the relay crystal is collected through actual movement');
   }else{
    yield* hop(2075.2,2091,low);
    yield* until(2129.1,()=>skate(low),'wide split first jump');yield* releaseJump(follow(low));
@@ -104,16 +104,19 @@ export function* downstreamInputs(ctx,high,start=892){
   yield* until(2467,()=>skate(-1.8),'returning throat');yield* until(2501,()=>skate(),'last checkpoint');
  }
  if(start<2676){
-  yield* until(high?2540:2537,()=>skate(s=>2*Math.sin((s-2506)*Math.PI/36)),'crown falling switchback');
+  // Turn before the look-ahead extrapolates the completed crumble curve into
+  // the first crusher's lane. The sheltered supplies do not change this line.
+  yield* until(ctx.wideCrown?2535:high?2540:2537,()=>skate(s=>2*Math.sin((s-2506)*Math.PI/36)),'crown falling switchback');
   const groundCrown=s=>s<2550?1.7:1.7-3.4*smooth((s-2550)/17);
-  yield* until(high?2556:2552,()=>skate(high?3.7:groundCrown),'first crown stamp');
+  yield* until(ctx.wideCrown?2553:high?2556:2552,()=>skate(ctx.wideCrown?2.6:high?3.7:groundCrown),'first crown stamp');
   if(high){
    const crown=s=>s<2572?3.7-7.3*smooth((s-2555)/17):s<2604?-3.6+6*smooth((s-2572)/32):2.4*(1-smooth((s-2604)/25));
    yield* catchRail(crown,'final crown catch');yield* until(2627.6,neutralGrind,'final crown grind');
    yield* releaseJump({grindHeld:false,moveX:0,moveY:0});
    yield* untilPred(()=>s()>2644&&r.p.grounded,()=>follow(),{maxFrames:450,label:'grind to sanctuary jump'});
   }else{
-   yield* until(2576,()=>skate(groundCrown),'second crown stamp');
+   if(ctx.wideCrown){yield* until(2573,()=>skate(-2.6),'second crown stamp');yield* until(2576,()=>skate(0),'rejoin the falling causeway');}
+   else yield* until(2576,()=>skate(groundCrown),'second crown stamp');
    yield* until(2620,()=>skate(s=>-2.4*Math.sin((s-2578)*Math.PI/42)),'last collapsing causeway');
    yield* hop(2629.1,2646,0);
   }

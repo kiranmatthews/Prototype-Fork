@@ -1,0 +1,2022 @@
+[
+  {
+    "name": "final-high",
+    "bails": [],
+    "startWorld": [
+      -54.2457,
+      -60.016300201416016,
+      -2488
+    ],
+    "final": {
+      "frame": 540,
+      "time": 9,
+      "position": [
+        7.497609296869617,
+        -64.27333333084981,
+        -2674.5928855721677
+      ],
+      "heading": [
+        0.30658600328667307,
+        0,
+        -0.951842961096369
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp plinth rim",
+        "y": -64.27333333084981,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.01,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "seconds": 9,
+    "pass": true
+  },
+  {
+    "name": "final-low",
+    "bails": [],
+    "startWorld": [
+      -54.2457,
+      -60.016300201416016,
+      -2488
+    ],
+    "jump2629.1": {
+      "frame": 493,
+      "time": 8.216666666666667,
+      "position": [
+        -2.043427792057476,
+        -65,
+        -2646.125237774519
+      ],
+      "heading": [
+        0.33752116127827286,
+        0,
+        -0.9413179408092507
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.628187558188248,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Sanctuary receiving island",
+        "y": -65,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2646.106756824964
+    },
+    "final": {
+      "frame": 570,
+      "time": 9.5,
+      "position": [
+        7.507816944576246,
+        -64.27333333084981,
+        -2674.5607903669093
+      ],
+      "heading": [
+        0.2970168225870883,
+        0,
+        -0.954872246481315
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp plinth rim",
+        "y": -64.27333333084981,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "seconds": 9.5,
+    "pass": true
+  },
+  {
+    "name": "inner-low",
+    "bails": [
+      {
+        "frame": 918,
+        "args": [
+          false,
+          23.834966762522967,
+          "trip",
+          23.834966762522967
+        ],
+        "position": [
+          -14.63060997189109,
+          13.87944599942769,
+          -309.8634876595627
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 1913,
+        "args": [
+          false,
+          31.647206754688614,
+          "trip",
+          31.647206754688614
+        ],
+        "position": [
+          -25.509961032432056,
+          -5.490172698323506,
+          -721.827058859849
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 3019,
+        "args": [
+          false,
+          31.999999999999996,
+          "trip",
+          31.999999999999996
+        ],
+        "position": [
+          56.480280715988854,
+          -15.5,
+          -1166.0984582187252
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 4417,
+        "args": [
+          false,
+          26.700894809758655,
+          "trip",
+          26.700894809758655
+        ],
+        "position": [
+          -59.06947874959849,
+          -24.75241194635863,
+          -1654.7781693775687
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 5345,
+        "args": [
+          false,
+          28.854222606840434,
+          "trip",
+          28.854222606840434
+        ],
+        "position": [
+          64.34931671949745,
+          -38.262699127197266,
+          -2002.1873219150523
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 6653,
+        "args": [
+          false,
+          32.03832051835606,
+          "trip",
+          32.03832051835606
+        ],
+        "position": [
+          -57.3178714731266,
+          -60.016300201416016,
+          -2474.414631710693
+        ],
+        "tripActive": false
+      }
+    ],
+    "jump84.5": {
+      "frame": 371,
+      "time": 6.183333333333334,
+      "position": [
+        32.720869769926296,
+        20.08210370922571,
+        -98.68765839852772
+      ],
+      "heading": [
+        0.1969754817925919,
+        0,
+        -0.9804084146785857
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.228420468669196,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": 20.08210370922571,
+        "normal": [
+          0.004438893597794952,
+          0.9994493510925127,
+          -0.03288298685313229
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.07,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 98.7385040466956
+    },
+    "jump188.5": {
+      "frame": 630,
+      "time": 10.5,
+      "position": [
+        12.502553931270935,
+        16.189663518288043,
+        -201.22172029822752
+      ],
+      "heading": [
+        -0.27976404360606244,
+        0,
+        -0.9600687891527298
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.654574766080074,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Jumping inner bank",
+        "y": 16.189663518288043,
+        "normal": [
+          -0.010423523240277077,
+          0.9994334733916007,
+          -0.03200128790627393
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.04,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 203.33506145981085
+    },
+    "jump246.5": {
+      "frame": 786,
+      "time": 13.1,
+      "position": [
+        -7.842438463613443,
+        14.547607155437198,
+        -258.2127514288119
+      ],
+      "heading": [
+        -0.33352834772570034,
+        0,
+        -0.9427400708908947
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 22.97355415823949,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Jumping inner bank",
+        "y": 14.547607155437198,
+        "normal": [
+          -0.006104802951974881,
+          0.9998133778107468,
+          -0.01832869148582915
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.02,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 260.46579514368744
+    },
+    "jump468.5": {
+      "frame": 1438,
+      "time": 23.966666666666665,
+      "position": [
+        10.68911062421819,
+        3.1725587815690783,
+        -486.9316518686988
+      ],
+      "heading": [
+        0.2952622341254932,
+        0,
+        -0.9554162512220639
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": 3.1725587815690783,
+        "normal": [
+          0.01618442381434728,
+          0.9977109976319946,
+          -0.06565690847098866
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.08,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 487.0614450641643
+    },
+    "jump622.4": {
+      "frame": 1754,
+      "time": 29.233333333333334,
+      "position": [
+        -3.6624769367253984,
+        -0.6606277443998073,
+        -637.9035747092106
+      ],
+      "heading": [
+        -0.28874221904289094,
+        0,
+        -0.9574068784702697
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.136533006671304,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -0.6606277443998073,
+        "normal": [
+          -0.009767153824642709,
+          0.9995301995807053,
+          -0.0290513826232285
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.04,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 640.1263900490634
+    },
+    "jump840.2": {
+      "frame": 2370,
+      "time": 39.5,
+      "position": [
+        -20.876102610466443,
+        -9,
+        -858.5056048417835
+      ],
+      "heading": [
+        0.2774890618458353,
+        0,
+        -0.9607287965684792
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Millrace arrival",
+        "y": -9,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.09,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 858.2947610457023
+    },
+    "jump1260.3": {
+      "frame": 3423,
+      "time": 57.05,
+      "position": [
+        21.2611808957319,
+        -19.06564271535154,
+        -1275.839066122651
+      ],
+      "heading": [
+        -0.25409960585013464,
+        0,
+        -0.9671780551205683
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 28.12716621104908,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Counterweight stepping bank",
+        "y": -19.06564271535154,
+        "normal": [
+          -0.009020023793527336,
+          0.9995104456971431,
+          -0.029958439763490254
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.04,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1277.2495748493486
+    },
+    "jump1318.2": {
+      "frame": 3567,
+      "time": 59.449999999999996,
+      "position": [
+        -2.411862140444388,
+        -20.705983559564213,
+        -1332.5877991118437
+      ],
+      "heading": [
+        -0.441087363949314,
+        0,
+        -0.8974641705183799
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.030672200463194,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Counterweight stepping bank",
+        "y": -20.705983559564213,
+        "normal": [
+          -0.008780202405649877,
+          0.9997647792836339,
+          -0.019831645157742748
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.04,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1335.2196682564268
+    },
+    "jump1500.3": {
+      "frame": 4070,
+      "time": 67.83333333333333,
+      "position": [
+        -65.20798308301153,
+        -18,
+        -1516.8760161507548
+      ],
+      "heading": [
+        -0.22742026244283817,
+        0,
+        -0.9737967058017972
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.24035489465556,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Left roof island",
+        "y": -18,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1517.3477400708598
+    },
+    "diagonalRoof": {
+      "frame": 4188,
+      "time": 69.8,
+      "position": [
+        -68.39350482529649,
+        -18.899999618530273,
+        -1563.4107757903362
+      ],
+      "heading": [
+        0.10901606250827352,
+        0,
+        -0.9940399881871932
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.10984238963114,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Right roof island",
+        "y": -18.899999618530273,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.22,
+        "moveY": -0.98,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "jump1696.3": {
+      "frame": 4752,
+      "time": 79.2,
+      "position": [
+        -37.58691126882659,
+        -27.988534117948998,
+        -1712.7146003523703
+      ],
+      "heading": [
+        0.423476195967648,
+        0,
+        -0.905907231149399
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 29.941491848173726,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -27.988534117948998,
+        "normal": [
+          0.02958564843949658,
+          0.9982033643699274,
+          -0.052103097479637886
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.03,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1712.6067599505034
+    },
+    "jump1738.3": {
+      "frame": 4843,
+      "time": 80.71666666666667,
+      "position": [
+        -14.492569883860256,
+        -30.404618759002876,
+        -1754.680461436393
+      ],
+      "heading": [
+        0.463017457489923,
+        0,
+        -0.8863491603536195
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 31.75,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": -30.404618759002876,
+        "normal": [
+          0.015560064624345393,
+          0.9994314173591679,
+          -0.029911977272174182
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1755.1291513867443
+    },
+    "jump1926.2": {
+      "frame": 5226,
+      "time": 87.1,
+      "position": [
+        57.09648182023868,
+        -35.02745837124883,
+        -1944.7343349752077
+      ],
+      "heading": [
+        0.2212796003802206,
+        0,
+        -0.9752104072740233
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": -35.02745837124883,
+        "normal": [
+          0.010000596042103887,
+          0.9991661373396599,
+          -0.039585579098284085
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.05,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1945.2621525132975
+    },
+    "jump2075.2": {
+      "frame": 5717,
+      "time": 95.28333333333333,
+      "position": [
+        49.28984550848246,
+        -41.743373645808276,
+        -2089.9674739422776
+      ],
+      "heading": [
+        -0.29572858045404865,
+        0,
+        -0.9552720066570747
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 25.284896582285427,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Advanced aqueduct stepping bank",
+        "y": -41.743373645808276,
+        "normal": [
+          -0.013307130575461802,
+          0.9991379925175667,
+          -0.03932165031906016
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.1,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2091.3981552669184
+    },
+    "doubleJump": {
+      "frame": 5885,
+      "time": 98.08333333333333,
+      "position": [
+        20.083798768375356,
+        -44.15401486004386,
+        -2150.9121661972054
+      ],
+      "heading": [
+        0.4333623377635673,
+        0,
+        0.9012197757528936
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": -15.76513158839706,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Advanced aqueduct stepping bank",
+        "y": -44.15401486004386,
+        "normal": [
+          -0.012661996780579846,
+          0.9995751293132693,
+          -0.02625327971682267
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "jump2179.1": {
+      "frame": 6051,
+      "time": 100.85,
+      "position": [
+        0.6698451240574869,
+        -45.30384502397495,
+        -2193.6483174817745
+      ],
+      "heading": [
+        -0.2855288655785267,
+        0,
+        -0.958370109572205
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.061549815109405,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Advanced aqueduct stepping bank",
+        "y": -45.30384502397495,
+        "normal": [
+          -0.008120502754250102,
+          0.999816447478848,
+          -0.017353062720860218
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.15,
+        "moveY": -0.99,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2196.3116173469066
+    },
+    "jump2322.2": {
+      "frame": 6396,
+      "time": 106.6,
+      "position": [
+        -40.546340108105476,
+        -50.359310748027006,
+        -2340.9747086600146
+      ],
+      "heading": [
+        -0.08641366044310989,
+        0,
+        -0.9962593433884693
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -50.359310748027006,
+        "normal": [
+          -0.021731439089665378,
+          0.9963364813540623,
+          -0.08271251705817342
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.26,
+        "moveY": -0.96,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2340.44799250547
+    },
+    "jump2414.2": {
+      "frame": 6578,
+      "time": 109.63333333333333,
+      "position": [
+        -58.703147278827004,
+        -58.38096005926313,
+        -2432.9754271983006
+      ],
+      "heading": [
+        -0.1900338360002192,
+        0,
+        -0.9817775415923102
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 31.75,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -58.38096005926313,
+        "normal": [
+          -0.002690144933031698,
+          0.9980944036119996,
+          -0.06164677281615029
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.22,
+        "moveY": -0.98,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2432.9918793198162
+    },
+    "jump2629.1": {
+      "frame": 7215,
+      "time": 120.25,
+      "position": [
+        -2.049318441191222,
+        -65,
+        -2646.443868454086
+      ],
+      "heading": [
+        0.3560277108872625,
+        0,
+        -0.934475397792996
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 27.46735732715338,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Sanctuary receiving island",
+        "y": -65,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.02,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2646.387326256413
+    },
+    "final": {
+      "frame": 7280,
+      "time": 121.33333333333333,
+      "position": [
+        7.511197313568308,
+        -64.27333333084981,
+        -2674.624512320385
+      ],
+      "heading": [
+        0.29702449402040393,
+        0,
+        -0.9548698602175719
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp plinth rim",
+        "y": -64.27333333084981,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "seconds": 121.33333333333333,
+    "pass": true,
+    "rails": [],
+    "checkpoints": 6,
+    "entryTrips": 6,
+    "forkChoices": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "minBoulderGap": 16.46893741773829
+  },
+  {
+    "name": "outer-high",
+    "bails": [
+      {
+        "frame": 868,
+        "args": [
+          false,
+          30.5,
+          "trip",
+          30.5
+        ],
+        "position": [
+          -16.649619781005057,
+          14.020790213402492,
+          -309.9072905452503
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 1921,
+        "args": [
+          false,
+          30.375452357088967,
+          "trip",
+          30.375452357088967
+        ],
+        "position": [
+          -25.126099603019448,
+          -5.496699810028076,
+          -722.3518211825823
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 3025,
+        "args": [
+          false,
+          32.00000000000001,
+          "trip",
+          32.00000000000001
+        ],
+        "position": [
+          56.48169912615186,
+          -15.5,
+          -1166.0928569884575
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 4342,
+        "args": [
+          false,
+          26.658461582429624,
+          "trip",
+          26.658461582429624
+        ],
+        "position": [
+          -59.04802776052205,
+          -24.75416865216533,
+          -1654.7842988389857
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 5258,
+        "args": [
+          false,
+          30.5,
+          "trip",
+          30.5
+        ],
+        "position": [
+          69.23245811349157,
+          -34.777123935204145,
+          -2002.07455022412
+        ],
+        "tripActive": false
+      },
+      {
+        "frame": 6502,
+        "args": [
+          false,
+          30.811733855770704,
+          "trip",
+          30.811733855770704
+        ],
+        "position": [
+          -57.28577759293036,
+          -60.016300201416016,
+          -2474.30236889937
+        ],
+        "tripActive": false
+      }
+    ],
+    "jump84.5": {
+      "frame": 371,
+      "time": 6.183333333333334,
+      "position": [
+        32.720869769926296,
+        20.08210370922571,
+        -98.68765839852772
+      ],
+      "heading": [
+        0.1969754817925919,
+        0,
+        -0.9804084146785857
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 24.228420468669196,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": 20.08210370922571,
+        "normal": [
+          0.004438893597794952,
+          0.9994493510925127,
+          -0.03288298685313229
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.07,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 98.7385040466956
+    },
+    "jump468.5": {
+      "frame": 1381,
+      "time": 23.016666666666666,
+      "position": [
+        10.636862089367805,
+        3.1865349611813762,
+        -486.7325066022051
+      ],
+      "heading": [
+        0.29549623541134784,
+        0,
+        -0.9553439039726573
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": 3.1865349611813762,
+        "normal": [
+          0.016298089426885296,
+          0.9976786951856687,
+          -0.06611802669208293
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.08,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 486.8617878432461
+    },
+    "jump840.2": {
+      "frame": 2376,
+      "time": 39.6,
+      "position": [
+        -20.878015020531766,
+        -9,
+        -858.5001612464032
+      ],
+      "heading": [
+        0.27746852876527706,
+        0,
+        -0.960734726938104
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Millrace arrival",
+        "y": -9,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.09,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 858.2893669278249
+    },
+    "causeway rail transfer": {
+      "frame": 3495,
+      "progress": 1311.6821954107152,
+      "rail": 22
+    },
+    "jump1500.3": {
+      "frame": 3982,
+      "time": 66.36666666666666,
+      "position": [
+        -65.15707649383428,
+        -18,
+        -1516.650343509974
+      ],
+      "heading": [
+        -0.22778348840691626,
+        0,
+        -0.9737118066497799
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 22.9858607235623,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Left roof island",
+        "y": -18,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1517.1232335190066
+    },
+    "diagonalRoof": {
+      "frame": 4106,
+      "time": 68.43333333333334,
+      "position": [
+        -68.39372746456164,
+        -18.899999618530273,
+        -1563.562742013225
+      ],
+      "heading": [
+        0.12148872309978198,
+        0,
+        -0.9925928118617371
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 22.940660141993398,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Right roof island",
+        "y": -18.899999618530273,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.23,
+        "moveY": -0.97,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "jump1696.3": {
+      "frame": 4635,
+      "time": 77.25,
+      "position": [
+        -37.7587161459906,
+        -27.964060652287202,
+        -1712.3432877433074
+      ],
+      "heading": [
+        0.42349738097475814,
+        0,
+        -0.905897327685384
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 28.293216241643147,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -27.964060652287202,
+        "normal": [
+          0.02958564843949658,
+          0.9982033643699274,
+          -0.052103097479637886
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.03,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1712.2412990272076
+    },
+    "jump1738.3": {
+      "frame": 4729,
+      "time": 78.81666666666666,
+      "position": [
+        -14.531048234239814,
+        -30.401677340139038,
+        -1754.6021977768467
+      ],
+      "heading": [
+        0.46300579868344666,
+        0,
+        -0.8863552506673058
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": -30.401677340139038,
+        "normal": [
+          0.015560064624345393,
+          0.9994314173591679,
+          -0.029911977272174182
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1755.0517815190815
+    },
+    "jump1926.2": {
+      "frame": 5142,
+      "time": 85.7,
+      "position": [
+        57.03080134301216,
+        -35.01107499820302,
+        -1944.3408899413414
+      ],
+      "heading": [
+        0.22187522161155102,
+        0,
+        -0.9750750668716861
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 31.75,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Worn creek sandstone",
+        "y": -35.01107499820302,
+        "normal": [
+          0.010256876789935922,
+          0.9991490388147051,
+          -0.0399499025551655
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.05,
+        "moveY": -1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 1944.8786614205953
+    },
+    "relay air one": {
+      "frame": 5682,
+      "progress": 2104.5724864572653,
+      "rail": 33
+    },
+    "relay air two": {
+      "frame": 5834,
+      "progress": 2165.8645754767413,
+      "rail": 34
+    },
+    "jump2322.2": {
+      "frame": 6244,
+      "time": 104.06666666666666,
+      "position": [
+        -40.567950367275124,
+        -50.386293660977685,
+        -2341.294061031996
+      ],
+      "heading": [
+        -0.08616698637394976,
+        0,
+        -0.9962807086656008
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -50.386293660977685,
+        "normal": [
+          -0.021731439089665378,
+          0.9963364813540623,
+          -0.08271251705817342
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.27,
+        "moveY": -0.96,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2340.752410669879
+    },
+    "jump2414.2": {
+      "frame": 6424,
+      "time": 107.06666666666666,
+      "position": [
+        -58.69891097959577,
+        -58.37282677024279,
+        -2432.8439297390673
+      ],
+      "heading": [
+        -0.1904427904129373,
+        0,
+        -0.9816982955978555
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 30.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -58.37282677024279,
+        "normal": [
+          -0.002690144933031698,
+          0.9980944036119996,
+          -0.06164677281615029
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.22,
+        "moveY": -0.98,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "progress": 2432.8606167280045
+    },
+    "death": {
+      "frame": 6874,
+      "cause": "crush",
+      "position": [
+        -36.77079271641318,
+        -62.10105711200346,
+        -2546.2890568931134
+      ],
+      "fatalChaseBoulder": 6
+    },
+    "pass": false,
+    "failure": "Error: first crown stamp remains alive\n    at Object.ok (file:///workspace/Prototype-Fork/tools/rumblewater-downstream-pilot.mjs:1:87)\n    at untilPred (file:///workspace/Prototype-Fork/tools/rumblewater-downstream-pilot.mjs:11:11)\n    at untilPred.next (<anonymous>)\n    at until (file:///workspace/Prototype-Fork/tools/rumblewater-downstream-pilot.mjs:15:63)\n    at until.next (<anonymous>)\n    at downstreamInputs (file:///workspace/Prototype-Fork/tools/rumblewater-downstream-pilot.mjs:109:10)\n    at downstreamInputs.next (<anonymous>)\n    at driveDownstream (file:///workspace/Prototype-Fork/tools/rumblewater-downstream-pilot.mjs:124:69)\n    at withBlockworksRuntime.modulePath (file:///workspace/Prototype-Fork/tools/test-rolling-bones-journey.mjs:84:9)\n    at withBlockworksRuntime (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:223:18)",
+    "last": {
+      "frame": 6875,
+      "time": 114.58333333333333,
+      "position": [
+        -36.77079271641318,
+        -62.10105711200346,
+        -2546.2890568931134
+      ],
+      "heading": [
+        0.9617262779899663,
+        0,
+        0.2740119818978106
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": true,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "vertramp",
+        "y": -62.10105711200346,
+        "normal": [
+          0.014724490329205217,
+          0.9989171779029238,
+          -0.044132313275012866
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.21,
+        "moveY": -0.98,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "cameraYaw": 3.141592653589793,
+      "tripActive": false,
+      "entryTrips": 6,
+      "chaseActive": true,
+      "chaseGap": 7.169905074671988
+    }
+  }
+]
