@@ -169,6 +169,47 @@ export const DESERT_BONUS_ENTRANCE:Point=(()=>{
   const p=desertPoint(DESERT_BONUS_STATION,6.3);p[1]=desertGround(p[0],p[2])+.08;return p;
 })();
 
+// Two supply stops per checkpoint section, measured on the existing trail.
+// Heights are native support at each column centre; the riding line stays clear.
+export const DESERT_SUPPLY_STATIONS: readonly (readonly [number,number,number])[]=[
+  [4.200000, 349.874888, 349.874888],
+  [9.800000, 349.697726, 349.697726],
+  [34.820000, 349.002882, 349.002882],
+  [99.220000, 339.187107, 339.189195],
+  [205.500000, 312.850669, 312.847721],
+  [343.500000, 273.599507, 273.631595],
+  [488.000000, 243.324144, 243.308187],
+  [528.000000, 236.714973, 236.704362],
+  [724.955316, 210.070742, 210.034173],
+  [786.895738, 209.907621, 209.888898],
+  [927.951054, 173.039530, 173.040735],
+  [1014.751054, 146.239250, 146.249617],
+  [1258.351054, 88.762549, 88.765422],
+  [1322.351054, 78.177646, 78.190731],
+  [1665.851054, 13.627223, 13.668311],
+  [1759.851054, 3.101204, 3.125196],
+  [2044.438079, -38.367545, -38.372269],
+  [2157.220778, -45.054486, -45.062311],
+  [2372.807802, -96.622414, -96.625883],
+  [2532.807802, -140.847786, -140.850704],
+  [2606.807802, -152.362468, -152.357742],
+  [2796.807802, -204.428897, -204.440142],
+  [2936.807802, -235.837460, -235.825075],
+  [3098.807802, -273.129007, -273.096342],
+  [3340.534211, -338.147983, -338.161813],
+  [3668.836089, -419.324939, -419.337108],
+  [3935.562497, -479.631109, -479.626353],
+  [4177.562497, -525.783962, -525.748298],
+  [4376.562497, -563.470684, -563.479360],
+  [4622.562497, -620.816192, -620.804697],
+  [4717.562497, -633.219705, -633.243274],
+  [4883.562497, -668.372812, -668.368145],
+  [5084.372291, -708.192406, -708.218872],
+  [5408.785349, -780.691950, -780.680245],
+  [5573.175142, -813.749196, -813.732174],
+  [5590.775142, -817.700192, -817.666600],
+];
+
 function buildComponents():CustomComponent[]{
 let seed=71115;
 const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
@@ -430,6 +471,16 @@ add({t:'crystal',p:desertPoint(DESERT_LENGTH-30),grp:50,nm:'Canyon descent cryst
 add({t:'colouredgem',gemColour:'yellow',p:[...DESERT_YELLOW_GEM],grp:50,nm:'Yellow hidden gem · replay destination beyond the finish'});
 const bonusReturn=desertPoint(DESERT_BONUS_STATION+9);bonusReturn[1]+=.18;
 add({t:'bonusplatform',p:[...DESERT_BONUS_ENTRANCE],to:bonusReturn,grp:50,nm:'Cactus Cache · desert basin bonus pad'});
+// The small side stacks are optional stop-and-spin supplies. Keep both charge
+// approaches and the centre descent free of crates or surprise patrols.
+for(const [index,[station,leftY,rightY]] of DESERT_SUPPLY_STATIONS.entries()){
+  for(const side of [-1,1]){
+    const p=desertPoint(station,side*2.7),height=side<0?2:3,base=side<0?leftY:rightY;
+    const name=`Section ${Math.floor(index/2)+1} · supply ${index%2+1} · ${side<0?'left':'right'}`;
+    for(let tier=0;tier<height;tier++)add({t:'crate',p:[p[0],base+tier*.96,p[2]],
+      kind:side>0&&tier===height-1?'mystery':'wood',grp:52,nm:`${name} · tier ${tier+1}`});
+  }
+}
 return C;
 }
 
@@ -452,6 +503,7 @@ export const DESERT_CANYON_LEVEL:CustomLevelData={
     {id:60,nm:'Vast valley and opposite mesas',editorOnly:true},{id:61,nm:'Exposed ledge and native conifer groves',editorOnly:true},
     {id:62,nm:'Traversable slopes and basin',editorOnly:true},
     {id:50,nm:'Playable checkpoints and finish',editorOnly:true},{id:51,nm:'Ordered camera course',editorOnly:true},
+    {id:52,nm:'Optional trail-side supply stacks',editorOnly:true},
   ],
 };
 lazySourceField(DESERT_CANYON_LEVEL,'components',buildComponents);

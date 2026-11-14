@@ -1,0 +1,521 @@
+{
+  "course": "bryce-canyon",
+  "name": "Dusty Road",
+  "bonus": "bonus-bryce-canyon",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T15:35:50Z",
+  "completedAt": "2026-11-14T16:13:28.493657+00:00",
+  "elapsedMinutes": 37.6,
+  "changes": {
+    "mainBefore": 0,
+    "mainAfter": 180,
+    "pairedStops": 36,
+    "verticalStacks": 72,
+    "wood": 144,
+    "mystery": 36,
+    "enemiesBefore": 0,
+    "enemiesAfter": 0,
+    "bonusBefore": 8,
+    "bonusAfter": 18
+  },
+  "before": {
+    "bryce-canyon": {
+      "physical": 0,
+      "counted": 0,
+      "checkpoints": 17,
+      "gemTally": 25,
+      "byKind": {},
+      "outlineByKind": {},
+      "per100m": 0,
+      "physicalPer100m": 0,
+      "checkpointGaps": [
+        8,
+        138.9,
+        224.6,
+        229.7,
+        199.9,
+        275.7,
+        413.1,
+        368.5,
+        410.9,
+        279.8,
+        319.8,
+        319.4,
+        604.9,
+        469.3,
+        419.9,
+        229.7,
+        605.7,
+        79
+      ],
+      "clusters": 0,
+      "singles": 0,
+      "meanClusterSize": null,
+      "sizeHist": {},
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 1,
+      "arrangements": {},
+      "maxStack": 0,
+      "largestCluster": 0,
+      "floatingClusters": 0,
+      "support": {},
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 0,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 5596.8,
+        "from": 0,
+        "to": 5596.8
+      },
+      "authoredRails": 4,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    },
+    "bonus-bryce-canyon": {
+      "physical": 9,
+      "counted": 8,
+      "checkpoints": 0,
+      "gemTally": 8,
+      "byKind": {
+        "bouncy": 1,
+        "life": 2,
+        "mystery": 2,
+        "bang": 1,
+        "wood": 1,
+        "multihit": 2
+      },
+      "outlineByKind": {},
+      "per100m": 7.84,
+      "physicalPer100m": 8.82,
+      "checkpointGaps": [
+        102
+      ],
+      "clusters": 7,
+      "singles": 6,
+      "meanClusterSize": 1.14,
+      "sizeHist": {
+        "1": 6,
+        "2": 1
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 2,
+      "arrangements": {
+        "single": 6,
+        "stack": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 2,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 7,
+        "crate": 1,
+        "none": 1
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 1,
+      "highTools": {
+        "none-found": 1
+      },
+      "onPath": 8,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 1.2,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "ledge": 1
+      },
+      "multihit": 2,
+      "emptiest": {
+        "length": 40,
+        "from": 21,
+        "to": 61
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "after": {
+    "bryce-canyon": {
+      "physical": 180,
+      "counted": 180,
+      "checkpoints": 17,
+      "gemTally": 215,
+      "byKind": {
+        "wood": 144,
+        "mystery": 36
+      },
+      "outlineByKind": {},
+      "per100m": 3.22,
+      "physicalPer100m": 3.22,
+      "checkpointGaps": [
+        8,
+        138.9,
+        224.6,
+        229.7,
+        199.9,
+        275.7,
+        413.1,
+        368.5,
+        410.9,
+        279.8,
+        319.8,
+        319.4,
+        604.9,
+        469.3,
+        419.9,
+        229.7,
+        605.7,
+        79
+      ],
+      "clusters": 72,
+      "singles": 0,
+      "meanClusterSize": 2.5,
+      "sizeHist": {
+        "2": 36,
+        "3": 36
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 3,
+      "arrangements": {
+        "stack": 72
+      },
+      "maxStack": 3,
+      "largestCluster": 3,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 72,
+        "crate": 108
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 18,
+      "high": 0,
+      "highTools": {},
+      "onPath": 180,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 3.1,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 12,
+      "downhill": 135,
+      "afterPad": 0,
+      "plainOnSpeed": 135,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 341.2,
+        "from": 1311.3,
+        "to": 1652.6
+      },
+      "authoredRails": 4,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    },
+    "bonus-bryce-canyon": {
+      "physical": 19,
+      "counted": 18,
+      "checkpoints": 0,
+      "gemTally": 18,
+      "byKind": {
+        "bouncy": 1,
+        "life": 2,
+        "mystery": 2,
+        "bang": 1,
+        "wood": 11,
+        "multihit": 2
+      },
+      "outlineByKind": {},
+      "per100m": 17.65,
+      "physicalPer100m": 18.63,
+      "checkpointGaps": [
+        102
+      ],
+      "clusters": 7,
+      "singles": 2,
+      "meanClusterSize": 2.57,
+      "sizeHist": {
+        "1": 2,
+        "2": 1,
+        "3": 2,
+        "4": 2
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 4,
+      "arrangements": {
+        "single": 2,
+        "stack": 5
+      },
+      "maxStack": 4,
+      "largestCluster": 4,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 7,
+        "crate": 11,
+        "none": 1
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 3,
+      "highTools": {
+        "none-found": 1,
+        "stack": 2
+      },
+      "onPath": 18,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 5.6,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "ledge": 1
+      },
+      "multihit": 2,
+      "emptiest": {
+        "length": 40,
+        "from": 21,
+        "to": 61
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "sectionCounts": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+  ],
+  "preservation": {
+    "all5138NonCrateComponentsExactAfterSerialization": true,
+    "settingsExact": true,
+    "publishedPackUntouched": true,
+    "movementAnimationArtworkUnchanged": true
+  },
+  "native": {
+    "mainHarvests": 72,
+    "crates": 180,
+    "maximumFloorCornerError": 0.23095551066177222,
+    "reset": {
+      "crates": 180,
+      "enemies": 0
+    },
+    "fullCentreRoute": {
+      "supportProbes": 8394,
+      "fromVista": false,
+      "vistaProbes": 18,
+      "vistaLength": 1751.0326446530826,
+      "freerideShoulder": true,
+      "valleyDeath": true,
+      "landingFrames": 1,
+      "checkpoints": 17,
+      "routeFrames": 43744,
+      "finishFrames": 135,
+      "checkpointBankAndPitRecovery": true,
+      "routeMetres": 5630.595142105832,
+      "upperExtension": 771.8510543215829,
+      "lowerExtension": 3466.7873397347685,
+      "lowerDrop": 781.0000000000001,
+      "final300mDrop": 64.68787848527495,
+      "airborneGaps": [
+        "Boardwalk launch",
+        "Canyon rim jump"
+      ],
+      "materials": "shared mineral texture owners verified"
+    },
+    "continuousBonus": {
+      "id": "bonus-bryce-canyon",
+      "state": "finished",
+      "gemEarned": true,
+      "totalCrates": 18,
+      "cratesBroken": 18,
+      "deaths": 0
+    },
+    "bonusSeconds": 43.55,
+    "wrongOrderRetry": {
+      "wrongOrder": [
+        {
+          "pattern": "upper",
+          "frames": 936,
+          "result": {
+            "pattern": "upper",
+            "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+            "rewardRemaining": 8,
+            "gemEarned": true
+          }
+        },
+        {
+          "pattern": "bridge",
+          "frames": 370,
+          "result": {
+            "pattern": "bridge",
+            "test": "skipping visible crossing footholds leads to real chasm death",
+            "state": "dead",
+            "gemEarned": true
+          }
+        },
+        {
+          "pattern": "finite",
+          "frames": 543,
+          "result": {
+            "pattern": "finite",
+            "test": "spending upper finite support first loses high cap access",
+            "capAlive": true,
+            "gemEarned": true
+          }
+        }
+      ],
+      "all19Restored": true,
+      "bridgeHidden": true,
+      "credit": 0
+    },
+    "bonusEntrance": {
+      "entries": 1,
+      "landed": [
+        -154.28716819010083,
+        -633.636483155386,
+        -3058.460775008077
+      ],
+      "returnPosition": [
+        -163.9307967119492,
+        -635.7348695821488,
+        -3063.0513656020094
+      ],
+      "grounded": true,
+      "deaths": 0
+    }
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 5,
+    "checkpointRestoresTwoBoxes": true,
+    "all18BonusBanked": true,
+    "bonusFailureAndRetry": true,
+    "consoleErrors": [],
+    "liteRenderSampling": "All normal fixed-step physics and callbacks; 3D draw calls sampled every 60 rendered frames."
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed"
+  },
+  "buildVersion": "de1c87dc733b80c294fe",
+  "releaseBytes": 959312251,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "All 180 main crates are collected through 72 separately staged normal-input approaches from the centre route. The full native centre-route clear is separate; no continuous main all-box run is claimed.",
+    "The full descent clears both gaps and the finish. Checkpoint support is checked individually, with separately staged checkpoint banking and recovery. It does not assert collection of all 17 checkpoints or the crystal in that full run.",
+    "Upright stacks sit on the existing sloping trail. The worst corner-to-ground height difference is 0.231 m; the generic audit flags 18 overhanging crates, but native rays find ground below every tested lower-tier corner. Terrain was not flattened.",
+    "Browser main collection, checkpoint, death and finish use staged approaches. Browser bonus state-flow checks use a debug entry trigger; its actual entrance and supported return are separately tested with normal native inputs.",
+    "The successful lite browser samples 3D draws every 60 rendered frames to reduce software rendering cost. Fixed-step physics, controls and callbacks remain normal. Five full-resolution views use normal rendering with complete authored geometry.",
+    "The first unthrottled browser attempt timed out and the second was deliberately stopped after passing opening collection and checkpoint activation. Their evidence is retained; the sampled-render retry passed every phase.",
+    "Wrong-order cases reset physical state after a successful bonus. The profile may already own its standalone gem; negative assertions concern physical target access and restoration.",
+    "The preservation comparison uses serialized values, treating negative zero as saved zero."
+  ]
+}

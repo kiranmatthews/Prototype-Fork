@@ -1,0 +1,19 @@
+PASS supplies in checkpoint section 1
+PASS supplies in checkpoint section 2
+PASS supplies in checkpoint section 3
+PASS supplies in checkpoint section 4
+PASS supplies in checkpoint section 5
+PASS supplies in checkpoint section 6
+PASS supplies in checkpoint section 7
+PASS supplies in checkpoint section 8
+PASS supplies in checkpoint section 9
+PASS supplies in checkpoint section 10
+PASS supplies in checkpoint section 11
+PASS supplies in checkpoint section 12
+PASS supplies in checkpoint section 13
+PASS supplies in checkpoint section 14
+PASS supplies in checkpoint section 15
+PASS supplies in checkpoint section 16
+PASS supplies in checkpoint section 17
+PASS supplies in checkpoint section 18
+PASS all 180 Dusty Road supply crates from separately staged main-route approaches, support and full reset

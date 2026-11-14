@@ -1,0 +1,587 @@
+{
+  "harvests": [
+    {
+      "name": "Section 1 · supply 1 · left",
+      "count": 2,
+      "station": 4.2,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 1 · supply 1 · right",
+      "count": 3,
+      "station": 4.2,
+      "fromMainRoute": true,
+      "frames": 126,
+      "deaths": 0
+    },
+    {
+      "name": "Section 1 · supply 2 · left",
+      "count": 2,
+      "station": 9.8,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 1 · supply 2 · right",
+      "count": 3,
+      "station": 9.8,
+      "fromMainRoute": true,
+      "frames": 126,
+      "deaths": 0
+    },
+    {
+      "name": "Section 2 · supply 1 · left",
+      "count": 2,
+      "station": 34.82,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 2 · supply 1 · right",
+      "count": 3,
+      "station": 34.82,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 2 · supply 2 · left",
+      "count": 2,
+      "station": 99.22,
+      "fromMainRoute": true,
+      "frames": 142,
+      "deaths": 0
+    },
+    {
+      "name": "Section 2 · supply 2 · right",
+      "count": 3,
+      "station": 99.22,
+      "fromMainRoute": true,
+      "frames": 143,
+      "deaths": 0
+    },
+    {
+      "name": "Section 3 · supply 1 · left",
+      "count": 2,
+      "station": 205.5,
+      "fromMainRoute": true,
+      "frames": 33,
+      "deaths": 0
+    },
+    {
+      "name": "Section 3 · supply 1 · right",
+      "count": 3,
+      "station": 205.5,
+      "fromMainRoute": true,
+      "frames": 13,
+      "deaths": 0
+    },
+    {
+      "name": "Section 3 · supply 2 · left",
+      "count": 2,
+      "station": 343.5,
+      "fromMainRoute": true,
+      "frames": 33,
+      "deaths": 0
+    },
+    {
+      "name": "Section 3 · supply 2 · right",
+      "count": 3,
+      "station": 343.5,
+      "fromMainRoute": true,
+      "frames": 66,
+      "deaths": 0
+    },
+    {
+      "name": "Section 4 · supply 1 · left",
+      "count": 2,
+      "station": 488,
+      "fromMainRoute": true,
+      "frames": 33,
+      "deaths": 0
+    },
+    {
+      "name": "Section 4 · supply 1 · right",
+      "count": 3,
+      "station": 488,
+      "fromMainRoute": true,
+      "frames": 13,
+      "deaths": 0
+    },
+    {
+      "name": "Section 4 · supply 2 · left",
+      "count": 2,
+      "station": 528,
+      "fromMainRoute": true,
+      "frames": 115,
+      "deaths": 0
+    },
+    {
+      "name": "Section 4 · supply 2 · right",
+      "count": 3,
+      "station": 528,
+      "fromMainRoute": true,
+      "frames": 98,
+      "deaths": 0
+    },
+    {
+      "name": "Section 5 · supply 1 · left",
+      "count": 2,
+      "station": 724.955316,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 5 · supply 1 · right",
+      "count": 3,
+      "station": 724.955316,
+      "fromMainRoute": true,
+      "frames": 100,
+      "deaths": 0
+    },
+    {
+      "name": "Section 5 · supply 2 · left",
+      "count": 2,
+      "station": 786.895738,
+      "fromMainRoute": true,
+      "frames": 126,
+      "deaths": 0
+    },
+    {
+      "name": "Section 5 · supply 2 · right",
+      "count": 3,
+      "station": 786.895738,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 6 · supply 1 · left",
+      "count": 2,
+      "station": 927.951054,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 6 · supply 1 · right",
+      "count": 3,
+      "station": 927.951054,
+      "fromMainRoute": true,
+      "frames": 68,
+      "deaths": 0
+    },
+    {
+      "name": "Section 6 · supply 2 · left",
+      "count": 2,
+      "station": 1014.751054,
+      "fromMainRoute": true,
+      "frames": 32,
+      "deaths": 0
+    },
+    {
+      "name": "Section 6 · supply 2 · right",
+      "count": 3,
+      "station": 1014.751054,
+      "fromMainRoute": true,
+      "frames": 40,
+      "deaths": 0
+    },
+    {
+      "name": "Section 7 · supply 1 · left",
+      "count": 2,
+      "station": 1258.351054,
+      "fromMainRoute": true,
+      "frames": 61,
+      "deaths": 0
+    },
+    {
+      "name": "Section 7 · supply 1 · right",
+      "count": 3,
+      "station": 1258.351054,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 7 · supply 2 · left",
+      "count": 2,
+      "station": 1322.351054,
+      "fromMainRoute": true,
+      "frames": 60,
+      "deaths": 0
+    },
+    {
+      "name": "Section 7 · supply 2 · right",
+      "count": 3,
+      "station": 1322.351054,
+      "fromMainRoute": true,
+      "frames": 41,
+      "deaths": 0
+    },
+    {
+      "name": "Section 8 · supply 1 · left",
+      "count": 2,
+      "station": 1665.851054,
+      "fromMainRoute": true,
+      "frames": 102,
+      "deaths": 0
+    },
+    {
+      "name": "Section 8 · supply 1 · right",
+      "count": 3,
+      "station": 1665.851054,
+      "fromMainRoute": true,
+      "frames": 124,
+      "deaths": 0
+    },
+    {
+      "name": "Section 8 · supply 2 · left",
+      "count": 2,
+      "station": 1759.851054,
+      "fromMainRoute": true,
+      "frames": 115,
+      "deaths": 0
+    },
+    {
+      "name": "Section 8 · supply 2 · right",
+      "count": 3,
+      "station": 1759.851054,
+      "fromMainRoute": true,
+      "frames": 126,
+      "deaths": 0
+    },
+    {
+      "name": "Section 9 · supply 1 · left",
+      "count": 2,
+      "station": 2044.438079,
+      "fromMainRoute": true,
+      "frames": 102,
+      "deaths": 0
+    },
+    {
+      "name": "Section 9 · supply 1 · right",
+      "count": 3,
+      "station": 2044.438079,
+      "fromMainRoute": true,
+      "frames": 124,
+      "deaths": 0
+    },
+    {
+      "name": "Section 9 · supply 2 · left",
+      "count": 2,
+      "station": 2157.220778,
+      "fromMainRoute": true,
+      "frames": 143,
+      "deaths": 0
+    },
+    {
+      "name": "Section 9 · supply 2 · right",
+      "count": 3,
+      "station": 2157.220778,
+      "fromMainRoute": true,
+      "frames": 127,
+      "deaths": 0
+    },
+    {
+      "name": "Section 10 · supply 1 · left",
+      "count": 2,
+      "station": 2372.807802,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 10 · supply 1 · right",
+      "count": 3,
+      "station": 2372.807802,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 10 · supply 2 · left",
+      "count": 2,
+      "station": 2532.807802,
+      "fromMainRoute": true,
+      "frames": 61,
+      "deaths": 0
+    },
+    {
+      "name": "Section 10 · supply 2 · right",
+      "count": 3,
+      "station": 2532.807802,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 11 · supply 1 · left",
+      "count": 2,
+      "station": 2606.807802,
+      "fromMainRoute": true,
+      "frames": 61,
+      "deaths": 0
+    },
+    {
+      "name": "Section 11 · supply 1 · right",
+      "count": 3,
+      "station": 2606.807802,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 11 · supply 2 · left",
+      "count": 2,
+      "station": 2796.807802,
+      "fromMainRoute": true,
+      "frames": 87,
+      "deaths": 0
+    },
+    {
+      "name": "Section 11 · supply 2 · right",
+      "count": 3,
+      "station": 2796.807802,
+      "fromMainRoute": true,
+      "frames": 71,
+      "deaths": 0
+    },
+    {
+      "name": "Section 12 · supply 1 · left",
+      "count": 2,
+      "station": 2936.807802,
+      "fromMainRoute": true,
+      "frames": 46,
+      "deaths": 0
+    },
+    {
+      "name": "Section 12 · supply 1 · right",
+      "count": 3,
+      "station": 2936.807802,
+      "fromMainRoute": true,
+      "frames": 69,
+      "deaths": 0
+    },
+    {
+      "name": "Section 12 · supply 2 · left",
+      "count": 2,
+      "station": 3098.807802,
+      "fromMainRoute": true,
+      "frames": 60,
+      "deaths": 0
+    },
+    {
+      "name": "Section 12 · supply 2 · right",
+      "count": 3,
+      "station": 3098.807802,
+      "fromMainRoute": true,
+      "frames": 41,
+      "deaths": 0
+    },
+    {
+      "name": "Section 13 · supply 1 · left",
+      "count": 2,
+      "station": 3340.534211,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 13 · supply 1 · right",
+      "count": 3,
+      "station": 3340.534211,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 13 · supply 2 · left",
+      "count": 2,
+      "station": 3668.836089,
+      "fromMainRoute": true,
+      "frames": 32,
+      "deaths": 0
+    },
+    {
+      "name": "Section 13 · supply 2 · right",
+      "count": 3,
+      "station": 3668.836089,
+      "fromMainRoute": true,
+      "frames": 40,
+      "deaths": 0
+    },
+    {
+      "name": "Section 14 · supply 1 · left",
+      "count": 2,
+      "station": 3935.562497,
+      "fromMainRoute": true,
+      "frames": 114,
+      "deaths": 0
+    },
+    {
+      "name": "Section 14 · supply 1 · right",
+      "count": 3,
+      "station": 3935.562497,
+      "fromMainRoute": true,
+      "frames": 123,
+      "deaths": 0
+    },
+    {
+      "name": "Section 14 · supply 2 · left",
+      "count": 2,
+      "station": 4177.562497,
+      "fromMainRoute": true,
+      "frames": 102,
+      "deaths": 0
+    },
+    {
+      "name": "Section 14 · supply 2 · right",
+      "count": 3,
+      "station": 4177.562497,
+      "fromMainRoute": true,
+      "frames": 124,
+      "deaths": 0
+    },
+    {
+      "name": "Section 15 · supply 1 · left",
+      "count": 2,
+      "station": 4376.562497,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 15 · supply 1 · right",
+      "count": 3,
+      "station": 4376.562497,
+      "fromMainRoute": true,
+      "frames": 68,
+      "deaths": 0
+    },
+    {
+      "name": "Section 15 · supply 2 · left",
+      "count": 2,
+      "station": 4622.562497,
+      "fromMainRoute": true,
+      "frames": 46,
+      "deaths": 0
+    },
+    {
+      "name": "Section 15 · supply 2 · right",
+      "count": 3,
+      "station": 4622.562497,
+      "fromMainRoute": true,
+      "frames": 67,
+      "deaths": 0
+    },
+    {
+      "name": "Section 16 · supply 1 · left",
+      "count": 2,
+      "station": 4717.562497,
+      "fromMainRoute": true,
+      "frames": 59,
+      "deaths": 0
+    },
+    {
+      "name": "Section 16 · supply 1 · right",
+      "count": 3,
+      "station": 4717.562497,
+      "fromMainRoute": true,
+      "frames": 68,
+      "deaths": 0
+    },
+    {
+      "name": "Section 16 · supply 2 · left",
+      "count": 2,
+      "station": 4883.562497,
+      "fromMainRoute": true,
+      "frames": 34,
+      "deaths": 0
+    },
+    {
+      "name": "Section 16 · supply 2 · right",
+      "count": 3,
+      "station": 4883.562497,
+      "fromMainRoute": true,
+      "frames": 40,
+      "deaths": 0
+    },
+    {
+      "name": "Section 17 · supply 1 · left",
+      "count": 2,
+      "station": 5084.372291,
+      "fromMainRoute": true,
+      "frames": 86,
+      "deaths": 0
+    },
+    {
+      "name": "Section 17 · supply 1 · right",
+      "count": 3,
+      "station": 5084.372291,
+      "fromMainRoute": true,
+      "frames": 70,
+      "deaths": 0
+    },
+    {
+      "name": "Section 17 · supply 2 · left",
+      "count": 2,
+      "station": 5408.785349,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 17 · supply 2 · right",
+      "count": 3,
+      "station": 5408.785349,
+      "fromMainRoute": true,
+      "frames": 44,
+      "deaths": 0
+    },
+    {
+      "name": "Section 18 · supply 1 · left",
+      "count": 2,
+      "station": 5573.175142,
+      "fromMainRoute": true,
+      "frames": 88,
+      "deaths": 0
+    },
+    {
+      "name": "Section 18 · supply 1 · right",
+      "count": 3,
+      "station": 5573.175142,
+      "fromMainRoute": true,
+      "frames": 96,
+      "deaths": 0
+    },
+    {
+      "name": "Section 18 · supply 2 · left",
+      "count": 2,
+      "station": 5590.775142,
+      "fromMainRoute": true,
+      "frames": 114,
+      "deaths": 0
+    },
+    {
+      "name": "Section 18 · supply 2 · right",
+      "count": 3,
+      "station": 5590.775142,
+      "fromMainRoute": true,
+      "frames": 123,
+      "deaths": 0
+    }
+  ],
+  "maxFloorError": 0.23095551066177222,
+  "settingsExact": true,
+  "geometryExact": true,
+  "reset": {
+    "crates": 180,
+    "enemies": 0
+  }
+}

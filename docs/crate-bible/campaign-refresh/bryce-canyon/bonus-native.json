@@ -1,0 +1,356 @@
+{
+  "stage": "collect earned gem and cross real bonus gate",
+  "evidence": [
+    {
+      "action": "bonus-bryce-canyon room 1 upper conserved-arrow ascent",
+      "contact": {
+        "frame": 327,
+        "position": [
+          6.972188888888893,
+          1.172,
+          0
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "Rounded sandstone cache shelf"
+      },
+      "landing": [
+        10.994055555555567,
+        7.8,
+        0
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "bonus-bryce-canyon room 1 upper high target before support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-bryce-canyon room 1 upper descend before clearing arrow",
+      "launch": [
+        10.583155555555575,
+        7.8,
+        0
+      ],
+      "landing": [
+        5.027155555555563,
+        0,
+        0
+      ],
+      "ground": "Rounded sandstone cache shelf"
+    },
+    {
+      "action": "bonus-bryce-canyon room 1 upper destroy arrow last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "upper",
+      "index": 0,
+      "position": [
+        26.919977777777863,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-bryce-canyon room 2 bridge create visible bridge",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "bonus-bryce-canyon room 2 bridge pass used switch",
+      "launch": [
+        31.83230000000016,
+        0,
+        0
+      ],
+      "landing": [
+        35.37249999999998,
+        0,
+        0
+      ],
+      "ground": "Rounded sandstone cache shelf"
+    },
+    {
+      "action": "bonus-bryce-canyon room 2 bridge receiver reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-bryce-canyon room 2 bridge receiver mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "bridge",
+      "index": 1,
+      "position": [
+        60.92911111111111,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-bryce-canyon room 3 finite spent upper finite support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "finite",
+      "index": 2,
+      "position": [
+        84.92792222222178,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 18,
+      "activeStageCrates": 18,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 18,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "bonus-bryce-canyon room 1 upper observation",
+      "firstFrame": 20,
+      "lastFrame": 134
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent takeoff",
+      "firstFrame": 152,
+      "lastFrame": 246
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent arrow contact",
+      "firstFrame": 291,
+      "lastFrame": 327
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent apex outside the shelf",
+      "firstFrame": 330,
+      "lastFrame": 363
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent rise above the shelf",
+      "firstFrame": 365,
+      "lastFrame": 370
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent",
+      "firstFrame": 370,
+      "lastFrame": 414
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 1 upper high target before support",
+      "firstFrame": 414,
+      "lastFrame": 480
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper high target before support",
+      "firstFrame": 500,
+      "lastFrame": 500
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper return-gallery edge",
+      "firstFrame": 522,
+      "lastFrame": 607
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper descend before clearing arrow",
+      "firstFrame": 652,
+      "lastFrame": 703
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 1 upper destroy arrow last",
+      "firstFrame": 703,
+      "lastFrame": 756
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper destroy arrow last",
+      "firstFrame": 776,
+      "lastFrame": 776
+    },
+    {
+      "name": "bonus-bryce-canyon room 1 upper supported room exit",
+      "firstFrame": 798,
+      "lastFrame": 1023
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge observation",
+      "firstFrame": 1041,
+      "lastFrame": 1115
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 2 bridge create visible bridge",
+      "firstFrame": 1133,
+      "lastFrame": 1216
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge create visible bridge",
+      "firstFrame": 1236,
+      "lastFrame": 1236
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge pass used switch",
+      "firstFrame": 1285,
+      "lastFrame": 1324
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge cross actual materialized bridge",
+      "firstFrame": 1324,
+      "lastFrame": 1514
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 2 bridge receiver reward",
+      "firstFrame": 1532,
+      "lastFrame": 1605
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge receiver reward",
+      "firstFrame": 1625,
+      "lastFrame": 1625
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 2 bridge receiver mystery",
+      "firstFrame": 1647,
+      "lastFrame": 1730
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge receiver mystery",
+      "firstFrame": 1750,
+      "lastFrame": 1750
+    },
+    {
+      "name": "bonus-bryce-canyon room 2 bridge supported room exit",
+      "firstFrame": 1772,
+      "lastFrame": 1864
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite observation",
+      "firstFrame": 1882,
+      "lastFrame": 1956
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite finite-stack approach",
+      "firstFrame": 1974,
+      "lastFrame": 2075
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite upper support contact",
+      "firstFrame": 2120,
+      "lastFrame": 2151
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite rebound apex",
+      "firstFrame": 2151,
+      "lastFrame": 2176
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite cap before spending support",
+      "firstFrame": 2178,
+      "lastFrame": 2183
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite clear landing",
+      "firstFrame": 2183,
+      "lastFrame": 2206
+    },
+    {
+      "name": "approach bonus-bryce-canyon room 3 finite spent upper finite support",
+      "firstFrame": 2226,
+      "lastFrame": 2279
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite spent upper finite support",
+      "firstFrame": 2299,
+      "lastFrame": 2299
+    },
+    {
+      "name": "bonus-bryce-canyon room 3 finite supported room exit",
+      "firstFrame": 2321,
+      "lastFrame": 2507
+    },
+    {
+      "name": "collect earned gem and cross real bonus gate",
+      "firstFrame": 2527,
+      "lastFrame": 2613
+    }
+  ],
+  "result": {
+    "id": "bonus-bryce-canyon",
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 18,
+    "cratesBroken": 18,
+    "deaths": 0
+  },
+  "id": "bonus-bryce-canyon",
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 18,
+  "cratesBroken": 18,
+  "deaths": 0,
+  "frames": 2613,
+  "seconds": 43.55
+}

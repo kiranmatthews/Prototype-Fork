@@ -1,0 +1,83 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "crates": 180,
+      "total": 215,
+      "bonus": 18,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "passed": false,
+    "failure": "Page.wait_for_function: Timeout 180000ms exceeded.",
+    "failureState": {
+      "level": "bryce-canyon",
+      "state": "ride",
+      "position": [
+        -1.0033333333333336,
+        349.8748875631012,
+        655.8019063649668
+      ],
+      "main": {
+        "done": false
+      },
+      "bonus": null
+    }
+  },
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "crates": 180,
+      "total": 215,
+      "bonus": 18,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "opening": {
+      "done": true,
+      "frames": 155,
+      "state": "ride",
+      "crates": 2,
+      "lives": 4,
+      "position": [
+        -1.0633333333333335,
+        349.8748875631012,
+        655.8019063649668
+      ],
+      "collected": 2,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 43,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        35.40530102031985,
+        266.2340695752203,
+        335.0735665299318
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 63,
+      "state": "ride",
+      "crates": 3,
+      "lives": 4,
+      "position": [
+        -53.661228562822416,
+        243.35283009861354,
+        274.2114914969069
+      ],
+      "collected": 2,
+      "checkpoint": false
+    },
+    "passed": false,
+    "failure": "Page.wait_for_function: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /usr/bin/chromium --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --disable-dev-shm-usage --use-angle=swiftshader --enable-unsafe-swiftshader --user-data-dir=/tmp/playwright_chromiumdev_profile-pA0U97 --remote-debugging-pipe --no-startup-window\n<launched> pid=61611\n[pid=61611][err] [61611:61641:1114/160026.591931:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.592097:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61641:1114/160026.605873:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.605973:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.610081:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.610131:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61641:1114/160026.610142:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61641:1114/160026.707406:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.732272:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.732857:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.733189:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.733397:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.739207:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.739294:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.742172:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61611:1114/160026.742314:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.742375:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.742507:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[pid=61611][err] [61611:61641:1114/160026.742514:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.745668:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61611:1114/160026.747827:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: \n[pid=61611][err] [61611:61611:1114/160026.747844:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.747918:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.754204:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] [61611:61641:1114/160026.754415:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[pid=61611][err] [61611:61611:1114/160026.761891:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[pid=61611][err] Warning: vkCreateInstance: Found no drivers!\n[pid=61611][err] Warning: vkCreateInstance failed with VK_ERROR_INCOMPATIBLE_DRIVER\n[pid=61611][err]     at CheckVkSuccessImpl (../../third_party/dawn/src/dawn/native/vulkan/VulkanError.cpp:106)\n[pid=61611][err] \n[pid=61611][err] [61611:61611:1114/160634.319817:ERROR:content/common/zygote/zygote_communication_linux.cc:313] Failed to send GetTerminationStatus message to zygote"
+  }
+]
