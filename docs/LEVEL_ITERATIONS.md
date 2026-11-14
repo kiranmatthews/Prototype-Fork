@@ -12055,3 +12055,11 @@ Eighteenth course, reviewed in approximately 7.9 minutes from 12:51:34 UTC. Reta
 All sixteen two-way circulation cases and four safe sand-return cases pass. Focused native checks score on an original bridge rail, complete the optional loop, and validate three-run rules and independent trophy ownership. The original Cup suite still stops at an old campaign-map coordinate; the focused copy explicitly excludes those legacy map assertions. Browser skating, ollie/landing and staged bail recovery pass, with three inspected full-resolution views and clean consoles.
 
 Documentation only; the prior successful production checks apply. [Evidence and limitation](crate-bible/campaign-refresh/waterpark-cup/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Carlisle Coast + Springtide Skippers
+
+Nineteenth course and fourteenth unique bonus, reviewed in approximately 38.5 minutes from 12:59:32 UTC. Added three fixed-quay supply piles and filled out two existing piles, adding 35 crates and three masks. All eighteen checkpoint sections now contain crates; 338 main crates plus 17 checkpoints and 21 bonus crates give a 376-box tally. The bonus's safe final life reward becomes wood. All original main crates, route components, native artwork and movement are preserved; no enemies are introduced into the existing spring/machinery course.
+
+Native staged approaches account for all 338 main crates: 104 on quays, 58 on consumable bridges, 154 in aerial chains and 22 cleared remotely. Steel-lane crossings, all original collect/bypass flights, and three continuous all-box bonus runs pass. The browser verifies checkpoint restoration, Nitro clear, staged finish, continuous bonus collection/banking and failure recovery. Seven full-resolution views have clean consoles. Corrected the harbour test pilot's hop for the existing landing-only spring rule; older snapshot/coordinate test limitations are recorded.
+
+Required level checks, build and release check pass: `eab91b0f7c3d18e839f3`, 959,307,795 bytes. [Evidence and scope](crate-bible/campaign-refresh/carlisle-coast/README.md). Authorized publication awaits GitHub authentication.

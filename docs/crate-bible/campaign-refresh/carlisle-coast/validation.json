@@ -1,0 +1,491 @@
+{
+  "course": "carlisle-coast",
+  "name": "Carlisle Coast",
+  "bonus": "bonus-carlisle-coast",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T12:59:32Z",
+  "completedAt": "2026-11-14T13:38:02.385108+00:00",
+  "elapsedMinutes": 38.5,
+  "changes": {
+    "mainAddedCrates": 35,
+    "newQuayPiles": 3,
+    "expandedQuayPiles": 2,
+    "masksBefore": 1,
+    "masksAfter": 4,
+    "bonusLifeChangedToWood": 1
+  },
+  "before": {
+    "main": {
+      "physical": 384,
+      "counted": 303,
+      "checkpoints": 17,
+      "gemTally": 341,
+      "byKind": {
+        "wood": 280,
+        "mask": 1,
+        "metal": 80,
+        "nitro": 22,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 7.51,
+      "physicalPer100m": 9.52,
+      "checkpointGaps": [
+        205.4,
+        222.2,
+        221.4,
+        210.8,
+        225,
+        241.5,
+        224.3,
+        241.3,
+        241.9,
+        236.9,
+        239.1,
+        246.2,
+        210,
+        216.4,
+        219.3,
+        227.2,
+        225,
+        179
+      ],
+      "clusters": 46,
+      "singles": 0,
+      "meanClusterSize": 8.33,
+      "sizeHist": {
+        "2": 1,
+        "3": 2,
+        "4": 17,
+        "5-9": 19,
+        "10+": 7
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 3,
+      "arrangements": {
+        "pyramid": 6,
+        "grid": 33,
+        "row": 5,
+        "block": 1,
+        "pair": 1
+      },
+      "maxStack": 3,
+      "largestCluster": 62,
+      "floatingClusters": 37,
+      "support": {
+        "ground": 119,
+        "crate": 45,
+        "none": 220
+      },
+      "floatingCrates": 220,
+      "overVoid": 198,
+      "overPit": 198,
+      "nearDrop": 25,
+      "overhanging": 12,
+      "high": 163,
+      "highTools": {
+        "crate-chain": 23,
+        "stack": 4,
+        "trampoline": 136
+      },
+      "onPath": 208,
+      "offLine": 93,
+      "detour": 2,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 62.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 23
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 15,
+      "afterPad": 0,
+      "plainOnSpeed": 15,
+      "runs": 160,
+      "runCrates": 474,
+      "longestRun": 21,
+      "runsBridging": 135,
+      "runsAfterSwitches": {
+        "runs": 160,
+        "crates": 474
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 520.7,
+        "from": 2872.7,
+        "to": 3393.4
+      },
+      "authoredRails": 5,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 28
+      }
+    },
+    "bonus": {
+      "physical": 21,
+      "counted": 21,
+      "checkpoints": 0,
+      "gemTally": 21,
+      "byKind": {
+        "wood": 20,
+        "life": 1
+      },
+      "outlineByKind": {},
+      "per100m": 14.09,
+      "physicalPer100m": 14.09,
+      "checkpointGaps": [
+        149
+      ],
+      "clusters": 5,
+      "singles": 0,
+      "meanClusterSize": 4.2,
+      "sizeHist": {
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5-9": 2
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "row": 1,
+        "wall-along-path": 3,
+        "pair": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 6,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 13,
+        "crate": 8
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 21,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 2
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 5,
+      "runCrates": 13,
+      "longestRun": 3,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 5,
+        "crates": 13
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 33.8,
+        "from": 105.1,
+        "to": 138.8
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 4
+      }
+    }
+  },
+  "after": {
+    "main": {
+      "physical": 419,
+      "counted": 338,
+      "checkpoints": 17,
+      "gemTally": 376,
+      "byKind": {
+        "wood": 312,
+        "mask": 4,
+        "metal": 80,
+        "nitro": 22,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 8.38,
+      "physicalPer100m": 10.39,
+      "checkpointGaps": [
+        205.4,
+        222.2,
+        221.4,
+        210.8,
+        225,
+        241.5,
+        224.3,
+        241.3,
+        241.9,
+        236.9,
+        239.1,
+        246.2,
+        210,
+        216.4,
+        219.3,
+        227.2,
+        225,
+        179
+      ],
+      "clusters": 49,
+      "singles": 0,
+      "meanClusterSize": 8.53,
+      "sizeHist": {
+        "2": 1,
+        "3": 2,
+        "4": 17,
+        "10+": 12,
+        "5-9": 17
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 3,
+      "arrangements": {
+        "pyramid": 9,
+        "grid": 33,
+        "row": 5,
+        "irregular": 1,
+        "pair": 1
+      },
+      "maxStack": 3,
+      "largestCluster": 62,
+      "floatingClusters": 37,
+      "support": {
+        "ground": 137,
+        "crate": 62,
+        "none": 220
+      },
+      "floatingCrates": 220,
+      "overVoid": 198,
+      "overPit": 198,
+      "nearDrop": 25,
+      "overhanging": 12,
+      "high": 163,
+      "highTools": {
+        "crate-chain": 23,
+        "stack": 4,
+        "trampoline": 136
+      },
+      "onPath": 212,
+      "offLine": 124,
+      "detour": 2,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 60.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 35
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 15,
+      "afterPad": 0,
+      "plainOnSpeed": 15,
+      "runs": 163,
+      "runCrates": 483,
+      "longestRun": 21,
+      "runsBridging": 135,
+      "runsAfterSwitches": {
+        "runs": 163,
+        "crates": 483
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 422.8,
+        "from": 2970.6,
+        "to": 3393.4
+      },
+      "authoredRails": 5,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 28
+      }
+    },
+    "bonus": {
+      "physical": 21,
+      "counted": 21,
+      "checkpoints": 0,
+      "gemTally": 21,
+      "byKind": {
+        "wood": 21
+      },
+      "outlineByKind": {},
+      "per100m": 14.09,
+      "physicalPer100m": 14.09,
+      "checkpointGaps": [
+        149
+      ],
+      "clusters": 5,
+      "singles": 0,
+      "meanClusterSize": 4.2,
+      "sizeHist": {
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5-9": 2
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "row": 1,
+        "wall-along-path": 3,
+        "pair": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 6,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 13,
+        "crate": 8
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 21,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 2
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 5,
+      "runCrates": 13,
+      "longestRun": 3,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 5,
+        "crates": 13
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 33.8,
+        "from": 105.1,
+        "to": 138.8
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 4
+      }
+    },
+    "sectionCounts": [
+      10,
+      12,
+      20,
+      25,
+      10,
+      22,
+      17,
+      10,
+      46,
+      18,
+      24,
+      10,
+      29,
+      10,
+      10,
+      30,
+      21,
+      14
+    ]
+  },
+  "preservation": {
+    "nonCrates": 977,
+    "originalCrates": 384,
+    "addedCrates": 35,
+    "settingsExact": true
+  },
+  "native": {
+    "quayGroups": 9,
+    "quayCrates": 104,
+    "maximumFloorError": 0,
+    "woodBridgeCrates": 58,
+    "woodAndSteelCrossings": 6,
+    "aerialFlightsWithEveryReward": 7,
+    "aerialRewardCrates": 154,
+    "collectAndBypassCases": 21,
+    "nitroClear": 22,
+    "all338MainCratesAccessedInSeparateRuns": true,
+    "fullReset": true,
+    "continuousBonusRuns": [
+      {
+        "phase": 0,
+        "seconds": 29.916666666666668,
+        "crates": 21
+      },
+      {
+        "phase": 7,
+        "seconds": 39.1,
+        "crates": 21
+      },
+      {
+        "phase": 19,
+        "seconds": 30.716666666666665,
+        "crates": 21
+      }
+    ]
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 7,
+    "bonusAll21AndBanked": true,
+    "bonusWaterFailureRestored": true,
+    "mainCheckpointRestoresQuayPile": true,
+    "consoleErrors": []
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "checkRelease": "passed"
+  },
+  "buildVersion": "eab91b0f7c3d18e839f3",
+  "releaseBytes": 959307795,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Main-course crate access uses separately staged native approaches. No continuous 4 km main-course all-box run is claimed.",
+    "The 21 original aerial collect/bypass cases ran before the additive quay change. Exact preservation of all original crates, non-crate components and settings keeps those flight checks applicable; the seven all-parcel flights ran after the change.",
+    "Main browser checkpoint, fall, Nitro clear and finish are staged. The bonus route is continuous after a staged entry through the ordinary bonus flow.",
+    "Older cargo tests use authored coordinates instead of migrated live bounds, and the older aerial test pins a stale whole-course hash. The new focused tests pass; the older suites are not claimed to pass.",
+    "The existing spring-contact rules require an airborne landing. The harbour pilot now performs a normal hop; movement and runtime rules are unchanged."
+  ]
+}

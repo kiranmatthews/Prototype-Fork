@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "carlisle-coast",
-  "next_course": "country-club",
+  "current_course": "country-club",
+  "next_course": "rooftop-relay",
   "courses": [
     {
       "order": 1,
@@ -339,9 +339,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-carlisle-coast",
-        "name": "Bonus: Springtide Skippers"
+        "name": "Bonus: Springtide Skippers",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/carlisle-coast/validation.json"
     },
     {
       "order": 20,
@@ -747,6 +749,12 @@
     {
       "id": "waterpark-cup",
       "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "carlisle-coast",
+      "bonus": "bonus-carlisle-coast",
       "status": "validated",
       "date": "2026-11-14"
     }

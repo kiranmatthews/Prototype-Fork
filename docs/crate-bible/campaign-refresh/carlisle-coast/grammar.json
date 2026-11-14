@@ -1,0 +1,75 @@
+{
+  "harvests": [
+    {
+      "name": "Shore starter parcel",
+      "count": 10,
+      "masks": 1,
+      "deaths": 0
+    },
+    {
+      "name": "Scissor hub stair",
+      "count": 12,
+      "masks": 0,
+      "deaths": 0
+    },
+    {
+      "name": "Winch transfer bundle",
+      "count": 10,
+      "masks": 0,
+      "deaths": 0
+    },
+    {
+      "name": "Pinwheel quay stores",
+      "count": 10,
+      "masks": 1,
+      "deaths": 0
+    },
+    {
+      "name": "Counterweight cargo steps",
+      "count": 18,
+      "masks": 0,
+      "deaths": 0
+    },
+    {
+      "name": "Scissors departure stores",
+      "count": 10,
+      "masks": 1,
+      "deaths": 0
+    },
+    {
+      "name": "Helical quay stores",
+      "count": 10,
+      "masks": 1,
+      "deaths": 0
+    },
+    {
+      "name": "Rigging launch parcels",
+      "count": 10,
+      "masks": 0,
+      "deaths": 0
+    },
+    {
+      "name": "Home harbour cargo fan",
+      "count": 14,
+      "masks": 0,
+      "deaths": 0
+    }
+  ],
+  "maxFloorError": 0,
+  "preservation": {
+    "nonCrates": 977,
+    "originalCrates": 384,
+    "addedCrates": 35,
+    "settingsExact": true
+  },
+  "fullReset": true,
+  "inventory": {
+    "physical": 419,
+    "counted": 338,
+    "gemTally": 376,
+    "checkpoints": 17,
+    "bonus": 21,
+    "enemies": 0,
+    "masks": 4
+  }
+}
