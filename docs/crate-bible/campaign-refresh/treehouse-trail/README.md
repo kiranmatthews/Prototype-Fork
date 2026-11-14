@@ -24,4 +24,6 @@ Validation: required level checks and production build pass. The native main reg
 
 The shared bonus pilot's only change uses the actual expanded steel-lid height for its landing assertion; the tolerance is unchanged. The player, tuning, art, native geometry, checkpoints and published editor snapshots are untouched.
 
-Evidence: [audit](audit.md), [machine-readable audit](audit.json), [validation](validation.json), [striped teaching stack](full-striped-support-on-safe.jpg), [guarded repetition](full-guarded-striped.jpg), [pipe exit/runway](full-dismount-before.jpg), [bonus gallery](bonus-full-gallery.jpg), [steel receivers](bonus-full-relay.jpg), [completed bonus](bonus-lite-finish.jpg).
+A supplemental full-render post-fall wait exceeded 30 seconds. The earlier lite fall/respawn check and independent full-render finish passed; this review does not establish a full-render finish immediately after recovery.
+
+Evidence: [clearing approach](full-clearing-route-approach.jpg), [audit](audit.md), [machine-readable audit](audit.json), [validation](validation.json), [striped teaching stack](full-striped-support-on-safe.jpg), [guarded repetition](full-guarded-striped.jpg), [pipe exit/runway](full-dismount-before.jpg), [bonus gallery](bonus-full-gallery.jpg), [steel receivers](bonus-full-relay.jpg), [completed bonus](bonus-lite-finish.jpg).

@@ -611,8 +611,11 @@
     }
   ],
   "publication": {
-    "status": "pending",
+    "status": "awaiting-user-approval",
+    "commit": "186b246a",
     "method": "origin/main then GitHub Pages",
-    "base_commit": "b499de87a671515f9acd16ad76a70225bb6692b5"
+    "reason": "Automatic approval review rejected the direct push because default-branch publication requires explicit user authorization. No push occurred.",
+    "asked_at": "2026-11-14T04:11:00Z",
+    "goal_blocked": false
   }
 }

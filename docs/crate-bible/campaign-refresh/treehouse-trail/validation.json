@@ -15,7 +15,8 @@
     "enemy_count": 4,
     "native": "All 62 crates collected: 59 in 21 staged ground groups, two rewards through arrow bounce, then arrow; supported patrols; unbanked checkpoint restoration.",
     "browser": "Lite native spin, arrow contact, checkpoint spin and finite-life fall/respawn. Full staged cluster views and finish gate. Not a continuous main-course all-box run.",
-    "console_errors": []
+    "console_errors": [],
+    "clearing_review": "Reviewed from authored +X approach; the lid reward and crab are visible with a clear bypass."
   },
   "bonus": {
     "counted_crates": 18,
@@ -60,7 +61,8 @@
   },
   "limitations": [
     "Main course collection uses staged approaches; no claim of a continuous all-box course run.",
-    "Audit void flags in the bonus are the intentional steel-supported stepping-stone puzzle, crossed in the native and normal browser loop."
+    "Audit void flags in the bonus are the intentional steel-supported stepping-stone puzzle, crossed in the native and normal browser loop.",
+    "Supplemental full-render post-fall recovery wait timed out after 30 seconds. The earlier lite finite-life recovery passed (4 to 3 lives, restored checkpoint position) and the independent full-render finish passed; full post-recovery finish is not established."
   ],
   "harness_corrections": [
     "Arrow fixture must fall onto the lid rather than spawn grounded on it.",
