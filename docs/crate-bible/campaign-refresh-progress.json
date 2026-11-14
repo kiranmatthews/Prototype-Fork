@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "warehouse",
-  "next_course": "bryce-canyon",
+  "current_course": "bryce-canyon",
+  "next_course": "jungle-minefield",
   "courses": [
     {
       "order": 1,
@@ -432,7 +432,9 @@
       "competition": false,
       "race": false,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "decision": "retain the existing crate-free five-token skate park",
+      "evidence": "docs/crate-bible/campaign-refresh/warehouse/validation.json"
     },
     {
       "order": 26,
@@ -780,6 +782,13 @@
       "bonus": "bonus-mayfield-mall",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "warehouse",
+      "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14",
+      "decision": "retain the existing crate-free five-token skate park"
     }
   ],
   "publication": {
