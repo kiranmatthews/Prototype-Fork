@@ -1,0 +1,91 @@
+{
+  "course": "drowned-crown",
+  "uiName": "The Merchant Wreck",
+  "bonus": "bonus-drowned-crown",
+  "passed": true,
+  "main": {
+    "counted": 184,
+    "checkpoints": 17,
+    "bonus": 35,
+    "total": 236,
+    "clusters": 55,
+    "singles": 0,
+    "meanClusterSize": 3.35,
+    "sectionCounts": [
+      10,
+      10,
+      14,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "harvestScenarios": 55,
+    "allCargoHarvested": 184,
+    "supportedPatrolProbes": 260,
+    "enemyKinds": 3,
+    "enemies": 13,
+    "resetRestores": true,
+    "continuousRoute": {
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": 17,
+      "boardingTransitions": 1,
+      "seconds": 416.6333333333333
+    },
+    "continuousAllBoxRun": false
+  },
+  "bonusResult": {
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 35,
+    "cratesBroken": 35,
+    "deaths": 0
+  },
+  "geometry": {
+    "allOtherPackBytesUnchanged": true,
+    "preservedComponents": 1436,
+    "preservedEnemies": 13,
+    "oldCrates": 10,
+    "newCrates": 184,
+    "geometrySha256": "62f6ec95196109b88fb32b2dfda3ed74608c1255825b549151e8e03104e152da",
+    "cameraAtmosphereOceanSpawnGateAndHazardsPreserved": true
+  },
+  "browser": {
+    "consoleErrors": 0,
+    "allPassed": true,
+    "fullResolution": [
+      1280,
+      720
+    ],
+    "fullViews": 10,
+    "mainScope": "opening harvest; staged checkpoint, forced kill-plane recovery, finish and full-render views",
+    "bonusScope": "continuous standalone all-box finish"
+  },
+  "checks": {
+    "levels": true,
+    "build": true,
+    "release": true,
+    "releaseBytes": 959301735,
+    "buildVersion": "049c296150a8936710c3"
+  },
+  "timing": {
+    "startedAt": "2026-11-14T09:50:00+00:00",
+    "validatedAt": "2026-11-14T10:31:37.115435+00:00",
+    "elapsedMinutes": 41.6,
+    "requestedMainMinutes": 15,
+    "requestedBonusMinutes": 5
+  },
+  "publication": "authorized; GitHub authentication is still unavailable"
+}

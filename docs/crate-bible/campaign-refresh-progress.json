@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "drowned-crown",
-  "next_course": "crab-chief",
+  "current_course": "crab-chief",
+  "next_course": "waterpark",
   "courses": [
     {
       "order": 1,
@@ -203,9 +203,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-drowned-crown",
-        "name": "Bonus: The Captain\u2019s Last Ledger"
+        "name": "Bonus: The Captain\u2019s Last Ledger",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/drowned-crown/validation.json"
     },
     {
       "order": 12,
@@ -679,6 +681,12 @@
     {
       "id": "test",
       "bonus": "bonus-test-course",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "drowned-crown",
+      "bonus": "bonus-drowned-crown",
       "status": "validated",
       "date": "2026-11-14"
     }
