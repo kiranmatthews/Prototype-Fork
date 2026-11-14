@@ -1,0 +1,46 @@
+[
+  {
+    "endsAt": "Cedar roots checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Lotus lookout checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Millrace checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Thunder pools checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Foot of the falls checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Waterwheel checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Hanging aqueduct checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Bell tower checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Cloud rest checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Last spray checkpoint",
+    "cargo": 10
+  },
+  {
+    "endsAt": "Summit finish",
+    "cargo": 10
+  }
+]

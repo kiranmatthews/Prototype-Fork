@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {withBlockworksRuntime} from './blockworks-runner.mjs';
+import {puzzleControls} from './puzzle-controls.mjs';
+const report={};
+await withBlockworksRuntime(async r=>{
+ const {p,l,THREE}=r,c=puzzleControls(r);r.report={actions:[],evidence:[]};
+ const named=name=>l.crates.find(b=>r.source.components[b.mesh.userData.editorIdx]?.nm===name);
+ const reward=named('High bell cache'),launcher=named('Bell rope launcher');
+ assert.equal(l.totalCrates,46);assert.equal(l.outlinedSurfaces.length,2);assert.equal(l.crates.filter(b=>b.pending).length,6);
+ const run=generator=>{let next;while(!(next=generator.next()).done)r.tick(next.value);return next.value;};
+ const reset=(x,y)=>{p.respawn(l,true,false,{position:new THREE.Vector3(x,y,0),heading:new THREE.Vector3(1,0,0)});r.stepFor(20);};
+ const attempt=()=>{let maxContact=-Infinity;
+  r.until(()=>p.vVel<.65,()=>{maxContact=Math.max(maxContact,p.crateBodyBox.max.y);return {...r.steerToward([39,13.8,0]),spinHeld:true};},{maxFrames:120,label:'unsupported reward approach'});
+  r.tick({});r.tick({jumpHeld:true});r.tick({jumpReleased:true});
+  r.until(()=>p.grounded,()=>{maxContact=Math.max(maxContact,p.crateBodyBox.max.y);return {...r.steerToward([39,2.4,0]),spinHeld:true};},{maxFrames:200,label:'ordinary double returns to the balcony'});
+  assert.ok(reward.alive,'ordinary launch must not bypass the lost arrow');return {maxContact,rewardBase:reward.box.min.y,rewardAlive:reward.alive};
+ };
+ reset(36.8,2.52);run(c.hit(launcher,'destroy the required bell launcher early'));
+ r.walkTo([39,2.4,0],{maxFrames:300});r.charge();r.releaseJump();report.floorWithoutArrow=attempt();
+ reset(36.8,2.52);run(c.hit(launcher,'lost arrow before neighboring-stack attempt'));
+ // The tallest nearby stack is itself a reusable launch until harvested.
+ const top=named('Bell keeper provisions · upper 2');p.pos.set(47,top.box.max.y+.8,0);p.grounded=false;p.state='air';p.vVel=-1;p.snapRenderInterpolation();
+ r.until(()=>!top.alive&&p.vVel>10,{jumpHeld:true},{maxFrames:100,label:'stomp the neighboring top box'});
+ report.neighborStompWithoutArrow=attempt();
+ reset(127,4.62);r.charge();r.releaseJump();
+ r.until(()=>p.state==='dead',()=>r.steerToward([133.5,5.2,0]),{maxFrames:400,allowDeath:true,label:'unrevealed spillway costs the attempt'});
+ report.unrevealed={state:p.state,position:p.pos.toArray()};
+ l.reset(true);assert.ok(l.crates.every(b=>b.alive));assert.equal(l.crates.filter(b=>b.pending).length,6);assert.ok(l.outlinedSurfaces.every(s=>!s.active));assert.ok(l.spinBridges.every(b=>b.state==='closed'));report.retryRestores=true;
+},{modulePath:'/src/levels/waterfall-climb-bonus.ts',source:m=>m.WATERFALL_CLIMB_BONUS,levelId:'bonus-waterfall-climb',controlFrame:()=>({x:0,z:-1}),maxFrames:8000});
+await writeFile(process.env.WATERFALL_ORDER_OUTPUT||'/tmp/waterfall-crate-order.json',JSON.stringify(report,null,2)+'\n');console.log('PASS Spillway crate order',JSON.stringify(report));

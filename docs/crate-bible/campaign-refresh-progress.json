@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "waterfall-climb",
-  "next_course": "test",
+  "current_course": "test",
+  "next_course": "drowned-crown",
   "courses": [
     {
       "order": 1,
@@ -167,9 +167,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-waterfall-climb",
-        "name": "Bonus: The Hidden Spillway"
+        "name": "Bonus: The Hidden Spillway",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/waterfall-climb/validation.json"
     },
     {
       "order": 10,
@@ -663,6 +665,12 @@
     {
       "id": "tribal-run",
       "bonus": "bonus-tribal-run",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "waterfall-climb",
+      "bonus": "bonus-waterfall-climb",
       "status": "validated",
       "date": "2026-11-14"
     }

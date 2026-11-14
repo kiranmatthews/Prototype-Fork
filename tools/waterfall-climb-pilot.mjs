@@ -14,14 +14,18 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
  }
  function* skate(action){
   const points=action.points;let index=0,braking=false;
-  const max=action.section>=20?15:23;
+  const max=action.section>=20?15:action.name==='Carve uphill into the catch basin'?16:23;
   for(let n=0;n<10000&&index<points.length;n++){
    const target=points[index],dist=c.distance(target),last=index===points.length-1;
+   if(last&&!action.stop&&action.name==='Millrace downhill carve'&&p.pos.z<=-610){index++;break;}
    if(!last){const next=points[index+1],passed=(p.pos.x-target[0])*(next[0]-target[0])+(p.pos.z-target[2])*(next[2]-target[2]);if(passed>0&&dist<Math.max(5,p.speed*.6)){index++;continue;}}
    if(last&&action.stop&&dist<Math.max(12,p.speed*1.45)){index++;break;}
    if(dist<(last&&!action.stop?1.5:3)){index++;continue;}
    if(p.speed>max)braking=true;else if(p.speed<max-2.5)braking=false;
-   const before=p.pos.clone();yield* c.tick({...c.steer(target),jumpHeld:true,grabHeld:braking});c.live(action.name);
+   // Look beyond the millrace lip so its short final waypoint cannot turn
+   // the board sideways immediately before the momentum-preserving ollie.
+   const aim=last&&!action.stop&&action.name==='Millrace downhill carve'?[10,2,-660]:target;
+   const before=p.pos.clone();yield* c.tick({...c.steer(aim),jumpHeld:true,grabHeld:braking});c.live(action.name);
    if(p.freeSkate){metrics.skateFrames++;metrics.skateMetres+=p.pos.distanceTo(before);}
   }
   c.check(index===points.length,action.name+' followed its whole curve');
@@ -50,7 +54,9 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
   const nearest=(point,margin=.9)=>action.target==='Drifting lily'?[m.mesh.position.x,top(),m.mesh.position.z+Math.sign(point[2]-m.mesh.position.z)*(spec.s[2]/2-1.2)]:[Math.max(m.mesh.position.x-spec.s[0]/2+margin,Math.min(m.mesh.position.x+spec.s[0]/2-margin,point[0])),top(),
    Math.max(m.mesh.position.z-spec.s[2]/2+margin,Math.min(m.mesh.position.z+spec.s[2]/2-margin,point[2]))];
   yield* c.walk(action.from,action.name+' boarding point');
-  yield* c.until(()=>Math.abs(top()-action.from[1])<.35&&c.distance(nearest(action.from))<5.6,{}, {label:action.name+' arrives',limit:1600});
+  const approaching=()=>spec.axis==='x'?(action.from[0]-m.mesh.position.x)*m.lastDelta.x>=-.001
+   :spec.axis==='y'?(action.from[1]-top())*m.lastDelta.y>=-.001:true;
+  yield* c.until(()=>Math.abs(top()-action.from[1])<.35&&c.distance(nearest(action.from))<(spec.axis==='x'?4.6:5.6)&&approaching(),{}, {label:action.name+' arrives',limit:1600});
   yield* c.hop(()=>nearest(action.from),action.name+' board',{heightTolerance:.5,tolerance:1});
   c.check(p.groundHit?.mesh===m.mesh||p.groundHit?.moverId===l.movers.indexOf(m),action.name+' actually carries the player');
   metrics.moverRides++;
@@ -91,9 +97,16 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
  }
  for(let index=fromBeat;index<Math.min(route.length,untilBeat);index++){
   const action=route[index];r.report.beat=index;r.report.stage=action.name;
-  if(action.kind==='cache') {if(collect){const box=c.crateNamed(action.target);if(box?.alive)yield* c.hit(box,action.name);}}
+  if(action.kind==='cache') {if(collect){const origin=p.pos.toArray();
+   for(const spec of source.components.filter(q=>q.t==='crate'&&(q.nm===action.target||q.nm?.startsWith(action.target+' ·')))){
+    const box=c.crateNamed(spec.nm);if(box?.alive)yield* c.hit(box,spec.nm);
+   }
+   // A mounting cache sits on the rail's approach side. Stay there instead
+   // of trying to walk through the elevated rail back to the center line.
+   if(route[index+1]?.kind!=='grind')yield* c.walk(origin,action.name+' return to the crossing line');
+  }}
   else if(action.kind==='checkpoint'){
-   const cp=l.checkpoints.find(q=>Math.hypot(q.spawnPos.x-action.to[0],q.spawnPos.z-action.to[2])<.1&&Math.abs(q.spawnPos.y-.1-action.to[1])<.1);
+   const cp=l.checkpoints.find(q=>source.components[q.mesh.userData.editorIdx]?.nm===action.target);
    yield* c.walk([action.to[0]+(p.pos.x>action.to[0]?1.1:-1.1),action.to[1],action.to[2]],action.name+' approach');yield* c.tick({});yield* c.tick({spinHeld:true});yield* c.stepFor(23);c.check(cp.active,action.name+' activates');
   }
   else if(action.kind==='walk')yield* c.walk(action.to,action.name);
@@ -127,9 +140,11 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
 
 export function* runWaterfallBonus(r){
  const c=puzzleControls(r),{p,l}=r,deaths=p.totalDeaths;
- const hit=function*(name){const box=c.crateNamed(name);if(box.alive)yield* c.hit(box,name);};
+ const hit=function*(name){for(const spec of r.source.components.filter(q=>q.t==='crate'&&(q.nm===name||q.nm?.startsWith(name+' ·')))){
+  const box=c.crateNamed(spec.nm);if(box.alive)yield* c.hit(box,spec.nm);
+ }};
  yield* c.stepFor(20);c.check(p.grounded,'Hidden Spillway arrival supported');
- for(const name of ['Arrival parcel','Arrival pair','Arrival pair cap','First wheel supplies'])yield* hit(name);
+ for(const name of ['Arrival parcel','Arrival pair','First wheel supplies'])yield* hit(name);
  const wheel=function*(index,takeoff,landing){
   const b=l.spinBridges[index];yield* c.walk(takeoff,b.component.nm+' approach');
   yield* c.tick({});yield* c.tick({spinHeld:true});
@@ -138,7 +153,7 @@ export function* runWaterfallBonus(r){
   yield* c.hop(landing,b.component.nm+' gap exit');
  };
  yield* wheel(0,[8.2,0,0],[23,1.2,0]);
- for(const name of ['First receiver cache','First receiver pair','First receiver cap'])yield* hit(name);
+ for(const name of ['First receiver cache','First receiver pair'])yield* hit(name);
  yield* c.walk([30.2,1.2,0],'Bell balcony takeoff');yield* c.hop([34.9,2.4,0],'Bell balcony jump');
  yield* c.highArrowBox(c.crateNamed('Bell rope launcher'),c.crateNamed('High bell cache'),'Keeper bell cache above the launcher');
  yield* hit('Bell keeper provisions');
@@ -151,16 +166,17 @@ export function* runWaterfallBonus(r){
  yield* c.until(()=>ferry.mesh.position.x>69,{}, {label:'Ride toward the treasury bank',limit:900});
  yield* c.walk(()=>[ferry.mesh.position.x+2.6,2.4,0],'Ferry exit rim',{settle:0});
  yield* c.hop([79,2.4,0],'Leave the moving ferry');
- for(const name of ['Ferry shore pair','Ferry shore pair cap'])yield* hit(name);
+ yield* hit('Ferry shore pair');
  yield* c.walk([89.1,2.4,0],'First rotten beam takeoff');
  yield* c.hop([94,3.1,0],'Reach the first rotten beam',{airButtons:{spinHeld:true}});
  yield* c.tick({});yield* c.tick({spinHeld:true});
- yield* c.walk([98,3.1,0],'Cross the first rotten beam',{settle:0,buttons:{spinHeld:true}});
+ const cross=function*(target,label){yield* c.until(()=>c.distance(target)<.15,()=>({...c.steer(target,.6),spinHeld:r.frame%18<9}),{label,limit:110});c.check(p.grounded,label+' retains its footing');};
+ yield* cross([98,3.1,0],'Cross the first rotten beam');
  yield* c.hop([102,3.8,0],'Transfer before the beam falls',{airButtons:{spinHeld:true}});
  yield* c.tick({});yield* c.tick({spinHeld:true});
- yield* c.walk([106,3.8,0],'Cross the second rotten beam',{settle:0,buttons:{spinHeld:true}});
+ yield* cross([106,3.8,0],'Cross the second rotten beam');
  yield* c.hop([111,4.5,0],'Reach the safe treasury terrace');
- for(const name of ['Treasury pair','Treasury pair cap','Sluice seal switch'])yield* hit(name);
+ for(const name of ['Treasury pair','Sluice seal switch'])yield* hit(name);
  yield* c.hop([124,4.5,0],'Clear the spent seal switch');yield* c.walk([127,4.5,0],'Revealed stones takeoff');
  for(const [index,[x,y]]of [[133.5,5.2],[141.5,6]].entries()){
   yield* c.hop([x-1.1,y,0],`Revealed spillway leap ${index+1}`,{airButtons:{spinHeld:true}});
@@ -168,7 +184,7 @@ export function* runWaterfallBonus(r){
   yield* c.walk([x+1.5,y,0],`Revealed spillway exit ${index+1}`,{settle:0});
  }
  yield* c.hop([149,6.8,0],'Treasury landing');
- for(const name of ['Treasury lower','Treasury crown','Keeper life','Last spillway parcel'])yield* hit(name);
+ for(const name of ['Treasury lower','Keeper stores','Last spillway parcel'])yield* hit(name);
  yield* c.clearAll('Every Hidden Spillway cache');const finish=yield* c.finish('Return from the Hidden Spillway',{limit:240});
  c.check(p.totalDeaths===deaths,'Bonus traversal concealed a death');return {...finish,deaths:0,cratesBroken:p.cratesBroken,frames:r.frame};
 }

@@ -1,0 +1,199 @@
+{
+  "course": "waterfall-climb",
+  "bonus": "bonus-waterfall-climb",
+  "passed": true,
+  "main": {
+    "cargo": 110,
+    "checkpoints": 10,
+    "bonus": 46,
+    "total": 166,
+    "clusters": 33,
+    "singles": 0,
+    "meanClusterSize": 3.36,
+    "enemies": 2,
+    "enemyKinds": 1,
+    "unchangedEnemyPlacements": true,
+    "supportedCrates": 110,
+    "overhangs": 0,
+    "authoredSectionCounts": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "nativeRouteScope": "two continuous sections joined at the Thunder Pools checkpoint",
+    "river": {
+      "deaths": 0,
+      "beat": 35,
+      "position": [
+        3.8753501078567205,
+        9,
+        -780.9295430889235
+      ],
+      "metrics": {
+        "skateFrames": 1440,
+        "skateMetres": 445.13752231658424,
+        "grindFrames": 807,
+        "grindMetres": 71.18143619236548,
+        "moverRides": 2,
+        "drumLaunches": 0
+      }
+    },
+    "ascent": {
+      "state": "finished",
+      "deaths": 0,
+      "cratesBroken": 76,
+      "totalCrates": 166,
+      "activeCheckpoints": 6,
+      "position": [
+        66.42491981515369,
+        156.1266666691502,
+        -1112.0011502042132
+      ],
+      "frames": 18910,
+      "metrics": {
+        "skateFrames": 1435,
+        "skateMetres": 348.4329424993151,
+        "grindFrames": 760,
+        "grindMetres": 64.94637684858334,
+        "moverRides": 3,
+        "drumLaunches": 4
+      }
+    },
+    "separateHarvestScenarios": 33,
+    "harvested": 110,
+    "patrolProbes": 60
+  },
+  "bonus_result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 46,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "deaths": 0,
+    "cratesBroken": 46,
+    "frames": 4452
+  },
+  "order": {
+    "floorWithoutArrow": {
+      "maxContact": 9.946148715852896,
+      "rewardBase": 13.8,
+      "rewardAlive": true
+    },
+    "neighborStompWithoutArrow": {
+      "maxContact": 10.603844035854085,
+      "rewardBase": 13.8,
+      "rewardAlive": true
+    },
+    "unrevealed": {
+      "state": "dead",
+      "position": [
+        133.45000000000024,
+        -2.687499976158148,
+        0
+      ]
+    },
+    "retryRestores": true
+  },
+  "geometry": [
+    {
+      "name": "waterfall-climb",
+      "unchangedComponents": 845,
+      "sha256": "aac0c41198dc40a1ef0cf1e191452ef9c08d5aa898e26bb3c8a84824720d9ddd",
+      "sourceBefore": "eaeb6f59",
+      "retainedEnemyPlacements": 2,
+      "removedEnemies": 0
+    },
+    {
+      "name": "waterfall-climb-bonus",
+      "unchangedComponents": 124,
+      "sha256": "519ff1d499feb0f5ad94bf5c874a017d147927b1bbf7a9d7eeafc2728ab4b206",
+      "sourceBefore": "eaeb6f59",
+      "identicalBoxDimensionsWithWorkingOutline": 2
+    }
+  ],
+  "browser": [
+    {
+      "mode": "main-lite",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "main-full",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "bonus-full",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "bonus-lite",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "visual_review": {
+    "passed": true,
+    "resolution": [
+      1280,
+      720
+    ],
+    "views": [
+      "main-full-opening",
+      "main-full-waterwheel",
+      "main-full-bells",
+      "main-full-summit",
+      "bonus-full-arrival",
+      "bonus-full-high-bell",
+      "bonus-full-sealed-gallery",
+      "bonus-full-revealed-gallery"
+    ],
+    "notes": "All eight full-render views and both lite finishes inspected; clean consoles."
+  },
+  "checks": {
+    "npm run check:levels": "passed",
+    "npm run build": "passed",
+    "npm run check:release": {
+      "passed": true,
+      "bytes": 952666803,
+      "budget": 1000000000
+    },
+    "build_version": "c5254f1e7e79802d61d1",
+    "layoutSupport": "passed",
+    "gameplayFingerprint": "updated only for the authorized crate and outline changes; unchanged geometry proven separately",
+    "git diff --check": "passed"
+  },
+  "limitations": [
+    "The main route is tested as two continuous sections, with the ascent starting at the existing Thunder Pools checkpoint; no single continuous main all-box run is claimed.",
+    "The main browser covers the continuous opening through the first checkpoint, a staged kill-plane fall with recovery, and a separately staged finish. Full-render views use supported staged positions.",
+    "The camera-line audit misassigns sections on the stacked, reversing ascent. The authored action-order check proves eleven sections of ten cargo crates each.",
+    "The static reach heuristic flags the high bell reward as unsupported and its arrow as targetless; native and browser input runs prove the held-arrow/double-jump connection. Removing the arrow defeats the tested floor and neighboring-stomp attempts.",
+    "Standalone bonus previews award their own gem. Actual bonus mode banks its count toward the parent tally.",
+    "The negative switch test records entry into the dead state before a life charge; no counter increment is claimed."
+  ],
+  "harness_notes": [
+    "Crate groups are fully harvested before returning to the crossing line; mounting caches remain on their approach side of a rail.",
+    "Ferry boarding waits for an approaching deck. Millrace input looks beyond the lip, takes off earlier and brakes for the uphill bends. Movement and geometry remain unchanged.",
+    "Checkpoint lookup uses its editor identity because cluster enlargement can slightly move runtime checkpoint crates.",
+    "The browser pilot advances on physics steps. Repeated spin presses and continuous movement clear the original 2.1-second crumble window.",
+    "A full-render attempt interrupted by a development reload after test edits was rejected and recaptured."
+  ],
+  "timing": {
+    "started_at_approximate": "2026-11-14T08:16:00+00:00",
+    "layout_stable_at_approximate": "2026-11-14T08:23:00+00:00",
+    "validated_at": "2026-11-14T08:43:18.312602+00:00",
+    "elapsed_minutes_approximate": 27.3,
+    "requested_main_minutes": 15,
+    "requested_bonus_minutes": 5,
+    "budget_exceeded": true
+  }
+}

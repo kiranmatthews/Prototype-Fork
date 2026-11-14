@@ -1,0 +1,2308 @@
+{
+  "actions": [
+    {
+      "name": "Jump toward the left cascade takeoff",
+      "firstFrame": 20,
+      "lastFrame": 162
+    },
+    {
+      "name": "Jump toward the left cascade",
+      "firstFrame": 189,
+      "lastFrame": 301
+    },
+    {
+      "name": "Rise above the whitewater takeoff",
+      "firstFrame": 301,
+      "lastFrame": 434
+    },
+    {
+      "name": "Rise above the whitewater",
+      "firstFrame": 461,
+      "lastFrame": 497
+    },
+    {
+      "name": "approach PREPARE / Pool keeper mask",
+      "firstFrame": 497,
+      "lastFrame": 607
+    },
+    {
+      "name": "PREPARE / Pool keeper mask",
+      "firstFrame": 627,
+      "lastFrame": 627
+    },
+    {
+      "name": "PREPARE / Pool keeper mask return to the crossing line",
+      "firstFrame": 649,
+      "lastFrame": 759
+    },
+    {
+      "name": "Find the narrow dry log takeoff",
+      "firstFrame": 777,
+      "lastFrame": 936
+    },
+    {
+      "name": "Find the narrow dry log",
+      "firstFrame": 963,
+      "lastFrame": 1002
+    },
+    {
+      "name": "Reach the lock keeper takeoff",
+      "firstFrame": 1002,
+      "lastFrame": 1173
+    },
+    {
+      "name": "Reach the lock keeper",
+      "firstFrame": 1200,
+      "lastFrame": 1236
+    },
+    {
+      "name": "Upper pool hopper safe approach",
+      "firstFrame": 1236,
+      "lastFrame": 1351
+    },
+    {
+      "name": "Upper pool hopper defeat",
+      "firstFrame": 1369,
+      "lastFrame": 1409
+    },
+    {
+      "name": "approach Upper pool cache",
+      "firstFrame": 1433,
+      "lastFrame": 1506
+    },
+    {
+      "name": "Upper pool cache",
+      "firstFrame": 1526,
+      "lastFrame": 1526
+    },
+    {
+      "name": "Upper pool cache return to the crossing line",
+      "firstFrame": 1548,
+      "lastFrame": 1620
+    },
+    {
+      "name": "Spin across the last river lock takeoff",
+      "firstFrame": 1638,
+      "lastFrame": 1742
+    },
+    {
+      "name": "Spin across the last river lock opens",
+      "firstFrame": 1744,
+      "lastFrame": 1763
+    },
+    {
+      "name": "Spin across the last river lock cross the timed leaf",
+      "firstFrame": 1763,
+      "lastFrame": 1900
+    },
+    {
+      "name": "Spin across the last river lock leave the leaf",
+      "firstFrame": 1927,
+      "lastFrame": 1966
+    },
+    {
+      "name": "Waterfall root-bank arrival takeoff",
+      "firstFrame": 1966,
+      "lastFrame": 2088
+    },
+    {
+      "name": "Waterfall root-bank arrival",
+      "firstFrame": 2115,
+      "lastFrame": 2230
+    },
+    {
+      "name": "approach REWARD / Thunder root-bank stores",
+      "firstFrame": 2230,
+      "lastFrame": 2334
+    },
+    {
+      "name": "REWARD / Thunder root-bank stores",
+      "firstFrame": 2354,
+      "lastFrame": 2354
+    },
+    {
+      "name": "REWARD / Thunder root-bank stores return to the crossing line",
+      "firstFrame": 2376,
+      "lastFrame": 2479
+    },
+    {
+      "name": "Root bank toward the thunder dismount",
+      "firstFrame": 3026,
+      "lastFrame": 3099
+    },
+    {
+      "name": "Root bank toward the thunder dismount release the held charge",
+      "firstFrame": 3100,
+      "lastFrame": 3139
+    },
+    {
+      "name": "Root bank toward the thunder bank arrival",
+      "firstFrame": 3147,
+      "lastFrame": 3356
+    },
+    {
+      "name": "Foot of the falls checkpoint approach",
+      "firstFrame": 3356,
+      "lastFrame": 3533
+    },
+    {
+      "name": "approach Thunder basin stores",
+      "firstFrame": 3576,
+      "lastFrame": 3659
+    },
+    {
+      "name": "Thunder basin stores",
+      "firstFrame": 3679,
+      "lastFrame": 3679
+    },
+    {
+      "name": "Thunder basin stores return to the crossing line",
+      "firstFrame": 3701,
+      "lastFrame": 3783
+    },
+    {
+      "name": "Follow the basin toward the gatehouse",
+      "firstFrame": 3801,
+      "lastFrame": 4208
+    },
+    {
+      "name": "Step behind the spray takeoff",
+      "firstFrame": 4226,
+      "lastFrame": 4300
+    },
+    {
+      "name": "Step behind the spray",
+      "firstFrame": 4327,
+      "lastFrame": 4366
+    },
+    {
+      "name": "Climb the first tooth takeoff",
+      "firstFrame": 4366,
+      "lastFrame": 4477
+    },
+    {
+      "name": "Climb the first tooth",
+      "firstFrame": 4504,
+      "lastFrame": 4539
+    },
+    {
+      "name": "Cross the short notch takeoff",
+      "firstFrame": 4539,
+      "lastFrame": 4642
+    },
+    {
+      "name": "Cross the short notch",
+      "firstFrame": 4669,
+      "lastFrame": 4704
+    },
+    {
+      "name": "Reach the tall pier takeoff",
+      "firstFrame": 4704,
+      "lastFrame": 4799
+    },
+    {
+      "name": "Reach the tall pier",
+      "firstFrame": 4826,
+      "lastFrame": 4859
+    },
+    {
+      "name": "Jump and spin the rising hinge takeoff",
+      "firstFrame": 4859,
+      "lastFrame": 4981
+    },
+    {
+      "name": "Jump and spin the rising hinge air activation",
+      "firstFrame": 5008,
+      "lastFrame": 5042
+    },
+    {
+      "name": "Jump and spin the rising hinge cross the timed leaf",
+      "firstFrame": 5042,
+      "lastFrame": 5152
+    },
+    {
+      "name": "Jump and spin the rising hinge leave the leaf",
+      "firstFrame": 5179,
+      "lastFrame": 5218
+    },
+    {
+      "name": "approach Gatehouse hinge parcel",
+      "firstFrame": 5218,
+      "lastFrame": 5310
+    },
+    {
+      "name": "Gatehouse hinge parcel",
+      "firstFrame": 5330,
+      "lastFrame": 5330
+    },
+    {
+      "name": "Gatehouse hinge parcel return to the crossing line",
+      "firstFrame": 5352,
+      "lastFrame": 5443
+    },
+    {
+      "name": "Leave the hinge balcony takeoff",
+      "firstFrame": 5461,
+      "lastFrame": 5578
+    },
+    {
+      "name": "Leave the hinge balcony",
+      "firstFrame": 5605,
+      "lastFrame": 5639
+    },
+    {
+      "name": "Climb beside the carved head takeoff",
+      "firstFrame": 5639,
+      "lastFrame": 5733
+    },
+    {
+      "name": "Climb beside the carved head",
+      "firstFrame": 5760,
+      "lastFrame": 5793
+    },
+    {
+      "name": "Turn at the narrow end takeoff",
+      "firstFrame": 5793,
+      "lastFrame": 5887
+    },
+    {
+      "name": "Turn at the narrow end",
+      "firstFrame": 5914,
+      "lastFrame": 5948
+    },
+    {
+      "name": "Rise onto the return balcony takeoff",
+      "firstFrame": 5948,
+      "lastFrame": 6038
+    },
+    {
+      "name": "Rise onto the return balcony",
+      "firstFrame": 6065,
+      "lastFrame": 6099
+    },
+    {
+      "name": "Cross the broad upper balcony",
+      "firstFrame": 6099,
+      "lastFrame": 6262
+    },
+    {
+      "name": "approach Gatehouse upper cache",
+      "firstFrame": 6280,
+      "lastFrame": 6353
+    },
+    {
+      "name": "Gatehouse upper cache",
+      "firstFrame": 6373,
+      "lastFrame": 6373
+    },
+    {
+      "name": "Gatehouse upper cache return to the crossing line",
+      "firstFrame": 6395,
+      "lastFrame": 6467
+    },
+    {
+      "name": "Read the next crossing",
+      "firstFrame": 6485,
+      "lastFrame": 6685
+    },
+    {
+      "name": "Read the next crossing",
+      "firstFrame": 6703,
+      "lastFrame": 6794
+    },
+    {
+      "name": "Waterwheel checkpoint approach",
+      "firstFrame": 6812,
+      "lastFrame": 6891
+    },
+    {
+      "name": "approach COUNT / Waterwheel boarding stores",
+      "firstFrame": 6934,
+      "lastFrame": 7035
+    },
+    {
+      "name": "COUNT / Waterwheel boarding stores",
+      "firstFrame": 7055,
+      "lastFrame": 7055
+    },
+    {
+      "name": "COUNT / Waterwheel boarding stores return to the crossing line",
+      "firstFrame": 7077,
+      "lastFrame": 7178
+    },
+    {
+      "name": "Great waterwheel lift boarding point",
+      "firstFrame": 7196,
+      "lastFrame": 7292
+    },
+    {
+      "name": "Great waterwheel lift arrives",
+      "firstFrame": 7310,
+      "lastFrame": 7827
+    },
+    {
+      "name": "Great waterwheel lift board",
+      "firstFrame": 7854,
+      "lastFrame": 7892
+    },
+    {
+      "name": "Great waterwheel lift stand on the moving deck",
+      "firstFrame": 7892,
+      "lastFrame": 7968
+    },
+    {
+      "name": "Great waterwheel lift exit edge",
+      "firstFrame": 7968,
+      "lastFrame": 8028
+    },
+    {
+      "name": "Great waterwheel lift reach the exit",
+      "firstFrame": 8028,
+      "lastFrame": 8213
+    },
+    {
+      "name": "Great waterwheel lift disembark",
+      "firstFrame": 8240,
+      "lastFrame": 8279
+    },
+    {
+      "name": "approach Waterwheel lookout cache",
+      "firstFrame": 8279,
+      "lastFrame": 8408
+    },
+    {
+      "name": "Waterwheel lookout cache",
+      "firstFrame": 8428,
+      "lastFrame": 8428
+    },
+    {
+      "name": "Waterwheel lookout cache return to the crossing line",
+      "firstFrame": 8450,
+      "lastFrame": 8579
+    },
+    {
+      "name": "approach REWARD / Waterwheel upper stores",
+      "firstFrame": 8597,
+      "lastFrame": 8759
+    },
+    {
+      "name": "REWARD / Waterwheel upper stores",
+      "firstFrame": 8779,
+      "lastFrame": 8779
+    },
+    {
+      "name": "REWARD / Waterwheel upper stores return to the crossing line",
+      "firstFrame": 8801,
+      "lastFrame": 8963
+    },
+    {
+      "name": "Hanging aqueduct checkpoint approach",
+      "firstFrame": 8981,
+      "lastFrame": 9126
+    },
+    {
+      "name": "approach COUNT / Aqueduct boarding stores",
+      "firstFrame": 9169,
+      "lastFrame": 9238
+    },
+    {
+      "name": "COUNT / Aqueduct boarding stores",
+      "firstFrame": 9258,
+      "lastFrame": 9258
+    },
+    {
+      "name": "COUNT / Aqueduct boarding stores return to the crossing line",
+      "firstFrame": 9280,
+      "lastFrame": 9348
+    },
+    {
+      "name": "Face the rising aqueduct",
+      "firstFrame": 9366,
+      "lastFrame": 9422
+    },
+    {
+      "name": "Aqueduct rising skate arc dismount",
+      "firstFrame": 9935,
+      "lastFrame": 9972
+    },
+    {
+      "name": "Aqueduct rising skate arc dismount release the held charge",
+      "firstFrame": 9973,
+      "lastFrame": 10012
+    },
+    {
+      "name": "Aqueduct rising skate arc bank arrival",
+      "firstFrame": 10020,
+      "lastFrame": 10154
+    },
+    {
+      "name": "approach Aqueduct bank parcel",
+      "firstFrame": 10154,
+      "lastFrame": 10220
+    },
+    {
+      "name": "Aqueduct bank parcel",
+      "firstFrame": 10240,
+      "lastFrame": 10240
+    },
+    {
+      "name": "Aqueduct bank parcel return to the crossing line",
+      "firstFrame": 10262,
+      "lastFrame": 10350
+    },
+    {
+      "name": "Aqueduct uphill return dismount",
+      "firstFrame": 10878,
+      "lastFrame": 10922
+    },
+    {
+      "name": "Aqueduct uphill return dismount release the held charge",
+      "firstFrame": 10923,
+      "lastFrame": 10962
+    },
+    {
+      "name": "Aqueduct uphill return bank arrival",
+      "firstFrame": 10970,
+      "lastFrame": 11099
+    },
+    {
+      "name": "approach TEST / Aqueduct mounting stores",
+      "firstFrame": 11099,
+      "lastFrame": 11154
+    },
+    {
+      "name": "TEST / Aqueduct mounting stores",
+      "firstFrame": 11174,
+      "lastFrame": 11174
+    },
+    {
+      "name": "Aqueduct crown rail mount",
+      "firstFrame": 11196,
+      "lastFrame": 11276
+    },
+    {
+      "name": "Aqueduct crown rail rail contact",
+      "firstFrame": 11327,
+      "lastFrame": 11328
+    },
+    {
+      "name": "Aqueduct crown rail full grind",
+      "firstFrame": 11328,
+      "lastFrame": 12088
+    },
+    {
+      "name": "Aqueduct crown rail dismount landing",
+      "firstFrame": 12090,
+      "lastFrame": 12119
+    },
+    {
+      "name": "Aqueduct crown rail safe bank stop",
+      "firstFrame": 12119,
+      "lastFrame": 12185
+    },
+    {
+      "name": "Aqueduct crown rail safe bank stop release the held charge",
+      "firstFrame": 12186,
+      "lastFrame": 12225
+    },
+    {
+      "name": "Bell tower checkpoint approach",
+      "firstFrame": 12233,
+      "lastFrame": 12382
+    },
+    {
+      "name": "Lower bell drum rim approach",
+      "firstFrame": 12425,
+      "lastFrame": 12539
+    },
+    {
+      "name": "Lower bell drum spring contact",
+      "firstFrame": 12584,
+      "lastFrame": 12623
+    },
+    {
+      "name": "Lower bell drum clear the receiving shelf",
+      "firstFrame": 12623,
+      "lastFrame": 12652
+    },
+    {
+      "name": "Lower bell drum high landing",
+      "firstFrame": 12652,
+      "lastFrame": 12718
+    },
+    {
+      "name": "approach Lower bell reward",
+      "firstFrame": 12722,
+      "lastFrame": 12823
+    },
+    {
+      "name": "Lower bell reward",
+      "firstFrame": 12843,
+      "lastFrame": 12843
+    },
+    {
+      "name": "Lower bell reward return to the crossing line",
+      "firstFrame": 12865,
+      "lastFrame": 12965
+    },
+    {
+      "name": "Activate the bell keeper crossing takeoff",
+      "firstFrame": 12983,
+      "lastFrame": 13111
+    },
+    {
+      "name": "Activate the bell keeper crossing opens",
+      "firstFrame": 13113,
+      "lastFrame": 13132
+    },
+    {
+      "name": "Activate the bell keeper crossing cross the timed leaf",
+      "firstFrame": 13132,
+      "lastFrame": 13265
+    },
+    {
+      "name": "Activate the bell keeper crossing leave the leaf",
+      "firstFrame": 13292,
+      "lastFrame": 13331
+    },
+    {
+      "name": "Middle bell drum rim approach",
+      "firstFrame": 13331,
+      "lastFrame": 13436
+    },
+    {
+      "name": "Middle bell drum spring contact",
+      "firstFrame": 13481,
+      "lastFrame": 13520
+    },
+    {
+      "name": "Middle bell drum clear the receiving shelf",
+      "firstFrame": 13520,
+      "lastFrame": 13549
+    },
+    {
+      "name": "Middle bell drum high landing",
+      "firstFrame": 13549,
+      "lastFrame": 13615
+    },
+    {
+      "name": "approach Middle bell reward",
+      "firstFrame": 13619,
+      "lastFrame": 13721
+    },
+    {
+      "name": "Middle bell reward",
+      "firstFrame": 13741,
+      "lastFrame": 13741
+    },
+    {
+      "name": "Middle bell reward return to the crossing line",
+      "firstFrame": 13763,
+      "lastFrame": 13864
+    },
+    {
+      "name": "Upper bell drum rim approach",
+      "firstFrame": 13882,
+      "lastFrame": 13990
+    },
+    {
+      "name": "Upper bell drum spring contact",
+      "firstFrame": 14035,
+      "lastFrame": 14074
+    },
+    {
+      "name": "Upper bell drum clear the receiving shelf",
+      "firstFrame": 14074,
+      "lastFrame": 14103
+    },
+    {
+      "name": "Upper bell drum high landing",
+      "firstFrame": 14103,
+      "lastFrame": 14169
+    },
+    {
+      "name": "approach REWARD / Upper bell stores",
+      "firstFrame": 14173,
+      "lastFrame": 14263
+    },
+    {
+      "name": "REWARD / Upper bell stores",
+      "firstFrame": 14283,
+      "lastFrame": 14283
+    },
+    {
+      "name": "REWARD / Upper bell stores return to the crossing line",
+      "firstFrame": 14305,
+      "lastFrame": 14394
+    },
+    {
+      "name": "Read the next crossing",
+      "firstFrame": 14412,
+      "lastFrame": 14699
+    },
+    {
+      "name": "Cloud rest checkpoint approach",
+      "firstFrame": 14717,
+      "lastFrame": 14826
+    },
+    {
+      "name": "approach Cloud rest stores",
+      "firstFrame": 14869,
+      "lastFrame": 14964
+    },
+    {
+      "name": "Cloud rest stores",
+      "firstFrame": 14984,
+      "lastFrame": 14984
+    },
+    {
+      "name": "Cloud rest stores return to the crossing line",
+      "firstFrame": 15006,
+      "lastFrame": 15100
+    },
+    {
+      "name": "Leave cloud rest takeoff",
+      "firstFrame": 15118,
+      "lastFrame": 15248
+    },
+    {
+      "name": "Leave cloud rest",
+      "firstFrame": 15275,
+      "lastFrame": 15309
+    },
+    {
+      "name": "Land on the rotten beam takeoff",
+      "firstFrame": 15309,
+      "lastFrame": 15418
+    },
+    {
+      "name": "Land on the rotten beam",
+      "firstFrame": 15445,
+      "lastFrame": 15480
+    },
+    {
+      "name": "Spin before the beam gives way takeoff",
+      "firstFrame": 15480,
+      "lastFrame": 15574
+    },
+    {
+      "name": "Spin before the beam gives way air activation",
+      "firstFrame": 15601,
+      "lastFrame": 15634
+    },
+    {
+      "name": "Spin before the beam gives way cross the timed leaf",
+      "firstFrame": 15634,
+      "lastFrame": 15743
+    },
+    {
+      "name": "Spin before the beam gives way leave the leaf",
+      "firstFrame": 15770,
+      "lastFrame": 15809
+    },
+    {
+      "name": "approach Crown refuge supplies",
+      "firstFrame": 15809,
+      "lastFrame": 15891
+    },
+    {
+      "name": "Crown refuge supplies",
+      "firstFrame": 15911,
+      "lastFrame": 15911
+    },
+    {
+      "name": "Crown refuge supplies return to the crossing line",
+      "firstFrame": 15933,
+      "lastFrame": 16015
+    },
+    {
+      "name": "Crown counterweight step boarding point",
+      "firstFrame": 16033,
+      "lastFrame": 16148
+    },
+    {
+      "name": "Crown counterweight step arrives",
+      "firstFrame": 16166,
+      "lastFrame": 16383
+    },
+    {
+      "name": "Crown counterweight step board",
+      "firstFrame": 16410,
+      "lastFrame": 16448
+    },
+    {
+      "name": "Crown counterweight step stand on the moving deck",
+      "firstFrame": 16448,
+      "lastFrame": 16512
+    },
+    {
+      "name": "Crown counterweight step exit edge",
+      "firstFrame": 16512,
+      "lastFrame": 16561
+    },
+    {
+      "name": "Crown counterweight step reach the exit",
+      "firstFrame": 16561,
+      "lastFrame": 16597
+    },
+    {
+      "name": "Crown counterweight step disembark",
+      "firstFrame": 16624,
+      "lastFrame": 16663
+    },
+    {
+      "name": "approach TEST / Counterweight rest stores",
+      "firstFrame": 16663,
+      "lastFrame": 16749
+    },
+    {
+      "name": "TEST / Counterweight rest stores",
+      "firstFrame": 16769,
+      "lastFrame": 16769
+    },
+    {
+      "name": "TEST / Counterweight rest stores return to the crossing line",
+      "firstFrame": 16791,
+      "lastFrame": 16877
+    },
+    {
+      "name": "Crown counterweight return boarding point",
+      "firstFrame": 16895,
+      "lastFrame": 17007
+    },
+    {
+      "name": "Crown counterweight return arrives",
+      "firstFrame": 17025,
+      "lastFrame": 17049
+    },
+    {
+      "name": "Crown counterweight return board",
+      "firstFrame": 17076,
+      "lastFrame": 17114
+    },
+    {
+      "name": "Crown counterweight return stand on the moving deck",
+      "firstFrame": 17114,
+      "lastFrame": 17178
+    },
+    {
+      "name": "Crown counterweight return exit edge",
+      "firstFrame": 17178,
+      "lastFrame": 17215
+    },
+    {
+      "name": "Crown counterweight return reach the exit",
+      "firstFrame": 17215,
+      "lastFrame": 17263
+    },
+    {
+      "name": "Crown counterweight return disembark",
+      "firstFrame": 17290,
+      "lastFrame": 17329
+    },
+    {
+      "name": "Last spray checkpoint approach",
+      "firstFrame": 17329,
+      "lastFrame": 17417
+    },
+    {
+      "name": "approach COUNT / Last spray stores",
+      "firstFrame": 17460,
+      "lastFrame": 17579
+    },
+    {
+      "name": "COUNT / Last spray stores",
+      "firstFrame": 17599,
+      "lastFrame": 17599
+    },
+    {
+      "name": "COUNT / Last spray stores return to the crossing line",
+      "firstFrame": 17621,
+      "lastFrame": 17719
+    },
+    {
+      "name": "Last spray drum rim approach",
+      "firstFrame": 17737,
+      "lastFrame": 17824
+    },
+    {
+      "name": "Last spray drum spring contact",
+      "firstFrame": 17869,
+      "lastFrame": 17908
+    },
+    {
+      "name": "Last spray drum clear the receiving shelf",
+      "firstFrame": 17908,
+      "lastFrame": 17937
+    },
+    {
+      "name": "Last spray drum high landing",
+      "firstFrame": 17937,
+      "lastFrame": 18003
+    },
+    {
+      "name": "approach REWARD / Summit landing stores",
+      "firstFrame": 18007,
+      "lastFrame": 18099
+    },
+    {
+      "name": "REWARD / Summit landing stores",
+      "firstFrame": 18119,
+      "lastFrame": 18119
+    },
+    {
+      "name": "REWARD / Summit landing stores return to the crossing line",
+      "firstFrame": 18141,
+      "lastFrame": 18232
+    },
+    {
+      "name": "approach Source pool final cache",
+      "firstFrame": 18250,
+      "lastFrame": 18412
+    },
+    {
+      "name": "Source pool final cache",
+      "firstFrame": 18432,
+      "lastFrame": 18432
+    },
+    {
+      "name": "Source pool final cache return to the crossing line",
+      "firstFrame": 18454,
+      "lastFrame": 18615
+    },
+    {
+      "name": "Reach the source pool crystal",
+      "firstFrame": 18633,
+      "lastFrame": 18840
+    },
+    {
+      "name": "Cross the summit finish gate",
+      "firstFrame": 18858,
+      "lastFrame": 18910
+    }
+  ],
+  "evidence": [
+    {
+      "action": "Jump toward the left cascade",
+      "launch": [
+        -2.930133333333337,
+        9,
+        -788.9155
+      ],
+      "landing": [
+        -2.9683561155851144,
+        9.6,
+        -793.5366119587239
+      ],
+      "ground": "Pool one stone"
+    },
+    {
+      "action": "action complete",
+      "index": 36,
+      "name": "Jump toward the left cascade",
+      "kind": "jump",
+      "position": [
+        -2.9683561155851144,
+        9.6,
+        -793.5366119587239
+      ]
+    },
+    {
+      "action": "Rise above the whitewater",
+      "launch": [
+        -2.9953561155851154,
+        9.6,
+        -802.8831119587264
+      ],
+      "landing": [
+        -2.073642426308452,
+        10.8,
+        -806.5110730651613
+      ],
+      "ground": "Pool two stone"
+    },
+    {
+      "action": "action complete",
+      "index": 37,
+      "name": "Rise above the whitewater",
+      "kind": "jump",
+      "position": [
+        -2.073642426308452,
+        10.8,
+        -806.5110730651613
+      ]
+    },
+    {
+      "action": "PREPARE / Pool keeper mask",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 38,
+      "name": "PREPARE / Pool keeper mask",
+      "kind": "cache",
+      "position": [
+        -2.0743379268931057,
+        10.8,
+        -806.5739500183761
+      ]
+    },
+    {
+      "action": "Find the narrow dry log",
+      "launch": [
+        0.9734954064402275,
+        10.8,
+        -818.8919833517127
+      ],
+      "landing": [
+        1.9404975210599555,
+        10.800000023841859,
+        -822.7639144888358
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "action complete",
+      "index": 39,
+      "name": "Find the narrow dry log",
+      "kind": "jump",
+      "position": [
+        1.9404975210599555,
+        10.800000023841859,
+        -822.7639144888358
+      ]
+    },
+    {
+      "action": "Reach the lock keeper",
+      "launch": [
+        2.988997521059952,
+        10.800000023841859,
+        -836.8969144888404
+      ],
+      "landing": [
+        2.991302020475298,
+        12,
+        -842.023944100316
+      ],
+      "ground": "Upper pool bank"
+    },
+    {
+      "action": "action complete",
+      "index": 40,
+      "name": "Reach the lock keeper",
+      "kind": "jump",
+      "position": [
+        2.991302020475298,
+        12,
+        -842.023944100316
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 41,
+      "name": "Upper pool hopper",
+      "kind": "enemy",
+      "position": [
+        3.0470365861817617,
+        12,
+        -848.9724327809299
+      ]
+    },
+    {
+      "action": "Upper pool cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 42,
+      "name": "Upper pool cache",
+      "kind": "cache",
+      "position": [
+        2.9735699195150938,
+        12,
+        -848.97673278093
+      ]
+    },
+    {
+      "action": "Spin across the last river lock leave the leaf",
+      "launch": [
+        2.999241085597106,
+        11.999999997615815,
+        -864.4853002721641
+      ],
+      "landing": [
+        2.999241085597106,
+        12,
+        -867.9652447166081
+      ],
+      "ground": "Thunder sluice receiver"
+    },
+    {
+      "action": "Spin across the last river lock",
+      "verb": "timed spin",
+      "remaining": 2.0033333333333454
+    },
+    {
+      "action": "action complete",
+      "index": 43,
+      "name": "Spin across the last river lock",
+      "kind": "spin",
+      "position": [
+        2.999241085597106,
+        12,
+        -867.9652447166081
+      ]
+    },
+    {
+      "action": "Waterfall root-bank arrival",
+      "launch": [
+        2.999241085597106,
+        12,
+        -875.8897447166103
+      ],
+      "landing": [
+        0.24328917061034247,
+        12,
+        -880.6559779861376
+      ],
+      "ground": "Gorge root foot"
+    },
+    {
+      "action": "action complete",
+      "index": 44,
+      "name": "Waterfall root-bank arrival",
+      "kind": "jump",
+      "position": [
+        0.24328917061034247,
+        12,
+        -880.6559779861376
+      ]
+    },
+    {
+      "action": "REWARD / Thunder root-bank stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 45,
+      "name": "REWARD / Thunder root-bank stores",
+      "kind": "cache",
+      "position": [
+        0.21489012052251044,
+        12,
+        -880.7327226038274
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 46,
+      "name": "Root bank toward the thunder",
+      "kind": "skate",
+      "position": [
+        0.02461622283877883,
+        12,
+        -1075.8983704503205
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 47,
+      "name": "Foot of the falls checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        1.0956162228387785,
+        12,
+        -1089.9229444444447
+      ]
+    },
+    {
+      "action": "Thunder basin stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 48,
+      "name": "Thunder basin stores",
+      "kind": "cache",
+      "position": [
+        1.1697275071956246,
+        12,
+        -1089.9509768278658
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 49,
+      "name": "Hidden spillway entrance",
+      "kind": "bonus",
+      "position": [
+        1.1697275071956246,
+        12,
+        -1089.9509768278658
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 50,
+      "name": "Follow the basin toward the gatehouse",
+      "kind": "walk",
+      "position": [
+        -40.936221694549715,
+        12,
+        -1103.9788194569567
+      ]
+    },
+    {
+      "action": "Step behind the spray",
+      "launch": [
+        -40.996821694549716,
+        12,
+        -1105.8987527902907
+      ],
+      "landing": [
+        -41.98554015372026,
+        12,
+        -1107.969787811339
+      ],
+      "ground": "Gatehouse threshold"
+    },
+    {
+      "action": "action complete",
+      "index": 51,
+      "name": "Step behind the spray",
+      "kind": "jump",
+      "position": [
+        -41.98554015372026,
+        12,
+        -1107.969787811339
+      ]
+    },
+    {
+      "action": "Climb the first tooth",
+      "launch": [
+        -36.8765401537202,
+        12,
+        -1111.937287811339
+      ],
+      "landing": [
+        -33.13490851246853,
+        13.5,
+        -1111.9617220113578
+      ],
+      "ground": "Gatehouse first tooth"
+    },
+    {
+      "action": "action complete",
+      "index": 52,
+      "name": "Climb the first tooth",
+      "kind": "jump",
+      "position": [
+        -33.13490851246853,
+        13.5,
+        -1111.9617220113578
+      ]
+    },
+    {
+      "action": "Cross the short notch",
+      "launch": [
+        -27.61487517913516,
+        13.5,
+        -1111.9965553446916
+      ],
+      "landing": [
+        -22.37230768790502,
+        15,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse second tooth"
+    },
+    {
+      "action": "action complete",
+      "index": 53,
+      "name": "Cross the short notch",
+      "kind": "jump",
+      "position": [
+        -22.37230768790502,
+        15,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Reach the tall pier",
+      "launch": [
+        -17.906374354571664,
+        15,
+        -1111.9988598441068
+      ],
+      "landing": [
+        -13.662929910127236,
+        16.9,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse tall pier"
+    },
+    {
+      "action": "action complete",
+      "index": 54,
+      "name": "Reach the tall pier",
+      "kind": "jump",
+      "position": [
+        -13.662929910127236,
+        16.9,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Jump and spin the rising hinge air activation",
+      "launch": [
+        -5.798429910127243,
+        16.9,
+        -1111.9988598441068
+      ],
+      "landing": [
+        -2.727985465682796,
+        18.599999997615814,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse rising hinge"
+    },
+    {
+      "action": "Jump and spin the rising hinge leave the leaf",
+      "launch": [
+        3.602014534317203,
+        18.599999997615814,
+        -1111.9988598441068
+      ],
+      "landing": [
+        4.767458978761648,
+        18.6,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse hinge receiver"
+    },
+    {
+      "action": "Jump and spin the rising hinge",
+      "verb": "timed spin",
+      "remaining": 3.270000000000011
+    },
+    {
+      "action": "action complete",
+      "index": 55,
+      "name": "Jump and spin the rising hinge",
+      "kind": "spin",
+      "position": [
+        4.767458978761648,
+        18.6,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Gatehouse hinge parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 56,
+      "name": "Gatehouse hinge parcel",
+      "kind": "cache",
+      "position": [
+        4.840125645428325,
+        18.6,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Leave the hinge balcony",
+      "launch": [
+        12.095625645428333,
+        18.6,
+        -1111.9988598441068
+      ],
+      "landing": [
+        16.85957008987278,
+        20.3,
+        -1111.9988598441068
+      ],
+      "ground": "Carved gatehouse shelf"
+    },
+    {
+      "action": "action complete",
+      "index": 57,
+      "name": "Leave the hinge balcony",
+      "kind": "jump",
+      "position": [
+        16.85957008987278,
+        20.3,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Climb beside the carved head",
+      "launch": [
+        21.195470089872806,
+        20.3,
+        -1111.9988598441068
+      ],
+      "landing": [
+        25.84691453431721,
+        22.2,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse upper ledge"
+    },
+    {
+      "action": "action complete",
+      "index": 58,
+      "name": "Climb beside the carved head",
+      "kind": "jump",
+      "position": [
+        25.84691453431721,
+        22.2,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Turn at the narrow end",
+      "launch": [
+        30.190981200983906,
+        22.2,
+        -1111.9988598441068
+      ],
+      "landing": [
+        34.26642564542833,
+        23.8,
+        -1111.9988598441068
+      ],
+      "ground": "Gatehouse turning drum bank"
+    },
+    {
+      "action": "action complete",
+      "index": 59,
+      "name": "Turn at the narrow end",
+      "kind": "jump",
+      "position": [
+        34.26642564542833,
+        23.8,
+        -1111.9988598441068
+      ]
+    },
+    {
+      "action": "Rise onto the return balcony",
+      "launch": [
+        35.95472564542834,
+        23.8,
+        -1115.5050265107743
+      ],
+      "landing": [
+        35.00946420236134,
+        25.4,
+        -1116.8642516215973
+      ],
+      "ground": "Gatehouse upper balcony"
+    },
+    {
+      "action": "action complete",
+      "index": 60,
+      "name": "Rise onto the return balcony",
+      "kind": "jump",
+      "position": [
+        35.00946420236134,
+        25.4,
+        -1116.8642516215973
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 61,
+      "name": "Cross the broad upper balcony",
+      "kind": "walk",
+      "position": [
+        22.072440906566303,
+        25.4,
+        -1119.9808562807561
+      ]
+    },
+    {
+      "action": "Gatehouse upper cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 62,
+      "name": "Gatehouse upper cache",
+      "kind": "cache",
+      "position": [
+        21.995684526447217,
+        25.4,
+        -1119.9851607801716
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 63,
+      "name": "Read the next crossing",
+      "kind": "walk",
+      "position": [
+        4.078240082002767,
+        25.4,
+        -1119.995660780172
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 64,
+      "name": "Read the next crossing",
+      "kind": "walk",
+      "position": [
+        0.07529563755832339,
+        25.4,
+        -1119.995660780172
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 65,
+      "name": "Waterwheel checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -1.8446254024640445,
+        25.4,
+        -1118.3457599134852
+      ]
+    },
+    {
+      "action": "COUNT / Waterwheel boarding stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 66,
+      "name": "COUNT / Waterwheel boarding stores",
+      "kind": "cache",
+      "position": [
+        -1.8086385986775622,
+        25.4,
+        -1118.4054945992214
+      ]
+    },
+    {
+      "action": "Great waterwheel lift board",
+      "launch": [
+        -6.131019603588959,
+        25.4,
+        -1119.9718092438313
+      ],
+      "landing": [
+        -8.874947467983349,
+        25.97719033235817,
+        -1119.9718092438313
+      ],
+      "ground": "moving platform"
+    },
+    {
+      "action": "Great waterwheel lift disembark",
+      "launch": [
+        -14.943291912427798,
+        52.83350734839754,
+        -1119.9931425771651
+      ],
+      "landing": [
+        -16.96714477873537,
+        53.4,
+        -1119.9931425771651
+      ],
+      "ground": "Waterwheel upper dock"
+    },
+    {
+      "action": "action complete",
+      "index": 67,
+      "name": "Great waterwheel lift",
+      "kind": "mover",
+      "position": [
+        -16.96714477873537,
+        53.4,
+        -1119.9931425771651
+      ]
+    },
+    {
+      "action": "Waterwheel lookout cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 68,
+      "name": "Waterwheel lookout cache",
+      "kind": "cache",
+      "position": [
+        -17.031644778735373,
+        53.4,
+        -1119.9961425771653
+      ]
+    },
+    {
+      "action": "REWARD / Waterwheel upper stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 69,
+      "name": "REWARD / Waterwheel upper stores",
+      "kind": "cache",
+      "position": [
+        -17.090941764073683,
+        53.4,
+        -1120.0122233263082
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 70,
+      "name": "Hanging aqueduct checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -27.800866307056463,
+        53.4,
+        -1118.009052000483
+      ]
+    },
+    {
+      "action": "COUNT / Aqueduct boarding stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 71,
+      "name": "COUNT / Aqueduct boarding stores",
+      "kind": "cache",
+      "position": [
+        -27.85049964038977,
+        53.4,
+        -1117.9589853338168
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 72,
+      "name": "Face the rising aqueduct",
+      "kind": "walk",
+      "position": [
+        -27.990137632882103,
+        53.4,
+        -1117.0677953713541
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 73,
+      "name": "Aqueduct rising skate arc",
+      "kind": "skate",
+      "position": [
+        54.904598481765305,
+        67.40071914454987,
+        -1111.9819099980232
+      ]
+    },
+    {
+      "action": "Aqueduct bank parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 74,
+      "name": "Aqueduct bank parcel",
+      "kind": "cache",
+      "position": [
+        54.961531815098645,
+        67.40035974991619,
+        -1111.9435766646907
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 75,
+      "name": "Aqueduct uphill return",
+      "kind": "skate",
+      "position": [
+        -9.903879656594587,
+        77.40062305245995,
+        -1126.0295374066734
+      ]
+    },
+    {
+      "action": "TEST / Aqueduct mounting stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 76,
+      "name": "TEST / Aqueduct mounting stores",
+      "kind": "cache",
+      "position": [
+        -9.903879656594587,
+        77.40573346543952,
+        -1128.9172540014897
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 77,
+      "name": "Aqueduct crown rail",
+      "kind": "grind",
+      "position": [
+        73.14393135872429,
+        77.4,
+        -1126
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 78,
+      "name": "Bell tower checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        62.16811107759075,
+        77.4,
+        -1123.0173145916992
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 79,
+      "name": "Lower bell drum",
+      "kind": "bounce",
+      "position": [
+        46.055244853076054,
+        91.4,
+        -1123.9754517129275
+      ]
+    },
+    {
+      "action": "Lower bell reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 80,
+      "name": "Lower bell reward",
+      "kind": "cache",
+      "position": [
+        45.97941151974272,
+        91.4,
+        -1124.006851712927
+      ]
+    },
+    {
+      "action": "Activate the bell keeper crossing leave the leaf",
+      "launch": [
+        28.11488822394777,
+        91.39999999761582,
+        -1125.9954563720855
+      ],
+      "landing": [
+        27.03373901857033,
+        91.4,
+        -1125.9954563720855
+      ],
+      "ground": "Bell keeper drum bank"
+    },
+    {
+      "action": "Activate the bell keeper crossing",
+      "verb": "timed spin",
+      "remaining": 2.070000000000012
+    },
+    {
+      "action": "action complete",
+      "index": 81,
+      "name": "Activate the bell keeper crossing",
+      "kind": "spin",
+      "position": [
+        27.03373901857033,
+        91.4,
+        -1125.9954563720855
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 82,
+      "name": "Middle bell drum",
+      "kind": "bounce",
+      "position": [
+        12.57236803754122,
+        105.4,
+        -1122.0335458363863
+      ]
+    },
+    {
+      "action": "Middle bell reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 83,
+      "name": "Middle bell reward",
+      "kind": "cache",
+      "position": [
+        12.487291084326975,
+        105.4,
+        -1122.0323170024683
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 84,
+      "name": "Upper bell drum",
+      "kind": "bounce",
+      "position": [
+        -0.4925650278132133,
+        119.4,
+        -1118.033729052563
+      ]
+    },
+    {
+      "action": "REWARD / Upper bell stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 85,
+      "name": "REWARD / Upper bell stores",
+      "kind": "cache",
+      "position": [
+        -0.5636316944798768,
+        119.4,
+        -1118.0764290525638
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 86,
+      "name": "Read the next crossing",
+      "kind": "walk",
+      "position": [
+        -28.931154990274923,
+        119.4,
+        -1112.018324393399
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 87,
+      "name": "Cloud rest checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -34.82830419202029,
+        119.4,
+        -1110.023481764328
+      ]
+    },
+    {
+      "action": "Cloud rest stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 88,
+      "name": "Cloud rest stores",
+      "kind": "cache",
+      "position": [
+        -34.859198319626984,
+        119.4,
+        -1110.0892085510488
+      ]
+    },
+    {
+      "action": "Leave cloud rest",
+      "launch": [
+        -26.10069831962693,
+        119.4,
+        -1111.9762085510515
+      ],
+      "landing": [
+        -22.644031117789872,
+        121.1,
+        -1111.9858939593537
+      ],
+      "ground": "Broken crown first shelf"
+    },
+    {
+      "action": "action complete",
+      "index": 89,
+      "name": "Leave cloud rest",
+      "kind": "jump",
+      "position": [
+        -22.644031117789872,
+        121.1,
+        -1111.9858939593537
+      ]
+    },
+    {
+      "action": "Land on the rotten beam",
+      "launch": [
+        -16.404031117789838,
+        121.1,
+        -1111.9963939593542
+      ],
+      "landing": [
+        -12.286372550792837,
+        122.40000001192094,
+        -1111.9963939593542
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "action complete",
+      "index": 90,
+      "name": "Land on the rotten beam",
+      "kind": "jump",
+      "position": [
+        -12.286372550792837,
+        122.40000001192094,
+        -1111.9963939593542
+      ]
+    },
+    {
+      "action": "Spin before the beam gives way air activation",
+      "launch": [
+        -7.916205884126166,
+        122.01250001192093,
+        -1111.9963939593542
+      ],
+      "landing": [
+        -4.735670423141457,
+        123.79999999761581,
+        -1111.9963939593542
+      ],
+      "ground": "Rotten beam hinge"
+    },
+    {
+      "action": "Spin before the beam gives way leave the leaf",
+      "launch": [
+        1.496829576858543,
+        123.79999999761581,
+        -1111.9963939593542
+      ],
+      "landing": [
+        2.969642472788091,
+        123.8,
+        -1111.9963939593542
+      ],
+      "ground": "Crown hinge refuge"
+    },
+    {
+      "action": "Spin before the beam gives way",
+      "verb": "timed spin",
+      "remaining": 2.320000000000011
+    },
+    {
+      "action": "action complete",
+      "index": 91,
+      "name": "Spin before the beam gives way",
+      "kind": "spin",
+      "position": [
+        2.969642472788091,
+        123.8,
+        -1111.9963939593542
+      ]
+    },
+    {
+      "action": "Crown refuge supplies",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 92,
+      "name": "Crown refuge supplies",
+      "kind": "cache",
+      "position": [
+        3.0352091394547593,
+        123.8,
+        -1111.9963939593542
+      ]
+    },
+    {
+      "action": "Crown counterweight step board",
+      "launch": [
+        10.035653583899219,
+        123.8,
+        -1111.9963939593542
+      ],
+      "landing": [
+        14.104018464046861,
+        124.34121797187129,
+        -1111.9963939593542
+      ],
+      "ground": "moving platform"
+    },
+    {
+      "action": "Crown counterweight step disembark",
+      "launch": [
+        18.002373566588727,
+        132.4,
+        -1111.9963939593542
+      ],
+      "landing": [
+        18.465882061656508,
+        132.4,
+        -1111.9963939593542
+      ],
+      "ground": "Counterweight middle dock"
+    },
+    {
+      "action": "action complete",
+      "index": 93,
+      "name": "Crown counterweight step",
+      "kind": "mover",
+      "position": [
+        18.465882061656508,
+        132.4,
+        -1111.9963939593542
+      ]
+    },
+    {
+      "action": "TEST / Counterweight rest stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 94,
+      "name": "TEST / Counterweight rest stores",
+      "kind": "cache",
+      "position": [
+        18.50834872832317,
+        132.4,
+        -1112.039793959355
+      ]
+    },
+    {
+      "action": "Crown counterweight return board",
+      "launch": [
+        25.214793172767653,
+        132.4,
+        -1112.0042939593538
+      ],
+      "landing": [
+        27.12013218700122,
+        132.98893701054772,
+        -1112.0042939593538
+      ],
+      "ground": "moving platform"
+    },
+    {
+      "action": "Crown counterweight return disembark",
+      "launch": [
+        29.84030996477904,
+        141.4,
+        -1112.0042939593538
+      ],
+      "landing": [
+        29.96758918539262,
+        141.4,
+        -1112.0042939593538
+      ],
+      "ground": "Counterweight upper dock"
+    },
+    {
+      "action": "action complete",
+      "index": 95,
+      "name": "Crown counterweight return",
+      "kind": "mover",
+      "position": [
+        29.96758918539262,
+        141.4,
+        -1112.0042939593538
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 96,
+      "name": "Last spray checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        32.84367807428154,
+        141.4,
+        -1110.0362606260203
+      ]
+    },
+    {
+      "action": "COUNT / Last spray stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 97,
+      "name": "COUNT / Last spray stores",
+      "kind": "cache",
+      "position": [
+        32.84441140761488,
+        141.4,
+        -1110.0996
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 98,
+      "name": "Last spray drum",
+      "kind": "bounce",
+      "position": [
+        42.99108867191863,
+        155.4,
+        -1111.9667739544877
+      ]
+    },
+    {
+      "action": "REWARD / Summit landing stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 99,
+      "name": "REWARD / Summit landing stores",
+      "kind": "cache",
+      "position": [
+        43.0480553385853,
+        155.4,
+        -1112.0248739544875
+      ]
+    },
+    {
+      "action": "Source pool final cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 100,
+      "name": "Source pool final cache",
+      "kind": "cache",
+      "position": [
+        43.125352323923615,
+        155.4,
+        -1112.0454547036306
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 101,
+      "name": "Reach the source pool crystal",
+      "kind": "walk",
+      "position": [
+        61.92491981515363,
+        155.4,
+        -1112.0011502042132
+      ]
+    }
+  ],
+  "source": "production source",
+  "started": "2026-11-14T08:39:18.551Z",
+  "beat": 101,
+  "stage": "Cross the summit finish gate",
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 76,
+    "totalCrates": 166,
+    "activeCheckpoints": 6,
+    "position": [
+      66.42491981515369,
+      156.1266666691502,
+      -1112.0011502042132
+    ],
+    "frames": 18910,
+    "metrics": {
+      "skateFrames": 1435,
+      "skateMetres": 348.4329424993151,
+      "grindFrames": 760,
+      "grindMetres": 64.94637684858334,
+      "moverRides": 3,
+      "drumLaunches": 4
+    }
+  }
+}

@@ -36,7 +36,7 @@ try{
     report.phase='bonus';const bonusContext={p,l:g.getLevel(),source:m.bonus,report,get frame(){return report.frame;}};
     report.bonusResult=yield* m.runWaterfallBonus(bonusContext);
     while(g.getCurrentLevel().id!=='waterfall-climb')yield {};
-    c.check(g.getLevel()===l,'Bonus restored the same suspended parent');c.check(p.bonusCrates===22,'All bonus boxes returned');
+    c.check(g.getLevel()===l,'Bonus restored the same suspended parent');c.check(p.bonusCrates===46,'All bonus boxes returned');
     report.phase='waterfall';const result=yield* m.runWaterfallClimb(context,{fromBeat:split+1});
     c.check(p.cratesBroken+p.bonusCrates===l.totalCrates,'Combined all-box denominator');
     c.check(p.gemEarned,'Complete river, bonus and ascent earned the real clear gem');

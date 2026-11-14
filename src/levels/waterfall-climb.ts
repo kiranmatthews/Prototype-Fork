@@ -1,6 +1,7 @@
 import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
 import {dressWaterfallClimb} from './waterfall-climb-art';
 import {waterfallStone,waterfallRibbon,waterfallLeaf} from './waterfall-climb-geometry';
+import {arrangeWaterfallCrates} from './waterfall-crate-arrangement';
 
 export type WaterfallPoint = [number,number,number];
 type P=WaterfallPoint;
@@ -205,6 +206,7 @@ add({t:'clock',p:[-3,0,9],grp:10,nm:'Waterfall time trial'});
 // The source-owned art pass preserves the measured greybox gameplay fingerprint.
 export const WATERFALL_GREYBOX=false;
 if(!WATERFALL_GREYBOX)dressWaterfallClimb(C,groups,{landings:WATERFALL_LANDINGS,riverEnd:WATERFALL_RIVER_END,baseY:12,faceZ:WATERFALL_FACE_Z,summitY:WATERFALL_SUMMIT_Y});
+arrangeWaterfallCrates(C,WATERFALL_ACTIONS);
 export const WATERFALL_CLIMB_LEVEL:CustomLevelData={v:1,name:'Waterfall Climb',spawn:[0,.12,9],killY:-18,fallRecoveryDrop:20,
  startWarpPad:false,sky:'day',cameraAirLift:.5,hugeDropBail:false,medalTimes:{gold:420,silver:510,bronze:630},
  keepPlayFog:true,jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,

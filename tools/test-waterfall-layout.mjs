@@ -24,9 +24,12 @@ for(const a of m.WATERFALL_ACTIONS){
  if(['walk','jump','spin','mover','grind','cache','checkpoint'].includes(a.kind))supported(a.name,a.to,'destination');
  if(a.from&&['jump','spin','mover','grind'].includes(a.kind))supported(a.name,a.from,'takeoff');
 }
-for(const c of source.components.filter(c=>['crate','checkpoint','gate'].includes(c.t)))supported(c.nm,c.p,c.t);
+for(const c of source.components.filter(c=>['crate','checkpoint','gate'].includes(c.t))){
+ const stacked=c.t==='crate'&&source.components.some(b=>b!==c&&b.t==='crate'&&Math.hypot(b.p[0]-c.p[0],b.p[2]-c.p[2])<.01&&Math.abs(b.p[1]+.96-c.p[1])<.01);
+ if(!stacked)supported(c.nm,c.p,c.t);
+}
 assert.ok(source.components.filter(c=>['platform','mesh','crumble','rail','spinbridge'].includes(c.t)&&c.solid!==false).every(c=>c.edgeGrinding!==false),'Ordinary authored edges retain grinding');
 const report={topTriangles,staticSurfaces:meshes.length,actions:m.WATERFALL_ACTIONS.length,issues};
-await mkdir('docs/waterfall-climb/runs',{recursive:true});await writeFile('docs/waterfall-climb/runs/layout-audit.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+const out=process.env.WATERFALL_OUTPUT||'docs/waterfall-climb/runs';await mkdir(out,{recursive:true});await writeFile(out+'/layout-audit.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
 for(const mesh of meshes){mesh.geometry.dispose();mesh.material.dispose();}
 assert.equal(issues.length,0,'Authored landing/takeoff or walkable mesh issue');
