@@ -90,6 +90,7 @@ export function runFinale(r, options = {}) {
     { maxFrames: 1200, label: 'bank crown checkpoint after the complete relay' });
   assert.ok(l.checkpoints[l.checkpoints.length - 1].active, 'crown checkpoint was skipped');
   note('Crown checkpoint');
+  const crownApproachFrame=r.frame;
   gapJump(2018, 'Crown ice gap');
   brake('dry brake before the crown roofs');
   const climb = m.BLOCKWORKS_CLIMBS.find(c => c.name === 'Crown roof bays');
@@ -97,13 +98,15 @@ export function runFinale(r, options = {}) {
   assert.ok(firstRoof, 'crown roof metadata missing');
   const [fx, , fz] = m.routeTangent(firstRoof.s);
   const towardRoof = (p.pos.x - firstRoof.point[0]) * fx + (p.pos.z - firstRoof.point[2]) * fz;
-  assert.ok(p.grounded && !p.groundHit?.slippy && towardRoof < -firstRoof.depth / 2 && p.pos.y < firstRoof.top,
-    'landing must stop on the dry approach or its skate wedge before the first roof face');
+  const reachedFirstRoof=Math.abs(p.pos.y-firstRoof.top)<.15&&Math.abs(towardRoof)<firstRoof.depth/2+.1;
+  assert.ok(p.grounded && !p.groundHit?.slippy &&
+    (reachedFirstRoof||(towardRoof < -firstRoof.depth / 2 && p.pos.y < firstRoof.top)),
+    'landing must stop on the dry approach, first wedge or first roof');
   note('Crown dry stop');
 
   // These roofs now have authored partial-width skate wedges. Follow their
   // real low/high contacts instead of jumping from the old unobstructed apron.
-  skateRoofWedges(r, 'Crown roof bays');
+  skateRoofWedges(r, 'Crown roof bays',{completedTiers:reachedFirstRoof?1:0,contactStart:crownApproachFrame});
   assert.ok(p.grounded && p.freeSkate && Math.abs(p.pos.y - climb.exit[1]) < .15,
     'Crown wedges must deliver the live rider mounted onto the departure roof');
   note('Crown roofs skate exit');

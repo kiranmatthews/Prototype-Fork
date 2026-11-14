@@ -1,0 +1,848 @@
+{
+  "harvests": [
+    {
+      "name": "HAUNTED / entry preparation / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / entry preparation / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / entry preparation / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / dry ice refuges / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / dry ice refuges / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / dry ice refuges / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / vert recovery / 1",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / foundry choices / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / foundry choices / 2",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / foundry choices / 3",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / machinery banks / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / machinery banks / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / machinery banks / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / roof relay preparation / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / roof relay preparation / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / roof relay preparation / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / crown count / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / crown count / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "HAUNTED / crown count / 3",
+      "count": 4,
+      "deaths": 0
+    }
+  ],
+  "bonusOrder": [
+    {
+      "stage": "attempt direct double, animated crown, air spin and ledge grab",
+      "evidence": [
+        {
+          "action": "pass arrow before revealing targets",
+          "launch": [
+            4.936144444444444,
+            -1.1920928966180355e-8,
+            0
+          ],
+          "landing": [
+            9.947644444444453,
+            -1.1920928966180355e-8,
+            0
+          ],
+          "ground": "Supported bonus court"
+        },
+        {
+          "action": "reveal row before wrong-order test",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": true
+          }
+        },
+        {
+          "action": "wrong order: destroy required arrow before upper rewards",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        }
+      ],
+      "actions": [
+        {
+          "name": "return negative observation",
+          "firstFrame": 20,
+          "lastFrame": 20
+        },
+        {
+          "name": "preserve return arrow outward",
+          "firstFrame": 38,
+          "lastFrame": 129
+        },
+        {
+          "name": "pass arrow before revealing targets",
+          "firstFrame": 174,
+          "lastFrame": 213
+        },
+        {
+          "name": "approach reveal row before wrong-order test",
+          "firstFrame": 213,
+          "lastFrame": 366
+        },
+        {
+          "name": "reveal row before wrong-order test",
+          "firstFrame": 386,
+          "lastFrame": 386
+        },
+        {
+          "name": "return to destroy needed donor",
+          "firstFrame": 408,
+          "lastFrame": 569
+        },
+        {
+          "name": "approach wrong order: destroy required arrow before upper rewards",
+          "firstFrame": 587,
+          "lastFrame": 638
+        },
+        {
+          "name": "wrong order: destroy required arrow before upper rewards",
+          "firstFrame": 658,
+          "lastFrame": 658
+        },
+        {
+          "name": "direct reach attempt takeoff",
+          "firstFrame": 680,
+          "lastFrame": 709
+        },
+        {
+          "name": "charged-jump timing",
+          "firstFrame": 754,
+          "lastFrame": 767
+        },
+        {
+          "name": "attempt direct double, animated crown, air spin and ledge grab",
+          "firstFrame": 769,
+          "lastFrame": 805
+        },
+        {
+          "name": "direct reach attempt takeoff",
+          "firstFrame": 805,
+          "lastFrame": 891
+        },
+        {
+          "name": "charged-jump timing",
+          "firstFrame": 936,
+          "lastFrame": 956
+        },
+        {
+          "name": "attempt direct double, animated crown, air spin and ledge grab",
+          "firstFrame": 958,
+          "lastFrame": 995
+        },
+        {
+          "name": "direct reach attempt takeoff",
+          "firstFrame": 995,
+          "lastFrame": 1081
+        },
+        {
+          "name": "charged-jump timing",
+          "firstFrame": 1126,
+          "lastFrame": 1151
+        },
+        {
+          "name": "attempt direct double, animated crown, air spin and ledge grab",
+          "firstFrame": 1153,
+          "lastFrame": 1190
+        },
+        {
+          "name": "direct reach attempt takeoff",
+          "firstFrame": 1190,
+          "lastFrame": 1276
+        },
+        {
+          "name": "charged-jump timing",
+          "firstFrame": 1321,
+          "lastFrame": 1348
+        },
+        {
+          "name": "attempt direct double, animated crown, air spin and ledge grab",
+          "firstFrame": 1350,
+          "lastFrame": 1387
+        }
+      ],
+      "result": {
+        "pattern": "return",
+        "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+        "rewardRemaining": 2,
+        "gemEarned": false
+      },
+      "pattern": "return",
+      "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+      "rewardRemaining": 2,
+      "gemEarned": false,
+      "frames": 1387,
+      "seconds": 23.116666666666667,
+      "retryRestores": true
+    },
+    {
+      "stage": "jump into the gap without using the required crossing tool",
+      "evidence": [
+        {
+          "action": "skip bridge switch",
+          "launch": [
+            36.915677777777795,
+            -1.1920928966180355e-8,
+            0
+          ],
+          "landing": [
+            41.367677777777764,
+            -1.1920928966180355e-8,
+            0
+          ],
+          "ground": "Supported bonus court"
+        }
+      ],
+      "actions": [
+        {
+          "name": "bridge negative observation",
+          "firstFrame": 20,
+          "lastFrame": 20
+        },
+        {
+          "name": "unused switch approach",
+          "firstFrame": 38,
+          "lastFrame": 111
+        },
+        {
+          "name": "skip bridge switch",
+          "firstFrame": 156,
+          "lastFrame": 195
+        },
+        {
+          "name": "unsupported crossing approach",
+          "firstFrame": 195,
+          "lastFrame": 275
+        },
+        {
+          "name": "jump into the gap without using the required crossing tool",
+          "firstFrame": 320,
+          "lastFrame": 370
+        }
+      ],
+      "result": {
+        "pattern": "bridge",
+        "test": "skipping visible crossing footholds leads to real chasm death",
+        "state": "dead",
+        "gemEarned": false
+      },
+      "pattern": "bridge",
+      "test": "skipping visible crossing footholds leads to real chasm death",
+      "state": "dead",
+      "gemEarned": false,
+      "frames": 370,
+      "seconds": 6.166666666666667,
+      "retryRestores": true
+    },
+    {
+      "stage": "single support recovery",
+      "evidence": [],
+      "actions": [
+        {
+          "name": "finite negative observation",
+          "firstFrame": 20,
+          "lastFrame": 20
+        },
+        {
+          "name": "exhaust upper striped support too soon",
+          "firstFrame": 38,
+          "lastFrame": 139
+        },
+        {
+          "name": "rise above lower support",
+          "firstFrame": 184,
+          "lastFrame": 194
+        },
+        {
+          "name": "spend every upper bounce before claiming cap",
+          "firstFrame": 194,
+          "lastFrame": 371
+        },
+        {
+          "name": "land beside one remaining support",
+          "firstFrame": 371,
+          "lastFrame": 414
+        },
+        {
+          "name": "single support contact",
+          "firstFrame": 441,
+          "lastFrame": 477
+        },
+        {
+          "name": "single support apex",
+          "firstFrame": 477,
+          "lastFrame": 502
+        },
+        {
+          "name": "attempt high reward with single support, double jump and air spin",
+          "firstFrame": 504,
+          "lastFrame": 524
+        },
+        {
+          "name": "single support recovery",
+          "firstFrame": 524,
+          "lastFrame": 543
+        }
+      ],
+      "result": {
+        "pattern": "finite",
+        "test": "spending upper finite support first loses high cap access",
+        "capAlive": true,
+        "gemEarned": false
+      },
+      "pattern": "finite",
+      "test": "spending upper finite support first loses high cap access",
+      "capAlive": true,
+      "gemEarned": false,
+      "frames": 543,
+      "seconds": 9.05,
+      "retryRestores": true
+    }
+  ],
+  "resetRestores": true,
+  "patrolProbes": 100,
+  "bonus": {
+    "stage": "cross the real finish gate",
+    "evidence": [
+      {
+        "action": "HAUNTED BONUS / arrival",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "pass return arrow",
+        "launch": [
+          4.925288888888888,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "landing": [
+          9.944288888888899,
+          -1.1920928966180355e-8,
+          0
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "reveal haunted gallery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "held arrow and double to gallery",
+        "contact": {
+          "frame": 825,
+          "position": [
+            7.032344444444471,
+            1.171999988079071,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Supported bonus court"
+        },
+        "landing": [
+          10.98534444444448,
+          8.39999998807907,
+          5.173531133159462e-19
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "Room 1 return: upper mystery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "descend before clearing donor",
+        "launch": [
+          10.582977777777822,
+          8.39999998807907,
+          5.173531133159462e-19
+        ],
+        "landing": [
+          5.026977777777811,
+          -1.1920928966180355e-8,
+          5.173531133159462e-19
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "clear arrow last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "pass spent return switch",
+        "launch": [
+          20.924300000000052,
+          -1.1920928966180355e-8,
+          5.173531133159462e-19
+        ],
+        "landing": [
+          25.36730000000002,
+          -1.1920928966180355e-8,
+          5.173531133159462e-19
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "HAUNTED BONUS / return recovery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "materialize bridge",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "pass bridge switch",
+        "launch": [
+          37.82415555555563,
+          -1.1920928966180355e-8,
+          5.173531133159462e-19
+        ],
+        "landing": [
+          41.37249999999998,
+          -1.1920928966180355e-8,
+          5.173531133159462e-19
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "HAUNTED BONUS / bridge cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Room 2 bridge: receiver reward",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Room 2 bridge: receiver mystery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "spent finite support",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "HAUNTED BONUS / exit count",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all crates in the active stage",
+        "totalCrates": 29,
+        "activeStageCrates": 29,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 29,
+        "remaining": 0
+      }
+    ],
+    "actions": [
+      {
+        "name": "approach HAUNTED BONUS / arrival",
+        "firstFrame": 20,
+        "lastFrame": 92
+      },
+      {
+        "name": "HAUNTED BONUS / arrival",
+        "firstFrame": 112,
+        "lastFrame": 112
+      },
+      {
+        "name": "preserve return arrow",
+        "firstFrame": 134,
+        "lastFrame": 265
+      },
+      {
+        "name": "pass return arrow",
+        "firstFrame": 310,
+        "lastFrame": 349
+      },
+      {
+        "name": "approach reveal haunted gallery",
+        "firstFrame": 349,
+        "lastFrame": 502
+      },
+      {
+        "name": "reveal haunted gallery",
+        "firstFrame": 522,
+        "lastFrame": 522
+      },
+      {
+        "name": "return to retained donor",
+        "firstFrame": 544,
+        "lastFrame": 705
+      },
+      {
+        "name": "held arrow and double to gallery takeoff",
+        "firstFrame": 723,
+        "lastFrame": 744
+      },
+      {
+        "name": "held arrow and double to gallery arrow contact",
+        "firstFrame": 789,
+        "lastFrame": 825
+      },
+      {
+        "name": "held arrow and double to gallery apex outside the shelf",
+        "firstFrame": 828,
+        "lastFrame": 861
+      },
+      {
+        "name": "held arrow and double to gallery rise above the shelf",
+        "firstFrame": 863,
+        "lastFrame": 873
+      },
+      {
+        "name": "held arrow and double to gallery",
+        "firstFrame": 873,
+        "lastFrame": 935
+      },
+      {
+        "name": "approach Room 1 return: upper mystery",
+        "firstFrame": 935,
+        "lastFrame": 1008
+      },
+      {
+        "name": "Room 1 return: upper mystery",
+        "firstFrame": 1028,
+        "lastFrame": 1028
+      },
+      {
+        "name": "leave harvested gallery",
+        "firstFrame": 1050,
+        "lastFrame": 1135
+      },
+      {
+        "name": "descend before clearing donor",
+        "firstFrame": 1180,
+        "lastFrame": 1232
+      },
+      {
+        "name": "approach clear arrow last",
+        "firstFrame": 1232,
+        "lastFrame": 1285
+      },
+      {
+        "name": "clear arrow last",
+        "firstFrame": 1305,
+        "lastFrame": 1305
+      },
+      {
+        "name": "spent return switch approach",
+        "firstFrame": 1327,
+        "lastFrame": 1505
+      },
+      {
+        "name": "pass spent return switch",
+        "firstFrame": 1550,
+        "lastFrame": 1589
+      },
+      {
+        "name": "approach HAUNTED BONUS / return recovery",
+        "firstFrame": 1589,
+        "lastFrame": 1668
+      },
+      {
+        "name": "HAUNTED BONUS / return recovery",
+        "firstFrame": 1688,
+        "lastFrame": 1688
+      },
+      {
+        "name": "approach materialize bridge",
+        "firstFrame": 1710,
+        "lastFrame": 1848
+      },
+      {
+        "name": "materialize bridge",
+        "firstFrame": 1868,
+        "lastFrame": 1868
+      },
+      {
+        "name": "pass bridge switch",
+        "firstFrame": 1917,
+        "lastFrame": 1956
+      },
+      {
+        "name": "approach HAUNTED BONUS / bridge cargo",
+        "firstFrame": 1956,
+        "lastFrame": 2082
+      },
+      {
+        "name": "HAUNTED BONUS / bridge cargo",
+        "firstFrame": 2102,
+        "lastFrame": 2102
+      },
+      {
+        "name": "approach Room 2 bridge: receiver reward",
+        "firstFrame": 2124,
+        "lastFrame": 2262
+      },
+      {
+        "name": "Room 2 bridge: receiver reward",
+        "firstFrame": 2282,
+        "lastFrame": 2282
+      },
+      {
+        "name": "approach Room 2 bridge: receiver mystery",
+        "firstFrame": 2304,
+        "lastFrame": 2387
+      },
+      {
+        "name": "Room 2 bridge: receiver mystery",
+        "firstFrame": 2407,
+        "lastFrame": 2407
+      },
+      {
+        "name": "finite-stack approach",
+        "firstFrame": 2429,
+        "lastFrame": 2578
+      },
+      {
+        "name": "upper support contact",
+        "firstFrame": 2623,
+        "lastFrame": 2654
+      },
+      {
+        "name": "rebound apex",
+        "firstFrame": 2654,
+        "lastFrame": 2679
+      },
+      {
+        "name": "cap before spending finite support",
+        "firstFrame": 2681,
+        "lastFrame": 2686
+      },
+      {
+        "name": "clear finite landing",
+        "firstFrame": 2686,
+        "lastFrame": 2709
+      },
+      {
+        "name": "approach spent finite support",
+        "firstFrame": 2729,
+        "lastFrame": 2782
+      },
+      {
+        "name": "spent finite support",
+        "firstFrame": 2802,
+        "lastFrame": 2802
+      },
+      {
+        "name": "approach HAUNTED BONUS / exit count",
+        "firstFrame": 2824,
+        "lastFrame": 3041
+      },
+      {
+        "name": "HAUNTED BONUS / exit count",
+        "firstFrame": 3061,
+        "lastFrame": 3061
+      },
+      {
+        "name": "approach earned gem",
+        "firstFrame": 3083,
+        "lastFrame": 3175
+      },
+      {
+        "name": "cross the real finish gate",
+        "firstFrame": 3195,
+        "lastFrame": 3225
+      }
+    ],
+    "result": {
+      "state": "finished",
+      "gemEarned": true,
+      "totalCrates": 29,
+      "cratesBroken": 29,
+      "deaths": 0
+    },
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 29,
+    "cratesBroken": 29,
+    "deaths": 0,
+    "frames": 3225,
+    "seconds": 53.75
+  }
+}

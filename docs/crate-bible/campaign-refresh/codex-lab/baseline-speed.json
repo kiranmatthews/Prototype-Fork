@@ -1,0 +1,6 @@
+{
+  "error": "AssertionError [ERR_ASSERTION]: first ice did not receive normal full skating speed",
+  "firstIceSpeed": 23.6793465209301,
+  "minSpeed": 23.6793465209301,
+  "deaths": 0
+}

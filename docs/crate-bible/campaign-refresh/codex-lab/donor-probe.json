@@ -1,0 +1,41 @@
+[
+  {
+    "donor": "HAUNTED BONUS / arrival",
+    "mode": "return",
+    "position": [
+      2.2499999999999982,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "maxY": 5.118499988079072,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  },
+  {
+    "donor": "HAUNTED BONUS / return recovery",
+    "mode": "return",
+    "position": [
+      23.75000000000005,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "maxY": 5.118499988079072,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  },
+  {
+    "donor": "Room 2 bridge: receiver mystery",
+    "mode": "finite",
+    "position": [
+      69.55000000000021,
+      -1.1920928966180355e-8,
+      0
+    ],
+    "maxY": 6.27049998807907,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  }
+]

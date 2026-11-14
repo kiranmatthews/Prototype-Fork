@@ -5,11 +5,11 @@ import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
 /** Session one authored high-air row from the live floor, then return under
  * control. This never resets position/speed or manufactures a launch. */
-export function pumpAqueductRow(f,focus,firstSide){
+export function pumpAqueductRow(f,focus,firstSide,{singleTarget=false}={}){
  const {p,l,sourceModule:m,tick,until}=f,normal=m.routeTangent(focus),begin=f.frame;
- const row=m.BLOCKWORKS_VERT_AQUEDUCT.targets.filter(t=>Math.abs(t.s-focus)<3);
+ const row=m.BLOCKWORKS_VERT_AQUEDUCT.targets.filter(t=>Math.abs(t.s-focus)<(singleTarget ? .01 : 3));
  const targets=row.map(t=>({source:t,crate:l.crates.find(c=>Math.abs(c.box.min.y-t.y)<.02&&Math.hypot(c.mesh.position.x-t.p[0],c.mesh.position.z-t.p[2])<.02)}));
- assert.equal(targets.length,3,'the session must address a complete authored high-air row');
+ assert.equal(targets.length,singleTarget?1:3,'the session must address the selected authored high-air targets');
  assert.ok(targets.every(t=>t.crate),'every high target must exist at its authored height');
  let side=firstSide,released=false,current=null;
  const airs=[];

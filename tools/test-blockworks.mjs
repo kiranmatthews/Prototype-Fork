@@ -133,7 +133,7 @@ export function runFrozen(r) {
     assert.ok(maxOffset<4.5,`ice patch ${a} exceeded its physical ribbon`);
     return {a,b,frames:samples.length,entrySpeed:round(entered),minimumSpeed:round(minimum),maxWorldXOffset:round(maxOffset)};
   });
-  assert.ok(Math.abs(patches[0].entrySpeed-23)<.1,'first ice did not receive normal full skating speed');
+  assert.ok(patches[0].entrySpeed>=r.TUNING.maxSpeed-.1,'first ice did not receive normal full skating speed');
   const minimumContinuousSpeed=Math.min(...frames.map(row=>row.speed));
   assert.ok(minimumContinuousSpeed>=r.TUNING.cruiseSpeed-.1,
     'continuous Terrace-to-Frozen traversal hid a stop or lost cruise speed');

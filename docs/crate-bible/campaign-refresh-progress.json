@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "codex-lab",
-  "next_course": "ghost-train",
+  "current_course": "ghost-train",
+  "next_course": "hollowwake-descent",
   "courses": [
     {
       "order": 1,
@@ -254,9 +254,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-codex-switchback",
-        "name": "Bonus: Haunted Hassle"
+        "name": "Bonus: Haunted Hassle",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/codex-lab/validation.json"
     },
     {
       "order": 15,
@@ -704,6 +706,12 @@
     {
       "id": "waterpark",
       "bonus": "bonus-waterpark",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "codex-lab",
+      "bonus": "bonus-codex-switchback",
       "status": "validated",
       "date": "2026-11-14"
     }

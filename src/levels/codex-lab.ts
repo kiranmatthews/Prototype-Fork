@@ -11,6 +11,7 @@ import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
+import {arrangeHauntedCrates} from './haunted-crate-arrangement';
 
 export { KONA_LEVEL } from './kona';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
@@ -367,6 +368,7 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
 // ordinary legacy reward arrangements once without moving the pier anchors.
 migrateCrateLayout({...CODEX_LAB_LEVEL,components:C.filter(c=>!currentSizeCrates.has(c))});
 CODEX_LAB_LEVEL.crateLayoutRevision=1;
+arrangeHauntedCrates(CODEX_LAB_LEVEL);
 
 // Three connected session areas, with five independent skill branches.
 // See docs/warehouse-flow/design.md for approach/receiver/recovery decisions.

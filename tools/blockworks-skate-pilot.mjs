@@ -2,13 +2,16 @@ import assert from 'node:assert/strict';
 
 /** Continue a live run through the authored partial-width roof wedges.
  * Only device inputs are written: no placements, speed changes or resets. */
-export function skateRoofWedges(r, label) {
+export function skateRoofWedges(r, label, options = {}) {
   const { p, l, THREE, sourceModule: m } = r;
   const climb = m.BLOCKWORKS_CLIMBS.find(c => c.name === label);
   const wedges = m.BLOCKWORKS_SKATE_RAMPS.filter(w => w.name.startsWith(label));
   assert.ok(climb && wedges.length === climb.steps.length, `missing ${label} wedge sequence`);
   const begin = r.frame, deaths = p.totalDeaths;
-  const first = wedges[0], direction = new THREE.Vector3(...first.high).sub(new THREE.Vector3(...first.low)).setY(0).normalize();
+  const completedTiers=options.completedTiers??0;
+  assert.ok(Number.isInteger(completedTiers)&&completedTiers>=0&&completedTiers<wedges.length);
+  const remaining=wedges.slice(completedTiers);
+  const first = remaining[0], direction = new THREE.Vector3(...first.high).sub(new THREE.Vector3(...first.low)).setY(0).normalize();
   const alreadyOnFirst = p.groundHit?.name === first.name;
   if (!alreadyOnFirst) {
     assert.ok(p.grounded && Math.abs(p.speed) < .2, `${label} approach must inherit a supported stop`);
@@ -23,7 +26,7 @@ export function skateRoofWedges(r, label) {
     assert.ok(start, `${label} has no supported skating approach`);
     r.walkTo(start, { maxFrames: 2400, label: `walk to ${label} ramp approach` });
   }
-  const points = wedges.flatMap((w, index) => {
+  const points = remaining.flatMap((w, index) => {
     const dir = new THREE.Vector3(...w.high).sub(new THREE.Vector3(...w.low)).setY(0).normalize();
     return [...(alreadyOnFirst && index === 0 ? [] : [new THREE.Vector3(...w.low)]),
       new THREE.Vector3(...w.high).addScaledVector(dir, 1.4)];
@@ -43,8 +46,9 @@ export function skateRoofWedges(r, label) {
   assert.ok(p.grounded && p.freeSkate && p.totalDeaths === deaths, `${label} must leave mounted without a death`);
   const ride = r.trace.slice(ridingBegin);
   assert.ok(ride.every(frame => !frame.input.jumpReleased), `${label} used a jump instead of the ramps`);
+  const contactTrace=r.trace.slice(options.contactStart??ridingBegin);
   const contacts = wedges.map(wedge => ({ name: wedge.name,
-    frames: ride.filter(frame => frame.grounded && frame.ground?.name === wedge.name).length }));
+    frames: contactTrace.filter(frame => frame.grounded && frame.ground?.name === wedge.name).length }));
   assert.ok(contacts.every(c => c.frames > 4), `${label} skipped a wedge: ${JSON.stringify(contacts)}`);
   return { label, frames: r.frame - begin, contacts, exit: r.snapshot() };
 }

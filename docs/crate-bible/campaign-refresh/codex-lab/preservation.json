@@ -1,0 +1,26 @@
+{
+  "main": {
+    "preservedNonCrateEnemyComponents": 3991,
+    "preservedStructuralCratesAndSwitches": 703,
+    "countedBefore": 8,
+    "countedAfter": 70,
+    "enemiesBefore": {
+      "turtle": 2,
+      "moa": 1,
+      "spiker": 1,
+      "grunt": 1
+    },
+    "enemiesAfter": {
+      "turtle": 2,
+      "grunt": 3
+    }
+  },
+  "bonus": {
+    "preservedNonCrateEnemyComponents": 143,
+    "preservedStructuralCratesAndSwitches": 2,
+    "countedBefore": 8,
+    "countedAfter": 29,
+    "enemiesBefore": {},
+    "enemiesAfter": {}
+  }
+}
