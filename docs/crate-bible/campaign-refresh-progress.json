@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "coastal-street-run",
-  "next_course": "jungle-cup",
+  "current_course": "jungle-cup",
+  "next_course": "custard-creek",
   "courses": [
     {
       "order": 1,
@@ -98,9 +98,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-coastal",
-        "name": "Bonus: Rooftop Deliveries"
+        "name": "Bonus: Rooftop Deliveries",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/coastal-street-run/validation.json"
     },
     {
       "order": 6,
@@ -630,6 +632,12 @@
     {
       "id": "jungle",
       "bonus": "bonus-jungle",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "coastal-street-run",
+      "bonus": "bonus-coastal",
       "status": "validated",
       "date": "2026-11-14"
     }

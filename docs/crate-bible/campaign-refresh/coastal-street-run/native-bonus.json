@@ -1,0 +1,1651 @@
+{
+  "journey": {
+    "stage": "cross the real Clockwork gate",
+    "evidence": [
+      {
+        "action": "opening protective cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "opening protective cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "opening protective cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "opening protective cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "opening spiker action choice",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          7.489255555555549,
+          0,
+          0
+        ]
+      },
+      {
+        "action": "intake upper-before-arrow reward support last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "intake upper-before-arrow reward",
+        "upperAlive": false,
+        "launcherAlive": false
+      },
+      {
+        "action": "pass removed bonus checkpoint",
+        "x": 41
+      },
+      {
+        "action": "safe five-hit workshop reward",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "first independent bridge circuit",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jump over the spent solid bridge switch",
+        "launch": [
+          53.82605555555562,
+          1.5999999999999996,
+          0
+        ],
+        "landing": [
+          57.16699999999998,
+          1.5999999999999996,
+          0
+        ],
+        "ground": "Fuse stack staging area"
+      },
+      {
+        "action": "pass removed bonus checkpoint",
+        "x": 80
+      },
+      {
+        "action": "turtle armor stomp",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          88.96529999999944,
+          1.5999999999999996,
+          0
+        ]
+      },
+      {
+        "action": "first retracted spinner opening",
+        "kind": "spinner",
+        "alive": false,
+        "position": [
+          95.3367444444437,
+          1.5999999999999996,
+          0
+        ]
+      },
+      {
+        "action": "first phase relay board phased footing",
+        "launch": [
+          103.22118888888788,
+          1.5999999999999996,
+          0
+        ],
+        "landing": [
+          106.965188888888,
+          1.600000011920929,
+          0
+        ],
+        "ground": "phase pad"
+      },
+      {
+        "action": "first phase relay spin the far timber and leave for permanent footing",
+        "launch": [
+          106.965188888888,
+          1.600000011920929,
+          0
+        ],
+        "landing": [
+          111.94968888888815,
+          1.5999999999999996,
+          0
+        ],
+        "ground": "Phase relay rest island"
+      },
+      {
+        "action": "offset phase relay board phased footing",
+        "launch": [
+          115.17436666666573,
+          1.5999999999999996,
+          0
+        ],
+        "landing": [
+          118.97086666666584,
+          1.600000011920929,
+          0
+        ],
+        "ground": "phase pad"
+      },
+      {
+        "action": "offset phase relay spin the far timber and leave for permanent footing",
+        "launch": [
+          118.97086666666584,
+          1.600000011920929,
+          0
+        ],
+        "landing": [
+          122.96686666666595,
+          2.8000000000000003,
+          0
+        ],
+        "ground": "Phase exit and charge apron"
+      },
+      {
+        "action": "pass removed bonus checkpoint",
+        "x": 126
+      },
+      {
+        "action": "charger bait and recovery opening",
+        "kind": "charger",
+        "alive": false,
+        "position": [
+          130.5209555555548,
+          2.8000000000000003,
+          0
+        ]
+      },
+      {
+        "action": "board the vertical lift",
+        "launch": [
+          144.2235666666659,
+          2.8000000000000003,
+          0
+        ],
+        "landing": [
+          149.8575666666661,
+          2.2101746238938964,
+          0
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "action": "leave lift for upper blade terrace",
+        "launch": [
+          149.99601111111053,
+          4.099211225486239,
+          0
+        ],
+        "landing": [
+          155.14701111111066,
+          4,
+          0
+        ],
+        "ground": "Upper blade room"
+      },
+      {
+        "action": "upper blade recovery window",
+        "kind": "spinner",
+        "alive": false,
+        "position": [
+          155.30284444444402,
+          4,
+          0
+        ]
+      },
+      {
+        "action": "pass the wooden arrow without destroying it",
+        "launch": [
+          160.23645555555524,
+          4,
+          0
+        ],
+        "landing": [
+          164.9674555555554,
+          4,
+          0
+        ],
+        "ground": "Upper blade room"
+      },
+      {
+        "action": "second outward materialization circuit",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "second circuit conserved-arrow return",
+        "contact": {
+          "frame": 4716,
+          "position": [
+            162.02868888888878,
+            5.171999999999999,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Upper blade room"
+        },
+        "landing": [
+          165.70268888888884,
+          12.4,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "second upper return target 167.48",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "descend before clearing the return arrow",
+        "launch": [
+          163.37535555555544,
+          12.4,
+          0
+        ],
+        "landing": [
+          159.42885555555537,
+          4,
+          0
+        ],
+        "ground": "Upper blade room"
+      },
+      {
+        "action": "second-circuit arrow after all dependents",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "clear the second spent solid switch",
+        "launch": [
+          168.33594444444458,
+          4,
+          0
+        ],
+        "landing": [
+          172.96350000000012,
+          4,
+          0
+        ],
+        "ground": "Upper blade room"
+      },
+      {
+        "action": "pass removed bonus checkpoint",
+        "x": 195
+      },
+      {
+        "action": "preserve arrow for high Nitro clear and return",
+        "contact": {
+          "frame": 6093,
+          "position": [
+            215.97107777777845,
+            5.171999999999999,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Nitro gallery"
+        },
+        "landing": [
+          219.57257777777846,
+          12.4,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "high green Nitro clearance",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "green clearance preserves the separate far-switch dependency",
+        "greenUsed": true,
+        "farSwitchUsed": false,
+        "nitroRemaining": 0
+      },
+      {
+        "action": "descend beyond the cleared wall",
+        "launch": [
+          219.80241111111175,
+          12.4,
+          0
+        ],
+        "landing": [
+          223.76700000000014,
+          4,
+          0
+        ],
+        "ground": "Nitro gallery"
+      },
+      {
+        "action": "far switch materializes the backward upper sweep",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jump over the spent far return switch",
+        "launch": [
+          232.3633333333336,
+          4,
+          0
+        ],
+        "landing": [
+          235.169,
+          4,
+          0
+        ],
+        "ground": "Final attack and fuse apron"
+      },
+      {
+        "action": "finish the sentry during its charge window",
+        "kind": "sentry",
+        "alive": false,
+        "position": [
+          247.18844444444466,
+          4,
+          0
+        ]
+      },
+      {
+        "action": "defeat the ranged enemy before committing to the long upper return",
+        "sentryAlive": false,
+        "returnArrowAlive": true,
+        "farSwitchUsed": true,
+        "sentryProjectiles": 0
+      },
+      {
+        "action": "jump back over the used far switch",
+        "launch": [
+          235.28266666666687,
+          4,
+          0
+        ],
+        "landing": [
+          231.6329999999999,
+          4,
+          0
+        ],
+        "ground": "Nitro gallery"
+      },
+      {
+        "action": "same conserved arrow for the far-switch return",
+        "contact": {
+          "frame": 7382,
+          "position": [
+            216.02855555555544,
+            5.171999999999999,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Nitro gallery"
+        },
+        "landing": [
+          208.2740222222219,
+          12.4,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "backward sweep target 202.56",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "backward sweep target 201.6",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return right to dismantle the exhausted launcher",
+        "launch": [
+          210.22867777777725,
+          12.4,
+          0
+        ],
+        "landing": [
+          213.46867777777734,
+          4,
+          0
+        ],
+        "ground": "Nitro gallery"
+      },
+      {
+        "action": "two-destination wooden arrow last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "cross the far switch after the complete upper sweep",
+        "launch": [
+          231.53549999999964,
+          4,
+          0
+        ],
+        "landing": [
+          235.17149999999975,
+          4,
+          0
+        ],
+        "ground": "Final attack and fuse apron"
+      },
+      {
+        "action": "board the familiar crumble receiver",
+        "launch": [
+          254.03544444444407,
+          4,
+          0
+        ],
+        "landing": [
+          258.95544444444386,
+          4.000000011920929,
+          0
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "action": "leave crumble before it disappears",
+        "launch": [
+          258.95544444444386,
+          4.000000011920929,
+          0
+        ],
+        "landing": [
+          263.9943888888876,
+          5.199999999999999,
+          0
+        ],
+        "ground": "Final mastery landing"
+      },
+      {
+        "action": "final permanent-floor cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "final permanent-floor cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "final permanent-floor cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "final permanent-floor cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Clockwork active-stage crate route",
+        "totalCrates": 55,
+        "activeStageCrates": 55,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 55,
+        "remaining": 0
+      }
+    ],
+    "actions": [
+      {
+        "name": "approach opening protective cargo",
+        "firstFrame": 20,
+        "lastFrame": 73
+      },
+      {
+        "name": "opening protective cargo",
+        "firstFrame": 93,
+        "lastFrame": 93
+      },
+      {
+        "name": "approach opening protective cargo",
+        "firstFrame": 115,
+        "lastFrame": 177
+      },
+      {
+        "name": "opening protective cargo",
+        "firstFrame": 197,
+        "lastFrame": 197
+      },
+      {
+        "name": "approach opening protective cargo",
+        "firstFrame": 219,
+        "lastFrame": 316
+      },
+      {
+        "name": "opening protective cargo",
+        "firstFrame": 336,
+        "lastFrame": 336
+      },
+      {
+        "name": "approach opening protective cargo",
+        "firstFrame": 358,
+        "lastFrame": 420
+      },
+      {
+        "name": "opening protective cargo",
+        "firstFrame": 440,
+        "lastFrame": 440
+      },
+      {
+        "name": "opening spiker action choice safe approach",
+        "firstFrame": 462,
+        "lastFrame": 548
+      },
+      {
+        "name": "opening spiker action choice spin",
+        "firstFrame": 566,
+        "lastFrame": 593
+      },
+      {
+        "name": "intake upper-before-arrow reward takeoff",
+        "firstFrame": 593,
+        "lastFrame": 695
+      },
+      {
+        "name": "intake upper-before-arrow reward arrow contact",
+        "firstFrame": 740,
+        "lastFrame": 776
+      },
+      {
+        "name": "intake upper-before-arrow reward high reward ascent",
+        "firstFrame": 776,
+        "lastFrame": 798
+      },
+      {
+        "name": "intake upper-before-arrow reward leave intact launcher",
+        "firstFrame": 798,
+        "lastFrame": 821
+      },
+      {
+        "name": "approach intake upper-before-arrow reward support last",
+        "firstFrame": 821,
+        "lastFrame": 882
+      },
+      {
+        "name": "intake upper-before-arrow reward support last",
+        "firstFrame": 902,
+        "lastFrame": 902
+      },
+      {
+        "name": "first relay takeoff",
+        "firstFrame": 924,
+        "lastFrame": 1029
+      },
+      {
+        "name": "first arrow to metal relay arrow contact",
+        "firstFrame": 1074,
+        "lastFrame": 1110
+      },
+      {
+        "name": "first arrow to metal relay",
+        "firstFrame": 1110,
+        "lastFrame": 1165
+      },
+      {
+        "name": "second arrow to fuse-room terrace arrow contact",
+        "firstFrame": 1192,
+        "lastFrame": 1233
+      },
+      {
+        "name": "second arrow to fuse-room terrace",
+        "firstFrame": 1233,
+        "lastFrame": 1288
+      },
+      {
+        "name": "pass former checkpoint at 41",
+        "firstFrame": 1288,
+        "lastFrame": 1288
+      },
+      {
+        "name": "fuse stack high approach",
+        "firstFrame": 1306,
+        "lastFrame": 1403
+      },
+      {
+        "name": "rise clear of the lower fuse stack",
+        "firstFrame": 1448,
+        "lastFrame": 1466
+      },
+      {
+        "name": "stomp the top TNT as an intact height tool",
+        "firstFrame": 1468,
+        "lastFrame": 1495
+      },
+      {
+        "name": "top TNT rebound apex",
+        "firstFrame": 1495,
+        "lastFrame": 1520
+      },
+      {
+        "name": "claim cap before TNT support disappears",
+        "firstFrame": 1522,
+        "lastFrame": 1527
+      },
+      {
+        "name": "retreat outside the TNT blast",
+        "firstFrame": 1527,
+        "lastFrame": 1552
+      },
+      {
+        "name": "wait for upper TNT geometry transformation",
+        "firstFrame": 1552,
+        "lastFrame": 1674
+      },
+      {
+        "name": "approach safe five-hit workshop reward",
+        "firstFrame": 1724,
+        "lastFrame": 1851
+      },
+      {
+        "name": "safe five-hit workshop reward",
+        "firstFrame": 1871,
+        "lastFrame": 1871
+      },
+      {
+        "name": "approach first independent bridge circuit",
+        "firstFrame": 1893,
+        "lastFrame": 1984
+      },
+      {
+        "name": "first independent bridge circuit",
+        "firstFrame": 2004,
+        "lastFrame": 2004
+      },
+      {
+        "name": "jump over the spent solid bridge switch",
+        "firstFrame": 2053,
+        "lastFrame": 2092
+      },
+      {
+        "name": "cross the fuse-room materialized bridge",
+        "firstFrame": 2092,
+        "lastFrame": 2315
+      },
+      {
+        "name": "pass former checkpoint at 80",
+        "firstFrame": 2333,
+        "lastFrame": 2389
+      },
+      {
+        "name": "turtle armor stomp safe approach",
+        "firstFrame": 2407,
+        "lastFrame": 2499
+      },
+      {
+        "name": "turtle armor stomp stomp",
+        "firstFrame": 2544,
+        "lastFrame": 2581
+      },
+      {
+        "name": "turtle armor stomp rebound landing",
+        "firstFrame": 2581,
+        "lastFrame": 2623
+      },
+      {
+        "name": "first retracted spinner opening safe approach",
+        "firstFrame": 2623,
+        "lastFrame": 2730
+      },
+      {
+        "name": "first retracted spinner opening spin",
+        "firstFrame": 2748,
+        "lastFrame": 2763
+      },
+      {
+        "name": "first phase relay permanent observation position",
+        "firstFrame": 2763,
+        "lastFrame": 2872
+      },
+      {
+        "name": "first phase relay wait for a fresh readable solid window",
+        "firstFrame": 2890,
+        "lastFrame": 2890
+      },
+      {
+        "name": "first phase relay board phased footing",
+        "firstFrame": 2917,
+        "lastFrame": 2956
+      },
+      {
+        "name": "first phase relay spin the far timber and leave for permanent footing",
+        "firstFrame": 2983,
+        "lastFrame": 3022
+      },
+      {
+        "name": "offset phase relay permanent observation position",
+        "firstFrame": 3022,
+        "lastFrame": 3107
+      },
+      {
+        "name": "offset phase relay wait for a fresh readable solid window",
+        "firstFrame": 3125,
+        "lastFrame": 3314
+      },
+      {
+        "name": "offset phase relay board phased footing",
+        "firstFrame": 3341,
+        "lastFrame": 3380
+      },
+      {
+        "name": "offset phase relay spin the far timber and leave for permanent footing",
+        "firstFrame": 3407,
+        "lastFrame": 3443
+      },
+      {
+        "name": "pass former checkpoint at 126",
+        "firstFrame": 3443,
+        "lastFrame": 3516
+      },
+      {
+        "name": "charger bait and recovery opening safe approach",
+        "firstFrame": 3534,
+        "lastFrame": 3638
+      },
+      {
+        "name": "charger bait and recovery opening spin",
+        "firstFrame": 3656,
+        "lastFrame": 3657
+      },
+      {
+        "name": "vertical lift takeoff",
+        "firstFrame": 3657,
+        "lastFrame": 3823
+      },
+      {
+        "name": "wait for a low lift receiver",
+        "firstFrame": 3841,
+        "lastFrame": 3841
+      },
+      {
+        "name": "board the vertical lift",
+        "firstFrame": 3868,
+        "lastFrame": 3908
+      },
+      {
+        "name": "ride lift to upper deck height",
+        "firstFrame": 3908,
+        "lastFrame": 4073
+      },
+      {
+        "name": "leave lift for upper blade terrace",
+        "firstFrame": 4100,
+        "lastFrame": 4140
+      },
+      {
+        "name": "upper blade recovery window safe approach",
+        "firstFrame": 4140,
+        "lastFrame": 4150
+      },
+      {
+        "name": "upper blade recovery window attack opening",
+        "firstFrame": 4168,
+        "lastFrame": 4219
+      },
+      {
+        "name": "upper blade recovery window spin",
+        "firstFrame": 4219,
+        "lastFrame": 4229
+      },
+      {
+        "name": "approach the intact return launcher",
+        "firstFrame": 4229,
+        "lastFrame": 4319
+      },
+      {
+        "name": "pass the wooden arrow without destroying it",
+        "firstFrame": 4364,
+        "lastFrame": 4403
+      },
+      {
+        "name": "approach second outward materialization circuit",
+        "firstFrame": 4403,
+        "lastFrame": 4493
+      },
+      {
+        "name": "second outward materialization circuit",
+        "firstFrame": 4513,
+        "lastFrame": 4513
+      },
+      {
+        "name": "second circuit conserved-arrow return takeoff",
+        "firstFrame": 4535,
+        "lastFrame": 4635
+      },
+      {
+        "name": "second circuit conserved-arrow return arrow contact",
+        "firstFrame": 4680,
+        "lastFrame": 4716
+      },
+      {
+        "name": "second circuit conserved-arrow return apex outside the shelf",
+        "firstFrame": 4719,
+        "lastFrame": 4752
+      },
+      {
+        "name": "second circuit conserved-arrow return rise above the shelf",
+        "firstFrame": 4754,
+        "lastFrame": 4764
+      },
+      {
+        "name": "second circuit conserved-arrow return",
+        "firstFrame": 4764,
+        "lastFrame": 4808
+      },
+      {
+        "name": "approach second upper return target 167.48",
+        "firstFrame": 4808,
+        "lastFrame": 4845
+      },
+      {
+        "name": "second upper return target 167.48",
+        "firstFrame": 4865,
+        "lastFrame": 4865
+      },
+      {
+        "name": "second upper return descent takeoff",
+        "firstFrame": 4887,
+        "lastFrame": 4972
+      },
+      {
+        "name": "descend before clearing the return arrow",
+        "firstFrame": 5017,
+        "lastFrame": 5069
+      },
+      {
+        "name": "approach second-circuit arrow after all dependents",
+        "firstFrame": 5069,
+        "lastFrame": 5135
+      },
+      {
+        "name": "second-circuit arrow after all dependents",
+        "firstFrame": 5155,
+        "lastFrame": 5155
+      },
+      {
+        "name": "second bridge switch takeoff",
+        "firstFrame": 5177,
+        "lastFrame": 5296
+      },
+      {
+        "name": "clear the second spent solid switch",
+        "firstFrame": 5341,
+        "lastFrame": 5380
+      },
+      {
+        "name": "cross second independently wired bridge",
+        "firstFrame": 5380,
+        "lastFrame": 5592
+      },
+      {
+        "name": "pass former checkpoint at 195",
+        "firstFrame": 5610,
+        "lastFrame": 5676
+      },
+      {
+        "name": "floater jump-spin safe approach",
+        "firstFrame": 5694,
+        "lastFrame": 5825
+      },
+      {
+        "name": "defeat the hovering foe with an airborne spin",
+        "firstFrame": 5870,
+        "lastFrame": 5880
+      },
+      {
+        "name": "land beyond the defeated floater",
+        "firstFrame": 5880,
+        "lastFrame": 5909
+      },
+      {
+        "name": "preserve arrow for high Nitro clear and return takeoff",
+        "firstFrame": 5909,
+        "lastFrame": 6012
+      },
+      {
+        "name": "preserve arrow for high Nitro clear and return arrow contact",
+        "firstFrame": 6057,
+        "lastFrame": 6093
+      },
+      {
+        "name": "preserve arrow for high Nitro clear and return apex outside the shelf",
+        "firstFrame": 6096,
+        "lastFrame": 6129
+      },
+      {
+        "name": "preserve arrow for high Nitro clear and return rise above the shelf",
+        "firstFrame": 6131,
+        "lastFrame": 6141
+      },
+      {
+        "name": "preserve arrow for high Nitro clear and return",
+        "firstFrame": 6141,
+        "lastFrame": 6155
+      },
+      {
+        "name": "approach high green Nitro clearance",
+        "firstFrame": 6155,
+        "lastFrame": 6184
+      },
+      {
+        "name": "high green Nitro clearance",
+        "firstFrame": 6204,
+        "lastFrame": 6204
+      },
+      {
+        "name": "descend beyond the cleared wall",
+        "firstFrame": 6298,
+        "lastFrame": 6350
+      },
+      {
+        "name": "approach the far return switch under sentry pressure",
+        "firstFrame": 6350,
+        "lastFrame": 6435
+      },
+      {
+        "name": "far switch materializes the backward upper sweep",
+        "firstFrame": 6437,
+        "lastFrame": 6437
+      },
+      {
+        "name": "jump over the spent far return switch",
+        "firstFrame": 6486,
+        "lastFrame": 6525
+      },
+      {
+        "name": "approach the surviving second fuse",
+        "firstFrame": 6525,
+        "lastFrame": 6580
+      },
+      {
+        "name": "prime surviving final TNT with deliberate stomp",
+        "firstFrame": 6607,
+        "lastFrame": 6643
+      },
+      {
+        "name": "use the last rebound to attack and reach right-hand refuge",
+        "firstFrame": 6643,
+        "lastFrame": 6684
+      },
+      {
+        "name": "finish the sentry during its charge window safe approach",
+        "firstFrame": 6684,
+        "lastFrame": 6693
+      },
+      {
+        "name": "finish the sentry during its charge window spin",
+        "firstFrame": 6711,
+        "lastFrame": 6717
+      },
+      {
+        "name": "wait for both deliberately primed final TNT",
+        "firstFrame": 6717,
+        "lastFrame": 6822
+      },
+      {
+        "name": "return through the cleared explosive room",
+        "firstFrame": 6877,
+        "lastFrame": 7030
+      },
+      {
+        "name": "jump back over the used far switch",
+        "firstFrame": 7075,
+        "lastFrame": 7114
+      },
+      {
+        "name": "return to the conserved arrow after removing sentry pressure",
+        "firstFrame": 7114,
+        "lastFrame": 7283
+      },
+      {
+        "name": "same conserved arrow for the far-switch return takeoff",
+        "firstFrame": 7301,
+        "lastFrame": 7301
+      },
+      {
+        "name": "same conserved arrow for the far-switch return arrow contact",
+        "firstFrame": 7346,
+        "lastFrame": 7382
+      },
+      {
+        "name": "same conserved arrow for the far-switch return apex outside the shelf",
+        "firstFrame": 7385,
+        "lastFrame": 7418
+      },
+      {
+        "name": "same conserved arrow for the far-switch return rise above the shelf",
+        "firstFrame": 7420,
+        "lastFrame": 7430
+      },
+      {
+        "name": "same conserved arrow for the far-switch return",
+        "firstFrame": 7430,
+        "lastFrame": 7475
+      },
+      {
+        "name": "approach backward sweep target 202.56",
+        "firstFrame": 7475,
+        "lastFrame": 7550
+      },
+      {
+        "name": "backward sweep target 202.56",
+        "firstFrame": 7570,
+        "lastFrame": 7570
+      },
+      {
+        "name": "approach backward sweep target 201.6",
+        "firstFrame": 7592,
+        "lastFrame": 7654
+      },
+      {
+        "name": "backward sweep target 201.6",
+        "firstFrame": 7674,
+        "lastFrame": 7674
+      },
+      {
+        "name": "backward gallery return descent",
+        "firstFrame": 7696,
+        "lastFrame": 7815
+      },
+      {
+        "name": "return right to dismantle the exhausted launcher",
+        "firstFrame": 7860,
+        "lastFrame": 7912
+      },
+      {
+        "name": "approach two-destination wooden arrow last",
+        "firstFrame": 7912,
+        "lastFrame": 7978
+      },
+      {
+        "name": "two-destination wooden arrow last",
+        "firstFrame": 7998,
+        "lastFrame": 7998
+      },
+      {
+        "name": "return to the cleared finish approach",
+        "firstFrame": 8020,
+        "lastFrame": 8211
+      },
+      {
+        "name": "cross the far switch after the complete upper sweep",
+        "firstFrame": 8256,
+        "lastFrame": 8295
+      },
+      {
+        "name": "final crumble observation ledge",
+        "firstFrame": 8295,
+        "lastFrame": 8503
+      },
+      {
+        "name": "board the familiar crumble receiver",
+        "firstFrame": 8548,
+        "lastFrame": 8587
+      },
+      {
+        "name": "leave crumble before it disappears",
+        "firstFrame": 8614,
+        "lastFrame": 8649
+      },
+      {
+        "name": "approach final permanent-floor cargo",
+        "firstFrame": 8649,
+        "lastFrame": 8754
+      },
+      {
+        "name": "final permanent-floor cargo",
+        "firstFrame": 8774,
+        "lastFrame": 8774
+      },
+      {
+        "name": "approach final permanent-floor cargo",
+        "firstFrame": 8796,
+        "lastFrame": 8858
+      },
+      {
+        "name": "final permanent-floor cargo",
+        "firstFrame": 8878,
+        "lastFrame": 8878
+      },
+      {
+        "name": "approach final permanent-floor cargo",
+        "firstFrame": 8900,
+        "lastFrame": 8982
+      },
+      {
+        "name": "final permanent-floor cargo",
+        "firstFrame": 9002,
+        "lastFrame": 9002
+      },
+      {
+        "name": "approach final permanent-floor cargo",
+        "firstFrame": 9024,
+        "lastFrame": 9086
+      },
+      {
+        "name": "final permanent-floor cargo",
+        "firstFrame": 9106,
+        "lastFrame": 9106
+      },
+      {
+        "name": "cross the real Clockwork gate",
+        "firstFrame": 9130,
+        "lastFrame": 9182
+      }
+    ],
+    "result": {
+      "completionScope": "complete-stage",
+      "activeStageCrates": 55,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true,
+      "id": "clockwork-gauntlet",
+      "cratesBroken": 55,
+      "totalCrates": 55,
+      "deaths": 0,
+      "state": "finished"
+    },
+    "completionScope": "complete-stage",
+    "activeStageCrates": 55,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "id": "clockwork-gauntlet",
+    "cratesBroken": 55,
+    "totalCrates": 55,
+    "deaths": 0,
+    "state": "finished",
+    "frames": 9182,
+    "seconds": 153.03333333333333
+  },
+  "retry": {
+    "crates": true,
+    "outlines": true,
+    "spinBridges": true
+  },
+  "intakeWrongOrder": {
+    "stage": "ground double and air-spin attempt -2",
+    "evidence": [
+      {
+        "action": "negative run opening cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "negative run opening cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "negative run opening cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "negative run opening cargo",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "negative run clear the approach spiker",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          7.489255555555549,
+          0,
+          0
+        ]
+      },
+      {
+        "action": "wrong order: destroy the intake launch before its cap",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "early intake destruction loses the ground-double collection route",
+        "authoredCapBase": 9.296,
+        "arrowAlive": false,
+        "capAlive": true,
+        "attempts": [
+          {
+            "doubleAtVelocity": 7,
+            "peakFeet": 4.125833333333332,
+            "capAlive": true
+          },
+          {
+            "doubleAtVelocity": 4,
+            "peakFeet": 4.483333333333331,
+            "capAlive": true
+          },
+          {
+            "doubleAtVelocity": 1,
+            "peakFeet": 4.5958333333333306,
+            "capAlive": true
+          },
+          {
+            "doubleAtVelocity": 0,
+            "peakFeet": 4.5527777777777745,
+            "capAlive": true
+          },
+          {
+            "doubleAtVelocity": -2,
+            "peakFeet": 4.481666666666663,
+            "capAlive": true
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "approach negative run opening cargo",
+        "firstFrame": 20,
+        "lastFrame": 73
+      },
+      {
+        "name": "negative run opening cargo",
+        "firstFrame": 93,
+        "lastFrame": 93
+      },
+      {
+        "name": "approach negative run opening cargo",
+        "firstFrame": 115,
+        "lastFrame": 177
+      },
+      {
+        "name": "negative run opening cargo",
+        "firstFrame": 197,
+        "lastFrame": 197
+      },
+      {
+        "name": "approach negative run opening cargo",
+        "firstFrame": 219,
+        "lastFrame": 316
+      },
+      {
+        "name": "negative run opening cargo",
+        "firstFrame": 336,
+        "lastFrame": 336
+      },
+      {
+        "name": "approach negative run opening cargo",
+        "firstFrame": 358,
+        "lastFrame": 420
+      },
+      {
+        "name": "negative run opening cargo",
+        "firstFrame": 440,
+        "lastFrame": 440
+      },
+      {
+        "name": "negative run clear the approach spiker safe approach",
+        "firstFrame": 462,
+        "lastFrame": 548
+      },
+      {
+        "name": "negative run clear the approach spiker spin",
+        "firstFrame": 566,
+        "lastFrame": 593
+      },
+      {
+        "name": "approach wrong order: destroy the intake launch before its cap",
+        "firstFrame": 593,
+        "lastFrame": 700
+      },
+      {
+        "name": "wrong order: destroy the intake launch before its cap",
+        "firstFrame": 720,
+        "lastFrame": 720
+      },
+      {
+        "name": "stand below the now-unreachable intake cap",
+        "firstFrame": 742,
+        "lastFrame": 803
+      },
+      {
+        "name": "ground jump before double at 7",
+        "firstFrame": 848,
+        "lastFrame": 861
+      },
+      {
+        "name": "ground double and air-spin attempt 7",
+        "firstFrame": 863,
+        "lastFrame": 899
+      },
+      {
+        "name": "ground jump before double at 4",
+        "firstFrame": 951,
+        "lastFrame": 970
+      },
+      {
+        "name": "ground double and air-spin attempt 4",
+        "firstFrame": 972,
+        "lastFrame": 1007
+      },
+      {
+        "name": "ground jump before double at 1",
+        "firstFrame": 1059,
+        "lastFrame": 1083
+      },
+      {
+        "name": "ground double and air-spin attempt 1",
+        "firstFrame": 1085,
+        "lastFrame": 1121
+      },
+      {
+        "name": "ground jump before double at 0",
+        "firstFrame": 1173,
+        "lastFrame": 1199
+      },
+      {
+        "name": "ground double and air-spin attempt 0",
+        "firstFrame": 1201,
+        "lastFrame": 1237
+      },
+      {
+        "name": "ground jump before double at -2",
+        "firstFrame": 1289,
+        "lastFrame": 1316
+      },
+      {
+        "name": "ground double and air-spin attempt -2",
+        "firstFrame": 1318,
+        "lastFrame": 1353
+      }
+    ],
+    "result": {
+      "id": "clockwork-gauntlet",
+      "test": "destroyed intake arrow blocks ordinary charged-double/air-spin harvesting",
+      "deaths": 0,
+      "attempts": [
+        {
+          "doubleAtVelocity": 7,
+          "peakFeet": 4.125833333333332,
+          "capAlive": true
+        },
+        {
+          "doubleAtVelocity": 4,
+          "peakFeet": 4.483333333333331,
+          "capAlive": true
+        },
+        {
+          "doubleAtVelocity": 1,
+          "peakFeet": 4.5958333333333306,
+          "capAlive": true
+        },
+        {
+          "doubleAtVelocity": 0,
+          "peakFeet": 4.5527777777777745,
+          "capAlive": true
+        },
+        {
+          "doubleAtVelocity": -2,
+          "peakFeet": 4.481666666666663,
+          "capAlive": true
+        }
+      ],
+      "capAlive": true,
+      "arrowAlive": false,
+      "gemEarned": false
+    },
+    "id": "clockwork-gauntlet",
+    "test": "destroyed intake arrow blocks ordinary charged-double/air-spin harvesting",
+    "deaths": 0,
+    "attempts": [
+      {
+        "doubleAtVelocity": 7,
+        "peakFeet": 4.125833333333332,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 4,
+        "peakFeet": 4.483333333333331,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 1,
+        "peakFeet": 4.5958333333333306,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 0,
+        "peakFeet": 4.5527777777777745,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": -2,
+        "peakFeet": 4.481666666666663,
+        "capAlive": true
+      }
+    ],
+    "capAlive": true,
+    "arrowAlive": false,
+    "gemEarned": false,
+    "frames": 1378,
+    "seconds": 22.966666666666665
+  },
+  "spentFuseSupport": {
+    "highCapRemains": true,
+    "capBase": 11.8,
+    "peakFeet": 8.514833333333332,
+    "peakSpinTop": 9.434833333333332,
+    "peakCrateBodyTop": 11.543269995102548,
+    "deaths": 0,
+    "retryRestores": true
+  }
+}

@@ -8,6 +8,11 @@ import { puzzleControls } from './puzzle-controls.mjs';
 export function* runClockworkJourney(r) {
   const {p,l}=r,c=puzzleControls(r),at=c.crateSpecAt;
   const deaths=p.totalDeaths;
+  function* harvest(a,b,label){
+    const boxes=l.crates.filter(box=>box.alive&&!box.pending&&!box.bang&&!box.nitroBang&&!box.nitro&&!box.tnt&&!box.bouncy&&!box.metalBounce&&box.mesh.position.x>=a&&box.mesh.position.x<=b)
+      .sort((a,b)=>a.box.min.y-b.box.min.y||a.mesh.position.x-b.mesh.position.x);
+    for(const box of boxes)if(box.alive)yield* c.hit(box,label);
+  }
   function* evadeTo(target,label,{ready=()=>true,double=true}={}) {
     let evadeCharge=0,evading=false,secondPop=false;
     const approaching=reach=>l.projectiles.some(shot=>shot.vel.x<0&&shot.mesh.position.x>p.pos.x-.4
@@ -39,7 +44,7 @@ export function* runClockworkJourney(r) {
     },{label,limit:700});
   }
   yield* c.stepFor(20);c.check(p.grounded,'Clockwork source spawn unsupported');
-  yield* c.hit(at(-2,0),'opening protective mask');
+  yield* harvest(-4,6,'opening protective cargo');
   yield* c.enemy(l.enemies[0],'opening spiker action choice');
   const intakeArrow=c.crateNamed('Preserve the intake launch until the upper box is gone');
   const intakeCap=c.crateNamed('High reward needs the intact wooden arrow');
@@ -55,13 +60,14 @@ export function* runClockworkJourney(r) {
   }
   const firstRelay=c.crateNamed('First relay arrow');
   yield* c.walk([21.65,0,0],'first relay takeoff');
-  yield* relayArrow(firstRelay.mesh.position.x,0,[29,2.18,0],'first arrow to metal relay');
+  const relayAnchor=at(29,1.2);
+  yield* relayArrow(firstRelay.mesh.position.x,0,[relayAnchor.mesh.position.x,relayAnchor.box.max.y+.02,0],'first arrow to metal relay');
   c.check(!at(29,2.16).alive,'relay airborne reward was not collected');
   yield* relayArrow(33,0,[40,1.6,0],'second arrow to fuse-room terrace');
   yield* c.checkpoint(41,'bank before the irreversible fuse stack');
 
   // Use the highest intact TNT as a height tool before its timed destruction.
-  const bottom=at(47,1.6),middle=at(47,2.56),top=at(47,3.52),cap=at(47,9.8);
+  const bottom=at(47,1.6),middle=at(47,2.56),top=at(47,3.52),cap=c.crateNamed('Upper-first reward: preserve the high TNT support until claimed');
   yield* c.walk([44.8,1.6,0],'fuse stack high approach');
   yield* c.charge();yield* c.tick({jumpReleased:true});
   yield* c.until(()=>p.pos.y>4.2,{}, {label:'rise clear of the lower fuse stack',limit:100});
@@ -69,7 +75,7 @@ export function* runClockworkJourney(r) {
   yield* c.until(()=>top.fuse!==undefined,()=>c.steer([47,4.48,0]),{label:'stomp the top TNT as an intact height tool',limit:140});
   yield* c.until(()=>p.vVel<.7,{}, {label:'top TNT rebound apex',limit:120});
   yield* c.tick({jumpHeld:true});yield* c.tick({jumpReleased:true});
-  yield* c.until(()=>!cap.alive,()=>({...c.steer([47,9.8,0]),spinHeld:p.pos.y>8.5}),{label:'claim cap before TNT support disappears',limit:160});
+  yield* c.until(()=>!cap.alive,()=>({...c.steer([47,cap.box.min.y,0]),spinHeld:p.pos.y>cap.box.min.y-2.1}),{label:'claim cap before TNT support disappears',limit:160});
   yield* c.until(()=>p.grounded,()=>c.steer([41.8,1.6,0]),{label:'retreat outside the TNT blast',limit:180});
   yield* c.until(()=>!top.alive,{}, {label:'wait for upper TNT geometry transformation',limit:240});
   yield* c.stepFor(50);
@@ -83,6 +89,7 @@ export function* runClockworkJourney(r) {
     yield* c.stepFor(50);
   }
   if(at(51,1.6).alive)yield* c.hit(at(51,1.6),'safe five-hit workshop reward');
+  yield* harvest(50,53,'finite retreat stock');
   yield* c.hit(at(55,1.6),'first independent bridge circuit');
   yield* c.hop([57.2,1.6,0],'jump over the spent solid bridge switch');
   yield* c.walk([78,1.6,0],'cross the fuse-room materialized bridge');
@@ -203,6 +210,7 @@ export function* runClockworkJourney(r) {
   yield* c.hop([259,4,0],'board the familiar crumble receiver');
   yield* c.hop([264.2,5.2,0],'leave crumble before it disappears',{heightTolerance:.2});
   for(const x of [271,275])if(at(x,5.2).alive)yield* c.hit(at(x,5.2),`final permanent-floor reward ${x}`);
+  yield* harvest(269,278,'final permanent-floor cargo');
   yield* c.clearAll('Clockwork active-stage crate route');
   const completion=yield* c.finish('cross the real Clockwork gate',{limit:220});
   c.check(p.totalDeaths===deaths,'Clockwork positive journey concealed a reset/death');
@@ -216,7 +224,8 @@ export function* runClockworkJourney(r) {
 export function* runClockworkGroundDoubleNegative(r) {
   const {p,l}=r,c=puzzleControls(r),deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'negative intake source spawn unsupported');
-  yield* c.hit(c.crateSpecAt(-2,0),'negative run protective mask');
+  for(const box of l.crates.filter(box=>box.alive&&box.mesh.position.x<6).sort((a,b)=>a.box.min.y-b.box.min.y||a.mesh.position.x-b.mesh.position.x))
+    if(box.alive)yield* c.hit(box,'negative run opening cargo');
   yield* c.enemy(l.enemies[0],'negative run clear the approach spiker');
   const arrow=c.crateNamed('Preserve the intake launch until the upper box is gone');
   const cap=c.crateNamed('High reward needs the intact wooden arrow');
