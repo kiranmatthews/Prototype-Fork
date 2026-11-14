@@ -13206,114 +13206,75 @@ export class Level {
     // for one. Without this every crate would sit at its nominal height and
     // hover over (or sink into) the bumps.
     this.root.updateMatrixWorld(true);
-    // `up` stacks: crate() only auto-stacks when the deck height it is handed
-    // is within 0.9 of the crate below, and on a rolling floor that test can
-    // just miss — which silently drops the second crate INSIDE the first
-    // instead of on top of it. Handing it the stacked height is exact.
-    const crateAt = (
-      z: number,
-      off: number,
-      kind?: Parameters<Level["crate"]>[3],
-      up = 0,
-    ): void => this.crate(gx(z) + off, gy(z) + up * 0.96, z, kind);
-    const fruitAt = (z: number, off = 0, h = 1.25): void =>
-      this.pickup(gx(z) + off, gy(z) + h, z);
+    // Legacy-grid harvests become touching native 1.152 m formations. Groups
+    // sit on shoulders; the clear route and all-box route remain distinct.
+    const cargo = (z:number,off:number,kinds:Parameters<Level["crate"]>[3][],job:string,y=gy(z)):void => {
+      kinds.forEach((kind,i)=>{
+        this.crate(gx(z)+off+(i%2-.5)*.96,y+Math.floor(i/2)*.96,z,kind);
+        this.crates[this.crates.length-1].mesh.name=job;
+      });
+    };
+    const fruitAt = (z:number,off=0,h=1.25):void => this.pickup(gx(z)+off,gy(z)+h,z);
+    for (const fruit of jungleFruitClusters(gx,gy)) this.pickup(...fruit.p);
 
-    for (const fruit of jungleFruitClusters(gx, gy)) this.pickup(...fruit.p);
+    // Ten crates to the first bank: spin, a protected crab lesson, then an
+    // isolated TNT decision with a clear retreat across the broad corridor.
+    cargo(-8,-2.2,[undefined,undefined,'mystery','mystery'],'TEACH / clearing harvest wall');
+    cargo(-52,2.4,[undefined,undefined,'mask'],'PREPARE / crab lesson shelter');
+    this.crate(-2.2,gy(-88),-88,'tnt');this.crates[this.crates.length-1].mesh.name='TEACH / side fuse with open right refuge';
+    this.crate(-1.24,gy(-88),-88);this.crates[this.crates.length-1].mesh.name='TOOL / fuse-cleared stock';
+    this.crate(-1.24,gy(-88)+.96,-88,'mystery');this.crates[this.crates.length-1].mesh.name='REWARD / fuse stock lid';
+    fruitAt(-13,-1.5);fruitAt(-13,1.5);
+    this.log(gx(-28)-6.5,gx(-28)+6.5,gy(-28),-28);
+    for(let i=0;i<5;i++)fruitAt(-33-i*2.6,0,1.6);
+    this.enemy(-3.4,-.2,gy(-64),-64,1.8,'x','grunt'); // roomy debut; pass on the right
+    for(let i=0;i<4;i++)fruitAt(-70-i*2.4,0,1.5);
+    this.log(gx(-96)-6.5,gx(-96)+6.5,gy(-96),-96);
+    for(let i=0;i<5;i++)fruitAt(-103-i*2.4,0,1.6);
 
-    // A. the clearing: a crate line to learn the spin on, one arrow crate
-    crateAt(-8, -1.5);
-    crateAt(-8, 0);
-    crateAt(-8, 1.5);
-    crateAt(-18, -2.2);
-    crateAt(-18, 2.2);
-    crateAt(-24, 0, "bouncy");
-    fruitAt(-13, -1.5);
-    fruitAt(-13, 1.5);
-    this.log(gx(-28) - 6.5, gx(-28) + 6.5, gy(-28), -28); // first thing to hop
+    this.checkpoint(gy(-116),-116,gx(-116));
+    cargo(-124,-2.4,[undefined,undefined,'mystery'],'COUNT / stock just after the checkpoint');
+    this.enemy(.3,2.9,gy(-140),-140,1.6,'x','turtle'); // shell lesson; clear left opt-out
+    cargo(-146,2.4,[undefined,undefined,'mystery'],'TEST / harvest beyond the shell patrol');
+    for(let i=0;i<4;i++)fruitAt(-146-i*2.4,0,1.5);
+    cargo(-164,-2.5,[undefined,undefined,'mystery','mask'],'PREPARE / trunk departure harvest');
+    for(let i=0;i<9;i++){const z=-178-i*7;this.pickup(gx(z),gy(z)+1.5,z);}
 
-    // B. corridors: fruit strung over both cuts, crates around the dip
-    for (let i = 0; i < 5; i++) fruitAt(-33 - i * 2.6, 0, 1.6);
-    crateAt(-52, -1.4);
-    crateAt(-52, 1.4);
-    crateAt(-52, -1.4, undefined, 1); // stacked on the one below
-    this.enemy(gx(-64) - 3.6, gx(-64) + 3.6, gy(-64), -64, 3, "x", "grunt");
-    for (let i = 0; i < 4; i++) fruitAt(-70 - i * 2.4, 0, 1.5); // over the dip
-    crateAt(-88, 0, "tnt");
-    crateAt(-88, -1.6);
-    crateAt(-88, 1.6);
-    this.log(gx(-96) - 6.5, gx(-96) + 6.5, gy(-96), -96);
-    for (let i = 0; i < 5; i++) fruitAt(-103 - i * 2.4, 0, 1.6);
+    this.checkpoint(gy(-246),-246,gx(-246));
+    cargo(-254,2.4,[undefined,undefined,'mystery','mystery'],'REST / ravine receiving court');
+    this.enemy(-3.4,-1.4,gy(-266),-266,1.8,'x','grunt'); // repeat beside the optional left harvest
+    cargo(-278,-2.4,[undefined,undefined,'mask'],'PREPARE / temple climb stock');
+    this.enemy(.4,2.8,0,-314,1.6,'x','turtle'); // right shoulder; first left stair remains clear
+    cargo(-354,-3.5,[undefined,undefined,'mystery'],'COUNT / third temple course harvest',6.9);
+    this.pickup(-2.6,3.6,-334);this.pickup(2.6,5.9,-346);
+    this.pickup(-2.6,8.2,-358);this.pickup(2.6,10.5,-370);
 
-    this.checkpoint(gy(-116), -116, gx(-116));
-    crateAt(-124, -2.4);
-    crateAt(-124, 2.4);
-    crateAt(-131, 0, "nitro");
-    this.enemy(gx(-140) - 3.4, gx(-140) + 3.4, gy(-140), -140, 2.6, "x", "turtle");
-    for (let i = 0; i < 4; i++) fruitAt(-146 - i * 2.4, 0, 1.5);
-    crateAt(-160, -1.5);
-    crateAt(-160, 1.5);
-    crateAt(-168, 0, "mystery");
+    this.checkpoint(11.5,-396,0);
+    this.enemy(2.8,5.2,11.5,-404,2.1,'x','grunt'); // guarded shoulder, passing lane on the left
+    cargo(-414,-3.4,[undefined,undefined,'mystery','mystery'],'REST / temple terrace harvest',11.5);
+    this.fruitRow(-394,-424,12.8,7,0);
+    cargo(-428,3.4,[undefined,undefined,'mask'],'PREPARE / long-peck lesson refuge',11.5);
+    this.enemy(-2.2,2.2,11.5,-439,1.45,'x','moa'); // broad debut before the descent
+    // The descent and rail stay clear of the former stationary blade enemy.
+    this.crate(2.4,gy(-500),-500);this.crates[this.crates.length-1].mesh.name='LANDING / far-bank marker';
+    for(let i=0;i<5;i++)fruitAt(-508-i*2.6,0,1.5);
+    this.enemy(.5,2.9,gy(-512),-512,1.45,'x','moa'); // peck reprise after a generous receiving bank
+    cargo(-546,-2.4,[undefined,'mystery'],'TEST / guarded last straight harvest');
+    this.enemy(-3.4,-1.4,gy(-548),-548,2,'x','grunt');
+    for(let i=0;i<5;i++)fruitAt(-565-i*2.4,0,1.6);
 
-    // C. the trunk: fruit strung along it, so the grind pays
-    for (let i = 0; i < 9; i++) {
-      const z = -178 - i * 7;
-      this.pickup(gx(z), gy(z) + 1.5, z);
+    this.checkpoint(gy(-580),-580,gx(-580));
+    this.log(gx(-592)-6.5,gx(-592)+6.5,gy(-592),-592);
+    cargo(-604,2.4,[undefined,undefined,'mystery','mystery'],'COUNT / harvest behind the log');
+    this.enemy(-3,-.6,gy(-616),-616,1.8,'x','turtle'); // shell reprise; right-hand clear route
+    for(let i=0;i<4;i++)fruitAt(-622-i*2.4,0,1.5);
+    // A visible Nitro frame on the left. The centre/right route stays open;
+    // the final green switch credits this optional stock after checkpoint retry.
+    for(const [x,up,kind]of [[-3.2,0,'nitro'],[-2.24,0,undefined],[-1.28,0,'nitro'],[-2.24,.96,'mystery']] as const){
+      this.crate(x,gy(-636)+up,-636,kind);this.crates[this.crates.length-1].mesh.name='FRAME / deferred Nitro-side cache';
     }
-    this.checkpoint(gy(-246), -246, gx(-246));
-    crateAt(-254, -1.6);
-    crateAt(-254, 1.6);
-    this.enemy(gx(-266) - 3.8, gx(-266) + 3.8, gy(-266), -266, 4.4, "x", "charger");
-    crateAt(-282, 0, "bouncy");
-    crateAt(-290, -2);
-    crateAt(-290, 2);
-
-    // D. the temple: a hopper guarding the mouth, crates on the courses, a
-    //    sentry holding the terrace
-    this.enemy(-4, 4, 0, -314, 3.4, "x", "hopper");
-    this.crate(-2.6, 2.3, -330);
-    this.crate(2.6, 4.6, -342);
-    this.crate(-2.6, 6.9, -354, "mask");
-    this.crate(2.6, 9.2, -366);
-    this.pickup(-2.6, 3.6, -334);
-    this.pickup(2.6, 5.9, -346);
-    this.pickup(-2.6, 8.2, -358);
-    this.pickup(2.6, 10.5, -370);
-    this.enemy(-3, 3, 11.5, -404, 0, "x", "sentry");
-    this.fruitRow(-394, -424, 12.8, 7, 0);
-    this.crate(-3.4, 11.5, -414);
-    this.crate(3.4, 11.5, -414);
-    this.crate(0, 11.5, -428, "tnt");
-    this.checkpoint(11.5, -396, 0);
-    // The broad level terrace leaves room to read and dodge the long peck.
-    this.enemy(-2.2, 2.2, 11.5, -439, 1.45, "x", "moa");
-
-    // E. the run home: a spinner on the last straight, then the landing
-    this.enemy(0, 0, 0.4, -470, 0, "x", "spinner");
-    crateAt(-500, -1.8);
-    crateAt(-500, 1.8);
-    for (let i = 0; i < 5; i++) fruitAt(-508 - i * 2.6, 0, 1.5);
-    // This shallow stretch gives the long peck a level approach and clear sides.
-    this.enemy(gx(-512) - 1.5, gx(-512) + 1.5, gy(-512), -512, 1.45, "x", "moa");
-    this.enemy(gx(-528) - 4, gx(-528) + 4, gy(-528), -528, 3.2, "x", "floater");
-    crateAt(-542, 0, "bouncy");
-    crateAt(-556, -1.5);
-    crateAt(-556, 1.5);
-    for (let i = 0; i < 5; i++) fruitAt(-565 - i * 2.4, 0, 1.6);
-    this.checkpoint(gy(-580), -580, gx(-580));
-    this.log(gx(-592) - 6.5, gx(-592) + 6.5, gy(-592), -592);
-    crateAt(-604, -2.2);
-    crateAt(-604, 2.2);
-    crateAt(-604, -2.2, undefined, 1);
-    crateAt(-604, 2.2, undefined, 1);
-    // Keep the fixed-height patrol on the shallow centre of the undulating trail.
-    this.enemy(gx(-616) - 1.6, gx(-616) + 2.8, gy(-616), -616, 3, "x", "spiker");
-    for (let i = 0; i < 4; i++) fruitAt(-622 - i * 2.4, 0, 1.5);
-    crateAt(-636, 0, "nitro");
-    crateAt(-644, -1.6);
-    crateAt(-644, 1.6);
-    for (let i = 0; i < 4; i++) fruitAt(-656 - i * 2.4, 0, 1.6);
-    crateAt(-668, 0, "mystery");
+    cargo(-668,2.4,[undefined,'mystery'],'REST / sanctuary approach stock');
+    for(let i=0;i<4;i++)fruitAt(-656-i*2.4,0,1.6);
 
     // ---- CAMERA LANE -------------------------------------------------------
     // Share the ground centreline: screen-up stays straight along the main
@@ -13336,6 +13297,7 @@ export class Level {
     // Preserve exact source components for editor copies (notably boost
     // stones). A legacy mesh capture alone cannot retain their mechanics.
     const original = this.captureData();
+    original.components.filter(c=>c.t==='crate').forEach((c,i)=>{c.nm=this.crates[i]?.mesh.name||c.nm;});
     // The constructor applies the native jungle palette after this builder.
     // Capture that final palette, so editor copies do not keep the earlier
     // construction-time fog and lighting while the live course uses another.

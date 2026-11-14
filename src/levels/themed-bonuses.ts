@@ -12,6 +12,7 @@ import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { arrangeCanopyCacheCrates } from './treehouse-bonus-crates';
 import { BONUS_LAYOUT_REPLACEMENTS, replaceBonusLayout } from './puzzle-bonus';
 import { dressJungleBonus } from './jungle-bonus';
+import { arrangeFernReliquaryCrates } from './jungle-bonus-crates';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
 import { dressBlockworksBonus } from './blockworks-bonus';
@@ -89,6 +90,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
     replaceBonusLayout(course.data,layout,{color,accent,tex,sky,jungleAtmosphere});
     course.rooms=[]; course.actions=[];
   }
+  if(recipe.parentId==='jungle')arrangeFernReliquaryCrates(course.data);
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
   if(recipe.key==='coastal')decorateCoastalBonus(course.data,end);

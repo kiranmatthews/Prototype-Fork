@@ -1,0 +1,1438 @@
+{
+  "course": "jungle",
+  "bonus": "bonus-jungle",
+  "date": "2026-11-14",
+  "source_commit_before_changes": "63e44ba7",
+  "source": "Native Jungle builder, source-owned finale and Fern-only reward arrangement; published editor pack unchanged.",
+  "metrics": {
+    "before": {
+      "jungle": {
+        "physical": 60,
+        "counted": 59,
+        "checkpoints": 9,
+        "gemTally": 88,
+        "byKind": {
+          "wood": 46,
+          "bouncy": 3,
+          "tnt": 2,
+          "nitro": 2,
+          "mystery": 4,
+          "mask": 2,
+          "nitrobang": 1
+        },
+        "outlineByKind": {},
+        "per100m": 3.79,
+        "physicalPer100m": 3.85,
+        "checkpointGaps": [
+          122.5,
+          130.7,
+          151.6,
+          185.6,
+          122.9,
+          339.4,
+          306.3,
+          70.5,
+          50.8,
+          76.7
+        ],
+        "clusters": 56,
+        "singles": 53,
+        "meanClusterSize": 1.05,
+        "sizeHist": {
+          "1": 53,
+          "2": 3
+        },
+        "structuralClusters": 1,
+        "structuralCrates": 1,
+        "maxStackAll": 2,
+        "arrangements": {
+          "single": 53,
+          "stack": 3
+        },
+        "maxStack": 2,
+        "largestCluster": 2,
+        "floatingClusters": 3,
+        "support": {
+          "ground": 54,
+          "none": 3,
+          "crate": 3
+        },
+        "floatingCrates": 3,
+        "overVoid": 0,
+        "overPit": 0,
+        "nearDrop": 0,
+        "overhanging": 23,
+        "high": 3,
+        "highTools": {
+          "arrow": 3
+        },
+        "onPath": 49,
+        "offLine": 10,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 2.2,
+        "enemyNear": 0,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 8,
+        "downhill": 2,
+        "afterPad": 0,
+        "plainOnSpeed": 2,
+        "runs": 0,
+        "runCrates": 0,
+        "longestRun": 0,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 0,
+          "crates": 0
+        },
+        "arrows": 3,
+        "arrowTargets": {
+          "crate": 3
+        },
+        "multihit": 0,
+        "emptiest": {
+          "length": 236.3,
+          "from": 1170.3,
+          "to": 1406.6
+        },
+        "authoredRails": 28,
+        "speedPads": 4,
+        "enemies": 10,
+        "hazards": {}
+      },
+      "bonus-jungle": {
+        "physical": 23,
+        "counted": 20,
+        "checkpoints": 0,
+        "gemTally": 20,
+        "byKind": {
+          "mask": 1,
+          "wood": 8,
+          "multihit": 1,
+          "bouncy": 2,
+          "life": 1,
+          "mystery": 2,
+          "bang": 1,
+          "tnt": 2,
+          "metalbounce": 1,
+          "nitrobang": 1,
+          "nitro": 3
+        },
+        "outlineByKind": {},
+        "per100m": 12.5,
+        "physicalPer100m": 14.38,
+        "checkpointGaps": [
+          160
+        ],
+        "clusters": 18,
+        "singles": 17,
+        "meanClusterSize": 1.11,
+        "sizeHist": {
+          "1": 17,
+          "3": 1
+        },
+        "structuralClusters": 3,
+        "structuralCrates": 3,
+        "maxStackAll": 1,
+        "arrangements": {
+          "single": 17,
+          "row": 1
+        },
+        "maxStack": 1,
+        "largestCluster": 3,
+        "floatingClusters": 1,
+        "support": {
+          "ground": 17,
+          "none": 2,
+          "spin-bridge": 4
+        },
+        "floatingCrates": 2,
+        "overVoid": 5,
+        "overPit": 0,
+        "nearDrop": 5,
+        "overhanging": 0,
+        "high": 1,
+        "highTools": {
+          "arrow-perfect-double": 1
+        },
+        "onPath": 20,
+        "offLine": 0,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 1.2,
+        "enemyNear": 0,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 0,
+        "downhill": 0,
+        "afterPad": 0,
+        "plainOnSpeed": 0,
+        "runs": 1,
+        "runCrates": 3,
+        "longestRun": 3,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 1,
+          "crates": 3
+        },
+        "arrows": 3,
+        "arrowTargets": {
+          "crate": 1,
+          "ledge": 1,
+          "fruit-only": 1
+        },
+        "multihit": 1,
+        "emptiest": {
+          "length": 38,
+          "from": 74,
+          "to": 112
+        },
+        "authoredRails": 0,
+        "speedPads": 0,
+        "enemies": 3,
+        "hazards": {}
+      }
+    },
+    "after": {
+      "jungle": {
+        "physical": 101,
+        "counted": 100,
+        "checkpoints": 9,
+        "gemTally": 157,
+        "byKind": {
+          "wood": 57,
+          "mystery": 36,
+          "mask": 4,
+          "tnt": 1,
+          "nitro": 2,
+          "nitrobang": 1
+        },
+        "outlineByKind": {},
+        "per100m": 6.42,
+        "physicalPer100m": 6.49,
+        "checkpointGaps": [
+          122.5,
+          130.7,
+          151.6,
+          185.6,
+          122.9,
+          339.4,
+          306.3,
+          70.5,
+          50.8,
+          76.7
+        ],
+        "clusters": 31,
+        "singles": 1,
+        "meanClusterSize": 3.23,
+        "sizeHist": {
+          "1": 1,
+          "2": 2,
+          "3": 17,
+          "4": 11
+        },
+        "structuralClusters": 1,
+        "structuralCrates": 1,
+        "maxStackAll": 2,
+        "arrangements": {
+          "wall-across-path": 7,
+          "pyramid": 18,
+          "single": 1,
+          "pair": 2,
+          "wall-along-path": 3
+        },
+        "maxStack": 2,
+        "largestCluster": 4,
+        "floatingClusters": 0,
+        "support": {
+          "ground": 63,
+          "crate": 38
+        },
+        "floatingCrates": 0,
+        "overVoid": 0,
+        "overPit": 0,
+        "nearDrop": 0,
+        "overhanging": 15,
+        "high": 0,
+        "highTools": {},
+        "onPath": 72,
+        "offLine": 28,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 3,
+        "enemyNear": 2,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 8,
+        "downhill": 1,
+        "afterPad": 0,
+        "plainOnSpeed": 1,
+        "runs": 12,
+        "runCrates": 24,
+        "longestRun": 2,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 12,
+          "crates": 24
+        },
+        "arrows": 0,
+        "arrowTargets": {},
+        "multihit": 0,
+        "emptiest": {
+          "length": 163.7,
+          "from": 1170.3,
+          "to": 1334
+        },
+        "authoredRails": 28,
+        "speedPads": 4,
+        "enemies": 9,
+        "hazards": {}
+      },
+      "bonus-jungle": {
+        "physical": 51,
+        "counted": 48,
+        "checkpoints": 0,
+        "gemTally": 48,
+        "byKind": {
+          "mask": 1,
+          "wood": 16,
+          "multihit": 1,
+          "bouncy": 2,
+          "life": 1,
+          "mystery": 22,
+          "bang": 1,
+          "tnt": 2,
+          "metalbounce": 1,
+          "nitrobang": 1,
+          "nitro": 3
+        },
+        "outlineByKind": {},
+        "per100m": 30,
+        "physicalPer100m": 31.88,
+        "checkpointGaps": [
+          160
+        ],
+        "clusters": 15,
+        "singles": 7,
+        "meanClusterSize": 3.2,
+        "sizeHist": {
+          "1": 7,
+          "3": 4,
+          "5-9": 4
+        },
+        "structuralClusters": 3,
+        "structuralCrates": 3,
+        "maxStackAll": 3,
+        "arrangements": {
+          "pyramid": 3,
+          "wall-along-path": 3,
+          "stack": 1,
+          "single": 7,
+          "row": 1
+        },
+        "maxStack": 3,
+        "largestCluster": 9,
+        "floatingClusters": 1,
+        "support": {
+          "ground": 24,
+          "none": 2,
+          "spin-bridge": 4,
+          "crate": 21
+        },
+        "floatingCrates": 2,
+        "overVoid": 5,
+        "overPit": 0,
+        "nearDrop": 6,
+        "overhanging": 0,
+        "high": 1,
+        "highTools": {
+          "arrow-perfect-double": 1
+        },
+        "onPath": 48,
+        "offLine": 0,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 1.8,
+        "enemyNear": 0,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 0,
+        "downhill": 0,
+        "afterPad": 0,
+        "plainOnSpeed": 0,
+        "runs": 5,
+        "runCrates": 12,
+        "longestRun": 3,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 5,
+          "crates": 12
+        },
+        "arrows": 3,
+        "arrowTargets": {
+          "crate": 1,
+          "ledge": 1,
+          "fruit-only": 1
+        },
+        "multihit": 1,
+        "emptiest": {
+          "length": 36.6,
+          "from": 75.3,
+          "to": 111.9
+        },
+        "authoredRails": 0,
+        "speedPads": 0,
+        "enemies": 3,
+        "hazards": {}
+      }
+    }
+  },
+  "main_staged_cargo": {
+    "harvests": [
+      {
+        "name": "TEACH / clearing harvest wall",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "PREPARE / crab lesson shelter",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / stock just after the checkpoint",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / harvest beyond the shell patrol",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "PREPARE / trunk departure harvest",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "REST / ravine receiving court",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "PREPARE / temple climb stock",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / third temple course harvest",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "REST / temple terrace harvest",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "PREPARE / long-peck lesson refuge",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "LANDING / far-bank marker",
+        "count": 1,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / guarded last straight harvest",
+        "count": 2,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / harvest behind the log",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "REST / sanctuary approach stock",
+        "count": 2,
+        "deaths": 0
+      },
+      {
+        "name": "The broken aqueduct / OPTIONAL / pre-boost harvest",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "Twin guardian chasm / OPTIONAL / pre-boost harvest",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "The hanging gardens / OPTIONAL / pre-boost harvest",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / stock after the hanging-gardens checkpoint",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "Sun gate leap / OPTIONAL / pre-boost harvest",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "REST / braking-deck harvest after the last leap",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 1",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 2",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 3",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / after the checkpoint 4",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 5",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 6",
+        "count": 4,
+        "deaths": 0
+      },
+      {
+        "name": "COUNT / after the checkpoint 8",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "TEST / optional ledge harvest 10",
+        "count": 3,
+        "deaths": 0
+      },
+      {
+        "name": "REWARD / summit harvest before the exit",
+        "count": 4,
+        "deaths": 0
+      }
+    ],
+    "supported": 101,
+    "sideFuse": {
+      "harvested": 3,
+      "deaths": 0
+    },
+    "remoteNitroClear": {
+      "harvested": 4
+    },
+    "checkpointRestores": true,
+    "patrolProbes": 270,
+    "enemies": [
+      {
+        "kind": "grunt",
+        "range": [
+          -3.4000000000000004,
+          -0.19999999999999996
+        ],
+        "z": -64
+      },
+      {
+        "kind": "turtle",
+        "range": [
+          0.30000000000000004,
+          2.9000000000000004
+        ],
+        "z": -140
+      },
+      {
+        "kind": "grunt",
+        "range": [
+          -3.4,
+          -1.4
+        ],
+        "z": -266
+      },
+      {
+        "kind": "turtle",
+        "range": [
+          0.40000000000000013,
+          2.8
+        ],
+        "z": -314
+      },
+      {
+        "kind": "grunt",
+        "range": [
+          2.8,
+          5.2
+        ],
+        "z": -404
+      },
+      {
+        "kind": "moa",
+        "range": [
+          -2.2,
+          2.2
+        ],
+        "z": -439
+      },
+      {
+        "kind": "moa",
+        "range": [
+          0.5,
+          2.9
+        ],
+        "z": -512
+      },
+      {
+        "kind": "grunt",
+        "range": [
+          -3.4,
+          -1.4
+        ],
+        "z": -548
+      },
+      {
+        "kind": "turtle",
+        "range": [
+          -3,
+          -0.6000000000000001
+        ],
+        "z": -616
+      }
+    ]
+  },
+  "main_native_finale": {
+    "stage": "cross the summit finish",
+    "seconds": 75.41666666666667,
+    "events": [
+      {
+        "name": "The broken aqueduct",
+        "width": 26,
+        "launch": {
+          "frame": 457,
+          "position": [
+            0,
+            4.09813033562437,
+            -839.4663969961276
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 37.322390873839815,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 533,
+          "position": [
+            0,
+            4.768371586472142e-08,
+            -886.4063912923556
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 37.06654218758054,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "Twin guardian chasm",
+        "width": 30,
+        "launch": {
+          "frame": 668,
+          "position": [
+            0,
+            4.086429030397519,
+            -969.4051044449394
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 39.327326660283,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 746,
+          "position": [
+            0,
+            4.768371586472142e-08,
+            -1020.1698903440965
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 39.05871849883663,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "The hanging gardens",
+        "width": 32,
+        "launch": {
+          "frame": 881,
+          "position": [
+            0,
+            4.10464121839677,
+            -1105.5005016201737
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 40.96476438160258,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 958,
+          "position": [
+            0,
+            4.768371586472142e-08,
+            -1157.7011953058575
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 40.68523849397287,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "Sun gate leap",
+        "width": 34,
+        "launch": {
+          "frame": 1090,
+          "position": [
+            0,
+            4.110230972047324,
+            -1243.5297812821527
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 43.01582198051416,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 1147,
+          "position": [
+            0,
+            4.768371586472142e-08,
+            -1284.103040655208
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 42.721990110722956,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 1",
+        "launch": {
+          "frame": 1872,
+          "position": [
+            14.529216886637837,
+            0,
+            -1359.996160896282
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 1931,
+          "position": [
+            18.615612989705724,
+            2.200000023841858,
+            -1359.996160896282
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 2",
+        "launch": {
+          "frame": 2055,
+          "position": [
+            25.55198663564046,
+            2.200000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 2114,
+          "position": [
+            29.601986635640422,
+            4.400000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 3",
+        "launch": {
+          "frame": 2238,
+          "position": [
+            36.55026441341821,
+            4.400000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 2297,
+          "position": [
+            40.600264413418174,
+            6.600000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 4",
+        "launch": {
+          "frame": 2421,
+          "position": [
+            47.54854219119597,
+            6.600000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 2480,
+          "position": [
+            50.56999999999998,
+            8.800000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": -6.3639610306789285,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 5",
+        "launch": {
+          "frame": 2704,
+          "position": [
+            61.530922222222294,
+            8.800000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 2763,
+          "position": [
+            66.33092222222236,
+            11.000000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 9,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 6",
+        "launch": {
+          "frame": 2906,
+          "position": [
+            75.55170000000022,
+            11.000000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 2965,
+          "position": [
+            79.60170000000038,
+            13.200000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 7",
+        "launch": {
+          "frame": 3089,
+          "position": [
+            86.54997777777817,
+            13.200000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 3148,
+          "position": [
+            90.59997777777832,
+            15.400000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 8",
+        "launch": {
+          "frame": 3272,
+          "position": [
+            97.54825555555611,
+            15.400000023841859,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 3331,
+          "position": [
+            100.57000000000008,
+            17.600000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": -6.3639610306789285,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 9",
+        "launch": {
+          "frame": 3558,
+          "position": [
+            111.5364222222221,
+            17.600000023841858,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 3617,
+          "position": [
+            116.33642222222228,
+            19.800000023841857,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 9,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 10",
+        "launch": {
+          "frame": 3760,
+          "position": [
+            125.55120000000018,
+            19.800000023841857,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 3819,
+          "position": [
+            129.60120000000032,
+            22.000000023841856,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 11",
+        "launch": {
+          "frame": 3943,
+          "position": [
+            136.54947777777812,
+            22.000000023841856,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 4002,
+          "position": [
+            140.59947777777828,
+            24.200000023841856,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "ledge 12",
+        "launch": {
+          "frame": 4126,
+          "position": [
+            147.54775555555608,
+            24.200000023841856,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "deaths": 0
+        },
+        "landing": {
+          "frame": 4185,
+          "position": [
+            150.57000000000008,
+            26.400000023841855,
+            -1360.000398561729
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": -6.3639610306789285,
+          "deaths": 0
+        }
+      },
+      {
+        "name": "finish",
+        "frame": 4525,
+        "position": [
+          181.33227777777878,
+          27.381111134952967,
+          -1360.000398561729
+        ],
+        "state": "finished",
+        "grounded": false,
+        "speed": 9,
+        "deaths": 0
+      }
+    ],
+    "recovery": [
+      {
+        "name": "aqueduct pit",
+        "seconds": 2.6333333333333333,
+        "spawn": [
+          107,
+          17.70000002384186,
+          -1360
+        ],
+        "returned": [
+          107,
+          17.70000002384186,
+          -1360
+        ]
+      },
+      {
+        "name": "climbing pit",
+        "seconds": 2.8333333333333335,
+        "spawn": [
+          107,
+          17.70000002384186,
+          -1360
+        ],
+        "returned": [
+          107,
+          17.70000002384186,
+          -1360
+        ]
+      }
+    ]
+  },
+  "main_native_ravine": "passed tools/test-jungle-forward-flow.mjs: ordinary grind collects crystal and lands; unchanged tuning; forward-lane and capture checks pass",
+  "bonus_native": {
+    "retry": {
+      "crates": true,
+      "spinBridges": true,
+      "outlinedBridge": true
+    },
+    "wrongOrder": {
+      "fixture": "all accessible low crate donors before the key gallery consumed",
+      "keyRemainsInactive": true,
+      "bridgeRemainsAbsent": true,
+      "highestFeet": 5.19083333333333,
+      "deaths": 0,
+      "retryRestores": true
+    }
+  },
+  "bonus_journey": {
+    "frames": 5221,
+    "seconds": 87.01666666666667,
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 48,
+    "totalCrates": 48,
+    "gemEarned": true
+  },
+  "checks": {
+    "npm run check:levels": "passed",
+    "git diff --check": "passed",
+    "npm run build": "passed",
+    "npm run check:release": {
+      "passed": true,
+      "bytes": 945600884,
+      "budget_bytes": 1000000000,
+      "files": 3487
+    },
+    "pilot syntax": "passed",
+    "build_version": "b70ebba94d825854620f"
+  },
+  "limitations": [
+    "Main harvesting uses staged approaches, not one continuous all-box run. Mandatory ravine and complete finale are separate native routes.",
+    "Full-render views use staged starts.",
+    "The first main lite browser attempt was invalidated by a source reload while correcting TypeScript compatibility; final browser rerun is separate.",
+    "The wrong-order bonus trial consumes all accessible low crate launchers as fixture setup. It does not claim the arrow is the only possible launcher when other donors remain.",
+    "Fifteen main audit corner probes differ from the rolling floor; all crate centres/columns have native support and no crate hangs over a void. The prior layout had 23 corner-probe warnings.",
+    "Native tests use fallback art; actual browser consoles are checked separately.",
+    "Initial full-render main warmup at 1280x720 exceeded the timeout; warming at 480x270 before returning to 1280x720 completed with the full asset set.",
+    "Initial temple/ascent captures preceded scenery residency; initial bonus sanctuary staging overlapped the live Nitro field and returned to a checkpoint. These screenshots were replaced and are not counted as valid visual evidence."
+  ],
+  "reproduce": [
+    "node tools/test-jungle-crate-grammar.mjs",
+    "node tools/test-fern-crate-grammar.mjs",
+    "node tools/test-jungle-finale.mjs",
+    "node tools/test-jungle-forward-flow.mjs",
+    "node tools/crate-placement-report.mjs --levels jungle,bonus-jungle --json <scratch>/audit.json --md <scratch>/audit.md"
+  ],
+  "main_browser_lite": {
+    "mode": "main-lite",
+    "checks": [
+      "supported native spawn",
+      "ordinary keyboard spin harvest",
+      "real fall costs one life and returns to earned checkpoint",
+      "ordinary jump over end switch into finish from staged summit"
+    ],
+    "spawn": [
+      0,
+      2.51522821880877,
+      6
+    ],
+    "livesBefore": 4,
+    "recovery": {
+      "position": [
+        0,
+        -2.7958760261535645,
+        -116
+      ],
+      "lives": 3,
+      "checkpoint": true
+    },
+    "passed": true,
+    "errors": []
+  },
+  "bonus_browser": [
+    {
+      "mode": "lite",
+      "spawn": [
+        -5,
+        0,
+        0
+      ],
+      "journey": {
+        "stage": "cross the real Primer finish gate",
+        "frame": 5233,
+        "done": true,
+        "failed": null,
+        "result": {
+          "completionScope": "complete-stage",
+          "activeStageCrates": 48,
+          "bonusCrateTotal": 0,
+          "bonusCrates": 0,
+          "gemEarned": true,
+          "id": "crate-primer",
+          "cratesBroken": 48,
+          "totalCrates": 48,
+          "deaths": 0,
+          "state": "finished"
+        },
+        "end": {
+          "frame": 5233,
+          "position": [
+            153.38962222177645,
+            1.9266666691501937,
+            -0.0011706585474798852
+          ],
+          "state": "finished",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 7,
+          "crates": 48,
+          "gem": true
+        }
+      },
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "spawn": [
+        -5,
+        0,
+        0
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "main_browser_full": {
+    "mode": "main-full",
+    "checks": [
+      "supported native spawn",
+      "clearing",
+      "temple",
+      "nitro-frame",
+      "aqueduct",
+      "ascent",
+      "summit"
+    ],
+    "spawn": [
+      0,
+      2.51522821880877,
+      6
+    ],
+    "passed": true,
+    "errors": []
+  },
+  "full_view_corrections": [
+    {
+      "level": "jungle",
+      "views": [
+        {
+          "name": "temple",
+          "position": [
+            0,
+            11.58,
+            -420
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "lives": 4,
+          "scenery": {
+            "components": 4315,
+            "placements": 15152,
+            "ready": 2415,
+            "skipped": 0,
+            "draws": 550,
+            "triangles": 2565191,
+            "allLodTriangles": 2565191,
+            "cells": 2296,
+            "residentCells": 550,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 41,
+            "textureMiB": 115.36,
+            "errors": [],
+            "windTime": 0.5062000000011175,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          },
+          "render": [
+            1280,
+            720
+          ]
+        },
+        {
+          "name": "ascent",
+          "position": [
+            55.894,
+            8.800000023841859,
+            -1360
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "lives": 4,
+          "scenery": {
+            "components": 4315,
+            "placements": 15152,
+            "ready": 3630,
+            "skipped": 0,
+            "draws": 646,
+            "triangles": 2954739,
+            "allLodTriangles": 2954739,
+            "cells": 2296,
+            "residentCells": 646,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 36,
+            "textureMiB": 100.02,
+            "errors": [],
+            "windTime": 1.0895333333344521,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          },
+          "render": [
+            1280,
+            720
+          ]
+        }
+      ],
+      "passed": true,
+      "errors": []
+    },
+    {
+      "level": "bonus-jungle",
+      "views": [
+        {
+          "name": "sanctuary",
+          "position": [
+            147.5,
+            1.2000000000000002,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "lives": 4,
+          "scenery": {
+            "components": 1553,
+            "placements": 1553,
+            "ready": 1553,
+            "skipped": 0,
+            "draws": 367,
+            "triangles": 1678435,
+            "allLodTriangles": 1678435,
+            "cells": 367,
+            "residentCells": 367,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 40,
+            "textureMiB": 101.69,
+            "errors": [],
+            "windTime": 0.8630999999996285,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          },
+          "render": [
+            1280,
+            720
+          ]
+        }
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "visual_review": {
+    "passed": true,
+    "resolution": [
+      1280,
+      720
+    ],
+    "main_views": [
+      "clearing",
+      "temple",
+      "nitro-frame",
+      "aqueduct",
+      "ascent",
+      "summit"
+    ],
+    "bonus_views": [
+      "arrival",
+      "key-gallery",
+      "fuses",
+      "sanctuary"
+    ],
+    "notes": "All final screenshots inspected. Temple/ascent recaptured after pending scenery cells reached zero. Bonus sanctuary recaptured at a safe staged position beyond the Nitro field; corrected views assert position, support and zero deaths."
+  },
+  "validated_at": "2026-11-14T06:13:53.678378+00:00",
+  "timing": {
+    "started_at": "2026-11-14T05:35:13+00:00",
+    "validated_at": "2026-11-14T06:13:53.678378+00:00",
+    "elapsed_minutes": 38.7,
+    "requested_main_minutes": 15,
+    "requested_bonus_minutes": 5,
+    "budget_exceeded": true,
+    "notes": "Main layout work took roughly six minutes; bonus layout and native pilot corrections continued until about 05:50 UTC. Required checks, browser warmup, capture corrections and evidence packaging account for the remaining time. This is an end-to-end elapsed measurement, not an assertion of meeting the requested 20-minute pair budget."
+  }
+}

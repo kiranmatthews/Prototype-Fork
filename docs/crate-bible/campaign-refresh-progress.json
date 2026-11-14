@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "jungle",
-  "next_course": "coastal-street-run",
+  "current_course": "coastal-street-run",
+  "next_course": "jungle-cup",
   "courses": [
     {
       "order": 1,
@@ -80,9 +80,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-jungle",
-        "name": "Bonus: Fern Reliquary"
+        "name": "Bonus: Fern Reliquary",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/jungle/validation.json"
     },
     {
       "order": 5,
@@ -622,6 +624,12 @@
     {
       "id": "rumblewater-run",
       "bonus": "bonus-rumblewater-run",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "jungle",
+      "bonus": "bonus-jungle",
       "status": "validated",
       "date": "2026-11-14"
     }
