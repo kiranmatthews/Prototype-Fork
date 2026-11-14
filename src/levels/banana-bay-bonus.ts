@@ -5,6 +5,31 @@ import { BAY_ATMOSPHERE, bayBoardwalk, bayPalm, bayProp } from './banana-bay-the
  * cuboids become the parent's oak cargo wharves, surrounded by the same full
  * sandstone/palm/hibiscus assets. No art supplies unintended puzzle footing. */
 export function dressBananaBayBonus(data:CustomLevelData):void {
+  const box=(x:number,y:number,kind:NonNullable<CustomComponent['kind']>,nm:string,grp=2,outline=false)=>
+    data.components.push({t:'crate',p:[x,y,0],kind,nm,grp,...(outline?{outline:true}:{})});
+  // Keep the measured access tools and their high targets. Group the payouts
+  // without raising any alternative launch surface beside a height puzzle.
+  for(const x of [-2.96,-1.04])box(x,0,'wood','PROTECT / opening shield companions');
+  for(const x of [17.04,18.96])box(x,2.8,'mystery','REWARD / admission-perch harvest');
+  box(36,9,'wood','REWARD / key-gallery harvest support');
+  for(const x of [35,36])box(x,9.96,'mystery','REWARD / key-gallery harvest lid');
+  box(104.04,2.8,'mask','PROTECT / workshop refuge before the second fuse');
+  box(105.96,2.8,'mystery','REST / workshop refuge manifest');
+  for(const x of [109.96,110.92])box(x,2.8,'mystery','BLAST TARGET / second fuse clears its manifests');
+  for(const x of [141,143])box(x,12.4,'mystery','RETURN / revealed gallery row',11,true);
+  for(const x of [140,142,144])box(x,13.36,'mystery','RETURN / revealed gallery lids',11,true);
+  // Claim high enough that the head-bonk leaves time to reach the receiver.
+  box(90,9.6,'mystery','TOOL TARGET / permanent workshop arrow parcel');
+  // The return arrow already serves the outlined high gallery. Keep its
+  // ascent empty: an early head-bonk would cancel the required vertical arc.
+  for(const x of [189,190,191,192])box(x,3.76,'nitro','CLEARANCE / green switch opens the cargo wall');
+  for(const x of [220.04,221.96])box(x,4,'wood','REWARD / final mastery wall support');
+  box(221,4.96,'mystery','REWARD / final mastery wall lid');
+  const firstPatrol=data.components.find(c=>c.t==='enemy'&&c.p[0]===26);
+  if(firstPatrol){firstPatrol.p[0]=28;firstPatrol.range=.7;firstPatrol.speed=1.2;
+    firstPatrol.nm='TEACH / spiker after four clear metres of supported balcony';}
+  const charger=data.components.find(c=>c.t==='enemy'&&c.p[0]===177);
+  if(charger){charger.range=2;charger.speed=1.4;charger.nm='TEACH / charger windup on the wide recovery apron';}
   const art:CustomComponent[]=[];
   const gameplay=data.components.filter(c=>c.grp!==90);
   data.components=gameplay.map(c=>{

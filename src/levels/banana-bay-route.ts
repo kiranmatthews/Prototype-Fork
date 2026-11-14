@@ -56,46 +56,57 @@ export function createBananaBayCoast():CustomComponent[] {
   const point=(d:number,l=0,lift=0)=>bayCoastPoint(d,l,r(floor(d,l)+lift));
   const crate=(d:number,l:number,kind:Kind,nm:string,lift=0)=>c.push({t:'crate',p:point(d,l,lift),kind,nm,grp:72});
   const stack=(d:number,l:number,kinds:Kind[],nm:string)=>kinds.forEach((k,i)=>crate(d,l,k,`${nm} / tier ${i+1}`,i*.96));
-  const enemy=(d:number,foe:NonNullable<CustomComponent['foe']>,range:number,speed:number,nm:string)=>
-    c.push({t:'enemy',p:point(d),foe,range,speed,terrainSupports:true,nm,grp:73});
+  const pile=(d:number,l:number,kinds:Kind[],nm:string)=>{
+    const p=point(d,l);
+    kinds.forEach((kind,i)=>c.push({t:'crate',p:[p[0]+(i%2-.5)*.96,p[1]+Math.floor(i/2)*.96,p[2]],kind,nm,grp:72}));
+  };
+  const enemy=(d:number,foe:NonNullable<CustomComponent['foe']>,range:number,speed:number,nm:string,lateral=0)=>
+    c.push({t:'enemy',p:point(d,lateral),foe,range,speed,terrainSupports:true,nm,grp:73});
   const cargo=(d:number,nm:string)=>{
-    stack(d,-1.65,['wood','mystery'],`${nm} / seaward consignment`);
-    stack(d+2,1.65,['wood','wood'],`${nm} / landward consignment`);
+    stack(d,-1.65,['wood','mystery','mystery'],`${nm} / seaward consignment`);
+    stack(d+2,1.3,['wood','wood','mystery'],`${nm} / landward consignment`);
   };
   for(const d of [16,86,233,451,674]) c.push(...looseFruitCluster(
     (side,forward)=>point(d-forward,side),`Banana Bay ${d}`,72));
   // A readable first encounter: mask, solitary crab, then a modest cargo stack.
-  stack(30,0,['wood','wood'],'Arrival cargo');crate(40,0,'mask','Protection before the first patrol');
+  stack(30,-1.5,['wood','wood','mystery'],'TEACH / arrival lid reward');
+  pile(40,1.6,['wood','wood','mask'],'PROTECT / before the first patrol');
   enemy(49,'grunt',2.1,1.3,'First crab / open sand with room to jump or spin');
-  cargo(75,'Crab landing cargo');crate(97,0,'mystery','Clear pier reward');
-  stack(121,-1.4,['wood','mystery'],'Low sand delivery');crate(125,1.4,'wood','Outside lane delivery');
+  pile(75,-1.65,['wood','wood','mystery','mystery'],'HARVEST / crab landing cargo');
+  stack(97,1.6,['wood','mystery'],'COUNT / clear pier checkpoint approach');
+  stack(121,-1.4,['multihit','wood','mystery'],'TEACH / striped low-sand delivery');
   enemy(133,'turtle',1.9,1.25,'Turtle introduction / visible open-sand patrol');
-  cargo(155,'Split pier takeoff cargo');crate(183,0,'mystery','Split pier landing reward');
+  cargo(155,'Split pier takeoff cargo');
   // The launch tool must be kept until the conspicuous overhead parcel is won.
   crate(188,-.8,'bouncy','Split pier / preserve the arrow for the high parcel');
   crate(188,-.8,'life','Split pier / high parcel before the arrow',7.2);
   c.push({t:'wumpa',p:point(188,-.8,4.2),nm:'Vertical fruit clue to the high parcel',grp:72});
-  stack(214,1.6,['wood','wood'],'Post-checkpoint picnic');
+  pile(214,1.6,['wood','wood','mask'],'PROTECT / post-checkpoint picnic before TNT');
+  crate(231,-2,'tnt','TEACH / lone fuse with clear landward refuge');
   // TNT is in a side pocket: there is a visible clear refuge across the deck.
   stack(242,-2,['tnt','wood'],'Fuse store / stomp cargo then retreat to the clear lane');
-  crate(251,2,'mystery','Fuse store / safe refuge reward');enemy(261,'grunt',2,1.6,'Fuse store exit crab');
+  const fuse=point(242,-2);
+  c.push({t:'crate',p:[fuse[0],fuse[1],fuse[2]+.96],kind:'mystery',nm:'Fuse store / manifest paid by the blast',grp:72});
+  pile(251,2,['mystery','wood','mystery'],'Fuse store / safe refuge reward');
+  enemy(261,'grunt',1.2,1.6,'Fuse store exit crab / clear opposite lane',-1.5);
   cargo(298,'Turtle terrace stock');enemy(322,'turtle',1.7,1.45,'Turtle beyond the landing / eight metres of warning');
-  stack(342,1.3,['wood','mystery'],'Terrace bank cargo');
-  enemy(360,'grunt',1.8,1.7,'Tide gate crab / decide before the gap');
-  crate(383,-1.4,'mystery','Tide gate clear landing reward');
+  stack(342,1.3,['multihit','wood','mystery'],'TEST / terrace striped support');
+  enemy(360,'grunt',1.2,1.7,'Tide gate crab / decide before the gap',-1.4);
+  pile(383,-1.4,['wood','wood','mystery'],'REST / tide gate clear landing reward');
   c.push({t:'bonusplatform',p:point(411,-1.5),to:point(416,1),nm:'Lifeguard Lockup / sheltered bonus stop',grp:72});
-  crate(406,2.4,'mask','Protection beside the bonus cove');
-  cargo(440,'Palm balcony manifests');
+  pile(406,2.0,['wood','wood','mask'],'PROTECT / beside the bonus cove');
+  pile(440,-1.2,['wood','wood','mystery','mystery'],'HARVEST / palm balcony manifests');
   crate(458,-2.3,'nitro','Palm balcony / marked hazardous seaward cargo');
-  crate(459.2,-2.3,'nitro','Palm balcony / hazardous cargo pair');
-  stack(461,1.5,['wood','mystery'],'Palm balcony / safe landward cargo lane');
-  stack(490,-1.2,['wood','wood'],'Headland landing stock');
-  cargo(516,'Broken jetty cargo');enemy(541,'grunt',1.5,1.9,'Broken jetty receiver crab / clear landing first');
-  crate(564,0,'mask','Protection before the loose board lesson');
-  stack(586,-1.3,['wood','mystery'],'Loose board approach cargo');
-  crate(617,0,'mystery','Loose board receiver / collect after crossing');
-  cargo(662,'Harbour loading stock');enemy(681,'turtle',2,1.5,'Harbour turtle');
-  enemy(694,'grunt',2,1.8,'Harbour crab / separated rhythm');crate(701,1.5,'life','Harbour clear reward');
+  crate(458.96,-2.3,'nitro','Palm balcony / hazardous cargo pair');
+  stack(461,1.5,['wood','mystery','mystery'],'Palm balcony / safe landward cargo lane');
+  pile(490,-1.2,['wood','wood','mystery'],'REST / headland landing stock');
+  cargo(516,'Broken jetty cargo');enemy(541,'grunt',1.2,1.9,'Broken jetty receiver crab / clear landing first',1.3);
+  pile(564,1.6,['wood','wood','mask'],'PROTECT / before the loose board lesson');
+  pile(586,-1.6,['wood','wood','mystery','mystery','mystery'],'ANTICIPATE / loose board approach cargo');
+  pile(617,.8,['wood','wood','mystery','mystery','mystery'],'REST / loose board receiver after crossing');
+  cargo(662,'Harbour loading stock');enemy(681,'turtle',1.3,1.5,'Harbour turtle / seaward stock patrol',-1.4);
+  enemy(694,'grunt',1.1,1.8,'Harbour crab / opposite lane, separated rhythm',1.4);
+  pile(701,-1.5,['wood','wood','mystery','mystery'],'COUNT / last harbour stock before the lagoon');
   // Checkpoint boxes stand beyond the sloped deck exits, on level sand.
   for(const [d,nm]of [[119,'First pier cleared'],[205,'Split pier bank'],[282,'Fuse store bank'],[404,'Bonus cove bank'],[489,'Palm balcony bank'],[568,'Broken jetty bank'],[636,'Loose board bank']] as const)
     c.push({t:'checkpoint',p:point(d),nm,grp:72});
@@ -123,6 +134,10 @@ export function createBananaBayFinale():CustomComponent[] {
     c.push({...bayBoardwalk(pts,width,nm,74),seed:86100+a});
   };
   const crate=(d:number,l:number,kind:Kind,nm:string,y=1.05)=>c.push({t:'crate',p:bayFinalePoint(d,l,y),kind,nm,grp:75});
+  const pile=(d:number,l:number,kinds:Kind[],nm:string)=>{
+    const p=bayFinalePoint(d,l);
+    kinds.forEach((kind,i)=>c.push({t:'crate',p:[p[0]+(i%2-.5)*.96,p[1]+Math.floor(i/2)*.96,p[2]],kind,nm,grp:75}));
+  };
   const shelf=(d:number,w:number,len:number,nm:string)=>{
     const p=bayFinalePoint(d,0,.85),pts:[number,number][]=[];
     // The radial shore builder needs a clockwise X/Z outline for upward faces.
@@ -139,27 +154,28 @@ export function createBananaBayFinale():CustomComponent[] {
   // The previous finish island now opens onto a new, coherent third act.
   pier(-8,54,7,1.05,'Salvage departure pier');shelf(30,22,34,'Salvage checkpoint island');
   c.push({t:'checkpoint',p:bayFinalePoint(34),nm:'Salvage steps checkpoint',grp:75});
-  crate(15,-1.7,'wood','Departure cargo');crate(15,-1.7,'mystery','Departure cargo cap',2.01);
+  pile(15,-1.7,['wood','wood','mystery'],'REST / departure cargo');
   c.push({t:'enemy',p:bayFinalePoint(23),foe:'grunt',range:2.2,speed:1.6,nm:'Salvage island crab',grp:76});
-  crate(42,1.8,'mask','Protection before the exposed crossings');
+  pile(42,1.8,['wood','wood','mask'],'PROTECT / before the exposed crossings');
   for(const [i,[a,b,y]] of [[57,65,1.65],[68,76,2.25],[79,87,1.65]].entries()){
     pier(a,b,6.4,y,`Salvage stepping pier ${i+1}`);crate((a+b)/2,0,i===1?'mystery':'wood',`Stepping pier ${i+1} cargo`,y);
   }
   pier(90,120,7.5,1.05,'Tidal ferry waiting quay');
   c.push({t:'checkpoint',p:bayFinalePoint(108),nm:'Tidal ferry checkpoint',grp:75});
-  crate(99,-1.8,'wood','Ferry waiting cargo');crate(99,1.8,'mystery','Ferry waiting manifest');
+  pile(99,-1.8,['wood','wood','mystery','mystery'],'REST / ferry waiting manifest');
+  pile(115,1.8,['wood','wood','mystery','mystery'],'ANTICIPATE / optional cargo beside the ferry waiting lane');
   const ferry=bayFinalePoint(129);
   c.push({t:'mover',p:ferry,s:[7,.5,13],axis:'x',amp:4.2,speed:.65,phase:0,tex:'creek-raft',color:'#c89758',nm:'Tidal ferry / wait for the deck to align',grp:74});
   pier(138,167,7.5,1.05,'Breakwater approach');
-  c.push({t:'enemy',p:bayFinalePoint(149),foe:'turtle',range:2.3,speed:1.6,nm:'Breakwater turtle / receiver has eleven clear metres',grp:76});
-  crate(156,-1.6,'wood','Breakwater salvage');crate(156,-1.6,'mystery','Breakwater salvage cap',2.01);
+  pile(145,-1.8,['wood','wood','mystery'],'REST / ferry receiver shoulder after seven clear metres');
+  c.push({t:'enemy',p:bayFinalePoint(149,1.6),foe:'turtle',range:1.1,speed:1.6,nm:'Breakwater turtle / receiver has eleven clear metres and a passing lane',grp:76});
+  pile(156,-1.6,['wood','wood','mystery'],'REST / breakwater salvage');
   c.push({t:'checkpoint',p:bayFinalePoint(162),nm:'Breakwater sprint checkpoint',grp:75});
+  pile(164,-2.1,['wood','wood','mask'],'PROTECT / beside the clear breakwater run-up');
   for(const [i,d]of [174,185,196].entries())c.push({t:'crumble',p:bayFinalePoint(d,0,1.05),s:[7,.5,8],shake:1.9-i*.1,tex:'plank',color:'#c89758',nm:`Breakwater loose deck ${i+1}`,grp:74});
   pier(204,250,8,1.05,'Lifeguard finish quay');shelf(230,28,54,'Lifeguard finish island');
   crate(212,0,'nitrobang','Lifeguard green switch / clear all marked hazardous cargo');
-  for(const [i,l]of [-1.8,0,1.8].entries()){
-    crate(221,l,'wood',`Final cargo ${i+1}`);crate(221,l,i===1?'life':'mystery',`Final cargo ${i+1} cap`,2.01);
-  }
+  for(const [i,l]of [-2,2].entries())pile(221+i*3,l,['wood','wood','mystery','mystery'],`REWARD / final salvage wall ${i+1}`);
   c.push({t:'crystal',p:bayFinalePoint(234,0,1.8),nm:'Lifeguard cargo crystal',grp:75},
     {t:'gate',p:bayFinalePoint(243),yaw:0,nm:'Banana Bay finish / all three acts',grp:75},
     {t:'pit',p:[0,-2.9,-1270],s:[220,1,300],invisible:true,nm:'Exposed lagoon recovery below the water',grp:74});

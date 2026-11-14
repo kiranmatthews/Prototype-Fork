@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "beachfront",
-  "next_course": "rumblewater-run",
+  "current_course": "rumblewater-run",
+  "next_course": "jungle",
   "courses": [
     {
       "order": 1,
@@ -44,9 +44,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-beachside-run",
-        "name": "Bonus: Lifeguard Lockup"
+        "name": "Bonus: Lifeguard Lockup",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/beachfront/validation.json"
     },
     {
       "order": 3,
@@ -608,14 +610,20 @@
       "bonus": "bonus-treehouse-trail",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "beachfront",
+      "bonus": "bonus-beachside-run",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "awaiting-user-approval",
-    "commit": "186b246a",
+    "status": "authorized-awaiting-github-authentication",
     "method": "origin/main then GitHub Pages",
-    "reason": "Automatic approval review rejected the direct push because default-branch publication requires explicit user authorization. No push occurred.",
-    "asked_at": "2026-11-14T04:11:00Z",
+    "authorization": "User: I authorize publishing/deployment whenever needed",
+    "reason": "The authorized push reached GitHub but failed because the cloud workspace has no authenticated GitHub credentials. No push occurred.",
+    "connection": "GitHub plugin suggested; installation and connection have not been confirmed.",
     "goal_blocked": false
   }
 }
