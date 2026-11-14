@@ -1,0 +1,17 @@
+[
+  {
+    "name": "tribal-run",
+    "unchangedComponents": 2218,
+    "sha256": "41e57bffc2a305f339ee3484bd7401cd2e68aebaefe5f804819dc31f12f375dd",
+    "sourceBefore": "45246a1f",
+    "retainedEnemyPlacements": 21,
+    "removedEnemies": 14
+  },
+  {
+    "name": "tribal-run-bonus",
+    "unchangedComponents": 249,
+    "sha256": "d7ecffbb3561df62122079d226323cc07b145cff541a97b407ae4478d01c076f",
+    "sourceBefore": "45246a1f",
+    "identicalBoxDimensionsWithWorkingOutline": 3
+  }
+]

@@ -1,0 +1,669 @@
+{
+  "stage": "Resonance Vault return",
+  "actions": [
+    {
+      "name": "approach First offering",
+      "firstFrame": 132,
+      "lastFrame": 214
+    },
+    {
+      "name": "First offering",
+      "firstFrame": 234,
+      "lastFrame": 234
+    },
+    {
+      "name": "approach Second offering",
+      "firstFrame": 256,
+      "lastFrame": 347
+    },
+    {
+      "name": "Second offering",
+      "firstFrame": 367,
+      "lastFrame": 367
+    },
+    {
+      "name": "approach Call",
+      "firstFrame": 389,
+      "lastFrame": 487
+    },
+    {
+      "name": "Call",
+      "firstFrame": 507,
+      "lastFrame": 507
+    },
+    {
+      "name": "approach Call \u00b7 upper 1",
+      "firstFrame": 529,
+      "lastFrame": 591
+    },
+    {
+      "name": "Call \u00b7 upper 1",
+      "firstFrame": 611,
+      "lastFrame": 611
+    },
+    {
+      "name": "first listening takeoff",
+      "firstFrame": 633,
+      "lastFrame": 741
+    },
+    {
+      "name": "first listening step",
+      "firstFrame": 786,
+      "lastFrame": 822
+    },
+    {
+      "name": "approach First response",
+      "firstFrame": 822,
+      "lastFrame": 881
+    },
+    {
+      "name": "First response",
+      "firstFrame": 901,
+      "lastFrame": 901
+    },
+    {
+      "name": "second listening takeoff",
+      "firstFrame": 923,
+      "lastFrame": 1024
+    },
+    {
+      "name": "second listening step",
+      "firstFrame": 1069,
+      "lastFrame": 1105
+    },
+    {
+      "name": "approach Second response",
+      "firstFrame": 1105,
+      "lastFrame": 1161
+    },
+    {
+      "name": "Second response",
+      "firstFrame": 1181,
+      "lastFrame": 1181
+    },
+    {
+      "name": "approach Drum approach",
+      "firstFrame": 1203,
+      "lastFrame": 1286
+    },
+    {
+      "name": "Drum approach",
+      "firstFrame": 1306,
+      "lastFrame": 1306
+    },
+    {
+      "name": "resonance drum approach",
+      "firstFrame": 1328,
+      "lastFrame": 1412
+    },
+    {
+      "name": "land on the resonance drum and let it lift the player",
+      "firstFrame": 1457,
+      "lastFrame": 1496
+    },
+    {
+      "name": "steer the drum bounce onto the echo gallery",
+      "firstFrame": 1496,
+      "lastFrame": 1546
+    },
+    {
+      "name": "approach High echo",
+      "firstFrame": 1546,
+      "lastFrame": 1606
+    },
+    {
+      "name": "High echo",
+      "firstFrame": 1626,
+      "lastFrame": 1626
+    },
+    {
+      "name": "approach High echo \u00b7 upper 1",
+      "firstFrame": 1648,
+      "lastFrame": 1710
+    },
+    {
+      "name": "High echo \u00b7 upper 1",
+      "firstFrame": 1730,
+      "lastFrame": 1730
+    },
+    {
+      "name": "approach Vault cache",
+      "firstFrame": 1752,
+      "lastFrame": 1835
+    },
+    {
+      "name": "Vault cache",
+      "firstFrame": 1855,
+      "lastFrame": 1855
+    },
+    {
+      "name": "approach Gallery gift",
+      "firstFrame": 1877,
+      "lastFrame": 1976
+    },
+    {
+      "name": "Gallery gift",
+      "firstFrame": 1996,
+      "lastFrame": 1996
+    },
+    {
+      "name": "approach Reveal the three echoes",
+      "firstFrame": 2018,
+      "lastFrame": 2101
+    },
+    {
+      "name": "Reveal the three echoes",
+      "firstFrame": 2121,
+      "lastFrame": 2121
+    },
+    {
+      "name": "pass the spent reveal switch",
+      "firstFrame": 2170,
+      "lastFrame": 2209
+    },
+    {
+      "name": "cross the breakaway gallery lip",
+      "firstFrame": 2209,
+      "lastFrame": 2269
+    },
+    {
+      "name": "reveal bridge Stone one",
+      "firstFrame": 2314,
+      "lastFrame": 2352
+    },
+    {
+      "name": "Stone one",
+      "firstFrame": 2354,
+      "lastFrame": 2354
+    },
+    {
+      "name": "echo stepping-stone takeoff",
+      "firstFrame": 2376,
+      "lastFrame": 2452
+    },
+    {
+      "name": "reveal bridge Stone two",
+      "firstFrame": 2497,
+      "lastFrame": 2536
+    },
+    {
+      "name": "echo stepping-stone takeoff",
+      "firstFrame": 2536,
+      "lastFrame": 2612
+    },
+    {
+      "name": "reveal bridge Stone three",
+      "firstFrame": 2657,
+      "lastFrame": 2696
+    },
+    {
+      "name": "echo stepping-stone takeoff",
+      "firstFrame": 2696,
+      "lastFrame": 2772
+    },
+    {
+      "name": "lower answering drum",
+      "firstFrame": 2817,
+      "lastFrame": 2862
+    },
+    {
+      "name": "approach Lower answer",
+      "firstFrame": 2862,
+      "lastFrame": 2922
+    },
+    {
+      "name": "Lower answer",
+      "firstFrame": 2942,
+      "lastFrame": 2942
+    },
+    {
+      "name": "last drop takeoff",
+      "firstFrame": 2964,
+      "lastFrame": 3057
+    },
+    {
+      "name": "vault return court",
+      "firstFrame": 3102,
+      "lastFrame": 3147
+    },
+    {
+      "name": "approach Return offering",
+      "firstFrame": 3147,
+      "lastFrame": 3220
+    },
+    {
+      "name": "Return offering",
+      "firstFrame": 3240,
+      "lastFrame": 3240
+    },
+    {
+      "name": "approach Last call",
+      "firstFrame": 3262,
+      "lastFrame": 3352
+    },
+    {
+      "name": "Last call",
+      "firstFrame": 3372,
+      "lastFrame": 3372
+    },
+    {
+      "name": "approach Last call \u00b7 upper 1",
+      "firstFrame": 3394,
+      "lastFrame": 3456
+    },
+    {
+      "name": "Last call \u00b7 upper 1",
+      "firstFrame": 3476,
+      "lastFrame": 3476
+    },
+    {
+      "name": "approach Final answer",
+      "firstFrame": 3498,
+      "lastFrame": 3581
+    },
+    {
+      "name": "Final answer",
+      "firstFrame": 3601,
+      "lastFrame": 3601
+    },
+    {
+      "name": "Resonance Vault return",
+      "firstFrame": 3625,
+      "lastFrame": 3698
+    }
+  ],
+  "evidence": [
+    {
+      "action": "First offering",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Second offering",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Call",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Call \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "first listening step",
+      "launch": [
+        7.030622222222229,
+        0,
+        0
+      ],
+      "landing": [
+        11.817122222222237,
+        1.2,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "First response",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "second listening step",
+      "launch": [
+        18.124077777777828,
+        1.2,
+        0
+      ],
+      "landing": [
+        22.91657777777779,
+        2.4,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Second response",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Drum approach",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "resonance drum bounce",
+      "before": 2.4,
+      "bounce": {
+        "position": [
+          35.580544444444506,
+          2.4000000059604645,
+          0
+        ],
+        "verticalSpeed": 21
+      },
+      "landing": [
+        42.67104444444445,
+        6.8,
+        0
+      ]
+    },
+    {
+      "action": "High echo",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "High echo \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Vault cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Gallery gift",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reveal the three echoes",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "pass the spent reveal switch",
+      "launch": [
+        55.817666666666874,
+        6.8,
+        0
+      ],
+      "landing": [
+        59.16699999999998,
+        6.8,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "reveal bridge Stone one",
+      "launch": [
+        60.22797777777776,
+        6.687500011920929,
+        0
+      ],
+      "landing": [
+        63.96597777777774,
+        6.8,
+        0
+      ],
+      "ground": "Revealed echo stepping stone"
+    },
+    {
+      "action": "Stone one",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "reveal bridge Stone two",
+      "launch": [
+        66.12868888888866,
+        6.8,
+        0
+      ],
+      "landing": [
+        70.37218888888879,
+        6.8,
+        0
+      ],
+      "ground": "Revealed echo stepping stone"
+    },
+    {
+      "action": "reveal bridge Stone three",
+      "launch": [
+        72.52889999999974,
+        6.8,
+        0
+      ],
+      "landing": [
+        76.77089999999987,
+        6.8,
+        0
+      ],
+      "ground": "Revealed echo stepping stone"
+    },
+    {
+      "action": "lower answering drum",
+      "launch": [
+        78.92914444444416,
+        6.8,
+        0
+      ],
+      "landing": [
+        83.77114444444432,
+        3.4,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Lower answer",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "vault return court",
+      "launch": [
+        89.11446666666626,
+        3.4,
+        0
+      ],
+      "landing": [
+        93.96996666666641,
+        0,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Return offering",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Last call",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Last call \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Final answer",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all fifty-two Tribal Run bonus offerings",
+      "totalCrates": 52,
+      "activeStageCrates": 52,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 52,
+      "remaining": 0
+    }
+  ],
+  "wrongOrder": {
+    "state": "dead",
+    "deaths": 0,
+    "position": [
+      65.05,
+      -6.416666666666675,
+      0
+    ]
+  },
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 52,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "state": "finished",
+    "cratesBroken": 52,
+    "totalCrates": 52,
+    "deaths": 0
+  },
+  "retryRestores": true
+}

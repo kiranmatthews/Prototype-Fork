@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "tribal-run",
-  "next_course": "waterfall-climb",
+  "current_course": "waterfall-climb",
+  "next_course": "test",
   "courses": [
     {
       "order": 1,
@@ -149,9 +149,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-tribal-run",
-        "name": "Bonus: The Resonance Vault"
+        "name": "Bonus: The Resonance Vault",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/tribal-run/validation.json"
     },
     {
       "order": 9,
@@ -655,6 +657,12 @@
     {
       "id": "custard-creek",
       "bonus": "bonus-custard-creek",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "tribal-run",
+      "bonus": "bonus-tribal-run",
       "status": "validated",
       "date": "2026-11-14"
     }

@@ -1,5 +1,6 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {dressTribalBonus} from './tribal-run-art';
+import {arrangeResonanceCrates} from './tribal-crate-arrangement';
 const C:CustomComponent[]=[];
 const deck=(a:number,b:number,y:number,nm:string,grp=1,outline=false)=>C.push({t:'platform',p:[(a+b)/2,y-2.5,0],s:[b-a,5,7],tex:'solid',color:'#aeb8be',grp,nm,...outline?{outline:true}:{}});
 const box=(x:number,y:number,name:string,kind:CustomComponent['kind']='wood',grp=2)=>C.push({t:'crate',p:[x,y,0],kind,grp,nm:name});
@@ -27,3 +28,4 @@ export const TRIBAL_RUN_BONUS_LEVEL:CustomLevelData={v:1,name:'Bonus: The Resona
  components:C,groups:[{id:1,nm:'Listening steps and echo gallery'},{id:2,nm:'Twenty offerings'},{id:3,nm:'Resonance drum and breakaway lip'},
  {id:20,nm:'Switch reveals the three echoes'},{id:4,nm:'Camera and return',editorOnly:true}]};
 dressTribalBonus(TRIBAL_RUN_BONUS_LEVEL);
+arrangeResonanceCrates(TRIBAL_RUN_BONUS_LEVEL);
