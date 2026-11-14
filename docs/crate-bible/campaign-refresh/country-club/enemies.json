@@ -1,0 +1,170 @@
+[
+  {
+    "index": 0,
+    "kind": "grunt",
+    "position": [
+      10.912449998443575,
+      -18.200000762939453,
+      -339.73852878241246
+    ],
+    "lateral": 7.12818724451247,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 1,
+    "kind": "turtle",
+    "position": [
+      -29.924173080704204,
+      -18.322999954223633,
+      -328.40000000000003
+    ],
+    "lateral": -6.999999999999999,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 2,
+    "kind": "hopper",
+    "position": [
+      -107.4,
+      -8.456999778747559,
+      -210.96639496516917
+    ],
+    "lateral": 6,
+    "frames": 63,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 3,
+    "kind": "grunt",
+    "position": [
+      -183.43342947825798,
+      -21.167999267578125,
+      -438.21273331439374
+    ],
+    "lateral": -6.984309826535048,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 4,
+    "kind": "turtle",
+    "position": [
+      -102.47797881090001,
+      -21.69499969482422,
+      -411.5806783965738
+    ],
+    "lateral": 7.0000000000000515,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 5,
+    "kind": "hopper",
+    "position": [
+      260.7356320929072,
+      -22.30900001525879,
+      -444.8276403594956
+    ],
+    "lateral": 7,
+    "frames": 65,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 6,
+    "kind": "grunt",
+    "position": [
+      -223.0202134808871,
+      -44.6879997253418,
+      -661.1878981900694
+    ],
+    "lateral": 7.0000000000000036,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 7,
+    "kind": "turtle",
+    "position": [
+      -275.2345381843049,
+      -53.38399887084961,
+      -737.5195957124448
+    ],
+    "lateral": -6.999999999999959,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 8,
+    "kind": "grunt",
+    "position": [
+      268.2961145309265,
+      -43.16600036621094,
+      -632.6
+    ],
+    "lateral": 7.046068895815431,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 9,
+    "kind": "hopper",
+    "position": [
+      318.31930347384446,
+      -51.8849983215332,
+      -740.3999775609525
+    ],
+    "lateral": -7.000000000000033,
+    "frames": 63,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 10,
+    "kind": "grunt",
+    "position": [
+      207.0879177989305,
+      -65.0999984741211,
+      -932.641410525317
+    ],
+    "lateral": 7.000000000000043,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  },
+  {
+    "index": 11,
+    "kind": "turtle",
+    "position": [
+      200.45052027644118,
+      -65.0999984741211,
+      -920.3148151264061
+    ],
+    "lateral": -6.999999999999974,
+    "frames": 49,
+    "defeated": true,
+    "falls": 0,
+    "deaths": 0
+  }
+]

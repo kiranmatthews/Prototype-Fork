@@ -1,0 +1,1 @@
+PASS 28 separately staged live item pickups with normal inputs

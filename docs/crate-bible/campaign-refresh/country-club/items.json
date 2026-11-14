@@ -1,0 +1,338 @@
+[
+  {
+    "index": 0,
+    "position": [
+      -171.00011513148286,
+      -1.145652185024202,
+      -151.8
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 1,
+    "position": [
+      -171.00011513148286,
+      -1.1737252153679048,
+      -154.6
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 2,
+    "position": [
+      -171.00011513148286,
+      -1.2022511032028003,
+      -157.4
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 3,
+    "position": [
+      -171.00011513148286,
+      -1.2318643718594362,
+      -160.2
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 4,
+    "position": [
+      -261.54953570314467,
+      -13.811077184705665,
+      -365.69283883743867
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 5,
+    "position": [
+      -258.7524665211308,
+      -13.820697537944875,
+      -365.56476077128985
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 6,
+    "position": [
+      -255.95539733911698,
+      -13.85525894472171,
+      -365.436682705141
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 7,
+    "position": [
+      -253.15832815710314,
+      -13.915612590240766,
+      -365.30860463899216
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 8,
+    "position": [
+      -162.25077289475433,
+      -19.59531008082942,
+      -439.63931117520474
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 9,
+    "position": [
+      -162.18507215823476,
+      -19.584705734793353,
+      -436.84008210040207
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 10,
+    "position": [
+      -162.11937142171521,
+      -19.574173168456703,
+      -434.04085302559935
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 11,
+    "position": [
+      -162.05367068519564,
+      -19.564097461699056,
+      -431.2416239507967
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 12,
+    "position": [
+      -145.1775974348551,
+      -57.048581555309354,
+      -876.2940029282211
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 13,
+    "position": [
+      -144.19445179840753,
+      -57.00287129177222,
+      -873.6722812310278
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 14,
+    "position": [
+      -143.21130616195993,
+      -56.95807057406884,
+      -871.0505595338344
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 15,
+    "position": [
+      -142.22816052551235,
+      -56.913272770069646,
+      -868.4288378366412
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 16,
+    "position": [
+      98.07173394984731,
+      -58.42316864728021,
+      -869.1963638204951
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 17,
+    "position": [
+      96.6825449224481,
+      -58.3866040509723,
+      -866.7652830225467
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 18,
+    "position": [
+      95.2933558950489,
+      -58.350365031971094,
+      -864.3342022245982
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 19,
+    "position": [
+      93.90416686764969,
+      -58.31433049066118,
+      -861.9031214266498
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 20,
+    "position": [
+      194.8771838194689,
+      -54.98788560198185,
+      -790.9521714669703
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 21,
+    "position": [
+      192.11894234146982,
+      -54.969468878986405,
+      -789.0333947866228
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 22,
+    "position": [
+      189.36070086347067,
+      -54.950923142037624,
+      -787.1146181062753
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 23,
+    "position": [
+      186.60245938547158,
+      -54.93116458941526,
+      -785.1958414259278
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 24,
+    "position": [
+      139.00077461784946,
+      -64.32977358087346,
+      -945.4582748397096
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 25,
+    "position": [
+      139.5016538448094,
+      -64.34895181513971,
+      -948.2131105879894
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 26,
+    "position": [
+      140.00253307176936,
+      -64.36800100561352,
+      -950.967946336269
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  },
+  {
+    "index": 27,
+    "position": [
+      140.5034122987293,
+      -64.38751112350477,
+      -953.7227820845488
+    ],
+    "frames": 1,
+    "jumped": false,
+    "item": "banana",
+    "falls": 0
+  }
+]

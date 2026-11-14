@@ -12063,3 +12063,9 @@ Nineteenth course and fourteenth unique bonus, reviewed in approximately 38.5 mi
 Native staged approaches account for all 338 main crates: 104 on quays, 58 on consumable bridges, 154 in aerial chains and 22 cleared remotely. Steel-lane crossings, all original collect/bypass flights, and three continuous all-box bonus runs pass. The browser verifies checkpoint restoration, Nitro clear, staged finish, continuous bonus collection/banking and failure recovery. Seven full-resolution views have clean consoles. Corrected the harbour test pilot's hop for the existing landing-only spring rule; older snapshot/coordinate test limitations are recorded.
 
 Required level checks, build and release check pass: `eab91b0f7c3d18e839f3`, 959,307,795 bytes. [Evidence and scope](crate-bible/campaign-refresh/carlisle-coast/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Country Club Circuit
+
+Twentieth course, reviewed in approximately 13.1 minutes from 13:38:18 UTC. Retained sixteen optional gem-box pairs, seven four-choice item rows and twelve side patrols. The race uses unique per-rider box credit and nonfatal recovery; no adventure checkpoint or bonus-room layer is added.
+
+Separate normal-input checks collect all 32 gem boxes and 28 item pickups, defeat all twelve patrols and verify retry restoration. A complete race with twenty roaming carts and seven rivals finishes for all eight riders with zero deaths. Browser opening, staged collection/recovery/finish and retry pass; three full-render views have clean consoles. No continuous all-box clear is claimed. Source, movement, artwork and the published pack are unchanged; the preceding Carlisle build and release checks apply. [Evidence](crate-bible/campaign-refresh/country-club/README.md). Authorized publication awaits GitHub authentication.

@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "country-club",
-  "next_course": "rooftop-relay",
+  "current_course": "rooftop-relay",
+  "next_course": "mayfield-mall",
   "courses": [
     {
       "order": 1,
@@ -356,7 +356,8 @@
       "competition": false,
       "race": true,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/country-club/validation.json"
     },
     {
       "order": 21,
@@ -755,6 +756,12 @@
     {
       "id": "carlisle-coast",
       "bonus": "bonus-carlisle-coast",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "country-club",
+      "bonus": null,
       "status": "validated",
       "date": "2026-11-14"
     }
