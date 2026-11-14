@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "rumblewater-run",
-  "next_course": "jungle",
+  "current_course": "jungle",
+  "next_course": "coastal-street-run",
   "courses": [
     {
       "order": 1,
@@ -62,9 +62,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-rumblewater-run",
-        "name": "Bonus: Sluicekeeper\u2019s Cache"
+        "name": "Bonus: Sluicekeeper\u2019s Cache",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/rumblewater-run/validation.json"
     },
     {
       "order": 4,
@@ -614,6 +616,12 @@
     {
       "id": "beachfront",
       "bonus": "bonus-beachside-run",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "rumblewater-run",
+      "bonus": "bonus-rumblewater-run",
       "status": "validated",
       "date": "2026-11-14"
     }
