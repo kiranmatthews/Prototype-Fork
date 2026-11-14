@@ -1,0 +1,603 @@
+{
+  "course": "jungle-gate-run",
+  "name": "The Ancient Gates",
+  "bonus": "bonus-jungle-gate",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T19:56:00Z",
+  "completedAt": "2026-11-14T20:50:22.290563+00:00",
+  "elapsedMinutes": 54.4,
+  "changes": {
+    "mainBefore": 15,
+    "mainAfter": 120,
+    "ordinaryGroups": 24,
+    "revisedOrdinaryCrates": 119,
+    "masks": 3,
+    "retainedEnemies": 16,
+    "retainedArrows": 3,
+    "bonusBefore": 28,
+    "bonusAfter": 46,
+    "removedUnnecessaryBonusArrows": 2,
+    "bonusCrownHeight": 9
+  },
+  "before": {
+    "jungle-gate-run": {
+      "physical": 20,
+      "counted": 15,
+      "checkpoints": 11,
+      "gemTally": 54,
+      "byKind": {
+        "mask": 3,
+        "wood": 4,
+        "mystery": 5,
+        "nitro": 1,
+        "metalbounce": 3,
+        "life": 2,
+        "bang": 1,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 1.07,
+      "physicalPer100m": 1.43,
+      "checkpointGaps": [
+        125,
+        116,
+        122,
+        113,
+        133,
+        120,
+        126,
+        110,
+        110,
+        126,
+        105,
+        90
+      ],
+      "clusters": 15,
+      "singles": 15,
+      "meanClusterSize": 1,
+      "sizeHist": {
+        "1": 15
+      },
+      "structuralClusters": 5,
+      "structuralCrates": 5,
+      "maxStackAll": 1,
+      "arrangements": {
+        "single": 15
+      },
+      "maxStack": 1,
+      "largestCluster": 1,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 20
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 15,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 8.6,
+      "enemyNear": 1,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 3,
+      "arrowTargets": {
+        "fruit-only": 2,
+        "nothing": 1
+      },
+      "multihit": 0,
+      "emptiest": {
+        "length": 237,
+        "from": 958,
+        "to": 1195
+      },
+      "authoredRails": 1,
+      "speedPads": 0,
+      "enemies": 16,
+      "hazards": {
+        "crusher": 3,
+        "pendulum": 4,
+        "mover": 3,
+        "crumble": 6,
+        "phasepad": 3,
+        "firetiki": 1
+      }
+    },
+    "bonus-jungle-gate": {
+      "physical": 35,
+      "counted": 28,
+      "checkpoints": 0,
+      "gemTally": 28,
+      "byKind": {
+        "wood": 12,
+        "bouncy": 2,
+        "mystery": 4,
+        "bang": 2,
+        "multihit": 3,
+        "metal": 5,
+        "life": 2
+      },
+      "outlineByKind": {
+        "life": 1,
+        "mystery": 2,
+        "wood": 2
+      },
+      "per100m": 13.4,
+      "physicalPer100m": 16.75,
+      "checkpointGaps": [
+        209
+      ],
+      "clusters": 24,
+      "singles": 15,
+      "meanClusterSize": 1.38,
+      "sizeHist": {
+        "1": 15,
+        "2": 9
+      },
+      "structuralClusters": 2,
+      "structuralCrates": 2,
+      "maxStackAll": 2,
+      "arrangements": {
+        "stack": 9,
+        "single": 15
+      },
+      "maxStack": 2,
+      "largestCluster": 2,
+      "floatingClusters": 6,
+      "support": {
+        "ground": 15,
+        "crate": 9,
+        "none": 6
+      },
+      "floatingCrates": 6,
+      "overVoid": 10,
+      "overPit": 10,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 6,
+      "highTools": {
+        "none-found": 6
+      },
+      "onPath": 28,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 1.7,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 2,
+      "arrowTargets": {
+        "fruit-only": 1,
+        "ledge": 1
+      },
+      "multihit": 3,
+      "emptiest": {
+        "length": 27,
+        "from": 43,
+        "to": 70
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "after": {
+    "jungle-gate-run": {
+      "physical": 125,
+      "counted": 120,
+      "checkpoints": 11,
+      "gemTally": 177,
+      "byKind": {
+        "nitro": 1,
+        "metalbounce": 3,
+        "bang": 1,
+        "nitrobang": 1,
+        "wood": 95,
+        "mask": 3,
+        "mystery": 19,
+        "life": 2
+      },
+      "outlineByKind": {},
+      "per100m": 8.6,
+      "physicalPer100m": 8.95,
+      "checkpointGaps": [
+        125,
+        116,
+        122,
+        113,
+        133,
+        120,
+        126,
+        110,
+        110,
+        126,
+        105,
+        90
+      ],
+      "clusters": 25,
+      "singles": 1,
+      "meanClusterSize": 4.8,
+      "sizeHist": {
+        "1": 1,
+        "4": 2,
+        "5-9": 22
+      },
+      "structuralClusters": 5,
+      "structuralCrates": 5,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 21,
+        "wall-along-path": 3,
+        "single": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 6,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 76,
+        "crate": 49
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 120,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 10.6,
+      "enemyNear": 6,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 24,
+      "runCrates": 49,
+      "longestRun": 3,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 24,
+        "crates": 49
+      },
+      "arrows": 3,
+      "arrowTargets": {
+        "fruit-only": 2,
+        "nothing": 1
+      },
+      "multihit": 0,
+      "emptiest": {
+        "length": 115.7,
+        "from": 733.2,
+        "to": 848.8
+      },
+      "authoredRails": 1,
+      "speedPads": 0,
+      "enemies": 16,
+      "hazards": {
+        "crusher": 3,
+        "pendulum": 4,
+        "mover": 3,
+        "crumble": 6,
+        "phasepad": 3,
+        "firetiki": 1
+      }
+    },
+    "bonus-jungle-gate": {
+      "physical": 53,
+      "counted": 46,
+      "checkpoints": 0,
+      "gemTally": 46,
+      "byKind": {
+        "bang": 2,
+        "metal": 5,
+        "wood": 29,
+        "multihit": 2,
+        "life": 2,
+        "mystery": 5
+      },
+      "outlineByKind": {
+        "wood": 6,
+        "mystery": 1,
+        "life": 1
+      },
+      "per100m": 22.01,
+      "physicalPer100m": 25.36,
+      "checkpointGaps": [
+        209
+      ],
+      "clusters": 17,
+      "singles": 4,
+      "meanClusterSize": 3,
+      "sizeHist": {
+        "1": 4,
+        "2": 6,
+        "5-9": 7
+      },
+      "structuralClusters": 2,
+      "structuralCrates": 2,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 3,
+        "row": 4,
+        "single": 4,
+        "stack": 6
+      },
+      "maxStack": 2,
+      "largestCluster": 5,
+      "floatingClusters": 6,
+      "support": {
+        "ground": 29,
+        "none": 6,
+        "crate": 10
+      },
+      "floatingCrates": 6,
+      "overVoid": 10,
+      "overPit": 10,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 6,
+      "highTools": {
+        "none-found": 6
+      },
+      "onPath": 46,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0.6,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 6,
+      "runCrates": 24,
+      "longestRun": 5,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 7,
+        "crates": 26
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 2,
+      "emptiest": {
+        "length": 22.8,
+        "from": 47.2,
+        "to": 70
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "sectionCounts": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+  ],
+  "preservation": {
+    "sourceNonCratesAndSettingsExact": true,
+    "publishedNonCrates": {
+      "main": {
+        "nonCrateComponents": 2991,
+        "numericDifferences": 0,
+        "maxAbsoluteDifference": 0
+      },
+      "bonus": {
+        "nonCrateComponents": 537,
+        "numericDifferences": 0,
+        "maxAbsoluteDifference": 0
+      }
+    },
+    "historicalGameplayHashesVerified": true,
+    "changedPublishedIds": [
+      "jungle-gate-run",
+      "bonus-jungle-gate"
+    ],
+    "movementAnimationArtworkUnchanged": true,
+    "previousStockSavesPreserved": true
+  },
+  "native": {
+    "main": {
+      "from": 0,
+      "to": 11,
+      "position": [
+        1374.394000000001,
+        18.40000002384186,
+        0
+      ],
+      "deaths": 0,
+      "frames": 21107,
+      "state": "finished",
+      "cratesBroken": 131,
+      "totalCrates": 177,
+      "bonusCrates": 0,
+      "gemEarned": false
+    },
+    "mainMaskHits": 0,
+    "continuousMainSeconds": 351.78333333333336,
+    "baselineMainSeconds": 379.73333333333335,
+    "bonus": {
+      "deaths": 0,
+      "frames": 6964,
+      "cratesBroken": 46,
+      "totalCrates": 46,
+      "state": "finished",
+      "completionScope": "complete-stage",
+      "activeStageCrates": 46,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true
+    },
+    "continuousBonusSeconds": 116.06666666666666,
+    "bonusWrongOrdersAndAlternatives": [
+      {
+        "pattern": "finite",
+        "test": "spending upper finite support first loses high cap access",
+        "capAlive": true,
+        "actualDoubleJump": true
+      },
+      {
+        "test": "unrevealed gallery cannot support clamber or award cargo",
+        "position": [
+          11.972500000000009,
+          0,
+          0
+        ]
+      },
+      {
+        "test": "unused causeway switch causes real gap death",
+        "state": "dead"
+      },
+      {
+        "test": "skipping relay footing causes real gap death",
+        "state": "dead"
+      },
+      {
+        "test": "ordinary cargo rebound and double stay below crown",
+        "maxHead": 8.756295959364387,
+        "capBottom": 9
+      },
+      {
+        "test": "final relay cap rebound and double cannot reach crown",
+        "capAlive": true,
+        "position": [
+          135.60000000000036,
+          0,
+          0
+        ]
+      },
+      {
+        "test": "complete retry",
+        "physical": 53,
+        "counted": 46,
+        "credit": 0
+      }
+    ],
+    "footprints": {
+      "bottomBoxes": 70,
+      "footprintProbes": 280,
+      "maxFloorError": 1.7763568394002505e-15,
+      "enemies": 16,
+      "groups": 24,
+      "ordinaryCrates": 119
+    },
+    "bonusEntrance": {
+      "position": [
+        1140.4322444444447,
+        8.000000023841858,
+        0
+      ],
+      "entries": 1,
+      "deaths": 0
+    },
+    "checkpointRecovery": {
+      "before": {
+        "deaths": 0,
+        "crates": 11,
+        "masks": 1,
+        "spawn": [
+          105,
+          3.100000023841857,
+          0
+        ]
+      },
+      "death": {
+        "position": [
+          62.38133333333301,
+          -18.135833309491485,
+          0
+        ],
+        "deaths": 1
+      },
+      "after": {
+        "deaths": 1,
+        "crates": 11,
+        "masks": 1,
+        "position": [
+          105,
+          3.000000023841858,
+          0
+        ],
+        "bridge": true
+      },
+      "frames": 2513
+    }
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 5,
+    "checkpointRestoresFourBoxes": true,
+    "bonusFailurePreservesLives": true,
+    "all46BonusBanked": true,
+    "consoleErrors": []
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed",
+    "stockSelectionAndArchive": "four prior source/published snapshots, eight raw/migrated saves and 56 authored variants"
+  },
+  "buildVersion": "5fee8e7cd5373175835b",
+  "releaseBytes": 959319729,
+  "publication": "authorized; pending commit and push",
+  "limitations": [
+    "Main and bonus all-box runs are separate. No combined parent clear-gem run is claimed.",
+    "Browser main probes are staged; the bonus clears continuously. Browser bonus entry uses the debug trigger; normal-input native entry verifies the actual platform and supported return.",
+    "Full-render native 1280x720 canvas captures omit DOM HUD labels.",
+    "The first browser bonus attempt hit a 240-second wall-clock timeout at the final shelf. Completed main probes were retained; only the unfinished bonus flow was rerun with a longer timeout and a 240x135 lite viewport.",
+    "The automated arrow classifier cannot recognize the main route\u2019s platform targets; all three launchers are traversed in the continuous native route."
+  ]
+}

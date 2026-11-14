@@ -1,0 +1,1387 @@
+{
+  "mode": "lite",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 125,
+    "total": 177,
+    "bonus": 46,
+    "checkpoints": 11,
+    "enemies": 16
+  },
+  "bonusPlatform": {
+    "x": 1128,
+    "y": 8,
+    "z": -4.2,
+    "laneFraction": 0.5,
+    "topY": 9.05,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 0
+  },
+  "opening": {
+    "done": true,
+    "frames": 492,
+    "state": "ride",
+    "crates": 5,
+    "lives": 4,
+    "position": [
+      -6.621666666697175,
+      2.384185793236071e-08,
+      1.215989053344808e-05
+    ],
+    "collected": 5,
+    "checkpoint": false
+  },
+  "checkpoint": {
+    "done": true,
+    "frames": 95,
+    "state": "ride",
+    "crates": 1,
+    "lives": 4,
+    "position": [
+      106.87000000001296,
+      3.000000023841858,
+      -3.900840154263873e-06
+    ],
+    "collected": 0,
+    "checkpoint": true
+  },
+  "afterCheckpoint": {
+    "done": true,
+    "frames": 361,
+    "state": "ride",
+    "crates": 5,
+    "lives": 4,
+    "position": [
+      115.90999999996865,
+      3.000000023841858,
+      1.20560448287819e-05
+    ],
+    "collected": 4,
+    "checkpoint": true
+  },
+  "recovery": {
+    "lives": 3,
+    "alive": 4,
+    "position": [
+      105,
+      3.000000023841858,
+      0
+    ]
+  },
+  "finish": {
+    "done": true,
+    "frames": 1,
+    "state": "finished",
+    "crates": 1,
+    "lives": 4,
+    "position": [
+      1375,
+      16.73666666644315,
+      0
+    ],
+    "collected": 1,
+    "checkpoint": false
+  },
+  "bonusFailure": {
+    "lives": 4,
+    "banked": 0,
+    "completed": false,
+    "sameParent": true
+  },
+  "bonusRetry": {
+    "physical": 53,
+    "alive": true
+  },
+  "retryReason": "Previous browser timeout during late bonus; completed main probes retained.",
+  "bonusJourney": {
+    "done": true,
+    "failure": null,
+    "frame": 7383,
+    "stage": "return with the complete Gatekeeper\u2019s Hoard",
+    "actions": [
+      {
+        "name": "approach arrival delivery",
+        "firstFrame": 20,
+        "lastFrame": 101
+      },
+      {
+        "name": "arrival delivery",
+        "firstFrame": 121,
+        "lastFrame": 121
+      },
+      {
+        "name": "approach arrival delivery",
+        "firstFrame": 143,
+        "lastFrame": 189
+      },
+      {
+        "name": "arrival delivery",
+        "firstFrame": 209,
+        "lastFrame": 209
+      },
+      {
+        "name": "approach arrival delivery",
+        "firstFrame": 231,
+        "lastFrame": 277
+      },
+      {
+        "name": "arrival delivery",
+        "firstFrame": 297,
+        "lastFrame": 297
+      },
+      {
+        "name": "approach arrival delivery",
+        "firstFrame": 319,
+        "lastFrame": 365
+      },
+      {
+        "name": "arrival delivery",
+        "firstFrame": 385,
+        "lastFrame": 385
+      },
+      {
+        "name": "approach arrival delivery",
+        "firstFrame": 407,
+        "lastFrame": 453
+      },
+      {
+        "name": "arrival delivery",
+        "firstFrame": 473,
+        "lastFrame": 473
+      },
+      {
+        "name": "approach sealed-court delivery",
+        "firstFrame": 495,
+        "lastFrame": 841
+      },
+      {
+        "name": "sealed-court delivery",
+        "firstFrame": 861,
+        "lastFrame": 861
+      },
+      {
+        "name": "approach sealed-court delivery",
+        "firstFrame": 883,
+        "lastFrame": 945
+      },
+      {
+        "name": "sealed-court delivery",
+        "firstFrame": 965,
+        "lastFrame": 965
+      },
+      {
+        "name": "approach sealed-court delivery",
+        "firstFrame": 987,
+        "lastFrame": 1049
+      },
+      {
+        "name": "sealed-court delivery",
+        "firstFrame": 1069,
+        "lastFrame": 1069
+      },
+      {
+        "name": "approach sealed-court delivery",
+        "firstFrame": 1091,
+        "lastFrame": 1153
+      },
+      {
+        "name": "sealed-court delivery",
+        "firstFrame": 1173,
+        "lastFrame": 1173
+      },
+      {
+        "name": "approach sealed-court delivery",
+        "firstFrame": 1195,
+        "lastFrame": 1257
+      },
+      {
+        "name": "sealed-court delivery",
+        "firstFrame": 1277,
+        "lastFrame": 1277
+      },
+      {
+        "name": "approach Jade gallery seal",
+        "firstFrame": 1299,
+        "lastFrame": 1388
+      },
+      {
+        "name": "Jade gallery seal",
+        "firstFrame": 1408,
+        "lastFrame": 1408
+      },
+      {
+        "name": "revealed jade gallery takeoff",
+        "firstFrame": 1430,
+        "lastFrame": 1719
+      },
+      {
+        "name": "revealed jade gallery first jump",
+        "firstFrame": 1764,
+        "lastFrame": 1777
+      },
+      {
+        "name": "revealed jade gallery double jump and clamber",
+        "firstFrame": 1779,
+        "lastFrame": 1832
+      },
+      {
+        "name": "approach jade-gallery delivery",
+        "firstFrame": 1832,
+        "lastFrame": 1888
+      },
+      {
+        "name": "jade-gallery delivery",
+        "firstFrame": 1908,
+        "lastFrame": 1908
+      },
+      {
+        "name": "approach jade-gallery delivery",
+        "firstFrame": 1930,
+        "lastFrame": 1976
+      },
+      {
+        "name": "jade-gallery delivery",
+        "firstFrame": 1996,
+        "lastFrame": 1996
+      },
+      {
+        "name": "approach jade-gallery delivery",
+        "firstFrame": 2018,
+        "lastFrame": 2064
+      },
+      {
+        "name": "jade-gallery delivery",
+        "firstFrame": 2084,
+        "lastFrame": 2084
+      },
+      {
+        "name": "approach jade-gallery delivery",
+        "firstFrame": 2106,
+        "lastFrame": 2152
+      },
+      {
+        "name": "jade-gallery delivery",
+        "firstFrame": 2172,
+        "lastFrame": 2172
+      },
+      {
+        "name": "approach jade-gallery delivery",
+        "firstFrame": 2194,
+        "lastFrame": 2240
+      },
+      {
+        "name": "jade-gallery delivery",
+        "firstFrame": 2260,
+        "lastFrame": 2260
+      },
+      {
+        "name": "gallery return edge",
+        "firstFrame": 2282,
+        "lastFrame": 2376
+      },
+      {
+        "name": "return from the jade gallery",
+        "firstFrame": 2421,
+        "lastFrame": 2491
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 2491,
+        "lastFrame": 2814
+      },
+      {
+        "name": "clear the spent jade seal",
+        "firstFrame": 2859,
+        "lastFrame": 2898
+      },
+      {
+        "name": "approach Three-stone causeway seal",
+        "firstFrame": 2898,
+        "lastFrame": 2992
+      },
+      {
+        "name": "Three-stone causeway seal",
+        "firstFrame": 3012,
+        "lastFrame": 3012
+      },
+      {
+        "name": "clear the spent causeway seal",
+        "firstFrame": 3061,
+        "lastFrame": 3100
+      },
+      {
+        "name": "restored causeway stone 1",
+        "firstFrame": 3127,
+        "lastFrame": 3224
+      },
+      {
+        "name": "restored causeway stone 2",
+        "firstFrame": 3251,
+        "lastFrame": 3348
+      },
+      {
+        "name": "restored causeway stone 3",
+        "firstFrame": 3375,
+        "lastFrame": 3437
+      },
+      {
+        "name": "causeway far landing",
+        "firstFrame": 3464,
+        "lastFrame": 3527
+      },
+      {
+        "name": "approach copper-store delivery",
+        "firstFrame": 3527,
+        "lastFrame": 3634
+      },
+      {
+        "name": "copper-store delivery",
+        "firstFrame": 3654,
+        "lastFrame": 3654
+      },
+      {
+        "name": "approach copper-store delivery",
+        "firstFrame": 3676,
+        "lastFrame": 3738
+      },
+      {
+        "name": "copper-store delivery",
+        "firstFrame": 3758,
+        "lastFrame": 3758
+      },
+      {
+        "name": "approach copper-store delivery",
+        "firstFrame": 3780,
+        "lastFrame": 3842
+      },
+      {
+        "name": "copper-store delivery",
+        "firstFrame": 3862,
+        "lastFrame": 3862
+      },
+      {
+        "name": "approach copper-store delivery",
+        "firstFrame": 3884,
+        "lastFrame": 3946
+      },
+      {
+        "name": "copper-store delivery",
+        "firstFrame": 3966,
+        "lastFrame": 3966
+      },
+      {
+        "name": "approach copper-store delivery",
+        "firstFrame": 3988,
+        "lastFrame": 4050
+      },
+      {
+        "name": "copper-store delivery",
+        "firstFrame": 4070,
+        "lastFrame": 4070
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 4092,
+        "lastFrame": 4235
+      },
+      {
+        "name": "steel relay anchor 1",
+        "firstFrame": 4280,
+        "lastFrame": 4354
+      },
+      {
+        "name": "steel relay anchor 2",
+        "firstFrame": 4381,
+        "lastFrame": 4459
+      },
+      {
+        "name": "steel relay anchor 3",
+        "firstFrame": 4486,
+        "lastFrame": 4564
+      },
+      {
+        "name": "steel relay anchor 4",
+        "firstFrame": 4591,
+        "lastFrame": 4669
+      },
+      {
+        "name": "steel relay anchor 5",
+        "firstFrame": 4696,
+        "lastFrame": 4774
+      },
+      {
+        "name": "steel relay exit",
+        "firstFrame": 4801,
+        "lastFrame": 4842
+      },
+      {
+        "name": "finite treasury approach",
+        "firstFrame": 4842,
+        "lastFrame": 4932
+      },
+      {
+        "name": "spend one upper treasury bounce",
+        "firstFrame": 4977,
+        "lastFrame": 5008
+      },
+      {
+        "name": "treasury rebound apex",
+        "firstFrame": 5008,
+        "lastFrame": 5033
+      },
+      {
+        "name": "crown before finite supports",
+        "firstFrame": 5035,
+        "lastFrame": 5039
+      },
+      {
+        "name": "treasury safe descent",
+        "firstFrame": 5039,
+        "lastFrame": 5062
+      },
+      {
+        "name": "approach Treasury upper finite chest",
+        "firstFrame": 5062,
+        "lastFrame": 5121
+      },
+      {
+        "name": "Treasury upper finite chest",
+        "firstFrame": 5141,
+        "lastFrame": 5141
+      },
+      {
+        "name": "approach treasury-exit delivery",
+        "firstFrame": 5163,
+        "lastFrame": 5306
+      },
+      {
+        "name": "treasury-exit delivery",
+        "firstFrame": 5326,
+        "lastFrame": 5326
+      },
+      {
+        "name": "approach treasury-exit delivery",
+        "firstFrame": 5348,
+        "lastFrame": 5410
+      },
+      {
+        "name": "treasury-exit delivery",
+        "firstFrame": 5430,
+        "lastFrame": 5430
+      },
+      {
+        "name": "approach treasury-exit delivery",
+        "firstFrame": 5452,
+        "lastFrame": 5514
+      },
+      {
+        "name": "treasury-exit delivery",
+        "firstFrame": 5534,
+        "lastFrame": 5534
+      },
+      {
+        "name": "approach treasury-exit delivery",
+        "firstFrame": 5556,
+        "lastFrame": 5618
+      },
+      {
+        "name": "treasury-exit delivery",
+        "firstFrame": 5638,
+        "lastFrame": 5638
+      },
+      {
+        "name": "approach treasury-exit delivery",
+        "firstFrame": 5660,
+        "lastFrame": 5722
+      },
+      {
+        "name": "treasury-exit delivery",
+        "firstFrame": 5742,
+        "lastFrame": 5742
+      },
+      {
+        "name": "last offering shelf takeoff",
+        "firstFrame": 5764,
+        "lastFrame": 5866
+      },
+      {
+        "name": "last offering shelf first jump",
+        "firstFrame": 5911,
+        "lastFrame": 5924
+      },
+      {
+        "name": "last offering shelf double jump and clamber",
+        "firstFrame": 5926,
+        "lastFrame": 5979
+      },
+      {
+        "name": "approach last-shelf delivery",
+        "firstFrame": 5979,
+        "lastFrame": 6035
+      },
+      {
+        "name": "last-shelf delivery",
+        "firstFrame": 6055,
+        "lastFrame": 6055
+      },
+      {
+        "name": "approach last-shelf delivery",
+        "firstFrame": 6077,
+        "lastFrame": 6123
+      },
+      {
+        "name": "last-shelf delivery",
+        "firstFrame": 6143,
+        "lastFrame": 6143
+      },
+      {
+        "name": "approach last-shelf delivery",
+        "firstFrame": 6165,
+        "lastFrame": 6211
+      },
+      {
+        "name": "last-shelf delivery",
+        "firstFrame": 6231,
+        "lastFrame": 6231
+      },
+      {
+        "name": "approach last-shelf delivery",
+        "firstFrame": 6253,
+        "lastFrame": 6299
+      },
+      {
+        "name": "last-shelf delivery",
+        "firstFrame": 6319,
+        "lastFrame": 6319
+      },
+      {
+        "name": "approach last-shelf delivery",
+        "firstFrame": 6341,
+        "lastFrame": 6387
+      },
+      {
+        "name": "last-shelf delivery",
+        "firstFrame": 6407,
+        "lastFrame": 6407
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 6429,
+        "lastFrame": 6531
+      },
+      {
+        "name": "return from the last shelf",
+        "firstFrame": 6576,
+        "lastFrame": 6625
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 6625,
+        "lastFrame": 6654
+      },
+      {
+        "name": "last hoard opening",
+        "firstFrame": 6699,
+        "lastFrame": 6760
+      },
+      {
+        "name": "approach departure delivery",
+        "firstFrame": 6760,
+        "lastFrame": 6852
+      },
+      {
+        "name": "departure delivery",
+        "firstFrame": 6872,
+        "lastFrame": 6872
+      },
+      {
+        "name": "approach departure delivery",
+        "firstFrame": 6894,
+        "lastFrame": 6956
+      },
+      {
+        "name": "departure delivery",
+        "firstFrame": 6976,
+        "lastFrame": 6976
+      },
+      {
+        "name": "approach departure delivery",
+        "firstFrame": 6998,
+        "lastFrame": 7060
+      },
+      {
+        "name": "departure delivery",
+        "firstFrame": 7080,
+        "lastFrame": 7080
+      },
+      {
+        "name": "approach departure delivery",
+        "firstFrame": 7102,
+        "lastFrame": 7164
+      },
+      {
+        "name": "departure delivery",
+        "firstFrame": 7184,
+        "lastFrame": 7184
+      },
+      {
+        "name": "approach departure delivery",
+        "firstFrame": 7206,
+        "lastFrame": 7268
+      },
+      {
+        "name": "departure delivery",
+        "firstFrame": 7288,
+        "lastFrame": 7288
+      },
+      {
+        "name": "return with the complete Gatekeeper\u2019s Hoard",
+        "firstFrame": 7312,
+        "lastFrame": 7383
+      }
+    ],
+    "evidence": [
+      {
+        "action": "arrival delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "arrival delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "arrival delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "arrival delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "arrival delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "sealed-court delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "sealed-court delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "sealed-court delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "sealed-court delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "sealed-court delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Jade gallery seal",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jade-gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "jade-gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "jade-gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "jade-gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "jade-gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return from the jade gallery",
+        "launch": [
+          10.582355555555653,
+          6.4,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          3.5278555555556377,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "clear the spent jade seal",
+        "launch": [
+          37.124800000000235,
+          0,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          41.46580000000021,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "Three-stone causeway seal",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "clear the spent causeway seal",
+        "launch": [
+          45.82891111111139,
+          0,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          50.49449999999997,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "restored causeway stone 1",
+        "launch": [
+          50.49449999999997,
+          0,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          57.97116666666657,
+          1,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "restored causeway stone 2",
+        "launch": [
+          57.97116666666657,
+          1,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          65.97216666666654,
+          2,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "restored causeway stone 3",
+        "launch": [
+          65.97216666666654,
+          2,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          73.9716666666668,
+          1.2,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "causeway far landing",
+        "launch": [
+          73.9716666666668,
+          1.2,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          81.47316666666705,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "copper-store delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "copper-store delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "copper-store delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "copper-store delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "copper-store delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "steel relay anchor 1",
+        "launch": [
+          102.73163333333288,
+          0,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          107.96663333333304,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 2",
+        "launch": [
+          107.96663333333304,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          112.47263333333318,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 3",
+        "launch": [
+          112.47263333333318,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          116.96513333333331,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 4",
+        "launch": [
+          116.96513333333331,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          121.47263333333346,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 5",
+        "launch": [
+          121.47263333333346,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          125.9651333333336,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay exit",
+        "launch": [
+          125.9651333333336,
+          1.172,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          131.42813333333376,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "Treasury upper finite chest",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "treasury-exit delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "treasury-exit delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "treasury-exit delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "treasury-exit delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "treasury-exit delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last-shelf delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last-shelf delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last-shelf delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last-shelf delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last-shelf delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return from the last shelf",
+        "launch": [
+          168.4172444444456,
+          6,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          170.46774444444566,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": false
+      },
+      {
+        "action": "last hoard opening",
+        "launch": [
+          170.69757777777895,
+          0,
+          6.323204718306007e-19
+        ],
+        "landing": [
+          179.38557777777925,
+          0,
+          6.323204718306007e-19
+        ],
+        "double": true
+      },
+      {
+        "action": "departure delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "departure delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "departure delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "departure delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "departure delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all Gatekeeper offerings",
+        "totalCrates": 46,
+        "activeStageCrates": 46,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 46,
+        "remaining": 0
+      }
+    ],
+    "maskHits": 0,
+    "sourceMatches": true,
+    "position": [
+      195.4858333333359,
+      0.7266666691501937,
+      6.323204718306007e-19
+    ],
+    "state": "finished",
+    "deaths": 0,
+    "result": {
+      "deaths": 0,
+      "frames": 7383,
+      "cratesBroken": 46,
+      "totalCrates": 46,
+      "state": "finished",
+      "completionScope": "bonus-detour",
+      "activeStageCrates": 46,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": false
+    }
+  },
+  "bonusBanked": {
+    "count": 46,
+    "completed": true,
+    "sameParent": true
+  },
+  "passed": true
+}

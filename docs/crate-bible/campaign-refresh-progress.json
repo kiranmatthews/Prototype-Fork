@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "jungle-gate-run",
-  "next_course": "jungle-gate-run",
+  "current_course": "rolling-bones",
+  "next_course": "rolling-bones",
   "courses": [
     {
       "order": 1,
@@ -584,9 +584,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-jungle-gate",
-        "name": "Bonus: The Gatekeeper\u2019s Hoard"
+        "name": "Bonus: The Gatekeeper\u2019s Hoard",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/jungle-gate-run/validation.json"
     },
     {
       "order": 35,
@@ -844,14 +846,21 @@
       "bonus": "bonus-jungle-terraces",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "jungle-gate-run",
+      "bonus": "bonus-jungle-gate",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "authenticated-ready-to-publish",
+    "status": "published-through-course-30",
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
-    "reason": "GitHub account and repository push access verified; validation complete.",
+    "reason": "GitHub Pages run 43634841254 succeeded; public fork label verified. Course 31 validated and awaiting push.",
     "connection": "Authenticated as kiranmatthews; repository-local Git credential helper and push dry-run verified.",
-    "goal_blocked": false
+    "goal_blocked": false,
+    "lastPublishedCommit": "0f49fb2e823994a4e970d301224201d05dd11aba"
   }
 }

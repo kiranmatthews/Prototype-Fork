@@ -1,0 +1,110 @@
+{
+  "mode": "lite",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 125,
+    "total": 177,
+    "bonus": 46,
+    "checkpoints": 11,
+    "enemies": 16
+  },
+  "bonusPlatform": {
+    "x": 1128,
+    "y": 8,
+    "z": -4.2,
+    "laneFraction": 0.5,
+    "topY": 9.05,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 0
+  },
+  "opening": {
+    "done": true,
+    "frames": 492,
+    "state": "ride",
+    "crates": 5,
+    "lives": 4,
+    "position": [
+      -6.621666666697175,
+      2.384185793236071e-08,
+      1.215989053344808e-05
+    ],
+    "collected": 5,
+    "checkpoint": false
+  },
+  "checkpoint": {
+    "done": true,
+    "frames": 95,
+    "state": "ride",
+    "crates": 1,
+    "lives": 4,
+    "position": [
+      106.87000000001296,
+      3.000000023841858,
+      -3.900840154263873e-06
+    ],
+    "collected": 0,
+    "checkpoint": true
+  },
+  "afterCheckpoint": {
+    "done": true,
+    "frames": 361,
+    "state": "ride",
+    "crates": 5,
+    "lives": 4,
+    "position": [
+      115.90999999996865,
+      3.000000023841858,
+      1.20560448287819e-05
+    ],
+    "collected": 4,
+    "checkpoint": true
+  },
+  "recovery": {
+    "lives": 3,
+    "alive": 4,
+    "position": [
+      105,
+      3.000000023841858,
+      0
+    ]
+  },
+  "finish": {
+    "done": true,
+    "frames": 1,
+    "state": "finished",
+    "crates": 1,
+    "lives": 4,
+    "position": [
+      1375,
+      16.73666666644315,
+      0
+    ],
+    "collected": 1,
+    "checkpoint": false
+  },
+  "bonusFailure": {
+    "lives": 4,
+    "banked": 0,
+    "completed": false,
+    "sameParent": true
+  },
+  "bonusRetry": {
+    "physical": 53,
+    "alive": true
+  },
+  "passed": false,
+  "failure": "Page.wait_for_function: Timeout 240000ms exceeded.",
+  "failureState": {
+    "level": "bonus:jungle-gate-run",
+    "state": "ride",
+    "position": [
+      161.25890000000112,
+      6,
+      6.323204718306007e-19
+    ],
+    "main": null,
+    "bonus": null
+  }
+}

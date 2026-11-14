@@ -43,12 +43,12 @@
       "authoringRuntime": "v24.19.0"
     },
     "jungle-gate-run": {
-      "snapshotSha256": "3d69c883e3e051cc4c102f38d4240c760ef9cf41d652ff8abea3387767cd02a4",
-      "authoringRuntime": "v26.13.0"
+      "snapshotSha256": "3e5380b7fd7706cc286012c6c224018a46bbe982e5856dd5c6a9f9a26a8d76f7",
+      "authoringRuntime": "v22.23.5"
     },
     "bonus-jungle-gate": {
-      "snapshotSha256": "b050a366f59ab0547e871a74a8554677f21d4dc0917448e14d3ecf59af616cc4",
-      "authoringRuntime": "v26.13.0"
+      "snapshotSha256": "b8b0dc51b71baf6b456dbb0d4c51795b0d10b0ede32a0f6a1baf0700c34a452b",
+      "authoringRuntime": "v22.23.5"
     },
     "bonus-jungle-terraces": {
       "snapshotSha256": "b8dff62f9df7d1a84318c274a72e1fce465d98581b6e87dd5eb17f6eacd21ae2",

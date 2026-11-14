@@ -1,0 +1,29 @@
+[
+  {
+    "name": "finite-order",
+    "passed": false,
+    "error": "finite height dependency bypassed after exhausting upper support: {\"frame\":527,\"position\":[139.0406777777781,0,0],\"state\":\"ride\",\"grounded\":true,\"bailing\":false,\"speed\":1.08,\"verticalSpeed\":0,\"deaths\":0,\"ground\":\"Five-bounce treasury\"}"
+  },
+  {
+    "name": "jade-order",
+    "bypass": true,
+    "jadeAlive": true,
+    "cacheAlive": true,
+    "position": [
+      10.868288888888914,
+      6.4,
+      -9.082421322657714e-18
+    ]
+  },
+  {
+    "name": "final-arrow-alternative",
+    "actualDoubleJump": true,
+    "capAlive": true,
+    "position": [
+      141.34999999999948,
+      0,
+      0
+    ],
+    "state": "ride"
+  }
+]
