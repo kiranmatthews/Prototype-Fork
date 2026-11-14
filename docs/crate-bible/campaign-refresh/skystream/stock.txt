@@ -1,0 +1,1 @@
+{"passed":true,"priorSourceSnapshots":1,"rawAndMigratedSaves":2,"authoredVariants":14,"storedArchiveUnchanged":true,"crateMigrationAppliedOnce":true}

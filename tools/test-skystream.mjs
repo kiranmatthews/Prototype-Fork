@@ -63,6 +63,15 @@ await withBlockworksRuntime(async r=>{
   assert.ok(position.distanceTo(new r.THREE.Vector3(...gap.takeoff))>24,'Keep jump setup clear');
   assert.ok(position.distanceTo(new r.THREE.Vector3(...gap.landing))>28,'Keep touchdown and rollout clear');
  }
+ const footprints={crates:l.crates.length,corners:0,minFloorDelta:Infinity,maxFloorDelta:-Infinity};
+ for(const crate of l.crates)for(const dx of [-.556,.556])for(const dz of [-.556,.556]){
+  ray.set(crate.mesh.position.clone().setY(crate.box.min.y+4).add(new r.THREE.Vector3(dx,0,dz)),new r.THREE.Vector3(0,-1,0));ray.far=8;
+  const hits=l.raycastGround(ray).sort((a,b)=>Math.abs(a.point.y-crate.box.min.y)-Math.abs(b.point.y-crate.box.min.y));
+  assert.ok(hits.length,'Each steering crate corner has actual cloud-road support');
+  const delta=hits[0].point.y-crate.box.min.y;assert.ok(Math.abs(delta)<1.5,'Corner belongs to the local road, not a distant overlapping loop');
+  footprints.corners++;footprints.minFloorDelta=Math.min(footprints.minFloorDelta,delta);footprints.maxFloorDelta=Math.max(footprints.maxFloorDelta,delta);
+ }
+ await writeFile(join(output,'footprints.json'),JSON.stringify(footprints,null,2));
  if(process.argv.includes('--structure'))return;
  const pilot=createSkystreamPilot(m),tuning=JSON.stringify(r.TUNING);
  let error,finished,recovery;

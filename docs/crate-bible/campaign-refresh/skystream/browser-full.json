@@ -1,0 +1,96 @@
+{
+  "mode": "full",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 60,
+    "total": 92,
+    "bonus": 25,
+    "checkpoints": 7,
+    "enemies": 0
+  },
+  "views": [
+    {
+      "name": "main-steering-line",
+      "position": [
+        -22.735039999999998,
+        138.32875964685363,
+        -62.417249999999996
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -19.66869217913236,
+        143.42875964685362,
+        -58.404768094562876
+      ],
+      "cameraQuaternion": [
+        -0.21984103838878666,
+        0.31175550539274305,
+        0.0743845997194544,
+        0.9213823061151284
+      ],
+      "drawCalls": 123,
+      "frame": 11
+    },
+    {
+      "name": "bonus-arrival",
+      "position": [
+        -8,
+        180.00000000357628,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -8,
+        188.351491169756,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.058784177018980366,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 84,
+      "frame": 24
+    },
+    {
+      "name": "bonus-flight",
+      "position": [
+        55.7,
+        180.70000000357626,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        55.7,
+        189.05149116975596,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.058784177018980366,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 104,
+      "frame": 37
+    }
+  ],
+  "passed": true
+}

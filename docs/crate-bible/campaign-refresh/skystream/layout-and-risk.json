@@ -1,0 +1,32 @@
+{
+  "footprintProbes": 56,
+  "maxFloorError": 0,
+  "nonCratesAndSettingsExact": true,
+  "mainEntireSourceExact": true,
+  "ordinaryJump": {
+    "lifeAlive": true,
+    "position": [
+      61.17249999999997,
+      180.00000000357628,
+      0
+    ],
+    "deaths": 0
+  },
+  "rewardJump": {
+    "lifeAlive": false,
+    "position": [
+      61.16799999999998,
+      180.00000000357628,
+      0
+    ],
+    "credit": 1
+  },
+  "missedJump": {
+    "state": "dead"
+  },
+  "retry": {
+    "physical": 25,
+    "allAlive": true,
+    "credit": 0
+  }
+}

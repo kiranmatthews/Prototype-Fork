@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "skystream",
-  "next_course": "skystream",
+  "current_course": "coconut-cart-rally",
+  "next_course": "coconut-cart-rally",
   "courses": [
     {
       "order": 1,
@@ -620,9 +620,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-skystream",
-        "name": "Bonus: Cumulus Cache"
+        "name": "Bonus: Cumulus Cache",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/skystream/validation.json"
     },
     {
       "order": 37,
@@ -860,15 +862,21 @@
       "bonus": "bonus-rolling-bones",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "skystream",
+      "bonus": "bonus-skystream",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "published-through-course-31",
+    "status": "published-through-course-32",
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
-    "reason": "GitHub Pages run 43639657508 succeeded; public fork label verified. Course 32 validated and awaiting push.",
+    "reason": "GitHub Pages run 43644690663 succeeded; public fork label verified. Course 33 validated and awaiting push.",
     "connection": "Authenticated as kiranmatthews; repository-local Git credential helper and push dry-run verified.",
     "goal_blocked": false,
-    "lastPublishedCommit": "571c26eab50c6cdcfd1119198117cc728ea86c5d"
+    "lastPublishedCommit": "d93e9103dc145f4dc52d111ec84d43c4775097a7"
   }
 }
