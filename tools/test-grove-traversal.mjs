@@ -1,11 +1,21 @@
 import assert from 'node:assert/strict';
 import {writeFile,mkdir,readFile} from 'node:fs/promises';
 import {transform} from 'esbuild';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const code=await transform(await readFile('src/levels/jungle-minefield.ts','utf8'),{loader:'ts',format:'esm'});
 const m=await import('data:text/javascript;base64,'+Buffer.from(code.code).toString('base64'));
 const requested=process.argv.slice(2).map(Number),ids=requested.length?requested:[2,4,6,8,3,10,1,5,9,7];
-await mkdir('/private/tmp/grove-traversal',{recursive:true});
+// Each crossing loads a complete SSR world. Isolate those module caches so a
+// ten-field review stays within the cloud runner's default Node heap.
+if(ids.length>1){
+ let failed=false;
+ for(const id of ids){const child=spawnSync(process.execPath,[fileURLToPath(import.meta.url),String(id)],{stdio:'inherit'});if(child.error)throw child.error;failed ||= child.status!==0;}
+ process.exit(failed?1:0);
+}
+const output=process.env.GROVE_TRAVERSAL_OUTPUT??'/tmp/grove-traversal';
+await mkdir(output,{recursive:true});
 for(const id of ids){
  const f=m.GROVE_FIELDS[id-1],startX=f.data.spots?.[0][0]??(id===6?-1.5:id===1?-3.6:0),start=[startX,.1,id===7?-f.clueAt-2:-f.start+9];
  let report={id};
@@ -72,7 +82,7 @@ for(const id of ids){
   if(!p.grounded)r.until(()=>p.grounded,{moveY:1,jumpHeld:true},{maxFrames:160,label:'land in safe camp'});
   assert.ok(-p.pos.z>f.end);assert.equal(p.totalDeaths,0);assert.ok(r.l.minefields.fields.every(f=>!f.detonated));
   report={id,pass:true,frames:r.frame,final:r.snapshot(),maxHeight:Math.max(...r.trace.map(t=>t.position[1]))};
-  await writeFile(`/private/tmp/grove-traversal/${id}-inputs.json`,JSON.stringify({id,start,frames:r.trace.map(t=>t.input)}));
+  await writeFile(`${output}/${id}-inputs.json`,JSON.stringify({id,start,frames:r.trace.map(t=>t.input)}));
  },{modulePath:'/src/levels/jungle-minefield.ts',source:m=>m.JUNGLE_MINEFIELD_LEVEL,levelId:'jungle-minefield',start,maxFrames:6000,onTick:s=>{report.last=s;}});}catch(e){report.pass=false;report.error=String(e);process.exitCode=1;}
- await writeFile(`/private/tmp/grove-traversal/${id}.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ await writeFile(`${output}/${id}.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }

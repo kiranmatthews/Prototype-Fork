@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "jungle-minefield",
-  "next_course": "nightworks-after-hours",
+  "current_course": "nightworks-after-hours",
+  "next_course": "dark",
   "courses": [
     {
       "order": 1,
@@ -470,7 +470,8 @@
         "status": "validated",
         "evidence": "docs/crate-bible/campaign-refresh/ghost-train/validation.json"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/jungle-minefield/validation.json"
     },
     {
       "order": 28,
@@ -795,6 +796,12 @@
     {
       "id": "bryce-canyon",
       "bonus": "bonus-bryce-canyon",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "jungle-minefield",
+      "bonus": "bonus-easy",
       "status": "validated",
       "date": "2026-11-14"
     }

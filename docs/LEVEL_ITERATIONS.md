@@ -12099,3 +12099,11 @@ Twenty-fourth course and seventeenth unique bonus, reviewed in approximately 37.
 All main crates and reset pass 72 separately staged native approaches. A separate full native descent clears both gaps and the finish; individual checkpoint support and staged banking/recovery pass. Continuous bonus, three wrong orders, physical reset, actual entrance and return pass. Browser collection, checkpoint/death recovery, staged finish and full bonus failure/retry/banking pass with clean consoles. Five full-resolution views are inspected. Lite browser drawing is sampled to control software rendering cost; physics and source remain unchanged. No continuous all-main-box clear is claimed. All original non-crate geometry, settings, movement and art are preserved.
 
 Required checks, build and release-size check pass: `de1c87dc733b80c294fe`, 959,312,251 bytes. [Evidence and limitations](crate-bible/campaign-refresh/bryce-canyon/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Nightmare Grove
+
+Twenty-fifth course; the shared Easy Street room is reused unchanged, leaving seventeen unique bonuses validated. Reviewed in approximately 25.2 minutes from 16:14 UTC. Grouped 24 scattered ordinary rewards into 18 supply groups holding 56 crates and replaced seven safe lives with ordinary rewards. With the five retained explosive crates, each checkpoint section now contains ten or eleven boxes. Five checkpoints and 24 shared bonus crates make a 90-box tally. Geometry, clues, rails, field wiring, movement and artwork are unchanged.
+
+All new ordinary rewards pass staged native access checks. Ten field crossings and three extended refuge/clue sequences pass without deaths; no continuous main all-box clear is claimed. Existing minefield regressions, actual bonus entrance and return, browser checkpoint/pressure-death recovery, staged finish and 24-box bonus banking pass. Five full-resolution views are inspected with clean consoles. Native evidence output paths now work in the cloud workspace.
+
+Required checks, build and release-size check pass: `9f735c3e0337ff2e9d6f`, 959,312,526 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-minefield/README.md). Authorized publication awaits GitHub authentication.

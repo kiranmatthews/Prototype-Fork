@@ -1,0 +1,5 @@
+Original-course fixture evidence:
+MINE_BOUNDS {"min":-1.072,"max":0.07999999999999985,"centre":-0.4960000000000001,"concealed":true,"visible":false}
+AssertionError [ERR_ASSERTION]: floor repair unearthed the mine
+
+Corrected fixture uses CRATE_SIZE for the burial bottom and centre while keeping the pressure lid at .08 m. It also checks current CrateArt ownership, including no art on hidden mines. Runtime code is unchanged.

@@ -1,0 +1,4 @@
+Nine individual crossings passed before the multi-world process exhausted its 4 GiB Node heap. Field 7 then passed in a fresh process. The test runner now isolates crossings.
+[62965:0x40262000]   488865 ms: Mark-Compact 4040.3 (4132.5) -> 4032.3 (4139.8) MB, pooled: 1 MB, 1651.07 / 0.00 ms  (average mu = 0.234, current mu = 0.016) allocation failure; scavenge might not succeed
+[62965:0x40262000]   490915 ms: Mark-Compact 4058.0 (4149.8) -> 4043.5 (4151.1) MB, pooled: 0 MB, 2024.21 / 0.00 ms  (average mu = 0.115, current mu = 0.013) allocation failure; scavenge might not succeed
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory

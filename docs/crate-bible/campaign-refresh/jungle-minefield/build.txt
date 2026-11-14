@@ -1,0 +1,5 @@
+> board-platformer-proto@0.1.0 build
+> tsc --noEmit && vite build
+✓ 1078 modules transformed.
+✓ built in 44.36s
+Offline game: 3301 files, 905.0 MiB, version 9f735c3e0337ff2e9d6f
