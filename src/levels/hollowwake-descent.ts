@@ -2,6 +2,7 @@ import {lazySource,lazySourceField} from './lazy-source';
 import type {CustomComponent,CustomLevelData} from '../level';
 import {hollowwakeArt} from './hollowwake-art';
 import {hollowwakeEnemies,hollowEnemyClearance} from './hollowwake-enemies';
+import {arrangeHollowwakeCrates} from './hollowwake-crates';
 export {HOLLOWWAKE_ENCOUNTERS} from './hollowwake-enemies';
 import {HOLLOWWAKE_END,HOLLOWWAKE_BOULDER_RADIUS,HOLLOWWAKE_ACTS,HOLLOWWAKE_ROOMS,HOLLOWWAKE_FORKS,hollowCentre,hollowPoint,hollowTangent,hollowYaw,hollowGroup,hollowRadius,hollowFloorRise,hollowGapApplies,type HollowPoint} from './hollowwake-route';
 export * from './hollowwake-route';
@@ -153,3 +154,4 @@ export const HOLLOWWAKE_LENGTH=Array.from({length:2480},(_,i)=>{const a=hollowPo
 // Sampling the sphere's contact envelope is only needed when this chase loads.
 lazySourceField(HOLLOWWAKE_LEVEL.boulderChase!,'path',()=>boulderPath(-62,2441));
 lazySourceField(HOLLOWWAKE_LEVEL.boulderChase!,'forks',()=>HOLLOWWAKE_FORKS.map(f=>({paths:[0,1].map(branch=>boulderPath(f.a,f.b,branch,2))})));
+arrangeHollowwakeCrates(HOLLOWWAKE_LEVEL);

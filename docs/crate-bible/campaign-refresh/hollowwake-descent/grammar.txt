@@ -1,0 +1,19 @@
+HARVEST TUNNELBORE / COUNT / before the release 3
+HARVEST TUNNELBORE / PREPARE / first pursuit 3
+HARVEST TUNNELBORE / REST / The dry notch arrival 4
+HARVEST TUNNELBORE / PREPARE / The dry notch departure 3
+HARVEST TUNNELBORE / COUNT / The dry notch last supplies 3
+HARVEST TUNNELBORE / REST / Old flood lock arrival 4
+HARVEST TUNNELBORE / PREPARE / Old flood lock departure 3
+HARVEST TUNNELBORE / COUNT / Old flood lock last supplies 3
+HARVEST TUNNELBORE / REST / Root cellar arrival 4
+HARVEST TUNNELBORE / PREPARE / Root cellar departure 3
+HARVEST TUNNELBORE / COUNT / Root cellar last supplies 3
+HARVEST TUNNELBORE / REST / The listening hollow arrival 4
+HARVEST TUNNELBORE / PREPARE / The listening hollow departure 3
+HARVEST TUNNELBORE / COUNT / The listening hollow last supplies 3
+HARVEST TUNNELBORE / REST / Last dry pocket arrival 4
+HARVEST TUNNELBORE / PREPARE / Last dry pocket departure 3
+HARVEST TUNNELBORE / COUNT / Last dry pocket last supplies 3
+HARVEST TUNNELBORE / COUNT / escaped wreck throat 4
+PASS eighteen protected cargo harvests, sixty counted crates, full reset, and exact non-crate preservation

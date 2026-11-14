@@ -1,0 +1,110 @@
+{
+  "course": "hollowwake-descent",
+  "name": "Tunnelbore Tracks",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T11:54:30Z",
+  "completedAt": "2026-11-14T12:23:25.214187+00:00",
+  "elapsedMinutes": 28.9,
+  "main": {
+    "countedBefore": 12,
+    "countedAfter": 60,
+    "physicalCrates": 66,
+    "clusters": 18,
+    "meanClusterSize": 3.33,
+    "singles": 0,
+    "checkpointSectionCounts": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "checkpoints": 5,
+    "masks": 4,
+    "steel": 6,
+    "nitro": 0,
+    "enemyActors": 17,
+    "enemyKinds": 3,
+    "enemySelection": "retained"
+  },
+  "bonus": {
+    "id": "bonus-easy",
+    "status": "reused unchanged",
+    "counted": 24,
+    "evidence": "../ghost-train/validation.json"
+  },
+  "parentTotal": 89,
+  "native": {
+    "separatelyStagedHarvests": 18,
+    "harvestedCrates": 60,
+    "fullReset": true,
+    "routes": [
+      {
+        "mode": "left",
+        "seconds": 95.41666666666667,
+        "jumps": 16,
+        "forks": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "deaths": 0,
+        "maskHits": 0,
+        "checkpoints": 5,
+        "camera": {
+          "samples": 604,
+          "maxStep": 1.4497144098981718,
+          "obstructions": [],
+          "maxStepAt": 414.213195577894
+        }
+      },
+      {
+        "mode": "right",
+        "seconds": 96.85,
+        "jumps": 14,
+        "forks": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "deaths": 0,
+        "maskHits": 0,
+        "checkpoints": 5,
+        "camera": {
+          "samples": 617,
+          "maxStep": 1.4859477583497667,
+          "obstructions": [],
+          "maxStepAt": 1227.452286996012
+        }
+      }
+    ],
+    "enemySupportSamples": 1020,
+    "enemyMaxFloorError": 7.105427357601002e-14
+  },
+  "preservation": {
+    "nonCrateComponents": 2642,
+    "steel": 6,
+    "enemies": 17,
+    "settingsExact": true
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 4,
+    "consoleErrors": []
+  },
+  "buildVersion": "e9643c927c81ab080eea",
+  "releaseBytes": 959307565,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Main all-box access is checked through eighteen separate normal-input harvests; no continuous all-box clear is claimed.",
+    "Browser opening, checkpoint recovery and finish checks are separately staged; complete fork routes use production physics in the native harness.",
+    "The planar audit marks twenty-four floor footprints as overhanging on the circular tunnel floor. Direct four-corner rays find continuous support, no void, and at most 0.3943 m height difference."
+  ]
+}

@@ -1,0 +1,191 @@
+[
+  {
+    "mode": "main-lite",
+    "inventory": {
+      "physicalCrates": 66,
+      "total": 89,
+      "bonus": 24,
+      "checkpoints": 5,
+      "enemies": 17
+    },
+    "opening": {
+      "done": true,
+      "kind": "opening",
+      "frames": 57,
+      "crates": 3,
+      "state": "ride",
+      "position": [
+        1.421928991958704,
+        77.82380612778455,
+        -4.505967481221686
+      ],
+      "lives": 4,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "kind": "checkpoint",
+      "frames": 49,
+      "crates": 1,
+      "state": "ride",
+      "position": [
+        11.661986084435558,
+        55.796000118564585,
+        -362.9572979555786
+      ],
+      "lives": 4,
+      "checkpoint": true
+    },
+    "recovery": {
+      "position": [
+        11.79573,
+        55.79600015127383,
+        -364
+      ],
+      "spawn": [
+        11.79573,
+        55.89600015127383,
+        -364
+      ],
+      "lives": 3
+    },
+    "stagedFinish": {
+      "done": true,
+      "kind": "finish",
+      "frames": 84,
+      "crates": 0,
+      "state": "finished",
+      "position": [
+        2.1405467900313604,
+        -84.87965738127293,
+        -2478.4063447387
+      ],
+      "lives": 4,
+      "checkpoint": false
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "main-full",
+    "inventory": {
+      "physicalCrates": 66,
+      "total": 89,
+      "bonus": 24,
+      "checkpoints": 5,
+      "enemies": 17
+    },
+    "views": [
+      {
+        "name": "entry",
+        "position": [
+          -0.022159999999999958,
+          77.81775364988661,
+          -3
+        ],
+        "camera": [
+          -1.7896971397632475,
+          83.46619095214183,
+          -28.427414495795315
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ],
+        "tunnels": {
+          "bores": 365,
+          "ready": 365,
+          "visible": 30,
+          "lamps": 76,
+          "failures": []
+        }
+      },
+      {
+        "name": "refuge",
+        "position": [
+          11.28267,
+          55.796000146538134,
+          -360
+        ],
+        "camera": [
+          13.191039110946397,
+          61.496,
+          -374.878179139395
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ],
+        "tunnels": {
+          "bores": 365,
+          "ready": 365,
+          "visible": 54,
+          "lamps": 76,
+          "failures": []
+        }
+      },
+      {
+        "name": "deep-refuge",
+        "position": [
+          17.35127,
+          -25.69799982520479,
+          -1614
+        ],
+        "camera": [
+          16.311524251524414,
+          -19.998,
+          -1628.9642851783485
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ],
+        "tunnels": {
+          "bores": 365,
+          "ready": 365,
+          "visible": 42,
+          "lamps": 76,
+          "failures": []
+        }
+      },
+      {
+        "name": "exit",
+        "position": [
+          4.27546,
+          -85.66994290448129,
+          -2470
+        ],
+        "camera": [
+          -2.251144130394745,
+          -77.45491052822241,
+          -2499.2619808252975
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ],
+        "tunnels": {
+          "bores": 365,
+          "ready": 365,
+          "visible": 22,
+          "lamps": 76,
+          "failures": []
+        }
+      }
+    ],
+    "passed": true,
+    "errors": []
+  }
+]

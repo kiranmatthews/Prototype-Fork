@@ -1,0 +1,681 @@
+{
+  "mode": "right",
+  "enemyDefeats": [
+    {
+      "name": "Wake drain crab \u00b7 first spin target",
+      "kind": "grunt",
+      "by": "player",
+      "at": 70.55901815472787
+    },
+    {
+      "name": "Right drain scavenger",
+      "kind": "grunt",
+      "by": "player",
+      "at": 234.2638865206706
+    },
+    {
+      "name": "Banked drain spring frog",
+      "kind": "hopper",
+      "by": "boulder",
+      "at": 635.7247384740546
+    },
+    {
+      "name": "Rising ribway spring frog",
+      "kind": "hopper",
+      "by": "boulder",
+      "at": 1021.3429212987792
+    }
+  ],
+  "maskHits": 0,
+  "solidHits": [],
+  "bails": [
+    {
+      "args": [
+        false,
+        33.249999999999986,
+        "trip",
+        33.249999999999986
+      ],
+      "at": 350.70685039354305,
+      "frame": 761,
+      "position": [
+        10.247490256483319,
+        55.8063637758366,
+        -350.68673498474436
+      ],
+      "vel": [
+        33.25,
+        0
+      ],
+      "vertAir": false,
+      "spin": 0,
+      "grab": "none",
+      "flip": 0,
+      "pipeEnd": false,
+      "stack": [
+        "    at r.p.bail (file:///workspace/crate-review/hollowwake/baseline-route.mjs:12:276)",
+        "    at Player.checkpointTrip (/workspace/Prototype-Fork/src/player.ts:11416:12)",
+        "    at Player.collide (/workspace/Prototype-Fork/src/player.ts:11447:28)",
+        "    at Player.stepSimulation (/workspace/Prototype-Fork/src/player.ts:5329:12)"
+      ],
+      "ground": "Seamless circular tunnel collision \u00b7 no exposed coping"
+    },
+    {
+      "args": [
+        false,
+        32.00000000000007,
+        "trip",
+        32.00000000000007
+      ],
+      "at": 754.3438502737436,
+      "frame": 1712,
+      "position": [
+        3.3173861010521626,
+        31.173826520330266,
+        -754.2470068812343
+      ],
+      "vel": [
+        32,
+        0
+      ],
+      "vertAir": false,
+      "spin": 0,
+      "grab": "none",
+      "flip": 0,
+      "pipeEnd": false,
+      "stack": [
+        "    at r.p.bail (file:///workspace/crate-review/hollowwake/baseline-route.mjs:12:276)",
+        "    at Player.checkpointTrip (/workspace/Prototype-Fork/src/player.ts:11416:12)",
+        "    at Player.collide (/workspace/Prototype-Fork/src/player.ts:11447:28)",
+        "    at Player.stepSimulation (/workspace/Prototype-Fork/src/player.ts:5329:12)"
+      ],
+      "ground": "Seamless circular tunnel collision \u00b7 no exposed coping"
+    },
+    {
+      "args": [
+        false,
+        32.000000000000036,
+        "trip",
+        32.000000000000036
+      ],
+      "at": 1164.6044123565475,
+      "frame": 2667,
+      "position": [
+        -38.14319205694905,
+        1.1566253275199547,
+        -1164.4858288137864
+      ],
+      "vel": [
+        32,
+        0
+      ],
+      "vertAir": false,
+      "spin": 0,
+      "grab": "none",
+      "flip": 0,
+      "pipeEnd": false,
+      "stack": [
+        "    at r.p.bail (file:///workspace/crate-review/hollowwake/baseline-route.mjs:12:276)",
+        "    at Player.checkpointTrip (/workspace/Prototype-Fork/src/player.ts:11416:12)",
+        "    at Player.collide (/workspace/Prototype-Fork/src/player.ts:11447:28)",
+        "    at Player.stepSimulation (/workspace/Prototype-Fork/src/player.ts:5329:12)"
+      ],
+      "ground": "Seamless circular tunnel collision \u00b7 no exposed coping"
+    }
+  ],
+  "spawn": {
+    "frame": 20,
+    "time": 0.3333333333333333,
+    "position": [
+      0,
+      78.00012927224721,
+      0
+    ],
+    "heading": [
+      0.011295814305482058,
+      0,
+      0.9999362002543842
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "Seamless circular tunnel collision \u00b7 no exposed coping",
+      "y": 78.00012927224721,
+      "normal": [
+        0.0650949751158953,
+        0.996009469934745,
+        -0.06105554860100228
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "lastInputs": [
+    {
+      "at": 1207.9477108108451,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -11.150210604142842,
+        -0.42468326136067325,
+        -1208.0152092729531
+      ]
+    },
+    {
+      "at": 1209.2431922555052,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -10.364665536850024,
+        -0.5930549332206048,
+        -1209.3158877341812
+      ]
+    },
+    {
+      "at": 1210.565496680692,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -9.57402530893713,
+        -0.7635528154311313,
+        -1210.641822542329
+      ]
+    },
+    {
+      "at": 1211.9162400755665,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -8.777816296007076,
+        -0.9140695640413015,
+        -1211.9950074480382
+      ]
+    },
+    {
+      "at": 1213.290243958221,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -7.976521036358495,
+        -0.9995261586135704,
+        -1213.3696779157985
+      ]
+    },
+    {
+      "at": 1214.6731776384051,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -7.1827425962186435,
+        -1.0844864499962659,
+        -1214.7536644589438
+      ]
+    },
+    {
+      "at": 1216.0616849227574,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -6.398955231035782,
+        -1.1694301250664865,
+        -1216.143379917042
+      ]
+    },
+    {
+      "at": 1217.4559447091863,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -5.626222999333766,
+        -1.2549509436150845,
+        -1217.5391407522882
+      ]
+    },
+    {
+      "at": 1218.8564176504958,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -4.859929410479793,
+        -1.3399901143341821,
+        -1218.9385179688832
+      ]
+    },
+    {
+      "at": 1220.263114044714,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -4.091124452638319,
+        -1.4265532864184782,
+        -1220.3364122173375
+      ]
+    },
+    {
+      "at": 1221.6752612828138,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -3.3061957931785795,
+        -1.5167297551635193,
+        -1221.7247725710633
+      ]
+    },
+    {
+      "at": 1223.0919809903744,
+      "branch": -1,
+      "u": 0,
+      "position": [
+        -2.4981166777348207,
+        -1.608565043849289,
+        -1223.0995479870098
+      ]
+    },
+    {
+      "at": 1224.5137860790512,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        -1.6698003225959779,
+        -1.6847787705332182,
+        -1224.4638821797316
+      ]
+    },
+    {
+      "at": 1225.9378556676704,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        -0.8106132905639849,
+        -1.75152190441427,
+        -1225.810279711848
+      ]
+    },
+    {
+      "at": 1227.3621202667496,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        0.07458522504899667,
+        -1.8112080034695524,
+        -1227.1402980303308
+      ]
+    },
+    {
+      "at": 1228.785062498098,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        0.9841002481541317,
+        -1.8602329923379468,
+        -1228.4547484250093
+      ]
+    },
+    {
+      "at": 1230.2066713615854,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        1.9086571353617794,
+        -1.862285056552789,
+        -1229.7597262981076
+      ]
+    },
+    {
+      "at": 1231.6204227540636,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        2.8816083025664416,
+        -2.1114010082132957,
+        -1231.0351556028793
+      ]
+    },
+    {
+      "at": 1233.028949690671,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        3.8305285777400653,
+        -2.19966101979276,
+        -1232.3173257690871
+      ]
+    },
+    {
+      "at": 1234.431729276129,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        4.787745392936321,
+        -2.287644479629342,
+        -1233.5933308466213
+      ]
+    },
+    {
+      "at": 1235.8286963520889,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        5.748059743723733,
+        -2.375422081555608,
+        -1234.8670360457434
+      ]
+    },
+    {
+      "at": 1237.2199925303523,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        6.706467907134824,
+        -2.4626775121887747,
+        -1236.142237984616
+      ]
+    },
+    {
+      "at": 1238.1114075705186,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.346711723494973,
+        -2.517753603090931,
+        -1236.9549202666105
+      ]
+    },
+    {
+      "at": 1238.1161182279466,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.35840177911482,
+        -2.517889133182868,
+        -1236.9563632974969
+      ]
+    },
+    {
+      "at": 1238.1302542840906,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.392675641944505,
+        -2.5182399734427707,
+        -1236.9609783694111
+      ]
+    },
+    {
+      "at": 1238.1543918561167,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.448655970190786,
+        -2.5185032605708857,
+        -1236.9697572098974
+      ]
+    },
+    {
+      "at": 1238.1902940422276,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.5268113351505095,
+        -2.5188212736823163,
+        -1236.9846225616213
+      ]
+    },
+    {
+      "at": 1238.2412561971498,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.62912050306647,
+        -2.5193826342059635,
+        -1237.0087817003596
+      ]
+    },
+    {
+      "at": 1238.3110393697295,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.756193971662849,
+        -2.52048512868588,
+        -1237.046485319413
+      ]
+    },
+    {
+      "at": 1238.4056454172191,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        7.909943300791742,
+        -2.522612164372816,
+        -1237.1041886672308
+      ]
+    },
+    {
+      "at": 1238.5309762997013,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.088712345570306,
+        -2.5262704639982605,
+        -1237.1894986995362
+      ]
+    },
+    {
+      "at": 1238.6941118384163,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.289239050496535,
+        -2.5322759137534696,
+        -1237.3119753888604
+      ]
+    },
+    {
+      "at": 1238.7066015015098,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.303340383690124,
+        -2.5302067246322526,
+        -1237.3217957210916
+      ]
+    },
+    {
+      "at": 1238.7405164321012,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.340824278363245,
+        -2.531970807095207,
+        -1237.3487477230885
+      ]
+    },
+    {
+      "at": 1238.796502337051,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.400232000844206,
+        -2.534757928033288,
+        -1237.3941112459672
+      ]
+    },
+    {
+      "at": 1238.876328191411,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.479967165602524,
+        -2.5388086062514756,
+        -1237.4605406893254
+      ]
+    },
+    {
+      "at": 1238.9840558327005,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.579078168119063,
+        -2.544499527513142,
+        -1237.5531647829466
+      ]
+    },
+    {
+      "at": 1239.1218051447931,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.692919611921724,
+        -2.5522191728519887,
+        -1237.6760823747006
+      ]
+    },
+    {
+      "at": 1239.2916849140167,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.815299132234992,
+        -2.562472756918622,
+        -1237.833862850242
+      ]
+    },
+    {
+      "at": 1239.494142650061,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        8.937006335536251,
+        -2.5758269763227517,
+        -1238.030060003298
+      ]
+    },
+    {
+      "at": 1239.7301210462456,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        9.074323819086763,
+        -2.592078761764813,
+        -1238.260424788561
+      ]
+    },
+    {
+      "at": 1240.011925890578,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        9.24027854337566,
+        -2.611419871097475,
+        -1238.5351709815004
+      ]
+    },
+    {
+      "at": 1240.3400546798528,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        9.433362563654779,
+        -2.633550192178391,
+        -1238.855543588102
+      ]
+    },
+    {
+      "at": 1240.7142153549664,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        9.653259150749667,
+        -2.658100517987914,
+        -1239.221517599412
+      ]
+    },
+    {
+      "at": 1241.1338501979335,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        9.900788198570837,
+        -2.685654533982113,
+        -1239.6324591244188
+      ]
+    },
+    {
+      "at": 1241.599470088624,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        10.17285914572871,
+        -2.7164245627761723,
+        -1240.0902228360853
+      ]
+    },
+    {
+      "at": 1242.1096732556427,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        10.47376072578279,
+        -2.750119765912739,
+        -1240.5922827278698
+      ]
+    },
+    {
+      "at": 1242.6658226401944,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        10.796661587073457,
+        -2.787204469068719,
+        -1241.1426756931955
+      ]
+    },
+    {
+      "at": 1243.2664389881054,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        11.145679203628244,
+        -2.827402075532391,
+        -1241.739009590432
+      ]
+    },
+    {
+      "at": 1243.9122758845178,
+      "branch": 1,
+      "u": 0,
+      "position": [
+        11.515957174676107,
+        -2.871038608532234,
+        -1242.3841031977192
+      ]
+    }
+  ],
+  "pass": false,
+  "error": "Error: complete right cave route: {\"frame\":3072,\"time\":51.2,\"position\":[11.906289073062757,-2.9171783588896094,-1243.0787089281137],\"heading\":[0.4842442858353163,0,-0.8749328383572327],\"state\":\"dead\",\"grounded\":true,\"speed\":0,\"verticalSpeed\":0,\"bailing\":true,\"deaths\":0,\"mover\":null,\"ground\":{\"name\":\"Seamless circular tunnel collision \u00b7 no exposed coping\",\"y\":-2.9171783588896094,\"normal\":[-0.026517249434622105,0.9967043281001754,-0.07666366694073444],\"slippy\":false,\"iceGrip\":null},\"rail\":null,\"railDistance\":null,\"balance\":0,\"input\":{\"moveX\":-0.25,\"moveY\":-0.97,\"jumpHeld\":true,\"grindHeld\":false,\"spinHeld\":false,\"grabHeld\":false,\"transferHeld\":false,\"jumpPressed\":false,\"jumpReleased\":false,\"grindPressed\":false,\"spinPressed\":false,\"grabPressed\":false,\"transferPressed\":false,\"restartPressed\":false}}\n    at assertAlive (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:118:15)\n    at file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:133:31\n    at action (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:122:20)\n    at Object.until (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:129:58)\n    at withBlockworksRuntime.modulePath (file:///workspace/crate-review/hollowwake/baseline-route.mjs:54:4)\n    at async withBlockworksRuntime (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:223:12)\n    at async file:///workspace/crate-review/hollowwake/baseline-route.mjs:6:5"
+}

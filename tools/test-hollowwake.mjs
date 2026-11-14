@@ -16,7 +16,10 @@ try{await withBlockworksRuntime(async r=>{
  assert.ok(!m.HOLLOWWAKE_LEVEL.components.some(c=>c.t==='torch'||c.t==='crystal'));
  r.stepFor(20);assert.ok(r.p.grounded,'supported spawn');report.spawn=r.snapshot();
  const branchAt=at=>{const i=m.HOLLOWWAKE_FORKS.findIndex(f=>at>=f.a&&at<=f.b);return i<0?-1:mode==='right'?1:mode==='alternate'?i%2:0;};
- const follow=(u=0,buttons={})=>({...r.steerToward(m.hollowPoint(s()+7,branchAt(s()+7),u)),...buttons});
+ // The right Wormwheel approach turns sharply: look through the bend early
+ // so ordinary steering keeps the speed needed to outrun the pursuer.
+ const lookAhead=mode==='right'?12:7;
+ const follow=(u=0,buttons={})=>({...r.steerToward(m.hollowPoint(s()+lookAhead,branchAt(s()+lookAhead),u)),...buttons});
  if(mode==='stall'){
   r.until(()=>s()>13,()=>follow(),{maxFrames:400,label:'release threshold'});
   r.until(()=>r.p.state==='dead',{}, {maxFrames:1800,allowDeath:true,label:'stationary runner is caught'});assert.equal(r.p.lives,3);report.pass=true;report.final=r.snapshot();return;
@@ -45,7 +48,9 @@ try{await withBlockworksRuntime(async r=>{
    return room.checkpoint-at>2.7?follow(0):follow(0,{spinHeld:r.frame%2===0});
   }
   if(r.p.checkpointTripActive)return follow(0);
-  if(at>m.HOLLOWWAKE_END-40)return follow(0,{jumpHeld:true,spinHeld:at>m.HOLLOWWAKE_END-9});
+  // The finish now requires the actual pad or its glow. Charge across the
+  // catwalk, then release an ordinary ollie into the column.
+  if(at>m.HOLLOWWAKE_END-40)return follow(0,{jumpHeld:at<m.HOLLOWWAKE_END-7,spinHeld:at>m.HOLLOWWAKE_END-9});
   if(gap&&at>gap.s-1.8){activeJump=gap;return follow(0,{jumpHeld:false,jumpReleased:true});}
   const attack=encounter?.foe==='grunt'&&encounter.s-at<8;
   return follow(u,{jumpHeld:true,spinHeld:encounter?(attack&&!r.p.spinning&&r.p.spinCd<=0):r.frame%30<8});
