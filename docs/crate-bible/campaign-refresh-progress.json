@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "jungle-cup",
-  "next_course": "custard-creek",
+  "current_course": "custard-creek",
+  "next_course": "tribal-run",
   "courses": [
     {
       "order": 1,
@@ -115,7 +115,9 @@
       "competition": true,
       "race": false,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "decision": "retain existing crate-free competition",
+      "evidence": "docs/crate-bible/campaign-refresh/jungle-cup/validation.json"
     },
     {
       "order": 7,
@@ -640,6 +642,13 @@
       "bonus": "bonus-coastal",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "jungle-cup",
+      "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14",
+      "decision": "no changes required for judged skating mode"
     }
   ],
   "publication": {

@@ -1,0 +1,8 @@
+node tools/test-jungle-cup.mjs
+PASS Jungle Cup: exact 60-second runs, all three judges, bail curve, reveal gates, best two, rival consistency/placement, ordinary caps, and arena structure.
+
+node tools/test-jungle-cup-runtime.mjs
+PASS Jungle Cup runtime: continuous banks/floor/perimeter, supported spawn, containment at three heights, rail cash-in, competition death/buzzer accounting, and gate-free editor round trip.
+
+node tools/test-jungle-cup-layout.mjs
+PASS varied Jungle Cup: clear sky/foundation/circulation, exact new surface heights and nondegenerate meshes, outside-bank round trip, 4 pocket airs, smooth outside entry (0.456m max step), round hip and 38 new rail catches.
