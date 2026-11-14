@@ -79,4 +79,4 @@ await withBlockworksRuntime(async r=>{
  const b=await readFile('public/props/sunset-waterfalls/rope-corner.glb'),glb=JSON.parse(b.subarray(20,20+b.readUInt32LE(12)).toString());
  const triangles=glb.meshes.flatMap(m=>m.primitives).reduce((n,p)=>n+glb.accessors[p.indices].count/3,0);assert.equal(triangles,5082);assert.ok(triangles<30000);report.assetTriangles=triangles;
 },{modulePath:'/src/levels/custard-creek.ts',levelId:'custard-creek',source:m=>m.CUSTARD_CREEK_LEVEL,controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir,allowCheckpointTrips:true});
-await writeFile('/private/tmp/sunset-waterfall-runtime.json',JSON.stringify(report,null,2));console.log('PASS Sunset waterfall run',JSON.stringify(report));
+await writeFile(process.env.SUNSET_WATERFALL_OUTPUT||'/tmp/sunset-waterfall-runtime.json',JSON.stringify(report,null,2));console.log('PASS Sunset waterfall run',JSON.stringify(report));

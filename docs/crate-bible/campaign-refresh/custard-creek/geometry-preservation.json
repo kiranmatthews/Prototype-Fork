@@ -1,0 +1,16 @@
+[
+  {
+    "file": "custard-creek",
+    "unchangedComponents": 4400,
+    "sha256": "b2daab9e4aed6a6b42b97108d74f2af9220001b820972ff4d8cce6893dbb6272",
+    "enemyPlacementUnchanged": true,
+    "sourceBefore": "aadae810"
+  },
+  {
+    "file": "custard-bonus",
+    "unchangedComponents": 296,
+    "sha256": "ee455d070f9e6262bbf91e655edaaf315e522bbb967a82db44ec6f92f77d7ec7",
+    "enemyPlacementUnchanged": true,
+    "sourceBefore": "aadae810"
+  }
+]

@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "custard-creek",
-  "next_course": "tribal-run",
+  "current_course": "tribal-run",
+  "next_course": "waterfall-climb",
   "courses": [
     {
       "order": 1,
@@ -131,9 +131,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-custard-creek",
-        "name": "Bonus: Willowmill Cache"
+        "name": "Bonus: Willowmill Cache",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/custard-creek/validation.json"
     },
     {
       "order": 8,
@@ -649,6 +651,12 @@
       "status": "validated",
       "date": "2026-11-14",
       "decision": "no changes required for judged skating mode"
+    },
+    {
+      "id": "custard-creek",
+      "bonus": "bonus-custard-creek",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {

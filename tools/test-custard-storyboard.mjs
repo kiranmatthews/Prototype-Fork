@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const report={bonus:null,water:[],hang:[]};
 await withBlockworksRuntime(async r=>{
  const {CUSTARD_BONUS_LEVEL:data}=r.sourceModule;
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(data),'rebuilt bonus must round-trip through editor validation');
- assert.equal(r.l.crates.length,18);assert.equal(data.components.filter(c=>c.t==='gate').length,1);
+ assert.equal(r.l.crates.length,27);assert.equal(data.components.filter(c=>c.t==='gate').length,1);
  r.p.bonusMode=true;let hold=0,jumps=0;
  for(let frame=0;frame<6000&&r.p.state!=='finished';frame++){
   const x=r.p.pos.x,targets=r.l.crates.filter(c=>c.alive&&!c.pending).sort((a,b)=>Math.abs(a.box.min.x-x)-Math.abs(b.box.min.x-x));
@@ -21,8 +22,9 @@ await withBlockworksRuntime(async r=>{
   assert.notEqual(r.p.state,'dead',`bonus pilot died at ${r.p.pos.toArray()}`);
  }
  assert.equal(r.p.state,'finished','normal-input pilot must reach the actual return gate');
- assert.equal(r.p.cratesBroken,18,'normal-input pilot must collect every original reward');
- report.bonus={jumps,boxes:r.p.cratesBroken,position:r.p.pos.toArray()};
+ assert.equal(r.p.cratesBroken,27,'normal-input pilot must collect every terrace reward and the gap life');
+ assert.equal(r.p.gemEarned,false,'bonus crates bank toward the parent gem');assert.equal(r.p.totalDeaths,0);
+ report.bonus={jumps,boxes:r.p.cratesBroken,gem:r.p.gemEarned,deaths:r.p.totalDeaths,position:r.p.pos.toArray()};
 },{modulePath:'/src/levels/custard-bonus.ts',source:m=>m.CUSTARD_BONUS_LEVEL,levelId:'bonus-custard-creek'});
 
 await withBlockworksRuntime(async r=>{
@@ -57,5 +59,6 @@ await withBlockworksRuntime(async r=>{
   assert.ok(lowest>=water-2.73&&lowest<water-2.2,`unbounded or invisible immersion ${lowest}/${water}`);
   report.water.push({s,water,lowest,returned});
  }
+ if(process.env.CUSTARD_STORYBOARD_OUTPUT)await writeFile(process.env.CUSTARD_STORYBOARD_OUTPUT,JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report,null,2));
 },{modulePath:'/src/levels/custard-creek.ts',source:m=>m.CUSTARD_CREEK_LEVEL,levelId:'custard-creek',endlessDeaths:true,maxFrames:9000});

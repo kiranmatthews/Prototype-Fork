@@ -1,6 +1,7 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {EASY_BONUS_LEVEL} from './bonus-easy';
 import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terrain';
+import {arrangeWillowmillCrates} from './custard-crate-arrangement';
 
 type P=[number,number,number];
 const C:CustomComponent[]=[];
@@ -12,8 +13,8 @@ const sampler={point:(s:number,y=0,u=0):P=>[s,y,u],height:()=>0};
 const prop=(dkind:CustomComponent['dkind'],p:P,s:P,yaw=0,nm='Custard bonus scenery',color='#ffffff')=>
   C.push({t:'decor',dkind,p,s,yaw,color,scenerySolid:false,solid:false,edgeGrinding:false,grp:91,nm});
 
-// The established 18-box route, two 2m gaps and single-plane controls survive
-// the art rebuild. The visible sculpted rock cap owns every ground contact.
+// Preserve the established 18 reward anchors when sculpting the bank, before
+// regrouping its crates below. The two 2m gaps and single-plane controls stay.
 for(const [a,b,y] of [[-16,2,0],[4,20,.35],[22,54,0]]){
   const anchors=EASY_BONUS_LEVEL.components.filter(c=>['crate','gate'].includes(c.t)&&c.p[0]>=a&&c.p[0]<=b)
     .map(c=>({s:c.p[0],u:0,y,radius:1.3,along:1.7}));
@@ -61,6 +62,7 @@ C.push({t:'mesh',p:[19,-2.8,-25],vertices:[-110,0,-65,110,0,-65,110,0,43,-110,0,
   nm:'Custard Creek water ribbon',grp:92,lethal:true,castShadow:false,edgeGrinding:false});
 for(const [a,b] of [[2,4],[20,22]])C.push({t:'pit',p:[(a+b)/2,-3.1,0],s:[b-a,1,9],invisible:true,nm:'Custard bonus water contact',grp:92});
 
+arrangeWillowmillCrates(C);
 export const CUSTARD_BONUS_LEVEL:CustomLevelData={
   ...EASY_BONUS_LEVEL,name:'Bonus: Willowmill Cache',sky:'sunset',killY:-9,
   jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
