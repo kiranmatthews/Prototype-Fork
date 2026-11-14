@@ -1,0 +1,14 @@
+Original unchanged-runtime failure: The expression evaluated to a falsy value:
+
+  assert.ok(Object.values(hud).every(v=>v===false))
+
+    at withBlockworksRuntime.modulePath (file:///workspace/Prototype-Fork/tools/test-skate-race-rules.mjs:81:140)
+    at async withBlockworksRuntime (file:///workspace/Prototype-Fork/tools/blockworks-runner.mjs:223:12)
+    at async file:///workspace/Prototype-Fork/tools/test-skate-race-rules.mjs:9:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

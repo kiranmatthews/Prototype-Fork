@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "slipstream-race",
-  "next_course": "waterpark-cup",
+  "current_course": "waterpark-cup",
+  "next_course": "carlisle-coast",
   "courses": [
     {
       "order": 1,
@@ -309,7 +309,8 @@
       "competition": false,
       "race": true,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/slipstream-race/validation.json"
     },
     {
       "order": 18,
@@ -732,6 +733,12 @@
     {
       "id": "hollowwake-descent",
       "bonus": "bonus-easy",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "slipstream-race",
+      "bonus": null,
       "status": "validated",
       "date": "2026-11-14"
     }

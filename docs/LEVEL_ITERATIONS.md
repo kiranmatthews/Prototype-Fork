@@ -12039,3 +12039,11 @@ Sixteenth course, reviewed in approximately 28.9 minutes from 11:54:30 UTC. Coun
 Eighteen separately staged normal-input harvests collect all sixty boxes and verify full reset. Continuous left and right fork runs clear all five checkpoints in 95.42 and 96.85 simulated seconds without death or damage. Enemy support and camera-spine checks pass. Original-layout checks reproduce two stale pilot failures, resolved by a final ollie and earlier steering through the right bend. Main browser opening, checkpoint recovery and staged finish pass; four full-resolution views have clean consoles. No continuous all-box clear is claimed.
 
 All 2,642 non-crate components, steel obstacles and environment settings are exact. The planar audit's curved-floor warnings are checked with four supported corner rays and no void beneath any formation. Required level checks, build and release check pass (959,307,565 bytes). [Evidence](crate-bible/campaign-refresh/hollowwake-descent/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Slipstream
+
+Seventeenth course, reviewed in approximately 27.5 minutes from 12:23:41 UTC. Retained the race-specific layout: 83 gem boxes, 108 roulette pickups in 27 rows and four ammunition pickups. Twenty-eight boxes become numbered time targets; no patrols, checkpoint crates or bonus room are added. Persistent unique credit and supported fall recovery replace adventure checkpoint pacing.
+
+Separate normal-input approaches collect every gem box and item. A complete native race wins in 167.73 simulated seconds without a human fall; all seven rivals also finish. Race ownership, refill, explosive equipment, nonfatal recovery and live finish contracts pass. A stale HUD assertion now recognizes the existing SPECIAL portrait. Browser opening, staged collection/recovery/finish and reset pass; two full-resolution views have clean consoles. No continuous all-box clear is claimed.
+
+Level data, runtime, native artwork and the published pack are unchanged, so the preceding validated build and release checks apply. [Evidence](crate-bible/campaign-refresh/slipstream-race/README.md). Authorized publication awaits GitHub authentication.

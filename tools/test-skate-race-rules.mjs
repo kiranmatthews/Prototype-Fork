@@ -78,7 +78,10 @@ await withBlockworksRuntime(async r=>{
  assert.equal(campaign.runModesUnlocked(id),true);assert.equal(race.hud().timeTrialUnlocked,true);
  // A real crossing finishes the solo trial without a crystal award.
  race.reset('time-trial');race.phase='running';race.riders[0].progress=114;r.p.pos.set(0,0,-100.1);tick();assert.equal(race.phase,'finished');assert.equal(r.p.hasCrystal,false);
- const hud=new HudVisibilityState().update({mode:'race',fruitCollectionRevision:99,inventoryHeld:true,hasEarnedRelic:true,nowMs:1});assert.ok(Object.values(hud).every(v=>v===false));
+ const hud=new HudVisibilityState().update({mode:'race',fruitCollectionRevision:99,inventoryHeld:true,hasEarnedRelic:true,nowMs:1});
+ // Racing retains the portrait because it also displays SPECIAL. The
+ // adventure collection counters stay hidden behind the race-owned HUD.
+ assert.equal(hud.showLife,true);assert.ok(Object.entries(hud).filter(([key])=>key!=='showLife').every(([,value])=>value===false));
  const {Recorder,Replayer,isReplayFile}=await r.server.ssrLoadModule('/src/replay.ts');
  const tuningBefore=JSON.stringify(r.TUNING),recorder=new Recorder();recorder.start('slipstream-race');
  recorder.record({...input,itemPressed:true,raceTrialStartPressed:true});const take=recorder.export();assert.ok(isReplayFile(take));

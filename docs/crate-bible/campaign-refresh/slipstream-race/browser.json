@@ -1,0 +1,133 @@
+[
+  {
+    "mode": "lite",
+    "inventory": {
+      "phase": "grid",
+      "physical": 195,
+      "gem": 83,
+      "items": 112,
+      "ammo": [
+        "tnt",
+        "nitro",
+        "nitro",
+        "nitro"
+      ],
+      "enemies": 0,
+      "checkpoints": 0,
+      "bonus": false,
+      "racers": 8,
+      "length": 4093.3106342590136
+    },
+    "opening": {
+      "done": true,
+      "frames": 449,
+      "progress": 120.50708266531831,
+      "rivalProgress": [
+        165.43727307883583,
+        64.29568317696656,
+        151.04577759832802,
+        142.55268499292254,
+        66.45086318743536,
+        89.7173390010383,
+        33.2861599437333
+      ],
+      "falls": 0,
+      "item": null,
+      "boxes": 0
+    },
+    "harvest": {
+      "done": true,
+      "frames": 1,
+      "collected": true,
+      "boxes": 1,
+      "falls": 0,
+      "state": "ride"
+    },
+    "recovery": {
+      "lives": 4,
+      "boxes": 1,
+      "falls": 1,
+      "time": 2.5999999999999956,
+      "grounded": true
+    },
+    "stagedFinish": {
+      "phase": "finished",
+      "time": 1.100000000000001,
+      "rank": 1,
+      "falls": 0
+    },
+    "retry": {
+      "allAlive": true,
+      "boxes": 0,
+      "phase": "grid"
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "full",
+    "inventory": {
+      "phase": "grid",
+      "physical": 195,
+      "gem": 83,
+      "items": 112,
+      "ammo": [
+        "tnt",
+        "nitro",
+        "nitro",
+        "nitro"
+      ],
+      "enemies": 0,
+      "checkpoints": 0,
+      "bonus": false,
+      "racers": 8,
+      "length": 4093.3106342590136
+    },
+    "views": [
+      {
+        "name": "first-items",
+        "position": [
+          0.1307468791692313,
+          931.997649716504,
+          -29.907327607120827
+        ],
+        "camera": [
+          -2.901075090587069,
+          938.3139310153095,
+          -24.14658488428853
+        ],
+        "grounded": true,
+        "state": "ride",
+        "falls": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "blocked": false
+      },
+      {
+        "name": "reservoir-items",
+        "position": [
+          10.525476412515237,
+          766.5255423539104,
+          -1250.11074233794
+        ],
+        "camera": [
+          13.370905430850598,
+          772.9960222325115,
+          -1244.56504270461
+        ],
+        "grounded": true,
+        "state": "ride",
+        "falls": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "blocked": false
+      }
+    ],
+    "passed": true,
+    "errors": []
+  }
+]
