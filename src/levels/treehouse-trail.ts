@@ -157,7 +157,7 @@ for (const [x, z] of [[24, -184], [27, -187], [21, -187]] as const)
   scenery("treehousesugarcane", [x, -13.9, z], [3.8, 3.5, 3], "Small lived-in sugarcane patch", GROUP.coast, x * 17);
 
 // Three huts, broad foliage silhouettes and a clear warm centre are enough
-// to establish the community. Crates and enemies are deliberately deferred.
+// to establish the community. Collection pockets sit beside the clear centre.
 ground([[X, -14, -189], [X, -14, -228]], "Enclosed lived-in jungle corridor", GROUP.settlement);
 for (const [x, z, yaw, scale] of [[27.5, -199, 20, 1], [44.4, -212, -32, 0.88], [25.2, -221, 36, 0.82]] as const)
   scenery("trialsv2porchhut", [x, -13.9, z], [8.6 * scale, 6.3 * scale, 7.2 * scale],
@@ -266,13 +266,18 @@ components.push(...TREEHOUSE_TRAIL_REWARDS.map(c=>({...c,p:[...c.p] as Point})))
 for (const component of components) if (component.p[2] <= -248)
   component.p[2] -= TREEHOUSE_TRIALS_CAVE_EXTENSION_V2;
 
-// Two slow, readable encounters on the broad forest floor. These stations
-// already include the cave extension; the shared continuity pass moves them
-// with the trail. Keep river landings, checkpoints and the rope crossing free.
-add({ t: "enemy", foe: "moa", p: [X, -14, -150], range: 2.2, speed: 1.45,
-  nm: "Moa in the coastal forest", grp: GROUP.practice });
-add({ t: "enemy", foe: "moa", p: [X, -14, -264], range: 2.2, speed: 1.45,
-  nm: "Moa in the forest beyond the river", grp: GROUP.practice });
+// Bible XIII: one counter per kind, first off the fast line on broad floor,
+// then beside a reward. Patrols remain short enough to retain an opt-out lane.
+// These stations already include the cave extension; continuity moves them
+// together with the supported terrain. No enemy occupies a jump/river landing.
+add({ t: "enemy", foe: "grunt", p: [16, 0, 3], range: 1.1, speed: 1.1,
+  nm: "TEACH · clearing crab with room to pass", grp: GROUP.practice });
+add({ t: "enemy", foe: "grunt", p: [X - 3.1, -14, -119], range: 1.0, speed: 1.3,
+  nm: "REPEAT · crab beside the fern harvest wall", grp: GROUP.practice });
+add({ t: "enemy", foe: "moa", p: [X - 3.0, -14, -150], range: .9, speed: 1.15,
+  nm: "TEACH · moa guards the optional striped stack", grp: GROUP.practice });
+add({ t: "enemy", foe: "moa", p: [X + 1.8, -14, -264], range: 1.1, speed: 1.45,
+  nm: "TEST · moa before the climb with a clear left lane", grp: GROUP.practice });
 
 // Reuse the complete source-owned opening, omitting the old rear matte that
 // would otherwise cut through the extended route at -185m.

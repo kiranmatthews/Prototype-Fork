@@ -1,0 +1,618 @@
+{
+  "objective": "Review and update crate/enemy selection and placement in every playable campaign UI course and its accessible bonus, one course at a time, against GAMEPLAY_DESIGN_BIBLE.md.",
+  "requested_budgets_minutes": {
+    "main": 15,
+    "bonus": 5
+  },
+  "base_commit": "b499de87a671515f9acd16ad76a70225bb6692b5",
+  "branch": "codex/crate-enemy-bible",
+  "scope": {
+    "playable_courses": 34,
+    "unbuilt_placeholders": 5,
+    "unique_bonus_rooms": 24
+  },
+  "current_course": "beachfront",
+  "next_course": "rumblewater-run",
+  "courses": [
+    {
+      "order": 1,
+      "key": "treehouse-trail",
+      "id": "treehouse-trail",
+      "name": "Treehouse Trail",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-treehouse-trail",
+        "name": "Bonus: Canopy Cache",
+        "status": "validated"
+      },
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/treehouse-trail/validation.json"
+    },
+    {
+      "order": 2,
+      "key": "beachside-run",
+      "id": "beachfront",
+      "name": "Banana Bay",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-beachside-run",
+        "name": "Bonus: Lifeguard Lockup"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "key": "rumblewater-run",
+      "id": "rumblewater-run",
+      "name": "Ripcord River",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-rumblewater-run",
+        "name": "Bonus: Sluicekeeper\u2019s Cache"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "key": "jungle",
+      "id": "jungle",
+      "name": "Jungle Ruins",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-jungle",
+        "name": "Bonus: Fern Reliquary"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "key": "coastal",
+      "id": "coastal-street-run",
+      "name": "Beach Street",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-coastal",
+        "name": "Bonus: Rooftop Deliveries"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "key": "jungle-cup",
+      "id": "jungle-cup",
+      "name": "Motu Beach Invitational",
+      "island": "island-1",
+      "placeholder": false,
+      "boss": true,
+      "competition": true,
+      "race": false,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "key": "custard-creek",
+      "id": "custard-creek",
+      "name": "Sunset Safari",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-custard-creek",
+        "name": "Bonus: Willowmill Cache"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "key": "tribal-run",
+      "id": "tribal-run",
+      "name": "Tribal Run",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-tribal-run",
+        "name": "Bonus: The Resonance Vault"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 9,
+      "key": "waterfall-climb",
+      "id": "waterfall-climb",
+      "name": "Waterfall Climb",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-waterfall-climb",
+        "name": "Bonus: The Hidden Spillway"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 10,
+      "key": "test-course",
+      "id": "test",
+      "name": "Uga Ambush",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-test-course",
+        "name": "Bonus: Quayside Cargo"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 11,
+      "key": "drowned-crown",
+      "id": "drowned-crown",
+      "name": "The Merchant Wreck",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-drowned-crown",
+        "name": "Bonus: The Captain\u2019s Last Ledger"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 12,
+      "key": "crab-chief",
+      "id": "crab-chief",
+      "name": "High Chief Uga Ha ku",
+      "island": "island-2",
+      "placeholder": false,
+      "boss": true,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 13,
+      "key": "waterpark",
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-waterpark",
+        "name": "Bonus: Deadwater Valve House"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 14,
+      "key": "codex-switchback",
+      "id": "codex-lab",
+      "name": "Haunted Hassle",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-codex-switchback",
+        "name": "Bonus: Haunted Hassle"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 15,
+      "key": "ghost-train",
+      "id": "ghost-train",
+      "name": "Ghost Train",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-easy",
+        "name": "Bonus: Easy Street"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 16,
+      "key": "hollowwake-descent",
+      "id": "hollowwake-descent",
+      "name": "Tunnelbore Tracks",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-easy",
+        "name": "Bonus: Easy Street"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 17,
+      "key": "slipstream",
+      "id": "slipstream-race",
+      "name": "Slipstream",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": true,
+      "competition": false,
+      "race": true,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 18,
+      "key": "waterpark-cup",
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "island": "island-3",
+      "placeholder": false,
+      "boss": true,
+      "competition": true,
+      "race": false,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 19,
+      "key": "carlisle-coast",
+      "id": "carlisle-coast",
+      "name": "Carlisle Coast",
+      "island": "island-4",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-carlisle-coast",
+        "name": "Bonus: Springtide Skippers"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 20,
+      "key": "country-club",
+      "id": "country-club",
+      "name": "Country Club Circuit",
+      "island": "island-4",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": true,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 21,
+      "key": "rooftop-relay",
+      "id": "rooftop-relay",
+      "name": "Hogsworth Harbour",
+      "island": "island-4",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-rooftop-relay",
+        "name": "Bonus: The Storm Parlour"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 22,
+      "key": "maynard-course-4",
+      "id": "mayfield-mall",
+      "name": "Mayfield Mall",
+      "island": "island-4",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-mayfield-mall",
+        "name": "Bonus: After Hours"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 23,
+      "key": "maynard-course-5",
+      "id": "planned-maynard-course-5",
+      "name": "Unnamed Course 5",
+      "island": "island-4",
+      "placeholder": true,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "unbuilt-not-playable"
+    },
+    {
+      "order": 24,
+      "key": "maynard-boss",
+      "id": "planned-maynard-boss",
+      "name": "Maynard Quay Boss",
+      "island": "island-4",
+      "placeholder": true,
+      "boss": true,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "unbuilt-not-playable"
+    },
+    {
+      "order": 25,
+      "key": "warehouse",
+      "id": "warehouse",
+      "name": "Factory Fuss",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 26,
+      "key": "bryce-canyon",
+      "id": "bryce-canyon",
+      "name": "Dusty Road",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-bryce-canyon",
+        "name": "Bonus: Cactus Cache"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 27,
+      "key": "jungle-minefield",
+      "id": "jungle-minefield",
+      "name": "Nightmare Grove",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-easy",
+        "name": "Bonus: Easy Street"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 28,
+      "key": "nightworks-after-hours",
+      "id": "nightworks-after-hours",
+      "name": "Guptus Eruptus",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-nightworks-after-hours",
+        "name": "Bonus: Caldera Counterweights"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 29,
+      "key": "nightworks",
+      "id": "dark",
+      "name": "Torchlight Trouble",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-nightworks",
+        "name": "Bonus: Nightworks Fuse Store"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 30,
+      "key": "quagmire-race",
+      "id": "spaghetti-rails",
+      "name": "Spaghetti Rails",
+      "island": "island-5",
+      "placeholder": false,
+      "boss": true,
+      "competition": false,
+      "race": true,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 31,
+      "key": "quagmire-boss",
+      "id": "planned-quagmire-boss",
+      "name": "Monster Final Boss",
+      "island": "island-5",
+      "placeholder": true,
+      "boss": true,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "unbuilt-not-playable"
+    },
+    {
+      "order": 32,
+      "key": "secret-1",
+      "id": "sky",
+      "name": "Sky Bridge",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-sky-bridge",
+        "name": "Bonus: Cloudtop Lockers"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 33,
+      "key": "secret-2",
+      "id": "jungle-terraces",
+      "name": "Temple of Embers",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-jungle-terraces",
+        "name": "Bonus: Ember Reliquary"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 34,
+      "key": "secret-3",
+      "id": "jungle-gate-run",
+      "name": "The Ancient Gates",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-jungle-gate",
+        "name": "Bonus: The Gatekeeper\u2019s Hoard"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 35,
+      "key": "secret-4",
+      "id": "rolling-bones",
+      "name": "Rolling Bones",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-rolling-bones",
+        "name": "Bonus: Moonbone Vault"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 36,
+      "key": "secret-5",
+      "id": "skystream",
+      "name": "The Skystream",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": {
+        "id": "bonus-skystream",
+        "name": "Bonus: Cumulus Cache"
+      },
+      "status": "pending"
+    },
+    {
+      "order": 37,
+      "key": "secret-6",
+      "id": "coconut-cart-rally",
+      "name": "Coconut Cart Rally",
+      "island": "hidden-shores",
+      "placeholder": false,
+      "boss": false,
+      "competition": false,
+      "race": true,
+      "bonus": null,
+      "status": "pending"
+    },
+    {
+      "order": 38,
+      "key": "secret-7",
+      "id": "planned-secret-7",
+      "name": "All Clear Gems",
+      "island": "hidden-shores",
+      "placeholder": true,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "unbuilt-not-playable"
+    },
+    {
+      "order": 39,
+      "key": "secret-8",
+      "id": "planned-secret-8",
+      "name": "All Gems & Medals",
+      "island": "hidden-shores",
+      "placeholder": true,
+      "boss": false,
+      "competition": false,
+      "race": false,
+      "bonus": null,
+      "status": "unbuilt-not-playable"
+    }
+  ],
+  "completed": [
+    {
+      "id": "treehouse-trail",
+      "bonus": "bonus-treehouse-trail",
+      "status": "validated",
+      "date": "2026-11-14"
+    }
+  ],
+  "publication": {
+    "status": "pending",
+    "method": "origin/main then GitHub Pages",
+    "base_commit": "b499de87a671515f9acd16ad76a70225bb6692b5"
+  }
+}

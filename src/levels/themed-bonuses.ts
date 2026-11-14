@@ -9,6 +9,7 @@ import {ROLLING_BONES_BONUS_LEVEL} from './rolling-bones-bonus';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { TRIBAL_RUN_BONUS_LEVEL } from './tribal-run-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
+import { arrangeCanopyCacheCrates } from './treehouse-bonus-crates';
 import { BONUS_LAYOUT_REPLACEMENTS, replaceBonusLayout } from './puzzle-bonus';
 import { dressJungleBonus } from './jungle-bonus';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
@@ -82,6 +83,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
+  if(recipe.parentId==='treehouse-trail')arrangeCanopyCacheCrates(course);
   const layout = BONUS_LAYOUT_REPLACEMENTS[recipe.key];
   if (layout) {
     replaceBonusLayout(course.data,layout,{color,accent,tex,sky,jungleAtmosphere});

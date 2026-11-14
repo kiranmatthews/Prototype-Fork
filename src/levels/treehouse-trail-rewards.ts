@@ -24,32 +24,55 @@ for(const [lip,launch,land,landing] of [[-46,-2.2,-50,-5.1],[-71,-5.9,-75,-9],[-
 for(const p of [[35,-4.55,-57],[35,-4.98,-63],[35,-8.6,-82],[35,-9,-89],
   [35,-12.5,-108]] as Point[])fruit(p,'lower dirt trail');
 
-// Low, readable groups sit off the clear running line. No crate occupies a
-// launch lip, stone, halfpipe transition, rope landing or finish pad.
-for(const [p,kind,name] of [
-  [[9.7,0,9.1],'wood','clearing pair'],[[10.9,0,9.1],'mystery','clearing pair'],
-  [[37.4,0,-23],'wood','forest entrance'],[[32.6,0,-26],'mask','before the descent'],
-  [[37.4,-5.62,-57],'wood','first lower landing'],
-  [[32.6,-9.55,-82],'mystery','second lower landing'],
-  [[37.4,-13.5,-108],'wood','last lower landing'],
-  [[32.6,-14,-123],'wood','fern grove pair'],[[31.4,-14,-123],'wood','fern grove pair'],
-  [[37.4,-14,-133],'mystery','coastal checkpoint approach'],
-  [[32.6,-14,-152],'multihit','quiet grove reward'],
-  [[37.4,-14,-156],'wood','coastal reveal'],
-  [[37.4,-14,-167],'wood','coastal shop'],[[38.6,-14,-167],'mystery','coastal shop'],
-  [[32.6,-14,-179],'wood','shaded coast'],
-  [[37.4,-14,-185],'wood','before village bend'],
-  [[32.6,-14,-199],'mystery','village pair'],[[31.4,-14,-199],'wood','village pair'],
-  [[37.4,-14,-209],'multihit','hut courtyard'],
-  [[37.4,-14,-218],'wood','river checkpoint approach'],
-  [[32.6,-14,-243],'wood','far riverbank'],
-  [[37.4,-7.2,-293],'mask','cavern entrance'],
-  [[32.5,-7.2,-344],'wood','halfpipe exit'],
-  [[38.8,-7.2,-347.5],'mystery','straight rope runway'],
-  [[32.5,-7.2,-349.2],'wood','straight rope runway'],
-  [[37.5,-7.2,-390],'wood','sunlit finish path'],
-  [[32.6,-7.2,-396],'life','last optional reward'],
-] as [Point,NonNullable<CustomComponent['kind']>,string][])crate(p,kind,name);
+// Gameplay Design Bible II–IV / VI: the opening teaches a small vocabulary;
+// the all-box line asks for deliberate stops beside the clear running lane.
+// Author touching formations on the 0.96 grid (runtime enlarges them ×1.2).
+const stack=(p:Point,kinds:NonNullable<CustomComponent['kind']>[],job:string)=>
+  kinds.forEach((kind,tier)=>crate([p[0],p[1]+tier*.96,p[2]],kind,job));
+const pile=(p:Point,kinds:NonNullable<CustomComponent['kind']>[],job:string)=>
+  kinds.forEach((kind,i)=>crate([p[0]+(i%2-.5)*.96,p[1]+Math.floor(i/2)*.96,p[2]],kind,job));
+
+// 9 crates before C1. The two-high clearing L teaches a visible lid reward;
+// the forest stack repeats it, and the mask is collected before the descent.
+pile([10.3,0,9.1],['wood','wood','mystery'],'TEACH · clearing lid reward');
+stack([37.7,0,-23],['multihit','wood','mystery'],'TEACH · striped support on safe forest ground');
+pile([32.3,0,-26],['wood','wood','mask'],'PROTECT · before the descent');
+
+// 10 between C1 and C2. These three singles are intentional landing markers,
+// off the downhill centreline; the first rest after the jumps holds a wall.
+crate([37.4,-5.62,-57],'wood','LANDING · first lower landing');
+crate([32.6,-9.55,-82],'mystery','LANDING · second lower landing');
+crate([37.4,-13.5,-108],'wood','LANDING · last lower landing');
+pile([32.3,-14,-123],['wood','mystery','wood','mystery'],'REST · fern grove harvest wall');
+stack([37.7,-14,-133],['wood','mystery','wood'],'COUNT · coastal checkpoint approach');
+
+// 12 between C2 and C3. Multi-hit now supports a target; the arrow has an
+// explicit overhead reward before the bonus asks the player to conserve it.
+// This first arrow is a forgiving payout, not a double-jump-proof height lock.
+stack([32.3,-14,-152],['multihit','wood','mystery'],'TEST · harvest lid before guarded striped base');
+crate([37.7,-14,-167],'bouncy','TEACH · arrow under the shop rewards');
+stack([37.7,-9.65,-167],['mystery','wood'],'TOOL TARGET · shop arrow rewards');
+pile([32.3,-14,-199],['wood','wood','mystery'],'REWARD · shaded village pocket');
+stack([37.7,-14,-209],['multihit','wood','mystery'],'TEST · village striped support');
+
+// 10 between C3 and C4. The stepping stones and rock treads stay pickup-free;
+// supported banks and the broad upper landing carry the collection stops.
+pile([32.3,-14,-243],['wood','wood','mystery'],'REST · far riverbank');
+pile([37.7,-14,-251],['wood','mystery','wood'],'ANTICIPATE · cave-climb waiting ground');
+pile([32.3,-7.2,-286],['wood','mystery','wood','mystery'],'REWARD · upper climb landing');
+
+// 10 between C4 and C5. The pipe is a deliberate skating breather. Its centre,
+// transitions and coping stay clear; these groups occupy the flat end courts.
+pile([37.7,-7.2,-293],['wood','wood','mask'],'PROTECT · cavern entrance');
+stack([32.3,-7.2,-340],['wood','wood','mystery'],'REST · last flat of the pipe');
+pile([37.7,-7.2,-344],['wood','mystery','wood','mystery'],'MODE CHANGE · dismount before the rope');
+
+// 11 after C5. The checkpoint restores these before the one-way rope crossing.
+// No box or enemy occupies the rope, its central run-up or its receiving pad.
+stack([31.7,-7.2,-347.5],['wood','wood','mystery'],'LAST CHANCE · left of the rope runway');
+stack([39.8,-7.2,-349.2],['multihit','wood','mystery'],'TEST · runway support at the right shoulder');
+pile([37.7,-7.2,-390],['wood','mystery','wood','mystery'],'REWARD · sunlit finish wall');
+crate([32.6,-7.2,-396],'mystery','COUNT · look beside the exit before leaving');
 
 for(const [p,name] of [
   [[4,0,8],'clearing handful'],[[35,0,-25],'forest entrance handful'],

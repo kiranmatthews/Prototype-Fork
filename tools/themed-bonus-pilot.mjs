@@ -94,7 +94,9 @@ export function* runThemedBonusJourney(r) {
       yield* c.walk([room.gap.a-1.2,0,0],`${label} inspect receiver chain`);
       for(const x of room.anchors) {
         const anchor=c.crateSpecAt(x,0),reward=c.crateSpecAt(x,.96);
-        yield* c.hop([x,.96,0],`${label} air-spin cap and retain anchor`,{airButtons:{spinHeld:true},tolerance:.85});
+        // Crate formations expand from the authored .96 m grid at runtime.
+        // Land on the actual retained lid, not its pre-expansion source height.
+        yield* c.hop([anchor.mesh.position.x,anchor.box.max.y,anchor.mesh.position.z],`${label} air-spin cap and retain anchor`,{airButtons:{spinHeld:true},tolerance:.85});
         c.check(anchor.alive&&!reward.alive,'relay failed to preserve permanent footing while harvesting');
       }
       yield* c.hop([room.gap.b+1.2,0,0],`${label} leave last steel receiver`);
