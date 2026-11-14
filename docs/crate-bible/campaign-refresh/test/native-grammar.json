@@ -1,0 +1,271 @@
+{
+  "harvests": [
+    {
+      "name": "01 Depot and rope stores / cargo 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "01 Depot and rope stores / cargo 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "01 Depot and rope stores / cargo 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "02 Stair detour and lower street / cargo 4",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "02 Stair detour and lower street / cargo 5",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "02 Stair detour and lower street / cargo 6",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "03 Warehouse deferred cargo / cargo 7",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "03 Warehouse deferred cargo / cargo 8",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "04 Channel harvests / cargo 9",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "04 Channel harvests / cargo 10",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "04 Channel harvests / cargo 11",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "05 Market optional count / cargo 12",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "05 Market optional count / cargo 13",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "05 Market optional count / cargo 14",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "05 Market optional count / revealed cargo",
+      "count": 6,
+      "deaths": 0
+    },
+    {
+      "name": "05 Market optional count / cargo 15",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "06 Hill-climb rests / cargo 16",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "06 Hill-climb rests / cargo 17",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "06 Hill-climb rests / cargo 18",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "07 Short crest connection / cargo 19",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "07 Short crest connection / cargo 20",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "08 Upper street choices / cargo 21",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "08 Upper street choices / cargo 22",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "08 Upper street choices / cargo 23",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "09 Lift district ledge / cargo 24",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "09 Lift district ledge / cargo 25",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "09 Lift district ledge / cargo 26",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "10 High lift and crystal plaza / cargo 27",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "10 High lift and crystal plaza / cargo 28",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "10 High lift and crystal plaza / cargo 29",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "11 Side-scroll upper choice / cargo 30",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "11 Side-scroll upper choice / cargo 31",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "11 Side-scroll upper choice / cargo 32",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "12 Harbour shoulder count / cargo 33",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "12 Harbour shoulder count / cargo 34",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "12 Harbour shoulder count / cargo 35",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "13 Harbour local reveal / cargo 36",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "13 Harbour local reveal / revealed cargo",
+      "count": 6,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 37",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 38",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 39",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 40",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 41",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "14 Both sides of the dock / cargo 42",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "15 Finish and remote credit / cargo 43",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "15 Finish and remote credit / cargo 44",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "15 Finish and remote credit / cargo 45",
+      "count": 4,
+      "deaths": 0
+    }
+  ],
+  "patrolProbes": 600,
+  "deferredCargo": 3,
+  "retryRestores": true,
+  "enemyKinds": [
+    "grunt",
+    "spiker"
+  ],
+  "opening": {
+    "stage": "start",
+    "evidence": [],
+    "actions": [],
+    "result": {
+      "crates": 3,
+      "deaths": 0,
+      "position": [
+        -2.990071415922408,
+        0,
+        -17.95899753682896
+      ],
+      "gemEarned": false
+    },
+    "crates": 3,
+    "deaths": 0,
+    "position": [
+      -2.990071415922408,
+      0,
+      -17.95899753682896
+    ],
+    "gemEarned": false,
+    "frames": 3985,
+    "seconds": 66.41666666666667
+  }
+}

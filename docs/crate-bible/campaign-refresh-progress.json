@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "test",
-  "next_course": "drowned-crown",
+  "current_course": "drowned-crown",
+  "next_course": "crab-chief",
   "courses": [
     {
       "order": 1,
@@ -185,9 +185,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-test-course",
-        "name": "Bonus: Quayside Cargo"
+        "name": "Bonus: Quayside Cargo",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/test/validation.json"
     },
     {
       "order": 11,
@@ -673,6 +675,12 @@
       "bonus": "bonus-waterfall-climb",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "test",
+      "bonus": "bonus-test-course",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
@@ -680,7 +688,7 @@
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
     "reason": "The authorized push reached GitHub but failed because the cloud workspace has no authenticated GitHub credentials. No push occurred.",
-    "connection": "GitHub plugin suggested; installation and connection have not been confirmed.",
+    "connection": "GitHub CLI device sign-in was started in the cloud workspace; the code expired without authorization. No authenticated connection or push is available.",
     "goal_blocked": false
   }
 }

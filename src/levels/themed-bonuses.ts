@@ -16,6 +16,7 @@ import { arrangeFernReliquaryCrates } from './jungle-bonus-crates';
 import { arrangeRooftopDeliveriesCrates } from './coastal-bonus-crates';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
+import { arrangeQuaysideCrates } from './ambush-crate-arrangement';
 import { dressBlockworksBonus } from './blockworks-bonus';
 import { decorateCoastalBonus } from './coastal-town-art';
 import { dressDrownedCrownBonus } from './drowned-crown-bonus';
@@ -107,7 +108,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
       for(let x=4;x<end;x+=18) course.data.components.push({t:'torch',p:[x,0,-4.6],rise:2,w:1.1,nm:'Reliquary torch'});
     }
   }
-  if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
+  if (recipe.parentId === 'test') {rebuildCarlisleBonus(course.data);arrangeQuaysideCrates(course.data);}
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
   if (recipe.parentId === 'beachfront') dressBananaBayBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);

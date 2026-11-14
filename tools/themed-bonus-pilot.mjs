@@ -1,10 +1,12 @@
 import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
+import { runQuaysideBonus } from './ambush-pilot.mjs';
 
 /** Each yield is an ordinary device sample. No position, physics, crate state,
  * hit counters, gem flags or finish state are changed by these pilots. */
 export function* runThemedBonusJourney(r) {
+  if (r.course.parentId === 'test') return yield* runQuaysideBonus(r);
   if (r.course.layout) return yield* runPuzzleJourney(Object.assign(Object.create(r),{id:r.course.layout}));
   if (r.course.parentId === 'nightworks-after-hours') return yield* runCalderaBonusJourney(r);
   const c=puzzleControls(r), {p,l}=r, course=r.course;

@@ -1,0 +1,944 @@
+[
+  {
+    "mode": "bonus-lite",
+    "inventory": {
+      "crates": 26,
+      "total": 25,
+      "bonus": 0,
+      "enemies": [],
+      "position": [
+        -6,
+        -1.1920928966180355e-08,
+        0
+      ]
+    },
+    "journey": {
+      "id": "bonus-test-course",
+      "stage": "cross the real finish gate",
+      "frame": 2168,
+      "done": true,
+      "failed": null,
+      "actions": [
+        {
+          "name": "approach QUAYSIDE / TEACH / arrival cargo",
+          "firstFrame": 20,
+          "lastFrame": 92
+        },
+        {
+          "name": "QUAYSIDE / TEACH / arrival cargo",
+          "firstFrame": 112,
+          "lastFrame": 112
+        },
+        {
+          "name": "inspect TNT support and overhead life",
+          "firstFrame": 134,
+          "lastFrame": 272
+        },
+        {
+          "name": "stomp the wooden takeoff cap",
+          "firstFrame": 317,
+          "lastFrame": 348
+        },
+        {
+          "name": "rebound apex above retained TNT",
+          "firstFrame": 348,
+          "lastFrame": 373
+        },
+        {
+          "name": "collect the high life first",
+          "firstFrame": 375,
+          "lastFrame": 379
+        },
+        {
+          "name": "land in the clear refuge",
+          "firstFrame": 379,
+          "lastFrame": 402
+        },
+        {
+          "name": "deliberate fuse approach",
+          "firstFrame": 422,
+          "lastFrame": 510
+        },
+        {
+          "name": "prime TNT by contact",
+          "firstFrame": 555,
+          "lastFrame": 591
+        },
+        {
+          "name": "leave the blast radius",
+          "firstFrame": 591,
+          "lastFrame": 632
+        },
+        {
+          "name": "wait for supported post-blast recovery",
+          "firstFrame": 632,
+          "lastFrame": 812
+        },
+        {
+          "name": "approach Room 1 fuse: refuge reward",
+          "firstFrame": 812,
+          "lastFrame": 952
+        },
+        {
+          "name": "Room 1 fuse: refuge reward",
+          "firstFrame": 972,
+          "lastFrame": 972
+        },
+        {
+          "name": "approach QUAYSIDE / REST / fuse recovery",
+          "firstFrame": 994,
+          "lastFrame": 1101
+        },
+        {
+          "name": "QUAYSIDE / REST / fuse recovery",
+          "firstFrame": 1121,
+          "lastFrame": 1121
+        },
+        {
+          "name": "approach materialize the native bridge",
+          "firstFrame": 1143,
+          "lastFrame": 1281
+        },
+        {
+          "name": "materialize the native bridge",
+          "firstFrame": 1301,
+          "lastFrame": 1301
+        },
+        {
+          "name": "pass the used switch",
+          "firstFrame": 1350,
+          "lastFrame": 1389
+        },
+        {
+          "name": "approach QUAYSIDE / TEST / bridge cargo",
+          "firstFrame": 1389,
+          "lastFrame": 1515
+        },
+        {
+          "name": "QUAYSIDE / TEST / bridge cargo",
+          "firstFrame": 1535,
+          "lastFrame": 1535
+        },
+        {
+          "name": "approach Room 2 bridge: receiver reward",
+          "firstFrame": 1557,
+          "lastFrame": 1695
+        },
+        {
+          "name": "Room 2 bridge: receiver reward",
+          "firstFrame": 1715,
+          "lastFrame": 1715
+        },
+        {
+          "name": "approach Room 2 bridge: receiver mystery",
+          "firstFrame": 1737,
+          "lastFrame": 1820
+        },
+        {
+          "name": "Room 2 bridge: receiver mystery",
+          "firstFrame": 1840,
+          "lastFrame": 1840
+        },
+        {
+          "name": "approach QUAYSIDE / COUNT / exit cargo",
+          "firstFrame": 1862,
+          "lastFrame": 1992
+        },
+        {
+          "name": "QUAYSIDE / COUNT / exit cargo",
+          "firstFrame": 2012,
+          "lastFrame": 2012
+        },
+        {
+          "name": "approach the earned gem",
+          "firstFrame": 2034,
+          "lastFrame": 2118
+        },
+        {
+          "name": "cross the real finish gate",
+          "firstFrame": 2138,
+          "lastFrame": 2168
+        }
+      ],
+      "evidence": [
+        {
+          "action": "QUAYSIDE / TEACH / arrival cargo",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "Room 1 fuse: refuge reward",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "QUAYSIDE / REST / fuse recovery",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "materialize the native bridge",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": true
+          }
+        },
+        {
+          "action": "pass the used switch",
+          "launch": [
+            29.82433333271452,
+            -1.1920928966180355e-08,
+            -0.0002692317310137551
+          ],
+          "landing": [
+            33.372499999906154,
+            -1.1920928522091145e-08,
+            -0.0003002960265725472
+          ],
+          "ground": "Supported bonus court"
+        },
+        {
+          "action": "QUAYSIDE / TEST / bridge cargo",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "Room 2 bridge: receiver reward",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "Room 2 bridge: receiver mystery",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "QUAYSIDE / COUNT / exit cargo",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "all crates in the active stage",
+          "totalCrates": 25,
+          "activeStageCrates": 25,
+          "bonusCrateTotal": 0,
+          "cratesBroken": 25,
+          "remaining": 0
+        }
+      ],
+      "result": {
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 25,
+        "cratesBroken": 25,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 2168,
+        "position": [
+          68.47148888784758,
+          0.7266666691501935,
+          -0.0005581475967887477
+        ],
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 6,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 25,
+        "crystal": false,
+        "gem": true,
+        "camera": [
+          68.36936222125284,
+          8.35149115425878,
+          25.81975247034206
+        ],
+        "progress": null
+      },
+      "tuningUnchanged": true
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "main-lite",
+    "inventory": {
+      "crates": 170,
+      "total": 205,
+      "bonus": 25,
+      "enemies": [
+        "grunt",
+        "spiker",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "grunt",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "grunt",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker"
+      ],
+      "position": [
+        0,
+        0.7366666664431492,
+        0
+      ]
+    },
+    "opening": {
+      "id": "test",
+      "stage": "spawn",
+      "frame": 198,
+      "done": true,
+      "failed": null,
+      "actions": [],
+      "evidence": [],
+      "result": {
+        "crates": 3,
+        "deaths": 0,
+        "position": [
+          -2.990071415922408,
+          0,
+          -17.95899753682896
+        ]
+      },
+      "end": {
+        "frame": 198,
+        "position": [
+          -2.990071415922408,
+          0,
+          -17.95899753682896
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 4,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 3,
+        "crystal": false,
+        "gem": false,
+        "camera": [
+          -2.9541430601822842,
+          5.1000005625249685,
+          -12.906589578870959
+        ],
+        "progress": null
+      },
+      "tuningUnchanged": true
+    },
+    "checkpoint": {
+      "done": true,
+      "kind": "checkpoint",
+      "end": {
+        "position": [
+          8.986157372292135e-06,
+          -5.085,
+          -184.04399999999995
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 1,
+        "gem": false,
+        "checkpoint": true,
+        "spawn": [
+          0,
+          -4.985,
+          -185
+        ]
+      },
+      "frames": 49
+    },
+    "recovery": {
+      "position": [
+        0,
+        -5.085,
+        -185
+      ],
+      "lives": 3,
+      "spawn": [
+        0,
+        -4.985,
+        -185
+      ]
+    },
+    "stagedFinish": {
+      "done": true,
+      "kind": "finish",
+      "end": {
+        "position": [
+          152.00001774217696,
+          -25.273333330849805,
+          -2293.3999999999487
+        ],
+        "grounded": true,
+        "state": "finished",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "gem": false,
+        "checkpoint": false,
+        "spawn": [
+          0,
+          0.8533333333333333,
+          0
+        ]
+      },
+      "frames": 58
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "bonus-full",
+    "inventory": {
+      "crates": 26,
+      "total": 25,
+      "bonus": 0,
+      "enemies": [],
+      "position": [
+        -6,
+        -1.1920928966180355e-08,
+        0
+      ]
+    },
+    "views": [
+      {
+        "name": "arrival",
+        "position": [
+          -6,
+          -1.1920928966180355e-08,
+          0
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 111,
+          "placements": 111,
+          "ready": 111,
+          "skipped": 0,
+          "draws": 47,
+          "triangles": 267366,
+          "allLodTriangles": 267366,
+          "cells": 47,
+          "residentCells": 47,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 45.66,
+          "errors": [],
+          "windTime": 0.7601999999992557,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "fuse",
+        "position": [
+          3.5,
+          -1.1920928966180355e-08,
+          0
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 111,
+          "placements": 111,
+          "ready": 111,
+          "skipped": 0,
+          "draws": 47,
+          "triangles": 267366,
+          "allLodTriangles": 267366,
+          "cells": 47,
+          "residentCells": 47,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 45.66,
+          "errors": [],
+          "windTime": 1.493533333332588,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "sealed-gallery",
+        "position": [
+          35,
+          -1.1920928966180355e-08,
+          0
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 111,
+          "placements": 111,
+          "ready": 111,
+          "skipped": 0,
+          "draws": 47,
+          "triangles": 267366,
+          "allLodTriangles": 267366,
+          "cells": 47,
+          "residentCells": 47,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 45.66,
+          "errors": [],
+          "windTime": 1.8935333333325866,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "revealed-gallery",
+        "position": [
+          35,
+          -1.1920928966180355e-08,
+          0
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 111,
+          "placements": 111,
+          "ready": 111,
+          "skipped": 0,
+          "draws": 47,
+          "triangles": 267366,
+          "allLodTriangles": 267366,
+          "cells": 47,
+          "residentCells": 47,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 14,
+          "textureMiB": 45.66,
+          "errors": [],
+          "windTime": 3.026866666665916,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      }
+    ],
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "main-full",
+    "inventory": {
+      "crates": 170,
+      "total": 205,
+      "bonus": 25,
+      "enemies": [
+        "grunt",
+        "spiker",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "grunt",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "grunt",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker",
+        "spiker",
+        "grunt",
+        "grunt",
+        "spiker"
+      ],
+      "position": [
+        0,
+        0.7366666664431492,
+        0
+      ]
+    },
+    "views": [
+      {
+        "name": "opening",
+        "position": [
+          0,
+          0,
+          -8
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 3524,
+          "placements": 3524,
+          "ready": 492,
+          "skipped": 0,
+          "draws": 158,
+          "triangles": 1371248,
+          "allLodTriangles": 1371248,
+          "cells": 1312,
+          "residentCells": 158,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 18,
+          "textureMiB": 31.33,
+          "errors": [],
+          "windTime": 0.5464000000022353,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "market",
+        "position": [
+          0,
+          -21.92,
+          -1090
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 3524,
+          "placements": 3524,
+          "ready": 492,
+          "skipped": 0,
+          "draws": 158,
+          "triangles": 1371248,
+          "allLodTriangles": 1371248,
+          "cells": 1312,
+          "residentCells": 158,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 18,
+          "textureMiB": 31.33,
+          "errors": [],
+          "windTime": 1.1464000000022363,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "harbour",
+        "position": [
+          152,
+          -25.92,
+          -2040
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 3524,
+          "placements": 3524,
+          "ready": 717,
+          "skipped": 0,
+          "draws": 278,
+          "triangles": 2218498,
+          "allLodTriangles": 2218498,
+          "cells": 1312,
+          "residentCells": 278,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 18,
+          "textureMiB": 31.33,
+          "errors": [],
+          "windTime": 1.629733333335568,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "split-dock",
+        "position": [
+          146.5,
+          -26,
+          -2081
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 3524,
+          "placements": 3524,
+          "ready": 587,
+          "skipped": 0,
+          "draws": 212,
+          "triangles": 2135588,
+          "allLodTriangles": 2135588,
+          "cells": 1312,
+          "residentCells": 212,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 18,
+          "textureMiB": 31.33,
+          "errors": [],
+          "windTime": 0.9000000000000012,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "name": "channel",
+        "position": [
+          0,
+          -13.5,
+          -785
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": {
+          "components": 3524,
+          "placements": 3524,
+          "ready": 518,
+          "skipped": 0,
+          "draws": 256,
+          "triangles": 2154150,
+          "allLodTriangles": 2154150,
+          "cells": 1312,
+          "residentCells": 256,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 18,
+          "textureMiB": 31.33,
+          "errors": [],
+          "windTime": 5.28333333333332,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      }
+    ],
+    "passed": true,
+    "errors": [],
+    "dock": {
+      "id": "test",
+      "stage": "land on the far dock",
+      "frame": 210,
+      "done": true,
+      "failed": null,
+      "actions": [
+        {
+          "name": "held dock arrow contact",
+          "firstFrame": 47,
+          "lastFrame": 83
+        },
+        {
+          "name": "dock bounce apex",
+          "firstFrame": 83,
+          "lastFrame": 119
+        },
+        {
+          "name": "land on the far dock",
+          "firstFrame": 122,
+          "lastFrame": 210
+        }
+      ],
+      "evidence": [],
+      "result": {
+        "position": [
+          146.53647171059302,
+          -26,
+          -2105.42
+        ],
+        "deaths": 0,
+        "arrowAlive": true
+      },
+      "end": {
+        "frame": 210,
+        "position": [
+          146.53647171059302,
+          -26,
+          -2105.42
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 4,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 0,
+        "crystal": false,
+        "gem": false,
+        "camera": [
+          146.53233634016578,
+          -16.994781202825173,
+          -2099.97717994075
+        ],
+        "progress": null
+      },
+      "tuningUnchanged": true
+    }
+  }
+]

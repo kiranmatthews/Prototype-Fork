@@ -3,10 +3,11 @@ import {buildCarlisleBoxes} from './carlisle-boxes';
 import {buildCarlisleArt,CARLISLE_ART_GROUPS} from './carlisle-coast-art';
 import {buildCarlisleRockTerrain} from './carlisle-rock-terrain';
 import {buildCarlisleChannelRock} from './carlisle-channel-rock';
+import {arrangeAmbushCrates} from './ambush-crate-arrangement';
 import originalEntry from '../../tools/carlisle-coast/original-course.json';
 
-// Retain encounter timing and the supported traversal lane while rebuilding
-// the native ground volume and independently dressing the ravine.
+// Retain the supported traversal lane while rebuilding the native ground
+// volume. Cargo and encounter changes run after this fixed sculpting pass.
 const original=originalEntry.data as unknown as CustomLevelData;
 const range=(a:number,b:number)=>Array.from({length:b-a+1},(_,i)=>a+i);
 export const CARLISLE_REMOVED_PARK_INDICES=[1,...range(20,30),...range(71,86),...range(121,123),175,176,...range(242,253),276,490,493,499,502];
@@ -99,3 +100,6 @@ export const CARLISLE_COAST_LEVEL:CustomLevelData={
  medalTimes:{gold:180,silver:210,bronze:255},
  groups:[...(original.groups??[]),...boxLayout.groups,...CARLISLE_ART_GROUPS],components:C,
 };
+const refreshed=arrangeAmbushCrates(CARLISLE_COAST_LEVEL,original);
+CARLISLE_CRATES.splice(0,CARLISLE_CRATES.length,...refreshed.components);
+CARLISLE_CRATE_SECTIONS.splice(0,CARLISLE_CRATE_SECTIONS.length,...refreshed.sections);

@@ -1,0 +1,56 @@
+{
+  "earlySpin": {
+    "stage": "wrong ground spin detonates useful TNT support",
+    "evidence": [],
+    "actions": [
+      {
+        "name": "fuse negative observation",
+        "firstFrame": 20,
+        "lastFrame": 20
+      },
+      {
+        "name": "unsafe direct spin approach",
+        "firstFrame": 38,
+        "lastFrame": 143
+      },
+      {
+        "name": "wrong ground spin detonates useful TNT support",
+        "firstFrame": 161,
+        "lastFrame": 168
+      }
+    ],
+    "result": {
+      "pattern": "fuse",
+      "test": "early ground spin destroys timed access and kills exposed player",
+      "capAlive": true,
+      "state": "dead",
+      "gemEarned": false
+    },
+    "pattern": "fuse",
+    "test": "early ground spin destroys timed access and kills exposed player",
+    "capAlive": true,
+    "state": "dead",
+    "gemEarned": false,
+    "frames": 168,
+    "seconds": 2.8
+  },
+  "floorWithoutDonor": {
+    "maxContact": 7.5951783386806175,
+    "rewardBase": 9,
+    "rewardAlive": true
+  },
+  "neighborWithoutDonor": {
+    "maxContact": 8.329383555865679,
+    "rewardBase": 9,
+    "rewardAlive": true
+  },
+  "skippedSwitch": {
+    "state": "dead",
+    "position": [
+      42.49999999999993,
+      -7.187500011920936,
+      0
+    ]
+  },
+  "retryRestores": true
+}
