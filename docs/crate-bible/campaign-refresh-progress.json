@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "spaghetti-rails",
-  "next_course": "sky",
+  "current_course": "sky",
+  "next_course": "jungle-terraces",
   "courses": [
     {
       "order": 1,
@@ -520,7 +520,8 @@
       "competition": false,
       "race": true,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/spaghetti-rails/validation.json"
     },
     {
       "order": 31,
@@ -820,6 +821,13 @@
       "bonus": "bonus-nightworks",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "spaghetti-rails",
+      "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14",
+      "decision": "retain the 706 reusable racing items and win-based reward"
     }
   ],
   "publication": {

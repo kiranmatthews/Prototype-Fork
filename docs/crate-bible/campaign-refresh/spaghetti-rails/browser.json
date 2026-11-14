@@ -1,0 +1,147 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "physical": 706,
+      "gem": 0,
+      "items": 706,
+      "rails": 193,
+      "enemies": 0,
+      "checkpoints": 0,
+      "raceCheckpoints": 0,
+      "bonus": false,
+      "racers": 8,
+      "length": 3467.8431814634605,
+      "loop": {
+        "minY": -144,
+        "height": 288
+      },
+      "components": 1789
+    },
+    "opening": {
+      "done": true,
+      "frames": 483,
+      "progress": 200.40202570839202,
+      "pickups": 2,
+      "uses": 2,
+      "grindFrames": 234,
+      "falls": 0,
+      "deaths": 0,
+      "rivalProgress": [
+        191.98179065850493,
+        106.46181473859207,
+        158.36879426692684,
+        164.4592594732453,
+        195.34648238759578,
+        150.04360464558206,
+        133.92298111877184
+      ]
+    },
+    "recovery": {
+      "lives": 4,
+      "offset": 288,
+      "falls": 0,
+      "deaths": 0,
+      "time": 10.483333333333434,
+      "grounded": true
+    },
+    "stagedFinish": {
+      "phase": "finished",
+      "time": 5.0833333333333295,
+      "rank": 1,
+      "falls": 0
+    },
+    "retry": {
+      "allAlive": true,
+      "item": null,
+      "boxes": 0,
+      "phase": "grid"
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "inventory": {
+      "physical": 706,
+      "gem": 0,
+      "items": 706,
+      "rails": 193,
+      "enemies": 0,
+      "checkpoints": 0,
+      "raceCheckpoints": 0,
+      "bonus": false,
+      "racers": 8,
+      "length": 3467.8431814634605,
+      "loop": {
+        "minY": -144,
+        "height": 288
+      },
+      "components": 1789
+    },
+    "views": [
+      {
+        "name": "opening",
+        "position": [
+          0,
+          114.68661120583978,
+          19.617485663083503
+        ],
+        "camera": [
+          3.709937154355011e-05,
+          119.9606744014344,
+          24.5015029811644
+        ],
+        "grounded": true,
+        "state": "ride",
+        "size": [
+          1280,
+          720
+        ],
+        "drawCalls": 612
+      },
+      {
+        "name": "interchange",
+        "position": [
+          0,
+          42.259228629532736,
+          -1072.5934642680004
+        ],
+        "camera": [
+          3.709937154355011e-05,
+          47.53342639188851,
+          -1067.7056056609913
+        ],
+        "grounded": true,
+        "state": "ride",
+        "size": [
+          1280,
+          720
+        ],
+        "drawCalls": 341
+      },
+      {
+        "name": "spring-receiver",
+        "position": [
+          24,
+          -53.74077069528255,
+          -144.40906943660542
+        ],
+        "camera": [
+          24.000037099371543,
+          -48.46657243142277,
+          -139.52121129137498
+        ],
+        "grounded": true,
+        "state": "ride",
+        "size": [
+          1280,
+          720
+        ],
+        "drawCalls": 271
+      }
+    ],
+    "passed": true
+  }
+]

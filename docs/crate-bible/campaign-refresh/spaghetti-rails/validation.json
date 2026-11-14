@@ -1,0 +1,75 @@
+{
+  "course": "spaghetti-rails",
+  "name": "Spaghetti Rails",
+  "bonus": null,
+  "status": "validated",
+  "decision": "retain the existing racing-item layout and win-based reward",
+  "startedAtApprox": "2026-11-14T18:09:15Z",
+  "completedAt": "2026-11-14T18:24:48.135752+00:00",
+  "elapsedMinutes": 15.6,
+  "inventory": {
+    "items": 706,
+    "gemBoxes": 0,
+    "enemies": 0,
+    "checkpoints": 0,
+    "bonus": false,
+    "winReward": true,
+    "itemHover": 0.9,
+    "itemSize": 2.304,
+    "roles": {
+      "Race item choice": 36,
+      "Air-route item": 3,
+      "Spring shortcut item": 18,
+      "rail": 649
+    },
+    "railItems": 649,
+    "groundItems": 57,
+    "maxRailAnchorDistance": 0.5992828827347777,
+    "minPickupMargin": 0.3057743154515009,
+    "maxFloorError": 7.105427357601002e-15,
+    "misses": []
+  },
+  "native": {
+    "raceSeconds": 305.9833333333837,
+    "playerFinish": 109.56666666666173,
+    "racersFinished": 8,
+    "falls": 0,
+    "deaths": 0,
+    "referenceGrindMetres": 2563.9788944581474,
+    "physicalGroundProbes": 2352,
+    "coverageSamples": 86044,
+    "connectedPlatforms": 904,
+    "authoredRails": 183,
+    "sampledItemTiers": 6,
+    "springReceivers": 18,
+    "stagedWraps": 5,
+    "winOnlyCampaignProgression": true
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 3,
+    "openingItemPickupAndUse": true,
+    "verticalWrapPreservesLives": true,
+    "stagedFinishAndRetry": true,
+    "consoleErrors": []
+  },
+  "preservation": {
+    "sourceUnchanged": true,
+    "publishedPackUnchanged": true,
+    "movementAnimationArtworkUnchanged": true
+  },
+  "checks": {
+    "checkLevels": "preceding Torchlight build remains valid; no gameplay changes",
+    "build": "preceding Torchlight build remains valid",
+    "release": "preceding Torchlight release remains valid"
+  },
+  "buildVersion": "fa387e11c8e1fa024fc1",
+  "releaseBytes": 959314619,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "The complete eight-rider native race uses production race inputs with no injected miss, death or reset. It is separate from staged placement, spring, downhill and browser recovery checks.",
+    "Every item is checked for native rail alignment or supported deck anchoring after accounting for the existing 0.9m racing hover. Dynamic item pickup/use/refill is sampled on all six height tiers; no continuous collection of all 706 items is claimed or required for this win-based race.",
+    "Browser opening uses production race controls. Browser fall and finish checks use explicit staged setup; the screenshots are three separately staged full-render views.",
+    "The generic adventure-crate audit intentionally excludes this race. Direct runtime checks establish the inventory and mode-specific progression instead."
+  ]
+}

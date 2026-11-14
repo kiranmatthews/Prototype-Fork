@@ -12123,3 +12123,11 @@ Twenty-seventh playable course and nineteenth unique bonus, reviewed in approxim
 All 120 main rewards pass separate normal-input approaches and reset. Native rock/camera and goblin regressions pass. Continuous native and browser bonus clears collect every box; both wrong orders, an actual cargo double-jump alternative, full retry, real entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; six full-resolution views are inspected with clean consoles. No continuous main-course or all-box clear is claimed.
 
 Required checks, build and release-size check pass: `fa387e11c8e1fa024fc1`, 959,314,619 bytes. [Evidence and limitations](crate-bible/campaign-refresh/dark/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Spaghetti Rails
+
+Twenty-eighth playable course, reviewed in approximately 15.6 minutes from 18:09:15 UTC. Retained 706 reusable racing-item boxes on the existing 183-rail, 904-platform network. Winning awards the campaign crystal and gem; there are no adventure checkpoints, enemies or bonus room.
+
+Every item passes native rail/deck alignment checks. An eight-rider race finishes for all competitors with zero deaths or race resets; the reference rider finishes in 109.57 simulated seconds. Six-tier item pickup/use/refill, all eighteen spring receivers, native geometry/recovery and win-only campaign progression pass. Browser opening, staged wrap recovery/finish/retry and three inspected full-render views pass with clean consoles. No continuous all-item clear is claimed.
+
+Source, movement, artwork and the published pack are unchanged, so the preceding Torchlight required checks, build and release remain valid (`fa387e11c8e1fa024fc1`, 959,314,619 bytes). [Evidence and scope](crate-bible/campaign-refresh/spaghetti-rails/README.md). Authorized publication awaits GitHub authentication.
