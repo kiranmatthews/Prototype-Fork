@@ -1,0 +1,104 @@
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+{"stage":"phase 1 · waiting","frame":1,"p":[0,0,16.996666666666666],"hp":9,"masks":2,"charge":0}
+{"stage":"phase 1 · intro","frame":96,"p":[1.7726573088083205e-16,-4.7683715642676816e-8,5.899999999999977],"hp":9,"masks":2,"charge":0}
+{"stage":"phase 1 · idle","frame":229,"p":[5.173867422081571e-16,-4.7683715642676816e-8,-13.898844706727207],"hp":9,"masks":2,"charge":0}
+{"stage":"phase 1 · slam","frame":358,"p":[-4.839077053471143,0.012249400309442215,-17.439376090356568],"hp":9,"masks":2,"charge":0}
+{"stage":"phase 1 · recover","frame":394,"p":[-4.845135981368668,2.1236663806235896,-17.44017300424459],"hp":9,"masks":2,"charge":0}
+{"stage":"phase 1 · hurt","frame":480,"p":[-0.8630517106691789,-4.7683715642676816e-8,-20.61789932390428],"hp":8,"masks":2,"charge":0}
+{"stage":"phase 1 · idle","frame":543,"p":[-0.1312593802962768,-4.7683715642676816e-8,-18.14377602441182],"hp":8,"masks":2,"charge":0}
+{"stage":"phase 1 · slam","frame":672,"p":[4.305539255882291,-4.7683715642676816e-8,-17.61787505244258],"hp":8,"masks":2,"charge":0}
+{"stage":"phase 1 · recover","frame":708,"p":[4.812440106686191,2.078055507871839,-17.557791268617898],"hp":8,"masks":2,"charge":0}
+{"stage":"phase 1 · hurt","frame":780,"p":[0.7361975322878292,-4.7683715642676816e-8,-20.151941582555768],"hp":7,"masks":2,"charge":0}
+{"stage":"phase 1 · idle","frame":843,"p":[0.13024656363927645,-4.7683715642676816e-8,-18.13379249639658],"hp":7,"masks":2,"charge":0}
+{"stage":"phase 1 · slam","frame":972,"p":[-4.3057653265903,0.008729791636778117,-17.616042332199747],"hp":7,"masks":2,"charge":0}
+{"stage":"phase 1 · recover","frame":1008,"p":[-4.8126586164626595,2.0887525918529186,-17.55688016344187],"hp":7,"masks":2,"charge":0}
+{"stage":"phase 1 · hurt","frame":1080,"p":[-0.7071557497353478,-4.7683715642676816e-8,-20.13838628072107],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · phase","frame":1143,"p":[-0.12440636839130381,-4.7683715642676816e-8,-18.128973082709447],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · idle","frame":1324,"p":[-0.014355643682636738,-4.7683715642676816e-8,0.5618610777114984],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · slam","frame":1453,"p":[4.859809454125169,-4.7683715642676816e-8,2.9090467231647468],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · tongue-form","frame":1643,"p":[5.536693904068563,-4.7683715642676816e-8,2.963041960174841],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · tongue-open","frame":1715,"p":[1.2614864466788736,-4.7683715642676816e-8,2.9915794394374955],"hp":6,"masks":2,"charge":0}
+{"stage":"phase 2 · hurt","frame":1937,"p":[-0.013055459142597689,6.223218497742739,-21.887552804589713],"hp":5,"masks":2,"charge":0}
+{"stage":"phase 2 · idle","frame":2000,"p":[-0.06453745615181031,-4.7683715642676816e-8,-13.557474252132664],"hp":5,"masks":2,"charge":1}
+{"stage":"phase 2 · volley-tell","frame":2051,"p":[-0.062350837293704366,-4.7683715642676816e-8,-11.679618806093924],"hp":5,"masks":2,"charge":1}
+{"stage":"phase 2 · volley","frame":2120,"p":[-0.03986510703640437,-4.7683715642676816e-8,-3.139981742979796],"hp":5,"masks":2,"charge":1}
+{"stage":"phase 2 · tongue-form","frame":2289,"p":[-0.0011945489251784008,0,11.546333867816243],"hp":5,"masks":2,"charge":1}
+{"stage":"phase 2 · tongue-open","frame":2361,"p":[-0.00036156927020148175,-4.7683715642676816e-8,5.58682724026815],"hp":5,"masks":2,"charge":0}
+{"stage":"phase 2 · hurt","frame":2611,"p":[-0.013032439951497365,6.223529836168288,-21.88861152192813],"hp":4,"masks":2,"charge":0}
+{"stage":"phase 2 · idle","frame":2674,"p":[-0.06444943634307629,-4.7683715642676816e-8,-13.558532568004392],"hp":4,"masks":2,"charge":1}
+{"stage":"phase 2 · slam","frame":2803,"p":[2.9826488285696957,-4.7683715642676816e-8,-4.306963197024485],"hp":4,"masks":2,"charge":1}
+{"stage":"phase 2 · tongue-form","frame":2993,"p":[5.825410130832995,-4.7683715642676816e-8,2.5772047481063014],"hp":4,"masks":2,"charge":1}
+{"stage":"phase 2 · tongue-open","frame":3065,"p":[1.3524551429487028,-4.7683715642676816e-8,2.9018418274429454],"hp":4,"masks":2,"charge":0}
+{"stage":"phase 2 · hurt","frame":3289,"p":[-0.013054354309185376,6.22323344080019,-21.887603618985608],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · phase","frame":3352,"p":[-0.0645332330253447,-4.7683715642676816e-8,-13.557525047257387],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · idle","frame":3533,"p":[-0.014831196025001997,-4.7683715642676816e-8,2.6350853960756386],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · slam","frame":3641,"p":[4.820496863780244,-4.7683715642676816e-8,6.815896402142818],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · ramp-form","frame":3677,"p":[5.554057369794549,-4.7683715642676816e-8,6.930394722881497],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · ramp-open","frame":3786,"p":[0.46549357478519704,0,6.994166281132417],"hp":3,"masks":2,"charge":0}
+{"stage":"phase 3 · hurt","frame":3960,"p":[0.46549357478519704,6.997362123066701,-20.951816069227785],"hp":2,"masks":2,"charge":0}
+{"stage":"phase 3 · idle","frame":4023,"p":[1.8853433654957081,1.0151434719576584,-9.951799059985184],"hp":2,"masks":2,"charge":0}
+{"stage":"phase 3 · volley-tell","frame":4074,"p":[2.0708863461913207,0.3564052482089912,-7.388261745577588],"hp":2,"masks":2,"charge":0}
+{"stage":"phase 3 · volley","frame":4143,"p":[1.1199600754845411,-4.7683715642676816e-8,-0.7813438387408692],"hp":2,"masks":2,"charge":0}
+{"stage":"phase 3 · ramp-open","frame":4240,"p":[0.08244058617095384,0,6.427213021869552],"hp":2,"masks":2,"charge":0}
+{"stage":"phase 3 · hurt","frame":4386,"p":[0.07923521671913325,6.937288949039207,-20.81548911345245],"hp":1,"masks":2,"charge":0}
+{"stage":"phase 3 · idle","frame":4449,"p":[0.3131842001647649,0.9455614523881648,-9.707554315724007],"hp":1,"masks":2,"charge":0}
+{"stage":"phase 3 · sweep-tell","frame":4500,"p":[0.34354363344634986,0.30388711263744117,-7.117304589819315],"hp":1,"masks":2,"charge":0}
+{"stage":"phase 3 · sweep","frame":4585,"p":[0.1373661319882499,-4.7683715642676816e-8,1.3551871238321394],"hp":1,"masks":2,"charge":0}
+{"stage":"phase 3 · ramp-open","frame":4700,"p":[0.011219995822642433,0,6.538934554147455],"hp":1,"masks":2,"charge":0}
+{"stage":"chief defeat settle","frame":4872,"p":[0.011219995822642433,6.8938231763886035,-20.735717611142995],"hp":0,"masks":2,"charge":0}
+PASS production Player input-only boss journey {"frame":5079,"hits":9,"playerHits":0,"grindDistance":57.2398475793882,"phases":[1,1,1,2,2,2,3,3,3],"strikes":[{"time":7.999999999999977,"phase":1,"speed":2.5886591222274133,"skating":false,"grinding":false,"charged":false,"kind":"pearl","tongueMetres":0,"rampSpeed":0},{"time":13.000000000000226,"phase":1,"speed":3.2994442088957774,"skating":false,"grinding":false,"charged":false,"kind":"pearl","tongueMetres":0,"rampSpeed":0},{"time":18.00000000000026,"phase":1,"speed":3.2926694032628165,"skating":false,"grinding":false,"charged":false,"kind":"pearl","tongueMetres":0,"rampSpeed":0},{"time":32.283333333332784,"phase":2,"speed":6.5,"skating":false,"grinding":true,"charged":true,"kind":"tongue","tongueMetres":19.079404351688392,"rampSpeed":0},{"time":43.51666666666548,"phase":2,"speed":6.5,"skating":true,"grinding":true,"charged":true,"kind":"tongue","tongueMetres":19.080900289512993,"rampSpeed":0},{"time":54.81666666666484,"phase":2,"speed":6.5,"skating":false,"grinding":true,"charged":true,"kind":"tongue","tongueMetres":19.079542938186627,"rampSpeed":0},{"time":65.99999999999754,"phase":3,"speed":12.127940244689709,"skating":true,"grinding":false,"charged":true,"kind":"sand-spin","tongueMetres":0,"rampSpeed":12.281296606506386},{"time":73.09999999999714,"phase":3,"speed":10.368897981198227,"skating":true,"grinding":false,"charged":true,"kind":"sand-spin","tongueMetres":0,"rampSpeed":10.522301987926342},{"time":81.19999999999668,"phase":3,"speed":11.912649151685365,"skating":true,"grinding":false,"charged":true,"kind":"sand-spin","tongueMetres":0,"rampSpeed":12.066051984326307}],"position":[0.049008151307062896,-4.7683715642676816e-8,-9.741844493449346]}

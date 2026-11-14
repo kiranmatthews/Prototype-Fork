@@ -1,0 +1,58 @@
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[{"endless":false,"phase":1,"health":7,"state":"recover","lives":3,"resetHealth":9},{"endless":false,"phase":2,"health":4,"state":"tongue-open","lives":3,"resetHealth":9},{"endless":false,"phase":3,"health":1,"state":"ramp-open","lives":3,"resetHealth":9},{"endless":false,"phase":3,"health":0,"state":"defeated","lives":3,"resetHealth":9},{"endless":true,"phase":1,"health":7,"state":"recover","lives":4,"resetHealth":9},{"endless":true,"phase":2,"health":4,"state":"tongue-open","lives":4,"resetHealth":9},{"endless":true,"phase":3,"health":1,"state":"ramp-open","lives":4,"resetHealth":9},{"endless":true,"phase":3,"health":0,"state":"defeated","lives":4,"resetHealth":9}]
+PASS real lagoon deaths restart all phases and the defeat settle at 9/9, clear transient geometry and preserve life loss.
