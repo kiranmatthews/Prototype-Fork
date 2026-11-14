@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "hogsworthOmitted": true,
+  "completeRuntimeSourceComparison": true,
+  "boundedRoundoffAccepted": true,
+  "authoredChangesPreserved": true,
+  "other13EntriesAndCertificatesExact": true,
+  "sourceBacked": [
+    "flats",
+    "sky",
+    "jungle-terraces",
+    "bonus-jungle-terraces",
+    "slipstream-race",
+    "country-club",
+    "rooftop-relay",
+    "coconut-cart-rally",
+    "jungle-gate-run",
+    "bonus-jungle-gate"
+  ],
+  "retained": [
+    "test",
+    "custard-creek",
+    "bonus-custard-creek",
+    "drowned-crown"
+  ],
+  "existingStaleCertificates": [
+    {
+      "id": "sky",
+      "unchangedAtHEAD": true,
+      "actual": "02664d8122f3094ccc406decee806dca0fa23ff3170c961679c3e64b43465b3f",
+      "certificate": "b97b0401ac7aa34866437c26d8d914a25cc1a91966b690a7ac932e375de61a0b"
+    },
+    {
+      "id": "custard-creek",
+      "unchangedAtHEAD": true,
+      "actual": "56a49ed3d894a1742dd7818b91139b8b2c7efeba76dc2dfe056cd53f42605a87",
+      "certificate": "0c665b0292715a9386185e58dd77ec331f53a10968bd6b0f3a384d30a6ac8a0d"
+    },
+    {
+      "id": "drowned-crown",
+      "unchangedAtHEAD": true,
+      "actual": "fe36ca70e48667542772cb86155758bdcb8ba92b537a095a1b32a4fae6a0c768",
+      "certificate": "eb891321a0f42231f77bc8bc123ccd3758d592536f0ff5dfc55888ed07436768"
+    }
+  ]
+}

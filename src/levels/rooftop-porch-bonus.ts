@@ -37,7 +37,7 @@ for(const [a,b,y] of [[44,48,1.2],[50,54,2.4],[56,60,1.2]])deck(a,b,y,'Stepped p
 crate(46,1.2,'wood','Lower pantry parcel');
 crate(52,2.4,'multihit','Pantry fruit hamper');crate(52,3.36,'wood','Pantry hamper cap');
 crate(58,1.2,'mystery','Descending pantry parcel');
-crate(64,0,'wood','Bell-pull parcel');crate(64,.96,'life','Bell-pull parcel cap');
+crate(64,0,'wood','Bell-pull parcel');crate(64,.96,'wood','Bell-pull parcel cap');
 
 // The bell-pull switch restores three separate porch boards. Their stepped
 // heights and visible gaps ask for three deliberate jumps, then a safe landing.
@@ -46,8 +46,20 @@ for(const [i,[x,y]] of STORM_PORCH_STEPS.entries()){
  components.push({t:'mesh',p:[x,y-.3,-4.5],...repairBoard,tex:'plank',color:'#c4d0c9',outline:true,grp:20,nm:`Revealed porch board ${i+1}`});
  crate(x,y,i===1?'mystery':'wood',`Bell-pull crossing parcel ${i+1}`,true);
 }
-crate(91,0,'wood','Departure parcel');crate(91,.96,'wood','Departure parcel middle');crate(91,1.92,'life','Departure parcel crown');
+crate(91,0,'wood','Departure parcel');crate(91,.96,'wood','Departure parcel middle');crate(91,1.92,'wood','Departure parcel crown');
 crate(97,0,'mystery','Last dry delivery');
+// The dry supplies are small cargo columns, not isolated fruit markers.
+// Preserve the arrow, pantry support and single landing markers on the
+// restored boards. Only the optional upstairs delivery pays a life.
+for(const [x,y,name,tiers] of [
+ [-3,0,'Welcome parcel',[2]],[1,0,'Calling-card parcel',[1,2]],
+ [12,4.2,'Upstairs invitation',[1,2]],[15.5,4.2,'Upstairs provisions',[1,2]],
+ [21,0,'Repair supplies',[2]],[36,0,'Bridge receiver parcel',[1,2]],
+ [40,0,'Dry store delivery',[1,2]],[46,1.2,'Lower pantry parcel',[1,2]],
+ [52,2.4,'Pantry hamper',[2]],[58,1.2,'Descending pantry parcel',[1,2]],
+ [64,0,'Bell-pull parcel',[2]],[97,0,'Last dry delivery',[1,2]],
+] as [number,number,string,number[]][])
+ for(const tier of tiers)crate(x,y+tier*.96,'wood',`${name} · upper parcel ${tier+1}`);
 for(const [x,y] of [[5,1.5],[7,3.5],[9,5.8],[17,5.5],[20,2.2],[26,1.5],[29,1.8],[32,1.5],
  [43,2.2],[49,3.6],[55,3.6],[61,2.2],[71,2.3],[75.6,3.2],[80.2,3.7],[84.5,2.7],[88,1.4],[100,1.4]])
  components.push({t:'wumpa',p:[x,y,0],grp:2});
@@ -66,7 +78,7 @@ export const ROOFTOP_PORCH_BONUS:CustomLevelData={
   ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.12,
   sunColor:'#e3edf2',sunIntensity:1.1,sunDirection:[-.65,.58,.48],fillColor:'#b7ccda',fillIntensity:.6,
   shadowStrength:.48,drawDistance:350,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null},
- components,groups:[{id:1,nm:'Covered porch and raised pantry shelves'},{id:2,nm:'Twenty-three dry deliveries'},
+ components,groups:[{id:1,nm:'Covered porch and raised pantry shelves'},{id:2,nm:'Forty-three dry deliveries'},
   {id:3,nm:'Spin-deployed maintenance crossing'},{id:20,nm:'Bell-pull porch restoration circuit'},
   {id:4,nm:'Bonus camera and depth containment',editorOnly:true},{id:90,nm:'Colonial manor and white balustrade',editorOnly:true},
   {id:91,nm:'Rainy Carolina garden',editorOnly:true}],

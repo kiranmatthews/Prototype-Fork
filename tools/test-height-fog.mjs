@@ -11,7 +11,7 @@ try{
  const {validAtmosphere}=await server.ssrLoadModule('/src/levelAtmosphere.ts');
  const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),root=new THREE.Group();root.add(mesh);
  let inherited=0;material.onBeforeCompile=()=>inherited++;
- const compile=()=>{const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};material.onBeforeCompile(shader,{});return shader;};
+ const compile=(target=material)=>{const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};target.onBeforeCompile(shader,{});return shader;};
  const camera=new THREE.Vector3(4,90,-200),color=new THREE.Color('#c3cedf'),profile={height:86.3,density:.12,falloff:.22,slope:[0,.029]};
  const first=new HeightFog();first.update(root,camera,profile,color,true);
  const shader=compile(),uniforms=shader.uniforms,key=material.customProgramCacheKey();
@@ -39,5 +39,18 @@ try{
  successor.update(root,camera,{...profile,contour},color,true);
  assert.equal(uniforms.uHeightFogCount.value,3);assert.deepEqual(uniforms.uHeightFogContour.value.slice(0,3).map(p=>p.toArray()),contour);
  successor.update(root,camera,profile,color,true);assert.equal(uniforms.uHeightFogCount.value,0,'reusing the same material can restore planar fog');
- successor.dispose();mesh.geometry.dispose();material.dispose();console.log('PASS height fog: shared material reuse, level exit, successor ownership and inspection');
+ // Level-specific material variants preserve the source shader callback.
+ // Their fog must compile once and remain independently owned on revisit.
+ const clone=material.clone();clone.onBeforeCompile=material.onBeforeCompile;clone.customProgramCacheKey=material.customProgramCacheKey;
+ const cloneRoot=new THREE.Group();cloneRoot.add(new THREE.Mesh(mesh.geometry,clone));
+ const cloneFog=new HeightFog();cloneFog.update(cloneRoot,camera,{...profile,height:44,density:.08},color,true);
+ const cloneShader=compile(clone);
+ assert.equal(cloneShader.vertexShader.match(/varying vec3 vHeightFogWorld/g)?.length,1,'inherited fog declarations compile once');
+ assert.equal(cloneShader.fragmentShader.match(/float heightFogSection\(/g)?.length,1,'inherited fog function compiles once');
+ assert.equal(cloneShader.fragmentShader.match(/float heightFogIntegral=/g)?.length,1,'inherited fog body compiles once');
+ assert.notEqual(cloneShader.uniforms.uHeightFogProfile,uniforms.uHeightFogProfile,'clone owns its fog uniforms');
+ assert.equal(cloneShader.uniforms.uHeightFogProfile.value.x,44);
+ successor.dispose();assert.equal(cloneShader.uniforms.uHeightFogProfile.value.y,.08,'source disposal leaves its clone active');
+ cloneFog.dispose();assert.equal(cloneShader.uniforms.uHeightFogProfile.value.y,0);
+ mesh.geometry.dispose();material.dispose();clone.dispose();console.log('PASS height fog: shared material reuse, level exit, successor ownership, cloned callbacks and inspection');
 }finally{await server.close();}

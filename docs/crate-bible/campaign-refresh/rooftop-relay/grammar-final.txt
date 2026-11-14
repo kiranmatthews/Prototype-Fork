@@ -1,0 +1,1 @@
+PASS 19 staged approaches collect all 79 main crates; eight grouped deliveries have supported footprints; full reset restores 103 physical crates

@@ -1,0 +1,17 @@
+{
+  "baselineCertifiedStock": true,
+  "builtinNonCrateDataExact": true,
+  "publishedNonCrateDataExact": true,
+  "crateDataExact": true,
+  "settingsExact": true,
+  "componentOrderMatchesSource": true,
+  "fullRuntimeComparisonPassed": true,
+  "certificateBefore": {
+    "snapshotSha256": "c0577508b47774d1feccc7562ffd31876d2604772a09fc39a87bab4209162f31",
+    "authoringRuntime": "v26.13.0"
+  },
+  "certificateAfter": {
+    "snapshotSha256": "98cc910893b719feb205ecf913e27c875a9c96c6fb5fee00baf32cee4f3897bc",
+    "authoringRuntime": "v22.23.5"
+  }
+}

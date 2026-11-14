@@ -1,0 +1,626 @@
+{
+  "actions": [
+    {
+      "name": "approach Welcome parcel",
+      "firstFrame": 20,
+      "lastFrame": 110
+    },
+    {
+      "name": "Welcome parcel",
+      "firstFrame": 130,
+      "lastFrame": 130
+    },
+    {
+      "name": "approach Calling-card parcel",
+      "firstFrame": 152,
+      "lastFrame": 243
+    },
+    {
+      "name": "Calling-card parcel",
+      "firstFrame": 263,
+      "lastFrame": 263
+    },
+    {
+      "name": "keep the arrow and reach the upstairs delivery shelf takeoff",
+      "firstFrame": 285,
+      "lastFrame": 387
+    },
+    {
+      "name": "keep the arrow and reach the upstairs delivery shelf arrow contact",
+      "firstFrame": 432,
+      "lastFrame": 468
+    },
+    {
+      "name": "keep the arrow and reach the upstairs delivery shelf",
+      "firstFrame": 468,
+      "lastFrame": 518
+    },
+    {
+      "name": "Upstairs invitation",
+      "firstFrame": 520,
+      "lastFrame": 520
+    },
+    {
+      "name": "approach Upstairs provisions",
+      "firstFrame": 542,
+      "lastFrame": 629
+    },
+    {
+      "name": "Upstairs provisions",
+      "firstFrame": 649,
+      "lastFrame": 649
+    },
+    {
+      "name": "descend from the delivery shelf",
+      "firstFrame": 698,
+      "lastFrame": 744
+    },
+    {
+      "name": "approach Delivery shelf arrow",
+      "firstFrame": 744,
+      "lastFrame": 888
+    },
+    {
+      "name": "Delivery shelf arrow",
+      "firstFrame": 908,
+      "lastFrame": 908
+    },
+    {
+      "name": "approach Repair supplies",
+      "firstFrame": 930,
+      "lastFrame": 1081
+    },
+    {
+      "name": "Repair supplies",
+      "firstFrame": 1101,
+      "lastFrame": 1101
+    },
+    {
+      "name": "read the folded repair bridge",
+      "firstFrame": 1123,
+      "lastFrame": 1221
+    },
+    {
+      "name": "wait for the porch bridge to settle",
+      "firstFrame": 1240,
+      "lastFrame": 1284
+    },
+    {
+      "name": "cross the restored dry maintenance leaf",
+      "firstFrame": 1284,
+      "lastFrame": 1412
+    },
+    {
+      "name": "approach Bridge receiver parcel",
+      "firstFrame": 1430,
+      "lastFrame": 1496
+    },
+    {
+      "name": "Bridge receiver parcel",
+      "firstFrame": 1516,
+      "lastFrame": 1516
+    },
+    {
+      "name": "approach Dry store delivery",
+      "firstFrame": 1538,
+      "lastFrame": 1629
+    },
+    {
+      "name": "Dry store delivery",
+      "firstFrame": 1649,
+      "lastFrame": 1649
+    },
+    {
+      "name": "pantry steps approach",
+      "firstFrame": 1671,
+      "lastFrame": 1759
+    },
+    {
+      "name": "first pantry bench",
+      "firstFrame": 1804,
+      "lastFrame": 1840
+    },
+    {
+      "name": "Lower pantry parcel",
+      "firstFrame": 1842,
+      "lastFrame": 1842
+    },
+    {
+      "name": "upper pantry takeoff",
+      "firstFrame": 1864,
+      "lastFrame": 1940
+    },
+    {
+      "name": "upper pantry bench",
+      "firstFrame": 1985,
+      "lastFrame": 2021
+    },
+    {
+      "name": "approach Pantry fruit hamper",
+      "firstFrame": 2021,
+      "lastFrame": 2062
+    },
+    {
+      "name": "Pantry fruit hamper",
+      "firstFrame": 2082,
+      "lastFrame": 2082
+    },
+    {
+      "name": "descending pantry bench",
+      "firstFrame": 2131,
+      "lastFrame": 2172
+    },
+    {
+      "name": "approach Descending pantry parcel",
+      "firstFrame": 2172,
+      "lastFrame": 2206
+    },
+    {
+      "name": "Descending pantry parcel",
+      "firstFrame": 2226,
+      "lastFrame": 2226
+    },
+    {
+      "name": "return to the main porch floor",
+      "firstFrame": 2275,
+      "lastFrame": 2316
+    },
+    {
+      "name": "approach Bell-pull parcel",
+      "firstFrame": 2316,
+      "lastFrame": 2381
+    },
+    {
+      "name": "Bell-pull parcel",
+      "firstFrame": 2401,
+      "lastFrame": 2401
+    },
+    {
+      "name": "approach Porch bell-pull switch",
+      "firstFrame": 2423,
+      "lastFrame": 2514
+    },
+    {
+      "name": "Porch bell-pull switch",
+      "firstFrame": 2534,
+      "lastFrame": 2534
+    },
+    {
+      "name": "clear the spent bell switch",
+      "firstFrame": 2583,
+      "lastFrame": 2622
+    },
+    {
+      "name": "restored porch board 1",
+      "firstFrame": 2649,
+      "lastFrame": 2724
+    },
+    {
+      "name": "restored porch board 2",
+      "firstFrame": 2751,
+      "lastFrame": 2826
+    },
+    {
+      "name": "restored porch board 3",
+      "firstFrame": 2853,
+      "lastFrame": 2932
+    },
+    {
+      "name": "last porch landing",
+      "firstFrame": 2959,
+      "lastFrame": 2999
+    },
+    {
+      "name": "approach Departure parcel",
+      "firstFrame": 2999,
+      "lastFrame": 3081
+    },
+    {
+      "name": "Departure parcel",
+      "firstFrame": 3101,
+      "lastFrame": 3101
+    },
+    {
+      "name": "approach Last dry delivery",
+      "firstFrame": 3123,
+      "lastFrame": 3230
+    },
+    {
+      "name": "Last dry delivery",
+      "firstFrame": 3250,
+      "lastFrame": 3250
+    },
+    {
+      "name": "return from the Storm Parlour",
+      "firstFrame": 3274,
+      "lastFrame": 3334
+    }
+  ],
+  "evidence": [
+    {
+      "action": "Welcome parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Calling-card parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "keep the arrow and reach the upstairs delivery shelf",
+      "contact": {
+        "frame": 468,
+        "position": [
+          6.9702333333333355,
+          1.171999988079071,
+          0
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "platform"
+      },
+      "landing": [
+        10.918,
+        4.199999988079071,
+        0
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "Upstairs invitation",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Upstairs provisions",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "descend from the delivery shelf",
+      "launch": [
+        14.336211111111124,
+        4.199999988079071,
+        0
+      ],
+      "landing": [
+        18.966711111111106,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Delivery shelf arrow",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Repair supplies",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Bridge receiver parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Dry store delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "first pantry bench",
+      "launch": [
+        42.42866666666691,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "landing": [
+        44.7686666666669,
+        1.199999988079071,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Lower pantry parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "upper pantry bench",
+      "launch": [
+        46.92997777777804,
+        1.199999988079071,
+        0
+      ],
+      "landing": [
+        50.36647777777802,
+        2.3999999880790703,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Pantry fruit hamper",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "descending pantry bench",
+      "launch": [
+        50.8251444444447,
+        2.3999999880790712,
+        0
+      ],
+      "landing": [
+        56.49214444444466,
+        1.199999988079071,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Descending pantry parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "return to the main porch floor",
+      "launch": [
+        56.80731111111134,
+        1.199999988079071,
+        0
+      ],
+      "landing": [
+        61.47231111111131,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Bell-pull parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Porch bell-pull switch",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "clear the spent bell switch",
+      "launch": [
+        66.8242333333334,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "landing": [
+        69.36900000000009,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "restored porch board 1",
+      "launch": [
+        69.36900000000009,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "landing": [
+        73.4715000000002,
+        0.600000011920929,
+        0
+      ],
+      "ground": "Revealed porch board 1"
+    },
+    {
+      "action": "restored porch board 2",
+      "launch": [
+        73.4715000000002,
+        0.600000011920929,
+        0
+      ],
+      "landing": [
+        77.97300000000034,
+        1.2000000119209289,
+        0
+      ],
+      "ground": "Revealed porch board 2"
+    },
+    {
+      "action": "restored porch board 3",
+      "launch": [
+        77.97300000000034,
+        1.2000000119209289,
+        0
+      ],
+      "landing": [
+        82.47300000000048,
+        0.600000011920929,
+        0
+      ],
+      "ground": "Revealed porch board 3"
+    },
+    {
+      "action": "last porch landing",
+      "launch": [
+        82.47300000000048,
+        0.600000011920929,
+        0
+      ],
+      "landing": [
+        86.97300000000062,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Departure parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Last dry delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all forty-three storm deliveries",
+      "totalCrates": 43,
+      "activeStageCrates": 43,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 43,
+      "remaining": 0
+    }
+  ],
+  "stage": "return from the Storm Parlour",
+  "result": {
+    "state": "finished",
+    "cratesBroken": 43,
+    "totalCrates": 43,
+    "deaths": 0,
+    "completionScope": "complete-stage",
+    "activeStageCrates": 43,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true
+  },
+  "retry": {
+    "all44CratesRestored": true,
+    "outlinedBoardsHidden": true,
+    "repairBridgeFolded": true,
+    "boxCreditCleared": true
+  }
+}

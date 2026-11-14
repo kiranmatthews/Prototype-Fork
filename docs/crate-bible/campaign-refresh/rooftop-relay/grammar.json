@@ -1,0 +1,154 @@
+{
+  "harvests": [
+    {
+      "name": "Coral Cove · terrace deliveries",
+      "count": 10,
+      "frames": 106,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Hydrangea Heights · terrace deliveries",
+      "count": 10,
+      "frames": 153,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Regatta Row · terrace deliveries",
+      "count": 10,
+      "frames": 201,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Pelican Point · terrace deliveries",
+      "count": 10,
+      "frames": 122,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Sailmaker Terrace · terrace deliveries",
+      "count": 10,
+      "frames": 153,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "The Kook Club · terrace deliveries",
+      "count": 10,
+      "frames": 88,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Club catering delivery -8 ·",
+      "count": 4,
+      "frames": 68,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Club catering delivery 10 ·",
+      "count": 4,
+      "frames": 59,
+      "deaths": 0,
+      "newGroup": true
+    },
+    {
+      "name": "Garden service delivery",
+      "count": 1,
+      "frames": 44,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Optional garden cache",
+      "count": 1,
+      "frames": 58,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Garden service delivery",
+      "count": 1,
+      "frames": 56,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Optional garden cache",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Reward after the long roof transfer",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Reward after the long roof transfer",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Reward after the long roof transfer",
+      "count": 1,
+      "frames": 58,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Catering delivery beside the flight cases",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Catering delivery beside the flight cases",
+      "count": 1,
+      "frames": 56,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Garden island line reward",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    },
+    {
+      "name": "Belvedere crystal line reward",
+      "count": 1,
+      "frames": 57,
+      "deaths": 0,
+      "newGroup": false
+    }
+  ],
+  "maxFloorError": 0,
+  "preservation": {
+    "nonCrates": 2148,
+    "metalCrates": 24,
+    "settingsExact": true
+  },
+  "fullReset": true,
+  "inventory": {
+    "physical": 103,
+    "counted": 79,
+    "gemTally": 128,
+    "checkpoints": 6,
+    "bonus": 43,
+    "masks": 3,
+    "multiHit": 0,
+    "enemies": 0
+  }
+}
