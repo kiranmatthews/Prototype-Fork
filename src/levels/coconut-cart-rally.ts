@@ -10,8 +10,9 @@ import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,STADIUM,cartRallyPoint,cartRallyFram
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
 const CHICANES=[90,390,780,950,1300,1470,1860,2020,2370,2760,3150,3690,4290,4510] as const;
 // Clear dirt across the racing lane. The fifth row is beyond the 1345 m
-// heading seam so the four choices face the approach after the cliff.
-const ITEM_ROWS=[65,423,640,1100,1350,1675,2009,2360,2740,3156,3680,4128,4500] as const;
+// heading seam so the four choices face the approach after the cliff. Extension
+// rows stay clear of the rock bodies and the next jump or tunnel launch.
+const ITEM_ROWS=[65,423,640,1100,1350,1675,2009,2340,2740,3175,3710,4128,4530] as const;
 const troughEnd=(j:typeof CART_RALLY_JUMPS[number])=>j.landingPlateau?j.end-(j.landingLead??8)+(j.landingRise??20):j.end+4;
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);

@@ -12165,3 +12165,11 @@ Both native chase routes, sheltered harvesting, checkpoint recovery, actual bonu
 Thirty-third playable course and twenty-fourth unique bonus, reviewed in 31.2 minutes from 21:47:49 UTC, exceeding the requested 15+5-minute budget. Retained Skystream's speed-course steering lines, clear launches and loop approaches. Cumulus now has six four-box deliveries and one optional life above its final gap, for 25 total. Main source and bonus non-crate data remain exact; no enemies are added to mandatory momentum or cloud crossings.
 
 Native main all-box traversal, loop/gap completion, fall recovery, bonus all-box completion, ordinary versus reward flight and full retry pass. Chrome enters the real bonus platform, verifies failure and banks all 25 into the same parent. Three full-render views and consoles pass. Required level checks, final validators, stock-save tests, build and release pass: `a9b37f2c67ba1eda78bb`, 959,321,948 bytes. [Evidence and limitations](crate-bible/campaign-refresh/skystream/README.md).
+
+### 2026-11-14 — Campaign crate bible review: Coconut Cart Rally and campaign completion
+
+Thirty-fourth and final playable UI course, reviewed in 31.3 minutes from approximately 22:20 UTC, exceeding the requested fifteen-minute budget. Moved four item rows clear of rocks; sixteen pickup positions change while all 52 items, seven rival racers, eighteen jumps and non-crate geometry/settings remain intact. Two prior pickups were inside rock collision. The win-only gem and race-specific crate grammar are retained.
+
+All 52 real cart pickup approaches, 208 anchor-corner probes, all eight racers finishing, continuous solo traversal of all eighteen jumps, rim containment, item respawn/retry, winning/losing gem fixtures and stock-save checks pass. Chrome confirms keyboard controls, the changed rows, finish/restart and two inspected full-render views. Required level checks, build and release pass: `44bce024d7abb2edb14e`, 959,322,064 bytes. [Evidence and limitations](crate-bible/campaign-refresh/coconut-cart-rally/README.md).
+
+The review now covers every current playable campaign UI course: **34 main courses and 24 unique bonus rooms**. The five unbuilt placeholder slots are excluded. [Complete review index](crate-bible/campaign-refresh/README.md).

@@ -27,7 +27,7 @@ try{
   g.renderer.render=(scene,camera)=>{if(scene===g.scene&&camera===g.camera){camera.position.copy(eye);camera.lookAt(center);camera.updateMatrixWorld();c.updateView(camera);}return render(scene,camera);};
   return {points:points.map(p=>p.toArray()),center:center.toArray(),span:across.length(),acrossErrorDegrees:Math.asin(dot)*180/Math.PI,items:l.crates.filter(b=>b.mystery).length};
  });
- assert.equal(row.items,28);assert.ok(Math.abs(row.center[2]+1350)<.001);assert.ok(row.acrossErrorDegrees<10);assert.ok(Math.abs(row.span-18)<.001);
+ assert.equal(row.items,52);assert.ok(Math.abs(row.center[2]+1350)<.001);assert.ok(row.acrossErrorDegrees<10);assert.ok(Math.abs(row.span-18)<.001);
  await page.waitForTimeout(1800);await page.screenshot({path:out+'/across-track-native.png'});
  await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(720));await page.waitForTimeout(150);await page.screenshot({path:out+'/across-track-normal.png'});
  const state=await page.evaluate(()=>({stamp:document.querySelector('.hud-build')?.textContent,gl:window.__game.renderer.getContext().getError()}));

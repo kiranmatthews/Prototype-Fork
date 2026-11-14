@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "coconut-cart-rally",
-  "next_course": "coconut-cart-rally",
+  "current_course": null,
+  "next_course": null,
   "courses": [
     {
       "order": 1,
@@ -637,7 +637,8 @@
       "competition": false,
       "race": true,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/coconut-cart-rally/validation.json"
     },
     {
       "order": 38,
@@ -868,15 +869,25 @@
       "bonus": "bonus-skystream",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "coconut-cart-rally",
+      "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "published-through-course-32",
+    "status": "automatic-pages-deployment",
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
-    "reason": "GitHub Pages run 43644690663 succeeded; public fork label verified. Course 33 validated and awaiting push.",
+    "reason": "All 34 courses are validated. The completion commit deploys through origin/main. This receipt records the latest verified deployment at packaging.",
     "connection": "Authenticated as kiranmatthews; repository-local Git credential helper and push dry-run verified.",
     "goal_blocked": false,
-    "lastPublishedCommit": "d93e9103dc145f4dc52d111ec84d43c4775097a7"
-  }
+    "lastPublishedCommit": "f1ee777fa0fe14ce2077504aae87d7a6fa54c2a8",
+    "lastVerifiedWorkflow": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/43647480640",
+    "workflowRuns": "https://github.com/kiranmatthews/Prototype-Fork/actions/workflows/deploy.yml"
+  },
+  "status": "complete",
+  "completedAt": "2026-11-14T22:51:17.290706+00:00"
 }

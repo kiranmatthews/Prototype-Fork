@@ -1,0 +1,238 @@
+{
+  "course": "coconut-cart-rally",
+  "bonus": null,
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T22:20:00+00:00",
+  "completedAt": "2026-11-14T22:51:17.290706+00:00",
+  "elapsedMinutes": 31.3,
+  "requestedBudgetMinutes": 15,
+  "changes": {
+    "pickupRows": 13,
+    "items": 52,
+    "movedItems": 16,
+    "rowMoves": [
+      {
+        "row": 8,
+        "from": 2360,
+        "to": 2340
+      },
+      {
+        "row": 10,
+        "from": 3156,
+        "to": 3175
+      },
+      {
+        "row": 11,
+        "from": 3680,
+        "to": 3710
+      },
+      {
+        "row": 13,
+        "from": 4500,
+        "to": 4530
+      }
+    ],
+    "beforeUnsafeRows": [
+      {
+        "row": 8,
+        "station": 2360,
+        "lanesWithin8m": [
+          1,
+          2,
+          3
+        ],
+        "lanesInsideRock": []
+      },
+      {
+        "row": 10,
+        "station": 3156,
+        "lanesWithin8m": [
+          1,
+          2,
+          3
+        ],
+        "lanesInsideRock": [
+          1,
+          2
+        ]
+      },
+      {
+        "row": 11,
+        "station": 3680,
+        "lanesWithin8m": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "lanesInsideRock": []
+      },
+      {
+        "row": 13,
+        "station": 4500,
+        "lanesWithin8m": [
+          2,
+          3,
+          4
+        ],
+        "lanesInsideRock": []
+      }
+    ],
+    "afterMinimumRockClearance": 8.553167800044912
+  },
+  "designDecision": "Keep four separated choices across each racing lane. Move four extension rows clear of rock collision, retain jump/launch clearance and the win-only gem. Ordinary cluster and checkpoint quotas do not apply to replenishing race item boxes.",
+  "enemyDecision": "Keep the seven rival racers, existing weapons, rock chicanes and eighteen dirt jumps. No ordinary attack enemies, explosives, checkpoints or bonus are added.",
+  "preservation": {
+    "nonCratesAndSettingsExact": true,
+    "otherPublishedLevelsExact": true,
+    "movedCratesOnly": true,
+    "stockSnapshots": 2,
+    "rawAndMigratedSaves": 4,
+    "authoredVariants": 28,
+    "stockHashesAdded": 4,
+    "crateMigrationAppliedOnce": true
+  },
+  "native": {
+    "raceResult": {
+      "mode": "race",
+      "rank": 1,
+      "time": 161.08333333335366,
+      "won": true,
+      "boxes": 0,
+      "totalBoxes": 0,
+      "boxGem": true
+    },
+    "riders": [
+      {
+        "id": 0,
+        "finish": 161.08333333335366,
+        "falls": 0
+      },
+      {
+        "id": 1,
+        "finish": 180.4833333333691,
+        "falls": 0
+      },
+      {
+        "id": 2,
+        "finish": 187.33333333337455,
+        "falls": 0
+      },
+      {
+        "id": 3,
+        "finish": 184.2333333333721,
+        "falls": 0
+      },
+      {
+        "id": 4,
+        "finish": 190.58333333337714,
+        "falls": 0
+      },
+      {
+        "id": 5,
+        "finish": 204.91666666672188,
+        "falls": 0
+      },
+      {
+        "id": 6,
+        "finish": 194.90000000004724,
+        "falls": 0
+      },
+      {
+        "id": 7,
+        "finish": 197.23333333338243,
+        "falls": 0
+      }
+    ],
+    "solo": {
+      "gapFlights": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "time": 160.61666666668663,
+      "falls": 0,
+      "boxes": 0,
+      "rolls": 0
+    },
+    "containment": {
+      "position": [
+        63.31702281130334,
+        26.475004098591143,
+        -319.6123545208035
+      ],
+      "falls": 0,
+      "hits": 10,
+      "clock": 15.000000000000325
+    },
+    "pickups": 52,
+    "anchorCornerProbes": 208,
+    "maxAnchorFloorDelta": 0.3079717689736903,
+    "pickupRespawn": true,
+    "fullRetry": true
+  },
+  "browser": {
+    "keyboard": {
+      "drive": {
+        "speed": 31.58779617142384,
+        "yaw": 0.3330792126769199,
+        "progress": 274.44727950794726
+      },
+      "steeredYaw": -1.5559922701000088,
+      "brakedSpeed": -0.0
+    },
+    "pickupCases": 5,
+    "stagedFinish": {
+      "done": true,
+      "frames": 229,
+      "phase": "finished",
+      "finish": 4.616666666666656,
+      "falls": 0,
+      "gem": false
+    },
+    "retry": {
+      "alive": 52,
+      "item": null,
+      "boxes": 0,
+      "phase": "grid"
+    },
+    "fullViews": 2,
+    "consoleErrors": []
+  },
+  "checks": {
+    "rowGeometry": "passed",
+    "stock": "passed",
+    "winOnlyGem": "passed",
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed",
+    "campaignUiCoverage": "passed"
+  },
+  "buildVersion": "44bce024d7abb2edb14e",
+  "releaseBytes": 959322064,
+  "limitations": [
+    "All 52 pickup approaches are isolated supported fixtures. The full race and solo replay are separate continuous journeys.",
+    "The standard crate-placement report intentionally excludes cart races; dedicated row geometry, contact and race tests cover this course.",
+    "Runtime item cubes intentionally float above the road. Support measurements use their authored ground anchors, not their animated visual bottoms.",
+    "An initial browser approach began fourteen metres before the final row and intersected the preceding rock. Repositioning that isolated start to eight metres before the pickup passed; no gameplay change was needed.",
+    "A staged left-lane tunnel view places the unchanged camera inside the preceding rock. This retained camera clipping is preserved in full-tunnel-left-camera.png; the clear central approach is inspected separately.",
+    "Legacy tests still expected twelve jumps and seven item rows from the shorter course. Assertions now cover the extended eighteen-jump, thirteen-row course; both replays finish within the original frame limits.",
+    "Initial support probes incorrectly measured the floating cube bottom; corrected anchor probes pass.",
+    "Elapsed review exceeded the requested fifteen-minute budget."
+  ]
+}

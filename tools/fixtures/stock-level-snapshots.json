@@ -39,8 +39,8 @@
       "authoringRuntime": "v22.23.3"
     },
     "coconut-cart-rally": {
-      "snapshotSha256": "6cec0c852a111b00ecc0dd8c88a147b26836ac81810fb2630304de0d94027a24",
-      "authoringRuntime": "v24.19.0"
+      "snapshotSha256": "e5d20a1a1eb70ae5f673eadb3a2350d72d3dc33ebe885fb90522c592425fc809",
+      "authoringRuntime": "v22.23.5"
     },
     "jungle-gate-run": {
       "snapshotSha256": "3e5380b7fd7706cc286012c6c224018a46bbe982e5856dd5c6a9f9a26a8d76f7",

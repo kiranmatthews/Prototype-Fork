@@ -36,14 +36,14 @@ await withBlockworksRuntime(async r=>{
  console.log('PASS golf-cart race',JSON.stringify(report.riders));
  // A solo restart owns exactly one cart and retains the shared clock/items.
  race.start('time-trial',0);assert.equal(race.carts.cartForRacer.length,1);assert.ok(race.carts.fleet.models.length>1);
- // A weapon hit can deliberately make a racer miss a jump. Prove all twelve
+ // A weapon hit can deliberately make a racer miss a jump. Prove every authored
  // takeoffs on the uninterrupted solo line, keeping the strict flight assertion.
  const soloFlights=new Set();
  for(let f=0;f<12000&&race.riders[0].finish===null;f++){
   race.step(r.dt,race.phase==='running'?race.drive(0):{moveX:0,moveY:0});
   jumpSpans.forEach(([a,b],i)=>{if(race.riders[0].progress>a+3&&race.riders[0].progress<b-3&&!r.p.grounded)soloFlights.add(i);});
  }
- assert.equal(soloFlights.size,12,'Every dirt double offers genuine flight on the solo line');
+ assert.equal(soloFlights.size,jumpSpans.length,'Every authored dirt double offers genuine flight on the solo line');
  assert.ok(race.riders[0].finish!==null,'Solo trial traverses the entire route');
  assert.equal(race.riders[0].falls,0,'Solo line lands every jump');
  report.solo={gapFlights:[...soloFlights],time:race.riders[0].finish,falls:race.riders[0].falls,boxes:race.riders[0].boxes.size,rolls:race.carts.fleet.physics.carts.reduce((n,c)=>n+c.rolls,0)};

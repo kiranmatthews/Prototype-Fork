@@ -1,0 +1,29 @@
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+PASS rally win-only gem: actual winning/losing/trial crossings, old crates, campaign persistence, unchanged skate-race rewards, source pickups and editor schema [{"mode":"race","rank":2,"time":10.033333333333335,"won":false,"boxes":1,"totalBoxes":1,"boxGem":false},{"mode":"time-trial","rank":1,"time":0,"won":false,"boxes":1,"totalBoxes":1,"boxGem":false},{"mode":"race","rank":1,"time":10.016666666666667,"won":true,"boxes":0,"totalBoxes":1,"boxGem":true}]
