@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "waterpark-cup",
-  "next_course": "carlisle-coast",
+  "current_course": "carlisle-coast",
+  "next_course": "country-club",
   "courses": [
     {
       "order": 1,
@@ -323,7 +323,9 @@
       "competition": true,
       "race": false,
       "bonus": null,
-      "status": "pending"
+      "status": "validated",
+      "decision": "retain existing crate-free competition",
+      "evidence": "docs/crate-bible/campaign-refresh/waterpark-cup/validation.json"
     },
     {
       "order": 19,
@@ -738,6 +740,12 @@
     },
     {
       "id": "slipstream-race",
+      "bonus": null,
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "waterpark-cup",
       "bonus": null,
       "status": "validated",
       "date": "2026-11-14"

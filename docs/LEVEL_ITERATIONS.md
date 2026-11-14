@@ -12047,3 +12047,11 @@ Seventeenth course, reviewed in approximately 27.5 minutes from 12:23:41 UTC. Re
 Separate normal-input approaches collect every gem box and item. A complete native race wins in 167.73 simulated seconds without a human fall; all seven rivals also finish. Race ownership, refill, explosive equipment, nonfatal recovery and live finish contracts pass. A stale HUD assertion now recognizes the existing SPECIAL portrait. Browser opening, staged collection/recovery/finish and reset pass; two full-resolution views have clean consoles. No continuous all-box clear is claimed.
 
 Level data, runtime, native artwork and the published pack are unchanged, so the preceding validated build and release checks apply. [Evidence](crate-bible/campaign-refresh/slipstream-race/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Deadwater Cup
+
+Eighteenth course, reviewed in approximately 7.9 minutes from 12:51:34 UTC. Retained the judged skating venue's empty crate/enemy selection, seven halfpipes and 442 runtime rails. There is no bonus room or adventure checkpoint quota.
+
+All sixteen two-way circulation cases and four safe sand-return cases pass. Focused native checks score on an original bridge rail, complete the optional loop, and validate three-run rules and independent trophy ownership. The original Cup suite still stops at an old campaign-map coordinate; the focused copy explicitly excludes those legacy map assertions. Browser skating, ollie/landing and staged bail recovery pass, with three inspected full-resolution views and clean consoles.
+
+Documentation only; the prior successful production checks apply. [Evidence and limitation](crate-bible/campaign-refresh/waterpark-cup/README.md). Authorized publication awaits GitHub authentication.

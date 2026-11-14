@@ -1,0 +1,54 @@
+{
+  "course": "waterpark-cup",
+  "name": "Deadwater Cup",
+  "bonus": null,
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T12:51:34Z",
+  "completedAt": "2026-11-14T12:59:25.093996+00:00",
+  "elapsedMinutes": 7.9,
+  "decision": "Retain the crate-free and patrol-free judged skating venue. Documentation only; no level, runtime, test or asset changes.",
+  "inventory": {
+    "crates": 0,
+    "enemies": 0,
+    "checkpoints": 0,
+    "bonus": null,
+    "halfpipes": 7,
+    "runtimeRails": 442
+  },
+  "native": {
+    "venueCore": "passed in focused copy excluding legacy campaign map assertions",
+    "originalSuite": "failed at its pre-existing waterpark map-position expectation before venue checks",
+    "currentCampaignGraph": "passed",
+    "bridgeGrindWithLivePoints": "passed",
+    "optionalLoopCompleteWithAtLeast1000Points": "passed",
+    "threeRunEventRulesAndIndependentCupSave": "passed with supplied scores",
+    "freshSandReturns": 3,
+    "recentSafeGroundReturns": 1,
+    "twoWayCirculationCases": 16,
+    "maximumHeightDifference": 0.40401498314014894,
+    "flowSuite": "passed unchanged"
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 3,
+    "normalInputSkateDistance": 23.10428457480247,
+    "ollieAndLanding": true,
+    "stagedBailRecovery": true,
+    "consoleErrors": []
+  },
+  "reusedChecks": {
+    "sourceCommit": "3602ffe9",
+    "evidence": "../hollowwake-descent/validation.json",
+    "reason": "Documentation only; level data, runtime, assets and published pack are unchanged.",
+    "checkLevels": "passed",
+    "buildVersion": "e9643c927c81ab080eea",
+    "releaseBytes": 959307565
+  },
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "The original test-waterpark-cup.mjs still fails: its waterpark map coordinate expects [86,6,4], while the current campaign uses [53,3,-160]. No map change is part of this review.",
+    "The focused scratch copy excludes legacy map-coordinate, campaign-array-index and saved-map-migration assertions; venue physics, event rules, trophy ownership and current graph checks remain.",
+    "Three-run event rules use supplied scores. A complete competition driven through all three runs is not claimed.",
+    "Browser full-render viewpoints and the bail recovery are staged; the opening skating, ollie and landing use real keyboard input."
+  ]
+}
