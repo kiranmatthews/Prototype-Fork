@@ -12131,3 +12131,11 @@ Twenty-eighth playable course, reviewed in approximately 15.6 minutes from 18:09
 Every item passes native rail/deck alignment checks. An eight-rider race finishes for all competitors with zero deaths or race resets; the reference rider finishes in 109.57 simulated seconds. Six-tier item pickup/use/refill, all eighteen spring receivers, native geometry/recovery and win-only campaign progression pass. Browser opening, staged wrap recovery/finish/retry and three inspected full-render views pass with clean consoles. No continuous all-item clear is claimed.
 
 Source, movement, artwork and the published pack are unchanged, so the preceding Torchlight required checks, build and release remain valid (`fa387e11c8e1fa024fc1`, 959,314,619 bytes). [Evidence and scope](crate-bible/campaign-refresh/spaghetti-rails/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Sky Bridge + Cloudtop Lockers
+
+Twenty-ninth playable course and twentieth unique bonus, reviewed in approximately 32.8 minutes from 18:25 UTC. Grouped ordinary rewards into sixteen five-box deliveries, retaining eight explosives for 88 counted main boxes. Added three single-tier bonus deliveries for 22 counted rewards. All four enemies, movement geometry, camera and artwork remain. Section counts are twelve/twelve/twelve/twelve/ten/ten/ten/ten; the parent tally is 117.
+
+The continuous native route clears all seven checkpoints without deaths. All eighty ordinary main rewards pass separate input-driven approaches. Native construction/hazard checks, continuous native/browser bonus clears, both wrong orders, actual cargo double-jump exclusion, real entrance/return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; five full-resolution views are inspected with clean consoles. No continuous main all-box clear is claimed. Only the Sky pack entry changes; prior stock-save recognition and authored variants remain valid.
+
+Required checks, build and release-size check pass: `65ee7f9fae03df303c39`, 959,314,989 bytes. [Evidence and limitations](crate-bible/campaign-refresh/sky/README.md). Authorized publication awaits GitHub authentication.

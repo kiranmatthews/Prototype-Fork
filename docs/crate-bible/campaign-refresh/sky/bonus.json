@@ -1,0 +1,560 @@
+{
+  "stage": "collect earned gem and cross real bonus gate",
+  "evidence": [
+    {
+      "action": "Cloudtop arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        5.719599999999996,
+        -4.768371586472142e-8,
+        0
+      ],
+      "landing": [
+        9.165100000000004,
+        1.172,
+        0
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        9.165100000000004,
+        1.172,
+        0
+      ],
+      "landing": [
+        12.37060000000001,
+        1.172,
+        0
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        12.37060000000001,
+        1.172,
+        0
+      ],
+      "landing": [
+        15.571600000000016,
+        1.172,
+        0
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        15.571600000000016,
+        1.172,
+        0
+      ],
+      "landing": [
+        18.7711,
+        1.172,
+        0
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay leave last steel receiver",
+      "launch": [
+        18.7711,
+        1.172,
+        0
+      ],
+      "landing": [
+        22.00999999999999,
+        3.5762786898541066e-9,
+        0
+      ],
+      "ground": "Cloudtop cumulus landing"
+    },
+    {
+      "action": "Cloudtop receiver delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop receiver delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop receiver delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop receiver delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop receiver delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "relay",
+      "index": 0,
+      "position": [
+        26.90911111111111,
+        3.5762786898541066e-9,
+        0
+      ]
+    },
+    {
+      "action": "bonus-sky-bridge room 2 finite spent upper finite support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "finite",
+      "index": 1,
+      "position": [
+        50.92792222222212,
+        3.5762786898541066e-9,
+        0
+      ]
+    },
+    {
+      "action": "Cloudtop exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Cloudtop exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 22,
+      "activeStageCrates": 22,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 22,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "Cloudtop arrival delivery",
+      "firstFrame": 22,
+      "lastFrame": 22
+    },
+    {
+      "name": "approach Cloudtop arrival delivery",
+      "firstFrame": 44,
+      "lastFrame": 105
+    },
+    {
+      "name": "Cloudtop arrival delivery",
+      "firstFrame": 125,
+      "lastFrame": 125
+    },
+    {
+      "name": "approach Cloudtop arrival delivery",
+      "firstFrame": 147,
+      "lastFrame": 209
+    },
+    {
+      "name": "Cloudtop arrival delivery",
+      "firstFrame": 229,
+      "lastFrame": 229
+    },
+    {
+      "name": "approach Cloudtop arrival delivery",
+      "firstFrame": 251,
+      "lastFrame": 313
+    },
+    {
+      "name": "Cloudtop arrival delivery",
+      "firstFrame": 333,
+      "lastFrame": 333
+    },
+    {
+      "name": "approach Cloudtop arrival delivery",
+      "firstFrame": 355,
+      "lastFrame": 417
+    },
+    {
+      "name": "Cloudtop arrival delivery",
+      "firstFrame": 437,
+      "lastFrame": 437
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay observation",
+      "firstFrame": 459,
+      "lastFrame": 537
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay inspect receiver chain",
+      "firstFrame": 555,
+      "lastFrame": 652
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 697,
+      "lastFrame": 770
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 797,
+      "lastFrame": 875
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 902,
+      "lastFrame": 980
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 1007,
+      "lastFrame": 1085
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay leave last steel receiver",
+      "firstFrame": 1112,
+      "lastFrame": 1153
+    },
+    {
+      "name": "Cloudtop receiver delivery",
+      "firstFrame": 1155,
+      "lastFrame": 1155
+    },
+    {
+      "name": "approach Cloudtop receiver delivery",
+      "firstFrame": 1177,
+      "lastFrame": 1235
+    },
+    {
+      "name": "Cloudtop receiver delivery",
+      "firstFrame": 1255,
+      "lastFrame": 1255
+    },
+    {
+      "name": "approach Cloudtop receiver delivery",
+      "firstFrame": 1277,
+      "lastFrame": 1339
+    },
+    {
+      "name": "Cloudtop receiver delivery",
+      "firstFrame": 1359,
+      "lastFrame": 1359
+    },
+    {
+      "name": "approach Cloudtop receiver delivery",
+      "firstFrame": 1381,
+      "lastFrame": 1443
+    },
+    {
+      "name": "Cloudtop receiver delivery",
+      "firstFrame": 1463,
+      "lastFrame": 1463
+    },
+    {
+      "name": "approach Cloudtop receiver delivery",
+      "firstFrame": 1485,
+      "lastFrame": 1547
+    },
+    {
+      "name": "Cloudtop receiver delivery",
+      "firstFrame": 1567,
+      "lastFrame": 1567
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay supported room exit",
+      "firstFrame": 1589,
+      "lastFrame": 1625
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite observation",
+      "firstFrame": 1643,
+      "lastFrame": 1718
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite finite-stack approach",
+      "firstFrame": 1736,
+      "lastFrame": 1837
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite upper support contact",
+      "firstFrame": 1882,
+      "lastFrame": 1913
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite rebound apex",
+      "firstFrame": 1913,
+      "lastFrame": 1938
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite cap before spending support",
+      "firstFrame": 1940,
+      "lastFrame": 1945
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite clear landing",
+      "firstFrame": 1945,
+      "lastFrame": 1968
+    },
+    {
+      "name": "approach bonus-sky-bridge room 2 finite spent upper finite support",
+      "firstFrame": 1988,
+      "lastFrame": 2041
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite spent upper finite support",
+      "firstFrame": 2061,
+      "lastFrame": 2061
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite supported room exit",
+      "firstFrame": 2083,
+      "lastFrame": 2269
+    },
+    {
+      "name": "approach Cloudtop exit delivery",
+      "firstFrame": 2287,
+      "lastFrame": 2366
+    },
+    {
+      "name": "Cloudtop exit delivery",
+      "firstFrame": 2386,
+      "lastFrame": 2386
+    },
+    {
+      "name": "approach Cloudtop exit delivery",
+      "firstFrame": 2408,
+      "lastFrame": 2470
+    },
+    {
+      "name": "Cloudtop exit delivery",
+      "firstFrame": 2490,
+      "lastFrame": 2490
+    },
+    {
+      "name": "approach Cloudtop exit delivery",
+      "firstFrame": 2512,
+      "lastFrame": 2574
+    },
+    {
+      "name": "Cloudtop exit delivery",
+      "firstFrame": 2594,
+      "lastFrame": 2594
+    },
+    {
+      "name": "approach Cloudtop exit delivery",
+      "firstFrame": 2616,
+      "lastFrame": 2678
+    },
+    {
+      "name": "Cloudtop exit delivery",
+      "firstFrame": 2698,
+      "lastFrame": 2698
+    },
+    {
+      "name": "approach Cloudtop exit delivery",
+      "firstFrame": 2720,
+      "lastFrame": 2782
+    },
+    {
+      "name": "Cloudtop exit delivery",
+      "firstFrame": 2802,
+      "lastFrame": 2802
+    },
+    {
+      "name": "collect earned gem and cross real bonus gate",
+      "firstFrame": 2826,
+      "lastFrame": 2863
+    }
+  ],
+  "result": {
+    "id": "bonus-sky-bridge",
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 22,
+    "cratesBroken": 22,
+    "deaths": 0
+  },
+  "id": "bonus-sky-bridge",
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 22,
+  "cratesBroken": 22,
+  "deaths": 0,
+  "frames": 2863,
+  "seconds": 47.71666666666667,
+  "maxFloorError": 2.7755575615628914e-17
+}

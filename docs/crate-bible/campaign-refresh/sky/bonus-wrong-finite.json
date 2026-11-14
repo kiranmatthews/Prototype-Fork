@@ -1,0 +1,64 @@
+{
+  "stage": "single support recovery",
+  "evidence": [],
+  "actions": [
+    {
+      "name": "finite negative observation",
+      "firstFrame": 3114,
+      "lastFrame": 3114
+    },
+    {
+      "name": "exhaust upper striped support too soon",
+      "firstFrame": 3132,
+      "lastFrame": 3233
+    },
+    {
+      "name": "rise above lower support",
+      "firstFrame": 3278,
+      "lastFrame": 3288
+    },
+    {
+      "name": "spend every upper bounce before claiming cap",
+      "firstFrame": 3288,
+      "lastFrame": 3465
+    },
+    {
+      "name": "land beside one remaining support",
+      "firstFrame": 3465,
+      "lastFrame": 3508
+    },
+    {
+      "name": "single support contact",
+      "firstFrame": 3535,
+      "lastFrame": 3571
+    },
+    {
+      "name": "single support apex",
+      "firstFrame": 3571,
+      "lastFrame": 3596
+    },
+    {
+      "name": "attempt high reward with single support, double jump and air spin",
+      "firstFrame": 3598,
+      "lastFrame": 3618
+    },
+    {
+      "name": "single support recovery",
+      "firstFrame": 3618,
+      "lastFrame": 3637
+    }
+  ],
+  "result": {
+    "pattern": "finite",
+    "test": "spending upper finite support first loses high cap access",
+    "capAlive": true,
+    "gemEarned": true
+  },
+  "pattern": "finite",
+  "test": "spending upper finite support first loses high cap access",
+  "capAlive": true,
+  "gemEarned": true,
+  "frames": 3637,
+  "seconds": 60.61666666666667,
+  "actualDoubleJump": true
+}

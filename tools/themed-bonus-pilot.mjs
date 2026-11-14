@@ -19,9 +19,10 @@ export function* runThemedBonusJourney(r) {
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');
   const cargo=function*(name){
-    if(course.parentId!=='dark')return;
-    const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(`Fuse Store cargo / ${name} /`));
-    for(const b of boxes)if(b.alive)yield* c.hit(b,`Fuse Store ${name} delivery`);
+    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':null;
+    if(!prefix)return;
+    const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(`${prefix} cargo / ${name} /`));
+    for(const b of boxes)if(b.alive)yield* c.hit(b,`${prefix} ${name} delivery`);
   };
   yield* cargo('arrival');
   const box=(room,role)=>c.crateNamed(room.crates.find(crate=>crate.role===role)?.name);
@@ -116,6 +117,7 @@ export function* runThemedBonusJourney(r) {
         c.check(anchor.alive&&!reward.alive,'relay failed to preserve permanent footing while harvesting');
       }
       yield* c.hop([room.gap.b+1.2,0,0],`${label} leave last steel receiver`);
+      yield* cargo('receiver');
     }
     yield* c.walk([room.b-1,0,0],`${label} supported room exit`);
     r.report.evidence.push({action:'room complete',pattern:room.pattern,index:room.index,position:p.pos.toArray()});

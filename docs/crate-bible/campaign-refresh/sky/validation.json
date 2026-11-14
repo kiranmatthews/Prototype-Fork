@@ -1,0 +1,465 @@
+{
+  "course": "sky",
+  "name": "Sky Bridge",
+  "bonus": "bonus-sky-bridge",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T18:25:00Z",
+  "completedAt": "2026-11-14T18:57:50.344211+00:00",
+  "elapsedMinutes": 32.8,
+  "changes": {
+    "mainBefore": 32,
+    "mainAfter": 88,
+    "ordinaryGroups": 16,
+    "masks": 3,
+    "retainedEnemies": 4,
+    "retainedEnemyKinds": 4,
+    "retainedExplosives": 8,
+    "bonusBefore": 7,
+    "bonusAfter": 22
+  },
+  "before": {
+    "sky": {
+      "physical": 33,
+      "counted": 32,
+      "checkpoints": 7,
+      "gemTally": 46,
+      "byKind": {
+        "wood": 18,
+        "mystery": 2,
+        "bouncy": 1,
+        "life": 1,
+        "multihit": 1,
+        "mask": 1,
+        "nitro": 4,
+        "tnt": 4,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 6.56,
+      "physicalPer100m": 6.76,
+      "checkpointGaps": [
+        72,
+        69,
+        66,
+        35,
+        72,
+        68,
+        56,
+        50
+      ],
+      "clusters": 32,
+      "singles": 32,
+      "meanClusterSize": 1,
+      "sizeHist": {
+        "1": 32
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 1,
+      "arrangements": {
+        "single": 32
+      },
+      "maxStack": 1,
+      "largestCluster": 1,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 33
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 7,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 24,
+      "offLine": 8,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 2.1,
+      "enemyNear": 3,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 9,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "nothing": 1
+      },
+      "multihit": 1,
+      "emptiest": {
+        "length": 75,
+        "from": 242,
+        "to": 317
+      },
+      "authoredRails": 18,
+      "speedPads": 0,
+      "enemies": 4,
+      "hazards": {
+        "crumble": 7
+      }
+    },
+    "bonus-sky-bridge": {
+      "physical": 11,
+      "counted": 7,
+      "checkpoints": 0,
+      "gemTally": 7,
+      "byKind": {
+        "metal": 4,
+        "wood": 4,
+        "multihit": 2,
+        "life": 1
+      },
+      "outlineByKind": {},
+      "per100m": 10.29,
+      "physicalPer100m": 16.18,
+      "checkpointGaps": [
+        68
+      ],
+      "clusters": 6,
+      "singles": 1,
+      "meanClusterSize": 1.83,
+      "sizeHist": {
+        "1": 1,
+        "2": 5
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "stack": 5,
+        "single": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 2,
+      "floatingClusters": 5,
+      "support": {
+        "none": 5,
+        "crate": 5,
+        "ground": 1
+      },
+      "floatingCrates": 5,
+      "overVoid": 8,
+      "overPit": 8,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 3,
+      "highTools": {
+        "stack": 2,
+        "none-found": 1
+      },
+      "onPath": 7,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 1.7,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 2,
+      "emptiest": {
+        "length": 26,
+        "from": 42,
+        "to": 68
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "after": {
+    "sky": {
+      "physical": 89,
+      "counted": 88,
+      "checkpoints": 7,
+      "gemTally": 117,
+      "byKind": {
+        "nitro": 4,
+        "tnt": 4,
+        "wood": 64,
+        "mask": 3,
+        "mystery": 13,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 18.03,
+      "physicalPer100m": 18.24,
+      "checkpointGaps": [
+        72,
+        69,
+        66,
+        35,
+        72,
+        68,
+        56,
+        50
+      ],
+      "clusters": 24,
+      "singles": 8,
+      "meanClusterSize": 3.67,
+      "sizeHist": {
+        "1": 8,
+        "5-9": 16
+      },
+      "structuralClusters": 1,
+      "structuralCrates": 1,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 16,
+        "single": 8
+      },
+      "maxStack": 2,
+      "largestCluster": 5,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 57,
+        "crate": 32
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 8,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 76,
+      "offLine": 12,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 3,
+      "enemyNear": 16,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 25,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 16,
+      "runCrates": 32,
+      "longestRun": 2,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 16,
+        "crates": 32
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 63.7,
+        "from": 245.7,
+        "to": 309.3
+      },
+      "authoredRails": 18,
+      "speedPads": 0,
+      "enemies": 4,
+      "hazards": {
+        "crumble": 7
+      }
+    },
+    "bonus-sky-bridge": {
+      "physical": 26,
+      "counted": 22,
+      "checkpoints": 0,
+      "gemTally": 22,
+      "byKind": {
+        "metal": 4,
+        "wood": 16,
+        "multihit": 2,
+        "life": 1,
+        "mystery": 3
+      },
+      "outlineByKind": {},
+      "per100m": 32.35,
+      "physicalPer100m": 38.24,
+      "checkpointGaps": [
+        68
+      ],
+      "clusters": 9,
+      "singles": 1,
+      "meanClusterSize": 2.89,
+      "sizeHist": {
+        "1": 1,
+        "2": 5,
+        "5-9": 3
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "row": 3,
+        "stack": 5,
+        "single": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 5,
+      "floatingClusters": 5,
+      "support": {
+        "none": 5,
+        "crate": 5,
+        "ground": 16
+      },
+      "floatingCrates": 5,
+      "overVoid": 8,
+      "overPit": 8,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 3,
+      "highTools": {
+        "stack": 2,
+        "none-found": 1
+      },
+      "onPath": 22,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0.6,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 3,
+      "runCrates": 15,
+      "longestRun": 5,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 3,
+        "crates": 15
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 2,
+      "emptiest": {
+        "length": 18.6,
+        "from": 42,
+        "to": 60.6
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {}
+    }
+  },
+  "projectedSectionCounts": [
+    12,
+    12,
+    12,
+    12,
+    10,
+    10,
+    10,
+    10
+  ],
+  "preservation": {
+    "mainNonCrateComponents": 390,
+    "bonusNonCrateComponents": 60,
+    "serializedExact": true,
+    "settingsExact": true,
+    "onlyPublishedPackIdChanged": "sky",
+    "movementAnimationArtworkUnchanged": true,
+    "previousStockSavePreserved": true
+  },
+  "native": {
+    "mainOrdinaryCratesCollected": 80,
+    "stagedHarvests": 16,
+    "maximumFloorCornerError": 0,
+    "continuousRouteSeconds": 44.38333333333333,
+    "continuousRouteDeaths": 0,
+    "continuousRouteCheckpoints": 7,
+    "continuousBonusCrates": 22,
+    "continuousBonusSeconds": 47.71666666666667,
+    "bonusEntrance": {
+      "entries": 1,
+      "platform": {
+        "x": 5.2,
+        "y": 0,
+        "z": -138,
+        "laneFraction": 0.5,
+        "topY": 1.05,
+        "radius": 1.6,
+        "modelReady": false,
+        "tilt": 0
+      },
+      "stagedApproach": [
+        3.3,
+        -2.384185793236071e-08,
+        -136
+      ],
+      "landed": [
+        5.106192153218813,
+        1.0499999986588955,
+        -137.90344520465186
+      ],
+      "returnPosition": [
+        1.9,
+        -4.768371586472142e-08,
+        -134
+      ],
+      "grounded": true,
+      "deaths": 0
+    },
+    "wrongOrders": [
+      "skip steel relay anchors",
+      "exhaust upper finite support"
+    ],
+    "cargoCannotReplaceFiniteStack": true,
+    "finiteNegativeDoubleJumpFired": true,
+    "constructionAndHazardTrials": 6
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 5,
+    "checkpointRestoresFiveBoxes": true,
+    "bonusFailurePreservesLives": true,
+    "all22BonusBanked": true,
+    "consoleErrors": []
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed",
+    "constructionRouteHazards": "passed",
+    "stockSelectionAndArchive": "passed"
+  },
+  "buildVersion": "65ee7f9fae03df303c39",
+  "releaseBytes": 959314989,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "The continuous main-route run clears all seven checkpoints without death. Separately staged native approaches collect all 80 ordinary rewards; no continuous all-88-box main clear or parent gem is claimed.",
+    "Four TNT and four Nitro retain their authored lane and refuge positions. Native TNT stomp/escape, lethal Nitro contact, rope bypass and Mossback stomp are verified separately.",
+    "Browser main collection, checkpoint, fall and finish checks use staged setup. Browser bonus flow uses the debug entry trigger; a separate normal-input native attempt verifies the actual bonus platform and supported return.",
+    "Normal gameplay canvas captures use captureBonusReviewFrame at native 1280x720. They omit DOM HUD text; fruit/crate models along the lower border are HUD overlays."
+  ]
+}

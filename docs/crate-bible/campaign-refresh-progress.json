@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "sky",
-  "next_course": "jungle-terraces",
+  "current_course": "jungle-terraces",
+  "next_course": "jungle-gate-run",
   "courses": [
     {
       "order": 1,
@@ -548,9 +548,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-sky-bridge",
-        "name": "Bonus: Cloudtop Lockers"
+        "name": "Bonus: Cloudtop Lockers",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/sky/validation.json"
     },
     {
       "order": 33,
@@ -828,6 +830,12 @@
       "status": "validated",
       "date": "2026-11-14",
       "decision": "retain the 706 reusable racing items and win-based reward"
+    },
+    {
+      "id": "sky",
+      "bonus": "bonus-sky-bridge",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
