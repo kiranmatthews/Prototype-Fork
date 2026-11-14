@@ -1,0 +1,41 @@
+[
+  {
+    "donor": "Room 1 fuse: refuge reward",
+    "mode": "fuse",
+    "position": [
+      9.749999999999988,
+      0,
+      0
+    ],
+    "maxY": 5.1185,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  },
+  {
+    "donor": "Room 2 bridge: receiver mystery",
+    "mode": "return",
+    "position": [
+      61.54999999999995,
+      0,
+      0
+    ],
+    "maxY": 6.270499999999999,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  },
+  {
+    "donor": "VALVE / exit count",
+    "mode": "return",
+    "position": [
+      93.7499999999998,
+      0,
+      0
+    ],
+    "maxY": 5.1185,
+    "hang": false,
+    "rewardCollected": false,
+    "galleryReached": false
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "main": {
+    "preservedNonCrateComponents": 1733,
+    "cratesBefore": 5,
+    "cratesAfter": 30
+  },
+  "bonus": {
+    "preservedNonCrateComponents": 101,
+    "cratesBefore": 11,
+    "cratesAfter": 34
+  }
+}

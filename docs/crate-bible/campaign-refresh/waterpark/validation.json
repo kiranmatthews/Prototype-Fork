@@ -1,0 +1,101 @@
+{
+  "course": "waterpark",
+  "name": "Deadwater Park",
+  "bonus": "bonus-waterpark",
+  "status": "validated",
+  "elapsedMinutes": 17.2,
+  "startedAtApprox": "2026-11-14T10:41:00Z",
+  "completedAt": "2026-11-14T10:58:12.609955+00:00",
+  "counts": {
+    "main": {
+      "countedCrates": 30,
+      "clusters": 9,
+      "singles": 0,
+      "meanClusterSize": 3.33,
+      "kinds": {
+        "mystery": 21,
+        "wood": 9
+      },
+      "clusterSizes": [
+        3,
+        3,
+        4,
+        3,
+        3,
+        4,
+        3,
+        3,
+        4
+      ]
+    },
+    "bonus": {
+      "countedCrates": 32,
+      "clusters": 12,
+      "singles": 2,
+      "meanClusterSize": 2.67,
+      "kinds": {
+        "bouncy": 1,
+        "life": 2,
+        "mystery": 22,
+        "tnt": 1,
+        "wood": 6
+      },
+      "clusterSizes": [
+        2,
+        1,
+        3,
+        3,
+        4,
+        1,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "parentCountIncludingCheckpointsAndBonus": 64,
+  "native": {
+    "separateMainHarvests": 9,
+    "mainBoxesHarvested": 30,
+    "entireFootprintsSupported": true,
+    "continuousRoutes": [
+      "checkpoint line: 85.72 seconds",
+      "checkpoint-bypass line: 85.65 seconds"
+    ],
+    "transfers": 5,
+    "jumps": 4,
+    "loops": 3,
+    "bonusBoxes": 32,
+    "bonusDeaths": 0,
+    "wrongOrderScenarios": 3,
+    "retryRestores": true
+  },
+  "browser": {
+    "modes": 4,
+    "fullViews": 6,
+    "consoleErrors": []
+  },
+  "preservation": {
+    "main": {
+      "preservedNonCrateComponents": 1733,
+      "cratesBefore": 5,
+      "cratesAfter": 30
+    },
+    "bonus": {
+      "preservedNonCrateComponents": 101,
+      "cratesBefore": 11,
+      "cratesAfter": 34
+    }
+  },
+  "releaseBytes": 959303170,
+  "buildVersion": "56e2addddfc43c978c88",
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Main cargo verified as separate input harvests, not a continuous main all-box route.",
+    "Main browser opening, checkpoint/recovery and finish are separate staged cases. Full downhill routes use native production physics.",
+    "Three staged neighboring-cargo attempts did not bypass the tool dependencies; this is not exhaustive over all possible inputs."
+  ]
+}

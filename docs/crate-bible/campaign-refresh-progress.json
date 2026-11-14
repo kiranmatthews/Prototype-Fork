@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "waterpark",
-  "next_course": "codex-lab",
+  "current_course": "codex-lab",
+  "next_course": "ghost-train",
   "courses": [
     {
       "order": 1,
@@ -236,9 +236,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-waterpark",
-        "name": "Bonus: Deadwater Valve House"
+        "name": "Bonus: Deadwater Valve House",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/waterpark/validation.json"
     },
     {
       "order": 14,
@@ -698,6 +700,12 @@
       "status": "validated",
       "date": "2026-11-14",
       "decision": "retain existing boss protection layout"
+    },
+    {
+      "id": "waterpark",
+      "bonus": "bonus-waterpark",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {

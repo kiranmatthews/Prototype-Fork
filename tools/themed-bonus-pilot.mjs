@@ -3,10 +3,12 @@ import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
 import { runQuaysideBonus } from './ambush-pilot.mjs';
 import { runLedgerBonus } from './merchant-pilot.mjs';
+import { runValveHouseBonus } from './valve-house-pilot.mjs';
 
 /** Each yield is an ordinary device sample. No position, physics, crate state,
  * hit counters, gem flags or finish state are changed by these pilots. */
 export function* runThemedBonusJourney(r) {
+  if (r.course.parentId === 'waterpark') return yield* runValveHouseBonus(r);
   if (r.course.parentId === 'drowned-crown') return yield* runLedgerBonus(r);
   if (r.course.parentId === 'test') return yield* runQuaysideBonus(r);
   if (r.course.layout) return yield* runPuzzleJourney(Object.assign(Object.create(r),{id:r.course.layout}));
