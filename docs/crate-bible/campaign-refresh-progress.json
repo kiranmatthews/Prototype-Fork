@@ -11,7 +11,7 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "jungle-terraces",
+  "current_course": "jungle-gate-run",
   "next_course": "jungle-gate-run",
   "courses": [
     {
@@ -566,9 +566,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-jungle-terraces",
-        "name": "Bonus: Ember Reliquary"
+        "name": "Bonus: Ember Reliquary",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/jungle-terraces/validation.json"
     },
     {
       "order": 34,
@@ -836,14 +838,20 @@
       "bonus": "bonus-sky-bridge",
       "status": "validated",
       "date": "2026-11-14"
+    },
+    {
+      "id": "jungle-terraces",
+      "bonus": "bonus-jungle-terraces",
+      "status": "validated",
+      "date": "2026-11-14"
     }
   ],
   "publication": {
-    "status": "authorized-awaiting-github-authentication",
+    "status": "authenticated-ready-to-publish",
     "method": "origin/main then GitHub Pages",
     "authorization": "User: I authorize publishing/deployment whenever needed",
-    "reason": "The authorized push reached GitHub but failed because the cloud workspace has no authenticated GitHub credentials. No push occurred.",
-    "connection": "GitHub CLI device sign-in was started in the cloud workspace; the code expired without authorization. No authenticated connection or push is available.",
+    "reason": "GitHub account and repository push access verified; validation complete.",
+    "connection": "Authenticated as kiranmatthews; repository-local Git credential helper and push dry-run verified.",
     "goal_blocked": false
   }
 }

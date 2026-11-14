@@ -27,6 +27,6 @@ await withBlockworksRuntime(async r=>{
   r.stepFor(30);assert.equal(p.totalDeaths,deaths);assert.ok(!p.isBailing&&p.grounded);
   report.push({s,foe:spec.foe,patrolProbes:21,frames:r.frame-start,deaths:p.totalDeaths-deaths,defeated:!enemy.alive});
  }
- await writeFile('/private/tmp/temple-embers-encounters.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ await writeFile(`${process.env.TEMPLE_OUTPUT??'/tmp'}/temple-embers-encounters.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,
  controlFrame:r=>r.p.courseInputDirection(r.l)??{x:r.p.camDir.x,z:r.p.camDir.z}});

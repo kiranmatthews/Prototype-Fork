@@ -1,0 +1,66 @@
+[
+  {
+    "s": 56,
+    "foe": "grunt",
+    "patrolProbes": 21,
+    "frames": 118,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 198,
+    "foe": "turtle",
+    "patrolProbes": 21,
+    "frames": 120,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 319,
+    "foe": "grunt",
+    "patrolProbes": 21,
+    "frames": 118,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 666,
+    "foe": "turtle",
+    "patrolProbes": 21,
+    "frames": 121,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 848,
+    "foe": "hopper",
+    "patrolProbes": 21,
+    "frames": 151,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 1058,
+    "foe": "grunt",
+    "patrolProbes": 21,
+    "frames": 97,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 1290,
+    "foe": "turtle",
+    "patrolProbes": 21,
+    "frames": 120,
+    "deaths": 0,
+    "defeated": true
+  },
+  {
+    "s": 1362,
+    "foe": "grunt",
+    "patrolProbes": 21,
+    "frames": 100,
+    "deaths": 0,
+    "defeated": true
+  }
+]

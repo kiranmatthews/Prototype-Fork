@@ -19,7 +19,7 @@ export function* runThemedBonusJourney(r) {
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');
   const cargo=function*(name){
-    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':null;
+    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':course.parentId==='jungle-terraces'?'Reliquary':null;
     if(!prefix)return;
     const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(`${prefix} cargo / ${name} /`));
     for(const b of boxes)if(b.alive)yield* c.hit(b,`${prefix} ${name} delivery`);
@@ -83,6 +83,7 @@ export function* runThemedBonusJourney(r) {
       for(const role of ['upper finite support','lower finite support']) {
         const support=box(room,role);if(support.alive)yield* c.hit(support,`${label} spent ${role}`);
       }
+      yield* cargo('finite-exit');
     } else if(room.pattern==='bridge') {
       const button=box(room,'local switch');
       yield* c.hit(button,`${label} create visible bridge`);

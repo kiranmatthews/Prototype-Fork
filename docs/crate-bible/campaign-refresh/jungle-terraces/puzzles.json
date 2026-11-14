@@ -1,0 +1,418 @@
+[
+  {
+    "name": "terraces-upper",
+    "test": "optional balcony upper-first solution",
+    "rewards": 2,
+    "launcherAlive": false,
+    "deaths": 0,
+    "frames": 459,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "skyline-return",
+    "test": "optional balcony upper-first solution",
+    "switchX": 619,
+    "rewards": 2,
+    "launcherAlive": false,
+    "deaths": 0,
+    "frames": 1190,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "terraces-wrong",
+    "test": "early donor destruction blocks balcony access",
+    "attempts": [
+      {
+        "timing": 7,
+        "peak": 4.139166666815677,
+        "capY": 7.8
+      },
+      {
+        "timing": 3,
+        "peak": 4.639166666815677,
+        "capY": 7.8
+      },
+      {
+        "timing": 0.5,
+        "peak": 4.705833333482343,
+        "capY": 7.8
+      },
+      {
+        "timing": -1.5,
+        "peak": 4.596666666815676,
+        "capY": 7.8
+      }
+    ],
+    "deaths": 0,
+    "frames": 1045,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "skyline-wrong",
+    "test": "early donor destruction blocks balcony access",
+    "attempts": [
+      {
+        "timing": 7,
+        "peak": 38.639166666815676,
+        "capY": 42.3
+      },
+      {
+        "timing": 3,
+        "peak": 39.139166666815676,
+        "capY": 42.3
+      },
+      {
+        "timing": 0.5,
+        "peak": 39.205833333482346,
+        "capY": 42.3
+      },
+      {
+        "timing": -1.5,
+        "peak": 39.09666666681568,
+        "capY": 42.3
+      }
+    ],
+    "deaths": 0,
+    "frames": 1753,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "skyline-crown",
+    "test": "crown upper-first solution",
+    "capAlive": false,
+    "arrowAlive": false,
+    "deaths": 0,
+    "frames": 293,
+    "actualDoubleJump": false
+  },
+  {
+    "name": "skyline-crown-wrong",
+    "test": "crown donor loss blocks ordinary jump and air-spin collection",
+    "attempts": [
+      {
+        "timing": 7,
+        "peak": 73.13916651407877,
+        "capY": 78.4
+      },
+      {
+        "timing": 3,
+        "peak": 73.63916651407878,
+        "capY": 78.4
+      },
+      {
+        "timing": 0.5,
+        "peak": 73.70583318074544,
+        "capY": 78.4
+      },
+      {
+        "timing": -1.5,
+        "peak": 73.59666651407878,
+        "capY": 78.4
+      }
+    ],
+    "capAlive": true,
+    "deaths": 0,
+    "frames": 672,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "terraces-tnt",
+    "test": "TNT cap stomp, fuse and supported refuge",
+    "blastRadius": 2.75,
+    "blastDistance": 5.9927723812554134,
+    "rewardDistance": 5.5,
+    "fuseFrames": 179,
+    "refugeFrames": 71,
+    "rewardSurvivedBlast": true,
+    "rewardCollectedAfterBlast": true,
+    "deaths": 0,
+    "frames": 373,
+    "actualDoubleJump": false
+  },
+  {
+    "name": "skyline-tnt",
+    "test": "TNT cap stomp, fuse and supported refuge",
+    "blastRadius": 2.75,
+    "blastDistance": 5.992772381255408,
+    "rewardDistance": 5.441295728477398,
+    "fuseFrames": 179,
+    "refugeFrames": 64,
+    "rewardSurvivedBlast": true,
+    "rewardCollectedAfterBlast": true,
+    "deaths": 0,
+    "frames": 374,
+    "actualDoubleJump": false
+  },
+  {
+    "name": "lantern-stair",
+    "deaths": 0,
+    "frames": 1305,
+    "steps": 48,
+    "rewards": 3,
+    "position": [
+      510.0035864827032,
+      34.53499997615814,
+      1.3194045759861979
+    ],
+    "actions": [
+      {
+        "name": "approach restore the complete metal staircase",
+        "firstFrame": 6184,
+        "lastFrame": 6238
+      },
+      {
+        "name": "restore the complete metal staircase",
+        "firstFrame": 6258,
+        "lastFrame": 6258
+      },
+      {
+        "name": "step around the used metal switch",
+        "firstFrame": 6280,
+        "lastFrame": 6353
+      },
+      {
+        "name": "pass the switch on the clear courtyard floor",
+        "firstFrame": 6371,
+        "lastFrame": 6463
+      },
+      {
+        "name": "approach the first restored step",
+        "firstFrame": 6481,
+        "lastFrame": 6554
+      },
+      {
+        "name": "jump onto restored tower at 513",
+        "firstFrame": 6599,
+        "lastFrame": 6631
+      },
+      {
+        "name": "jump onto restored tower at 516",
+        "firstFrame": 6658,
+        "lastFrame": 6690
+      },
+      {
+        "name": "jump onto restored tower at 519",
+        "firstFrame": 6717,
+        "lastFrame": 6749
+      },
+      {
+        "name": "reach the upper lantern offering shelf",
+        "firstFrame": 6776,
+        "lastFrame": 6850
+      },
+      {
+        "name": "approach claim the upper lantern offering",
+        "firstFrame": 6850,
+        "lastFrame": 6922
+      },
+      {
+        "name": "claim the upper lantern offering",
+        "firstFrame": 6942,
+        "lastFrame": 6942
+      },
+      {
+        "name": "return to the shelf lip",
+        "firstFrame": 6964,
+        "lastFrame": 7035
+      },
+      {
+        "name": "return via supported tower at 519",
+        "firstFrame": 7080,
+        "lastFrame": 7122
+      },
+      {
+        "name": "return via supported tower at 516",
+        "firstFrame": 7149,
+        "lastFrame": 7193
+      },
+      {
+        "name": "return via supported tower at 513",
+        "firstFrame": 7220,
+        "lastFrame": 7264
+      },
+      {
+        "name": "return via supported tower at 510",
+        "firstFrame": 7291,
+        "lastFrame": 7334
+      },
+      {
+        "name": "rejoin the main causeway",
+        "firstFrame": 7334,
+        "lastFrame": 7446
+      }
+    ],
+    "evidence": [
+      {
+        "action": "restore the complete metal staircase",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jump onto restored tower at 513",
+        "launch": [
+          511.0957164350901,
+          34.53499997615814,
+          7.916505787132245
+        ],
+        "landing": [
+          512.8750491321728,
+          36.858999976158145,
+          7.96741747537768
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "jump onto restored tower at 516",
+        "launch": [
+          512.8750491321728,
+          36.858999976158145,
+          7.96741747537768
+        ],
+        "landing": [
+          515.871220210438,
+          39.16299997615815,
+          7.976829031905993
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "jump onto restored tower at 519",
+        "launch": [
+          515.871220210438,
+          39.16299997615815,
+          7.976829031905993
+        ],
+        "landing": [
+          518.8789933797102,
+          41.46699997615815,
+          7.98466631758194
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "reach the upper lantern offering shelf",
+        "launch": [
+          518.8789933797102,
+          41.46699997615815,
+          7.98466631758194
+        ],
+        "landing": [
+          522.1699952512541,
+          42.29999997615814,
+          7.98812183528716
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "claim the upper lantern offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return via supported tower at 519",
+        "launch": [
+          522.2561764940356,
+          42.29999997615814,
+          7.970474090578385
+        ],
+        "landing": [
+          519.0296482514814,
+          41.46699997615815,
+          7.970474090578385
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 516",
+        "launch": [
+          519.0296482514814,
+          41.46699997615815,
+          7.970474090578385
+        ],
+        "landing": [
+          516.0202410744615,
+          39.16299997615815,
+          7.971849020430689
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 513",
+        "launch": [
+          516.0202410744615,
+          39.16299997615815,
+          7.971849020430689
+        ],
+        "landing": [
+          513.0196334484965,
+          36.858999976158145,
+          7.971849020430689
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 510",
+        "launch": [
+          513.0196334484965,
+          36.858999976158145,
+          7.971849020430689
+        ],
+        "landing": [
+          510.02008648270316,
+          34.53499997615814,
+          7.971849020430689
+        ],
+        "ground": "platform"
+      }
+    ],
+    "actualDoubleJump": false
+  },
+  {
+    "name": "lantern-wrong",
+    "attempts": [
+      {
+        "timing": 7,
+        "allRewardsRemain": true
+      },
+      {
+        "timing": 3,
+        "allRewardsRemain": true
+      },
+      {
+        "timing": 0.5,
+        "allRewardsRemain": true
+      },
+      {
+        "timing": -1.5,
+        "allRewardsRemain": true
+      }
+    ],
+    "metalStepsStillOutlined": true,
+    "frames": 730,
+    "actualDoubleJump": true
+  },
+  {
+    "name": "neighboring-cargo-crown-alternative",
+    "startDistance": 15.684344028923288,
+    "actualRebound": true,
+    "actualDoubleJump": true,
+    "capRemains": true,
+    "state": "ride"
+  }
+]

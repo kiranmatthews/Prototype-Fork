@@ -24,7 +24,7 @@ export async function withTempleRuntime(run,options){
    const mx=sample.moveX??0,my=sample.moveY??0,dx=f.fx*mx+f.fz*my,dz=f.fz*mx-f.fx*my;
    return real.tick({...sample,moveX:dx*-cam.z+dz*cam.x,moveY:dx*cam.x+dz*cam.z});
   };
-  const r={...real,p,l,source:{...route.data,components:route.sourceComponents},tick,stepFor:(n,s={})=>{for(let i=0;i<n;i++)tick(s);},get frame(){return real.frame;}};
+  const r={...real,native:real,p,l,source:{...route.data,components:route.sourceComponents},tick,stepFor:(n,s={})=>{for(let i=0;i<n;i++)tick(s);},get frame(){return real.frame;}};
   return run(r);
  },config);
 }

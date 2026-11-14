@@ -9,5 +9,5 @@ await withTempleRuntime(async r=>{
  const gen=runLanternStair(r,c);let next=gen.next();
  try{while(!next.done){r.tick(next.value);next=gen.next();}console.log(JSON.stringify(next.value));}
  catch(error){r.report.error=String(error);throw error;}
- finally{await writeFile('/private/tmp/temple-embers-stair.json',JSON.stringify({result:next.value,report:r.report,trace:r.trace},null,2));}
+ finally{await writeFile(`${process.env.TEMPLE_OUTPUT??'/tmp'}/temple-embers-stair.json`,JSON.stringify({result:next.value,report:r.report,trace:r.trace},null,2));}
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',start:[506,34.62,8],maxFrames:9000});

@@ -1,4 +1,5 @@
 import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { withTempleRuntime as withBlockworksRuntime } from './temple-test-runtime.mjs';
@@ -8,7 +9,7 @@ const MODULE = '/src/levels/jungle-sequels.ts';
 const reports = [];
 const requestedCase = process.argv.find(value => value.startsWith('--case='))?.slice(7);
 
-function* roomCorrect(r, index) {
+export function* roomCorrect(r, index) {
   const c = puzzleControls(r), { p } = r;
   const room = r.sourceModule.JUNGLE_SEQUEL_ROUTES[0].rooms[index];
   const { x, y, capY, switchX } = room;
@@ -37,7 +38,7 @@ function* roomCorrect(r, index) {
     launcherAlive: arrow.alive, deaths: p.totalDeaths };
 }
 
-function* roomWrong(r, index) {
+export function* roomWrong(r, index) {
   const c = puzzleControls(r), { p } = r;
   const { x, y, capY, switchX } = r.sourceModule.JUNGLE_SEQUEL_ROUTES[0].rooms[index];
   const arrow = c.crateSpecAt(x, y), rewards = [c.crateSpecAt(x + 4, capY), c.crateSpecAt(x + 6, capY)];
@@ -74,7 +75,7 @@ function* roomWrong(r, index) {
   return { test: 'early donor destruction blocks balcony access', id: r.id, attempts, deaths: p.totalDeaths };
 }
 
-function* crownCorrect(r) {
+export function* crownCorrect(r) {
   const c = puzzleControls(r), { p } = r, x = 928, y = 69, z = -2.3;
   const arrow = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, 78.4);
   yield* c.stepFor(20);
@@ -95,7 +96,7 @@ function* crownCorrect(r) {
   return { test: 'crown upper-first solution', capAlive: cap.alive, arrowAlive: arrow.alive, deaths: p.totalDeaths };
 }
 
-function* crownWrong(r) {
+export function* crownWrong(r) {
   const c = puzzleControls(r), { p } = r;
   const arrow = c.crateSpecAt(928, 69), cap = c.crateSpecAt(928, 78.4);
   yield* c.stepFor(20);
@@ -117,7 +118,7 @@ function* crownWrong(r) {
   return { test: 'crown donor loss blocks ordinary jump and air-spin collection', attempts, capAlive: cap.alive, deaths: 0 };
 }
 
-function* tntRefuge(r, x, y) {
+export function* tntRefuge(r, x, y) {
   const c = puzzleControls(r), { p, TUNING, THREE } = r;
   const tnt = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, y + .96), reward = c.crateSpecAt(x + 5.5, y);
   const relay = c.crateSpecAt(x + 1.55, y);
@@ -143,13 +144,18 @@ function* tntRefuge(r, x, y) {
   assert.equal(p.totalDeaths, 0);
   assert.ok(p.grounded && !p.isBailing);
   const blastDistance = new THREE.Vector3(...destination).distanceTo(tnt.mesh.position);
-  yield* c.hit(reward, 'collect the safe recovery reward after the blast');
+  let lastSpin=false;
+  yield* c.until(()=>!reward.alive,()=>{
+    const spinHeld=p.spinning||!lastSpin;lastSpin=spinHeld;
+    return{...c.steer([reward.mesh.position.x,y,reward.mesh.position.z],.3),spinHeld};
+  },{label:'collect the safe recovery reward after the blast',limit:180});
+  assert.equal(p.totalDeaths,0);
   return { test: 'TNT cap stomp, fuse and supported refuge', id: r.id, blastRadius: TUNING.tntRadius,
     blastDistance, rewardDistance, fuseFrames, refugeFrames, rewardSurvivedBlast: true,
     rewardCollectedAfterBlast: !reward.alive, deaths: p.totalDeaths };
 }
 
-const cases = [
+export const TEMPLE_CRATE_CASES = [
   ['terraces-upper', 0, [25.9, .12, -2.3], r => roomCorrect(r, 0)],
   ['skyline-return', 1, [28.9, .12, -2.3], r => roomCorrect(r, 1)],
   ['terraces-wrong', 0, [25.9, .12, -2.3], r => roomWrong(r, 0)],
@@ -159,7 +165,8 @@ const cases = [
   ['terraces-tnt', 0, [363.7, 34.62, -2.3], r => tntRefuge(r, 366, 34.5)],
   ['skyline-tnt', 1, [236.7, 17.37, -2.3], r => tntRefuge(r, 813, 51.75)],
 ];
-for (const [name, index, start, pilot] of cases) {
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
+for (const [name, index, start, pilot] of TEMPLE_CRATE_CASES) {
   if (requestedCase && !requestedCase.split(',').includes(name)) continue;
   const id = 'jungle-terraces';
   const report = await withBlockworksRuntime(async r => {
@@ -174,7 +181,7 @@ for (const [name, index, start, pilot] of cases) {
       r.report.error = error.message;
       throw error;
     } finally {
-      await writeFile(`${tmpdir()}/jungle-sequel-${name}.json`, JSON.stringify({ report: r.report, trace: r.trace }, null, 2));
+      await writeFile(`${process.env.TEMPLE_OUTPUT??tmpdir()}/jungle-sequel-${name}.json`, JSON.stringify({ report: r.report, trace: r.trace }, null, 2));
     }
   }, { modulePath: MODULE, levelId: id, source: module => module.JUNGLE_SEQUEL_ROUTES[0].data,
     controlFrame: () => ({ x: 0, z: -1 }), start:index?[start[0]+574,start[1]+34.5,start[2]]:start, maxFrames: 9000 });
@@ -182,3 +189,5 @@ for (const [name, index, start, pilot] of cases) {
 }
 assert.ok(reports.length, `unknown case: ${requestedCase}`);
 console.log(`PASS ${reports.length} optional Jungle sequel crate-room and TNT-refuge input checks.`);
+
+}

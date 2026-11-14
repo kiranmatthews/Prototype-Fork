@@ -1,0 +1,160 @@
+{
+  "mode": "full",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 187,
+    "total": 174,
+    "bonus": 29,
+    "checkpoints": 12,
+    "enemies": 8
+  },
+  "bonusPlatform": {
+    "x": 46,
+    "y": 34.54,
+    "z": 56,
+    "laneFraction": 0.5,
+    "topY": 35.589999999999996,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 0
+  },
+  "views": [
+    {
+      "name": "opening",
+      "position": [
+        1.25,
+        0.03500000014901161,
+        82
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        1.25,
+        5.135000000149011,
+        87.05
+      ],
+      "cameraQuaternion": [
+        -0.21942052619456637,
+        0,
+        0,
+        0.9756303770816587
+      ],
+      "drawCalls": 1544,
+      "frame": 9
+    },
+    {
+      "name": "reliquary-court",
+      "position": [
+        63,
+        34.53499997615814,
+        51.25
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        68.05,
+        39.63499997615814,
+        51.25
+      ],
+      "cameraQuaternion": [
+        -0.15515374200369836,
+        0.6898748555660293,
+        0.15515374200369836,
+        0.6898748555660293
+      ],
+      "drawCalls": 1635,
+      "frame": 20
+    },
+    {
+      "name": "bowl-recovery",
+      "position": [
+        -97.92389905609758,
+        80.53499984741211,
+        -65.34564155197376
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -93.55047102350774,
+        85.6349998474121,
+        -62.82064110766541
+      ],
+      "cameraQuaternion": [
+        -0.1900237553691245,
+        0.4878151456219453,
+        0.10971025344477153,
+        0.8449207160357352
+      ],
+      "drawCalls": 1607,
+      "frame": 31
+    },
+    {
+      "name": "bonus-finite",
+      "position": [
+        3,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        3,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898024,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 170,
+      "frame": 43
+    },
+    {
+      "name": "bonus-fuse",
+      "position": [
+        61.5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        61.5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898024,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 193,
+      "frame": 56
+    }
+  ],
+  "passed": true
+}

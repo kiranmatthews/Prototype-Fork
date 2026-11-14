@@ -12139,3 +12139,11 @@ Twenty-ninth playable course and twentieth unique bonus, reviewed in approximate
 The continuous native route clears all seven checkpoints without deaths. All eighty ordinary main rewards pass separate input-driven approaches. Native construction/hazard checks, continuous native/browser bonus clears, both wrong orders, actual cargo double-jump exclusion, real entrance/return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; five full-resolution views are inspected with clean consoles. No continuous main all-box clear is claimed. Only the Sky pack entry changes; prior stock-save recognition and authored variants remain valid.
 
 Required checks, build and release-size check pass: `65ee7f9fae03df303c39`, 959,314,989 bytes. [Evidence and limitations](crate-bible/campaign-refresh/sky/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Temple of Embers + Ember Reliquary
+
+Thirtieth playable course and twenty-first unique bonus, reviewed in approximately 56.8 minutes from 18:59 UTC. Grouped the main rewards into 22 caches and seven stair pairs, preserving all arrow, TNT and metal-stair puzzles and eight enemies. Main boxes rise from 61 to 133 and bonus boxes from nine to 29. Checkpoint sections contain 10–12 boxes; the parent tally is 174. Geometry, camera, movement and artwork remain.
+
+The continuous native route clears all 12 checkpoints without deaths; separate input-driven approaches collect all 114 revised ordinary rewards. Eleven main puzzle cases, every enemy encounter, native/browser bonus clears, three bonus wrong orders, real entrance/return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass. Five native-resolution views are inspected with clean consoles. The final recovery stack move eliminates the remaining collectible footprint overhang. No continuous main all-box clear is claimed.
+
+Required level checks, the final relevant validator, build and release check pass: `d195217e2674b8c194dc`, 959,317,549 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-terraces/README.md). GitHub authentication and authorized publication access are verified.

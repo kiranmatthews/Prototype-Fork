@@ -26,5 +26,5 @@ await withBlockworksRuntime(async r=>{
  const tiki=l.fireTikis[0];tiki.update(2,p.pos);assert.ok(tiki.boxes.every(b=>b.isEmpty()));tiki.update(4.8,p.pos);assert.ok(tiki.boxes.every(b=>b.isEmpty()));
  tiki.update(6.2,p.pos);assert.ok(tiki.boxes.some(b=>!b.isEmpty()));const yaw=tiki.head.rotation.y;tiki.update(6.7,p.pos);assert.notEqual(yaw,tiki.head.rotation.y);tiki.update(7.6,p.pos);assert.ok(tiki.boxes.every(b=>b.isEmpty()));
  const report={name:route.data.name,probes,end:route.end,peak:route.peak,checkpoints,torches:l.torches.length,tikis:l.fireTikis.length,bonusEntrances:1};
- await writeFile('/private/tmp/temple-night-structure.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ await writeFile(`${process.env.TEMPLE_OUTPUT??'/tmp'}/temple-night-structure.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,endlessDeaths:true});

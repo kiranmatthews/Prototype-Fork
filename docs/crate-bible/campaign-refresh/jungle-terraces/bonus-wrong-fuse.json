@@ -1,0 +1,35 @@
+{
+  "stage": "wrong ground spin detonates useful TNT support",
+  "evidence": [],
+  "actions": [
+    {
+      "name": "fuse negative observation",
+      "firstFrame": 5489,
+      "lastFrame": 5489
+    },
+    {
+      "name": "unsafe direct spin approach",
+      "firstFrame": 5507,
+      "lastFrame": 5612
+    },
+    {
+      "name": "wrong ground spin detonates useful TNT support",
+      "firstFrame": 5630,
+      "lastFrame": 5637
+    }
+  ],
+  "result": {
+    "pattern": "fuse",
+    "test": "early ground spin destroys timed access and kills exposed player",
+    "capAlive": true,
+    "state": "dead",
+    "gemEarned": true
+  },
+  "pattern": "fuse",
+  "test": "early ground spin destroys timed access and kills exposed player",
+  "capAlive": true,
+  "state": "dead",
+  "gemEarned": true,
+  "frames": 5637,
+  "seconds": 93.95
+}

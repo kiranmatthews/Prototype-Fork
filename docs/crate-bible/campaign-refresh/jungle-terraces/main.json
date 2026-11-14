@@ -1,0 +1,256 @@
+{
+  "harvests": [
+    {
+      "name": "Ember offering / section 1 / cache 1 /",
+      "count": 5,
+      "frames": 126,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 1 / cache 2 /",
+      "count": 5,
+      "frames": 126,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 2 / cache 1 /",
+      "count": 5,
+      "frames": 142,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 2 / cache 2 /",
+      "count": 3,
+      "frames": 143,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 3 / cache 1 /",
+      "count": 4,
+      "frames": 117,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 4 / cache 1 /",
+      "count": 5,
+      "frames": 213,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 4 / cache 2 /",
+      "count": 5,
+      "frames": 155,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 5 / cache 1 /",
+      "count": 3,
+      "frames": 128,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 5 / cache 2 /",
+      "count": 3,
+      "frames": 142,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 6 / cache 1 /",
+      "count": 5,
+      "frames": 153,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 6 / cache 2 /",
+      "count": 2,
+      "frames": 127,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 7 / cache 1 /",
+      "count": 5,
+      "frames": 151,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 7 / cache 2 /",
+      "count": 2,
+      "frames": 142,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 9 / cache 1 /",
+      "count": 5,
+      "frames": 128,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 9 / cache 2 /",
+      "count": 3,
+      "frames": 102,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 10 / cache 1 /",
+      "count": 5,
+      "frames": 186,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 10 / cache 2 /",
+      "count": 5,
+      "frames": 213,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 11 / cache 1 /",
+      "count": 10,
+      "frames": 405,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 12 / cache 1 /",
+      "count": 5,
+      "frames": 212,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 12 / cache 2 /",
+      "count": 5,
+      "frames": 128,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 13 / cache 1 /",
+      "count": 5,
+      "frames": 130,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember offering / section 13 / cache 2 /",
+      "count": 5,
+      "frames": 130,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 1 / step 2 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 1 / step 4 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 1 / step 6 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 2 / step 2 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 2 / step 4 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 2 / step 6 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Ember stair offering / climb 2 / step 8 /",
+      "count": 2,
+      "frames": 1,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    }
+  ],
+  "maxFloorError": 0.034999847412109375,
+  "floorErrors": [
+    {
+      "prefix": "Ember offering / section 9 / cache 2 /",
+      "name": "Ember offering / section 9 / cache 2 / box 1",
+      "crate": [
+        -15.332099768685097,
+        69.6109998474121,
+        8.518786102184698
+      ],
+      "base": 69.03499984741211,
+      "corner": [
+        -0.556,
+        -0.556
+      ],
+      "ground": [
+        -15.888099768685098,
+        69,
+        7.962786102184698
+      ],
+      "error": 0.034999847412109375
+    },
+    {
+      "prefix": "Ember offering / section 9 / cache 2 /",
+      "name": "Ember offering / section 9 / cache 2 / box 1",
+      "crate": [
+        -15.332099768685097,
+        69.6109998474121,
+        8.518786102184698
+      ],
+      "base": 69.03499984741211,
+      "corner": [
+        0.556,
+        -0.556
+      ],
+      "ground": [
+        -14.776099768685096,
+        69,
+        7.962786102184698
+      ],
+      "error": 0.034999847412109375
+    }
+  ],
+  "settingsExact": true,
+  "nonCratesExact": true,
+  "reset": {
+    "crates": 187,
+    "enemies": 8
+  }
+}

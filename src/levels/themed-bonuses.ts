@@ -25,6 +25,7 @@ import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
 import { arrangeSkyBridgeBonusCrates, dressSkyBridgeBonus } from './sky-bridge-bonus';
+import { arrangeEmberReliquary } from './temple-bonus-crates';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
@@ -108,6 +109,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
     if (recipe.parentId === 'jungle-terraces') {
       course.data.sky='night'; course.data.atmosphere={...TEMPLE_NIGHT_ATMOSPHERE};
       for(let x=4;x<end;x+=18) course.data.components.push({t:'torch',p:[x,0,-4.6],rise:2,w:1.1,nm:'Reliquary torch'});
+      arrangeEmberReliquary(course);
     }
   }
   if (recipe.parentId === 'test') {rebuildCarlisleBonus(course.data);arrangeQuaysideCrates(course.data);}
