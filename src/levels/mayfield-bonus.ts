@@ -13,6 +13,18 @@ export const MAYFIELD_BONUS_COURSE=makeBonusCourse({
   style:{color:'#e2d3ae',accent:'#63aaa4',tex:'pavement',sky:'day'},
 });
 const data=MAYFIELD_BONUS_COURSE.data,C=data.components;
+// Expand the earned rewards into small groups without adding a lower launch
+// beside either height gate. The arrow and both finite supports retain their jobs.
+for(const room of MAYFIELD_BONUS_COURSE.rooms){
+ for(const base of [...room.crates])if(base.role.startsWith('upper ')&&room.pattern==='upper'||base.role.startsWith('receiver')){
+  for(const tier of room.pattern==='upper'?[1,2,3]:[1,2]){
+   const role=base.role+' parcel '+(tier+1),name=`Room ${room.index+1} ${room.pattern}: ${role}`,y=base.y+tier*.96;
+   C.push({t:'crate',p:[base.x,y,0],kind:'wood',grp:2,nm:name});room.crates.push({role,x:base.x,y,kind:'wood',name});
+  }
+ }
+
+}
+
 const font=new FontLoader().parse(fontData);
 const art=(geo:BoxGeometry|ShapeGeometry,p:[number,number,number],color:string,nm:string)=>{
   geo.translate(...p);C.push({t:'mesh',p:[0,0,0],vertices:Array.from(geo.attributes.position.array),indices:geo.index?Array.from(geo.index.array):Array.from({length:geo.attributes.position.count},(_,i)=>i),color,tex:'solid',solid:false,edgeGrinding:false,grp:90,nm});geo.dispose();

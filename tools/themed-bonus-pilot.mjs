@@ -81,7 +81,7 @@ export function* runThemedBonusJourney(r) {
       c.check(button.bangUsed,'bridge switch did not activate');
       yield* c.hop([room.switchX+2.4,0,0],`${label} pass used switch`);
       yield* c.walk([room.gap.b+1,0,0],`${label} cross actual materialized bridge`);
-      for(const role of ['receiver reward','receiver mystery'])yield* c.hit(box(room,role),`${label} ${role}`);
+      for(const spec of room.crates.filter(crate=>crate.role.startsWith('receiver')))if(box(room,spec.role).alive)yield* c.hit(box(room,spec.role),`${label} ${spec.role}`);
     } else if(room.pattern==='fuse') {
       const x=room.launchX,wood=box(room,'wooden takeoff cap'),cap=box(room,'upper cap before fuse'),tnt=box(room,'timed support');
       yield* c.walk([x-2.1,0,0],`${label} upper-first staging`);

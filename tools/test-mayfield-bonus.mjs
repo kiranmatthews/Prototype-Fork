@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {runInputPilot} from './test-puzzle-trilogy.mjs';
-import {runThemedBonusJourney} from './themed-bonus-pilot.mjs';
+import {runThemedBonusJourney,runThemedBonusWrongOrder} from './themed-bonus-pilot.mjs';
 import {runMayfieldBonusEntrance} from './mayfield-bonus-entrance.mjs';
 const out=process.env.MAYFIELD_BONUS_OUTPUT??'/tmp/mayfield-bonus-review';
 await mkdir(out,{recursive:true});
@@ -14,7 +14,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(parseCustomLevelJson(JSON.stringify(r.source)),'Bonus survives editor serialization');
  assert.ok(parseCustomLevelJson(JSON.stringify(r.l.captureData())),'Built bonus survives editor serialization');
  for(const id of ['mayfield-mall','maynard-course-4']){
-  assert.equal(levelAllowsBonus(id),true);assert.equal(resolveBonusLevel(id),r.source);assert.equal(bonusCrateCount(id),8);
+  assert.equal(levelAllowsBonus(id),true);assert.equal(resolveBonusLevel(id),r.source);assert.equal(bonusCrateCount(id),18);
  }
  assert.ok(m.MAYFIELD_BONUS_SOURCE_TRIANGLES>1000,'Retain actual Mall architecture');
  assert.ok(r.source.components.filter(c=>c.grp===91).every(c=>c.solid===false),'Backdrop cannot bypass puzzles');
@@ -22,10 +22,21 @@ await withBlockworksRuntime(async r=>{
  const tuning=JSON.stringify(r.TUNING);
  try{
   const result=runInputPilot(r,runThemedBonusJourney);
-  assert.equal(result.state,'finished');assert.equal(result.cratesBroken,8);assert.equal(result.deaths,0);assert.equal(result.gemEarned,true);
+  assert.equal(result.state,'finished');assert.equal(result.cratesBroken,18);assert.equal(result.deaths,0);assert.equal(result.gemEarned,true);
   assert.equal(JSON.stringify(r.TUNING),tuning);
   await writeFile(out+'/native.json',JSON.stringify({...result,sourceTriangles:m.MAYFIELD_BONUS_SOURCE_TRIANGLES},null,2));
   console.log(JSON.stringify({state:result.state,crates:result.cratesBroken,deaths:result.deaths,seconds:result.seconds,sourceTriangles:m.MAYFIELD_BONUS_SOURCE_TRIANGLES}));
+  r.p.respawn(r.l,true);r.l.update(0);assert.equal(r.l.crates.length,19);assert.ok(r.l.crates.every(c=>c.alive));assert.ok(r.l.outlinedSurfaces.every(s=>!s.active));assert.equal(r.p.cratesBroken,0);
+  const wrongOrder=[];
+  for(const room of m.MAYFIELD_BONUS_COURSE.rooms){
+   r.p.respawn(r.l,true,false,{position:new r.THREE.Vector3(room.a+1,.12,0),heading:new r.THREE.Vector3(0,0,-1)});
+   r.course={...m.MAYFIELD_BONUS_COURSE,rooms:[room]};const first=r.frame;
+   const negative=runInputPilot(r,runThemedBonusWrongOrder);wrongOrder.push({pattern:room.pattern,frames:r.frame-first,result:negative.result});
+  }
+  r.p.respawn(r.l,true);r.l.update(0);assert.ok(r.l.crates.every(c=>c.alive));assert.ok(r.l.outlinedSurfaces.every(s=>!s.active));
+  await writeFile(out+'/wrong-order-retry.json',JSON.stringify({wrongOrder,all19Restored:true,bridgeHidden:true,credit:r.p.cratesBroken},null,2));
+  console.log('PASS three wrong-order cases and complete bonus retry');
+
  }catch(error){await writeFile(out+'/native-failure.json',JSON.stringify({error:String(error),report:r.report,trace:r.trace.slice(-120)},null,2));throw error;}
 },{modulePath:'/src/levels/mayfield-bonus.ts',source:m=>m.MAYFIELD_BONUS_LEVEL,levelId:'bonus-mayfield-mall',controlFrame:()=>({x:0,z:-1}),maxFrames:16000});
 let entries=0;

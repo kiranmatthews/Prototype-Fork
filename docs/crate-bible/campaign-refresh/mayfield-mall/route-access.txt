@@ -1,0 +1,23 @@
+PASS access Section 1 · dispatch supplies jumps=0
+PASS access Section 1 · receiving supplies jumps=0
+PASS access Section 2 · dispatch supplies jumps=1
+PASS access Section 2 · receiving supplies jumps=2
+PASS access Section 3 · dispatch supplies jumps=0
+PASS access Section 3 · receiving supplies jumps=0
+PASS access Section 4 · dispatch supplies jumps=0
+PASS access Section 4 · receiving supplies jumps=0
+PASS access Section 5 · dispatch supplies jumps=1
+PASS access Section 5 · receiving supplies jumps=0
+PASS access Section 6 · dispatch supplies jumps=1
+PASS access Section 6 · receiving supplies jumps=0
+PASS access Section 7 · dispatch supplies jumps=0
+PASS access Section 7 · receiving supplies jumps=0
+PASS access Section 8 · dispatch supplies jumps=0
+PASS access Section 8 · receiving supplies jumps=0
+PASS access Section 9 · dispatch supplies jumps=0
+PASS access Section 9 · receiving supplies jumps=1
+PASS access Section 10 · dispatch supplies jumps=0
+PASS access Section 10 · receiving supplies jumps=0
+PASS access Section 11 · dispatch supplies jumps=0
+PASS access Section 11 · receiving supplies jumps=0
+PASS main-route approaches to all 110 crates in 22 supported groups, three normal-spin enemy counters and full reset

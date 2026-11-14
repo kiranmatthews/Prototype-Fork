@@ -1,0 +1,3 @@
+{"state":"finished","crates":18,"deaths":0,"seconds":43.43333333333333,"sourceTriangles":1083}
+PASS three wrong-order cases and complete bonus retry
+{"entrance":{"position":[-23.90536127685003,68.11867802197784,-618.5567310666893],"ground":"bonus platform deck","deaths":0,"gemEarned":false},"entries":1,"returnPosition":[-17.28,67.06867980957031,-623.05],"ground":"Mall crossrail arcade / Atrium / crossrail arcade / surface"}

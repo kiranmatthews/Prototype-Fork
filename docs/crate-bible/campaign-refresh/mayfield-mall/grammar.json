@@ -1,0 +1,229 @@
+{
+  "harvests": [
+    {
+      "name": "Section 1 · dispatch supplies",
+      "count": 5,
+      "frames": 154,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.612012580814316,
+      "jumps": 0
+    },
+    {
+      "name": "Section 1 · receiving supplies",
+      "count": 5,
+      "frames": 151,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.7304000000018,
+      "jumps": 0
+    },
+    {
+      "name": "Section 2 · dispatch supplies",
+      "count": 5,
+      "frames": 304,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.26960000000043,
+      "jumps": 1
+    },
+    {
+      "name": "Section 2 · receiving supplies",
+      "count": 5,
+      "frames": 358,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.500000000001197,
+      "jumps": 2
+    },
+    {
+      "name": "Section 3 · dispatch supplies",
+      "count": 5,
+      "frames": 171,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.269600000000938,
+      "jumps": 0
+    },
+    {
+      "name": "Section 3 · receiving supplies",
+      "count": 5,
+      "frames": 149,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.269600000000938,
+      "jumps": 0
+    },
+    {
+      "name": "Section 4 · dispatch supplies",
+      "count": 5,
+      "frames": 152,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.710698800491891,
+      "jumps": 0
+    },
+    {
+      "name": "Section 4 · receiving supplies",
+      "count": 5,
+      "frames": 186,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.289327497693884,
+      "jumps": 0
+    },
+    {
+      "name": "Section 5 · dispatch supplies",
+      "count": 5,
+      "frames": 152,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.272435941712669,
+      "jumps": 1
+    },
+    {
+      "name": "Section 5 · receiving supplies",
+      "count": 5,
+      "frames": 152,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.4025583256708964,
+      "jumps": 0
+    },
+    {
+      "name": "Section 6 · dispatch supplies",
+      "count": 5,
+      "frames": 152,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.32528930324886,
+      "jumps": 1
+    },
+    {
+      "name": "Section 6 · receiving supplies",
+      "count": 5,
+      "frames": 165,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.269613670384803,
+      "jumps": 0
+    },
+    {
+      "name": "Section 7 · dispatch supplies",
+      "count": 5,
+      "frames": 154,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.499999999999998,
+      "jumps": 0
+    },
+    {
+      "name": "Section 7 · receiving supplies",
+      "count": 5,
+      "frames": 151,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.2696000000000005,
+      "jumps": 0
+    },
+    {
+      "name": "Section 8 · dispatch supplies",
+      "count": 5,
+      "frames": 152,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.2696,
+      "jumps": 0
+    },
+    {
+      "name": "Section 8 · receiving supplies",
+      "count": 5,
+      "frames": 154,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.482912931594151,
+      "jumps": 0
+    },
+    {
+      "name": "Section 9 · dispatch supplies",
+      "count": 5,
+      "frames": 150,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.269825127978223,
+      "jumps": 0
+    },
+    {
+      "name": "Section 9 · receiving supplies",
+      "count": 5,
+      "frames": 186,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.269824401016058,
+      "jumps": 1
+    },
+    {
+      "name": "Section 10 · dispatch supplies",
+      "count": 5,
+      "frames": 169,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.725722715706351,
+      "jumps": 0
+    },
+    {
+      "name": "Section 10 · receiving supplies",
+      "count": 5,
+      "frames": 149,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.477766292317662,
+      "jumps": 0
+    },
+    {
+      "name": "Section 11 · dispatch supplies",
+      "count": 5,
+      "frames": 151,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.72969591561846,
+      "jumps": 0
+    },
+    {
+      "name": "Section 11 · receiving supplies",
+      "count": 5,
+      "frames": 156,
+      "deaths": 0,
+      "fromMainRoute": true,
+      "routeOffset": 5.27746450730513,
+      "jumps": 0
+    }
+  ],
+  "enemies": [
+    {
+      "index": 0,
+      "kind": "grunt",
+      "defeated": true,
+      "deaths": 0
+    },
+    {
+      "index": 1,
+      "kind": "grunt",
+      "defeated": true,
+      "deaths": 0
+    },
+    {
+      "index": 2,
+      "kind": "grunt",
+      "defeated": true,
+      "deaths": 0
+    }
+  ],
+  "maxFloorError": 0.03699104090499361,
+  "retry": {
+    "crates": 110,
+    "enemies": 3
+  },
+  "nonCratesExact": true,
+  "settingsExact": true
+}
