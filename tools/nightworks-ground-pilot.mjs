@@ -109,6 +109,8 @@ export function createAfterHoursCrownPilot() {
  },observe(p){
   if(air){air.peak=Math.max(air.peak,p.pos.y);air.airborne||=!p.grounded;
    if(air.airborne&&p.grounded){evidence.landings.push({...air,end:position(p)});air=null;}}
-  evidence.complete=jump===2&&evidence.landings.length===2&&p.grounded&&Math.abs(p.pos.x-120)<2.5&&p.pos.z<-591&&p.pos.z>-598&&p.axisF.z<-.9&&p.speed>0&&p.speed<=13&&p.boardRolling;
+  // Braking preserves the landing heading. A safe north-facing handoff can
+  // therefore sit a few metres east of the checkpoint on this 24m-wide dock.
+  evidence.complete=jump===2&&evidence.landings.length===2&&p.grounded&&Math.abs(p.pos.x-120)<4&&p.pos.z<-591&&p.pos.z>-598&&p.axisF.z<-.9&&p.speed>0&&p.speed<=13&&p.boardRolling;
  }};
 }

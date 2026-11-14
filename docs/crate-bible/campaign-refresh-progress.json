@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "nightworks-after-hours",
-  "next_course": "dark",
+  "current_course": "dark",
+  "next_course": "spaghetti-rails",
   "courses": [
     {
       "order": 1,
@@ -485,9 +485,11 @@
       "race": false,
       "bonus": {
         "id": "bonus-nightworks-after-hours",
-        "name": "Bonus: Caldera Counterweights"
+        "name": "Bonus: Caldera Counterweights",
+        "status": "validated"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/nightworks-after-hours/validation.json"
     },
     {
       "order": 29,
@@ -802,6 +804,12 @@
     {
       "id": "jungle-minefield",
       "bonus": "bonus-easy",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "bonus": "bonus-nightworks-after-hours",
       "status": "validated",
       "date": "2026-11-14"
     }

@@ -6,12 +6,16 @@ export function* runCalderaBonusJourney(r){
   const c=puzzleControls(r),{p,l}=r,deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'caldera arrival is supported');
   const hit=function*(name){const box=c.crateNamed(name);if(box.alive)yield* c.hit(box,name);};
-  yield* hit('Arrival ore crate');yield* hit('Arrival mystery');
+  const harvest=function*(prefix){
+    const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(prefix));
+    while(boxes.some(b=>b.alive))yield* c.hit(boxes.filter(b=>b.alive).sort((a,b)=>a.box.min.y-b.box.min.y)[0],prefix);
+  };
+  yield* harvest('Arrival ');
   yield* c.walk([2.6,0,0],'approach the rising shelf');
   yield* c.hop([7.5,2,0],'first lifted basalt landing');
-  yield* hit('Low shelf cap');yield* hit('Low shelf ore');
+  yield* harvest('Low shelf ');
   yield* c.walk([12.6,2,0],'second shelf takeoff');yield* c.hop([17.5,4,0],'second lifted basalt landing');
-  yield* hit('Middle shelf striped ore');yield* hit('Middle shelf mystery');
+  yield* harvest('Middle shelf ');
   yield* c.walk([23.7,4,0],'upper crucible takeoff');yield* c.hop([28.5,6,0],'upper crucible landing');
   yield* c.highArrowBox(c.crateNamed('Crucible arrow'),c.crateNamed('Crucible high life'),'crucible high cache before arrow');
   yield* hit('Crucible dispatch crate');
@@ -22,7 +26,7 @@ export function* runCalderaBonusJourney(r){
   c.check(p.grounded,'ferry landing required');
   yield* c.until(()=>ferry.mesh.position.x>49.4,()=>c.steer([ferry.mesh.position.x,6,0]),{label:'ride the counterweight across the lava',limit:900});
   yield* c.hop([55.5,6,0],'leave the moving ferry');
-  yield* hit('Receiver ore cap');yield* hit('Receiver ore');yield* hit('Receiver mystery');
+  yield* harvest('Receiver ');
   yield* c.walk([63.4,6,0],'last ember reading ledge');
   const pad=l.phasePads[0];
   yield* c.until(()=>!pad.on,{}, {label:'read cooling ember',limit:800});
@@ -30,8 +34,8 @@ export function* runCalderaBonusJourney(r){
   yield* c.hop([69,6,0],'land on the live breathing rock');
   yield* c.walk([73,6,0],'cross the live breathing rock');
   yield* c.hop([78,6,0],'last vault landing');
-  for(const name of ['Vault ore cap','Vault ore','Vault life','Last dispatch'])yield* hit(name);
-  yield* c.clearAll('all sixteen caldera crates');
+  yield* harvest('Vault ');yield* hit('Last dispatch');
+  yield* c.clearAll('all caldera supply crates');
   const result=yield* c.finish('return through the real caldera gate');
   c.check(p.totalDeaths===deaths,'caldera journey must not hide a reset');
   return {id:r.id,state:p.state,gemEarned:p.gemEarned,totalCrates:l.totalCrates,cratesBroken:p.cratesBroken,deaths:p.totalDeaths-deaths,...result};

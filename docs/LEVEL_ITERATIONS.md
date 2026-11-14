@@ -12107,3 +12107,11 @@ Twenty-fifth course; the shared Easy Street room is reused unchanged, leaving se
 All new ordinary rewards pass staged native access checks. Ten field crossings and three extended refuge/clue sequences pass without deaths; no continuous main all-box clear is claimed. Existing minefield regressions, actual bonus entrance and return, browser checkpoint/pressure-death recovery, staged finish and 24-box bonus banking pass. Five full-resolution views are inspected with clean consoles. Native evidence output paths now work in the cloud workspace.
 
 Required checks, build and release-size check pass: `9f735c3e0337ff2e9d6f`, 959,312,526 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-minefield/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Guptus Eruptus + Caldera Counterweights
+
+Twenty-sixth playable course and eighteenth unique bonus, reviewed in approximately 62.3 minutes from 16:39:50 UTC. Added sixteen five-box main caches and grouped bonus cargo from sixteen to twenty-five counted boxes. Three masks prepare later encounters; four original enemies retain their two counters and placement. The parent tally is 112. The projected checkpoint median is ten boxes; the west workbay cache projects onto the preceding lateral rail leg.
+
+All eighty main rewards pass separate normal-input access checks. A continuous mounted route clears all eight chapters in 70.98 simulated seconds, banks six checkpoints and finishes without deaths. Continuous native/browser bonus clears collect every box; raised arrow reward, cargo-alternative rejection, full retry, actual entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass, and six full-resolution views are inspected with clean consoles. The original course reproduces the full-route pilot stall exactly; only the test handoff was corrected. No continuous main all-box clear is claimed.
+
+Required checks, build and release-size check pass: `06dd1662d9c48a9825df`, 959,313,361 bytes. [Evidence and limitations](crate-bible/campaign-refresh/nightworks-after-hours/README.md). Authorized publication awaits GitHub authentication.

@@ -1,0 +1,38 @@
+{
+  "maxFeet": 10.223333333333331,
+  "lifeAlive": false,
+  "highLifeBottom": 13.2,
+  "arrowAlive": false,
+  "actions": [
+    {
+      "name": "spend arrow before its high reward",
+      "firstFrame": 25,
+      "lastFrame": 179,
+      "seconds": 2.5666666666666664
+    },
+    {
+      "name": "walk",
+      "firstFrame": 219,
+      "lastFrame": 278,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "walk",
+      "firstFrame": 219,
+      "lastFrame": 308,
+      "seconds": 1.4833333333333334
+    },
+    {
+      "name": "reach the ordinary jump apex",
+      "firstFrame": 335,
+      "lastFrame": 360,
+      "seconds": 0.4166666666666667
+    },
+    {
+      "name": "double jump without the arrow",
+      "firstFrame": 362,
+      "lastFrame": 391,
+      "seconds": 0.48333333333333334
+    }
+  ]
+}

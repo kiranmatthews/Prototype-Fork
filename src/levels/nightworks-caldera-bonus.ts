@@ -21,13 +21,20 @@ export function createCalderaBonus(): BonusCourse {
   island(27,39,6,'Upper crucible loading ledge');
   island(54,65,6,'Counterweight receiving ledge');
   island(77,94,6,'Last ember vault and return');
-  crate('Arrival ore crate',-2,0);crate('Arrival mystery',1,0,'mystery');
-  crate('Low shelf ore',9,2);crate('Low shelf cap',9,2.96);
-  crate('Middle shelf striped ore',20,4,'multihit');crate('Middle shelf mystery',23,4,'mystery');
-  crate('Crucible arrow',32,6,'bouncy');crate('Crucible high life',32,13.2,'life');
+  // Low cargo formations reward each stable landing. None extends the
+  // moving crossing or becomes a substitute launcher for the high arrow life.
+  crate('Arrival ore crate',-2.48,0);crate('Arrival ore cap',-1.52,0);crate('Arrival mystery',-2,.96,'mystery');
+  crate('Low shelf ore',8.52,2);crate('Low shelf cap',8.52,2.96);
+  crate('Low shelf second ore',9.48,2);crate('Low shelf second cap',9.48,2.96);
+  crate('Middle shelf ore',19.52,4);crate('Middle shelf second ore',20.48,4);crate('Middle shelf mystery',20,4.96,'mystery');
+  // The current character's head reaches beyond the 0.92m spin band. Keep
+  // this above a full foot double jump plus the nearby single cargo box.
+  crate('Crucible arrow',32,6,'bouncy');crate('Crucible high life',32,15.2,'life');
   crate('Crucible dispatch crate',36,6);
-  crate('Receiver ore',57,6);crate('Receiver ore cap',57,6.96);crate('Receiver mystery',62,6,'mystery');
-  crate('Vault ore',80,6);crate('Vault ore cap',80,6.96);crate('Vault life',85,6,'life');crate('Last dispatch',88,6);
+  crate('Receiver ore',56.52,6);crate('Receiver ore cap',57.48,6);crate('Receiver ore reward',57,6.96,'mystery');
+  crate('Receiver second ore',61.52,6);crate('Receiver third ore',62.48,6);crate('Receiver mystery',62,6.96,'mystery');
+  crate('Vault ore',79.52,6);crate('Vault ore cap',80.48,6);crate('Vault ore reward',80,6.96,'mystery');
+  crate('Vault last ore',84.52,6);crate('Last dispatch',85.48,6);crate('Vault life',85,6.96,'life');
   add({t:'mover',nm:'Caldera counterweight ferry',dkind:'nightsteppingrock',p:[46.5,6,0],s:[7.6,6,6.6],
     axis:'x',amp:4.2,speed:.55,phase:-Math.PI/2,lit:true,grp:1});
   add({t:'phasepad',nm:'Last ember breathing rock',dkind:'nightphaserock',p:[71,6,0],s:[7,5.8,7],cycle:5.6,phase:.12,amp:.76,grp:1});

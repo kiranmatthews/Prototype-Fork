@@ -1,0 +1,962 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+    "inventory": {
+      "physical": 80,
+      "total": 112,
+      "bonus": 25,
+      "checkpoints": 7,
+      "enemies": 4
+    },
+    "bonusPlatform": {
+      "x": 139,
+      "y": 36,
+      "z": -692,
+      "laneFraction": 0.5,
+      "topY": 37.05,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "opening": {
+      "done": true,
+      "frames": 184,
+      "state": "ride",
+      "crates": 5,
+      "lives": 4,
+      "position": [
+        -4.379,
+        10,
+        13
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 97,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        -8.000000052097295,
+        12,
+        -174.1246666666663
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 175,
+      "state": "ride",
+      "crates": 6,
+      "lives": 4,
+      "position": [
+        -15.130999999999982,
+        12,
+        -178
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "recovery": {
+      "lives": 3,
+      "alive": 5,
+      "position": [
+        -8,
+        12,
+        -176
+      ]
+    },
+    "finish": {
+      "done": true,
+      "frames": 67,
+      "state": "finished",
+      "crates": 0,
+      "lives": 4,
+      "position": [
+        132,
+        36.72666666915019,
+        -682.4216666666666
+      ],
+      "collected": 0,
+      "checkpoint": false
+    },
+    "bonusFailure": {
+      "lives": 4,
+      "banked": 0,
+      "completed": false,
+      "sameParent": true
+    },
+    "bonusRetry": {
+      "physical": 25,
+      "alive": true
+    },
+    "arrowLoss": {
+      "done": true,
+      "frame": 284,
+      "state": "ride",
+      "crates": 1,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "approach spend arrow first",
+            "firstFrame": 0,
+            "lastFrame": 72
+          },
+          {
+            "name": "spend arrow first",
+            "firstFrame": 92,
+            "lastFrame": 92
+          },
+          {
+            "name": "stand under the high life",
+            "firstFrame": 114,
+            "lastFrame": 175
+          },
+          {
+            "name": "ordinary jump apex",
+            "firstFrame": 220,
+            "lastFrame": 245
+          },
+          {
+            "name": "land without the arrow",
+            "firstFrame": 247,
+            "lastFrame": 283
+          }
+        ],
+        "evidence": [
+          {
+            "action": "spend arrow first",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "lifeAlive": true,
+            "maxHead": 13.714423458163633,
+            "highLifeBottom": 15.2,
+            "doubleJumpFired": true
+          }
+        ],
+        "stage": "land without the arrow"
+      }
+    },
+    "afterArrowReset": true,
+    "bonusJourney": {
+      "done": true,
+      "frame": 3351,
+      "state": "finished",
+      "crates": 25,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "approach Arrival ",
+            "firstFrame": 20,
+            "lastFrame": 97
+          },
+          {
+            "name": "Arrival ",
+            "firstFrame": 117,
+            "lastFrame": 117
+          },
+          {
+            "name": "approach Arrival ",
+            "firstFrame": 139,
+            "lastFrame": 201
+          },
+          {
+            "name": "Arrival ",
+            "firstFrame": 221,
+            "lastFrame": 221
+          },
+          {
+            "name": "approach the rising shelf",
+            "firstFrame": 243,
+            "lastFrame": 343
+          },
+          {
+            "name": "first lifted basalt landing",
+            "firstFrame": 388,
+            "lastFrame": 421
+          },
+          {
+            "name": "Low shelf ",
+            "firstFrame": 423,
+            "lastFrame": 423
+          },
+          {
+            "name": "approach Low shelf ",
+            "firstFrame": 445,
+            "lastFrame": 497
+          },
+          {
+            "name": "Low shelf ",
+            "firstFrame": 517,
+            "lastFrame": 517
+          },
+          {
+            "name": "second shelf takeoff",
+            "firstFrame": 539,
+            "lastFrame": 631
+          },
+          {
+            "name": "second lifted basalt landing",
+            "firstFrame": 676,
+            "lastFrame": 709
+          },
+          {
+            "name": "approach Middle shelf ",
+            "firstFrame": 709,
+            "lastFrame": 767
+          },
+          {
+            "name": "Middle shelf ",
+            "firstFrame": 787,
+            "lastFrame": 787
+          },
+          {
+            "name": "approach Middle shelf ",
+            "firstFrame": 809,
+            "lastFrame": 871
+          },
+          {
+            "name": "Middle shelf ",
+            "firstFrame": 891,
+            "lastFrame": 891
+          },
+          {
+            "name": "upper crucible takeoff",
+            "firstFrame": 913,
+            "lastFrame": 1006
+          },
+          {
+            "name": "upper crucible landing",
+            "firstFrame": 1051,
+            "lastFrame": 1084
+          },
+          {
+            "name": "crucible high cache before arrow takeoff",
+            "firstFrame": 1084,
+            "lastFrame": 1158
+          },
+          {
+            "name": "crucible high cache before arrow arrow contact",
+            "firstFrame": 1203,
+            "lastFrame": 1239
+          },
+          {
+            "name": "crucible high cache before arrow high reward ascent",
+            "firstFrame": 1239,
+            "lastFrame": 1261
+          },
+          {
+            "name": "crucible high cache before arrow leave intact launcher",
+            "firstFrame": 1261,
+            "lastFrame": 1284
+          },
+          {
+            "name": "approach crucible high cache before arrow support last",
+            "firstFrame": 1284,
+            "lastFrame": 1345
+          },
+          {
+            "name": "crucible high cache before arrow support last",
+            "firstFrame": 1365,
+            "lastFrame": 1365
+          },
+          {
+            "name": "approach Crucible dispatch crate",
+            "firstFrame": 1387,
+            "lastFrame": 1478
+          },
+          {
+            "name": "Crucible dispatch crate",
+            "firstFrame": 1498,
+            "lastFrame": 1498
+          },
+          {
+            "name": "read counterweight ferry",
+            "firstFrame": 1520,
+            "lastFrame": 1600
+          },
+          {
+            "name": "wait for returning ferry",
+            "firstFrame": 1618,
+            "lastFrame": 1618
+          },
+          {
+            "name": "board actual moving basalt ferry",
+            "firstFrame": 1645,
+            "lastFrame": 1684
+          },
+          {
+            "name": "ride the counterweight across the lava",
+            "firstFrame": 1684,
+            "lastFrame": 1892
+          },
+          {
+            "name": "leave the moving ferry",
+            "firstFrame": 1919,
+            "lastFrame": 1958
+          },
+          {
+            "name": "Receiver ",
+            "firstFrame": 1960,
+            "lastFrame": 1960
+          },
+          {
+            "name": "approach Receiver ",
+            "firstFrame": 1982,
+            "lastFrame": 2040
+          },
+          {
+            "name": "Receiver ",
+            "firstFrame": 2060,
+            "lastFrame": 2060
+          },
+          {
+            "name": "approach Receiver ",
+            "firstFrame": 2082,
+            "lastFrame": 2172
+          },
+          {
+            "name": "Receiver ",
+            "firstFrame": 2192,
+            "lastFrame": 2192
+          },
+          {
+            "name": "approach Receiver ",
+            "firstFrame": 2214,
+            "lastFrame": 2276
+          },
+          {
+            "name": "Receiver ",
+            "firstFrame": 2296,
+            "lastFrame": 2296
+          },
+          {
+            "name": "last ember reading ledge",
+            "firstFrame": 2318,
+            "lastFrame": 2391
+          },
+          {
+            "name": "read cooling ember",
+            "firstFrame": 2409,
+            "lastFrame": 2485
+          },
+          {
+            "name": "read renewed ember glow",
+            "firstFrame": 2485,
+            "lastFrame": 2565
+          },
+          {
+            "name": "land on the live breathing rock",
+            "firstFrame": 2592,
+            "lastFrame": 2631
+          },
+          {
+            "name": "cross the live breathing rock",
+            "firstFrame": 2631,
+            "lastFrame": 2723
+          },
+          {
+            "name": "last vault landing",
+            "firstFrame": 2768,
+            "lastFrame": 2807
+          },
+          {
+            "name": "approach Vault ",
+            "firstFrame": 2807,
+            "lastFrame": 2839
+          },
+          {
+            "name": "Vault ",
+            "firstFrame": 2859,
+            "lastFrame": 2859
+          },
+          {
+            "name": "approach Vault ",
+            "firstFrame": 2881,
+            "lastFrame": 2943
+          },
+          {
+            "name": "Vault ",
+            "firstFrame": 2963,
+            "lastFrame": 2963
+          },
+          {
+            "name": "approach Vault ",
+            "firstFrame": 2985,
+            "lastFrame": 3075
+          },
+          {
+            "name": "Vault ",
+            "firstFrame": 3095,
+            "lastFrame": 3095
+          },
+          {
+            "name": "approach Vault ",
+            "firstFrame": 3117,
+            "lastFrame": 3163
+          },
+          {
+            "name": "Vault ",
+            "firstFrame": 3183,
+            "lastFrame": 3183
+          },
+          {
+            "name": "approach Last dispatch",
+            "firstFrame": 3205,
+            "lastFrame": 3251
+          },
+          {
+            "name": "Last dispatch",
+            "firstFrame": 3271,
+            "lastFrame": 3271
+          }
+        ],
+        "evidence": [
+          {
+            "action": "Arrival ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Arrival ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "first lifted basalt landing",
+            "launch": [
+              2.5310999997697894,
+              -4.440892098500626e-16,
+              -6.267296011389714e-05
+            ],
+            "landing": [
+              7.28309999964155,
+              2,
+              -9.758310141586741e-05
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "Low shelf ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Low shelf ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "second lifted basalt landing",
+            "launch": [
+              12.524088888389015,
+              2,
+              -0.00013608555568210643
+            ],
+            "landing": [
+              17.28058888826066,
+              4,
+              -0.00017102875583000697
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "Middle shelf ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Middle shelf ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "upper crucible landing",
+            "launch": [
+              23.630055554755998,
+              4,
+              -0.0002176745425567504
+            ],
+            "landing": [
+              28.3175555546295,
+              6,
+              -0.0002521108404003924
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "crucible high cache before arrow support last",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "crucible high cache before arrow",
+            "upperAlive": false,
+            "launcherAlive": false
+          },
+          {
+            "action": "Crucible dispatch crate",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "board actual moving basalt ferry",
+            "launch": [
+              37.42406666649028,
+              6,
+              -0.0003200091388407152
+            ],
+            "landing": [
+              42.56006666635179,
+              6,
+              -0.00035774030166203617
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "leave the moving ferry",
+            "launch": [
+              49.38079927305196,
+              6,
+              -0.00035852293922938373
+            ],
+            "landing": [
+              55.318,
+              6,
+              -0.0003979180639625095
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "Receiver ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Receiver ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Receiver ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Receiver ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "land on the live breathing rock",
+            "launch": [
+              63.31724444422837,
+              6,
+              -0.0004569515308332563
+            ],
+            "landing": [
+              68.84324444407936,
+              6.000000095367431,
+              -0.0004975477936351682
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "last vault landing",
+            "launch": [
+              72.93162222174688,
+              6.000000095367431,
+              -0.0005275826938704485
+            ],
+            "landing": [
+              77.94762222161162,
+              6,
+              -0.0005644322874669722
+            ],
+            "ground": "floating rock island"
+          },
+          {
+            "action": "Vault ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Vault ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Vault ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Vault ",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Last dispatch",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "all caldera supply crates",
+            "totalCrates": 25,
+            "activeStageCrates": 25,
+            "bonusCrateTotal": 0,
+            "cratesBroken": 25,
+            "remaining": 0
+          }
+        ],
+        "stage": "return through the real caldera gate"
+      }
+    },
+    "bonusBanked": {
+      "count": 25,
+      "completed": true,
+      "sameParent": true
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+    "inventory": {
+      "physical": 80,
+      "total": 112,
+      "bonus": 25,
+      "checkpoints": 7,
+      "enemies": 4
+    },
+    "bonusPlatform": {
+      "x": 139,
+      "y": 36,
+      "z": -692,
+      "laneFraction": 0.5,
+      "topY": 37.05,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "views": [
+      {
+        "name": "opening",
+        "position": [
+          0,
+          10,
+          17
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          0,
+          16.200000000000003,
+          25.5
+        ],
+        "cameraQuaternion": [
+          -0.13917310096006522,
+          0,
+          0,
+          0.9902680687415704
+        ],
+        "drawCalls": 315,
+        "frame": 14
+      },
+      {
+        "name": "scissor",
+        "position": [
+          -8,
+          12,
+          -92
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          -8,
+          18.200000000000003,
+          -83.5
+        ],
+        "cameraQuaternion": [
+          -0.13917310096006602,
+          0,
+          0,
+          0.9902680687415704
+        ],
+        "drawCalls": 346,
+        "frame": 27
+      },
+      {
+        "name": "workbay",
+        "position": [
+          114,
+          14,
+          -383
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          114,
+          20.200000000000003,
+          -374.5
+        ],
+        "cameraQuaternion": [
+          -0.13917310096006408,
+          0,
+          0,
+          0.9902680687415706
+        ],
+        "drawCalls": 332,
+        "frame": 40
+      },
+      {
+        "name": "crown",
+        "position": [
+          95,
+          24,
+          -530
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          95,
+          30.200000000000003,
+          -521.5
+        ],
+        "cameraQuaternion": [
+          -0.13917310096006408,
+          0,
+          0,
+          0.9902680687415706
+        ],
+        "drawCalls": 274,
+        "frame": 54
+      },
+      {
+        "name": "bonus-upper",
+        "position": [
+          29,
+          6,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          29,
+          14.35149116617971,
+          25.820309867674464
+        ],
+        "cameraQuaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "drawCalls": 196,
+        "frame": 78
+      },
+      {
+        "name": "bonus-receiver",
+        "position": [
+          59,
+          6,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          59,
+          14.35149116617971,
+          25.820309867674464
+        ],
+        "cameraQuaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "drawCalls": 196,
+        "frame": 95
+      }
+    ],
+    "passed": true
+  }
+]

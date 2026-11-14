@@ -1,0 +1,123 @@
+{
+  "harvests": [
+    {
+      "name": "Guptus supply / section 1 / cache 1 /",
+      "count": 5,
+      "frames": 490,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 1 / cache 2 /",
+      "count": 5,
+      "frames": 255,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 2 / cache 1 /",
+      "count": 5,
+      "frames": 826,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 2 / cache 2 /",
+      "count": 5,
+      "frames": 825,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 3 / cache 1 /",
+      "count": 5,
+      "frames": 769,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 3 / cache 2 /",
+      "count": 5,
+      "frames": 744,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 4 / cache 1 /",
+      "count": 5,
+      "frames": 1039,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 4 / cache 2 /",
+      "count": 5,
+      "frames": 1039,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 5 / cache 1 /",
+      "count": 5,
+      "frames": 1193,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 5 / cache 2 /",
+      "count": 5,
+      "frames": 1250,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 6 / cache 1 /",
+      "count": 5,
+      "frames": 871,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 6 / cache 2 /",
+      "count": 5,
+      "frames": 871,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 7 / cache 1 /",
+      "count": 5,
+      "frames": 826,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 7 / cache 2 /",
+      "count": 5,
+      "frames": 713,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 8 / cache 1 /",
+      "count": 5,
+      "frames": 815,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Guptus supply / section 8 / cache 2 /",
+      "count": 5,
+      "frames": 602,
+      "deaths": 0,
+      "fromClearedRoute": true
+    }
+  ],
+  "maxFloorError": 0,
+  "settingsExact": true,
+  "nonCratesExact": true,
+  "reset": {
+    "crates": 80,
+    "enemies": 4
+  }
+}

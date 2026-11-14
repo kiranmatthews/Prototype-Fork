@@ -1,0 +1,1 @@
+PASS continuous 25-box Caldera journey, actual ferry/phase contacts, wrong arrow order, cargo alternative and physical retry

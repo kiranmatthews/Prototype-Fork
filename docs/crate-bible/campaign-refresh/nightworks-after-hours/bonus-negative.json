@@ -1,0 +1,17 @@
+{
+  "arrowLostHighLifeRemains": true,
+  "doubleJumpFired": true,
+  "maxFeet": 10.59083333333333,
+  "maxHead": 13.584299997945063,
+  "cargoContact": [
+    35.93400000000001,
+    7.171999999999999,
+    0
+  ],
+  "cargoMaxFeet": 11.762833333333328,
+  "cargoMaxHead": 14.762609888636767,
+  "cargoCannotReplaceArrow": true,
+  "highLifeBottom": 15.2,
+  "all25Restored": true,
+  "credit": 0
+}
