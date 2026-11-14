@@ -1,0 +1,1 @@
+PASS Nightworks: 456 surface probes, 456 swept side/corner collisions, 453 real Player ledge catches, 3 supported joins, 1764 visual/collision comparisons; moving mantle and death/finish; moving support, phase collision and visibility, rope endpoints/velocity, editor round trip.

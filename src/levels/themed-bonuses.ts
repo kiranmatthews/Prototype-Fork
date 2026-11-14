@@ -1,4 +1,4 @@
-import { rebuildNightworksBonus } from './nightworks-bonus';
+import { arrangeNightworksBonusCrates, rebuildNightworksBonus } from './nightworks-bonus';
 import { createCalderaBonus } from './nightworks-caldera-bonus';
 import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-route';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
@@ -114,6 +114,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
   if (recipe.parentId === 'beachfront') dressBananaBayBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
+  if (recipe.parentId === 'dark') arrangeNightworksBonusCrates(course);
   if (recipe.parentId === 'waterpark') arrangeValveHouseCrates(course.data);
   if (recipe.parentId === 'codex-lab') arrangeHauntedBonusCrates(course.data);
   return {...course,layout,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};

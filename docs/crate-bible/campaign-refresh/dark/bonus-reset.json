@@ -1,0 +1,16 @@
+{
+  "countedCrates": 20,
+  "physicalCrates": 21,
+  "allRestored": true,
+  "credit": 0,
+  "cargoContact": [
+    17.1425,
+    1.172,
+    0
+  ],
+  "doubleJumpFired": true,
+  "maxFeet": 5.76283333333333,
+  "maxHead": 8.769715216282933,
+  "requiredCapBottom": 9,
+  "cargoCannotReplaceFuse": true
+}

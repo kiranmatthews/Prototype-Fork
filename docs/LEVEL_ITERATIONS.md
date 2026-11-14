@@ -12115,3 +12115,11 @@ Twenty-sixth playable course and eighteenth unique bonus, reviewed in approximat
 All eighty main rewards pass separate normal-input access checks. A continuous mounted route clears all eight chapters in 70.98 simulated seconds, banks six checkpoints and finishes without deaths. Continuous native/browser bonus clears collect every box; raised arrow reward, cargo-alternative rejection, full retry, actual entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass, and six full-resolution views are inspected with clean consoles. The original course reproduces the full-route pilot stall exactly; only the test handoff was corrected. No continuous main all-box clear is claimed.
 
 Required checks, build and release-size check pass: `06dd1662d9c48a9825df`, 959,313,361 bytes. [Evidence and limitations](crate-bible/campaign-refresh/nightworks-after-hours/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Torchlight Trouble + Nightworks Fuse Store
+
+Twenty-seventh playable course and nineteenth unique bonus, reviewed in approximately 24.9 minutes from 17:44 UTC. Added 24 five-box main deliveries and grouped the bonus from seven to twenty counted boxes. Three masks prepare original encounters; six goblins, all movement geometry, camera views and artwork remain. The 151-box tally includes eleven checkpoints. Projected checkpoint sections have a median of ten crates.
+
+All 120 main rewards pass separate normal-input approaches and reset. Native rock/camera and goblin regressions pass. Continuous native and browser bonus clears collect every box; both wrong orders, an actual cargo double-jump alternative, full retry, real entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; six full-resolution views are inspected with clean consoles. No continuous main-course or all-box clear is claimed.
+
+Required checks, build and release-size check pass: `fa387e11c8e1fa024fc1`, 959,314,619 bytes. [Evidence and limitations](crate-bible/campaign-refresh/dark/README.md). Authorized publication awaits GitHub authentication.

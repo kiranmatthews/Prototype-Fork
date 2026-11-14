@@ -1,0 +1,179 @@
+{
+  "harvests": [
+    {
+      "name": "Torchlight supply / section 1 / cache 1 /",
+      "count": 5,
+      "frames": 408,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 1 / cache 2 /",
+      "count": 5,
+      "frames": 256,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 2 / cache 1 /",
+      "count": 5,
+      "frames": 312,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 2 / cache 2 /",
+      "count": 5,
+      "frames": 534,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 3 / cache 1 /",
+      "count": 5,
+      "frames": 298,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 3 / cache 2 /",
+      "count": 5,
+      "frames": 769,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 4 / cache 1 /",
+      "count": 5,
+      "frames": 365,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 4 / cache 2 /",
+      "count": 5,
+      "frames": 407,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 5 / cache 1 /",
+      "count": 5,
+      "frames": 396,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 5 / cache 2 /",
+      "count": 5,
+      "frames": 422,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 6 / cache 1 /",
+      "count": 5,
+      "frames": 184,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 6 / cache 2 /",
+      "count": 5,
+      "frames": 434,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 7 / cache 1 /",
+      "count": 5,
+      "frames": 521,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 7 / cache 2 /",
+      "count": 5,
+      "frames": 491,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 8 / cache 1 /",
+      "count": 5,
+      "frames": 157,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 8 / cache 2 /",
+      "count": 5,
+      "frames": 241,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 9 / cache 1 /",
+      "count": 5,
+      "frames": 141,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 9 / cache 2 /",
+      "count": 5,
+      "frames": 130,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 10 / cache 1 /",
+      "count": 5,
+      "frames": 209,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 10 / cache 2 /",
+      "count": 5,
+      "frames": 353,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 11 / cache 1 /",
+      "count": 5,
+      "frames": 158,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 11 / cache 2 /",
+      "count": 5,
+      "frames": 130,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 12 / cache 1 /",
+      "count": 5,
+      "frames": 74,
+      "deaths": 0,
+      "fromClearedRoute": true
+    },
+    {
+      "name": "Torchlight supply / section 12 / cache 2 /",
+      "count": 5,
+      "frames": 351,
+      "deaths": 0,
+      "fromClearedRoute": true
+    }
+  ],
+  "maxFloorError": 7.105427357601002e-15,
+  "settingsExact": true,
+  "nonCratesExact": true,
+  "reset": {
+    "crates": 120,
+    "enemies": 6
+  }
+}

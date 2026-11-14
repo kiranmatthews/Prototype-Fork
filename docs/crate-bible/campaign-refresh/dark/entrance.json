@@ -1,0 +1,30 @@
+{
+  "entries": 1,
+  "platform": {
+    "x": 4.809098965857913,
+    "y": 26,
+    "z": -204.7,
+    "laneFraction": 0.5,
+    "topY": 27.05,
+    "radius": 1.6,
+    "modelReady": false,
+    "tilt": 0
+  },
+  "stagedApproach": [
+    9,
+    26,
+    -202
+  ],
+  "landed": [
+    6.617823271360496,
+    26,
+    -203.50931942444302
+  ],
+  "returnPosition": [
+    2.409098965857936,
+    26,
+    -202
+  ],
+  "grounded": true,
+  "deaths": 0
+}
