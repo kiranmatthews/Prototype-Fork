@@ -1,0 +1,2172 @@
+{
+  "test": "continuous input-only ghost train journey",
+  "state": "finished",
+  "frames": 26334,
+  "seconds": 438.9,
+  "distance": 2544.420296364973,
+  "largestStep": 0.7385583579202474,
+  "checkpoints": 23,
+  "evidence": [
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        38,
+        40.6
+      ],
+      "landingStation": 47.230250648706026,
+      "doubleJump": false,
+      "frames": 155,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Bathhouse boarding",
+      "station": 54.311751146655034
+    },
+    {
+      "test": "input-only moving-cart relay",
+      "relay": 0,
+      "landings": [
+        {
+          "cart": 2,
+          "frame": 1420,
+          "position": [
+            -8.999110878589775,
+            0.04003905951976777,
+            -75.95452169316042
+          ],
+          "mover": 1,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 3,
+          "frame": 1680,
+          "position": [
+            -8.999110878589775,
+            0.04003905951976777,
+            -82.09958747535508
+          ],
+          "mover": 2,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 4,
+          "frame": 1852,
+          "position": [
+            -8.999110878589775,
+            0.04003905951976777,
+            -85.7351995215612
+          ],
+          "mover": 3,
+          "overlappingExitIsland": false
+        }
+      ],
+      "exitStation": 120.37089289106376,
+      "frames": 1325,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Last Departure",
+      "station": 130.17174450190225
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 0,
+      "exitStation": 143.07174450190257,
+      "frames": 273
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        155,
+        158
+      ],
+      "landingStation": 161.15770388987562,
+      "doubleJump": false,
+      "frames": 98,
+      "deaths": 0
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 0.84,
+      "exitStation": 182.28509773336106,
+      "frames": 298
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "First steam hall",
+      "station": 182.5149185119634
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        213,
+        215.7
+      ],
+      "landingStation": 222.71417284904007,
+      "doubleJump": false,
+      "frames": 150,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Under the castle",
+      "station": 222.87676502369
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 1.68,
+      "exitStation": 252.10422269574502,
+      "frames": 169
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 2.52,
+      "exitStation": 293.14806807810953,
+      "frames": 262
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        306,
+        308.8
+      ],
+      "landingStation": 312.7421360424335,
+      "doubleJump": false,
+      "frames": 109,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Execution flags",
+      "station": 331.69607156891044
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        353,
+        356.2
+      ],
+      "landingStation": 362.91549575951996,
+      "doubleJump": false,
+      "frames": 170,
+      "deaths": 0
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        373,
+        376.2
+      ],
+      "landingStation": 385.0844394072148,
+      "doubleJump": false,
+      "frames": 62,
+      "deaths": 0
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 3.36,
+      "exitStation": 410.18965751988,
+      "frames": 198
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        439,
+        442
+      ],
+      "landingStation": 448.3533933981712,
+      "doubleJump": false,
+      "frames": 157,
+      "deaths": 0
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        462,
+        465.2
+      ],
+      "landingStation": 474.2404059206249,
+      "doubleJump": false,
+      "frames": 71,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Flagstone crossings complete",
+      "station": 481.86030759600413
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 4.2,
+      "exitStation": 501.00883363550406,
+      "frames": 334
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 5.04,
+      "exitStation": 513.1370969725047,
+      "frames": 215
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Service entrance",
+      "station": 515.2674178625667
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Butler entrance",
+      "station": 560.1280640673087
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        618,
+        621
+      ],
+      "landingStation": 627.263808333577,
+      "doubleJump": false,
+      "frames": 176,
+      "deaths": 0
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        637,
+        639.2
+      ],
+      "landingStation": 646.6892098077785,
+      "doubleJump": false,
+      "frames": 66,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Banquet runway cleared",
+      "station": 705.1736530433706
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        761,
+        764
+      ],
+      "landingStation": 771.733829870391,
+      "doubleJump": false,
+      "frames": 165,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Serving stair complete",
+      "station": 817.1633039917143
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        923,
+        926
+      ],
+      "landingStation": 930.5524035369342,
+      "doubleJump": false,
+      "frames": 156,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Armour procession",
+      "station": 983.5728453203154
+    },
+    {
+      "test": "input-only broken railway grind transfers",
+      "catches": [
+        {
+          "frame": 11651,
+          "rail": 0,
+          "station": 1000.0569574637383
+        },
+        {
+          "frame": 11795,
+          "rail": 1,
+          "station": 1031.4488668766369
+        }
+      ],
+      "exitStation": 1055.2740628469628,
+      "frames": 342,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Drawbridge cleared",
+      "station": 1059.8370755915162
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Freight boarding",
+      "station": 1084.8067504357423
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1114,
+        1117
+      ],
+      "landingStation": 1122.7265422636638,
+      "doubleJump": false,
+      "frames": 157,
+      "deaths": 0
+    },
+    {
+      "test": "input-only moving-cart relay",
+      "relay": 1,
+      "landings": [
+        {
+          "cart": 2,
+          "frame": 13536,
+          "position": [
+            -7.999089748774497,
+            2.040039059519768,
+            -1161.9765718688493
+          ],
+          "mover": 5,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 3,
+          "frame": 13796,
+          "position": [
+            -7.999089748774497,
+            2.040039059519768,
+            -1168.0782530065808
+          ],
+          "mover": 6,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 4,
+          "frame": 13968,
+          "position": [
+            -7.999089748774497,
+            2.040039059519768,
+            -1171.7331470811343
+          ],
+          "mover": 7,
+          "overlappingExitIsland": false
+        }
+      ],
+      "exitStation": 1206.362236327455,
+      "frames": 1155,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Freight transfer island",
+      "station": 1210.1274829985284
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1269,
+        1272
+      ],
+      "landingStation": 1280.9861337959458,
+      "doubleJump": false,
+      "frames": 141,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Lower train platform",
+      "station": 1282.8334098426599
+    },
+    {
+      "test": "input-only moving-cart relay",
+      "relay": 2,
+      "landings": [
+        {
+          "cart": 2,
+          "frame": 15923,
+          "position": [
+            7.999585629964853,
+            -3.959960940480232,
+            -1303.9895676509968
+          ],
+          "mover": 9,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 3,
+          "frame": 16183,
+          "position": [
+            7.999585629964853,
+            -3.959960940480232,
+            -1310.0656559536465
+          ],
+          "mover": 10,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 4,
+          "frame": 16355,
+          "position": [
+            7.999585629964853,
+            -3.959960940480232,
+            -1313.7319883628572
+          ],
+          "mover": 11,
+          "overlappingExitIsland": false
+        }
+      ],
+      "exitStation": 1348.366964775853,
+      "frames": 1110,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Funeral train cleared",
+      "station": 1351.1249149410226
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Steam crypt entry",
+      "station": 1380.5588727120576
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1399,
+        1402
+      ],
+      "landingStation": 1408.238466369263,
+      "doubleJump": false,
+      "frames": 161,
+      "deaths": 0
+    },
+    {
+      "test": "input-only broken railway grind transfers",
+      "catches": [
+        {
+          "frame": 17645,
+          "rail": 2,
+          "station": 1434.1683220287014
+        },
+        {
+          "frame": 17894,
+          "rail": 3,
+          "station": 1486.5446405975526
+        },
+        {
+          "frame": 18154,
+          "rail": 4,
+          "station": 1531.405744273011
+        }
+      ],
+      "exitStation": 1593.1048222404786,
+      "frames": 1291,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Hanging railway complete",
+      "station": 1598.1301177488883
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1637,
+        1640
+      ],
+      "landingStation": 1645.9574592285685,
+      "doubleJump": false,
+      "frames": 155,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Clockworks entrance",
+      "station": 1690.1661991780638
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 5.88,
+      "exitStation": 1726.144258550911,
+      "frames": 119
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1747,
+        1750
+      ],
+      "landingStation": 1751.3644270672798,
+      "doubleJump": true,
+      "frames": 257,
+      "deaths": 0
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 6.72,
+      "exitStation": 1787.137764017858,
+      "frames": 277
+    },
+    {
+      "test": "input-only moving-cart relay",
+      "relay": 3,
+      "landings": [
+        {
+          "cart": 2,
+          "frame": 21959,
+          "position": [
+            -0.004402882102729654,
+            10.040039059519767,
+            -1829.0345949647162
+          ],
+          "mover": 13,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 3,
+          "frame": 22218,
+          "position": [
+            -0.004402882102729676,
+            10.040039059519767,
+            -1835.0664589550047
+          ],
+          "mover": 14,
+          "overlappingExitIsland": false
+        },
+        {
+          "cart": 4,
+          "frame": 22390,
+          "position": [
+            -0.004402882102729609,
+            10.040039059519767,
+            -1838.732061050546
+          ],
+          "mover": 15,
+          "overlappingExitIsland": false
+        }
+      ],
+      "exitStation": 1873.3666645574299,
+      "frames": 1291,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "High convoy complete",
+      "station": 1880.3952675675912
+    },
+    {
+      "test": "input-only swinging axe crossing",
+      "initialAxePhase": 7.56,
+      "exitStation": 1924.0077093341579,
+      "frames": 349
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1938,
+        1941
+      ],
+      "landingStation": 1944.995209334163,
+      "doubleJump": false,
+      "frames": 106,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Boiler room cleared",
+      "station": 1955.1513848761315
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Throne antechamber",
+      "station": 2019.1628575867135
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        2063,
+        2066
+      ],
+      "landingStation": 2071.948484207401,
+      "doubleJump": false,
+      "frames": 157,
+      "deaths": 0
+    },
+    {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        2110,
+        2113
+      ],
+      "landingStation": 2119.2015451165576,
+      "doubleJump": false,
+      "frames": 155,
+      "deaths": 0
+    },
+    {
+      "test": "checkpoint banked through inputs",
+      "name": "Last vault departure",
+      "station": 2156.929016754009
+    },
+    {
+      "test": "input-only broken railway grind transfers",
+      "catches": [
+        {
+          "frame": 25899,
+          "rail": 5,
+          "station": 2172.1538508671783
+        },
+        {
+          "frame": 26033,
+          "rail": 6,
+          "station": 2201.4101079712254
+        }
+      ],
+      "exitStation": 2227.274954153437,
+      "frames": 341,
+      "deaths": 0
+    }
+  ],
+  "deaths": 0,
+  "actions": [
+    {
+      "name": "walk authored chamber route to 20.0",
+      "firstFrame": 20,
+      "lastFrame": 197,
+      "seconds": 2.95
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 209,
+      "lastFrame": 327,
+      "seconds": 1.9666666666666666
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 328,
+      "lastFrame": 364,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 364,
+      "lastFrame": 428,
+      "seconds": 1.0666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 52.0",
+      "firstFrame": 428,
+      "lastFrame": 428,
+      "seconds": 0
+    },
+    {
+      "name": "approach checkpoint Bathhouse boarding",
+      "firstFrame": 448,
+      "lastFrame": 530,
+      "seconds": 1.3666666666666667
+    },
+    {
+      "name": "approach checkpoint Bathhouse boarding",
+      "firstFrame": 448,
+      "lastFrame": 560,
+      "seconds": 1.8666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 74.0",
+      "firstFrame": 585,
+      "lastFrame": 785,
+      "seconds": 3.3333333333333335
+    },
+    {
+      "name": "wait on the loading dock for the incoming train",
+      "firstFrame": 805,
+      "lastFrame": 1087,
+      "seconds": 4.7
+    },
+    {
+      "name": "approach open carriage boarding end",
+      "firstFrame": 1087,
+      "lastFrame": 1171,
+      "seconds": 1.4
+    },
+    {
+      "name": "jump into the first compact carriage",
+      "firstFrame": 1222,
+      "lastFrame": 1261,
+      "seconds": 0.65
+    },
+    {
+      "name": "settle inside boarding carriage",
+      "firstFrame": 1261,
+      "lastFrame": 1261,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 1 to its run-up",
+      "firstFrame": 1261,
+      "lastFrame": 1312,
+      "seconds": 0.85
+    },
+    {
+      "name": "land inside cart 2",
+      "firstFrame": 1381,
+      "lastFrame": 1420,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 1420,
+      "lastFrame": 1444,
+      "seconds": 0.4
+    },
+    {
+      "name": "walk cart 2 to its run-up",
+      "firstFrame": 1462,
+      "lastFrame": 1572,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "land inside cart 3",
+      "firstFrame": 1641,
+      "lastFrame": 1680,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 1680,
+      "lastFrame": 1680,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 3 to its run-up",
+      "firstFrame": 1698,
+      "lastFrame": 1744,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "land inside cart 4",
+      "firstFrame": 1813,
+      "lastFrame": 1852,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 1852,
+      "lastFrame": 1852,
+      "seconds": 0
+    },
+    {
+      "name": "ride the last carriage into the illuminated exit window",
+      "firstFrame": 1870,
+      "lastFrame": 1980,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "line up the last carriage exit",
+      "firstFrame": 1980,
+      "lastFrame": 2022,
+      "seconds": 0.7
+    },
+    {
+      "name": "jump out onto the station island",
+      "firstFrame": 2091,
+      "lastFrame": 2130,
+      "seconds": 0.65
+    },
+    {
+      "name": "walk authored chamber route to 128.0",
+      "firstFrame": 2130,
+      "lastFrame": 2206,
+      "seconds": 1.2666666666666666
+    },
+    {
+      "name": "approach checkpoint Last Departure",
+      "firstFrame": 2226,
+      "lastFrame": 2286,
+      "seconds": 1
+    },
+    {
+      "name": "approach checkpoint Last Departure",
+      "firstFrame": 2226,
+      "lastFrame": 2316,
+      "seconds": 1.5
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 2349,
+      "lastFrame": 2514,
+      "seconds": 2.75
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 2514,
+      "lastFrame": 2622,
+      "seconds": 1.8
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 2622,
+      "lastFrame": 2682,
+      "seconds": 1
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 2683,
+      "lastFrame": 2720,
+      "seconds": 0.6166666666666667
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 2720,
+      "lastFrame": 2776,
+      "seconds": 0.9333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 169.2",
+      "firstFrame": 2776,
+      "lastFrame": 2833,
+      "seconds": 0.95
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 2853,
+      "lastFrame": 3035,
+      "seconds": 3.033333333333333
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 3035,
+      "lastFrame": 3151,
+      "seconds": 1.9333333333333333
+    },
+    {
+      "name": "approach checkpoint First steam hall",
+      "firstFrame": 3159,
+      "lastFrame": 3175,
+      "seconds": 0.26666666666666666
+    },
+    {
+      "name": "approach checkpoint First steam hall",
+      "firstFrame": 3159,
+      "lastFrame": 3205,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "walk authored chamber route to 195.0",
+      "firstFrame": 3230,
+      "lastFrame": 3367,
+      "seconds": 2.283333333333333
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 3379,
+      "lastFrame": 3492,
+      "seconds": 1.8833333333333333
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 3493,
+      "lastFrame": 3529,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 3529,
+      "lastFrame": 3595,
+      "seconds": 1.1
+    },
+    {
+      "name": "approach checkpoint Under the castle",
+      "firstFrame": 3603,
+      "lastFrame": 3818,
+      "seconds": 3.5833333333333335
+    },
+    {
+      "name": "approach checkpoint Under the castle",
+      "firstFrame": 3603,
+      "lastFrame": 3848,
+      "seconds": 4.083333333333333
+    },
+    {
+      "name": "walk authored chamber route to 239.0",
+      "firstFrame": 3873,
+      "lastFrame": 4036,
+      "seconds": 2.716666666666667
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 4056,
+      "lastFrame": 4115,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 4115,
+      "lastFrame": 4225,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 280.0",
+      "firstFrame": 4225,
+      "lastFrame": 4464,
+      "seconds": 3.9833333333333334
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 4484,
+      "lastFrame": 4636,
+      "seconds": 2.533333333333333
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 4636,
+      "lastFrame": 4746,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 4746,
+      "lastFrame": 4813,
+      "seconds": 1.1166666666666667
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 4814,
+      "lastFrame": 4855,
+      "seconds": 0.6833333333333333
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 4855,
+      "lastFrame": 4900,
+      "seconds": 0.75
+    },
+    {
+      "name": "walk authored chamber route to 329.0",
+      "firstFrame": 4900,
+      "lastFrame": 5034,
+      "seconds": 2.2333333333333334
+    },
+    {
+      "name": "approach checkpoint Execution flags",
+      "firstFrame": 5054,
+      "lastFrame": 5150,
+      "seconds": 1.6
+    },
+    {
+      "name": "approach checkpoint Execution flags",
+      "firstFrame": 5054,
+      "lastFrame": 5180,
+      "seconds": 2.1
+    },
+    {
+      "name": "walk authored chamber route to 335.0",
+      "firstFrame": 5205,
+      "lastFrame": 5284,
+      "seconds": 1.3166666666666667
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 5296,
+      "lastFrame": 5429,
+      "seconds": 2.216666666666667
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 5430,
+      "lastFrame": 5466,
+      "seconds": 0.6
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 5466,
+      "lastFrame": 5491,
+      "seconds": 0.4166666666666667
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 5492,
+      "lastFrame": 5528,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 5528,
+      "lastFrame": 5599,
+      "seconds": 1.1833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 397.1",
+      "firstFrame": 5599,
+      "lastFrame": 5599,
+      "seconds": 0
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 5619,
+      "lastFrame": 5716,
+      "seconds": 1.6166666666666667
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 5716,
+      "lastFrame": 5817,
+      "seconds": 1.6833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 421.0",
+      "firstFrame": 5817,
+      "lastFrame": 5923,
+      "seconds": 1.7666666666666666
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 5935,
+      "lastFrame": 6055,
+      "seconds": 2
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 6056,
+      "lastFrame": 6092,
+      "seconds": 0.6
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 6092,
+      "lastFrame": 6126,
+      "seconds": 0.5666666666666667
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 6127,
+      "lastFrame": 6163,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 6163,
+      "lastFrame": 6237,
+      "seconds": 1.2333333333333334
+    },
+    {
+      "name": "walk authored chamber route to 480.0",
+      "firstFrame": 6237,
+      "lastFrame": 6237,
+      "seconds": 0
+    },
+    {
+      "name": "approach checkpoint Flagstone crossings complete",
+      "firstFrame": 6257,
+      "lastFrame": 6409,
+      "seconds": 2.533333333333333
+    },
+    {
+      "name": "approach checkpoint Flagstone crossings complete",
+      "firstFrame": 6257,
+      "lastFrame": 6439,
+      "seconds": 3.033333333333333
+    },
+    {
+      "name": "walk authored chamber route to 488.0",
+      "firstFrame": 6464,
+      "lastFrame": 6551,
+      "seconds": 1.45
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 6571,
+      "lastFrame": 6796,
+      "seconds": 3.75
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 6796,
+      "lastFrame": 6905,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 6913,
+      "lastFrame": 7038,
+      "seconds": 2.0833333333333335
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 7038,
+      "lastFrame": 7128,
+      "seconds": 1.5
+    },
+    {
+      "name": "approach checkpoint Service entrance",
+      "firstFrame": 7136,
+      "lastFrame": 7160,
+      "seconds": 0.4
+    },
+    {
+      "name": "approach checkpoint Service entrance",
+      "firstFrame": 7136,
+      "lastFrame": 7190,
+      "seconds": 0.9
+    },
+    {
+      "name": "walk authored chamber route to 558.0",
+      "firstFrame": 7215,
+      "lastFrame": 7600,
+      "seconds": 6.416666666666667
+    },
+    {
+      "name": "approach checkpoint Butler entrance",
+      "firstFrame": 7620,
+      "lastFrame": 7679,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "approach checkpoint Butler entrance",
+      "firstFrame": 7620,
+      "lastFrame": 7709,
+      "seconds": 1.4833333333333334
+    },
+    {
+      "name": "walk authored chamber route to 600.0",
+      "firstFrame": 7734,
+      "lastFrame": 8087,
+      "seconds": 5.883333333333333
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 8099,
+      "lastFrame": 8228,
+      "seconds": 2.15
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 8229,
+      "lastFrame": 8275,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 8275,
+      "lastFrame": 8304,
+      "seconds": 0.48333333333333334
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 8305,
+      "lastFrame": 8341,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 8341,
+      "lastFrame": 8406,
+      "seconds": 1.0833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 703.0",
+      "firstFrame": 8406,
+      "lastFrame": 8806,
+      "seconds": 6.666666666666667
+    },
+    {
+      "name": "approach checkpoint Banquet runway cleared",
+      "firstFrame": 8826,
+      "lastFrame": 8886,
+      "seconds": 1
+    },
+    {
+      "name": "approach checkpoint Banquet runway cleared",
+      "firstFrame": 8826,
+      "lastFrame": 8916,
+      "seconds": 1.5
+    },
+    {
+      "name": "walk authored chamber route to 743.0",
+      "firstFrame": 8941,
+      "lastFrame": 9275,
+      "seconds": 5.566666666666666
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 9287,
+      "lastFrame": 9411,
+      "seconds": 2.0666666666666664
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 9412,
+      "lastFrame": 9452,
+      "seconds": 0.6666666666666666
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 9452,
+      "lastFrame": 9509,
+      "seconds": 0.95
+    },
+    {
+      "name": "walk authored chamber route to 815.0",
+      "firstFrame": 9509,
+      "lastFrame": 9812,
+      "seconds": 5.05
+    },
+    {
+      "name": "approach checkpoint Serving stair complete",
+      "firstFrame": 9832,
+      "lastFrame": 9892,
+      "seconds": 1
+    },
+    {
+      "name": "approach checkpoint Serving stair complete",
+      "firstFrame": 9832,
+      "lastFrame": 9922,
+      "seconds": 1.5
+    },
+    {
+      "name": "walk authored chamber route to 905.0",
+      "firstFrame": 9947,
+      "lastFrame": 10676,
+      "seconds": 12.15
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 10688,
+      "lastFrame": 10807,
+      "seconds": 1.9833333333333334
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 10808,
+      "lastFrame": 10844,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 10844,
+      "lastFrame": 10901,
+      "seconds": 0.95
+    },
+    {
+      "name": "walk authored chamber route to 981.0",
+      "firstFrame": 10901,
+      "lastFrame": 11281,
+      "seconds": 6.333333333333333
+    },
+    {
+      "name": "approach checkpoint Armour procession",
+      "firstFrame": 11301,
+      "lastFrame": 11374,
+      "seconds": 1.2166666666666666
+    },
+    {
+      "name": "approach checkpoint Armour procession",
+      "firstFrame": 11301,
+      "lastFrame": 11404,
+      "seconds": 1.7166666666666666
+    },
+    {
+      "name": "walk authored chamber route to 992.0",
+      "firstFrame": 11429,
+      "lastFrame": 11543,
+      "seconds": 1.9
+    },
+    {
+      "name": "approach broken railway",
+      "firstFrame": 11563,
+      "lastFrame": 11650,
+      "seconds": 1.45
+    },
+    {
+      "name": "catch first cartless rail",
+      "firstFrame": 11651,
+      "lastFrame": 11651,
+      "seconds": 0
+    },
+    {
+      "name": "grind to broken rail 1 end",
+      "firstFrame": 11651,
+      "lastFrame": 11753,
+      "seconds": 1.7
+    },
+    {
+      "name": "catch receiving broken railway",
+      "firstFrame": 11754,
+      "lastFrame": 11795,
+      "seconds": 0.6833333333333333
+    },
+    {
+      "name": "ride broken track exit onto actual floor",
+      "firstFrame": 11795,
+      "lastFrame": 11905,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 11905,
+      "lastFrame": 11961,
+      "seconds": 0.9333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1058.0",
+      "firstFrame": 11961,
+      "lastFrame": 11961,
+      "seconds": 0
+    },
+    {
+      "name": "approach checkpoint Drawbridge cleared",
+      "firstFrame": 11981,
+      "lastFrame": 12034,
+      "seconds": 0.8833333333333333
+    },
+    {
+      "name": "approach checkpoint Drawbridge cleared",
+      "firstFrame": 11981,
+      "lastFrame": 12064,
+      "seconds": 1.3833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1083.0",
+      "firstFrame": 12089,
+      "lastFrame": 12311,
+      "seconds": 3.6999999999999997
+    },
+    {
+      "name": "approach checkpoint Freight boarding",
+      "firstFrame": 12331,
+      "lastFrame": 12385,
+      "seconds": 0.9
+    },
+    {
+      "name": "approach checkpoint Freight boarding",
+      "firstFrame": 12331,
+      "lastFrame": 12415,
+      "seconds": 1.4
+    },
+    {
+      "name": "walk authored chamber route to 1096.0",
+      "firstFrame": 12440,
+      "lastFrame": 12567,
+      "seconds": 2.1166666666666667
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 12579,
+      "lastFrame": 12697,
+      "seconds": 1.9666666666666666
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 12698,
+      "lastFrame": 12736,
+      "seconds": 0.6333333333333333
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 12736,
+      "lastFrame": 12795,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1160.0",
+      "firstFrame": 12795,
+      "lastFrame": 13070,
+      "seconds": 4.583333333333333
+    },
+    {
+      "name": "wait on the loading dock for the incoming train",
+      "firstFrame": 13090,
+      "lastFrame": 13203,
+      "seconds": 1.8833333333333333
+    },
+    {
+      "name": "approach open carriage boarding end",
+      "firstFrame": 13203,
+      "lastFrame": 13287,
+      "seconds": 1.4
+    },
+    {
+      "name": "jump into the first compact carriage",
+      "firstFrame": 13338,
+      "lastFrame": 13377,
+      "seconds": 0.65
+    },
+    {
+      "name": "settle inside boarding carriage",
+      "firstFrame": 13377,
+      "lastFrame": 13377,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 1 to its run-up",
+      "firstFrame": 13377,
+      "lastFrame": 13428,
+      "seconds": 0.85
+    },
+    {
+      "name": "land inside cart 2",
+      "firstFrame": 13497,
+      "lastFrame": 13536,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 13536,
+      "lastFrame": 13560,
+      "seconds": 0.4
+    },
+    {
+      "name": "walk cart 2 to its run-up",
+      "firstFrame": 13578,
+      "lastFrame": 13688,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "land inside cart 3",
+      "firstFrame": 13757,
+      "lastFrame": 13796,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 13796,
+      "lastFrame": 13796,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 3 to its run-up",
+      "firstFrame": 13814,
+      "lastFrame": 13860,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "land inside cart 4",
+      "firstFrame": 13929,
+      "lastFrame": 13968,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 13968,
+      "lastFrame": 13968,
+      "seconds": 0
+    },
+    {
+      "name": "ride the last carriage into the illuminated exit window",
+      "firstFrame": 13986,
+      "lastFrame": 14095,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "line up the last carriage exit",
+      "firstFrame": 14095,
+      "lastFrame": 14137,
+      "seconds": 0.7
+    },
+    {
+      "name": "jump out onto the station island",
+      "firstFrame": 14206,
+      "lastFrame": 14245,
+      "seconds": 0.65
+    },
+    {
+      "name": "walk authored chamber route to 1208.0",
+      "firstFrame": 14245,
+      "lastFrame": 14272,
+      "seconds": 0.45
+    },
+    {
+      "name": "approach checkpoint Freight transfer island",
+      "firstFrame": 14292,
+      "lastFrame": 14351,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "approach checkpoint Freight transfer island",
+      "firstFrame": 14292,
+      "lastFrame": 14381,
+      "seconds": 1.4833333333333334
+    },
+    {
+      "name": "walk authored chamber route to 1251.0",
+      "firstFrame": 14406,
+      "lastFrame": 14779,
+      "seconds": 6.216666666666667
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 14791,
+      "lastFrame": 14896,
+      "seconds": 1.75
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 14897,
+      "lastFrame": 14932,
+      "seconds": 0.5833333333333334
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 14932,
+      "lastFrame": 15005,
+      "seconds": 1.2166666666666666
+    },
+    {
+      "name": "approach checkpoint Lower train platform",
+      "firstFrame": 15013,
+      "lastFrame": 15261,
+      "seconds": 4.133333333333333
+    },
+    {
+      "name": "approach checkpoint Lower train platform",
+      "firstFrame": 15013,
+      "lastFrame": 15291,
+      "seconds": 4.633333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1302.0",
+      "firstFrame": 15316,
+      "lastFrame": 15502,
+      "seconds": 3.1
+    },
+    {
+      "name": "wait on the loading dock for the incoming train",
+      "firstFrame": 15522,
+      "lastFrame": 15590,
+      "seconds": 1.1333333333333333
+    },
+    {
+      "name": "approach open carriage boarding end",
+      "firstFrame": 15590,
+      "lastFrame": 15674,
+      "seconds": 1.4
+    },
+    {
+      "name": "jump into the first compact carriage",
+      "firstFrame": 15725,
+      "lastFrame": 15764,
+      "seconds": 0.65
+    },
+    {
+      "name": "settle inside boarding carriage",
+      "firstFrame": 15764,
+      "lastFrame": 15764,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 1 to its run-up",
+      "firstFrame": 15764,
+      "lastFrame": 15815,
+      "seconds": 0.85
+    },
+    {
+      "name": "land inside cart 2",
+      "firstFrame": 15884,
+      "lastFrame": 15923,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 15923,
+      "lastFrame": 15947,
+      "seconds": 0.4
+    },
+    {
+      "name": "walk cart 2 to its run-up",
+      "firstFrame": 15965,
+      "lastFrame": 16075,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "land inside cart 3",
+      "firstFrame": 16144,
+      "lastFrame": 16183,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 16183,
+      "lastFrame": 16183,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 3 to its run-up",
+      "firstFrame": 16201,
+      "lastFrame": 16247,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "land inside cart 4",
+      "firstFrame": 16316,
+      "lastFrame": 16355,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 16355,
+      "lastFrame": 16355,
+      "seconds": 0
+    },
+    {
+      "name": "ride the last carriage into the illuminated exit window",
+      "firstFrame": 16373,
+      "lastFrame": 16482,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "line up the last carriage exit",
+      "firstFrame": 16482,
+      "lastFrame": 16524,
+      "seconds": 0.7
+    },
+    {
+      "name": "jump out onto the station island",
+      "firstFrame": 16593,
+      "lastFrame": 16632,
+      "seconds": 0.65
+    },
+    {
+      "name": "walk authored chamber route to 1349.0",
+      "firstFrame": 16632,
+      "lastFrame": 16643,
+      "seconds": 0.18333333333333332
+    },
+    {
+      "name": "approach checkpoint Funeral train cleared",
+      "firstFrame": 16663,
+      "lastFrame": 16722,
+      "seconds": 0.9833333333333333
+    },
+    {
+      "name": "approach checkpoint Funeral train cleared",
+      "firstFrame": 16663,
+      "lastFrame": 16752,
+      "seconds": 1.4833333333333334
+    },
+    {
+      "name": "walk authored chamber route to 1378.0",
+      "firstFrame": 16777,
+      "lastFrame": 17023,
+      "seconds": 4.1
+    },
+    {
+      "name": "approach checkpoint Steam crypt entry",
+      "firstFrame": 17043,
+      "lastFrame": 17120,
+      "seconds": 1.2833333333333332
+    },
+    {
+      "name": "approach checkpoint Steam crypt entry",
+      "firstFrame": 17043,
+      "lastFrame": 17150,
+      "seconds": 1.7833333333333332
+    },
+    {
+      "name": "walk authored chamber route to 1381.0",
+      "firstFrame": 17175,
+      "lastFrame": 17203,
+      "seconds": 0.4666666666666667
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 17215,
+      "lastFrame": 17339,
+      "seconds": 2.0666666666666664
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 17340,
+      "lastFrame": 17376,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 17376,
+      "lastFrame": 17434,
+      "seconds": 0.9666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 1426.0",
+      "firstFrame": 17434,
+      "lastFrame": 17537,
+      "seconds": 1.7166666666666666
+    },
+    {
+      "name": "approach broken railway",
+      "firstFrame": 17557,
+      "lastFrame": 17644,
+      "seconds": 1.45
+    },
+    {
+      "name": "catch first cartless rail",
+      "firstFrame": 17645,
+      "lastFrame": 17645,
+      "seconds": 0
+    },
+    {
+      "name": "grind to broken rail 1 end",
+      "firstFrame": 17645,
+      "lastFrame": 17852,
+      "seconds": 3.4499999999999997
+    },
+    {
+      "name": "catch receiving broken railway",
+      "firstFrame": 17853,
+      "lastFrame": 17894,
+      "seconds": 0.6833333333333333
+    },
+    {
+      "name": "grind to broken rail 2 end",
+      "firstFrame": 17894,
+      "lastFrame": 18112,
+      "seconds": 3.6333333333333333
+    },
+    {
+      "name": "catch receiving broken railway",
+      "firstFrame": 18113,
+      "lastFrame": 18154,
+      "seconds": 0.6833333333333333
+    },
+    {
+      "name": "ride broken track exit onto actual floor",
+      "firstFrame": 18154,
+      "lastFrame": 18848,
+      "seconds": 11.566666666666666
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 18848,
+      "lastFrame": 18893,
+      "seconds": 0.75
+    },
+    {
+      "name": "walk authored chamber route to 1596.0",
+      "firstFrame": 18893,
+      "lastFrame": 18893,
+      "seconds": 0
+    },
+    {
+      "name": "approach checkpoint Hanging railway complete",
+      "firstFrame": 18913,
+      "lastFrame": 18964,
+      "seconds": 0.85
+    },
+    {
+      "name": "approach checkpoint Hanging railway complete",
+      "firstFrame": 18913,
+      "lastFrame": 18994,
+      "seconds": 1.35
+    },
+    {
+      "name": "walk authored chamber route to 1619.0",
+      "firstFrame": 19019,
+      "lastFrame": 19218,
+      "seconds": 3.3166666666666664
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 19230,
+      "lastFrame": 19348,
+      "seconds": 1.9666666666666666
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 19349,
+      "lastFrame": 19385,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 19385,
+      "lastFrame": 19449,
+      "seconds": 1.0666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 1688.0",
+      "firstFrame": 19449,
+      "lastFrame": 19748,
+      "seconds": 4.983333333333333
+    },
+    {
+      "name": "approach checkpoint Clockworks entrance",
+      "firstFrame": 19768,
+      "lastFrame": 19828,
+      "seconds": 1
+    },
+    {
+      "name": "approach checkpoint Clockworks entrance",
+      "firstFrame": 19768,
+      "lastFrame": 19858,
+      "seconds": 1.5
+    },
+    {
+      "name": "walk authored chamber route to 1713.0",
+      "firstFrame": 19883,
+      "lastFrame": 20096,
+      "seconds": 3.55
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 20116,
+      "lastFrame": 20125,
+      "seconds": 0.15
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 20125,
+      "lastFrame": 20235,
+      "seconds": 1.8333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1729.0",
+      "firstFrame": 20235,
+      "lastFrame": 20275,
+      "seconds": 0.6666666666666666
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 20287,
+      "lastFrame": 20487,
+      "seconds": 3.3333333333333335
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 20488,
+      "lastFrame": 20544,
+      "seconds": 0.9333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1774.0",
+      "firstFrame": 20544,
+      "lastFrame": 20739,
+      "seconds": 3.25
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 20759,
+      "lastFrame": 20925,
+      "seconds": 2.7666666666666666
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 20925,
+      "lastFrame": 21036,
+      "seconds": 1.8499999999999999
+    },
+    {
+      "name": "walk authored chamber route to 1827.0",
+      "firstFrame": 21036,
+      "lastFrame": 21356,
+      "seconds": 5.333333333333333
+    },
+    {
+      "name": "wait on the loading dock for the incoming train",
+      "firstFrame": 21376,
+      "lastFrame": 21625,
+      "seconds": 4.15
+    },
+    {
+      "name": "approach open carriage boarding end",
+      "firstFrame": 21625,
+      "lastFrame": 21709,
+      "seconds": 1.4
+    },
+    {
+      "name": "jump into the first compact carriage",
+      "firstFrame": 21760,
+      "lastFrame": 21799,
+      "seconds": 0.65
+    },
+    {
+      "name": "settle inside boarding carriage",
+      "firstFrame": 21799,
+      "lastFrame": 21799,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 1 to its run-up",
+      "firstFrame": 21799,
+      "lastFrame": 21851,
+      "seconds": 0.8666666666666667
+    },
+    {
+      "name": "land inside cart 2",
+      "firstFrame": 21920,
+      "lastFrame": 21959,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 21959,
+      "lastFrame": 21983,
+      "seconds": 0.4
+    },
+    {
+      "name": "walk cart 2 to its run-up",
+      "firstFrame": 22001,
+      "lastFrame": 22110,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "land inside cart 3",
+      "firstFrame": 22179,
+      "lastFrame": 22218,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 22218,
+      "lastFrame": 22218,
+      "seconds": 0
+    },
+    {
+      "name": "walk cart 3 to its run-up",
+      "firstFrame": 22236,
+      "lastFrame": 22282,
+      "seconds": 0.7666666666666666
+    },
+    {
+      "name": "land inside cart 4",
+      "firstFrame": 22351,
+      "lastFrame": 22390,
+      "seconds": 0.65
+    },
+    {
+      "name": "brake the earned jump momentum on the receiving cart",
+      "firstFrame": 22390,
+      "lastFrame": 22390,
+      "seconds": 0
+    },
+    {
+      "name": "ride the last carriage into the illuminated exit window",
+      "firstFrame": 22408,
+      "lastFrame": 22517,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "line up the last carriage exit",
+      "firstFrame": 22517,
+      "lastFrame": 22559,
+      "seconds": 0.7
+    },
+    {
+      "name": "jump out onto the station island",
+      "firstFrame": 22628,
+      "lastFrame": 22667,
+      "seconds": 0.65
+    },
+    {
+      "name": "walk authored chamber route to 1878.0",
+      "firstFrame": 22667,
+      "lastFrame": 22721,
+      "seconds": 0.9
+    },
+    {
+      "name": "approach checkpoint High convoy complete",
+      "firstFrame": 22741,
+      "lastFrame": 22806,
+      "seconds": 1.0833333333333333
+    },
+    {
+      "name": "approach checkpoint High convoy complete",
+      "firstFrame": 22741,
+      "lastFrame": 22836,
+      "seconds": 1.5833333333333333
+    },
+    {
+      "name": "walk authored chamber route to 1911.0",
+      "firstFrame": 22861,
+      "lastFrame": 23141,
+      "seconds": 4.666666666666667
+    },
+    {
+      "name": "wait for execution axe safe timing window",
+      "firstFrame": 23161,
+      "lastFrame": 23401,
+      "seconds": 4
+    },
+    {
+      "name": "walk through swinging axe timing window",
+      "firstFrame": 23401,
+      "lastFrame": 23510,
+      "seconds": 1.8166666666666667
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 23510,
+      "lastFrame": 23579,
+      "seconds": 1.15
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 23580,
+      "lastFrame": 23616,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 23616,
+      "lastFrame": 23674,
+      "seconds": 0.9666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 1953.0",
+      "firstFrame": 23674,
+      "lastFrame": 23705,
+      "seconds": 0.5166666666666666
+    },
+    {
+      "name": "approach checkpoint Boiler room cleared",
+      "firstFrame": 23725,
+      "lastFrame": 23786,
+      "seconds": 1.0166666666666666
+    },
+    {
+      "name": "approach checkpoint Boiler room cleared",
+      "firstFrame": 23725,
+      "lastFrame": 23816,
+      "seconds": 1.5166666666666666
+    },
+    {
+      "name": "walk authored chamber route to 2017.0",
+      "firstFrame": 23841,
+      "lastFrame": 24365,
+      "seconds": 8.733333333333333
+    },
+    {
+      "name": "approach checkpoint Throne antechamber",
+      "firstFrame": 24385,
+      "lastFrame": 24445,
+      "seconds": 1
+    },
+    {
+      "name": "approach checkpoint Throne antechamber",
+      "firstFrame": 24385,
+      "lastFrame": 24475,
+      "seconds": 1.5
+    },
+    {
+      "name": "walk authored chamber route to 2045.0",
+      "firstFrame": 24500,
+      "lastFrame": 24739,
+      "seconds": 3.9833333333333334
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 24751,
+      "lastFrame": 24871,
+      "seconds": 2
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 24872,
+      "lastFrame": 24908,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 24908,
+      "lastFrame": 24972,
+      "seconds": 1.0666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 2092.0",
+      "firstFrame": 24972,
+      "lastFrame": 25092,
+      "seconds": 2
+    },
+    {
+      "name": "earn approach speed on broken bathhouse paving",
+      "firstFrame": 25104,
+      "lastFrame": 25222,
+      "seconds": 1.9666666666666666
+    },
+    {
+      "name": "land beyond the collapsed flagstones",
+      "firstFrame": 25223,
+      "lastFrame": 25259,
+      "seconds": 0.6
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 25259,
+      "lastFrame": 25323,
+      "seconds": 1.0666666666666667
+    },
+    {
+      "name": "walk authored chamber route to 2155.0",
+      "firstFrame": 25323,
+      "lastFrame": 25566,
+      "seconds": 4.05
+    },
+    {
+      "name": "approach checkpoint Last vault departure",
+      "firstFrame": 25586,
+      "lastFrame": 25642,
+      "seconds": 0.9333333333333333
+    },
+    {
+      "name": "approach checkpoint Last vault departure",
+      "firstFrame": 25586,
+      "lastFrame": 25672,
+      "seconds": 1.4333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 2164.0",
+      "firstFrame": 25697,
+      "lastFrame": 25791,
+      "seconds": 1.5666666666666667
+    },
+    {
+      "name": "approach broken railway",
+      "firstFrame": 25811,
+      "lastFrame": 25898,
+      "seconds": 1.45
+    },
+    {
+      "name": "catch first cartless rail",
+      "firstFrame": 25899,
+      "lastFrame": 25899,
+      "seconds": 0
+    },
+    {
+      "name": "grind to broken rail 1 end",
+      "firstFrame": 25899,
+      "lastFrame": 25991,
+      "seconds": 1.5333333333333332
+    },
+    {
+      "name": "catch receiving broken railway",
+      "firstFrame": 25992,
+      "lastFrame": 26033,
+      "seconds": 0.6833333333333333
+    },
+    {
+      "name": "ride broken track exit onto actual floor",
+      "firstFrame": 26033,
+      "lastFrame": 26152,
+      "seconds": 1.9833333333333334
+    },
+    {
+      "name": "brake on supported receiving ground",
+      "firstFrame": 26152,
+      "lastFrame": 26208,
+      "seconds": 0.9333333333333333
+    },
+    {
+      "name": "walk authored chamber route to 2255.0",
+      "firstFrame": 26208,
+      "lastFrame": 26342,
+      "seconds": 2.2333333333333334
+    },
+    {
+      "name": "cross the actual emerald throne finish gate",
+      "firstFrame": 26354,
+      "lastFrame": 26354,
+      "seconds": 0
+    }
+  ]
+}

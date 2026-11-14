@@ -13,11 +13,12 @@ const sampler={point:(s:number,y=0,u=0):P=>[s,y,u],height:()=>0};
 const prop=(dkind:CustomComponent['dkind'],p:P,s:P,yaw=0,nm='Custard bonus scenery',color='#ffffff')=>
   C.push({t:'decor',dkind,p,s,yaw,color,scenerySolid:false,solid:false,edgeGrinding:false,grp:91,nm});
 
-// Preserve the established 18 reward anchors when sculpting the bank, before
-// regrouping its crates below. The two 2m gaps and single-plane controls stay.
+// These established anchors define the sculpted bank. Keep that geometry
+// independent of subsequent crate changes in the shared Easy Street room.
+const BANK_ANCHORS=[-9,-6,-3,0,7,10,13,16,16,18,25,28,31,34,37,40,43,46,50];
 for(const [a,b,y] of [[-16,2,0],[4,20,.35],[22,54,0]]){
-  const anchors=EASY_BONUS_LEVEL.components.filter(c=>['crate','gate'].includes(c.t)&&c.p[0]>=a&&c.p[0]<=b)
-    .map(c=>({s:c.p[0],u:0,y,radius:1.3,along:1.7}));
+  const anchors=BANK_ANCHORS.filter(x=>x>=a&&x<=b)
+    .map(x=>({s:x,u:0,y,radius:1.3,along:1.7}));
   anchors.push({s:a+2,u:0,y,radius:1.8,along:2},{s:b-1,u:0,y,radius:1.8,along:2});
   const bank:CreekBank={a,b,top:y,width:6.4,offset:0,minHalf:2.85,protected:anchors,
     name:'Custard bonus moss-capped sandstone shelf',group:1,spacing:1,bare:()=>.84};

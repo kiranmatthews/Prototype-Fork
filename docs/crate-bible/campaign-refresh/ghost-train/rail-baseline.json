@@ -1,0 +1,12 @@
+[
+  {
+    "baseline": true,
+    "passed": false,
+    "error": "catch receiving broken railway: {\"frame\":252,\"time\":4.2,\"position\":[0,6.49998046875,-1013.6397307807791],\"heading\":[0,0,-1],\"state\":\"air\",\"grounded\":false,\"speed\":7.641717801651307,\"verticalSpeed\":5.613859053939319,\"bailing\":true,\"deaths\":0,\"mover\":null,\"ground\":null,\"rail\":null,\"railDistance\":null,\"balance\":0,\"input\":{\"moveX\":0,\"moveY\":1,\"jumpHeld\":false,\"grindHeld\":true,\"spinHeld\":false,\"grabHeld\":false,\"transferHeld\":false,\"jumpPressed\":false,\"jumpReleased\":false,\"grindPressed\":false,\"spinPressed\":false,\"grabPressed\":false,\"transferPressed\":false,\"restartPressed\":false}}"
+  },
+  {
+    "baseline": false,
+    "passed": false,
+    "error": "catch receiving broken railway: {\"frame\":252,\"time\":4.2,\"position\":[0,6.49998046875,-1013.6397307807791],\"heading\":[0,0,-1],\"state\":\"air\",\"grounded\":false,\"speed\":7.641717801651307,\"verticalSpeed\":5.613859053939319,\"bailing\":true,\"deaths\":0,\"mover\":null,\"ground\":null,\"rail\":null,\"railDistance\":null,\"balance\":0,\"input\":{\"moveX\":0,\"moveY\":1,\"jumpHeld\":false,\"grindHeld\":true,\"spinHeld\":false,\"grabHeld\":false,\"transferHeld\":false,\"jumpPressed\":false,\"jumpReleased\":false,\"grindPressed\":false,\"spinPressed\":false,\"grabPressed\":false,\"transferPressed\":false,\"restartPressed\":false}}"
+  }
+]

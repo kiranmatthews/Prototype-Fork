@@ -83,7 +83,7 @@ try {
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { BonusPayout } = await server.ssrLoadModule('/src/bonusPayout.ts');
   const { mergeCompletedBonusInventory } = await server.ssrLoadModule('/src/campaign.ts');
-  assert.equal(count, 18);
+  assert.equal(count, 24);
   assert.equal(original.components.filter(c => c.t === 'crate').length, 34, 'original challenge was overwritten');
   assert.equal(findLevel('bonus-easy').data, data);
   assert.equal(data.hudMode, 'bonus');

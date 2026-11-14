@@ -1,0 +1,61 @@
+JOURNEY Collapsed bathhouse crossing 47.23 364
+JOURNEY Bathhouse boarding 54.31 585
+JOURNEY convoy 0 120.37 2130
+JOURNEY Last Departure 130.17 2341
+JOURNEY Close execution axe 143.07 2622
+JOURNEY Collapsed bathhouse crossing 161.16 2720
+JOURNEY Close execution axe 182.29 3151
+JOURNEY First steam hall 182.51 3230
+JOURNEY Collapsed bathhouse crossing 222.71 3529
+JOURNEY Under the castle 222.88 3873
+JOURNEY Close execution axe 252.10 4225
+JOURNEY Close execution axe 293.15 4746
+JOURNEY Collapsed bathhouse crossing 312.74 4855
+JOURNEY Execution flags 331.70 5205
+JOURNEY Collapsed bathhouse crossing 362.92 5466
+JOURNEY Collapsed bathhouse crossing 385.08 5528
+JOURNEY Close execution axe 410.19 5817
+JOURNEY Collapsed bathhouse crossing 448.35 6092
+JOURNEY Collapsed bathhouse crossing 474.24 6163
+JOURNEY Flagstone crossings complete 481.86 6464
+JOURNEY Close execution axe 501.01 6905
+JOURNEY Close execution axe 513.14 7128
+JOURNEY Service entrance 515.27 7215
+JOURNEY Butler entrance 560.13 7734
+JOURNEY Collapsed bathhouse crossing 627.26 8275
+JOURNEY Broken serving table 646.69 8341
+JOURNEY Banquet runway cleared 705.17 8941
+JOURNEY Collapsed bathhouse crossing 771.73 9452
+JOURNEY Serving stair complete 817.16 9947
+JOURNEY Collapsed bathhouse crossing 930.55 10844
+JOURNEY Armour procession 983.57 11429
+JOURNEY rail vault 998 1055.27 11905
+JOURNEY Drawbridge cleared 1059.84 12089
+JOURNEY Freight boarding 1084.81 12440
+JOURNEY Collapsed bathhouse crossing 1122.73 12736
+JOURNEY convoy 1 1206.36 14245
+JOURNEY Freight transfer island 1210.13 14406
+JOURNEY Collapsed bathhouse crossing 1280.99 14932
+JOURNEY Lower train platform 1282.83 15316
+JOURNEY convoy 2 1348.37 16632
+JOURNEY Funeral train cleared 1351.12 16777
+JOURNEY Steam crypt entry 1380.56 17175
+JOURNEY Collapsed bathhouse crossing 1408.24 17376
+JOURNEY rail vault 1432 1593.10 18848
+JOURNEY Hanging railway complete 1598.13 19019
+JOURNEY Collapsed bathhouse crossing 1645.96 19385
+JOURNEY Clockworks entrance 1690.17 19883
+JOURNEY Close execution axe 1726.14 20235
+JOURNEY Collapsed bathhouse crossing 1751.36 20544
+JOURNEY Close execution axe 1787.14 21036
+JOURNEY convoy 3 1873.37 22667
+JOURNEY High convoy complete 1880.40 22861
+JOURNEY Close execution axe 1924.01 23510
+JOURNEY Collapsed bathhouse crossing 1945.00 23616
+JOURNEY Boiler room cleared 1955.15 23841
+JOURNEY Throne antechamber 2019.16 24500
+JOURNEY Collapsed bathhouse crossing 2071.95 24908
+JOURNEY Collapsed bathhouse crossing 2119.20 25259
+JOURNEY Last vault departure 2156.93 25697
+JOURNEY rail vault 2170 2227.27 26152
+{"test":"continuous input-only ghost train journey","state":"finished","frames":26334,"seconds":438.9,"distance":2544.420296364973,"largestStep":0.7385583579202474,"checkpoints":23,"evidence":[{"test":"input-only execution-gallery floor jump","gap":[38,40.6],"landingStation":47.230250648706026,"doubleJump":false,"frames":155,"deaths":0},{"test":"checkpoint banked through inputs","name":"Bathhouse boarding","station":54.311751146655034},{"test":"input-only moving-cart relay","relay":0,"landings":[{"cart":2,"frame":1420,"position":[-8.999110878589775,0.04003905951976777,-75.95452169316042],"mover":1,"overlappingExitIsland":false},{"cart":3,"frame":1680,"position":[-8.999110878589775,0.04003905951976777,-82.09958747535508],"mover":2,"overlappingExitIsland":false},{"cart":4,"frame":1852,"position":[-8.999110878589775,0.04003905951976777,-85.7351995215612],"mover":3,"overlappingExitIsland":false}],"exitStation":120.37089289106376,"frames":1325,"deaths":0},{"test":"checkpoint banked through inputs","name":"Last Departure","station":130.17174450190225},{"test":"input-only swinging axe crossing","initialAxePhase":0,"exitStation":143.07174450190257,"frames":273},{"test":"input-only execution-gallery floor jump","gap":[155,158],"landingStation":161.15770388987562,"doubleJump":false,"frames":98,"deaths":0},{"test":"input-only swinging axe crossing","initialAxePhase":0.84,"exitStation":182.28509773336106,"frames":298},{"test":"checkpoint banked through inputs","name":"First steam hall","station":182.5149185119634},{"test":"input-only execution-gallery floor jump","gap":[213,215.7],"landingStation":222.71417284904007,"doubleJump":false,"frames":150,"deaths":0},{"test":"checkpoint banked through inputs","name":"Under the castle","station":222.87676502369},{"test":"input-only swinging axe crossing","initialAxePhase":1.68,"exitStation":252.10422269574502,"frames":169},{"test":"input-only swinging axe crossing","initialAxePhase":2.52,"exitStation":293.14806807810953,"frames":262},{"test":"input-only execution-gallery floor jump","gap":[306,308.8],"landingStation":312.7421360424335,"doubleJump":false,"frames":109,"deaths":0},{"test":"checkpoint banked through inputs","name":"Execution flags","station":331.69607156891044},{"test":"input-only execution-gallery floor jump","gap":[353,356.2],"landingStation":362.91549575951996,"doubleJump":false,"frames":170,"deaths":0},{"test":"input-only execution-gallery floor jump","gap":[373,376.2],"landingStation":385.0844394072148,"doubleJump":false,"frames":62,"deaths":0},{"test":"input-only swinging axe crossing","initialAxePhase":3.36,"exitStation":410.18965751988,"frames":198},{"test":"input-only execution-gallery floor jump","gap":[439,442],"landingStation":448.3533933981712,"doubleJump":false,"frames":157,"deaths":0},{"test":"input-only execution-gallery floor jump","gap":[462,465.2],"landingStation":474.2404059206249,"doubleJump":false,"frames":71,"deaths":0},{"test":"checkpoint banked through inputs","name":"Flagstone crossings complete","station":481.86030759600413},{"test":"input-only swinging axe crossing","initialAxePhase":4.2,"exitStation":501.00883363550406,"frames":334},{"test":"input-only swinging axe crossing","initialAxePhase":5.04,"exitStation":513.1370969725047,"frames":215},{"test":"checkpoint banked through inputs","name":"Service entrance","station":515.2674178625667},{"test":"checkpoint banked through inputs","name":"Butler entrance","station":560.1280640673087},{"test":"input-only execution-gallery floor jump","gap":[618,621],"landingStation":627.263808333577,"doubleJump":false,"frames":176,"deaths":0},{"test":"input-only execution-gallery floor jump","gap":[637,639.2],"landingStation":646.6892098077785,"doubleJump":false,"frames":66,"deaths":0},{"test":"checkpoint banked through inputs","name":"Banquet runway cleared","station":705.1736530433706},{"test":"input-only execution-gallery floor jump","gap":[761,764],"landingStation":771.733829870391,"doubleJump":false,"frames":165,"deaths":0},{"test":"checkpoint banked through inputs","name":"Serving stair complete","station":817.1633039917143},{"test":"input-only execution-gallery floor jump","gap":[923,926],"landingStation":930.5524035369342,"doubleJump":false,"frames":156,"deaths":0},{"test":"checkpoint banked through inputs","name":"Armour procession","station":983.5728453203154},{"test":"input-only broken railway grind transfers","catches":[{"frame":11651,"rail":0,"station":1000.0569574637383},{"frame":11795,"rail":1,"station":1031.4488668766369}],"exitStation":1055.2740628469628,"frames":342,"deaths":0},{"test":"checkpoint banked through inputs","name":"Drawbridge cleared","station":1059.8370755915162},{"test":"checkpoint banked through inputs","name":"Freight boarding","station":1084.8067504357423},{"test":"input-only execution-gallery floor jump","gap":[1114,1117],"landingStation":1122.7265422636638,"doubleJump":false,"frames":157,"deaths":0},{"test":"input-only moving-cart relay","relay":1,"landings":[{"cart":2,"frame":13536,"position":[-7.999089748774497,2.040039059519768,-1161.9765718688493],"mover":5,"overlappingExitIsland":false},{"cart":3,"frame":13796,"position":[-7.999089748774497,2.040039059519768,-1168.0782530065808],"mover":6,"overlappingExitIsland":false},{"cart":4,"frame":13968,"position":[-7.999089748774497,2.040039059519768,-1171.7331470811343],"mover":7,"overlappingExitIsland":false}],"exitStation":1206.362236327455,"frames":1155,"deaths":0},{"test":"checkpoint banked through inputs","name":"Freight transfer island","station":1210.1274829985284},{"test":"input-only execution-gallery floor jump","gap":[1269,1272],"landingStation":1280.9861337959458,"doubleJump":false,"frames":141,"deaths":0},{"test":"checkpoint banked through inputs","name":"Lower train platform","station":1282.8334098426599},{"test":"input-only moving-cart relay","relay":2,"landings":[{"cart":2,"frame":15923,"position":[7.999585629964853,-3.959960940480232,-1303.9895676509968],"mover":9,"overlappingExitIsland":false},{"cart":3,"frame":16183,"position":[7.999585629964853,-3.959960940480232,-1310.0656559536465],"mover":10,"overlappingExitIsland":false},{"cart":4,"frame":16355,"position":[7.999585629964853,-3.959960940480232,-1313.7319883628572],"mover":11,"overlappingExitIsland":false}],"exitStation":1348.366964775853,"frames":1110,"deaths":0},{"test":"checkpoint banked through inputs","name":"Funeral train cleared","station":1351.1249149410226},{"test":"checkpoint banked through inputs","name":"Steam crypt entry","station":1380.5588727120576},{"test":"input-only execution-gallery floor jump","gap":[1399,1402],"landingStation":1408.238466369263,"doubleJump":false,"frames":161,"deaths":0},{"test":"input-only broken railway grind transfers","catches":[{"frame":17645,"rail":2,"station":1434.1683220287014},{"frame":17894,"rail":3,"station":1486.5446405975526},{"frame":18154,"rail":4,"station":1531.405744273011}],"exitStation":1593.1048222404786,"frames":1291,"deaths":0},{"test":"checkpoint banked through inputs","name":"Hanging railway complete","station":1598.1301177488883},{"test":"input-only execution-gallery floor jump","gap":[1637,1640],"landingStation":1645.9574592285685,"doubleJump":false,"frames":155,"deaths":0},{"test":"checkpoint banked through inputs","name":"Clockworks entrance","station":1690.1661991780638},{"test":"input-only swinging axe crossing","initialAxePhase":5.88,"exitStation":1726.144258550911,"frames":119},{"test":"input-only execution-gallery floor jump","gap":[1747,1750],"landingStation":1751.3644270672798,"doubleJump":true,"frames":257,"deaths":0},{"test":"input-only swinging axe crossing","initialAxePhase":6.72,"exitStation":1787.137764017858,"frames":277},{"test":"input-only moving-cart relay","relay":3,"landings":[{"cart":2,"frame":21959,"position":[-0.004402882102729654,10.040039059519767,-1829.0345949647162],"mover":13,"overlappingExitIsland":false},{"cart":3,"frame":22218,"position":[-0.004402882102729676,10.040039059519767,-1835.0664589550047],"mover":14,"overlappingExitIsland":false},{"cart":4,"frame":22390,"position":[-0.004402882102729609,10.040039059519767,-1838.732061050546],"mover":15,"overlappingExitIsland":false}],"exitStation":1873.3666645574299,"frames":1291,"deaths":0},{"test":"checkpoint banked through inputs","name":"High convoy complete","station":1880.3952675675912},{"test":"input-only swinging axe crossing","initialAxePhase":7.56,"exitStation":1924.0077093341579,"frames":349},{"test":"input-only execution-gallery floor jump","gap":[1938,1941],"landingStation":1944.995209334163,"doubleJump":false,"frames":106,"deaths":0},{"test":"checkpoint banked through inputs","name":"Boiler room cleared","station":1955.1513848761315},{"test":"checkpoint banked through inputs","name":"Throne antechamber","station":2019.1628575867135},{"test":"input-only execution-gallery floor jump","gap":[2063,2066],"landingStation":2071.948484207401,"doubleJump":false,"frames":157,"deaths":0},{"test":"input-only execution-gallery floor jump","gap":[2110,2113],"landingStation":2119.2015451165576,"doubleJump":false,"frames":155,"deaths":0},{"test":"checkpoint banked through inputs","name":"Last vault departure","station":2156.929016754009},{"test":"input-only broken railway grind transfers","catches":[{"frame":25899,"rail":5,"station":2172.1538508671783},{"frame":26033,"rail":6,"station":2201.4101079712254}],"exitStation":2227.274954153437,"frames":341,"deaths":0}],"deaths":0}

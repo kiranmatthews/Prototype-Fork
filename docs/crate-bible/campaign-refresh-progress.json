@@ -11,8 +11,8 @@
     "unbuilt_placeholders": 5,
     "unique_bonus_rooms": 24
   },
-  "current_course": "ghost-train",
-  "next_course": "hollowwake-descent",
+  "current_course": "hollowwake-descent",
+  "next_course": "slipstream-race",
   "courses": [
     {
       "order": 1,
@@ -272,9 +272,12 @@
       "race": false,
       "bonus": {
         "id": "bonus-easy",
-        "name": "Bonus: Easy Street"
+        "name": "Bonus: Easy Street",
+        "status": "validated",
+        "evidence": "docs/crate-bible/campaign-refresh/ghost-train/validation.json"
       },
-      "status": "pending"
+      "status": "validated",
+      "evidence": "docs/crate-bible/campaign-refresh/ghost-train/validation.json"
     },
     {
       "order": 16,
@@ -288,7 +291,9 @@
       "race": false,
       "bonus": {
         "id": "bonus-easy",
-        "name": "Bonus: Easy Street"
+        "name": "Bonus: Easy Street",
+        "status": "validated",
+        "evidence": "docs/crate-bible/campaign-refresh/ghost-train/validation.json"
       },
       "status": "pending"
     },
@@ -446,7 +451,9 @@
       "race": false,
       "bonus": {
         "id": "bonus-easy",
-        "name": "Bonus: Easy Street"
+        "name": "Bonus: Easy Street",
+        "status": "validated",
+        "evidence": "docs/crate-bible/campaign-refresh/ghost-train/validation.json"
       },
       "status": "pending"
     },
@@ -712,6 +719,12 @@
     {
       "id": "codex-lab",
       "bonus": "bonus-codex-switchback",
+      "status": "validated",
+      "date": "2026-11-14"
+    },
+    {
+      "id": "ghost-train",
+      "bonus": "bonus-easy",
       "status": "validated",
       "date": "2026-11-14"
     }
