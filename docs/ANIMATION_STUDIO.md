@@ -480,8 +480,10 @@ contacts and saved-draft migration.
 The local-only `/rope-review.html?playtest&level=codex-lab&nocrt` page builds
 one rope over a floor and runs the real player step against it, so the catch
 (a real run and jump, the swing phased to meet it), the hang, the climb, both
-leaps and the landing are the game's own. Its panel drives them by hand.
-`window.__ropeReview` drives them from a script one fixed step at a time, and
+leaps and the landing are the game's own. It plays with the game's own
+controls; its panel (or `play(name)`) runs each move for a watcher, at full
+speed or slowed to a tenth; and `window.__ropeReview` drives them from a
+script one fixed step at a time, and
 measures two things frame by frame: `clip()` counts, for each body part, the
 surface points that lie inside the drawn rope and how deep, and `joints()`
 gives the world positions the eye follows, for finding a pose that steps

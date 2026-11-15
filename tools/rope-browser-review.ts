@@ -176,11 +176,12 @@ function play(name: string): void {
   else if (name === 'descend') { onRope(); each(70, { moveY: -1 }); each(20); }
   else if (name === 'leap' || name === 'charged') {
     onRope();
-    // Wait for the rope to be swinging forward through the bottom of its arc, then let go and steer on forward.
+    // Wait for the rope to be swinging forward and up out of the bottom of its arc, then let go and steer on
+    // forward while in the air (the rope slows as it rises, so the leap leaves it behind).
     let waited = 0;
-    steps.push(() => { tick(speed / 60); return (rope.theta > -.15 && rope.theta < .3 && rope.thetaV > 0) || ++waited > 600 / speed; });
+    steps.push(() => { tick(speed / 60); return (rope.theta > .2 && rope.theta < .55 && rope.thetaV > 0) || ++waited > 600 / speed; });
     each(name === 'charged' ? 30 : 3, { jumpHeld: true });
-    each(100, { moveY: 1 });
+    for (let i = 0, n = Math.round(100 / speed); i < n; i++) steps.push(() => { tick(speed / 60, p.state === 'air' ? { moveY: 1 } : {}); });
   } else if (name === 'start') steps.push(() => { stand(4); });
   manual = true; playing = steps;
 }
