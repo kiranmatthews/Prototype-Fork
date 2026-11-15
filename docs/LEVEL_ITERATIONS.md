@@ -11967,3 +11967,32 @@ clear of the crate bridge. Tested and not changed: the first arrow's pair is
 broken by a plain bounce with a double jump (the bible's head-reach table is
 stale). Final figures: 142 crates, 11 checkpoints, pilots 175.2 s, 204.0 s
 and 217.8 s with no deaths.
+
+## 2026-11-15 — Sprite Stack Lab: can the rider be drawn from stacked slices?
+
+Brief: could sprite stacking work for this game, with stills of every core
+animation captured from four angles, restyled by an image model, then sliced;
+investigate, and produce a demo if viable. About 1 h 35 min from prompt to the
+published demo. Not a level: no level data, tuning or runtime file changed.
+
+`sprite-stack-lab.html` draws Bone Man from slice stacks baked out of 18
+Animation Studio clips (176 frames, 776 KB), playable under the chase, board
+and side-on cameras measured in the running game. `tools/sprite-stack/` poses
+the real rider through the studio, captures him from six sides with depth, and
+rebuilds a 56 x 72 x 56 grid of 5 cm squares per frame; it also writes the
+stills an image model would restyle and takes restyled ones back.
+
+Findings, each with a "show me" button on the page: the look holds at the chase
+and board cameras; flat slices fall apart side-on and need thick slices or
+solid cubes there; slices have to be cut from the 3D rider, and colour needs a
+fifth view from above (the board's deck loses its grip tape without it);
+outlines painted into the stills wrap onto the model as smears, while a palette
+rule and an outline found from the model at draw time are stable from every
+angle. The image-model step was exercised only with two stand-ins written in
+code; no image model was run. `docs/SPRITE_STACK_LAB.md` has the measurements,
+the costs of baking all 102 clips, and the steps for a real image-model test.
+
+Validated: type-check, production build, the lab and its packaged copy loaded
+in a browser at desktop and phone widths with no console errors, and every
+preset and clip stepped through. Frame rate was seen only on a software
+renderer.
