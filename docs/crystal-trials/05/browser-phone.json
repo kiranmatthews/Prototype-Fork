@@ -1,0 +1,164 @@
+{
+  "trial": 5,
+  "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "pilot": {
+    "id": 5,
+    "frame": 1794,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the halfpipe checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Enter through the open end of the halfpipe",
+        "firstFrame": 137,
+        "lastFrame": 494
+      },
+      {
+        "name": "Push from rest onto the board",
+        "firstFrame": 512,
+        "lastFrame": 546
+      },
+      {
+        "name": "Roll down the transition into the flat",
+        "firstFrame": 1184,
+        "lastFrame": 1200
+      },
+      {
+        "name": "Bleed the accumulated speed on the opposite transition",
+        "firstFrame": 1200,
+        "lastFrame": 1252
+      },
+      {
+        "name": "Coast back into the flat after braking",
+        "firstFrame": 1252,
+        "lastFrame": 1299
+      },
+      {
+        "name": "Dismount at walking speed on the flat",
+        "firstFrame": 1299,
+        "lastFrame": 1322
+      },
+      {
+        "name": "Rejoin the open center of the pipe",
+        "firstFrame": 1322,
+        "lastFrame": 1401
+      },
+      {
+        "name": "Return through the open end to the checkpoint",
+        "firstFrame": 1419,
+        "lastFrame": 1776
+      }
+    ],
+    "evidence": [
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 6.348539237019213,
+        "frames": 58,
+        "start": [
+          8.580915332584313,
+          2.3845088487030286,
+          -32.95286760556297
+        ],
+        "landing": [
+          8.92311527679771,
+          3.2195264470657317,
+          -32.99868021607781
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": -1,
+        "peak": 7.095073564056618,
+        "frames": 57,
+        "start": [
+          -8.930880895724547,
+          4.2163067767934965,
+          -33.011784862373474
+        ],
+        "landing": [
+          -8.922743835131744,
+          3.2179334182399177,
+          -33.012274420387065
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 7.972480919681964,
+        "frames": 65,
+        "start": [
+          8.924256778477977,
+          4.013953641477479,
+          -33.0130733767463
+        ],
+        "landing": [
+          8.923589070863942,
+          3.2223498762613696,
+          -33.013725468862845
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": -1,
+        "peak": 9.130215353232822,
+        "frames": 73,
+        "start": [
+          -8.942889068999529,
+          4.019148983709089,
+          -33.01456228326398
+        ],
+        "landing": [
+          -8.9226330373321,
+          3.2174582316767424,
+          -33.01543967118327
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 10.086413789011429,
+        "frames": 78,
+        "start": [
+          8.928973843461158,
+          4.158050258929495,
+          -33.009767324350456
+        ],
+        "landing": [
+          8.922647797256031,
+          3.2175215336335365,
+          -33.00233662258543
+        ],
+        "collected": true
+      }
+    ],
+    "position": [
+      -0.003962547799279667,
+      0,
+      4.924490114022629
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return through the open end to the checkpoint",
+    "result": {
+      "id": 5,
+      "collected": 1,
+      "position": [
+        -0.003962547799279667,
+        0,
+        4.924490114022629
+      ],
+      "frames": 1794
+    }
+  }
+}

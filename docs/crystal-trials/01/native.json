@@ -1,0 +1,128 @@
+{
+  "id": 1,
+  "actions": [
+    {
+      "name": "Approach the first checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Read the arrow and overhead crystal",
+      "firstFrame": 137,
+      "lastFrame": 275
+    },
+    {
+      "name": "Try an unboosted arrow rebound",
+      "firstFrame": 320,
+      "lastFrame": 356
+    },
+    {
+      "name": "See that the short rebound misses the crystal",
+      "firstFrame": 356,
+      "lastFrame": 386
+    },
+    {
+      "name": "Recover beside the spring for a local retry",
+      "firstFrame": 386,
+      "lastFrame": 403
+    },
+    {
+      "name": "Set up the held rebound",
+      "firstFrame": 403,
+      "lastFrame": 403
+    },
+    {
+      "name": "Land on the arrow for a held rebound",
+      "firstFrame": 448,
+      "lastFrame": 484
+    },
+    {
+      "name": "Retrieve the airborne crystal",
+      "firstFrame": 484,
+      "lastFrame": 505
+    },
+    {
+      "name": "Steer off the arrow onto the safe retry floor",
+      "firstFrame": 505,
+      "lastFrame": 541
+    }
+  ],
+  "evidence": [
+    {
+      "action": "short rebound misses fairly",
+      "apex": 4.909499999999996,
+      "collected": false
+    },
+    {
+      "action": "arrow rebound",
+      "position": [
+        -0.02750000000000004,
+        1.172,
+        -4.997146441365196
+      ],
+      "verticalSpeed": 20
+    },
+    {
+      "action": "crystal",
+      "position": [
+        -0.02750000000000004,
+        6.054499999999998,
+        -4.997146441365196
+      ],
+      "frame": 505
+    }
+  ],
+  "passed": true,
+  "stage": "Steer off the arrow onto the safe retry floor",
+  "result": {
+    "frame": 541,
+    "time": 9.016666666666666,
+    "position": [
+      3.4719999999999986,
+      0,
+      -4.997146441365196
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

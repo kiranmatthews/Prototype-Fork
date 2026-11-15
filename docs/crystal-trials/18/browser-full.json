@@ -1,0 +1,126 @@
+{
+  "trial": 18,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "d8b75eac7d98d6fa51dbe201e956fc3f0930b3956a2474458059aad2f07d3227",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        13.692099788303082,
+        22.076299364909246
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            0,
+            0.9446198022885967,
+            0.9973584198367674
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06312013305349108,
+        0,
+        4.999243510248337
+      ],
+      "camera": [
+        0.06312013305349108,
+        13.692099788303082,
+        22.075542875157584
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            -0.0012251995163421135,
+            0.9548327847535368,
+            0.9973541228659792
+          ]
+        }
+      ]
+    },
+    {
+      "name": "moving-rest",
+      "position": [
+        -2.8802119514358813,
+        9.200000005960463,
+        -32
+      ],
+      "camera": [
+        -2.8679758968592113,
+        22.892099794263544,
+        -14.923700635090754
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            0.11257725098600706,
+            0.495529698644821,
+            0.994138101830678
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06312013305349108,
+        0,
+        4.999243510248337
+      ]
+    },
+    {
+      "name": "moving-rest",
+      "position": [
+        0,
+        9.35,
+        -32
+      ]
+    }
+  ],
+  "passed": true
+}

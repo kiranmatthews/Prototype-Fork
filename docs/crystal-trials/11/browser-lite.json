@@ -1,0 +1,297 @@
+{
+  "trial": 11,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 13
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -1915
+  ],
+  "installed": {
+    "id": 11,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 11,
+    "frame": 2755,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 11 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Line up with the first rail",
+        "firstFrame": 137,
+        "lastFrame": 228
+      },
+      {
+        "name": "Catch the first transfer rail",
+        "firstFrame": 273,
+        "lastFrame": 308
+      },
+      {
+        "name": "Riding straight misses the offset rail and falls into the pit",
+        "firstFrame": 308,
+        "lastFrame": 519
+      },
+      {
+        "name": "Recover at the transfer checkpoint",
+        "firstFrame": 519,
+        "lastFrame": 652
+      },
+      {
+        "name": "Line up with the first rail",
+        "firstFrame": 652,
+        "lastFrame": 750
+      },
+      {
+        "name": "Catch the first transfer rail",
+        "firstFrame": 795,
+        "lastFrame": 830
+      },
+      {
+        "name": "Balance to the right transfer",
+        "firstFrame": 830,
+        "lastFrame": 904
+      },
+      {
+        "name": "Catch the right offset rail",
+        "firstFrame": 933,
+        "lastFrame": 976
+      },
+      {
+        "name": "Balance to the left transfer",
+        "firstFrame": 976,
+        "lastFrame": 1068
+      },
+      {
+        "name": "Catch the left offset rail",
+        "firstFrame": 1097,
+        "lastFrame": 1140
+      },
+      {
+        "name": "Balance to the final receiver",
+        "firstFrame": 1140,
+        "lastFrame": 1248
+      },
+      {
+        "name": "Pop onto the raised receiver",
+        "firstFrame": 1275,
+        "lastFrame": 1307
+      },
+      {
+        "name": "Brake on the receiver",
+        "firstFrame": 1307,
+        "lastFrame": 1336
+      },
+      {
+        "name": "Collect the transfer crystal",
+        "firstFrame": 1336,
+        "lastFrame": 1336
+      },
+      {
+        "name": "Drop outside the pit onto the flat return",
+        "firstFrame": 1381,
+        "lastFrame": 1436
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 1436,
+        "lastFrame": 1564
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 1582,
+        "lastFrame": 2151
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2169,
+        "lastFrame": 2433
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 2451,
+        "lastFrame": 2542
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 2560,
+        "lastFrame": 2737
+      }
+    ],
+    "evidence": [
+      {
+        "action": "right rail transfer",
+        "position": [
+          3.4992107763866342,
+          1.3499999999999999,
+          -1946.9037420602367
+        ],
+        "railLength": 34
+      },
+      {
+        "action": "left rail transfer",
+        "position": [
+          -0.2992107763866336,
+          1.3499999999999999,
+          -1973.8687906506073
+        ],
+        "railLength": 31
+      }
+    ],
+    "position": [
+      0.0680289424287577,
+      0,
+      -1911.003972879193
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the local circuit",
+    "expectedDeaths": 0,
+    "result": {
+      "id": 11,
+      "collected": 1,
+      "position": [
+        0.0680289424287577,
+        0,
+        -1911.003972879193
+      ],
+      "frames": 2755
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.0680289424287577,
+        0,
+        -1911.003972879193
+      ],
+      "camera": [
+        0.0680289424287577,
+        7.835185867704152,
+        -1893.8128184165907
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            4.654919518623382e-05,
+            0.681372239470556,
+            1.0006110268231472
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0045377847804811125,
+            0.6781423313051165,
+            1.0006241088409515
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            6.17062627885046e-05,
+            0.6865621011066112,
+            1.0006471379943531
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            6.93125695721854e-05,
+            0.6771973165723697,
+            1.0006652597480934
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.01055281650789633,
+            0.6735132382615029,
+            1.0006916128648342
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            9.69671952323415e-05,
+            0.6735616767493382,
+            1.0007311459041797
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.00012422225388004427,
+            0.6816708680790152,
+            1.0007960801061562
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.014602670433412993,
+            0.6635790635292801,
+            1.0008991070896007
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.022523300249057816,
+            0.66827082984516,
+            1.0011155188207037
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0.0006393634383769082,
+            0.7544737512215595,
+            1.00202338554523
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.04784372142694106,
+            0.7633674986186041,
+            0.9995804890561951
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            -0.00019388206167567147,
+            0.7446477417602394,
+            1.000038207956882
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

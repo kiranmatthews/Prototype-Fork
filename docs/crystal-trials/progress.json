@@ -1,0 +1,303 @@
+{
+  "status": "validated_pending_publication",
+  "target": 25,
+  "validated": 25,
+  "current": null,
+  "started_at": "2026-11-14T23:05:00Z",
+  "completed": [
+    {
+      "id": 1,
+      "name": "1 / Bounce crate",
+      "geometry_started_at": "2026-11-14T23:39:00Z",
+      "validated_at": "2026-11-14T23:49:21.499185+00:00",
+      "evidence": "01",
+      "rejects": [
+        "01-a"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "2 / Trampoline and high platform",
+      "geometry_started_at": "2026-11-14T23:49:22Z",
+      "validated_at": "2026-11-14T23:57:24.597379+00:00",
+      "evidence": "02",
+      "rejects": [
+        "02-a"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "3 / Long rail over a pit",
+      "geometry_started_at": "2026-11-14T23:56:00Z",
+      "validated_at": "2026-11-15T00:11:58.026580+00:00",
+      "evidence": "03",
+      "rejects": [
+        "03-a",
+        "03-b",
+        "03-c"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "4 / Moving platform and lift",
+      "geometry_started_at": "2026-11-15T00:12:00Z",
+      "validated_at": "2026-11-15T00:27:16.936508+00:00",
+      "evidence": "04",
+      "rejects": [
+        "04-a"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "5 / Halfpipe and high crystal",
+      "geometry_started_at": "2026-11-15T00:25:00Z",
+      "validated_at": "2026-11-15T00:35:27.559706+00:00",
+      "evidence": "05",
+      "rejects": []
+    },
+    {
+      "id": 6,
+      "name": "6 / Climbing rope and high platform",
+      "geometry_started_at": "2026-11-15T00:36:00Z",
+      "validated_at": "2026-11-15T00:43:24.993885+00:00",
+      "evidence": "06",
+      "rejects": [
+        "06-a"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "7 / Timed steps",
+      "geometry_started_at": "2026-11-15T00:44:00Z",
+      "validated_at": "2026-11-15T01:05:48.093292+00:00",
+      "evidence": "07",
+      "rejects": [
+        "07-a",
+        "07-b",
+        "07-c"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "8 / Switch, steps and bounce crate",
+      "geometry_started_at": "2026-11-15T01:06:00Z",
+      "validated_at": "2026-11-15T01:38:07.616590+00:00",
+      "evidence": "08",
+      "rejects": [
+        "08-a"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "9 / Turtle shell and high platform",
+      "geometry_started_at": "2026-11-15T01:32:00Z",
+      "validated_at": "2026-11-15T01:48:12.836558+00:00",
+      "evidence": "09",
+      "rejects": []
+    },
+    {
+      "id": 10,
+      "name": "10 / Folding bridge and small platform",
+      "geometry_started_at": "2026-11-15T01:35:00Z",
+      "validated_at": "2026-11-15T02:06:42.904059+00:00",
+      "evidence": "10",
+      "rejects": [
+        "10-a"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "11 / Offset rail transfers",
+      "geometry_started_at": "2026-11-15T01:43:00Z",
+      "validated_at": "2026-11-15T02:06:42.991424+00:00",
+      "evidence": "11",
+      "rejects": []
+    },
+    {
+      "id": 12,
+      "name": "12 / Trampoline and airborne bounce crate",
+      "geometry_started_at": "2026-11-15T01:46:00Z",
+      "validated_at": "2026-11-15T02:21:29.225887+00:00",
+      "evidence": "12",
+      "rejects": [
+        "12-a"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "13 / Two climbing ropes",
+      "geometry_started_at": "2026-11-15T01:49:29Z",
+      "validated_at": "2026-11-15T02:38:25.113985+00:00",
+      "evidence": "13",
+      "rejects": [
+        "13-a"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "14 / Timed platforms and resting island",
+      "geometry_started_at": "2026-11-15T01:51:47Z",
+      "validated_at": "2026-11-15T02:48:13.105345+00:00",
+      "evidence": "14",
+      "rejects": []
+    },
+    {
+      "id": 15,
+      "name": "15 / TNT, switch and revealed route",
+      "geometry_started_at": "2026-11-15T01:56:41Z",
+      "validated_at": "2026-11-15T03:10:56.218485+00:00",
+      "evidence": "15",
+      "rejects": []
+    },
+    {
+      "id": 16,
+      "name": "16 / Nitro frames and two launchers",
+      "geometry_started_at": "2026-11-15T02:00:26Z",
+      "validated_at": "2026-11-15T03:13:38.737593+00:00",
+      "evidence": "16",
+      "rejects": [
+        "16-a"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "17 / Rails, timed enemy and bounce crate",
+      "geometry_started_at": "2026-11-15T02:05:51Z",
+      "validated_at": "2026-11-15T03:16:45.946468+00:00",
+      "evidence": "17",
+      "rejects": [
+        "17-a"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "18 / Two ropes and moving platform",
+      "geometry_started_at": "2026-11-15T02:06:18Z",
+      "validated_at": "2026-11-15T03:21:39.732537+00:00",
+      "evidence": "18",
+      "rejects": [
+        "18-a"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "19 / Crumbling steps and bounce crate",
+      "geometry_started_at": "2026-11-15T02:08:20Z",
+      "validated_at": "2026-11-15T03:26:40.088131+00:00",
+      "evidence": "19",
+      "rejects": [
+        "19-a"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "20 / TNT and two switch groups",
+      "geometry_started_at": "2026-11-15T02:08:52Z",
+      "validated_at": "2026-11-15T02:48:30.862646+00:00",
+      "evidence": "20",
+      "rejects": [
+        "20-a"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "21 / Rails, trick gate, enemy and spring",
+      "geometry_started_at": "2026-11-15T02:14:21Z",
+      "validated_at": "2026-11-15T03:09:14.562409+00:00",
+      "evidence": "21",
+      "rejects": [
+        "21-a"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "22 / Two ropes, timed steps and spring",
+      "geometry_started_at": "2026-11-15T02:15:06Z",
+      "validated_at": "2026-11-15T03:07:22.997008+00:00",
+      "evidence": "22",
+      "rejects": [
+        "22-a"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "23 / Two switch groups and climbing rope",
+      "geometry_started_at": "2026-11-15T02:16:48Z",
+      "validated_at": "2026-11-15T03:10:45.871266+00:00",
+      "evidence": "23",
+      "rejects": []
+    },
+    {
+      "id": 24,
+      "name": "24 / Rails, enemy, spring, rope and timed steps",
+      "geometry_started_at": "2026-11-15T02:17:23Z",
+      "validated_at": "2026-11-15T03:24:53.992166+00:00",
+      "evidence": "24",
+      "rejects": [
+        "24-a",
+        "24-b"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "25 / Switches, rope, timed steps and Nitro spring",
+      "geometry_started_at": "2026-11-15T02:20:29Z",
+      "validated_at": "2026-11-15T03:23:08.410035+00:00",
+      "evidence": "25",
+      "rejects": []
+    }
+  ],
+  "rejected_attempts": 25,
+  "published": false,
+  "integration_check": {
+    "validated_through": 25,
+    "evidence": "course/native.json",
+    "frames": 185005,
+    "continuous": true,
+    "gate": "finished",
+    "layout": "linear corridor"
+  },
+  "shared_checks": {
+    "levels": "passed",
+    "editor_transactions": "28/28 passed",
+    "evidence": "final-shared-checks.txt",
+    "build": "passed",
+    "release": "959426696 bytes; passed",
+    "source_validation": "passed after final camera revisions"
+  },
+  "outstanding_review": "Public deployment and public-host cold-transfer verification.",
+  "layout_revision": "linear corridor with 256 m station spacing and a continuous flat recovery floor",
+  "phone_playtest": {
+    "target_megabytes": 50,
+    "status": "local_production_passed",
+    "baseline_dev_megabytes": 174.614183,
+    "first_production_megabytes": 34.274418,
+    "first_build_evidence": "phone-first-build/smoke.json",
+    "touch_smoke": "passed",
+    "complete_collection_measurement": "36.373148 MB; public host pending",
+    "evidence": "phone/smoke.json",
+    "controller_routes": [
+      1,
+      3,
+      5,
+      13,
+      16,
+      21,
+      25
+    ],
+    "controller_status": "All seven representative production-phone routes passed, including challenge 21 after the final camera revision."
+  },
+  "native_validated": 25,
+  "course_spacing_metres": 256,
+  "phone_final_local": {
+    "bytes": 36373148,
+    "megabytes": 36.373148,
+    "menu_bytes": 18840,
+    "challenges": 25,
+    "rejects": 25,
+    "original_grid": true,
+    "touch_passed": true,
+    "evidence": "phone/smoke.json",
+    "reject_choices": 26
+  }
+}

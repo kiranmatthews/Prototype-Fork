@@ -1,0 +1,613 @@
+{
+  "trial": 25,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "0c574e1c8157db5f6d1260176406cd66a08cc1c2ca8812553a0c008fe000b03e",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -6139
+  ],
+  "installed": {
+    "id": 25,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 25,
+    "frame": 7116,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 25 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the enclosed switch from its side",
+        "firstFrame": 137,
+        "lastFrame": 313
+      },
+      {
+        "name": "Read the switch behind the transparent panel",
+        "firstFrame": 331,
+        "lastFrame": 431
+      },
+      {
+        "name": "Leave the enclosed switch",
+        "firstFrame": 490,
+        "lastFrame": 589
+      },
+      {
+        "name": "Walk around the front of the TNT",
+        "firstFrame": 607,
+        "lastFrame": 717
+      },
+      {
+        "name": "Set up a falling stomp onto TNT",
+        "firstFrame": 735,
+        "lastFrame": 814
+      },
+      {
+        "name": "Stomp TNT to start its visible fuse",
+        "firstFrame": 859,
+        "lastFrame": 895
+      },
+      {
+        "name": "Retreat outside the blast radius",
+        "firstFrame": 895,
+        "lastFrame": 936
+      },
+      {
+        "name": "The timed blast operates the remote switch",
+        "firstFrame": 936,
+        "lastFrame": 1093
+      },
+      {
+        "name": "Approach the revealed steps",
+        "firstFrame": 1093,
+        "lastFrame": 1202
+      },
+      {
+        "name": "Jump onto the first revealed step",
+        "firstFrame": 1247,
+        "lastFrame": 1279
+      },
+      {
+        "name": "Cross the first step",
+        "firstFrame": 1279,
+        "lastFrame": 1357
+      },
+      {
+        "name": "Jump onto the revealed spring terrace",
+        "firstFrame": 1402,
+        "lastFrame": 1434
+      },
+      {
+        "name": "Approach the revealed bounce crate",
+        "firstFrame": 1434,
+        "lastFrame": 1521
+      },
+      {
+        "name": "Hold the revealed arrow rebound",
+        "firstFrame": 1566,
+        "lastFrame": 1602
+      },
+      {
+        "name": "Land on the high receiver",
+        "firstFrame": 1602,
+        "lastFrame": 1647
+      },
+      {
+        "name": "Approach the second switch",
+        "firstFrame": 1647,
+        "lastFrame": 1734
+      },
+      {
+        "name": "approach Activate only the upper group",
+        "firstFrame": 1752,
+        "lastFrame": 1783
+      },
+      {
+        "name": "Activate only the upper group",
+        "firstFrame": 1803,
+        "lastFrame": 1803
+      },
+      {
+        "name": "Read the upper outlined flight",
+        "firstFrame": 1825,
+        "lastFrame": 1900
+      },
+      {
+        "name": "Jump onto the upper revealed step",
+        "firstFrame": 1945,
+        "lastFrame": 1977
+      },
+      {
+        "name": "Cross the upper step",
+        "firstFrame": 1977,
+        "lastFrame": 2061
+      },
+      {
+        "name": "Land on the upper spring terrace",
+        "firstFrame": 2106,
+        "lastFrame": 2138
+      },
+      {
+        "name": "Set up the second held rebound",
+        "firstFrame": 2138,
+        "lastFrame": 2225
+      },
+      {
+        "name": "Hold the second arrow rebound",
+        "firstFrame": 2270,
+        "lastFrame": 2306
+      },
+      {
+        "name": "Land on the final high receiver",
+        "firstFrame": 2306,
+        "lastFrame": 2350
+      },
+      {
+        "name": "Read the upper climbing rope from its terrace",
+        "firstFrame": 2350,
+        "lastFrame": 2484
+      },
+      {
+        "name": "Wait for the upper rope crossing",
+        "firstFrame": 2528,
+        "lastFrame": 2528
+      },
+      {
+        "name": "Catch the upper rope",
+        "firstFrame": 2529,
+        "lastFrame": 2531
+      },
+      {
+        "name": "Climb above the upper receiving platform",
+        "firstFrame": 2533,
+        "lastFrame": 2736
+      },
+      {
+        "name": "Read the upper release window",
+        "firstFrame": 2762,
+        "lastFrame": 3020
+      },
+      {
+        "name": "Release onto the upper receiving platform",
+        "firstFrame": 3021,
+        "lastFrame": 3061
+      },
+      {
+        "name": "Read the next timed flight from a permanent bank",
+        "firstFrame": 3061,
+        "lastFrame": 3161
+      },
+      {
+        "name": "Wait for the timed flight to begin",
+        "firstFrame": 3205,
+        "lastFrame": 3286
+      },
+      {
+        "name": "Jump onto the first timed step",
+        "firstFrame": 3287,
+        "lastFrame": 3322
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3322,
+        "lastFrame": 3403
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3448,
+        "lastFrame": 3483
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3483,
+        "lastFrame": 3564
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3609,
+        "lastFrame": 3644
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3644,
+        "lastFrame": 3725
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3770,
+        "lastFrame": 3804
+      },
+      {
+        "name": "Read the next timed flight from a permanent bank",
+        "firstFrame": 4374,
+        "lastFrame": 4493
+      },
+      {
+        "name": "Wait for the timed flight to begin",
+        "firstFrame": 4537,
+        "lastFrame": 4786
+      },
+      {
+        "name": "Jump onto the first timed step",
+        "firstFrame": 4787,
+        "lastFrame": 4822
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4822,
+        "lastFrame": 4903
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 4948,
+        "lastFrame": 4983
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4983,
+        "lastFrame": 5064
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 5109,
+        "lastFrame": 5144
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 5144,
+        "lastFrame": 5225
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 5270,
+        "lastFrame": 5304
+      },
+      {
+        "name": "Approach the Nitro-framed spring through its front opening",
+        "firstFrame": 5304,
+        "lastFrame": 5380
+      },
+      {
+        "name": "Hold the final rebound between the Nitro crates",
+        "firstFrame": 5425,
+        "lastFrame": 5461
+      },
+      {
+        "name": "Clear the Nitro before drifting sideways",
+        "firstFrame": 5461,
+        "lastFrame": 5463
+      },
+      {
+        "name": "Land inside the final receiver",
+        "firstFrame": 5463,
+        "lastFrame": 5505
+      },
+      {
+        "name": "Collect the final crystal",
+        "firstFrame": 5505,
+        "lastFrame": 5587
+      },
+      {
+        "name": "Drop through the open side onto the recovery floor",
+        "firstFrame": 5632,
+        "lastFrame": 5730
+      },
+      {
+        "name": "Walk outside the entire combined route",
+        "firstFrame": 5730,
+        "lastFrame": 6856
+      },
+      {
+        "name": "Complete the final circuit",
+        "firstFrame": 6874,
+        "lastFrame": 7098
+      }
+    ],
+    "evidence": [
+      {
+        "action": "direct spin cannot reach the enclosed switch"
+      },
+      {
+        "action": "TNT activates the enclosed switch",
+        "position": [
+          -4.92049681250615,
+          0,
+          -6153.996415090513
+        ],
+        "switchUsed": true,
+        "arrowRevealed": true
+      },
+      {
+        "action": "Activate only the upper group",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "independent second switch reveals upper route"
+      },
+      {
+        "action": "upper rope after the preceding combinations",
+        "position": [
+          4.980773415595924,
+          30,
+          -6213.631712720005
+        ]
+      },
+      {
+        "action": "completed final timed flight 1",
+        "position": [
+          4.999199177967008,
+          36.2,
+          -6245.0825802577965
+        ]
+      },
+      {
+        "action": "completed final timed flight 2",
+        "position": [
+          4.999220501618606,
+          42.4,
+          -6279.082358035042
+        ]
+      }
+    ],
+    "position": [
+      0.05618921099891538,
+      0,
+      -6139.039245571321
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the final circuit",
+    "result": {
+      "id": 25,
+      "collected": 1,
+      "position": [
+        0.05618921099891538,
+        0,
+        -6139.039245571321
+      ],
+      "frames": 7116
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.05618921099891538,
+        0,
+        -6139.039245571321
+      ],
+      "camera": [
+        0.05618921099891538,
+        9.873420384529114,
+        -6121.7115286485505
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            1.1779681288364572e-05,
+            0.6180961364877914,
+            1.0005341032581971
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0013021489584838924,
+            0.6172083200850759,
+            1.0005356321798926
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            1.3041720740231543e-05,
+            0.6194837593782611,
+            1.00053774358274
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            1.3583953262402452e-05,
+            0.6172146882922598,
+            1.00053930764031
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.0022640573865442062,
+            0.6165633987075805,
+            1.0005411534645994
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            1.4966011329862457e-05,
+            0.6168280890817369,
+            1.0005432941558625
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            1.583036626564002e-05,
+            0.6183705563749952,
+            1.0005457873683228
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.0017706172522578157,
+            0.6162402122222448,
+            1.0005484064275925
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.0018791357681434452,
+            0.6173523502658026,
+            1.0005513655230538
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            1.9014572301207805e-05,
+            0.6211164921837619,
+            1.0005549721393405
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            2.0737217766114946e-05,
+            0.6208627237799877,
+            1.0005599410716155
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.003285437201832571,
+            0.6130884135494403,
+            1.0005631880540167
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            2.3971132176896738e-05,
+            0.6093880877543013,
+            1.0005692692253287
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            2.6421062564982695e-05,
+            0.613805355327535,
+            1.0005763359946815
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            0.0005405716842610108,
+            0.6155891797364755,
+            1.0005830779501823
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            -0.004766653984079518,
+            0.6112587181856834,
+            1.000591619584407
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            -0.003957090152687388,
+            0.6162272268962515,
+            1.0006080274239122
+          ]
+        },
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            4.1753445940335065e-05,
+            0.6036325045932419,
+            1.0006205619112485
+          ]
+        },
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            -0.005275769214112878,
+            0.6006763119860552,
+            1.0006439853173086
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            -0.005251072166186861,
+            0.5931221086331162,
+            1.0006722747240862
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            -0.008449785558602171,
+            0.6151831872207894,
+            1.0007305347626532
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            -0.011409285838713637,
+            0.5382804188127636,
+            1.0008112347591056
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            -0.014959192842727263,
+            0.4972961128331716,
+            1.0009905430585353
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            -0.08835674659538828,
+            0.17384399045765375,
+            1.0029094470322486
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

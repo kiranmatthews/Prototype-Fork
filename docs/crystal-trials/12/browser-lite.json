@@ -1,0 +1,266 @@
+{
+  "trial": 12,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 13
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -2107
+  ],
+  "installed": {
+    "id": 12,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 12,
+    "frame": 1263,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 12 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 314,
+        "lastFrame": 353
+      },
+      {
+        "name": "The trampoline alone cannot reach the high receiver",
+        "firstFrame": 353,
+        "lastFrame": 403
+      },
+      {
+        "name": "Land in the flat courtyard for a local retry",
+        "firstFrame": 403,
+        "lastFrame": 429
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 429,
+        "lastFrame": 538
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 583,
+        "lastFrame": 622
+      },
+      {
+        "name": "Rise beside the airborne crate without hitting its underside",
+        "firstFrame": 622,
+        "lastFrame": 651
+      },
+      {
+        "name": "Align above the airborne spring at the trampoline apex",
+        "firstFrame": 651,
+        "lastFrame": 672
+      },
+      {
+        "name": "Land on the airborne crate for a held second rebound",
+        "firstFrame": 672,
+        "lastFrame": 683
+      },
+      {
+        "name": "Gain height beside the receiver",
+        "firstFrame": 683,
+        "lastFrame": 694
+      },
+      {
+        "name": "Drift onto the high receiver after both launchers",
+        "firstFrame": 694,
+        "lastFrame": 727
+      },
+      {
+        "name": "Collect the two-launcher crystal",
+        "firstFrame": 727,
+        "lastFrame": 754
+      },
+      {
+        "name": "Return to the flat courtyard beside both launchers",
+        "firstFrame": 799,
+        "lastFrame": 858
+      },
+      {
+        "name": "Pass around the launchers",
+        "firstFrame": 858,
+        "lastFrame": 1050
+      },
+      {
+        "name": "Finish the two-launcher circuit",
+        "firstFrame": 1068,
+        "lastFrame": 1245
+      }
+    ],
+    "evidence": [
+      {
+        "action": "trampoline alone misses",
+        "apex": 11.349166660706187
+      },
+      {
+        "action": "airborne arrow contact",
+        "position": [
+          3.9117819904485156,
+          9.172,
+          -2123.9475728100783
+        ],
+        "verticalSpeed": 20
+      }
+    ],
+    "position": [
+      0.06732512795953415,
+      0,
+      -2107.000904265742
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Finish the two-launcher circuit",
+    "result": {
+      "id": 12,
+      "collected": 1,
+      "position": [
+        0.06732512795953415,
+        0,
+        -2107.000904265742
+      ],
+      "frames": 1263
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06732512795953415,
+        0,
+        -2107.000904265742
+      ],
+      "camera": [
+        0.06732512795953415,
+        12.554055145966812,
+        -2090.049549857035
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            4.2358422145446044e-05,
+            0.789940560137672,
+            1.0006020974434697
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.004127233133347073,
+            0.7875820778867882,
+            1.0006128781489392
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            5.4499360220285927e-05,
+            0.7963198081736793,
+            1.0006313251785768
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            6.0314677637899405e-05,
+            0.7887054067700179,
+            1.0006453248016696
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.009086313928730052,
+            0.7866978914462405,
+            1.0006649892149728
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            8.012508525286481e-05,
+            0.7885591805963205,
+            1.0006930157908303
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            9.780472983551193e-05,
+            0.7978632624935217,
+            1.0007355772441098
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.010805064615501103,
+            0.7877094412441255,
+            1.000795311826571
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.014536207038254452,
+            0.7983521235261989,
+            1.0008972440235384
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0.00026596337325240736,
+            0.8520813888787149,
+            1.0011403973869526
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            0.0010881007108877858,
+            1.0360675512605502,
+            1.003119586488952
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            -0.0003414310540613114,
+            0.8509570248636534,
+            0.9996781740136508
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,126 @@
+{
+  "trial": 17,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "2688945c18d888b7585db772415f2718d9ec6ed75a75347e9ca98a6ff7387a04",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        7.835185867704152,
+        22.19115446260227
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.06388479381576728,
+            0.7329248244289268,
+            0.998774420842477
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06825298675241255,
+        0,
+        8.999292785734573
+      ],
+      "camera": [
+        0.06825298675241255,
+        7.835185867704152,
+        26.190447248336845
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.0611772173147541,
+            0.7355767040378319,
+            0.9988285448828378
+          ]
+        }
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.1,
+        -88
+      ],
+      "camera": [
+        0,
+        10.935185867704153,
+        -70.80884553739773
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.26469647572305555,
+            0.653591380500354,
+            0.9933499443759346
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06825298675241255,
+        0,
+        8.999292785734573
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.25,
+        -88
+      ]
+    }
+  ],
+  "passed": true
+}

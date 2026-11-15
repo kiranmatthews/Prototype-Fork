@@ -1,0 +1,385 @@
+{
+  "trial": 9,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 10
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -1531
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        -1531
+      ],
+      "camera": [
+        0,
+        8.944980302152805,
+        -1513.6925689424652
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            -0.0,
+            0.6295774440557413,
+            1.000638073043328
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0058845418515654346,
+            0.6258080293554755,
+            1.0006590827098503
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            -0.0,
+            0.6375655033944722,
+            1.0006993434384028
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            -0.0,
+            0.625269966995045,
+            1.0007344553206308
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.016197429292852217,
+            0.6202019520281299,
+            1.0007918164746477
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            -0.0,
+            0.6205105726335247,
+            1.0008955920134
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            -0.0,
+            0.6383602806169669,
+            1.0011359072659356
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.05334400177190255,
+            0.5870675549848597,
+            1.001941093402692
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.19166253325266777,
+            0.652089929928848,
+            0.9953227922622062
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0,
+            0.5724759377157763,
+            0.9996435787259783
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.08392108657185926,
+        0,
+        -1531.000920900064
+      ],
+      "camera": [
+        0.08392108657185926,
+        8.944980302152805,
+        -1513.6934898425293
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            7.142774266216152e-05,
+            0.6295918310725079,
+            1.0006380731979634
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.005802243155264375,
+            0.625824602668007,
+            1.0006590829151754
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0.00010315283265322604,
+            0.6375862934285292,
+            1.0006993437609089
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.00012133336657194227,
+            0.6252943978289102,
+            1.0007344557668374
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.016046433342494813,
+            0.6202323512291584,
+            1.0007918171660435
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.00020476824941992252,
+            0.62055178803423,
+            1.000895593284267
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.0003292013627426643,
+            0.6384266339194177,
+            1.0011359105506479
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.05259850323434656,
+            0.5872173417710812,
+            1.0019411102756912
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            -0.0004435053012689481,
+            0.5723870040663591,
+            0.9996435846877726
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 9,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 9,
+    "frame": 2208,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the turtle checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the turtle from the side",
+        "firstFrame": 137,
+        "lastFrame": 345
+      },
+      {
+        "name": "A first spin leaves a shell",
+        "firstFrame": 364,
+        "lastFrame": 364
+      },
+      {
+        "name": "A fresh second spin removes the spring",
+        "firstFrame": 430,
+        "lastFrame": 430
+      },
+      {
+        "name": "Leave the removed shell",
+        "firstFrame": 430,
+        "lastFrame": 548
+      },
+      {
+        "name": "Approach the designated reset pit",
+        "firstFrame": 566,
+        "lastFrame": 798
+      },
+      {
+        "name": "Reset the destroyed tool through the marked pit",
+        "firstFrame": 816,
+        "lastFrame": 870
+      },
+      {
+        "name": "Recover at the turtle checkpoint",
+        "firstFrame": 870,
+        "lastFrame": 1003
+      },
+      {
+        "name": "Set up a falling stomp",
+        "firstFrame": 1003,
+        "lastFrame": 1211
+      },
+      {
+        "name": "Stomp the turtle into a reusable shell",
+        "firstFrame": 1256,
+        "lastFrame": 1293
+      },
+      {
+        "name": "Recover beside the new shell",
+        "firstFrame": 1293,
+        "lastFrame": 1335
+      },
+      {
+        "name": "Approach the shell spring",
+        "firstFrame": 1335,
+        "lastFrame": 1335
+      },
+      {
+        "name": "Hold the shell rebound",
+        "firstFrame": 1380,
+        "lastFrame": 1415
+      },
+      {
+        "name": "Measure the held rebound without a double jump",
+        "firstFrame": 1415,
+        "lastFrame": 1452
+      },
+      {
+        "name": "Land beside the shell for a local retry",
+        "firstFrame": 1452,
+        "lastFrame": 1473
+      },
+      {
+        "name": "Approach the shell spring",
+        "firstFrame": 1473,
+        "lastFrame": 1473
+      },
+      {
+        "name": "Hold the shell rebound",
+        "firstFrame": 1518,
+        "lastFrame": 1553
+      },
+      {
+        "name": "Rise outside the high platform",
+        "firstFrame": 1556,
+        "lastFrame": 1589
+      },
+      {
+        "name": "Double jump above the platform edge",
+        "firstFrame": 1591,
+        "lastFrame": 1597
+      },
+      {
+        "name": "Drift onto the high receiver",
+        "firstFrame": 1597,
+        "lastFrame": 1617
+      },
+      {
+        "name": "Collect the turtle crystal",
+        "firstFrame": 1617,
+        "lastFrame": 1690
+      },
+      {
+        "name": "Return to the flat courtyard",
+        "firstFrame": 1735,
+        "lastFrame": 1787
+      },
+      {
+        "name": "Walk around the shell and platform",
+        "firstFrame": 1787,
+        "lastFrame": 2027
+      },
+      {
+        "name": "Complete the turtle circuit",
+        "firstFrame": 2045,
+        "lastFrame": 2190
+      }
+    ],
+    "evidence": [
+      {
+        "action": "second attack removes the required tool"
+      },
+      {
+        "action": "held shell alone misses",
+        "apex": 7.309166666666661
+      },
+      {
+        "action": "shell and double jump reach receiver",
+        "position": [
+          5.939600577404676,
+          8.2,
+          -1553.9636306818227
+        ]
+      }
+    ],
+    "position": [
+      0.08392108657185926,
+      0,
+      -1531.000920900064
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the turtle circuit",
+    "expectedDeaths": 0,
+    "result": {
+      "id": 9,
+      "collected": 1,
+      "position": [
+        0.08392108657185926,
+        0,
+        -1531.000920900064
+      ],
+      "frames": 2208
+    }
+  },
+  "passed": true
+}

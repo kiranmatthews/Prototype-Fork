@@ -175,6 +175,7 @@ import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
 import { SkateCollectathon } from './skateCollectathon';
+import { CRYSTAL_TRIALS_LEVEL, CRYSTAL_REJECTS_LEVEL, REJECTED_GRID } from './levels/crystal-trials';
 import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
 import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
@@ -823,7 +824,7 @@ export interface CustomComponent {
     | "thorn" // visual-only pulsing procedural thorn cluster; pair with a deliberately smaller pit for lethal collision
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
-    | "crystal"; // one per level (the editor enforces it)
+    | "crystal"; // one per ordinary level; crystalTrials permits independent goals
   gemColour?: ColouredGemColour; // colouredgem only; distinct from box/combo rewards
   minefieldTrap?: number; // rail: detonate this pressure field on contact
   checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
@@ -1217,6 +1218,8 @@ export interface CustomLevelData {
   emberCourt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
+  /** Independent crystals in one practice park; archive keeps the exit open. */
+  crystalTrials?: "challenge" | "archive";
   /** Optional source calibration; other levels retain their authored movement. */
   skateReference?: SkateReferenceData;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -1663,7 +1666,7 @@ export function migrateCustomLevel(d: CustomLevelData, { crateLayout = true } = 
       component.t !== "clock" && component.t !== "comboorb");
   }
   const lastCrystal = d.components.map((component) => component.t).lastIndexOf("crystal");
-  if (lastCrystal >= 0)
+  if (lastCrystal >= 0 && !d.crystalTrials)
     d.components = d.components.filter(
       (component, index) => component.t !== "crystal" || index === lastCrystal,
     );
@@ -2658,6 +2661,9 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "kona", name: KONA_LEVEL.name, data: KONA_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
+  { id: 'crystal-trials', name: CRYSTAL_TRIALS_LEVEL.name, data: CRYSTAL_TRIALS_LEVEL },
+  { id: 'crystal-trials-rejects', name: CRYSTAL_REJECTS_LEVEL.name, data: CRYSTAL_REJECTS_LEVEL },
+  { id: 'crystal-trials-grid-reject', name: REJECTED_GRID.name, data: REJECTED_GRID },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
@@ -2753,6 +2759,7 @@ export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
+  'crystalTrials',
   'encounter', 'kiteTow',
   "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere", "desertHeat",
@@ -3024,6 +3031,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
+  if (source.crystalTrials !== undefined &&
+      (source.crystalTrials !== 'challenge' && source.crystalTrials !== 'archive' ||
+       !source.skatepark || source.skateCollectathon ||
+       source.crystalTrials === 'challenge' && !source.components.some(c => c?.t === 'crystal'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
@@ -7800,7 +7811,9 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
-    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
+    this.skateCollectathon = data.crystalTrials
+      ? new SkateCollectathon(false, data.crystalTrials === 'archive' ? 'archive' : 'crystals', data.name)
+      : data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
     this.skateReference = this.skatepark && data.skateReference ? {...data.skateReference, stats: {...data.skateReference.stats}} : undefined;
     this.skateReferencePhysics = this.skateReference ? createSkateReference(this.skateReference) : undefined;
     this.allBalanceCrates = data.allBalanceCrates === true;
@@ -8938,7 +8951,7 @@ export class Level {
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
-            if (this.skateCollectathon) this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
+            if (this.skateCollectathon?.mode === 'tokens') this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
             else this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
             (c.cameraPresentationOnly?this.cameraPresentationViews:this.cameraViews).push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
@@ -8974,7 +8987,9 @@ export class Level {
             marker.userData.editorGhost = true;
             this.root.add(marker);
           } else if (c.t === "crystal") {
-            this.crystal(c.p[0], c.p[1], c.p[2]);
+            if (data.crystalTrials && this.skateCollectathon)
+              this.skateCollectathon.add(this.root, [c.p[0], c.p[1] + 1.3, c.p[2]], c.nm ?? 'Crystal', Level.crystalMesh(.7));
+            else this.crystal(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "trampoline") {
             const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
             pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);

@@ -1,0 +1,212 @@
+{
+  "id": 4,
+  "phaseDelay": 2.1,
+  "actions": [
+    {
+      "name": "Bank the machine-bank checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Inspect the full ferry cycle from the safe bank",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Deliberately choose the ferry away from the bank",
+      "firstFrame": 853,
+      "lastFrame": 902
+    },
+    {
+      "name": "A mistimed ferry jump falls into the visible water",
+      "firstFrame": 903,
+      "lastFrame": 952
+    },
+    {
+      "name": "Recover at the bank checkpoint after the mistimed jump",
+      "firstFrame": 952,
+      "lastFrame": 1085
+    },
+    {
+      "name": "Return to the ferry observation edge",
+      "firstFrame": 1085,
+      "lastFrame": 1220
+    },
+    {
+      "name": "Wait for the returning ferry",
+      "firstFrame": 1390,
+      "lastFrame": 1686
+    },
+    {
+      "name": "Board the ferry with a normal jump",
+      "firstFrame": 1687,
+      "lastFrame": 1726
+    },
+    {
+      "name": "Move to the ferry departure end",
+      "firstFrame": 1726,
+      "lastFrame": 1810
+    },
+    {
+      "name": "Ride the ferry to the resting island",
+      "firstFrame": 1854,
+      "lastFrame": 1979
+    },
+    {
+      "name": "Jump from the ferry onto the fixed island",
+      "firstFrame": 1980,
+      "lastFrame": 2019
+    },
+    {
+      "name": "Read the lift from a fixed resting ledge",
+      "firstFrame": 2019,
+      "lastFrame": 2122
+    },
+    {
+      "name": "Wait for the low descending lift",
+      "firstFrame": 2166,
+      "lastFrame": 2362
+    },
+    {
+      "name": "Board the gallery lift",
+      "firstFrame": 2363,
+      "lastFrame": 2402
+    },
+    {
+      "name": "Cross to the lift departure edge",
+      "firstFrame": 2402,
+      "lastFrame": 2487
+    },
+    {
+      "name": "Ride upward to the gallery window",
+      "firstFrame": 2531,
+      "lastFrame": 2634
+    },
+    {
+      "name": "Jump from the rising lift into the gallery",
+      "firstFrame": 2635,
+      "lastFrame": 2671
+    },
+    {
+      "name": "Collect the gallery crystal",
+      "firstFrame": 2671,
+      "lastFrame": 2759
+    },
+    {
+      "name": "Read the lower return from the gallery edge",
+      "firstFrame": 2777,
+      "lastFrame": 2860
+    },
+    {
+      "name": "Drop into the broad return landing",
+      "firstFrame": 2905,
+      "lastFrame": 2966
+    },
+    {
+      "name": "Join the lower machine return",
+      "firstFrame": 2966,
+      "lastFrame": 3050
+    },
+    {
+      "name": "Follow the return outside the water",
+      "firstFrame": 3068,
+      "lastFrame": 3355
+    },
+    {
+      "name": "Climb the return and reach its upper junction",
+      "firstFrame": 3373,
+      "lastFrame": 3668
+    },
+    {
+      "name": "Finish the machine circuit on the entrance bank",
+      "firstFrame": 3686,
+      "lastFrame": 3863
+    }
+  ],
+  "evidence": [
+    {
+      "action": "mistimed ferry jump recovers locally",
+      "position": [
+        -4,
+        0.1,
+        5
+      ]
+    },
+    {
+      "action": "ferry carries rider",
+      "position": [
+        -0.0005799060612705804,
+        0,
+        -21.854004573374162
+      ],
+      "ferry": [
+        0,
+        -0.25,
+        -20.307271195583464
+      ]
+    },
+    {
+      "action": "lift carries rider",
+      "position": [
+        -0.0005799060612705804,
+        7.345727419226842,
+        -41.423572387656485
+      ],
+      "top": 7.371075778295014
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the machine circuit on the entrance bank",
+  "expectedDeaths": 0,
+  "result": {
+    "frame": 3881,
+    "time": 64.68333333333334,
+    "position": [
+      0.06816903779855123,
+      0,
+      8.99926177024023
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

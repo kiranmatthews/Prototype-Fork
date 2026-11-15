@@ -1,0 +1,284 @@
+{
+  "trial": 3,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "d4aabd430b52251b208ca4cfd38126548993ffc99c226477d4936888e7634ad3",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "scope": "Standalone source trial in the full game renderer",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        7.419511492363866,
+        20.054198589899627
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0,
+            0.7155226063842696,
+            0.9984788691927036
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        -4,
+        0,
+        5
+      ],
+      "camera": [
+        -4,
+        7.419511492363866,
+        20.054198589899627
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": []
+    },
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -8,
+        -21
+      ],
+      "camera": [
+        15,
+        -2.9956038652002355,
+        -34.7741787413987
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            -0.3722254467506386,
+            0.07111579240819192,
+            1.0045220587294763
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 3,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 3,
+    "frame": 3140,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the viaduct checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 137,
+        "lastFrame": 228
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 273,
+        "lastFrame": 308
+      },
+      {
+        "name": "Oversteer while the rail still has a floor beneath it",
+        "firstFrame": 308,
+        "lastFrame": 332
+      },
+      {
+        "name": "Recover from the balance mistake on the approach deck",
+        "firstFrame": 332,
+        "lastFrame": 418
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 418,
+        "lastFrame": 604
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 649,
+        "lastFrame": 683
+      },
+      {
+        "name": "Balance across the open pit",
+        "firstFrame": 683,
+        "lastFrame": 1117
+      },
+      {
+        "name": "Pop from the needle onto its raised receiver",
+        "firstFrame": 1144,
+        "lastFrame": 1176
+      },
+      {
+        "name": "Brake on the crystal receiver",
+        "firstFrame": 1176,
+        "lastFrame": 1201
+      },
+      {
+        "name": "Collect the viaduct crystal",
+        "firstFrame": 1201,
+        "lastFrame": 1286
+      },
+      {
+        "name": "Read the lower return landing",
+        "firstFrame": 1304,
+        "lastFrame": 1385
+      },
+      {
+        "name": "Drop onto the one-way return landing",
+        "firstFrame": 1430,
+        "lastFrame": 1485
+      },
+      {
+        "name": "Join the return below the crystal deck",
+        "firstFrame": 1485,
+        "lastFrame": 1584
+      },
+      {
+        "name": "Follow the lower return outside the pit",
+        "firstFrame": 1602,
+        "lastFrame": 2155
+      },
+      {
+        "name": "Climb back to the observation promenade",
+        "firstFrame": 2173,
+        "lastFrame": 2437
+      },
+      {
+        "name": "Turn onto the upper return junction",
+        "firstFrame": 2455,
+        "lastFrame": 2546
+      },
+      {
+        "name": "Finish the local circuit at the approach",
+        "firstFrame": 2564,
+        "lastFrame": 2741
+      },
+      {
+        "name": "Test a missed crossing by running into the visible pit",
+        "firstFrame": 2759,
+        "lastFrame": 3007
+      },
+      {
+        "name": "Respawn at the banked viaduct checkpoint",
+        "firstFrame": 3007,
+        "lastFrame": 3140
+      }
+    ],
+    "evidence": [
+      {
+        "action": "balance miss recovers on safe deck",
+        "position": [
+          8.778052492580638e-06,
+          0,
+          -16.11529466777937
+        ]
+      },
+      {
+        "action": "long rail crossing",
+        "seconds": 7.233333333333333,
+        "position": [
+          0,
+          1.3499999999999999,
+          -70.09999999997163
+        ],
+        "balance": -0.07253225974650072,
+        "speed": 8.999999999996124
+      },
+      {
+        "action": "receiver crystal",
+        "position": [
+          4.5172260092872634e-07,
+          3.1,
+          -83.93455371827181
+        ]
+      },
+      {
+        "action": "pit recovery preserves crystal",
+        "position": [
+          -4,
+          0.1,
+          5
+        ],
+        "deaths": 0,
+        "livesBefore": 4,
+        "livesAfter": 3
+      }
+    ],
+    "position": [
+      -4,
+      0.1,
+      5
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Respawn at the banked viaduct checkpoint",
+    "pitDeathObserved": true,
+    "expectedDeaths": 0,
+    "result": {
+      "id": 3,
+      "collected": 1,
+      "position": [
+        -4,
+        0.1,
+        5
+      ],
+      "frames": 3140
+    }
+  },
+  "stagedVisualFixtures": [
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -7.85,
+        -21
+      ]
+    }
+  ],
+  "passed": true
+}

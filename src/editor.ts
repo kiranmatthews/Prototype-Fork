@@ -3386,6 +3386,7 @@ export class Editor {
     let clean = batch;
     const replacing = new Set<string>();
     for (const t of ["crystal", "gate", "clock", "comboorb", "worldmap", "bonusplatform"] as const) {
+      if (t === "crystal" && this.data.crystalTrials) continue;
       const last = clean.map((c) => c.t).lastIndexOf(t);
       if (last >= 0) {
         clean = clean.filter((c, i) => c.t !== t || i === last);

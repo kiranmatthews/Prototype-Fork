@@ -1,0 +1,162 @@
+{
+  "trial": 19,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "360a3fb660ccb82e34d3883ddc82aca98b544d2ba6d077f8bec7b8e52fddc47a",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        9.335185867704151,
+        22.19115446260227
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.08525914267504958,
+            0.9573472393601655,
+            0.9981970408251712
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06834090115384098,
+        0,
+        8.996299945105564
+      ],
+      "camera": [
+        0.06834090115384098,
+        9.335185867704151,
+        26.187454407707833
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.08081046679552158,
+            0.9526830525718436,
+            0.9982920616364779
+          ]
+        }
+      ]
+    },
+    {
+      "name": "upper-steps",
+      "position": [
+        0,
+        6.2,
+        -35
+      ],
+      "camera": [
+        0,
+        15.53518586770415,
+        -17.80884553739773
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.14663348944210716,
+            0.872957550827843,
+            0.9965391507237327
+          ]
+        }
+      ]
+    },
+    {
+      "name": "high-bounce",
+      "position": [
+        0,
+        12.4,
+        -65
+      ],
+      "camera": [
+        0,
+        21.73518586770415,
+        -47.80884553739773
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.3136257272674279,
+            0.5138126359086369,
+            0.9920282305642326
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06834090115384098,
+        0,
+        8.996299945105564
+      ]
+    },
+    {
+      "name": "upper-steps",
+      "position": [
+        0,
+        6.35,
+        -35
+      ]
+    },
+    {
+      "name": "high-bounce",
+      "position": [
+        0,
+        12.55,
+        -65
+      ]
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,168 @@
+{
+  "id": 6,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank the rope courtyard checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait below the climbing vine",
+      "firstFrame": 137,
+      "lastFrame": 378
+    },
+    {
+      "name": "Read the rope as it crosses the courtyard center",
+      "firstFrame": 422,
+      "lastFrame": 432
+    },
+    {
+      "name": "Catch the moving lower rope with a normal jump",
+      "firstFrame": 433,
+      "lastFrame": 436
+    },
+    {
+      "name": "A low release misses the window and lands in the courtyard",
+      "firstFrame": 465,
+      "lastFrame": 508
+    },
+    {
+      "name": "Wait below the climbing vine",
+      "firstFrame": 508,
+      "lastFrame": 610
+    },
+    {
+      "name": "Read the rope as it crosses the courtyard center",
+      "firstFrame": 654,
+      "lastFrame": 654
+    },
+    {
+      "name": "Catch the moving lower rope with a normal jump",
+      "firstFrame": 655,
+      "lastFrame": 658
+    },
+    {
+      "name": "Climb the swinging rope above the window sill",
+      "firstFrame": 660,
+      "lastFrame": 863
+    },
+    {
+      "name": "Wait for the high swing toward the window",
+      "firstFrame": 889,
+      "lastFrame": 935
+    },
+    {
+      "name": "Release through the framed window onto its sill",
+      "firstFrame": 936,
+      "lastFrame": 976
+    },
+    {
+      "name": "Collect the window crystal",
+      "firstFrame": 976,
+      "lastFrame": 1059
+    },
+    {
+      "name": "Read the courtyard return beside the window",
+      "firstFrame": 1077,
+      "lastFrame": 1150
+    },
+    {
+      "name": "Drop into the broad courtyard beside the gallery",
+      "firstFrame": 1195,
+      "lastFrame": 1248
+    },
+    {
+      "name": "Pass outside the climbing rope",
+      "firstFrame": 1248,
+      "lastFrame": 1386
+    },
+    {
+      "name": "Return to the rope courtyard entrance",
+      "firstFrame": 1404,
+      "lastFrame": 1653
+    }
+  ],
+  "evidence": [
+    {
+      "action": "low rope catch",
+      "position": [
+        -0.0022049624319712795,
+        0.27890604258190654,
+        -17.171036114395573
+      ],
+      "gripDistance": 11.9
+    },
+    {
+      "action": "low rope catch",
+      "position": [
+        -0.0006657722504036509,
+        0.27613931315840956,
+        -18.788343009944352
+      ],
+      "gripDistance": 11.9
+    },
+    {
+      "action": "climbed release",
+      "position": [
+        -0.01788630878157146,
+        8.723348132830493,
+        -19.604393241039975
+      ],
+      "gripDistance": 3.7800000000000793
+    }
+  ],
+  "passed": true,
+  "stage": "Return to the rope courtyard entrance",
+  "result": {
+    "frame": 1671,
+    "time": 27.849999999999998,
+    "position": [
+      0.02610421044197431,
+      0,
+      4.919722750952303
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

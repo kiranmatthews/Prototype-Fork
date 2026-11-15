@@ -1,0 +1,300 @@
+{
+  "id": 19,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 19 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Jump onto crumbling flight 1",
+      "firstFrame": 314,
+      "lastFrame": 349
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 349,
+      "lastFrame": 430
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 475,
+      "lastFrame": 508
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 508,
+      "lastFrame": 589
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 634,
+      "lastFrame": 667
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 667,
+      "lastFrame": 748
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 793,
+      "lastFrame": 825
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 1395,
+      "lastFrame": 1503
+    },
+    {
+      "name": "Jump onto crumbling flight 2",
+      "firstFrame": 1548,
+      "lastFrame": 1583
+    },
+    {
+      "name": "A late upper transfer falls to the flat recovery floor",
+      "firstFrame": 1583,
+      "lastFrame": 1783
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 1783,
+      "lastFrame": 1960
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 1978,
+      "lastFrame": 2210
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 2228,
+      "lastFrame": 2492
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 2510,
+      "lastFrame": 2601
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 2619,
+      "lastFrame": 2796
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 2814,
+      "lastFrame": 2974
+    },
+    {
+      "name": "Jump onto crumbling flight 1",
+      "firstFrame": 3019,
+      "lastFrame": 3054
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 3054,
+      "lastFrame": 3135
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 3180,
+      "lastFrame": 3213
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 3213,
+      "lastFrame": 3294
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 3339,
+      "lastFrame": 3372
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 3372,
+      "lastFrame": 3453
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 3498,
+      "lastFrame": 3530
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 3530,
+      "lastFrame": 3653
+    },
+    {
+      "name": "Jump onto crumbling flight 2",
+      "firstFrame": 3698,
+      "lastFrame": 3733
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 3733,
+      "lastFrame": 3814
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 3859,
+      "lastFrame": 3892
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 3892,
+      "lastFrame": 3973
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 4018,
+      "lastFrame": 4051
+    },
+    {
+      "name": "Cross the lit step before it crumbles",
+      "firstFrame": 4051,
+      "lastFrame": 4132
+    },
+    {
+      "name": "Jump to the next crumbling step or permanent island",
+      "firstFrame": 4177,
+      "lastFrame": 4209
+    },
+    {
+      "name": "Approach the bounce crate after the crumbling flights",
+      "firstFrame": 4209,
+      "lastFrame": 4302
+    },
+    {
+      "name": "Hold the high arrow rebound",
+      "firstFrame": 4347,
+      "lastFrame": 4383
+    },
+    {
+      "name": "Land above the crumbling route",
+      "firstFrame": 4383,
+      "lastFrame": 4427
+    },
+    {
+      "name": "Collect the crystal at the center of the receiver",
+      "firstFrame": 4427,
+      "lastFrame": 4507
+    },
+    {
+      "name": "Drop to the flat recovery floor",
+      "firstFrame": 4552,
+      "lastFrame": 4625
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 4625,
+      "lastFrame": 4708
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 4726,
+      "lastFrame": 5185
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 5203,
+      "lastFrame": 5467
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 5485,
+      "lastFrame": 5576
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 5594,
+      "lastFrame": 5771
+    }
+  ],
+  "evidence": [
+    {
+      "action": "completed crumbling flight 1",
+      "position": [
+        -0.0039351487076886155,
+        6.2,
+        -29.61999999999997
+      ]
+    },
+    {
+      "action": "completed crumbling flight 1",
+      "position": [
+        0.0038084711732483535,
+        6.2,
+        -29.61999999999997
+      ]
+    },
+    {
+      "action": "completed crumbling flight 2",
+      "position": [
+        0.0038084711732483535,
+        12.4,
+        -64.0002777777778
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the local circuit",
+  "result": {
+    "frame": 5789,
+    "time": 96.48333333333333,
+    "position": [
+      0.06834090115384098,
+      0,
+      8.996299945105564
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

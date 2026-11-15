@@ -12173,3 +12173,115 @@ Thirty-fourth and final playable UI course, reviewed in 31.3 minutes from approx
 All 52 real cart pickup approaches, 208 anchor-corner probes, all eight racers finishing, continuous solo traversal of all eighteen jumps, rim containment, item respawn/retry, winning/losing gem fixtures and stock-save checks pass. Chrome confirms keyboard controls, the changed rows, finish/restart and two inspected full-render views. Required level checks, build and release pass: `44bce024d7abb2edb14e`, 959,322,064 bytes. [Evidence and limitations](crate-bible/campaign-refresh/coconut-cart-rally/README.md).
 
 The review now covers every current playable campaign UI course: **34 main courses and 24 unique bonus rooms**. The five unbuilt placeholder slots are excluded. [Complete review index](crate-bible/campaign-refresh/README.md).
+
+
+### 2026-11-14 — Crystal Trials 01: 1 / Bounce crate
+
+First of 25 requested retrieval challenges, authored from approximately 23:39 UTC and validated in approximately 12 minutes, after separate research and shared objective-system setup. A repeatable steel arrow puts the crystal above ordinary floor-jump reach. The unboosted rebound peaks at 4.91 m; a held rebound collects at 6.05 m and lands safely. Native inputs and Chromium verify a deliberate miss, local retry, checkpoint, pickup and recovery. A full 1280×720 view exposed a hidden overhead goal; the original layout is preserved in the separate rejects stage, and a wider authored presentation view now shows the arrow and crystal together.
+
+Opt-in multi-crystal park support preserves ordinary campaign rewards and the editor's usual single-crystal rule. All 28 editor transaction checks and TypeScript pass. The other 24 challenges and final level/build/release gates are outstanding; this is local progress, not a published completion claim. [Evidence](crystal-trials/01/).
+
+
+### 2026-11-14 — Crystal Trials 02: 2 / Trampoline and high platform
+
+Second retrieval, authored and validated in approximately 7 minutes from 23:49:22 UTC. A trampoline launches at 27.5 m/s to an 11.35 m apex; steering during ascent lands on a 4.6 × 5.2 m balcony at 8.4 m. Native and real-browser controls include an intentional wrong-way drift, safe courtyard landing, local retry, the crystal, and the return drop. The successful route uses no ledge grabs, deaths or state manipulation. An inspected 1280×720 approach shows the spring, receiver and crystal together. The first version's floating arch lintel is preserved as reject 02-a; full-height rear piers complete the frame without blocking the flight. [Evidence](crystal-trials/02/).
+
+
+### 2026-11-15 — Crystal Trials 03: 3 / Long rail over a pit
+
+Third retrieval, authored and validated in approximately 16 minutes from 23:56 UTC. A 72 m rail begins over a safe practice floor, crosses a visible pit and ends below a 3.1 m receiver. Native inputs show an oversteer recovery on safe ground, over seven seconds of sustained balance, a charged grind jump, the crystal and a complete lower return circuit. A separate deliberate pit fall spends one Classic reserve life, returns to the banked checkpoint and preserves the earned crystal. Chromium repeats the route in lite and full rendering, with an inspected 1280×720 approach and clean consoles.
+
+Rejected 03-a retains the ground-level return shortcut and conflicting edge. Rejected 03-b retains the premature ramp junction that caused an unintended ledge catch. The accepted lower return cannot reach the reward deck with a floor double jump; its ramp now meets the junction at equal height. [Evidence](crystal-trials/03/).
+
+### 2026-11-15 — Crystal Trials 04: 4 / Moving platform and lift
+
+Fourth retrieval, reviewed in approximately 13 minutes from 00:12 UTC. A horizontal ferry reaches a fixed resting island; a vertical lift then carries the player to an 8.4m crystal gallery. A lower return ramp closes the circuit. Native controller routes pass at three arrival phases, including a deliberately mistimed ferry jump and checkpoint recovery. Lite and full Chromium routes pass with clean consoles; both the 1280×720 initial approach and lift observation views are inspected. Movement settings remain unchanged. No geometry attempt was abandoned. [Evidence](crystal-trials/04/).
+
+### 2026-11-15 — Crystal Trials 05: 5 / Halfpipe and high crystal
+
+Fifth retrieval, reviewed in approximately 10 minutes from 00:25 UTC. A 4m halfpipe carries a crystal at 9.8m above its right coping. Native and Chromium controller runs pump through five airs (first approximately 6.35m, fifth 10.09m), collect on the fifth, land in the transition, brake and return through the open end without bails. Full-resolution approach and floor views are inspected: the approach reveals the high goal; the rider camera frames the transition while on the floor. The first pilot drifted along the pipe and needed steering; another needed a second brake on the flat. These are preserved input histories, with no abandoned geometry. Required shared-data checks are running. [Evidence](crystal-trials/05/).
+
+### 2026-11-15 — Crystal Trials 06: 6 / Climbing rope and high platform
+
+Retrieval 6, reviewed in 7.4 minutes from 2026-11-15T00:36:00Z. Catch the low swing, climb 8.12m along its rope, and release through a framed 9.2m gallery. A low release lands safely for a retry; the successful release has zero ledge-grab frames. The original low lintel is retained as reject 06-a. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/06/).
+
+
+### 2026-11-15 — Crystal Trials 07: 7 / Timed steps
+
+Retrieval 7, reviewed in 21.8 minutes from 2026-11-15T00:44:00Z. Three timed 1.5m rising steps lead to a 6.2m crystal balcony. Waiting through a warning drops to a supported lower courtyard; a side ramp enables the local retry. The full route has no deaths or ledge catches. This iteration exceeded 20 minutes to give the recovery path a clear return-facing camera with matching controls. Camera variants 07-a, 07-b and 07-c are preserved. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/07/).
+
+### 2026-11-15 — Crystal Trials 08: 8 / Switch, steps and bounce crate
+
+Retrieval 8, reviewed in 32.1 minutes from 2026-11-15T01:06:00Z. Switch reveals two solid mesh steps and a reusable bounce crate; a short rebound misses the 10.2 m receiver, then the held retry lands cleanly. Full-resolution approach and return show the route and goal clearly. The platform-outline draft is preserved as 08-a. Time includes the requested corridor and phone-entry work. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/08/).
+
+### 2026-11-15 — Crystal Trials 09: 9 / Turtle shell and high platform
+
+Retrieval 9, reviewed in 16.2 minutes from 2026-11-15T01:32:00Z. A turtle becomes a reusable shell after one attack; a second attack removes it and the designated pit/checkpoint restores it. A held shell bounce falls short, while an apex double jump reaches the 8.2 m receiver. Native and both browser routes include the failed-tool recovery and complete safe return. Full-resolution approach and return views show the turtle, raised goal, and recovered shell. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/09/).
+
+### 2026-11-15 — Crystal Trials 10: 10 / Folding bridge and small platform
+
+Retrieval 10, reviewed in 31.7 minutes from 2026-11-15T01:35:00Z. Folding bridge timeout, local recovery, timed crossing and precision receiver pass. Rejected the blocked on-axis sightline and preserved it as 10-a; the angled approach reveals the crystal. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/10/).
+
+### 2026-11-15 — Crystal Trials 11: 11 / Offset rail transfers
+
+Retrieval 11, reviewed in 23.7 minutes from 2026-11-15T01:43:00Z. Three offset rails require two deliberate transfers; riding straight fails into the designated pit. The positive route, raised landing and lower return pass. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/11/).
+
+### 2026-11-15 — Crystal Trials 12: 12 / Trampoline and airborne bounce crate
+
+Retrieval 12, reviewed in 35.5 minutes from 2026-11-15T01:46:00Z. The trampoline feeds an airborne steel-arrow crate, then a separate high receiver. The wrong drift safely returns to the floor. A rejected camera clipped the crystal; the final full-resolution approach shows it completely. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/12/).
+
+### 2026-11-15 — Crystal Trials 13: 13 / Two climbing ropes
+
+Retrieval 13, reviewed in 48.9 minutes from 2026-11-15T01:49:29Z. Two climbs are separated by a permanent rest. An early low release returns safely to the courtyard; both climbed releases and the final return pass. The widened lower camera keeps the upper target visible; the earlier framing is preserved as 13-a. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/13/).
+
+### 2026-11-15 — Crystal Trials 14: 14 / Timed platforms and resting island
+
+Retrieval 14, reviewed in 56.4 minutes from 2026-11-15T01:51:47Z. Two timed flights have a permanent rest and a flat recovery route. The controller tests failed timing, completes both flights, and returns up the side ramp; upper flight and return-camera fixtures were reviewed. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/14/).
+
+### 2026-11-15 — Crystal Trials 20: 20 / TNT and two switch groups
+
+Retrieval 20, reviewed in 39.6 minutes from 2026-11-15T02:08:52Z. The TNT fuse opens one switch group; the upper switch opens a separate group. The controller confirms direct-spin occlusion, safe retreat, both spring landings and the flat-floor return. Full-resolution initial and upper-switch views were inspected. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/20/).
+
+### 2026-11-15 — Crystal Trials 22: 22 / Two ropes, timed steps and spring
+
+Retrieval 22, reviewed in 52.3 minutes from 2026-11-15T02:15:06Z. Two rope climbs lead to a timed flight and held spring rebound. The real-input route confirms low-release recovery, both high landings, timed transfers, crystal pickup and a flat-floor return. The upper timed flight and final spring views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/22/).
+
+### 2026-11-15 — Crystal Trials 21: 21 / Rails, trick gate, enemy and spring
+
+Retrieval 21, reviewed in 54.9 minutes from 2026-11-15T02:14:21Z. Rail transfers end in a neutral kickflip through the gate, followed by a timed enemy and held bounce. The revised terrace camera clears the gate frame; prior blocked views are preserved in rejects 21-a and 24-a. Native and full browser routes also pass after the camera revision. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/21/).
+
+### 2026-11-15 — Crystal Trials 23: 23 / Two switch groups and climbing rope
+
+Retrieval 23, reviewed in 54.0 minutes from 2026-11-15T02:16:48Z. TNT and two independent switch groups lead through both spring routes to a rope climb and its high crystal. The browser route preserves each group and returns to the flat floor; the upper rope and receiving platform remain visible in the full-resolution fixture. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/23/).
+
+### 2026-11-15 — Crystal Trials 15: 15 / TNT, switch and revealed route
+
+Retrieval 15, reviewed in 74.3 minutes from 2026-11-15T01:56:41Z. A stomp starts the TNT fuse while the transparent enclosure prevents a direct spin on the switch. The timed blast reveals the steps and spring; the controller retreats safely, retrieves the high crystal and returns across the flat floor. Full-resolution enclosure and route views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/15/).
+
+### 2026-11-15 — Crystal Trials 16: 16 / Nitro frames and two launchers
+
+Retrieval 16, reviewed in 73.2 minutes from 2026-11-15T02:00:26Z. The route deliberately tests Nitro death and checkpoint recovery, then uses the trampoline and airborne bounce crate to reach the narrow receiver without touching its Nitro frame. Full-resolution and portrait/landscape phone views were reviewed; the phone controller also completes the route. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/16/).
+
+### 2026-11-15 — Crystal Trials 17: 17 / Rails, timed enemy and bounce crate
+
+Retrieval 17, reviewed in 70.9 minutes from 2026-11-15T02:05:51Z. Three rails require two balance transfers and a raised exit pop. A retracted-enemy timing window then opens access to the bounce crate and high crystal. The input route tests a missed transfer, checkpoint recovery, enemy timing and the return ramp. Full-resolution rail and enemy-terrace views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/17/).
+
+### 2026-11-15 — Crystal Trials 18: 18 / Two ropes and moving platform
+
+Retrieval 18, reviewed in 75.4 minutes from 2026-11-15T02:06:18Z. The first climbed release lands on a moving rest, which carries the player before the second rope crossing. Real-input tests pass at three start timings and in the continuous course; early low releases recover on the flat floor. The moving rest and upper landing were inspected at full resolution. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/18/).
+
+### 2026-11-15 — Crystal Trials 25: 25 / Switches, rope, timed steps and Nitro spring
+
+Retrieval 25, reviewed in 62.7 minutes from 2026-11-15T02:20:29Z. The complete chain uses TNT, two isolated switch groups, both held spring rebounds, a rope climb, two timed flights and a Nitro-framed final rebound. Native, course-browser and production phone routes collect the final crystal and return safely; full-resolution waiting-bank, resting-island and Nitro-spring views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/25/).
+
+### 2026-11-15 — Crystal Trials 24: 24 / Rails, enemy, spring, rope and timed steps
+
+Retrieval 24, reviewed in 67.5 minutes from 2026-11-15T02:17:23Z. The route combines offset rails, a kickflip gate, timed enemy, held spring, upper rope climb and timed steps. The gate view clears its frame and hands over to the rope view before the upper terrace; both superseded camera layouts are preserved. Native and browser routes pass after the final camera correction. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/24/).
+
+### 2026-11-15 — Crystal Trials 19: 19 / Crumbling steps and bounce crate
+
+Retrieval 19, reviewed in 78.3 minutes from 2026-11-15T02:08:20Z. Six crumbling steps include a permanent mid-route rest and finish with a held spring rebound. The controller verifies that loitering collapses a step, recovers on the flat floor, and then crosses both flights and retrieves the crystal. Full-resolution upper-flight and high-bounce views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/19/).
+
+### 2026-11-15 — 25-challenge corridor and lightweight phone playtest
+
+Completed local validation in 261.7 minutes from the recorded collection start. The 25 modules sit 256 metres apart over a continuous flat floor with designated death pits; the archive contains 25 superseded attempts plus the original eight-station grid. A continuous 185,005-step controller run retrieves all crystals and opens the final gate. The dedicated phone entry uses the existing player, physics and animation baseline with touch controls and individual/course/reject selection. A cache-disabled production audit transfers 36,373,148 bytes (36.4 MB), including all layouts; its picker transfers 18,840 bytes before Play. Seven representative phone controller routes pass. Level checks, 28 editor regressions, build, and release-size checks pass. No movement tuning changed. Publication verification follows. [Evidence](crystal-trials/README.md).

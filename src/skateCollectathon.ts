@@ -3,15 +3,19 @@ import * as THREE from 'three';
 /** Small opt-in objective for data-authored parks. Wumpa markers become tokens;
  * ordinary courses retain their original pickups and campaign rewards. */
 export class SkateCollectathon {
-  constructor(private readonly warehouseArt=false){}
+  constructor(private readonly warehouseArt=false,
+    readonly mode: 'tokens' | 'crystals' | 'archive' = 'tokens',
+    private readonly title = 'WAREHOUSE / FIVE LINES'){}
   readonly tokens: { group: THREE.Group; box: THREE.Box3; name: string; collected: boolean; y: number }[] = [];
   private signs: { texture: THREE.CanvasTexture; canvas: HTMLCanvasElement }[] = [];
   get collected(): number { return this.tokens.filter(t => t.collected).length; }
   get complete(): boolean { return this.tokens.length > 0 && this.tokens.every(t => t.collected); }
+  get exitReady(): boolean { return this.mode === 'archive' || this.complete; }
+  get noun(): string { return this.mode === 'tokens' ? 'TOKENS' : 'CRYSTALS'; }
 
-  add(root: THREE.Group, p: [number, number, number], name: string): void {
+  add(root: THREE.Group, p: [number, number, number], name: string, crystal?: THREE.Group): void {
     const group = new THREE.Group(); group.position.fromArray(p);
-    const token = new THREE.Mesh(new THREE.OctahedronGeometry(.65),
+    const token = crystal ?? new THREE.Mesh(new THREE.OctahedronGeometry(.65),
       new THREE.MeshStandardMaterial({ color: 0xf3f3f3, emissive: 0x444444, roughness: .3, metalness: .35 }));
     group.add(token);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(.95, .045, 6, 32),
@@ -50,9 +54,9 @@ export class SkateCollectathon {
       const c = canvas.getContext('2d')!;
       c.fillStyle = '#202225'; c.fillRect(0, 0, canvas.width, canvas.height);
       c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#eeeeee';
-      c.font = 'bold 70px sans-serif'; c.fillText('WAREHOUSE / FIVE LINES', 512, 58);
-      c.font = '42px sans-serif'; c.fillText(this.complete ? 'ALL TOKENS FOUND / EXIT OPEN' : 'FIND THE FIVE HIGH TOKENS', 512, 129);
-      c.fillText(`${this.collected} / ${this.tokens.length}     •     RETURN TO THIS PAD`, 512, 190);
+      c.font = 'bold 70px sans-serif'; c.fillText(this.title.toUpperCase(), 512, 58, 980);
+      c.font = '42px sans-serif'; c.fillText(this.mode === 'archive' ? 'PRESERVED EXPERIMENTS / EXIT OPEN' : this.complete ? `ALL ${this.noun} FOUND / EXIT OPEN` : `FIND THE ${this.tokens.length} ${this.noun}`, 512, 129);
+      c.fillText(`${this.collected} / ${this.tokens.length}     •     ${this.mode === 'tokens' ? 'RETURN TO THIS PAD' : 'CONTINUE TO THE EXIT'}`, 512, 190);
       c.font = '30px sans-serif'; c.fillText('NO TIMER  /  EXPLORE  /  LINK YOUR LINES', 512, 257);
       texture.needsUpdate = true;
     }

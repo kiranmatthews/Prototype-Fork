@@ -1,0 +1,1128 @@
+{
+  "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "menuBytes": 11487,
+  "portraitButtons": [
+    {
+      "text": "Challenges",
+      "x": 18,
+      "y": 111,
+      "w": 119.640625,
+      "h": 48
+    },
+    {
+      "text": "Rejects",
+      "x": 145.640625,
+      "y": 111,
+      "w": 89.484375,
+      "h": 48
+    },
+    {
+      "text": "1",
+      "x": 21,
+      "y": 174,
+      "w": 63.1875,
+      "h": 221.625
+    },
+    {
+      "text": "2",
+      "x": 92.1875,
+      "y": 174,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "3",
+      "x": 163.390625,
+      "y": 174,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "4",
+      "x": 234.59375,
+      "y": 174,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "5",
+      "x": 305.796875,
+      "y": 174,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "6",
+      "x": 21,
+      "y": 403.625,
+      "w": 63.1875,
+      "h": 221.625
+    },
+    {
+      "text": "7",
+      "x": 92.1875,
+      "y": 403.625,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "8",
+      "x": 163.390625,
+      "y": 403.625,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "9",
+      "x": 234.59375,
+      "y": 403.625,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "10",
+      "x": 305.796875,
+      "y": 403.625,
+      "w": 63.203125,
+      "h": 221.625
+    },
+    {
+      "text": "Play",
+      "x": 18,
+      "y": 707.25,
+      "w": 65.703125,
+      "h": 48
+    },
+    {
+      "text": "Whole course",
+      "x": 91.703125,
+      "y": 707.25,
+      "w": 139.703125,
+      "h": 48
+    }
+  ],
+  "start": [
+    0,
+    0,
+    5
+  ],
+  "afterTouch": [
+    0,
+    0,
+    0.9333333333333336
+  ],
+  "landscapeButtons": [
+    {
+      "text": "Challenges",
+      "x": 18,
+      "y": 94,
+      "w": 119.640625,
+      "h": 48
+    },
+    {
+      "text": "Rejects",
+      "x": 145.640625,
+      "y": 94,
+      "w": 89.484375,
+      "h": 48
+    },
+    {
+      "text": "1",
+      "x": 21,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "2",
+      "x": 101.5,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "3",
+      "x": 182,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "4",
+      "x": 262.5,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "5",
+      "x": 343,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "6",
+      "x": 21,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "7",
+      "x": 101.5,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "8",
+      "x": 182,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "9",
+      "x": 262.5,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "10",
+      "x": 343,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "Play",
+      "x": 425.5,
+      "y": 94,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Resume",
+      "x": 629.75,
+      "y": 94,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Retry",
+      "x": 425.5,
+      "y": 150,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Whole course",
+      "x": 629.75,
+      "y": 150,
+      "w": 196.25,
+      "h": 48
+    }
+  ],
+  "gridCrystals": 8,
+  "bytes": 34274418,
+  "resources": [
+    {
+      "url": "http://127.0.0.1:4173/motion-study/skate/motion.json.gz",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8626839
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/level-AQeIHnk7.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3752064
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/metal-fracture.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2879991
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/wood-fracture.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2127087
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/board-scribble-1z1e6AP0.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 2004089
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/metal-sculpt.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 1939823
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/uber-music.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 1314162
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/wood-sculpt.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 1195563
+    },
+    {
+      "url": "http://127.0.0.1:4173/motion-study/jak/motion.json.gz",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 927227
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/wood-brace.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 878822
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/player-7xrVoTAd.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 800234
+    },
+    {
+      "url": "http://127.0.0.1:4173/props/crate-family/crate-vfx-atlas.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 780761
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/three-finger-hand/three-finger-hand.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 719094
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/weather/rooftop-rain.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 705836
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/weather/rooftop-thunder.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 564716
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/boulder-camera/rolling-rush.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 384236
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/boulder-camera/camera-hit-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 288236
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/boulder-camera/camera-hit-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 265196
+    },
+    {
+      "url": "http://127.0.0.1:4173/skateboard/surf-cruiser-orange-sun.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 253249
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/boulder-camera/camera-hit-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 245996
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-shorts/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 228335
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-torso/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 213623
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-head/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 204843
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/playerCatalog-BfYFdp0J.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 197544
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/engine-rattle-v2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 177836
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/three.module-C5Nqj5WA.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 155537
+    },
+    {
+      "url": "http://127.0.0.1:4173/skateboard/skateboard-truck.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 147909
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/fire-crackle-v2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 128904
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/ledgeTraversal-BpvP1mcB.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 97384
+    },
+    {
+      "url": "http://127.0.0.1:4173/models/skull.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 90389
+    },
+    {
+      "url": "http://127.0.0.1:4173/models/crossbones.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 82145
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/explosion.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 79948
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/moa-caw.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 73195
+    },
+    {
+      "url": "http://127.0.0.1:4173/bone-head.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 73176
+    },
+    {
+      "url": "http://127.0.0.1:4173/roo.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 63693
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/skating-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 60197
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/crystal-collect.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 51736
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/mask-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 48257
+    },
+    {
+      "url": "http://127.0.0.1:4173/skateboard/skateboard-truck.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 47221
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/sounds-DSOM5NRG.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 44792
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/life-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 43105
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/drone-swoop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 37675
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/explosion.m4a",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 37038
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/landing-crunch-v1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 34795
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/turtle-grumble.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 31915
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/grinding-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 31861
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/skating-loop-5.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 30965
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/goblin-mutter.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 30475
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/slide.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 29995
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/thruster-start.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28957
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/thruster-end.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28957
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/skid.m4a",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28808
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/thruster-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28477
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/spin-away.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28377
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/karts/crash.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28263
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/characterAnimationRuntime-Bc3qrC4J.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 27824
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/sentry-charge.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26635
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/mask-loss.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26417
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/spiker-snuffle.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26155
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/bull-snort.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26155
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/frog-croak.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 25675
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-torso/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 25098
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/tuning-D9eXvqOE.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 24537
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-head/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 23726
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-shorts/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 22778
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/bull-brake.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 22315
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/skate-halt.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 21545
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/drone-hover.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 21355
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/crab-clack.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 20395
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/playableMotion-ByO1dVVS.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 20026
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/slide-jump.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 19435
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/bull-charge.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 19435
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/machine-down.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 18475
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/special-trick.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 17086
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/spinner-open.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 16555
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/sentry-cool.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15595
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/organic-down.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15595
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/crate-break-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15161
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/spinner-close.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15115
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/spin-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 14433
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/moa-caw-peck.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 14315
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/frog-land.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 13675
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/GLTFLoader-DSqmFct1.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 13544
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/frog-hop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 13195
+    },
+    {
+      "url": "http://127.0.0.1:4173/fonts/RooRegular.ttf",
+      "status": 200,
+      "type": "Font",
+      "bytes": 11876
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/sentry-fire.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11755
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/spin-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11297
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/turtle-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11275
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/ollie.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10737
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/death.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10401
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/woosh.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10008
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/bouncy-box-bounce.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10008
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/rail-land.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 9728
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/crate-break-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 9280
+    },
+    {
+      "url": "http://127.0.0.1:4173/characters/meshy-shorts/metallic.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 9071
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/bull-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8874
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/metal-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8874
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/unsure.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8328
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/crunch.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8272
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/foot-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 7096
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/skate-transition.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 7040
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/spiker-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6954
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/spin-4.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6816
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/fflate.module-XEyfgjbZ.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 6796
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/milk-DCanU9nK.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 6650
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/enemies/crab-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6474
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/wumpa-get-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6312
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/crystal-trials-wJ4qLl43.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 5884
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/skateChaseCamera-CRbDYIuY.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 5770
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/woosh-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5696
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/crate-bounce.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5584
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/tnt-count-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5584
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/elasticity-BV0m_i3f.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 5578
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/wumpa-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4856
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/fruit-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4856
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/foot-step-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4408
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/geometry-ekXept3V.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 4143
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/take-damage.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 3792
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/tnt-count.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 3400
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/presentationLoading-HYPoaOc_.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3146
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/retarget-DvtW2a6E.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3054
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/runtime-BpUDQUW9.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3052
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/BufferGeometryUtils-cQTEOgP4.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 2640
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/woosh-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2224
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/ledge-grab.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2224
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/skateCatalog-CrQC9mUx.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 2193
+    },
+    {
+      "url": "http://127.0.0.1:4173/sfx/foot-step-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2112
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/challengePlaytest-f3Ckk8cC.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 1806
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/challengePlaytest-CKJMx-TX.css",
+      "status": 200,
+      "type": "Stylesheet",
+      "bytes": 1220
+    },
+    {
+      "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+      "status": 200,
+      "type": "Document",
+      "bytes": 1119
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/preload-helper-CmsKOCeN.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 863
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/skateGrabMotion-_awZViYM.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 629
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/Pass-uJjVGx3X.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 596
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/modulepreload-polyfill-B5Qt9EMX.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 595
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/localGameStorage-CkXwQ_fa.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 523
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/SkeletonUtils-BCVmgslc.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 461
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/level-DJtrQsAn.css",
+      "status": 200,
+      "type": "Stylesheet",
+      "bytes": 408
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/storageKeys-Cs5plciI.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 282
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/aae3ee74-6d5e-40cb-9985-d0090f91485b",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/67330585-eb6b-49ef-b67f-ebfc10cd55b7",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/7d615996-1ce9-47ad-a870-de91a033681b",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/df2572d0-7c55-4f15-aeac-b97cae9fd8f3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/5f6a537f-7eff-44fa-afee-1784dd579816",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/fa852138-d370-41ec-adaa-90d8c10c2092",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/2513a011-51a1-45f2-8f49-a54ca0e2b2d4",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/e509215a-8cfa-4e6e-a247-62bfccd8f2c5",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/c8e51729-8724-4d22-9eb5-7f72f64bfd21",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/067ab40b-2472-4e80-9b4a-206f634e1df7",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:http://127.0.0.1:4173/3ff45762-f9eb-4ccb-b638-a4a97446b121",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    }
+  ]
+}

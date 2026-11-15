@@ -1,0 +1,190 @@
+{
+  "id": 3,
+  "actions": [
+    {
+      "name": "Bank the viaduct checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Set up on the safe rail approach",
+      "firstFrame": 137,
+      "lastFrame": 228
+    },
+    {
+      "name": "Catch the long viaduct rail",
+      "firstFrame": 273,
+      "lastFrame": 308
+    },
+    {
+      "name": "Oversteer while the rail still has a floor beneath it",
+      "firstFrame": 308,
+      "lastFrame": 332
+    },
+    {
+      "name": "Recover from the balance mistake on the approach deck",
+      "firstFrame": 332,
+      "lastFrame": 421
+    },
+    {
+      "name": "Set up on the safe rail approach",
+      "firstFrame": 421,
+      "lastFrame": 607
+    },
+    {
+      "name": "Catch the long viaduct rail",
+      "firstFrame": 652,
+      "lastFrame": 686
+    },
+    {
+      "name": "Balance across the open pit",
+      "firstFrame": 686,
+      "lastFrame": 1120
+    },
+    {
+      "name": "Pop from the needle onto its raised receiver",
+      "firstFrame": 1147,
+      "lastFrame": 1179
+    },
+    {
+      "name": "Brake on the crystal receiver",
+      "firstFrame": 1179,
+      "lastFrame": 1204
+    },
+    {
+      "name": "Collect the viaduct crystal",
+      "firstFrame": 1204,
+      "lastFrame": 1289
+    },
+    {
+      "name": "Read the lower return landing",
+      "firstFrame": 1307,
+      "lastFrame": 1388
+    },
+    {
+      "name": "Drop onto the one-way return landing",
+      "firstFrame": 1433,
+      "lastFrame": 1488
+    },
+    {
+      "name": "Join the return below the crystal deck",
+      "firstFrame": 1488,
+      "lastFrame": 1587
+    },
+    {
+      "name": "Follow the lower return outside the pit",
+      "firstFrame": 1605,
+      "lastFrame": 2158
+    },
+    {
+      "name": "Climb back to the observation promenade",
+      "firstFrame": 2176,
+      "lastFrame": 2440
+    },
+    {
+      "name": "Turn onto the upper return junction",
+      "firstFrame": 2458,
+      "lastFrame": 2549
+    },
+    {
+      "name": "Finish the local circuit at the approach",
+      "firstFrame": 2567,
+      "lastFrame": 2744
+    },
+    {
+      "name": "Test a missed crossing by running into the visible pit",
+      "firstFrame": 2762,
+      "lastFrame": 3010
+    },
+    {
+      "name": "Respawn at the banked viaduct checkpoint",
+      "firstFrame": 3010,
+      "lastFrame": 3143
+    }
+  ],
+  "evidence": [
+    {
+      "action": "balance miss recovers on safe deck",
+      "position": [
+        0,
+        0,
+        -16.130843008713235
+      ]
+    },
+    {
+      "action": "long rail crossing",
+      "seconds": 7.233333333333333,
+      "position": [
+        0,
+        1.3499999999999999,
+        -70.09999999999987
+      ],
+      "balance": -0.07253225974650072,
+      "speed": 9
+    },
+    {
+      "action": "receiver crystal",
+      "position": [
+        0,
+        3.1,
+        -83.93455371839433
+      ]
+    },
+    {
+      "action": "pit recovery preserves crystal",
+      "position": [
+        -4,
+        0.1,
+        5
+      ],
+      "deaths": 0,
+      "livesBefore": 4,
+      "livesAfter": 3
+    }
+  ],
+  "passed": true,
+  "stage": "Respawn at the banked viaduct checkpoint",
+  "pitDeathObserved": true,
+  "expectedDeaths": 0,
+  "result": {
+    "frame": 3143,
+    "time": 52.38333333333333,
+    "position": [
+      -4,
+      0.1,
+      5
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": null,
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

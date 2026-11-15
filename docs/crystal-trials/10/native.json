@@ -1,0 +1,182 @@
+{
+  "id": 10,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank the bridge checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Approach the upright bridge",
+      "firstFrame": 137,
+      "lastFrame": 291
+    },
+    {
+      "name": "Wait for the bridge to settle",
+      "firstFrame": 310,
+      "lastFrame": 339
+    },
+    {
+      "name": "Wait on the deployed bridge",
+      "firstFrame": 339,
+      "lastFrame": 454
+    },
+    {
+      "name": "A late crossing folds away and drops to the flat floor",
+      "firstFrame": 472,
+      "lastFrame": 662
+    },
+    {
+      "name": "Join the lower return",
+      "firstFrame": 662,
+      "lastFrame": 839
+    },
+    {
+      "name": "Walk to the return ramp",
+      "firstFrame": 857,
+      "lastFrame": 972
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 990,
+      "lastFrame": 1253
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 1271,
+      "lastFrame": 1362
+    },
+    {
+      "name": "Return to the bridge entrance",
+      "firstFrame": 1380,
+      "lastFrame": 1557
+    },
+    {
+      "name": "Approach the upright bridge",
+      "firstFrame": 1575,
+      "lastFrame": 1759
+    },
+    {
+      "name": "Wait for the bridge to settle",
+      "firstFrame": 1778,
+      "lastFrame": 1807
+    },
+    {
+      "name": "Cross before the bridge folds",
+      "firstFrame": 1807,
+      "lastFrame": 1975
+    },
+    {
+      "name": "Jump from the bridge onto the small raised receiver",
+      "firstFrame": 2020,
+      "lastFrame": 2052
+    },
+    {
+      "name": "Collect the bridge crystal",
+      "firstFrame": 2052,
+      "lastFrame": 2120
+    },
+    {
+      "name": "Drop beside the folded bridge into the recovery floor",
+      "firstFrame": 2165,
+      "lastFrame": 2219
+    },
+    {
+      "name": "Join the lower return",
+      "firstFrame": 2219,
+      "lastFrame": 2351
+    },
+    {
+      "name": "Walk to the return ramp",
+      "firstFrame": 2369,
+      "lastFrame": 2475
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 2493,
+      "lastFrame": 2757
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 2775,
+      "lastFrame": 2866
+    },
+    {
+      "name": "Return to the bridge entrance",
+      "firstFrame": 2884,
+      "lastFrame": 3061
+    }
+  ],
+  "evidence": [
+    {
+      "action": "bridge timeout returns to flat floor",
+      "position": [
+        -0.0011212033935620368,
+        -8,
+        -13.916887772363461
+      ]
+    },
+    {
+      "action": "timed bridge and precision landing",
+      "position": [
+        0.004060249236052055,
+        2.2,
+        -26.93279520862277
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Return to the bridge entrance",
+  "result": {
+    "frame": 3079,
+    "time": 51.31666666666666,
+    "position": [
+      0.06805915966910317,
+      0,
+      8.996423135606209
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

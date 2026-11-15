@@ -1,0 +1,242 @@
+{
+  "id": 22,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 22 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 137,
+      "lastFrame": 378
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 422,
+      "lastFrame": 432
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 433,
+      "lastFrame": 436
+    },
+    {
+      "name": "An early low release returns to the flat courtyard",
+      "firstFrame": 465,
+      "lastFrame": 508
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 508,
+      "lastFrame": 610
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 654,
+      "lastFrame": 654
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 655,
+      "lastFrame": 658
+    },
+    {
+      "name": "Climb rope 1 above its receiving platform",
+      "firstFrame": 660,
+      "lastFrame": 863
+    },
+    {
+      "name": "Wait for rope 1 to swing toward the landing",
+      "firstFrame": 889,
+      "lastFrame": 935
+    },
+    {
+      "name": "Release onto receiving platform 1",
+      "firstFrame": 936,
+      "lastFrame": 976
+    },
+    {
+      "name": "Wait below climbing rope 2",
+      "firstFrame": 976,
+      "lastFrame": 1130
+    },
+    {
+      "name": "Read rope 2 crossing its low point",
+      "firstFrame": 1174,
+      "lastFrame": 1199
+    },
+    {
+      "name": "Catch climbing rope 2",
+      "firstFrame": 1200,
+      "lastFrame": 1203
+    },
+    {
+      "name": "Climb rope 2 above its receiving platform",
+      "firstFrame": 1205,
+      "lastFrame": 1408
+    },
+    {
+      "name": "Wait for rope 2 to swing toward the landing",
+      "firstFrame": 1434,
+      "lastFrame": 1702
+    },
+    {
+      "name": "Release onto receiving platform 2",
+      "firstFrame": 1703,
+      "lastFrame": 1817
+    },
+    {
+      "name": "Read the upper timed flight from the permanent rest",
+      "firstFrame": 1817,
+      "lastFrame": 1924
+    },
+    {
+      "name": "Wait for the upper timed flight to begin",
+      "firstFrame": 1968,
+      "lastFrame": 2402
+    },
+    {
+      "name": "Jump onto the first upper timed step",
+      "firstFrame": 2403,
+      "lastFrame": 2438
+    },
+    {
+      "name": "Cross the lit upper step",
+      "firstFrame": 2438,
+      "lastFrame": 2519
+    },
+    {
+      "name": "Transfer across the upper timed flight",
+      "firstFrame": 2564,
+      "lastFrame": 2599
+    },
+    {
+      "name": "Cross the lit upper step",
+      "firstFrame": 2599,
+      "lastFrame": 2680
+    },
+    {
+      "name": "Transfer across the upper timed flight",
+      "firstFrame": 2725,
+      "lastFrame": 2760
+    },
+    {
+      "name": "Cross the lit upper step",
+      "firstFrame": 2760,
+      "lastFrame": 2841
+    },
+    {
+      "name": "Transfer across the upper timed flight",
+      "firstFrame": 2886,
+      "lastFrame": 2920
+    },
+    {
+      "name": "Approach the final bounce crate",
+      "firstFrame": 2920,
+      "lastFrame": 3012
+    },
+    {
+      "name": "Hold the final arrow rebound",
+      "firstFrame": 3057,
+      "lastFrame": 3093
+    },
+    {
+      "name": "Land on the final high receiver",
+      "firstFrame": 3093,
+      "lastFrame": 3137
+    },
+    {
+      "name": "Collect the crystal at the center of the receiver",
+      "firstFrame": 3137,
+      "lastFrame": 3217
+    },
+    {
+      "name": "Drop to the recovery courtyard",
+      "firstFrame": 3262,
+      "lastFrame": 3340
+    },
+    {
+      "name": "Walk outside the raised route",
+      "firstFrame": 3340,
+      "lastFrame": 4097
+    },
+    {
+      "name": "Complete the combined circuit",
+      "firstFrame": 4115,
+      "lastFrame": 4276
+    }
+  ],
+  "evidence": [
+    {
+      "action": "rope 1 high landing",
+      "position": [
+        -0.0194251511334923,
+        9.2,
+        -24.93261166483005
+      ]
+    },
+    {
+      "action": "rope 2 high landing",
+      "position": [
+        -0.07036404862230958,
+        18.4,
+        -43.73819805153394
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the combined circuit",
+  "result": {
+    "frame": 4294,
+    "time": 71.56666666666666,
+    "position": [
+      0.0738902488912411,
+      0,
+      4.995998920588442
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

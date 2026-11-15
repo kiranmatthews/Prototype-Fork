@@ -1,0 +1,126 @@
+{
+  "trial": 15,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "20be2eb3b4c7a10a0830fec6697905b3eccf19a41942b8d3ec2f4bdff2f911db",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        9.873420384529114,
+        22.327716922770183
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            -0.023355352410970743,
+            0.6829170501379511,
+            0.9967147707634837
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.03366403421728156,
+        0,
+        4.946740481656547
+      ],
+      "camera": [
+        0.03366403421728156,
+        9.873420384529114,
+        22.27445740442673
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            -0.02419578306963247,
+            0.6937786418592101,
+            0.9967062730490485
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tnt-and-switch",
+      "position": [
+        -5,
+        0,
+        -9
+      ],
+      "camera": [
+        -5,
+        9.873420384529114,
+        8.327716922770183
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            0.12537122530879546,
+            0.7034581921408939,
+            0.9954201920203155
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.03366403421728156,
+        0,
+        4.946740481656547
+      ]
+    },
+    {
+      "name": "tnt-and-switch",
+      "position": [
+        -5,
+        0.15,
+        -9
+      ]
+    }
+  ],
+  "passed": true
+}

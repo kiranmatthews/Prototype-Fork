@@ -1,0 +1,126 @@
+{
+  "trial": 23,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "b8fe6e5204b59a840ba9855b0f6714410913f413b72106cdf6824bea564f2dc7",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        9.873420384529114,
+        22.327716922770183
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.07258092352949018,
+            1.1890436147532295,
+            0.9981473923145184
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.058967550289855716,
+        0,
+        4.9512866389687575
+      ],
+      "camera": [
+        0.058967550289855716,
+        9.873420384529114,
+        22.27900356173894
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.07181931700530081,
+            1.1962248752098297,
+            0.9981442965346257
+          ]
+        }
+      ]
+    },
+    {
+      "name": "upper-rope",
+      "position": [
+        5,
+        20.8,
+        -57
+      ],
+      "camera": [
+        8.286335345030997,
+        32.372670690061994,
+        -40.568323274845014
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.12209648534743814,
+            0.7639761404453514,
+            0.9937731675342317
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.058967550289855716,
+        0,
+        4.9512866389687575
+      ]
+    },
+    {
+      "name": "upper-rope",
+      "position": [
+        5,
+        20.95,
+        -57
+      ]
+    }
+  ],
+  "passed": true
+}

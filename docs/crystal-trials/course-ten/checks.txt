@@ -1,0 +1,381 @@
+Starting the connected 10-station controller run.
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+PASS connected Crystal Trials: all 10 goals, ordinary navigation, real gate, checkpoints, recovery and fresh-run reset.
+PASS rejects archive: original attempts retained and its gate is immediately usable.
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Crate sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Metal sculpt could not load; retaining playable fallback HttpError: fetch for "" responded with 404:
+    at file:///workspace/Prototype-Fork/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}

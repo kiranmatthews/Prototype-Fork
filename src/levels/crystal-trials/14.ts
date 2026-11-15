@@ -1,0 +1,30 @@
+import { deck, type CrystalTrial } from './types';
+
+export const TRIAL_14: CrystalTrial = {
+  id: 14, name: '14 / Timed platforms and resting island',
+  brief: 'Three timed steps → fixed rest → three timed steps → high platform.',
+  spawn: [0, .15, 5],
+  reviewViews: [{ name: 'upper-steps', position: [0, 6.35, -35] }, { name: 'lower-return', position: [15, -7.85, -21] }],
+  components: [
+    deck('14 / Waiting bank', 0, 0, 3, 18, 16),
+    deck('14 / Flat recovery floor', 0, -8, -30, 40, 100, '#929e94'),
+    { t: 'checkpoint', nm: '14 / Checkpoint', p: [-4, 0, 5] },
+    ...[0, 1, 2].map(i => ({ t: 'phasepad' as const, nm: `14 / Lower timed step ${i + 1}`,
+      p: [0, (i + 1) * 1.5, -10 - i * 7] as [number, number, number], s: [4, .6, 4] as [number, number, number],
+      cycle: 8, amp: .55, phase: [0, .76, .52][i] })),
+    deck('14 / Permanent resting island', 0, 6.2, -33, 8, 12, '#a8b9a0'),
+    ...[0, 1, 2].map(i => ({ t: 'phasepad' as const, nm: `14 / Upper timed step ${i + 1}`,
+      p: [0, 6.2 + (i + 1) * 1.5, -44 - i * 7] as [number, number, number], s: [4, .6, 4] as [number, number, number],
+      cycle: 9, amp: .55, phase: [0, .78, .56][i] })),
+    deck('14 / High receiver', 0, 12.4, -67, 8, 8, '#d8b26e'),
+    { t: 'crystal', nm: '14 / Timed platforms and resting island', p: [0, 12.4, -68] },
+    { t: 'ramp', nm: '14 / Return ramp', p: [15, -8, -7.5], len: 25, rise: 8, w: 5, yaw: 180 },
+    deck('14 / Return junction', 13, 0, 10, 8, 10),
+    { t: 'camnode', nm: '14 / Timed platforms view', p: [0, 7, -29], s: [21, 44, 92], radius: 3,
+      cameraView: true, cameraPresentationOnly: true, cameraPosition: [0, 15, 0], cameraTarget: [0, 6, -29],
+      cameraFollowDistance: 18, cameraKeepDistance: true, cameraFollowTargetHeight: 4, cameraFov: 65 },
+    { t: 'camnode', nm: '14 / Return view', p: [15, -4, -34], s: [9, 12, 100], radius: 2, yaw: 180,
+      cameraView: true, cameraPosition: [15, 1, -50], cameraTarget: [15, -3, -28],
+      cameraFollowDistance: 14, cameraFollowTargetHeight: 2.5 },
+  ],
+};

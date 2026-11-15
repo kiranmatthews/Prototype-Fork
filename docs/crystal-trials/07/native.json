@@ -1,0 +1,236 @@
+{
+  "id": 7,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank the timed staircase checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Observe the full staircase from its waiting bank",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Start as the first stair lights",
+      "firstFrame": 313,
+      "lastFrame": 482
+    },
+    {
+      "name": "Jump onto the first rising stair",
+      "firstFrame": 483,
+      "lastFrame": 518
+    },
+    {
+      "name": "Let the warned stair disappear and recover below",
+      "firstFrame": 518,
+      "lastFrame": 770
+    },
+    {
+      "name": "Walk below the stairs toward the retry route",
+      "firstFrame": 770,
+      "lastFrame": 922
+    },
+    {
+      "name": "Join the lower retry ramp",
+      "firstFrame": 940,
+      "lastFrame": 1117
+    },
+    {
+      "name": "Climb to the fixed waiting bank",
+      "firstFrame": 1135,
+      "lastFrame": 1429
+    },
+    {
+      "name": "Rejoin the staircase entrance",
+      "firstFrame": 1447,
+      "lastFrame": 1624
+    },
+    {
+      "name": "Observe the full staircase from its waiting bank",
+      "firstFrame": 1642,
+      "lastFrame": 1802
+    },
+    {
+      "name": "Start as the first stair lights",
+      "firstFrame": 1846,
+      "lastFrame": 1922
+    },
+    {
+      "name": "Jump onto the first rising stair",
+      "firstFrame": 1923,
+      "lastFrame": 1958
+    },
+    {
+      "name": "Cross stair 1 before its warning ends",
+      "firstFrame": 1958,
+      "lastFrame": 2039
+    },
+    {
+      "name": "Jump onto lit stair 2",
+      "firstFrame": 2084,
+      "lastFrame": 2119
+    },
+    {
+      "name": "Cross stair 2 before its warning ends",
+      "firstFrame": 2119,
+      "lastFrame": 2200
+    },
+    {
+      "name": "Jump onto lit stair 3",
+      "firstFrame": 2245,
+      "lastFrame": 2280
+    },
+    {
+      "name": "Cross stair 3 before its warning ends",
+      "firstFrame": 2280,
+      "lastFrame": 2361
+    },
+    {
+      "name": "Jump to the permanent crystal balcony",
+      "firstFrame": 2406,
+      "lastFrame": 2440
+    },
+    {
+      "name": "Collect the crystal after the rising rhythm",
+      "firstFrame": 2440,
+      "lastFrame": 2530
+    },
+    {
+      "name": "Read the lower return beside the balcony",
+      "firstFrame": 2548,
+      "lastFrame": 2631
+    },
+    {
+      "name": "Drop from the balcony into the recovery courtyard",
+      "firstFrame": 2676,
+      "lastFrame": 2735
+    },
+    {
+      "name": "Walk below the stairs toward the retry route",
+      "firstFrame": 2735,
+      "lastFrame": 2927
+    },
+    {
+      "name": "Join the lower retry ramp",
+      "firstFrame": 2945,
+      "lastFrame": 3122
+    },
+    {
+      "name": "Climb to the fixed waiting bank",
+      "firstFrame": 3140,
+      "lastFrame": 3434
+    },
+    {
+      "name": "Rejoin the staircase entrance",
+      "firstFrame": 3452,
+      "lastFrame": 3629
+    }
+  ],
+  "evidence": [
+    {
+      "action": "late step recovers without death",
+      "position": [
+        -0.023768482041021947,
+        -8,
+        -9.14228253507865
+      ]
+    },
+    {
+      "action": "rising transfer",
+      "stair": 1,
+      "position": [
+        0.0034751378399146145,
+        3.000000011920929,
+        -15.755766924552246
+      ],
+      "phases": [
+        0.41458333333324315,
+        0.17458333333324294,
+        0.9345833333332436
+      ]
+    },
+    {
+      "action": "rising transfer",
+      "stair": 2,
+      "position": [
+        0.0034751378399146145,
+        4.500000011920929,
+        -22.75544470233001
+      ],
+      "phases": [
+        0.7499999999998908,
+        0.5099999999998905,
+        0.2699999999998912
+      ]
+    },
+    {
+      "action": "rising transfer",
+      "stair": 3,
+      "position": [
+        0.0034751378399146145,
+        6.2,
+        -30.082489146774435
+      ],
+      "phases": [
+        0.08333333333320514,
+        0.8433333333332049,
+        0.6033333333332056
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Rejoin the staircase entrance",
+  "result": {
+    "frame": 3647,
+    "time": 60.78333333333333,
+    "position": [
+      0.06731871559910386,
+      0,
+      8.999131893247938
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

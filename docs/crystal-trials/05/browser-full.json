@@ -1,0 +1,369 @@
+{
+  "trial": 5,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0,
+      20
+    ],
+    "crystals": 5
+  },
+  "stagedStart": [
+    384,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        384,
+        0,
+        5
+      ],
+      "camera": [
+        384,
+        9.172261940194216,
+        22.240873133980724
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -17.79322927503406,
+            0.4950023523709984,
+            0.9929900607083771
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -10.347147409153411,
+            0.6856246137893668,
+            0.9945532113597766
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -2.2970744593244685,
+            0.5495125315228211,
+            0.99856105296319
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -1.715317307110422,
+            0.6716010802204153,
+            0.9976041598050638
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            0.21202313667542538,
+            0.7370554073076772,
+            0.996681905877423
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        383.9996004888766,
+        0,
+        4.923601511113512
+      ],
+      "camera": [
+        383.9996004888766,
+        9.172261940194216,
+        22.164474645094238
+      ],
+      "render": [
+        480,
+        270
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -17.893864808180858,
+            0.5171532231729826,
+            0.9929475771811946
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -10.393427725834306,
+            0.7039972358933794,
+            0.9945266037739215
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -2.3004107279417387,
+            0.5552871927309091,
+            0.9985582326162185
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -1.7190389118928238,
+            0.6804970117290974,
+            0.9975978645525495
+          ]
+        }
+      ]
+    },
+    {
+      "name": "halfpipe-floor",
+      "position": [
+        384,
+        0,
+        -33
+      ],
+      "camera": [
+        379.07729389788796,
+        5.1,
+        -31.873294789117907
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            0.21175909919728458,
+            1.0241784372703784,
+            1.0010880177102965
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            0.21454927555110342,
+            0.9962416095956872,
+            1.0013009653984957
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            0.7421197229109128,
+            1.052849432686445,
+            1.001799726834354
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            0.5974347772810146,
+            0.9016374382546206,
+            1.0030489549162667
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            0.2482528732150273,
+            2.4645657481605254,
+            0.9804621903961909
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 5,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 5,
+    "frame": 1792,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the halfpipe checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Enter through the open end of the halfpipe",
+        "firstFrame": 137,
+        "lastFrame": 494
+      },
+      {
+        "name": "Push from rest onto the board",
+        "firstFrame": 512,
+        "lastFrame": 546
+      },
+      {
+        "name": "Roll down the transition into the flat",
+        "firstFrame": 1184,
+        "lastFrame": 1200
+      },
+      {
+        "name": "Bleed the accumulated speed on the opposite transition",
+        "firstFrame": 1200,
+        "lastFrame": 1252
+      },
+      {
+        "name": "Coast back into the flat after braking",
+        "firstFrame": 1252,
+        "lastFrame": 1299
+      },
+      {
+        "name": "Dismount at walking speed on the flat",
+        "firstFrame": 1299,
+        "lastFrame": 1322
+      },
+      {
+        "name": "Rejoin the open center of the pipe",
+        "firstFrame": 1322,
+        "lastFrame": 1400
+      },
+      {
+        "name": "Return through the open end to the checkpoint",
+        "firstFrame": 1418,
+        "lastFrame": 1774
+      }
+    ],
+    "evidence": [
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 6.3485324967408445,
+        "frames": 58,
+        "start": [
+          392.58091869538094,
+          2.3845031736190307,
+          -32.95279605293076
+        ],
+        "landing": [
+          392.92311420955417,
+          3.219587294013959,
+          -32.99853948423797
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": -1,
+        "peak": 7.095402033514911,
+        "frames": 57,
+        "start": [
+          375.0691021920495,
+          4.21653405536882,
+          -33.01181973309102
+        ],
+        "landing": [
+          375.0772502432553,
+          3.218023711965319,
+          -33.01223328997499
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 7.972447602537202,
+        "frames": 65,
+        "start": [
+          392.92425570927884,
+          4.013902401825813,
+          -33.012908197664046
+        ],
+        "landing": [
+          392.9235871021118,
+          3.222428688929853,
+          -33.01345903937208
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": -1,
+        "peak": 9.129613754294429,
+        "frames": 73,
+        "start": [
+          375.05718743897523,
+          4.018728060078196,
+          -33.01416592428228
+        ],
+        "landing": [
+          375.0773822259518,
+          3.2174574774088502,
+          -33.01490705527582
+        ],
+        "collected": false
+      },
+      {
+        "action": "halfpipe air",
+        "side": 1,
+        "peak": 10.087432634775475,
+        "frames": 78,
+        "start": [
+          392.92900167085145,
+          4.15868827277473,
+          -33.011499092459154
+        ],
+        "landing": [
+          392.9226668489518,
+          3.217668019449651,
+          -33.00436294378474
+        ],
+        "collected": true
+      }
+    ],
+    "position": [
+      383.9996004888766,
+      0,
+      4.923601511113512
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return through the open end to the checkpoint",
+    "result": {
+      "id": 5,
+      "collected": 1,
+      "position": [
+        383.9996004888766,
+        0,
+        4.923601511113512
+      ],
+      "frames": 1792
+    }
+  },
+  "stagedVisualFixtures": [
+    {
+      "name": "halfpipe-floor",
+      "position": [
+        0,
+        0.15,
+        -33
+      ]
+    }
+  ],
+  "passed": true
+}

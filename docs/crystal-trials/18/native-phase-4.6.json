@@ -1,0 +1,186 @@
+{
+  "id": 18,
+  "phaseDelay": 4.6,
+  "actions": [
+    {
+      "name": "Bank challenge 18 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 413,
+      "lastFrame": 654
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 680,
+      "lastFrame": 875
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 876,
+      "lastFrame": 879
+    },
+    {
+      "name": "An early low release returns to the flat courtyard",
+      "firstFrame": 908,
+      "lastFrame": 951
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 951,
+      "lastFrame": 1053
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 1079,
+      "lastFrame": 1097
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 1098,
+      "lastFrame": 1101
+    },
+    {
+      "name": "Climb rope 1 above its receiving platform",
+      "firstFrame": 1103,
+      "lastFrame": 1306
+    },
+    {
+      "name": "Wait for rope 1 to swing toward the landing",
+      "firstFrame": 1332,
+      "lastFrame": 1379
+    },
+    {
+      "name": "Release onto receiving platform 1",
+      "firstFrame": 1380,
+      "lastFrame": 1420
+    },
+    {
+      "name": "Wait below climbing rope 2",
+      "firstFrame": 1520,
+      "lastFrame": 1714
+    },
+    {
+      "name": "Read rope 2 crossing its low point",
+      "firstFrame": 1740,
+      "lastFrame": 2751
+    },
+    {
+      "name": "Catch climbing rope 2",
+      "firstFrame": 2752,
+      "lastFrame": 2756
+    },
+    {
+      "name": "Climb rope 2 above its receiving platform",
+      "firstFrame": 2758,
+      "lastFrame": 2961
+    },
+    {
+      "name": "Wait for rope 2 to swing toward the landing",
+      "firstFrame": 2987,
+      "lastFrame": 3033
+    },
+    {
+      "name": "Release onto receiving platform 2",
+      "firstFrame": 3034,
+      "lastFrame": 3074
+    },
+    {
+      "name": "Collect the crystal above both climbs",
+      "firstFrame": 3074,
+      "lastFrame": 3151
+    },
+    {
+      "name": "Drop beside both raised platforms into the courtyard",
+      "firstFrame": 3196,
+      "lastFrame": 3259
+    },
+    {
+      "name": "Walk around both climbing ropes",
+      "firstFrame": 3259,
+      "lastFrame": 3726
+    },
+    {
+      "name": "Finish the two-rope circuit",
+      "firstFrame": 3744,
+      "lastFrame": 3882
+    }
+  ],
+  "evidence": [
+    {
+      "action": "rope 1 high landing",
+      "position": [
+        0.05596326279079335,
+        9.200000005960463,
+        -25.65035848781532
+      ]
+    },
+    {
+      "action": "moving rest carries the player before the second climb",
+      "distance": 0.8109305251698329
+    },
+    {
+      "action": "rope 2 high landing",
+      "position": [
+        -0.020045871454725323,
+        18.4,
+        -44.648032412656036
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the two-rope circuit",
+  "result": {
+    "frame": 3900,
+    "time": 65,
+    "position": [
+      0.06312013305349108,
+      0,
+      4.999243510248337
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

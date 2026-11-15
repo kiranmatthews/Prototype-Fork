@@ -1,0 +1,166 @@
+{
+  "trial": 2,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0,
+      20
+    ],
+    "crystals": 2
+  },
+  "stagedStart": [
+    96,
+    0.15,
+    5
+  ],
+  "installed": {
+    "id": 2,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 2,
+    "frame": 959,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the bell courtyard checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Observe the spring and its high receiver",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Try the spring before choosing the balcony line",
+        "firstFrame": 314,
+        "lastFrame": 353
+      },
+      {
+        "name": "A wrong-side drift returns to the courtyard",
+        "firstFrame": 353,
+        "lastFrame": 429
+      },
+      {
+        "name": "Retry from the same spring approach",
+        "firstFrame": 429,
+        "lastFrame": 550
+      },
+      {
+        "name": "Jump onto the bell spring",
+        "firstFrame": 595,
+        "lastFrame": 634
+      },
+      {
+        "name": "Gain height before drifting toward the balcony",
+        "firstFrame": 634,
+        "lastFrame": 646
+      },
+      {
+        "name": "Drift onto the high bell balcony",
+        "firstFrame": 646,
+        "lastFrame": 697
+      },
+      {
+        "name": "Claim the crystal inside the bell arch",
+        "firstFrame": 697,
+        "lastFrame": 774
+      },
+      {
+        "name": "Read the open return edge",
+        "firstFrame": 792,
+        "lastFrame": 862
+      },
+      {
+        "name": "Drop from the bell balcony into the courtyard",
+        "firstFrame": 907,
+        "lastFrame": 959
+      }
+    ],
+    "evidence": [
+      {
+        "action": "missed drift recovers safely",
+        "position": [
+          91.03568123129762,
+          0,
+          -9.997767423392022
+        ]
+      },
+      {
+        "action": "spring launch",
+        "position": [
+          95.99748154712219,
+          0.11999999403953551,
+          -7.778889306626307
+        ],
+        "verticalSpeed": 27.5
+      },
+      {
+        "action": "balcony landing",
+        "position": [
+          101.9434764950156,
+          8.4,
+          -12.952615932007957
+        ],
+        "collected": true
+      }
+    ],
+    "position": [
+      101.99779644974183,
+      0,
+      -5.028582095788906
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Drop from the bell balcony into the courtyard",
+    "result": {
+      "id": 2,
+      "collected": 1,
+      "position": [
+        101.99779644974183,
+        0,
+        -5.028582095788906
+      ],
+      "frames": 959
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        101.99779644974183,
+        0,
+        -5.028582095788906
+      ],
+      "camera": [
+        101.99779644974183,
+        8.271523597155722,
+        12.571861357604465
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -7.238075438181557,
+            0.3398752711189803,
+            0.9889986796344531
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

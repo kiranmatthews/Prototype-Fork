@@ -1,0 +1,185 @@
+{
+  "id": 11,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 11 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Line up with the first rail",
+      "firstFrame": 137,
+      "lastFrame": 228
+    },
+    {
+      "name": "Catch the first transfer rail",
+      "firstFrame": 273,
+      "lastFrame": 308
+    },
+    {
+      "name": "Riding straight misses the offset rail and falls into the pit",
+      "firstFrame": 308,
+      "lastFrame": 519
+    },
+    {
+      "name": "Recover at the transfer checkpoint",
+      "firstFrame": 519,
+      "lastFrame": 652
+    },
+    {
+      "name": "Line up with the first rail",
+      "firstFrame": 652,
+      "lastFrame": 750
+    },
+    {
+      "name": "Catch the first transfer rail",
+      "firstFrame": 795,
+      "lastFrame": 830
+    },
+    {
+      "name": "Balance to the right transfer",
+      "firstFrame": 830,
+      "lastFrame": 904
+    },
+    {
+      "name": "Catch the right offset rail",
+      "firstFrame": 933,
+      "lastFrame": 976
+    },
+    {
+      "name": "Balance to the left transfer",
+      "firstFrame": 976,
+      "lastFrame": 1068
+    },
+    {
+      "name": "Catch the left offset rail",
+      "firstFrame": 1097,
+      "lastFrame": 1140
+    },
+    {
+      "name": "Balance to the final receiver",
+      "firstFrame": 1140,
+      "lastFrame": 1248
+    },
+    {
+      "name": "Pop onto the raised receiver",
+      "firstFrame": 1275,
+      "lastFrame": 1307
+    },
+    {
+      "name": "Brake on the receiver",
+      "firstFrame": 1307,
+      "lastFrame": 1336
+    },
+    {
+      "name": "Collect the transfer crystal",
+      "firstFrame": 1336,
+      "lastFrame": 1336
+    },
+    {
+      "name": "Drop outside the pit onto the flat return",
+      "firstFrame": 1381,
+      "lastFrame": 1436
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 1436,
+      "lastFrame": 1564
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 1582,
+      "lastFrame": 2151
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 2169,
+      "lastFrame": 2433
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 2451,
+      "lastFrame": 2542
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 2560,
+      "lastFrame": 2737
+    }
+  ],
+  "evidence": [
+    {
+      "action": "right rail transfer",
+      "position": [
+        3.49921077648106,
+        1.3499999999999999,
+        -26.903742060233277
+      ],
+      "railLength": 34
+    },
+    {
+      "action": "left rail transfer",
+      "position": [
+        -0.29921077648106,
+        1.3499999999999999,
+        -53.868790650727306
+      ],
+      "railLength": 31
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the local circuit",
+  "expectedDeaths": 0,
+  "result": {
+    "frame": 2755,
+    "time": 45.916666666666664,
+    "position": [
+      0.06810280736516153,
+      0,
+      8.996040769566745
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

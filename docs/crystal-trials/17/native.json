@@ -1,0 +1,223 @@
+{
+  "id": 17,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 17 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Line up with the first rail",
+      "firstFrame": 137,
+      "lastFrame": 228
+    },
+    {
+      "name": "Catch the first transfer rail",
+      "firstFrame": 273,
+      "lastFrame": 308
+    },
+    {
+      "name": "Riding straight misses the offset rail and falls into the pit",
+      "firstFrame": 308,
+      "lastFrame": 519
+    },
+    {
+      "name": "Recover at the transfer checkpoint",
+      "firstFrame": 519,
+      "lastFrame": 652
+    },
+    {
+      "name": "Line up with the first rail",
+      "firstFrame": 652,
+      "lastFrame": 750
+    },
+    {
+      "name": "Catch the first transfer rail",
+      "firstFrame": 795,
+      "lastFrame": 830
+    },
+    {
+      "name": "Balance to the right transfer",
+      "firstFrame": 830,
+      "lastFrame": 904
+    },
+    {
+      "name": "Catch the right offset rail",
+      "firstFrame": 933,
+      "lastFrame": 976
+    },
+    {
+      "name": "Balance to the left transfer",
+      "firstFrame": 976,
+      "lastFrame": 1068
+    },
+    {
+      "name": "Catch the left offset rail",
+      "firstFrame": 1097,
+      "lastFrame": 1140
+    },
+    {
+      "name": "Balance to the final receiver",
+      "firstFrame": 1140,
+      "lastFrame": 1248
+    },
+    {
+      "name": "Pop onto the raised receiver",
+      "firstFrame": 1275,
+      "lastFrame": 1307
+    },
+    {
+      "name": "Brake on the receiver",
+      "firstFrame": 1307,
+      "lastFrame": 1336
+    },
+    {
+      "name": "Read the blade cycle from the safe terrace",
+      "firstFrame": 1336,
+      "lastFrame": 1440
+    },
+    {
+      "name": "Observe an extended blade cycle",
+      "firstFrame": 1458,
+      "lastFrame": 1511
+    },
+    {
+      "name": "Wait for the blades to retract",
+      "firstFrame": 1601,
+      "lastFrame": 1644
+    },
+    {
+      "name": "Approach inside the retracted window",
+      "firstFrame": 1644,
+      "lastFrame": 1699
+    },
+    {
+      "name": "Pass the defeated enemy",
+      "firstFrame": 1720,
+      "lastFrame": 1785
+    },
+    {
+      "name": "Approach the terrace bounce crate",
+      "firstFrame": 1803,
+      "lastFrame": 1912
+    },
+    {
+      "name": "Hold the terrace rebound",
+      "firstFrame": 1957,
+      "lastFrame": 1993
+    },
+    {
+      "name": "Land above the enemy terrace",
+      "firstFrame": 1993,
+      "lastFrame": 2037
+    },
+    {
+      "name": "Drop outside the terrace to the flat return",
+      "firstFrame": 2064,
+      "lastFrame": 2126
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 2126,
+      "lastFrame": 2209
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 2227,
+      "lastFrame": 2906
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 2924,
+      "lastFrame": 3188
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 3206,
+      "lastFrame": 3297
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 3315,
+      "lastFrame": 3492
+    }
+  ],
+  "evidence": [
+    {
+      "action": "right rail transfer",
+      "position": [
+        3.49921077648106,
+        1.3499999999999999,
+        -26.903742060233277
+      ],
+      "railLength": 34
+    },
+    {
+      "action": "left rail transfer",
+      "position": [
+        -0.29921077648106,
+        1.3499999999999999,
+        -53.868790650727306
+      ],
+      "railLength": 31
+    },
+    {
+      "action": "defeated retracted enemy after reading its full dangerous cycle"
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the local circuit",
+  "expectedDeaths": 0,
+  "result": {
+    "frame": 3510,
+    "time": 58.5,
+    "position": [
+      0.06825298675241255,
+      0,
+      8.999292785734573
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

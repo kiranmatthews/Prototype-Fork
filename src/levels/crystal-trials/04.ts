@@ -1,0 +1,30 @@
+import { deck, type CrystalTrial } from './types';
+
+export const TRIAL_04: CrystalTrial = {
+  id: 4, name: '4 / Moving platform and lift',
+  brief: 'Moving platform → fixed island → lift → high platform.',
+  spawn: [0, .15, 5],
+  reviewViews: [{ name: 'lift-observation', position: [0, .15, -32] }, { name: 'lower-return', position: [15, -7.85, -21] }],
+  components: [
+    deck('04 / Ferry observation bank', 0, 0, 3, 18, 16, '#809b9b'),
+    { t: 'checkpoint', nm: '04 / Passing Platforms start', p: [-4, 0, 5] },
+    { t: 'mover', nm: '04 / Horizontal ferry', p: [0, 0, -15], s: [6, .5, 6], axis: 'z', amp: 6, speed: .7, phase: 0, color: '#a8a3d8' },
+    deck('04 / Fixed island between moving transfers', 0, 0, -29, 10, 10),
+    { t: 'mover', nm: '04 / Gallery lift', p: [0, 4, -40], s: [6, .6, 6], axis: 'y', amp: 4, speed: .7, phase: 1.7, color: '#a8a3d8' },
+    deck('04 / High crystal gallery', 0, 8.4, -49, 8, 10, '#d8b26e'),
+    { t: 'crystal', nm: '4 / Moving platform and lift', p: [0, 8.4, -50] },
+    { t: 'pit', nm: '04 / Water below the moving route', p: [0, -6, -25], s: [16, 1, 42], color: '#192e42' },
+    deck('04 / Broad lower return landing', 15, -8, -50, 12, 12),
+    deck('04 / Lower return outside the pit', 15, -8, -35, 6, 30),
+    { t: 'ramp', nm: '04 / Return climb', p: [15, -8, -7.5], len: 25, rise: 8, w: 6, yaw: 180 },
+    deck('04 / Upper return junction', 13, 0, 10, 10, 10),
+    { t: 'camnode', nm: '04 / Observe both machines and their receivers',
+      p: [0, 6, -25], s: [21, 40, 84], radius: 3, cameraView: true,
+      cameraPresentationOnly: true, cameraPosition: [0, 11, 1], cameraTarget: [0, 3.2, -25],
+      cameraFollowDistance: 18, cameraKeepDistance: true, cameraFollowTargetHeight: 3.2,
+      cameraFov: 58, cameraAspect: 16 / 9 },
+    { t: 'camnode', nm: '04 / Return view', p: [15, -4, -44], s: [9, 12, 120], radius: 2, yaw: 180,
+      cameraView: true, cameraPosition: [15, 1, -60], cameraTarget: [15, -3, -38],
+      cameraFollowDistance: 14, cameraFollowTargetHeight: 2.5 },
+  ],
+};

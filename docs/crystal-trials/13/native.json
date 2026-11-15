@@ -1,0 +1,182 @@
+{
+  "id": 13,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 13 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 137,
+      "lastFrame": 378
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 422,
+      "lastFrame": 432
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 433,
+      "lastFrame": 436
+    },
+    {
+      "name": "An early low release returns to the flat courtyard",
+      "firstFrame": 465,
+      "lastFrame": 508
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 508,
+      "lastFrame": 610
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 654,
+      "lastFrame": 654
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 655,
+      "lastFrame": 658
+    },
+    {
+      "name": "Climb rope 1 above its receiving platform",
+      "firstFrame": 660,
+      "lastFrame": 863
+    },
+    {
+      "name": "Wait for rope 1 to swing toward the landing",
+      "firstFrame": 889,
+      "lastFrame": 935
+    },
+    {
+      "name": "Release onto receiving platform 1",
+      "firstFrame": 936,
+      "lastFrame": 976
+    },
+    {
+      "name": "Wait below climbing rope 2",
+      "firstFrame": 976,
+      "lastFrame": 1130
+    },
+    {
+      "name": "Read rope 2 crossing its low point",
+      "firstFrame": 1174,
+      "lastFrame": 1199
+    },
+    {
+      "name": "Catch climbing rope 2",
+      "firstFrame": 1200,
+      "lastFrame": 1203
+    },
+    {
+      "name": "Climb rope 2 above its receiving platform",
+      "firstFrame": 1205,
+      "lastFrame": 1408
+    },
+    {
+      "name": "Wait for rope 2 to swing toward the landing",
+      "firstFrame": 1434,
+      "lastFrame": 1702
+    },
+    {
+      "name": "Release onto receiving platform 2",
+      "firstFrame": 1703,
+      "lastFrame": 1817
+    },
+    {
+      "name": "Collect the crystal above both climbs",
+      "firstFrame": 1817,
+      "lastFrame": 1902
+    },
+    {
+      "name": "Drop beside both raised platforms into the courtyard",
+      "firstFrame": 1947,
+      "lastFrame": 2010
+    },
+    {
+      "name": "Walk around both climbing ropes",
+      "firstFrame": 2010,
+      "lastFrame": 2477
+    },
+    {
+      "name": "Finish the two-rope circuit",
+      "firstFrame": 2495,
+      "lastFrame": 2633
+    }
+  ],
+  "evidence": [
+    {
+      "action": "rope 1 high landing",
+      "position": [
+        -0.0194251511334923,
+        9.2,
+        -24.93261166483005
+      ]
+    },
+    {
+      "action": "rope 2 high landing",
+      "position": [
+        -0.07036404862230958,
+        18.4,
+        -43.73819805153394
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the two-rope circuit",
+  "result": {
+    "frame": 2651,
+    "time": 44.18333333333333,
+    "position": [
+      0.06426737058064415,
+      0,
+      4.999324792110226
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

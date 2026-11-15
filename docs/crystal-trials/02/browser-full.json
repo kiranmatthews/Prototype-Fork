@@ -1,0 +1,202 @@
+{
+  "trial": 2,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0.15,
+      20
+    ],
+    "crystals": 2
+  },
+  "stagedStart": [
+    96,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        96,
+        0,
+        5
+      ],
+      "camera": [
+        96,
+        8.271523597155722,
+        22.60044345339337
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -4.357398062883499,
+            0.38924797990248056,
+            0.9931435425409582
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            0.21444942517461013,
+            0.5559176087268782,
+            0.9947072555673178
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        101.9977826227871,
+        0,
+        -5.028582075698541
+      ],
+      "camera": [
+        101.9977826227871,
+        8.271523597155722,
+        12.57186137769483
+      ],
+      "render": [
+        480,
+        270
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -7.2627667620567955,
+            0.37596818677839605,
+            0.9889594430667352
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 2,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 2,
+    "frame": 959,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the bell courtyard checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Observe the spring and its high receiver",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Try the spring before choosing the balcony line",
+        "firstFrame": 314,
+        "lastFrame": 353
+      },
+      {
+        "name": "A wrong-side drift returns to the courtyard",
+        "firstFrame": 353,
+        "lastFrame": 429
+      },
+      {
+        "name": "Retry from the same spring approach",
+        "firstFrame": 429,
+        "lastFrame": 550
+      },
+      {
+        "name": "Jump onto the bell spring",
+        "firstFrame": 595,
+        "lastFrame": 634
+      },
+      {
+        "name": "Gain height before drifting toward the balcony",
+        "firstFrame": 634,
+        "lastFrame": 646
+      },
+      {
+        "name": "Drift onto the high bell balcony",
+        "firstFrame": 646,
+        "lastFrame": 697
+      },
+      {
+        "name": "Claim the crystal inside the bell arch",
+        "firstFrame": 697,
+        "lastFrame": 774
+      },
+      {
+        "name": "Read the open return edge",
+        "firstFrame": 792,
+        "lastFrame": 862
+      },
+      {
+        "name": "Drop from the bell balcony into the courtyard",
+        "firstFrame": 907,
+        "lastFrame": 959
+      }
+    ],
+    "evidence": [
+      {
+        "action": "missed drift recovers safely",
+        "position": [
+          91.0356732798419,
+          0,
+          -9.997768794153517
+        ]
+      },
+      {
+        "action": "spring launch",
+        "position": [
+          95.99746999744923,
+          0.11999999403953551,
+          -7.778889207872801
+        ],
+        "verticalSpeed": 27.5
+      },
+      {
+        "action": "balcony landing",
+        "position": [
+          101.94346480814858,
+          8.4,
+          -12.952615868856286
+        ],
+        "collected": true
+      }
+    ],
+    "position": [
+      101.9977826227871,
+      0,
+      -5.028582075698541
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Drop from the bell balcony into the courtyard",
+    "result": {
+      "id": 2,
+      "collected": 1,
+      "position": [
+        101.9977826227871,
+        0,
+        -5.028582075698541
+      ],
+      "frames": 959
+    }
+  },
+  "passed": true
+}

@@ -1,0 +1,552 @@
+{
+  "trial": 10,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 13
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -1723
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        -1723
+      ],
+      "camera": [
+        5.6779226808886065,
+        8.542338144710886,
+        -1706.534024225423
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            0.44471209383091875,
+            0.5740719093900529,
+            1.0006288227054698
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            0.43946278329484967,
+            0.5705141478950118,
+            1.0006457286194654
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0.4468306403273688,
+            0.5807730886016926,
+            1.0006771416896785
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.44724680602015654,
+            0.5698306969192651,
+            1.0007028258664274
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            0.43430017584309505,
+            0.5655471791819829,
+            1.0007411407604665
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.4508411164127075,
+            0.5658410083344475,
+            1.0008050908008348
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.455758582267238,
+            0.577729229000607,
+            1.0009220891158952
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.4374648662058092,
+            0.551275659813108,
+            1.0011482162623246
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.4361679831540616,
+            0.5583777169633151,
+            1.001930564549384
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0.27149958449050904,
+            0.3262858447523572,
+            0.9962818576097068
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            0.4113712039030982,
+            0.537488380301494,
+            0.9997774178501687
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.451575547882632,
+            0.6132497058779577,
+            0.9999726611845687
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            0.42934346998772177,
+            0.6148562793872335,
+            1.0001602180096238
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.0684738630487787,
+        0,
+        -1719.0037343953109
+      ],
+      "camera": [
+        5.746396543937386,
+        8.542338144710886,
+        -1702.537758620734
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            0.4447835477700369,
+            0.5741223686008203,
+            1.0006291285501308
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            0.439529530892985,
+            0.5705616848247954,
+            1.000646120216378
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0.4469359401604524,
+            0.5808644781180478,
+            1.0006777208188575
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.44736900138700325,
+            0.5698943833037116,
+            1.0007035856054824
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            0.43438783360946825,
+            0.5656038541292978,
+            1.000742215620568
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.45104561589225245,
+            0.5659144661703603,
+            1.0008068137702706
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.4560806756771445,
+            0.5779242236711182,
+            1.0009253948559804
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.4377406063789916,
+            0.5512567701412756,
+            1.001156047260868
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.43675049469053906,
+            0.5585276190819249,
+            1.001969278300504
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            0.41141421270449563,
+            0.5376900646014197,
+            0.9997869131695212
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.4512201529666619,
+            0.612668358185181,
+            0.999977737101192
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            0.4292520040830948,
+            0.6144703651265511,
+            1.0001623331441722
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -8,
+        -1749
+      ],
+      "camera": [
+        15,
+        -2.9956038652002355,
+        -1762.7741787413986
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            0.010717200111938283,
+            0.4125314484913258,
+            1.0003843245972548
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            0.007258862964077624,
+            0.4176315798430657,
+            1.0003694037805535
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0.014549103713690201,
+            0.4121247737462903,
+            1.0003429204902579
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.016587790527843163,
+            0.4245593934682845,
+            1.0003208922724949
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            0.007847423996852539,
+            0.4325446208565186,
+            1.0002881445010936
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.024366108626097453,
+            0.43890987847178814,
+            1.0002368467566713
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.03273566457116129,
+            0.4408009285656112,
+            1.0001464128559578
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.02894192544010871,
+            0.48385419993584095,
+            0.9999789242991253
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.054681707415945545,
+            0.5373956738682338,
+            0.9995153893750753
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            2.863152701182937,
+            2.678574820100575,
+            0.969563469752698
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            -0.07693629360457657,
+            0.3293666617670931,
+            1.0013314294854951
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.022364867840284776,
+            0.28326523587270286,
+            1.0010577896426975
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            -0.03176704375165609,
+            0.3116783392567661,
+            1.000843371160379
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 10,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 10,
+    "frame": 3078,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the bridge checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the upright bridge",
+        "firstFrame": 137,
+        "lastFrame": 291
+      },
+      {
+        "name": "Wait for the bridge to settle",
+        "firstFrame": 310,
+        "lastFrame": 339
+      },
+      {
+        "name": "Wait on the deployed bridge",
+        "firstFrame": 339,
+        "lastFrame": 454
+      },
+      {
+        "name": "A late crossing folds away and drops to the flat floor",
+        "firstFrame": 472,
+        "lastFrame": 662
+      },
+      {
+        "name": "Join the lower return",
+        "firstFrame": 662,
+        "lastFrame": 839
+      },
+      {
+        "name": "Walk to the return ramp",
+        "firstFrame": 857,
+        "lastFrame": 972
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 990,
+        "lastFrame": 1253
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 1271,
+        "lastFrame": 1362
+      },
+      {
+        "name": "Return to the bridge entrance",
+        "firstFrame": 1380,
+        "lastFrame": 1557
+      },
+      {
+        "name": "Approach the upright bridge",
+        "firstFrame": 1575,
+        "lastFrame": 1759
+      },
+      {
+        "name": "Wait for the bridge to settle",
+        "firstFrame": 1778,
+        "lastFrame": 1807
+      },
+      {
+        "name": "Cross before the bridge folds",
+        "firstFrame": 1807,
+        "lastFrame": 1975
+      },
+      {
+        "name": "Jump from the bridge onto the small raised receiver",
+        "firstFrame": 2020,
+        "lastFrame": 2052
+      },
+      {
+        "name": "Collect the bridge crystal",
+        "firstFrame": 2052,
+        "lastFrame": 2120
+      },
+      {
+        "name": "Drop beside the folded bridge into the recovery floor",
+        "firstFrame": 2165,
+        "lastFrame": 2219
+      },
+      {
+        "name": "Join the lower return",
+        "firstFrame": 2219,
+        "lastFrame": 2350
+      },
+      {
+        "name": "Walk to the return ramp",
+        "firstFrame": 2368,
+        "lastFrame": 2474
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2492,
+        "lastFrame": 2756
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 2774,
+        "lastFrame": 2865
+      },
+      {
+        "name": "Return to the bridge entrance",
+        "firstFrame": 2883,
+        "lastFrame": 3060
+      }
+    ],
+    "evidence": [
+      {
+        "action": "bridge timeout returns to flat floor",
+        "position": [
+          -0.0011189197824121565,
+          -8,
+          -1741.9168872137159
+        ]
+      },
+      {
+        "action": "timed bridge and precision landing",
+        "position": [
+          0.003670453200382825,
+          2.2,
+          -1754.9330757863383
+        ]
+      }
+    ],
+    "position": [
+      0.0684738630487787,
+      0,
+      -1719.0037343953109
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return to the bridge entrance",
+    "result": {
+      "id": 10,
+      "collected": 1,
+      "position": [
+        0.0684738630487787,
+        0,
+        -1719.0037343953109
+      ],
+      "frames": 3078
+    }
+  },
+  "stagedVisualFixtures": [
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -7.85,
+        -21
+      ]
+    }
+  ],
+  "passed": true
+}

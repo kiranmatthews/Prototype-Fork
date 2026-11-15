@@ -15159,8 +15159,8 @@ export class Player {
       const names = level.skateCollectathon.collect(this.playerBox);
       if (names.length) {
         sfx.play('crystalGet', .9);
-        if (level.skateCollectathon.complete)
-          this.onCourseHint('EXIT OPEN', 'Return to the entrance pad');
+        if (level.skateCollectathon.exitReady)
+          this.onCourseHint('EXIT OPEN', level.skateCollectathon.mode === 'tokens' ? 'Return to the entrance pad' : 'Continue to the exit pad');
       }
     }
     if (
@@ -15267,10 +15267,10 @@ export class Player {
     if (this.kiteReleased && this.grounded && !onPad) this.kiteFinishJump = false;
     const finishReady = !level.kiteTow || this.kiteReleased && this.kiteFinishJump;
     const touchingFinish = finishReady && (onPad || this.playerBox.intersectsBox(level.finishGlow));
-    const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
+    const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.exitReady;
     if (touchingFinish && !parkGoalsComplete && !this.parkGoalHintShown) {
       this.parkGoalHintShown = true;
-      this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} tokens — explore above`);
+      this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} ${level.skateCollectathon!.noun.toLowerCase()} — explore above`);
     } else if (!touchingFinish) this.parkGoalHintShown = false;
     if (!level.skateRace && !this.competitionMode && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive

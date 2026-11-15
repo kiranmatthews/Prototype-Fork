@@ -1,0 +1,154 @@
+{
+  "id": 12,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 12 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Approach the trampoline",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Hold the trampoline launch",
+      "firstFrame": 314,
+      "lastFrame": 353
+    },
+    {
+      "name": "The trampoline alone cannot reach the high receiver",
+      "firstFrame": 353,
+      "lastFrame": 403
+    },
+    {
+      "name": "Land in the flat courtyard for a local retry",
+      "firstFrame": 403,
+      "lastFrame": 429
+    },
+    {
+      "name": "Approach the trampoline",
+      "firstFrame": 429,
+      "lastFrame": 538
+    },
+    {
+      "name": "Hold the trampoline launch",
+      "firstFrame": 583,
+      "lastFrame": 622
+    },
+    {
+      "name": "Rise beside the airborne crate without hitting its underside",
+      "firstFrame": 622,
+      "lastFrame": 651
+    },
+    {
+      "name": "Align above the airborne spring at the trampoline apex",
+      "firstFrame": 651,
+      "lastFrame": 672
+    },
+    {
+      "name": "Land on the airborne crate for a held second rebound",
+      "firstFrame": 672,
+      "lastFrame": 683
+    },
+    {
+      "name": "Gain height beside the receiver",
+      "firstFrame": 683,
+      "lastFrame": 694
+    },
+    {
+      "name": "Drift onto the high receiver after both launchers",
+      "firstFrame": 694,
+      "lastFrame": 727
+    },
+    {
+      "name": "Collect the two-launcher crystal",
+      "firstFrame": 727,
+      "lastFrame": 745
+    },
+    {
+      "name": "Return to the flat courtyard beside both launchers",
+      "firstFrame": 790,
+      "lastFrame": 849
+    },
+    {
+      "name": "Pass around the launchers",
+      "firstFrame": 849,
+      "lastFrame": 1041
+    },
+    {
+      "name": "Finish the two-launcher circuit",
+      "firstFrame": 1059,
+      "lastFrame": 1236
+    }
+  ],
+  "evidence": [
+    {
+      "action": "trampoline alone misses",
+      "apex": 11.349166660706187
+    },
+    {
+      "action": "airborne arrow contact",
+      "position": [
+        3.90733708303595,
+        9.172,
+        -11.944751944507566
+      ],
+      "verticalSpeed": 20
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the two-launcher circuit",
+  "result": {
+    "frame": 1254,
+    "time": 20.9,
+    "position": [
+      0.06779698433723039,
+      0,
+      4.996026158014567
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}
