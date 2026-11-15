@@ -12088,7 +12088,8 @@ the view's corners, and the side-on wait for the hoist.
 Brief: refine the existing rope climb, jump-on, swing and jump-off animations,
 fixing the clipping through the different movements and parts of the swing,
 and making the transitions extremely smooth, natural and bouncy. About 3 h
-30 min from the prompt to the pushed branch. No level changed, and nothing in
+30 min from the prompt to the pushed branch, and 4 h 15 min to the playable
+page. No level changed, and nothing in
 `src/tuning.ts`: the grip, the climb speed, the grab radius and the leap are
 as they were.
 
@@ -12140,6 +12141,10 @@ above on old and new, and photographed sequences of every move in lite and
 full render with no console errors. No full suite run and no human play test.
 `tools/test-idle-rope.mjs` (grind tightropes, not swing ropes) fails the same
 way before and after this change and was left alone.
+
+A private page hosts the review page's rope as a playground: each move on a
+button, slow motion down to a tenth, three cameras, and the game's own
+controls.
 
 Left as they were: the tap leap's flight pose is the source clip's (arms held
 forward); a catch made upside down in a flip still passes the head through the

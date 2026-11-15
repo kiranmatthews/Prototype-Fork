@@ -24,6 +24,8 @@ const fixture = new Level(g.scene, { id: 'rope-review', name: 'Rope review', dat
     { t: 'platform', p: [0, -.5, -10], s: [30, 1, 70], tex: 'stone', color: '#8e98a8' },
     { t: 'ropeswing', p: [0, ANCHOR_Y, ROPE_Z], len: LEN, amp: AMP, speed: 0, phase: 0, yaw: YAW },
     { t: 'gate', p: [0, 0, -44] },
+    // (A level with no stopwatch is given one beside its start, which is where the run-up is. This one is out of the way.)
+    { t: 'clock', p: [0, -60, 400] },
   ],
 } });
 // The game's own level stays loaded but out of the picture.
