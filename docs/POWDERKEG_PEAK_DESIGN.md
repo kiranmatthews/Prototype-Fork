@@ -111,7 +111,7 @@ Each hazard is introduced with room, developed, twisted, then used in the last r
 ## Crates
 
 142 crates in the level (138 counted) in 54 clusters, mean cluster size 2.57,
-5 single crates (9 %); 12 checkpoints; 17 more in the bonus round; gem tally 166.
+5 single crates (9 %); 12 checkpoints; 17 more in the bonus round; gem tally 167.
 Every cluster has one named job in its label (teach, reward, bait, landing
 marker, count trap, checkpoint group).
 
