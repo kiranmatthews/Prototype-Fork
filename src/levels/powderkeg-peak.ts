@@ -36,6 +36,10 @@ const groups: CustomGroup[] = [
 const C: CustomComponent[] = [];
 const add = (c: CustomComponent): CustomComponent => { if (c.nm && c.nm.length > 120) throw new Error(`Powderkeg Peak: label over 120 characters: ${c.nm}`); C.push(c); return c; };
 const SNOW = '#f2f6fc', ICE = '#a9dcf2', DEEP = '#1d3d6e';
+/** Boulders are balls of blue ice, and each rolls in a track of bare ice worn across the snow: white on white, they
+ * were all but invisible. Blue ice is the mountain's colour for "watch this": the stampers and the slick floors wear it too. */
+const BOULDER = '#86bfe8';
+const tracks: { x: number; y: number; z: number; alongX: boolean; reach: number; half: number }[] = [];
 
 /** A solid block given by its top face: x0..x1 east, z0..z1 south (z0 < z1), top at `y`, `thick` deep. */
 const block = (x0: number, x1: number, z0: number, z1: number, y: number, thick: number, nm: string, o: Partial<CustomComponent> = {}): CustomComponent =>
@@ -52,9 +56,15 @@ const slate = (x0: number, x1: number, z0: number, z1: number, bottom: number, t
 /** Shadowed rock behind the slate pieces: the clefts between them close on this, never on sky. */
 const backing = (x0: number, x1: number, z0: number, z1: number, bottom: number, top: number, nm: string): CustomComponent =>
   block(x0, x1, z0, z1, top, top - bottom, nm, { tex: 'solid', color: '#3d4259', edgeGrinding: false, grp: G.rock });
-/** A touch-kill sheet at height `y` (the engine's box reaches 0.25 m above and 1.75 m below it). */
-const kill = (x0: number, x1: number, z0: number, z1: number, y: number, nm: string): CustomComponent =>
-  add({ t: 'pit', p: [r3((x0 + x1) / 2), r3(y), r3((z0 + z1) / 2)], s: [r3(x1 - x0), 1, r3(z1 - z0)], invisible: true, grp: G.bounds, nm });
+/** A touch-kill sheet at height `y` (the engine's box reaches 0.25 m above and 1.75 m below it), and an unseen deadly
+ * floor just under that box. A mask spends itself on the sheet and its wearer falls on through: the floor is what
+ * makes a pit a pit for them too, so nobody is left standing at the bottom of one or falls on out of the world. */
+const kill = (x0: number, x1: number, z0: number, z1: number, y: number, nm: string): CustomComponent => {
+  const f = r3(y - 1.95);
+  add({ t: 'mesh', p: [0, 0, 0], vertices: [r3(x0), f, r3(z0), r3(x1), f, r3(z0), r3(x1), f, r3(z1), r3(x0), f, r3(z1)], indices: [0, 3, 2, 0, 2, 1], normals: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    lethal: true, invisible: true, tex: 'solid', castShadow: false, edgeGrinding: false, grp: G.bounds, nm: `${nm}: floor` });
+  return add({ t: 'pit', p: [r3((x0 + x1) / 2), r3(y), r3((z0 + z1) / 2)], s: [r3(x1 - x0), 1, r3(z1 - z0)], invisible: true, grp: G.bounds, nm });
+};
 /** An invisible barrier from `y0` up `h` metres. */
 const fence = (x0: number, x1: number, z0: number, z1: number, y0: number, h: number, nm: string): CustomComponent =>
   add({ t: 'wall', p: [r3((x0 + x1) / 2), r3(y0), r3((z0 + z1) / 2)], s: [r3(Math.max(.4, x1 - x0)), r3(h), r3(Math.max(.4, z1 - z0))], invisible: true, grp: G.bounds, nm });
@@ -117,6 +127,13 @@ for (const t of TERRACES) {
   // Free-standing pillars and the half bridge are columns of blue ice.
   if (t.w) C.push(...cliff({ line: boxLine(x - w / 2, -t.b, x + w / 2, -t.a), side: 1, closed: true, bottom: t.y - 9, top: t.y - .18, palette: BLUE_ICE, relief: .3, batter: .03, seed: Math.round(t.a), ice: 0, nm: `${t.nm}: ice column`, grp: G.rock }));
 }
+// Where one terrace stands above the last with no ramp between (the mill pond over the crab shelf), the step has a face:
+// without it the slab's edge hung over a gap you could see through.
+for (let i = 1; i < TERRACES.length; i++) {
+  const t = TERRACES[i], before = TERRACES[i - 1];
+  if (t.w || before.w || Math.abs(t.a - before.b) > .01 || t.y - before.y < .2) continue;
+  block(-HALF, HALF, -t.a - .3, -t.a, t.y - SLAB, t.y - SLAB - before.y + .3, `${t.nm}: the face of the step`, t.ice ? { tex: 'ice', color: ICE, edgeGrinding: false } : { edgeGrinding: false });
+}
 for (const q of RAMPS) {
   add({ t: 'ramp', p: [0, q.y0, r3(-(q.a + q.b) / 2)], len: q.b - q.a, rise: r3(q.y1 - q.y0), w: HALF * 2, yaw: 0, tex: 'snow', color: SNOW, grp: G.ground, nm: q.nm });
   block(-HALF, HALF, -q.b, -q.a, q.y0 - .02, 8, `${q.nm}: body`, { artProxy: true, edgeGrinding: false, grp: G.rock });
@@ -139,10 +156,11 @@ for (const side of [-1, 1] as const) {
     const b = Math.min(193, a + 17), top = Math.max(wallTop(a), wallTop(b)) + .35, bottom = gullyFloor(a) - 9;
     slate(side > 0 ? x : x - 6.5, side > 0 ? x + 6.5 : x, -b, -a, bottom, top, i * 2 + (side > 0 ? 1 : 0) + 3, `Gully wall slate ${side > 0 ? 'east' : 'west'} ${a}`);
   }
-  for (const [a, b, top] of WALLS) backing(side > 0 ? x + 2.2 : x - 3.4, side > 0 ? x + 3.4 : x - 2.2, -b, -a, gullyFloor(a) - 9, top - .5, `Gully wall heart ${a}`);
+  // The heart stands behind the deepest the face may fall back (`back`): a face that dips behind its heart shows as a flat dark blot.
+  for (const [a, b, top] of WALLS) backing(side > 0 ? x + 3 : x - 3.6, side > 0 ? x + 3.6 : x - 3, -b, -a, gullyFloor(a) - 9, top - .5, `Gully wall heart ${a}`);
   // Where a slate piece falls back from the gully, a faceted face of the same rock shows behind it, never a flat slab.
-  C.push(...cliff({ line: [[x + side * 1.7, -12], [x + side * 1.7, -191]], side, bottom: t => gullyFloor(12 + t) - 8.6, top: t => wallTop(12 + t) - .2, palette: SLATE, relief: .5, batter: .03, seed: side > 0 ? 31 : 37, ice: .08, nm: `Gully wall face ${side > 0 ? 'east' : 'west'}`, grp: G.rock }));
-  C.push(...snowCap({ line, side: side > 0 ? 1 : -1, y: t => wallTop(12 + t) - .1, depth: 3.6, height: 1, overhang: .15, seed: side > 0 ? 5 : 2, nm: `Gully wall cap ${side > 0 ? 'east' : 'west'}`, grp: G.rock }));
+  C.push(...cliff({ line: [[x + side * 1.7, -12], [x + side * 1.7, -191]], side, bottom: t => gullyFloor(12 + t) - 8.6, top: t => wallTop(12 + t) - .2, palette: SLATE, relief: .5, batter: .03, back: 1.2, ledge: 2, seed: side > 0 ? 31 : 37, ice: .08, nm: `Gully wall face ${side > 0 ? 'east' : 'west'}`, grp: G.rock }));
+  C.push(...snowCap({ line, side: side > 0 ? 1 : -1, y: t => wallTop(12 + t) - .1, depth: 3.6, height: 1, overhang: .15, taper: 2.5, seed: side > 0 ? 5 : 2, nm: `Gully wall cap ${side > 0 ? 'east' : 'west'}`, grp: G.rock }));
 }
 // Far walls of the crevasses (the ones the camera faces): blue ice from the depths to the next floor.
 for (const q of CREVASSES) {
@@ -161,7 +179,8 @@ fruitLine([0, 1.6, -35.6], [0, 2.5, -38.8], 3, .9);
 fruitLine([0, 2.5, -41], [0, 2.5, -47], 4);
 rowOf(-.96, 2.5, -50, ['wood', 'mystery', 'wood'], 'Row at the far end of the mill pond (teach: spin while you slide)');
 fruitLine([0, 2.5, -56], [0, 2.5, -60], 3);
-add({ t: 'stone', p: [0, 2.5, -62.5], axis: 'x', range: 4.5, speed: 4.5, radius: 1.1, tex: 'snow', color: '#e4edf9', grp: G.hazards, nm: 'Boulder in its trough across the gully (debut: stand and watch, cross behind it)' });
+add({ t: 'stone', p: [0, 2.5, -62.5], axis: 'x', range: 4.5, speed: 4.5, radius: 1.1, tex: 'ice', color: BOULDER, grp: G.hazards, nm: 'Boulder in its trough across the gully (debut: stand and watch, cross behind it)' });
+tracks.push({ x: 0, y: 2.5, z: -62.5, alongX: true, reach: 4.5 + 1.1 + .3, half: 1.3 });
 fruitLine([0, 2.5, -65.5], [3, 2.5, -70], 3); fruitLine([3, 2.5, -71.4], [3, 2.5, -73.6], 2);
 crate(-3, 2.5 + 1.4, -72.5, 'mystery', 'Over the open half of the crevasse, above a spin from either bank (reward for the risk: jump the gap through it)');
 rowOf(-4.36, 2.5, -79, ['wood', 'bouncy', 'wood'], 'Arrow crate between two boxes on the runway (teach the tool; break its neighbours first and it is still there)');
@@ -201,7 +220,8 @@ const finish = RUN2.at(RUN2.length), FINISH: P3 = [r3(finish.x), -12, r3(finish.
 const RUN_HALF = 6.5, BANK_RUN = 3.5;
 // The first crevasse on a board takes only the left half of the piste: the right half rides straight on beside it.
 const RUN1_GAPS: Gap[] = [{ a: 404, b: 410, depth: 7, lat1: 0 }];
-const RUN2_GAPS: Gap[] = [{ a: 244, b: 253, depth: 8 }, { a: 452, b: 461, depth: 8 }, { a: 596, b: 607, depth: 9 }];
+// The last is the long one: ten metres. From its checkpoint, a board that coasts to the lip needs the ollie held a moment.
+const RUN2_GAPS: Gap[] = [{ a: 244, b: 253, depth: 8 }, { a: 452, b: 461, depth: 8 }, { a: 596, b: 606, depth: 9 }];
 interface Trough { path: Path; s: number; centre: number; range: number; speed: number; radius: number; nm: string; }
 const TROUGHS: Trough[] = [
   // Every trough sits a second and a half of clear straight past the bend before it.
@@ -270,11 +290,40 @@ C.push(...pisteMeshes(mountain, RUN2, 0, RUN2.length, lats, { nm: 'Powderkeg Run
 for (const t of TROUGHS) {
   const [x0, z0, x1, z1] = troughRect(t), f = t.path.at(t.s), acrossX = Math.abs(f.rx) > .5, c = t.path.w(t.s, t.centre);
   C.push(...padMeshes(mountain, x0 - 1.2, z0 - 1.2, x1 + 1.2, z1 + 1.2, 1.1, { nm: `Boulder trough ${t.path.name} ${t.s}`, grp: G.ground, tex: 'snow' }));
-  add({ t: 'stone', p: [c[0], r3(t.path.elev(t.s)), c[2]], ...(acrossX ? { axis: 'x' as const } : {}), range: t.range, speed: t.speed, radius: t.radius, tex: 'snow', color: '#e4edf9', grp: G.hazards, nm: t.nm });
+  add({ t: 'stone', p: [c[0], r3(t.path.elev(t.s)), c[2]], ...(acrossX ? { axis: 'x' as const } : {}), range: t.range, speed: t.speed, radius: t.radius, tex: 'ice', color: BOULDER, grp: G.hazards, nm: t.nm });
+  tracks.push({ x: c[0], y: t.path.elev(t.s), z: c[2], alongX: acrossX, reach: t.range + t.radius + .3, half: t.radius + .15 });
 }
+// Crevasses on the runs (every one lies on an axis-aligned straight). The drawn walls are scenery, so each crevasse is
+// closed by unseen walls just under the snow: at the far lip, at the near lip, and along the sound half where the
+// crevasse takes only part of the width. A jump that falls short meets the far wall and drops into the pit; before,
+// it flew on under the landing and out of the bottom of the world.
+const WEDGE = 1.6, WEDGE_RISE = .9;
 for (const [path, gaps] of [[RUN1, RUN1_GAPS], [RUN2, RUN2_GAPS]] as const) for (const g of gaps) {
-  const reach = RUN_HALF + BANK_RUN + 2, corners = [g.a, g.b].flatMap(st => [Math.max(-reach, (g.lat0 ?? -reach) + .5), Math.min(reach, (g.lat1 ?? reach) - .5)].map(lat => path.w(st, lat)));
-  kill(Math.min(...corners.map(q => q[0])), Math.max(...corners.map(q => q[0])), Math.min(...corners.map(q => q[2])), Math.max(...corners.map(q => q[2])), path.elev((g.a + g.b) / 2) - 3.2, `${path.name}: crevasse ${g.a}`);
+  const reach = RUN_HALF + BANK_RUN + 2, l0 = Math.max(-reach, g.lat0 ?? -reach), l1 = Math.min(reach, g.lat1 ?? reach);
+  const box = (s0: number, s1: number, a: number, b: number): [number, number, number, number] => {
+    const q = [s0, s1].flatMap(st => [a, b].map(lat => path.w(st, lat)));
+    return [Math.min(...q.map(v => v[0])), Math.max(...q.map(v => v[0])), Math.min(...q.map(v => v[2])), Math.max(...q.map(v => v[2]))];
+  };
+  // The sheet runs on a little under the near lip and under the sound half: it lies three metres below the snow there.
+  const w0 = l0 - (g.lat0 === undefined ? 0 : 1.5), w1 = l1 + (g.lat1 === undefined ? 0 : 1.5);
+  kill(...box(g.a - 2, g.b, w0, w1), path.elev((g.a + g.b) / 2) - 3.2, `${path.name}: crevasse ${g.a}`);
+  // Under the landing it steps down with the snow, three metres beneath it. A board that comes in just under the far lip
+  // is too shallow for a wall to stop (a body rides over a low step), so it is caught here, a moment later.
+  for (let k = 1; k <= 3; k++) kill(...box(g.b + 4 * (k - 1), g.b + 4 * k, w0, w1), path.elev(g.b + 4 * k) - 3.2, `${path.name}: crevasse ${g.a}, under the landing ${k}`);
+  const wall = (s0: number, s1: number, a: number, b: number, top: number, nm: string): void => {
+    const [x0, x1, z0, z1] = box(s0, s1, a, b); block(x0, x1, z0, z1, top, g.depth + 2, `${path.name}: crevasse ${g.a}, ${nm}`, { artProxy: true, edgeGrinding: false, grp: G.bounds });
+  };
+  // Each top sits a hand under the lowest snow above it: a grab on a lip climbs out onto the piste itself.
+  wall(g.b, g.b + .4, l0, l1, path.elev(g.b + .4) - .06, 'far lip');
+  // A landing apron of packed snow under the far lip: a ramp reaching out into the crevasse and rising to the lip. A
+  // board that comes in a little low lands on it and is carried up onto the piste, where a sheer lip knocked it down.
+  // Measured from each crevasse's own checkpoint: a tap now clears the nine-metre ones, and the long one asks for the
+  // ollie to be held over the last four metres (a quarter of a second); anything shorter still ends in the pit.
+  { const f = path.at(g.b), mid = path.w(g.b - WEDGE / 2, (l0 + l1) / 2);
+    add({ t: 'ramp', p: [mid[0], r3(path.elev(g.b) - .06 - WEDGE_RISE), mid[2]], len: WEDGE, rise: WEDGE_RISE, w: r3(l1 - l0), yaw: r3(f.yaw), tex: 'snow', color: SNOW, edgeGrinding: false, grp: G.ground, nm: `${path.name}: crevasse ${g.a}, landing apron` }); }
+  wall(g.a - .4, g.a, l0, l1, path.elev(g.a) - .06, 'near lip');
+  if (g.lat1 !== undefined) wall(g.a, g.b, g.lat1, g.lat1 + .4, path.elev(g.b) - .06, 'side of the sound half');
+  if (g.lat0 !== undefined) wall(g.a, g.b, g.lat0 - .4, g.lat0, path.elev(g.b) - .06, 'side of the sound half');
 }
 C.push(...padMeshes(mountain, -17, -14, 17, 19, 1.6, { nm: 'Lodge yard', grp: G.ground, tex: 'snow' }));
 C.push(...padMeshes(mountain, -11, -208, 11, -188, 1.6, { nm: 'First crest', grp: G.ground, tex: 'snow' }));
@@ -284,10 +333,12 @@ C.push(...padMeshes(mountain, FINISH[0] - 14, FINISH[2] - 8, FINISH[0] + 14, FIN
 const routes = [CLIMB, RUN1, RUN2];
 const nearRoute = (x: number, z: number): boolean => routes.some(path => path.nearest(x, z, 85) !== null) || (Math.abs(x - 34) < 120 && z < -520 && z > -690);
 C.push(...slopeMeshes(mountain, BOUNDS.x0, BOUNDS.z0, BOUNDS.x1, BOUNDS.z1, 3.6, { nm: 'Slopes', grp: G.slopes, tex: 'snow', wanted: nearRoute }));
-// Piste bounds: a tall unseen fence along each bank crest.
+// Piste bounds: a tall unseen fence along each bank crest, to the last metre of each run (the paddocks take over there).
 for (const path of [RUN1, RUN2]) for (const side of [-1, 1]) for (let from = 0; from < path.length; from += 120) {
-  const to = Math.min(path.length, from + 120), origin = path.w(from, side * (RUN_HALF + 2.4)), pts: [number, number, number, number][] = [];
-  for (let s = from; s <= to + .01; s += 6) { const q = path.w(Math.min(s, to), side * (RUN_HALF + 2.4)); pts.push([r3(q[0] - origin[0]), r3(q[2] - origin[2]), 0, r3(q[1] - origin[1])]); }
+  const to = Math.min(path.length, from + 120), origin = path.w(from, side * (RUN_HALF + 2.4)), pts: [number, number, number, number][] = [], stations: number[] = [];
+  for (let s = from; s < to - .01; s += 6) stations.push(s);
+  stations.push(to);
+  for (const s of stations) { const q = path.w(s, side * (RUN_HALF + 2.4)); pts.push([r3(q[0] - origin[0]), r3(q[2] - origin[2]), 0, r3(q[1] - origin[1])]); }
   add({ t: 'wallpath', p: origin, pts, w: .5, rise: 9, collisionHeight: 9, containment: true, invisible: true, grp: G.bounds, nm: `${path.name}: bank fence` });
 }
 
@@ -333,14 +384,16 @@ runFruit(RUN1, 398, 418, -3.7, -3.7, 5);
 runStack(RUN1, 433, -2.6, ['wood', 'wood', 'mystery'], 'Tall stack where the jump and the grind meet again (either way across pays; the fruit differs)');
 runFruit(RUN1, 440, 456, -1, 2.6, 4);
 runStack(RUN1, 462, 2.6, ['wood', 'wood', 'wood'], 'Tall stack on the inside of the last bend');
-runFruit(RUN1, 469, 489, 2.6, -2.4, 4);
+// The run-out is nearly level: a board that only coasts from the last checkpoint is down to 12 m/s here, under the speed
+// that smashes a box. So this fruit passes beside the run-out stack, not into it: the boxes are for a rider who pushes.
+runFruit(RUN1, 469, 489, 2.6, -1, 4);
 runStack(RUN1, 496, -2.8, ['wood', 'wood'], 'Run-out stack, left'); runStack(RUN1, 520, 2.8, ['wood', 'mystery'], 'Run-out stack, right (a second of travel after the left, and before anyone brakes for the shore)');
 runFruit(RUN1, 538, 554, 0, 0, 3);
 
 // Powderkeg Run: everything the mountain has taught, at speed.
 runFruit(RUN2, 6, 30, 0, 0, 5);
-runStack(RUN2, 40, -.48, ['wood', 'wood'], 'Block to ram at the mount (charge: on the level ridge a coasting board trips on it; push, or spin)');
-runStack(RUN2, 40, .48, ['wood', 'mask'], 'Block at the mount: the mask in it');
+// The mask for the last run stands on the summit, on foot (see the summit's dressing). It used to be a block to ram on
+// the level ridge, forty metres in, where a board that only coasted tripped on it with the fruit leading straight at it.
 runRail(RUN2, 52, 84, 3.2, .6, 'Ridge fence rail');
 runFruit(RUN2, 54, 82, 3.2, 3.2, 6);
 foe('floater', on(RUN2, 68, 3.2)[0], on(RUN2, 68, 3.2)[1], on(RUN2, 68, 3.2)[2], 8, 3, 'Watcher over the ridge rail (spin from the grind)');
@@ -365,7 +418,7 @@ runFruit(RUN2, 450.5, 462.5, 2, 2, 6, 1.5);
 runNitro(RUN2, 494, -1, 'Nitro gate in the last chicane, left'); runNitro(RUN2, 503, 1, 'Nitro gate in the last chicane, right');
 runFruit(RUN2, 472, 488, 0, 0, 3); runFruit(RUN2, 508, 526, 0, 0, 4);
 runStack(RUN2, 534, 0, ['wood', 'wood', 'wood'], 'Tall stack before the last checkpoint (the group the checkpoint closes)');
-runFruit(RUN2, 594.5, 608.5, 0, 0, 7, 1.6);
+runFruit(RUN2, 594.5, 607.5, 0, 0, 7, 1.6);
 runStack(RUN2, 617, 0, ['wood', 'wood', 'mystery'], 'Tall stack dead ahead of the landing past the long gap');
 stack(FINISH[0] - 4.6, FINISH[1], FINISH[2] + 8, ['wood', 'mystery'], 'Works yard stack'); crate(FINISH[0] - 3.64, FINISH[1], FINISH[2] + 8, 'wood', 'Works yard stack: the step beside it');
 
@@ -374,7 +427,9 @@ add({ t: 'platform', p: [0, TARN_Y - .13, -582], s: [34, .3, 22], pts: [[-17, -1
 for (const dx of [0, CR]) rowOf(-.48 + dx, TARN_Y + .17, -581.5, ['wood', 'wood'], 'Block in the middle of the tarn ice (slide and spin)', true);
 foe('floater', 5.5, TARN_Y, -596.5, 3.5, 2, 'Watcher over the north shore by the hoist (debut on foot, on firm snow with room: spin, never stomp)');
 const ROW_A = -606, ROW_B = -614, A0_Y = 6;
-block(-6, -.4, ROW_A - 1.4, ROW_A + 3.6, TARN_Y - .62, 1.2, 'Hoist pit floor: nothing to fall into under a risen deck', { tex: 'plank', color: '#8d6c46', edgeGrinding: false });
+block(-6, -.4, ROW_A - 2, ROW_A + 3.6, TARN_Y - .62, 1.2, 'Hoist pit floor: nothing to fall into under a risen deck', { tex: 'plank', color: '#8d6c46', edgeGrinding: false });
+// East of the shaft, south of the landing's column, there is no ground at all: the tower is boarded up on that side, top to bottom.
+fence(-.5, -.1, ROW_A + 2, ROW_A + 3.8, TARN_Y - 1.4, 54, 'Hoist shaft: boarded east side');
 add({ t: 'mover', p: [-3, r3((TARN_Y + A0_Y) / 2), ROW_A + 1], s: [4, .6, 4], axis: 'y', amp: (A0_Y - TARN_Y) / 2, speed: .7, phase: -Math.PI / 2, tex: 'plank', color: '#b98f5e', grp: G.hazards, nm: 'The hoist: rises fourteen metres to the lower ledge row' });
 
 // ───────────────────────────── S3 · The Headwall ─────────────────────────────
@@ -394,8 +449,8 @@ const ROW_A_LEDGES: Ledge[] = [
 ];
 const B0_Y = 19;
 const ROW_B_LEDGES: Ledge[] = [
-  { x0: 66, x1: 80, y: B0_Y, ice: true, nm: 'Glazed gallery under the stamper' },
-  { x0: 57.6, x1: 63.4, y: 19.8, nm: 'Bristleback pillar: its near three metres are clear to land on' },
+  { x0: 66.6, x1: 80, y: B0_Y, ice: true, nm: 'Glazed gallery under the stamper' },
+  { x0: 57.6, x1: 64, y: 19.8, nm: 'Bristleback pillar: its near four metres are clear to land on' },
   { x0: 53.3, x1: 56.3, y: 20.2, crumble: true, nm: 'Rotten shelf one' },
   { x0: 48.8, x1: 51.8, y: 20.7, crumble: true, nm: 'Rotten shelf two' },
   { x0: 44.3, x1: 47.3, y: 21.2, crumble: true, nm: 'Rotten shelf three' },
@@ -415,18 +470,29 @@ const row = (ledges: readonly Ledge[], z: number, floor: number) => {
 };
 row(ROW_A_LEDGES, ROW_A, -12);
 row(ROW_B_LEDGES, ROW_B, 4);
-floorBlock(80, 90, ROW_B - 2, ROW_A + 2, B0_Y, 3, 'East landing: the turn back west');
-slate(79.7, 90.3, ROW_B - 2.3, ROW_A + 2.2, B0_Y - 3.4, B0_Y - .22, 65, 'East landing: slate lip');
+// The east landing is an L: a balcony over the east end of the far bank, where the buttress comes up, and the landing
+// proper behind it, between the rows. West of the balcony it stands back from the lower row's lane, so the far-bank
+// stamper and its frame hang in plain view; before, the landing roofed them over and hid all but the block's foot.
+const BALCONY_X = 87.2;
+floorBlock(80, 90, ROW_B - 2, ROW_A - 2, B0_Y, 3, 'East landing: the turn back west');
+floorBlock(BALCONY_X, 90, ROW_A - 2, ROW_A + 2, B0_Y, 3, 'East landing: the balcony above the far bank');
+slate(79.7, 90.3, ROW_B - 2.3, ROW_A - 1.8, B0_Y - 3.4, B0_Y - .22, 65, 'East landing: slate lip');
+slate(BALCONY_X - .3, 90.3, ROW_A - 2.2, ROW_A + 2.2, B0_Y - 3.4, B0_Y - .22, 66, 'East landing: balcony slate');
 // The wall itself: behind row A up to row B's floor, behind row B up to the ridge, and the two end buttresses.
 const proxy = { artProxy: true, grp: G.rock, edgeGrinding: false } as const;
-block(-8, 30, ROW_A - 6, ROW_A - 2, 20.3, 32.3, 'Headwall behind the lower row, west', proxy);
-block(30, 60, ROW_A - 6, ROW_A - 2, 18.1, 30.1, 'Headwall behind the lower row, middle', proxy);
-block(60, 104, ROW_A - 6, ROW_A - 2, 17.5, 29.5, 'Headwall behind the lower row, east', proxy);
+// The lower wall's body stops short of the upper row's lane (LOWER_BACK), behind that row's lip fence: its top edge is
+// out of reach of anyone falling through a gap up there.
+const LOWER_BACK = ROW_A - 5.4;
+block(-8, 30, LOWER_BACK, ROW_A - 2, 20.3, 32.3, 'Headwall behind the lower row, west', proxy);
+block(30, 60, LOWER_BACK, ROW_A - 2, 18.1, 30.1, 'Headwall behind the lower row, middle', proxy);
+block(60, 104, LOWER_BACK, ROW_A - 2, 17.5, 29.5, 'Headwall behind the lower row, east', proxy);
 block(-16, 104, ROW_B - 8, ROW_B - 2, 36, 48, 'Headwall behind the upper row', proxy);
 block(104, 110, ROW_B - 8, ROW_A + 3.4, 30, 42, 'East buttress', proxy);
 block(-42, -14, ROW_B - 12, ROW_A + 3.4, SUMMIT_Y - .12, 40, 'Summit block', proxy);
 block(-14, -6, ROW_A - 6, ROW_A + 3.4, SUMMIT_Y - .12, 40, 'Rock beside the hoist', proxy);
-block(90, 104, ROW_B - 2, ROW_B + 2, 30, 42, 'Rock closing the east landing', proxy);
+// East of the landing the rock stands the full depth between the rows, to the back of the buttress tiers: there is no
+// pocket of snow shelf behind them to drop into.
+block(90, 104, ROW_B - 2, ROW_A - 2, 30, 42, 'Rock closing the east landing', proxy);
 // The headwall as seen: two great faces of slate, the buttresses that close each end, snow along every shelf.
 // Kept under the upper row's floors, snow cap and all, so the shelf never hides a walker's feet up there.
 const lowerTop = (x: number): number => 17.5 + .6 * Math.max(0, Math.min(1, (62 - x) / 4)) + 2.2 * Math.max(0, Math.min(1, (32 - x) / 4));
@@ -435,19 +501,31 @@ for (let x = -17, i = 0; x < 104; x += 24, i++) slate(x, Math.min(105, x + 27), 
 // A second course behind the first, half a piece along, so the clefts of one close on the faces of the other.
 for (let x = 3, i = 0; x < 96; x += 23, i++) slate(x, Math.min(104, x + 24), ROW_A - 8, ROW_A - 3.1, -11, Math.max(lowerTop(x), lowerTop(x + 24)) - .5, 70 + i, `Headwall slate, lower second course ${i + 1}`);
 for (let x = -5, i = 0; x < 96; x += 24, i++) slate(x, Math.min(104, x + 25), ROW_B - 9.5, ROW_B - 3.1, 12, 35.8, 80 + i, `Headwall slate, upper second course ${i + 1}`);
-backing(-8, 30, ROW_A - 6, ROW_A - 4.2, -11, 19.5, 'Headwall heart, lower west'); backing(30, 60, ROW_A - 6, ROW_A - 4.2, -11, 17.3, 'Headwall heart, lower middle'); backing(60, 104, ROW_A - 6, ROW_A - 4.2, -11, 16.7, 'Headwall heart, lower east');
-backing(-15.6, 104, ROW_B - 8, ROW_B - 4.2, 12, 35.4, 'Headwall heart, upper');
+// Each heart stands behind the deepest its face may fall back: a face that dips behind its heart shows as a flat dark blot.
+backing(-8, 30, LOWER_BACK, ROW_A - 4.9, -11, 19.5, 'Headwall heart, lower west'); backing(30, 60, LOWER_BACK, ROW_A - 4.9, -11, 17.3, 'Headwall heart, lower middle'); backing(60, 104, LOWER_BACK, ROW_A - 4.9, -11, 16.7, 'Headwall heart, lower east');
+backing(-14.2, 104, ROW_B - 8, ROW_B - 5.6, 12, 36, 'Headwall heart, upper');
+// The buttresses and the summit block are rock pieces alone: a heart inside each closes their clefts on rock, not on sky.
+backing(104.6, 109.4, ROW_B - 7.4, ROW_A + 2.4, -11, 29.4, 'East buttress heart'); backing(90.6, 103.6, ROW_B - 1.4, ROW_A - 4, 15, 29.4, 'East landing rock heart');
+// And in front of those two, where the rock pieces leave gaps, one faceted face of the same slate: along the back of the
+// buttress tiers, round the inner corner, across the end of the lower row and round onto the buttress's south side.
+C.push(...cliff({ line: [[90.3, ROW_A - 3], [103.7, ROW_A - 3], [103.7, ROW_A + 3.3], [112.5, ROW_A + 3.3]], side: -1, bottom: -11, top: 29.8, palette: SLATE_DEEP, relief: .5, batter: .02, back: .7, seed: 49, ice: 0, nm: 'East buttress face', grp: G.rock }));
+backing(-41.4, -14.6, ROW_B - 11.4, ROW_A + 2.8, -10, SUMMIT_Y - .7, 'Summit block heart'); backing(-14, -6.6, ROW_A - 5.2, ROW_A + 2.8, -10, SUMMIT_Y - .7, 'Hoist rock heart');
 // In front of each heart, a faceted face of the same slate in shadow: what shows where a rock piece falls back is
 // rock, and it stays dark, so the white ledges of both rows read against it.
-C.push(...cliff({ line: [[-8, ROW_A - 3.8], [104, ROW_A - 3.8]], side: -1, bottom: -11, top: t => lowerTop(-8 + t) - .9, palette: SLATE_DEEP, relief: .5, batter: .02, seed: 43, ice: 0, nm: 'Headwall face, lower', grp: G.rock }));
-C.push(...cliff({ line: [[-16, ROW_B - 8], [-16, ROW_B - 3.8], [104, ROW_B - 3.8]], side: -1, bottom: 12, top: 35.2, palette: SLATE_DEEP, relief: .5, batter: .02, seed: 45, ice: 0, nm: 'Headwall face, upper', grp: G.rock }));
-C.push(...snowCap({ line: [[-8, ROW_A - 2], [104, ROW_A - 2]], side: -1, y: t => lowerTop(-8 + t) - .3, depth: 4, height: .7, overhang: .1, seed: 42, nm: 'Headwall shelf snow', grp: G.rock }));
-C.push(...snowCap({ line: [[-16, ROW_B - 2], [104, ROW_B - 2]], side: -1, y: 36.2, depth: 6, height: 1.6, overhang: .5, seed: 44, nm: 'Ridge cornice', grp: G.rock }));
+// Each face rises behind the underside of the snow above it, so no camera below ever looks under a drift at the sky.
+C.push(...cliff({ line: [[-8, ROW_A - 3.8], [104, ROW_A - 3.8]], side: -1, bottom: -11, top: t => lowerTop(-8 + t) - .5, palette: SLATE_DEEP, relief: .5, batter: .02, back: 1, seed: 43, ice: 0, nm: 'Headwall face, lower', grp: G.rock }));
+C.push(...cliff({ line: [[-16, ROW_B - 8], [-16, ROW_B - 3.8], [104, ROW_B - 3.8]], side: -1, bottom: 12, top: 36.1, palette: SLATE_DEEP, relief: .5, batter: .02, back: 1.6, seed: 45, ice: 0, nm: 'Headwall face, upper', grp: G.rock }));
+C.push(...snowCap({ line: [[-8, ROW_A - 2], [90.6, ROW_A - 2]], side: -1, y: t => lowerTop(-8 + t) - .3, depth: 4, height: .7, overhang: .1, soffit: 2.4, taper: 2.5, seed: 42, nm: 'Headwall shelf snow', grp: G.rock }));
+C.push(...snowCap({ line: [[-16, ROW_B - 2], [104, ROW_B - 2]], side: -1, y: 36.2, depth: 6, height: 1.6, overhang: .5, soffit: 2.6, taper: 3, seed: 44, nm: 'Ridge cornice', grp: G.rock }));
 slate(104, 111.5, ROW_B - 9, ROW_A + 3.6, -11, 31, 61, 'East buttress slate');
-C.push(...snowCap({ line: [[104, ROW_A + 3.4], [104, ROW_B - 8]], side: 1, y: 30.4, depth: 6.5, height: 1.2, seed: 47, nm: 'East buttress cap', grp: G.rock }));
+// Beyond it the mountain's own slope climbs steeply: more rock stands in front, stepping down and out, so the edge of
+// the side view is a buttress and never a flat pale sheet.
+slate(110, 121, ROW_B - 8, ROW_A + 6, -11, 34, 68, 'East buttress slate, outer'); slate(119, 131, ROW_B - 6, ROW_A + 9, -11, 27, 69, 'East buttress slate, outermost');
+C.push(...snowCap({ line: [[110.5, ROW_A + 5.6], [110.5, ROW_B - 7.6]], side: 1, y: 33.6, depth: 9.6, height: 1.3, soffit: .7, taper: 2.5, seed: 48, nm: 'East buttress cap, outer', grp: G.rock }));
+C.push(...snowCap({ line: [[104, ROW_A + 3.4], [104, ROW_B - 8]], side: 1, y: 30.4, depth: 6.5, height: 1.2, soffit: .7, taper: 2.5, seed: 47, nm: 'East buttress cap', grp: G.rock }));
 slate(-43, -22, ROW_B - 12, ROW_A + 3.6, -10, SUMMIT_Y - .3, 62, 'Summit block slate, west'); slate(-25, -6, ROW_B - 3, ROW_A + 3.6, -10, SUMMIT_Y - .3, 63, 'Summit block slate, east');
-slate(90, 104.5, ROW_B - 2.4, ROW_B + 2.2, 16, 30.6, 64, 'East landing slate');
-C.push(...snowCap({ line: [[90, ROW_B + 2], [104, ROW_B + 2]], side: -1, y: 30.2, depth: 4, height: 1, seed: 52, nm: 'East landing cap', grp: G.rock }));
+slate(90, 104.5, ROW_B - 2.4, ROW_B + 2.2, 16, 30.6, 64, 'East landing slate'); slate(90, 104.5, ROW_B + 1.6, ROW_A - 1.8, 15, 30.4, 67, 'East landing slate, behind the buttress tiers');
+C.push(...snowCap({ line: [[90, ROW_A - 2], [104, ROW_A - 2]], side: -1, y: 30.2, depth: 7.6, height: 1.2, soffit: .7, taper: 2.5, seed: 52, nm: 'East landing cap', grp: G.rock }));
 add({ t: 'ramp', p: [-10, APPROACH_Y, ROW_B], len: 8, rise: r3(SUMMIT_Y - APPROACH_Y), w: 4, yaw: 90, tex: 'snow', color: SNOW, grp: G.ground, nm: 'Drift ramp onto the summit' });
 // Falls: one sheet under each row, and an unseen fence along each row's open (south) edge.
 // The sheet starts past the hoist landing, which is solid to the shore: the rising hoist deck beside it must carry no one through a kill box.
@@ -455,9 +533,16 @@ kill(26, 104, ROW_A - 2, ROW_A + 2, 1.5, 'Lower row: fall');
 kill(-16, 80, ROW_B - 2, ROW_B + 2, 14, 'Upper row: fall');
 fence(-1, 104, ROW_A + 2, ROW_A + 2.4, 4, 40, 'Lower row: lip fence');
 // The shelf of snow on top of the wall behind the lower row is scenery: nobody stands on it (the east landing joins both rows, so the wall breaks there).
-fence(-8, 80, ROW_A - 2.4, ROW_A - 2, 4, 40, 'Lower row: back wall'); fence(90, 104, ROW_A - 2.4, ROW_A - 2, 4, 40, 'Buttress: back wall');
-fence(-16, 80, ROW_B + 2, ROW_B + 2.4, 18, 30, 'Upper row: lip fence');
-fence(90, 104, ROW_B + 2, ROW_B + 2.4, 18, 30, 'East landing: lip fence');
+// Behind the buttress tiers the wall's top is within a jump, so there the fence stands in front of the rock, not inside
+// it: a lip that can be grabbed but never climbed is a false promise.
+fence(-8, 80, ROW_A - 2.4, ROW_A - 2, 4, 40, 'Lower row: back wall'); fence(90, 104, ROW_A - 2, ROW_A - 1.6, 4, 40, 'Buttress: back wall');
+// The upper row's fence reaches down past the top of the lower wall, for the same reason.
+fence(-16, 80, ROW_B + 2, ROW_B + 2.4, 13, 35, 'Upper row: lip fence');
+// The east landing is left two ways only: on west along the upper row, or back down the buttress it was reached from.
+// Its edges over the lower row and both sides of the snow shelf between the rows are railed off.
+fence(80, 80.4, ROW_B + 2, ROW_A - 2, 17, 31, 'East landing: west rail');
+fence(80, BALCONY_X + .4, ROW_A - 2.4, ROW_A - 2, 17, 31, 'East landing: south rail, over the far bank');
+fence(BALCONY_X, BALCONY_X + .4, ROW_A - 2, ROW_A + 2.4, 17, 31, 'East landing: balcony rail');
 add({ t: 'zone', p: [46, 6, ROW_A], s: [108, 1, 8], dir: 'E', grp: G.camera, nm: 'Lower row: side-on, heading east' });
 add({ t: 'zone', p: [42, 20, ROW_B], s: [116, 1, 7.98], dir: 'W', grp: G.camera, nm: 'Upper row: side-on, heading west' });
 
@@ -478,14 +563,19 @@ rowOf(71.54, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes on 
 fruitLine([78.6, 9, ROW_A], [82.4, 10.2, ROW_A], 3, 1.6);
 stamper(84.5, 10.2, ROW_A, 0, 'Stamper on the far bank: jump as it rises');
 stack(100.2, 14.6, ROW_A, ['wood', 'mystery'], 'At the dead end of the second buttress tier (reward for going the wrong way first)');
+// The turn: the route leaves the east landing into the screen and then west. Fruit draws it, from the checkpoint round the corner.
+fruitLine([88.6, B0_Y, ROW_A - .6], [88.6, B0_Y, ROW_A - 2.6], 2); fruitLine([87.4, B0_Y, ROW_A - 5.6], [85.6, B0_Y, ROW_B + 1], 2); fruitLine([83.6, B0_Y, ROW_B + .4], [81, B0_Y, ROW_B], 2);
 stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
-rowOf(67.3, B0_Y, ROW_B - 1.4, ['wood', 'wood'], 'On the ice by the far lip, against the wall (bait: the slide carries you at the gap)');
-foe('spiker', 58.85, 19.8, ROW_B, .4, 1.2, 'Bristleback at the far end of the landing pillar: a short hop off the ice lands clear of it');
+rowOf(67.9, B0_Y, ROW_B - 1.4, ['wood', 'wood'], 'On the ice by the far lip, against the wall (bait: the slide carries you at the gap)');
+// A full running jump off the ice comes down at x 62.2; the bristleback keeps to the last metre and a half of the pillar,
+// 2.6 m further on, so even that landing has room to stop or spin in. (It used to land a hand's width from its spines.)
+foe('spiker', 58.3, 19.8, ROW_B, .15, 1.2, 'Bristleback at the far end of the landing pillar: any jump off the ice lands clear of it');
 // The mask waits on the far side of the crate bridge: a third mask smashes every box it touches, the bridge included.
 stack(23.8, 22.6, ROW_B - 1.4, ['wood', 'mask'], 'Mask on a box at the end of the bridge, before the twin stampers');
 rowOf(34.55, 21.8, ROW_B - 1.4, ['nitro', 'life', 'nitro'], 'Life framed by Nitro against the wall, six metres past the landing: only from above');
 crate(30.2, 21.8, ROW_B - 1.4, 'bang', 'Switch by the lip, against the wall, three clear metres from the Nitro: it builds the crate bridge', { grp: SWITCH });
-rowOf(27.1 - 1.5 * CR, 21.8 - 1.152, ROW_B, ['wood', 'mystery', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
+// (Its lids lie a finger under the ledge they leave: flush, stepping onto the first box hung on a rounding error.)
+rowOf(27.1 - 1.5 * CR, 21.8 - 1.152 - .02, ROW_B, ['wood', 'mystery', 'wood', 'wood'], 'Switch bridge', false, { grp: SWITCH, outline: true });
 stamper(19.5, 22.6, ROW_B, 0, 'Twin stampers, first');
 foe('grunt', 16.5, 22.6, ROW_B, .7, 1.4, 'Snow crab in the pocket between the twin stampers (arrive spinning)');
 stamper(13.5, 22.6, ROW_B, 1.6, 'Twin stampers, second: half a cycle off, so the pocket is a stop');
@@ -505,7 +595,7 @@ block(83, 86, ROW_B - 2.3, ROW_B - 1.95, DOOR[1] + 3.3, 3.3, 'Adit door: the dar
 const ARROW: P3 = [88.7, B0_Y, ROW_B - .7];
 crate(ARROW[0], ARROW[1], ARROW[2], 'metalbounce', 'Steel arrow in the corner of the east landing, under the adit door (the tool: it cannot be smashed or spent)');
 for (const dy of [2.2, 3.8, 5.4, 7]) fruit(ARROW[0], B0_Y + dy, ARROW[2]);
-add({ t: 'returnportal', p: [DOOR[0], r3(DOOR[1] - .3), DOOR[2]], s: [3, 3.3, .9], yaw: 0, to: [CAVE_X + 2.5, .12, CAVE_Z], exitYaw: 270, artProxy: true, grp: G.course, nm: 'Into the Old Adit' });
+add({ t: 'returnportal', p: [DOOR[0], r3(DOOR[1] - .3), DOOR[2]], s: [3, 3.3, .9], yaw: 0, to: [CAVE_X + 5, .12, CAVE_Z + .4], exitYaw: 270, artProxy: true, grp: G.course, nm: 'Into the Old Adit' });
 interface Shelf { x0: number; x1: number; y: number; ice?: boolean; crumble?: boolean; nm: string; }
 // 8.5 m above the arrow floor: past a double jump and a grab even from a stomped box (8.14 m), inside a plain bounce
 // off the arrow with a double jump and a grab (9.0 m), and well inside one with Jump held on the arrow.
@@ -530,11 +620,21 @@ for (const q of ADIT) {
 }
 // The gallery itself: a wall of blue ice behind, a roof that keeps the sun out, dark floor far below, pit props along the wall.
 const CAVE_TOP = 24.4;
-block(CAVE_X - 8, CAVE_X + ADIT_LEN + 8, CAVE_Z - 7, CAVE_Z - 2.6, CAVE_TOP - 2, CAVE_TOP + 6, 'Adit: ice wall heart', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
-block(CAVE_X - 8, CAVE_X + ADIT_LEN + 8, CAVE_Z - 7, CAVE_Z + 3.4, CAVE_TOP, 2.4, 'Adit: roof', { tex: 'solid', color: '#16294a', edgeGrinding: false, grp: G.rock });
-block(CAVE_X - 8, CAVE_X + ADIT_LEN + 8, CAVE_Z - 7, CAVE_Z + 3.4, -6.4, 1.6, 'Adit: the dark below', { tex: 'solid', color: '#0e1a33', edgeGrinding: false, grp: G.rock });
-for (const x of [CAVE_X - 8, CAVE_X + ADIT_LEN + 5.6]) block(x, x + 2.4, CAVE_Z - 7, CAVE_Z + 3.4, CAVE_TOP - 2, CAVE_TOP + 6, 'Adit: end wall', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
-C.push(...cliff({ line: [[CAVE_X - 6, CAVE_Z - 2.4], [CAVE_X + ADIT_LEN + 6, CAVE_Z - 2.4]], side: -1, bottom: -6.4, top: CAVE_TOP - 2.2, palette: BLUE_ICE, relief: .75, batter: 0, seed: 77, ice: 0, nm: 'Adit: ice wall', grp: G.rock }));
+// The gallery's shell runs sixteen metres past each end shelf: the side camera never looks round an end wall at the sky.
+const CAVE_W = CAVE_X - 16, CAVE_E = CAVE_X + ADIT_LEN + 16;
+block(CAVE_W, CAVE_E, CAVE_Z - 7, CAVE_Z - 4.8, CAVE_TOP - 2, CAVE_TOP + 6, 'Adit: ice wall heart', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+// Flush with the back edge of every shelf, as on the rows outside: half a pace further back there is a slot to fall into.
+fence(CAVE_X - 6, CAVE_X + ADIT_LEN + 6, CAVE_Z - 2.4, CAVE_Z - 2, -6.4, 28.4, 'Adit: back of the lane');
+block(CAVE_W, CAVE_E, CAVE_Z - 7, CAVE_Z + 3.4, CAVE_TOP, 2.4, 'Adit: roof', { tex: 'solid', color: '#16294a', edgeGrinding: false, grp: G.rock });
+block(CAVE_W, CAVE_E, CAVE_Z - 7, CAVE_Z + 3.4, -6.4, 1.6, 'Adit: the dark below', { tex: 'solid', color: '#0e1a33', edgeGrinding: false, grp: G.rock });
+// Each end of the gallery is a wall of ice hard against the last shelf: nothing to walk off, and no flat slab in view.
+for (const west of [true, false]) {
+  const x0 = west ? CAVE_W : CAVE_X + ADIT_LEN, x1 = west ? CAVE_X : CAVE_E, face = west ? x1 + .25 : x0 - .25, far = west ? x0 : x1, south = CAVE_Z + 3.65;
+  block(x0, x1, CAVE_Z - 7, CAVE_Z + 3.4, CAVE_TOP - 2, CAVE_TOP + 6, 'Adit: end wall', { tex: 'solid', color: '#1c3a66', edgeGrinding: false, grp: G.rock });
+  // Ice on the face toward the gallery and on the face toward the camera, as one sheet round the corner.
+  C.push(...cliff({ line: west ? [[far, south], [face, south], [face, CAVE_Z - 3.6]] : [[face, CAVE_Z - 3.6], [face, south], [far, south]], side: -1, bottom: -6.4, top: CAVE_TOP - 2.2, palette: BLUE_ICE, relief: .22, batter: 0, back: .2, seed: west ? 71 : 73, ice: 0, nm: 'Adit: end wall ice', grp: G.rock }));
+}
+C.push(...cliff({ line: [[CAVE_X - 1, CAVE_Z - 3.5], [CAVE_X + ADIT_LEN + 1, CAVE_Z - 3.5]], side: -1, bottom: -6.4, top: CAVE_TOP - 2.2, palette: BLUE_ICE, relief: .62, batter: 0, back: 1.2, seed: 77, ice: 0, nm: 'Adit: ice wall', grp: G.rock }));
 {
   const props = new Timber('Adit pit props', G.scenery);
   for (let x = CAVE_X + 5; x < CAVE_X + ADIT_LEN + 3; x += 9.5) { const base = -6.4; props.beam([x, base, CAVE_Z - 2.1], [x, 19, CAVE_Z - 2.1], .34); props.beam([x - 1.2, 19, CAVE_Z - 2.1], [x + 1.2, 19, CAVE_Z - 2.1], .3); }
@@ -553,20 +653,24 @@ add({ t: 'zone', p: [CAVE_X + ADIT_LEN / 2, 0, CAVE_Z], s: [ADIT_LEN + 14, 1, 8]
 add({ t: 'camnode', p: [CAVE_X + ADIT_LEN / 2, 8, CAVE_Z - 2], s: [ADIT_LEN + 20, 40, 16], cameraView: true, cameraPresentationOnly: true, cameraPosition: [CAVE_X + ADIT_LEN / 2, 8, CAVE_Z + 22], cameraTarget: [CAVE_X + ADIT_LEN / 2, 5.4, CAVE_Z],
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 3, grp: G.camera, nm: 'Old Adit: side view' });
 // Adit content.
-add({ t: 'returnportal', p: [CAVE_X + .7, -.3, CAVE_Z], s: [.9, 3.3, 3], yaw: 0, to: ADIT_BACK, exitYaw: 0, grp: G.course, nm: 'Back out to the east landing (for anyone who has seen enough)' });
+// Both ways out are rings on the back wall, entered into the screen like the door outside. (Across the lane, as they
+// were, the first stood a stride behind the arrival point: holding the stick the way the arrow had thrown you walked
+// straight back out through it.)
+add({ t: 'returnportal', p: [CAVE_X + 1.8, -.3, CAVE_Z - 1.9], s: [3, 3.3, .9], yaw: 0, to: ADIT_BACK, exitYaw: 0, grp: G.course, nm: 'Back out to the east landing (for anyone who has seen enough)' });
 rowOf(CAVE_X + 6.6, 0, CAVE_Z - 1.4, ['wood', 'wood'], 'Pair on the adit landing, against the wall (open the route)');
 rowOf(CAVE_X + 17, .8, CAVE_Z - 1.4, ['wood', 'mystery'], 'Pair on the glazed drift, against the wall (bait: the slide carries a spin on toward the Nitro)');
 crate(CAVE_X + 21.5, .8, CAVE_Z - 1.4, 'nitro', 'Nitro by the wall near the end of the ice (the lane along the lip stays clear, and so does the take-off)');
 stamper(CAVE_X + 41.3, 2.8, CAVE_Z, 0, 'Quick stamper, first: four metres of sound floor to read it from', { cycle: 2.6 });
-crate(CAVE_X + 44.3, 2.8, CAVE_Z, 'mystery', 'In the pocket between the quick stampers');
+// Against the wall: in the lane it left less than a body's width to either stamper, and standing beside it was fatal.
+crate(CAVE_X + 44.3, 2.8, CAVE_Z - 1.4, 'mystery', 'In the pocket between the quick stampers, against the wall (the pocket itself stays three clear metres)');
 stamper(CAVE_X + 47.3, 2.8, CAVE_Z, 1.3, 'Quick stamper, second: half a cycle off, with six metres of floor beyond it for the run-up', { cycle: 2.6 });
-foe('spiker', CAVE_X + 62, 3.6, CAVE_Z, .9, 1.4, 'Bristleback on the far half of the pillar past the wide gap (the near half is the landing)');
+foe('spiker', CAVE_X + 62.6, 3.6, CAVE_Z, .35, 1.4, 'Bristleback on the far two metres of the pillar past the wide gap (the near three are the landing: arrive spinning)');
 rowOf(CAVE_X + 67.6, 4.4, CAVE_Z - 1.4, ['wood', 'mystery'], 'Pair on the arrow floor, against the wall (rest before the climb)');
 crate(CAVE_X + 73.2, 4.4, CAVE_Z, 'metalbounce', 'Steel arrow to the gem shelf (it cannot be spent, and no box stands near enough to stand in for it)');
 stack(CAVE_X + 81, GEM_Y, CAVE_Z - 1.4, ['wood', 'wood', 'life'], 'Tower on the gem shelf: the life on top');
 add({ t: 'colouredgem', gemColour: 'blue', p: [CAVE_X + 78.6, GEM_Y, CAVE_Z], grp: G.course, nm: 'The blue gem' });
-add({ t: 'returnportal', p: [CAVE_X + 85.2, r3(GEM_Y - .3), CAVE_Z], s: [.9, 3.3, 3], yaw: 0, to: ADIT_BACK, exitYaw: 0, grp: G.course, nm: 'Back to the east landing' });
-for (const [x, y] of [[3.4, 0], [19.4, .8], [37.2, 2.8], [51.6, 2.8], [70.6, 4.4], [76.4, GEM_Y]] as const) add({ t: 'torch', p: [CAVE_X + x, y, CAVE_Z - 1.6], rise: 2.2, w: 1, grp: G.scenery, nm: 'Adit lamp' });
+add({ t: 'returnportal', p: [CAVE_X + 84.2, r3(GEM_Y - .3), CAVE_Z - 1.9], s: [3, 3.3, .9], yaw: 0, to: ADIT_BACK, exitYaw: 0, grp: G.course, nm: 'Back to the east landing' });
+for (const [x, y] of [[4.4, 0], [19.4, .8], [37.2, 2.8], [51.6, 2.8], [70.6, 4.4], [76.4, GEM_Y]] as const) add({ t: 'torch', p: [CAVE_X + x, y, CAVE_Z - 1.6], rise: 2.2, w: 1, grp: G.scenery, nm: 'Adit lamp' });
 fruitLine([CAVE_X + 9.6, 0, CAVE_Z], [CAVE_X + 13.6, .8, CAVE_Z], 3, 1.3); fruitLine([CAVE_X + 50, 2.8, CAVE_Z], [CAVE_X + 53.6, 2.8, CAVE_Z], 3); fruitLine([CAVE_X + 54.4, 2.8, CAVE_Z], [CAVE_X + 58.8, 3.6, CAVE_Z], 4, 1.8);
 
 // ───────────────────────────── Dressing ─────────────────────────────
@@ -590,11 +694,12 @@ prop('treehouseporchhut', ground(-13.5, -197), 90, 'Crest hut'); lamp(8.6, -192)
 // Marker poles with red pennants down both banks of each run, and the forest beyond them.
 for (const path of [RUN1, RUN2]) {
   const poles = new Timber(`${path.name}: marker poles`, G.scenery);
-  for (let st = 6; st < path.length - 2; st += 17) for (const side of [-1, 1]) {
+  for (let st = 6; st < path.length - 2; st += 11) for (const side of [-1, 1]) {
     if ([...RUN1_GAPS, ...RUN2_GAPS].some(g => path === (RUN1_GAPS.includes(g) ? RUN1 : RUN2) && st > g.a - 2 && st < g.b + 2)) continue;
-    const q = on(path, st, side * (RUN_HALF + 2.3)), f = path.at(st), top = q[1] + 2;
-    poles.beam([q[0], q[1] - .3, q[2]], [q[0], top, q[2]], .1, .1, '#3c2f25');
-    poles.panel([[q[0], top - .05, q[2]], [q[0] + f.fx * .62, top - .2, q[2] + f.fz * .62], [q[0] + f.fx * .62, top - .52, q[2] + f.fz * .62], [q[0], top - .5, q[2]]], '#e2452c');
+    const q = on(path, st, side * (RUN_HALF + 2.3)), f = path.at(st), top = q[1] + 2.7;
+    poles.beam([q[0], q[1] - .3, q[2]], [q[0], top, q[2]], .13, .13, '#3c2f25');
+    // Linear-light colour: this is seen as the bright red of a piste marker.
+    poles.panel([[q[0], top - .05, q[2]], [q[0] + f.fx * .98, top - .24, q[2] + f.fz * .98], [q[0] + f.fx * .98, top - .72, q[2] + f.fz * .98], [q[0], top - .7, q[2]]], '#c41408');
   }
   C.push(...poles.done());
 }
@@ -619,6 +724,38 @@ for (const path of [RUN1, RUN2]) for (let st = 30, n = 0; st < path.length - 20;
   prop('crowncrashcavernrock', ground(x, z, -1.2), Math.round(rnd(n * 11) * 360), 'Slate outcrop', { s: [r3(w), r3(h), r3(w * .8)] });
 }
 
+// Bare ice where each boulder rolls: a blue track across the snow, seen from well up the slope.
+{
+  const ice = new Timber('Boulder tracks', G.scenery, 'solid');
+  for (const t of tracks) {
+    const dx = t.alongX ? t.reach : t.half, dz = t.alongX ? t.half : t.reach, y = t.y + .05;
+    ice.panel([[t.x - dx, y, t.z - dz], [t.x + dx, y, t.z - dz], [t.x + dx, y, t.z + dz], [t.x - dx, y, t.z + dz]], '#143f86');
+    // A paler worn line down the middle.
+    const mx = t.alongX ? t.reach : t.half * .45, mz = t.alongX ? t.half * .45 : t.reach;
+    ice.panel([[t.x - mx, y + .02, t.z - mz], [t.x + mx, y + .02, t.z - mz], [t.x + mx, y + .02, t.z + mz], [t.x - mx, y + .02, t.z + mz]], '#2f6fb8');
+  }
+  C.push(...ice.done());
+}
+// A piste sign each side of both start arches: a board on a yellow plate. The runs are for riding.
+{
+  const signs = new Timber('Piste signs', G.scenery, 'solid');
+  /** `r` is the viewer's right and `n` the direction the plate faces, both unit vectors on the ground plane. */
+  const sign = (x: number, z: number, r: [number, number], n: [number, number]): void => {
+    const y = mountain.y(x, z), at = (u: number, v: number, lift: number): P3 => [r3(x + r[0] * u + n[0] * lift), r3(y + 2.15 + v), r3(z + r[1] * u + n[1] * lift)];
+    const quad = (cx: number, cy: number, w: number, h: number, deg: number, tint: string, lift: number): void => {
+      const c = Math.cos(deg * Math.PI / 180), sn = Math.sin(deg * Math.PI / 180);
+      signs.panel(([[-w / 2, h / 2], [w / 2, h / 2], [w / 2, -h / 2], [-w / 2, -h / 2]] as const).map(([u, v]) => at(cx + u * c - v * sn, cy + u * sn + v * c, lift)), tint);
+    };
+    for (const u of [-.72, .72]) signs.beam([x + r[0] * u, y - .3, z + r[1] * u], [x + r[0] * u, y + 2.9, z + r[1] * u], .13, .13, '#3c2f25');
+    quad(0, 0, 1.9, 1.3, 0, '#1a1a22', .05); quad(0, 0, 1.74, 1.14, 0, '#e8a80c', .07);
+    // The board, nose up the slope, and the two bindings on it.
+    quad(0, -.05, 1.25, .16, -20, '#101016', .09); quad(.6, -.23, .3, .16, 10, '#101016', .09); quad(-.6, .19, .3, .16, -50, '#101016', .09);
+    quad(-.2, .1, .12, .2, -20, '#c41408', .1); quad(.2, -.045, .12, .2, -20, '#c41408', .1);
+  };
+  sign(-6.9, -203.8, [1, 0], [0, 1]); sign(6.9, -203.8, [1, 0], [0, 1]);
+  { const q = RUN2.at(4.6); for (const side of [-6.9, 6.9]) sign(q.x + q.rx * side, q.z + q.rz * side, [q.rx, q.rz], [-q.fx, -q.fz]); }
+  C.push(...signs.done());
+}
 // Each grind rail stands on hewn posts (none over a crevasse).
 {
   const posts = new Timber('Rail posts', G.scenery);
@@ -640,6 +777,9 @@ prop('treehouseporchhut', ground(27.9, -563), 270, 'Tarn hut'); lamp(9, -556); l
   for (const y of [top, top - 4.2]) { tower.beam([x0, y, z0], [x1, y, z0], .3); tower.beam([x0, y, z1], [x1, y, z1], .3); tower.beam([x0, y, z0], [x0, y, z1], .3); tower.beam([x1, y, z0], [x1, y, z1], .3); }
   for (let y = TARN_Y; y < A0_Y - 2; y += 4.4) { tower.beam([x0, y, z0], [x1, y + 4.4, z0], .2); tower.beam([x0, y + 4.4, z0], [x0, y, z1], .2); }
   tower.beam([x0 - .5, top + .5, (z0 + z1) / 2], [x1 + .5, top + .5, (z0 + z1) / 2], .42);
+  // Boards up the east side, between the landing's column and the corner post: the unseen wall there has a face.
+  for (const z of [ROW_A + 2.25, ROW_A + 2.7, ROW_A + 3.15]) tower.beam([x1, TARN_Y - .6, z], [x1, top, z], .4, .07, '#7a5a3a');
+  for (const y of [TARN_Y + 1.2, TARN_Y + 7, A0_Y + 1.1]) tower.beam([x1 + .06, y, ROW_A + 2], [x1 + .06, y, z1], .07, .16, '#5f4329');
   C.push(...tower.done());
 }
 // The Headwall: a gallows frame behind every stamper (the telegraph is geometry), braziers on the rest ledges, a wide side camera.
@@ -653,12 +793,31 @@ prop('treehouseporchhut', ground(27.9, -563), 270, 'Tarn hut'); lamp(9, -556); l
   C.push(...frames.done());
 }
 for (const [x, y, z] of [[1.2, A0_Y, ROW_A - 1.5], [77.4, 9, ROW_A - 1.5], [81.2, B0_Y, ROW_B - 1.5], [39.6, 21.8, ROW_B - 1.5], [-9, APPROACH_Y, ROW_B - 1.5]] as const) torch(x, y, z);
+{ // Post-and-rail along the east landing's closed edges (an unseen wall stands in each): the open way is the upper row.
+  const rails = new Timber('East landing rails', G.scenery);
+  const run = (x: number, z0: number, z1: number): void => {
+    const n = Math.max(1, Math.round(Math.abs(z1 - z0) / 2.5));
+    for (let i = 0; i <= n; i++) {
+      const z = z0 + (z1 - z0) * i / n;
+      rails.beam([x, B0_Y - .3, z], [x, B0_Y + 1.15, z], .15, .15, '#4a3a2c');
+      if (i) for (const h of [.55, 1]) rails.beam([x, B0_Y + h, z - (z1 - z0) / n], [x, B0_Y + h, z], .09, .09, '#6d5540');
+    }
+  };
+  run(80.2, ROW_B + 2.2, ROW_A - 2.2); run(BALCONY_X + .2, ROW_A - 2.2, ROW_A + 1.8);
+  // The south rail runs along the lane rather than into the screen.
+  for (let x = 80.2, i = 0; x <= BALCONY_X + .21; x += (BALCONY_X - 80) / 3, i++) {
+    rails.beam([x, B0_Y - .3, ROW_A - 2.2], [x, B0_Y + 1.15, ROW_A - 2.2], .15, .15, '#4a3a2c');
+    if (i) for (const h of [.55, 1]) rails.beam([x - (BALCONY_X - 80) / 3, B0_Y + h, ROW_A - 2.2], [x, B0_Y + h, ROW_A - 2.2], .09, .09, '#6d5540');
+  }
+  C.push(...rails.done());
+}
 add({ t: 'camnode', p: [45, 14, ROW_A - 4], s: [132, 62, 21], cameraView: true, cameraPresentationOnly: true, cameraPosition: [45, 17, ROW_A + 22], cameraTarget: [45, 14.4, ROW_A],
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 4, grp: G.camera, nm: 'Headwall: a side view wide enough to read a stamper before you reach it' });
 
 // The summit: the last hut and the start arch of Powderkeg Run.
 prop('treehouseporchhut', ground(-24.5, -622.5), 0, 'Summit hut'); lamp(-17.4, -619.2);
 add({ t: 'bonusplatform', p: [-21, SUMMIT_Y, -607.2], to: [-21, r3(SUMMIT_Y + .12), -610.8], grp: G.course, nm: 'Cold Storage: the bonus round and its safe return (on the summit, once the Headwall has taught everything in it)' });
+stack(-27.6, SUMMIT_Y, ROW_B + 4.4, ['wood', 'mask'], 'Summit pile, beside the way to the run: the mask for it'); rowOf(-26.64, SUMMIT_Y, ROW_B + 4.4, ['wood', 'wood'], 'Summit pile: the boxes beside the mask stack');
 { const q = on(RUN2, 9, 0); prop('crowncrashoakarch', [q[0], q[1] - .1, q[2]], 90, 'Powderkeg Run start arch', { s: [15, 9.4, 3.5] }); }
 // The powder works: the yard at the bottom of the mountain.
 prop('trialsv2crabshack', ground(FINISH[0] + 12, FINISH[2] + 14), 270, 'Powder works store'); prop('treehouseporchhut', ground(FINISH[0] - 12.5, FINISH[2] + 16), 90, 'Powder works hut');
@@ -713,17 +872,19 @@ const laneNodes: { p: P3; radius: number }[] = [
 for (const node of laneNodes) add({ t: 'camnode', p: node.p, radius: node.radius, grp: G.camera });
 // Checkpoints in route order (the playtest warps step through them as authored). On a run a checkpoint is a box to ride
 // through at speed, on the fruit line, closing the crate group before it.
-checkpoint([-3.4, 5, -124], 'C1 · Powder landing');
-checkpoint([0, CREST_Y, -CREST_S], 'C2 · First crest: board from here');
-checkpoint(on(RUN1, 334, 1.2), 'C3 · First Tracks, past the boulders (on the side of the piste that stays sound)');
-checkpoint([0, TARN_Y, -560], 'C4 · Tarn shore');
-checkpoint([4, A0_Y, ROW_A], 'C5 · Hoist landing');
-checkpoint([86.5, B0_Y, ROW_A + .4], 'C6 · East landing');
-checkpoint([41.9, 21.8, ROW_B - 1.4], 'C7 · Switch ledge: the middle of the upper row, on its widest floor');
-checkpoint([-24, SUMMIT_Y, ROW_B], 'C8 · Summit: board from here');
-checkpoint(on(RUN2, 281, 0), 'C9 · Powderkeg Run, past the first crevasse');
-checkpoint(on(RUN2, 384, 0), 'C10 · Mid-run, before the fast boulder');
-checkpoint(on(RUN2, 548, 0), 'C11 · Before the long gap (from a standing start, charge the ollie: a tap falls short)');
+checkpoint([0, 2.5, -93.4], 'C1 · First landing, past the first crevasse (dead ahead of where the jump comes down)');
+checkpoint([-3.4, 5, -124], 'C2 · Powder landing');
+checkpoint([0, CREST_Y, -CREST_S], 'C3 · First crest: board from here');
+checkpoint(on(RUN1, 334, 1.2), 'C4 · First Tracks, past the boulders (on the side of the piste that stays sound)');
+checkpoint([0, TARN_Y, -560], 'C5 · Tarn shore');
+checkpoint([4, A0_Y, ROW_A], 'C6 · Hoist landing');
+checkpoint([88.6, B0_Y, ROW_A - 4.3], 'C7 · East landing: dead ahead of the balcony, on the way into the screen');
+// By the lip, not against the wall: a restart there faces west, and the Nitro frame stands against the wall four metres on.
+checkpoint([39.4, 21.8, ROW_B + .9], 'C8 · Switch ledge: the middle of the upper row, on its widest floor');
+checkpoint([-24, SUMMIT_Y, ROW_B], 'C9 · Summit: board from here');
+checkpoint(on(RUN2, 281, 0), 'C10 · Powderkeg Run, past the first crevasse');
+checkpoint(on(RUN2, 384, 0), 'C11 · Mid-run, before the fast boulder');
+checkpoint(on(RUN2, 548, 0), 'C12 · Before the long gap (from a standing start, hold the ollie a moment: a tap falls short)');
 add({ t: 'crystal', p: [-19, SUMMIT_Y + .5, ROW_B], grp: G.course, nm: 'The crystal, on the top of the mountain' });
 add({ t: 'gate', p: [FINISH[0], FINISH[1], FINISH[2] + 20], yaw: 180, grp: G.course, nm: 'Powder works gate' });
 crate(FINISH[0] + 5.5, FINISH[1], FINISH[2] + 9, 'nitrobang', 'Green switch in the works yard, on foot after the ride: it counts every Nitro on the mountain');
@@ -734,9 +895,13 @@ export const POWDERKEG_BOUNDS = BOUNDS;
 export const POWDERKEG_TREES = treeCount;
 export const POWDERKEG_PLAN = { DOOR, ARROW, ADIT_BACK, CAVE_X, CAVE_Z, ADIT, GEM_Y, HALF, CREST_Y, CREST_S, TARN_Y, SUMMIT_Y, ROW_A, ROW_B, A0_Y, B0_Y, APPROACH_Y, FINISH, TERRACES, RAMPS, CREVASSES, ROW_A_LEDGES, ROW_B_LEDGES, RUN_HALF };
 export const POWDERKEG_PEAK_LEVEL: CustomLevelData = {
-  v: 1, name: 'Powderkeg Peak', spawn: [0, .14, 8], killY: -44, sky: 'day', groups, components: C,
+  // A blue alpine sky with cumulus along the horizon. (The game's "day" sky has green jungle towers standing in its
+  // cloud sea, and they loomed behind the snow summit.) The light is pinned below to what "day" gave, so only the
+  // painting changes.
+  v: 1, name: 'Powderkeg Peak', spawn: [0, .14, 8], killY: -44, sky: 'country-club', groups, components: C,
   // The main route, walked and ridden without the optional adit, takes a careful pilot 175 s; pushing on both runs saves ten.
   medalTimes: { gold: 165, silver: 195, bronze: 240 },
   // Late light: a low warm sun out of the south-west, blue in every shadow, haze that keeps the far slopes soft.
-  atmosphere: { fogColor: '#dbe7f6', fogNear: 70, fogFar: 460, ambientSky: '#a9c4ee', ambientGround: '#e6edf8', sunColor: '#ffe3bf', sunIntensity: 1.35, sunDirection: [-.6, .55, .58] },
+  atmosphere: { fogColor: '#dbe7f6', fogNear: 70, fogFar: 460, ambientSky: '#a9c4ee', ambientGround: '#e6edf8', ambientIntensity: 1.38, sunColor: '#ffe3bf', sunIntensity: 1.35, sunDirection: [-.6, .55, .58],
+    fillColor: '#dcefff', fillIntensity: .36, drawDistance: 400 },
 };

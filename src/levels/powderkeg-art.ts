@@ -16,12 +16,15 @@ const scale = (a: V3, k: number): V3 => [clamp(a[0] * k), clamp(a[1] * k), clamp
 
 export interface Palette { a: V3; b: V3; shelf: V3; seep: V3; }
 export const ROCK: Palette = { a: hex('#7d8498'), b: hex('#565d73'), shelf: hex('#f4f8fd'), seep: hex('#9fd6f0') };
+// Vertex colours reach the renderer as linear light, so a rock tone is written here much darker than it is seen: the
+// two slates below come out, in the level's late sun, as the purple-grey of the mountain's own rock pieces. (Written
+// as the colour meant, they rendered as a pale lavender haze the white ledges were lost against.)
 /** The dark slate of the mountain's rock pieces, for faces made in code to stand behind them. */
-export const SLATE: Palette = { a: hex('#5f5a86'), b: hex('#3d3a5c'), shelf: hex('#f4f8fd'), seep: hex('#9fd6f0') };
+export const SLATE: Palette = { a: hex('#2a2652'), b: hex('#15132e'), shelf: hex('#f4f8fd'), seep: hex('#9fd6f0') };
 /** The same slate in shadow, its shelves bare: a wall that white ledges read against. */
-export const SLATE_DEEP: Palette = { a: hex('#484569'), b: hex('#302e49'), shelf: hex('#545078'), seep: hex('#6f8fc0') };
+export const SLATE_DEEP: Palette = { a: hex('#100e24'), b: hex('#060610'), shelf: hex('#16132f'), seep: hex('#1b3a6e') };
 export const BLUE_ICE: Palette = { a: hex('#8ecbea'), b: hex('#3f7fc0'), shelf: hex('#e9f4fc'), seep: hex('#d3eefb') };
-const SNOW_LIT = hex('#f6f9fe'), SNOW_SHADE = hex('#cfdef2');
+const SNOW_LIT = hex('#f6f9fe'), SNOW_SHADE = hex('#cfdef2'), SNOW_UNDER = hex('#7f9fd0');
 
 /** Collects triangles into mesh components, starting a new one before the engine's per-mesh limits. */
 class MeshBag {
@@ -47,6 +50,8 @@ export interface CliffOptions {
   /** Lean of the face away from the viewer, metres per metre of height. */ batter?: number;
   /** Close the line into a loop (a free-standing pillar). */ closed?: boolean;
   /** 0..1: how much of the face is glazed with seep ice. */ ice?: number;
+  /** The face never falls back further than this behind its line (metres), so whatever stands behind it stays hidden. */ back?: number;
+  /** One snow-covered ledge along the whole face, this many rows below its top, broken here and there; no scattered shelves. */ ledge?: number;
   nm: string; grp: number;
 }
 /** A faceted rock (or ice) face swept along a plan line: strata, shelves holding snow, seep ice, a talus foot. */
@@ -58,10 +63,25 @@ export const cliff = (o: CliffOptions): CustomComponent[] => {
   let total = 0; const lens: number[] = [];
   for (let k = 1; k < src.length; k++) { lens.push(Math.hypot(src[k][0] - src[k - 1][0], src[k][1] - src[k - 1][1])); total += lens[k - 1]; }
   const count = Math.max(2, Math.round(total / step));
-  for (let c = 0; c <= count; c++) {
+  if (o.closed || lens.length === 1) for (let c = 0; c <= count; c++) {
     let d = total * c / count, k = 0; while (k < lens.length - 1 && d > lens[k]) { d -= lens[k]; k++; }
     const u = lens[k] ? d / lens[k] : 0, dx = (src[k + 1][0] - src[k][0]) / (lens[k] || 1), dz = (src[k + 1][1] - src[k][1]) / (lens[k] || 1);
     pts.push({ x: lerp(src[k][0], src[k + 1][0], u), z: lerp(src[k][1], src[k + 1][1], u), t: total * c / count, nx: dz * o.side, nz: -dx * o.side });
+  } else {
+    // An open line with corners: every corner is a sample, and the face leaves it along the bisector of its two
+    // sides, so the sheet wraps the corner whole. (Sampled evenly along the line, a corner fell between two samples
+    // and the sheet cut it off: whatever stood behind showed through as a dark seam.)
+    let run = 0;
+    for (let k = 0; k < lens.length; k++) {
+      const n = Math.max(1, Math.round(lens[k] / step)), dx = (src[k + 1][0] - src[k][0]) / (lens[k] || 1), dz = (src[k + 1][1] - src[k][1]) / (lens[k] || 1);
+      for (let i = k ? 1 : 0; i <= n; i++) pts.push({ x: lerp(src[k][0], src[k + 1][0], i / n), z: lerp(src[k][1], src[k + 1][1], i / n), t: run + lens[k] * i / n, nx: dz * o.side, nz: -dx * o.side });
+      if (k < lens.length - 1) {
+        const ex = (src[k + 2][0] - src[k + 1][0]) / (lens[k + 1] || 1), ez = (src[k + 2][1] - src[k + 1][1]) / (lens[k + 1] || 1), last = pts[pts.length - 1];
+        const ax = last.nx + ez * o.side, az = last.nz - ex * o.side, l = Math.hypot(ax, az) || 1;
+        pts[pts.length - 1] = { ...last, nx: ax / l, nz: az / l };
+      }
+      run += lens[k];
+    }
   }
   if (o.closed) { // average the normals at corners so a pillar's faces meet in a chamfer rather than a crack
     const n = pts.length - 1;
@@ -77,8 +97,12 @@ export const cliff = (o: CliffOptions): CustomComponent[] => {
       const p = pts[start + c], y0 = bottom(p.t), y1 = top(p.t), wrapT = o.closed && start + c === pts.length - 1 ? 0 : p.t;
       for (let r = 0; r <= rows; r++) {
         const v = r / rows, y = lerp(y0, y1, v), band = y / 2.5 + noise2(wrapT / 9 + seed, seed * 3.1) * .7, f = band - Math.floor(band), layer = hash2(Math.floor(band) + seed * 7, seed);
-        const shelf = f > .82 ? 1 : 0, rough = fbm(wrapT / 5 + seed * 11, y / 3, 2) * .9 + noise2(wrapT / 1.6 + seed, y / 1.1) * .45;
-        const out = relief * ((layer - .5) * 1.1 + shelf * .75 + rough) + (r === 0 ? .7 : 0) - batter * (y - y0) - (r === rows ? .35 : 0);
+        // Scattered shelves suit ice; on dark rock their snow read as smudges, so there a face can carry one long ledge instead.
+        const shelf = o.ledge !== undefined ? (rows - r === o.ledge && noise2(wrapT / 11 + seed * 5, 3.7) > -.3 ? 1 : 0) : f > .82 ? 1 : 0;
+        const rough = fbm(wrapT / 5 + seed * 11, y / 3, 2) * .9 + noise2(wrapT / 1.6 + seed, y / 1.1) * .45;
+        const raw = relief * ((layer - .5) * 1.1 + shelf * .75 + rough) + (r === 0 ? .7 : 0) - batter * (y - y0) - (r === rows ? .35 : 0);
+        // A soft floor on the recess: the relief keeps its shape while it nears the limit, and never passes it.
+        const out = o.back !== undefined && raw < 0 ? -o.back * (1 - Math.exp(raw / o.back)) : raw;
         const jitter = (hash2(start + c + seed * 5, r + seed) - .5) * .5, dx = -p.nz * o.side * jitter, dz = p.nx * o.side * jitter;
         const seep = iceAmount > 0 ? smooth((fbm(wrapT / 6 + seed * 31, 9, 2) + iceAmount - .35) / .3) * (.55 + .45 * noise2(wrapT / 1.3, y / 4)) : 0;
         let col = scale(mix(palette.a, palette.b, clamp(layer * .8 + rough * .25 + .1)), .9 + noise2(wrapT / 2.2, y / 1.7 + seed) * .12);
@@ -98,7 +122,10 @@ export const cliff = (o: CliffOptions): CustomComponent[] => {
 export interface CapOptions {
   /** Plan line along the lip the cap overhangs, in travel order. */ line: readonly (readonly [number, number])[];
   /** +1: the cap's body lies to the right of the line's direction; −1: to its left. */ side: 1 | -1;
-  y: number | ((t: number) => number); depth: number; height?: number; overhang?: number; seed?: number; nm: string; grp: number;
+  y: number | ((t: number) => number); depth: number; height?: number; overhang?: number; seed?: number;
+  /** Metres at each end over which the cap thins away to nothing, so it melts into the rock rather than ending square. */ taper?: number;
+  /** An underside in blue shadow from the lip back this far (to the face below): a cap seen from beneath is a drift, not a sheet. */ soffit?: number;
+  nm: string; grp: number;
 }
 /** A soft rounded snow cap along a lip: a little cornice over the edge, a drifted crown, a fall-away behind. */
 export const snowCap = (o: CapOptions): CustomComponent[] => {
@@ -110,15 +137,23 @@ export const snowCap = (o: CapOptions): CustomComponent[] => {
     t += len;
   }
   const profile: [number, number][] = [[-overhang, -.22], [-overhang * .9, .12], [o.depth * .18, .72], [o.depth * .5, 1], [o.depth * .85, .55], [o.depth + .25, -.2]];
+  // The underside comes first in the profile: from the face below, out under the drift to the lip.
+  const under = o.soffit ? 1 : 0; if (o.soffit) profile.unshift([o.soffit, -.62]);
   const bag = new MeshBag({ nm: o.nm, grp: o.grp, tex: 'snow' }, true), cols = profile.length - 1, perChunk = Math.floor(4096 / (cols + 1)) - 1;
+  /** 0 at either end of the line, 1 once `taper` metres in. */
+  const full = (at: number): number => o.taper ? smooth(Math.min(at, t - at) / o.taper) : 1;
   for (let start = 0; start < pts.length - 1; start += perChunk) {
     const rows = Math.min(perChunk, pts.length - 1 - start), first = bag.open((rows + 1) * (cols + 1), rows * cols * 2);
     for (let r = 0; r <= rows; r++) {
-      const p = pts[start + r], swell = 1 + noise2(p.t / 4.3 + seed, seed * 2.7) * .35;
-      profile.forEach(([u, h], c) => {
-        const lift = h > 0 ? h * height * swell : h, wob = (c > 0 && c < cols ? noise2(p.t / 2.1 + c, seed) * .18 : 0);
-        const slope = c === 0 ? -1 : c === cols ? 1 : (profile[c + 1][1] - profile[c - 1][1]) * -height / (profile[c + 1][0] - profile[c - 1][0]), nl = Math.hypot(slope, 1);
-        bag.vert([p.x + p.rx * (u + wob), y(p.t) + lift, p.z + p.rz * (u + wob)], mix(SNOW_LIT, SNOW_SHADE, clamp(.12 + (c === 0 || c === cols ? .55 : 0) + noise2(p.t / 3 + c, seed + 4) * .12)), [p.rx * slope / nl, 1 / nl, p.rz * slope / nl]);
+      const p = pts[start + r], k = full(p.t), swell = (1 + noise2(p.t / 4.3 + seed, seed * 2.7) * .35) * k;
+      profile.forEach(([u0, h], c) => {
+        // Tapered, the drift draws in toward its lip as well as sinking: at the very end it is a line on the rock.
+        const u = c < under ? u0 : lerp(Math.min(u0, 0), u0, .25 + .75 * k);
+        const lift = h > 0 ? h * height * swell : h * (c < under ? 1 : .35 + .65 * k), wob = (c > under && c < cols ? noise2(p.t / 2.1 + c, seed) * .18 * k : 0);
+        const slope = c <= under ? -1 : c === cols ? 1 : (profile[c + 1][1] - profile[c - 1][1]) * -height / (profile[c + 1][0] - profile[c - 1][0]), nl = Math.hypot(slope, 1);
+        const shade = c < under ? 1.25 : c === under && under ? .95 : .12 + (c === under || c === cols ? .55 : 0) + noise2(p.t / 3 + c, seed + 4) * .12;
+        bag.vert([p.x + p.rx * (u + wob), y(p.t) + lift, p.z + p.rz * (u + wob)], c < under ? SNOW_UNDER : mix(SNOW_LIT, SNOW_SHADE, clamp(shade)),
+          c < under ? [0, -1, 0] : [p.rx * slope / nl, 1 / nl, p.rz * slope / nl]);
       });
     }
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {

@@ -12011,3 +12011,74 @@ Closed the same day: the owner agreed it will not work for the game. The lab
 page and its baked data were removed so they do not ship (last present in
 `042ed5a8`); `docs/SPRITE_STACK_LAB.md` and `tools/sprite-stack/` stay as the
 record.
+
+## 2026-11-15 — Powderkeg Peak: a polish pass on the rough edges
+
+Brief: go through Powderkeg Peak and clean up the rough edges, taking a long
+time over it. About 3 h 15 min from the prompt to the republished level. No
+tuning or shared runtime file changed: `src/levels/powderkeg-peak.ts`,
+`powderkeg-art.ts`, `powderkeg-bonus.ts`, the pilots and two new tests.
+
+Found by three means: a random walker in the headless runtime, a photographed
+walk-through of the whole route and the bonus round in full render, and an
+independent play review that ran its own probes.
+
+Ways out of the world or into a soft-lock, all closed:
+
+- Walking east off the hoist's pit floor fell through the world. The shaft is
+  boarded up on that side and the pit floor reaches the wall.
+- The bank fences of both runs stopped 2 to 3 m short of the end, so a walker
+  could leave the piste at the tarn or the works yard and step off solid ground.
+- A mask absorbed every kill sheet: a masked player stood alive at the bottom
+  of each crevasse on foot and in the Old Adit, and fell 30 to 60 m out of the
+  headwall rows and the board crevasses. Every pit now has an unseen deadly
+  floor under its sheet.
+- A board jump that fell just short of a crevasse passed through the drawn far
+  wall and fell out of the bottom of the world. Each crevasse now has unseen
+  lip walls, a kill sheet that steps down under the landing, and a landing
+  apron of packed snow under the far lip.
+- Two lips that could be grabbed and never climbed (behind the buttress tiers,
+  and the top of the lower wall from a gap in the upper row).
+- The east landing's west edge dropped a walker back to the lower row or onto
+  a dead-end snow shelf; arriving in the adit holding "into the screen" walked
+  off the back of the landing.
+
+Fairness, from the play review (13 findings, 12 fixed, 1 answered with signs):
+the switch-ledge checkpoint moved to the lip (a restart there walked straight
+into Nitro); the upper row's bristleback keeps to the end of a longer pillar (a
+full jump off the ice landed a hand from it); the adit's pocket crate moved
+against the wall (the pocket was narrower than the player) and its pillar
+bristleback moved back; the adit's exits became rings on the back wall and its
+entry point moved in (holding the stick on arrival walked back out); a
+checkpoint was added on the first landing (the first 124 m had none, so there
+are now 12); the east landing became an L that leaves the far-bank stamper in
+plain view; the long gap went from 11 m to 10 m; the mask block that tripped
+every coasting board at the top of the last run became a calm pile on the
+summit; the run-out fruit of First Tracks no longer aims a slow board at a
+stack; a piste sign stands each side of both start arches.
+
+Looks: the dark blots on every rock and ice wall were the backing blocks
+showing through faces that fell back behind them, so faces now keep to a limit
+and wrap their corners; the slate faces were rendering as a pale haze (vertex
+colours are linear light) and are now the rock's own dark purple; snow caps
+have undersides and tapered ends, which closed the slit of sky under the ridge
+cornice; the sky is a blue alpine one instead of green jungle towers behind a
+snow summit; boulders are blue ice on blue tracks instead of white on white;
+the mill pond's ice has a face where it floated over a gap; the east buttress
+and the adit's ends are closed with rock and ice; marker poles are taller and
+closer; the bonus round is an ice store with a wall of blue ice, timber
+framing and stacked cut ice instead of white boxes against a brick wall, and
+its stamper is a block of ice, not a mossy boulder.
+
+Two crate bridges whose lids were exactly flush with a floor were lowered 2 cm:
+whether a walker stepped onto the first box hung on a rounding error.
+
+Validated: `npm run check:powderkeg` (pilot 204.0 s with the gem route and no
+deaths, 175.2 s without it, collector 221.3 s with all 12 checkpoints and 123
+of 138 counted crates; bounds test 103 cases; fairness test 23 cases; bonus
+pilot 39.5 s, 17 of 17), `npm run check:levels`, type-check, production build,
+and four screenshot passes in full render with no console errors. No full
+suite run and no human play test.
+
+Left as they were: streaky snow on the boulder-trough cuts, arch legs crossing
+the view's corners, and the side-on wait for the hoist.

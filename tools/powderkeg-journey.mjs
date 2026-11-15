@@ -7,7 +7,7 @@ export const POWDERKEG_STARTS = {
   crest: { position: [0, 10.62, -197], heading: [0, 0, -1], beat: 'first tracks' },
   tarn: { position: [0, -7.88, -560], heading: [0, 0, -1], beat: 'tarn and hoist' },
   hoist: { position: [4, 6.12, -606], heading: [1, 0, 0], beat: 'lower row' },
-  east: { position: [86.5, 19.14, -608.4], heading: [0, 0, -1], beat: 'old adit' },
+  east: { position: [88.6, 19.14, -610.3], heading: [0, 0, -1], beat: 'old adit' },
   upper: { position: [86, 19.14, -610], heading: [0, 0, -1], beat: 'upper row' },
   summit: { position: [-24, 28.12, -614], heading: [-1, 0, 0], beat: 'powderkeg run' },
 };
@@ -259,8 +259,9 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       jump(93.5, z, A[7].y, { label: 'buttress tier one' }); walk(94.6, z, { tol: .4 });
       jump(99, z, A[8].y, { label: 'buttress tier two' }); walk(98, z, { tol: .4 });
       jump(93.5, z, A[9].y, { label: 'buttress tier three' }); walk(92.4, z, { tol: .4 });
-      jump(88.4, z, B0_Y, { label: 'east landing' });
-      walk(87.4, ROW_A + .2, { tol: .4 }); still(20, 'bank the east landing checkpoint');
+      jump(88.7, z, B0_Y, { label: 'east landing' });
+      // Off the balcony into the screen: the checkpoint stands dead ahead on the landing proper.
+      walk(88.6, ROW_A - 2.9, { tol: .4 }); still(20, 'bank the east landing checkpoint');
     } },
     { name: 'old adit', run() {
       if (process.env.POWDERKEG_SKIP_ADIT === '1') return;
@@ -289,7 +290,7 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       arrowLaunch([X + 73.2, z], [X + 76.8, z], PLAN.GEM_Y, 'arrow to the gem shelf', [-.3, 0]);
       walk(X + 78.6, z, { keep: true }); walk(X + 80.8, z - .5, { tol: .4 });
       for (let k = 0; k < 4; k++) { spinOnce('gem shelf tower'); still(14, 'let the tower settle'); }
-      run('out by the ring', () => p.pos.x < 200, () => toward(X + 86.6, z, 1), 400);
+      run('out by the ring', () => p.pos.x < 200, () => toward(X + 84.2, z - 1.8, 1), 400);
       still(12, 'back on the east landing');
     } },
     { name: 'upper row', run() {
@@ -299,13 +300,13 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       walk(69, z, { keep: true });
       // A short hop off the ice lands on the pillar's clear end; then step into the bristleback spinning.
       leap([B[0].x0, z], [62.2, z, B[1].y], { label: 'bristleback pillar', spin: true });
-      run('clear the bristleback', () => !l.enemies.some(e => e.alive && e.box.distanceToPoint(p.pos) < 5), () => toward(58.85, z, .45), 300);
+      run('clear the bristleback', () => !l.enemies.some(e => e.alive && e.box.distanceToPoint(p.pos) < 5), () => toward(58.4, z, .45), 300);
       leap([B[1].x0, z], [54.8, z, B[2].y], { label: 'rotten shelf one', tap: true });
       leap([B[2].x0, z], [50.3, z, B[3].y], { label: 'rotten shelf two', tap: true });
       leap([B[3].x0, z], [45.8, z, B[4].y], { label: 'rotten shelf three', tap: true });
       leap([B[4].x0, z], [41.4, z + .6, B[5].y], { label: 'switch ledge', tap: true });
-      still(24, 'bank the switch ledge checkpoint');
-      if (!l.checkpoints.some(c => c.active && Math.abs(c.mesh.position.x - 41.9) < 1 && Math.abs(c.mesh.position.z - (z - 1.4)) < 1)) fail('the switch ledge checkpoint was not banked');
+      walk(40.7, z + .9, { tol: .3 }); still(24, 'bank the switch ledge checkpoint');
+      if (!l.checkpoints.some(c => c.active && Math.abs(c.mesh.position.x - 39.4) < 1 && Math.abs(c.mesh.position.z - (z + .9)) < 1)) fail('the switch ledge checkpoint was not banked');
       walk(39, z + 1); walk(31.6, z + 1); walk(30.6, z - .2, { tol: .25 }); spinOnce('hit the switch');
       const bridge = () => l.crates.filter(c => c.alive && !c.pending && Math.abs(c.mesh.position.z - z) < .5 && c.mesh.position.x > 24.5 && c.mesh.position.x < 29.6);
       if (bridge().length < 4) fail('the switch did not build the bridge');
@@ -321,6 +322,8 @@ export async function runPowderkegJourney(r, { from = null, log = console.log, c
       walk(-5.5, z, { keep: true }); walk(-15, z, { keep: true }); walk(-23.4, z); still(20, 'bank the summit checkpoint');
     } },
     { name: 'powderkeg run', run() {
+      // The mask for the run stands in a pile on the summit, beside the way to the start arch.
+      if (collect) { walk(-26.6, ROW_B + 3.1, { tol: .35 }); for (let k = 0; k < 4; k++) { spinOnce('summit pile'); still(14, 'let the pile settle'); } walk(-27.5, ROW_B, { tol: .4 }); }
       mount(-36, -614);
       if (collect) ride(RUN2, RUN2.length - 40, { label: 'powderkeg run, every box', push: true, pops: [243, 595], grinds: [{ pop: 50.6, end: 85 }, { pop: 450.6, end: 462 }],
         lane: laneOf([[30, 0], [44, 0], [50, 3.2], [114, 3.2], [132, -2.4], [146, -2.4], [162, 0], [414, 0], [432, -3.6], [464, -3.6], [476, 0], [568, 0]]) });
