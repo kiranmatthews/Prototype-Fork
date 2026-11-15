@@ -1,7 +1,7 @@
 import os,json,base64
 from pathlib import Path
 from playwright.sync_api import sync_playwright
-out=Path('/workspace/crystal-trials/phone');out.mkdir(exist_ok=True)
+out=Path(os.environ.get('CRYSTAL_PHONE_OUT','/workspace/crystal-trials/phone'));out.mkdir(parents=True,exist_ok=True)
 url=os.environ.get('CRYSTAL_PHONE_URL','http://127.0.0.1:5173/challenge-playtest.html?touch')
 report={'url':url,'errors':[],'passed':False}
 with sync_playwright() as pw:
@@ -35,7 +35,7 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/'play-portrait.png'))
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
   page.locator('#challenge-retry').tap();frames(15)
-  assert abs(page.evaluate('window.__game.player.pos.z')-5)<.1,'Retry did not reset the single trial'
+  assert abs(page.evaluate('window.__game.player.pos.z-window.__game.getCurrentLevel().data.spawn[2]'))<3,'Retry did not reset the single trial'
   page.set_viewport_size({'width':844,'height':390});frames(10)
   page.screenshot(path=str(out/'play-landscape.png'))
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
@@ -55,9 +55,11 @@ with sync_playwright() as pw:
   page.screenshot(path=str(out/'whole-course.png'))
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
   page.locator('#reject-tab').tap();report['rejectChoices']=page.locator('#challenge-options button').count()
+  assert report['rejectChoices']==76,'Missing preserved layouts in the rejects picker'
   page.locator('#challenge-course').tap()
   page.wait_for_function('window.__game.getCurrentLevel().id === "phone-reject-all" && !window.__game.paused');frames(15)
   report['archiveCrystals']=page.evaluate('window.__game.getLevel().skateCollectathon.tokens.length')
+  assert report['archiveCrystals']==75,'The rejects course lost a preserved attempt'
   assert page.evaluate('window.__game.getLevel().skateCollectathon.exitReady')
   page.screenshot(path=str(out/'whole-archive.png'))
   page.wait_for_load_state('networkidle')

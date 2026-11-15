@@ -1,0 +1,41 @@
+{
+  "reviewedAt": "2026-11-15T10:05:14.358077+00:00",
+  "manuallyReviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "resolution": [
+    1280,
+    720
+  ],
+  "scope": "Explicitly staged approach and final-crystal views; actual controller routes are recorded separately. The recovery bank is additionally shown for 2.",
+  "notes": [
+    "Raised receivers and next catches are visible along the straight skating direction.",
+    "The halfpipe crystal is high in the approach view; its aura reaches the top edge. The separate full-render input route through 5 passes.",
+    "Closed kickflip panels hide the crystal until the prescribed trick opens the gate.",
+    "13 uses the measured bank height for its staged approach, avoiding an incorrect flat-ground pose."
+  ]
+}

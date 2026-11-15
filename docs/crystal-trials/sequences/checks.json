@@ -1,0 +1,21 @@
+{
+  "verifiedAt": "2026-11-15T09:57:56.636836+00:00",
+  "checks": {
+    "npm run check:levels": {
+      "exitCode": 0
+    },
+    "npm run build": {
+      "exitCode": 0
+    },
+    "npm run check:release": {
+      "exitCode": 0,
+      "bytes": 959492775,
+      "budget": 1000000000
+    }
+  },
+  "nativeChallenges": 25,
+  "continuousCourse": true,
+  "movementAndAnimationFilesChanged": false,
+  "phoneLocalBytes": 36489355,
+  "phonePickerBytes": 26537
+}

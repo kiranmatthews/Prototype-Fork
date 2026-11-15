@@ -30,11 +30,16 @@ export { REJECTED_GRID } from './crystal-trials/rejected-grid';
 export { trialLevel } from './crystal-trials/types';
 
 export const CRYSTAL_TRIALS: CrystalTrial[] = [TRIAL_01, TRIAL_02, TRIAL_03, TRIAL_04, TRIAL_05, TRIAL_06, TRIAL_07, TRIAL_08, TRIAL_09, TRIAL_10, TRIAL_11, TRIAL_12, TRIAL_13, TRIAL_14, TRIAL_15, TRIAL_16, TRIAL_17, TRIAL_18, TRIAL_19, TRIAL_20, TRIAL_21, TRIAL_22, TRIAL_23, TRIAL_24, TRIAL_25];
-export const trialOrigin = (index: number): [number, number, number] =>
-  [0, 0, -index * 256];
+const stationSpan = (trial: CrystalTrial) => trial.skateLine
+  ? Math.max(512, 224 - (trial.exit?.[2] ?? -288)) : 256;
+const originsFor = (trials: CrystalTrial[]) => {
+  let z = 0;
+  return trials.map(trial => { const origin: [number, number, number] = [0, 0, z]; z -= stationSpan(trial); return origin; });
+};
+const origins = originsFor(CRYSTAL_TRIALS);
+export const trialOrigin = (index: number): [number, number, number] => [...origins[index]];
 
-function placed(trial: CrystalTrial, index: number): CustomComponent[] {
-  const offset = trialOrigin(index);
+function placed(trial: CrystalTrial, index: number, offset: [number, number, number]): CustomComponent[] {
   return structuredClone(trial.components)
     // The shared flat floor replaces coplanar local recovery slabs. The source
     // trial keeps them, so it remains independently playable when separated.
@@ -51,14 +56,23 @@ function placed(trial: CrystalTrial, index: number): CustomComponent[] {
 }
 
 function assemble(name: string, trials: CrystalTrial[], archive = false): CustomLevelData {
-  const finishZ = trialOrigin(Math.max(0, trials.length - 1))[2] - 192;
-  const back = finishZ - 32, front = 96;
+  const placements = originsFor(trials);
+  const last = Math.max(0, trials.length - 1);
+  const finishZ = placements[last][2] + (trials[last].exit?.[2] ?? -168) - 24;
+  const back = finishZ - 32, front = archive ? 96 : 160;
   const components: CustomComponent[] = [
-    deck('Continuous flat recovery floor', 0, -8, (front + back) / 2, 84, front - back, '#929e94'),
+    deck('Continuous flat recovery floor', 0, -8, (front + back) / 2, 104, front - back, '#929e94'),
     { t: 'gate', nm: 'Exit after the final challenge', p: [0, -8, finishZ] },
   ];
   for (let i = 0; i < trials.length; i++) {
-    const z = trialOrigin(i)[2];
+    const z = placements[i][2];
+    if (trials[i].skateLine) {
+      components.push(
+        { t: 'ramp', nm: `${trials[i].id} / Wide rolling approach`, p: [0, -8, z + 102], len: 48, rise: 8, w: 24 },
+        deck(`${trials[i].id} / Approach joins the run-up`, 0, 0, z + 74, 24, 8),
+      );
+      continue;
+    }
     if (trials[i].spawn[1] < 0) continue; // Preserved entrance experiments own their ramp.
     const bankFront = Math.max(...trials[i].components.filter(c => c.t === 'platform' && c.s
       && Math.abs(c.p[1] + c.s[1] / 2) < .001 && Math.abs(c.p[0]) < c.s[0] / 2)
@@ -71,9 +85,9 @@ function assemble(name: string, trials: CrystalTrial[], archive = false): Custom
         cameraFollowDistance: 18, cameraKeepDistance: true, cameraFollowTargetHeight: 3.5, cameraFov: 62 },
     );
   }
-  components.push(...trials.flatMap(placed));
-  return { v: 1, name, spawn: [0, -7.85, 80], killY: -24, skatepark: true,
-    alwaysSkate: false, crystalTrials: archive ? 'archive' : 'challenge',
+  components.push(...trials.flatMap((trial, index) => placed(trial, index, placements[index])));
+  return { v: 1, name, spawn: [0, -7.85, archive ? 80 : 144], killY: -24, skatepark: true,
+    alwaysSkate: !archive, crystalTrials: archive ? 'archive' : 'challenge',
     startWarpPad: false, hugeDropBail: false, sky: 'sunset',
     groups: trials.flatMap((trial, i) => [...new Set(trial.components.map(c => c.grp ?? 1))]
       .map(group => ({ id: i * 100 + group, nm: trial.name }))),

@@ -1,7 +1,9 @@
 import type { RejectedCrystalTrial } from './types';
+import { REJECTED_PLATFORMING } from './rejected-platforming';
+import { REJECTED_SKATING } from './rejected-skating';
 
 /** Abandoned layouts remain playable and editable in the rejects stage. */
-export const REJECTED_CRYSTAL_TRIALS: RejectedCrystalTrial[] = [
+const EARLY_REJECTS: RejectedCrystalTrial[] = [
   {
     "id": 1,
     "name": "1 / Bounce crate",
@@ -6347,3 +6349,5 @@ export const REJECTED_CRYSTAL_TRIALS: RejectedCrystalTrial[] = [
     "reason": "The gate-clearance camera extended into the upper rope terrace and pushed its receiving platform out of frame."
   }
 ];
+
+export const REJECTED_CRYSTAL_TRIALS: RejectedCrystalTrial[] = [...EARLY_REJECTS, ...REJECTED_PLATFORMING, ...REJECTED_SKATING];

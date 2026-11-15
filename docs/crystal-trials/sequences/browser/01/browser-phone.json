@@ -1,0 +1,285 @@
+{
+  "trial": 1,
+  "url": "http://127.0.0.1:5173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "pilot": {
+    "id": 1,
+    "frame": 1088,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Roll off the final roof onto the recovery floor",
+        "firstFrame": 733,
+        "lastFrame": 1043
+      },
+      {
+        "name": "Approach the unlocked exit",
+        "firstFrame": 1043,
+        "lastFrame": 1068
+      },
+      {
+        "name": "Ollie through the unlocked exit",
+        "firstFrame": 1069,
+        "lastFrame": 1088
+      }
+    ],
+    "evidence": [
+      {
+        "action": "complete linked sequence",
+        "p": [
+          0,
+          -8,
+          -318.2909869036434
+        ],
+        "speed": 23.851232103407078
+      }
+    ],
+    "sections": [
+      {
+        "kind": 1,
+        "entry": null,
+        "actions": [
+          {
+            "name": "Skate to 20",
+            "firstFrame": 0,
+            "lastFrame": 170,
+            "pose": {
+              "frame": 170,
+              "p": [
+                0,
+                0,
+                19.913338596316738
+              ],
+              "state": "ride",
+              "speed": 22.999305774278216,
+              "skate": true,
+              "ground": "platform"
+            }
+          },
+          {
+            "name": "Skate to -24",
+            "firstFrame": 170,
+            "lastFrame": 284,
+            "pose": {
+              "frame": 284,
+              "p": [
+                0,
+                1.7544589655378884,
+                -24.03567172430311
+              ],
+              "state": "ride",
+              "speed": 22.999305774278216,
+              "skate": true,
+              "ground": "ramp"
+            }
+          },
+          {
+            "name": "Roll onto the landing",
+            "firstFrame": 285,
+            "lastFrame": 326,
+            "pose": {
+              "frame": 326,
+              "p": [
+                0,
+                3.35,
+                -39.971991653449706
+              ],
+              "state": "grind",
+              "speed": 22.76617132735227,
+              "skate": true,
+              "ground": null
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "action": "ollie",
+            "frame": 284,
+            "p": [
+              0,
+              1.7544589655378884,
+              -24.03567172430311
+            ],
+            "state": "ride",
+            "speed": 22.999305774278216,
+            "skate": true,
+            "ground": "ramp"
+          }
+        ],
+        "firstFrame": 0,
+        "stage": "Roll onto the landing",
+        "lastFrame": 326,
+        "passed": true
+      },
+      {
+        "kind": 3,
+        "entry": "air",
+        "actions": [
+          {
+            "name": "Grind through -86",
+            "firstFrame": 326,
+            "lastFrame": 516,
+            "pose": {
+              "frame": 516,
+              "p": [
+                0,
+                3.35,
+                -112.06486752339848
+              ],
+              "state": "grind",
+              "speed": 22.76617132735227,
+              "skate": true,
+              "ground": null
+            }
+          },
+          {
+            "name": "Land from the grind and keep rolling",
+            "firstFrame": 517,
+            "lastFrame": 560,
+            "pose": {
+              "frame": 560,
+              "p": [
+                0,
+                3.5,
+                -128.76005983012328
+              ],
+              "state": "ride",
+              "speed": 24.96617132735282,
+              "skate": true,
+              "ground": "platform"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "action": "air-to-rail handoff",
+            "frame": 326,
+            "p": [
+              0,
+              3.35,
+              -39.971991653449706
+            ],
+            "state": "grind",
+            "speed": 22.76617132735227,
+            "skate": true,
+            "ground": null
+          },
+          {
+            "action": "grind pop",
+            "frame": 516,
+            "p": [
+              0,
+              3.35,
+              -112.06486752339848
+            ],
+            "state": "grind",
+            "speed": 22.76617132735227,
+            "skate": true,
+            "ground": null
+          }
+        ],
+        "firstFrame": 326,
+        "stage": "Land from the grind and keep rolling",
+        "lastFrame": 560,
+        "passed": true
+      },
+      {
+        "kind": 2,
+        "entry": null,
+        "actions": [
+          {
+            "name": "Skate to 20",
+            "firstFrame": 560,
+            "lastFrame": 560,
+            "pose": {
+              "frame": 560,
+              "p": [
+                0,
+                3.5,
+                -128.76005983012328
+              ],
+              "state": "ride",
+              "speed": 24.96617132735282,
+              "skate": true,
+              "ground": "platform"
+            }
+          },
+          {
+            "name": "Skate to -26",
+            "firstFrame": 560,
+            "lastFrame": 672,
+            "pose": {
+              "frame": 672,
+              "p": [
+                0,
+                6.2708882423370795,
+                -172.31984711047193
+              ],
+              "state": "ride",
+              "speed": 22.999305774278216,
+              "skate": true,
+              "ground": "ramp"
+            }
+          },
+          {
+            "name": "Roll onto the landing",
+            "firstFrame": 673,
+            "lastFrame": 733,
+            "pose": {
+              "frame": 733,
+              "p": [
+                0,
+                3.5,
+                -195.4269628569237
+              ],
+              "state": "ride",
+              "speed": 24.928310570280427,
+              "skate": true,
+              "ground": "platform"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "action": "ollie",
+            "frame": 672,
+            "p": [
+              0,
+              6.2708882423370795,
+              -172.31984711047193
+            ],
+            "state": "ride",
+            "speed": 22.999305774278216,
+            "skate": true,
+            "ground": "ramp"
+          }
+        ],
+        "firstFrame": 560,
+        "stage": "Roll onto the landing",
+        "lastFrame": 733,
+        "passed": true
+      }
+    ],
+    "position": [
+      0,
+      -6.244542500000002,
+      -336.2533706670558
+    ],
+    "state": "finished",
+    "deaths": 0,
+    "stage": "Ollie through the unlocked exit",
+    "result": {
+      "id": 1,
+      "sections": 3,
+      "position": [
+        0,
+        -6.244542500000002,
+        -336.2533706670558
+      ],
+      "collected": true,
+      "board": true
+    }
+  }
+}

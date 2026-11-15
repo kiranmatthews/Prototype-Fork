@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile, copyFile } from 'node:fs/promises';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 const id = Number(process.argv[2] ?? 1);
-const { runCrystalTrial } = await import(process.env.CRYSTAL_TRIAL_PILOT ?? (id > 10 ? `./crystal-trials-pilots/${id}.mjs` : './crystal-trials-pilot.mjs'));
+const historicalPilot = (await import(process.env.CRYSTAL_TRIAL_PILOT ?? (id > 10 ? `./crystal-trials-pilots/${id}.mjs` : './crystal-trials-pilot.mjs'))).runCrystalTrial;
+const { runSkateTrial } = await import('./crystal-skate-pilot.mjs');
 const phaseDelay = Number(process.argv[3] ?? 0);
 const out = process.env.CRYSTAL_TRIAL_OUT ?? `/workspace/crystal-trials/${String(id).padStart(2, '0')}`;
 await mkdir(out, { recursive: true });
@@ -25,7 +26,9 @@ await withBlockworksRuntime(async r => {
   assert.equal(migrateCustomLevel(ordinary).components.filter(c => c.t === 'crystal').length, 1,
     'ordinary courses keep exactly one crystal');
   try {
-    for (const sample of runCrystalTrial({ ...r, report, phaseWait: Math.round(phaseDelay / r.dt), get frame() { return r.frame; } }, id)) r.tick(sample);
+    const trial = r.sourceModule.CRYSTAL_TRIALS.find(t => t.id === id);
+    const pilot = trial.skateLine && !process.env.CRYSTAL_TRIAL_PILOT ? runSkateTrial : historicalPilot;
+    for (const sample of pilot({ ...r, trial, report, phaseWait: Math.round(phaseDelay / r.dt), get frame() { return r.frame; } }, id)) r.tick(sample);
     assert.equal(r.l.skateCollectathon.collected, 1);
     assert.equal(r.l.crystalPickup, null, 'practice rewards cannot write the campaign crystal');
     assert.equal(r.p.hasCrystal, false);

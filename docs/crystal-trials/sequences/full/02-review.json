@@ -1,0 +1,61 @@
+{
+  "id": 2,
+  "errors": [],
+  "passed": true,
+  "scope": "Full renderer at 1280x720; staged views are labelled separately from input routes.",
+  "stagedVisualFixtures": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        -4.847724224015714
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "render": [
+        1280,
+        720
+      ]
+    },
+    {
+      "name": "crystal-approach",
+      "position": [
+        0.22393472819158114,
+        2.7500000059604646,
+        -201.14211694671522
+      ],
+      "heading": [
+        -0.005099977891528754,
+        0,
+        -0.9999869950281883
+      ],
+      "render": [
+        1280,
+        720
+      ]
+    },
+    {
+      "name": "recovery-bank",
+      "position": [
+        34,
+        -7.85,
+        -26
+      ],
+      "heading": [
+        0,
+        0,
+        1
+      ],
+      "render": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "fixtureNote": "Player simulation is frozen at each explicitly staged pose; this avoids a midair fixture falling before its screenshot. Moving geometry still renders normally.",
+  "nativeSourceHash": "2ef7e3e0086c94d2f2cdb0b86df3ed087fda6caffbc83ae31b16e8c2f6269c9c"
+}

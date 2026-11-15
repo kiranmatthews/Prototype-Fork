@@ -2,12 +2,15 @@ import { CRYSTAL_TRIALS, trialOrigin } from '../src/levels/crystal-trials';
 
 /** Run the same pilot through the application's ordinary fixed-step loop. */
 export async function installCrystalTrialPilot(id) {
-  const { runCrystalTrial } = id > 10 ? await import(`./crystal-trials-pilots/${id}.mjs`) : await import('./crystal-trials-pilot.mjs');
+  const trial = CRYSTAL_TRIALS.find(t => t.id === id);
+  const runCrystalTrial = trial?.skateLine
+    ? (await import('./crystal-skate-pilot.mjs')).runSkateTrial
+    : (id > 10 ? await import(`./crystal-trials-pilots/${id}.mjs`) : await import('./crystal-trials-pilot.mjs')).runCrystalTrial;
   const g = window.__game, p = g.player, l = g.getLevel();
   const index = CRYSTAL_TRIALS.findIndex(t => t.id === id);
   if (index < 0) throw Error('Unknown trial');
   const report = window.crystalTrialReport = { id, frame: 0, done: false, failure: null, actions: [], evidence: [] };
-  const r = { p, l, report, source: g.getCurrentLevel().data, offset: g.trialOffset ?? trialOrigin(index),
+  const r = { p, l, trial, report, source: g.getCurrentLevel().data, offset: g.trialOffset ?? trialOrigin(index),
     get frame() { return report.frame; } };
   const pilot = runCrystalTrial(r, id);
   let next = pilot.next(), last = {}, advanced = false;

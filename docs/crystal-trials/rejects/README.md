@@ -29,3 +29,13 @@ Each rejected layout remains playable. The rejects exit is open. Layout 0 preser
 | 21-a | 21 / Rails, trick gate, enemy and spring | The rail camera continued behind the trick gate and its frame obscured the enemy terrace. |
 | 24-a | 24 / Rails, enemy, spring, rope and timed steps | The rail camera continued behind the trick gate and its frame obscured the enemy terrace. |
 | 24-b | 24 / Rails, enemy, spring, rope and timed steps | The gate-clearance camera extended into the upper rope terrace and pushed its receiving platform out of frame. |
+
+
+The skating revision adds two complete preserved collections:
+
+| Attempts | Layouts | Reason for revision |
+|---|---|---|
+| 01-p–25-p | Previously published 25 platforming challenges | Narrow landings, climbing and stop/start jumps did not fit fast skating. |
+| 01-s–25-s | First 25 continuous skating studies | Each study was too short and simple by itself. The current challenges combine them through raised roofs, direct air-to-rail connections and spring-to-rail catches. |
+
+The phone picker contains 75 individual rejected attempts plus layout 0. These are actual source snapshots, not alternate descriptions of the current geometry.

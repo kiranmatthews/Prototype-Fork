@@ -1,49 +1,59 @@
-# Numbered crystal challenges
+# Numbered skating challenges
 
 [Play on your phone](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch).
 
-25 increasingly demanding crystal retrievals form one straight corridor. Each source module can also be played independently. The challenge starts are 256 metres apart. A continuous flat floor catches ordinary falls; explicit death pits retain the consequences of missed pit crossings.
+Each of the 25 challenges is a continuous skating sequence with one starting checkpoint and one final crystal. Three to five linked sections require repeated ollies, catches, transfers, landings, carving or vert pumps. The later runs combine switches, timed or crumbling surfaces, moving rails, Nitro clearances and airborne bounce rows.
 
-The design reference is [THPS research](../warehouse-flow/research-principles.md), alongside the measured movement rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md). The separate secret-tape reference has not been located.
+Bank airs can land directly into grinds. Bounce chains feed elevated rails. Raised receiving roofs preserve the height earned in the previous section, so approaching the final crystal from the recovery floor cannot replace the intended sequence. The ordinary edges remain grindable. The authored player, movement tuning and animation baseline are unchanged.
+
+The source modules remain independently reusable. The whole course lays them in a straight corridor, with at least 512 metres between starts and longer spacing for the longer sequences. There are 224 metres between one trial's local exit and the next origin, leaving a clear run into the next approach. A flat floor 8 metres below the first approach catches ordinary misses; marked dark pits cause death. A wide side bank returns a missed run to its start. The course exit opens only after all 25 crystals. These practice rewards do not alter campaign progress.
 
 | Number | Components |
 |---|---|
-| 1 | Bounce crate → airborne crystal. |
-| 2 | Trampoline → high platform. |
-| 3 | Long rail over a death pit → raised platform. |
-| 4 | Moving platform → fixed island → lift → high platform. |
-| 5 | Halfpipe pumps → high crystal. |
-| 6 | Climbing rope → high framed platform. |
-| 7 | Three timed steps → raised platform. |
-| 8 | Switch → two raised steps → bounce crate → high platform. |
-| 9 | Turtle shell → held bounce → double jump → high platform. |
-| 10 | Spin-open bridge → timed crossing → small raised platform. |
-| 11 | Three offset rails over a pit → raised platform. |
-| 12 | Trampoline → airborne bounce crate → high platform. |
-| 13 | Climbing rope → raised rest → second climbing rope → high platform. |
-| 14 | Three timed steps → fixed rest → three timed steps → high platform. |
-| 15 | TNT → enclosed switch → revealed steps and bounce crate → high platform. |
-| 16 | Trampoline → bounce crate between Nitro → narrow high landing. |
-| 17 | Three offset rails → retracting enemy → bounce crate → high platform. |
-| 18 | Climbing rope → moving rest → second rope → high platform. |
-| 19 | Six crumbling steps with a rest → bounce crate → high platform. |
-| 20 | TNT switch → revealed steps and spring → second switch → upper spring. |
-| 21 | Rail transfers → kickflip gate → retracting enemy → bounce crate. |
-| 22 | Two climbing ropes → timed steps → bounce crate → high platform. |
-| 23 | TNT → two revealed spring routes → climbing rope → high platform. |
-| 24 | Rail transfers and trick gate → enemy → spring → rope → timed steps. |
-| 25 | TNT and two switches → rope → six timed steps → Nitro-framed spring. |
+| 1 | Bank air → long grind → raised roof gap. |
+| 2 | Bank air → rope grind → moving roof → gap. |
+| 3 | Long balance → two rail transfers → bank air. |
+| 4 | Moving roof gaps → enemy carve → bank-to-rail air. |
+| 5 | Bank-to-rail air → transfers → high vert crystal. |
+| 6 | Rope air → spring and bounce row → high grind → roof gap. |
+| 7 | Timed roof gap → rail transfers → enemy carve and bank. |
+| 8 | Switch grind → roof gap → rope transfer → Nitro-framed air. |
+| 9 | Enemy carve → moving roof gaps → grind and kickflip gate. |
+| 10 | Bridge airs → rail catch → enemy carve → spring and bounce row. |
+| 11 | Rail transfers → switch roof → high grind → Nitro gap. |
+| 12 | Spring and bounce row → moving high rail → kickflip gap. |
+| 13 | Rope transfer → two rail transfers → moving roof gaps. |
+| 14 | Timed roof gaps → moving grind → switch roof and high rail. |
+| 15 | TNT-framed switch grind → enemy carve → rail catch and kickflip. |
+| 16 | Nitro gap → spring and bounce row → high rail transfers. |
+| 17 | Grind and enemy carve → rope transfer → bridge airs → roof gap. |
+| 18 | Moving grind → moving roof gaps → rail transfers → kickflip. |
+| 19 | Crumbling gaps → switch roof → high grind → spring and bounce row. |
+| 20 | Two switch grinds → rope transfer → Nitro air → rail and kickflip. |
+| 21 | Kickflip to rail → transfers → enemy carve → switch bank and high grind. |
+| 22 | Rope and timed gap → bounce-to-rail → enemy carve → bridge airs. |
+| 23 | Switch roof and high grind → moving rail → rope transfer → Nitro gap. |
+| 24 | Rail transfers and carve → crumbling gaps → bounce-to-rail → kickflip. |
+| 25 | Switch and Nitro kickflip → timed gap → rope transfer → enemy carve → high grind → bounce row. |
 
-**25/25 challenges validated locally.** Every challenge passes native and browser input routes and a full-resolution visual review. One uninterrupted run collects all 25 crystals, walks every connecting gap and recovery route, and finishes through the real exit. Published through GitHub Pages; the live course and phone entry pass with clean consoles. [Progress and evidence](progress.json).
+The previous platforming collection is preserved as rejects `01-p`–`25-p`; the short skating studies are `01-s`–`25-s`. There are 75 rejected attempts plus the original eight-station grid, all selectable from the same phone page. [Rejects index](rejects/README.md).
 
-The course has one exit after the last challenge, opened by all 25 crystals. Soft recovery keeps collected crystals; a fresh run clears them. These are practice rewards and do not alter campaign progress.
+The phone entry downloads this collection and its rejects on Play, with touch controls, retry, individual selection and whole-course selection. It does not fetch the shared level pack or install the full game's offline cache. The current release's cache-disabled byte measurement and touch checks are recorded in [sequence evidence](sequences/README.md).
 
-Rejected physical layouts remain in a separate playable archive with an open exit. The superseded eight-station grid is preserved as rejected layout 0. See the [rejects index](rejects/README.md).
+Current validation and measurements are in [progress.json](progress.json) and [sequences/](sequences/README.md). The numbered evidence directories, `course/`, `phone-public/` and `public/` at this directory's root describe the superseded platforming release; its original progress record is preserved in [platforming-version/progress.json](platforming-version/progress.json).
 
-The dedicated `challenge-playtest.html` entry provides touch controls, a numbered picker, individual playtests, the whole course, and the rejects. The public entry transferred **34.6 MB** with caching disabled, including the whole course, all 25 rejected attempts, the original eight-challenge grid, models and audio. The picker transferred only **19.3 KB** before Play. It does not fetch the shared level pack or install the full offline game. Touch movement, pause, retry, portrait and landscape pass. Seven representative production-phone controller routes also pass. See [public phone evidence](phone-public/smoke.json), [public course/build verification](public/smoke.json), and [deployment](public/deployment.json). The local gzip server measured 36.4 MB; the ordinary development entry measured 174.6 MB.
+To verify the current geometry:
 
-[The continuous 25-challenge run](course/native.json) records 185,005 physics steps through the corridor, including deliberate failure/recovery checks. `course-six/` and `course-ten/` preserve earlier assemblies.
+```sh
+CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate.mjs 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate-course.mjs
+node tools/test-crystal-skate-recovery.mjs
+node tools/test-crystal-trials.mjs 25
+CRYSTAL_SKATE_OUT=/tmp/crystal-sequences python3 tools/review-crystal-skate.py
+CRYSTAL_PHONE_TRIALS=1,3,5,13,16,21,25 python3 tools/crystal-trials-phone.py
+CRYSTAL_PHONE_URL=PRODUCTION_URL python3 tools/test-challenge-phone.py
+```
 
-Focused verification uses `node tools/test-crystal-trials.mjs NUMBER` for individual input routes, `node tools/test-crystal-trials-course.mjs 25` for the continuous course, and `CRYSTAL_TRIAL=NUMBER CRYSTAL_RENDER=full python tools/crystal-trials-browser.py` for full-render review. With a production server running, `CRYSTAL_PHONE_URL=URL python tools/test-challenge-phone.py` measures cold network transfer and touch/menu behavior. The phone controller routes are in `tools/crystal-trials-phone.py`.
+The native pilots supply controller inputs to the production Player and Level; browser pilots use the application's ordinary fixed-step loop. They do not change movement, position, velocity or pickup state to complete a route. Visual fixtures are explicitly staged and separate from traversal evidence. Full-render screenshots use native 1280 × 720 output. The historical `test-crystal-trials-course.mjs` and platforming pilot modules document the prior collection.
 
-Full-resolution visual fixtures are reviewed after a matching-source lite browser route passes. `CRYSTAL_FULL_ROUTE=1` additionally repeats the controller route in the full renderer; those longer passes are retained where already completed. Staged review views are labelled separately from actual traversal evidence.
+Design references: [THPS research](../warehouse-flow/research-principles.md) and the measured movement rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md).

@@ -1,31 +1,5 @@
-import { deck, type CrystalTrial } from './types';
+import { skateSequence } from './skate-sequence';
 
-export const TRIAL_07: CrystalTrial = {
-  id: 7, name: '7 / Timed steps',
-  brief: 'Three timed steps → raised platform.',
-  spawn: [0, .15, 5],
-  reviewViews: [{ name: 'lower-recovery', position: [15, -7.85, -21] }],
-  components: [
-    deck('07 / Stair observation bank', 0, 0, 3, 18, 16),
-    { t: 'checkpoint', nm: '07 / Vanishing Stairs start', p: [-4, 0, 5] },
-    ...[0, 1, 2].map(i => ({ t: 'phasepad' as const, nm: `07 / Vanishing stair ${i + 1}`,
-      p: [0, 1.5 * (i + 1), -10 - 7 * i] as [number, number, number],
-      s: [4, .6, 4] as [number, number, number], cycle: 8, amp: .55, phase: (1 - .24 * i) % 1 })),
-    deck('07 / Crystal balcony after the rhythm', 0, 6.2, -33, 8, 8, '#d8b26e'),
-    { t: 'crystal', nm: '7 / Timed steps', p: [0, 6.2, -34] },
-    deck('07 / Missed-step recovery courtyard', 0, -8, -20, 26, 58, '#7d8b9c'),
-    deck('07 / Lower return beside the stairs', 15, -8, -33, 8, 26),
-    { t: 'ramp', nm: '07 / Retry climb', p: [15, -8, -7.5], len: 25, rise: 8, w: 6, yaw: 180 },
-    deck('07 / Upper return junction', 13, 0, 10, 10, 10),
-    { t: 'camnode', nm: '07 / Watch the whole rising rhythm',
-      p: [0, 4, -20], s: [21, 40, 76], radius: 3, cameraView: true,
-      cameraPresentationOnly: true, cameraPosition: [0, 11, 6], cameraTarget: [0, 2.5, -23],
-      cameraFollowDistance: 20, cameraKeepDistance: true, cameraFollowTargetHeight: 3.5,
-      cameraFov: 62, cameraAspect: 16 / 9 },
-    { t: 'camnode', nm: '07 / Look along the retry ramp toward the entrance',
-      p: [15, -4, -24], s: [9, 12, 80], radius: 2, yaw: 180, cameraView: true,
-      cameraPosition: [15, 1, -40], cameraTarget: [15, -3, -18],
-      cameraFollowDistance: 14, cameraKeepDistance: true, cameraFollowTargetHeight: 2.5,
-      cameraFov: 62, cameraAspect: 16 / 9 },
-  ],
-};
+export const TRIAL_07 = skateSequence(7, 'Timed roof and rail transfers',
+  'Timed roof gap → rail transfers → enemy carve and bank.',
+  [7, 11, 9]);
