@@ -42,6 +42,8 @@ const PROFILES:Record<string,Amplitudes> = {
   'kite-grab':[.045,.035,.055,.018,.020],
   hang:[0,0,0,.035,.050], climb:[0,0,0,.030,.050],
   rope:[.025,0,0,.035,.050], 'rope-climb':[.025,0,0,.040,.050],
+  // Live hang: arms and torso give as the weight comes onto a caught rope, then rebound; the grip solve runs afterward.
+  'rope-catch':[.055,.070,.090,.030,.040],
   'rope-release':[.080,.070,.10,.070,.10], 'rope-release-charged':[.080,.070,.10,.070,.10],
   slam:[.065,.030,.050,.045,.060], 'pancake-slam':[.28,.12,.18,.18,.25],
   'pancake-slam-impact':[0,.28,.40,.30,.40], // limbs spread longer at contact; never shorten into the floor

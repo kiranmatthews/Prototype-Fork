@@ -12082,3 +12082,66 @@ suite run and no human play test.
 
 Left as they were: streaky snow on the boulder-trough cuts, arch legs crossing
 the view's corners, and the side-on wait for the hoist.
+
+## 2026-11-15 — Swing rope: the whole suite, without the rope through the body
+
+Brief: refine the existing rope climb, jump-on, swing and jump-off animations,
+fixing the clipping through the different movements and parts of the swing,
+and making the transitions extremely smooth, natural and bouncy. About 3 h
+30 min from the prompt to the pushed branch. No level changed, and nothing in
+`src/tuning.ts`: the grip, the climb speed, the grab radius and the leap are
+as they were.
+
+What was wrong, measured on a test rope with the real player step (3,479
+frames: a hang through two swings, a climb and descent, hang/climb switches,
+four real run-and-jump catches, six leaps):
+
+- The body hung straight down while the rope swung, so the rope cut through
+  the head, the torso or the hips on 1,167 of those frames (353 of 620 just
+  hanging, 396 of 580 climbing).
+- A catch moved every part of the body 1.6 to 2.1 m in a single frame.
+- The legs kicked through the rope while climbing, the hands were pinned to
+  two fixed points, and the rope ran through both wrists.
+- The charged leap's backflip was always cut off upside down by the ground,
+  because its clip takes a second to come round and no leap is in the air
+  that long.
+- Every clip change onto and off the rope was a cut.
+
+What changed:
+
+- `src/animation/ropeSwingBody.ts` (new): where the body is on the rope. The
+  torso hangs along the rope with the rope in front of it; hands hold it in
+  their palms and walk it hand over hand; shoes clamp it, or the legs hang
+  free where there is no rope under them; a catch carries on from the last
+  drawn frame and settles; a leap lets go in order; and the drawn rope gives
+  way round a body leaping through it. `docs/ANIMATION_STUDIO.md` has the
+  detail under "Rope body layer".
+- `src/ropeGeometry.ts`, `src/level.ts`: the drawn rope may be pushed aside
+  (`shove`); the rope that decides a grab is unchanged.
+- `src/animation/unityRope.ts`, `src/characterAnimationRuntime.ts`: cross-fades
+  onto the rope, between hang and climb, into the leap and out of it; the
+  charged backflip paced to the leap's own time in the air.
+- `src/player.ts`: the layer's hooks, fingers that close round the rope, and
+  the leap's clip length.
+- `tools/rope-browser-review.ts`: the review page rebuilt round a real test
+  rope, with the two measurements.
+
+After, on the same 3,479 frames: the rope is through the head, torso, hips,
+an upper arm or a shin on 29 (none while hanging, climbing or switching; the
+rest are single frames in a leap and five frames of the head in a catch made
+upside down). The worst step at a catch is 19 to 24 cm, which is the jump
+being stopped by the rope, against 163 to 207 cm. The charged backflip lands
+on its feet.
+
+Validated: `npm run check:rope` (rewritten for the walking hands, the body's
+clearance through a swing and the rope giving way), the animation runtime,
+elasticity, suite and IK tests, type-check, production build, the measurement
+above on old and new, and photographed sequences of every move in lite and
+full render with no console errors. No full suite run and no human play test.
+`tools/test-idle-rope.mjs` (grind tightropes, not swing ropes) fails the same
+way before and after this change and was left alone.
+
+Left as they were: the tap leap's flight pose is the source clip's (arms held
+forward); a catch made upside down in a flip still passes the head through the
+rope's end for about five frames; hands brush the rope's surface in a reach.
+

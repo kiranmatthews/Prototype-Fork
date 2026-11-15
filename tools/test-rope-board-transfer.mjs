@@ -203,6 +203,7 @@ try {
     UNITY_ROPE_INPUTS,
     UNITY_ROPE_TIMING,
     createPlayerStarterAnimationSuite,
+    unityRopeLeapAirSeconds,
     unityRopeReleaseDuration,
   } = await server.ssrLoadModule("/src/animation/index.ts");
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
@@ -456,12 +457,18 @@ try {
   assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.release);
   closeTo(rider.ropeAnimationDiagnostics.releaseCharge, 1,
     "full rope charge did not select the charged Unity variant");
+  // The charged backflip is paced to the leap's own time in the air, so it has come round before the ground;
+  // played at the source clip's length it never could.
+  const leapAir = unityRopeLeapAirSeconds(rider.vVel, TUNING.riseGravity, TUNING.fallGravity);
   closeTo(rider.ropeAnimationDiagnostics.releaseDuration,
-    UNITY_ROPE_TIMING.backflipReleaseDuration,
-    "full rope charge used the wrong Unity release duration");
-  closeTo(rider.ropeAnimationDiagnostics.releaseDuration,
-    unityRopeReleaseDuration(1),
-    "release duration helper diverged at full charge");
+    unityRopeReleaseDuration(1, leapAir),
+    "full rope charge did not pace the backflip to the leap");
+  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration * 0.62 < leapAir,
+    "the charged backflip would not have come round before the leap is back at the height it left");
+  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration < UNITY_ROPE_TIMING.backflipReleaseDuration,
+    "the charged backflip still plays at the source clip's own length");
+  closeTo(unityRopeReleaseDuration(1), UNITY_ROPE_TIMING.backflipReleaseDuration,
+    "release duration helper diverged from the source clip at full charge");
   closeTo(unityRopeReleaseDuration(0), UNITY_ROPE_TIMING.swingReleaseDuration,
     "minimum rope charge used the wrong Unity release duration");
   closeTo(unityRopeReleaseDuration(0.5),

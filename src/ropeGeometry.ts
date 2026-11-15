@@ -3,6 +3,9 @@ import * as THREE from "three";
 export interface FlexibleRopeState {
   anchor:THREE.Vector3;anchorVel:THREE.Vector3;len:number;yaw:number;theta:number;thetaV:number;
   bend?:number;bendV?:number;sway?:number;swayV?:number;
+  /** Presentation only: a body passing through the DRAWN rope pushes it aside by this much (rope-local metres) from
+   * `shoveD` down it to its end, tapering to nothing at the anchor. Never part of where the rope can be caught. */
+  shove?:THREE.Vector3;shoveD?:number;
 }
 export function ropeLocalPoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {
   const u=THREE.MathUtils.clamp(d/Math.max(.001,rs.len),0,1),shape=Math.sin(Math.PI*u);
@@ -11,6 +14,16 @@ export function ropeLocalPoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):
 }
 export function flexibleRopePoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {
   ropeLocalPoint(rs,d,out);const x=out.x,z=out.z,c=Math.cos(rs.yaw),s=Math.sin(rs.yaw);
+  return out.set(rs.anchor.x+x*c+z*s,rs.anchor.y+out.y,rs.anchor.z-x*s+z*c);
+}
+/** The rope as it is drawn: its own curve, plus whatever a body has pushed it aside by. Not for deciding a grab. */
+export function drawnRopeLocalPoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {
+  ropeLocalPoint(rs,d,out);
+  if(rs.shove&&rs.shoveD)out.addScaledVector(rs.shove,Math.min(1,d/Math.max(.001,rs.shoveD)));
+  return out;
+}
+export function drawnRopePoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {
+  drawnRopeLocalPoint(rs,d,out);const x=out.x,z=out.z,c=Math.cos(rs.yaw),s=Math.sin(rs.yaw);
   return out.set(rs.anchor.x+x*c+z*s,rs.anchor.y+out.y,rs.anchor.z-x*s+z*c);
 }
 export function flexibleRopeVelocity(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {

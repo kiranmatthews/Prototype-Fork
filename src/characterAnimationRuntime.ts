@@ -189,7 +189,7 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpRefere
   if (from === RUN_STOP_CLIP_ID) return .12;
   if (to === 'player.death') return .12;
   if (from.startsWith('player.swim') || to.startsWith('player.swim')) return .3;
-  if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
+  if (to === LAND_CLIP_ID && (AIRBORNE_CLIP_IDS.has(from) || from === UNITY_ROPE_CLIP_IDS.release)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
   }
   // Capture the interrupted airborne pose before the second jump pop.
@@ -206,6 +206,9 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpRefere
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && to === UNITY_ROPE_CLIP_IDS.release) {
     return UNITY_ROPE_TIMING.releaseBlend;
   }
+  // Onto a rope from anything else, and off its leap into anything else: never a cut.
+  if (ROPE_ATTACHED_CLIP_IDS.has(to)) return UNITY_ROPE_TIMING.catchBlend;
+  if (from === UNITY_ROPE_CLIP_IDS.release) return UNITY_ROPE_TIMING.leaveBlend;
   if (CROUCH_CRAWL_CLIP_IDS.has(from) || CROUCH_CRAWL_CLIP_IDS.has(to)) {
     return UNITY_CROUCH_CRAWL_TIMING.rapidBlend;
   }

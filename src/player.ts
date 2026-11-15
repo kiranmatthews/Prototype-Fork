@@ -137,6 +137,8 @@ import {
 } from './animation/bridge';
 import type { ProceduralMotionContext } from './animation/types';
 import { solveTwoBoneIk } from './animation/ik';
+import { RopeSwingBody } from './animation/ropeSwingBody';
+import { drawnRopeLocalPoint, flexibleRopePoint } from './ropeGeometry';
 import { JAK_SLIDE, JAK_SLIDE_JUMP } from './animation/jakSlide';
 import { JAK_SKID } from './animation/jakSkid';
 import {
@@ -148,6 +150,7 @@ import {
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_INPUTS,
   UNITY_ROPE_TIMING,
+  unityRopeLeapAirSeconds,
   unityRopeReleaseDuration,
 } from './animation/unityRope';
 import {
@@ -414,19 +417,8 @@ const HANG_BOX = new THREE.Box3();
 const ROPE_P = new THREE.Vector3();
 const ROCK_CONTACT = new THREE.Vector3();
 const ROPE_V = new THREE.Vector3();
-const ROPE_AXIS = new THREE.Vector3();
-const ROPE_SIDE = new THREE.Vector3();
-const ROPE_FORWARD = new THREE.Vector3();
-const ROPE_TARGET_L = new THREE.Vector3();
-const ROPE_TARGET_R = new THREE.Vector3();
-const ROPE_POLE_L = new THREE.Vector3();
-const ROPE_POLE_R = new THREE.Vector3();
-const ROPE_SHOULDER = new THREE.Vector3();
-const ROPE_SHOULDER_R = new THREE.Vector3();
-const ROPE_ELBOW = new THREE.Vector3();
-const ROPE_WRIST = new THREE.Vector3();
-const ROPE_GRIP_SAMPLE = new THREE.Vector3();
-const ROPE_Q = new THREE.Quaternion();
+/** Fingers round a swing rope: well curled but not a fist, for a rope as thick as the wrist. */
+const ROPE_GLOVE_POSE = blendCartoonGlovePose(CARTOON_GLOVE_POSES.curl, CARTOON_GLOVE_POSES.grab, .35);
 const CRAWL_UP = new THREE.Vector3(0, 1, 0);
 const CRAWL_DOWN = new THREE.Vector3(0, -1, 0);
 const CRAWL_HIPS = new THREE.Vector3();
@@ -1567,6 +1559,11 @@ export class Player {
   private ropeLeftGripError = 0;
   private ropeRightGripError = 0;
   private ropeGripRootOffsetY = 0;
+  /** How the visible body hangs from the rope: along it, springing, hand over hand. Presentation only. */
+  private readonly ropeBody = new RopeSwingBody();
+  /** The rope being held or, for the moment the body takes to leave it, the one just left. */
+  private ropeBodyRope: RopeSwing | null = null;
+  private ropeShoveDrawn = false;
   // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
   // held, release/jump/timeout drops back in fakie.
@@ -2768,6 +2765,8 @@ export class Player {
       leftGripError: this.ropeLeftGripError,
       rightGripError: this.ropeRightGripError,
       gripRootOffsetY: this.ropeGripRootOffsetY,
+      handHolds: this.ropeBody.holds,
+      ropeShove: this.ropeBody.ropeShove,
     } as const;
   }
 
@@ -4403,6 +4402,8 @@ export class Player {
     this.ropeLeftGripError = 0;
     this.ropeRightGripError = 0;
     this.ropeGripRootOffsetY = 0;
+    this.ropeBody.reset();
+    this.ropeBodyRope = null;
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0;
@@ -10704,6 +10705,9 @@ export class Player {
       this.ropeReleaseElapsed = 0;
       this.ropeReleaseDuration = 0;
       this.ropeReleaseCharge = 0;
+      // The flight that brought the hands here carries on into the hang: presentation takes it before it is zeroed.
+      this.ropeBody.catch(d, ROPE_V.set(this.lastVelX, this.vVel, this.lastVelZ), level.ropeVelAt(rs, d, ROPE_P));
+      this.ropeBodyRope = rs;
       this.vVel = 0;
       this.speed = 0;
       this.walkVelocity.set(0, 0, 0);
@@ -10814,12 +10818,13 @@ export class Player {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const jumpV = TUNING.jumpMinVelocity + (TUNING.jumpVelocity - TUNING.jumpMinVelocity) * t;
     level.ropeVelAt(rs, this.ropeD, ROPE_V);
+    this.ropeBody.release(t);
+    this.ropeBodyRope = rs;
     this.state = 'air';
     this.ropeObj = null;
     this.ropeClimbDirection = 0;
     this.ropeReleaseElapsed = 0;
     this.ropeReleaseCharge = t;
-    this.ropeReleaseDuration = unityRopeReleaseDuration(t);
     this.ropeCoolT = CONST.ropeRegrabCool;
     this.charging = false;
     this.chargeTimer = 0;
@@ -10831,6 +10836,9 @@ export class Player {
     this.airGrav = 'foot';
     this.airMomentum = false;
     this.vVel = jumpV + Math.max(0, ROPE_V.y * 0.9);
+    // The leap's clip is paced to the leap: a charged backflip comes round in the air this launch actually has.
+    this.ropeReleaseDuration = unityRopeReleaseDuration(t,
+      unityRopeLeapAirSeconds(this.vVel, TUNING.riseGravity, TUNING.fallGravity));
     this.airborneT = 0;
     this.launchVy = this.vVel;
     this.airPeakY = this.pos.y;
@@ -11007,92 +11015,35 @@ export class Player {
    * onto the authoritative rope axis. Keep that same order so expressive
    * shoulders/elbows never make the grip visibly float off a tilted rope. */
   private alignHandsToRopeGrip(dt: number): void {
-    if (this.state !== 'rope' || !this.ropeObj) {
-      this.ropeGripRootOffsetY +=
-        (0 - this.ropeGripRootOffsetY) * Math.min(1, 12 * Math.max(0, dt));
-      this.bodyGroup.position.y += this.ropeGripRootOffsetY;
-      this.ropeLeftGripError = 0;
-      this.ropeRightGripError = 0;
-      return;
-    }
     if (
       !this.armL || !this.armR ||
       !this.elbowL || !this.elbowR ||
       !this.wristL || !this.wristR
     ) return;
-
-    this.bodyGroup.updateWorldMatrix(true, true);
-    this.armL.getWorldPosition(ROPE_SHOULDER);
-    this.elbowL.getWorldPosition(ROPE_ELBOW);
-    this.wristL.getWorldPosition(ROPE_WRIST);
-    const leftReach = ROPE_SHOULDER.distanceTo(ROPE_ELBOW) +
-      ROPE_ELBOW.distanceTo(ROPE_WRIST);
-    this.armR.getWorldPosition(ROPE_SHOULDER_R);
-    this.elbowR.getWorldPosition(ROPE_ELBOW);
-    this.wristR.getWorldPosition(ROPE_WRIST);
-    const rightReach = ROPE_SHOULDER_R.distanceTo(ROPE_ELBOW) +
-      ROPE_ELBOW.distanceTo(ROPE_WRIST);
-    const desiredShoulderY = this.ropeGripWorld.y -
-      Math.min(leftReach, rightReach) * 0.7;
-    this.ropeGripRootOffsetY = THREE.MathUtils.clamp(
-      // Keep the lower shoulder in reach during asymmetric source pulls,
-      // rather than averaging it with the other, raised shoulder.
-      desiredShoulderY - Math.min(ROPE_SHOULDER.y, ROPE_SHOULDER_R.y),
-      -2,
-      2,
-    );
-    this.bodyGroup.position.y += this.ropeGripRootOffsetY;
-    this.bodyGroup.updateWorldMatrix(true, true);
-
-    ROPE_AXIS.copy(this.ropeGripWorld).sub(this.ropeObj.anchor);
-    if (ROPE_AXIS.lengthSq() < 1e-8) ROPE_AXIS.set(0, -1, 0);
-    else ROPE_AXIS.normalize();
-    this.bodyGroup.getWorldQuaternion(ROPE_Q);
-    ROPE_SIDE.set(1, 0, 0).applyQuaternion(ROPE_Q).normalize();
-    ROPE_FORWARD.set(0, 0, 1).applyQuaternion(ROPE_Q).normalize();
-    ROPE_TARGET_L.copy(this.ropeGripWorld).addScaledVector(ROPE_AXIS, 0.12);
-    ROPE_TARGET_R.copy(this.ropeGripWorld).addScaledVector(ROPE_AXIS, 0.24);
-
-    this.armL.getWorldPosition(ROPE_SHOULDER);
-    ROPE_POLE_L.copy(ROPE_SHOULDER)
-      .addScaledVector(ROPE_SIDE, -0.35)
-      .addScaledVector(ROPE_FORWARD, 0.18);
-    // Source-aligned elbows plus independent character width/length scaling
-    // require a few refinement passes; two left a visible contact residual.
-    for (let iteration = 0; iteration < 6; iteration++) {
-      solveTwoBoneIk({
-        root: this.armL,
-        mid: this.elbowL,
-        end: this.wristL,
-        target: ROPE_TARGET_L,
-        pole: ROPE_POLE_L,
-        accountForParentScale: true,
-        tolerance: 0.002,
-      });
+    const attached = this.state === 'rope' && !!this.ropeObj;
+    const rope = attached ? this.ropeObj : this.ropeBodyRope;
+    // For the moment the body takes to leave a rope, its last hold keeps travelling with that rope.
+    if (rope && !attached) flexibleRopePoint(rope, this.ropeD, this.ropeGripWorld);
+    const result = this.ropeBody.apply({
+      body: this.bodyGroup,
+      armL: this.armL, elbowL: this.elbowL, wristL: this.wristL,
+      armR: this.armR, elbowR: this.elbowR, wristR: this.wristR,
+      legL: this.legL, kneeL: this.kneeL, ankleL: this.ankleL,
+      legR: this.legR, kneeR: this.kneeR, ankleR: this.ankleR,
+      head: this.headM,
+    }, {
+      dt, rope, attached, airborne: this.state === 'air' && !this.grounded, ropeD: this.ropeD, grip: this.ropeGripWorld,
+      charge: attached && this.charging ? Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0,
+    });
+    this.ropeLeftGripError = result.leftGripError;
+    this.ropeRightGripError = result.rightGripError;
+    this.ropeGripRootOffsetY = result.rootOffsetY;
+    // A rope the body has just pushed aside is redrawn where it now is, this frame, not on the level's next pass.
+    if (rope?.shove && (rope.shove.lengthSq() > 0 || this.ropeShoveDrawn)) {
+      this.ropeShoveDrawn = rope.shove.lengthSq() > 0;
+      rope.visual.update((d, out) => drawnRopeLocalPoint(rope, d, out));
     }
-
-    this.armR.getWorldPosition(ROPE_SHOULDER);
-    ROPE_POLE_R.copy(ROPE_SHOULDER)
-      .addScaledVector(ROPE_SIDE, 0.35)
-      .addScaledVector(ROPE_FORWARD, 0.18);
-    for (let iteration = 0; iteration < 6; iteration++) {
-      solveTwoBoneIk({
-        root: this.armR,
-        mid: this.elbowR,
-        end: this.wristR,
-        target: ROPE_TARGET_R,
-        pole: ROPE_POLE_R,
-        accountForParentScale: true,
-        tolerance: 0.002,
-      });
-    }
-    this.bodyGroup.updateWorldMatrix(true, true);
-    this.ropeLeftGripError = this.wristL
-      .getWorldPosition(ROPE_GRIP_SAMPLE)
-      .distanceTo(ROPE_TARGET_L);
-    this.ropeRightGripError = this.wristR
-      .getWorldPosition(ROPE_GRIP_SAMPLE)
-      .distanceTo(ROPE_TARGET_R);
+    if (!attached && !result.active) this.ropeBodyRope = null;
   }
 
   /**
@@ -21292,8 +21243,10 @@ export class Player {
     );
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.grab, gloveGrip);
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.fist, gloveFist);
-    if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, glovePose);
-    if (this.gloveRight) setCartoonGlovePose(this.gloveRight, glovePose);
+    // On a swing rope each hand closes round it, and opens as it reaches for its next hold.
+    const [ropeGripRight, ropeGripLeft] = this.ropeBody.grip;
+    if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, ropeGripLeft > 0 ? blendCartoonGlovePose(glovePose, ROPE_GLOVE_POSE, ropeGripLeft) : glovePose);
+    if (this.gloveRight) setCartoonGlovePose(this.gloveRight, ropeGripRight > 0 ? blendCartoonGlovePose(glovePose, ROPE_GLOVE_POSE, ropeGripRight) : glovePose);
     if(this.specialFlip){
       const hand=this.stance>0?this.gloveRight:this.gloveLeft;
       if(hand)setCartoonGlovePose(hand,blendCartoonGlovePose(glovePose,CARTOON_GLOVE_POSES.grab,sampleBackflip(1-this.flipT/this.flipDuration).grab));
@@ -22169,6 +22122,9 @@ export class Player {
       this.playerAnimationBridge.modulateDeformations(skate900Elasticity(this.grabPose,this.stance));
     if(this.underK>0 && !this.isBailing && (this.state==='grind'||this.state==='air'))
       this.playerAnimationBridge.modulateDeformations(skateUnderRailElasticity(this.underK,this.runTime,this.state==='grind'&&!this.railUnder,this.state!=='grind'));
+    // A caught rope stretches the arms and torso as the weight comes on, and they spring back (last frame's state).
+    const ropeStretch = this.ropeBody.deformations();
+    if (ropeStretch) this.playerAnimationBridge.modulateDeformations(ropeStretch);
     if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
       const hit = sampleSoftSkateImpact(this.softSkateImpactT);
       this.bodyGroup.rotation.x += 0.16 * hit.brace;

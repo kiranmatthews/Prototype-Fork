@@ -153,7 +153,7 @@ import {
   BEACHFRONT_COURSE_LENGTH,
   beachfrontPointAtDistance,
 } from "./beachfrontCourse";
-import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
+import { BraidedRope, ropeLocalPoint, drawnRopeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import {RopeBridges,type RopeBridgeSpan,type BridgeAnchors} from './ropeBridges';
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
@@ -594,6 +594,7 @@ interface Crusher {
 export interface RopeSwing {
   visual: BraidedRope;
   bend: number; bendV: number; sway: number; swayV: number;
+  shove?: THREE.Vector3; shoveD?: number; // presentation only: the drawn rope pushed aside by a passing body
   pivot: THREE.Group; // at the anchor; rotation.y = yaw, rotation.z = the swing
   anchor: THREE.Vector3;
   anchorVel: THREE.Vector3; // analytic travelling-anchor velocity at the sampled level time
@@ -10826,7 +10827,7 @@ export class Level {
       rs.sway=Math.sin(phase*1.6+1.1)*flex*.24;
       rs.swayV=Math.cos(phase*1.6+1.1)*flex*.24*rs.speed*1.6;
       rs.pivot.rotation.z=0;
-      rs.visual.update((d,out)=>ropeLocalPoint(rs,d,out));
+      rs.visual.update((d,out)=>drawnRopeLocalPoint(rs,d,out));
     }
 
     // Scrolling pit textures (lava/void) drift forever.

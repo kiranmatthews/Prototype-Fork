@@ -151,12 +151,71 @@ rider positions.
 
 `player.rope` is the attached idle loop. `player.rope-climb` follows a
 phase-preserving 2.533-second cycle, plays forward while climbing and backward
-while descending, and crossfades to/from hang over Unity's six-frame attached
-blend. `player.rope-release` continuously blends the swing-jump and charged
-backflip variants from the fixed-step release charge and uses Unity's trimmed
-34-frame/17-frame lead-ins. A final two-bone correction keeps both wrists on
-the live rope axis after the authored pose; the pendulum angle never drives or
-distorts the body animation.
+while descending, and crossfades to/from hang over the suite's nine-frame
+attached blend. `player.rope-release` continuously blends the swing-jump and
+charged backflip variants from the fixed-step release charge and uses Unity's
+trimmed 34-frame/17-frame lead-ins.
+
+No rope clip cuts in or out. Whatever the flight was doing eases into the hang
+over `catchBlend`, hang and climb hand over to each other over `attachedBlend`,
+the hang eases into the leap over `releaseBlend`, and the leap eases into the
+fall after it over `leaveBlend` (`UNITY_ROPE_TIMING`).
+
+The charged backflip is paced to the leap. Its source clip takes a full second
+to come round, and no leap off a rope is in the air that long, so at the clip's
+own pace it was always cut off upside down by the ground. `ropeLeap` now gives
+`unityRopeReleaseDuration` the leap's own time in the air
+(`unityRopeLeapAirSeconds`, from the launch speed and the two on-foot
+gravities), and the flip has come round nine tenths of the way through it. The
+tap release keeps the swing-jump clip's own length. Only the clip's clock
+changes: the leap's speed, height and gravity are untouched.
+
+### Rope body layer
+
+The clips say how the limbs move; `src/animation/ropeSwingBody.ts` says where
+the body is, because a clip authored hanging straight down cannot follow a
+rope that swings. It runs after the clip has posed the skeleton, every frame,
+and moves the visible body and the drawn rope only. The rider position, the
+grip, the rope that can be caught and the leap are gameplay's and are not
+touched. Its numbers are `ROPE_BODY`.
+
+- **Along the rope, behind it.** The torso is stood up out of the clip's lean
+  (as a whole frame: hips to shoulders, shoulders level) and hung by the
+  shoulders below the grip, along the rope's own line, with the rope 0.37 m in
+  front of the hip-to-shoulder line. That clears the chest, the belly and the
+  face at every swing angle. Before, the body hung straight down while the rope
+  swung through it.
+- **A second pendulum.** The body trails the grip's travel and swings past it
+  (under-damped), but the rope is in front of its chest: it can swing back from
+  the rope and not through it, and comes off it with a little of its speed.
+- **Hands.** Each holds the rope across its palm, thumb up it, fingers curled
+  (they open in a reach), instead of the rope running through the wrist. They
+  are planted: a hand stays where it is on the rope while the grip travels,
+  and at the end of its pull lets go and reaches on past the other. Stopping
+  mid-climb leaves them where they are. A body bouncing lower than the arms
+  can hold is held up by them.
+- **Feet.** With rope below the hips, each shoe clamps it from its own side and
+  the pair scissor with the climb. With none (hands at the knot, where most
+  catches are made) the legs hang free as a pendulum of their own that trails
+  the swing and swings on past it.
+- **Catch.** The catch starts from the torso exactly as it was drawn the frame
+  before (hips, turn, and the speed of both) and runs out into the hang on a
+  critically damped spring, so nothing steps when the hands close, even half
+  way round a jump's flip. The arms reach long for the rope (up to 55% past
+  their length, through the shared arm stretch) and the legs swing on through.
+  While the torso is still coming upright the hips hang back, so the head comes
+  up behind the rope.
+- **Leap.** Feet, then hands, then body leave the rope, each on an eased
+  weight that starts with no slope. A held leap coils first: pulled up the
+  rope, knees up, torso short.
+- **The rope gives way.** A leap forward goes straight through where the rope
+  is. Rather than pass through the body, the DRAWN rope is pushed round the
+  body's side (`FlexibleRopeState.shove`, read only by `drawnRopePoint` and the
+  rope's mesh) and swings back on a spring. `flexibleRopePoint`, which decides
+  every grab, never sees it.
+- **Stretch.** The layer multiplies its own length factors onto the clip's
+  (`rope-catch` in the shared elasticity profiles): arms give under the body's
+  weight and at the bottom of the arc, and the torso with them.
 
 ## Quaternius crouch and crawl (catalog 24)
 
@@ -404,16 +463,29 @@ The Unity rope source has a relaxed, bent A-pose, not the Quaternius T-pose.
 The importer now reflects Unity X into the player's handedness and calibrates
 each upper/lower arm and leg to its measured bind child direction. All four
 rope clips retain the resulting source rotations; the old placeholder arm
-tracks no longer override hang/climb. Live grip IK runs afterward, using the
-complete scaled parent transform and the lower shoulder's reach during pulls.
-Other IK consumers retain their existing behavior.
+tracks no longer override hang/climb. The rope body layer runs afterward and
+places the wrists and ankles itself, using the complete scaled parent
+transform. Other IK consumers retain their existing behavior.
 
 Saved Unity rope clips upgrade with their playback speeds retained and exact
 `pre-limb-mapping` recovery copies. Custom non-Unity clips are not replaced.
-Run `npm run check:rope` for independent source-direction fixtures, live
-hang/climb/descend checks, scaled-parent contacts and saved-draft migration.
-The local-only `/rope-review.html?playtest&level=codex-lab&nocrt` review provides
-front/oblique/side views and normal/charged release controls without saving data.
+Run `npm run check:rope` for independent source-direction fixtures; live
+hang, climb and descent with both hands within 2 cm of where they are meant to
+be on every frame, reaches included, and a new hold for about every half metre
+of rope; a full swing with the rope never nearer the hips, spine, chest, neck
+or head than 0.2 m, with the legs round the rope and hanging free; the drawn
+rope giving way to a leap and coming back to its own line; scaled-parent
+contacts and saved-draft migration.
+
+The local-only `/rope-review.html?playtest&level=codex-lab&nocrt` page builds
+one rope over a floor and runs the real player step against it, so the catch
+(a real run and jump, the swing phased to meet it), the hang, the climb, both
+leaps and the landing are the game's own. Its panel drives them by hand.
+`window.__ropeReview` drives them from a script one fixed step at a time, and
+measures two things frame by frame: `clip()` counts, for each body part, the
+surface points that lie inside the drawn rope and how deep, and `joints()`
+gives the world positions the eye follows, for finding a pose that steps
+between frames. It saves nothing.
 
 Run:
 

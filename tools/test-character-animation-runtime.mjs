@@ -292,7 +292,7 @@ try {
     near(upperArmRestAngleWeight, id === 'player.idle' ? 1 : 0);
   }
 
-  // Unity's attached rope states crossfade for exactly six source frames.
+  // The attached rope states crossfade over the suite's own attached blend.
   // Climb phase is gameplay-scrubbed and may run forward or backward without
   // restarting the clip clock.
   hint = UNITY_ROPE_CLIP_IDS.hang;
