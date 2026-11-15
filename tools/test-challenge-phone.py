@@ -60,6 +60,7 @@ with sync_playwright() as pw:
   report['archiveCrystals']=page.evaluate('window.__game.getLevel().skateCollectathon.tokens.length')
   assert page.evaluate('window.__game.getLevel().skateCollectathon.exitReady')
   page.screenshot(path=str(out/'whole-archive.png'))
+  page.wait_for_load_state('networkidle')
   rows=sorted(resources.values(),key=lambda r:r['bytes'],reverse=True)
   report.update(bytes=sum(r['bytes'] for r in rows),resources=rows)
   assert not any('/levels.json' in r['url'] or '/offline-manifest' in r['url'] for r in rows),'Downloaded unrelated game pack'

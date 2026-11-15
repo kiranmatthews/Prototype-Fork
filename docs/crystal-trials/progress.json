@@ -1,5 +1,5 @@
 {
-  "status": "validated_pending_publication",
+  "status": "complete",
   "target": 25,
   "validated": 25,
   "current": null,
@@ -248,7 +248,7 @@
     }
   ],
   "rejected_attempts": 25,
-  "published": false,
+  "published": true,
   "integration_check": {
     "validated_through": 25,
     "evidence": "course/native.json",
@@ -263,18 +263,19 @@
     "evidence": "final-shared-checks.txt",
     "build": "passed",
     "release": "959426696 bytes; passed",
-    "source_validation": "passed after final camera revisions"
+    "source_validation": "passed after final camera revisions",
+    "public_smoke": "passed; 25 crystals and Codex/sol fork build stamp"
   },
-  "outstanding_review": "Public deployment and public-host cold-transfer verification.",
+  "outstanding_review": null,
   "layout_revision": "linear corridor with 256 m station spacing and a continuous flat recovery floor",
   "phone_playtest": {
     "target_megabytes": 50,
-    "status": "local_production_passed",
+    "status": "published_verified",
     "baseline_dev_megabytes": 174.614183,
     "first_production_megabytes": 34.274418,
     "first_build_evidence": "phone-first-build/smoke.json",
     "touch_smoke": "passed",
-    "complete_collection_measurement": "36.373148 MB; public host pending",
+    "complete_collection_measurement": "34.571875 MB on GitHub Pages",
     "evidence": "phone/smoke.json",
     "controller_routes": [
       1,
@@ -285,7 +286,8 @@
       21,
       25
     ],
-    "controller_status": "All seven representative production-phone routes passed, including challenge 21 after the final camera revision."
+    "controller_status": "All seven representative production-phone routes passed, including challenge 21 after the final camera revision.",
+    "public_evidence": "phone-public/smoke.json"
   },
   "native_validated": 25,
   "course_spacing_metres": 256,
@@ -299,5 +301,20 @@
     "touch_passed": true,
     "evidence": "phone/smoke.json",
     "reject_choices": 26
+  },
+  "published_url": "https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch",
+  "deployed_commit": "d8ec262137a7ae07c158c34f9a73ebd2b621e58b",
+  "deployment": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/43672478121",
+  "verified_at": "2026-11-15T03:37:33.962910+00:00",
+  "phone_final_public": {
+    "bytes": 34571875,
+    "megabytes": 34.571875,
+    "menu_bytes": 19299,
+    "challenges": 25,
+    "rejects": 25,
+    "reject_choices": 26,
+    "original_grid": true,
+    "touch_passed": true,
+    "evidence": "phone-public/smoke.json"
   }
 }

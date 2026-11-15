@@ -1,5 +1,7 @@
 # Numbered crystal challenges
 
+[Play on your phone](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch).
+
 25 increasingly demanding crystal retrievals form one straight corridor. Each source module can also be played independently. The challenge starts are 256 metres apart. A continuous flat floor catches ordinary falls; explicit death pits retain the consequences of missed pit crossings.
 
 The design reference is [THPS research](../warehouse-flow/research-principles.md), alongside the measured movement rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md). The separate secret-tape reference has not been located.
@@ -32,13 +34,13 @@ The design reference is [THPS research](../warehouse-flow/research-principles.md
 | 24 | Rail transfers and trick gate → enemy → spring → rope → timed steps. |
 | 25 | TNT and two switches → rope → six timed steps → Nitro-framed spring. |
 
-**25/25 challenges validated locally.** Every challenge passes native and browser input routes and a full-resolution visual review. One uninterrupted run collects all 25 crystals, walks every connecting gap and recovery route, and finishes through the real exit. Publication and public-host download verification are pending. [Progress and evidence](progress.json).
+**25/25 challenges validated locally.** Every challenge passes native and browser input routes and a full-resolution visual review. One uninterrupted run collects all 25 crystals, walks every connecting gap and recovery route, and finishes through the real exit. Published through GitHub Pages; the live course and phone entry pass with clean consoles. [Progress and evidence](progress.json).
 
 The course has one exit after the last challenge, opened by all 25 crystals. Soft recovery keeps collected crystals; a fresh run clears them. These are practice rewards and do not alter campaign progress.
 
 Rejected physical layouts remain in a separate playable archive with an open exit. The superseded eight-station grid is preserved as rejected layout 0. See the [rejects index](rejects/README.md).
 
-The dedicated `challenge-playtest.html` entry provides touch controls, a numbered picker, individual playtests, the whole course, and the rejects. It excludes level-pack synchronization and the full-game offline installer. The final local production build transferred **36.4 MB** with caching disabled, including the whole 25-challenge course, all 25 rejected attempts, and the original eight-challenge grid. The initial picker transferred only **19 KB** before Play. Touch movement, pause, retry, and portrait/landscape layouts passed. See [phone transfer evidence](phone/smoke.json); public-host verification follows deployment. The ordinary development entry transferred 174.6 MB in the comparison test, including 67.0 MB of unrelated level data.
+The dedicated `challenge-playtest.html` entry provides touch controls, a numbered picker, individual playtests, the whole course, and the rejects. The public entry transferred **34.6 MB** with caching disabled, including the whole course, all 25 rejected attempts, the original eight-challenge grid, models and audio. The picker transferred only **19.3 KB** before Play. It does not fetch the shared level pack or install the full offline game. Touch movement, pause, retry, portrait and landscape pass. Seven representative production-phone controller routes also pass. See [public phone evidence](phone-public/smoke.json), [public course/build verification](public/smoke.json), and [deployment](public/deployment.json). The local gzip server measured 36.4 MB; the ordinary development entry measured 174.6 MB.
 
 [The continuous 25-challenge run](course/native.json) records 185,005 physics steps through the corridor, including deliberate failure/recovery checks. `course-six/` and `course-ten/` preserve earlier assemblies.
 
