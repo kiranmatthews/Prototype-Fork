@@ -12088,7 +12088,7 @@ the view's corners, and the side-on wait for the hoist.
 Brief: refine the existing rope climb, jump-on, swing and jump-off animations,
 fixing the clipping through the different movements and parts of the swing,
 and making the transitions extremely smooth, natural and bouncy. About 3 h
-30 min from the prompt to the pushed branch, and 4 h 15 min to the playable
+30 min from the prompt to the pushed branch, and about 4 h to the playable
 page. No level changed, and nothing in
 `src/tuning.ts`: the grip, the climb speed, the grab radius and the leap are
 as they were.
