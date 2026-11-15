@@ -6,6 +6,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; font-synthesis: none; }
 button, select, input { font: inherit; color: inherit; touch-action: manipulation; }
 /* Under a phone's top bar, the page colour rather than whatever scrolls beneath the stage. */
@@ -40,6 +41,12 @@ kbd { font-family: var(--display); font-size: 10px; color: var(--fg); background
 .dpad button:nth-child(3) { grid-column: 2; grid-row: 2; } .dpad button:nth-child(4) { grid-column: 3; grid-row: 2; }
 .acts { display: flex; gap: 4px; }
 @media (pointer: coarse) { .pad { display: flex; } .hud-keys { display: none; } }
+.versus { position: absolute; top: 46px; right: 10px; display: flex; gap: 8px; pointer-events: none; }
+.versus figure { width: clamp(108px, 15vw, 200px); gap: 4px; }
+.versus canvas, #versus-slot { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; border: 1px solid var(--line); border-radius: 6px; }
+.versus canvas { image-rendering: auto; background: var(--bg); }
+.versus figcaption { justify-self: start; white-space: nowrap; color: var(--fg); font-size: 11.5px; background: rgb(13 11 28 / .78); border-radius: 4px; padding: 2px 6px; }
+.toggle small { color: var(--muted); font-size: 12px; }
 
 .panels { display: grid; gap: 12px; min-width: 0; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 10px; }
@@ -53,6 +60,8 @@ h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 12px; 
 .verdict ol b { color: var(--fg); font-weight: 600; }
 .verdict li { color: #d5cdea; }
 .verdict li::marker { color: var(--hot); font-family: var(--display); font-size: 11px; }
+.fit { color: #d5cdea; border-top: 1px solid var(--line); padding-top: 10px; }
+.fit b { color: var(--fg); font-weight: 600; }
 .show { display: inline-flex; flex-wrap: wrap; gap: 5px; margin-left: 2px; vertical-align: middle; }
 .show button { background: transparent; border: 1px solid var(--hot); color: var(--hot); border-radius: 999px; padding: 1px 10px; font-size: 12.5px; min-height: 24px; cursor: pointer; }
 .show button:hover, .show button[aria-pressed="true"] { background: var(--hot); color: var(--ink); }
@@ -85,6 +94,7 @@ figcaption b { color: var(--hot); font-family: var(--display); font-weight: 400;
   .bench { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .stage { top: env(safe-area-inset-top, 0px); height: 50vh; min-height: 300px; z-index: 5; box-shadow: 0 10px 24px rgb(13 11 28 / .6); }
   .back { order: 0; margin-left: 0; flex-basis: 100%; }
+  .versus .count { display: none; }
 }
 @media (pointer: coarse) { .show button { min-height: 34px; padding: 4px 14px; } .chips button, .row button, .row select { min-height: 42px; } .toggle { min-height: 42px; } input[type="range"] { height: 36px; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }

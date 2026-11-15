@@ -14,6 +14,10 @@
       <canvas id="stage" tabindex="0" aria-label="The rider drawn from slices. W A S D or the arrow keys move, Space jumps, dragging turns the camera."></canvas>
       <div class="hud hud-top"><b id="hud-clip">Loading the slices…</b><span id="hud-draw"></span><span id="hud-fps"></span></div>
       <p class="hud hud-keys"><kbd>W A S D</kbd> move <kbd>Shift</kbd> walk <kbd>Space</kbd> jump <kbd>F</kbd> spin <kbd>B</kbd> board <i>drag to turn the camera</i></p>
+      <div class="versus" id="versus" hidden>
+        <figure><canvas id="versus-real" width="240" height="320" aria-label="The game’s own rider at this moment of the animation"></canvas><figcaption>The game today</figcaption></figure>
+        <figure><div id="versus-slot" role="img" aria-label="The stacked rider at the same moment, from the same camera"></div><figcaption>Stacked<span class="count"> · <span id="versus-count"></span></span></figcaption></figure>
+      </div>
       <div class="pad" aria-label="Touch controls">
         <div class="dpad"><button type="button" data-hold="KeyW" aria-label="Forward">▲</button><button type="button" data-hold="KeyA" aria-label="Left">◀</button><button type="button" data-hold="KeyS" aria-label="Back">▼</button><button type="button" data-hold="KeyD" aria-label="Right">▶</button></div>
         <div class="acts"><button type="button" data-hold="KeyB">Board</button><button type="button" data-hold="KeyF">Spin</button><button type="button" data-hold="Space">Jump</button></div>
@@ -21,16 +25,17 @@
     </section>
     <aside class="panels" aria-label="Findings and controls">
       <section class="card verdict">
-        <h2>Short answer</h2>
-        <p class="headline">Yes, the look works for this game, and it is running here on the real animations. Two parts of the plan need to change.</p>
+        <h2>Honest answer</h2>
+        <p class="headline">It can be done, and it is running here on the real animations. I would not rebuild the rider this way.</p>
         <ol>
-          <li><b>It holds up at the game’s normal cameras.</b> From behind the rider, on foot and on the board, the stack reads clearly. <span class="show"><button type="button" data-show="chase">Show me</button></span></li>
-          <li><b>Side-on rooms break flat slices.</b> Seen edge-on they turn into a pile of lines. Drawn thick, or as solid cubes, they hold. <span class="show"><button type="button" data-show="side-thin">Flat</button><button type="button" data-show="side-solid">Solid</button></span></li>
-          <li><b>Slices cannot be worked out from four pictures.</b> They are cut from the 3D rider the game already has; pictures can only supply colour. Four is also one short: the camera looks down on the rider, so it needs a picture from above. <span class="show"><button type="button" data-show="top-missing">Four pictures</button><button type="button" data-show="top-present">With one from above</button></span></li>
-          <li><b>Repainting the stills is the weak step.</b> A line drawn round the edge of one picture is not on the edge from any other side, so on the model it lands as smears. Tested with a stand-in made in code, not a real image model. <span class="show"><button type="button" data-show="painted">Show me</button></span></li>
-          <li><b>Add the look while drawing instead.</b> Design it once, then apply it as rules: a palette, and an outline worked out from the model. It is the same from every angle and in every frame, with nothing to repaint. <span class="show"><button type="button" data-show="rules">Comic</button><button type="button" data-show="neon">Neon</button></span></li>
-          <li><b>The price is the live animation.</b> Today the rider is posed fresh every frame: moves blend into each other and limbs stretch with speed. A stack plays back fixed poses, so every blend would have to be baked as frames of its own. <span class="show"><button type="button" data-show="frames">See the frames</button></span></li>
+          <li><b>It does work as a way to draw him.</b> From the game’s normal cameras, behind the rider on foot and on the board, the stack reads clearly. <span class="show"><button type="button" data-show="chase">Show me</button></span></li>
+          <li><b>But look at what it replaces.</b> The cubes are 5&nbsp;cm, so his whole head is 16 squares across. Each animation becomes a handful of fixed poses, where the game now poses him fresh every frame, blending moves and stretching limbs. <span class="show"><button type="button" data-show="versus">Side by side</button></span></li>
+          <li><b>The plan’s pipeline does not hold.</b> Slices cannot be worked out from four pictures. They have to be cut from the 3D rider, so the model stays the real source either way, and colour needs a fifth picture from above. <span class="show"><button type="button" data-show="top-missing">Four pictures</button><button type="button" data-show="top-present">With one from above</button></span></li>
+          <li><b>The image-model step can add little.</b> A still keeps 56 by 72 squares once it is on the stack, and a line drawn round the edge of a picture lands on the model as smears. What survives is a flat change of colour. Tested with stand-ins made in code, not a real image model. <span class="show"><button type="button" data-show="painted">Show me</button></span></li>
+          <li><b>A look added while drawing does that job for free.</b> A palette, and an outline worked out from the model, are the same from every angle and in every frame. <span class="show"><button type="button" data-show="rules">Comic</button><button type="button" data-show="neon">Neon</button></span></li>
+          <li><b>Side-on rooms need a second way of drawing it.</b> Seen edge-on, flat slices turn into a pile of lines; they have to be drawn thick or as solid cubes. <span class="show"><button type="button" data-show="side-thin">Flat</button><button type="button" data-show="side-solid">Solid</button></span></li>
         </ol>
+        <p class="note fit"><b>Where it would fit:</b> as an extra, not a replacement. An unlockable skin, a retro bonus room, the figures on a menu or map: things seen from above that only turn.</p>
       </section>
       <section class="card">
         <h2>Camera</h2>
@@ -48,6 +53,7 @@
       <section class="card">
         <h2>Animation</h2>
         <div id="clip-buttons" class="chips"></div>
+        <div class="toggles"><label class="toggle"><input id="versus-toggle" type="checkbox"> Beside the game’s own rider <small>(run, walk, ollie)</small></label></div>
         <div class="row"><button type="button" id="pause" aria-pressed="false">Pause</button><button type="button" id="step">Step one frame</button><select id="rate" aria-label="Playback speed"><option value="0.25">¼ speed</option><option value="0.5">½ speed</option><option value="1" selected>Full speed</option></select></div>
       </section>
       <section class="card">

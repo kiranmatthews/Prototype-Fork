@@ -11996,3 +11996,13 @@ Validated: type-check, production build, the lab and its packaged copy loaded
 in a browser at desktop and phone widths with no console errors, and every
 preset and clip stepped through. Frame rate was seen only on a software
 renderer.
+
+Follow-up, about 1 h later: the owner sent the post that prompted the idea and
+asked for a plain verdict grounded in the demo. X could not be opened from the
+session, so the lab was checked against the open recipe behind the current
+sprite-stacking posts instead; its drawing rule and its stated limits match the
+lab's. Added a side-by-side: loops of the game's own rider (run, walk, ollie)
+captured from the chase camera, shown in step with the stack drawn from the
+same camera. The page now says it plainly: it can be done, but it is not a good
+way to rebuild the rider, and it fits better as an extra (a skin, a bonus room,
+menu figures).

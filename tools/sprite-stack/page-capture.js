@@ -1,6 +1,7 @@
 // Runs inside the game page (Animation Studio open). Poses the real rider with a studio clip at a given time and
 // captures it from six orthographic directions, colour and depth, in the rider's own frame.
-// Exposed as window.__stackCapture = { setup, measure, frame, restore }.
+// `reference` renders him as the game draws him, for a side-by-side with the stack.
+// Exposed as window.__stackCapture = { setup, measure, frame, reference, restore }.
 (() => {
   const S = {};
   const setup = async (opts) => {
@@ -87,6 +88,37 @@
     } finally { (parent ?? S.home).add(p.group); r.setRenderTarget(keep.rt); r.setClearColor(keep.clear, keep.alpha); r.autoClear = keep.auto; r.shadowMap.enabled = keep.shadow; }
     return { views: out, R };
   };
+  /**
+   * The rider as the game draws him, one tile per time, for a side-by-side with his stack. The camera sits `o.dist`
+   * metres from a point `o.height` above his origin, `o.elev` degrees up and `o.yaw` degrees round from straight behind
+   * (toward his left-hand side as the lab's camera turns). Each tile is rendered at twice its size and scaled down.
+   * Returns one WebP: tiles of `o.w` by `o.h` in `o.cols` columns on `o.background`.
+   */
+  const reference = (clipId, times, o) => {
+    const { T, p, g, cap } = S, r = g.renderer, W = o.w * 2, H = o.h * 2, [rt] = target(W, H);
+    const cam = S.viewCam ?? (S.viewCam = new T.PerspectiveCamera()); cam.fov = o.fov; cam.aspect = o.w / o.h; cam.near = .1; cam.far = 60; cam.updateProjectionMatrix();
+    const sheet = document.createElement('canvas'); sheet.width = o.cols * o.w; sheet.height = Math.ceil(times.length / o.cols) * o.h;
+    const ctx = sheet.getContext('2d'); ctx.fillStyle = o.background; ctx.fillRect(0, 0, sheet.width, sheet.height); ctx.imageSmoothingQuality = 'high';
+    const tile = document.createElement('canvas'); tile.width = W; tile.height = H; const tctx = tile.getContext('2d'), image = tctx.createImageData(W, H), px = new Uint8Array(W * H * 4);
+    const keep = { rt: r.getRenderTarget(), clear: r.getClearColor(new T.Color()), alpha: r.getClearAlpha(), auto: r.autoClear, shadow: r.shadowMap.enabled };
+    const e = o.elev * Math.PI / 180, y = o.yaw * Math.PI / 180;
+    r.shadowMap.enabled = false; r.autoClear = true;
+    try {
+      for (const [n, time] of times.entries()) {
+        pose(clipId, time);
+        const f = frameOf(), focus = f.o.clone().addScaledVector(f.y, o.height), parent = p.group.parent;
+        cam.position.copy(focus).addScaledVector(f.x, -Math.sin(y) * o.dist * Math.cos(e)).addScaledVector(f.y, o.dist * Math.sin(e)).addScaledVector(f.z, -Math.cos(y) * o.dist * Math.cos(e));
+        cam.up.copy(f.y); cam.lookAt(focus); cam.updateMatrixWorld(true);
+        cap.add(p.group);
+        try { r.setClearColor(0x000000, 0); r.setRenderTarget(rt); r.clear(); r.render(cap, cam); r.readRenderTargetPixels(rt, 0, 0, W, H, px); }
+        finally { (parent ?? S.home).add(p.group); }
+        for (let row = 0; row < H; row++) image.data.set(px.subarray((H - 1 - row) * W * 4, (H - row) * W * 4), row * W * 4);
+        tctx.putImageData(image, 0, 0);
+        ctx.drawImage(tile, 0, 0, W, H, (n % o.cols) * o.w, Math.floor(n / o.cols) * o.h, o.w, o.h);
+      }
+    } finally { r.setRenderTarget(keep.rt); r.setClearColor(keep.clear, keep.alpha); r.autoClear = keep.auto; r.shadowMap.enabled = keep.shadow; }
+    return sheet.toDataURL('image/webp', o.quality ?? .9);
+  };
   const restore = () => { for (const o of S.hidden ?? []) o.visible = true; };
-  window.__stackCapture = { setup, measure, frame, restore };
+  window.__stackCapture = { setup, measure, frame, reference, restore };
 })();

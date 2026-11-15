@@ -3,13 +3,14 @@
 //   node tools/sprite-stack/bake.mjs capture     pose the rider in the running game and store the six-sided captures
 //   node tools/sprite-stack/bake.mjs build       captures -> stills for an image model, slice sheets and the manifest
 //   node tools/sprite-stack/bake.mjs             capture if nothing is stored yet, then build
+//   node tools/sprite-stack/bake.mjs reference   loops of the real rider, for the lab's side-by-side with the stack
 //
 //   build --recolour <dir> --style ink           rebuild the slices with colours from restyled stills in <dir>
 //   build --colour-views 0,1,2,3 --style four-sides   colour from the four side stills only (no view from above)
 //   capture --clips player.run,player.idle       capture only these clips
 //
-// `capture` needs the dev server (`npx vite --port 5190`, or --server <url>) and Playwright (PLAYWRIGHT_MODULE, and
-// PLAYWRIGHT_CHROMIUM for a browser binary outside Playwright's own). `build` needs neither.
+// `capture` and `reference` need the dev server (`npx vite --port 5190`, or --server <url>) and Playwright
+// (PLAYWRIGHT_MODULE, and PLAYWRIGHT_CHROMIUM for a browser binary outside Playwright's own). `build` needs neither.
 //
 // Stored under tools/sprite-stack/.work/ (not committed): captures/ holds colour and depth for every frame; sheets/
 // holds the stills an image model would restyle, one PNG per clip (one row per frame, five columns: front, left, back,
@@ -23,7 +24,7 @@ import { encodePng, decodePng, fromB64 } from './png.mjs';
 import { GRID, boxOf, reduceView, reconstruct, buildPalette, key15, paletteMapper, sliceSheet, debugViews, VIEW_NAMES } from './volume.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, '../..');
-const argv = process.argv.slice(2), command = ['capture', 'build'].includes(argv[0]) ? argv[0] : 'all';
+const argv = process.argv.slice(2), command = ['capture', 'build', 'reference'].includes(argv[0]) ? argv[0] : 'all';
 const option = (name) => { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : undefined; };
 const OUT = path.resolve(ROOT, option('--out') ?? 'public/sprite-stack-lab'), STYLE = option('--style') ?? 'captured';
 const WORK = path.resolve(ROOT, option('--work') ?? 'tools/sprite-stack/.work'), CAPTURES = path.join(WORK, 'captures');
@@ -73,10 +74,10 @@ const loadClip = async (id) => {
   return head.frames.map(f => ({ ...f, views: f.views.map(v => ({ ...v, col: take(v.w * v.h * 4), dep: take(v.w * v.h * 4) })) }));
 };
 
-const capture = async () => {
+/** Open the game with the Animation Studio ready and the capture script loaded; `work` gets the page and the studio's clips. */
+const withStudio = async (work) => {
   const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
   const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM || undefined, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--no-sandbox'] });
-  const started = Date.now();
   try {
     const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
     page.on('pageerror', e => log('pageerror', e.message.slice(0, 200)));
@@ -86,33 +87,65 @@ const capture = async () => {
     await page.waitForFunction(() => window.__game?.getCurrentLevel?.() && !window.__game.gameFlow?.blocksGameplay, null, { timeout: 480000 });
     await page.waitForTimeout(2500);
     await page.addScriptTag({ content: await readFile(path.join(HERE, 'page-capture.js'), 'utf8') });
-    const info = await page.evaluate(() => window.__stackCapture.setup({}));
-    const studioSeconds = +info.clips.reduce((a, c) => a + (c.end - c.start), 0).toFixed(1);
-    log('studio clips', info.clips.length, 'seconds', studioSeconds);
-    await mkdir(CAPTURES, { recursive: true });
-    let index = { grid: GRID, clips: [] }; try { index = JSON.parse(await readFile(path.join(CAPTURES, 'index.json'), 'utf8')); } catch { /* first capture */ }
-    Object.assign(index, { grid: GRID, studioClips: info.clips.length, studioSeconds });
-    for (const spec of CLIPS.filter(c => !ONLY || ONLY.includes(c.id))) {
-      const clip = info.clips.find(c => c.id === spec.id);
-      if (!clip) { log('missing clip', spec.id); continue; }
-      const span = clip.end - clip.start, loop = clip.loop === 'loop', n = spec.frames, frames = [];
-      for (let f = 0; f < n; f++) {
-        const time = clip.start + span * (loop ? f / n : f / (n - 1));
-        // Anchor the capture box on the pose (snapped to whole voxels), so travelling and jumping clips stay inside it.
-        const b = await page.evaluate(([id, t]) => window.__stackCapture.measure(id, [t]), [spec.id, time]);
-        const centre = [0, 1, 2].map(k => Math.round((b.min[k] + b.max[k]) / 2 / GRID.voxel) * GRID.voxel);
-        centre[1] = Math.max(centre[1], Math.round((b.min[1] + box.e[1] - .1) / GRID.voxel) * GRID.voxel); // never lose the feet
-        const cap = await page.evaluate(([id, t, bx, px]) => window.__stackCapture.frame(id, t, bx, px), [spec.id, time, { c: centre, e: box.e }, box.px]);
-        frames.push({ time, centre, R: cap.R, views: cap.views.map(v => ({ ...v, col: fromB64(v.col), dep: fromB64(v.dep) })) });
-      }
-      await storeClip(spec.id, frames);
-      index.clips = [...index.clips.filter(c => c.id !== spec.id), { id: spec.id, frames: n, loop, span, speed: clip.speed ?? 1, studioName: clip.name }];
-      await writeFile(path.join(CAPTURES, 'index.json'), JSON.stringify(index));
-      log('captured', spec.id.padEnd(40), 'frames', String(n).padStart(2), 'elapsed s', ((Date.now() - started) / 1000).toFixed(0));
-    }
+    await work(page, await page.evaluate(() => window.__stackCapture.setup({})));
     await page.evaluate(() => window.__stackCapture.restore());
   } finally { await browser.close(); }
 };
+
+const capture = () => withStudio(async (page, info) => {
+  const started = Date.now();
+  const studioSeconds = +info.clips.reduce((a, c) => a + (c.end - c.start), 0).toFixed(1);
+  log('studio clips', info.clips.length, 'seconds', studioSeconds);
+  await mkdir(CAPTURES, { recursive: true });
+  let index = { grid: GRID, clips: [] }; try { index = JSON.parse(await readFile(path.join(CAPTURES, 'index.json'), 'utf8')); } catch { /* first capture */ }
+  Object.assign(index, { grid: GRID, studioClips: info.clips.length, studioSeconds });
+  for (const spec of CLIPS.filter(c => !ONLY || ONLY.includes(c.id))) {
+    const clip = info.clips.find(c => c.id === spec.id);
+    if (!clip) { log('missing clip', spec.id); continue; }
+    const span = clip.end - clip.start, loop = clip.loop === 'loop', n = spec.frames, frames = [];
+    for (let f = 0; f < n; f++) {
+      const time = clip.start + span * (loop ? f / n : f / (n - 1));
+      // Anchor the capture box on the pose (snapped to whole voxels), so travelling and jumping clips stay inside it.
+      const b = await page.evaluate(([id, t]) => window.__stackCapture.measure(id, [t]), [spec.id, time]);
+      const centre = [0, 1, 2].map(k => Math.round((b.min[k] + b.max[k]) / 2 / GRID.voxel) * GRID.voxel);
+      centre[1] = Math.max(centre[1], Math.round((b.min[1] + box.e[1] - .1) / GRID.voxel) * GRID.voxel); // never lose the feet
+      const cap = await page.evaluate(([id, t, bx, px]) => window.__stackCapture.frame(id, t, bx, px), [spec.id, time, { c: centre, e: box.e }, box.px]);
+      frames.push({ time, centre, R: cap.R, views: cap.views.map(v => ({ ...v, col: fromB64(v.col), dep: fromB64(v.dep) })) });
+    }
+    await storeClip(spec.id, frames);
+    index.clips = [...index.clips.filter(c => c.id !== spec.id), { id: spec.id, frames: n, loop, span, speed: clip.speed ?? 1, studioName: clip.name }];
+    await writeFile(path.join(CAPTURES, 'index.json'), JSON.stringify(index));
+    log('captured', spec.id.padEnd(40), 'frames', String(n).padStart(2), 'elapsed s', ((Date.now() - started) / 1000).toFixed(0));
+  }
+});
+
+// ───────────────────────────── reference ─────────────────────────────
+/**
+ * Loops of the rider as the game draws him, for the lab's side-by-side: the chase camera's angle (the lab draws the
+ * stack from the same camera), enough poses to play smoothly, on the lab's background colour.
+ */
+const REFERENCE = { tile: [240, 320], cols: 8, background: '#15122a', clips: [
+  { id: 'player.run', fps: 60, dist: 6.5, elev: 37, yaw: 52, height: 1.5, fov: 30 },
+  { id: 'player.walk', fps: 30, dist: 6.5, elev: 37, yaw: 52, height: 1.5, fov: 30 },
+  { id: 'player.skate-study.basic-ollie', fps: 20, dist: 7.5, elev: 37, yaw: 52, height: 1.9, fov: 35 },
+] };
+const reference = () => withStudio(async (page, info) => {
+  const manifestPath = path.join(OUT, 'manifest.json'), manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  await mkdir(path.join(OUT, 'reference'), { recursive: true });
+  manifest.reference = { tile: REFERENCE.tile, cols: REFERENCE.cols, clips: { ...manifest.reference?.clips } }; // a partial run keeps the other loops
+  for (const { id, fps, ...camera } of REFERENCE.clips.filter(c => !ONLY || ONLY.includes(c.id))) {
+    const clip = info.clips.find(c => c.id === id);
+    if (!clip) { log('missing clip', id); continue; }
+    const span = clip.end - clip.start, loop = clip.loop === 'loop', n = Math.max(8, Math.round(span / (clip.speed ?? 1) * fps));
+    const times = Array.from({ length: n }, (_, i) => clip.start + span * (loop ? i / n : i / (n - 1)));
+    const url = await page.evaluate(([clipId, list, o]) => window.__stackCapture.reference(clipId, list, o), [id, times, { ...camera, w: REFERENCE.tile[0], h: REFERENCE.tile[1], cols: REFERENCE.cols, background: REFERENCE.background }]);
+    const bytes = Buffer.from(url.split(',')[1], 'base64'), file = `reference/${slug(id)}.webp`;
+    await writeFile(path.join(OUT, file), bytes);
+    manifest.reference.clips[id] = { file, frames: n, ...camera };
+    log('reference', id.padEnd(40), 'poses', String(n).padStart(3), 'KB', (bytes.length / 1024).toFixed(0));
+  }
+  await writeFile(manifestPath, JSON.stringify(manifest));
+});
 
 // ───────────────────────────── build ─────────────────────────────
 /** A restyled picture for one frame: its own strip (`<slug>-f00.png`, optionally under strips/) or a row of the clip's sheet. */
@@ -190,11 +223,12 @@ const build = async () => {
   const manifestPath = path.join(OUT, 'manifest.json');
   let manifest = null; try { manifest = JSON.parse(await readFile(manifestPath, 'utf8')); } catch { /* first build */ }
   const fresh = { version: 1, grid: [GRID.nx, GRID.ny, GRID.nz], voxel: GRID.voxel, sheet: { cell: [cellW, cellH], views: SHEET_VIEWS.map(v => VIEW_NAMES[v]) }, source: { studioClips: index.studioClips, studioSeconds: index.studioSeconds }, clips, styles: {} };
-  if (!manifest || writeSheets) manifest = { ...fresh, styles: manifest?.styles ?? {} };
+  if (!manifest || writeSheets) manifest = { ...fresh, styles: manifest?.styles ?? {}, ...(manifest?.reference ? { reference: manifest.reference } : {}) };
   manifest.styles[STYLE] = { palette: palette.map(c => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('')), bytes };
   await writeFile(manifestPath, JSON.stringify(manifest));
   log('style', STYLE, 'clips', clips.length, 'frames', clips.reduce((a, c) => a + c.frames, 0), 'palette', palette.length, 'slice sheets KB', (bytes / 1024).toFixed(0), 'total s', ((Date.now() - started) / 1000).toFixed(0));
 };
 
 if (command === 'capture' || (command === 'all' && !(await exists(path.join(CAPTURES, 'index.json'))))) await capture();
-if (command !== 'capture') await build();
+if (command === 'reference') await reference();
+else if (command !== 'capture') await build();

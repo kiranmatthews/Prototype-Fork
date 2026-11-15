@@ -11,7 +11,9 @@ import './lab.css';
  */
 interface ClipInfo { id: string; slug: string; label: string; group: string; studioName: string; frames: number; loop: boolean; seconds: number; offsets: [number, number, number][]; }
 interface StyleInfo { palette: string[]; bytes: number; }
-interface Manifest { version: number; grid: [number, number, number]; voxel: number; sheet: { cell: [number, number]; views: string[] }; source: { studioClips: number; studioSeconds: number }; clips: ClipInfo[]; styles: Record<string, StyleInfo>; }
+/** A loop of the rider as the game draws him, and the camera it was taken from (relative to the rider). */
+interface Reference { file: string; frames: number; dist: number; elev: number; yaw: number; height: number; fov: number; }
+interface Manifest { version: number; grid: [number, number, number]; voxel: number; sheet: { cell: [number, number]; views: string[] }; source: { studioClips: number; studioSeconds: number }; clips: ClipInfo[]; styles: Record<string, StyleInfo>; reference?: { tile: [number, number]; cols: number; clips: Record<string, Reference> }; }
 /**
  * `feet` is how far the lowest drawn pixel of each frame sits above the rider's origin and `ground` the lowest of them;
  * `box` is the part of the grid the clip ever uses (x, z, then layers); `shell` marks the empty cells that touch a filled one.
@@ -270,12 +272,41 @@ const rail = new THREE.Group();
 { const steel = new THREE.MeshLambertMaterial({ color: '#8f8ab8' }), bar = new THREE.Mesh(new THREE.BoxGeometry(.12, .12, 7), steel); bar.position.y = .72; rail.add(bar);
   for (const z of [-3, 0, 3]) { const leg = new THREE.Mesh(new THREE.BoxGeometry(.1, .66, .1), steel); leg.position.set(0, .33, z); rail.add(leg); } }
 rail.visible = false; rider.add(rail);
+// ───────────────────────────── side by side ─────────────────────────────
+// The game's own rider, captured from the chase camera, next to the stack drawn from that same camera at the same moment.
+for (const mesh of [sliceMesh, sliceOutline, voxelMesh, voxelOutline]) mesh.layers.enable(1);
+const versusCamera = new THREE.PerspectiveCamera(); versusCamera.layers.set(1);
+const versusEl = $('versus'), versusSlot = $('versus-slot'), versusReal = $<HTMLCanvasElement>('versus-real').getContext('2d')!;
+const referenceImages = new Map<string, HTMLImageElement>();
+const referenceImage = (file: string): HTMLImageElement | null => {
+  let image = referenceImages.get(file);
+  if (!image) { image = new Image(); image.src = `${BASE}${file}`; referenceImages.set(file, image); }
+  return image.complete && image.naturalWidth ? image : null;
+};
+const versusEye = new THREE.Vector3(), versusFocus = new THREE.Vector3();
+const drawVersus = (ref: Reference, sheet: Sheet): void => {
+  const { tile: [w, h], cols } = manifest.reference!, image = referenceImage(ref.file);
+  if (image) { const n = Math.min(ref.frames - 1, Math.floor(state.phase * ref.frames)); versusReal.drawImage(image, (n % cols) * w, Math.floor(n / cols) * h, w, h, 0, 0, w, h); }
+  $('versus-count').textContent = `${state.clip.frames} poses`;
+  // The stack stands on its clip's lowest frame, so the camera drops by the same amount to stay level with the capture.
+  const e = ref.elev * RAD, y = ref.yaw * RAD, reach = ref.dist * Math.cos(e);
+  rider.updateMatrixWorld(true);
+  versusFocus.set(0, ref.height - sheet.ground, 0); versusEye.set(-Math.sin(y) * reach, ref.height - sheet.ground + ref.dist * Math.sin(e), -Math.cos(y) * reach);
+  versusCamera.position.copy(versusEye.applyMatrix4(rider.matrixWorld)); versusCamera.lookAt(versusFocus.applyMatrix4(rider.matrixWorld));
+  const slot = versusSlot.getBoundingClientRect(), stage = canvas.getBoundingClientRect();
+  versusCamera.fov = ref.fov; versusCamera.aspect = slot.width / Math.max(1, slot.height); versusCamera.updateProjectionMatrix();
+  const x = slot.left - stage.left, bottom = stage.bottom - slot.bottom;
+  renderer.setScissorTest(true); renderer.setViewport(x, bottom, slot.width, slot.height); renderer.setScissor(x, bottom, slot.width, slot.height);
+  renderer.render(scene, versusCamera);
+  renderer.setScissorTest(false); renderer.setViewport(0, 0, stage.width, stage.height);
+};
+
 const blob = new THREE.Mesh(new THREE.CircleGeometry(.62, 24), new THREE.MeshBasicMaterial({ color: '#07060f', transparent: true, opacity: .42, depthWrite: false }));
 blob.rotation.x = -Math.PI / 2; scene.add(blob);
 
 // ───────────────────────────── state ─────────────────────────────
 const state = {
-  style: 'captured', look: 'plain' as Look, mode: 'slices' as DrawMode, sub: 1, explode: 1, outline: false, turntable: false,
+  style: 'captured', look: 'plain' as Look, mode: 'slices' as DrawMode, sub: 1, explode: 1, outline: false, turntable: false, versus: false, phase: 0,
   preview: null as ClipInfo | null, paused: false, rate: 1,
   cam: { preset: 'foot', elev: 37, dist: 6.5, ahead: 3.2, yaw: 0, fov: 49 },
   clip: clipById.get('player.idle') ?? manifest.clips[0], time: 0, frame: 0, sheet: null as Sheet | null,
@@ -304,7 +335,7 @@ const applyFrame = (): void => {
   const clip = state.clip, sheet = state.sheet; if (!sheet) return;
   const span = clip.seconds, u = clip.loop ? ((state.time % span) + span) % span / span : clamp(state.time / span, 0, .9999);
   const frame = Math.min(clip.frames - 1, Math.floor(u * clip.frames));
-  state.frame = frame;
+  state.frame = frame; state.phase = u;
   uniforms.uSheet.value = sheet.texture; uniforms.uShell.value = sheet.shell; uniforms.uSheetSize.value.set(sheet.width, sheet.height); uniforms.uFrame.value = frame;
   const [i0, i1, k0, k1, j0, j1] = sheet.box; // one cube of margin all round, for the outline
   uniforms.uBox.value.set(Math.max(0, i0 - 1), Math.max(0, k0 - 1), Math.min(NX, i1 + 2), Math.min(NZ, k1 + 2)); uniforms.uLayers.value.set(Math.max(0, j0 - 1), Math.min(NY - 1, j1 + 1));
@@ -448,7 +479,7 @@ const refresh = (): void => {
     button('Free play', !state.preview, () => { state.preview = null; refresh(); }, 'Back to moving the rider yourself'),
     ...[...groups.entries()].flatMap(([group, list]) => { const head = document.createElement('span'); head.className = 'group'; head.textContent = group; return [head, ...list.map(c => button(c.label, state.preview === c, () => { state.preview = c; setClip(c, true); refresh(); }, c.studioName))]; }),
   );
-  $<HTMLInputElement>('outline').checked = state.outline; $<HTMLInputElement>('turntable').checked = state.turntable;
+  $<HTMLInputElement>('outline').checked = state.outline; $<HTMLInputElement>('turntable').checked = state.turntable; $<HTMLInputElement>('versus-toggle').checked = state.versus;
   for (const el of document.querySelectorAll<HTMLButtonElement>('[data-show]')) el.setAttribute('aria-pressed', String(el.dataset.show === shown));
   $('pause').setAttribute('aria-pressed', String(state.paused)); $('pause').textContent = state.paused ? 'Play' : 'Pause';
   uniforms.uSub.value = state.sub; uniforms.uShade.value.set(...LOOKS[state.look].shade); uniforms.uOutline.value.set(...LOOKS[state.look].outline).divideScalar(255);
@@ -456,7 +487,7 @@ const refresh = (): void => {
   sliceOutline.visible = state.outline && sliceMesh.visible; voxelOutline.visible = state.outline && voxelMesh.visible;
 };
 /** The "show me" buttons of the short answer: each sets the stage up to show one finding. */
-type Setup = { cam: string; yaw?: number; dist?: number; ahead?: number; mode: DrawMode; sub?: number; style: string; look: Look; clip?: string; explode?: number; rate?: number };
+type Setup = { cam: string; yaw?: number; dist?: number; ahead?: number; mode: DrawMode; sub?: number; style: string; look: Look; clip?: string; explode?: number; rate?: number; versus?: boolean };
 const SHOWS: Record<string, Setup> = {
   chase: { cam: 'foot', mode: 'slices', sub: 4, style: 'captured', look: 'plain' },
   'side-thin': { cam: 'side', mode: 'slices', sub: 1, style: 'captured', look: 'plain', dist: 9 },
@@ -466,13 +497,13 @@ const SHOWS: Record<string, Setup> = {
   painted: { cam: 'foot', yaw: 2.5, dist: 5, mode: 'slices', sub: 4, style: 'ink', look: 'plain', clip: 'player.idle' },
   rules: { cam: 'foot', yaw: 2.5, dist: 5, mode: 'slices', sub: 4, style: 'captured', look: 'comic', clip: 'player.idle' },
   neon: { cam: 'foot', yaw: 2.5, dist: 5, mode: 'slices', sub: 4, style: 'captured', look: 'neon', clip: 'player.run' },
-  frames: { cam: 'foot', yaw: .9, mode: 'slices', sub: 4, style: 'captured', look: 'comic', clip: 'player.run', rate: .25 },
+  versus: { cam: 'foot', yaw: .9, mode: 'slices', sub: 4, style: 'captured', look: 'plain', clip: 'player.run', rate: .25, versus: true },
 };
 let shown = '';
 const show = (id: string): void => {
   const setup = SHOWS[id], cam = CAMERAS[setup.cam]; shown = id;
   Object.assign(state.cam, { preset: setup.cam, elev: cam.elev, dist: setup.dist ?? cam.dist, ahead: setup.ahead ?? cam.ahead, fov: cam.fov, yaw: setup.yaw ?? 0 });
-  Object.assign(state, { mode: setup.mode, sub: setup.sub ?? 1, look: setup.look, outline: setup.look !== 'plain', explode: setup.explode ?? 1, rate: setup.rate ?? 1, paused: false, turntable: false });
+  Object.assign(state, { mode: setup.mode, sub: setup.sub ?? 1, look: setup.look, outline: setup.look !== 'plain', explode: setup.explode ?? 1, rate: setup.rate ?? 1, paused: false, turntable: false, versus: setup.versus ?? false });
   if (manifest.styles[setup.style] && state.style !== setup.style) { state.style = setup.style; state.sheet = null; }
   state.preview = setup.clip ? clipById.get(setup.clip) ?? null : null;
   if (!state.preview) { body.board = false; body.action = null; }
@@ -485,6 +516,7 @@ $<HTMLInputElement>('elevation').addEventListener('input', e => { state.cam.elev
 $<HTMLInputElement>('explode').addEventListener('input', e => { state.explode = Number((e.target as HTMLInputElement).value); $('explode-value').textContent = state.explode === 1 ? 'stacked' : `×${state.explode.toFixed(1)}`; });
 $<HTMLInputElement>('outline').addEventListener('change', e => { state.outline = (e.target as HTMLInputElement).checked; refresh(); });
 $<HTMLInputElement>('turntable').addEventListener('change', e => { state.turntable = (e.target as HTMLInputElement).checked; });
+$<HTMLInputElement>('versus-toggle').addEventListener('change', e => { state.versus = (e.target as HTMLInputElement).checked; });
 $<HTMLSelectElement>('rate').addEventListener('change', e => { state.rate = Number((e.target as HTMLSelectElement).value); });
 $('pause').addEventListener('click', () => { state.paused = !state.paused; refresh(); });
 $('step').addEventListener('click', () => { state.paused = true; state.time = (((state.frame + 1) % state.clip.frames) + .5) / state.clip.frames * state.clip.seconds; refresh(); });
@@ -532,6 +564,9 @@ const tick = (now: number): void => {
   blob.position.set(body.pos.x, groundUnder(body.pos.x, body.pos.z, body.pos.y) + .02, body.pos.z); blob.scale.setScalar(clamp(1 - (body.pos.y - blob.position.y) * .12, .45, 1));
   placeCamera(dt);
   renderer.render(scene, camera);
+  const reference = state.versus && state.sheet ? manifest.reference?.clips[state.clip.id] : undefined;
+  versusEl.hidden = !reference;
+  if (reference && state.sheet) drawVersus(reference, state.sheet);
   panelClock += dt; if (panelClock > .09) { panelClock = 0; drawPanels(); }
   $('hud-clip').textContent = `${state.clip.label} · frame ${state.frame + 1}/${state.clip.frames}`;
   $('hud-draw').textContent = state.mode === 'voxels' ? 'solid cubes' : `${NY * state.sub} layers`;

@@ -4,27 +4,52 @@
 with stills of every core animation captured from four angles, restyled by an image model, then cut into slices?
 
 The lab draws Bone Man from stacks of flat slices baked from 18 Animation Studio clips. There is no 3D character on
-the page. He can be walked, jumped and ridden under the game's measured cameras, and every finding below has a
-"show me" button on the page.
+the page. He can be walked, jumped and ridden under the game's measured cameras, the game's own rider can be shown
+beside the stack from the same camera, and every finding below has a "show me" button on the page.
 
 ## Verdict
 
-The look works for this game. Two parts of the plan do not.
+It can be done, and the lab runs it on the real animations. It is not a good way to rebuild the rider.
 
-1. **It holds at the game's normal cameras.** Behind the rider, on foot and on the board, the stack reads clearly.
-2. **Side-on rooms break flat slices.** Seen edge-on they become a pile of lines. Each slice drawn several times
-   through its thickness, or the same data drawn as solid cubes, holds at any angle.
-3. **Slices cannot be worked out from four pictures.** They are cut from the 3D rider; pictures only supply colour.
-   Four is also one short: the cameras look down on the rider, so the deck of the board and the tops of the head and
-   shoulders need a view from above.
-4. **Repainting the stills is the weak step.** Anything painted relative to a picture's edge (an outline, a rim
-   light) is not on the figure's edge from any other side, so it wraps onto the model as smears; thin limbs are all
-   edge. Each still also keeps only 56 by 72 squares of detail once it is on the stack. This was tested with two
-   stand-ins written in code. No image model was run: none was available to the session that built the lab.
-5. **Add the look while drawing instead.** A palette rule and an outline found from the model are identical from
-   every angle and in every frame, and need no repainting. The lab has two (`Comic`, `Neon`).
-6. **The price is the live animation.** The rider is posed fresh every frame today: clips blend and limbs stretch
-   with speed. A stack plays back fixed poses, so every blend would have to be baked as frames of its own.
+1. **It works as a way to draw him.** From the game's normal cameras, behind the rider on foot and on the board,
+   the stack reads clearly.
+2. **It replaces more than it adds.** The squares are 5 cm, so his whole head is 16 across, and each clip becomes a
+   handful of fixed poses (10 for the run) where the game poses him fresh every frame, blending clips and stretching
+   limbs. The lab's side-by-side shows the two from one camera, in step.
+3. **The planned pipeline does not hold.** Slices cannot be worked out from four pictures. They are cut from the 3D
+   rider, so the model stays the real source either way and stacking is one more step after it, not a replacement
+   for it. Colour also needs a fifth view from above: the cameras look down on the rider, and without it the deck of
+   the board loses its grip tape.
+4. **The image-model step can add little.** A still keeps 56 by 72 squares once it is on the stack, and
+   anything painted relative to a picture's edge (an outline, a rim light) wraps onto the model as smears, because
+   it is not on the figure's edge from any other side; thin limbs are all edge. This was tested with two stand-ins
+   written in code. No image model was run: none was available to the session that built the lab. The two limits
+   are properties of the stack, not of the painter, so the best a real model can do here is a flat recolour.
+5. **A look added while drawing does that job for free.** A palette rule and an outline found from the model are
+   identical from every angle and in every frame. The lab has two (`Comic`, `Neon`).
+6. **Side-on rooms need a second way of drawing it.** Seen edge-on, flat slices become a pile of lines. Each slice
+   drawn several times through its thickness, or the same data drawn as solid cubes, holds at any angle.
+
+Where it would fit: as an extra, not a replacement. An unlockable skin, a retro bonus room, the figures on a menu or
+map: things seen from above that only turn. The bake in `tools/sprite-stack/` makes a stack of any clip.
+
+Costs that weigh against using it for the rider, beyond the six points:
+
+- Every animation change means a re-bake, and blends between clips do not exist unless they are baked too.
+- The stack carries the light it was captured under. It will not pick up a level's own lighting without more work.
+- It cuts against two standing rules in `AGENTS.md`. One is to keep the complete authored geometry at every viewing
+  distance. The other is that stretch, compression and rebound are core to every character animation: a deformation
+  smaller than a square vanishes, and one driven by play is not in a baked frame at all.
+
+## The reference post
+
+The idea came with a link to a post on X by the maker of an AI pixel-art generator. X could not be opened from the
+session that built the lab, so the lab was not checked against the post itself. What was checked instead is the open
+recipe behind the current run of sprite-stacking posts, `loktar00/sprite-stacking` on GitHub. Its drawing rule is
+the one the lab uses (the "Classic top-down" camera is the same thing): slices drawn bottom to top, squashed by
+`sin(elevation)` and spaced by `cos(elevation)`. Its stated limits match what the lab found: an object cannot roll
+or bank, because every slice stays horizontal, and a side view collapses the slices into lines. Its examples are
+rigid props on turntables, not animated characters.
 
 ## What was measured
 
@@ -68,6 +93,10 @@ sparsely). Halving the square size multiplies those by eight.
    marches the same texture as cubes. The outline is the stack drawn again one square fatter, in one colour, pushed
    back along each sight line.
 
+The side-by-side uses loops of the real rider (`public/sprite-stack-lab/reference/`, run, walk and ollie) rendered
+by the same capture script from the chase camera's angle, at 20 to 60 poses a second. The lab draws the stack from
+that same camera and steps both from one clock.
+
 ## Running it
 
 ```bash
@@ -82,9 +111,14 @@ PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node tools/sprite-stack/bake.mjs
 node tools/sprite-stack/bake.mjs build
 ```
 
+```bash
+PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node tools/sprite-stack/bake.mjs reference
+```
+
 `capture` stores colour and depth for every frame under `tools/sprite-stack/.work/captures/` (46 MB, not committed).
 `build` needs no browser: it writes the slice sheets and manifest, and the stills an image model would restyle to
 `tools/sprite-stack/.work/sheets/captured/` (one sheet per clip, and one strip per frame in `strips/`).
+`reference` writes the loops of the real rider for the side-by-side.
 
 The variants in the lab:
 
@@ -120,6 +154,7 @@ to the next. The shape always comes from the capture, so a restyle that moves th
 ## Open points
 
 - No image model has been run through the round trip.
+- The lab has not been checked against the X post that prompted it.
 - Frame rate was only seen on a software renderer. The page shows the live figure in its top-left corner.
 - 18 of 102 clips are baked. The clip list is `CLIPS` in `tools/sprite-stack/bake.mjs`.
 - Enemies, pickups and scenery are untouched; a cube rider beside smooth models is an art-direction call.
@@ -131,8 +166,8 @@ to the next. The shape always comes from the capture, so a restyle that moves th
 | Path | Role |
 | --- | --- |
 | `sprite-stack-lab.html`, `src/sprite-stack-lab/` | The lab page |
-| `public/sprite-stack-lab/` | Baked slice sheets, manifest and one example still (3 MB) |
-| `tools/sprite-stack/bake.mjs` | Capture and build |
-| `tools/sprite-stack/page-capture.js` | In-page six-sided capture |
+| `public/sprite-stack-lab/` | Baked slice sheets, manifest, reference loops and one example still (3.8 MB) |
+| `tools/sprite-stack/bake.mjs` | Capture, build and reference |
+| `tools/sprite-stack/page-capture.js` | In-page six-sided capture and reference render |
 | `tools/sprite-stack/volume.mjs`, `png.mjs` | Volume rebuild, palette, slice sheets, PNG read and write |
 | `tools/sprite-stack/style-standin.mjs` | The two code stand-ins for an image-model pass |
