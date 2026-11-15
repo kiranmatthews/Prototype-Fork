@@ -1,6 +1,18 @@
 # Sprite Stack Lab
 
-`sprite-stack-lab.html` answers one question, asked on 15 November 2026: could the rider be drawn by sprite stacking,
+Status: closed on 15 November 2026. The owner agreed with the verdict below: stacking turns the rider into a low-res
+voxel figure and will not be used for the game. The lab page (`sprite-stack-lab.html`, `src/sprite-stack-lab/`) and
+its baked data (`public/sprite-stack-lab/`) were then removed so they do not ship with the game; this write-up and
+`tools/sprite-stack/` stay as the record. The last commit that has the page and data is `042ed5a8`. To look at the
+lab again, check them out from it and put back its line in `tools/site-entries.mjs` and `tools/tool-directory.mjs`:
+
+```bash
+git checkout 042ed5a8 -- sprite-stack-lab.html src/sprite-stack-lab public/sprite-stack-lab
+```
+
+The rest of this document describes the lab as it stood at that commit.
+
+`sprite-stack-lab.html` answered one question, asked on 15 November 2026: could the rider be drawn by sprite stacking,
 with stills of every core animation captured from four angles, restyled by an image model, then cut into slices?
 
 The lab draws Bone Man from stacks of flat slices baked from 18 Animation Studio clips. There is no 3D character on
@@ -115,6 +127,7 @@ node tools/sprite-stack/bake.mjs build
 PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node tools/sprite-stack/bake.mjs reference
 ```
 
+The bake now writes to `tools/sprite-stack/.work/lab-data/` unless `--out public/sprite-stack-lab` is given.
 `capture` stores colour and depth for every frame under `tools/sprite-stack/.work/captures/` (46 MB, not committed).
 `build` needs no browser: it writes the slice sheets and manifest, and the stills an image model would restyle to
 `tools/sprite-stack/.work/sheets/captured/` (one sheet per clip, and one strip per frame in `strips/`).
@@ -165,8 +178,8 @@ to the next. The shape always comes from the capture, so a restyle that moves th
 
 | Path | Role |
 | --- | --- |
-| `sprite-stack-lab.html`, `src/sprite-stack-lab/` | The lab page |
-| `public/sprite-stack-lab/` | Baked slice sheets, manifest, reference loops and one example still (3.8 MB) |
+| `sprite-stack-lab.html`, `src/sprite-stack-lab/` | The lab page (removed; in `042ed5a8`) |
+| `public/sprite-stack-lab/` | Baked slice sheets, manifest, reference loops and one example still, 3.8 MB (removed; in `042ed5a8`) |
 | `tools/sprite-stack/bake.mjs` | Capture, build and reference |
 | `tools/sprite-stack/page-capture.js` | In-page six-sided capture and reference render |
 | `tools/sprite-stack/volume.mjs`, `png.mjs` | Volume rebuild, palette, slice sheets, PNG read and write |

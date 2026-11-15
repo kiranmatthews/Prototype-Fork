@@ -18,7 +18,6 @@ const descriptions = {
   'jak-lab.html': ['Jak & Daxter effects lab', 'Browse the effects preview by category, including particle, HUD and disappearance effects.', 'Labs & studios'],
   'jak-particle-study.html': ['Jak particle / HUD study', 'Recovered progress-menu particles: six layouts, original transitions, source icon animation and Original / Gouraud comparison.', 'Labs & studios'],
   'fire-sprite-lab.html': ['Fire Sprite Lab', 'Eight animated billboard flame exhibits from one painted atlas: torches, bonfires, rings, jets, magical colours and the game’s Jak heat distortion.', 'Labs & studios'],
-  'sprite-stack-lab.html': ['Sprite Stack Lab', 'Bone Man rebuilt from stacked slices of 18 studio animations: play it under the game’s cameras, compare flat slices with solid cubes, and test repainted stills against draw-time looks.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
   'public/update-game.html': ['Update game', 'Load the latest published build while retaining saves and settings.', 'Maintenance'],

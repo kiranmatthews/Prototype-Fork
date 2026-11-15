@@ -15,7 +15,8 @@
 // Stored under tools/sprite-stack/.work/ (not committed): captures/ holds colour and depth for every frame; sheets/
 // holds the stills an image model would restyle, one PNG per clip (one row per frame, five columns: front, left, back,
 // right, top) and one strip per frame in sheets/<style>/strips/. A restyled set keeps either layout at any uniform
-// scale and goes back in with --recolour. Slice sheets and the manifest go to public/sprite-stack-lab/ (--out).
+// scale and goes back in with --recolour. Slice sheets and the manifest go to .work/lab-data/ (--out): the lab page that
+// read them from public/sprite-stack-lab/ was removed after the verdict (docs/SPRITE_STACK_LAB.md says how to restore it).
 import { readFile, writeFile, mkdir, access } from 'node:fs/promises';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import path from 'node:path';
@@ -26,7 +27,7 @@ import { GRID, boxOf, reduceView, reconstruct, buildPalette, key15, paletteMappe
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, '../..');
 const argv = process.argv.slice(2), command = ['capture', 'build', 'reference'].includes(argv[0]) ? argv[0] : 'all';
 const option = (name) => { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : undefined; };
-const OUT = path.resolve(ROOT, option('--out') ?? 'public/sprite-stack-lab'), STYLE = option('--style') ?? 'captured';
+const OUT = path.resolve(ROOT, option('--out') ?? 'tools/sprite-stack/.work/lab-data'), STYLE = option('--style') ?? 'captured';
 const WORK = path.resolve(ROOT, option('--work') ?? 'tools/sprite-stack/.work'), CAPTURES = path.join(WORK, 'captures');
 const RECOLOUR = option('--recolour') ? path.resolve(option('--recolour')) : null, DEBUG = option('--debug') ? path.resolve(option('--debug')) : null;
 const SERVER = option('--server') ?? 'http://127.0.0.1:5190', ONLY = option('--clips')?.split(',');

@@ -12006,3 +12006,8 @@ captured from the chase camera, shown in step with the stack drawn from the
 same camera. The page now says it plainly: it can be done, but it is not a good
 way to rebuild the rider, and it fits better as an extra (a skin, a bonus room,
 menu figures).
+
+Closed the same day: the owner agreed it will not work for the game. The lab
+page and its baked data were removed so they do not ship (last present in
+`042ed5a8`); `docs/SPRITE_STACK_LAB.md` and `tools/sprite-stack/` stay as the
+record.
