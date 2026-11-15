@@ -38,7 +38,9 @@ The source modules remain independently reusable. The whole course lays them in 
 
 The previous platforming collection is preserved as rejects `01-p`–`25-p`; the short skating studies are `01-s`–`25-s`. There are 75 rejected attempts plus the original eight-station grid, all selectable from the same phone page. [Rejects index](rejects/README.md).
 
-The phone entry downloads this collection and its rejects on Play, with touch controls, retry, individual selection and whole-course selection. It does not fetch the shared level pack or install the full game's offline cache. The current release's cache-disabled byte measurement and touch checks are recorded in [sequence evidence](sequences/README.md).
+The phone entry downloads this collection and its rejects on Play, with touch controls, retry, individual selection and whole-course selection. It does not fetch the shared level pack or install the full game's offline cache. The live page transferred **34.7 MB** with caching disabled; its picker loaded **27.3 KB** before Play. [Public phone measurement](sequences/phone-public/smoke.json).
+
+**All 25 challenges pass native and phone controller routes.** The continuous course and full-render routes through 5 and 25 also pass. All 25 have been visually reviewed at native 1280 × 720 resolution. The public deployment is verified with clean consoles.
 
 Current validation and measurements are in [progress.json](progress.json) and [sequences/](sequences/README.md). The numbered evidence directories, `course/`, `phone-public/` and `public/` at this directory's root describe the superseded platforming release; its original progress record is preserved in [platforming-version/progress.json](platforming-version/progress.json).
 
