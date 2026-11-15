@@ -12015,7 +12015,7 @@ record.
 ## 2026-11-15 — Powderkeg Peak: a polish pass on the rough edges
 
 Brief: go through Powderkeg Peak and clean up the rough edges, taking a long
-time over it. About 3 h 15 min from the prompt to the republished level. No
+time over it. About 3 h from the prompt to the republished level. No
 tuning or shared runtime file changed: `src/levels/powderkeg-peak.ts`,
 `powderkeg-art.ts`, `powderkeg-bonus.ts`, the pilots and two new tests.
 
