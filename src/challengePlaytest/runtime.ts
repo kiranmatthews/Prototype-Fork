@@ -14,7 +14,10 @@ import { makeSkyTexture } from '../proceduralSky';
 import { CameraLookOffset } from '../cameraLook';
 import { CameraFallHold } from '../cameraRig';
 import { CameraPortraitFraming } from '../cameraPortraitFraming';
-import { presentationAssets } from '../presentationLoading';
+import { GraphicsRecovery } from '../graphicsRecovery';
+import { installContextResourceRecovery } from '../contextResourceRecovery';
+import { releaseLostGraphicsResources } from '../lostGraphicsResources';
+import { afterPresentationPaint, presentationAssets, waitForPresentationGpu } from '../presentationLoading';
 import { sfx } from '../audio';
 import { puffs } from '../puffs';
 import { CRYSTAL_TRIALS, CRYSTAL_TRIALS_LEVEL, CRYSTAL_REJECTS_LEVEL, REJECTED_GRID, trialLevel } from '../levels/crystal-trials';
@@ -35,7 +38,9 @@ export interface PlaytestRuntime {
  * has no campaign, editor or music player. */
 export async function createPlaytest(menu: (message?: string) => void): Promise<PlaytestRuntime> {
   const canvas = document.getElementById('challenge-world') as HTMLCanvasElement;
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: devicePixelRatio <= 1 });
+  const gl = renderer.getContext();
+  installContextResourceRecovery(canvas, gl);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;renderer.toneMappingExposure = 1.1;
   const scene = new THREE.Scene();scene.background = new THREE.Color('#aebdc2');
@@ -54,6 +59,37 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   const camera = new THREE.PerspectiveCamera(62, 1, .05, 350);
   const framing = new CameraViewFraming(), skateCamera = new SkateChaseCameraOverlay();
   const portrait = new CameraPortraitFraming(), fall = new CameraFallHold(), look = new CameraLookOffset();
+  let level: Level, current: { id: string; name: string; data: CustomLevelData };
+  let active: PlaytestSelection | undefined;
+  let paused = true, last = 0, accumulator = 0, snapVersion = -1;
+
+  function resize() {
+    const width = canvas.clientWidth, height = canvas.clientHeight;
+    if (!width || !height || gl.isContextLost()) return;
+    resizeRendererSurface(renderer, width, height, devicePixelRatio || 1);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    snapVersion = -1;
+  }
+  const graphics = new GraphicsRecovery(canvas, () => {
+    input.consumeEdges(true);
+    sfx.stopLoops();
+    releaseLostGraphicsResources([scene, level, p]);
+  }, () => {
+    // A loss inside Three's shadow pass can leave its offscreen target selected.
+    renderer.resetState();
+    renderer.setRenderTarget(null);
+    renderer.shadowMap.needsUpdate = true;
+    resize();
+    accumulator = 0;
+    last = 0;
+    input.consumeEdges(true);
+    p.snapRenderInterpolation();
+  });
+  resize();
+  addEventListener('resize', resize);
+  window.visualViewport?.addEventListener('resize', resize);
+  addEventListener('pageshow', resize);
   const binding = RigBinding.fromDefinition(p.animationRig.root,
     withSkatePresentationRig(RigBinding.fromSculptRuntime(p.animationRig.root, { strict: false }).definition), { strict: false });
   const assets = await prepareGameplayAnimationAssets();
@@ -61,9 +97,6 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     createPlayerStarterAnimationSuite(binding.definition), binding.definition, assets.jak));
   const presentation = new GameplayAnimationPresentation(p, scene, assets);
   await p.preparePresentationAssets();
-  let level: Level, current: { id: string; name: string; data: CustomLevelData };
-  let active: PlaytestSelection | undefined;
-  let paused = true, last = 0, accumulator = 0, snapVersion = -1;
   const aim = new THREE.Vector3(), eye = new THREE.Vector3(), forward = new THREE.Vector3(0, 0, -1);
   const stats = { frame: 0, totalFixedSteps: 0 };
   const count = document.getElementById('challenge-count')!;
@@ -81,11 +114,6 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     say(trial ? `${trial.name} · Checkpoint saved` : 'Checkpoint saved');
   };
   p.onFinish = () => { paused = true;queueMicrotask(() => menu(`${current.name} complete.`)); };
-  const resize = () => {
-    resizeRendererSurface(renderer, innerWidth, innerHeight, devicePixelRatio || 1);
-    camera.aspect = innerWidth / innerHeight;camera.updateProjectionMatrix();snapVersion = -1;
-  };
-  resize();addEventListener('resize', resize);
   const pause = () => { paused = true;accumulator = 0;input.consumeEdges(true);sfx.stopLoops(); };
   const resume = () => {
     if (!active || p.state === 'finished') return;
@@ -120,6 +148,8 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     for(const mesh of level.groundMeshes){mesh.receiveShadow=true;mesh.castShadow=mesh.userData.castShadow!==false;}
     await Promise.all([level.prepareJungleAssets(), level.prepareSurfaceImages()]);
     await presentationAssets.waitUntilSettled();
+    p.prepareStartPresentation(level);
+    await presentCourse();
     active = selection;
     say(data.name);
   }
@@ -129,26 +159,20 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     get selection() { return active; },
     get trialOffset() { return active?.index === undefined ? undefined : [0, 0, 0]; },
     load, pause, resume, retry,
-    captureBonusReviewFrame: () => renderer.domElement.toDataURL('image/png'),
+    captureBonusReviewFrame: () => {
+      renderer.setRenderTarget(null);
+      renderer.render(scene, camera);
+      return canvas.toDataURL('image/png');
+    },
     get paused() { return paused; },
   };
   Object.assign(window, { __game: debug });
-  function render(now: number) {
-    requestAnimationFrame(render);
-    const dt = Math.min(.05, (now - (last || now)) / 1000);last = now;stats.frame++;
-    input.update();
-    if (input.pausePressed && level) { if (!paused) menu();input.pausePressed = false; }
-    if (!level || paused) { input.consumeEdges(true);return; }
-    if (input.moveX || input.moveY || input.jumpHeld || input.spinHeld || input.grindHeld || input.grabHeld) sfx.unlock();
+  function setControlDirection() {
     const control = cameraViewDirection(level.cameraViews, p.pos.x, p.pos.y, p.pos.z, { x: 0, z: -1 });
     p.camDir.set(control.x, 0, control.z);forward.copy(p.camDir);
-    accumulator += dt;
-    while (accumulator + 1e-10 >= CONST.fixedStep && !paused) {
-      p.step(CONST.fixedStep, input, level);level.update(CONST.fixedStep);
-      p.flushLevelCrateRewards(level);p.commitRenderStep(level);input.consumeEdges();
-      accumulator = Math.max(0, accumulator - CONST.fixedStep);stats.totalFixedSteps++;
-    }
-    p.applyRenderInterpolation(accumulator / CONST.fixedStep);
+  }
+  function drawWorld(dt: number, interpolation: number) {
+    p.applyRenderInterpolation(interpolation);
     try {
       portrait.restore(camera);skateCamera.restore(camera);framing.restore(camera);
       const subject = p.renderPosition, snap = snapVersion !== p.renderSnapVersion;
@@ -171,12 +195,70 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
       portrait.apply(camera, true);
       presentation.prepareRender(camera);p.prepareMaskPresentation();puffs.update(dt, camera);
       sky.position.copy(camera.position);sun.target.position.copy(subject);sun.position.copy(subject);sun.position.x-=26;sun.position.y+=48;sun.position.z+=21;
-      scene.updateMatrixWorld(true);camera.updateMatrixWorld();renderer.render(scene, camera);
+      scene.updateMatrixWorld(true);camera.updateMatrixWorld();
+      renderer.setRenderTarget(null);
+      renderer.render(scene, camera);
     } finally { p.restoreRenderPose(); }
+  }
+  async function presentCourse() {
+    // Keep the picker over the canvas until the GPU has completed a spawn frame
+    // in the current context. A reset during that draw needs a new frame.
+    for (;;) {
+      await graphics.ready();
+      if (!document.hidden && canvas.clientWidth && canvas.clientHeight && !gl.isContextLost()) {
+        const generation = graphics.diagnostics.restores;
+        try {
+          resize();
+          setControlDirection();
+          drawWorld(0, 1);
+          await waitForPresentationGpu(renderer);
+          await afterPresentationPaint();
+          if (!document.hidden && !gl.isContextLost() && generation === graphics.diagnostics.restores) {
+            // WebKit can discard a covered drawing buffer between paints.
+            // Redraw in the same turn that reveals the HUD and the canvas.
+            drawWorld(0, 1);
+            if (!gl.isContextLost()) return;
+          }
+        } catch (error) {
+          if (!gl.isContextLost()) throw error;
+        }
+      }
+      await afterPresentationPaint();
+    }
+  }
+  function advance(now: number) {
+    const dt = Math.min(.05, (now - (last || now)) / 1000);last = now;
+    input.update();
+    if (input.pausePressed && level) { if (!paused) menu();input.pausePressed = false; }
+    if (!level || paused) { input.consumeEdges(true);return; }
+    if (input.moveX || input.moveY || input.jumpHeld || input.spinHeld || input.grindHeld || input.grabHeld) sfx.unlock();
+    setControlDirection();
+    accumulator += dt;
+    while (accumulator + 1e-10 >= CONST.fixedStep && !paused) {
+      p.step(CONST.fixedStep, input, level);level.update(CONST.fixedStep);
+      p.flushLevelCrateRewards(level);p.commitRenderStep(level);input.consumeEdges();
+      accumulator = Math.max(0, accumulator - CONST.fixedStep);stats.totalFixedSteps++;
+    }
+    drawWorld(dt, accumulator / CONST.fixedStep);
     const goals = level.skateCollectathon;
     count.textContent = goals ? `${goals.collected}/${goals.tokens.length} crystals · ${p.totalDeaths} deaths` : '';
     balance.hidden = p.state !== 'grind';balance.value = p.balance;
     if (now > hintUntil) hint.textContent = goals?.exitReady ? 'Exit open' : '';
+  }
+  function render(now: number) {
+    requestAnimationFrame(render);
+    stats.frame++;
+    if (document.hidden || graphics.lost || gl.isContextLost()) {
+      last = 0;
+      return;
+    }
+    try {
+      advance(now);
+    } catch (error) {
+      if (gl.isContextLost()) return; // The driver can fail a draw before the loss event is delivered.
+      menu('The course could not be drawn. Tap Play to try again.');
+      console.error(error);
+    }
   }
   requestAnimationFrame(render);
   return { load, pause, resume, retry,

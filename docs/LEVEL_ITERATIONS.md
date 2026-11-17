@@ -12716,3 +12716,11 @@ All 25 individual skating routes retained the board after mounting and crossed t
 A second pass varied the start by 1.1 and 2.3 seconds. It exposed a dark first sill in 25. A short side lip beside each pulsing dock now lets the skater ollie over the dark stretch. All five timed lines, 7, 14, 21, 22 and 25, completed from all three starting phases. The phone renderer produced 2532 × 1170 pixels in an emulated 844 × 390, DPR 3 viewport, and 1280 × 800 at DPR 1. [Numbered layouts and verification commands](crystal-trials/README.md)
 
 Opening the published phone picker used 36 KB. Starting the first challenge brought the total to 20.1 MB. Opening the course, archive and original grid brought it to 38.3 MB with the cache disabled. The published touch test walked, mounted, braked to a dismount and retried checkpoint 2 with the first crystal retained. The full game rendered the released course at native 1280 × 720. Both public browser runs completed with no console errors. [Pages deployment for ba541a8b](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/44186767124)
+
+### 2026-11-17 — Blank phone course launch
+
+The first recovered course was playable at 22:53 UTC, about 13 minutes into the investigation. Interrupting graphics during the first shadow draw on the published build left the HUD over a single solid colour. The simulation kept running for more than 100 steps after the interruption, sending frames to an offscreen target.
+
+The phone picker now waits for the GPU to finish drawing the course and redraws the spawn view as it reveals the canvas. During a graphics interruption the playtest holds the rider in place, releases lost GPU resources and restores the screen target before resuming the same run. High-density screens retain native resolution with a smaller drawing-buffer allocation.
+
+A mobile Chromium and WebKit regression interrupted both the first shadow draw and a moving rider. The rider stayed still during the interruption, moved again after restoration and remained in the same level. Screenshots showed the rider and course at launch in 1179 × 2556 portrait and the whole course in 2532 × 1170 landscape. [Rendering check](../tools/test-challenge-rendering.py)

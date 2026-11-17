@@ -73,7 +73,7 @@ async function play(course = false) {
       ? { kind: 'grid' } : { kind: reject ? 'reject' : 'challenge', index: course ? undefined : selected };
     await runtime.load(selection);resume();
   } catch (error) {
-    showMenu('Could not load. Check your connection, then press Play to retry.');
+    showMenu('Could not open the course. Tap Play to try again.');
     console.error(error);
   } finally { loading = false;buttons.forEach(b => b.disabled = false); }
 }

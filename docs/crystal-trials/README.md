@@ -54,6 +54,13 @@ CRYSTAL_PHONE_TRIALS=25 python3 tools/crystal-trials-phone.py
 CRYSTAL_PHONE_URL='http://localhost:4173/challenge-playtest.html?touch' python3 tools/test-challenge-phone.py
 ```
 
+The rendering check interrupts the first shadow draw and an active ride, then checks the visible course in portrait and landscape. It uses Playwright and Pillow. Set `CRYSTAL_PHONE_URL` to test a production build.
+
+```sh
+python3 tools/test-challenge-rendering.py
+CRYSTAL_RENDER_BROWSER=webkit python3 tools/test-challenge-rendering.py
+```
+
 The existing numbered evidence directories and progress files describe previous releases. The historical skating pilots can be run against their matching [November 17 source revision](https://github.com/kiranmatthews/Prototype-Fork/tree/c1524e29). [Previous skating series](sequences/README.md) · [Previous platforming series](platforming-version/progress.json)
 
 The layout review used the measured transitions, hazard timings and recovery rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md) and the [THPS level-design research](../warehouse-flow/research-principles.md).
