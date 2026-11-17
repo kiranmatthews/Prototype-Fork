@@ -1,4 +1,5 @@
-import { GolfCartRace } from '../golf-cart/race';
+import type { GolfCartRace } from '../golf-cart/race';
+import { loadGolfCartRace, loadedGolfCartRace } from '../golf-cart/lazyCarts';
 import { CONST, TUNING } from '../tuning';
 import { medalForTime } from '../campaign';
 import * as THREE from 'three';
@@ -80,6 +81,7 @@ export class SkateRace {
   get active():boolean{return !!this.level;}
   get count():number{return this.mode==='race'?8:1;}
   async preparePresentationAssets():Promise<void> {
+    if(this.level?.skateRace?.vehicle==='golf-cart')await loadGolfCartRace();
     if(this.active)await Promise.all([prepareRaceItemPictures(),prepareExplosiveBundles(),...this.riders.slice(1,this.count).map(r=>r.player.preparePresentationAssets())]);
   }
   private allocate():void {
@@ -134,6 +136,11 @@ export class SkateRace {
     level.raceAudioListener=this.human.pos;
     level.onRaceCrateBreak=(crate,id)=>this.crateBroken(crate,id);
     this.reset('race',false);
+    // Cart races load their vehicles on first use; seat the grid in them as
+    // soon as they arrive (the level stays covered until then).
+    if(level.skateRace?.vehicle==='golf-cart'&&!loadedGolfCartRace())void loadGolfCartRace().then(()=>{
+      if(this.level===level&&this.phase==='grid'&&!this.carts)this.reset(this.mode,false,this.runSeed);
+    },error=>console.error('Cart race failed to load.',error));
   }
   reset(mode:RaceMode='race',resetWorld=true,runSeed=this.level?.skateRace?.seed??1):void {
     if(!this.level||!this.course)return;
@@ -159,7 +166,8 @@ export class SkateRace {
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
-    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power),this.runSeed);this.root.add(this.carts.fleet.root);this.heavyAt=18;}
+    const CartRace=level.skateRace?.vehicle==='golf-cart'?loadedGolfCartRace():null;
+    if(CartRace){this.carts=new CartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power),this.runSeed);this.root.add(this.carts.fleet.root);this.heavyAt=18;}
   }
   start(mode:RaceMode=this.mode,seed?:number):void {
     if(!this.level||mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))return;

@@ -4,7 +4,7 @@ import {GameplayAnimationPresentation,gameplayAnimationDocument,prepareGameplayA
 import { createSkystreamSun } from './skystreamSun';
 import { installBananaBaySkySun } from './bananaBaySkySun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
-import { CountryClubCarts } from './golf-cart/course';
+import { LazyCountryClubCarts } from './golf-cart/lazyCarts';
 import { SkateRace } from './race/runtime';
 import {BoulderChaseCamera} from './boulderChase';
 import {CrackedDisplay} from './crackedDisplay';
@@ -1864,7 +1864,7 @@ let runStartRewards = {
 };
 const player = new Player(scene);
 const skateRace=new SkateRace(scene,player,import.meta.env.DEV&&new URLSearchParams(location.search).has('fullRivals'),id=>campaign.runModesUnlocked(id));
-const countryClubCarts=new CountryClubCarts(scene);
+const countryClubCarts=new LazyCountryClubCarts(scene);
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,

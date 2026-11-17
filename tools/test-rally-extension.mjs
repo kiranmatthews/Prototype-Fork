@@ -11,6 +11,7 @@ await withBlockworksRuntime(async e=>{
  const prior=JSON.parse(await readFile('tools/fixtures/rally-pre-extension.json','utf8')),points=[];
  for(let s=prior.start;s<=prior.end;s+=prior.step)for(const u of prior.lanes)points.push(layout.rallySurfacePoint(s,u));
  assert.equal(createHash('sha256').update(JSON.stringify(points)).digest('hex'),prior.surfaceSha256,'Every sampled original road, mound, bank and existing corner stays exactly authored');
+ await (await e.server.ssrLoadModule('/src/golf-cart/lazyCarts.ts')).loadGolfCartRace(); // the game loads carts on demand
  const race=new SkateRace(e.scene,e.p,false,()=>true);race.attach(e.l,'coconut-cart-rally');race.start('time-trial',42);
  const c=race.carts,w=c.fleet.physics,report={passed:false,length,actualLength:race.course.length,cases:[]};let previous={};
  const tick=sample=>{const input=normalizeGameInput(sample,previous);previous=input;race.step(1/60,input);};

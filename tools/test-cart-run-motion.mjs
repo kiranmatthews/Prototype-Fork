@@ -7,6 +7,7 @@ await withBlockworksRuntime(async e => {
   const { createCharacterAnimationRuntime } = await e.server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const { CartInteractionActor } = await e.server.ssrLoadModule('/src/golf-cart/interactionMotion.ts');
   const { SkateRace } = await e.server.ssrLoadModule('/src/race/runtime.ts');
+  await (await e.server.ssrLoadModule('/src/golf-cart/lazyCarts.ts')).loadGolfCartRace(); // the game loads carts on demand
   const race = new SkateRace(e.scene, e.p, false, () => true);
   race.attach(e.l, 'coconut-cart-rally'); race.start('race', 0); race.phase = 'running';
   const c = race.carts; c.drive = () => ({ moveX: 0, moveY: 0 }); c.present(1); c.exit(0, false);
