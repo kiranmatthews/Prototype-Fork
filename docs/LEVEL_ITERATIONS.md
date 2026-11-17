@@ -12649,7 +12649,8 @@ the time-trial number crates and the item-row spacing).
 
 Brief: keep Codex's Temple of Embers, put this branch's temple and the snow level in the next open
 level-select slots, make every side-scroll section run left to right, and publish to main.
-Elapsed: about 1 hour 25 minutes from the request to the validated build (03:38–05:03 UTC), before publishing.
+Elapsed: about 1 hour 24 minutes from the request to the live page (03:38–05:02 UTC): validated and
+committed by 04:56, deployed by 05:02.
 
 - **Temple of Embers** (`jungle-terraces`, Secret Island slot 2) is Codex's version again: main's
   route, crate arrangement, polish and Ember Reliquary bonus files and their tests are restored
@@ -12688,3 +12689,6 @@ Known, unchanged by this brief (each fails the same way on main or on this morni
 Codex's temple tests (`test-jungle-sequel-climbs`, `-crates`, `-bank-clearance`); Cinder Sanctum's
 input-only journey, which loses the walkway crab (station 170) and, started past it, one bank launch
 at station 767.
+
+Published: main `a2154f38`, Pages run 932 succeeded. The live page serves the new build (stamp
+"Codex/sol fork", built 11-17 04:59 UTC) with both previews and both new levels in its code.
