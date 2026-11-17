@@ -12,7 +12,7 @@ try{
  let saves=0,edits=0;
  for(const raw of entries){const migrated=structuredClone(raw);migrateCrateLayout(migrated.data);
   const builtin=api.BUILTIN_LEVELS.find(e=>e.id===raw.id);assert.ok(builtin);
-  assert.ok(builtin.data.components.some(c=>c.t==='crate'));
+  assert.equal(builtin.data.components.filter(c=>c.t==='crate').length,raw.id==='jungle-terraces'?187:30);
   for(const entry of [raw,migrated]){
    assert.ok(api.setUserLevels([entry]));const stored=storage.get('solProtoUserLevels');
    assert.equal(api.findLevel(entry.id),builtin);assert.equal(api.isOverridden(entry.id),false);

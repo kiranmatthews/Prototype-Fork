@@ -1642,6 +1642,10 @@ footing):
 | Toward the camera | chases and count traps | lateral moves only, alternating hazards; railed sides where depth is read late (Bears Repeating's bridge) |
 | Vehicle or ride | slalom and speed | lanes, boost gates, few prompted jumps with a crate on the lip |
 
+**Side-scroll stretches always read left to right** in this game (the owner's rule): travel `+X` with the
+camera on the south side. Where a route doubles back, the return leg goes into the screen, as Crash 2's
+mountain levels turn from a side-on row into the screen again.
+
 **Mode changes happen at one-way transitions, and each carries a checkpoint**: a lift top, a free-fall
 shaft, a dock, an automatic rail launch onto a pad (Snow Go, Hang Eight, A Real Grind). The camera
 always shows the axis being tested (A Real Grind: rail 1 tests vertical dodges in a side view, rail 2
@@ -2828,6 +2832,10 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] The hardest run sits next to a checkpoint, right after it or closing into it.
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
+- [ ] Every side-scroll stretch reads left to right (owner's rule, November 2026): its travel zone heads
+  east (`dir: 'E'`), any fixed side view over it looks from the south, and bonus rounds run toward +X. A
+  route that doubles back plays the westward leg into the screen, never side-on (Powderkeg Peak's upper
+  row). `node tools/test-side-scroll-direction.mjs` (in `check:levels`) checks every built-in level.
 
 **Per level (geometry)**
 - [ ] One hazard family (two at most) climbs debut → repeat → invert → combine; each enemy kind climbs its

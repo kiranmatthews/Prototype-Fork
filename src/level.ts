@@ -167,6 +167,7 @@ import { SLIPSTREAM_LEVEL } from "./levels/slipstream";
 import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
+import { CINDER_SANCTUM_LEVEL } from './levels/cinder-sanctum';
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
 import { DESERT_CANYON_LEVEL, SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
@@ -2619,6 +2620,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
+  { id: 'cinder-sanctum', name: CINDER_SANCTUM_LEVEL.name, data: CINDER_SANCTUM_LEVEL },
   { id: "flats", name: "Flats & Pipes", data: FLATS_LEVEL }, // sky-deck runway opening into the transition yard
   { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },

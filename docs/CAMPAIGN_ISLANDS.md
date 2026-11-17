@@ -30,8 +30,8 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 | | Country Club Circuit | Country Club · `country-club` |
 | | Hogsworth Harbour | Rooftop Relay · `rooftop-relay` |
 | | Unnamed Course 4 | — |
-| | Unnamed Course 5 | — |
-| | Maynard Quay Boss | — |
+| | Cinder Sanctum | Cinder Sanctum · `cinder-sanctum` (the switchback temple, formerly a Temple of Embers rebuild) |
+| | Powderkeg Peak | Powderkeg Peak · `powderkeg-peak` (in the slot once reserved for a Maynard Quay boss: an ordinary course, so clearing it opens Quagmire Caverns) |
 | Quagmire Caverns | Factory Fuss | Warehouse / Five Lines · `warehouse` |
 | | Dusty Road | Dusty Road · `bryce-canyon` |
 | | Nightmare Grove | No-Man’s Grove · `jungle-minefield` |

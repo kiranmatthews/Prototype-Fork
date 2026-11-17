@@ -16,11 +16,11 @@ const CUBE = {
  * bridge, the cap-before-fuse vault, and the nitro corridor whose green
  * switch counts every volatile offering. Movement, crates, fire and the
  * side-view camera are the shared runtime's; only the arrangement is new. */
-export const EMBER_RELIQUARY_TIKI_X = 31;
-export const EMBER_RELIQUARY_NITRO_X = [120, 127, 134] as const;
-export const EMBER_RELIQUARY_BRIDGE: readonly [number, number] = [62, 74];
+export const CINDER_VAULT_TIKI_X = 31;
+export const CINDER_VAULT_NITRO_X = [120, 127, 134] as const;
+export const CINDER_VAULT_BRIDGE: readonly [number, number] = [62, 74];
 
-export function createEmberReliquaryBonus(): BonusCourse {
+export function createCinderVaultBonus(): BonusCourse {
   const components: CustomComponent[] = [];
   const add = (c: CustomComponent): void => { components.push(c); };
   const deck = (a: number, b: number, y: number, nm: string, outline = false, grp = 1): void =>
@@ -35,7 +35,7 @@ export function createEmberReliquaryBonus(): BonusCourse {
 
   // Room 1 · Offering vestibule: the count, the spin, and the mask that makes
   // the next room forgiving. Every crate is visible from the arrival deck.
-  deck(-10, 0, 0, 'Reliquary arrival and observation');
+  deck(-10, 0, 0, 'Vault arrival and observation');
   deck(0, 20, 0, 'Offering vestibule');
   crate('Vestibule offering', 3, 0);
   crate('Vestibule offering pair', 6, 0);
@@ -49,9 +49,9 @@ export function createEmberReliquaryBonus(): BonusCourse {
   // Two offerings stand inside that sweep: read the amber windup, cross or
   // spin while it cools. Lamps mark the safe floor on both sides.
   deck(20, 42, 0, 'Ember gate');
-  add({ t: 'platform', p: [EMBER_RELIQUARY_TIKI_X, -.25, -4.6], s: [3.8, .5, 3.8], tex: 'stone', color: '#a1a68c', grp: 1, nm: 'Sentinel footing behind the lane' });
-  add({ t: 'wall', p: [EMBER_RELIQUARY_TIKI_X, 0, -4.6], s: [2.65, 2.9, 2.65], invisible: true, edgeGrinding: false, grp: 1, nm: 'Sentinel head collision core' });
-  add({ t: 'firetiki', p: [EMBER_RELIQUARY_TIKI_X, 0, -4.6], yaw: 0, range: 7.1, cycle: 7.8, phase: 0, amp: 28, w: 1, grp: 1,
+  add({ t: 'platform', p: [CINDER_VAULT_TIKI_X, -.25, -4.6], s: [3.8, .5, 3.8], tex: 'stone', color: '#a1a68c', grp: 1, nm: 'Sentinel footing behind the lane' });
+  add({ t: 'wall', p: [CINDER_VAULT_TIKI_X, 0, -4.6], s: [2.65, 2.9, 2.65], invisible: true, edgeGrinding: false, grp: 1, nm: 'Sentinel head collision core' });
+  add({ t: 'firetiki', p: [CINDER_VAULT_TIKI_X, 0, -4.6], yaw: 0, range: 7.1, cycle: 7.8, phase: 0, amp: 28, w: 1, grp: 1,
     nm: 'Ember gate sentinel: amber windup, fire across the lane, then safe cooling' });
   crate('Ember gate offering', 30, 0);
   crate('Ember gate offering pair', 32, 0);
@@ -61,18 +61,18 @@ export function createEmberReliquaryBonus(): BonusCourse {
   // Room 3 · Jade bridge chain. The visible switch is high: keep the arrow,
   // bounce to the shelf, strike the switch so the outlined bridge becomes
   // real, drop back to the deck, clear the arrow last, then cross.
-  deck(42, EMBER_RELIQUARY_BRIDGE[0], 0, 'Switch court below the shelf');
-  deck(EMBER_RELIQUARY_BRIDGE[0], EMBER_RELIQUARY_BRIDGE[1], 0, 'Visible jade bridge created by the high switch', true, 21);
-  deck(EMBER_RELIQUARY_BRIDGE[1], 88, 0, 'Bridge receiver court');
-  add({ t: 'pit', p: [(EMBER_RELIQUARY_BRIDGE[0] + EMBER_RELIQUARY_BRIDGE[1]) / 2, -7, 0], s: [EMBER_RELIQUARY_BRIDGE[1] - EMBER_RELIQUARY_BRIDGE[0], 1, 6.4], grp: 1, nm: 'Visible chasm below the required crossing' });
-  crate('Reliquary arrow: preserve it until the high switch is struck', 45, 0, 'bouncy');
+  deck(42, CINDER_VAULT_BRIDGE[0], 0, 'Switch court below the shelf');
+  deck(CINDER_VAULT_BRIDGE[0], CINDER_VAULT_BRIDGE[1], 0, 'Visible jade bridge created by the high switch', true, 21);
+  deck(CINDER_VAULT_BRIDGE[1], 88, 0, 'Bridge receiver court');
+  add({ t: 'pit', p: [(CINDER_VAULT_BRIDGE[0] + CINDER_VAULT_BRIDGE[1]) / 2, -7, 0], s: [CINDER_VAULT_BRIDGE[1] - CINDER_VAULT_BRIDGE[0], 1, 6.4], grp: 1, nm: 'Visible chasm below the required crossing' });
+  crate('Vault arrow: preserve it until the high switch is struck', 45, 0, 'bouncy');
   deck(47.5, 56.5, 7.8, 'High switch shelf');
   crate('High jade switch: strike it from the shelf', 51, 7.8, 'bang', 21);
   crate('Shelf mystery', 55, 7.8, 'mystery');
   crate('Receiver offering', 77, 0);
   crate('Receiver mystery', 80, 0, 'mystery');
   fruitArc(45, 49, 3, 3);
-  fruitArc(EMBER_RELIQUARY_BRIDGE[0], EMBER_RELIQUARY_BRIDGE[1], 0, .35);
+  fruitArc(CINDER_VAULT_BRIDGE[0], CINDER_VAULT_BRIDGE[1], 0, .35);
   lamp(43.5, 'Switch court lamp'); lamp(86, 'Receiver court lamp');
 
   // Room 4 · Fuse vault: stomp the wooden cap for the overhead life first,
@@ -89,14 +89,14 @@ export function createEmberReliquaryBonus(): BonusCourse {
   // seven metres apart, with fruit arcs drawing each jump. The green switch
   // waits well beyond the last one; it counts all three at once.
   deck(114, 158, 0, 'Nitro corridor and reliquary return');
-  for (const x of EMBER_RELIQUARY_NITRO_X) {
+  for (const x of CINDER_VAULT_NITRO_X) {
     crate('Volatile offering: jump it, count it from the green switch', x, 0, 'nitro');
     fruitArc(x - 2.6, x + 2.6, 0, 2.3);
   }
   crate('Green switch: detonate every volatile offering for the complete count', 141, 0, 'nitrobang');
   lamp(116, 'Corridor lamp'); lamp(138, 'Green switch lamp'); lamp(152, 'Return lamp');
   const gateX = 150, end = gateX + 8;
-  add({ t: 'gate', p: [gateX, 0, 0], yaw: 90, grp: 1, nm: 'Reliquary return after the earned gem approach' });
+  add({ t: 'gate', p: [gateX, 0, 0], yaw: 90, grp: 1, nm: 'Vault return after the earned gem approach' });
   for (const z of [-.83, .83]) add({ t: 'wall', p: [end / 2 - 10, -14, z], s: [end + 60, 46, .6], invisible: true, grp: 3, nm: 'Single-plane side-scrolling boundary' });
   add({ t: 'camnode', p: [-14, 0, 0], radius: 0, grp: 3 });
   add({ t: 'camnode', p: [end + 13, 0, 0], radius: 0, grp: 3 });
@@ -107,17 +107,17 @@ export function createEmberReliquaryBonus(): BonusCourse {
   // Temple night dressing: the terraces backdrop, moonlit fog, and warm lamps
   // that stay clear of the sentinel so its fire is the only light there.
   const art = bonusCourseArt('terraces', end);
-  for (let x = 4; x < end; x += 18) if (Math.abs(x - EMBER_RELIQUARY_TIKI_X) > 8)
-    art.push({ t: 'torch', p: [x, 0, -4.6], rise: 2, w: 1.1, grp: 90, nm: 'Reliquary torch' });
+  for (let x = 4; x < end; x += 18) if (Math.abs(x - CINDER_VAULT_TIKI_X) > 8)
+    art.push({ t: 'torch', p: [x, 0, -4.6], rise: 2, w: 1.1, grp: 90, nm: 'Vault torch' });
   components.push(...art);
-  const data: CustomLevelData = { v: 1, name: 'Bonus: Ember Reliquary', spawn: [-6, .12, 0], killY: -12, hudMode: 'bonus',
+  const data: CustomLevelData = { v: 1, name: 'Bonus: Cinder Vault', spawn: [-6, .12, 0], killY: -12, hudMode: 'bonus',
     sky: 'night', jungleAtmosphere: true, cameraAirLift: .85, components,
     groups: [
       { id: 1, nm: 'Supported courts, sentinel footing and the return gate', editorOnly: true },
       { id: 2, nm: 'Ordered crate decisions', editorOnly: true },
       { id: 3, nm: 'Side-view camera and depth containment', editorOnly: true },
       { id: 21, nm: 'High switch · jade bridge circuit' },
-      { id: 90, nm: 'Reliquary night scenery', editorOnly: true },
+      { id: 90, nm: 'Vault night scenery', editorOnly: true },
     ] };
   Object.assign(data, bonusArtAtmosphere('terraces'));
   data.atmosphere = { ...TEMPLE_NIGHT_ATMOSPHERE };
@@ -127,5 +127,5 @@ export function createEmberReliquaryBonus(): BonusCourse {
 
 /** One shared instance: the campaign registry, the editor entry and the
  * standalone tests must all see the same authored object. */
-export const EMBER_RELIQUARY_BONUS_COURSE = createEmberReliquaryBonus();
-export const EMBER_RELIQUARY_BONUS_LEVEL = EMBER_RELIQUARY_BONUS_COURSE.data;
+export const CINDER_VAULT_BONUS_COURSE = createCinderVaultBonus();
+export const CINDER_VAULT_BONUS_LEVEL = CINDER_VAULT_BONUS_COURSE.data;

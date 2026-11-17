@@ -1,5 +1,6 @@
 import { arrangeNightworksBonusCrates, rebuildNightworksBonus } from './nightworks-bonus';
 import { createCalderaBonus } from './nightworks-caldera-bonus';
+import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-route';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
@@ -24,13 +25,14 @@ import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
 import { arrangeSkyBridgeBonusCrates, dressSkyBridgeBonus } from './sky-bridge-bonus';
+import { arrangeEmberReliquary } from './temple-bonus-crates';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
 import { CARLISLE_HARBOUR_BONUS } from './carlisle-harbour-bonus';
 import { MAYFIELD_BONUS_LEVEL } from './mayfield-bonus';
 import { DUSTY_ROAD_BONUS_COURSE } from './dusty-road-bonus';
-import { EMBER_RELIQUARY_BONUS_COURSE } from './ember-reliquary-bonus';
+import { CINDER_VAULT_BONUS_LEVEL } from './cinder-vault-bonus';
 import { POWDERKEG_BONUS_LEVEL } from './powderkeg-bonus';
 
 interface BonusRecipe {
@@ -77,7 +79,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
   {parentId:'nightworks-after-hours',key:'nightworks-after-hours',name:'Bonus: Caldera Counterweights',theme:'afterhours',
     patterns:[],color:'#666b81',accent:'#73d5ca',tex:'stone',sky:'night'},
   {parentId:'jungle-terraces',key:'jungle-terraces',name:'Bonus: Ember Reliquary',theme:'terraces',
-    patterns:[],color:'#c8bc94',accent:'#79a996',tex:'jungle',sky:'night',jungleAtmosphere:true},
+    patterns:['finite','bridge','fuse'],color:'#c8bc94',accent:'#79a996',tex:'jungle',sky:'night',jungleAtmosphere:true},
   {parentId:'drowned-crown',key:'drowned-crown',name:"Bonus: The Captain’s Last Ledger",theme:'pirate',
     patterns:['return','fuse','bridge'],color:'#a67e52',accent:'#d2b572',tex:'plank',sky:'night'},
   {parentId:'bone-yard',key:'bone-yard',name:'Bonus: Ivory Salvage',theme:'boneyard',
@@ -87,8 +89,6 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
 export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe.parentId !== 'astra-chimeworks' && levelAllowsBonus(recipe.parentId)).map(recipe => {
   if(recipe.parentId==='bryce-canyon')return {...DUSTY_ROAD_BONUS_COURSE,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
-  // Temple of Embers authors its own five-room exam of the course's vocabulary.
-  if (recipe.parentId === 'jungle-terraces') return {...EMBER_RELIQUARY_BONUS_COURSE,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
   if(recipe.parentId==='treehouse-trail')arrangeCanopyCacheCrates(course);
@@ -108,6 +108,11 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
     Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
+    if (recipe.parentId === 'jungle-terraces') {
+      course.data.sky='night'; course.data.atmosphere={...TEMPLE_NIGHT_ATMOSPHERE};
+      for(let x=4;x<end;x+=18) course.data.components.push({t:'torch',p:[x,0,-4.6],rise:2,w:1.1,nm:'Reliquary torch'});
+      arrangeEmberReliquary(course);
+    }
   }
   if (recipe.parentId === 'test') {rebuildCarlisleBonus(course.data);arrangeQuaysideCrates(course.data);}
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
@@ -145,6 +150,9 @@ BONUS_LEVEL_ENTRIES.push({id:'bonus-jungle-gate',name:ANCIENT_GATES_BONUS.name,d
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rooftop-relay',name:ROOFTOP_PORCH_BONUS.name,data:ROOFTOP_PORCH_BONUS});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVEL.name,data:RUMBLEWATER_BONUS_LEVEL});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rolling-bones',name:ROLLING_BONES_BONUS_LEVEL.name,data:ROLLING_BONES_BONUS_LEVEL});
+// Cinder Sanctum authors its own five-room exam of the course's vocabulary.
+BONUS_BY_PARENT_ID.set('cinder-sanctum',CINDER_VAULT_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-cinder-sanctum',name:CINDER_VAULT_BONUS_LEVEL.name,data:CINDER_VAULT_BONUS_LEVEL});
 BONUS_BY_PARENT_ID.set('powderkeg-peak',POWDERKEG_BONUS_LEVEL);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-powderkeg-peak',name:POWDERKEG_BONUS_LEVEL.name,data:POWDERKEG_BONUS_LEVEL});
 

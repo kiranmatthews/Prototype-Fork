@@ -1,6 +1,8 @@
-# Temple of Embers · level design (the switchback)
+# Cinder Sanctum · level design (the switchback)
 
-Temple of Embers (`jungle-terraces`, Secret Island slot 2, unlocked by five all-box gems) is where
+Cinder Sanctum (`cinder-sanctum`, Maynard Quay slot 5) began as the fifth design of Temple of Embers.
+Codex's Temple of Embers keeps `jungle-terraces` and its Secret Island slot; this course became its own
+level on 17 November 2026, with its bonus renamed Cinder Vault. It is where
 Crash Bandicoot's crate corridor and Tony Hawk's earned speed have to meet. The previous pass put the
 crates right ([`GAMEPLAY_DESIGN_BIBLE.md`](GAMEPLAY_DESIGN_BIBLE.md) Part XX: mean cluster 2.56, 5 %
 singles) but laid the whole course along one straight line. This pass keeps that crate composition
@@ -8,12 +10,12 @@ and re-plans the course the way the Famitsu isometric maps the bible cites plan 
 at right angles, courts at the corners, the route doubling back over its own start, a stretch read
 from the side. Nothing ahead of the player is ever simply "straight on".
 
-Source: `src/levels/temple-of-embers.ts`. Everything is authored in **station space** (a continuous
+Source: `src/levels/cinder-sanctum.ts`. Everything is authored in **station space** (a continuous
 metre count `s` along the route, `x` across it with negative left, `y` up) and placed in the world by a
 leg table (`TEMPLE_LEGS`): each leg has a start station, a world origin and a yaw, so a crate, row,
 ramp or wall authored at (s, x) lands axis-aligned on whichever leg owns that station. `toLocal`
 reverses the map for tools and pilots. `docs/LEVEL_ITERATIONS.md` holds the timed record,
-`docs/temple-embers-design/` the evidence, including both bible reports.
+`docs/cinder-sanctum-design/` the evidence, including both bible reports.
 
 ## 1. Shape sources
 
@@ -222,7 +224,7 @@ line. Corner courts carry their checkpoint inside the walls.
   contact, mask absorption and ledge hang; the side-scroll zone's camera (looks −Z from the stair's
   south side) and control frame confirmed on grounded probes; `check:levels`; production build;
   release size under the 1,000,000,000-byte budget; Chromium lite pass over 32 rooms and full pass
-  over 8 with clean consoles. Evidence in `docs/temple-embers-design/`.
+  over 8 with clean consoles. Evidence in `docs/cinder-sanctum-design/` (measured under the old `jungle-terraces` id).
 
 ## 10. The dressing pass (after the switchback)
 

@@ -1,6 +1,5 @@
 import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
-import { runEmberReliquaryJourney } from './ember-reliquary-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
 import { runQuaysideBonus } from './ambush-pilot.mjs';
 import { runLedgerBonus } from './merchant-pilot.mjs';
@@ -16,12 +15,11 @@ export function* runThemedBonusJourney(r) {
   if (r.course.parentId === 'test') return yield* runQuaysideBonus(r);
   if (r.course.layout) return yield* runPuzzleJourney(Object.assign(Object.create(r),{id:r.course.layout}));
   if (r.course.parentId === 'nightworks-after-hours') return yield* runCalderaBonusJourney(r);
-  if (r.course.parentId === 'jungle-terraces') return yield* runEmberReliquaryJourney(r);
   const c=puzzleControls(r), {p,l}=r, course=r.course;
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');
   const cargo=function*(name){
-    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':null;
+    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':course.parentId==='jungle-terraces'?'Reliquary':null;
     if(!prefix)return;
     const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(`${prefix} cargo / ${name} /`));
     for(const b of boxes)if(b.alive)yield* c.hit(b,`${prefix} ${name} delivery`);

@@ -37,7 +37,7 @@ carry the pits, ledges and enemies; speed lives on the two descents.
 | S1 Kindling Steps | Foot, into the screen, 12 m walled gully | 197 m, +10.5 m | Ice underfoot | C1 first landing, C2 powder landing, C3 crest |
 | S2 First Tracks | Board, square-wave descent | 561 m, -18.5 m | Rolling ice boulders | C4 past the boulders, C5 tarn |
 | Tarn and hoist | Foot, hub; the camera turns side-on on the way up | 14 m lift | (rest) | C6 hoist landing |
-| S3 The Headwall | Foot, side-on: east along the lower row, up the buttress, west along the upper row | 2 × 105 m, +22 m | Ice stampers | C7 east landing, C8 switch ledge, C9 summit |
+| S3 The Headwall | Foot: side-on east along the lower row, up the buttress, then into the screen west along the upper row | 2 × 105 m, +22 m | Ice stampers | C7 east landing, C8 switch ledge, C9 summit |
 | S4 Powderkeg Run | Board, ridge then the long face | 656 m, -40 m | Everything, combined | C10, C11, C12 |
 
 ## Beats
@@ -75,7 +75,13 @@ it) → three buttress tiers, one a dead end with a reward → east landing: a
 balcony over the far bank, then into the screen to the landing proper (C7).
 Its other edges are railed; fruit draws the turn.
 
-**S3 upper row (west).** Stamper over glazed ice (wait on the dry landing, then
+**S3 upper row (west, into the screen).** Since 17 November 2026 the upper row is played
+with the camera behind the walker rather than side-on: side-on stretches in this game always read
+left to right, and a side-on row heading west would read right to left. The camera lane turns from
+the side view at the east landing and follows the row west to the summit. The landing's east end, under the
+arrow and the adit door, keeps a fixed into-the-screen frame (C7 faces the door) so the arrow bounce is steered on
+steady axes; the turn west begins once you step past it.
+The row's floors and content are unchanged: stamper over glazed ice (wait on the dry landing, then
 run) → pillar whose near four metres are clear, a bristleback keeping to its
 far end (a full running jump off the ice lands 2.6 m short of it) →
 three rotten shelves → switch ledge: checkpoint C8 by the lip, a life framed
@@ -230,7 +236,7 @@ Medal times: gold 165 s, silver 195 s, bronze 240 s (main route).
 ## Known limits
 
 - The bible's geometry report follows the camera lane, so it under-reports the
-  two side-on rows and the adit.
+  side-on lower row and the adit.
 - The pilots prove one line and its collector variant, not every line a player
   can choose; the half crevasse's ollie line and the chicane edges were checked
   by measurement and by eye.

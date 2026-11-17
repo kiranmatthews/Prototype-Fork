@@ -1,4 +1,4 @@
-// Temple of Embers · one input-only journey from the spawn ledge to the sanctuary gate.
+// Cinder Sanctum · one input-only journey from the spawn ledge to the sanctuary gate.
 // Ordinary device samples only, through all seven legs of the switchback: the rider charges the smash
 // stagger and grinds the gutter coping, turns west through the corner court and hops the pillar chain,
 // climbs the fallen ledges to the roofed fuse court, walks the side-scroll broken stair under its slab, drops down the
@@ -10,7 +10,7 @@
 export async function runTempleJourney(r, { startStation = null } = {}) {
   const { p, l } = r, route = r.route;
   const { templeTikiPhase } = await r.server.ssrLoadModule('/src/templeBreath.ts');
-  const { templeFloorCentre } = await r.server.ssrLoadModule('/src/levels/temple-of-embers.ts');
+  const { templeFloorCentre } = await r.server.ssrLoadModule('/src/levels/cinder-sanctum.ts');
   const loc = () => route.toLocal(p.pos.toArray()), S = () => loc()[0], X = () => loc()[2];
   const dead = () => p.isBailing || ['dead', 'gameover'].includes(p.state);
   const pose = () => ({ s: +S().toFixed(2), x: +X().toFixed(2), y: +p.pos.y.toFixed(2), state: p.state, grounded: p.grounded, board: p.freeSkate, speed: +p.speed.toFixed(2), vVel: +p.vVel.toFixed(2), deaths: p.totalDeaths, frame: r.frame });

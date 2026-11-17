@@ -372,8 +372,10 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'country-club': {name:'Country Club Circuit',levelId:'country-club',previewKey:'country-club',skateRace:true,bonus:false},
   'rooftop-relay': {name:'Hogsworth Harbour',levelId:'rooftop-relay',previewKey:'rooftop-relay'},
   'maynard-course-4': {name:'Mayfield Mall',levelId:'mayfield-mall',previewKey:'mayfield-mall',bonus:true,relicTime:100},
-  'maynard-course-5': {name:'Unnamed Course 5',placeholder:true},
-  'maynard-boss': {name:'Maynard Quay Boss',placeholder:true,boss:true},
+  // The next two open slots (17 November 2026). The sixth was reserved for a Maynard Quay boss; it now holds an
+  // ordinary course, so clearing Powderkeg Peak opens Quagmire Caverns. Both keep their slot keys for saved progress.
+  'maynard-course-5': {name:'Cinder Sanctum',levelId:'cinder-sanctum',previewKey:'cinder-sanctum',relicTime:220},
+  'maynard-boss': {name:'Powderkeg Peak',levelId:'powderkeg-peak',previewKey:'powderkeg-peak',boss:false,relicTime:165},
   warehouse: {name:'Factory Fuss',levelId:'warehouse',previewKey:'warehouse',bonus:false,timeTrial:false},
   'bryce-canyon': {name:'Dusty Road',levelId:'bryce-canyon',previewKey:'bryce-canyon',bonus:true,relicTime:210,colouredGem:'yellow'},
   'jungle-minefield': {name:'Nightmare Grove',levelId:'jungle-minefield',previewKey:'jungle-minefield'},

@@ -11,14 +11,14 @@ const expected=[
  ['treehouse-trail','Treehouse Trail'],['beachfront','Banana Bay'],['rumblewater-run','Ripcord River'],['jungle','Jungle Ruins'],['coastal-street-run','Beach Street'],['jungle-cup','Motu Beach Invitational'],
  ['custard-creek','Sunset Safari'],['tribal-run','Tribal Run'],['waterfall-climb','Waterfall Climb'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
  ['waterpark','Deadwater Park'],['codex-lab','Haunted Hassle'],['ghost-train','Ghost Train'],['hollowwake-descent','Tunnelbore Tracks'],['slipstream-race','Slipstream'],['waterpark-cup','Deadwater Cup'],
- ['carlisle-coast','Carlisle Coast'],['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['mayfield-mall','Mayfield Mall'],['warehouse','Factory Fuss'],['bryce-canyon','Dusty Road'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],['spaghetti-rails','Spaghetti Rails'],
+ ['carlisle-coast','Carlisle Coast'],['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['mayfield-mall','Mayfield Mall'],['cinder-sanctum','Cinder Sanctum'],['powderkeg-peak','Powderkeg Peak'],['warehouse','Factory Fuss'],['bryce-canyon','Dusty Road'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],['spaghetti-rails','Spaghetti Rails'],
  ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],['skystream','The Skystream'],['coconut-cart-rally','Coconut Cart Rally'],
 ];
 assert.deepEqual(levels.filter(d=>!d.placeholder).map(d=>[d.levelId,d.name]),expected);
-assert.equal(levels.length,39);assert.equal(levels.filter(d=>d.placeholder).length,5);
+assert.equal(levels.length,39);assert.equal(levels.filter(d=>d.placeholder).length,3);
 assert.equal(new Set(levels.map(d=>d.levelId)).size,39);assert.equal(new Set(levels.map(d=>d.progressKey)).size,39);
 assert.deepEqual(c.validateCampaignMapGraph(),[]);assert.equal(c.CAMPAIGN_MAP_EDGES.length,38);
-assert.deepEqual(bosses.map(d=>d.progressKey),['jungle-cup','crab-chief','slipstream','waterpark-cup','maynard-boss','quagmire-race','quagmire-boss']);
+assert.deepEqual(bosses.map(d=>d.progressKey),['jungle-cup','crab-chief','slipstream','waterpark-cup','quagmire-race','quagmire-boss']);
 // IDs in old point arrays are reserved even when the course is no longer assigned.
 for(const [key,index] of [['jungle',0],['test-course',1],['sky-bridge',2],['island-hopper',7],['codex-switchback',9],['treehouse-trail',12],['crab-chief',23],['ghost-train',24],['rumblewater-run',27]])assert.equal(c.campaignMapPointIndex(key),index);
 // Untouched older editor captures adopt new positions; authored custom points survive.
@@ -131,7 +131,7 @@ assert.equal(oldUgaSave.levelProgress('tribal-run').cleared,false,'migration inv
 assert.equal(oldUgaSave.levelProgress('waterfall-climb').cleared,false,'migration invented a Waterfall Climb clear');
 assert.equal(oldUgaSave.levelProgress('test').timeMedal,'silver');memory.set('solProtoCampaignSavesV1',savedSlots);
 assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:false,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'Secret Island migration should retain gems and medals');
-assert.equal(reload.totals().maxLevels,34);assert.equal(reload.runModesUnlocked('warehouse'),false);
+assert.equal(reload.totals().maxLevels,36);assert.equal(reload.runModesUnlocked('warehouse'),false);
 assert.deepEqual(reload.levelProgress('sky'),reload.active.levels['sky-bridge'],'reassigned Sky Bridge lost its older rewards');
 assert.equal(reload.levelPlayable('sky'),false,'old completion bypassed the secret-island boss gate');
 for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10'],['secret-4','rolling-bones','gems-15'],['secret-5','skystream','medals-20']]){

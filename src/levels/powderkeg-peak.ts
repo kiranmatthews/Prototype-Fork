@@ -14,14 +14,19 @@ import { Mountain, Path, bed, pad, rectPad, padMeshes, pisteMeshes, profile, slo
  *   S1  Kindling Steps   on foot, north up a walled gully in terraces      (new: ice underfoot)
  *   S2  First Tracks     board, a square-wave descent to the frozen tarn   (new: rolling boulders)
  *       the tarn, the hoist: the camera turns side-on on the way up
- *   S3  The Headwall     on foot, side-on: east along the lower ledge row, up
- *                        the east buttress, back west along the upper row   (new: ice stampers)
+ *   S3  The Headwall     on foot: side-on east along the lower ledge row, up
+ *                        the east buttress, then into the screen and west
+ *                        along the upper row with the camera behind you      (new: ice stampers)
  *   S4  Powderkeg Run    board, west along the summit ridge and south down
  *                        the long face to the powder works                  (everything, combined)
  *
  * World: X east, Z south, so "into the screen" is −Z. Engine yaw 0 faces −Z,
  * +90 faces −X. Climbs are played on foot and carry the pits, ledges and
  * enemies; speed lives on the two descents.
+ *
+ * Side-on stretches always read left to right: the camera stands south of them and the route heads east (the lower
+ * row, the Old Adit, the Cold Storage bonus). Where the Headwall doubles back west, the upper row is played into
+ * the screen instead of side-on (17 November 2026).
  */
 type Kind = NonNullable<CustomComponent['kind']>;
 type Foe = NonNullable<CustomComponent['foe']>;
@@ -433,7 +438,8 @@ fence(-.5, -.1, ROW_A + 2, ROW_A + 3.8, TARN_Y - 1.4, 54, 'Hoist shaft: boarded 
 add({ t: 'mover', p: [-3, r3((TARN_Y + A0_Y) / 2), ROW_A + 1], s: [4, .6, 4], axis: 'y', amp: (A0_Y - TARN_Y) / 2, speed: .7, phase: -Math.PI / 2, tex: 'plank', color: '#b98f5e', grp: G.hazards, nm: 'The hoist: rises fourteen metres to the lower ledge row' });
 
 // ───────────────────────────── S3 · The Headwall ─────────────────────────────
-// Side-on. Row A runs east along z = ROW_A, row B west along z = ROW_B, eight metres behind and above it.
+// Row A runs east along z = ROW_A, side-on. Row B runs west along z = ROW_B, eight metres behind and above it, played
+// into the screen with the camera behind the walker: a side-on row heading west would read right to left.
 interface Ledge { x0: number; x1: number; y: number; ice?: boolean; crumble?: boolean; /** A shelf pinned to the wall rather than a column from the floor. */ shelf?: boolean; nm: string; }
 const ROW_A_LEDGES: Ledge[] = [
   { x0: -1, x1: 26, y: 6, nm: 'Hoist landing and the first stamper' },
@@ -544,7 +550,10 @@ fence(80, 80.4, ROW_B + 2, ROW_A - 2, 17, 31, 'East landing: west rail');
 fence(80, BALCONY_X + .4, ROW_A - 2.4, ROW_A - 2, 17, 31, 'East landing: south rail, over the far bank');
 fence(BALCONY_X, BALCONY_X + .4, ROW_A - 2, ROW_A + 2.4, 17, 31, 'East landing: balcony rail');
 add({ t: 'zone', p: [46, 6, ROW_A], s: [108, 1, 8], dir: 'E', grp: G.camera, nm: 'Lower row: side-on, heading east' });
-add({ t: 'zone', p: [42, 20, ROW_B], s: [116, 1, 7.98], dir: 'W', grp: G.camera, nm: 'Upper row: side-on, heading west' });
+// No side-on zone on the upper row: the camera lane (see Course frame) turns the camera to follow the walker west
+// along it. The east end of the landing keeps a fixed into-the-screen frame instead, so the arrow bounce to the adit
+// door is steered on steady axes rather than on the lane's corner; the turn west begins once you step past it.
+add({ t: 'zone', p: [87, B0_Y, ROW_B + 1], s: [6, 1, 6], dir: 'S', grp: G.camera, nm: 'East landing: into the screen under the arrow and the adit door' });
 
 // The Headwall · content.
 const SWITCH = 12;
@@ -563,7 +572,8 @@ rowOf(71.54, 9, ROW_A - 1.4, ['wood', 'tnt', 'wood'], 'TNT between two boxes on 
 fruitLine([78.6, 9, ROW_A], [82.4, 10.2, ROW_A], 3, 1.6);
 stamper(84.5, 10.2, ROW_A, 0, 'Stamper on the far bank: jump as it rises');
 stack(100.2, 14.6, ROW_A, ['wood', 'mystery'], 'At the dead end of the second buttress tier (reward for going the wrong way first)');
-// The turn: the route leaves the east landing into the screen and then west. Fruit draws it, from the checkpoint round the corner.
+// The turn: the route leaves the east landing into the screen and then west, and the camera turns with it from the
+// side view to a view along the upper row. Fruit draws it, from the checkpoint round the corner.
 fruitLine([88.6, B0_Y, ROW_A - .6], [88.6, B0_Y, ROW_A - 2.6], 2); fruitLine([87.4, B0_Y, ROW_A - 5.6], [85.6, B0_Y, ROW_B + 1], 2); fruitLine([83.6, B0_Y, ROW_B + .4], [81, B0_Y, ROW_B], 2);
 stamper(75.5, B0_Y, ROW_B, 2, 'Stamper over glazed ice (invert: you cannot stop under it, so wait on the dry landing and run)', { cycle: 4 });
 rowOf(67.9, B0_Y, ROW_B - 1.4, ['wood', 'wood'], 'On the ice by the far lip, against the wall (bait: the slide carries you at the gap)');
@@ -811,7 +821,8 @@ for (const [x, y, z] of [[1.2, A0_Y, ROW_A - 1.5], [77.4, 9, ROW_A - 1.5], [81.2
   }
   C.push(...rails.done());
 }
-add({ t: 'camnode', p: [45, 14, ROW_A - 4], s: [132, 62, 21], cameraView: true, cameraPresentationOnly: true, cameraPosition: [45, 17, ROW_A + 22], cameraTarget: [45, 14.4, ROW_A],
+// The side view covers the lower row, the buttress and the balcony only; north of them the lane camera takes over.
+add({ t: 'camnode', p: [45, 14, ROW_A + .5], s: [132, 62, 12], cameraView: true, cameraPresentationOnly: true, cameraPosition: [45, 17, ROW_A + 22], cameraTarget: [45, 14.4, ROW_A],
   cameraFollowDistance: 16.5, cameraKeepDistance: true, cameraFollowTargetHeight: 2.3, cameraFov: 52, cameraAspect: 16 / 9, radius: 4, grp: G.camera, nm: 'Headwall: a side view wide enough to read a stamper before you reach it' });
 
 // The summit: the last hut and the start arch of Powderkeg Run.
@@ -866,7 +877,11 @@ paddock('Summit, north', [[-14.3, -616.4], [-14.3, -621.4], [-17, -623.2], [-21.
 // ───────────────────────────── Course frame ─────────────────────────────
 const laneNodes: { p: P3; radius: number }[] = [
   { p: [0, 0, 16], radius: 0 }, { p: [0, CREST_Y, -CREST_S], radius: 0 },
-  ...RUN1.lane(), { p: [0, TARN_Y, -598], radius: 0 }, { p: [-24, SUMMIT_Y, ROW_B], radius: 0 }, ...RUN2.lane(),
+  ...RUN1.lane(), { p: [0, TARN_Y, -598], radius: 0 },
+  // The Headwall: the hoist and the lower row (side-on inside their zone), the balcony, the turn into the screen at
+  // the east landing, and west along the upper row to the summit.
+  { p: [-3, A0_Y, ROW_A], radius: 0 }, { p: [BALCONY_X + 1.4, B0_Y, ROW_A], radius: 0 }, { p: [BALCONY_X + 1.4, B0_Y, ROW_B], radius: 3 },
+  { p: [-14, APPROACH_Y, ROW_B], radius: 0 }, { p: [-24, SUMMIT_Y, ROW_B], radius: 0 }, ...RUN2.lane(),
   { p: [FINISH[0], FINISH[1], FINISH[2] + 26], radius: 0 },
 ];
 for (const node of laneNodes) add({ t: 'camnode', p: node.p, radius: node.radius, grp: G.camera });

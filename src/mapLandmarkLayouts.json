@@ -3950,5 +3950,35 @@
       48,
       42
     ]
+  },
+  "maynard-course-5": {
+    "theme": "Cinder Sanctum · aqueduct arches over a fire-lit portico",
+    "footprint": [44, 35],
+    "pieces": [
+      {"asset":"aqueduct","p":[1,-1,-21],"extent":20,"yaw":-8},
+      {"asset":"column","p":[-6,0,-10],"extent":1,"yaw":0,"size":[2.6,10,2.6]},
+      {"asset":"column","p":[6,0,-10],"extent":1,"yaw":0,"size":[2.6,10,2.6]},
+      {"asset":"lintel","p":[0,9.6,-10],"extent":1,"yaw":0,"size":[15,2.6,3.6]},
+      {"asset":"step","p":[0,0,-6.5],"extent":9,"yaw":0},
+      {"asset":"brazier","p":[-5,0,5],"extent":4,"yaw":0},
+      {"asset":"brazier","p":[5,0,5],"extent":4,"yaw":0},
+      {"asset":"canopy","p":[-15,0,-9],"extent":13,"yaw":0},
+      {"asset":"fern","p":[13,0,-3],"extent":6,"yaw":20},
+      {"asset":"relief","p":[-11,0.6,-15],"extent":5,"yaw":18}
+    ]
+  },
+  "maynard-boss": {
+    "theme": "Powderkeg Peak · pines and the mine hoist under a slate headwall",
+    "footprint": [46, 34],
+    "pieces": [
+      {"asset":"spire","p":[2,0,-18],"extent":17,"yaw":0,"size":[22,17,8]},
+      {"asset":"spire","p":[-14,0,-12],"extent":12,"yaw":15},
+      {"asset":"hoist","p":[9,0,-9],"extent":10,"yaw":-10},
+      {"asset":"pine","p":[-15,0,1],"extent":10,"yaw":0},
+      {"asset":"pine","p":[15,0,-3],"extent":11,"yaw":35},
+      {"asset":"pine","p":[11,0,7],"extent":7,"yaw":70},
+      {"asset":"boulder","p":[-8,0,6],"extent":4,"yaw":20},
+      {"asset":"log","p":[4,0,6],"extent":5,"yaw":30}
+    ]
   }
 }

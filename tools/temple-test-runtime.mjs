@@ -4,7 +4,8 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 // velocity, hit budgets and collision geometry always remain world-space.
 export async function withTempleRuntime(run,options){
  let route;const config={...options,source:m=>{
-  route=m.JUNGLE_SEQUEL_ROUTES.find(r=>r.id===options.levelId);
+  // Temple of Embers comes from jungle-sequels.ts; Cinder Sanctum from its own module.
+  route=[...(m.JUNGLE_SEQUEL_ROUTES??[]),m.CINDER_SANCTUM_ROUTE].find(r=>r?.id===options.levelId);
   if(options.start)config.start=route.toWorld(...options.start);
   return route.data;
  },controlFrame:r=>r.p.courseInputDirection(r.l)??{x:r.p.camDir.x,z:r.p.camDir.z}};

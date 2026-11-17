@@ -12644,3 +12644,47 @@ updated. Six tests fail the same way on main and were left alone: the HUD
 fruit-revision check, the time-trial rally finish, and four that run on the
 blockworks test harness (camera extraction, the Slipstream edge fingerprint,
 the time-trial number crates and the item-row spacing).
+
+## 2026-11-17 — Temples split, two new slots, side-scroll runs left to right
+
+Brief: keep Codex's Temple of Embers, put this branch's temple and the snow level in the next open
+level-select slots, make every side-scroll section run left to right, and publish to main.
+Elapsed: about 1 hour 25 minutes from the request to the validated build (03:38–05:03 UTC), before publishing.
+
+- **Temple of Embers** (`jungle-terraces`, Secret Island slot 2) is Codex's version again: main's
+  route, crate arrangement, polish and Ember Reliquary bonus files and their tests are restored
+  unchanged.
+- **Cinder Sanctum** (`cinder-sanctum`) is this branch's switchback temple under its own name, with
+  its bonus renamed **Cinder Vault**. It fills Maynard Quay slot 5 (formerly "Unnamed Course 5").
+  Source `src/levels/cinder-sanctum.ts`, design notes `docs/CINDER_SANCTUM_DESIGN.md`, tests
+  `tools/test-cinder-sanctum-*.mjs` and `tools/test-cinder-vault-bonus.mjs`.
+- **Powderkeg Peak** fills Maynard Quay slot 6, the next open slot. It was reserved for a Maynard
+  Quay boss; it is now an ordinary course, so clearing it opens Quagmire Caverns, which the missing
+  boss had kept locked.
+- **Left to right.** Every side-on stretch already ran east (left to right) except Powderkeg Peak's
+  upper headwall row, which scrolled west. It is now played into the screen: from the east landing
+  the camera lane turns behind the walker and follows the row west to the summit. The landing's east
+  end keeps a fixed into-the-screen zone, so the arrow bounce to the adit door is steered on steady
+  axes rather than on the lane's corner. The row's floors and content are unchanged. The rule is in the bible (XIV.3 and the Part XX geometry checklist), and
+  `tools/test-side-scroll-direction.mjs` (in `check:levels`) checks every built-in level: side-scroll
+  zones head east, fixed side views look from the south, bonus rounds run toward +X.
+- New level-select previews for both slots, rendered with the game's own renderer, and world-map scenes
+  built from existing landmark models (an aqueduct and fire-lit portico; spires, pines and the mine hoist).
+- The production build now gives the type-check and Vite a 4 GB heap: with both temples in the game each
+  came within reach of Node's 2 GB default, and both ran out once here.
+
+Validation: type-check and production build (944.8 MB of the 1 GB budget); `check:levels` (the new
+direction test: 16 side-scroll zones and 28 bonus rounds across 80 levels), `check:campaign` and
+`check:powderkeg` (the input-only journey from the lodge to the gate through the adit, the upper row
+into the screen and the last run, zero deaths, plus bounds, fair restarts and Cold Storage); Codex's
+restored temple tests; Cinder Sanctum's structure, collision, encounter and fire tests; the Cinder Vault
+journey (17 of 17 boxes, gem); the level-select and six-island tests. Browser pass over the built game:
+Maynard Quay lists Cinder Sanctum and Powderkeg Peak with their previews; the camera looks west behind
+the walker on Powderkeg's upper row and north under its arrow; Cinder Sanctum's stair, Cinder Vault,
+Cold Storage and Codex's Ember Reliquary run left to right; Codex's Temple of Embers loads with its 187
+crates; the world map shows the new scenes; no console errors.
+
+Known, unchanged by this brief (each fails the same way on main or on this morning's build): three of
+Codex's temple tests (`test-jungle-sequel-climbs`, `-crates`, `-bank-clearance`); Cinder Sanctum's
+input-only journey, which loses the walkway crab (station 170) and, started past it, one bank launch
+at station 767.

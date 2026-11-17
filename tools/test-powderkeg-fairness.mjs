@@ -19,10 +19,12 @@ await withBlockworksRuntime(async r => {
   for (const cp of l.checkpoints) {
     const s = cp.spawnPos, onRun = [RUN1, RUN2].some(path => { const q = path.nearest(s.x, s.z, 9); return q && q.s > 2 && q.s < path.length - 2; });
     if (onRun) continue;
-    const zone = l.zoneAt(s.x, s.z)?.dir, h = zone === 'E' ? [1, 0] : zone === 'W' ? [-1, 0] : [0, -1], nitro = nitroAlive();
+    // The way the course runs: a side-on zone's heading, else the camera lane's (the upper row runs west into the screen).
+    const zone = l.zoneAt(s.x, s.z)?.dir, lane = zone ? null : l.laneDirAt(s.x, s.y, s.z), nitro = nitroAlive();
+    const h = zone === 'E' ? [1, 0] : zone === 'W' ? [-1, 0] : lane ? [lane.x, lane.z] : [0, -1];
     put(s.x, s.y - .1, s.z, h[0], h[1]); for (let i = 0; i < 6; i++) r.tick({});
     let died = null; for (let i = 0; i < 75; i++) { r.tick(toward(h[0], h[1])); if (p.totalDeaths) { died = i * dt; break; } }
-    check(`restart at (${s.x.toFixed(1)}, ${s.z.toFixed(1)}) holding ${zone ?? 'N'}`, died === null && nitroAlive() === nitro, died === null ? at() : `dead after ${died.toFixed(2)} s at ${at()}`);
+    check(`restart at (${s.x.toFixed(1)}, ${s.z.toFixed(1)}) holding ${zone ?? `lane ${h.map(v => v.toFixed(2)).join(',')}`}`, died === null && nitroAlive() === nitro, died === null ? at() : `dead after ${died.toFixed(2)} s at ${at()}`);
   }
 
   // 2. Off the glazed gallery of the upper row: the full running jump lands clear of the bristleback, and holding on a

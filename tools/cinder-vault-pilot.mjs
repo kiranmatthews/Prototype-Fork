@@ -1,11 +1,11 @@
 import {puzzleControls} from './puzzle-controls.mjs';
-// Authored positions from src/levels/ember-reliquary-bonus.ts (the pilot runs in plain Node).
-const EMBER_RELIQUARY_BRIDGE=[62,74],EMBER_RELIQUARY_NITRO_X=[120,127,134];
+// Authored positions from src/levels/cinder-vault-bonus.ts (the pilot runs in plain Node).
+const CINDER_VAULT_BRIDGE=[62,74],CINDER_VAULT_NITRO_X=[120,127,134];
 
 /** Ordinary device input from the reliquary arrival to its return gate. The
  * sentinel's clock, the TNT fuse and the nitro blasts are never advanced or
  * reset; every authored reward box must be collected before the gate. */
-export function* runEmberReliquaryJourney(r){
+export function* runCinderVaultJourney(r){
   const c=puzzleControls(r),{p,l}=r,deaths=p.totalDeaths;
   const hit=function*(name){const box=c.crateNamed(name);c.check(box,`missing crate ${name}`);if(box.alive)yield* c.hit(box,name);};
   yield* c.stepFor(20);c.check(p.grounded,'supported reliquary arrival');
@@ -23,7 +23,7 @@ export function* runEmberReliquaryJourney(r){
   yield* c.walk([39,0,0],'leave the sweep before the next windup');
   c.check(p.masks===masksBefore,'a well-timed crossing spends no mask');
   // Room 3 · jade bridge chain: arrow → shelf → high switch → bridge → arrow last → cross.
-  const arrow=c.crateNamed('Reliquary arrow: preserve it until the high switch is struck');
+  const arrow=c.crateNamed('Vault arrow: preserve it until the high switch is struck');
   const bridge=l.outlinedSurfaces.find(s=>s.component.nm.startsWith('Visible jade bridge'));
   c.check(bridge&&!l.groundMeshes.includes(bridge.mesh),'the jade bridge must begin as a ghost outline');
   yield* c.bounce(arrow,[49.3,7.8,0],'conserved-arrow ascent to the switch shelf',{double:true});
@@ -34,8 +34,8 @@ export function* runEmberReliquaryJourney(r){
   yield* c.walk([56,7.8,0],'shelf edge above the switch court');
   yield* c.hop([58.5,0,0],'descend to the court before the chasm',{heightTolerance:.2});
   c.check(arrow.alive,'the arrow must survive until the shelf work is done');
-  yield* hit('Reliquary arrow: preserve it until the high switch is struck');
-  yield* c.walk([EMBER_RELIQUARY_BRIDGE[1]+1.5,0,0],'cross the created jade bridge');
+  yield* hit('Vault arrow: preserve it until the high switch is struck');
+  yield* c.walk([CINDER_VAULT_BRIDGE[1]+1.5,0,0],'cross the created jade bridge');
   yield* hit('Receiver offering');yield* hit('Receiver mystery');
   // Room 4 · fuse vault: cap and life first, then prime the TNT and retreat.
   const x=96,wood=c.crateNamed('Vault wooden takeoff cap'),cap=c.crateNamed('Vault life before the fuse'),tnt=c.crateNamed('Vault timed support');
@@ -54,7 +54,7 @@ export function* runEmberReliquaryJourney(r){
   yield* c.until(()=>!tnt.alive&&l.explosions.length===0,{}, {label:'supported post-blast recovery',limit:240});
   yield* hit('Vault refuge mystery');
   // Room 5 · nitro corridor: jump each volatile offering, then count them all.
-  for(const nx of EMBER_RELIQUARY_NITRO_X){
+  for(const nx of CINDER_VAULT_NITRO_X){
     yield* c.walk([nx-2.6,0,0],`approach volatile offering ${nx}`);
     yield* c.hop([nx+2.6,0,0],`jump the volatile offering ${nx}`,{tolerance:.9});
   }

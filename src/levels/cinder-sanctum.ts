@@ -3,7 +3,10 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-atmosphere';
 
 /**
- * TEMPLE OF EMBERS · fifth design: the switchback temple.
+ * CINDER SANCTUM · the switchback temple (`cinder-sanctum`, Maynard Quay slot 5).
+ *
+ * It began as the fifth design of Temple of Embers; Codex's Temple of Embers keeps
+ * that course's `jungle-terraces` id and Secret Island slot, and this one is its own level.
  *
  * The course is a chain of seven legs that turn at right angles, climb, and
  * double back over the start, in the manner of the Famitsu isometric maps of
@@ -101,7 +104,7 @@ type Floor = TempleFloor;
 interface PlacedCrate { s: number; x: number; y: number; kind: Kind; nm: string; flags: Set<string>; }
 interface Scenery { s: number; x: number; y: number; radius: number; nm: string; }
 
-export function buildTempleOfEmbers(): TempleRoute {
+export function buildCinderSanctum(): TempleRoute {
   const C: CustomComponent[] = [];
   const groups: CustomGroup[] = [
     { id: G.ground, nm: 'Ravine floors and ramps', editorOnly: true }, { id: G.masonry, nm: 'Bonded temple masonry', editorOnly: true },
@@ -643,8 +646,8 @@ export function buildTempleOfEmbers(): TempleRoute {
   promised(L6 + 55.46, 5.5, 16, 'wood', 'Promise block, back left'); promised(L6 + 55.46, 6.46, 16, 'mystery', 'Promise block, back right');
   sentinel(L6 + 60, 9, 16, -1, 8, 28, 1.6, 'Niche sentinel sweeping the exit lip');
   flight(hallB, L6 + 75.6, 16, GALLERY, -8, 8, 'Cistern ramp up to the gallery', false);
-  masonry(L6 + 24, L6 + 32, -27, -20, 16, 'Side chapel of the Reliquary', { lip: false, kind: 'side' });
-  add({ t: 'bonusplatform', p: pt(L6 + 28, 16, -24), to: pt(L6 + 28, 16.12, -15), grp: G.course, nm: 'Ember Reliquary: the single temple bonus and safe return' });
+  masonry(L6 + 24, L6 + 32, -27, -20, 16, 'Side chapel of the Vault', { lip: false, kind: 'side' });
+  add({ t: 'bonusplatform', p: pt(L6 + 28, 16, -24), to: pt(L6 + 28, 16.12, -15), grp: G.course, nm: 'Cinder Vault: the single temple bonus and safe return' });
   for (const q of [L6 + 24, L6 + 32]) add({ t: 'decor', dkind: 'templewall', p: pt(q, 16, -23.5), s: [7, 4.6, 1.2], yaw: yawAt(q), seed: Math.round(q), solid: false, scenerySolid: false, castShadow: false, grp: G.masonry, nm: 'Chapel wall' });
   torch(L6 + 28, -26.5, 16, 'Chapel brazier', 1.5, 1);
   masonry(L6 + 75.6, L7, -8, 8, GALLERY, 'Cistern exit gallery');
@@ -743,7 +746,7 @@ export function buildTempleOfEmbers(): TempleRoute {
   torch(T + 86.5, -3.4, 30, 'Gate brazier', 2, 1.3); torch(T + 86.5, 3.4, 30, 'Gate brazier', 2, 1.3);
 
   // ---- verification -------------------------------------------------------
-  // The authoring rules of docs/TEMPLE_OF_EMBERS_DESIGN.md and the bible's Part XX checklist, run at build.
+  // The authoring rules of docs/CINDER_SANCTUM_DESIGN.md and the bible's Part XX checklist, run at build.
   const checks: string[] = [], problems: string[] = [];
   const check = (label: string, body: () => void) => { checks.push(label); body(); };
   const COUNTED = (c: PlacedCrate) => !['bang', 'nitrobang', 'metal', 'metalbounce'].includes(c.kind);
@@ -817,7 +820,7 @@ export function buildTempleOfEmbers(): TempleRoute {
     const boxes = TEMPLE_LEGS.map(l => { const p0 = templeToWorld(l.a, 0, 0), p1 = templeToWorld(l.b, 0, 0), half = 12; return { l, x0: Math.min(p0[0], p1[0]) - half, x1: Math.max(p0[0], p1[0]) + half, z0: Math.min(p0[2], p1[2]) - half, z1: Math.max(p0[2], p1[2]) + half }; });
     for (let i = 0; i < boxes.length; i++) for (let j = i + 2; j < boxes.length; j++) { const a = boxes[i], b = boxes[j]; if (a.x0 < b.x1 - 14 && b.x0 < a.x1 - 14 && a.z0 < b.z1 - 14 && b.z0 < a.z1 - 14) problems.push(`${a.l.name} and ${b.l.name} overlap in plan`); }
   });
-  if (problems.length) console.warn(`Temple of Embers authoring notes (advisory):\n${problems.join('\n')}`);
+  if (problems.length) console.warn(`Cinder Sanctum authoring notes (advisory):\n${problems.join('\n')}`);
 
   // ---- camera spine and level data ---------------------------------------
   // Camnodes chain leg by leg; each leg's lane stops at its corner court's centre so the camera cuts the corner there.
@@ -827,14 +830,14 @@ export function buildTempleOfEmbers(): TempleRoute {
   for (let s = -16; s <= END; s += 2) profile.push([s, mainFloorAt(s)]);
   const countedCrates = crates.filter(c => !['bang', 'nitrobang', 'metal', 'metalbounce'].includes(c.kind)).length;
   const data: CustomLevelData = {
-    v: 1, name: 'Temple of Embers', spawn: pt(-8, 4.12, 1.2), killY: -24, sky: 'night', jungleAtmosphere: true, keepPlayFog: true,
+    v: 1, name: 'Cinder Sanctum', spawn: pt(-8, 4.12, 1.2), killY: -24, sky: 'night', jungleAtmosphere: true, keepPlayFog: true,
     jungleDepthFade: false, jungleStyle: 'painterly', cameraAirLift: .8, atmosphere: TEMPLE_NIGHT_ATMOSPHERE,
     relicTime: 220, medalTimes: { gold: 220, silver: 300, bronze: 420 }, groups, components: C,
   };
-  return { id: 'jungle-terraces', data, sourceComponents: C, toWorld: templeToWorld, toLocal: templeToLocal, frameAt: templeFrameAt,
+  return { id: 'cinder-sanctum', data, sourceComponents: C, toWorld: templeToWorld, toLocal: templeToLocal, frameAt: templeFrameAt,
     groundAt: s => mainFloorAt(Math.min(END, Math.max(-16, s))), profile, pipes, gaps, rooms, climbs: [], voids, chapters: rooms, setPieces,
     tikiTrials: setPieces.sentinels.map(f => ({ s: f.s, side: Math.sign(f.x) })), peak: 32, end: END, countedCrates, checks, floors, floorAt, legs: TEMPLE_LEGS };
 }
 
-export const TEMPLE_OF_EMBERS_ROUTE = buildTempleOfEmbers();
-export const TEMPLE_OF_EMBERS_LEVEL = TEMPLE_OF_EMBERS_ROUTE.data;
+export const CINDER_SANCTUM_ROUTE = buildCinderSanctum();
+export const CINDER_SANCTUM_LEVEL = CINDER_SANCTUM_ROUTE.data;

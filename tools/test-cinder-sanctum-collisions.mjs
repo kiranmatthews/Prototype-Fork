@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
-// World-space audit of the built Temple of Embers, independent of the rules
+// World-space audit of the built Cinder Sanctum, independent of the rules
 // the course verifies while it is authored.
 const SIZE=1.152;
 await withBlockworksRuntime(async r=>{
- const {l,THREE}=r,{JUNGLE_TERRACES_ROUTE:route}=await r.server.ssrLoadModule('/src/levels/jungle-sequels.ts');
+ const {l,THREE}=r,{CINDER_SANCTUM_ROUTE:route}=await r.server.ssrLoadModule('/src/levels/cinder-sanctum.ts');
  const C=route.data.components,crates=C.filter(c=>c.t==='crate'),hits=[];
  const local=p=>route.toLocal(p).map(n=>+n.toFixed(2));
  // 1. No authored rail passes through a crate.
@@ -51,4 +51,4 @@ await withBlockworksRuntime(async r=>{
  const report={crates:crates.length,enemies:l.enemies.length,tikis:l.fireTikis.length,hits};
  await writeFile('/private/tmp/temple-embers-collisions.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  assert.deepEqual(hits,[],'the built world must have no geometry collisions');
-},{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,endlessDeaths:true});
+},{modulePath:'/src/levels/cinder-sanctum.ts',levelId:'cinder-sanctum',source:m=>m.CINDER_SANCTUM_LEVEL,endlessDeaths:true});
