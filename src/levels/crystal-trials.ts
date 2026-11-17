@@ -1,5 +1,5 @@
 import type { CustomComponent, CustomLevelData } from '../level';
-import { deck, type CrystalTrial } from './crystal-trials/types';
+import { addExitNitroSwitch, deck, type CrystalTrial } from './crystal-trials/types';
 import { TRIAL_01 } from './crystal-trials/01';
 import { TRIAL_02 } from './crystal-trials/02';
 import { TRIAL_03 } from './crystal-trials/03';
@@ -86,6 +86,7 @@ function assemble(name: string, trials: CrystalTrial[], archive = false): Custom
     );
   }
   components.push(...trials.flatMap((trial, index) => placed(trial, index, placements[index])));
+  if (!archive) addExitNitroSwitch(components, [0, -8, finishZ]);
   return { v: 1, name, spawn: [0, -7.85, archive ? 80 : 144], killY: -24, skatepark: true,
     alwaysSkate: !archive, crystalTrials: archive ? 'archive' : 'challenge',
     startWarpPad: false, hugeDropBail: false, sky: 'sunset',

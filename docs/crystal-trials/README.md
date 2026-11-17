@@ -38,17 +38,19 @@ The source modules remain independently reusable. The whole course lays them in 
 
 The previous platforming collection is preserved as rejects `01-p`–`25-p`; the short skating studies are `01-s`–`25-s`. There are 75 rejected attempts plus the original eight-station grid, all selectable from the same phone page. [Rejects index](rejects/README.md).
 
-The phone entry downloads this collection and its rejects on Play, with touch controls, retry, individual selection and whole-course selection. It does not fetch the shared level pack or install the full game's offline cache. The live page transferred **34.7 MB** with caching disabled; its picker loaded **27.3 KB** before Play. [Public phone measurement](sequences/phone-public/smoke.json).
+The phone picker loads before the game assets. Allow about 30 MB to try the challenges and rejects. Finishing a numbered challenge selects the next number. Tap Play to start it or Replay to take another run at the one you finished. In the whole course, From checkpoint returns to the numbered checkpoint and keeps earned crystals. Whole course starts a fresh run.
 
-**All 25 challenges pass native and phone controller routes.** The continuous course and full-render routes through 5 and 25 also pass. All 25 have been visually reviewed at native 1280 × 720 resolution. The public deployment is verified with clean consoles.
+The November 17 review covers the rolling exits, moving rail landings, temporary roofs, halfpipe camera and phone controls. [Review and measurements](../LEVEL_ITERATIONS.md#2026-11-17--numbered-skating-challenge-review).
 
-Current validation and measurements are in [progress.json](progress.json) and [sequences/](sequences/README.md). The numbered evidence directories, `course/`, `phone-public/` and `public/` at this directory's root describe the superseded platforming release; its original progress record is preserved in [platforming-version/progress.json](platforming-version/progress.json).
+The November 15 skating release has its own [progress record](progress.json) and [route evidence](sequences/README.md). The numbered evidence directories, `course/`, `phone-public/` and `public/` at this directory's root describe the earlier platforming release. [Platforming progress record](platforming-version/progress.json).
 
 To verify the current geometry:
 
 ```sh
 CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate.mjs 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
 CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate-course.mjs
+CRYSTAL_SKATE_OUT=/tmp/crystal-early node tools/test-crystal-skate.mjs 18 3.3 -80
+CRYSTAL_SKATE_OUT=/tmp/crystal-late node tools/test-crystal-skate.mjs 18 3.3 -92
 node tools/test-crystal-skate-recovery.mjs
 node tools/test-crystal-trials.mjs 25
 CRYSTAL_SKATE_OUT=/tmp/crystal-sequences python3 tools/review-crystal-skate.py

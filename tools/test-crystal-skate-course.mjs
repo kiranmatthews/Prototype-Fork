@@ -10,11 +10,18 @@ await withBlockworksRuntime(async r=>{
  const forward={moveY:1,jumpHeld:true};
  const gate=r.source.components.find(c=>c.t==='gate').p;
  assert.equal(l.skateCollectathon.tokens.length,25);assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
+ assert.equal(l.nitroClearDiagnostics.switches,1);
+ assert.equal(l.nitroClearDiagnostics.generated,0);
  assert.equal(new Set(r.source.groups.map(g=>g.id)).size,r.source.groups.length);
  try {
   // Separate locked-exit fixture, before the continuous run's ordinary reset.
   p.respawn(l,true,false,{position:new r.THREE.Vector3(0,gate[1]+.15,gate[2]+8),heading:new r.THREE.Vector3(0,0,-1)});
-  for(let i=0;i<90;i++)r.tick({moveY:1});
+  let touchedLockedPad=false;
+  for(let i=0;i<90;i++){
+   r.tick({moveY:1});
+   if(p.grounded && p.groundHit?.finishPad)touchedLockedPad=true;
+  }
+  assert.ok(touchedLockedPad,'The locked-exit fixture never reached the pad');
   assert.notEqual(p.state,'finished');assert.equal(l.skateCollectathon.exitReady,false);
   report.lockedExit=true;p.respawn(l,true);const firstFrame=r.frame;
   for(const [index,trial] of m.CRYSTAL_TRIALS.entries()){
@@ -26,8 +33,8 @@ await withBlockworksRuntime(async r=>{
    local.passed=true;local.frames=r.frame-start;
    console.log(JSON.stringify({id:trial.id,passed:true,frame:r.frame,position:p.pos.toArray(),speed:p.speed}));
   }
-  r.until(()=>p.pos.z<gate[2]+10,forward,{label:'Skate across the final runout'});r.releaseJump({moveY:1});
-  r.until(()=>p.state==='finished',forward,{label:'Ollie through the real exit',maxFrames:180});
+  r.until(()=>p.state==='finished',forward,{label:'Ride onto the unlocked course exit',maxFrames:240});
+  assert.ok(p.grounded && p.groundHit?.finishPad);
   assert.equal(JSON.stringify(r.TUNING),baseline);
   assert.equal(l.skateCollectathon.collected,25);report.frames=r.frame-firstFrame;report.seconds=report.frames/60;
   report.finish=r.snapshot();report.passed=true;

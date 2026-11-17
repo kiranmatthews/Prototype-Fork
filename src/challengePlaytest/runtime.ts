@@ -19,6 +19,9 @@ import { REJECTED_CRYSTAL_TRIALS } from '../levels/crystal-trials/rejects';
 
 export interface PlaytestSelection { kind: 'challenge' | 'reject' | 'grid'; index?: number }
 export interface PlaytestRuntime {
+  readonly selection: PlaytestSelection | undefined;
+  readonly finished: boolean;
+  readonly checkpointRetry: boolean;
   load(selection: PlaytestSelection): Promise<void>;
   pause(): void;
   resume(): void;
@@ -50,6 +53,7 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   const presentation = new GameplayAnimationPresentation(p, scene, assets);
   await p.preparePresentationAssets();
   let level: Level, current: { id: string; name: string; data: CustomLevelData };
+  let active: PlaytestSelection | undefined;
   let paused = true, last = 0, accumulator = 0, snapVersion = -1;
   const aim = new THREE.Vector3(), eye = new THREE.Vector3(), forward = new THREE.Vector3(0, 0, -1);
   const stats = { frame: 0, totalFixedSteps: 0 };
@@ -58,9 +62,16 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   const balance = document.getElementById('challenge-balance') as HTMLMeterElement;
   let hintUntil = 0;
   const say = (message: string) => { hint.textContent = message;hintUntil = performance.now() + 5000; };
+  const checkpointTrial = () => {
+    if (active?.kind !== 'challenge' || active.index !== undefined || !level.activeCheckpoint) return;
+    return CRYSTAL_TRIALS[level.checkpoints.findIndex(cp => cp === level.activeCheckpoint)];
+  };
   p.onCourseHint = (title, description) => say(`${title} · ${description}`);
-  p.onCheckpoint = () => say('Checkpoint saved');
-  p.onFinish = () => { paused = true;queueMicrotask(() => menu('Complete. Choose another challenge or retry.')); };
+  p.onCheckpoint = () => {
+    const trial = checkpointTrial();
+    say(trial ? `${trial.name} · Checkpoint saved` : 'Checkpoint saved');
+  };
+  p.onFinish = () => { paused = true;queueMicrotask(() => menu(`${current.name} complete.`)); };
   const resize = () => {
     const scale = Math.min(1, 540 / Math.min(innerWidth, innerHeight));
     renderer.setSize(Math.round(innerWidth * scale), Math.round(innerHeight * scale), false);
@@ -68,13 +79,22 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   };
   resize();addEventListener('resize', resize);
   const pause = () => { paused = true;accumulator = 0;input.consumeEdges(true);sfx.stopLoops(); };
-  const resume = () => { paused = false;last = 0;input.consumeEdges(true);canvas.focus(); };
-  const retry = () => {
-    if (!level) return;p.respawn(level, true);level.setRunModesEnabled(false);
+  const resume = () => {
+    if (!active || p.state === 'finished') return;
+    paused = false;last = 0;input.consumeEdges(true);canvas.focus();
+  };
+  const reset = (hard: boolean) => {
+    p.respawn(level, hard);level.setRunModesEnabled(false);
     p.endlessDeaths = true;animation.restart();accumulator = 0;snapVersion = -1;
   };
+  const retry = () => {
+    if (!active) return;
+    const trial = p.state === 'finished' ? undefined : checkpointTrial();
+    reset(!trial);
+    say(trial ? `${trial.name} · From checkpoint` : current.name);
+  };
   async function load(selection: PlaytestSelection) {
-    pause();level?.dispose();
+    pause();
     let data: CustomLevelData;
     if (selection.kind === 'grid') data = REJECTED_GRID;
     else if (selection.index === undefined) data = selection.kind === 'challenge' ? CRYSTAL_TRIALS_LEVEL : CRYSTAL_REJECTS_LEVEL;
@@ -84,17 +104,20 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
       data = trialLevel(trial);
       if (selection.kind === 'reject') data.crystalTrials = 'archive';
     }
+    active = undefined;
+    level?.dispose();
     current = { id: `phone-${selection.kind}-${selection.index ?? 'all'}`, name: data.name, data };
-    level = new Level(scene, current);p.enterLevel(current.id);retry();
+    level = new Level(scene, current);p.enterLevel(current.id);reset(true);
     await Promise.all([level.prepareJungleAssets(), level.prepareSurfaceImages()]);
     await presentationAssets.waitUntilSettled();
-    hint.textContent = data.name;
-    hintUntil = performance.now() + 5000;
-    Object.assign(debug, { selection, trialOffset: selection.index === undefined ? undefined : [0, 0, 0] });
+    active = selection;
+    say(data.name);
   }
   const debug = {
     player: p, input, scene, camera, renderer, frameStats: stats,
     getLevel: () => level, getCurrentLevel: () => current,
+    get selection() { return active; },
+    get trialOffset() { return active?.index === undefined ? undefined : [0, 0, 0]; },
     load, pause, resume, retry,
     captureBonusReviewFrame: () => renderer.domElement.toDataURL('image/png'),
     get paused() { return paused; },
@@ -144,5 +167,9 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     if (now > hintUntil) hint.textContent = goals?.exitReady ? 'Exit open' : '';
   }
   requestAnimationFrame(render);
-  return { load, pause, resume, retry };
+  return { load, pause, resume, retry,
+    get selection() { return active; },
+    get finished() { return p.state === 'finished'; },
+    get checkpointRetry() { return p.state !== 'finished' && !!checkpointTrial(); },
+  };
 }

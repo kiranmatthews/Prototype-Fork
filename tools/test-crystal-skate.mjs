@@ -15,7 +15,9 @@ await withBlockworksRuntime(async base=>{
   const scene=new base.THREE.Scene(),l=new base.Level(scene,{id:`skate-${id}`,name:source.name,data:source});l.update(0);scene.updateMatrixWorld(true);
   const p=new base.Player(scene);p.enterLevel(`skate-${id}`);p.respawn(l,true);p.endlessDeaths=true;
   const trace=[];let frame=0,last={};
-  const r={p,l,trial,source,report,phaseWait:Math.round(report.phaseDelay*60),get frame(){return frame;}};
+  const movingRailPop=Number(process.argv[4]??-89);
+  if(trial.skateSections?.some(section=>section.kind===18))report.movingRailPop=movingRailPop;
+  const r={p,l,trial,source,report,movingRailPop,phaseWait:Math.round(report.phaseDelay*60),get frame(){return frame;}};
   try{
    for(const sample of runSkateTrial(r,id)){
     const input=normalizeGameInput(sample,last);last={...input};p.step(1/60,input,l);l.update(1/60);p.flushLevelCrateRewards(l);p.commitRenderStep(l);frame++;

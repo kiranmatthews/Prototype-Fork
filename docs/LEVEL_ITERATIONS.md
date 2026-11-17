@@ -12692,3 +12692,15 @@ at station 767.
 
 Published: main `a2154f38`, Pages run 932 succeeded. The live page serves the new build (stamp
 "Codex/sol fork", built 11-17 04:59 UTC) with both previews and both new levels in its code.
+
+### 2026-11-17 — Numbered skating challenge review
+
+The revised course was playable at 18:59 UTC, about 28 minutes into the review. A straight roll after collecting the crystal exposed an unexpected metal crate in the finish lane of 8, 11, 16, 20, 23 and 25. The engine had placed the Nitro detonator four metres in front of the pad. These layouts now put it five metres to the side. The full course places one switch beside its final exit. Both controller pilots now require a grounded finish on the actual pad.
+
+In 12, 14, 18 and 23, the moving rail intersected six metres of the receiving roof. Releasing late at the low point could throw the rider off. The lip now begins one metre beyond the rail tip. The approaches to the first timed or crumbling roof in 7, 14, 19 and 24 meet the disappearing surface edge to edge. In 5 the camera gives the high crystal more headroom on the approach to the pipe.
+
+The phone picker offers the next number after a finish. In the whole course it announces the numbered checkpoint and retries there with the collected crystals intact. A cache-disabled production browser test used 21.9 MB for the first challenge and 29.2 MB after opening the course, archived attempts and original grid. The touch test banked checkpoint 2, retried and retained crystal 1.
+
+All 25 individual controller routes passed across 85 sections, retaining the board and collecting every goal with zero deaths. At the bottom of 18's rail cycle, takeoffs 14 and 2 metres before the tip both connected to the following roof. In the 1280 × 720 approach view for 5, the crystal ring has 56 pixels of headroom. Separate fixtures verified the return bank, a fatal fall and successful checkpoint retry, 16 frames of contact with the locked exit, and activation of the relocated switch clearing all 36 course Nitros.
+
+The continuous run collected all 25 crystals in 53,218 simulation steps (14 minutes 47 seconds), crossed every connecting stretch and finished grounded on the warp pad with zero deaths or teleports. The editor round-trip, level checks, production build and release-size check passed.

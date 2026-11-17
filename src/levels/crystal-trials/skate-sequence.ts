@@ -9,6 +9,14 @@ const rises: Record<number, number> = { 1:2, 2:2, 3:1.5, 4:.75, 5:0, 6:.75,
   17:2, 18:1.5, 19:.75, 20:.75, 21:2, 22:.75, 23:3, 24:2, 25:.75 };
 const foundation = /Flat recovery floor|Clear skating approach|Return junction|Checkpoint before the line|Recovery bank|Rolling exit to the flat floor/;
 
+// Move only the incoming edge. The opposite lip determines the next handoff.
+function setDeckFront(deck: CustomComponent, front: number) {
+  const size = deck.s!;
+  const back = deck.p[2] - size[2] / 2;
+  deck.p[2] = (front + back) / 2;
+  size[2] = front - back;
+}
+
 /** Each section hands its speed and height to the next; no intervening spawn,
  * checkpoint, exit or recovery courtyard. The sole crystal is at the end.
  * Air links replace a landing with a rail; spring links catch the second
@@ -19,6 +27,19 @@ export function skateSequence(id: number, description: string, brief: string, li
     const source = REJECTED_SKATING.find(t => t.id === spec.kind)!;
     const components = structuredClone(source.components).filter(c => !foundation.test(c.nm ?? ''));
     let endZ = source.exit![2] + 76;
+    if (spec.kind === 18) {
+      const movingRail = components.find(c => c.t === 'rail')!;
+      const receiver = components.find(c => c.t === 'platform')!;
+      // At the low point, early pops are already descending as late pops
+      // rise. One metre beyond the tip puts the lip within both trajectories.
+      setDeckFront(receiver, movingRail.p[2] - movingRail.len! / 2 - 1);
+    }
+    if ([7, 14, 19].includes(spec.kind)) {
+      const firstRoof = components.find(c => c.t === 'phasepad' || c.t === 'crumble')!;
+      // The approach supports the rider up to -20. Its last two metres used
+      // to show through the first temporary roof and stay solid after it went.
+      setDeckFront(firstRoof, -20);
+    }
     if (spec.kind === 17 || spec.kind === 24) {
       // A fast grind exit spends its first ~20m airborne. Give the rider a
       // further full skating beat to carve around the visible enemy.

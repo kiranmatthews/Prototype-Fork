@@ -6,6 +6,21 @@ import type { PlaytestRuntime, PlaytestSelection } from './runtime';
 const $ = (id: string) => document.getElementById(id)!;
 let reject = false, selected = 0, runtime: PlaytestRuntime | undefined, loading = false;
 const options = () => reject ? REJECTED_CRYSTAL_TRIALS : CRYSTAL_TRIALS;
+function select(index: number) {
+  selected = index;
+  const trial = options()[index];
+  $('challenge-options').querySelectorAll('button').forEach((button, i) => {
+    button.classList.toggle('selected', i === index);
+    button.setAttribute('aria-pressed', String(i === index));
+  });
+  $('challenge-selected').textContent = trial?.name ?? '0 / Original grid layout';
+  $('challenge-description').textContent = trial?.brief ?? 'The first eight challenges in their superseded grid arrangement.';
+  $('challenge-play').textContent = `Play ${trial && 'attempt' in trial ? trial.attempt : trial?.id ?? 0}`;
+  const active = runtime?.selection;
+  if (runtime?.finished && active?.index !== undefined) {
+    $('challenge-retry').hidden = active.kind === (reject ? 'reject' : 'challenge') && active.index === index;
+  }
+}
 function refresh() {
   $('challenge-tab').setAttribute('aria-pressed', String(!reject));
   $('reject-tab').setAttribute('aria-pressed', String(reject));
@@ -15,26 +30,34 @@ function refresh() {
     const button = document.createElement('button');
     button.textContent = 'attempt' in trial ? String(trial.attempt) : String(trial.id);
     button.ariaLabel = trial.name;
-    button.classList.toggle('selected', i === selected);
-    button.setAttribute('aria-pressed', String(i === selected));
-    button.onclick = () => { selected = i; refresh(); };
+    button.onclick = () => select(i);
     list.appendChild(button);
   });
   if (reject) {
     const button = document.createElement('button');button.textContent = '0';
-    button.ariaLabel = '0 / Original grid layout';button.classList.toggle('selected', selected === items.length);
-    button.onclick = () => { selected = items.length;refresh(); };list.appendChild(button);
+    button.ariaLabel = '0 / Original grid layout';
+    button.onclick = () => select(items.length);list.appendChild(button);
   }
-  const trial = items[selected];
-  $('challenge-selected').textContent = trial?.name ?? '0 / Original grid layout';
-  $('challenge-description').textContent = trial?.brief ?? 'The first eight challenges in their superseded grid arrangement.';
+  list.scrollTop = 0;
+  select(selected);
   $('challenge-course').textContent = reject ? 'All rejects' : 'Whole course';
 }
 const showMenu = (status?: string) => {
   runtime?.pause();$('challenge-menu').hidden = false;$('challenge-hud').hidden = true;
   document.body.classList.add('challenge-menu-open', 'game-shell-modal');
-  $('challenge-resume').hidden = !runtime;$('challenge-retry').hidden = !runtime;
-  if (status) $('challenge-status').textContent = status;
+  const active = runtime?.selection, finished = runtime?.finished;
+  $('challenge-resume').hidden = !active || !!finished;
+  $('challenge-retry').hidden = !active;
+  const number = active?.kind === 'challenge' && active.index !== undefined ? CRYSTAL_TRIALS[active.index].id : undefined;
+  $('challenge-retry').textContent = runtime?.checkpointRetry ? 'From checkpoint'
+    : finished ? (number ? `Replay ${number}` : 'Replay') : 'Retry';
+  if (finished && active?.kind === 'challenge' && active.index !== undefined) {
+    const next = active.index + 1;
+    if (reject) { reject = false;refresh(); }
+    select(next < CRYSTAL_TRIALS.length ? next : active.index);
+    $('challenge-options').querySelector('.selected')?.scrollIntoView({block: 'nearest'});
+  }
+  $('challenge-status').textContent = status ?? 'Paused. Resume your run or choose another layout.';
 };
 const resume = () => {
   $('challenge-menu').hidden = true;$('challenge-hud').hidden = false;
@@ -49,9 +72,8 @@ async function play(course = false) {
     const selection: PlaytestSelection = selected === options().length && reject && !course
       ? { kind: 'grid' } : { kind: reject ? 'reject' : 'challenge', index: course ? undefined : selected };
     await runtime.load(selection);resume();
-    $('challenge-status').textContent = 'Paused. Resume your run or choose another layout.';
   } catch (error) {
-    $('challenge-status').textContent = 'Could not load. Check your connection, then press Play to retry.';
+    showMenu('Could not load. Check your connection, then press Play to retry.');
     console.error(error);
   } finally { loading = false;buttons.forEach(b => b.disabled = false); }
 }

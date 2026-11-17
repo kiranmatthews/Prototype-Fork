@@ -89,9 +89,7 @@ function* runSkateSection(r, id, {finish=true, sectionOnly=false, entry, outgoin
   else if(id===21){yield* pop(-64);yield* go(-116);yield* release();yield* tick({spinHeld:true,spinPressed:true});yield* land();check(l.trickGates.filter(g=>g.unlocked).length>gatesAtStart,'Kickflip gate did not unlock');}
   else if(id===22){yield* pop(-68);yield* gap(-120);}
   else if(id===23){yield* pop(-62);yield* go(-126);yield* release({grindHeld:true});yield* until(()=>p.state==='grind',{moveY:1,grindHeld:true,jumpHeld:true},'Catch the high rail',180);yield* pop(-180);}
-  // The moving rail's low phase needs an earlier pop to clear the raised
-  // roof's front face. Read the receiver before the rail reaches its end.
-  else yield* pop(({3:-86,6:-82,18:sectionOnly?-80:-86})[id]);
+  else yield* pop(({3:-86,6:-82,18:sectionOnly?(r.movingRailPop??-89):-86})[id]);
  } else if([7,14,19].includes(id)){
   yield* gap(-60);if(id!==7)yield* gap(-104);
  } else if(id===9){
@@ -141,6 +139,10 @@ export function* runSkateTrial(r,id,{finish=true}={}) {
   // A normal setup ollie renews the held charge after long vert returns.
   yield {moveY:1,jumpReleased:true,skateRelative:true};
  }
+ if(!cycles.length && r.phaseWait){
+  const start=r.frame;
+  yield* until(()=>r.frame>=start+r.phaseWait,{grabHeld:true,jumpHeld:true,skateRelative:true},'Observe the moving line before setting off');
+ }
  if(cycles.length){
   if(p.pos.z-o[2]>65)yield* until(()=>p.pos.z-o[2]<65,toward,'Reach the wide observation bank');
   yield* until(()=>p.grounded,{moveY:1,jumpHeld:true,skateRelative:true},'Land the rolling approach before braking');
@@ -165,9 +167,8 @@ export function* runSkateTrial(r,id,{finish=true}={}) {
  if(!l.checkpoints.some(cp=>cp.active))throw Error('The start checkpoint was not banked');
  report.evidence.push({action:'complete linked sequence',p:p.pos.toArray(),speed:p.speed});
  if(finish){
-  yield* until(()=>p.pos.z-o[2]<trial.exit[2]+10,toward,'Approach the unlocked exit');
-  yield {moveY:1,jumpReleased:true,skateRelative:true};
-  yield* until(()=>p.state==='finished',toward,'Ollie through the unlocked exit',240);
+  yield* until(()=>p.state==='finished',toward,'Ride onto the unlocked exit',240);
+  if(!p.grounded||!p.groundHit?.finishPad)throw Error('The rolling finish missed the pad surface');
  }
  return {id,sections:report.sections.length,position:p.pos.toArray(),collected:goal.collected,board:p.freeSkate};
 }

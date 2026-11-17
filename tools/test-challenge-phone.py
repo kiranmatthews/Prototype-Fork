@@ -26,6 +26,8 @@ with sync_playwright() as pw:
   page.locator('#challenge-play').tap()
   page.wait_for_function('window.__game?.getLevel() && !window.__game.paused && document.getElementById("challenge-menu").hidden')
   frames(15)
+  page.wait_for_load_state('networkidle')
+  report['firstPlayBytes']=sum(r['bytes'] for r in resources.values())
   report['start']=page.evaluate('window.__game.player.pos.toArray()')
   pad=page.locator('.tc-pad').bounding_box();x=pad['x']+pad['width']/2;y=pad['y']+pad['height']*.18
   cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y,'id':1}]});frames(35)
@@ -36,6 +38,24 @@ with sync_playwright() as pw:
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
   page.locator('#challenge-retry').tap();frames(15)
   assert abs(page.evaluate('window.__game.player.pos.z-window.__game.getCurrentLevel().data.spawn[2]'))<3,'Retry did not reset the single trial'
+  # Isolate the finish menu from route timing. The native routes earn every
+  # crystal; here seed its real collectible and ride the last stretch by touch.
+  page.evaluate('''() => {
+    const g=window.__game, level=g.getLevel(), p=g.player;
+    const gate=g.getCurrentLevel().data.components.find(c=>c.t==='gate');
+    level.skateCollectathon.collect(level.skateCollectathon.tokens[0].box);
+    const start=p.pos.clone().fromArray(gate.p);start.y+=.8;start.z+=13;
+    p.respawn(level,false,false,{position:start,heading:p.axisF.clone().set(0,0,-1)});
+  }''')
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y,'id':1}]})
+  try: page.wait_for_function('window.__game.paused && window.__game.player.state==="finished"',timeout=30000)
+  finally: cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+  assert page.locator('#challenge-resume').is_hidden()
+  assert page.locator('#challenge-retry').inner_text()=='Replay 1'
+  assert page.locator('#challenge-play').inner_text()=='Play 2'
+  page.locator('#challenge-play').tap()
+  page.wait_for_function('window.__game.getCurrentLevel().id==="phone-challenge-1" && !window.__game.paused')
+  report['advancedTo']=2
   page.set_viewport_size({'width':844,'height':390});frames(10)
   page.screenshot(path=str(out/'play-landscape.png'))
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
@@ -53,6 +73,29 @@ with sync_playwright() as pw:
   report['wholeCourseCrystals']=page.evaluate('window.__game.getLevel().skateCollectathon.tokens.length')
   assert report['wholeCourseCrystals']==25
   page.screenshot(path=str(out/'whole-course.png'))
+  # Start just before station 2 with the previous crystal already earned.
+  # Bank its crate with normal skating input, then use the actual Retry button.
+  expected=page.evaluate('''() => {
+    const g=window.__game, level=g.getLevel(), p=g.player, cp=level.checkpoints[1];
+    level.skateCollectathon.collect(level.skateCollectathon.tokens[0].box);
+    const start=cp.spawnPos.clone();start.y+=.15;start.z+=22;
+    p.respawn(level,false,false,{position:start,heading:p.axisF.clone().set(0,0,-1)});
+    return cp.spawnPos.z;
+  }''')
+  page.keyboard.down('ArrowUp');page.keyboard.down('Space')
+  try: page.wait_for_function('window.__game.getLevel().checkpoints[1].active',timeout=30000)
+  finally: page.keyboard.up('ArrowUp');page.keyboard.up('Space')
+  hint=page.locator('#challenge-hint').inner_text()
+  assert hint.startswith('2 / '),f'Checkpoint 2 announced {hint!r}'
+  page.locator('.tc-pause').tap()
+  page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
+  retry=page.locator('#challenge-retry').inner_text()
+  assert retry=='From checkpoint',f'Checkpoint 2 offered {retry!r}'
+  page.locator('#challenge-retry').tap();frames(5)
+  actual=page.evaluate('window.__game.player.pos.z')
+  assert abs(actual-expected)<3,f'Retry placed the rider at {actual}, expected checkpoint {expected}'
+  assert page.evaluate('window.__game.getLevel().skateCollectathon.collected')==1,'Retry lost the first crystal'
+  report['checkpointRetry']={'challenge':2,'crystals':1}
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
   page.locator('#reject-tab').tap();report['rejectChoices']=page.locator('#challenge-options button').count()
   assert report['rejectChoices']==76,'Missing preserved layouts in the rejects picker'

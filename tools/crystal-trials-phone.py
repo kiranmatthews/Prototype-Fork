@@ -29,6 +29,11 @@ with sync_playwright() as pw:
    report['pilot']=page.evaluate('window.crystalTrialReport')
    assert not report['pilot']['failure'],report['pilot']
    assert report['pilot']['deaths']==report['pilot'].get('expectedDeaths',0)
+   page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
+   assert page.locator('#challenge-resume').is_hidden(), 'A finished run offered Resume'
+   assert page.locator('#challenge-play').inner_text()==f'Play {min(trial+1,25)}'
+   if trial<25: assert page.locator('#challenge-retry').inner_text()==f'Replay {trial}'
+   else: assert page.locator('#challenge-retry').is_hidden()
    page.screenshot(path=str(out/'phone-returned-landscape.png'))
    page.set_viewport_size({'width':390,'height':844})
    start=page.evaluate('window.__game.frameStats.frame');page.wait_for_function('n=>window.__game.frameStats.frame>n+6',arg=start)

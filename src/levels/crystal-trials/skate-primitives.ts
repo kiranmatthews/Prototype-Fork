@@ -20,6 +20,8 @@ export const pit = (name: string, front: number, back: number, width = 26): Cust
 export function skateTrial(id: number, description: string, brief: string,
   components: CustomComponent[], endZ = -120): CrystalTrial {
   const name = `${id} / ${description}`;
+  // Frame the high crystal on the ride into the halfpipe, before its vert camera takes over.
+  const targetHeight = components.some(c => c.t === 'vertramp' && c.vkind === 'half') ? 5.8 : 4;
   return {
     id, name, brief, skateLine: true, spawn: [0, .15, 55], exit: [0, -8, endZ - 76],
     reviewViews: [{ name: 'commitment', position: [0, .15, -5] }],
@@ -32,7 +34,7 @@ export function skateTrial(id: number, description: string, brief: string,
       { t: 'camnode', nm: `${id} / Skating line view`, p: [0, 12, (70 + endZ) / 2],
         s: [52, 100, 90 - endZ], radius: 6, cameraView: true, cameraPresentationOnly: true,
         cameraPosition: [0, 12, 25], cameraTarget: [0, 3, -5], cameraFollowDistance: 20,
-        cameraKeepDistance: true, cameraFollowTargetHeight: 4, cameraFov: 64, cameraAspect: 16 / 9 },
+        cameraKeepDistance: true, cameraFollowTargetHeight: targetHeight, cameraFov: 64, cameraAspect: 16 / 9 },
       { t: 'camnode', nm: `${id} / Recovery lane view`, p: [34, 2, (70 + endZ) / 2],
         s: [16, 30, 90 - endZ], radius: 3, yaw: 180, cameraView: true,
         cameraPosition: [34, 4, endZ - 20], cameraTarget: [34, -3, endZ + 8],

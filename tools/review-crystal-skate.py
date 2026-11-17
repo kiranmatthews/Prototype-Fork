@@ -38,6 +38,14 @@ with sync_playwright() as pw:
    first=next(q for q in trace if q['collected'])
    before=trace[max(0,first['frame']-40)]
    views.append({'name':'crystal-approach','position':before['p'],'heading':before['heading']})
+   for section in native['sections']:
+    if section['kind']==18:
+     pop=next(e for e in section['evidence'] if e['action']=='grind pop')
+     rider=trace[pop['frame']-18]
+     views.append({'name':'moving-rail-landing','position':rider['p'],'heading':rider['heading']})
+   if any(c.get('kind')=='nitrobang' for c in entry['data']['components']):
+    rider=trace[-40]
+    views.append({'name':'exit-approach','position':rider['p'],'heading':rider['heading']})
    if i==2:views.append({'name':'recovery-bank','position':[34,-7.85,-26],'heading':[0,0,1]})
    page.evaluate('window.__fixturePlayerStep=window.__game.player.step;window.__game.player.step=()=>{}')
    for view in views:
@@ -46,6 +54,19 @@ with sync_playwright() as pw:
     page.screenshot(path=str(out/f'{i:02}-{view["name"]}.jpg'),type='jpeg',quality=88)
     view['render']=page.evaluate('[window.__game.renderer.domElement.width,window.__game.renderer.domElement.height]')
     assert view['render']==[1280,720]
+    if i==5 and view['name']=='crystal-approach':
+     view['ringTopPixels']=page.evaluate('''() => {
+       const g=window.__game, token=g.getLevel().skateCollectathon.tokens[0];
+       const ring=token.group.children.find(child=>child.geometry?.type==='TorusGeometry');
+       const vertices=ring.geometry.getAttribute('position'), point=ring.position.clone();
+       let top=-Infinity;
+       for(let i=0;i<vertices.count;i++){
+         point.fromBufferAttribute(vertices,i).applyMatrix4(ring.matrixWorld).project(g.camera);
+         top=Math.max(top,point.y);
+       }
+       return (1-top)*g.renderer.domElement.height/2;
+     }''')
+     assert view['ringTopPixels']>=12,'The halfpipe crystal clips the top of the frame'
     page.set_viewport_size({'width':320,'height':180})
    page.evaluate('window.__game.player.step=window.__fixturePlayerStep;delete window.__fixturePlayerStep')
    report['stagedVisualFixtures']=views
