@@ -16,7 +16,7 @@ let pending:Promise<GameplayAnimationAssets>|null=null;
 export function prepareGameplayAnimationAssets():Promise<GameplayAnimationAssets> {
   return pending??=Promise.all([
     loadMotionStudyJson<JakMotionBank>('jak-motion'),
-    loadMotionStudyJson<MotionData>('skate-motion'),
+    loadMotionStudyJson<MotionData>('skate-motion','gameplay.json'),
     new THREE.TextureLoader().loadAsync(new URL('./skateReferenceLab/assets/board-scribble.png',import.meta.url).href),
   ]).then(([jak,skate,ink])=>({jak,skate,ink})).catch(error=>{pending=null;throw error;});
 }

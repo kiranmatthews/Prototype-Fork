@@ -3,7 +3,9 @@ type StudyAsset = 'jak-motion' | 'jak-audio' | 'jak-eco' | 'skate-motion';
 /** Local source overrides and the published playtests use the same samples. */
 export function motionStudyAsset(kind: StudyAsset, file = ''): string {
   if (import.meta.env.DEV) {
-    if (kind === 'skate-motion' && import.meta.env.VITE_SKATE_REFERENCE_LOCAL)
+    // The local source root holds the complete study only; the gameplay
+    // subset is always the packaged one.
+    if (kind === 'skate-motion' && import.meta.env.VITE_SKATE_REFERENCE_LOCAL && file !== 'gameplay.json')
       return `/__skate_reference/${file}`;
     if (kind !== 'skate-motion' && import.meta.env.VITE_JAK_REFERENCE_AUDIO)
       return `/__jak-reference-${kind.slice(4)}/${file}`;
@@ -27,6 +29,9 @@ export async function loadMotionStudyBuffer(kind: StudyAsset, file: string): Pro
     : bytes;
 }
 
-export async function loadMotionStudyJson<T>(kind: 'jak-motion' | 'skate-motion'): Promise<T> {
-  return JSON.parse(new TextDecoder().decode(await loadMotionStudyBuffer(kind, 'motion.json'))) as T;
+/** `motion.json` is a complete study (the labs). The game asks for the skate
+ * study's `gameplay.json`: only the clips its riding overlay plays, built by
+ * tools/skate-gameplay-motion.mjs. */
+export async function loadMotionStudyJson<T>(kind: 'jak-motion' | 'skate-motion', file: 'motion.json' | 'gameplay.json' = 'motion.json'): Promise<T> {
+  return JSON.parse(new TextDecoder().decode(await loadMotionStudyBuffer(kind, file))) as T;
 }

@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
-const bank=async name=>JSON.parse(gunzipSync(await readFile(new URL(`../public/motion-study/${name}/motion.json.gz`,import.meta.url))));
-const [jak,skate]=await Promise.all([bank('jak'),bank('skate')]);
+// The game loads the gameplay skate subset; the labs load the full study.
+const bank=async(name,file='motion')=>JSON.parse(gunzipSync(await readFile(new URL(`../public/motion-study/${name}/${file}.json.gz`,import.meta.url))));
+const [jak,skate]=await Promise.all([bank('jak'),bank('skate','gameplay')]);
 await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const {GameplayAnimationPresentation,gameplayAnimationDocument}=await server.ssrLoadModule('/src/gameplayAnimationScheme.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');

@@ -25,6 +25,13 @@
       "packedBytes": 8626641
     },
     {
+      "path": "skate/gameplay.json.gz",
+      "bytes": 3737040,
+      "sha256": "7dac32be2c3246adbb5aa613a44a24c16346c7b9b77100a011909182ad8635cb",
+      "encoding": "gzip",
+      "packedBytes": 1303940
+    },
+    {
       "path": "jak/audio/jump-1.wav",
       "bytes": 28666,
       "sha256": "298ccff4fe2e52aab4ab721f7a2d99ad758d38c52ad4f9bc0590c9a2df453dff"
