@@ -1,0 +1,64 @@
+{
+  "bonus": {
+    "jumps": 2,
+    "boxes": 27,
+    "gem": false,
+    "deaths": 0,
+    "position": [
+      48.44999999999987,
+      0.7266666691501937,
+      0
+    ]
+  },
+  "water": [
+    {
+      "s": 60,
+      "water": -6,
+      "lowest": -8.72,
+      "returned": true
+    },
+    {
+      "s": 420,
+      "water": -0.3478372064758277,
+      "lowest": -3.067837206475828,
+      "returned": true
+    },
+    {
+      "s": 920,
+      "water": 10.184601776142632,
+      "lowest": 7.464601776142633,
+      "returned": true
+    },
+    {
+      "s": 1600,
+      "water": -3.10009765625,
+      "lowest": -5.820097656250001,
+      "returned": true
+    },
+    {
+      "s": 2060,
+      "water": -15.601485932751274,
+      "lowest": -18.321485932751273,
+      "returned": true
+    },
+    {
+      "s": 2395,
+      "water": -12,
+      "lowest": -14.719999999999999,
+      "returned": true
+    },
+    {
+      "s": 2465,
+      "water": -28,
+      "lowest": -30.720000000000002,
+      "returned": true
+    },
+    {
+      "s": 2500,
+      "water": -28,
+      "lowest": -30.720000000000002,
+      "returned": true
+    }
+  ],
+  "hang": []
+}

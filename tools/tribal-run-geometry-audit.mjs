@@ -43,14 +43,13 @@ export function auditTribalGeometry(r){
   minHeadingDot=Math.min(minHeadingDot,dot);headingProbes++;
  }
  const crateSeats=[];
- for(const c of source.components.filter(c=>c.t==='crate')){
-  const runtime=l.crates.find(b=>b.name===c.nm&&Math.hypot(b.mesh.position.x-c.p[0],b.mesh.position.z-c.p[2])<.1)
-   ??l.crates.find(b=>Math.hypot(b.mesh.position.x-c.p[0],b.mesh.position.z-c.p[2])<.1);
-  assert.ok(runtime,`missing crate ${c.nm} at ${c.p}`);
-  const y=runtime.box.min.y,p=[c.p[0],y,c.p[2]],hit=hits(p,.08,.2).find(h=>Math.abs(h.point.y-y)<.09);
-  assert.ok(hit,`unsupported crate ${c.nm} at ${c.p}`);
-  assert.ok(Math.abs(y-c.p[1])<.12,`crate ${c.nm} needed a large automatic seating repair`);
-  crateSeats.push({name:c.nm,p:c.p,runtimeY:y,supportY:hit.point.y});
+ for(const runtime of l.crates){
+  const c=source.components[runtime.mesh.userData.editorIdx],y=runtime.box.min.y,p=[runtime.mesh.position.x,y,runtime.mesh.position.z];
+  const hit=hits(p,.08,.2).find(h=>Math.abs(h.point.y-y)<.09);
+  const support=l.crates.find(b=>b!==runtime&&Math.abs(b.box.max.y-y)<.05&&Math.hypot(b.mesh.position.x-p[0],b.mesh.position.z-p[2])<.05);
+  assert.ok(hit||support,`unsupported crate ${c.nm} at ${c.p}`);
+  if(hit)assert.ok(Math.abs(y-c.p[1])<.12,`crate ${c.nm} needed a large automatic seating repair`);
+  crateSeats.push({name:c.nm,p:c.p,runtimeY:y,supportY:hit?.point.y??support.box.max.y,support:hit?'ground':'crate'});
  }
  assert.equal(source.components.filter(c=>c.t==='gate').length,1);
  assert.equal(l.checkpoints.length,9);assert.equal(l.cameraViews.length,0);

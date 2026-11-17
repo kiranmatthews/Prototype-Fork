@@ -1,0 +1,10 @@
+{
+  "changedLevelIds": [
+    "rooftop-relay"
+  ],
+  "otherLevelEntriesPreserved": 13,
+  "nonCrateComponentsPreserved": 2148,
+  "settingsPreserved": true,
+  "beforePhysicalCrates": 61,
+  "afterPhysicalCrates": 103
+}

@@ -6,6 +6,12 @@ export function* runSwitchyardJourney(r) {
   const at = (x, y) => c.crateSpecAt(x, y);
   const named = name => c.crateNamed(name);
   const foeAt = x => l.enemies.find(enemy => Math.abs(enemy.homePosition.x - x) < .04);
+  function* harvest(a,b,y,label){
+    const boxes=l.crates.filter(box=>box.alive&&!box.pending&&!box.bang&&!box.nitroBang&&!box.bouncy&&!box.metalBounce&&!box.tnt&&!box.nitro&&
+      box.mesh.position.x>=a&&box.mesh.position.x<=b&&box.box.min.y>=y-.15&&box.box.min.y<y+2.5)
+      .sort((a,b)=>a.box.min.y-b.box.min.y||a.mesh.position.x-b.mesh.position.x);
+    for(const box of boxes)if(box.alive)yield* c.hit(box,label);
+  }
   const shelfTop = name => {
     const component = r.source.components.find(component => component.nm === name);
     c.check(component, `Missing receiving shelf ${name}`);
@@ -39,17 +45,20 @@ export function* runSwitchyardJourney(r) {
   }
   function* prime(crate, retreat, label) {
     const x = crate.mesh.position.x, y = crate.box.min.y;
+    const masksBefore=p.masks;
     yield* c.walk([x - 1.65, y, 0], `${label} takeoff`);
     yield* c.charge(); yield* c.tick({ jumpReleased: true });
-    yield* c.until(() => crate.fuse !== undefined,
+    yield* c.until(() => crate.fuse !== undefined || !crate.alive,
       () => c.steer([x, y + .96, 0]), { label: `${label} stomp fuse`, limit: 140 });
+    if(!crate.alive)c.check(p.uberTimer>0||p.masks<masksBefore,
+      `${label} immediate detonation needs native mask protection`);
     yield* grounded(retreat, `${label} leave blast radius`);
     yield* c.until(() => !crate.alive && l.explosions.length === 0, {},
       { label: `${label} complete countdown`, limit: 240 });
   }
 
   yield* c.stepFor(20); c.check(p.grounded, 'Switchyard source spawn unsupported');
-  yield* c.hit(at(-2, 0), 'opening protection');
+  yield* harvest(-4,0,0,'opening protection and companions');
   yield* upperFirstStack(5, at(5, .96),
     named('Upper-first target: lost if both striped supports are cleared early'),
     'finite two-support upper-first puzzle');
@@ -61,12 +70,12 @@ export function* runSwitchyardJourney(r) {
     () => c.steer([14, admissionBox.box.max.y, 0]),
     { label: 'stomp ordinary admission stepping box', limit: 140 });
   yield* grounded([16.6, 2.8, 0], 'ordinary crate rebound to admission perch');
-  if (at(18, 2.8).alive) yield* c.hit(at(18, 2.8), 'admission upper life');
+  yield* harvest(16,20,2.8,'admission upper life and harvest');
   // Continue over the solid perch after collecting it. The old return to
   // ground then walked the full-height rider through its low underside.
   yield* c.walk([19.2, 2.8, 0], 'admission exit takeoff');
   yield* c.hop([24, 1.4, 0], 'raised balcony admission');
-  yield* c.enemy(foeAt(26), 'first patrol');
+  yield* c.enemy([...l.enemies].sort((a,b)=>a.homePosition.x-b.homePosition.x)[0], 'first patrol');
 
   const keyLaunch = named('Preserve the switch-gallery launcher');
   const keyY = shelfTop('High gallery key perch');
@@ -75,6 +84,7 @@ export function* runSwitchyardJourney(r) {
     yield* c.until(() => !named('Upper key-gallery reward').alive && p.grounded && p.pos.x > 34.4,
       i => ({ ...c.steer([35.4, keyY, 0]), spinHeld: i % 26 === 1, jumpHeld: p.state === 'hang' }),
       { label: 'high key reward and full gallery entry', limit: 180 });
+  yield* harvest(34,37,9,'key-gallery harvest');
   yield* c.hit(named('Gallery bridge circuit local ! switch'), 'first high bridge key');
   yield* c.hop([30, 1.4, 0], 'return below high gallery');
   yield* c.hit(keyLaunch, 'high gallery launcher last');
@@ -95,6 +105,10 @@ export function* runSwitchyardJourney(r) {
   yield* c.until(() => p.vVel > 15 && p.pos.y < workshopArrow.box.max.y + .2,
     () => ({ ...c.steer([89, workshopArrow.box.max.y, 0]), jumpHeld: true }),
     { label: 'jump from final anchor onto workshop arrow', limit: 160 });
+  const workshopParcel=l.crates.find(crate=>r.source.components[crate.mesh.userData.editorIdx]?.nm==='TOOL TARGET / permanent workshop arrow parcel');
+  if(workshopParcel)yield* c.until(()=>!workshopParcel.alive,
+    ()=>({...c.steer([workshopParcel.mesh.position.x,workshopParcel.box.min.y,0]),jumpHeld:true}),
+    {label:'claim the visible workshop arrow parcel',limit:150});
   yield* grounded([94, 2.8, 0], 'arrow into upper explosive workshop');
 
   const stackWood = at(101, 3.76),
@@ -113,7 +127,7 @@ export function* runSwitchyardJourney(r) {
   c.check(fuse101.alive, 'TNT support exploded before upper claim');
   yield* grounded([97, 2.8, 0], 'TNT upper-first retreat');
   if (fuse101.alive) yield* prime(fuse101, [97, 2.8, 0], 'first workshop fuse');
-  if (at(105, 2.8).alive) yield* c.hit(at(105, 2.8), 'workshop retreat reward');
+  yield* harvest(103,107,2.8,'workshop retreat reward and protection');
   yield* prime(at(109, 2.8), [105, 2.8, 0], 'second workshop fuse');
   yield* c.enemy(foeAt(115), 'workshop blade window');
 
@@ -151,7 +165,7 @@ export function* runSwitchyardJourney(r) {
   yield* c.hop([203.8, 4, 0], 'finite footing finale', { tolerance: 1, limit: 180 });
   yield* c.enemy(foeAt(208), 'final armored stomp');
   yield* c.enemy(foeAt(216), 'final spike spin');
-  if (at(221, 4).alive) yield* c.hit(at(221, 4), 'final mastery reward');
+  yield* harvest(218,224,4,'final mastery reward wall');
   yield* c.clearAll('Switchyard active-stage crate dependency route');
   const completion=yield* c.finish('finish plane crossing',{limit:200});
   return { ...completion, id: r.id, done: true, state: p.state, cratesBroken: p.cratesBroken,

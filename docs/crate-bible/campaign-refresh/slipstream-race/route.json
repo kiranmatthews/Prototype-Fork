@@ -1,0 +1,2966 @@
+{
+  "stats": {
+    "originalLength": 3077.6771686157977,
+    "extensionLength": 1008.5688499224768,
+    "baseRaceLength": 3084.741784336533,
+    "ratio": 1.3299999999999996,
+    "drop": 506.6212161392324,
+    "finish": [
+      12,
+      170.3787838607676,
+      -2873.9727296835395
+    ],
+    "knots": 1050,
+    "pools": [
+      {
+        "group": 420,
+        "start": [
+          5.5,
+          785.9,
+          -731
+        ],
+        "end": [
+          7,
+          785.9,
+          -760
+        ],
+        "width": 32,
+        "surface": 785.9,
+        "floor": 782.3,
+        "exitStart": [
+          6.380138974863518,
+          782.3,
+          -748.0160201806947
+        ],
+        "landing": [
+          7,
+          786.8,
+          -756
+        ],
+        "takeoff": [
+          5.5,
+          793,
+          -735
+        ]
+      },
+      {
+        "group": 421,
+        "start": [
+          58,
+          769.4368888888889,
+          -1086.5
+        ],
+        "end": [
+          58,
+          769.4368888888889,
+          -1128
+        ],
+        "width": 38,
+        "surface": 769.4368888888889,
+        "floor": 765.8368888888889,
+        "exitStart": [
+          58,
+          765.8368888888889,
+          -1116
+        ],
+        "landing": [
+          58,
+          770.3368888888889,
+          -1124
+        ],
+        "takeoff": [
+          58,
+          773.5715555555555,
+          -1090.5
+        ]
+      },
+      {
+        "group": 422,
+        "start": [
+          -12,
+          749.7,
+          -1336.5
+        ],
+        "end": [
+          -12,
+          749.7,
+          -1384
+        ],
+        "width": 38,
+        "surface": 749.7,
+        "floor": 746.1,
+        "exitStart": [
+          -12,
+          746.1,
+          -1372
+        ],
+        "landing": [
+          -12,
+          750.6,
+          -1380
+        ],
+        "takeoff": [
+          -12,
+          755.8308148148149,
+          -1340.5
+        ]
+      },
+      {
+        "group": 423,
+        "start": [
+          -2,
+          722.2128888888889,
+          -1678.5
+        ],
+        "end": [
+          -2,
+          722.2128888888889,
+          -1731
+        ],
+        "width": 38,
+        "surface": 722.2128888888889,
+        "floor": 718.6128888888888,
+        "exitStart": [
+          -2,
+          718.6128888888888,
+          -1719
+        ],
+        "landing": [
+          -2,
+          723.1128888888888,
+          -1727
+        ],
+        "takeoff": [
+          -2,
+          729.4948148148148,
+          -1682.5
+        ]
+      },
+      {
+        "group": 424,
+        "start": [
+          -14,
+          700.1,
+          -2066.5
+        ],
+        "end": [
+          -14,
+          700.1,
+          -2091
+        ],
+        "width": 32,
+        "surface": 700.1,
+        "floor": 696.5,
+        "exitStart": [
+          -14,
+          696.5,
+          -2079
+        ],
+        "landing": [
+          -14,
+          701,
+          -2087
+        ],
+        "takeoff": [
+          -14,
+          703.8,
+          -2070.5
+        ]
+      },
+      {
+        "group": 425,
+        "start": [
+          12,
+          676.1,
+          -2523.2
+        ],
+        "end": [
+          12,
+          676.1,
+          -2544
+        ],
+        "width": 32,
+        "surface": 676.1,
+        "floor": 672.5,
+        "exitStart": [
+          12,
+          672.5,
+          -2532.56
+        ],
+        "landing": [
+          12,
+          677,
+          -2540
+        ],
+        "takeoff": [
+          12,
+          679.1,
+          -2527.2
+        ]
+      },
+      {
+        "group": 426,
+        "start": [
+          16,
+          696.6,
+          -2146
+        ],
+        "end": [
+          16,
+          696.6,
+          -2229
+        ],
+        "width": 32,
+        "surface": 696.6,
+        "floor": 693,
+        "exitStart": [
+          16,
+          693,
+          -2217
+        ],
+        "landing": [
+          16,
+          701,
+          -2225
+        ],
+        "takeoff": [
+          16,
+          698,
+          -2150
+        ]
+      },
+      {
+        "group": 427,
+        "start": [
+          16,
+          698.6,
+          -2284
+        ],
+        "end": [
+          16,
+          698.6,
+          -2328
+        ],
+        "width": 32,
+        "surface": 698.6,
+        "floor": 695,
+        "exitStart": [
+          16,
+          695,
+          -2316
+        ],
+        "landing": [
+          16,
+          700,
+          -2324
+        ],
+        "takeoff": [
+          16,
+          701,
+          -2288
+        ]
+      }
+    ],
+    "platformJumps": [
+      {
+        "takeoff": [
+          16,
+          698,
+          -2150
+        ],
+        "landing": [
+          16,
+          698.3,
+          -2156.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          698.3,
+          -2159.5
+        ],
+        "landing": [
+          16,
+          698.7,
+          -2166.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          698.7,
+          -2169.5
+        ],
+        "landing": [
+          16,
+          699.1,
+          -2176.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          699.1,
+          -2179.5
+        ],
+        "landing": [
+          16,
+          699.5,
+          -2186.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          699.5,
+          -2189.5
+        ],
+        "landing": [
+          16,
+          699.9,
+          -2196.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          699.9,
+          -2199.5
+        ],
+        "landing": [
+          16,
+          700.3,
+          -2206.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          700.3,
+          -2209.5
+        ],
+        "landing": [
+          16,
+          700.7,
+          -2216.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          700.7,
+          -2219.5
+        ],
+        "landing": [
+          16,
+          701,
+          -2225
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          701,
+          -2288
+        ],
+        "landing": [
+          16,
+          701,
+          -2294.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          701,
+          -2297.5
+        ],
+        "landing": [
+          16,
+          701,
+          -2304.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          701,
+          -2307.5
+        ],
+        "landing": [
+          16,
+          701,
+          -2314.5
+        ]
+      },
+      {
+        "takeoff": [
+          16,
+          701,
+          -2317.5
+        ],
+        "landing": [
+          16,
+          700,
+          -2324
+        ]
+      }
+    ]
+  },
+  "result": {
+    "mode": "race",
+    "rank": 1,
+    "time": 167.73333333335896,
+    "won": true,
+    "boxes": 10,
+    "totalBoxes": 83,
+    "boxGem": false
+  },
+  "report": [
+    {
+      "f": 0,
+      "phase": "countdown",
+      "riders": [
+        {
+          "id": 0,
+          "s": 0,
+          "p": [
+            -2.2,
+            936,
+            18
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 0,
+          "p": [
+            2.2,
+            936,
+            18
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 0,
+          "p": [
+            -2.2,
+            936,
+            21.5
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 0,
+          "p": [
+            2.2,
+            936,
+            21.5
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 0,
+          "p": [
+            -2.2,
+            936,
+            25
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 0,
+          "p": [
+            2.2,
+            936,
+            25
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 0,
+          "p": [
+            -2.2,
+            936,
+            28.5
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 0,
+          "p": [
+            2.2,
+            936,
+            28.5
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 600,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 81.22,
+          "p": [
+            18.7,
+            925.99,
+            -55.97
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 94.61,
+          "p": [
+            25.47,
+            923.52,
+            -67.37
+          ],
+          "speed": 23.21,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 136.09,
+          "p": [
+            51.95,
+            915.5,
+            -98.81
+          ],
+          "speed": 27.93,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 63.5,
+          "p": [
+            6.78,
+            929.36,
+            -43.19
+          ],
+          "speed": 0.41,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 125.89,
+          "p": [
+            43.16,
+            916.39,
+            -92.13
+          ],
+          "speed": 24.72,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 26.25,
+          "p": [
+            -0.33,
+            935.38,
+            -8.19
+          ],
+          "speed": 17.88,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 78.15,
+          "p": [
+            17.59,
+            926.55,
+            -52.97
+          ],
+          "speed": 18.32,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 68.57,
+          "p": [
+            10.98,
+            928.03,
+            -46.17
+          ],
+          "speed": 0.28,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 1200,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 254,
+          "p": [
+            4.09,
+            895.97,
+            -193.67
+          ],
+          "speed": 30.36,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 352.69,
+          "p": [
+            -14.07,
+            886.21,
+            -275.04
+          ],
+          "speed": 23.71,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 380.37,
+          "p": [
+            -1.47,
+            884.72,
+            -299.74
+          ],
+          "speed": 24.53,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 228.65,
+          "p": [
+            24.91,
+            899.3,
+            -179.35
+          ],
+          "speed": 11.86,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 335.3,
+          "p": [
+            -22.65,
+            887.74,
+            -259.94
+          ],
+          "speed": 23.26,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 231.64,
+          "p": [
+            21.86,
+            898.58,
+            -180.33
+          ],
+          "speed": 27.26,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 339.99,
+          "p": [
+            -19.72,
+            887.37,
+            -263.69
+          ],
+          "speed": 23.33,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 170.64,
+          "p": [
+            58.18,
+            909.83,
+            -133.02
+          ],
+          "speed": 28.73,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 1800,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 564.12,
+          "p": [
+            0.39,
+            857.87,
+            -292.46
+          ],
+          "speed": 30.1,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 637.7,
+          "p": [
+            4.91,
+            850.17,
+            -357.46
+          ],
+          "speed": 28.44,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 655.07,
+          "p": [
+            -6.18,
+            849.14,
+            -370.68
+          ],
+          "speed": 28.06,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 472.77,
+          "p": [
+            -63.59,
+            872.06,
+            -306.79
+          ],
+          "speed": 30.5,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 583.69,
+          "p": [
+            16.55,
+            857.5,
+            -305.57
+          ],
+          "speed": 25.36,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 423.57,
+          "p": [
+            -12.13,
+            846.31,
+            -365.92
+          ],
+          "speed": 0,
+          "falls": 1,
+          "stun": true,
+          "state": "dead",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 588.94,
+          "p": [
+            18.49,
+            856.88,
+            -311.36
+          ],
+          "speed": 25.76,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 400.83,
+          "p": [
+            1.26,
+            840.9,
+            -324.56
+          ],
+          "speed": 0,
+          "falls": 1,
+          "stun": true,
+          "state": "dead",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 2400,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 791.71,
+          "p": [
+            -99.28,
+            833.66,
+            -443.42
+          ],
+          "speed": 30.5,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 893.72,
+          "p": [
+            -47.45,
+            822.92,
+            -529.28
+          ],
+          "speed": 23.81,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 904.8,
+          "p": [
+            -38.71,
+            822.42,
+            -536.38
+          ],
+          "speed": 26.81,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 723.92,
+          "p": [
+            -70.06,
+            844.12,
+            -396.41
+          ],
+          "speed": 23.99,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 818.19,
+          "p": [
+            -93.77,
+            831.39,
+            -469.85
+          ],
+          "speed": 23.11,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 654.89,
+          "p": [
+            -6.94,
+            848.5,
+            -369.25
+          ],
+          "speed": 29.12,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 854.31,
+          "p": [
+            -70.46,
+            826.23,
+            -497.42
+          ],
+          "speed": 23.55,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 569.6,
+          "p": [
+            6.35,
+            858.32,
+            -294.37
+          ],
+          "speed": 24.89,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 3000,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 1092.24,
+          "p": [
+            1.62,
+            792.81,
+            -713.73
+          ],
+          "speed": 30.5,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 1144.22,
+          "p": [
+            10.35,
+            789.96,
+            -763.92
+          ],
+          "speed": 25.35,
+          "falls": 0,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 2,
+          "s": 1153.64,
+          "p": [
+            7.62,
+            786.64,
+            -773.27
+          ],
+          "speed": 25,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 991.17,
+          "p": [
+            -7.5,
+            814.82,
+            -615.72
+          ],
+          "speed": 24.93,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 1007.12,
+          "p": [
+            -11.32,
+            812.44,
+            -631.85
+          ],
+          "speed": 22.04,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 912.17,
+          "p": [
+            -35.5,
+            821.53,
+            -543.22
+          ],
+          "speed": 23.55,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 1076.49,
+          "p": [
+            0.8,
+            796.94,
+            -698.46
+          ],
+          "speed": 2.31,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 828.29,
+          "p": [
+            -84.44,
+            828.89,
+            -475.77
+          ],
+          "speed": 24.72,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 3600,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 1229.75,
+          "p": [
+            0.89,
+            786.2,
+            -849.01
+          ],
+          "speed": 23.59,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 1329.52,
+          "p": [
+            5.05,
+            784.66,
+            -947.87
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 1393,
+          "p": [
+            42.35,
+            783.11,
+            -999.16
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 1241.05,
+          "p": [
+            0.9,
+            786.2,
+            -860.32
+          ],
+          "speed": 23.1,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 1252.26,
+          "p": [
+            -2.62,
+            786.2,
+            -871.41
+          ],
+          "speed": 21.79,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 1120.8,
+          "p": [
+            7.49,
+            796.28,
+            -742.85
+          ],
+          "speed": 33,
+          "falls": 1,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 6,
+          "s": 1282.79,
+          "p": [
+            0.94,
+            785.7,
+            -902.03
+          ],
+          "speed": 23.25,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1081.19,
+          "p": [
+            2.01,
+            795.67,
+            -702.85
+          ],
+          "speed": 23.89,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 4200,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 1465.51,
+          "p": [
+            57.22,
+            775.78,
+            -1069.1
+          ],
+          "speed": 29.39,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 1535.72,
+          "p": [
+            59.77,
+            769.89,
+            -1138.64
+          ],
+          "speed": 22.44,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 1592.65,
+          "p": [
+            32.21,
+            768.48,
+            -1185.29
+          ],
+          "speed": 23.2,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 1355.86,
+          "p": [
+            21.49,
+            784.04,
+            -968.3
+          ],
+          "speed": 22.97,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 1479.61,
+          "p": [
+            54.44,
+            772.62,
+            -1082.82
+          ],
+          "speed": 1.08,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 1326.59,
+          "p": [
+            2.38,
+            784.72,
+            -945.93
+          ],
+          "speed": 10.16,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 1405.37,
+          "p": [
+            46.85,
+            782.76,
+            -1010.81
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1329.01,
+          "p": [
+            4.24,
+            784.67,
+            -947.7
+          ],
+          "speed": 22.98,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 4800,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 1819.83,
+          "p": [
+            -12.26,
+            750.08,
+            -1397.33
+          ],
+          "speed": 35.71,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 1719.51,
+          "p": [
+            -11.58,
+            763.6,
+            -1299.03
+          ],
+          "speed": 29.32,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 1842.16,
+          "p": [
+            -11.2,
+            749.4,
+            -1419.66
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 1601.76,
+          "p": [
+            26.56,
+            768.28,
+            -1192.11
+          ],
+          "speed": 22.97,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 1566.76,
+          "p": [
+            49.21,
+            769.07,
+            -1165.78
+          ],
+          "speed": 22.77,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 1499.11,
+          "p": [
+            59.73,
+            772.51,
+            -1102.16
+          ],
+          "speed": 13.02,
+          "falls": 1,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 6,
+          "s": 1653.69,
+          "p": [
+            15.17,
+            766.84,
+            -1239.71
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1573.38,
+          "p": [
+            47.39,
+            768.85,
+            -1173.34
+          ],
+          "speed": 23,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 5400,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 2056.08,
+          "p": [
+            42.31,
+            743.93,
+            -1600.82
+          ],
+          "speed": 12.96,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 2017.41,
+          "p": [
+            48.91,
+            744.91,
+            -1568.43
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 1967.51,
+          "p": [
+            54.63,
+            746.36,
+            -1520.33
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 1903.88,
+          "p": [
+            18.08,
+            747.88,
+            -1469.86
+          ],
+          "speed": 23.2,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 1838.33,
+          "p": [
+            -13.25,
+            749.52,
+            -1415.82
+          ],
+          "speed": 39.31,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 1654.85,
+          "p": [
+            13.87,
+            766.82,
+            -1240.46
+          ],
+          "speed": 22.98,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 1877.07,
+          "p": [
+            -1.13,
+            748.45,
+            -1451.28
+          ],
+          "speed": 3.83,
+          "falls": 0,
+          "stun": true,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1722.04,
+          "p": [
+            -6.94,
+            762.89,
+            -1301.52
+          ],
+          "speed": 4.27,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 6000,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 2334.91,
+          "p": [
+            -2,
+            720,
+            -1854.51
+          ],
+          "speed": 23.1,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 2268.94,
+          "p": [
+            -2.35,
+            721.25,
+            -1788.57
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 2256.11,
+          "p": [
+            -3.8,
+            721.64,
+            -1775.74
+          ],
+          "speed": 21.74,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 2038.29,
+          "p": [
+            55.23,
+            744.32,
+            -1588.5
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 2029.12,
+          "p": [
+            50.56,
+            744.54,
+            -1580.4
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 1952.45,
+          "p": [
+            41.44,
+            721.15,
+            -1511.09
+          ],
+          "speed": 23,
+          "falls": 1,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 6,
+          "s": 1980.99,
+          "p": [
+            54.23,
+            745.95,
+            -1533.77
+          ],
+          "speed": 16.2,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1937.38,
+          "p": [
+            34.14,
+            716.82,
+            -1500.01
+          ],
+          "speed": 0,
+          "falls": 2,
+          "stun": true,
+          "state": "dead",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 6600,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 2581.59,
+          "p": [
+            -14.68,
+            703.61,
+            -2092.73
+          ],
+          "speed": 23.5,
+          "falls": 0,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 1,
+          "s": 2522.92,
+          "p": [
+            3.8,
+            706.21,
+            -2039.47
+          ],
+          "speed": 26.85,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 2492.55,
+          "p": [
+            9.49,
+            709.2,
+            -2008.93
+          ],
+          "speed": 23.03,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 2103.39,
+          "p": [
+            5.95,
+            743.03,
+            -1630.43
+          ],
+          "speed": 22.97,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 2149.77,
+          "p": [
+            -3.65,
+            729.34,
+            -1670.65
+          ],
+          "speed": 31.49,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 2066.57,
+          "p": [
+            34.09,
+            743.72,
+            -1607.53
+          ],
+          "speed": 23,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 2232.83,
+          "p": [
+            -2.08,
+            722.34,
+            -1752.47
+          ],
+          "speed": 22.98,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 1993.64,
+          "p": [
+            51.21,
+            745.58,
+            -1546.23
+          ],
+          "speed": 22.98,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 7200,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 2695.71,
+          "p": [
+            16,
+            695.07,
+            -2199.01
+          ],
+          "speed": 6.2,
+          "falls": 0,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 1,
+          "s": 2668.24,
+          "p": [
+            16.4,
+            695.07,
+            -2171.52
+          ],
+          "speed": 5.59,
+          "falls": 0,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 2,
+          "s": 2671.64,
+          "p": [
+            15.98,
+            695.07,
+            -2174.93
+          ],
+          "speed": 6.13,
+          "falls": 0,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 3,
+          "s": 2367.25,
+          "p": [
+            0.19,
+            720,
+            -1886.85
+          ],
+          "speed": 23.86,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 2396.94,
+          "p": [
+            -4.18,
+            720.05,
+            -1916.55
+          ],
+          "speed": 24.25,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 2328.76,
+          "p": [
+            -2.58,
+            720,
+            -1848.37
+          ],
+          "speed": 23.3,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 2467.48,
+          "p": [
+            12.35,
+            712.25,
+            -1984.78
+          ],
+          "speed": 25.82,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 2125.33,
+          "p": [
+            -2.56,
+            738.03,
+            -1647.8
+          ],
+          "speed": 21.35,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 7800,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 2807.25,
+          "p": [
+            15.98,
+            701.51,
+            -2310.34
+          ],
+          "speed": 23.33,
+          "falls": 0,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 1,
+          "s": 2721.32,
+          "p": [
+            16.82,
+            697.98,
+            -2224.47
+          ],
+          "speed": 5,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 2726.4,
+          "p": [
+            15.69,
+            701,
+            -2229.48
+          ],
+          "speed": 10.7,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 2620.03,
+          "p": [
+            3.3,
+            698.16,
+            -2125.78
+          ],
+          "speed": 25.83,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 2639.99,
+          "p": [
+            10.84,
+            698,
+            -2144.63
+          ],
+          "speed": 23.2,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 2574.22,
+          "p": [
+            -12.65,
+            706.96,
+            -2085.81
+          ],
+          "speed": 24.81,
+          "falls": 2,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 6,
+          "s": 2654.23,
+          "p": [
+            14.11,
+            699.72,
+            -2157.68
+          ],
+          "speed": 23.15,
+          "falls": 0,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        },
+        {
+          "id": 7,
+          "s": 2382.05,
+          "p": [
+            0.28,
+            720.27,
+            -1901.66
+          ],
+          "speed": 7,
+          "falls": 3,
+          "stun": true,
+          "state": "air",
+          "ground": false
+        }
+      ]
+    },
+    {
+      "f": 8400,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 3099.34,
+          "p": [
+            12.19,
+            674.52,
+            -2584.38
+          ],
+          "speed": 25.79,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 2905.54,
+          "p": [
+            -10.4,
+            692.55,
+            -2402.54
+          ],
+          "speed": 24.75,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 2949.74,
+          "p": [
+            -19.88,
+            685.57,
+            -2443.9
+          ],
+          "speed": 23.43,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 2719.33,
+          "p": [
+            16.37,
+            699.75,
+            -2222.44
+          ],
+          "speed": 0,
+          "falls": 1,
+          "stun": false,
+          "state": "hang",
+          "ground": false
+        },
+        {
+          "id": 4,
+          "s": 2706.52,
+          "p": [
+            16,
+            695.07,
+            -2209.83
+          ],
+          "speed": 6.2,
+          "falls": 1,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 5,
+          "s": 2694.1,
+          "p": [
+            16,
+            695.07,
+            -2197.4
+          ],
+          "speed": 6.2,
+          "falls": 2,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 6,
+          "s": 2715.2,
+          "p": [
+            16,
+            695.07,
+            -2218.42
+          ],
+          "speed": 6.2,
+          "falls": 0,
+          "stun": false,
+          "state": "swim",
+          "ground": false
+        },
+        {
+          "id": 7,
+          "s": 2574.13,
+          "p": [
+            -12.54,
+            706.94,
+            -2085.71
+          ],
+          "speed": 24.39,
+          "falls": 3,
+          "stun": false,
+          "state": "air",
+          "ground": false
+        }
+      ]
+    },
+    {
+      "f": 9000,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 3431.39,
+          "p": [
+            3.99,
+            469.91,
+            -2592.19
+          ],
+          "speed": 33.15,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 3160.19,
+          "p": [
+            4.55,
+            642.7,
+            -2633.52
+          ],
+          "speed": 33.2,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 3206.23,
+          "p": [
+            -23.09,
+            613.39,
+            -2652.42
+          ],
+          "speed": 33.52,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 2856.89,
+          "p": [
+            12.24,
+            698.29,
+            -2359.63
+          ],
+          "speed": 23.98,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 2849.98,
+          "p": [
+            10.06,
+            698.92,
+            -2351.65
+          ],
+          "speed": 23.95,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 2757.25,
+          "p": [
+            16.13,
+            701,
+            -2260.33
+          ],
+          "speed": 23.1,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 2743.06,
+          "p": [
+            16.22,
+            701,
+            -2246.14
+          ],
+          "speed": 19.13,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 2719.97,
+          "p": [
+            16.2,
+            698.66,
+            -2223.11
+          ],
+          "speed": 0,
+          "falls": 3,
+          "stun": false,
+          "state": "hang",
+          "ground": false
+        }
+      ]
+    },
+    {
+      "f": 9600,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 3767.4,
+          "p": [
+            6.03,
+            255.84,
+            -2595.87
+          ],
+          "speed": 33.07,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 3416.31,
+          "p": [
+            -3.03,
+            479.54,
+            -2583.67
+          ],
+          "speed": 33.32,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 3542.8,
+          "p": [
+            -27.85,
+            398.94,
+            -2652.52
+          ],
+          "speed": 33.46,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 3101.64,
+          "p": [
+            14.58,
+            673.98,
+            -2586.62
+          ],
+          "speed": 22.11,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 3078.74,
+          "p": [
+            10.56,
+            677,
+            -2564
+          ],
+          "speed": 18.18,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 3012.68,
+          "p": [
+            5.64,
+            678.83,
+            -2500.57
+          ],
+          "speed": 26.21,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 2980.77,
+          "p": [
+            -10.4,
+            682.18,
+            -2473.25
+          ],
+          "speed": 24.59,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 2902.91,
+          "p": [
+            -6.45,
+            692.91,
+            -2401.64
+          ],
+          "speed": 26.38,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 10200,
+      "phase": "running",
+      "riders": [
+        {
+          "id": 0,
+          "s": 4076.9,
+          "p": [
+            11.88,
+            170.1,
+            -2857.54
+          ],
+          "speed": 24.24,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 3783.87,
+          "p": [
+            10.65,
+            244.97,
+            -2606.86
+          ],
+          "speed": 30.86,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 3854.1,
+          "p": [
+            3,
+            216.5,
+            -2668.63
+          ],
+          "speed": 22.83,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 3446.45,
+          "p": [
+            11.69,
+            460.3,
+            -2601.31
+          ],
+          "speed": 35.79,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 3386.09,
+          "p": [
+            -23.22,
+            498.75,
+            -2575.67
+          ],
+          "speed": 32.99,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 3309.81,
+          "p": [
+            -65.86,
+            547.39,
+            -2602.79
+          ],
+          "speed": 33.11,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 3280.62,
+          "p": [
+            -66.4,
+            565.96,
+            -2624.3
+          ],
+          "speed": 40.8,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 3095.27,
+          "p": [
+            14.85,
+            675.3,
+            -2580.39
+          ],
+          "speed": 22.67,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 10800,
+      "phase": "finished",
+      "riders": [
+        {
+          "id": 0,
+          "s": 4093.31,
+          "p": [
+            12.12,
+            170.38,
+            -2885.14
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 4051.81,
+          "p": [
+            12.53,
+            170.53,
+            -2832.66
+          ],
+          "speed": 23.24,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 4093.31,
+          "p": [
+            8.39,
+            170.38,
+            -2884
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 3792.11,
+          "p": [
+            17.37,
+            240.19,
+            -2612.93
+          ],
+          "speed": 22.84,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 3769.83,
+          "p": [
+            5.85,
+            254.27,
+            -2597.91
+          ],
+          "speed": 35.59,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 3579.25,
+          "p": [
+            -52.54,
+            375.72,
+            -2642.81
+          ],
+          "speed": 33.16,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 3642.73,
+          "p": [
+            -66.59,
+            335.29,
+            -2600.56
+          ],
+          "speed": 35.82,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 3436.05,
+          "p": [
+            9.29,
+            466.96,
+            -2593.33
+          ],
+          "speed": 35.82,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 11400,
+      "phase": "finished",
+      "riders": [
+        {
+          "id": 0,
+          "s": 4093.31,
+          "p": [
+            12.12,
+            170.38,
+            -2885.14
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 4093.31,
+          "p": [
+            10.52,
+            170.38,
+            -2882.85
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 4093.31,
+          "p": [
+            8.39,
+            170.38,
+            -2884
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 4010.69,
+          "p": [
+            34.04,
+            174.39,
+            -2797.75
+          ],
+          "speed": 28.58,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 3966.57,
+          "p": [
+            25.1,
+            183.42,
+            -2758.76
+          ],
+          "speed": 25.73,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 3894.57,
+          "p": [
+            -11.5,
+            202.97,
+            -2702.66
+          ],
+          "speed": 30.5,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 3901.52,
+          "p": [
+            -10.88,
+            200.58,
+            -2708.68
+          ],
+          "speed": 30.58,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 3652.36,
+          "p": [
+            -66.06,
+            329.11,
+            -2592.61
+          ],
+          "speed": 33.37,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    },
+    {
+      "f": 12000,
+      "phase": "finished",
+      "riders": [
+        {
+          "id": 0,
+          "s": 4093.31,
+          "p": [
+            12.12,
+            170.38,
+            -2885.14
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 1,
+          "s": 4093.31,
+          "p": [
+            10.52,
+            170.38,
+            -2882.85
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 2,
+          "s": 4093.31,
+          "p": [
+            8.39,
+            170.38,
+            -2884
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 3,
+          "s": 4093.31,
+          "p": [
+            14.47,
+            170.38,
+            -2881.81
+          ],
+          "speed": 0,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 4,
+          "s": 4093.31,
+          "p": [
+            8.8,
+            170.38,
+            -2881.42
+          ],
+          "speed": 0,
+          "falls": 1,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 5,
+          "s": 4093.31,
+          "p": [
+            10.57,
+            170.38,
+            -2878.78
+          ],
+          "speed": 8.31,
+          "falls": 2,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 6,
+          "s": 4093.31,
+          "p": [
+            9.22,
+            170.38,
+            -2880.34
+          ],
+          "speed": 0,
+          "falls": 0,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        },
+        {
+          "id": 7,
+          "s": 3956.57,
+          "p": [
+            22.76,
+            185.75,
+            -2747.81
+          ],
+          "speed": 23.64,
+          "falls": 3,
+          "stun": false,
+          "state": "ride",
+          "ground": true
+        }
+      ]
+    }
+  ],
+  "riders": [
+    {
+      "id": 0,
+      "progress": 4093.31063425901,
+      "finish": 167.73333333335896,
+      "falls": 0,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 1,
+      "progress": 4093.31063425901,
+      "finish": 178.86666666670115,
+      "falls": 0,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 2,
+      "progress": 4093.31063425901,
+      "finish": 175.750000000032,
+      "falls": 0,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 3,
+      "progress": 4093.31063425901,
+      "finish": 190.58333333337714,
+      "falls": 1,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 4,
+      "progress": 4093.31063425901,
+      "finish": 192.15000000004505,
+      "falls": 1,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 5,
+      "progress": 4093.31063425901,
+      "finish": 196.683333333382,
+      "falls": 2,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 6,
+      "progress": 4093.31063425901,
+      "finish": 194.13333333337997,
+      "falls": 0,
+      "deaths": 0,
+      "fruit": 0
+    },
+    {
+      "id": 7,
+      "progress": 4093.31063425901,
+      "finish": 202.60000000005337,
+      "falls": 3,
+      "deaths": 0,
+      "fruit": 0
+    }
+  ]
+}

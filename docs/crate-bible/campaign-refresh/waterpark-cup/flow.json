@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Admission courtyard bridge",
+    "reversed": false,
+    "lowest": 12,
+    "maxHeightError": 0.17343294413760368
+  },
+  {
+    "name": "Admission courtyard bridge",
+    "reversed": true,
+    "lowest": 11.979999771118164,
+    "maxHeightError": 0.18040344352708537
+  },
+  {
+    "name": "East courtyard flume bridge",
+    "reversed": false,
+    "lowest": 12.000590089578173,
+    "maxHeightError": 0.21015428992090968
+  },
+  {
+    "name": "East courtyard flume bridge",
+    "reversed": true,
+    "lowest": 12,
+    "maxHeightError": 0.28669739623804347
+  },
+  {
+    "name": "Loop return promenade",
+    "reversed": false,
+    "lowest": 0,
+    "maxHeightError": 0.3083264898422815
+  },
+  {
+    "name": "Loop return promenade",
+    "reversed": true,
+    "lowest": 0,
+    "maxHeightError": 0.40401498314014894
+  },
+  {
+    "name": "Flume two-way bypass",
+    "reversed": false,
+    "lowest": 14,
+    "maxHeightError": 0.07819607358008795
+  },
+  {
+    "name": "Flume two-way bypass",
+    "reversed": true,
+    "lowest": 14,
+    "maxHeightError": 0.08050318886210128
+  },
+  {
+    "name": "Coaster upper gallery",
+    "reversed": false,
+    "lowest": 18,
+    "maxHeightError": 2.384185648907078e-08
+  },
+  {
+    "name": "Coaster upper gallery",
+    "reversed": true,
+    "lowest": 18,
+    "maxHeightError": 2.384185648907078e-08
+  },
+  {
+    "name": "North bridge gallery bank",
+    "reversed": false,
+    "lowest": 15.5,
+    "maxHeightError": 0.1897300542717062
+  },
+  {
+    "name": "North bridge gallery bank",
+    "reversed": true,
+    "lowest": 15.5,
+    "maxHeightError": 0.22181286682988954
+  },
+  {
+    "name": "West promenade concourse turn",
+    "reversed": false,
+    "lowest": 12,
+    "maxHeightError": 4.7683716530855236e-08
+  },
+  {
+    "name": "West promenade concourse turn",
+    "reversed": true,
+    "lowest": 12,
+    "maxHeightError": 4.7683716530855236e-08
+  },
+  {
+    "name": "Wave pool median connection",
+    "reversed": false,
+    "lowest": 12,
+    "maxHeightError": 4.7683716530855236e-08
+  },
+  {
+    "name": "Wave pool median connection",
+    "reversed": true,
+    "lowest": 12,
+    "maxHeightError": 4.7683716530855236e-08
+  }
+]

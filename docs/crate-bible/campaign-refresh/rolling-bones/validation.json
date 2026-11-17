@@ -1,0 +1,923 @@
+{
+  "course": "rolling-bones",
+  "bonus": "bonus-rolling-bones",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T20:51:00Z",
+  "completedAt": "2026-11-14T21:47:18.255079+00:00",
+  "elapsedMinutes": 56.3,
+  "requestedBudgetMinutes": 20,
+  "changes": {
+    "mainCounted": [
+      63,
+      77
+    ],
+    "mainPhysical": 118,
+    "shelteredSupplies": 44,
+    "shelterGroups": 10,
+    "sectionCounts": [
+      11,
+      11,
+      11,
+      11,
+      11,
+      11,
+      11
+    ],
+    "masks": 3,
+    "branchLives": 2,
+    "preservedWoodBarricades": 23,
+    "preservedMetal": 40,
+    "preservedNitro": 7,
+    "preservedCleanupSwitch": 1,
+    "bonusCounted": [
+      16,
+      22
+    ],
+    "bonusDeliveries": 4,
+    "highLifeBottom": [
+      13.2,
+      15
+    ]
+  },
+  "before": {
+    "rolling-bones": {
+      "physical": 104,
+      "counted": 63,
+      "checkpoints": 6,
+      "gemTally": 85,
+      "byKind": {
+        "mask": 2,
+        "wood": 42,
+        "mystery": 8,
+        "life": 4,
+        "metal": 40,
+        "nitro": 7,
+        "nitrobang": 1
+      },
+      "outlineByKind": {},
+      "per100m": 2.25,
+      "physicalPer100m": 3.71,
+      "checkpointGaps": [
+        336.8,
+        427.1,
+        462.4,
+        514,
+        372,
+        491.4,
+        201.5
+      ],
+      "clusters": 39,
+      "singles": 33,
+      "meanClusterSize": 1.62,
+      "sizeHist": {
+        "1": 33,
+        "2": 1,
+        "3": 1,
+        "5-9": 4
+      },
+      "structuralClusters": 5,
+      "structuralCrates": 41,
+      "maxStackAll": 2,
+      "arrangements": {
+        "single": 33,
+        "irregular": 4,
+        "pair": 1,
+        "row": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 8,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 74,
+        "crate": 30
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 7,
+      "high": 0,
+      "highTools": {},
+      "onPath": 21,
+      "offLine": 42,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 3.5,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 1,
+      "nearRail": 3,
+      "downhill": 2,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 2,
+      "runCrates": 7,
+      "longestRun": 4,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 2,
+        "crates": 7
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 307.8,
+        "from": 2117.2,
+        "to": 2425.1
+      },
+      "authoredRails": 44,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "crusher": 6,
+        "pendulum": 3,
+        "crumble": 48,
+        "boulder": 8
+      }
+    },
+    "bonus-rolling-bones": {
+      "physical": 16,
+      "counted": 16,
+      "checkpoints": 0,
+      "gemTally": 16,
+      "byKind": {
+        "wood": 9,
+        "mystery": 4,
+        "bouncy": 1,
+        "life": 2
+      },
+      "outlineByKind": {},
+      "per100m": 16.49,
+      "physicalPer100m": 16.49,
+      "checkpointGaps": [
+        97
+      ],
+      "clusters": 12,
+      "singles": 8,
+      "meanClusterSize": 1.33,
+      "sizeHist": {
+        "1": 8,
+        "2": 4
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "stack": 4,
+        "single": 8
+      },
+      "maxStack": 2,
+      "largestCluster": 2,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 11,
+        "crate": 4,
+        "none": 1
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 4,
+      "overhanging": 0,
+      "high": 1,
+      "highTools": {
+        "arrow-perfect": 1
+      },
+      "onPath": 16,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 6.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 2,
+        "crumble": 1
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "crate": 1
+      },
+      "multihit": 0,
+      "emptiest": {
+        "length": 24,
+        "from": 35,
+        "to": 59
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 1,
+        "crumble": 4
+      }
+    }
+  },
+  "after": {
+    "rolling-bones": {
+      "physical": 118,
+      "counted": 77,
+      "checkpoints": 6,
+      "gemTally": 105,
+      "byKind": {
+        "mask": 3,
+        "life": 2,
+        "wood": 57,
+        "metal": 40,
+        "nitro": 7,
+        "nitrobang": 1,
+        "mystery": 8
+      },
+      "outlineByKind": {},
+      "per100m": 2.75,
+      "physicalPer100m": 4.21,
+      "checkpointGaps": [
+        336.8,
+        427.1,
+        462.4,
+        514,
+        372,
+        491.4,
+        201.5
+      ],
+      "clusters": 19,
+      "singles": 3,
+      "meanClusterSize": 4.05,
+      "sizeHist": {
+        "1": 3,
+        "2": 2,
+        "3": 3,
+        "4": 1,
+        "5-9": 10
+      },
+      "structuralClusters": 5,
+      "structuralCrates": 41,
+      "maxStackAll": 2,
+      "arrangements": {
+        "single": 3,
+        "pyramid": 6,
+        "wall-across-path": 3,
+        "irregular": 4,
+        "pair": 2,
+        "row": 1
+      },
+      "maxStack": 2,
+      "largestCluster": 8,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 70,
+        "crate": 48
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 7,
+      "high": 0,
+      "highTools": {},
+      "onPath": 33,
+      "offLine": 44,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 3.5,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 1,
+      "nearRail": 3,
+      "downhill": 2,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 10,
+      "runCrates": 25,
+      "longestRun": 4,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 10,
+        "crates": 25
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 351.9,
+        "from": 331.9,
+        "to": 683.7
+      },
+      "authoredRails": 44,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "crusher": 6,
+        "pendulum": 3,
+        "crumble": 48,
+        "boulder": 8
+      }
+    },
+    "bonus-rolling-bones": {
+      "physical": 22,
+      "counted": 22,
+      "checkpoints": 0,
+      "gemTally": 22,
+      "byKind": {
+        "bouncy": 1,
+        "life": 1,
+        "wood": 16,
+        "mystery": 4
+      },
+      "outlineByKind": {},
+      "per100m": 22.68,
+      "physicalPer100m": 22.68,
+      "checkpointGaps": [
+        97
+      ],
+      "clusters": 6,
+      "singles": 2,
+      "meanClusterSize": 3.67,
+      "sizeHist": {
+        "1": 2,
+        "5-9": 4
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 3,
+        "row": 1,
+        "single": 2
+      },
+      "maxStack": 2,
+      "largestCluster": 5,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 15,
+        "none": 1,
+        "crate": 6
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 9,
+      "overhanging": 0,
+      "high": 1,
+      "highTools": {
+        "arrow-perfect-double": 1
+      },
+      "onPath": 22,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 6.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "crumble": 1
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 4,
+      "runCrates": 11,
+      "longestRun": 5,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 4,
+        "crates": 11
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "crate": 1
+      },
+      "multihit": 0,
+      "emptiest": {
+        "length": 27,
+        "from": 31.2,
+        "to": 58.2
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 1,
+        "crumble": 4
+      }
+    }
+  },
+  "enemyDecision": "Keep the chase roster: eight boulders, six crushers, three pendulums and 48 crumbles already supply avoidance pressure. No attack enemy is added to a forced line or sheltered rest.",
+  "preservation": {
+    "mainNonCratesAndSettingsExact": true,
+    "bonusNonCrateComponentsExact": true,
+    "bonusMetadataException": "Group 2 name changed from Sixteen moonbone offerings to Moonbone offerings.",
+    "sourceOwnedLevels": true,
+    "publishedPackUnchanged": true,
+    "movementAnimationCameraAndArtUnchanged": true,
+    "stockSnapshots": 2,
+    "stockRawAndMigratedSaves": 4,
+    "authoredSaveVariants": 28,
+    "captureMigrationAppliedOnce": true
+  },
+  "native": {
+    "journeys": [
+      {
+        "name": "final-high",
+        "pass": true,
+        "seconds": 9,
+        "final": {
+          "frame": 540,
+          "time": 9,
+          "position": [
+            7.497609296869617,
+            -64.27333333084981,
+            -2674.5928855721677
+          ],
+          "heading": [
+            0.30658600328667307,
+            0,
+            -0.951842961096369
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp plinth rim",
+            "y": -64.27333333084981,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.01,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      },
+      {
+        "name": "final-low",
+        "pass": true,
+        "seconds": 9.5,
+        "final": {
+          "frame": 570,
+          "time": 9.5,
+          "position": [
+            7.507816944576246,
+            -64.27333333084981,
+            -2674.5607903669093
+          ],
+          "heading": [
+            0.2970168225870883,
+            0,
+            -0.954872246481315
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp plinth rim",
+            "y": -64.27333333084981,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      },
+      {
+        "name": "recovery",
+        "pass": true,
+        "seconds": 27.616666666666667,
+        "waterRespawn": true,
+        "final": {
+          "frame": 1657,
+          "time": 27.616666666666667,
+          "position": [
+            -16.0464,
+            13.878999710083008,
+            -324
+          ],
+          "heading": [
+            0.11455340830333655,
+            0,
+            0.9934170909774449
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Mossgate refuge floor",
+            "y": 13.878999710083008,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      },
+      {
+        "name": "outer-high",
+        "pass": true,
+        "seconds": 118.66666666666667,
+        "checkpoints": 5,
+        "final": {
+          "frame": 7120,
+          "time": 118.66666666666667,
+          "position": [
+            7.543931887983051,
+            -64.26333333355686,
+            -2674.735443599902
+          ],
+          "heading": [
+            0.30635852542437064,
+            0,
+            -0.9519162010911496
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": -64.26333333355686,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.01,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      },
+      {
+        "name": "inner-low",
+        "pass": true,
+        "seconds": 121.76666666666667,
+        "checkpoints": 6,
+        "final": {
+          "frame": 7306,
+          "time": 121.76666666666667,
+          "position": [
+            7.480666856138894,
+            -64.27333333084981,
+            -2674.50565475526
+          ],
+          "heading": [
+            0.2971062898105766,
+            0,
+            -0.9548444127474355
+          ],
+          "state": "finished",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp plinth rim",
+            "y": -64.27333333084981,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      }
+    ],
+    "cargo": {
+      "groups": [
+        {
+          "name": "Bones shelter / section 1 / cache 1 /",
+          "count": 4,
+          "frames": 340,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 1 / cache 2 /",
+          "count": 5,
+          "frames": 377,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 2 / cache 1 /",
+          "count": 5,
+          "frames": 407,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 2 / cache 2 /",
+          "count": 5,
+          "frames": 350,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 3 / cache 1 /",
+          "count": 3,
+          "frames": 324,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 4 / cache 1 /",
+          "count": 3,
+          "frames": 288,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 5 / cache 1 /",
+          "count": 6,
+          "frames": 379,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 6 / cache 1 /",
+          "count": 2,
+          "frames": 284,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 7 / cache 1 /",
+          "count": 5,
+          "frames": 451,
+          "deaths": 0
+        },
+        {
+          "name": "Bones shelter / section 7 / cache 2 /",
+          "count": 6,
+          "frames": 424,
+          "deaths": 0
+        }
+      ],
+      "footprintProbes": 104,
+      "maxFloorError": 8.881784197001252e-16,
+      "retainedSlopeContacts": [
+        {
+          "kind": "metal",
+          "originalComponent": 665,
+          "minFloorDelta": -0.13577794565788004,
+          "maxFloorDelta": 0.2232675946435645
+        },
+        {
+          "kind": "metal",
+          "originalComponent": 679,
+          "minFloorDelta": -0.12535987933401138,
+          "maxFloorDelta": 0.2297122633045081
+        },
+        {
+          "kind": "nitro",
+          "originalComponent": 889,
+          "minFloorDelta": -0.1383901702350201,
+          "maxFloorDelta": 0.13839017023501654
+        },
+        {
+          "kind": "nitro",
+          "originalComponent": 890,
+          "minFloorDelta": -0.14334616943201794,
+          "maxFloorDelta": 0.13839017023501654
+        },
+        {
+          "kind": "metal",
+          "originalComponent": 1310,
+          "minFloorDelta": -0.1998815209725393,
+          "maxFloorDelta": 0.3297169613356914
+        },
+        {
+          "kind": "metal",
+          "originalComponent": 1311,
+          "minFloorDelta": -0.017519745756942484,
+          "maxFloorDelta": 0.08826935508169242
+        },
+        {
+          "kind": "wood",
+          "originalComponent": 1322,
+          "minFloorDelta": -0.04897630814586762,
+          "maxFloorDelta": 0.07561729893730984
+        }
+      ],
+      "nonCratesAndSettingsExact": true
+    },
+    "bonus": {
+      "state": "finished",
+      "cratesBroken": 22,
+      "totalCrates": 22,
+      "deaths": 0,
+      "completionScope": "complete-stage",
+      "activeStageCrates": 22,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true
+    },
+    "bonusNegative": [
+      {
+        "test": "spending arrow blocks direct double and air-spin reach",
+        "lifeAlive": true
+      },
+      {
+        "test": "actual cargo rebound, double and repeated air spins",
+        "maxHead": 14.83418051513907,
+        "capBottom": 15,
+        "lifeAlive": true
+      },
+      {
+        "test": "skipping breakaway footing produces real gap death",
+        "state": "dead"
+      },
+      {
+        "test": "complete bonus retry",
+        "physical": 22,
+        "counted": 22,
+        "credit": 0
+      }
+    ],
+    "entrance": {
+      "passed": true,
+      "entries": 1,
+      "entered": [
+        -24.642354137355515,
+        -4.446700001341104,
+        -736.8437741337772
+      ],
+      "returned": [
+        -29.6299,
+        -5.496699810028076,
+        -741
+      ],
+      "supportedReturn": true,
+      "sheltered": true,
+      "deaths": 0
+    }
+  },
+  "browser": {
+    "litePassed": true,
+    "fullPassed": true,
+    "fullViews": 4,
+    "bankedBonus": {
+      "count": 22,
+      "completed": true,
+      "sameParent": true
+    },
+    "recovery": {
+      "lives": 3,
+      "credit": 5,
+      "bankedGone": 4,
+      "restored": 5,
+      "position": [
+        -16.0464,
+        13.978999710083007,
+        -324
+      ]
+    },
+    "consoleErrors": []
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed",
+    "stock": "passed",
+    "moonboneProduction": "passed"
+  },
+  "buildVersion": "b2f5bf68d75083366ae6",
+  "releaseBytes": 959321422,
+  "limitations": [
+    "Continuous main routes prove traversal; the 44 new shelter crates are collected in staged native probes. A continuous main all-box run is not claimed.",
+    "Seven original slope-contact audit flags remain: all 28 corners have ground; the probes record the original floor variation. Every new cargo corner is flat and supported.",
+    "The browser main checks are staged. Bonus entry in the browser uses the debug trigger; the normal-input native entrance test verifies the actual platform and supported return.",
+    "Initial controller failures are retained. Its missing-crystal assumption and look-ahead past the final crumble curve were corrected without changing level geometry or physics.",
+    "Canvas captures omit DOM HUD labels; the large fruit and crate icons along the bottom are HUD overlays.",
+    "Elapsed validation exceeded the 15+5-minute request; the interval also includes cloud startup verification."
+  ]
+}

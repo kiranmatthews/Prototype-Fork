@@ -1,0 +1,395 @@
+{
+  "trial": 18,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "ae5ba1192a8da1c72c257265cce82cc0f5705f540536d439291f10e58298dca9",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -4347
+  ],
+  "installed": {
+    "id": 18,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 18,
+    "frame": 3824,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 18 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Wait below climbing rope 1",
+        "firstFrame": 137,
+        "lastFrame": 378
+      },
+      {
+        "name": "Read rope 1 crossing its low point",
+        "firstFrame": 404,
+        "lastFrame": 578
+      },
+      {
+        "name": "Catch climbing rope 1",
+        "firstFrame": 579,
+        "lastFrame": 582
+      },
+      {
+        "name": "An early low release returns to the flat courtyard",
+        "firstFrame": 611,
+        "lastFrame": 654
+      },
+      {
+        "name": "Wait below climbing rope 1",
+        "firstFrame": 654,
+        "lastFrame": 740
+      },
+      {
+        "name": "Read rope 1 crossing its low point",
+        "firstFrame": 766,
+        "lastFrame": 799
+      },
+      {
+        "name": "Catch climbing rope 1",
+        "firstFrame": 800,
+        "lastFrame": 804
+      },
+      {
+        "name": "Climb rope 1 above its receiving platform",
+        "firstFrame": 806,
+        "lastFrame": 1009
+      },
+      {
+        "name": "Wait for rope 1 to swing toward the landing",
+        "firstFrame": 1035,
+        "lastFrame": 1303
+      },
+      {
+        "name": "Release onto receiving platform 1",
+        "firstFrame": 1304,
+        "lastFrame": 1344
+      },
+      {
+        "name": "Wait below climbing rope 2",
+        "firstFrame": 1444,
+        "lastFrame": 1638
+      },
+      {
+        "name": "Read rope 2 crossing its low point",
+        "firstFrame": 1664,
+        "lastFrame": 2675
+      },
+      {
+        "name": "Catch climbing rope 2",
+        "firstFrame": 2676,
+        "lastFrame": 2680
+      },
+      {
+        "name": "Climb rope 2 above its receiving platform",
+        "firstFrame": 2682,
+        "lastFrame": 2885
+      },
+      {
+        "name": "Wait for rope 2 to swing toward the landing",
+        "firstFrame": 2911,
+        "lastFrame": 2957
+      },
+      {
+        "name": "Release onto receiving platform 2",
+        "firstFrame": 2958,
+        "lastFrame": 2998
+      },
+      {
+        "name": "Collect the crystal above both climbs",
+        "firstFrame": 2998,
+        "lastFrame": 3075
+      },
+      {
+        "name": "Drop beside both raised platforms into the courtyard",
+        "firstFrame": 3120,
+        "lastFrame": 3183
+      },
+      {
+        "name": "Walk around both climbing ropes",
+        "firstFrame": 3183,
+        "lastFrame": 3650
+      },
+      {
+        "name": "Finish the two-rope circuit",
+        "firstFrame": 3668,
+        "lastFrame": 3806
+      }
+    ],
+    "evidence": [
+      {
+        "action": "rope 1 high landing",
+        "position": [
+          0.05595169040109729,
+          9.200000005960463,
+          -4377.650358487767
+        ]
+      },
+      {
+        "action": "moving rest carries the player before the second climb",
+        "distance": 0.8109332336883777
+      },
+      {
+        "action": "rope 2 high landing",
+        "position": [
+          -0.02003740616914708,
+          18.4,
+          -4396.648032412611
+        ]
+      }
+    ],
+    "position": [
+      0.06313632648550248,
+      0,
+      -4347.00075800602
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Finish the two-rope circuit",
+    "result": {
+      "id": 18,
+      "collected": 1,
+      "position": [
+        0.06313632648550248,
+        0,
+        -4347.00075800602
+      ],
+      "frames": 3824
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06313632648550248,
+        0,
+        -4347.00075800602
+      ],
+      "camera": [
+        0.06313632648550248,
+        13.692099788303082,
+        -4329.9244586411105
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            1.9002606093219475e-05,
+            0.7350578529929066,
+            1.000548906397847
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0019027271414790742,
+            0.7339115342968453,
+            1.0005520695279901
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            2.2017936894206326e-05,
+            0.7375935413132202,
+            1.0005566470180793
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            2.339922616530501e-05,
+            0.7342991037440522,
+            1.00056019290952
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.0035535872572686252,
+            0.7334648314507607,
+            1.0005645719201346
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            2.7192698652642775e-05,
+            0.7341180329561883,
+            1.0005699310881226
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            2.978593934525999e-05,
+            0.7370262882737904,
+            1.0005765881658022
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.0030759680502313973,
+            0.733692027473025,
+            1.0005840990330213
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.00341404394098401,
+            0.7360955405657389,
+            1.0005933285129711
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            4.116505021414175e-05,
+            0.7440502581107816,
+            1.0006057993474702
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            4.887255715026961e-05,
+            0.7451070723620388,
+            1.0006255851978685
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.007305818632262613,
+            0.7287175373714364,
+            1.0006404735912806
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            6.772638107586449e-05,
+            0.7196263552410034,
+            1.000673984627505
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            8.795983034910724e-05,
+            0.7317633695979442,
+            1.0007259256771441
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            0.001942295598903806,
+            0.7393980694800799,
+            1.0007962305313436
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            -0.022941001257583398,
+            0.7229056541479647,
+            1.0009408335478591
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            -0.05814281966824487,
+            0.7906466641678598,
+            1.0020874254068188
+          ]
+        },
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.02219276333295963,
+            0.7739786961788636,
+            0.9998942620584242
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            0.01097379153549468,
+            0.7658962924358521,
+            1.000139857040699
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.008667682361385069,
+            0.7226059607847992,
+            1.000263497094292
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            0.006872172163967067,
+            0.7710716425274783,
+            1.0003125145658724
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.0046944268345157705,
+            0.762569673233282,
+            1.0003460076765562
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.004527628322352217,
+            0.7488307563197857,
+            1.0003765206691462
+          ]
+        },
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.007315752796812326,
+            0.7766512413883088,
+            1.0003917107913156
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

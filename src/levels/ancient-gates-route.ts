@@ -1,5 +1,6 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {dressAncientGates,ANCIENT_GATES_ATMOSPHERE} from './ancient-gates-art';
+import {arrangeAncientGatesCrates} from './ancient-gates-crates';
 
 /** Feet/deck heights throughout. Helpers own box centres. The original
  * spawn-to-gate route was 448m; this journey is 1,396m, without repeated rooms. */
@@ -160,6 +161,7 @@ add({t:'camnode',p:[683,16,0],s:[1460,110,24],cameraView:true,cameraPresentation
  cameraFollowTargetHeight:2,cameraFov:55,cameraAspect:16/9,radius:3,nm:'Readable Ancient Gates side view',grp:80});
 
 components.push(...dressAncientGates(components,ANCIENT_GATES_DECKS));
+arrangeAncientGatesCrates(components);
 export const JUNGLE_GATE_RUN_LEVEL:CustomLevelData={v:1,name:'The Ancient Gates',spawn:[-20,.12,0],killY:-18,ledgeAssist:1,sky:'day',components,
  jungleAtmosphere:true,jungleDepthFade:false,jungleStyle:'painterly',keepPlayFog:true,atmosphere:ANCIENT_GATES_ATMOSPHERE,
  medalTimes:{gold:330,silver:390,bronze:450},

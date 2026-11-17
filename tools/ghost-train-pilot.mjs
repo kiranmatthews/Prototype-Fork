@@ -75,7 +75,9 @@ export function runGhostBrokenRails(r,rails){
   for(let i=0;i<rails.length-1;i++){
     const rail=rails[i],next=rails[i+1],old=p.grindRail;
     r.until(()=>station(r)>=rail.b-1.9,()=>({moveY:0,moveX:Math.max(-1,Math.min(1,-p.balance*9-p.balanceVel*1.5)),grindHeld:true,jumpHeld:station(r)>rail.b-13}),{maxFrames:1800,label:`grind to broken rail ${i+1} end`});
-    r.releaseJump({moveY:1,grindHeld:true});assert.equal(p.state,'air','broken track must be jumped');
+    // The live movement model requires a fresh airborne Grind press for each
+    // grind ollie. Release it at takeoff, then press again in the catch loop.
+    r.releaseJump({moveY:1,grindHeld:false});assert.equal(p.state,'air','broken track must be jumped');
     r.until(()=>p.state==='grind'&&p.grindRail!==old,()=>({...aim(station(r)+6,next.u),grindHeld:true}),{maxFrames:180,label:'catch receiving broken railway'});
     catches.push({frame:r.frame,rail:r.l.rails.indexOf(p.grindRail),station:station(r)});
   }
@@ -102,10 +104,17 @@ export function runGhostFloorGap(r,gap){
   assert.ok(r.p.grounded,'flagstone takeoff must remain on real floor');
   r.releaseJump(r.steerToward(m.ghostRoutePoint(gap.b+8)));
   assert.ok(r.p.state==='air'&&r.p.vVel>0,`gap ${gap.a} needs an actual upward jump: ${JSON.stringify(r.snapshot())}`);
-  r.until(()=>r.p.grounded&&station(r)>gap.b,()=>r.steerToward(m.ghostRoutePoint(station(r)+8)),{maxFrames:180,label:'land beyond the collapsed flagstones'});
+  // Uphill approaches lose running speed. Use the ordinary apex double jump
+  // when the receiving floor rises, instead of assuming flat-ground range.
+  let doubled=false;const uphill=m.ghostRouteHeight(gap.b)-m.ghostRouteHeight(gap.a-2)>.55;
+  r.until(()=>r.p.grounded&&station(r)>gap.b,()=>{
+    const input=r.steerToward(m.ghostRoutePoint(station(r)+8));
+    if(uphill&&!doubled&&r.p.vVel<.8){input.jumpHeld=true;doubled=true;}
+    return input;
+  },{maxFrames:180,label:'land beyond the collapsed flagstones'});
   assert.equal(r.p.groundHit?.moverId,undefined,'flagstone receiver is ordinary floor');
   assert.equal(r.p.totalDeaths,deaths,'flagstone jump must survive');
-  return{test:'input-only execution-gallery floor jump',gap:[gap.a,gap.b],landingStation:station(r),frames:r.frame-begin,deaths:r.p.totalDeaths};
+  return{test:'input-only execution-gallery floor jump',gap:[gap.a,gap.b],landingStation:station(r),doubleJump:doubled,frames:r.frame-begin,deaths:r.p.totalDeaths};
 }
 
 /** One uninterrupted spawn-to-gate run; only ordinary device samples move it. */

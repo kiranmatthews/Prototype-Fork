@@ -1,0 +1,151 @@
+{
+  "id": 16,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 16 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Approach the trampoline",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Hold the trampoline launch",
+      "firstFrame": 314,
+      "lastFrame": 353
+    },
+    {
+      "name": "A drift into the visible Nitro frame causes a death",
+      "firstFrame": 353,
+      "lastFrame": 414
+    },
+    {
+      "name": "Recover at the launcher checkpoint with the Nitro frame restored",
+      "firstFrame": 414,
+      "lastFrame": 547
+    },
+    {
+      "name": "Approach the trampoline",
+      "firstFrame": 547,
+      "lastFrame": 682
+    },
+    {
+      "name": "Hold the trampoline launch",
+      "firstFrame": 727,
+      "lastFrame": 766
+    },
+    {
+      "name": "Rise in front of the Nitro frame",
+      "firstFrame": 766,
+      "lastFrame": 795
+    },
+    {
+      "name": "Align above the safe spring between the Nitro",
+      "firstFrame": 795,
+      "lastFrame": 816
+    },
+    {
+      "name": "Rebound from the airborne spring without touching Nitro",
+      "firstFrame": 816,
+      "lastFrame": 827
+    },
+    {
+      "name": "Rise beside the narrow landing",
+      "firstFrame": 827,
+      "lastFrame": 838
+    },
+    {
+      "name": "Land between the four Nitro corners",
+      "firstFrame": 838,
+      "lastFrame": 871
+    },
+    {
+      "name": "Collect the Nitro-frame crystal",
+      "firstFrame": 871,
+      "lastFrame": 896
+    },
+    {
+      "name": "Leave through the open side of the Nitro frame",
+      "firstFrame": 941,
+      "lastFrame": 1000
+    },
+    {
+      "name": "Walk around the launchers",
+      "firstFrame": 1000,
+      "lastFrame": 1192
+    },
+    {
+      "name": "Finish the Nitro-frame circuit",
+      "firstFrame": 1210,
+      "lastFrame": 1387
+    }
+  ],
+  "evidence": [
+    {
+      "action": "precision aerial spring contact",
+      "position": [
+        3.94303057852593,
+        9.172,
+        -11.884988487005558
+      ],
+      "nitrosIntact": true
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the Nitro-frame circuit",
+  "expectedDeaths": 0,
+  "result": {
+    "frame": 1405,
+    "time": 23.416666666666668,
+    "position": [
+      0.06879366713736891,
+      0,
+      4.99925352543133
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

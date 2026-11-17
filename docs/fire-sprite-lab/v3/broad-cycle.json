@@ -1,0 +1,113 @@
+{
+  "fps": 36,
+  "frames": [
+    {
+      "file": "../../../public/fire-sprites/v2/broad/01.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t23.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t14.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/01-1.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/02.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t21.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t11.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t06.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/03.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t09.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/04.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t24.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t03.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t10.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/05.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t18.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/06.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t22.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t12.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/07.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t19.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t07.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/08.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t20.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t08.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/09.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t15.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t04.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/10.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t16.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/11.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t02.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t05.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t17.png"
+    },
+    {
+      "file": "../../../public/fire-sprites/v2/broad/12.png"
+    },
+    {
+      "file": "../../../art/fire-sprites/v3/broad/t13.png"
+    }
+  ]
+}

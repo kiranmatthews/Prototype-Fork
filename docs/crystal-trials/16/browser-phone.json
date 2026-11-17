@@ -1,0 +1,124 @@
+{
+  "trial": 16,
+  "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "pilot": {
+    "id": 16,
+    "frame": 1365,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 16 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 314,
+        "lastFrame": 353
+      },
+      {
+        "name": "A drift into the visible Nitro frame causes a death",
+        "firstFrame": 353,
+        "lastFrame": 379
+      },
+      {
+        "name": "Recover at the launcher checkpoint with the Nitro frame restored",
+        "firstFrame": 379,
+        "lastFrame": 512
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 512,
+        "lastFrame": 647
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 692,
+        "lastFrame": 731
+      },
+      {
+        "name": "Rise in front of the Nitro frame",
+        "firstFrame": 731,
+        "lastFrame": 760
+      },
+      {
+        "name": "Align above the safe spring between the Nitro",
+        "firstFrame": 760,
+        "lastFrame": 781
+      },
+      {
+        "name": "Rebound from the airborne spring without touching Nitro",
+        "firstFrame": 781,
+        "lastFrame": 792
+      },
+      {
+        "name": "Rise beside the narrow landing",
+        "firstFrame": 792,
+        "lastFrame": 803
+      },
+      {
+        "name": "Land between the four Nitro corners",
+        "firstFrame": 803,
+        "lastFrame": 836
+      },
+      {
+        "name": "Collect the Nitro-frame crystal",
+        "firstFrame": 836,
+        "lastFrame": 856
+      },
+      {
+        "name": "Leave through the open side of the Nitro frame",
+        "firstFrame": 901,
+        "lastFrame": 960
+      },
+      {
+        "name": "Walk around the launchers",
+        "firstFrame": 960,
+        "lastFrame": 1152
+      },
+      {
+        "name": "Finish the Nitro-frame circuit",
+        "firstFrame": 1170,
+        "lastFrame": 1347
+      }
+    ],
+    "evidence": [
+      {
+        "action": "precision aerial spring contact",
+        "position": [
+          3.953637180243731,
+          9.172,
+          -11.902495577115339
+        ],
+        "nitrosIntact": true
+      }
+    ],
+    "position": [
+      0.06758593425671802,
+      0,
+      4.996250112040715
+    ],
+    "state": "ride",
+    "deaths": 1,
+    "stage": "Finish the Nitro-frame circuit",
+    "expectedDeaths": 1,
+    "result": {
+      "id": 16,
+      "collected": 1,
+      "position": [
+        0.06758593425671802,
+        0,
+        4.996250112040715
+      ],
+      "frames": 1365
+    }
+  }
+}

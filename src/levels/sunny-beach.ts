@@ -27,7 +27,7 @@ export const sunnyIslandPoint=(d:number,lateral=0):P=>{
 // Keep the Unity reference sources intact. Banana Bay owns the new coastal
 // encounters and finale; the four proven island crossings retain their reach.
 const beach=createBananaBayCoast();
-const islands=structuredClone(ISLAND_HOPPER_LEVEL.components).filter(c=>!['clock','decor','gate','crystal'].includes(c.t)).map(c=>{
+const islands=structuredClone(ISLAND_HOPPER_LEVEL.components).filter(c=>!['clock','decor','gate','crystal','crate'].includes(c.t)).map(c=>{
   c.p=translate(c.p);c.grp=(c.grp??0)+40;
   c.nm=`Island Hopper / ${c.nm??c.t}`;
   if(c.supportBaseY!==undefined)c.supportBaseY+=SUNNY_ISLAND_OFFSET[1];
@@ -55,12 +55,23 @@ for(let z=-716;z>=-752;z-=7)components.push({t:'wumpa',p:[r((z+752)/36*1.8),2.02
 for(const [i,d]of [22,112,200,284,352].entries()){
   const p=sunnyIslandPoint(d);components.push({t:'enemy',p,foe:i%2?'turtle':'grunt',range:2.2,speed:1.4+i*.1,
     terrainSupports:true,nm:`Lagoon island ${i+1} / patrol after the landing`,grp:73});
-  for(const side of [-1,1]){
-    const q=sunnyIslandPoint(d+7,side*1.7);
-    components.push({t:'crate',p:q,kind:'wood',nm:`Lagoon island ${i+1} / sorted cargo ${side}`,grp:72},
-      {t:'crate',p:[q[0],q[1]+.96,q[2]],kind:side===1?'mystery':'wood',nm:`Lagoon island ${i+1} / cargo cap ${side}`,grp:72});
-  }
 }
+// Banana Bay owns its cargo: no inherited orphan arrows or singles along the
+// ramp/rope timing lanes. Broad courts carry harvest groups, with two small
+// arrival pairs as deliberate landing markers after the real lagoon gaps.
+type CargoKind=NonNullable<CustomComponent['kind']>;
+const lagoonPile=(d:number,lateral:number,kinds:CargoKind[],job:string)=>{
+  const q=sunnyIslandPoint(d,lateral);
+  kinds.forEach((kind,i)=>components.push({t:'crate',p:[q[0]+(i%2-.5)*.96,q[1]+Math.floor(i/2)*.96,q[2]],kind,nm:`Lagoon / ${job}`,grp:72}));
+};
+for(const [i,d]of [29,119,207].entries())for(const side of [-1,1])
+  lagoonPile(d,side*2.2,['wood','wood','mystery'],`HARVEST / island ${i+1} stock ${side}`);
+for(const [i,d]of [58,147,235].entries())
+  lagoonPile(d,i%2?-1.8:1.8,['wood','wood','mystery'],`ANTICIPATE / flat court before crossing ${i+1}`);
+for(const [i,d]of [96,183,267].entries())
+  lagoonPile(d,i%2?1.8:-1.8,['wood','mystery'],`LANDING / island arrival ${i+2}`);
+lagoonPile(291,-2.2,['wood','wood','mystery'],'LAST CHANCE / before the final rope');
+lagoonPile(359,2.2,['wood','wood','mystery','mystery','mystery'],'REST / final lagoon island wall');
 
 // Fully editable scenery. A clear corridor surrounds every playable surface;
 // the original cliff boundary remains the only cliff gameplay proxy.

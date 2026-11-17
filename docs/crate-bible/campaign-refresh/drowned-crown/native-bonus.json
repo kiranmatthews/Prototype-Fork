@@ -1,0 +1,523 @@
+{
+  "stage": "cross the real finish gate",
+  "evidence": [
+    {
+      "action": "LEDGER / arrival supplies",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "pass return arrow",
+      "launch": [
+        4.925288888888888,
+        0,
+        0
+      ],
+      "landing": [
+        9.944288888888899,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "reveal high ledger gallery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "held arrow and double to gallery",
+      "contact": {
+        "frame": 825,
+        "position": [
+          7.032344444444471,
+          1.172,
+          0
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "Supported bonus court"
+      },
+      "landing": [
+        11.11234444444448,
+        8.4,
+        0
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "Room 1 return: upper life",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 1 return: upper mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "descend before clearing donor",
+      "launch": [
+        10.579744444444483,
+        8.4,
+        0
+      ],
+      "landing": [
+        5.035744444444472,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "clear arrow last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "pass spent return switch",
+      "launch": [
+        20.924300000000045,
+        0,
+        0
+      ],
+      "landing": [
+        25.367300000000014,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "LEDGER / return recovery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 2 fuse: refuge reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "LEDGER / fuse recovery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "materialize bridge",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "pass bridge switch",
+      "launch": [
+        63.825277777777906,
+        0,
+        0
+      ],
+      "landing": [
+        67.3725000000001,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "LEDGER / revealed bridge cargo",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 3 bridge: receiver reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 3 bridge: receiver mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "LEDGER / exit count",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all crates in the active stage",
+      "totalCrates": 35,
+      "activeStageCrates": 35,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 35,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "approach LEDGER / arrival supplies",
+      "firstFrame": 20,
+      "lastFrame": 92
+    },
+    {
+      "name": "LEDGER / arrival supplies",
+      "firstFrame": 112,
+      "lastFrame": 112
+    },
+    {
+      "name": "preserve return arrow",
+      "firstFrame": 134,
+      "lastFrame": 265
+    },
+    {
+      "name": "pass return arrow",
+      "firstFrame": 310,
+      "lastFrame": 349
+    },
+    {
+      "name": "approach reveal high ledger gallery",
+      "firstFrame": 349,
+      "lastFrame": 502
+    },
+    {
+      "name": "reveal high ledger gallery",
+      "firstFrame": 522,
+      "lastFrame": 522
+    },
+    {
+      "name": "return to the retained donor",
+      "firstFrame": 544,
+      "lastFrame": 705
+    },
+    {
+      "name": "held arrow and double to gallery takeoff",
+      "firstFrame": 723,
+      "lastFrame": 744
+    },
+    {
+      "name": "held arrow and double to gallery arrow contact",
+      "firstFrame": 789,
+      "lastFrame": 825
+    },
+    {
+      "name": "held arrow and double to gallery apex outside the shelf",
+      "firstFrame": 828,
+      "lastFrame": 861
+    },
+    {
+      "name": "held arrow and double to gallery rise above the shelf",
+      "firstFrame": 863,
+      "lastFrame": 873
+    },
+    {
+      "name": "held arrow and double to gallery",
+      "firstFrame": 873,
+      "lastFrame": 888
+    },
+    {
+      "name": "Room 1 return: upper life",
+      "firstFrame": 890,
+      "lastFrame": 894
+    },
+    {
+      "name": "approach Room 1 return: upper mystery",
+      "firstFrame": 916,
+      "lastFrame": 996
+    },
+    {
+      "name": "Room 1 return: upper mystery",
+      "firstFrame": 1016,
+      "lastFrame": 1016
+    },
+    {
+      "name": "leave harvested gallery",
+      "firstFrame": 1038,
+      "lastFrame": 1123
+    },
+    {
+      "name": "descend before clearing donor",
+      "firstFrame": 1168,
+      "lastFrame": 1220
+    },
+    {
+      "name": "approach clear arrow last",
+      "firstFrame": 1220,
+      "lastFrame": 1273
+    },
+    {
+      "name": "clear arrow last",
+      "firstFrame": 1293,
+      "lastFrame": 1293
+    },
+    {
+      "name": "spent return switch approach",
+      "firstFrame": 1315,
+      "lastFrame": 1493
+    },
+    {
+      "name": "pass spent return switch",
+      "firstFrame": 1538,
+      "lastFrame": 1577
+    },
+    {
+      "name": "approach LEDGER / return recovery",
+      "firstFrame": 1577,
+      "lastFrame": 1656
+    },
+    {
+      "name": "LEDGER / return recovery",
+      "firstFrame": 1676,
+      "lastFrame": 1676
+    },
+    {
+      "name": "inspect fuse and overhead life",
+      "firstFrame": 1698,
+      "lastFrame": 1852
+    },
+    {
+      "name": "stomp takeoff cap",
+      "firstFrame": 1897,
+      "lastFrame": 1928
+    },
+    {
+      "name": "rebound apex",
+      "firstFrame": 1928,
+      "lastFrame": 1953
+    },
+    {
+      "name": "high life before TNT",
+      "firstFrame": 1955,
+      "lastFrame": 1960
+    },
+    {
+      "name": "clear refuge",
+      "firstFrame": 1960,
+      "lastFrame": 1983
+    },
+    {
+      "name": "deliberate fuse approach",
+      "firstFrame": 2003,
+      "lastFrame": 2091
+    },
+    {
+      "name": "prime TNT by contact",
+      "firstFrame": 2136,
+      "lastFrame": 2172
+    },
+    {
+      "name": "leave blast radius",
+      "firstFrame": 2172,
+      "lastFrame": 2213
+    },
+    {
+      "name": "post-blast recovery",
+      "firstFrame": 2213,
+      "lastFrame": 2392
+    },
+    {
+      "name": "approach Room 2 fuse: refuge reward",
+      "firstFrame": 2392,
+      "lastFrame": 2533
+    },
+    {
+      "name": "Room 2 fuse: refuge reward",
+      "firstFrame": 2553,
+      "lastFrame": 2553
+    },
+    {
+      "name": "approach LEDGER / fuse recovery",
+      "firstFrame": 2575,
+      "lastFrame": 2682
+    },
+    {
+      "name": "LEDGER / fuse recovery",
+      "firstFrame": 2702,
+      "lastFrame": 2702
+    },
+    {
+      "name": "approach materialize bridge",
+      "firstFrame": 2724,
+      "lastFrame": 2862
+    },
+    {
+      "name": "materialize bridge",
+      "firstFrame": 2882,
+      "lastFrame": 2882
+    },
+    {
+      "name": "pass bridge switch",
+      "firstFrame": 2931,
+      "lastFrame": 2970
+    },
+    {
+      "name": "approach LEDGER / revealed bridge cargo",
+      "firstFrame": 2970,
+      "lastFrame": 3096
+    },
+    {
+      "name": "LEDGER / revealed bridge cargo",
+      "firstFrame": 3116,
+      "lastFrame": 3116
+    },
+    {
+      "name": "approach Room 3 bridge: receiver reward",
+      "firstFrame": 3138,
+      "lastFrame": 3276
+    },
+    {
+      "name": "Room 3 bridge: receiver reward",
+      "firstFrame": 3296,
+      "lastFrame": 3296
+    },
+    {
+      "name": "approach Room 3 bridge: receiver mystery",
+      "firstFrame": 3318,
+      "lastFrame": 3401
+    },
+    {
+      "name": "Room 3 bridge: receiver mystery",
+      "firstFrame": 3421,
+      "lastFrame": 3421
+    },
+    {
+      "name": "approach LEDGER / exit count",
+      "firstFrame": 3443,
+      "lastFrame": 3573
+    },
+    {
+      "name": "LEDGER / exit count",
+      "firstFrame": 3593,
+      "lastFrame": 3593
+    },
+    {
+      "name": "approach earned gem",
+      "firstFrame": 3615,
+      "lastFrame": 3699
+    },
+    {
+      "name": "cross the real finish gate",
+      "firstFrame": 3719,
+      "lastFrame": 3749
+    }
+  ],
+  "result": {
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 35,
+    "cratesBroken": 35,
+    "deaths": 0
+  },
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 35,
+  "cratesBroken": 35,
+  "deaths": 0,
+  "frames": 3749,
+  "seconds": 62.483333333333334
+}

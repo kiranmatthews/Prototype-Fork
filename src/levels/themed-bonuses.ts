@@ -1,4 +1,4 @@
-import { rebuildNightworksBonus } from './nightworks-bonus';
+import { arrangeNightworksBonusCrates, rebuildNightworksBonus } from './nightworks-bonus';
 import { createCalderaBonus } from './nightworks-caldera-bonus';
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
 import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
@@ -8,16 +8,22 @@ import {ROLLING_BONES_BONUS_LEVEL} from './rolling-bones-bonus';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
 import { TRIBAL_RUN_BONUS_LEVEL } from './tribal-run-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
+import { arrangeCanopyCacheCrates } from './treehouse-bonus-crates';
 import { BONUS_LAYOUT_REPLACEMENTS, replaceBonusLayout } from './puzzle-bonus';
 import { dressJungleBonus } from './jungle-bonus';
+import { arrangeFernReliquaryCrates } from './jungle-bonus-crates';
+import { arrangeRooftopDeliveriesCrates } from './coastal-bonus-crates';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
 import { rebuildCarlisleBonus } from './carlisle-bonus';
+import { arrangeQuaysideCrates } from './ambush-crate-arrangement';
+import { arrangeValveHouseCrates } from './waterpark-crate-arrangement';
+import { arrangeHauntedBonusCrates } from './haunted-crate-arrangement';
 import { dressBlockworksBonus } from './blockworks-bonus';
 import { decorateCoastalBonus } from './coastal-town-art';
 import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
-import { dressSkyBridgeBonus } from './sky-bridge-bonus';
+import { arrangeSkyBridgeBonusCrates, dressSkyBridgeBonus } from './sky-bridge-bonus';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
@@ -85,25 +91,31 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   if (recipe.parentId === 'jungle-terraces') return {...EMBER_RELIQUARY_BONUS_COURSE,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
+  if(recipe.parentId==='treehouse-trail')arrangeCanopyCacheCrates(course);
   const layout = BONUS_LAYOUT_REPLACEMENTS[recipe.key];
   if (layout) {
     replaceBonusLayout(course.data,layout,{color,accent,tex,sky,jungleAtmosphere});
     course.rooms=[]; course.actions=[];
   }
+  if(recipe.parentId==='jungle')arrangeFernReliquaryCrates(course.data);
+  if(recipe.key==='coastal')arrangeRooftopDeliveriesCrates(course.data);
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;
   if(recipe.key==='coastal')decorateCoastalBonus(course.data,end);
   else if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
-  else if(recipe.parentId==='sky')dressSkyBridgeBonus(course.data);
+  else if(recipe.parentId==='sky'){dressSkyBridgeBonus(course.data);arrangeSkyBridgeBonusCrates(course.data);}
   else if(recipe.parentId==='drowned-crown')dressDrownedCrownBonus(course.data,end);
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
     Object.assign(course.data,bonusArtAtmosphere(recipe.theme));
   }
-  if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
+  if (recipe.parentId === 'test') {rebuildCarlisleBonus(course.data);arrangeQuaysideCrates(course.data);}
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
   if (recipe.parentId === 'beachfront') dressBananaBayBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
+  if (recipe.parentId === 'dark') arrangeNightworksBonusCrates(course);
+  if (recipe.parentId === 'waterpark') arrangeValveHouseCrates(course.data);
+  if (recipe.parentId === 'codex-lab') arrangeHauntedBonusCrates(course.data);
   return {...course,layout,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
 

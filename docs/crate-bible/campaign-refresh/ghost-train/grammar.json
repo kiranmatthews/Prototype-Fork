@@ -1,0 +1,694 @@
+{
+  "harvests": [
+    {
+      "name": "GHOST CARGO / 1 / 1",
+      "count": 3,
+      "station": 12,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 1 / 2",
+      "count": 3,
+      "station": 28,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 1 / 3",
+      "count": 4,
+      "station": 47.99996632029728,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 2 / 1",
+      "count": 3,
+      "station": 64.0000228452168,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 2 / 2",
+      "count": 3,
+      "station": 70.00009521471281,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 2 / 3",
+      "count": 4,
+      "station": 122,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 3 / 1",
+      "count": 3,
+      "station": 146.00007064214316,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 3 / 2",
+      "count": 3,
+      "station": 165.99994104497975,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 4 / 1",
+      "count": 3,
+      "station": 190.99999322418648,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 4 / 2",
+      "count": 3,
+      "station": 197,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 4 / 3",
+      "count": 4,
+      "station": 203,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 5 / 1",
+      "count": 3,
+      "station": 235,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 5 / 2",
+      "count": 3,
+      "station": 276.9999275131377,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 5 / 3",
+      "count": 4,
+      "station": 297,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 6 / 1",
+      "count": 3,
+      "station": 365,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 6 / 2",
+      "count": 3,
+      "station": 415.0000238182209,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 6 / 3",
+      "count": 4,
+      "station": 451,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 7 / 1",
+      "count": 3,
+      "station": 486,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 8 / 1",
+      "count": 3,
+      "station": 522.9999479728785,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 8 / 2",
+      "count": 3,
+      "station": 537.0000926175476,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 8 / 3",
+      "count": 4,
+      "station": 543.0000114853727,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 9 / 1",
+      "count": 3,
+      "station": 593.9999132298392,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 9 / 2",
+      "count": 3,
+      "station": 630,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 9 / 3",
+      "count": 4,
+      "station": 684.0000716280233,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 10 / 1",
+      "count": 3,
+      "station": 731,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 10 / 2",
+      "count": 3,
+      "station": 752.999961767655,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 10 / 3",
+      "count": 4,
+      "station": 797,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 11 / 1",
+      "count": 3,
+      "station": 848.9999720629045,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 11 / 2",
+      "count": 3,
+      "station": 899,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 11 / 3",
+      "count": 4,
+      "station": 947,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 12 / 1",
+      "count": 3,
+      "station": 998.9999047609784,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 12 / 2",
+      "count": 3,
+      "station": 1053,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 12 / 3",
+      "count": 4,
+      "station": 1056,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 13 / 1",
+      "count": 3,
+      "station": 1064.000081020644,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 13 / 2",
+      "count": 3,
+      "station": 1080.000044535577,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 14 / 1",
+      "count": 3,
+      "station": 1107.0000464028853,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 14 / 2",
+      "count": 3,
+      "station": 1147,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 14 / 3",
+      "count": 4,
+      "station": 1161,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 15 / 1",
+      "count": 3,
+      "station": 1224.0000273542362,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 15 / 2",
+      "count": 3,
+      "station": 1230.0000490210757,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 15 / 3",
+      "count": 4,
+      "station": 1235.999993586992,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 16 / 1",
+      "count": 3,
+      "station": 1291,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 16 / 2",
+      "count": 3,
+      "station": 1297,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 16 / 3",
+      "count": 4,
+      "station": 1303,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 17 / 1",
+      "count": 3,
+      "station": 1357,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 17 / 2",
+      "count": 3,
+      "station": 1365,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 17 / 3",
+      "count": 4,
+      "station": 1375.0000442547494,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 18 / 1",
+      "count": 3,
+      "station": 1418,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 18 / 2",
+      "count": 3,
+      "station": 1424,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 18 / 3",
+      "count": 4,
+      "station": 1588,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 19 / 1",
+      "count": 3,
+      "station": 1610,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 19 / 2",
+      "count": 3,
+      "station": 1647.9998912346507,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 19 / 3",
+      "count": 4,
+      "station": 1678.0000491857681,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 20 / 1",
+      "count": 3,
+      "station": 1704,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 20 / 2",
+      "count": 3,
+      "station": 1790.0000997362215,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 20 / 3",
+      "count": 4,
+      "station": 1828,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 21 / 1",
+      "count": 3,
+      "station": 1893.9999489163365,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 21 / 2",
+      "count": 3,
+      "station": 1907.9999619396403,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 21 / 3",
+      "count": 4,
+      "station": 1948,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 22 / 1",
+      "count": 3,
+      "station": 1967.0000700872565,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 22 / 2",
+      "count": 3,
+      "station": 1981.0001200839479,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 22 / 3",
+      "count": 4,
+      "station": 2007,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 23 / 1",
+      "count": 3,
+      "station": 2041,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 23 / 2",
+      "count": 3,
+      "station": 2086.999925724209,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 23 / 3",
+      "count": 4,
+      "station": 2129,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 24 / 1",
+      "count": 3,
+      "station": 2173,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 24 / 2",
+      "count": 3,
+      "station": 2227,
+      "deaths": 0
+    },
+    {
+      "name": "GHOST CARGO / 24 / 3",
+      "count": 4,
+      "station": 2234,
+      "deaths": 0
+    }
+  ],
+  "resetRestores": true,
+  "bonus": {
+    "stage": "cross the real finish gate",
+    "evidence": [
+      {
+        "action": "harvest group -9",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "harvest group -4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "first short gap",
+        "launch": [
+          0.6244333333333466,
+          0,
+          0
+        ],
+        "landing": [
+          5.067433333333345,
+          0.349999952316284,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "harvest group 7",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "harvest group 13",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "harvest group 18",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "second short gap",
+        "launch": [
+          18.822111111111198,
+          0.349999952316284,
+          0
+        ],
+        "landing": [
+          23.071611111111167,
+          0,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "harvest group 25",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "harvest group 34",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "harvest group 45",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all crates in the active stage",
+        "totalCrates": 24,
+        "activeStageCrates": 24,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 24,
+        "remaining": 0
+      }
+    ],
+    "actions": [
+      {
+        "name": "approach harvest group -9",
+        "firstFrame": 20,
+        "lastFrame": 92
+      },
+      {
+        "name": "harvest group -9",
+        "firstFrame": 112,
+        "lastFrame": 112
+      },
+      {
+        "name": "approach harvest group -4",
+        "firstFrame": 134,
+        "lastFrame": 233
+      },
+      {
+        "name": "harvest group -4",
+        "firstFrame": 253,
+        "lastFrame": 253
+      },
+      {
+        "name": "first terrace departure",
+        "firstFrame": 275,
+        "lastFrame": 380
+      },
+      {
+        "name": "first short gap",
+        "firstFrame": 425,
+        "lastFrame": 463
+      },
+      {
+        "name": "approach harvest group 7",
+        "firstFrame": 463,
+        "lastFrame": 515
+      },
+      {
+        "name": "harvest group 7",
+        "firstFrame": 535,
+        "lastFrame": 535
+      },
+      {
+        "name": "approach harvest group 13",
+        "firstFrame": 557,
+        "lastFrame": 664
+      },
+      {
+        "name": "harvest group 13",
+        "firstFrame": 684,
+        "lastFrame": 684
+      },
+      {
+        "name": "approach harvest group 18",
+        "firstFrame": 706,
+        "lastFrame": 805
+      },
+      {
+        "name": "harvest group 18",
+        "firstFrame": 825,
+        "lastFrame": 825
+      },
+      {
+        "name": "second terrace departure",
+        "firstFrame": 847,
+        "lastFrame": 921
+      },
+      {
+        "name": "second short gap",
+        "firstFrame": 966,
+        "lastFrame": 1006
+      },
+      {
+        "name": "approach harvest group 25",
+        "firstFrame": 1006,
+        "lastFrame": 1058
+      },
+      {
+        "name": "harvest group 25",
+        "firstFrame": 1078,
+        "lastFrame": 1078
+      },
+      {
+        "name": "approach harvest group 34",
+        "firstFrame": 1100,
+        "lastFrame": 1230
+      },
+      {
+        "name": "harvest group 34",
+        "firstFrame": 1250,
+        "lastFrame": 1250
+      },
+      {
+        "name": "approach harvest group 45",
+        "firstFrame": 1272,
+        "lastFrame": 1418
+      },
+      {
+        "name": "harvest group 45",
+        "firstFrame": 1438,
+        "lastFrame": 1438
+      },
+      {
+        "name": "last count before return",
+        "firstFrame": 1460,
+        "lastFrame": 1552
+      },
+      {
+        "name": "cross the real finish gate",
+        "firstFrame": 1572,
+        "lastFrame": 1588
+      }
+    ],
+    "result": {
+      "state": "finished",
+      "cratesBroken": 24,
+      "totalCrates": 24,
+      "gemEarned": true,
+      "deaths": 0
+    },
+    "state": "finished",
+    "cratesBroken": 24,
+    "totalCrates": 24,
+    "gemEarned": true,
+    "deaths": 0,
+    "frames": 1588,
+    "seconds": 26.466666666666665
+  },
+  "bonusRetry": {
+    "deaths": 1,
+    "restored": 24,
+    "crates": 0,
+    "position": [
+      -12,
+      0.12,
+      0
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+PASS real Meshy biped: 240 native walk/deformation frames, 7.15e-16 m planted-foot error, independent segments, finite defeat, 192 supported patrol samples and both levels' two-hit/recoil/reset paths, supported random lurches and snot sprays.

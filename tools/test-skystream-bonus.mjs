@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {runSkystreamBonus} from './skystream-bonus-pilot.mjs';
-const out=process.env.SKYSTREAM_BONUS_OUTPUT??'/private/tmp/skystream-bonus-review';
+const out=process.env.SKYSTREAM_BONUS_OUTPUT??'/tmp/skystream-bonus-review';
 await mkdir(out,{recursive:true});
 await withBlockworksRuntime(async r=>{
   const {p,l,source,sourceModule:m}=r;
@@ -11,8 +11,8 @@ await withBlockworksRuntime(async r=>{
   assert.ok(normalizeCustomLevelData(source));assert.ok(normalizeCustomLevelData(l.captureData()));
   assert.equal(resolveBonusLevel('skystream').name,source.name);
   assert.equal(resolveBonusLevel('secret-5').name,source.name);
-  assert.equal(bonusCrateCount('skystream'),18);
-  assert.equal(l.skyPreset,'clouds');assert.equal(l.totalCrates,18);
+  assert.equal(bonusCrateCount('skystream'),25);
+  assert.equal(l.skyPreset,'clouds');assert.equal(l.totalCrates,25);
   const shells=[];l.root.traverse(o=>{if(o.userData.cloudPlatformVisual)shells.push(o);});
   assert.equal(shells.length,12);assert.ok(shells.every(o=>!l.groundMeshes.includes(o)));
   const contacts=l.groundMeshes.filter(o=>o.userData.cloudRoad);
@@ -36,6 +36,6 @@ await withBlockworksRuntime(async r=>{
   const result={error,result:next.value,report,end:r.snapshot(),densityBytes:shells.reduce((n,m)=>n+m.userData.densityBytes,0)};
   await writeFile(out+'/native.json',JSON.stringify({...result,trace:r.trace}));
   console.log(JSON.stringify(result));assert.equal(error,undefined);assert.equal(p.state,'finished');
-  assert.equal(p.cratesBroken,18);assert.equal(p.totalDeaths,0);
+  assert.equal(p.cratesBroken,25);assert.equal(p.totalDeaths,0);
   assert.equal(report.evidence.filter(e=>e.action.startsWith('Cloud gap')).length,5);
 },{modulePath:'/src/levels/skystream-bonus.ts',source:m=>m.SKYSTREAM_BONUS_LEVEL,levelId:'bonus-skystream',maxFrames:8000,endlessDeaths:true});

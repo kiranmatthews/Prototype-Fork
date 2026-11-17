@@ -1,0 +1,79 @@
+[
+  {
+    "label": "unassisted stair -192",
+    "landing": [
+      4,
+      -3.2999999761581424,
+      -191.9500000000002
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "unassisted stair -199",
+    "landing": [
+      4,
+      -1.099999952316284,
+      -199.00000000000045
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "unassisted stair -206",
+    "landing": [
+      4,
+      1.0999999523162842,
+      -206.05000000000072
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "unassisted stair -212",
+    "landing": [
+      4,
+      3.3000000953674316,
+      -211.894
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "unassisted side-scroll transfer",
+    "landing": [
+      44.44999999999986,
+      -17.5,
+      -1720
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "unassisted upper side-scroll ledge",
+    "landing": [
+      120.87000000000015,
+      -11.5,
+      -1720
+    ],
+    "deaths": 0
+  },
+  {
+    "label": "dock arrow gap",
+    "position": [
+      146.53647171059302,
+      -26,
+      -2105.738198051534
+    ],
+    "deaths": 0,
+    "arrowAlive": true,
+    "gemEarned": false
+  },
+  {
+    "label": "charged channel formation 10",
+    "count": 3,
+    "contactSpeed": 21.60833333333335,
+    "deaths": 0
+  },
+  {
+    "label": "charged channel formation 11",
+    "count": 4,
+    "contactSpeed": 24.765293652174552,
+    "deaths": 0
+  }
+]

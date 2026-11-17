@@ -1,0 +1,35 @@
+{
+  "stage": "jump into the gap without using the required crossing tool",
+  "evidence": [],
+  "actions": [
+    {
+      "name": "relay negative observation",
+      "firstFrame": 2883,
+      "lastFrame": 2883
+    },
+    {
+      "name": "unsupported crossing approach",
+      "firstFrame": 2901,
+      "lastFrame": 2999
+    },
+    {
+      "name": "jump into the gap without using the required crossing tool",
+      "firstFrame": 3044,
+      "lastFrame": 3094
+    }
+  ],
+  "result": {
+    "pattern": "relay",
+    "test": "skipping visible crossing footholds leads to real chasm death",
+    "state": "dead",
+    "steelIntact": true,
+    "gemEarned": true
+  },
+  "pattern": "relay",
+  "test": "skipping visible crossing footholds leads to real chasm death",
+  "state": "dead",
+  "steelIntact": true,
+  "gemEarned": true,
+  "frames": 3094,
+  "seconds": 51.56666666666666
+}

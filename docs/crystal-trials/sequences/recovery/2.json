@@ -1,0 +1,108 @@
+{
+  "id": 2,
+  "passed": true,
+  "actions": [],
+  "evidence": [],
+  "safeMiss": {
+    "frame": 395,
+    "time": 6.583333333333333,
+    "position": [
+      15.02245781462749,
+      -8,
+      -33.68432923197765
+    ],
+    "heading": [
+      0.26369363037201665,
+      0,
+      -0.9646064841691798
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 22.674555102681303,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": -8,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 1,
+      "jumpHeld": true,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "returned": {
+    "frame": 1296,
+    "time": 21.6,
+    "position": [
+      1.39275955091833,
+      0,
+      28.72955209715905
+    ],
+    "heading": [
+      -0.2836741887961593,
+      0,
+      -0.9589207238405274
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 11.962901887692801,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 1,
+      "jumpHeld": true,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

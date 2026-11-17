@@ -1,0 +1,308 @@
+[
+  {
+    "target": "Right high-air crate 1",
+    "focus": 823.6,
+    "airs": [
+      {
+        "side": -1,
+        "peak": 6.325799686820201,
+        "frames": 57
+      },
+      {
+        "side": 1,
+        "peak": 9.095108532505378,
+        "frames": 76
+      },
+      {
+        "side": -1,
+        "peak": 11.33732011907012,
+        "frames": 90
+      },
+      {
+        "side": 1,
+        "peak": 13.564383526174874,
+        "frames": 99
+      },
+      {
+        "side": -1,
+        "peak": 15.815190911643363,
+        "frames": 109
+      },
+      {
+        "side": 1,
+        "peak": 15.558803492467598,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.8910139690882,
+        "frames": 110
+      },
+      {
+        "side": 1,
+        "peak": 15.946946878250484,
+        "frames": 110
+      }
+    ],
+    "broken": [
+      "Right high-air crate 1"
+    ],
+    "frames": 1287,
+    "deaths": 0
+  },
+  {
+    "target": "Right high-air crate 2",
+    "focus": 826,
+    "airs": [
+      {
+        "side": -1,
+        "peak": 6.325372408726773,
+        "frames": 57
+      },
+      {
+        "side": 1,
+        "peak": 9.095363250350076,
+        "frames": 76
+      },
+      {
+        "side": -1,
+        "peak": 11.337360723743554,
+        "frames": 90
+      },
+      {
+        "side": 1,
+        "peak": 13.563939256885915,
+        "frames": 99
+      },
+      {
+        "side": -1,
+        "peak": 15.815134983650495,
+        "frames": 109
+      },
+      {
+        "side": 1,
+        "peak": 15.559171077041658,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.89119846692231,
+        "frames": 110
+      },
+      {
+        "side": 1,
+        "peak": 15.947013265499658,
+        "frames": 110
+      }
+    ],
+    "broken": [
+      "Right high-air crate 2"
+    ],
+    "frames": 1287,
+    "deaths": 0
+  },
+  {
+    "target": "Right high-air crate 3",
+    "focus": 828.4,
+    "airs": [
+      {
+        "side": -1,
+        "peak": 6.325347194364656,
+        "frames": 57
+      },
+      {
+        "side": 1,
+        "peak": 9.092516204448307,
+        "frames": 76
+      },
+      {
+        "side": -1,
+        "peak": 11.340114978339857,
+        "frames": 90
+      },
+      {
+        "side": 1,
+        "peak": 13.555146699739431,
+        "frames": 99
+      },
+      {
+        "side": -1,
+        "peak": 15.767295253126163,
+        "frames": 109
+      },
+      {
+        "side": 1,
+        "peak": 15.591950304392238,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.909944924586076,
+        "frames": 110
+      },
+      {
+        "side": 1,
+        "peak": 15.947385394320374,
+        "frames": 110
+      }
+    ],
+    "broken": [
+      "Right high-air crate 3"
+    ],
+    "frames": 1287,
+    "deaths": 0
+  },
+  {
+    "target": "Left high-air crate 1",
+    "focus": 871.6,
+    "airs": [
+      {
+        "side": 1,
+        "peak": 6.325316968233998,
+        "frames": 57
+      },
+      {
+        "side": -1,
+        "peak": 9.093561309905754,
+        "frames": 76
+      },
+      {
+        "side": 1,
+        "peak": 11.332252325367973,
+        "frames": 89
+      },
+      {
+        "side": -1,
+        "peak": 13.015873578181658,
+        "frames": 98
+      },
+      {
+        "side": 1,
+        "peak": 15.148852959215127,
+        "frames": 107
+      },
+      {
+        "side": -1,
+        "peak": 14.19854597316465,
+        "frames": 92
+      },
+      {
+        "side": 1,
+        "peak": 15.406040326185687,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.917231455461463,
+        "frames": 110
+      }
+    ],
+    "broken": [
+      "Left high-air crate 1"
+    ],
+    "frames": 1267,
+    "deaths": 0
+  },
+  {
+    "target": "Left high-air crate 2",
+    "focus": 874,
+    "airs": [
+      {
+        "side": 1,
+        "peak": 6.291356401963573,
+        "frames": 57
+      },
+      {
+        "side": -1,
+        "peak": 9.12038953262038,
+        "frames": 76
+      },
+      {
+        "side": 1,
+        "peak": 11.709663855506642,
+        "frames": 91
+      },
+      {
+        "side": -1,
+        "peak": 13.621869319610706,
+        "frames": 100
+      },
+      {
+        "side": 1,
+        "peak": 15.772720937062436,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 14.122960234699235,
+        "frames": 90
+      },
+      {
+        "side": 1,
+        "peak": 15.425108657501122,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.89696568578405,
+        "frames": 110
+      }
+    ],
+    "broken": [
+      "Left high-air crate 2"
+    ],
+    "frames": 1271,
+    "deaths": 0
+  },
+  {
+    "target": "Left high-air crate 3",
+    "focus": 876.4,
+    "airs": [
+      {
+        "side": 1,
+        "peak": 6.327204817327215,
+        "frames": 57
+      },
+      {
+        "side": -1,
+        "peak": 9.088026556120816,
+        "frames": 76
+      },
+      {
+        "side": 1,
+        "peak": 11.34344258527579,
+        "frames": 90
+      },
+      {
+        "side": -1,
+        "peak": 13.568252574427532,
+        "frames": 99
+      },
+      {
+        "side": 1,
+        "peak": 15.703477223108873,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 14.166037599148368,
+        "frames": 89
+      },
+      {
+        "side": 1,
+        "peak": 15.451099826770877,
+        "frames": 109
+      },
+      {
+        "side": -1,
+        "peak": 15.848348977781127,
+        "frames": 109
+      }
+    ],
+    "broken": [
+      "Left high-air crate 3"
+    ],
+    "frames": 1267,
+    "deaths": 0
+  }
+]

@@ -1,0 +1,160 @@
+{
+  "mode": "full",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 125,
+    "total": 177,
+    "bonus": 46,
+    "checkpoints": 11,
+    "enemies": 16
+  },
+  "bonusPlatform": {
+    "x": 1128,
+    "y": 8,
+    "z": -4.2,
+    "laneFraction": 0.5,
+    "topY": 9.05,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 0
+  },
+  "views": [
+    {
+      "name": "opening",
+      "position": [
+        -12,
+        2.384185793236071e-08,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -12,
+        6.6689499002889,
+        17.180639604630535
+      ],
+      "cameraQuaternion": [
+        -0.15086421372374934,
+        0,
+        0,
+        0.9885544947131214
+      ],
+      "drawCalls": 260,
+      "frame": 10
+    },
+    {
+      "name": "parapet",
+      "position": [
+        166,
+        10.000000023841858,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        166,
+        16.6689499002889,
+        17.180639604630535
+      ],
+      "cameraQuaternion": [
+        -0.15086421372374934,
+        0,
+        0,
+        0.9885544947131214
+      ],
+      "drawCalls": 375,
+      "frame": 22
+    },
+    {
+      "name": "crown",
+      "position": [
+        1263,
+        25.000000023841856,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        1263,
+        31.6689499002889,
+        17.180639604630535
+      ],
+      "cameraQuaternion": [
+        -0.1508642137237494,
+        0,
+        0,
+        0.9885544947131214
+      ],
+      "drawCalls": 384,
+      "frame": 34
+    },
+    {
+      "name": "bonus-finite",
+      "position": [
+        133,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        133,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898024,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 271,
+      "frame": 47
+    },
+    {
+      "name": "bonus-gallery",
+      "position": [
+        8.5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        8.5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898024,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 224,
+      "frame": 60
+    }
+  ],
+  "passed": true
+}

@@ -3,7 +3,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(s=>s.startsWith('http'))??'http://127.0.0.1:5259',full=process.argv.includes('--full'),camps=process.argv.includes('--camps');
 const fieldIds=process.argv.find(s=>s.startsWith('--fields='))?.slice(9).split(',').map(Number)??[1,2,3,4,5,6,7,8,9,10];
-const output='/private/tmp/grove-browser';await mkdir(output,{recursive:true});
+const output=process.env.GROVE_BROWSER_OUTPUT??'/tmp/grove-browser';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],report={full,fields:[]};
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
@@ -40,7 +40,8 @@ try{
  await page.screenshot({path:`${output}/${full?'full':'lite'}-arrival.png`});
  for(const id of fieldIds){
   const campRoute=camps&&[1,3,7].includes(id);
-  const replay=JSON.parse(await readFile(`/private/tmp/${campRoute?'grove-camps':'grove-traversal'}/${id}-inputs.json`,'utf8'));
+  const replayRoot=campRoute?(process.env.GROVE_CAMP_OUTPUT??'/tmp/grove-camps'):(process.env.GROVE_TRAVERSAL_OUTPUT??'/tmp/grove-traversal');
+  const replay=JSON.parse(await readFile(`${replayRoot}/${id}-inputs.json`,'utf8'));
   const result=await run(replay);report.fields.push({id,...result});
   assert.notEqual(result.state,'dead',`field ${id} died in browser`);assert.deepEqual(result.detonated,[],`field ${id} tripped`);assert.ok(result.grounded,`field ${id} has no supported landing`);
   if(campRoute){

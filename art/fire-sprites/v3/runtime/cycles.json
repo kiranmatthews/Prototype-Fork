@@ -1,0 +1,1016 @@
+{
+  "narrow": {
+    "id": "narrow",
+    "width": 1254,
+    "height": 1254,
+    "fps": 36,
+    "frameCount": 36,
+    "pages": [
+      {
+        "file": "narrow/atlas-0.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-1.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 9,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-2.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 18,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-3.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 27,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      }
+    ],
+    "frames": [
+      {
+        "file": "public/fire-sprites/v2/narrow/01.png",
+        "anchor": [
+          0.4808284512357997,
+          0.05622009569377995
+        ],
+        "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t21.png",
+        "anchor": [
+          0.47979577982689375,
+          0.054625199362041466
+        ],
+        "sha256": "ef4f7747a39456a8ac4dc6d865ec054eae17e33fc160d7c55cdb16bfd6529d2a"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/01-1.png",
+        "anchor": [
+          0.48027785162491626,
+          0.053827751196172224
+        ],
+        "sha256": "cf205441ec1e21d7bc878423f5b04fe9c917b650185432dc327594f1116913b1"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/02.png",
+        "anchor": [
+          0.48042637648257097,
+          0.054625199362041466
+        ],
+        "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t06.png",
+        "anchor": [
+          0.47756429989153815,
+          0.05861244019138756
+        ],
+        "sha256": "da7ccfc66c22c16b143908d6c513b856375af333115372bb2ea99bb73d4fd3a0"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t12.png",
+        "anchor": [
+          0.47774970464690936,
+          0.05781499202551832
+        ],
+        "sha256": "bac24c464b8f33eb3a3ea583651fa52aa8c803c88f5994049ed29779c746d4ec"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t17.png",
+        "anchor": [
+          0.4800415280350385,
+          0.05701754385964908
+        ],
+        "sha256": "91e3111bbc7309ef80236e2d386a7ba953b7bf0315fc3cf943e7feaaa8586a5e"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/03.png",
+        "anchor": [
+          0.48016483714300184,
+          0.07535885167464118
+        ],
+        "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t13.png",
+        "anchor": [
+          0.4788974587229111,
+          0.0737639553429027
+        ],
+        "sha256": "6c2f710057f0e8de90ea8593ed034b8377a6e547bd56633c459a5a2bf5e4b1fe"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/04.png",
+        "anchor": [
+          0.4789558655402771,
+          0.0737639553429027
+        ],
+        "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t24.png",
+        "anchor": [
+          0.47880093792543055,
+          0.07216905901116433
+        ],
+        "sha256": "36102e59a98bbe41d1f20e1cb573099818089fbc5ba54bda0f93df84edbe41e0"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t20.png",
+        "anchor": [
+          0.47707543873245856,
+          0.07137161084529509
+        ],
+        "sha256": "f2bffc900b9bef03f15ed68e00576fa2bc4a17f59923be2f8f1c7f9a74846b89"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t10.png",
+        "anchor": [
+          0.4770376302871278,
+          0.07296650717703346
+        ],
+        "sha256": "64c2f6fc0f07bd8c07589a2320bdffc5d970e0f01a856715251a79e78b537fa4"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/05.png",
+        "anchor": [
+          0.47850656006663506,
+          0.07216905901116433
+        ],
+        "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t22.png",
+        "anchor": [
+          0.47826595367346325,
+          0.0697767145135566
+        ],
+        "sha256": "049e91f321ba505e0a49c5ca92cb6024afbdb8c88ff6b3e04ad3dbaf08fae447"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/06.png",
+        "anchor": [
+          0.4777384307976093,
+          0.07057416267942584
+        ],
+        "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t19.png",
+        "anchor": [
+          0.4787631230953843,
+          0.06818181818181823
+        ],
+        "sha256": "9b20b55224a06ab690235d3d2728ee8c2b8a25ee93b051193973abb6302e4b57"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t09.png",
+        "anchor": [
+          0.47741309814339733,
+          0.06658692185007975
+        ],
+        "sha256": "7acdab837cf3b8ed783492f2fc3e0652a56a19ff4fda617fbbe9bfaa294a8bf7"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/07.png",
+        "anchor": [
+          0.4788192051738784,
+          0.06897926634768736
+        ],
+        "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t02.png",
+        "anchor": [
+          0.47832214151657043,
+          0.06818181818181823
+        ],
+        "sha256": "b0eefd3c73cf70088c0c45137e48ff8bab9c5afad0709d4f7532bde6548ef2fb"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t18.png",
+        "anchor": [
+          0.4780428289833993,
+          0.06658692185007975
+        ],
+        "sha256": "6d58457dd36969a833112528ba5f7ecdd9d55090ed3783f39c5af3bc70c1c467"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t11.png",
+        "anchor": [
+          0.4773319044531716,
+          0.0633971291866029
+        ],
+        "sha256": "ae8c3ae5a090f1b07683860f4f4238da53d1c75315e067e2b6e40afaf170661f"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/08.png",
+        "anchor": [
+          0.4785613590211122,
+          0.06499202551834127
+        ],
+        "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t16.png",
+        "anchor": [
+          0.476575628897557,
+          0.061802232854864414
+        ],
+        "sha256": "4269ee061ca4eca3a14a618c20f665756f80e65525b6b5f1a39284f13e01af34"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t05.png",
+        "anchor": [
+          0.47233416380788384,
+          0.06100478468899517
+        ],
+        "sha256": "76f6c41e9f8d31a4d5b6fd833657057419296b46d01b159c1ab134733dce5cc2"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t04.png",
+        "anchor": [
+          0.4754668081977918,
+          0.06259968102073366
+        ],
+        "sha256": "9447f6f3ab02d77f06251473f27d35ee169aa297b561134ba3a734dab0ace658"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t03.png",
+        "anchor": [
+          0.4773787027223862,
+          0.06419457735247214
+        ],
+        "sha256": "a704d6bd06c205adfb3bbbdb7392ec3d30fad4ad509b8430f540ba0ca1a6125d"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/09.png",
+        "anchor": [
+          0.47794351502825944,
+          0.0633971291866029
+        ],
+        "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t15.png",
+        "anchor": [
+          0.4772114729050245,
+          0.06100478468899517
+        ],
+        "sha256": "57ff514e51ae991f066903f97cc4c26b260736cd6fc1bb2ad7d9a2dd3e9beb50"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t07.png",
+        "anchor": [
+          0.47777932211114654,
+          0.06100478468899517
+        ],
+        "sha256": "a7f6b2bf42ef0aee22b586de0d746f388d099630f93524fc4a154167b2ba358a"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/10.png",
+        "anchor": [
+          0.4787079412096166,
+          0.05861244019138756
+        ],
+        "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t08.png",
+        "anchor": [
+          0.47873326882335787,
+          0.054625199362041466
+        ],
+        "sha256": "382c3585d48f5bb6de520f9fe9effe710241f0c2f6338203588dd31a0aa998aa"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t23.png",
+        "anchor": [
+          0.4792532386120598,
+          0.053827751196172224
+        ],
+        "sha256": "9d4b0bb84c6aaa0daa1a3f9866ac445596a832e6efe673af38fd3e39de23baaa"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/11.png",
+        "anchor": [
+          0.47927458486834307,
+          0.05223285486443385
+        ],
+        "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c"
+      },
+      {
+        "file": "public/fire-sprites/v2/narrow/12.png",
+        "anchor": [
+          0.4783673223587258,
+          0.04984051036682613
+        ],
+        "sha256": "7b1c5be70ef1ded5ce7b08f234dc6292bf2fc48bed385c898e934c4fa1dab87b"
+      },
+      {
+        "file": "art/fire-sprites/v3/narrow/t14.png",
+        "anchor": [
+          0.47950535612445466,
+          0.04984051036682613
+        ],
+        "sha256": "b8558eed2032201e831f99c615ce2e76ea9e326c22680b78a0f999d66ad92248"
+      }
+    ]
+  },
+  "medium": {
+    "id": "medium",
+    "width": 1254,
+    "height": 1254,
+    "fps": 36,
+    "frameCount": 36,
+    "pages": [
+      {
+        "file": "medium/atlas-0.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-1.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 9,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-2.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 18,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-3.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 27,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      }
+    ],
+    "frames": [
+      {
+        "file": "public/fire-sprites/v2/medium/01.png",
+        "anchor": [
+          0.48536489853538556,
+          0.06499202551834127
+        ],
+        "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t23.png",
+        "anchor": [
+          0.4847141423181488,
+          0.06499202551834127
+        ],
+        "sha256": "f40e66ca57addd71c2400f09d50a705057a4e1e7225498fb47894a61e335988a"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/01-1.png",
+        "anchor": [
+          0.4836102788986422,
+          0.06419457735247214
+        ],
+        "sha256": "ddc145107b98409017770617156b5bbb76f147224b97af44799cf8a93236e869"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/02.png",
+        "anchor": [
+          0.4851313713502361,
+          0.06499202551834127
+        ],
+        "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t13.png",
+        "anchor": [
+          0.482273856544138,
+          0.06259968102073366
+        ],
+        "sha256": "6172f97d24462239a39aee90a9a6d451bcc44ef75b8e1cabb42df17624250461"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t07.png",
+        "anchor": [
+          0.4868177389046075,
+          0.0633971291866029
+        ],
+        "sha256": "b1cfe6eb4bc244d5275858a84c1f696afc95e6933c97413f483c6808139aa373"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/03.png",
+        "anchor": [
+          0.4860061741267727,
+          0.0633971291866029
+        ],
+        "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t19.png",
+        "anchor": [
+          0.4830516553428905,
+          0.06020733652312604
+        ],
+        "sha256": "147b3858ddefa2e1805fcb0e20d4741741ab18bd834b3c7262320845a45d7da7"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t14.png",
+        "anchor": [
+          0.48211022918572166,
+          0.0594098883572568
+        ],
+        "sha256": "ea06c95c1c4afbb7a736fb6f36547c99a8590be7ba3cfa558d49ba3812785f77"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t06.png",
+        "anchor": [
+          0.4830645526585708,
+          0.06020733652312604
+        ],
+        "sha256": "e844c5a68e8642fbf581325f8a47d5fc45bbba177023422afbebfd91eb56ca71"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/04.png",
+        "anchor": [
+          0.48385267635824397,
+          0.06100478468899517
+        ],
+        "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t20.png",
+        "anchor": [
+          0.47940796706296246,
+          0.0594098883572568
+        ],
+        "sha256": "918e94a6e614ac78d030e1bb3eedfd4847ab7bdd2a159e4c2745e73cf23174ff"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t09.png",
+        "anchor": [
+          0.4841113758851806,
+          0.06020733652312604
+        ],
+        "sha256": "c395b93babb98c4ca6c96857aa666f044fa59409775112ef10d280e398a68850"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/05.png",
+        "anchor": [
+          0.48462629572184246,
+          0.06020733652312604
+        ],
+        "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t10.png",
+        "anchor": [
+          0.48124835971883545,
+          0.05781499202551832
+        ],
+        "sha256": "ddc2221d78e684095cad6aad93f1d6ba7159863bcb5e6de3ef8e4ab9512217b1"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t24.png",
+        "anchor": [
+          0.4807061562714816,
+          0.05701754385964908
+        ],
+        "sha256": "a05a94d55f4117d0e8614063c56a49e09c6099e8f55ac12178122f7e1b0fc0d3"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/06.png",
+        "anchor": [
+          0.48392109101974035,
+          0.0594098883572568
+        ],
+        "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t18.png",
+        "anchor": [
+          0.4815892685416552,
+          0.05781499202551832
+        ],
+        "sha256": "4bfbc12c8309a3049bf88286c931abda13f2cb2899f33302078a1567a50a0ebe"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t08.png",
+        "anchor": [
+          0.4828891174609231,
+          0.05861244019138756
+        ],
+        "sha256": "f209a601b5f5088757db3fc5333d449840d85ad56b38f66ab7c06c2043c925f4"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/07.png",
+        "anchor": [
+          0.4843285775178833,
+          0.05861244019138756
+        ],
+        "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t02.png",
+        "anchor": [
+          0.48273233778832353,
+          0.054625199362041466
+        ],
+        "sha256": "b7086d33e471bbd0f30ca19766742a120fa891a7693e9576604aa3eb6fa1bcb1"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t15.png",
+        "anchor": [
+          0.4835688717452467,
+          0.05303030303030298
+        ],
+        "sha256": "726cffacb67b0efa2c45e28967346bab2583a947f4ccf145efe42ed3d3149d85"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/08.png",
+        "anchor": [
+          0.4854764956040915,
+          0.054625199362041466
+        ],
+        "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t22.png",
+        "anchor": [
+          0.48052814118413606,
+          0.05223285486443385
+        ],
+        "sha256": "8cc4ae7cb905df836fdf334ba672bdc11cf680fc6c844a72c050c6bc5b59b7ac"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t05.png",
+        "anchor": [
+          0.483587118098178,
+          0.05223285486443385
+        ],
+        "sha256": "a66d1214ab8f78e968e9af7ee8ddacfe57d477a6a1c286bd1f8806e158e1320d"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t16.png",
+        "anchor": [
+          0.48410302754038514,
+          0.05223285486443385
+        ],
+        "sha256": "c9ebf6e73aa6059b054ed7e436beb466b47ae7bf44ea8c8c779f2d7fd9325c7c"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/09.png",
+        "anchor": [
+          0.4845401017823902,
+          0.053827751196172224
+        ],
+        "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t17.png",
+        "anchor": [
+          0.47740904065707046,
+          0.05143540669856461
+        ],
+        "sha256": "8ff9348a018d2bdd0bb12454b1009d7995178efa972a9453519ca2e8436fe86e"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t11.png",
+        "anchor": [
+          0.480899889820973,
+          0.053827751196172224
+        ],
+        "sha256": "e7509149c9a0c4f26a4c37b32747a9d36376bddef2e9f834b2d688e5800454dd"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t03.png",
+        "anchor": [
+          0.4785164201223281,
+          0.053827751196172224
+        ],
+        "sha256": "8d6a51e919f5dc1291402d6a1e094e391fcb0468863e687678f85b783ae5474f"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/10.png",
+        "anchor": [
+          0.47868691769572436,
+          0.05622009569377995
+        ],
+        "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t04.png",
+        "anchor": [
+          0.475880529969116,
+          0.05622009569377995
+        ],
+        "sha256": "c2c54068f2a3f3024c774dcf8dc60fc909d40b65509b44923120f8a26f8418e4"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t12.png",
+        "anchor": [
+          0.4787920327256931,
+          0.05701754385964908
+        ],
+        "sha256": "e95635f45ce366480b1df30fe6bc7056ecbfaf2c36c91e812bc85e22160ae2c4"
+      },
+      {
+        "file": "art/fire-sprites/v3/medium/t21.png",
+        "anchor": [
+          0.4847633742451724,
+          0.05861244019138756
+        ],
+        "sha256": "2c76264ab85a299a583ce93ac56f07e9021f3217738fed45c4cd6f3787f19984"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/11.png",
+        "anchor": [
+          0.4851515905756634,
+          0.0633971291866029
+        ],
+        "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+      },
+      {
+        "file": "public/fire-sprites/v2/medium/12.png",
+        "anchor": [
+          0.4851420641819468,
+          0.06419457735247214
+        ],
+        "sha256": "6eae56fe6e72d277ffee323b5dfa02f2b8ef85f8d361a6364be41b2eec62233c"
+      }
+    ]
+  },
+  "broad": {
+    "id": "broad",
+    "width": 1774,
+    "height": 887,
+    "fps": 36,
+    "frameCount": 36,
+    "pages": [
+      {
+        "file": "broad/atlas-0.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 0,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-1.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 8,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-2.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 16,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-3.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 24,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-4.webp",
+        "columns": 2,
+        "rows": 2,
+        "first": 32,
+        "count": 4,
+        "width": 3548,
+        "height": 1774
+      }
+    ],
+    "frames": [
+      {
+        "file": "public/fire-sprites/v2/broad/01.png",
+        "anchor": [
+          0.4961578192766943,
+          0.13246899661781286
+        ],
+        "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t23.png",
+        "anchor": [
+          0.491100980050879,
+          0.1313416009019166
+        ],
+        "sha256": "86000d116334a22584f683d023c5dcaeda4f24b834e6bad75dd67fcaaf63e850"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t14.png",
+        "anchor": [
+          0.4930340284088581,
+          0.1313416009019166
+        ],
+        "sha256": "f7cba6f4dbd9f22d740298fe860ecdabfa71118be0823a9d93386ef28b7dacb6"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/01-1.png",
+        "anchor": [
+          0.49368432553009617,
+          0.1313416009019166
+        ],
+        "sha256": "6b1f0d989cddb039d97f7e47d2afff8eb99920116dcd6945c37d7028817b62bf"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/02.png",
+        "anchor": [
+          0.4933264108695832,
+          0.12908680947012396
+        ],
+        "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t21.png",
+        "anchor": [
+          0.49276526147510075,
+          0.1279594137542277
+        ],
+        "sha256": "dad2cb8d2261e48258fdf775514f0c1b8dfcd36897f46c6a970bf5c3aed82c4a"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t11.png",
+        "anchor": [
+          0.4879516085713112,
+          0.1279594137542277
+        ],
+        "sha256": "17b85d990f968ac2b98650db9a4600a6add5e90480b86c1badfa9881d99b4924"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t06.png",
+        "anchor": [
+          0.4874816049322201,
+          0.12908680947012396
+        ],
+        "sha256": "c040b93186c297902b18d1310355aae77d22b590163524975ce9745bfa8542ff"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/03.png",
+        "anchor": [
+          0.4893996198410052,
+          0.12908680947012396
+        ],
+        "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t09.png",
+        "anchor": [
+          0.48904305131477566,
+          0.12683201803833144
+        ],
+        "sha256": "ca8409e920760e3b49f5f0c39f6ccd7fef085b734ccfcb52542958550b873c0c"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/04.png",
+        "anchor": [
+          0.49027460220600844,
+          0.1279594137542277
+        ],
+        "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t24.png",
+        "anchor": [
+          0.49057995004250976,
+          0.1279594137542277
+        ],
+        "sha256": "c826f2ad19c2216a5937f83c182bcf09d337f33e23ffed97751ee2e529c088a5"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t03.png",
+        "anchor": [
+          0.4910703374724533,
+          0.12683201803833144
+        ],
+        "sha256": "c4aa0cb6558e845f60c802e9245ca8176f9f8610d34d84da0012e252796b8898"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t10.png",
+        "anchor": [
+          0.4920281309939644,
+          0.12683201803833144
+        ],
+        "sha256": "58134275a7d8ea78879ba4a40e2785fe172d2de610596b825921284f143953ea"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/05.png",
+        "anchor": [
+          0.49013529487314406,
+          0.12683201803833144
+        ],
+        "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t18.png",
+        "anchor": [
+          0.48888755627509617,
+          0.12457722660653892
+        ],
+        "sha256": "06d4de0d3d91b676fd28075215ef987695635b18cc80bd277f8eabffcb49dda2"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/06.png",
+        "anchor": [
+          0.48869122980131147,
+          0.12683201803833144
+        ],
+        "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t22.png",
+        "anchor": [
+          0.4863583509620702,
+          0.12457722660653892
+        ],
+        "sha256": "78633da607b92ad725b86f8b824bdd27fbe41e69fcd780d10be08b286d7c0cd4"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t12.png",
+        "anchor": [
+          0.48673563574233975,
+          0.12457722660653892
+        ],
+        "sha256": "a4c5eedd19594eedaf0d94588c7b2efc60ed97018f899c7d9dbf8891baaabb35"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/07.png",
+        "anchor": [
+          0.4902004129485676,
+          0.12683201803833144
+        ],
+        "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t19.png",
+        "anchor": [
+          0.4908726753785272,
+          0.12457722660653892
+        ],
+        "sha256": "9c6dcf7cb0f9170b1528b31d11d6c4f58e5736eee2088330738592b033829ef1"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t07.png",
+        "anchor": [
+          0.49320186870885796,
+          0.12570462232243518
+        ],
+        "sha256": "a7a1d32220e9447c16dc698f24e708b34be101a151486af0bc8fbf644ff53676"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/08.png",
+        "anchor": [
+          0.49199559760728007,
+          0.12457722660653892
+        ],
+        "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t20.png",
+        "anchor": [
+          0.49170771235676175,
+          0.12344983089064265
+        ],
+        "sha256": "9177768a41cd6375bae54f75c599e02b72d7827f3073f645d8fffbff8e5890be"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t08.png",
+        "anchor": [
+          0.4897171358250707,
+          0.12457722660653892
+        ],
+        "sha256": "950173da86cad3ba3accd4c16cb84b627dab82c3d3e2be8f2ff4284d3c2f6c2e"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/09.png",
+        "anchor": [
+          0.4888601481210307,
+          0.12457722660653892
+        ],
+        "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t15.png",
+        "anchor": [
+          0.4904220220082735,
+          0.12457722660653892
+        ],
+        "sha256": "452de7ac4b18e03b974b5995b056a5b94d68c56e7d3de6c279fe23d8395de6f9"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t04.png",
+        "anchor": [
+          0.4906821396903465,
+          0.12457722660653892
+        ],
+        "sha256": "2684a57a3d0860a14aba24a84b2b07de0f16f7c21f3e088a811815c71fb916d4"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/10.png",
+        "anchor": [
+          0.4888905699704809,
+          0.12457722660653892
+        ],
+        "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t16.png",
+        "anchor": [
+          0.4909163376117392,
+          0.12344983089064265
+        ],
+        "sha256": "a253c9a6d39898d5e6eee4cb6574ea7fd00745f6915eaf0f69914ddf9f80f58e"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/11.png",
+        "anchor": [
+          0.49298151652963623,
+          0.12570462232243518
+        ],
+        "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t02.png",
+        "anchor": [
+          0.49226000889314087,
+          0.12683201803833144
+        ],
+        "sha256": "807a8fba535f082adafa3f013608c87a01c510626e6f5d65576965bb17c3398e"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t05.png",
+        "anchor": [
+          0.4937939201593135,
+          0.12570462232243518
+        ],
+        "sha256": "424c9fcad1c5aee8966164fe4f8a22c4ca4321153c50aa3df5a67084be4e1123"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t17.png",
+        "anchor": [
+          0.4936396890974751,
+          0.12457722660653892
+        ],
+        "sha256": "495b6cab2362b04afb6cc2887dc9a855c11848e35204059560c5f17edd9ed799"
+      },
+      {
+        "file": "public/fire-sprites/v2/broad/12.png",
+        "anchor": [
+          0.4932039325882728,
+          0.13021420518602034
+        ],
+        "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+      },
+      {
+        "file": "art/fire-sprites/v3/broad/t13.png",
+        "anchor": [
+          0.49424210332841884,
+          0.13021420518602034
+        ],
+        "sha256": "501cb417e529e6bb007d227cc38f10d7d2c71e7bde26591cc5f483eb4c4e2b77"
+      }
+    ]
+  }
+}

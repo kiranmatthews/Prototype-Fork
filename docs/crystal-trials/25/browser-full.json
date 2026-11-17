@@ -1,0 +1,198 @@
+{
+  "trial": 25,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "b89d869731f93f0f3fe22923f0c0ba88a2c92bd18b8eee12948cfca6ebb6c7cf",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        9.873420384529114,
+        22.327716922770183
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.09151831978777686,
+            1.2299038850611226,
+            0.9991516731323595
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.056112462455306274,
+        0,
+        4.960859648199413
+      ],
+      "camera": [
+        0.056112462455306274,
+        9.873420384529114,
+        22.288576570969596
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.09111688107210528,
+            1.2342523021766192,
+            0.999150704448604
+          ]
+        }
+      ]
+    },
+    {
+      "name": "timed-route",
+      "position": [
+        5,
+        30,
+        -74
+      ],
+      "camera": [
+        7.505200402301195,
+        40.63670090517769,
+        -57.08989728446693
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.25617046088877277,
+            1.0005607727923211,
+            0.9979127869438171
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resting-island",
+      "position": [
+        5,
+        36.2,
+        -107
+      ],
+      "camera": [
+        7.558408596267325,
+        47.59602149066832,
+        -90.37034412426239
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.29719321681456995,
+            0.9415276402022541,
+            0.9962764471290803
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nitro-spring",
+      "position": [
+        5,
+        42.4,
+        -136
+      ],
+      "camera": [
+        7.558408596267325,
+        53.79602149066831,
+        -119.37034412426239
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.38068502582260866,
+            0.4446397271213199,
+            0.9916790579521999
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.056112462455306274,
+        0,
+        4.960859648199413
+      ]
+    },
+    {
+      "name": "timed-route",
+      "position": [
+        5,
+        30.15,
+        -74
+      ]
+    },
+    {
+      "name": "resting-island",
+      "position": [
+        5,
+        36.35,
+        -107
+      ]
+    },
+    {
+      "name": "nitro-spring",
+      "position": [
+        5,
+        42.55,
+        -136
+      ]
+    }
+  ],
+  "passed": true
+}

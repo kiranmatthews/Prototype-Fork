@@ -1,0 +1,278 @@
+{
+  "id": 23,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 23 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Approach the enclosed switch from its side",
+      "firstFrame": 137,
+      "lastFrame": 313
+    },
+    {
+      "name": "Read the switch behind the transparent panel",
+      "firstFrame": 331,
+      "lastFrame": 431
+    },
+    {
+      "name": "Leave the enclosed switch",
+      "firstFrame": 490,
+      "lastFrame": 589
+    },
+    {
+      "name": "Walk around the front of the TNT",
+      "firstFrame": 607,
+      "lastFrame": 717
+    },
+    {
+      "name": "Set up a falling stomp onto TNT",
+      "firstFrame": 735,
+      "lastFrame": 814
+    },
+    {
+      "name": "Stomp TNT to start its visible fuse",
+      "firstFrame": 859,
+      "lastFrame": 895
+    },
+    {
+      "name": "Retreat outside the blast radius",
+      "firstFrame": 895,
+      "lastFrame": 936
+    },
+    {
+      "name": "The timed blast operates the remote switch",
+      "firstFrame": 936,
+      "lastFrame": 1093
+    },
+    {
+      "name": "Approach the revealed steps",
+      "firstFrame": 1093,
+      "lastFrame": 1202
+    },
+    {
+      "name": "Jump onto the first revealed step",
+      "firstFrame": 1247,
+      "lastFrame": 1279
+    },
+    {
+      "name": "Cross the first step",
+      "firstFrame": 1279,
+      "lastFrame": 1357
+    },
+    {
+      "name": "Jump onto the revealed spring terrace",
+      "firstFrame": 1402,
+      "lastFrame": 1434
+    },
+    {
+      "name": "Approach the revealed bounce crate",
+      "firstFrame": 1434,
+      "lastFrame": 1521
+    },
+    {
+      "name": "Hold the revealed arrow rebound",
+      "firstFrame": 1566,
+      "lastFrame": 1602
+    },
+    {
+      "name": "Land on the high receiver",
+      "firstFrame": 1602,
+      "lastFrame": 1647
+    },
+    {
+      "name": "Approach the second switch",
+      "firstFrame": 1647,
+      "lastFrame": 1734
+    },
+    {
+      "name": "approach Activate only the upper group",
+      "firstFrame": 1752,
+      "lastFrame": 1783
+    },
+    {
+      "name": "Activate only the upper group",
+      "firstFrame": 1803,
+      "lastFrame": 1803
+    },
+    {
+      "name": "Read the upper outlined flight",
+      "firstFrame": 1825,
+      "lastFrame": 1900
+    },
+    {
+      "name": "Jump onto the upper revealed step",
+      "firstFrame": 1945,
+      "lastFrame": 1977
+    },
+    {
+      "name": "Cross the upper step",
+      "firstFrame": 1977,
+      "lastFrame": 2061
+    },
+    {
+      "name": "Land on the upper spring terrace",
+      "firstFrame": 2106,
+      "lastFrame": 2138
+    },
+    {
+      "name": "Set up the second held rebound",
+      "firstFrame": 2138,
+      "lastFrame": 2225
+    },
+    {
+      "name": "Hold the second arrow rebound",
+      "firstFrame": 2270,
+      "lastFrame": 2306
+    },
+    {
+      "name": "Land on the final high receiver",
+      "firstFrame": 2306,
+      "lastFrame": 2350
+    },
+    {
+      "name": "Read the upper climbing rope from its terrace",
+      "firstFrame": 2350,
+      "lastFrame": 2484
+    },
+    {
+      "name": "Wait for the upper rope crossing",
+      "firstFrame": 2528,
+      "lastFrame": 2593
+    },
+    {
+      "name": "Catch the upper rope",
+      "firstFrame": 2594,
+      "lastFrame": 2597
+    },
+    {
+      "name": "Climb above the upper receiving platform",
+      "firstFrame": 2599,
+      "lastFrame": 2802
+    },
+    {
+      "name": "Read the upper release window",
+      "firstFrame": 2828,
+      "lastFrame": 3096
+    },
+    {
+      "name": "Release onto the upper receiving platform",
+      "firstFrame": 3097,
+      "lastFrame": 3137
+    },
+    {
+      "name": "Collect the crystal beyond the upper rope",
+      "firstFrame": 3137,
+      "lastFrame": 3220
+    },
+    {
+      "name": "Drop to the flat recovery courtyard",
+      "firstFrame": 3265,
+      "lastFrame": 3342
+    },
+    {
+      "name": "Walk outside both switch groups",
+      "firstFrame": 3342,
+      "lastFrame": 3911
+    },
+    {
+      "name": "Complete the combined circuit",
+      "firstFrame": 3929,
+      "lastFrame": 4133
+    }
+  ],
+  "evidence": [
+    {
+      "action": "direct spin cannot reach the enclosed switch"
+    },
+    {
+      "action": "TNT activates the enclosed switch",
+      "position": [
+        -4.920494682619405,
+        0,
+        -9.99641475459683
+      ],
+      "switchUsed": true,
+      "arrowRevealed": true
+    },
+    {
+      "action": "Activate only the upper group",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "independent second switch reveals upper route"
+    },
+    {
+      "action": "upper rope after the preceding combinations",
+      "position": [
+        4.980765486392862,
+        30,
+        -68.92876899488586
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the combined circuit",
+  "result": {
+    "frame": 4151,
+    "time": 69.18333333333334,
+    "position": [
+      0.058967550289855716,
+      0,
+      4.9512866389687575
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

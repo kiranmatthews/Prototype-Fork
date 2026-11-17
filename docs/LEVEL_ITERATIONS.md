@@ -11911,6 +11911,17 @@ Validation: native atlas extraction equals every original RGBA frame; all 36 sel
 
 Evidence: [reference study](fire-sprite-lab/v2/reference-study.md), [source sequences and implementation](fire-sprite-lab/README.md), [browser checks](fire-sprite-lab/v2/browser), and [production review](fire-sprite-lab/v2/validation.json).
 
+### 2026-11-11 — Fire Sprite Lab: 36 actual cels per family
+
+The user found twelve frames insufficient for a believable loop. Expanded each family to 36 distinct drawings: 72 accepted new built-in imagegen cels, generated one by one using the neighbouring poses as references, plus the 36 original keys. The recorded v3 authoring plan starts at 09:29 UTC and the first expanded browser preview was running at 10:48 UTC, approximately 79 minutes; this is the measurable authoring-to-playable interval, not a precise chat-receipt timestamp.
+
+Additional drawings cover changing necks, disappearing caps, emerging tongues, internal colour flow and the return to the first pose. Final ordering is explicit and playback uses 36 drawings per second over one second. Frame blending remains off by default. Preserved all native PNGs and packed 13 lossless WebP pages with decoded alpha/visible-RGB verification. Expanded the existing static atlas sampler and anchor array to accommodate the longer cycles. Archived retired v2 runtime atlases under art, retaining their originals and the active thumbnail keys. The existing Jak heat pass, arrangements, movement and gameplay remain unchanged.
+
+Validation: all 108 original hashes are distinct; all 108 decoded atlas cells match. Reviewed source sheets and all 108 rendered poses in a real browser at native resolution, including all three 36→01 wraps. Lite/full rendering, all eight arrangements, ¼ speed, source mode, 720p/MAX, hue and heat work without console warnings or errors. Frozen heat changes 1,101 pixels; zero-strength and disabled heat are pixel-identical. Production build/type-check, tool directory, authoring-script syntax and release-size checks pass (991,918,868 / 1,000,000,000 bytes). No full suite was run.
+
+Evidence: [final sequences and provenance](fire-sprite-lab/v3/sequence.json), [source and browser sheets](fire-sprite-lab/README.md), [validation](fire-sprite-lab/v3/validation.json).
+
+
 ## 2026-11-11 — Powderkeg Peak: a new level from the bible's Crash shapes
 
 Brief: design a new level from scratch on the shape and length of the Crash
@@ -11967,6 +11978,450 @@ clear of the crate bridge. Tested and not changed: the first arrow's pair is
 broken by a plain bounce with a double jump (the bible's head-reach table is
 stale). Final figures: 142 crates, 11 checkpoints, pilots 175.2 s, 204.0 s
 and 217.8 s with no deaths.
+
+### 2026-11-13 — Ember Court and fire motion rebuilt from continuous sources
+
+Added a playable temple courtyard around the fire lab: torches, central basin, altar channel, ritual ring, wall trap, shrine lantern, offering bowl, camp hearth and inner sanctuary. First courtyard play took approximately 13 minutes from its brief (10:24–10:37 NZDT). It has solid props, stairs, a checkpoint, fall recovery, an altar jump and reachable finish, with keyboard, drag-look, compact movement buttons and gamepad input. Main-game movement and shared level data are unchanged.
+
+The subsequent 144 independently generated v4 cels were rejected for flicker. Clean input-frame imagegen tests also changed neighbouring contours and internal paint. The user explicitly authorized preserving sourced motion and using shared imagegen artwork. The first v5 source-driven preview was available around 13:11, approximately 60 minutes after the source-first correction at 12:11; final local validation around 13:50 took about 99 minutes from that correction. The rejected v4 set was never published.
+
+V5 uses two CC0 Unity Labs 64-frame native flipbooks, with one built-in imagegen painting supplying a fixed six-colour treatment. All native source pixels and generated originals are retained. A shared material maps intensity and alpha consistently; screen compositing keeps layered flames from clipping to white. Eight arrangements share the source textures, phases and hue transforms. Removed the drifting miniature whole-flame emitter; the horizontal jet stays rooted at its outlet. Existing shared Jak heat code is unchanged. Superseded runtime assets remain in the authoring archive outside the hosted build.
+
+Production build/type-check, exact source/atlas pixel checks, tool-directory checks, diff checks and release size pass (935,986,203 / 1,000,000,000 bytes). CUA review covers the reference comparison, both source seams, normal/quarter playback, source-frame wrap, hue, rooted jet, full collection, lite/full production rendering, 720p/MAX, courtyard traversal, checkpoint/finish and compact 390×844 controls. A tall-window collection crop found during review was fixed. The frozen scene is identical across repeat captures; heat changes 1,592 pixels, and zero-strength heat matches disabled heat. Console checks are clean. No full suite was run.
+
+Evidence: [pipeline and source attribution](fire-sprite-lab/README.md), [work and visual findings](fire-sprite-lab/v5/WORK.md), [validation](fire-sprite-lab/v5/validation.json), [native hearth](fire-sprite-lab/v5/browser/production-hearth-native.jpg), [sanctuary torches](fire-sprite-lab/v5/browser/production-sanctuary-native.jpg), [collection](fire-sprite-lab/v5/browser/production-collection-native.jpg), [compact court](fire-sprite-lab/v5/browser/production-court-compact.jpg). The local motion comparison contains supplied reference footage and remains untracked.
+
+### 2026-11-13 — Ember Court in normal Bone Man gameplay
+
+Approximately ten minutes from the movement-change brief to the first playable normal-game preview. The Fire Sprite Lab entry now redirects to the registered **Ember Court · Fire Lab** source level. Bone Man uses the existing Player/Input/camera/runtime, including running, jumping, spinning, the normal board controls, checkpoints, deaths and finish receipt. No movement tuning or character animation code changed. **M** toggles the normal MENU/TUNER/TEXT/CRT/RENDER/BOARD/SPIN/LOOK tabs, with Unity treatment, Gouraud lighting, CRT and native resolution tested in the court.
+
+Geometry is a broad inspection arena, intentionally a breather rather than a campaign crate challenge. Existing platforms and walls own collision; low side terraces offer forgiving jumps. An open entrance, raised temple arch and open sanctuary keep the third-person camera clear. A reachable checkpoint and standard gate support recovery/exit. The automatic time-trial pickup is omitted in this exhibition so exploring cannot accidentally start a timed run. Source-owned art and flame asset loading/disposal are scoped by the validated `emberCourt` level flag. The accepted v5 64-frame source motion, shared imagegen palette and existing Jak heat pass remain unchanged.
+
+Validation: `npm run check:levels`, `npm run build`, `node tools/test-tool-directory.mjs`, `npm run check:release` (935,950,966 / 1,000,000,000 bytes), and `git diff --check` passed. Real browser passes covered the old lab link redirect, supported spawn, normal run/jump/spin, basin collision, checkpoint activation, fall/death/checkpoint recovery, altar access and the native run-complete receipt. Full production rendering covered 720p and native, Gouraud on/off, Unity treatment on/off, CRT on/off, debug chrome hide/show and the normal level-menu entry with no console errors. Source assets and the shared published level pack were not rewritten.
+
+Evidence: [integration checks](fire-sprite-lab/game-integration/validation.json), [native Gouraud panel](fire-sprite-lab/game-integration/native-gouraud.jpg), [Unity effects](fire-sprite-lab/game-integration/unity-effects.jpg), [CRT effects](fire-sprite-lab/game-integration/crt-effects.jpg), [normal jump](fire-sprite-lab/game-integration/normal-jump.jpg).
+
+### 2026-11-13 — One broad flame for the temple basin
+
+**Rejected by the user:** this used a stretched Flame02 sheet and a flared base. The implementation is superseded by the independent broad source correction below. Build/browser checks did not establish aesthetic acceptance.
+
+Approximately six minutes from the brief to the first playable single-body basin with a fitted base. Replaced the bonfire's three independently timed source copies with one continuous billboard sheet. It has an authored width of 4.0 relative to a height of 3.8 and a fixed lower flare that spreads across the bowl while tapering into the upper plume. All 64 source poses share exactly the same spatial profile and timing; there is no extra phase, regenerated art or animated geometric wobble. The source-only authoring view resets width and flare to the original proportions. The wider heat footprint uses the existing Jak heat writer and renderer.
+
+The other arrangements keep their original dimensions and animation behavior. The exhibition now has 32 flame bodies, or 39 including the court torches. The native source atlases and shared imagegen palette are unchanged.
+
+Validation: `npm run build`, `npm run check:release` (935,951,410 / 1,000,000,000 bytes), and `git diff --check` passed. Real-browser review covered lite and full production rendering, 720p and native resolution, multiple live poses, the front and both sides of the basin, correct seating/occlusion against the bowl, and a clean console. No gameplay geometry, movement or level data changed, so unrelated level and system audits were not rerun.
+
+Evidence: [review record](fire-sprite-lab/wide-basin/validation.json), [native view](fire-sprite-lab/wide-basin/native-resolution.jpg), [right side](fire-sprite-lab/wide-basin/basin-right.jpg), [left side](fire-sprite-lab/wide-basin/basin-left.jpg).
+
+
+### 2026-11-13 — Replace the distorted basin with an independent broad source
+
+About 31 minutes from the first recorded correction work at 06:11 UTC to the playable basin review around 06:42 UTC; the exact prompt timestamp is not recorded. The prior width override and flared mesh were rejected and are removed. The new basin uses JangaFX’s CC0 Small Camp Fire: all 200 source volume frames projected with one fixed orthographic camera, uniform unit scale and fixed flame-only material. The source is naturally broad. It is not a widened Flame02 or an arrangement of repeated narrow fires. The same accepted imagegen palette supplies its colour treatment.
+
+The runtime uses one four-vertex billboard at source aspect, 200 poses at 30 fps (6⅔ seconds), and the existing Jak heat attachment. Native 512×512 renders and source hashes are retained; packing removes constant transparent padding to 403×416 and preserves every visible RGB/alpha value losslessly. The 199→0 alpha change (0.006054) is comparable to the median adjacent change (0.006078), and the actual material was stepped through the join and all 200 frames. The other source atlases and painting are unchanged. Normal Bone Man gameplay, level layout, movement, camera and debug panels are unchanged.
+
+Validation: type-check, production build, release-size check (943,398,871 / 1,000,000,000 bytes) and diff check passed. Real-browser review covered lite running/jumping, full rendering at native and fixed 720p, the basin from both sides and close up, and the existing LOOK/M debug controls. Consoles were clean. No level geometry changed; unrelated level/system suites were not rerun. [Source/render notes](fire-sprite-lab/basin-source/README.md), [validation](fire-sprite-lab/basin-source/validation.json), [native basin](fire-sprite-lab/basin-source/basin-native-close.jpg), [motion preview](fire-sprite-lab/basin-source/source-loop-review.mp4). The preview encodes the actual stepped browser poses at 30 fps and repeats the cycle once; it is not a live performance recording.
+
+### 2026-11-14 — Campaign crate bible refresh: Treehouse Trail and Canopy Cache
+
+First course pair of the campaign-wide review. About 14 minutes of main-course review/authoring and four minutes for its bonus, followed by native/browser/package validation. Replaced isolated main rewards with named stacks and harvest walls: 27 → 62 crates, mean cluster size 1.17 → 2.70, and 9–12 crates per checkpoint section. Crabs and moa now progress from safe introductions to guarded optional rewards. Masks precede traversal challenges; the life stays in the optional bonus. Canopy Cache increases from seven to 18 counted crates while retaining its arrow-first gallery and steel crossing puzzle. Its all-box run completes without death in native physics and the normal browser loop.
+
+`npm run check:levels`, final source validation, `npm run build`, native collection/support/order checks and lite/full browser review pass. The shared bonus pilot now measures the real enlarged steel-lid height rather than the authoring-grid height. Main-course verification uses staged collection approaches, not a continuous all-box playthrough. [Design decisions and evidence](crate-bible/campaign-refresh/treehouse-trail/README.md). [Campaign progress](crate-bible/campaign-refresh-progress.json).
+
+### 2026-11-14 — Campaign crate bible refresh: Banana Bay and Lifeguard Lockup
+
+Second course pair. Approximately 11 minutes of main-course review/authoring (04:13–04:24 UTC) and 13 minutes of bonus authoring and native traversal corrections (04:24–04:37), exceeding the requested five-minute bonus budget. Final native/browser validation and evidence packaging continued until approximately 04:48, about 35 minutes after this pair's review began. Main cargo increases from 110 to 164 counted crates, mean cluster size from 1.50 to 2.95, and every checkpoint section now contains 10–12 crates. Grouped rewards occupy shoulders and waiting courts; masks precede hard stretches, TNT gets an isolated introduction and refuge, and the only main life retains its high-arrow risk. Fifteen crabs/turtles remain, with clearer passing lanes at the tighter encounters.
+
+Lifeguard Lockup grows from 24 to 48 counted crates around its existing finite-support, switch-gallery, arrow and fuse dependencies. Native contact review corrected a too-tall TNT cap, an early head-bonk that blocked ascent, and a reward that obstructed the fuse approach. Its main/bonus tally is 226. Native main traversal finishes with zero deaths; the bonus completes all 48 boxes and earns the gem without death in both native physics and the normal lite browser loop. Wrong-order trials retain the intended lost-access consequences, and checkpoint/retry resets restore consumed tools and outlines.
+
+Required level checks, final source/capture/support and patrol checks, production build, release-size check (945,597,246 / 1,000,000,000 bytes), and lite/full browser review pass with clean browser consoles. Main browser evidence is staged; the continuous native main run collects 116 boxes and is a clear-route check, not a continuous all-box run. The return-arrow audit warning reflects its outlined upper-gallery target, which the native and browser runs use successfully. Geometry, movement, animation, native art and the shared editor pack are preserved. [Design and validation evidence](crate-bible/campaign-refresh/beachfront/README.md). Publishing is authorized; GitHub authentication is still required, as recorded in [campaign progress](crate-bible/campaign-refresh-progress.json).
+
+### 2026-11-14 — Campaign crate bible refresh: Ripcord River and Sluicekeeper’s Cache
+
+Third course pair. Main layout review/authoring took about three to four minutes from 04:49 UTC; bonus authoring and native dependency corrections took roughly ten minutes through 05:02, with a later platform-metadata correction around 05:19. Final full-render verification completed around 05:30 and evidence packaging took the pair to approximately 44.5 minutes overall. This exceeds the requested 15-minute main plus five-minute bonus budget; slow parallel software rendering and browser harness corrections contributed to the overrun.
+
+Ripcord River grows from 21 to 50 counted crates, with mean cluster size 1.00 → 3.33 and ten crates in each checkpoint section. Harvest groups occupy the four protected shelters and sanctuary. Both live chase branches remain clear, removing the need to reverse into a pursuer for the all-box route. Removed ineffective mask promises, isolated lives, scattered steel and an orphan Nitro switch. The five boulders supply the pressure; no patrol enemies interrupt the safe rooms.
+
+Sluicekeeper’s Cache grows from 21 to 33 counted crates around its existing arrow, island-switch and falling-timber sequence. Native play exposed an ordinary-box bypass of the original high life. Its new y=12 position exceeds the measured ordinary rebound/double silhouettes from both neighbouring supports (11.157 and 11.534); the conserved-arrow route succeeds. The switch reveals six reward crates on permanent islands. Removed their ignored outline metadata and verified that retry restores outlined rewards while retaining supported stone footings.
+
+Both continuous native river branches finish without deaths. Separate ordinary-input shelter/sanctuary trials harvest all 50 cargo boxes; no continuous main all-box run is claimed. Main lite browser checks cover harvesting, checkpoint activation, a real fall costing one life with checkpoint recovery, and a separately staged finish. The bonus completes all 33 crates and earns its gem without deaths in both native physics and the normal lite browser loop. Full-render views of both levels have clean consoles. Required level checks, production build, release-size check (945,598,322 / 1,000,000,000 bytes), and diff checks pass. Movement, animation, geometry, boulder timing, native art and the published editor pack remain unchanged. [Design and validation evidence](crate-bible/campaign-refresh/rumblewater-run/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+
+### 2026-11-14 — Campaign crate bible refresh: Jungle Ruins and Fern Reliquary
+
+Fourth course pair. Work started at 05:35:13 UTC; final visual review and evidence packaging completed at 06:13 UTC, approximately 38.7 minutes overall. Main layout authoring took roughly six minutes, and bonus layout/native-pilot corrections continued until about 05:50. Required checks, browser warmup and correcting staged captures extended the pair beyond the requested 15-minute main plus five-minute bonus budget.
+
+Jungle Ruins increases from 59 to 100 counted cargo boxes, with exactly ten in every checkpoint section. Mean cluster size rises from 1.05 to 3.23; 53 isolated rewards become one intentional landing marker. Named harvests occupy shoulders, temple pauses, pre-boost runways and the rear of ascent ledges. A side TNT lesson has an open refuge; the left-shoulder Nitro frame clears remotely from the final green switch. Crabs, turtles and moa now progress through introductions and repetitions: nine enemies across three kinds replace ten across nine kinds. The fast descent, aqueduct launch/landing lines and ascent remain free of enemies.
+
+Fern Reliquary increases from 20 to 48 counted crates around its existing launch tools, spin-open timbers, high-key gallery, materialized crossing, fuse terrace and final Nitro switch. Native and normal lite-browser continuous runs collect all 48, earn the gem and finish without death. Retry restores crates, bridges and outlines. A staged negative trial spends all accessible low crate donors before the gallery: an ordinary double reaches a 5.191 m feet apex without activating the key. Other preserved donors can remain valid solutions; this is not an arrow-exclusivity claim.
+
+Native main checks separately harvest all 100 cargo boxes without death, verify 101 supported physical crates and 270 patrol samples, traverse the mandatory ravine grind/crystal, and finish all four aqueduct jumps and twelve ascent ledges. Main browser checks cover supported spawn, ordinary spin, checkpoint/fall recovery and a staged summit finish. No continuous main all-box run is claimed. Fifteen audit corner probes differ from rolling terrain, down from 23; centres and stack columns have native support, with no crate over a void.
+
+Required level checks, production build, pilot syntax, release-size check (945,600,884 / 1,000,000,000 bytes), and diff checks pass. Both levels have full-render 1280×720 views and clean browser consoles. The first temple/ascent captures preceded scenery residency, and the first bonus sanctuary fixture touched live Nitro; corrected captures wait for loaded scenery and assert the intended position, grounded state and zero deaths. Terrain, geometry, movement, animation, native art and the shared editor pack are unchanged. [Design and validation evidence](crate-bible/campaign-refresh/jungle/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Beach Street and Rooftop Deliveries
+
+Fifth course pair. Work started at 06:14:59 UTC; final validation and evidence packaging completed at 07:09 UTC, approximately 54.1 minutes overall. Main authoring took about ten minutes. Native route corrections, the bonus lost-support test and software browser review extended the pair beyond the requested 15-minute main plus five-minute bonus budget.
+
+Beach Street is a forced kite ride. Its 14 isolated rewards become 94 cargo boxes in 29 formations: mean cluster size 1.00 → 3.24, with no singles. Seven long sections contain ten crates each; four short canal/checkpoint sections contain six to preserve clear approaches and landings. Crabs and turtles debut alone, then repeat in pairs with an open passing lane: eight enemies across two kinds replace ten across four kinds. No explosives or ineffective masks interrupt the forced ride. Native and browser review corrected cargo near a direction change, the bonus bypass, a post-hop approach and the walking finish.
+
+Rooftop Deliveries increases from 32 to 55 counted crates around its preserved launch, fuse, combat and switch dependencies. The new retreat payload initially bypassed the fuse-room life after the TNT support was spent. Raising the reward to 11.8 m clears the tested 11.543 m ordinary rebound/double contact silhouette; the intact-TNT route still succeeds. Retry restores all crates, outlines and spin-open bridges. The intake wrong-order test also preserves the cost of destroying its launch arrow early.
+
+The complete native main run collects all 104 main/checkpoint boxes and the crystal, clears all thirteen jumps and finishes without a crash. Its 159-box gem correctly remains dependent on the 55-box bonus. Browser main evidence covers a continuous 18-box prefix through the first canal and second checkpoint, one deliberate fall with recovery, and a separately staged keyboard finish. Controller input is sampled per physics step because the initial frame-driven keyboard pilot overshot crates at software-renderer frame rates. Both native and normal lite-browser bonus journeys collect all 55 crates, earn the gem and finish without death. Full-render 1280×720 views of both levels have clean consoles.
+
+Required level checks, final source validation, native regressions, production build, release-size check (945,603,211 / 1,000,000,000 bytes), pilot syntax and diff checks pass. Geometry, wind, movement, animation, native art and the shared editor pack are preserved. [Design and validation evidence](crate-bible/campaign-refresh/coastal-street-run/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Motu Beach Invitational
+
+Sixth playable course, reviewed in approximately 7.7 minutes (07:10–07:18 UTC), within the 15-minute main-course budget. No bonus is linked. Retained the intentionally crate-free and enemy-free judged skating arena: its three 60-second runs, best-two result and cup progression have no adventure all-box objective. The crate audit explicitly excludes this mode. Adding crate clusters or patrols would introduce unrelated interruptions into clear skating approaches, landings and connecting lanes. No source, geometry, movement, art or runtime code changed.
+
+Fresh focused native checks pass for full competition rules/progression, supported floor and containment, rail scoring, recovery, four pocket airs and 38 rail catches. Browser lite/full review confirms zero crates/enemies/checkpoints/bonus pickups, the real introduction and start, a 23.82 m keyboard charge/ollie/landing with zero deaths, and a counted bail with automatic remount and unchanged lives. Full-render 1280×720 start, rhythm and pocket-bowl views have clean consoles. A complete three-run browser competition is not claimed; native tests cover winning and losing events. The preceding validated production build and global level checks remain applicable to the unchanged runtime. [Review and evidence](crate-bible/campaign-refresh/jungle-cup/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Sunset Safari and Willowmill Cache
+
+Seventh course pair, started 07:19:12 UTC. Layout authoring finished at 07:28:10 (about nine minutes); full native/browser validation and packaging took 33.8 minutes overall, exceeding the requested 15-minute main plus five-minute bonus budget.
+
+Sunset Safari grows from 152 to 170 counted cargo crates. Ten occupy every checkpoint section except the split millrace, which has ten on each branch; the clear route chooses either, while all-box play visits both. Mean cluster size rises 1.01 → 3.21, with 148 singles reduced to one optional roof life. Masks precede the locks and quarry; the preserved arrow has a visible reward. A paired Nitro frame and cap clear from the green switch on the final shelf. Eleven unchanged patrol positions now use two enemy kinds instead of seven. Crates on the spillway are deliberate smash/carve choices; waterfall cargo occupies fixed rest terraces and leaves all twenty springs clear.
+
+Willowmill Cache grows from 18 to 27 crates in seven terrace groups and one high life over the second short water gap. Both continuous native bonus-mode and normal browser-preview runs collect all 27 and finish without death. Native bonus mode correctly banks its count toward the parent gem; the standalone browser preview earns its own gem. The floating life is an ordinary jump reward, not a claimed tool gate. The parent's total is 212 including fifteen checkpoints and the bonus.
+
+Native verification separately harvests all 167 ordinary main boxes plus three remotely credited Nitro-frame boxes, proves every physical crate supported, samples 330 supported enemy patrol positions, checks irreversible retry, passes ten course traversal scenarios and completes all twenty waterfall springs with zero deaths. No continuous main all-box run is claimed. Main lite-browser evidence covers the opening harvest, checkpoint activation and a real water death/recovery, plus a separately staged finish. Full-render 1280×720 views have clean consoles. Geometry comparison proves 4,400 main and 296 bonus non-crate/enemy components unchanged, with enemy patrol positions/ranges/speeds preserved.
+
+Required level checks, production build, release-size check (952,660,312 / 1,000,000,000 bytes), and diff checks pass. Movement, animation, hazards, native artwork and the published editor pack remain unchanged. [Design and validation evidence](crate-bible/campaign-refresh/custard-creek/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Tribal Run and The Resonance Vault
+
+Eighth course pair, started 07:53:59 UTC. Layout authoring finished at 07:59:58 (about six minutes); full native/browser validation and packaging took 22.1 minutes, exceeding the requested 15-minute main plus five-minute bonus budget.
+
+Tribal Run grows from 45 to 100 cargo boxes in thirty supported columns, ten per checkpoint section. Single crates fall from 43 to zero. Eight masks face the fire-head encounters; fixed-bank harvests leave movers, wet slides and crossing landings clear. Twenty-one existing guardian placements remain unchanged; fourteen redundant patrols are removed. The complete native route clears all 29 movers, seven rails, nine checkpoints and the crystal without death. Separate normal-input scenarios harvest all 100 boxes and sample 630 supported patrol positions.
+
+The Resonance Vault grows from 20 to 52 counted crates around its preserved drum and gallery sequence. Three outlined platforms used a primitive that ignored their outline flag; identical mesh boxes make the authored reveal work. A skipped-switch case reaches a dead state, the positive native and normal browser previews collect all 52 without death, and retry restores all crates and outlines. The final life is an ordinary jump reward over the short return gap. The parent total is 161 including nine checkpoints and the bonus.
+
+Main browser checks cover the opening harvest, checkpoint activation, one staged kill-plane fall with recovery and a separately staged finish. Full-render 1280×720 views have clean consoles. No continuous main all-box run is claimed. Geometry comparison proves 2,218 main and 249 bonus non-crate/enemy components unchanged, with three intentionally activated outline supports retaining their box geometry. Movement, animation, hazards, native artwork and the published editor pack remain unchanged.
+
+Required level checks, production build, release-size check (952,662,913 / 1,000,000,000 bytes), and diff checks pass. [Design and validation evidence](crate-bible/campaign-refresh/tribal-run/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Waterfall Climb and The Hidden Spillway
+
+Ninth course pair, started around 08:16 UTC with the layout stable around 08:23. Validation and packaging took approximately 27.3 minutes, beyond the requested 15-minute main plus five-minute bonus budget. Existing pilot assumptions about rail approaches, ferry phase, board takeoff, checkpoint identity and repeated spin input needed correction; no movement or geometry tuning changed.
+
+Waterfall Climb grows from 17 to 110 cargo boxes in 33 supported formations, with no singles or footprint overhangs. The authored route has ten boxes in each of eleven checkpoint sections; the camera-line audit cannot order its stacked ascent correctly. Fixed banks and balconies hold the cargo, leaving moving decks, drum launches and fragile main-route footing clear. Both hopper placements remain unchanged, with masks preparing their two encounters. Safe-line lives become ordinary supplies.
+
+The Hidden Spillway grows from 22 to 46 counted boxes. The high life is a tested held-arrow/double-jump reward; floor and neighboring-stomp attempts fail after the arrow is lost. Two authored outline platforms now use identical mesh boxes so the gray switch actually reveals the supports and six crates. Wrong-order failure and complete retry restoration pass. The parent total is 166 including ten checkpoints and the bonus.
+
+Two native route sections join at Thunder Pools and cover all five movers, both rails and four drums without death. Separate supported approaches harvest all 110 main crates, and sixty patrol probes remain supported. Native and browser bonus previews collect all 46 without death. Main browser checks cover the opening harvest, first checkpoint, staged fall/recovery and a separately staged finish. No single continuous main all-box run is claimed. Eight full-render 1280×720 views have clean consoles.
+
+Geometry comparison preserves 845 main and 124 bonus non-crate/enemy components and both enemy placements; only the two intended outline supports change primitive while keeping their box geometry. Required level checks, layout support, production build, release-size check (952,666,803 / 1,000,000,000 bytes), and diff checks pass. Movement, animation, native artwork and the shared editor pack remain unchanged. [Design and validation evidence](crate-bible/campaign-refresh/waterfall-climb/README.md). Publishing remains authorized and awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Uga Ambush and Quayside Cargo
+
+Tenth course pair, started around 08:44 UTC. Final validation and packaging took 65.2 minutes, including GitHub authentication assistance, beyond the requested 15-minute main plus five-minute bonus budget. Physical checks found that the old dock arrow was too far back for a reliable foot crossing and that a four-high channel stack left its top behind at speed. Moving the arrow to the lip and changing that stack to three high plus a low tail resolves both without changing terrain or movement.
+
+Uga Ambush grows from 140 to 166 counted cargo boxes in 48 groups, with 102 singles reduced to zero. Fifteen checkpoint sections have ten boxes each except the optional market/dock branches (twenty each) and short crest connection (six). Lives reward the high stair and lift routes; five masks prepare encounters. Twenty crabs/spikers replace twenty-eight actors across eight kinds. Two six-box local reveals and one remotely credited Nitro/cap cluster remain intentional optional work. The parent total is 205 including fourteen checkpoints and the bonus.
+
+Quayside grows from six to twenty-five counted boxes. Native and browser previews collect every box without death; the TNT/high-life order, unsupported bridge failure and full retry restoration pass. Missing-donor floor and neighboring-stomp reach attempts remain below the life. Native main checks separately harvest 163 ordinary boxes, credit the remaining three through the green switch, sample 600 supported patrol positions, and verify stair/side-scroll access plus charged channel clears. The revised dock crossing also passes the browser. No continuous main all-box clear is claimed.
+
+Nine full-render 1280×720 views and both lite modes have clean consoles. Geometry comparison retains all 3,892 main and 134 bonus non-crate/enemy components. Required level checks, final build, focused crate clearance, release-size (959,277,006 bytes) and diff checks pass. The broader rail render-surface test still reproduces the exact pre-existing −0.535 m overlap from the committed baseline; it is documented separately. [Design and validation evidence](crate-bible/campaign-refresh/test/README.md). Publishing remains authorized; the GitHub device sign-in expired without authentication.
+
+
+### 2026-11-14 — Campaign crate bible refresh: The Merchant Wreck and The Captain’s Last Ledger
+
+Eleventh course, started around 09:50 UTC; validated in 41.6 minutes, exceeding the 15 + 5 minute request. Main cargo grows from ten singles to 184 boxes in 55 groups, with no empty checkpoint section. Both optional lives and five pre-challenge masks give the reward selection a role. Timed platforms remain clear and all thirteen authored enemies remain unchanged. The bonus grows from nine to 35 boxes while retaining its return, fuse and bridge dependencies.
+
+All 184 main boxes pass separate input-driven harvests; the continuous clear route reaches all seventeen checkpoints with zero deaths. Native and browser bonus clears collect every box and earn the gem without death. Wrong-order and retry tests pass. The main browser verifies opening, staged checkpoint/death recovery and finish, with ten full-render views across the pair and clean consoles. Two cargo footprints were corrected against the actual native floors. The edited campaign-pack entry receives only crate/group/revision changes; all 1,436 non-crate components, environment settings and other pack entries are preserved. Required level checks, build and release check pass (959,301,735 bytes; `049c296150a8936710c3`). [Evidence](crate-bible/campaign-refresh/drowned-crown/README.md). GitHub authentication still blocks the authorized publication.
+
+### 2026-11-14 — Campaign crate bible review: High Chief Uga Ha ku
+
+Twelfth course, reviewed in approximately 8.7 minutes from 10:32 UTC, within the fifteen-minute main-course budget. Retained the four optional side-terrace mask crates: each has a protection/recovery role in the dedicated boss encounter. There are no ordinary patrols, checkpoints or bonus room. No source or level data changed.
+
+The existing core and eight real lagoon-retry scenarios pass. A continuous native fight completes all nine phase-specific hits in 84.65 simulated seconds with zero player hits or deaths; four separate mask harvests and reset pass. Browser lite review verifies third-mask invincibility and real lagoon recovery; a fresh full-render 1280×720 arena view is supported and visually inspected. Both consoles are clean. Full browser fight completion is not claimed. The preceding commit's successful global checks, build and release check apply to the unchanged runtime. [Evidence](crate-bible/campaign-refresh/crab-chief/README.md). GitHub authentication still blocks authorized publication.
+
+### 2026-11-14 — Campaign crate bible refresh: Deadwater Park and Deadwater Valve House
+
+Thirteenth course, reviewed in approximately 17.2 minutes from 10:41 UTC. Main cargo grows from five singles to thirty boxes in nine fixed-floor groups, ten per checkpoint section. The clear downhill route and its existing zero-patrol selection remain unchanged. The bonus grows from nine to thirty-two counted boxes around its preserved fuse, bridge and return-arrow dependencies.
+
+All thirty main boxes pass separate normal-input harvests and footprint support checks. Both continuous native downhill routes clear five transfers, four jumps and three loops; checkpoint failure/recovery passes. Native and browser bonus journeys collect all thirty-two boxes without death; three wrong-order/retry cases and three staged neighboring-cargo attempts pass. Browser main opening, staged checkpoint/death recovery and staged finish pass. Six 1280×720 full-render views have clean consoles. No continuous main all-box clear is claimed.
+
+Geometry comparison preserves 1,733 main and 101 bonus non-crate components. Required level checks, build and release check pass (959,303,170 bytes). [Evidence](crate-bible/campaign-refresh/waterpark/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Haunted Hassle and its bonus
+
+Fourteenth course, reviewed in approximately 27.4 minutes from 10:59 UTC. Main crates grow from eight to seventy, with ten per checkpoint section; six high-air targets and all 700 structural steel boxes retain their original roles. Five unchanged patrol positions now use two enemy kinds instead of four. Masks prepare encounters, and the optional foundry perch now awards a life. The bonus grows from eight to twenty-nine counted boxes around its return, bridge and finite-support dependencies.
+
+Separate normal-input harvests collect all sixty-four new boxes, and six floor-start pump sessions collect every retained high target. The continuous native route banks all six checkpoints and finishes in 346.05 simulated seconds without death or reset. Native and browser bonus journeys collect every box and earn the gem; wrong-order, retry and neighboring-cargo attempts pass. Enemy support/counter tests and browser opening, checkpoint recovery and staged finish pass. Seven full-render views have clean consoles. Two stale route-pilot assumptions were corrected without changing movement; the original source reproduces the exact-speed assertion failure. No continuous main all-box clear is claimed.
+
+All 3,991 main and 143 bonus non-crate/enemy components remain unchanged. Required level checks, build and release check pass (959,305,099 bytes). [Evidence](crate-bible/campaign-refresh/codex-lab/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Ghost Train and Easy Street
+
+Fifteenth course, reviewed in approximately 27.1 minutes from 11:27 UTC. Ghost Train grows from seventeen to 225 counted crates in sixty-eight fixed-floor groups. Twenty-one checkpoint sections hold ten boxes; three short axe/transfer intervals hold six, three and six. All fifteen enemies retain their two counters, and all movement, geometry and art stay exact. Easy Street grows from eighteen scattered rewards to twenty-four grouped boxes while retaining its forgiving jumps. Original terrain anchors keep Willowmill Cache exactly unchanged.
+
+All 225 main boxes are collected through separate normal-input harvests. One continuous native route banks 23 checkpoints and finishes in 438.90 simulated seconds with no death or reset. Native and browser Easy Street clears collect all boxes and earn the gem; failed-gap reset and existing cart, patrol, checkpoint and bonus contracts pass. Seven full-resolution views have clean consoles. Two stale pilot assumptions were corrected using fresh Grind presses and ordinary uphill double jumps; original-layout checks reproduce both failures. No continuous main all-box claim is made.
+
+Required level checks, build and release check pass (959,306,694 bytes). [Evidence](crate-bible/campaign-refresh/ghost-train/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible refresh: Tunnelbore Tracks
+
+Sixteenth course, reviewed in approximately 28.9 minutes from 11:54:30 UTC. Counted rewards grow from twelve to sixty in eighteen groups on shared safe ground, ten per checkpoint section. Four masks prepare pursuit segments; all six steel obstacles and seventeen enemies retain their three counters and placement. The effective source has no Nitro after its original clearance filter, so no remote switch is added. Easy Street remains the preceding course's validated twenty-four-box bonus.
+
+Eighteen separately staged normal-input harvests collect all sixty boxes and verify full reset. Continuous left and right fork runs clear all five checkpoints in 95.42 and 96.85 simulated seconds without death or damage. Enemy support and camera-spine checks pass. Original-layout checks reproduce two stale pilot failures, resolved by a final ollie and earlier steering through the right bend. Main browser opening, checkpoint recovery and staged finish pass; four full-resolution views have clean consoles. No continuous all-box clear is claimed.
+
+All 2,642 non-crate components, steel obstacles and environment settings are exact. The planar audit's curved-floor warnings are checked with four supported corner rays and no void beneath any formation. Required level checks, build and release check pass (959,307,565 bytes). [Evidence](crate-bible/campaign-refresh/hollowwake-descent/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Slipstream
+
+Seventeenth course, reviewed in approximately 27.5 minutes from 12:23:41 UTC. Retained the race-specific layout: 83 gem boxes, 108 roulette pickups in 27 rows and four ammunition pickups. Twenty-eight boxes become numbered time targets; no patrols, checkpoint crates or bonus room are added. Persistent unique credit and supported fall recovery replace adventure checkpoint pacing.
+
+Separate normal-input approaches collect every gem box and item. A complete native race wins in 167.73 simulated seconds without a human fall; all seven rivals also finish. Race ownership, refill, explosive equipment, nonfatal recovery and live finish contracts pass. A stale HUD assertion now recognizes the existing SPECIAL portrait. Browser opening, staged collection/recovery/finish and reset pass; two full-resolution views have clean consoles. No continuous all-box clear is claimed.
+
+Level data, runtime, native artwork and the published pack are unchanged, so the preceding validated build and release checks apply. [Evidence](crate-bible/campaign-refresh/slipstream-race/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Deadwater Cup
+
+Eighteenth course, reviewed in approximately 7.9 minutes from 12:51:34 UTC. Retained the judged skating venue's empty crate/enemy selection, seven halfpipes and 442 runtime rails. There is no bonus room or adventure checkpoint quota.
+
+All sixteen two-way circulation cases and four safe sand-return cases pass. Focused native checks score on an original bridge rail, complete the optional loop, and validate three-run rules and independent trophy ownership. The original Cup suite still stops at an old campaign-map coordinate; the focused copy explicitly excludes those legacy map assertions. Browser skating, ollie/landing and staged bail recovery pass, with three inspected full-resolution views and clean consoles.
+
+Documentation only; the prior successful production checks apply. [Evidence and limitation](crate-bible/campaign-refresh/waterpark-cup/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Carlisle Coast + Springtide Skippers
+
+Nineteenth course and fourteenth unique bonus, reviewed in approximately 38.5 minutes from 12:59:32 UTC. Added three fixed-quay supply piles and filled out two existing piles, adding 35 crates and three masks. All eighteen checkpoint sections now contain crates; 338 main crates plus 17 checkpoints and 21 bonus crates give a 376-box tally. The bonus's safe final life reward becomes wood. All original main crates, route components, native artwork and movement are preserved; no enemies are introduced into the existing spring/machinery course.
+
+Native staged approaches account for all 338 main crates: 104 on quays, 58 on consumable bridges, 154 in aerial chains and 22 cleared remotely. Steel-lane crossings, all original collect/bypass flights, and three continuous all-box bonus runs pass. The browser verifies checkpoint restoration, Nitro clear, staged finish, continuous bonus collection/banking and failure recovery. Seven full-resolution views have clean consoles. Corrected the harbour test pilot's hop for the existing landing-only spring rule; older snapshot/coordinate test limitations are recorded.
+
+Required level checks, build and release check pass: `eab91b0f7c3d18e839f3`, 959,307,795 bytes. [Evidence and scope](crate-bible/campaign-refresh/carlisle-coast/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Country Club Circuit
+
+Twentieth course, reviewed in approximately 13.1 minutes from 13:38:18 UTC. Retained sixteen optional gem-box pairs, seven four-choice item rows and twelve side patrols. The race uses unique per-rider box credit and nonfatal recovery; no adventure checkpoint or bonus-room layer is added.
+
+Separate normal-input checks collect all 32 gem boxes and 28 item pickups, defeat all twelve patrols and verify retry restoration. A complete race with twenty roaming carts and seven rivals finishes for all eight riders with zero deaths. Browser opening, staged collection/recovery/finish and retry pass; three full-render views have clean consoles. No continuous all-box clear is claimed. Source, movement, artwork and the published pack are unchanged; the preceding Carlisle build and release checks apply. [Evidence](crate-bible/campaign-refresh/country-club/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Hogsworth Harbour + The Storm Parlour
+
+Twenty-first course and fifteenth unique bonus, reviewed in approximately 57.4 minutes from 13:51:37 UTC. Grouped the six district and two final catering deliveries; main sections now contain 10–14 boxes. Main inventory is 79 counted crates, six checkpoints and 43 bonus crates (128 total). The bonus gains grouped supply columns and replaces two safe life rewards with wood. The three main masks, upstairs bonus life, steel cases, storm, geometry and retired-enemy state are preserved.
+
+All main boxes pass separate normal-input approaches and a separate full skate route passes 44 roofs, 43 jumps and six checkpoints without deaths. The continuous 43-box bonus and full retry restoration pass. Browser checkpoint/fall/finish, continuous bonus collection and banking, and unrepaired-gap failure pass; six full-render views have clean consoles. Source and published crate data agree, with every other published level and non-crate component preserved. No continuous main all-box clear is claimed.
+
+The retry exposed duplicate fog injection in cloned materials; a minimal shared shader guard and independent-uniform regression fix it. The final browser flow is clean. The broader sync suite still fails on an unchanged pre-existing sky certificate mismatch. Hogsworth's stock certificate was refreshed with preserved data and complete source comparison so the release omits a duplicate 9.6 MB snapshot. Required level checks, focused final crate/source/Hogsworth-compaction/fog checks, build and release check pass: `4bdb920695972f6dc797`, 959,308,568 bytes. [Evidence and limitations](crate-bible/campaign-refresh/rooftop-relay/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Mayfield Mall + After Hours
+
+Twenty-second course and sixteenth unique bonus, reviewed in approximately 31.0 minutes from 14:49:20 UTC. Replaced fourteen isolated or unsupported source boxes with twenty-two five-box deliveries: ten boxes per checkpoint section. Added three masks and three optional supply guards. Main inventory is 110 crates plus ten checkpoints; the grouped 18-box bonus makes a 138-box parent tally. The arrow, bridge and finite-support target retain their tool dependencies.
+
+All main crates, three enemy counters and reset pass separately staged native approaches from the cleared main route. A separate full walking clear gets all checkpoints and the crystal with no deaths. The continuous bonus, three wrong orders, physical reset, real platform entrance and return pass. Browser collection, checkpoint/death recovery, staged finish, bonus failure/retry and full 18-box banking pass with clean consoles. Five full-resolution views are inspected. All serialized non-crate geometry, settings, movement and art are preserved. No continuous main all-box clear is claimed.
+
+Required level checks, build and release-size check pass: `33fa0d85bcda5732230f`, 959,310,252 bytes. [Evidence and limitations](crate-bible/campaign-refresh/mayfield-mall/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Factory Fuss
+
+Twenty-third playable course, reviewed in approximately 14.8 minutes from 15:20:40 UTC. Retained the existing crate-free five-token skate park with three supported checkpoints and no enemies or bonus. The tokens reward five optional movement lines, and soft retry preserves collected goals.
+
+Existing native checks pass enclosure/support, eleven rail catches, six halfpipe probes, three checkpoint retries and the token/exit lifecycle. A continuous lite browser run earns all five tokens in east-first order through ordinary Gamepad input and finishes with no deaths or position snaps. Separate staged browser checks cover checkpoint death/recovery. Three full-render views are inspected and both consoles are clean. No source/assets/data changed, so the immediately preceding Mayfield required checks, build and release-size validation remain valid (`33fa0d85bcda5732230f`, 959,310,252 bytes). [Evidence and limitations](crate-bible/campaign-refresh/warehouse/README.md). Authorized publication awaits authentication.
+
+### 2026-11-14 — Campaign crate bible review: Dusty Road + Cactus Cache
+
+Twenty-fourth course and seventeenth unique bonus, reviewed in approximately 37.6 minutes from 15:35:50 UTC. Added 36 paired supply stops with two- and three-high stacks: 180 main crates, ten in every checkpoint section. The retained 17 checkpoints and enlarged 18-box bonus give a 215-box tally. Existing terrain, gaps and hazards remain, with no new enemies. Both tool puzzles and earned lives retain their dependencies.
+
+All main crates and reset pass 72 separately staged native approaches. A separate full native descent clears both gaps and the finish; individual checkpoint support and staged banking/recovery pass. Continuous bonus, three wrong orders, physical reset, actual entrance and return pass. Browser collection, checkpoint/death recovery, staged finish and full bonus failure/retry/banking pass with clean consoles. Five full-resolution views are inspected. Lite browser drawing is sampled to control software rendering cost; physics and source remain unchanged. No continuous all-main-box clear is claimed. All original non-crate geometry, settings, movement and art are preserved.
+
+Required checks, build and release-size check pass: `de1c87dc733b80c294fe`, 959,312,251 bytes. [Evidence and limitations](crate-bible/campaign-refresh/bryce-canyon/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Nightmare Grove
+
+Twenty-fifth course; the shared Easy Street room is reused unchanged, leaving seventeen unique bonuses validated. Reviewed in approximately 25.2 minutes from 16:14 UTC. Grouped 24 scattered ordinary rewards into 18 supply groups holding 56 crates and replaced seven safe lives with ordinary rewards. With the five retained explosive crates, each checkpoint section now contains ten or eleven boxes. Five checkpoints and 24 shared bonus crates make a 90-box tally. Geometry, clues, rails, field wiring, movement and artwork are unchanged.
+
+All new ordinary rewards pass staged native access checks. Ten field crossings and three extended refuge/clue sequences pass without deaths; no continuous main all-box clear is claimed. Existing minefield regressions, actual bonus entrance and return, browser checkpoint/pressure-death recovery, staged finish and 24-box bonus banking pass. Five full-resolution views are inspected with clean consoles. Native evidence output paths now work in the cloud workspace.
+
+Required checks, build and release-size check pass: `9f735c3e0337ff2e9d6f`, 959,312,526 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-minefield/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Guptus Eruptus + Caldera Counterweights
+
+Twenty-sixth playable course and eighteenth unique bonus, reviewed in approximately 62.3 minutes from 16:39:50 UTC. Added sixteen five-box main caches and grouped bonus cargo from sixteen to twenty-five counted boxes. Three masks prepare later encounters; four original enemies retain their two counters and placement. The parent tally is 112. The projected checkpoint median is ten boxes; the west workbay cache projects onto the preceding lateral rail leg.
+
+All eighty main rewards pass separate normal-input access checks. A continuous mounted route clears all eight chapters in 70.98 simulated seconds, banks six checkpoints and finishes without deaths. Continuous native/browser bonus clears collect every box; raised arrow reward, cargo-alternative rejection, full retry, actual entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass, and six full-resolution views are inspected with clean consoles. The original course reproduces the full-route pilot stall exactly; only the test handoff was corrected. No continuous main all-box clear is claimed.
+
+Required checks, build and release-size check pass: `06dd1662d9c48a9825df`, 959,313,361 bytes. [Evidence and limitations](crate-bible/campaign-refresh/nightworks-after-hours/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Torchlight Trouble + Nightworks Fuse Store
+
+Twenty-seventh playable course and nineteenth unique bonus, reviewed in approximately 24.9 minutes from 17:44 UTC. Added 24 five-box main deliveries and grouped the bonus from seven to twenty counted boxes. Three masks prepare original encounters; six goblins, all movement geometry, camera views and artwork remain. The 151-box tally includes eleven checkpoints. Projected checkpoint sections have a median of ten crates.
+
+All 120 main rewards pass separate normal-input approaches and reset. Native rock/camera and goblin regressions pass. Continuous native and browser bonus clears collect every box; both wrong orders, an actual cargo double-jump alternative, full retry, real entrance, supported return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; six full-resolution views are inspected with clean consoles. No continuous main-course or all-box clear is claimed.
+
+Required checks, build and release-size check pass: `fa387e11c8e1fa024fc1`, 959,314,619 bytes. [Evidence and limitations](crate-bible/campaign-refresh/dark/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Spaghetti Rails
+
+Twenty-eighth playable course, reviewed in approximately 15.6 minutes from 18:09:15 UTC. Retained 706 reusable racing-item boxes on the existing 183-rail, 904-platform network. Winning awards the campaign crystal and gem; there are no adventure checkpoints, enemies or bonus room.
+
+Every item passes native rail/deck alignment checks. An eight-rider race finishes for all competitors with zero deaths or race resets; the reference rider finishes in 109.57 simulated seconds. Six-tier item pickup/use/refill, all eighteen spring receivers, native geometry/recovery and win-only campaign progression pass. Browser opening, staged wrap recovery/finish/retry and three inspected full-render views pass with clean consoles. No continuous all-item clear is claimed.
+
+Source, movement, artwork and the published pack are unchanged, so the preceding Torchlight required checks, build and release remain valid (`fa387e11c8e1fa024fc1`, 959,314,619 bytes). [Evidence and scope](crate-bible/campaign-refresh/spaghetti-rails/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Sky Bridge + Cloudtop Lockers
+
+Twenty-ninth playable course and twentieth unique bonus, reviewed in approximately 32.8 minutes from 18:25 UTC. Grouped ordinary rewards into sixteen five-box deliveries, retaining eight explosives for 88 counted main boxes. Added three single-tier bonus deliveries for 22 counted rewards. All four enemies, movement geometry, camera and artwork remain. Section counts are twelve/twelve/twelve/twelve/ten/ten/ten/ten; the parent tally is 117.
+
+The continuous native route clears all seven checkpoints without deaths. All eighty ordinary main rewards pass separate input-driven approaches. Native construction/hazard checks, continuous native/browser bonus clears, both wrong orders, actual cargo double-jump exclusion, real entrance/return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass; five full-resolution views are inspected with clean consoles. No continuous main all-box clear is claimed. Only the Sky pack entry changes; prior stock-save recognition and authored variants remain valid.
+
+Required checks, build and release-size check pass: `65ee7f9fae03df303c39`, 959,314,989 bytes. [Evidence and limitations](crate-bible/campaign-refresh/sky/README.md). Authorized publication awaits GitHub authentication.
+
+### 2026-11-14 — Campaign crate bible review: Temple of Embers + Ember Reliquary
+
+Thirtieth playable course and twenty-first unique bonus, reviewed in approximately 56.8 minutes from 18:59 UTC. Grouped the main rewards into 22 caches and seven stair pairs, preserving all arrow, TNT and metal-stair puzzles and eight enemies. Main boxes rise from 61 to 133 and bonus boxes from nine to 29. Checkpoint sections contain 10–12 boxes; the parent tally is 174. Geometry, camera, movement and artwork remain.
+
+The continuous native route clears all 12 checkpoints without deaths; separate input-driven approaches collect all 114 revised ordinary rewards. Eleven main puzzle cases, every enemy encounter, native/browser bonus clears, three bonus wrong orders, real entrance/return and parent banking pass. Browser checkpoint/fall recovery and staged finish pass. Five native-resolution views are inspected with clean consoles. The final recovery stack move eliminates the remaining collectible footprint overhang. No continuous main all-box clear is claimed.
+
+Required level checks, the final relevant validator, build and release check pass: `d195217e2674b8c194dc`, 959,317,549 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-terraces/README.md). GitHub authentication and authorized publication access are verified.
+
+### 2026-11-14 — Campaign crate bible review: Ancient Gates + Gatekeeper’s Hoard
+
+Thirty-first playable course and twenty-second unique bonus, reviewed in approximately 54.4 minutes from 19:56 UTC. Grouped 119 ordinary main rewards into 24 caches, retaining Nitro, all three climb arrows, the reveal/cleanup switches and 16 enemies. Main crates rise from 15 to 120, ten per checkpoint section; bonus crates rise from 28 to 46. Removed two unnecessary bonus arrows and raised the finite crown to 9m so the upper chest matters. Original non-crate geometry, settings, movement and artwork remain exact.
+
+Continuous native main and bonus runs collect all of their respective crates without deaths; the main spends no masks. Negative dependency and alternative-donor tests, full retry, supported footprints, checkpoint recovery and actual bonus entry/return pass. Chrome verifies staged main probes and continuous bonus banking. Five native-resolution views are inspected with clean consoles. Required checks, build and release gate pass: `5fee8e7cd5373175835b`, 959,319,729 bytes. [Evidence and limitations](crate-bible/campaign-refresh/jungle-gate-run/README.md).
+
+### 2026-11-14 — Campaign crate bible review: Rolling Bones + Moonbone Vault
+
+Thirty-second playable course and twenty-third unique bonus, reviewed in approximately 56.3 minutes from 20:51 UTC, exceeding the requested 15+5-minute budget. Grouped 44 main supplies into ten protected shelter caches; 77 counted crates give every section eleven. Retained all smash barricades, Nitro lane markers, cleanup switch and chase threats. Moonbone now has 22 crates in four deliveries and its arrow/life pair; the 15m life requires preserving the arrow. Non-crate geometry, movement, animation and art remain unchanged.
+
+Both native chase routes, sheltered harvesting, checkpoint recovery, actual bonus entry/return, bonus all-box completion, wrong order, alternative rebound and full retry pass. Chrome verifies main cargo and restoration plus continuous bonus banking, with four inspected full-render views and clean consoles. Stock-save and capture checks, required level checks, build and release pass: `b2f5bf68d75083366ae6`, 959,321,422 bytes. [Evidence and limitations](crate-bible/campaign-refresh/rolling-bones/README.md).
+
+### 2026-11-14 — Campaign crate bible review: Skystream + Cumulus Cache
+
+Thirty-third playable course and twenty-fourth unique bonus, reviewed in 31.2 minutes from 21:47:49 UTC, exceeding the requested 15+5-minute budget. Retained Skystream's speed-course steering lines, clear launches and loop approaches. Cumulus now has six four-box deliveries and one optional life above its final gap, for 25 total. Main source and bonus non-crate data remain exact; no enemies are added to mandatory momentum or cloud crossings.
+
+Native main all-box traversal, loop/gap completion, fall recovery, bonus all-box completion, ordinary versus reward flight and full retry pass. Chrome enters the real bonus platform, verifies failure and banks all 25 into the same parent. Three full-render views and consoles pass. Required level checks, final validators, stock-save tests, build and release pass: `a9b37f2c67ba1eda78bb`, 959,321,948 bytes. [Evidence and limitations](crate-bible/campaign-refresh/skystream/README.md).
+
+### 2026-11-14 — Campaign crate bible review: Coconut Cart Rally and campaign completion
+
+Thirty-fourth and final playable UI course, reviewed in 31.3 minutes from approximately 22:20 UTC, exceeding the requested fifteen-minute budget. Moved four item rows clear of rocks; sixteen pickup positions change while all 52 items, seven rival racers, eighteen jumps and non-crate geometry/settings remain intact. Two prior pickups were inside rock collision. The win-only gem and race-specific crate grammar are retained.
+
+All 52 real cart pickup approaches, 208 anchor-corner probes, all eight racers finishing, continuous solo traversal of all eighteen jumps, rim containment, item respawn/retry, winning/losing gem fixtures and stock-save checks pass. Chrome confirms keyboard controls, the changed rows, finish/restart and two inspected full-render views. Required level checks, build and release pass: `44bce024d7abb2edb14e`, 959,322,064 bytes. [Evidence and limitations](crate-bible/campaign-refresh/coconut-cart-rally/README.md).
+
+The review now covers every current playable campaign UI course: **34 main courses and 24 unique bonus rooms**. The five unbuilt placeholder slots are excluded. [Complete review index](crate-bible/campaign-refresh/README.md).
+
+
+### 2026-11-14 — Crystal Trials 01: 1 / Bounce crate
+
+First of 25 requested retrieval challenges, authored from approximately 23:39 UTC and validated in approximately 12 minutes, after separate research and shared objective-system setup. A repeatable steel arrow puts the crystal above ordinary floor-jump reach. The unboosted rebound peaks at 4.91 m; a held rebound collects at 6.05 m and lands safely. Native inputs and Chromium verify a deliberate miss, local retry, checkpoint, pickup and recovery. A full 1280×720 view exposed a hidden overhead goal; the original layout is preserved in the separate rejects stage, and a wider authored presentation view now shows the arrow and crystal together.
+
+Opt-in multi-crystal park support preserves ordinary campaign rewards and the editor's usual single-crystal rule. All 28 editor transaction checks and TypeScript pass. The other 24 challenges and final level/build/release gates are outstanding; this is local progress, not a published completion claim. [Evidence](crystal-trials/01/).
+
+
+### 2026-11-14 — Crystal Trials 02: 2 / Trampoline and high platform
+
+Second retrieval, authored and validated in approximately 7 minutes from 23:49:22 UTC. A trampoline launches at 27.5 m/s to an 11.35 m apex; steering during ascent lands on a 4.6 × 5.2 m balcony at 8.4 m. Native and real-browser controls include an intentional wrong-way drift, safe courtyard landing, local retry, the crystal, and the return drop. The successful route uses no ledge grabs, deaths or state manipulation. An inspected 1280×720 approach shows the spring, receiver and crystal together. The first version's floating arch lintel is preserved as reject 02-a; full-height rear piers complete the frame without blocking the flight. [Evidence](crystal-trials/02/).
+
+
+### 2026-11-15 — Crystal Trials 03: 3 / Long rail over a pit
+
+Third retrieval, authored and validated in approximately 16 minutes from 23:56 UTC. A 72 m rail begins over a safe practice floor, crosses a visible pit and ends below a 3.1 m receiver. Native inputs show an oversteer recovery on safe ground, over seven seconds of sustained balance, a charged grind jump, the crystal and a complete lower return circuit. A separate deliberate pit fall spends one Classic reserve life, returns to the banked checkpoint and preserves the earned crystal. Chromium repeats the route in lite and full rendering, with an inspected 1280×720 approach and clean consoles.
+
+Rejected 03-a retains the ground-level return shortcut and conflicting edge. Rejected 03-b retains the premature ramp junction that caused an unintended ledge catch. The accepted lower return cannot reach the reward deck with a floor double jump; its ramp now meets the junction at equal height. [Evidence](crystal-trials/03/).
+
+### 2026-11-15 — Crystal Trials 04: 4 / Moving platform and lift
+
+Fourth retrieval, reviewed in approximately 13 minutes from 00:12 UTC. A horizontal ferry reaches a fixed resting island; a vertical lift then carries the player to an 8.4m crystal gallery. A lower return ramp closes the circuit. Native controller routes pass at three arrival phases, including a deliberately mistimed ferry jump and checkpoint recovery. Lite and full Chromium routes pass with clean consoles; both the 1280×720 initial approach and lift observation views are inspected. Movement settings remain unchanged. No geometry attempt was abandoned. [Evidence](crystal-trials/04/).
+
+### 2026-11-15 — Crystal Trials 05: 5 / Halfpipe and high crystal
+
+Fifth retrieval, reviewed in approximately 10 minutes from 00:25 UTC. A 4m halfpipe carries a crystal at 9.8m above its right coping. Native and Chromium controller runs pump through five airs (first approximately 6.35m, fifth 10.09m), collect on the fifth, land in the transition, brake and return through the open end without bails. Full-resolution approach and floor views are inspected: the approach reveals the high goal; the rider camera frames the transition while on the floor. The first pilot drifted along the pipe and needed steering; another needed a second brake on the flat. These are preserved input histories, with no abandoned geometry. Required shared-data checks are running. [Evidence](crystal-trials/05/).
+
+### 2026-11-15 — Crystal Trials 06: 6 / Climbing rope and high platform
+
+Retrieval 6, reviewed in 7.4 minutes from 2026-11-15T00:36:00Z. Catch the low swing, climb 8.12m along its rope, and release through a framed 9.2m gallery. A low release lands safely for a retry; the successful release has zero ledge-grab frames. The original low lintel is retained as reject 06-a. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/06/).
+
+
+### 2026-11-15 — Crystal Trials 07: 7 / Timed steps
+
+Retrieval 7, reviewed in 21.8 minutes from 2026-11-15T00:44:00Z. Three timed 1.5m rising steps lead to a 6.2m crystal balcony. Waiting through a warning drops to a supported lower courtyard; a side ramp enables the local retry. The full route has no deaths or ledge catches. This iteration exceeded 20 minutes to give the recovery path a clear return-facing camera with matching controls. Camera variants 07-a, 07-b and 07-c are preserved. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/07/).
+
+### 2026-11-15 — Crystal Trials 08: 8 / Switch, steps and bounce crate
+
+Retrieval 8, reviewed in 32.1 minutes from 2026-11-15T01:06:00Z. Switch reveals two solid mesh steps and a reusable bounce crate; a short rebound misses the 10.2 m receiver, then the held retry lands cleanly. Full-resolution approach and return show the route and goal clearly. The platform-outline draft is preserved as 08-a. Time includes the requested corridor and phone-entry work. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/08/).
+
+### 2026-11-15 — Crystal Trials 09: 9 / Turtle shell and high platform
+
+Retrieval 9, reviewed in 16.2 minutes from 2026-11-15T01:32:00Z. A turtle becomes a reusable shell after one attack; a second attack removes it and the designated pit/checkpoint restores it. A held shell bounce falls short, while an apex double jump reaches the 8.2 m receiver. Native and both browser routes include the failed-tool recovery and complete safe return. Full-resolution approach and return views show the turtle, raised goal, and recovered shell. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/09/).
+
+### 2026-11-15 — Crystal Trials 10: 10 / Folding bridge and small platform
+
+Retrieval 10, reviewed in 31.7 minutes from 2026-11-15T01:35:00Z. Folding bridge timeout, local recovery, timed crossing and precision receiver pass. Rejected the blocked on-axis sightline and preserved it as 10-a; the angled approach reveals the crystal. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/10/).
+
+### 2026-11-15 — Crystal Trials 11: 11 / Offset rail transfers
+
+Retrieval 11, reviewed in 23.7 minutes from 2026-11-15T01:43:00Z. Three offset rails require two deliberate transfers; riding straight fails into the designated pit. The positive route, raised landing and lower return pass. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/11/).
+
+### 2026-11-15 — Crystal Trials 12: 12 / Trampoline and airborne bounce crate
+
+Retrieval 12, reviewed in 35.5 minutes from 2026-11-15T01:46:00Z. The trampoline feeds an airborne steel-arrow crate, then a separate high receiver. The wrong drift safely returns to the floor. A rejected camera clipped the crystal; the final full-resolution approach shows it completely. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/12/).
+
+### 2026-11-15 — Crystal Trials 13: 13 / Two climbing ropes
+
+Retrieval 13, reviewed in 48.9 minutes from 2026-11-15T01:49:29Z. Two climbs are separated by a permanent rest. An early low release returns safely to the courtyard; both climbed releases and the final return pass. The widened lower camera keeps the upper target visible; the earlier framing is preserved as 13-a. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/13/).
+
+### 2026-11-15 — Crystal Trials 14: 14 / Timed platforms and resting island
+
+Retrieval 14, reviewed in 56.4 minutes from 2026-11-15T01:51:47Z. Two timed flights have a permanent rest and a flat recovery route. The controller tests failed timing, completes both flights, and returns up the side ramp; upper flight and return-camera fixtures were reviewed. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/14/).
+
+### 2026-11-15 — Crystal Trials 20: 20 / TNT and two switch groups
+
+Retrieval 20, reviewed in 39.6 minutes from 2026-11-15T02:08:52Z. The TNT fuse opens one switch group; the upper switch opens a separate group. The controller confirms direct-spin occlusion, safe retreat, both spring landings and the flat-floor return. Full-resolution initial and upper-switch views were inspected. Native and lite/full Chromium controller routes pass with clean browser consoles; full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/20/).
+
+### 2026-11-15 — Crystal Trials 22: 22 / Two ropes, timed steps and spring
+
+Retrieval 22, reviewed in 52.3 minutes from 2026-11-15T02:15:06Z. Two rope climbs lead to a timed flight and held spring rebound. The real-input route confirms low-release recovery, both high landings, timed transfers, crystal pickup and a flat-floor return. The upper timed flight and final spring views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/22/).
+
+### 2026-11-15 — Crystal Trials 21: 21 / Rails, trick gate, enemy and spring
+
+Retrieval 21, reviewed in 54.9 minutes from 2026-11-15T02:14:21Z. Rail transfers end in a neutral kickflip through the gate, followed by a timed enemy and held bounce. The revised terrace camera clears the gate frame; prior blocked views are preserved in rejects 21-a and 24-a. Native and full browser routes also pass after the camera revision. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/21/).
+
+### 2026-11-15 — Crystal Trials 23: 23 / Two switch groups and climbing rope
+
+Retrieval 23, reviewed in 54.0 minutes from 2026-11-15T02:16:48Z. TNT and two independent switch groups lead through both spring routes to a rope climb and its high crystal. The browser route preserves each group and returns to the flat floor; the upper rope and receiving platform remain visible in the full-resolution fixture. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/23/).
+
+### 2026-11-15 — Crystal Trials 15: 15 / TNT, switch and revealed route
+
+Retrieval 15, reviewed in 74.3 minutes from 2026-11-15T01:56:41Z. A stomp starts the TNT fuse while the transparent enclosure prevents a direct spin on the switch. The timed blast reveals the steps and spring; the controller retreats safely, retrieves the high crystal and returns across the flat floor. Full-resolution enclosure and route views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/15/).
+
+### 2026-11-15 — Crystal Trials 16: 16 / Nitro frames and two launchers
+
+Retrieval 16, reviewed in 73.2 minutes from 2026-11-15T02:00:26Z. The route deliberately tests Nitro death and checkpoint recovery, then uses the trampoline and airborne bounce crate to reach the narrow receiver without touching its Nitro frame. Full-resolution and portrait/landscape phone views were reviewed; the phone controller also completes the route. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/16/).
+
+### 2026-11-15 — Crystal Trials 17: 17 / Rails, timed enemy and bounce crate
+
+Retrieval 17, reviewed in 70.9 minutes from 2026-11-15T02:05:51Z. Three rails require two balance transfers and a raised exit pop. A retracted-enemy timing window then opens access to the bounce crate and high crystal. The input route tests a missed transfer, checkpoint recovery, enemy timing and the return ramp. Full-resolution rail and enemy-terrace views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/17/).
+
+### 2026-11-15 — Crystal Trials 18: 18 / Two ropes and moving platform
+
+Retrieval 18, reviewed in 75.4 minutes from 2026-11-15T02:06:18Z. The first climbed release lands on a moving rest, which carries the player before the second rope crossing. Real-input tests pass at three start timings and in the continuous course; early low releases recover on the flat floor. The moving rest and upper landing were inspected at full resolution. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/18/).
+
+### 2026-11-15 — Crystal Trials 25: 25 / Switches, rope, timed steps and Nitro spring
+
+Retrieval 25, reviewed in 62.7 minutes from 2026-11-15T02:20:29Z. The complete chain uses TNT, two isolated switch groups, both held spring rebounds, a rope climb, two timed flights and a Nitro-framed final rebound. Native, course-browser and production phone routes collect the final crystal and return safely; full-resolution waiting-bank, resting-island and Nitro-spring views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/25/).
+
+### 2026-11-15 — Crystal Trials 24: 24 / Rails, enemy, spring, rope and timed steps
+
+Retrieval 24, reviewed in 67.5 minutes from 2026-11-15T02:17:23Z. The route combines offset rails, a kickflip gate, timed enemy, held spring, upper rope climb and timed steps. The gate view clears its frame and hands over to the rope view before the upper terrace; both superseded camera layouts are preserved. Native and browser routes pass after the final camera correction. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/24/).
+
+### 2026-11-15 — Crystal Trials 19: 19 / Crumbling steps and bounce crate
+
+Retrieval 19, reviewed in 78.3 minutes from 2026-11-15T02:08:20Z. Six crumbling steps include a permanent mid-route rest and finish with a held spring rebound. The controller verifies that loitering collapses a step, recovers on the flat floor, and then crosses both flights and retrieves the crystal. Full-resolution upper-flight and high-bounce views were inspected. Native and lite Chromium controller routes pass with clean browser consoles; full-render, full-resolution views were manually inspected. Movement settings remain unchanged. [Evidence](crystal-trials/19/).
+
+### 2026-11-15 — 25-challenge corridor and lightweight phone playtest
+
+Completed local validation in 261.7 minutes from the recorded collection start. The 25 modules sit 256 metres apart over a continuous flat floor with designated death pits; the archive contains 25 superseded attempts plus the original eight-station grid. A continuous 185,005-step controller run retrieves all crystals and opens the final gate. The dedicated phone entry uses the existing player, physics and animation baseline with touch controls and individual/course/reject selection. A cache-disabled production audit transfers 36,373,148 bytes (36.4 MB), including all layouts; its picker transfers 18,840 bytes before Play. Seven representative phone controller routes pass. Level checks, 28 editor regressions, build, and release-size checks pass. No movement tuning changed. Published and verified via GitHub Pages: the public cold transfer is 34,571,875 bytes (34.6 MB), with a 19,299-byte picker. Both public entries have clean browser consoles and the main course shows the Codex/sol fork build stamp. [Playtest](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch). [Evidence](crystal-trials/README.md).
+
+
+### 2026-11-15 — Crystal challenges rebuilt as linked skating sequences
+
+Rebuilt all 25 modules around 3–5 connected skating sections, with direct bank-air-to-rail and bounce-to-rail handoffs, raised receiving roofs, offset grinds, enemy carving, switches, timed footing and kickflip gates. Each challenge has one start checkpoint and one final crystal. The initial short skating studies and all 25 previous platforming layouts remain playable in rejects (75 attempts plus the original grid). No player, animation or movement-tuning code changed.
+
+All 25 individual controller routes and the continuous course passed by 09:54 UTC, approximately 73 minutes from the recorded 08:41:15 UTC refinement start. Individual successes take 18.1–47.5 seconds; the course run retains the board, visits every connecting gap, retrieves all crystals and exits without deaths or teleportation. Deliberate flat-floor misses, the return bank, pit death, checkpoint retry and resets also pass. A later moving-rail phase requires popping earlier to clear the receiving roof; the controller route observes that timing. The production phone page measured 36.5 MB with caching disabled and a 26.5 KB picker. Build and release-size checks pass. Final browser and deployment results are recorded in [the sequence evidence](crystal-trials/sequences/README.md).
+
+Final verification completed at 10:14 UTC (about 93 minutes from the refinement start): all 25 phone controller routes pass, all 25 native 1280 × 720 visual fixtures were reviewed, full-render routes 5 and 25 pass, and level validation passes. Published source `0e87a0559fdf4e4f518cede18c53a0198ae1d48d` deployed successfully. The public cache-disabled phone audit transfers 34,688,844 bytes (34.7 MB), with a 27,286-byte picker, 75 rejected attempts plus the original grid, working touch/retry/orientation changes and no console errors. The main public course reports 25 crystals and `Codex/sol fork · build 11-15 10:08 UTC`. [Live phone playtest](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch). [Public evidence](crystal-trials/sequences/public/).
 
 ## 2026-11-15 — Sprite Stack Lab: can the rider be drawn from stacked slices?
 

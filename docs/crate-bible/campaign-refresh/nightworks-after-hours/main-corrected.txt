@@ -1,0 +1,1 @@
+PASS all 80 main rewards through 16 separately staged route approaches, supported footprints and reset

@@ -17,7 +17,7 @@ try{
   assert.equal(ordinary.kiteTow,false);assert.ok(Math.abs(ordinaryPlayer.pos.z)<.01,'Ordinary levels do not auto move');
   const scene=new THREE.Scene();
   const data={...source,ocean:undefined,unitySand:undefined,components:source.components.filter(c=>c.t!=='decor'&&c.solid!==false)};
-  const l=new Level(scene,{id:'kite-test',name:source.name,data});
+  const l=new Level(scene,{id:'coastal-street-run',name:source.name,data});
   const p=new Player(scene);p.rawInput=makeInput();p.respawn(l,true);p.lives=99;
   scene.updateMatrixWorld(true);
   const tick=(input=makeInput())=>{l.update(1/60);p.step(1/60,input,l);input.consumeEdges();};
@@ -33,6 +33,7 @@ try{
    }
    report.stairGuideClearance=stairClearance;assert.ok(stairClearance>=.25,`Stair clearance ${stairClearance}`);
    p.kiteMotion.reset(17);
+   const bonus=l.bonusPlatformDiagnostics,bonusContactZ=l.kiteBonusPad?.body.z;
    const used=new Set();let releaseFrames=0,lastCp='',airStart=null,heldLast=false,exitFrames=0,finishCharge=-1;
    for(let i=0;i<14000&&p.state!=='finished';i++){
     const z=-p.pos.z;
@@ -51,7 +52,10 @@ try{
     const next=jumps.find(j=>!used.has(j.name)&&z>=j.at);
     if(next){used.add(next.name);releaseFrames=6;report.jumps.push({name:next.name,takeoff:snap()});}
     const held=releaseFrames===0;
-    const input=makeInput({moveX:Math.max(-1,Math.min(1,((line(z+2)-p.pos.x)*5-p.kiteMotion.wind*KITE_TOW.windDrift)/KITE_TOW.steeringSpeed)),
+    let target=line(z+2);
+    if(bonus&&bonusContactZ!==undefined&&z>-bonus.z-14&&z<-bonus.z+18)
+      target=z<-bonusContactZ?bonus.x-2.1:3.8;
+    const input=makeInput({moveX:Math.max(-1,Math.min(1,((target-p.pos.x)*5-p.kiteMotion.wind*KITE_TOW.windDrift)/KITE_TOW.steeringSpeed)),
       jumpPressed:held&&!heldLast,jumpReleased:!held&&heldLast,jumpHeld:held});
     releaseFrames=Math.max(0,releaseFrames-1);heldLast=held;tick(input);
     if(!p.grounded&&airStart===null)airStart={i,y:p.pos.y,peak:p.pos.y};
@@ -66,11 +70,11 @@ try{
    assert.equal(p.state,'finished','Whole course clears, then walking and a deliberate jump finish');
    assert.ok(report.release&&report.waitingAtFinish);assert.ok(report.waitingAtFinish.p[2]>-3000);assert.equal(report.waitingAtFinish.speed,0);
    assert.equal(used.size,jumps.length);assert.ok(report.checkpoints.length>=10);
-   report.finish={...snap(),crates:p.cratesBroken,totalCrates:l.totalCrates,crystal:p.hasCrystal,gem:p.gemEarned};report.gripErrors=p.kiteVisual?.gripErrors;
+   report.finish={...snap(),crates:p.cratesBroken,totalCrates:l.totalCrates,bonusCrates:l.bonusCrateTotal,crystal:p.hasCrystal,gem:p.gemEarned};report.gripErrors=p.kiteVisual?.gripErrors;
    report.missedCrates=l.crates.filter(c=>c.alive).map(c=>({kind:c.kind,position:c.mesh.position.toArray()}));
-   assert.equal(p.cratesBroken,l.totalCrates,'The suggested line collects every crate/checkpoint');
+   assert.equal(p.cratesBroken,l.totalCrates-l.bonusCrateTotal,'The suggested line collects every main crate/checkpoint while bypassing the bonus');
    assert.equal(p.hasCrystal,true,'The crystal stays reachable on the home stretch');
-   assert.equal(p.gemEarned,true,'The all-boxes gem retains normal progression');
+   assert.equal(p.gemEarned,l.bonusCrateTotal===0,'The all-boxes gem still requires the linked bonus');
    const resetAt=(x,z)=>{
     const c=source.components.find(c=>c.grp===1&&(c.s?.[0]===12||c.w===12)&&Math.abs(c.p[2]+z)<=(c.s?.[2]??c.len)/2);
     const y=c.t==='platform'?c.p[1]+c.s[1]/2:c.p[1]+c.rise*(.5+(c.yaw===180?-1:1)*(z+c.p[2])/c.len);

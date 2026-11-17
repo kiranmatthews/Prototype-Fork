@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fire v4 · Game material review</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#17252e;color:#edf3f6;font:15px system-ui}header{height:70px;display:flex;align-items:center;gap:24px;padding:12px 28px;border-bottom:1px solid #415d69}h1{font-size:21px;margin:0}small{color:#bacbd1}canvas{display:block;width:100%;height:calc(100vh - 150px)}footer{height:80px;display:flex;align-items:center;gap:18px;padding:15px 28px}button,select{padding:9px 14px;background:#243f4b;color:#fff;border:1px solid #7694a0;border-radius:6px}input{width:33vw}output{font-variant-numeric:tabular-nums}a{color:#f2cd91}</style>
+<header><h1>Fire v4 / Game material</h1><small>AUTHORING REVIEW · Native atlas · Registered feet · No frame blending</small><a href="./review.html">Original cels</a></header>
+<canvas aria-label="Fire animation using the game sprite material"></canvas>
+<footer><select id="family" aria-label="Flame family"></select><button id="play">Pause</button><select id="speed" aria-label="Playback speed"><option value="1">1× speed</option><option value="0.25">¼ speed</option></select><input id="seek" type="range" min="0" max="47" value="0" aria-label="Animation phase"><output id="status">Loading native atlases…</output></footer>
+<script type="module">
+import * as THREE from 'three';
+import {SpriteFire} from '../../../src/spriteFire.ts';
+const $=id=>document.getElementById(id),canvas=document.querySelector('canvas');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor('#17252e');
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(0,2,9);camera.lookAt(0,2,0);
+const manifest=await(await fetch('/art/fire-sprites/v4/runtime/cycles.json')).json(),loader=new THREE.TextureLoader(),cycles={};
+for(const [family,data]of Object.entries(manifest)){const textures=await Promise.all(data.pages.map(async page=>{const t=await loader.loadAsync('/art/fire-sprites/v4/runtime/'+page.file);t.colorSpace=THREE.SRGBColorSpace;t.minFilter=t.magFilter=THREE.LinearFilter;t.generateMipmaps=false;t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;return t;}));cycles[family]={...data,textures};$('family').add(new Option(family,family));}
+let fire,time=0,paused=false,last=performance.now();
+function select(){fire?.dispose();fire=new SpriteFire(cycles[$('family').value],{arrangement:'torch',family:$('family').value,hue:0});fire.sourceOnly=true;scene.add(fire);time=0;}
+function pause(p){paused=p;$('play').textContent=p?'Play':'Pause';}
+$('family').onchange=select;$('play').onclick=()=>pause(!paused);$('seek').oninput=()=>{pause(true);time=Number($('seek').value)/40;};select();
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setPixelRatio(devicePixelRatio);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
+function draw(now){const dt=Math.max(0,Math.min(.1,(now-last)/1000));last=now;if(!paused)time+=dt*Number($('speed').value);fire.update(time,camera);renderer.render(scene,camera);$('seek').value=fire.drawingFrame;$('status').textContent=`${fire.cycle.id} · ${String(fire.drawingFrame).padStart(2,'0')} / 47 · ${renderer.domElement.width} × ${renderer.domElement.height}`;requestAnimationFrame(draw);}requestAnimationFrame(draw);
+</script></html>

@@ -1,0 +1,421 @@
+{
+  "trial": 4,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "3dce4ed1fc2ff158e7449238c1f8f204784ca164c6fddee52212397dce34b3dc",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -763
+  ],
+  "installed": {
+    "id": 4,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 4,
+    "frame": 3795,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the machine-bank checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Inspect the full ferry cycle from the safe bank",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Deliberately choose the ferry away from the bank",
+        "firstFrame": 853,
+        "lastFrame": 853
+      },
+      {
+        "name": "A mistimed ferry jump falls into the visible water",
+        "firstFrame": 854,
+        "lastFrame": 903
+      },
+      {
+        "name": "Recover at the bank checkpoint after the mistimed jump",
+        "firstFrame": 903,
+        "lastFrame": 1036
+      },
+      {
+        "name": "Return to the ferry observation edge",
+        "firstFrame": 1036,
+        "lastFrame": 1171
+      },
+      {
+        "name": "Wait for the returning ferry",
+        "firstFrame": 1215,
+        "lastFrame": 1599
+      },
+      {
+        "name": "Board the ferry with a normal jump",
+        "firstFrame": 1600,
+        "lastFrame": 1639
+      },
+      {
+        "name": "Move to the ferry departure end",
+        "firstFrame": 1639,
+        "lastFrame": 1719
+      },
+      {
+        "name": "Ride the ferry to the resting island",
+        "firstFrame": 1763,
+        "lastFrame": 1892
+      },
+      {
+        "name": "Jump from the ferry onto the fixed island",
+        "firstFrame": 1893,
+        "lastFrame": 1932
+      },
+      {
+        "name": "Read the lift from a fixed resting ledge",
+        "firstFrame": 1932,
+        "lastFrame": 2035
+      },
+      {
+        "name": "Wait for the low descending lift",
+        "firstFrame": 2079,
+        "lastFrame": 2275
+      },
+      {
+        "name": "Board the gallery lift",
+        "firstFrame": 2276,
+        "lastFrame": 2315
+      },
+      {
+        "name": "Cross to the lift departure edge",
+        "firstFrame": 2315,
+        "lastFrame": 2400
+      },
+      {
+        "name": "Ride upward to the gallery window",
+        "firstFrame": 2444,
+        "lastFrame": 2547
+      },
+      {
+        "name": "Jump from the rising lift into the gallery",
+        "firstFrame": 2548,
+        "lastFrame": 2584
+      },
+      {
+        "name": "Collect the gallery crystal",
+        "firstFrame": 2584,
+        "lastFrame": 2672
+      },
+      {
+        "name": "Read the lower return from the gallery edge",
+        "firstFrame": 2690,
+        "lastFrame": 2773
+      },
+      {
+        "name": "Drop into the broad return landing",
+        "firstFrame": 2818,
+        "lastFrame": 2879
+      },
+      {
+        "name": "Join the lower machine return",
+        "firstFrame": 2879,
+        "lastFrame": 2964
+      },
+      {
+        "name": "Follow the return outside the water",
+        "firstFrame": 2982,
+        "lastFrame": 3269
+      },
+      {
+        "name": "Climb the return and reach its upper junction",
+        "firstFrame": 3287,
+        "lastFrame": 3582
+      },
+      {
+        "name": "Finish the machine circuit on the entrance bank",
+        "firstFrame": 3600,
+        "lastFrame": 3777
+      }
+    ],
+    "evidence": [
+      {
+        "action": "mistimed ferry jump recovers locally",
+        "position": [
+          -4,
+          0.1,
+          -763
+        ]
+      },
+      {
+        "action": "ferry carries rider",
+        "position": [
+          -0.000933206587321417,
+          0,
+          -789.8463081348444
+        ],
+        "ferry": [
+          0,
+          -0.25,
+          -788.3072711955834
+        ]
+      },
+      {
+        "action": "lift carries rider",
+        "position": [
+          -0.0009321215927489798,
+          7.345727419226842,
+          -809.4233759488385
+        ],
+        "top": 7.371075778295014
+      }
+    ],
+    "position": [
+      0.06806571249418004,
+      0,
+      -759.0010005366306
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Finish the machine circuit on the entrance bank",
+    "expectedDeaths": 0,
+    "result": {
+      "id": 4,
+      "collected": 1,
+      "position": [
+        0.06806571249418004,
+        0,
+        -759.0010005366306
+      ],
+      "frames": 3795
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06806571249418004,
+        0,
+        -759.0010005366306
+      ],
+      "camera": [
+        0.06806571249418004,
+        8.372261940194218,
+        -741.7601274026499
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            0.0001191054222222002,
+            0.6619168683846716,
+            1.000783736144258
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.016157019146726653,
+            0.6523080070516333,
+            1.0009415785821043
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            0.0006068995499715315,
+            0.7264188177585514,
+            1.0019452603881145
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            0.0366020221799855,
+            0.6779380093328259,
+            0.9998359544015702
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            -0.000155065881260781,
+            0.6666760331955877,
+            1.0001308856939366
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            -0.00010586297068912188,
+            0.6553548971276125,
+            1.0002480465416104
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.007108537861103378,
+            0.6649253246221033,
+            1.0003059005117714
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.005773752309156328,
+            0.6600662589557389,
+            1.000342370470504
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            -5.513908862068553e-05,
+            0.650746947146968,
+            1.000368829091898
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            -4.603168686888981e-05,
+            0.6531225269557719,
+            1.000390515429087
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.0052135198430403665,
+            0.6663039955586118,
+            1.0003999120635068
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            -3.694881072493111e-05,
+            0.6695575255664353,
+            1.0004121433664588
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            -3.3065451467105185e-05,
+            0.6629634031685926,
+            1.0004213903328918
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            -0.00047884044016168446,
+            0.6607723455825388,
+            1.000427462093206
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.003495889389425318,
+            0.6636637022886597,
+            1.0004329279242763
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.002213370660415115,
+            0.6597326804219886,
+            1.0004396497462744
+          ]
+        },
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            -2.4005196151147508e-05,
+            0.665610347046218,
+            1.000442964406064
+          ]
+        },
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.001942686163654888,
+            0.6652092507689041,
+            1.0004470455803185
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            0.001523307368938013,
+            0.6660768331225978,
+            1.00045006508631
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.0017071878797680115,
+            0.6594027308005643,
+            1.0004534800316671
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            0.00162255621466338,
+            0.6702627873402239,
+            1.0004557923981214
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.001282536878966592,
+            0.6692865436729757,
+            1.0004579774470843
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.0014441974779191757,
+            0.6661902210259002,
+            1.0004606656421862
+          ]
+        },
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.00254613726192684,
+            0.6761795075175111,
+            1.000462376078621
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

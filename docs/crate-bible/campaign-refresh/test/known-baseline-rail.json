@@ -1,0 +1,12 @@
+{
+  "scope": "pre-existing broader terrain render audit",
+  "command": "node tools/test-carlisle-boxes.mjs",
+  "reproducedInCommittedBaseline": "ae71736a",
+  "position": [
+    5,
+    -13.883047341954292,
+    -1379.0617708846448
+  ],
+  "beamGroundClearance": -0.5352586012767784,
+  "message": "The full render-surface check fails at exactly the same point in the untouched baseline and current source; crate support/rail clearance passes."
+}

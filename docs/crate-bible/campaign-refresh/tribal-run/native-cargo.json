@@ -1,0 +1,155 @@
+{
+  "harvests": [
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 30",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 139",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 173",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 274",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 349",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 515",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 548",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 663",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 770",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 840",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 921",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 974",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 1107",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEST / crossing pause / 1255",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 1364",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 1386",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEST / crossing pause / 1412",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 1501",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 1527",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEST / crossing pause / 1543",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 1610",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 1668",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 1760",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 1928",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / PREPARE / fire-head protection / 2010",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEST / crossing pause / 2163",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 2170",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEACH / fixed-bank harvest / 2232",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / TEST / crossing pause / 2291",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TRIBAL / COUNT / restart approach / 2302",
+      "count": 4,
+      "deaths": 0
+    }
+  ],
+  "patrolProbes": 630
+}

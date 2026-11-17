@@ -45,9 +45,11 @@ for (const boat of CARLISLE_HARBOUR_BOATS) {
 
 // Rewards stay on fixed quays: collecting a stack never removes a boat or
 // launcher, and every crate can be collected with normal movement and spins.
+// Fixed-quay parcels pay fruit and box credit; an unearned life on the safe
+// final quay would misprice the reward without adding an optional risk.
 for(const [x,count,tiers] of [[-5,3,1],[31,3,2],[64,2,2],[94,2,1],[129,3,2]])
   for(let tier=0;tier<tiers;tier++)for(let i=0;i<count;i++)C.push({t:'crate',nm:`Harbour cargo ${x} · ${tier+1}.${i+1}`,
-    p:[x+i*.96,DECK+tier*.96,0],kind:x===129&&tier===1&&i===2?'life':'wood',grp:4});
+    p:[x+i*.96,DECK+tier*.96,0],kind:'wood',grp:4});
 for(const [x,y] of [[8,5],[12,8],[16,5],[24,3],[42,5],[46,8],[51,5],[58,3],
   [73,5],[77,8],[81,5],[86,7],[90,6],[94,3],[103,5],[107,8],[112,5],[121,3],[135,2.4]])
   C.push({t:'wumpa',nm:'Harbour bounce trail',p:[x,y,0],grp:4});

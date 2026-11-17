@@ -3,6 +3,7 @@ import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terra
 import {buildCreekArt,CUSTARD_ART_GROUPS} from './custard-creek-art';
 import {custardValley,CUSTARD_VALLEY_GROUPS} from './custard-valley';
 import {buildSunsetWaterfalls,SUNSET_WATERFALL_GROUPS} from './sunset-waterfalls';
+import {arrangeSunsetSafariCrates} from './custard-crate-arrangement';
 
 type Point=[number,number,number];
 type Scalar=number|((s:number)=>number);
@@ -232,6 +233,7 @@ for(const c of C)if(c.t==='crumble'||c.t==='mover'||c.t==='pendulum')c.tex=c.nm=
 C.push(...buildCreekArt({point:custardPoint,height:custardHeight,yaw:custardYaw,roads:CUSTARD_CREEK_ROADS,gaps:CUSTARD_CREEK_GAPS,surfaces:CUSTARD_NATIVE_BANKS}));
 C.push(...custardValley({point:custardPoint,height:custardHeight,yaw:custardYaw,waterfallRun:true}));
 C.push(...buildSunsetWaterfalls({point:custardPoint,yaw:custardYaw}));
+arrangeSunsetSafariCrates(C,{point:custardPoint,progress:custardProgress,tangent:custardTangent});
 export const CUSTARD_CREEK_CAMERA=C.filter(c=>c.t==='camnode').map(c=>c.p);
 export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(['enemy','stone','crusher','pendulum','mover','crumble','rail','vertramp','trampoline','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
 export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'sunset',spawn:custardPoint(0,.12),killY:-315,hugeDropBail:false,

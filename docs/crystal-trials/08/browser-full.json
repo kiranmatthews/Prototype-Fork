@@ -1,0 +1,364 @@
+{
+  "trial": 8,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -7.85,
+      80
+    ],
+    "crystals": 9
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -1339
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        -1339
+      ],
+      "camera": [
+        0,
+        9.672261940194216,
+        -1321.7591268660192
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            -0.0,
+            0.6626316843992893,
+            1.0006588268632624
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.006923629942734418,
+            0.6584805089645321,
+            1.0006871513403388
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            -0.0,
+            0.6734156855184568,
+            1.0007452229599771
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            -0.0,
+            0.6585958381117337,
+            1.0008003242680859
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.022254070898198527,
+            0.6522731311694449,
+            1.0009008875191954
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            -0.0,
+            0.6531979069417813,
+            1.001125501036877
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            -0.0,
+            0.6988220125881736,
+            1.0020463942700502
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.16199949476876865,
+            0.7440344594045065,
+            0.9961240726093145
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.033279916467851854,
+            0.655314831425742,
+            0.9996011428506709
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.05517681095789041,
+        0,
+        -1339.0549717078648
+      ],
+      "camera": [
+        0.05517681095789041,
+        9.672261940194216,
+        -1321.814098573884
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            5.4023800293306845e-05,
+            0.6623530833909186,
+            1.000658814695557
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0068593394895302695,
+            0.6581525639098991,
+            1.00068713444199
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            8.343047299497865e-05,
+            0.6729841572831551,
+            1.0007451939394059
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.0001021840444818647,
+            0.6580694597572714,
+            1.0008002807335135
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.022113354867159304,
+            0.6515716803347267,
+            1.0009008099359136
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.00021283669324585923,
+            0.6521031565833093,
+            1.0011253121380208
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.0005260139687731034,
+            0.6960823392751793,
+            1.0020452399559399
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.0329881979305932,
+            0.6568906217547664,
+            0.9996007522176613
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 8,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 8,
+    "frame": 1914,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the outline orchard checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Read the ghost steps before operating the switch",
+        "firstFrame": 137,
+        "lastFrame": 308
+      },
+      {
+        "name": "An unrevealed step lets the jump fall safely into the courtyard",
+        "firstFrame": 353,
+        "lastFrame": 392
+      },
+      {
+        "name": "approach Reveal the orchard steps and their arrow",
+        "firstFrame": 392,
+        "lastFrame": 508
+      },
+      {
+        "name": "Reveal the orchard steps and their arrow",
+        "firstFrame": 528,
+        "lastFrame": 528
+      },
+      {
+        "name": "Approach the now-solid first step",
+        "firstFrame": 550,
+        "lastFrame": 643
+      },
+      {
+        "name": "Jump onto the first revealed step",
+        "firstFrame": 688,
+        "lastFrame": 720
+      },
+      {
+        "name": "Set up the jump to the spring terrace",
+        "firstFrame": 720,
+        "lastFrame": 797
+      },
+      {
+        "name": "Jump onto the revealed spring terrace",
+        "firstFrame": 842,
+        "lastFrame": 874
+      },
+      {
+        "name": "Approach the intact steel arrow",
+        "firstFrame": 874,
+        "lastFrame": 961
+      },
+      {
+        "name": "Try the short arrow rebound",
+        "firstFrame": 1006,
+        "lastFrame": 1042
+      },
+      {
+        "name": "Read the height still missing from the short rebound",
+        "firstFrame": 1042,
+        "lastFrame": 1072
+      },
+      {
+        "name": "Land beside the arrow for a local retry",
+        "firstFrame": 1072,
+        "lastFrame": 1089
+      },
+      {
+        "name": "Approach the intact steel arrow",
+        "firstFrame": 1089,
+        "lastFrame": 1089
+      },
+      {
+        "name": "Hold the high arrow rebound",
+        "firstFrame": 1134,
+        "lastFrame": 1170
+      },
+      {
+        "name": "Drift from the arrow into the high orchard gallery",
+        "firstFrame": 1170,
+        "lastFrame": 1215
+      },
+      {
+        "name": "Collect the orchard crystal",
+        "firstFrame": 1215,
+        "lastFrame": 1294
+      },
+      {
+        "name": "Read the clear courtyard return edge",
+        "firstFrame": 1312,
+        "lastFrame": 1384
+      },
+      {
+        "name": "Drop into the orchard courtyard",
+        "firstFrame": 1429,
+        "lastFrame": 1483
+      },
+      {
+        "name": "Pass outside the raised outline route",
+        "firstFrame": 1483,
+        "lastFrame": 1691
+      },
+      {
+        "name": "Return to the orchard entrance",
+        "firstFrame": 1709,
+        "lastFrame": 1896
+      }
+    ],
+    "evidence": [
+      {
+        "action": "Reveal the orchard steps and their arrow",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "short rebound misses high gallery",
+        "apex": 9.309499999999996
+      },
+      {
+        "action": "held arrow launch",
+        "position": [
+          -0.027500000002653173,
+          5.571999999999999,
+          -1365.9968194807213
+        ],
+        "verticalSpeed": 20
+      }
+    ],
+    "position": [
+      0.05517681095789041,
+      0,
+      -1339.0549717078648
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return to the orchard entrance",
+    "result": {
+      "id": 8,
+      "collected": 1,
+      "position": [
+        0.05517681095789041,
+        0,
+        -1339.0549717078648
+      ],
+      "frames": 1914
+    }
+  },
+  "passed": true
+}

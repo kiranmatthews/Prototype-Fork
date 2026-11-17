@@ -1,0 +1,174 @@
+{
+  "trial": 3,
+  "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "pilot": {
+    "id": 3,
+    "frame": 3140,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the viaduct checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 137,
+        "lastFrame": 228
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 273,
+        "lastFrame": 308
+      },
+      {
+        "name": "Oversteer while the rail still has a floor beneath it",
+        "firstFrame": 308,
+        "lastFrame": 332
+      },
+      {
+        "name": "Recover from the balance mistake on the approach deck",
+        "firstFrame": 332,
+        "lastFrame": 418
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 418,
+        "lastFrame": 604
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 649,
+        "lastFrame": 683
+      },
+      {
+        "name": "Balance across the open pit",
+        "firstFrame": 683,
+        "lastFrame": 1117
+      },
+      {
+        "name": "Pop from the needle onto its raised receiver",
+        "firstFrame": 1144,
+        "lastFrame": 1176
+      },
+      {
+        "name": "Brake on the crystal receiver",
+        "firstFrame": 1176,
+        "lastFrame": 1201
+      },
+      {
+        "name": "Collect the viaduct crystal",
+        "firstFrame": 1201,
+        "lastFrame": 1286
+      },
+      {
+        "name": "Read the lower return landing",
+        "firstFrame": 1304,
+        "lastFrame": 1385
+      },
+      {
+        "name": "Drop onto the one-way return landing",
+        "firstFrame": 1430,
+        "lastFrame": 1485
+      },
+      {
+        "name": "Join the return below the crystal deck",
+        "firstFrame": 1485,
+        "lastFrame": 1584
+      },
+      {
+        "name": "Follow the lower return outside the pit",
+        "firstFrame": 1602,
+        "lastFrame": 2155
+      },
+      {
+        "name": "Climb back to the observation promenade",
+        "firstFrame": 2173,
+        "lastFrame": 2437
+      },
+      {
+        "name": "Turn onto the upper return junction",
+        "firstFrame": 2455,
+        "lastFrame": 2546
+      },
+      {
+        "name": "Finish the local circuit at the approach",
+        "firstFrame": 2564,
+        "lastFrame": 2741
+      },
+      {
+        "name": "Test a missed crossing by running into the visible pit",
+        "firstFrame": 2759,
+        "lastFrame": 3007
+      },
+      {
+        "name": "Respawn at the banked viaduct checkpoint",
+        "firstFrame": 3007,
+        "lastFrame": 3140
+      }
+    ],
+    "evidence": [
+      {
+        "action": "balance miss recovers on safe deck",
+        "position": [
+          0,
+          0,
+          -16.11529466778607
+        ]
+      },
+      {
+        "action": "long rail crossing",
+        "seconds": 7.233333333333333,
+        "position": [
+          0,
+          1.3499999999999999,
+          -70.09999999999987
+        ],
+        "balance": -0.07253225974650072,
+        "speed": 9
+      },
+      {
+        "action": "receiver crystal",
+        "position": [
+          0,
+          3.1,
+          -83.93455371839433
+        ]
+      },
+      {
+        "action": "pit recovery preserves crystal",
+        "position": [
+          -4,
+          0.1,
+          5
+        ],
+        "deaths": 1,
+        "livesBefore": 4,
+        "livesAfter": 4
+      }
+    ],
+    "position": [
+      -4,
+      0.1,
+      5
+    ],
+    "state": "ride",
+    "deaths": 1,
+    "stage": "Respawn at the banked viaduct checkpoint",
+    "pitDeathObserved": true,
+    "expectedDeaths": 1,
+    "result": {
+      "id": 3,
+      "collected": 1,
+      "position": [
+        -4,
+        0.1,
+        5
+      ],
+      "frames": 3140
+    }
+  }
+}

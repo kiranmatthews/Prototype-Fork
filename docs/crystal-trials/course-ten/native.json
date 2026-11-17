@@ -1,0 +1,2345 @@
+{
+  "expected": 10,
+  "passed": true,
+  "trials": [
+    {
+      "id": 1,
+      "actions": [
+        {
+          "name": "Approach the first checkpoint",
+          "firstFrame": 966,
+          "lastFrame": 1047
+        },
+        {
+          "name": "Read the arrow and overhead crystal",
+          "firstFrame": 1091,
+          "lastFrame": 1229
+        },
+        {
+          "name": "Try an unboosted arrow rebound",
+          "firstFrame": 1274,
+          "lastFrame": 1310
+        },
+        {
+          "name": "See that the short rebound misses the crystal",
+          "firstFrame": 1310,
+          "lastFrame": 1340
+        },
+        {
+          "name": "Recover beside the spring for a local retry",
+          "firstFrame": 1340,
+          "lastFrame": 1357
+        },
+        {
+          "name": "Set up the held rebound",
+          "firstFrame": 1357,
+          "lastFrame": 1357
+        },
+        {
+          "name": "Land on the arrow for a held rebound",
+          "firstFrame": 1402,
+          "lastFrame": 1438
+        },
+        {
+          "name": "Retrieve the airborne crystal",
+          "firstFrame": 1438,
+          "lastFrame": 1459
+        },
+        {
+          "name": "Steer off the arrow onto the safe retry floor",
+          "firstFrame": 1459,
+          "lastFrame": 1495
+        }
+      ],
+      "evidence": [
+        {
+          "action": "short rebound misses fairly",
+          "apex": 4.909499999999996,
+          "collected": false
+        },
+        {
+          "action": "arrow rebound",
+          "position": [
+            -0.02750000000000004,
+            1.172,
+            -4.997179774697827
+          ],
+          "verticalSpeed": 20
+        },
+        {
+          "action": "crystal",
+          "position": [
+            -0.02750000000000004,
+            6.054499999999998,
+            -4.997179774697827
+          ],
+          "frame": 1459
+        }
+      ],
+      "expectedDeaths": 0,
+      "stage": "Steer off the arrow onto the safe retry floor",
+      "end": {
+        "frame": 1495,
+        "time": 24.916666666666668,
+        "position": [
+          3.4719999999999986,
+          0,
+          -4.997179774697827
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 2,
+      "actions": [
+        {
+          "name": "Bank the bell courtyard checkpoint",
+          "firstFrame": 5278,
+          "lastFrame": 5359
+        },
+        {
+          "name": "Observe the spring and its high receiver",
+          "firstFrame": 5403,
+          "lastFrame": 5535
+        },
+        {
+          "name": "Try the spring before choosing the balcony line",
+          "firstFrame": 5580,
+          "lastFrame": 5619
+        },
+        {
+          "name": "A wrong-side drift returns to the courtyard",
+          "firstFrame": 5619,
+          "lastFrame": 5695
+        },
+        {
+          "name": "Retry from the same spring approach",
+          "firstFrame": 5695,
+          "lastFrame": 5816
+        },
+        {
+          "name": "Jump onto the bell spring",
+          "firstFrame": 5861,
+          "lastFrame": 5900
+        },
+        {
+          "name": "Gain height before drifting toward the balcony",
+          "firstFrame": 5900,
+          "lastFrame": 5912
+        },
+        {
+          "name": "Drift onto the high bell balcony",
+          "firstFrame": 5912,
+          "lastFrame": 5963
+        },
+        {
+          "name": "Claim the crystal inside the bell arch",
+          "firstFrame": 5963,
+          "lastFrame": 6040
+        },
+        {
+          "name": "Read the open return edge",
+          "firstFrame": 6058,
+          "lastFrame": 6128
+        },
+        {
+          "name": "Drop from the bell balcony into the courtyard",
+          "firstFrame": 6173,
+          "lastFrame": 6225
+        }
+      ],
+      "evidence": [
+        {
+          "action": "missed drift recovers safely",
+          "position": [
+            -4.970341487183461,
+            0,
+            -201.98662295565785
+          ]
+        },
+        {
+          "action": "spring launch",
+          "position": [
+            -0.02967936510346363,
+            0.11999999403953551,
+            -199.77780521139331
+          ],
+          "verticalSpeed": 27.5
+        },
+        {
+          "action": "balcony landing",
+          "position": [
+            5.94408750283159,
+            8.4,
+            -204.95385033738506
+          ],
+          "collected": true
+        }
+      ],
+      "expectedDeaths": 0,
+      "stage": "Drop from the bell balcony into the courtyard",
+      "end": {
+        "frame": 6225,
+        "time": 103.75,
+        "position": [
+          5.996020836164926,
+          0,
+          -197.05181671633446
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -0.6363961030678928,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.01,
+          "moveY": -0.1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 3,
+      "actions": [
+        {
+          "name": "Bank the viaduct checkpoint",
+          "firstFrame": 10015,
+          "lastFrame": 10096
+        },
+        {
+          "name": "Set up on the safe rail approach",
+          "firstFrame": 10140,
+          "lastFrame": 10231
+        },
+        {
+          "name": "Catch the long viaduct rail",
+          "firstFrame": 10276,
+          "lastFrame": 10311
+        },
+        {
+          "name": "Oversteer while the rail still has a floor beneath it",
+          "firstFrame": 10311,
+          "lastFrame": 10335
+        },
+        {
+          "name": "Recover from the balance mistake on the approach deck",
+          "firstFrame": 10335,
+          "lastFrame": 10421
+        },
+        {
+          "name": "Set up on the safe rail approach",
+          "firstFrame": 10421,
+          "lastFrame": 10607
+        },
+        {
+          "name": "Catch the long viaduct rail",
+          "firstFrame": 10652,
+          "lastFrame": 10686
+        },
+        {
+          "name": "Balance across the open pit",
+          "firstFrame": 10686,
+          "lastFrame": 11120
+        },
+        {
+          "name": "Pop from the needle onto its raised receiver",
+          "firstFrame": 11147,
+          "lastFrame": 11179
+        },
+        {
+          "name": "Brake on the crystal receiver",
+          "firstFrame": 11179,
+          "lastFrame": 11204
+        },
+        {
+          "name": "Collect the viaduct crystal",
+          "firstFrame": 11204,
+          "lastFrame": 11289
+        },
+        {
+          "name": "Read the lower return landing",
+          "firstFrame": 11307,
+          "lastFrame": 11388
+        },
+        {
+          "name": "Drop onto the one-way return landing",
+          "firstFrame": 11433,
+          "lastFrame": 11488
+        },
+        {
+          "name": "Join the return below the crystal deck",
+          "firstFrame": 11488,
+          "lastFrame": 11587
+        },
+        {
+          "name": "Follow the lower return outside the pit",
+          "firstFrame": 11605,
+          "lastFrame": 12158
+        },
+        {
+          "name": "Climb back to the observation promenade",
+          "firstFrame": 12176,
+          "lastFrame": 12440
+        },
+        {
+          "name": "Turn onto the upper return junction",
+          "firstFrame": 12458,
+          "lastFrame": 12549
+        },
+        {
+          "name": "Finish the local circuit at the approach",
+          "firstFrame": 12567,
+          "lastFrame": 12744
+        },
+        {
+          "name": "Test a missed crossing by running into the visible pit",
+          "firstFrame": 12762,
+          "lastFrame": 13010
+        },
+        {
+          "name": "Respawn at the banked viaduct checkpoint",
+          "firstFrame": 13010,
+          "lastFrame": 13143
+        }
+      ],
+      "evidence": [
+        {
+          "action": "balance miss recovers on safe deck",
+          "position": [
+            0,
+            0,
+            -400.1152946677854
+          ]
+        },
+        {
+          "action": "long rail crossing",
+          "seconds": 7.233333333333333,
+          "position": [
+            0,
+            1.3499999999999999,
+            -454.09999999999985
+          ],
+          "balance": -0.07253225974650072,
+          "speed": 9
+        },
+        {
+          "action": "receiver crystal",
+          "position": [
+            0,
+            3.1,
+            -467.93455371839246
+          ]
+        },
+        {
+          "action": "pit recovery preserves crystal",
+          "position": [
+            -4,
+            0.1,
+            -379
+          ],
+          "deaths": 1,
+          "livesBefore": 4,
+          "livesAfter": 4
+        }
+      ],
+      "expectedDeaths": 1,
+      "stage": "Respawn at the banked viaduct checkpoint",
+      "pitDeathObserved": true,
+      "end": {
+        "frame": 13143,
+        "time": 219.04999999999998,
+        "position": [
+          -4,
+          0.1,
+          -379
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 1,
+        "mover": null,
+        "ground": null,
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 4,
+      "actions": [
+        {
+          "name": "Bank the machine-bank checkpoint",
+          "firstFrame": 16857,
+          "lastFrame": 16938
+        },
+        {
+          "name": "Inspect the full ferry cycle from the safe bank",
+          "firstFrame": 16982,
+          "lastFrame": 17114
+        },
+        {
+          "name": "Deliberately choose the ferry away from the bank",
+          "firstFrame": 17698,
+          "lastFrame": 18136
+        },
+        {
+          "name": "A mistimed ferry jump falls into the visible water",
+          "firstFrame": 18137,
+          "lastFrame": 18186
+        },
+        {
+          "name": "Recover at the bank checkpoint after the mistimed jump",
+          "firstFrame": 18186,
+          "lastFrame": 18319
+        },
+        {
+          "name": "Return to the ferry observation edge",
+          "firstFrame": 18319,
+          "lastFrame": 18454
+        },
+        {
+          "name": "Wait for the returning ferry",
+          "firstFrame": 18498,
+          "lastFrame": 18920
+        },
+        {
+          "name": "Board the ferry with a normal jump",
+          "firstFrame": 18921,
+          "lastFrame": 18960
+        },
+        {
+          "name": "Move to the ferry departure end",
+          "firstFrame": 18960,
+          "lastFrame": 19044
+        },
+        {
+          "name": "Ride the ferry to the resting island",
+          "firstFrame": 19088,
+          "lastFrame": 19213
+        },
+        {
+          "name": "Jump from the ferry onto the fixed island",
+          "firstFrame": 19214,
+          "lastFrame": 19253
+        },
+        {
+          "name": "Read the lift from a fixed resting ledge",
+          "firstFrame": 19253,
+          "lastFrame": 19356
+        },
+        {
+          "name": "Wait for the low descending lift",
+          "firstFrame": 19400,
+          "lastFrame": 19596
+        },
+        {
+          "name": "Board the gallery lift",
+          "firstFrame": 19597,
+          "lastFrame": 19636
+        },
+        {
+          "name": "Cross to the lift departure edge",
+          "firstFrame": 19636,
+          "lastFrame": 19721
+        },
+        {
+          "name": "Ride upward to the gallery window",
+          "firstFrame": 19765,
+          "lastFrame": 19868
+        },
+        {
+          "name": "Jump from the rising lift into the gallery",
+          "firstFrame": 19869,
+          "lastFrame": 19905
+        },
+        {
+          "name": "Collect the gallery crystal",
+          "firstFrame": 19905,
+          "lastFrame": 19993
+        },
+        {
+          "name": "Read the lower return from the gallery edge",
+          "firstFrame": 20011,
+          "lastFrame": 20094
+        },
+        {
+          "name": "Drop into the broad return landing",
+          "firstFrame": 20139,
+          "lastFrame": 20200
+        },
+        {
+          "name": "Join the lower machine return",
+          "firstFrame": 20200,
+          "lastFrame": 20284
+        },
+        {
+          "name": "Follow the return outside the water",
+          "firstFrame": 20302,
+          "lastFrame": 20589
+        },
+        {
+          "name": "Climb the return and reach its upper junction",
+          "firstFrame": 20607,
+          "lastFrame": 20902
+        },
+        {
+          "name": "Finish the machine circuit on the entrance bank",
+          "firstFrame": 20920,
+          "lastFrame": 21097
+        }
+      ],
+      "evidence": [
+        {
+          "action": "mistimed ferry jump recovers locally",
+          "position": [
+            -4,
+            0.1,
+            -571
+          ]
+        },
+        {
+          "action": "ferry carries rider",
+          "position": [
+            -0.0005799060612705804,
+            0,
+            -597.8536860705412
+          ],
+          "ferry": [
+            0,
+            -0.25,
+            -596.3111939904694
+          ]
+        },
+        {
+          "action": "lift carries rider",
+          "position": [
+            -0.0005799060612705804,
+            7.348801001146975,
+            -617.4246672192628
+          ],
+          "top": 7.374094343474817
+        }
+      ],
+      "expectedDeaths": 2,
+      "stage": "Finish the machine circuit on the entrance bank",
+      "end": {
+        "frame": 21115,
+        "time": 351.9166666666667,
+        "position": [
+          0.06853055556118773,
+          0,
+          -567.0036834349685
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 2,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 5,
+      "actions": [
+        {
+          "name": "Bank the halfpipe checkpoint",
+          "firstFrame": 24725,
+          "lastFrame": 24806
+        },
+        {
+          "name": "Enter through the open end of the halfpipe",
+          "firstFrame": 24850,
+          "lastFrame": 25207
+        },
+        {
+          "name": "Push from rest onto the board",
+          "firstFrame": 25225,
+          "lastFrame": 25259
+        },
+        {
+          "name": "Roll down the transition into the flat",
+          "firstFrame": 25895,
+          "lastFrame": 25912
+        },
+        {
+          "name": "Bleed the accumulated speed on the opposite transition",
+          "firstFrame": 25912,
+          "lastFrame": 25964
+        },
+        {
+          "name": "Coast back into the flat after braking",
+          "firstFrame": 25964,
+          "lastFrame": 26011
+        },
+        {
+          "name": "Dismount at walking speed on the flat",
+          "firstFrame": 26011,
+          "lastFrame": 26033
+        },
+        {
+          "name": "Rejoin the open center of the pipe",
+          "firstFrame": 26033,
+          "lastFrame": 26113
+        },
+        {
+          "name": "Return through the open end to the checkpoint",
+          "firstFrame": 26131,
+          "lastFrame": 26488
+        }
+      ],
+      "evidence": [
+        {
+          "action": "halfpipe air",
+          "side": 1,
+          "peak": 6.351892858526901,
+          "frames": 58,
+          "start": [
+            8.582434951738264,
+            2.3878627095508373,
+            -800.9531634171124
+          ],
+          "landing": [
+            8.923225067117093,
+            3.220145113000003,
+            -800.9989787047443
+          ],
+          "collected": false
+        },
+        {
+          "action": "halfpipe air",
+          "side": -1,
+          "peak": 7.158531154481296,
+          "frames": 58,
+          "start": [
+            -8.927459255551994,
+            4.111782718558017,
+            -801.0118944110968
+          ],
+          "landing": [
+            -8.922852815131165,
+            3.2184008086713702,
+            -801.0120915160157
+          ],
+          "collected": false
+        },
+        {
+          "action": "halfpipe air",
+          "side": 1,
+          "peak": 8.058916600064032,
+          "frames": 65,
+          "start": [
+            8.927198327215896,
+            4.103811895437436,
+            -801.0124062290586
+          ],
+          "landing": [
+            8.922792692403105,
+            3.2181429559648427,
+            -801.0126624845748
+          ],
+          "collected": false
+        },
+        {
+          "action": "halfpipe air",
+          "side": -1,
+          "peak": 9.02475387836017,
+          "frames": 71,
+          "start": [
+            -8.929504926817103,
+            4.1742737613508645,
+            -801.0129940207828
+          ],
+          "landing": [
+            -8.922931519125964,
+            3.2187383522048756,
+            -801.0133233956465
+          ],
+          "collected": false
+        },
+        {
+          "action": "halfpipe air",
+          "side": 1,
+          "peak": 9.785155034867673,
+          "frames": 76,
+          "start": [
+            8.928644237683288,
+            4.147981481447519,
+            -801.0136828063801
+          ],
+          "landing": [
+            8.922578869188037,
+            3.2172259168266883,
+            -801.0140978904594
+          ],
+          "collected": true
+        }
+      ],
+      "expectedDeaths": 2,
+      "stage": "Return through the open end to the checkpoint",
+      "end": {
+        "frame": 26506,
+        "time": 441.76666666666665,
+        "position": [
+          -0.000778204274440232,
+          0,
+          -763.0762595274435
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 2,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 6,
+      "actions": [
+        {
+          "name": "Bank the rope courtyard checkpoint",
+          "firstFrame": 30208,
+          "lastFrame": 30289
+        },
+        {
+          "name": "Wait below the climbing vine",
+          "firstFrame": 30333,
+          "lastFrame": 30574
+        },
+        {
+          "name": "Read the rope as it crosses the courtyard center",
+          "firstFrame": 30618,
+          "lastFrame": 30813
+        },
+        {
+          "name": "Catch the moving lower rope with a normal jump",
+          "firstFrame": 30814,
+          "lastFrame": 30818
+        },
+        {
+          "name": "A low release misses the window and lands in the courtyard",
+          "firstFrame": 30847,
+          "lastFrame": 30890
+        },
+        {
+          "name": "Wait below the climbing vine",
+          "firstFrame": 30890,
+          "lastFrame": 30976
+        },
+        {
+          "name": "Read the rope as it crosses the courtyard center",
+          "firstFrame": 31020,
+          "lastFrame": 31035
+        },
+        {
+          "name": "Catch the moving lower rope with a normal jump",
+          "firstFrame": 31036,
+          "lastFrame": 31039
+        },
+        {
+          "name": "Climb the swinging rope above the window sill",
+          "firstFrame": 31041,
+          "lastFrame": 31244
+        },
+        {
+          "name": "Wait for the high swing toward the window",
+          "firstFrame": 31270,
+          "lastFrame": 31538
+        },
+        {
+          "name": "Release through the framed window onto its sill",
+          "firstFrame": 31539,
+          "lastFrame": 31579
+        },
+        {
+          "name": "Collect the window crystal",
+          "firstFrame": 31579,
+          "lastFrame": 31664
+        },
+        {
+          "name": "Read the courtyard return beside the window",
+          "firstFrame": 31682,
+          "lastFrame": 31755
+        },
+        {
+          "name": "Drop into the broad courtyard beside the gallery",
+          "firstFrame": 31800,
+          "lastFrame": 31853
+        },
+        {
+          "name": "Pass outside the climbing rope",
+          "firstFrame": 31853,
+          "lastFrame": 31991
+        },
+        {
+          "name": "Return to the rope courtyard entrance",
+          "firstFrame": 32009,
+          "lastFrame": 32258
+        }
+      ],
+      "evidence": [
+        {
+          "action": "low rope catch",
+          "position": [
+            0.0017727231859519502,
+            0.2712649026551648,
+            -978.7111280764145
+          ],
+          "gripDistance": 11.9
+        },
+        {
+          "action": "low rope catch",
+          "position": [
+            0.0017728331452803467,
+            0.27746805859666024,
+            -977.1918925035208
+          ],
+          "gripDistance": 11.9
+        },
+        {
+          "action": "climbed release",
+          "position": [
+            -0.025271939023195942,
+            8.726104642264639,
+            -979.6104031515284
+          ],
+          "gripDistance": 3.7800000000000793
+        }
+      ],
+      "expectedDeaths": 2,
+      "stage": "Return to the rope courtyard entrance",
+      "end": {
+        "frame": 32276,
+        "time": 537.9333333333333,
+        "position": [
+          0.02330385552981145,
+          0,
+          -955.079891073722
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 2,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 7,
+      "actions": [
+        {
+          "name": "Bank the timed staircase checkpoint",
+          "firstFrame": 35978,
+          "lastFrame": 36059
+        },
+        {
+          "name": "Observe the full staircase from its waiting bank",
+          "firstFrame": 36103,
+          "lastFrame": 36235
+        },
+        {
+          "name": "Start as the first stair lights",
+          "firstFrame": 36279,
+          "lastFrame": 36482
+        },
+        {
+          "name": "Jump onto the first rising stair",
+          "firstFrame": 36483,
+          "lastFrame": 36518
+        },
+        {
+          "name": "Let the warned stair disappear and recover below",
+          "firstFrame": 36518,
+          "lastFrame": 36771
+        },
+        {
+          "name": "Walk below the stairs toward the retry route",
+          "firstFrame": 36771,
+          "lastFrame": 36923
+        },
+        {
+          "name": "Join the lower retry ramp",
+          "firstFrame": 36941,
+          "lastFrame": 37118
+        },
+        {
+          "name": "Climb to the fixed waiting bank",
+          "firstFrame": 37136,
+          "lastFrame": 37430
+        },
+        {
+          "name": "Rejoin the staircase entrance",
+          "firstFrame": 37448,
+          "lastFrame": 37625
+        },
+        {
+          "name": "Observe the full staircase from its waiting bank",
+          "firstFrame": 37643,
+          "lastFrame": 37802
+        },
+        {
+          "name": "Start as the first stair lights",
+          "firstFrame": 37846,
+          "lastFrame": 37922
+        },
+        {
+          "name": "Jump onto the first rising stair",
+          "firstFrame": 37923,
+          "lastFrame": 37958
+        },
+        {
+          "name": "Cross stair 1 before its warning ends",
+          "firstFrame": 37958,
+          "lastFrame": 38039
+        },
+        {
+          "name": "Jump onto lit stair 2",
+          "firstFrame": 38084,
+          "lastFrame": 38119
+        },
+        {
+          "name": "Cross stair 2 before its warning ends",
+          "firstFrame": 38119,
+          "lastFrame": 38200
+        },
+        {
+          "name": "Jump onto lit stair 3",
+          "firstFrame": 38245,
+          "lastFrame": 38280
+        },
+        {
+          "name": "Cross stair 3 before its warning ends",
+          "firstFrame": 38280,
+          "lastFrame": 38361
+        },
+        {
+          "name": "Jump to the permanent crystal balcony",
+          "firstFrame": 38406,
+          "lastFrame": 38440
+        },
+        {
+          "name": "Collect the crystal after the rising rhythm",
+          "firstFrame": 38440,
+          "lastFrame": 38530
+        },
+        {
+          "name": "Read the lower return beside the balcony",
+          "firstFrame": 38548,
+          "lastFrame": 38631
+        },
+        {
+          "name": "Drop from the balcony into the recovery courtyard",
+          "firstFrame": 38676,
+          "lastFrame": 38735
+        },
+        {
+          "name": "Walk below the stairs toward the retry route",
+          "firstFrame": 38735,
+          "lastFrame": 38927
+        },
+        {
+          "name": "Join the lower retry ramp",
+          "firstFrame": 38945,
+          "lastFrame": 39122
+        },
+        {
+          "name": "Climb to the fixed waiting bank",
+          "firstFrame": 39140,
+          "lastFrame": 39434
+        },
+        {
+          "name": "Rejoin the staircase entrance",
+          "firstFrame": 39452,
+          "lastFrame": 39629
+        }
+      ],
+      "evidence": [
+        {
+          "action": "late step recovers without death",
+          "position": [
+            -0.024025506045561144,
+            -8,
+            -1161.1423995059608
+          ]
+        },
+        {
+          "action": "rising transfer",
+          "stair": 1,
+          "position": [
+            0.0012687068222098851,
+            3.000000011920929,
+            -1167.7555159410524
+          ],
+          "phases": [
+            0.41458333330218977,
+            0.1745833333021949,
+            0.9345833333021858
+          ]
+        },
+        {
+          "action": "rising transfer",
+          "stair": 2,
+          "position": [
+            0.0012687068222098851,
+            4.500000011920929,
+            -1174.7555603855
+          ],
+          "phases": [
+            0.7499999999685514,
+            0.5099999999685565,
+            0.2699999999685474
+          ]
+        },
+        {
+          "action": "rising transfer",
+          "stair": 3,
+          "position": [
+            0.0012687068222098851,
+            6.2,
+            -1182.0826048299477
+          ],
+          "phases": [
+            0.08333333330158155,
+            0.8433333333015867,
+            0.6033333333015776
+          ]
+        }
+      ],
+      "expectedDeaths": 2,
+      "stage": "Rejoin the staircase entrance",
+      "end": {
+        "frame": 39647,
+        "time": 660.7833333333333,
+        "position": [
+          0.06751163509271454,
+          0,
+          -1143.0039111167398
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 2,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 8,
+      "actions": [
+        {
+          "name": "Bank the outline orchard checkpoint",
+          "firstFrame": 43257,
+          "lastFrame": 43338
+        },
+        {
+          "name": "Read the ghost steps before operating the switch",
+          "firstFrame": 43382,
+          "lastFrame": 43553
+        },
+        {
+          "name": "An unrevealed step lets the jump fall safely into the courtyard",
+          "firstFrame": 43598,
+          "lastFrame": 43637
+        },
+        {
+          "name": "approach Reveal the orchard steps and their arrow",
+          "firstFrame": 43637,
+          "lastFrame": 43753
+        },
+        {
+          "name": "Reveal the orchard steps and their arrow",
+          "firstFrame": 43773,
+          "lastFrame": 43773
+        },
+        {
+          "name": "Approach the now-solid first step",
+          "firstFrame": 43795,
+          "lastFrame": 43888
+        },
+        {
+          "name": "Jump onto the first revealed step",
+          "firstFrame": 43933,
+          "lastFrame": 43965
+        },
+        {
+          "name": "Set up the jump to the spring terrace",
+          "firstFrame": 43965,
+          "lastFrame": 44043
+        },
+        {
+          "name": "Jump onto the revealed spring terrace",
+          "firstFrame": 44088,
+          "lastFrame": 44120
+        },
+        {
+          "name": "Approach the intact steel arrow",
+          "firstFrame": 44120,
+          "lastFrame": 44207
+        },
+        {
+          "name": "Try the short arrow rebound",
+          "firstFrame": 44252,
+          "lastFrame": 44288
+        },
+        {
+          "name": "Read the height still missing from the short rebound",
+          "firstFrame": 44288,
+          "lastFrame": 44318
+        },
+        {
+          "name": "Land beside the arrow for a local retry",
+          "firstFrame": 44318,
+          "lastFrame": 44335
+        },
+        {
+          "name": "Approach the intact steel arrow",
+          "firstFrame": 44335,
+          "lastFrame": 44335
+        },
+        {
+          "name": "Hold the high arrow rebound",
+          "firstFrame": 44380,
+          "lastFrame": 44416
+        },
+        {
+          "name": "Drift from the arrow into the high orchard gallery",
+          "firstFrame": 44416,
+          "lastFrame": 44461
+        },
+        {
+          "name": "Collect the orchard crystal",
+          "firstFrame": 44461,
+          "lastFrame": 44540
+        },
+        {
+          "name": "Read the clear courtyard return edge",
+          "firstFrame": 44558,
+          "lastFrame": 44630
+        },
+        {
+          "name": "Drop into the orchard courtyard",
+          "firstFrame": 44675,
+          "lastFrame": 44729
+        },
+        {
+          "name": "Pass outside the raised outline route",
+          "firstFrame": 44729,
+          "lastFrame": 44937
+        },
+        {
+          "name": "Return to the orchard entrance",
+          "firstFrame": 44955,
+          "lastFrame": 45142
+        }
+      ],
+      "evidence": [
+        {
+          "action": "Reveal the orchard steps and their arrow",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": true
+          }
+        },
+        {
+          "action": "short rebound misses high gallery",
+          "apex": 9.309499999999996
+        },
+        {
+          "action": "held arrow launch",
+          "position": [
+            -0.02750000000000004,
+            5.571999999999999,
+            -1365.9974399585612
+          ],
+          "verticalSpeed": 20
+        }
+      ],
+      "expectedDeaths": 2,
+      "stage": "Return to the orchard entrance",
+      "end": {
+        "frame": 45160,
+        "time": 752.6666666666666,
+        "position": [
+          0.05517343320950151,
+          0,
+          -1339.0551286672164
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 2,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 9,
+      "actions": [
+        {
+          "name": "Bank the turtle checkpoint",
+          "firstFrame": 48862,
+          "lastFrame": 48943
+        },
+        {
+          "name": "Approach the turtle from the side",
+          "firstFrame": 48987,
+          "lastFrame": 49195
+        },
+        {
+          "name": "A first spin leaves a shell",
+          "firstFrame": 49214,
+          "lastFrame": 49214
+        },
+        {
+          "name": "A fresh second spin removes the spring",
+          "firstFrame": 49280,
+          "lastFrame": 49280
+        },
+        {
+          "name": "Leave the removed shell",
+          "firstFrame": 49280,
+          "lastFrame": 49398
+        },
+        {
+          "name": "Approach the designated reset pit",
+          "firstFrame": 49416,
+          "lastFrame": 49648
+        },
+        {
+          "name": "Reset the destroyed tool through the marked pit",
+          "firstFrame": 49666,
+          "lastFrame": 49720
+        },
+        {
+          "name": "Recover at the turtle checkpoint",
+          "firstFrame": 49720,
+          "lastFrame": 49853
+        },
+        {
+          "name": "Set up a falling stomp",
+          "firstFrame": 49853,
+          "lastFrame": 50061
+        },
+        {
+          "name": "Stomp the turtle into a reusable shell",
+          "firstFrame": 50106,
+          "lastFrame": 50143
+        },
+        {
+          "name": "Recover beside the new shell",
+          "firstFrame": 50143,
+          "lastFrame": 50185
+        },
+        {
+          "name": "Approach the shell spring",
+          "firstFrame": 50185,
+          "lastFrame": 50185
+        },
+        {
+          "name": "Hold the shell rebound",
+          "firstFrame": 50230,
+          "lastFrame": 50265
+        },
+        {
+          "name": "Measure the held rebound without a double jump",
+          "firstFrame": 50265,
+          "lastFrame": 50302
+        },
+        {
+          "name": "Land beside the shell for a local retry",
+          "firstFrame": 50302,
+          "lastFrame": 50323
+        },
+        {
+          "name": "Approach the shell spring",
+          "firstFrame": 50323,
+          "lastFrame": 50323
+        },
+        {
+          "name": "Hold the shell rebound",
+          "firstFrame": 50368,
+          "lastFrame": 50403
+        },
+        {
+          "name": "Rise outside the high platform",
+          "firstFrame": 50406,
+          "lastFrame": 50439
+        },
+        {
+          "name": "Double jump above the platform edge",
+          "firstFrame": 50441,
+          "lastFrame": 50447
+        },
+        {
+          "name": "Drift onto the high receiver",
+          "firstFrame": 50447,
+          "lastFrame": 50467
+        },
+        {
+          "name": "Collect the turtle crystal",
+          "firstFrame": 50467,
+          "lastFrame": 50540
+        },
+        {
+          "name": "Return to the flat courtyard",
+          "firstFrame": 50585,
+          "lastFrame": 50637
+        },
+        {
+          "name": "Walk around the shell and platform",
+          "firstFrame": 50637,
+          "lastFrame": 50877
+        },
+        {
+          "name": "Complete the turtle circuit",
+          "firstFrame": 50895,
+          "lastFrame": 51040
+        }
+      ],
+      "evidence": [
+        {
+          "action": "second attack removes the required tool"
+        },
+        {
+          "action": "held shell alone misses",
+          "apex": 7.309166666666661
+        },
+        {
+          "action": "shell and double jump reach receiver",
+          "position": [
+            5.939599713097399,
+            8.2,
+            -1553.963629094817
+          ]
+        }
+      ],
+      "expectedDeaths": 3,
+      "stage": "Complete the turtle circuit",
+      "end": {
+        "frame": 51058,
+        "time": 850.9666666666667,
+        "position": [
+          0.08391684950127158,
+          0,
+          -1531.0012212764439
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 3,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "id": 10,
+      "actions": [
+        {
+          "name": "Bank the bridge checkpoint",
+          "firstFrame": 54760,
+          "lastFrame": 54841
+        },
+        {
+          "name": "Approach the upright bridge",
+          "firstFrame": 54885,
+          "lastFrame": 55039
+        },
+        {
+          "name": "Wait for the bridge to settle",
+          "firstFrame": 55058,
+          "lastFrame": 55087
+        },
+        {
+          "name": "Wait on the deployed bridge",
+          "firstFrame": 55087,
+          "lastFrame": 55202
+        },
+        {
+          "name": "A late crossing folds away and drops to the flat floor",
+          "firstFrame": 55220,
+          "lastFrame": 55410
+        },
+        {
+          "name": "Join the lower return",
+          "firstFrame": 55410,
+          "lastFrame": 55587
+        },
+        {
+          "name": "Walk to the return ramp",
+          "firstFrame": 55605,
+          "lastFrame": 55720
+        },
+        {
+          "name": "Climb the return ramp",
+          "firstFrame": 55738,
+          "lastFrame": 56001
+        },
+        {
+          "name": "Turn onto the approach",
+          "firstFrame": 56019,
+          "lastFrame": 56110
+        },
+        {
+          "name": "Return to the bridge entrance",
+          "firstFrame": 56128,
+          "lastFrame": 56305
+        },
+        {
+          "name": "Approach the upright bridge",
+          "firstFrame": 56323,
+          "lastFrame": 56507
+        },
+        {
+          "name": "Wait for the bridge to settle",
+          "firstFrame": 56526,
+          "lastFrame": 56555
+        },
+        {
+          "name": "Cross before the bridge folds",
+          "firstFrame": 56555,
+          "lastFrame": 56723
+        },
+        {
+          "name": "Jump from the bridge onto the small raised receiver",
+          "firstFrame": 56768,
+          "lastFrame": 56800
+        },
+        {
+          "name": "Collect the bridge crystal",
+          "firstFrame": 56800,
+          "lastFrame": 56868
+        },
+        {
+          "name": "Drop beside the folded bridge into the recovery floor",
+          "firstFrame": 56913,
+          "lastFrame": 56967
+        },
+        {
+          "name": "Join the lower return",
+          "firstFrame": 56967,
+          "lastFrame": 57098
+        },
+        {
+          "name": "Walk to the return ramp",
+          "firstFrame": 57116,
+          "lastFrame": 57222
+        },
+        {
+          "name": "Climb the return ramp",
+          "firstFrame": 57240,
+          "lastFrame": 57504
+        },
+        {
+          "name": "Turn onto the approach",
+          "firstFrame": 57522,
+          "lastFrame": 57613
+        },
+        {
+          "name": "Return to the bridge entrance",
+          "firstFrame": 57631,
+          "lastFrame": 57808
+        }
+      ],
+      "evidence": [
+        {
+          "action": "bridge timeout returns to flat floor",
+          "position": [
+            -0.004412649236518015,
+            -8,
+            -1741.915084054193
+          ]
+        },
+        {
+          "action": "timed bridge and precision landing",
+          "position": [
+            0.00376880339309768,
+            2.2,
+            -1754.9330914904497
+          ]
+        }
+      ],
+      "expectedDeaths": 3,
+      "stage": "Return to the bridge entrance",
+      "end": {
+        "frame": 57826,
+        "time": 963.7666666666667,
+        "position": [
+          0.0685722132414939,
+          0,
+          -1719.0037500994222
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 3,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    }
+  ],
+  "navigation": {
+    "actions": [
+      {
+        "name": "Try the final exit before retrieving any crystals",
+        "firstFrame": 12,
+        "lastFrame": 103
+      },
+      {
+        "name": "Approach challenge 1 from the flat floor",
+        "firstFrame": 133,
+        "lastFrame": 302
+      },
+      {
+        "name": "Climb the approach to challenge 1",
+        "firstFrame": 320,
+        "lastFrame": 811
+      },
+      {
+        "name": "Enter challenge 1 on foot",
+        "firstFrame": 829,
+        "lastFrame": 936
+      },
+      {
+        "name": "Leave challenge 1 through its return",
+        "firstFrame": 1495,
+        "lastFrame": 1667
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 1685,
+        "lastFrame": 1759
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 1777,
+        "lastFrame": 2268
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 2286,
+        "lastFrame": 2612
+      },
+      {
+        "name": "Walk through the clear gap to challenge 2",
+        "firstFrame": 2630,
+        "lastFrame": 4179
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 4197,
+        "lastFrame": 4523
+      },
+      {
+        "name": "Approach challenge 2 from the flat floor",
+        "firstFrame": 4541,
+        "lastFrame": 4614
+      },
+      {
+        "name": "Climb the approach to challenge 2",
+        "firstFrame": 4632,
+        "lastFrame": 5123
+      },
+      {
+        "name": "Enter challenge 2 on foot",
+        "firstFrame": 5141,
+        "lastFrame": 5248
+      },
+      {
+        "name": "Leave challenge 2 through its return",
+        "firstFrame": 6225,
+        "lastFrame": 6404
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 6422,
+        "lastFrame": 6496
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 6514,
+        "lastFrame": 7005
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 7023,
+        "lastFrame": 7349
+      },
+      {
+        "name": "Walk through the clear gap to challenge 3",
+        "firstFrame": 7367,
+        "lastFrame": 8916
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 8934,
+        "lastFrame": 9260
+      },
+      {
+        "name": "Approach challenge 3 from the flat floor",
+        "firstFrame": 9278,
+        "lastFrame": 9351
+      },
+      {
+        "name": "Climb the approach to challenge 3",
+        "firstFrame": 9369,
+        "lastFrame": 9860
+      },
+      {
+        "name": "Enter challenge 3 on foot",
+        "firstFrame": 9878,
+        "lastFrame": 9985
+      },
+      {
+        "name": "Leave challenge 3 through its return",
+        "firstFrame": 13143,
+        "lastFrame": 13246
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 13264,
+        "lastFrame": 13338
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 13356,
+        "lastFrame": 13847
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 13865,
+        "lastFrame": 14191
+      },
+      {
+        "name": "Walk through the clear gap to challenge 4",
+        "firstFrame": 14209,
+        "lastFrame": 15758
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 15776,
+        "lastFrame": 16102
+      },
+      {
+        "name": "Approach challenge 4 from the flat floor",
+        "firstFrame": 16120,
+        "lastFrame": 16193
+      },
+      {
+        "name": "Climb the approach to challenge 4",
+        "firstFrame": 16211,
+        "lastFrame": 16702
+      },
+      {
+        "name": "Enter challenge 4 on foot",
+        "firstFrame": 16720,
+        "lastFrame": 16827
+      },
+      {
+        "name": "Leave challenge 4 through its return",
+        "firstFrame": 21115,
+        "lastFrame": 21115
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 21133,
+        "lastFrame": 21206
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 21224,
+        "lastFrame": 21715
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 21733,
+        "lastFrame": 22059
+      },
+      {
+        "name": "Walk through the clear gap to challenge 5",
+        "firstFrame": 22077,
+        "lastFrame": 23626
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 23644,
+        "lastFrame": 23970
+      },
+      {
+        "name": "Approach challenge 5 from the flat floor",
+        "firstFrame": 23988,
+        "lastFrame": 24061
+      },
+      {
+        "name": "Climb the approach to challenge 5",
+        "firstFrame": 24079,
+        "lastFrame": 24570
+      },
+      {
+        "name": "Enter challenge 5 on foot",
+        "firstFrame": 24588,
+        "lastFrame": 24695
+      },
+      {
+        "name": "Leave challenge 5 through its return",
+        "firstFrame": 26506,
+        "lastFrame": 26597
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 26615,
+        "lastFrame": 26689
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 26707,
+        "lastFrame": 27198
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 27216,
+        "lastFrame": 27542
+      },
+      {
+        "name": "Walk through the clear gap to challenge 6",
+        "firstFrame": 27560,
+        "lastFrame": 29109
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 29127,
+        "lastFrame": 29453
+      },
+      {
+        "name": "Approach challenge 6 from the flat floor",
+        "firstFrame": 29471,
+        "lastFrame": 29544
+      },
+      {
+        "name": "Climb the approach to challenge 6",
+        "firstFrame": 29562,
+        "lastFrame": 30053
+      },
+      {
+        "name": "Enter challenge 6 on foot",
+        "firstFrame": 30071,
+        "lastFrame": 30178
+      },
+      {
+        "name": "Leave challenge 6 through its return",
+        "firstFrame": 32276,
+        "lastFrame": 32367
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 32385,
+        "lastFrame": 32459
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 32477,
+        "lastFrame": 32968
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 32986,
+        "lastFrame": 33312
+      },
+      {
+        "name": "Walk through the clear gap to challenge 7",
+        "firstFrame": 33330,
+        "lastFrame": 34879
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 34897,
+        "lastFrame": 35223
+      },
+      {
+        "name": "Approach challenge 7 from the flat floor",
+        "firstFrame": 35241,
+        "lastFrame": 35314
+      },
+      {
+        "name": "Climb the approach to challenge 7",
+        "firstFrame": 35332,
+        "lastFrame": 35823
+      },
+      {
+        "name": "Enter challenge 7 on foot",
+        "firstFrame": 35841,
+        "lastFrame": 35948
+      },
+      {
+        "name": "Leave challenge 7 through its return",
+        "firstFrame": 39647,
+        "lastFrame": 39647
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 39665,
+        "lastFrame": 39738
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 39756,
+        "lastFrame": 40247
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 40265,
+        "lastFrame": 40591
+      },
+      {
+        "name": "Walk through the clear gap to challenge 8",
+        "firstFrame": 40609,
+        "lastFrame": 42158
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 42176,
+        "lastFrame": 42502
+      },
+      {
+        "name": "Approach challenge 8 from the flat floor",
+        "firstFrame": 42520,
+        "lastFrame": 42593
+      },
+      {
+        "name": "Climb the approach to challenge 8",
+        "firstFrame": 42611,
+        "lastFrame": 43102
+      },
+      {
+        "name": "Enter challenge 8 on foot",
+        "firstFrame": 43120,
+        "lastFrame": 43227
+      },
+      {
+        "name": "Leave challenge 8 through its return",
+        "firstFrame": 45160,
+        "lastFrame": 45251
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 45269,
+        "lastFrame": 45343
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 45361,
+        "lastFrame": 45852
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 45870,
+        "lastFrame": 46196
+      },
+      {
+        "name": "Walk through the clear gap to challenge 9",
+        "firstFrame": 46214,
+        "lastFrame": 47763
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 47781,
+        "lastFrame": 48107
+      },
+      {
+        "name": "Approach challenge 9 from the flat floor",
+        "firstFrame": 48125,
+        "lastFrame": 48198
+      },
+      {
+        "name": "Climb the approach to challenge 9",
+        "firstFrame": 48216,
+        "lastFrame": 48707
+      },
+      {
+        "name": "Enter challenge 9 on foot",
+        "firstFrame": 48725,
+        "lastFrame": 48832
+      },
+      {
+        "name": "Leave challenge 9 through its return",
+        "firstFrame": 51058,
+        "lastFrame": 51149
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 51167,
+        "lastFrame": 51241
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 51259,
+        "lastFrame": 51750
+      },
+      {
+        "name": "Join the flat corridor beside the station",
+        "firstFrame": 51768,
+        "lastFrame": 52094
+      },
+      {
+        "name": "Walk through the clear gap to challenge 10",
+        "firstFrame": 52112,
+        "lastFrame": 53661
+      },
+      {
+        "name": "Line up with the next approach ramp",
+        "firstFrame": 53679,
+        "lastFrame": 54005
+      },
+      {
+        "name": "Approach challenge 10 from the flat floor",
+        "firstFrame": 54023,
+        "lastFrame": 54096
+      },
+      {
+        "name": "Climb the approach to challenge 10",
+        "firstFrame": 54114,
+        "lastFrame": 54605
+      },
+      {
+        "name": "Enter challenge 10 on foot",
+        "firstFrame": 54623,
+        "lastFrame": 54730
+      },
+      {
+        "name": "Leave challenge 10 through its return",
+        "firstFrame": 57826,
+        "lastFrame": 57826
+      },
+      {
+        "name": "Rejoin the approach landing",
+        "firstFrame": 57844,
+        "lastFrame": 57917
+      },
+      {
+        "name": "Descend to the continuous flat floor",
+        "firstFrame": 57935,
+        "lastFrame": 58426
+      },
+      {
+        "name": "Join the corridor after the final challenge",
+        "firstFrame": 58444,
+        "lastFrame": 58770
+      },
+      {
+        "name": "Continue to the final exit",
+        "firstFrame": 58788,
+        "lastFrame": 60369
+      },
+      {
+        "name": "Finish through the real gate after challenge 25",
+        "firstFrame": 60387,
+        "lastFrame": 60626
+      }
+    ],
+    "evidence": [],
+    "stage": "Finish through the real gate after challenge 25"
+  },
+  "finish": {
+    "frame": 60626,
+    "time": 1010.4333333333333,
+    "position": [
+      1.446012158270901,
+      -7.273333330849806,
+      -1855.9925159415832
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 3,
+    "mover": null,
+    "ground": {
+      "name": "warp plinth rim",
+      "y": -7.273333330849806,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": -1,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

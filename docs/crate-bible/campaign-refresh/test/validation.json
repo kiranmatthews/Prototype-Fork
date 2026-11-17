@@ -1,0 +1,247 @@
+{
+  "course": "test",
+  "uiName": "Uga Ambush",
+  "bonus": "bonus-test-course",
+  "passed": true,
+  "scope": "crate/enemy placement; existing terrain, hazards and native art retained",
+  "main": {
+    "cargo": 166,
+    "checkpoints": 14,
+    "bonus": 25,
+    "total": 205,
+    "clusters": 48,
+    "singles": 0,
+    "meanClusterSize": 3.46,
+    "overhangs": 0,
+    "floating": 0,
+    "sectionCounts": [
+      10,
+      10,
+      10,
+      10,
+      20,
+      10,
+      6,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      20,
+      10
+    ],
+    "enemies": 20,
+    "enemyKinds": 2,
+    "harvested": 163,
+    "deferredCargo": 3,
+    "separateHarvestScenarios": 47,
+    "patrolProbes": 600,
+    "retryRestores": true,
+    "continuousAllBoxRun": false
+  },
+  "bonus_result": {
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 25,
+    "cratesBroken": 25,
+    "deaths": 0
+  },
+  "order": {
+    "earlySpin": {
+      "stage": "wrong ground spin detonates useful TNT support",
+      "evidence": [],
+      "actions": [
+        {
+          "name": "fuse negative observation",
+          "firstFrame": 20,
+          "lastFrame": 20
+        },
+        {
+          "name": "unsafe direct spin approach",
+          "firstFrame": 38,
+          "lastFrame": 143
+        },
+        {
+          "name": "wrong ground spin detonates useful TNT support",
+          "firstFrame": 161,
+          "lastFrame": 168
+        }
+      ],
+      "result": {
+        "pattern": "fuse",
+        "test": "early ground spin destroys timed access and kills exposed player",
+        "capAlive": true,
+        "state": "dead",
+        "gemEarned": false
+      },
+      "pattern": "fuse",
+      "test": "early ground spin destroys timed access and kills exposed player",
+      "capAlive": true,
+      "state": "dead",
+      "gemEarned": false,
+      "frames": 168,
+      "seconds": 2.8
+    },
+    "floorWithoutDonor": {
+      "maxContact": 7.5951783386806175,
+      "rewardBase": 9,
+      "rewardAlive": true
+    },
+    "neighborWithoutDonor": {
+      "maxContact": 8.329383555865679,
+      "rewardBase": 9,
+      "rewardAlive": true
+    },
+    "skippedSwitch": {
+      "state": "dead",
+      "position": [
+        42.49999999999993,
+        -7.187500011920936,
+        0
+      ]
+    },
+    "retryRestores": true
+  },
+  "access": [
+    {
+      "label": "unassisted stair -192",
+      "landing": [
+        4,
+        -3.2999999761581424,
+        -191.9500000000002
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "unassisted stair -199",
+      "landing": [
+        4,
+        -1.099999952316284,
+        -199.00000000000045
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "unassisted stair -206",
+      "landing": [
+        4,
+        1.0999999523162842,
+        -206.05000000000072
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "unassisted stair -212",
+      "landing": [
+        4,
+        3.3000000953674316,
+        -211.894
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "unassisted side-scroll transfer",
+      "landing": [
+        44.44999999999986,
+        -17.5,
+        -1720
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "unassisted upper side-scroll ledge",
+      "landing": [
+        120.87000000000015,
+        -11.5,
+        -1720
+      ],
+      "deaths": 0
+    },
+    {
+      "label": "dock arrow gap",
+      "position": [
+        146.53647171059302,
+        -26,
+        -2105.738198051534
+      ],
+      "deaths": 0,
+      "arrowAlive": true,
+      "gemEarned": false
+    },
+    {
+      "label": "charged channel formation 10",
+      "count": 3,
+      "contactSpeed": 21.60833333333335,
+      "deaths": 0
+    },
+    {
+      "label": "charged channel formation 11",
+      "count": 4,
+      "contactSpeed": 24.765293652174552,
+      "deaths": 0
+    }
+  ],
+  "geometry": [
+    {
+      "name": "carlisle-coast",
+      "unchangedComponents": 3892,
+      "sha256": "44ec75ddd3b4b3f7c6420bcd7985559e7d4268deddbf78f3f337cf824ad245a1"
+    },
+    {
+      "name": "themed-bonuses",
+      "unchangedComponents": 134,
+      "sha256": "a0436e43a519c5fb1f99121d3d40df1a8b1f4e02374f00fd7bf87efae6eac2e9"
+    }
+  ],
+  "browser": {
+    "allPassed": true,
+    "consoleErrors": 0,
+    "fullResolution": [
+      1280,
+      720
+    ],
+    "fullViews": 9,
+    "dock": {
+      "position": [
+        146.53647171059302,
+        -26,
+        -2105.42
+      ],
+      "deaths": 0,
+      "arrowAlive": true
+    },
+    "mainScope": "opening harvest; staged checkpoint, kill-plane recovery and finish; staged continuous dock crossing",
+    "bonusScope": "continuous standalone all-box finish"
+  },
+  "checks": {
+    "levels": true,
+    "build": true,
+    "release": true,
+    "releaseBytes": 959277006,
+    "buildVersion": "97b04893cf0a40ce7131",
+    "crateSupportWallsRailsSwitches": true,
+    "nativeAccess": true
+  },
+  "knownBaselineIssue": {
+    "scope": "pre-existing broader terrain render audit",
+    "command": "node tools/test-carlisle-boxes.mjs",
+    "reproducedInCommittedBaseline": "ae71736a",
+    "position": [
+      5,
+      -13.883047341954292,
+      -1379.0617708846448
+    ],
+    "beamGroundClearance": -0.5352586012767784,
+    "message": "The full render-surface check fails at exactly the same point in the untouched baseline and current source; crate support/rail clearance passes."
+  },
+  "timing": {
+    "startedAt": "2026-11-14T08:44:00+00:00",
+    "validatedAt": "2026-11-14T09:49:14.846109+00:00",
+    "elapsedMinutes": 65.2,
+    "requestedMainMinutes": 15,
+    "requestedBonusMinutes": 5,
+    "includesGitHubAuthenticationAssistance": true
+  },
+  "publication": "authorized; GitHub device login expired without authentication"
+}

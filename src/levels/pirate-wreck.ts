@@ -13,6 +13,7 @@ import { DROWNED_SKYLIGHTS } from '../drownedCrownCanopy.generated';
 import { DROWNED_CROWN_BOARD_MODELS } from '../drownedCrownBoards.generated';
 import { DROWNED_CROWN_ARCH_MODELS } from '../drownedCrownArch.generated';
 import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
+import { arrangeDrownedCrates } from './drowned-crate-arrangement';
 
 const C:CustomComponent[]=PIRATE_HARBOUR_COMPONENTS.map(c=>c.t==='camnode'&&c.cameraView?{...c,grp:12}:c),M=pirateMeshes(C);
 const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Cargo stepping islands','Moving freight and collapsing pallets','Captain’s optional consignment','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate','Camera · movement spine','Camera · framing views'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
@@ -537,3 +538,4 @@ export const PIRATE_WRECK_LEVEL:CustomLevelData={
  atmosphere:{profile:'drowned-crown',fogEnabled:true,fogNear:85,fogFar:400,fogColor:'#657d83',ambientSky:'#cedbed',ambientGround:'#8d8373',ambientIntensity:.8,sunColor:'#ffdfac',sunIntensity:2.9,sunDirection:[-.4,.54,.74],fillColor:'#b4d8e6',fillIntensity:.4,shadowStrength:.8,drawDistance:600,backdrop:'painted sky',fallbackTop:'#36546d',fallbackBottom:'#d5ac88',fallbackFog:'#657d83',fallbackStars:false,fallbackRidges:false},
  groups,components:stageDrownedReveal(dressDrownedCrown(C)),
 };
+arrangeDrownedCrates(PIRATE_WRECK_LEVEL);

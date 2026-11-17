@@ -107,12 +107,25 @@ for(let s=56,i=0;s<GROVE_EXIT_START+12;s+=10,i++){
   add({t:'decor',dkind:'trialsv3bough',p:point(s,8.7),s:[20,6,13],yaw:i%2?180:0,scenerySolid:false,grp:3,nm:'Interlocking black jungle canopy'});
   for(const side of [-1,1])add({t:'decor',dkind:'vines',p:point(s+2,8.4,side*5.6),rise:3.5,n:3,grp:3,nm:'Hanging lianas'});
 }
+// Refuge supplies stay between braking and clue-reading areas. Short later
+// checkpoint sections get larger deliveries; no rewards mark hidden safe soil.
+export const GROVE_CAMP_SUPPLIES:readonly (readonly [number,number])[]=[
+  [2,0],[2,0],[2,0],[2,2],[2,0],[2,0],[2,5],[5,5],[5,4],[5,3],[4,0],
+];
+function supply(s:number,y:number,x:number,count:number,group:number,name:string){
+  const cells=count===5?[[-.96,0],[0,0],[.96,0],[-.48,.96],[.48,.96]]:
+    count===4?[[-.48,0],[.48,0],[-.48,.96],[.48,.96]]:
+    Array.from({length:count},(_,tier)=>[0,tier*.96]);
+  cells.forEach(([dx,dy],i)=>add({t:'crate',kind:count>2&&i===cells.length-1?'mystery':'wood',
+    p:point(s,y+dy,x+dx),grp:group,nm:`${name} · box ${i+1}`}));
+}
 function camp(s:number,id:number,checkpoint:boolean){
   const group=100+id;
   add({t:'decor',dkind:'grovecamp',p:point(s+1,0,4.1),s:[4.8,3.5,4.2],yaw:-12,scenerySolid:false,grp:group,nm:'Meshy expedition checkpoint shelter'});
   for(const side of [-1,1])add({t:'torch',p:point(s+(side<0?3:-2),0,side*5.4),rise:1.8,w:.85,grp:group,nm:'Safe camp fire'});
-  add({t:'crate',kind:'wood',p:point(s-3,0,-1.5),grp:group,nm:'Camp supplies'});
-  add({t:'crate',kind:id%2===0?'life':'mystery',p:point(s+3,0,1.5),grp:group,nm:'Refuge provisions'});
+  const [arrival,departure]=GROVE_CAMP_SUPPLIES[id];
+  supply(s-3,0,-2.8,arrival,group,`Camp ${id} arrival supplies`);
+  if(departure)supply(s+7,0,2.8,departure,group,`Camp ${id} after-checkpoint supplies`);
   if(checkpoint)add({t:'checkpoint',p:point(s,0,0),grp:group,nm:'No-Man’s Grove checkpoint'});
 }
 camp(campBases[0],0,false);
@@ -164,8 +177,9 @@ tunnel(GROVE_ENTRANCE_START,GROVE_ENTRANCE_END,5.8);tunnel(GROVE_EXIT_START,MINE
 // The camera and spawn are well inside the bore, with solid rock behind them.
 add({t:'wall',p:point(GROVE_ENTRANCE_START-1,groveTunnelFloor(GROVE_ENTRANCE_START)-2),s:[18,18,2],tex:'stone',color:'#36302b',grp:4,nm:'Sealed underground starting chamber'});
 add({t:'clock',p:point(GROVE_SPAWN_S+8,groveTunnelFloor(GROVE_SPAWN_S+8)+1.75,4.2),grp:4,nm:'Optional tunnel time trial'});
-add({t:'crate',kind:'wood',p:point(GROVE_SPAWN_S+24,groveTunnelFloor(GROVE_SPAWN_S+24),2),grp:4,nm:'Abandoned tunnel crate'});
-add({t:'crate',kind:'life',p:point(GROVE_EXIT_START+20,groveTunnelFloor(GROVE_EXIT_START+20),2),grp:4,nm:'Final tunnel supplies'});
+// Native bore support at x=2 includes the rounded floor's cross slope.
+supply(GROVE_SPAWN_S+24,-28.551000,2,2,4,'Abandoned tunnel supplies');
+supply(GROVE_EXIT_START+20,-4.508651,2,2,4,'Final tunnel count check');
 add({t:'crystal',p:point(MINEFIELD_END-12,groveTunnelFloor(MINEFIELD_END-12)+1),grp:4,nm:'No-Man’s Grove crystal'});
 add({t:'gate',p:point(MINEFIELD_END,groveTunnelFloor(MINEFIELD_END)),grp:4,nm:'Underground extraction'});
 for(let s=GROVE_ENTRANCE_START;s<=MINEFIELD_END+16;s+=6)add({t:'camnode',p:point(s,groveTunnelFloor(s)),radius:14,grp:5,nm:'Forward route away from camera'});

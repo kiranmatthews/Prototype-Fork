@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {runStormPorch} from './rooftop-porch-pilot.mjs';
+const out=process.env.PORCH_OUTPUT??'/tmp/rooftop-porch';await mkdir(out,{recursive:true});
 
 await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData,findLevel}=await r.server.ssrLoadModule('/src/level.ts');
@@ -11,7 +12,7 @@ await withBlockworksRuntime(async r=>{
  r.report={actions:[],evidence:[]};
  assert.ok(normalizeCustomLevelData(r.source),'porch is editable and within geometry budgets');
  assert.equal(resolveBonusLevel('rooftop-relay'),r.source);assert.equal(findLevel('bonus-rooftop-relay').data,r.source);
- assert.equal(bonusCrateCount('rooftop-relay'),23);assert.equal(r.l.totalCrates,23);
+ assert.equal(bonusCrateCount('rooftop-relay'),43);assert.equal(r.l.totalCrates,43);
  assert.ok(validAtmosphere(r.source.atmosphere));
  for(const shelter of [null,{}, {min:[0,0,0],max:[0,1,1]}, {min:[0,0,0],max:[1,Infinity,1]}, {min:[0,0],max:[1,1,1]}, {min:[0,0,0],max:[1,1,1],extra:true}])
   assert.equal(validAtmosphere({rain:{intensity:1,wind:[1,1],shelter}}),false);
@@ -39,9 +40,14 @@ await withBlockworksRuntime(async r=>{
  const pilot=runStormPorch(r);
  try{
   let step;while(!(step=pilot.next()).done)r.tick(step.value);r.report.result=step.value;
-  assert.equal(r.p.state,'finished');assert.equal(r.p.cratesBroken,23);assert.equal(r.p.totalDeaths,0);assert.equal(r.p.gemEarned,true);
+  assert.equal(r.p.state,'finished');assert.equal(r.p.cratesBroken,43);assert.equal(r.p.totalDeaths,0);assert.equal(r.p.gemEarned,true);
   assert.ok(r.trace.every(row=>!row.ground?.slippy));
+  assert.ok(r.l.spinBridges[0].deployed);assert.ok(r.l.outlinedSurfaces.every(s=>s.active));
+  r.p.respawn(r.l,true);r.l.update(0);
+  assert.ok(r.l.crates.every(c=>c.alive));assert.ok(r.l.outlinedSurfaces.every(s=>!s.active));
+  assert.ok(r.l.spinBridges.every(b=>!b.activated&&!b.deployed));assert.equal(r.p.cratesBroken,0);
+  r.report.retry={all44CratesRestored:true,outlinedBoardsHidden:true,repairBridgeFolded:true,boxCreditCleared:true};
   console.log('PASS Storm Parlour native input-only journey, all boxes, dry traction, real gaps and shelter',JSON.stringify(r.report.result));
  }catch(error){console.log(JSON.stringify({error:error.message,report:r.report,last:r.snapshot()}));throw error;}
- finally{await writeFile('/private/tmp/rooftop-porch/physics.json',JSON.stringify({report:r.report,trace:r.trace}));}
+ finally{await writeFile(out+'/physics.json',JSON.stringify({report:r.report,trace:r.trace}));}
 },{modulePath:'/src/levels/rooftop-porch-bonus.ts',levelId:'bonus-rooftop-relay',source:m=>m.ROOFTOP_PORCH_BONUS,controlFrame:()=>({x:0,z:-1}),maxFrames:12000});

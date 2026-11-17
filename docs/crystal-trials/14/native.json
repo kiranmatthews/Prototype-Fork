@@ -1,0 +1,305 @@
+{
+  "id": 14,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 14 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Read the start of timed flight 1",
+      "firstFrame": 313,
+      "lastFrame": 482
+    },
+    {
+      "name": "Jump onto timed flight 1",
+      "firstFrame": 483,
+      "lastFrame": 518
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 518,
+      "lastFrame": 599
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 644,
+      "lastFrame": 679
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 679,
+      "lastFrame": 760
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 805,
+      "lastFrame": 840
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 840,
+      "lastFrame": 921
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 966,
+      "lastFrame": 1000
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 1570,
+      "lastFrame": 1689
+    },
+    {
+      "name": "Read the start of timed flight 2",
+      "firstFrame": 1733,
+      "lastFrame": 2162
+    },
+    {
+      "name": "Jump onto timed flight 2",
+      "firstFrame": 2163,
+      "lastFrame": 2198
+    },
+    {
+      "name": "A late upper transfer falls to the flat recovery floor",
+      "firstFrame": 2198,
+      "lastFrame": 2491
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 2491,
+      "lastFrame": 2668
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 2686,
+      "lastFrame": 2918
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 2936,
+      "lastFrame": 3200
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 3218,
+      "lastFrame": 3309
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 3327,
+      "lastFrame": 3504
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 3522,
+      "lastFrame": 3681
+    },
+    {
+      "name": "Read the start of timed flight 1",
+      "firstFrame": 3725,
+      "lastFrame": 3842
+    },
+    {
+      "name": "Jump onto timed flight 1",
+      "firstFrame": 3843,
+      "lastFrame": 3878
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 3878,
+      "lastFrame": 3959
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 4004,
+      "lastFrame": 4039
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 4039,
+      "lastFrame": 4120
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 4165,
+      "lastFrame": 4200
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 4200,
+      "lastFrame": 4281
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 4326,
+      "lastFrame": 4360
+    },
+    {
+      "name": "Wait on the permanent bank",
+      "firstFrame": 4360,
+      "lastFrame": 4480
+    },
+    {
+      "name": "Read the start of timed flight 2",
+      "firstFrame": 4524,
+      "lastFrame": 4862
+    },
+    {
+      "name": "Jump onto timed flight 2",
+      "firstFrame": 4863,
+      "lastFrame": 4898
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 4898,
+      "lastFrame": 4979
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 5024,
+      "lastFrame": 5059
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 5059,
+      "lastFrame": 5140
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 5185,
+      "lastFrame": 5220
+    },
+    {
+      "name": "Cross the lit step before it withdraws",
+      "firstFrame": 5220,
+      "lastFrame": 5301
+    },
+    {
+      "name": "Jump to the next timed step or permanent island",
+      "firstFrame": 5346,
+      "lastFrame": 5380
+    },
+    {
+      "name": "Collect the crystal after both timed flights",
+      "firstFrame": 5380,
+      "lastFrame": 5470
+    },
+    {
+      "name": "Drop to the recovery floor beside the steps",
+      "firstFrame": 5515,
+      "lastFrame": 5581
+    },
+    {
+      "name": "Join the flat return outside the hazard",
+      "firstFrame": 5581,
+      "lastFrame": 5697
+    },
+    {
+      "name": "Approach the return ramp",
+      "firstFrame": 5715,
+      "lastFrame": 6143
+    },
+    {
+      "name": "Climb the return ramp",
+      "firstFrame": 6161,
+      "lastFrame": 6425
+    },
+    {
+      "name": "Turn onto the approach",
+      "firstFrame": 6443,
+      "lastFrame": 6534
+    },
+    {
+      "name": "Complete the local circuit",
+      "firstFrame": 6552,
+      "lastFrame": 6729
+    }
+  ],
+  "evidence": [
+    {
+      "action": "completed timed flight 1",
+      "position": [
+        -0.0039351487076886155,
+        6.2,
+        -30.08218253507864
+      ]
+    },
+    {
+      "action": "completed timed flight 1",
+      "position": [
+        0.0005167319960584574,
+        6.2,
+        -30.08242330467126
+      ]
+    },
+    {
+      "action": "completed timed flight 2",
+      "position": [
+        0.0005167319960584574,
+        12.4,
+        -64.08206774911574
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Complete the local circuit",
+  "result": {
+    "frame": 6747,
+    "time": 112.45,
+    "position": [
+      0.06805627484772583,
+      0,
+      8.996227471012451
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

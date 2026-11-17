@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142f35"><link rel="icon" href="data:,"><title>Challenges 1–25 · Phone playtest</title></head>
+<body class="challenge-menu-open game-shell-modal"><canvas id="challenge-world" tabindex="-1" aria-label="Challenge playtest"></canvas>
+<div id="challenge-hud" hidden><span id="challenge-count"></span><span id="challenge-hint" role="status"></span><meter id="challenge-balance" min="-1" max="1" value="0" aria-label="Grind balance" hidden></meter></div>
+<main id="challenge-menu"><header><p>Prototype Fork · Phone playtest</p><h1>Challenges 1–25</h1><p id="challenge-status" role="status">Choose a challenge. Game assets load when you press Play.</p></header>
+<nav aria-label="Collection"><button id="challenge-tab" aria-pressed="true">Challenges</button><button id="reject-tab" aria-pressed="false">Rejects</button></nav>
+<section id="challenge-options" aria-label="Choose a layout"></section>
+<div id="challenge-detail"><strong id="challenge-selected"></strong><p id="challenge-description"></p></div>
+<footer><div class="challenge-actions"><button id="challenge-play">Play</button><button id="challenge-resume" hidden>Resume</button><button id="challenge-retry" hidden>Retry</button><button id="challenge-course">Whole course</button></div>
+<p>Hold Jump to build speed; release to ollie. Hold Grind to catch rails. Tap Spin with no direction in the air for a kickflip. Landscape gives a wider view.</p><p id="challenge-size">First load: about 37 MB. Includes this collection and its rejects.</p></footer></main>
+<script type="module" src="/src/challengePlaytest/menu.ts"></script></body></html>

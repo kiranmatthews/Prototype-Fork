@@ -1,0 +1,53 @@
+{
+  "inventory": {
+    "crates": 4,
+    "total": 4,
+    "checkpoints": 0,
+    "bonus": 0,
+    "patrolEnemies": 0,
+    "boss": true
+  },
+  "pickups": [
+    {
+      "position": [
+        -18,
+        1.251,
+        0
+      ],
+      "before": 2,
+      "after": 2,
+      "cratesBroken": 1
+    },
+    {
+      "position": [
+        -18,
+        1.363500000000002,
+        -25
+      ],
+      "before": 2,
+      "after": 2,
+      "cratesBroken": 1
+    },
+    {
+      "position": [
+        18,
+        1.251,
+        0
+      ],
+      "before": 2,
+      "after": 2,
+      "cratesBroken": 1
+    },
+    {
+      "position": [
+        18,
+        1.363500000000002,
+        -25
+      ],
+      "before": 2,
+      "after": 2,
+      "cratesBroken": 1
+    }
+  ],
+  "retryRestores": true
+}

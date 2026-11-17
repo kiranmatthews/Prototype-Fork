@@ -1,0 +1,2062 @@
+{
+  "course": "custard-creek",
+  "name": "Sunset Safari",
+  "bonus": "bonus-custard-creek",
+  "bonus_name": "Willowmill Cache",
+  "date": "2026-11-14",
+  "source_before": "aadae810",
+  "counts": {
+    "main_before": 152,
+    "main_after": 170,
+    "checkpoint_crates": 15,
+    "bonus_before": 18,
+    "bonus_after": 27,
+    "gem_tally": 212
+  },
+  "audit": {
+    "before": {
+      "custard-creek": {
+        "summary": {
+          "physical": 153,
+          "counted": 152,
+          "checkpoints": 15,
+          "gemTally": 185,
+          "byKind": {
+            "wood": 131,
+            "mask": 2,
+            "mystery": 14,
+            "life": 2,
+            "bouncy": 1,
+            "nitro": 2,
+            "nitrobang": 1
+          },
+          "outlineByKind": {},
+          "per100m": 4.61,
+          "physicalPer100m": 4.64,
+          "checkpointGaps": [
+            226,
+            322,
+            204,
+            89.3,
+            357.5,
+            125.9,
+            174,
+            176,
+            136.1,
+            282.4,
+            180,
+            131.1,
+            228.8,
+            211.3,
+            209,
+            242
+          ],
+          "clusters": 150,
+          "singles": 148,
+          "meanClusterSize": 1.01,
+          "sizeHist": {
+            "1": 148,
+            "2": 2
+          },
+          "structuralClusters": 1,
+          "structuralCrates": 1,
+          "maxStackAll": 2,
+          "arrangements": {
+            "single": 148,
+            "pair": 1,
+            "stack": 1
+          },
+          "maxStack": 2,
+          "largestCluster": 2,
+          "floatingClusters": 0,
+          "support": {
+            "ground": 152,
+            "crate": 1
+          },
+          "floatingCrates": 0,
+          "overVoid": 0,
+          "overPit": 0,
+          "nearDrop": 0,
+          "overhanging": 2,
+          "high": 0,
+          "highTools": {},
+          "onPath": 82,
+          "offLine": 69,
+          "detour": 1,
+          "behindStart": 0,
+          "beyondGate": 0,
+          "routeOffset": 3,
+          "enemyNear": 3,
+          "hazardNear": {
+            "mover": 1
+          },
+          "onRail": 0,
+          "nearRail": 5,
+          "downhill": 7,
+          "afterPad": 0,
+          "plainOnSpeed": 7,
+          "runs": 0,
+          "runCrates": 0,
+          "longestRun": 0,
+          "runsBridging": 0,
+          "runsAfterSwitches": {
+            "runs": 0,
+            "crates": 0
+          },
+          "arrows": 1,
+          "arrowTargets": {
+            "crate": 1
+          },
+          "multihit": 0,
+          "emptiest": {
+            "length": 236.8,
+            "from": 3058.5,
+            "to": 3295.3
+          },
+          "authoredRails": 6,
+          "speedPads": 0,
+          "enemies": 11,
+          "hazards": {
+            "crusher": 2,
+            "pendulum": 2,
+            "mover": 2,
+            "crumble": 15,
+            "boulder": 3
+          }
+        },
+        "section_counts": [
+          13,
+          28,
+          6,
+          10,
+          19,
+          5,
+          7,
+          8,
+          12,
+          20,
+          12,
+          3,
+          3,
+          2,
+          2,
+          2
+        ]
+      },
+      "bonus-custard-creek": {
+        "summary": {
+          "physical": 18,
+          "counted": 18,
+          "checkpoints": 0,
+          "gemTally": 18,
+          "byKind": {
+            "wood": 16,
+            "life": 1,
+            "mask": 1
+          },
+          "outlineByKind": {},
+          "per100m": 29.03,
+          "physicalPer100m": 29.03,
+          "checkpointGaps": [
+            62
+          ],
+          "clusters": 17,
+          "singles": 16,
+          "meanClusterSize": 1.06,
+          "sizeHist": {
+            "1": 16,
+            "2": 1
+          },
+          "structuralClusters": 0,
+          "structuralCrates": 0,
+          "maxStackAll": 2,
+          "arrangements": {
+            "single": 16,
+            "stack": 1
+          },
+          "maxStack": 2,
+          "largestCluster": 2,
+          "floatingClusters": 0,
+          "support": {
+            "ground": 17,
+            "crate": 1
+          },
+          "floatingCrates": 0,
+          "overVoid": 0,
+          "overPit": 0,
+          "nearDrop": 0,
+          "overhanging": 0,
+          "high": 0,
+          "highTools": {},
+          "onPath": 18,
+          "offLine": 0,
+          "detour": 0,
+          "behindStart": 0,
+          "beyondGate": 0,
+          "routeOffset": 0.6,
+          "enemyNear": 0,
+          "hazardNear": {},
+          "onRail": 0,
+          "nearRail": 0,
+          "downhill": 0,
+          "afterPad": 0,
+          "plainOnSpeed": 0,
+          "runs": 0,
+          "runCrates": 0,
+          "longestRun": 0,
+          "runsBridging": 0,
+          "runsAfterSwitches": {
+            "runs": 0,
+            "crates": 0
+          },
+          "arrows": 0,
+          "arrowTargets": {},
+          "multihit": 0,
+          "emptiest": {
+            "length": 7,
+            "from": 12,
+            "to": 19
+          },
+          "authoredRails": 0,
+          "speedPads": 0,
+          "enemies": 0,
+          "hazards": {}
+        },
+        "section_counts": [
+          18
+        ]
+      }
+    },
+    "after": {
+      "custard-creek": {
+        "summary": {
+          "physical": 171,
+          "counted": 170,
+          "checkpoints": 15,
+          "gemTally": 212,
+          "byKind": {
+            "wood": 64,
+            "mystery": 100,
+            "mask": 2,
+            "bouncy": 1,
+            "life": 1,
+            "nitro": 2,
+            "nitrobang": 1
+          },
+          "outlineByKind": {},
+          "per100m": 5.16,
+          "physicalPer100m": 5.19,
+          "checkpointGaps": [
+            226,
+            322,
+            204,
+            89.3,
+            357.5,
+            125.9,
+            174,
+            176,
+            136.1,
+            282.4,
+            180,
+            131.1,
+            228.8,
+            211.3,
+            209,
+            242
+          ],
+          "clusters": 53,
+          "singles": 1,
+          "meanClusterSize": 3.21,
+          "sizeHist": {
+            "1": 1,
+            "2": 3,
+            "3": 33,
+            "4": 16
+          },
+          "structuralClusters": 1,
+          "structuralCrates": 1,
+          "maxStackAll": 3,
+          "arrangements": {
+            "stack": 36,
+            "wall-along-path": 11,
+            "wall-diagonal": 3,
+            "single": 1,
+            "wall-across-path": 2
+          },
+          "maxStack": 3,
+          "largestCluster": 4,
+          "floatingClusters": 0,
+          "support": {
+            "ground": 70,
+            "crate": 101
+          },
+          "floatingCrates": 0,
+          "overVoid": 0,
+          "overPit": 0,
+          "nearDrop": 4,
+          "overhanging": 2,
+          "high": 0,
+          "highTools": {},
+          "onPath": 92,
+          "offLine": 77,
+          "detour": 1,
+          "behindStart": 0,
+          "beyondGate": 0,
+          "routeOffset": 3.1,
+          "enemyNear": 0,
+          "hazardNear": {
+            "mover": 1
+          },
+          "onRail": 0,
+          "nearRail": 4,
+          "downhill": 30,
+          "afterPad": 0,
+          "plainOnSpeed": 30,
+          "runs": 16,
+          "runCrates": 32,
+          "longestRun": 2,
+          "runsBridging": 0,
+          "runsAfterSwitches": {
+            "runs": 16,
+            "crates": 32
+          },
+          "arrows": 1,
+          "arrowTargets": {
+            "crate": 1
+          },
+          "multihit": 0,
+          "emptiest": {
+            "length": 236.7,
+            "from": 3058.6,
+            "to": 3295.3
+          },
+          "authoredRails": 6,
+          "speedPads": 0,
+          "enemies": 11,
+          "hazards": {
+            "crusher": 2,
+            "pendulum": 2,
+            "mover": 2,
+            "crumble": 15,
+            "boulder": 3
+          }
+        },
+        "section_counts": [
+          10,
+          20,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "bonus-custard-creek": {
+        "summary": {
+          "physical": 27,
+          "counted": 27,
+          "checkpoints": 0,
+          "gemTally": 27,
+          "byKind": {
+            "wood": 12,
+            "mystery": 14,
+            "life": 1
+          },
+          "outlineByKind": {},
+          "per100m": 43.55,
+          "physicalPer100m": 43.55,
+          "checkpointGaps": [
+            62
+          ],
+          "clusters": 8,
+          "singles": 1,
+          "meanClusterSize": 3.38,
+          "sizeHist": {
+            "1": 1,
+            "3": 2,
+            "4": 5
+          },
+          "structuralClusters": 0,
+          "structuralCrates": 0,
+          "maxStackAll": 3,
+          "arrangements": {
+            "wall-along-path": 5,
+            "stack": 2,
+            "single": 1
+          },
+          "maxStack": 3,
+          "largestCluster": 4,
+          "floatingClusters": 1,
+          "support": {
+            "ground": 12,
+            "crate": 14,
+            "none": 1
+          },
+          "floatingCrates": 1,
+          "overVoid": 1,
+          "overPit": 1,
+          "nearDrop": 0,
+          "overhanging": 0,
+          "high": 1,
+          "highTools": {
+            "double-jump": 1
+          },
+          "onPath": 27,
+          "offLine": 0,
+          "detour": 0,
+          "behindStart": 0,
+          "beyondGate": 0,
+          "routeOffset": 1.7,
+          "enemyNear": 0,
+          "hazardNear": {},
+          "onRail": 0,
+          "nearRail": 0,
+          "downhill": 0,
+          "afterPad": 0,
+          "plainOnSpeed": 0,
+          "runs": 5,
+          "runCrates": 10,
+          "longestRun": 2,
+          "runsBridging": 0,
+          "runsAfterSwitches": {
+            "runs": 5,
+            "crates": 10
+          },
+          "arrows": 0,
+          "arrowTargets": {},
+          "multihit": 0,
+          "emptiest": {
+            "length": 9.9,
+            "from": 9,
+            "to": 18.9
+          },
+          "authoredRails": 0,
+          "speedPads": 0,
+          "enemies": 0,
+          "hazards": {}
+        },
+        "section_counts": [
+          27
+        ]
+      }
+    }
+  },
+  "geometry": [
+    {
+      "file": "custard-creek",
+      "unchangedComponents": 4400,
+      "sha256": "b2daab9e4aed6a6b42b97108d74f2af9220001b820972ff4d8cce6893dbb6272",
+      "enemyPlacementUnchanged": true,
+      "sourceBefore": "aadae810"
+    },
+    {
+      "file": "custard-bonus",
+      "unchangedComponents": 296,
+      "sha256": "ee455d070f9e6262bbf91e655edaaf315e522bbb967a82db44ec6f92f77d7ec7",
+      "enemyPlacementUnchanged": true,
+      "sourceBefore": "aadae810"
+    }
+  ],
+  "native": {
+    "ordinary_harvests": 52,
+    "ordinary_boxes": 167,
+    "remote_nitro": {
+      "count": 3,
+      "deaths": 0
+    },
+    "supported": 171,
+    "patrol_probes": 330,
+    "checkpoint_restores": true,
+    "enemy_kinds": [
+      "grunt",
+      "turtle"
+    ],
+    "traversal": [
+      {
+        "name": "inner-bank",
+        "pass": true,
+        "seconds": 14.049999999999999,
+        "progress": 554.2560573541547,
+        "states": [
+          "ride",
+          "air"
+        ],
+        "grounds": [
+          "Inner millrace bank",
+          "Millrace reunion shelf"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 10
+      },
+      {
+        "name": "outer-bank",
+        "pass": true,
+        "seconds": 13.566666666666666,
+        "progress": 554.0321556444361,
+        "states": [
+          "ride"
+        ],
+        "grounds": [
+          "Outer millrace bank",
+          "crumble pad",
+          "Millrace reunion shelf"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 11
+      },
+      {
+        "name": "spillway",
+        "pass": true,
+        "seconds": 11.616666666666667,
+        "progress": 1170.3349651749163,
+        "states": [
+          "ride"
+        ],
+        "grounds": [
+          "vertramp",
+          "Spillway runout"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 10
+      },
+      {
+        "name": "sluice",
+        "pass": true,
+        "seconds": 13.549999999999999,
+        "progress": 1484.0721348932948,
+        "states": [
+          "ride",
+          "air"
+        ],
+        "grounds": [
+          "Spillway runout",
+          "Creek bank",
+          "Offset sluice island",
+          "Returning sluice island",
+          "crumble pad"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 20
+      },
+      {
+        "name": "ferry",
+        "pass": true,
+        "seconds": 29.483333333333334,
+        "progress": 1665.00712113394,
+        "states": [
+          "ride",
+          "air"
+        ],
+        "grounds": [
+          "Reedbed ferry approach",
+          "moving platform",
+          "Ferry receiver island"
+        ],
+        "rails": [],
+        "movers": [
+          1
+        ],
+        "cratesBroken": 0
+      },
+      {
+        "name": "boulder-run",
+        "pass": true,
+        "seconds": 13.166666666666666,
+        "progress": 2098.3218118315212,
+        "states": [
+          "ride"
+        ],
+        "grounds": [
+          "Boulder-run carving bank"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 10
+      },
+      {
+        "name": "continuous-chapter",
+        "pass": true,
+        "seconds": 38.983333333333334,
+        "progress": 1190.0114433825963,
+        "states": [
+          "ride",
+          "air",
+          "grind"
+        ],
+        "grounds": [
+          "Creek bank",
+          "Inner millrace bank",
+          "Millrace reunion shelf",
+          "Ascending mill crown",
+          "Measured Custard broken bank root Broken crown aqueduct -1",
+          "Measured Custard broken bank root Broken crown aqueduct 1",
+          "Upper mill terrace",
+          "vertramp",
+          "Spillway runout"
+        ],
+        "rails": [
+          1
+        ],
+        "movers": [],
+        "cratesBroken": 36
+      },
+      {
+        "name": "mill-roof-lift",
+        "course": "independent-folded-creek",
+        "startStation": 785,
+        "startOffset": -4,
+        "startWorld": [
+          299.563232421875,
+          14.310791015625,
+          -268.72021484375
+        ],
+        "startHeading": [
+          0.053466796875,
+          0.079345703125,
+          0.99853515625
+        ],
+        "initial": {
+          "frame": 30,
+          "time": 0.5,
+          "position": [
+            299.563232421875,
+            14.19113541977028,
+            -268.72021484375
+          ],
+          "heading": [
+            0.0545076166190724,
+            0,
+            0.9985133548082911
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Upper mill terrace",
+            "y": 14.19113541977028,
+            "normal": [
+              -0.0044574752610254936,
+              0.9969949135351819,
+              -0.0773386921228497
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "initialProgress": 784.9999481316926,
+        "boarded": {
+          "frame": 598,
+          "time": 9.966666666666667,
+          "position": [
+            305.3959632286436,
+            14.710865322328614,
+            -262.9020308190877
+          ],
+          "heading": [
+            0.03683770752802293,
+            0,
+            0.9993212613089346
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": -0.3181980515339464,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": 0,
+          "ground": {
+            "name": "moving platform",
+            "y": 14.710865322328614,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -1,
+            "moveY": -0.05,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "final": {
+          "frame": 963,
+          "time": 16.05,
+          "position": [
+            310.01293485863977,
+            19.67329978942871,
+            -263.02827565532635
+          ],
+          "heading": [
+            0.036057643556672875,
+            0,
+            0.9993497117331549
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Mill reward roof",
+            "y": 19.67329978942871,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "finalProgress": 791.0005070665333,
+        "pass": true,
+        "states": [
+          "ride",
+          "air"
+        ],
+        "grounds": [
+          "Upper mill terrace",
+          "moving platform",
+          "Mill reward roof"
+        ],
+        "rails": [],
+        "movers": [
+          0
+        ],
+        "cratesBroken": 0,
+        "seconds": 16.05,
+        "headingExtents": {
+          "x": [
+            0.03592226113169352,
+            0.05465074133375622
+          ],
+          "z": [
+            0.9985055315178133,
+            0.9993545872988158
+          ]
+        }
+      },
+      {
+        "name": "lockyard",
+        "course": "independent-folded-creek",
+        "startStation": 0,
+        "startOffset": 0,
+        "startWorld": [
+          0,
+          0.1201171875,
+          0
+        ],
+        "startHeading": [
+          -0.248046875,
+          0,
+          -0.96875
+        ],
+        "initial": {
+          "frame": 30,
+          "time": 0.5,
+          "position": [
+            0,
+            0.7366666664431492,
+            0
+          ],
+          "heading": [
+            -0.26384960497087245,
+            0,
+            -0.9645638319762537
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "warp pad",
+            "y": 0.7366666664431492,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "initialProgress": 0,
+        "final": {
+          "frame": 847,
+          "time": 14.116666666666667,
+          "position": [
+            -30.852845047146527,
+            2.9985543666429377,
+            -233.63879517168849
+          ],
+          "heading": [
+            0.07164917361867609,
+            0,
+            -0.997429895240644
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 23.490099501,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Lockyard towpath",
+            "y": 2.9985543666429377,
+            "normal": [
+              -7.655183611409798e-05,
+              0.9999997188027031,
+              0.0007460122863539474
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.03,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "finalProgress": 238.0723435576858,
+        "pass": true,
+        "states": [
+          "ride"
+        ],
+        "grounds": [
+          "warp pad",
+          "warp plinth rim",
+          "Lockyard towpath"
+        ],
+        "rails": [],
+        "movers": [],
+        "cratesBroken": 3,
+        "seconds": 14.116666666666667,
+        "headingExtents": {
+          "x": [
+            -0.9990053851482843,
+            0.3764640186218481
+          ],
+          "z": [
+            -0.9999999371646037,
+            0.6062872098899925
+          ]
+        }
+      },
+      {
+        "name": "backwater-finish",
+        "course": "independent-folded-creek",
+        "startStation": 2110,
+        "startOffset": 3,
+        "startWorld": [
+          628.858642578125,
+          -9.8798828125,
+          -292.4697265625
+        ],
+        "startHeading": [
+          0.99365234375,
+          0,
+          0.113037109375
+        ],
+        "initial": {
+          "frame": 30,
+          "time": 0.5,
+          "position": [
+            628.858642578125,
+            -10,
+            -292.4697265625
+          ],
+          "heading": [
+            0.993770150113564,
+            0,
+            0.11144904101545483
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Backwater crown approach",
+            "y": -10,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "initialProgress": 2110.000031448585,
+        "catch": {
+          "frame": 565,
+          "time": 9.416666666666666,
+          "position": [
+            746.4281424338706,
+            -6,
+            -185.43575295544952
+          ],
+          "heading": [
+            0.1216280102415875,
+            0,
+            0.9925757538468655
+          ],
+          "state": "grind",
+          "grounded": false,
+          "speed": 23.060992450011373,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Backwater crown approach",
+            "y": -6,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": 5,
+          "railDistance": 13.512833542855688,
+          "balance": 0.1,
+          "input": {
+            "moveX": 0.1,
+            "moveY": 0.99,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": true,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "final": {
+          "frame": 869,
+          "time": 14.483333333333333,
+          "position": [
+            728.749120392382,
+            -6,
+            -72.21712629063897
+          ],
+          "heading": [
+            -0.30652882438427037,
+            0,
+            0.9518613763682174
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 16.520732641801303,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Custard finish bank before the falls",
+            "y": -6,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0.02,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "finalProgress": 2399.495869222864,
+        "pass": true,
+        "states": [
+          "ride",
+          "grind",
+          "air"
+        ],
+        "grounds": [
+          "Backwater crown approach",
+          "Measured Custard broken bank root Final backwater rail crescent 1",
+          "Custard finish bank before the falls"
+        ],
+        "rails": [
+          5
+        ],
+        "movers": [],
+        "cratesBroken": 11,
+        "seconds": 14.483333333333333,
+        "headingExtents": {
+          "x": [
+            -0.30652882438427037,
+            0.993770150113564
+          ],
+          "z": [
+            0.11144904101545483,
+            0.9999998782555635
+          ]
+        }
+      }
+    ],
+    "bonus_and_water": {
+      "bonus": {
+        "jumps": 2,
+        "boxes": 27,
+        "gem": false,
+        "deaths": 0,
+        "position": [
+          48.44999999999987,
+          0.7266666691501937,
+          0
+        ]
+      },
+      "water": [
+        {
+          "s": 60,
+          "water": -6,
+          "lowest": -8.72,
+          "returned": true
+        },
+        {
+          "s": 420,
+          "water": -0.3478372064758277,
+          "lowest": -3.067837206475828,
+          "returned": true
+        },
+        {
+          "s": 920,
+          "water": 10.184601776142632,
+          "lowest": 7.464601776142633,
+          "returned": true
+        },
+        {
+          "s": 1600,
+          "water": -3.10009765625,
+          "lowest": -5.820097656250001,
+          "returned": true
+        },
+        {
+          "s": 2060,
+          "water": -15.601485932751274,
+          "lowest": -18.321485932751273,
+          "returned": true
+        },
+        {
+          "s": 2395,
+          "water": -12,
+          "lowest": -14.719999999999999,
+          "returned": true
+        },
+        {
+          "s": 2465,
+          "water": -28,
+          "lowest": -30.720000000000002,
+          "returned": true
+        },
+        {
+          "s": 2500,
+          "water": -28,
+          "lowest": -30.720000000000002,
+          "returned": true
+        }
+      ],
+      "hang": []
+    },
+    "waterfalls": {
+      "runs": [
+        {
+          "boosted": true,
+          "seconds": 150.95,
+          "jumps": 20,
+          "position": [
+            543.1332307599704,
+            -263.2733333308498,
+            727.400963978439
+          ],
+          "maxCameraStep": 21.662126161805798
+        }
+      ],
+      "pads": [
+        {
+          "name": "Waterfall spring 1",
+          "y": -10,
+          "size": [
+            20,
+            0.7,
+            28
+          ],
+          "launch": 84.5637
+        },
+        {
+          "name": "Waterfall spring 2",
+          "y": -20,
+          "size": [
+            16,
+            0.7,
+            22
+          ],
+          "launch": 86.6159
+        },
+        {
+          "name": "Waterfall spring 3",
+          "y": -13,
+          "size": [
+            12,
+            0.7,
+            18
+          ],
+          "launch": 85.36
+        },
+        {
+          "name": "Waterfall spring 4",
+          "y": -20,
+          "size": [
+            11,
+            0.7,
+            16
+          ],
+          "launch": 81.5403
+        },
+        {
+          "name": "Waterfall spring 5",
+          "y": -43,
+          "size": [
+            18,
+            0.7,
+            24
+          ],
+          "launch": 80.4042
+        },
+        {
+          "name": "Waterfall spring 6",
+          "y": -65,
+          "size": [
+            20,
+            0.7,
+            28
+          ],
+          "launch": 87.454
+        },
+        {
+          "name": "Waterfall spring 7",
+          "y": -80,
+          "size": [
+            14,
+            0.7,
+            20
+          ],
+          "launch": 88.9601
+        },
+        {
+          "name": "Waterfall spring 8",
+          "y": -70,
+          "size": [
+            12,
+            0.7,
+            18
+          ],
+          "launch": 72.9148
+        },
+        {
+          "name": "Waterfall spring 9",
+          "y": -87,
+          "size": [
+            10,
+            0.7,
+            16
+          ],
+          "launch": 86.4954
+        },
+        {
+          "name": "Waterfall spring 10",
+          "y": -111,
+          "size": [
+            17,
+            0.7,
+            22
+          ],
+          "launch": 77.88
+        },
+        {
+          "name": "Waterfall spring 11",
+          "y": -135,
+          "size": [
+            22,
+            0.7,
+            28
+          ],
+          "launch": 85.799
+        },
+        {
+          "name": "Waterfall spring 12",
+          "y": -147,
+          "size": [
+            13,
+            0.7,
+            18
+          ],
+          "launch": 83.2388
+        },
+        {
+          "name": "Waterfall spring 13",
+          "y": -138,
+          "size": [
+            11,
+            0.7,
+            16
+          ],
+          "launch": 84.0071
+        },
+        {
+          "name": "Waterfall spring 14",
+          "y": -155,
+          "size": [
+            10,
+            0.7,
+            15
+          ],
+          "launch": 85.9408
+        },
+        {
+          "name": "Waterfall spring 15",
+          "y": -175,
+          "size": [
+            16,
+            0.7,
+            22
+          ],
+          "launch": 79.5578
+        },
+        {
+          "name": "Waterfall spring 16",
+          "y": -203,
+          "size": [
+            20,
+            0.7,
+            28
+          ],
+          "launch": 86.4855
+        },
+        {
+          "name": "Waterfall spring 17",
+          "y": -216,
+          "size": [
+            12,
+            0.7,
+            18
+          ],
+          "launch": 90.0852
+        },
+        {
+          "name": "Waterfall spring 18",
+          "y": -208,
+          "size": [
+            10,
+            0.7,
+            15
+          ],
+          "launch": 81.4104
+        },
+        {
+          "name": "Waterfall spring 19",
+          "y": -229,
+          "size": [
+            14,
+            0.7,
+            20
+          ],
+          "launch": 84.7443
+        },
+        {
+          "name": "Waterfall spring 20",
+          "y": -248,
+          "size": [
+            18,
+            0.7,
+            26
+          ],
+          "launch": 85.36
+        }
+      ],
+      "camera": [],
+      "miss": {
+        "caught": true,
+        "y": -278.12
+      },
+      "assetTriangles": 5082
+    }
+  },
+  "browser": [
+    {
+      "mode": "bonus-lite",
+      "inventory": {
+        "crates": 27,
+        "total": 27,
+        "bonus": 0,
+        "enemies": [],
+        "position": [
+          -12,
+          0.12,
+          0
+        ]
+      },
+      "journey": {
+        "done": true,
+        "trace": [
+          {
+            "position": [
+              -7.801999999999994,
+              0,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 4,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              0.6939999999999985,
+              0,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 7,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              6.3980000000000015,
+              0.3499999940395355,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 9,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              15.398000000000023,
+              0.3499999940395355,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 15,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              23.797999999999952,
+              1.9427777718173105,
+              0
+            ],
+            "state": "air",
+            "grounded": false,
+            "crates": 16,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              32.59799999999993,
+              0,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 20,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          },
+          {
+            "position": [
+              41.59799999999984,
+              0,
+              0
+            ],
+            "state": "ride",
+            "grounded": true,
+            "crates": 24,
+            "total": 27,
+            "deaths": 0,
+            "gem": false
+          }
+        ],
+        "mode": "continuous normal-input bonus preview",
+        "end": {
+          "position": [
+            48.393999999999956,
+            0.7266666691501937,
+            0
+          ],
+          "state": "finished",
+          "grounded": true,
+          "crates": 27,
+          "total": 27,
+          "deaths": 0,
+          "gem": true
+        },
+        "frames": 470,
+        "jumps": 2
+      },
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "main-lite",
+      "inventory": {
+        "crates": 171,
+        "total": 212,
+        "bonus": 27,
+        "enemies": [
+          "grunt",
+          "grunt",
+          "grunt",
+          "turtle",
+          "turtle",
+          "grunt",
+          "turtle",
+          "turtle",
+          "turtle",
+          "grunt",
+          "turtle"
+        ],
+        "position": [
+          0,
+          0.7366666664431492,
+          0
+        ]
+      },
+      "opening": {
+        "done": true,
+        "kind": "opening",
+        "trace": [
+          {
+            "position": [
+              -1.1422359041554047,
+              0,
+              -5.584379745258941
+            ],
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "lives": 4,
+            "crates": 0,
+            "gem": false,
+            "checkpoint": false,
+            "spawn": [
+              0,
+              0.8533333333333333,
+              0
+            ]
+          },
+          {
+            "position": [
+              -2.9457662791376222,
+              0,
+              -14.40182144829937
+            ],
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "lives": 4,
+            "crates": 0,
+            "gem": false,
+            "checkpoint": false,
+            "spawn": [
+              0,
+              0.8533333333333333,
+              0
+            ]
+          },
+          {
+            "position": [
+              -4.7197053127131445,
+              0,
+              -22.53804296875
+            ],
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "lives": 4,
+            "crates": 0,
+            "gem": false,
+            "checkpoint": false,
+            "spawn": [
+              0,
+              0.8533333333333333,
+              0
+            ]
+          }
+        ],
+        "end": {
+          "position": [
+            -4.818609244245812,
+            0,
+            -22.688017636461954
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "lives": 4,
+          "crates": 3,
+          "gem": false,
+          "checkpoint": false,
+          "spawn": [
+            0,
+            0.8533333333333333,
+            0
+          ]
+        },
+        "frames": 193
+      },
+      "checkpoint": {
+        "done": true,
+        "kind": "checkpoint",
+        "trace": [],
+        "end": {
+          "position": [
+            -30.037301779026734,
+            2.9161743313924675,
+            -219.49342127557676
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "lives": 4,
+          "crates": 1,
+          "gem": false,
+          "checkpoint": true,
+          "spawn": [
+            -28.7470703125,
+            3.0350993220775773,
+            -221.369384765625
+          ]
+        },
+        "frames": 53
+      },
+      "recovery": {
+        "position": [
+          -28.7470703125,
+          2.9350993220775763,
+          -221.369384765625
+        ],
+        "lives": 3,
+        "spawn": [
+          -28.7470703125,
+          3.0350993220775773,
+          -221.369384765625
+        ]
+      },
+      "stagedFinish": {
+        "done": true,
+        "kind": "finish",
+        "trace": [
+          {
+            "position": [
+              544.4176049435711,
+              -264,
+              721.754347852584
+            ],
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "lives": 4,
+            "crates": 0,
+            "gem": false,
+            "checkpoint": false,
+            "spawn": [
+              0,
+              0.8533333333333333,
+              0
+            ]
+          }
+        ],
+        "end": {
+          "position": [
+            543.1460009027658,
+            -263.2733333308498,
+            727.3106976582922
+          ],
+          "grounded": true,
+          "state": "finished",
+          "deaths": 0,
+          "lives": 4,
+          "crates": 0,
+          "gem": false,
+          "checkpoint": false,
+          "spawn": [
+            0,
+            0.8533333333333333,
+            0
+          ]
+        },
+        "frames": 98
+      },
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "bonus-full",
+      "inventory": {
+        "crates": 27,
+        "total": 27,
+        "bonus": 0,
+        "enemies": [],
+        "position": [
+          -12,
+          0,
+          0
+        ]
+      },
+      "views": [
+        {
+          "name": "arrival",
+          "position": [
+            -12,
+            0,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 257,
+            "placements": 257,
+            "ready": 257,
+            "skipped": 0,
+            "draws": 60,
+            "triangles": 640725,
+            "allLodTriangles": 640725,
+            "cells": 60,
+            "residentCells": 60,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 119.67,
+            "errors": [],
+            "windTime": 0.9565333333325896,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        },
+        {
+          "name": "gap-reward",
+          "position": [
+            18,
+            0.3499999940395355,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 257,
+            "placements": 257,
+            "ready": 257,
+            "skipped": 0,
+            "draws": 60,
+            "triangles": 640725,
+            "allLodTriangles": 640725,
+            "cells": 60,
+            "residentCells": 60,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 119.67,
+            "errors": [],
+            "windTime": 1.756533333332587,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        }
+      ],
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "main-full",
+      "inventory": {
+        "crates": 171,
+        "total": 212,
+        "bonus": 27,
+        "enemies": [
+          "grunt",
+          "grunt",
+          "grunt",
+          "turtle",
+          "turtle",
+          "grunt",
+          "turtle",
+          "turtle",
+          "turtle",
+          "grunt",
+          "turtle"
+        ],
+        "position": [
+          0,
+          0.7366666664431492,
+          0
+        ]
+      },
+      "views": [
+        {
+          "name": "opening",
+          "position": [
+            -5.125732421875,
+            0,
+            -17.252197265625
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 2837,
+            "placements": 2837,
+            "ready": 979,
+            "skipped": 0,
+            "draws": 571,
+            "triangles": 2732923,
+            "allLodTriangles": 2732923,
+            "cells": 1593,
+            "residentCells": 571,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 22,
+            "textureMiB": 103.67,
+            "errors": [],
+            "windTime": 1.1090333333325895,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        },
+        {
+          "name": "waterfall-rest",
+          "position": [
+            677.5380859375,
+            -52,
+            140.093017578125
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 2837,
+            "placements": 2837,
+            "ready": 837,
+            "skipped": 0,
+            "draws": 520,
+            "triangles": 2464502,
+            "allLodTriangles": 2464502,
+            "cells": 1593,
+            "residentCells": 520,
+            "pendingCells": 29,
+            "retryingCells": 0,
+            "compressedTextures": 22,
+            "textureMiB": 103.67,
+            "errors": [],
+            "windTime": 1.6090333333325877,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        },
+        {
+          "name": "final-switch",
+          "position": [
+            547.697021484375,
+            -263.92,
+            707.4248046875
+          ],
+          "grounded": true,
+          "state": "ride",
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 2837,
+            "placements": 2837,
+            "ready": 867,
+            "skipped": 0,
+            "draws": 549,
+            "triangles": 2748056,
+            "allLodTriangles": 2748056,
+            "cells": 1593,
+            "residentCells": 549,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 24,
+            "textureMiB": 133.33,
+            "errors": [],
+            "windTime": 2.209033333332586,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        }
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "visual_review": {
+    "passed": true,
+    "resolution": [
+      1280,
+      720
+    ],
+    "views": [
+      "arrival",
+      "gap-reward",
+      "opening",
+      "waterfall-rest",
+      "final-switch"
+    ],
+    "notes": "All final screenshots inspected; full native artwork and clean browser consoles."
+  },
+  "checks": {
+    "npm run check:levels": "passed",
+    "npm run build": "passed",
+    "npm run check:release": {
+      "passed": true,
+      "bytes": 952660312,
+      "budget": 1000000000
+    },
+    "build_version": "d789a36c1f4040ac8828",
+    "git diff --check": "passed",
+    "harness_notes": [
+      "The multi-case traversal process reached its JavaScript heap limit after eight completed cases; preserved per-case evidence was combined with isolated passing reruns.",
+      "Full-render capture explicitly dispatches resize and waits for a 1280 by 720 canvas; initial captures at the warmup resolution were rejected."
+    ]
+  },
+  "limitations": [
+    "Main cargo harvesting and traversal are separate native scenarios; no continuous main all-box run is claimed.",
+    "Both split banks are individually traversed; the all-box route requires visiting both banks.",
+    "Main browser covers a continuous opening harvest, staged checkpoint activation and genuine water death/recovery, plus a separately staged finish. Full-render views use staged supported positions.",
+    "The standalone bonus preview earns a gem; actual bonus mode instead banks all 27 crates toward the parent gem.",
+    "The bonus life is a reachable jump reward over water, not a tool-gated dependency.",
+    "Two main crate corner-overhang audit flags match the prior count; all crate centers/stack columns have native support."
+  ],
+  "timing": {
+    "started_at": "2026-11-14T07:19:12+00:00",
+    "layout_authored_at": "2026-11-14T07:28:10+00:00",
+    "validated_at": "2026-11-14T07:52:58.818312+00:00",
+    "elapsed_minutes": 33.8,
+    "requested_main_minutes": 15,
+    "requested_bonus_minutes": 5,
+    "budget_exceeded": true
+  }
+}

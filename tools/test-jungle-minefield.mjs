@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
+ const {CRATE_SIZE}=await r.server.ssrLoadModule('/src/crateDimensions.ts');
  const {Minefields,minefieldSafe}=await r.server.ssrLoadModule('/src/minefields.ts');
  const m=r.sourceModule,data=m.JUNGLE_MINEFIELD_LEVEL,l=r.l;
  assert.ok(normalizeCustomLevelData(data));
@@ -128,11 +129,14 @@ await withBlockworksRuntime(async r=>{
  const l=make(),[mine,neighbor,ordinary]=l.crates;
  assert.equal(mine.concealed,true);assert.equal(mine.mesh.visible,false);
  assert.ok(Math.abs(mine.box.max.y-.08)<1e-6,'pressure contact must sit at ground level');
- assert.ok(Math.abs(mine.box.min.y+.88)<1e-6,'floor repair unearthed the mine');
+ // Legacy burial preserves the .08 m pressure lid while enlarging downward.
+ assert.ok(Math.abs(mine.box.min.y-(.08-CRATE_SIZE))<1e-6,'floor repair unearthed the mine');
  assert.equal(mine.explosiveBundle,undefined,'hidden mines should not allocate visible dynamite assemblies');
- assert.equal(ordinary.mesh.visible,true);assert.ok(ordinary.explosiveBundle);
+ assert.equal(mine.art,undefined,'hidden mines should not allocate visible crate art');
+ assert.equal(ordinary.mesh.visible,true);assert.equal(ordinary.art?.kind,'nitro');
+ assert.equal(ordinary.art?.root.parent,ordinary.mesh,'ordinary Nitro retains its visible art owner');
  for(let i=0;i<60;i++)l.update(1/60);
- assert.equal(mine.mesh.visible,false);assert.ok(Math.abs(mine.mesh.position.y+.4)<1e-6,'mine bobbed out of burial');
+ assert.equal(mine.mesh.visible,false);assert.ok(Math.abs(mine.mesh.position.y-(.08-CRATE_SIZE/2))<1e-6,'mine bobbed out of burial');
  l.detonate(mine);assert.ok(l.explosions[0].center.y>=0,'burst must emerge above ground');
  for(let i=0;i<20;i++)l.update(1/60);
  assert.equal(neighbor.alive,false,'nearby mines did not chain');

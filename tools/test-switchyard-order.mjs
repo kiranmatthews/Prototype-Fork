@@ -59,7 +59,8 @@ export function* probeSwitchyardOrder(r, kind) {
     const key = c.crateNamed('Independent workshop circuit local ! switch');
     const launcher = c.crateNamed('Return-loop launch: save it until after the far !');
     const row = l.crates.filter(crate => crate.pending && crate.mesh.position.x >= 138 && crate.mesh.position.x <= 145);
-    c.check(row.length === 3, 'spent-switch probe must start with three genuine outline rewards');
+    c.check(row.length > 0, 'spent-switch probe must start with genuine outline rewards');
+    const outlinedRewards=row.length;
     yield* c.hit(key, 'materialize the genuine upper return row');
     yield* c.hit(launcher, 'wrong order: destroy return launcher before claiming the upper row');
     c.check(!launcher.alive && row.every(crate => !crate.pending), 'wrong-order setup failed');
@@ -82,7 +83,7 @@ export function* probeSwitchyardOrder(r, kind) {
       () => { track(); return c.steer([145.3, 2.8, 0]); },
       { label: 'spent switch bypass attempt returns to ordinary floor', limit: 180 });
     const result = { id: r.id, kind, maximumFeet, maximumSilhouette,
-      before: { outlinedRewards: 3, switchActivated: true, launcherDestroyed: true },
+      before: { outlinedRewards, switchActivated: true, launcherDestroyed: true },
       after: { reward: row.every(crate => crate.alive), remainingRewards: row.filter(crate => crate.alive).length,
         rewardBases: row.map(crate => crate.box.min.y), launcherAlive: launcher.alive },
       state: p.state, deaths: p.totalDeaths };

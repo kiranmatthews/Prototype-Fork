@@ -1,0 +1,148 @@
+{
+  "course": "ghost-train",
+  "name": "Ghost Train",
+  "bonus": {
+    "countedBefore": 18,
+    "countedAfter": 24,
+    "clusters": 8,
+    "singles": 0,
+    "meanClusterSize": 3,
+    "lifeAndMaskDecision": "plain rewards suit the forgiving room; remove safe-line life and unnecessary mask"
+  },
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T11:27:00Z",
+  "completedAt": "2026-11-14T11:54:08.118712+00:00",
+  "elapsedMinutes": 27.1,
+  "main": {
+    "countedBefore": 17,
+    "countedAfter": 225,
+    "clusters": 68,
+    "singles": 0,
+    "meanClusterSize": 3.31,
+    "checkpointSectionCounts": [
+      10,
+      10,
+      6,
+      10,
+      10,
+      10,
+      3,
+      10,
+      10,
+      10,
+      10,
+      10,
+      6,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "checkpoints": 23,
+    "masks": 5,
+    "enemyActors": 15,
+    "enemyKinds": 2,
+    "enemySelection": "retained"
+  },
+  "parentTotal": 272,
+  "native": {
+    "cargoHarvests": 68,
+    "cargoCrates": 225,
+    "mainRoute": {
+      "test": "continuous input-only ghost train journey",
+      "state": "finished",
+      "frames": 26334,
+      "seconds": 438.9,
+      "distance": 2544.420296364973,
+      "largestStep": 0.7385583579202474,
+      "checkpoints": 23,
+      "deaths": 0
+    },
+    "bonus": {
+      "state": "finished",
+      "cratesBroken": 24,
+      "totalCrates": 24,
+      "gemEarned": true,
+      "deaths": 0
+    },
+    "bonusRetry": {
+      "deaths": 1,
+      "restored": 24,
+      "crates": 0,
+      "position": [
+        -12,
+        0.12,
+        0
+      ]
+    },
+    "coreChecks": [
+      {
+        "test": "source contracts, spawn, checkpoints, enemy patrol support",
+        "movers": 16,
+        "axes": 10,
+        "enemies": 15,
+        "checkpoints": 23
+      },
+      {
+        "test": "moving cart rider carry",
+        "name": "Last Departure \u00b7 moving carriage 2",
+        "carried": 17.9,
+        "deaths": 0
+      },
+      {
+        "test": "moving cart rider carry",
+        "name": "Funeral Freight \u00b7 moving carriage 2",
+        "carried": 17.65,
+        "deaths": 0
+      },
+      {
+        "test": "input-only checkpoint contact and banked respawn",
+        "active": true
+      },
+      {
+        "test": "broken rail pit death and supported respawn",
+        "deaths": 1,
+        "grounded": true
+      },
+      {
+        "test": "reachable production finish gate",
+        "state": "finished"
+      }
+    ]
+  },
+  "browser": {
+    "modes": 4,
+    "fullViews": 7,
+    "consoleErrors": []
+  },
+  "preservation": {
+    "willowmillExact": true,
+    "main": {
+      "preservedNonCrateComponents": 3629,
+      "countedBefore": 17,
+      "countedAfter": 225,
+      "enemiesUnchanged": 15
+    },
+    "bonus": {
+      "preservedNonCrateComponents": 24,
+      "countedBefore": 18,
+      "countedAfter": 24,
+      "enemiesUnchanged": 0
+    }
+  },
+  "releaseBytes": 959306694,
+  "buildVersion": "f21acc5b5dca6ca8233d",
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Main all-box access uses 68 separately staged normal-input harvests; no continuous main all-box run is claimed.",
+    "Main browser opening, checkpoint/recovery, and finish checks are separately staged. The full main route uses production physics in the native harness.",
+    "Three short checkpoint intervals contain 6, 3, and 6 crates to preserve axe windows and mode-change landings."
+  ]
+}

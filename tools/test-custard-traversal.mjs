@@ -45,7 +45,7 @@ async function encounter(name,station,offset,body){
  await writeFile(output+'/'+name+'-trace.json',JSON.stringify(trace));results.push(report);console.log(JSON.stringify({name:report.name,pass:report.pass,seconds:report.seconds,progress:report.finalProgress,states:report.states,grounds:report.grounds,rails:report.rails,movers:report.movers,cratesBroken:report.cratesBroken,...(!report.pass?{failure:report.failure}: {})}));
 }
 if(selected('lockyard'))await encounter('lockyard',0,0,({r,s,skate,ground,until,report})=>{
- const line=s=>s>75&&s<115?-5.5:s>131&&s<174?5.5:s>174&&s<219?4.2:0;
+ const line=s=>s<35?2.2:s>75&&s<115?-5.5:s>131&&s<174?5.5:s>174&&s<219?4.2:0;
  until(238,()=>skate(line,8),'lockyard crusher chicane');ground('lockyard exit');assert.ok(r.p.cratesBroken>=3,'early section offers a continuously skatable crate line');
 });
 if(selected('inner-bank'))await encounter('inner-bank',275,-6,({r,s,skate,follow,ground,until,hop,report})=>{
@@ -90,7 +90,9 @@ if(selected('backwater-finish'))await encounter('backwater-finish',2110,3,({r,s,
  r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:600,label:'catch final crown rail'});report.catch=r.snapshot();
  until(2383,()=>grind(0,8,{jumpHeld:true}),'final exposed crescent grind');
  r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:600,label:'final island landing'});ground('final island landing');
- r.until(()=>r.p.state==='finished',()=>skate(0,8),{maxFrames:900,label:'finish island crate line and gate'});assert.equal(r.p.state,'finished');
+ // The waterfall chapter now follows this bank; its twenty springs and real
+ // finish gate are covered by test-sunset-waterfalls.mjs.
+ until(2398,()=>skate(0,8),'crown receiver crate line');ground('waterfall chapter approach');
 });
 if(selected('continuous-chapter'))await encounter('continuous-chapter',250,0,({r,m,s,pt,follow,skate,grind,attack,ground,until,hop,report})=>{
  until(276,()=>skate(-6,8),'split-bank entry run-up');ground('inner bank entry');

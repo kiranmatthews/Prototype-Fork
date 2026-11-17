@@ -1,0 +1,49 @@
+{
+  "status": "Local validation passed; public deployment verification pending",
+  "date": "2026-11-13T06:49:37.510370+00:00",
+  "baseCommit": "e2cb111791c2f585e63af7981b51cc80351f484e",
+  "rejectedMethod": "Flame02 width override plus flared mesh; removed",
+  "source": {
+    "name": "JangaFX Small Camp Fire",
+    "frames": 200,
+    "uniqueRenderedFrames": 200,
+    "fps": 30,
+    "seconds": 6.666666666666667,
+    "nativeProjection": [
+      512,
+      512
+    ],
+    "runtimeFrame": [
+      403,
+      416
+    ],
+    "packing": "One constant transparent crop, lossless WebP, exact visible RGB/alpha checked",
+    "spatialTransforms": "Fixed orthographic projection and uniform world scale only"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "releaseBytes": 943398871,
+    "releaseLimit": 1000000000,
+    "diffCheck": "passed",
+    "unchanged": "Unity source atlases, shared painting, movement/camera/level data and shared heat implementation"
+  },
+  "browser": {
+    "tool": "CUA, real browser",
+    "lite": "Run and jump to basin, M debug toggle; no console errors",
+    "production": "Full rendering at native and fixed 720p, basin left/right/close views, LOOK effects toggle and restored settings; no console warnings/errors",
+    "buildStamp": "Codex/sol fork \u00b7 build 11-13 06:39 UTC",
+    "loop": "All 200 actual game-material poses captured by visible UI frame stepping; 199\u21920 inspected",
+    "video": "source-loop-review.mp4 \u2014 200 stepped browser poses encoded at authored 30 fps and repeated once to show the join; not a performance recording"
+  },
+  "evidence": [
+    "basin-lite.jpg",
+    "basin-native-left.jpg",
+    "basin-native-right.jpg",
+    "basin-native-close.jpg",
+    "basin-with-effects.jpg",
+    "basin-720.jpg",
+    "source-loop-review.mp4"
+  ],
+  "notes": "Visual/technical review does not claim user aesthetic acceptance."
+}

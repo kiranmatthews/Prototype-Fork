@@ -1,0 +1,28 @@
+Starting the connected 25-station controller run.
+Completed challenge 1/25 and its corridor return at frame 2287.
+Completed challenge 2/25 and its corridor return at frame 7526.
+Completed challenge 3/25 and its corridor return at frame 14872.
+Completed challenge 4/25 and its corridor return at frame 22810.
+Completed challenge 5/25 and its corridor return at frame 28796.
+Completed challenge 6/25 and its corridor return at frame 34834.
+Completed challenge 7/25 and its corridor return at frame 42665.
+Completed challenge 8/25 and its corridor return at frame 48771.
+Completed challenge 9/25 and its corridor return at frame 55171.
+Completed challenge 10/25 and its corridor return at frame 62349.
+Completed challenge 11/25 and its corridor return at frame 69204.
+Completed challenge 12/25 and its corridor return at frame 74648.
+Completed challenge 13/25 and its corridor return at frame 81790.
+Completed challenge 14/25 and its corridor return at frame 92685.
+Completed challenge 15/25 and its corridor return at frame 99175.
+Completed challenge 16/25 and its corridor return at frame 104772.
+Completed challenge 17/25 and its corridor return at frame 112382.
+Completed challenge 18/25 and its corridor return at frame 119925.
+Completed challenge 19/25 and its corridor return at frame 129814.
+Completed challenge 20/25 and its corridor return at frame 137203.
+Completed challenge 21/25 and its corridor return at frame 144813.
+Completed challenge 22/25 and its corridor return at frame 153323.
+Completed challenge 23/25 and its corridor return at frame 161418.
+Completed challenge 24/25 and its corridor return at frame 171083.
+Completed challenge 25/25 and its corridor return at frame 182321.
+PASS connected Crystal Trials: all 25 goals, ordinary navigation, real gate, checkpoints, recovery and fresh-run reset.
+PASS rejects archive: original attempts retained and its gate is immediately usable.

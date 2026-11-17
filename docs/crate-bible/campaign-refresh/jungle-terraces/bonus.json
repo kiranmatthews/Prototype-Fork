@@ -1,0 +1,761 @@
+{
+  "stage": "collect earned gem and cross real bonus gate",
+  "evidence": [
+    {
+      "action": "Reliquary arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-jungle-terraces room 1 finite spent upper finite support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary finite-exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary finite-exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary finite-exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary finite-exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary finite-exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "finite",
+      "index": 0,
+      "position": [
+        22.92477777777785,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-jungle-terraces room 2 bridge create visible bridge",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "bonus-jungle-terraces room 2 bridge pass used switch",
+      "launch": [
+        27.83363333333348,
+        0,
+        0
+      ],
+      "landing": [
+        31.372499999999974,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "bonus-jungle-terraces room 2 bridge receiver reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-jungle-terraces room 2 bridge receiver mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "bridge",
+      "index": 1,
+      "position": [
+        56.92707777777772,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-jungle-terraces room 3 fuse recovery reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "fuse",
+      "index": 2,
+      "position": [
+        82.9290555555544,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "Reliquary exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reliquary exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 29,
+      "activeStageCrates": 29,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 29,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "Reliquary arrival delivery",
+      "firstFrame": 22,
+      "lastFrame": 22
+    },
+    {
+      "name": "approach Reliquary arrival delivery",
+      "firstFrame": 44,
+      "lastFrame": 105
+    },
+    {
+      "name": "Reliquary arrival delivery",
+      "firstFrame": 125,
+      "lastFrame": 125
+    },
+    {
+      "name": "approach Reliquary arrival delivery",
+      "firstFrame": 147,
+      "lastFrame": 209
+    },
+    {
+      "name": "Reliquary arrival delivery",
+      "firstFrame": 229,
+      "lastFrame": 229
+    },
+    {
+      "name": "approach Reliquary arrival delivery",
+      "firstFrame": 251,
+      "lastFrame": 313
+    },
+    {
+      "name": "Reliquary arrival delivery",
+      "firstFrame": 333,
+      "lastFrame": 333
+    },
+    {
+      "name": "approach Reliquary arrival delivery",
+      "firstFrame": 355,
+      "lastFrame": 417
+    },
+    {
+      "name": "Reliquary arrival delivery",
+      "firstFrame": 437,
+      "lastFrame": 437
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite observation",
+      "firstFrame": 459,
+      "lastFrame": 537
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite finite-stack approach",
+      "firstFrame": 555,
+      "lastFrame": 656
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite upper support contact",
+      "firstFrame": 701,
+      "lastFrame": 732
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite rebound apex",
+      "firstFrame": 732,
+      "lastFrame": 757
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite cap before spending support",
+      "firstFrame": 759,
+      "lastFrame": 764
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite clear landing",
+      "firstFrame": 764,
+      "lastFrame": 787
+    },
+    {
+      "name": "approach bonus-jungle-terraces room 1 finite spent upper finite support",
+      "firstFrame": 807,
+      "lastFrame": 860
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite spent upper finite support",
+      "firstFrame": 880,
+      "lastFrame": 880
+    },
+    {
+      "name": "approach Reliquary finite-exit delivery",
+      "firstFrame": 902,
+      "lastFrame": 1022
+    },
+    {
+      "name": "Reliquary finite-exit delivery",
+      "firstFrame": 1042,
+      "lastFrame": 1042
+    },
+    {
+      "name": "approach Reliquary finite-exit delivery",
+      "firstFrame": 1064,
+      "lastFrame": 1126
+    },
+    {
+      "name": "Reliquary finite-exit delivery",
+      "firstFrame": 1146,
+      "lastFrame": 1146
+    },
+    {
+      "name": "approach Reliquary finite-exit delivery",
+      "firstFrame": 1168,
+      "lastFrame": 1230
+    },
+    {
+      "name": "Reliquary finite-exit delivery",
+      "firstFrame": 1250,
+      "lastFrame": 1250
+    },
+    {
+      "name": "approach Reliquary finite-exit delivery",
+      "firstFrame": 1272,
+      "lastFrame": 1334
+    },
+    {
+      "name": "Reliquary finite-exit delivery",
+      "firstFrame": 1354,
+      "lastFrame": 1354
+    },
+    {
+      "name": "approach Reliquary finite-exit delivery",
+      "firstFrame": 1376,
+      "lastFrame": 1438
+    },
+    {
+      "name": "Reliquary finite-exit delivery",
+      "firstFrame": 1458,
+      "lastFrame": 1458
+    },
+    {
+      "name": "bonus-jungle-terraces room 1 finite supported room exit",
+      "firstFrame": 1480,
+      "lastFrame": 1570
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge observation",
+      "firstFrame": 1588,
+      "lastFrame": 1662
+    },
+    {
+      "name": "approach bonus-jungle-terraces room 2 bridge create visible bridge",
+      "firstFrame": 1680,
+      "lastFrame": 1763
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge create visible bridge",
+      "firstFrame": 1783,
+      "lastFrame": 1783
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge pass used switch",
+      "firstFrame": 1832,
+      "lastFrame": 1871
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge cross actual materialized bridge",
+      "firstFrame": 1871,
+      "lastFrame": 2061
+    },
+    {
+      "name": "approach bonus-jungle-terraces room 2 bridge receiver reward",
+      "firstFrame": 2079,
+      "lastFrame": 2151
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge receiver reward",
+      "firstFrame": 2171,
+      "lastFrame": 2171
+    },
+    {
+      "name": "approach bonus-jungle-terraces room 2 bridge receiver mystery",
+      "firstFrame": 2193,
+      "lastFrame": 2255
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge receiver mystery",
+      "firstFrame": 2275,
+      "lastFrame": 2275
+    },
+    {
+      "name": "bonus-jungle-terraces room 2 bridge supported room exit",
+      "firstFrame": 2297,
+      "lastFrame": 2404
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse observation",
+      "firstFrame": 2422,
+      "lastFrame": 2496
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse upper-first staging",
+      "firstFrame": 2514,
+      "lastFrame": 2612
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse takeoff cap rebound",
+      "firstFrame": 2657,
+      "lastFrame": 2688
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse upper-first rebound apex",
+      "firstFrame": 2688,
+      "lastFrame": 2713
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse collect cap before timed support",
+      "firstFrame": 2715,
+      "lastFrame": 2720
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse visible refuge",
+      "firstFrame": 2720,
+      "lastFrame": 2743
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse deliberate fuse approach",
+      "firstFrame": 2763,
+      "lastFrame": 2851
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse prime fuse by contact",
+      "firstFrame": 2896,
+      "lastFrame": 2932
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse leave blast radius",
+      "firstFrame": 2932,
+      "lastFrame": 2973
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse supported post-blast recovery",
+      "firstFrame": 2993,
+      "lastFrame": 3152
+    },
+    {
+      "name": "approach bonus-jungle-terraces room 3 fuse recovery reward",
+      "firstFrame": 3152,
+      "lastFrame": 3293
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse recovery reward",
+      "firstFrame": 3313,
+      "lastFrame": 3313
+    },
+    {
+      "name": "approach Reliquary refuge delivery",
+      "firstFrame": 3335,
+      "lastFrame": 3431
+    },
+    {
+      "name": "Reliquary refuge delivery",
+      "firstFrame": 3451,
+      "lastFrame": 3451
+    },
+    {
+      "name": "approach Reliquary refuge delivery",
+      "firstFrame": 3473,
+      "lastFrame": 3535
+    },
+    {
+      "name": "Reliquary refuge delivery",
+      "firstFrame": 3555,
+      "lastFrame": 3555
+    },
+    {
+      "name": "approach Reliquary refuge delivery",
+      "firstFrame": 3577,
+      "lastFrame": 3639
+    },
+    {
+      "name": "Reliquary refuge delivery",
+      "firstFrame": 3659,
+      "lastFrame": 3659
+    },
+    {
+      "name": "approach Reliquary refuge delivery",
+      "firstFrame": 3681,
+      "lastFrame": 3743
+    },
+    {
+      "name": "Reliquary refuge delivery",
+      "firstFrame": 3763,
+      "lastFrame": 3763
+    },
+    {
+      "name": "approach Reliquary refuge delivery",
+      "firstFrame": 3785,
+      "lastFrame": 3847
+    },
+    {
+      "name": "Reliquary refuge delivery",
+      "firstFrame": 3867,
+      "lastFrame": 3867
+    },
+    {
+      "name": "bonus-jungle-terraces room 3 fuse supported room exit",
+      "firstFrame": 3889,
+      "lastFrame": 3962
+    },
+    {
+      "name": "approach Reliquary exit delivery",
+      "firstFrame": 3980,
+      "lastFrame": 4059
+    },
+    {
+      "name": "Reliquary exit delivery",
+      "firstFrame": 4079,
+      "lastFrame": 4079
+    },
+    {
+      "name": "approach Reliquary exit delivery",
+      "firstFrame": 4101,
+      "lastFrame": 4163
+    },
+    {
+      "name": "Reliquary exit delivery",
+      "firstFrame": 4183,
+      "lastFrame": 4183
+    },
+    {
+      "name": "approach Reliquary exit delivery",
+      "firstFrame": 4205,
+      "lastFrame": 4267
+    },
+    {
+      "name": "Reliquary exit delivery",
+      "firstFrame": 4287,
+      "lastFrame": 4287
+    },
+    {
+      "name": "approach Reliquary exit delivery",
+      "firstFrame": 4309,
+      "lastFrame": 4371
+    },
+    {
+      "name": "Reliquary exit delivery",
+      "firstFrame": 4391,
+      "lastFrame": 4391
+    },
+    {
+      "name": "approach Reliquary exit delivery",
+      "firstFrame": 4413,
+      "lastFrame": 4475
+    },
+    {
+      "name": "Reliquary exit delivery",
+      "firstFrame": 4495,
+      "lastFrame": 4495
+    },
+    {
+      "name": "collect earned gem and cross real bonus gate",
+      "firstFrame": 4519,
+      "lastFrame": 4556
+    }
+  ],
+  "result": {
+    "id": "bonus-jungle-terraces",
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 29,
+    "cratesBroken": 29,
+    "deaths": 0
+  },
+  "id": "bonus-jungle-terraces",
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 29,
+  "cratesBroken": 29,
+  "deaths": 0,
+  "frames": 4556,
+  "seconds": 75.93333333333334,
+  "maxFloorError": 0
+}

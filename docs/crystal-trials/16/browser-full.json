@@ -1,0 +1,90 @@
+{
+  "trial": 16,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "ebd6d0d35f56d5ad77fc408aeeb621280f8b1b2f034233d3d00a97ecd1239198",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        14.054055145966812,
+        21.951354408707076
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.33267776011819633,
+            0.8796542740698953,
+            0.9941566833834415
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06879366713736891,
+        0,
+        4.99925352543133
+      ],
+      "camera": [
+        0.06879366713736891,
+        14.054055145966812,
+        21.950607934138404
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.3308513312405605,
+            0.8979333347331123,
+            0.9941400348317203
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06879366713736891,
+        0,
+        4.99925352543133
+      ]
+    }
+  ],
+  "passed": true
+}

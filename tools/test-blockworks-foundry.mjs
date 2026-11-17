@@ -98,13 +98,15 @@ export function runFoundry(r,{exerciseReward=true,verifyRespawn=true}={}) {
   bankHop(reward[0],bankEdge-.65,3.6,8,true,'reward first pier');
   for(let i=1;i<reward.length;i++)hopFrom(reward[i-1],reward[i],`reward pier ${i+1}`);
   hopFrom(reward.at(-1),perch,'lower reward perch');
-  const mask=l.crates.find(c=>c.mask&&Math.hypot(c.mesh.position.x-perch.q[0],c.mesh.position.z-perch.q[2])<.1);
-  assert.ok(mask,'lower perch reward is missing');
-  const masksBefore=p.masks;
-  walk([mask.mesh.position.x,3.6,mask.mesh.position.z+1.25],'claim the optional reward');
-  tick({spinHeld:true});stepFor(18);
-  assert.ok(!mask.alive&&(p.masks>masksBefore||(masksBefore>=2&&p.uberTimer>0)),
-    'the lower branch must award a mask or its normal third-mask power-up');
+  const rewardCrates=l.crates.filter(c=>!c.metal&&!c.bang&&Math.hypot(c.mesh.position.x-perch.q[0],c.mesh.position.z-perch.q[2])<.1);
+  const rewardLife=rewardCrates.find(c=>c.life);
+  assert.ok(rewardLife,'lower perch life reward is missing');
+  const livesBefore=p.lives;
+  walk([rewardLife.mesh.position.x,3.6,rewardLife.mesh.position.z+1.25],'claim the optional reward');
+  until(()=>rewardCrates.every(c=>!c.alive),()=>({...steerToward(rewardLife.mesh.position,{pace:.2}),spinHeld:p.spinning||!r.lastInput.spinHeld}),
+    {maxFrames:240,label:'harvest the optional foundry consignment'});
+  stepFor(18);
+  assert.ok(!rewardLife.alive&&p.lives>livesBefore,'the optional branch must award its life');
   assert.ok(keys.bridge.bangUsed!==true&&metal(f.groups.bridge).every(c=>c.pending),'reward perch must not open the main crossing');
   assert.ok(!p.hasCrystal&&!l.crystalPickup.collected,'ordinary reward roof must not collect the crystal');
   const crystal=l.crystalPickup.group.position;

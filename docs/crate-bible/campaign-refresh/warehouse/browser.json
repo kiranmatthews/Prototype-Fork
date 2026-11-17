@@ -1,0 +1,108 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "crates": 0,
+      "enemies": 0,
+      "checkpoints": 3,
+      "tokens": 5,
+      "bonus": false,
+      "skatepark": true,
+      "alwaysSkate": false
+    },
+    "continuousFiveTokens": {
+      "finished": true,
+      "tokens": 5,
+      "pickupOrder": [
+        3,
+        4,
+        5,
+        1,
+        2
+      ],
+      "deaths": 0,
+      "snaps": 0,
+      "failure": null,
+      "missingCheckpoints": [],
+      "seconds": 70.58333333333333,
+      "grindFrames": 54,
+      "bails": 0,
+      "distance": 721.0304001446686
+    },
+    "checkpoint": {
+      "done": true,
+      "active": true,
+      "frames": 48
+    },
+    "recovery": {
+      "position": [
+        8,
+        0,
+        -32
+      ],
+      "lives": 3,
+      "grounded": true,
+      "tokens": 0
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "inventory": {
+      "crates": 0,
+      "enemies": 0,
+      "checkpoints": 3,
+      "tokens": 5,
+      "bonus": false,
+      "skatepark": true,
+      "alwaysSkate": false
+    },
+    "views": [
+      {
+        "name": "arrival",
+        "position": [
+          0,
+          3.200000023841858,
+          10
+        ],
+        "state": "ride",
+        "grounded": true,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "loading-gap",
+        "position": [
+          -22,
+          3.200000023841858,
+          -117
+        ],
+        "state": "ride",
+        "grounded": true,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "crane-receiver",
+        "position": [
+          35,
+          8.12,
+          -94
+        ],
+        "state": "ride",
+        "grounded": true,
+        "render": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true
+  }
+]

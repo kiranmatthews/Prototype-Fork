@@ -1,0 +1,3 @@
+{"supportProbes":8394,"fromVista":false,"vistaProbes":18,"vistaLength":1751.0326446530826,"freerideShoulder":true,"valleyDeath":true,"landingFrames":1,"checkpoints":17,"routeFrames":43744,"finishFrames":135,"checkpointBankAndPitRecovery":true,"routeMetres":5630.595142105832,"upperExtension":771.8510543215829,"lowerExtension":3466.7873397347685,"lowerDrop":781.0000000000001,"final300mDrop":64.68787848527495,"airborneGaps":["Boardwalk launch","Canyon rim jump"],"materials":"shared mineral texture owners verified"}
+Bryce terrain, checkpoints, finish and native rock budgets pass
+Verified 173 complete native vista cells against their authored hashes

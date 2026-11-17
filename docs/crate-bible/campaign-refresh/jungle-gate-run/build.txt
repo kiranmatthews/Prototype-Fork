@@ -1,0 +1,122 @@
+
+> board-platformer-proto@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1082 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/fire-sprite-lab.html                               0.51 kB │ gzip:     0.36 kB
+dist/roo-type-lab.html                                  0.84 kB │ gzip:     0.41 kB
+dist/golf-cart-lab.html                                 1.09 kB │ gzip:     0.45 kB
+dist/jak-lab.html                                       1.13 kB │ gzip:     0.44 kB
+dist/jak-particle-study.html                            1.17 kB │ gzip:     0.47 kB
+dist/labs/index.html                                    1.22 kB │ gzip:     0.59 kB
+dist/crt-review.html                                    1.45 kB │ gzip:     0.70 kB
+dist/milk-review.html                                   2.27 kB │ gzip:     1.12 kB
+dist/jump-review.html                                   2.40 kB │ gzip:     1.10 kB
+dist/skateboard-lab.html                                2.87 kB │ gzip:     1.07 kB
+dist/reset-local-data.html                              3.04 kB │ gzip:     1.53 kB
+dist/skate-pose-review.html                             4.42 kB │ gzip:     1.61 kB
+dist/skate-playtest.html                                5.08 kB │ gzip:     1.69 kB
+dist/index.html                                         5.23 kB │ gzip:     2.17 kB
+dist/tools/enemies/reference-review.html                5.40 kB │ gzip:     1.93 kB
+dist/skate-reference-lab.html                           5.43 kB │ gzip:     1.92 kB
+dist/spin-lab.html                                      8.11 kB │ gzip:     2.58 kB
+dist/tools/enemies/motion-review.html                  10.17 kB │ gzip:     3.46 kB
+dist/assets/loadingVortex.worker-DJH5czhb.js          933.44 kB
+dist/assets/board-scribble-1z1e6AP0.png             2,003.90 kB
+dist/assets/level-DJtrQsAn.css                          0.31 kB │ gzip:     0.22 kB
+dist/assets/skatePlaytest-Btx9nPC1.css                  1.69 kB │ gzip:     0.75 kB
+dist/assets/skatePoseReview-B-TzxqPF.css                3.87 kB │ gzip:     1.52 kB
+dist/assets/main-Zvv1Vkzc.css                           4.02 kB │ gzip:     1.42 kB
+dist/assets/labs-vC8ionaB.css                           4.32 kB │ gzip:     1.64 kB
+dist/assets/golfCartLab-BweRo8CP.css                    5.95 kB │ gzip:     1.94 kB
+dist/assets/lab-BCywtt52.css                            6.24 kB │ gzip:     2.09 kB
+dist/assets/enemyReferenceReview-DR9rPaID.css           8.53 kB │ gzip:     2.46 kB
+dist/assets/skateReferenceLab-CtJFldWq.css              8.98 kB │ gzip:     2.69 kB
+dist/assets/rooTypeLab-COcsGWcy.css                    14.52 kB │ gzip:     3.88 kB
+dist/assets/storageKeys-Cs5plciI.js                     0.09 kB │ gzip:     0.09 kB
+dist/assets/fireSpriteLab-DepvoY89.js                   0.21 kB │ gzip:     0.17 kB
+dist/assets/catalog-COcLuESW.js                         0.28 kB │ gzip:     0.23 kB
+dist/assets/SkeletonUtils-BCVmgslc.js                   0.45 kB │ gzip:     0.27 kB
+dist/assets/toolRoutes-C327gphf.js                      0.47 kB │ gzip:     0.32 kB
+dist/assets/localGameStorage-CkXwQ_fa.js                0.52 kB │ gzip:     0.33 kB
+dist/assets/Pass-BxWhC-nJ.js                            0.70 kB │ gzip:     0.41 kB
+dist/assets/modulepreload-polyfill-B5Qt9EMX.js          0.71 kB │ gzip:     0.40 kB
+dist/assets/modelBounds-BExakTI6.js                     0.78 kB │ gzip:     0.48 kB
+dist/assets/startupScreen-CtEhl7RW.js                   0.95 kB │ gzip:     0.50 kB
+dist/assets/preload-helper-CmsKOCeN.js                  1.11 kB │ gzip:     0.67 kB
+dist/assets/skateGrabMotion-_awZViYM.js                 1.21 kB │ gzip:     0.43 kB
+dist/assets/index-CNmbJEAd.js                           1.59 kB │ gzip:     0.92 kB
+dist/assets/archive-BUGldSO_.js                         1.67 kB │ gzip:     0.88 kB
+dist/assets/jumpReview-C_E8_jCK.js                      1.77 kB │ gzip:     0.97 kB
+dist/assets/crtReview-DEKfW2Rt.js                       3.25 kB │ gzip:     1.56 kB
+dist/assets/studiokit-B05fLFON.js                       4.28 kB │ gzip:     1.64 kB
+dist/assets/milkReview-Bgr1TL66.js                      5.13 kB │ gzip:     2.45 kB
+dist/assets/distortion-DHFcEh-b.js                      5.47 kB │ gzip:     2.28 kB
+dist/assets/resetLocalData-BrtcfYax.js                  5.63 kB │ gzip:     2.31 kB
+dist/assets/spinLab-BHYupKGl.js                         6.18 kB │ gzip:     2.90 kB
+dist/assets/skateboardLab-0NtNHp3n.js                   6.32 kB │ gzip:     3.15 kB
+dist/assets/skatePlaytest-CnnmPE1x.js                   6.83 kB │ gzip:     3.31 kB
+dist/assets/BufferGeometryUtils-Gn4VSFnB.js             7.33 kB │ gzip:     2.45 kB
+dist/assets/presentationLoading-Cz99VV6S.js             7.50 kB │ gzip:     2.94 kB
+dist/assets/retarget-DZamY-3t.js                        7.68 kB │ gzip:     2.86 kB
+dist/assets/waterstudio-A-1S9UIp.js                     8.76 kB │ gzip:     3.56 kB
+dist/assets/geometry-CfjUw0BK.js                       10.21 kB │ gzip:     3.95 kB
+dist/assets/skatePoseReview-CqDtlvfR.js                10.50 kB │ gzip:     4.61 kB
+dist/assets/skateReferenceLab-CNPTZQaf.js              10.55 kB │ gzip:     4.40 kB
+dist/assets/puffstudio-k0u6OsJT.js                     10.92 kB │ gzip:     4.23 kB
+dist/assets/swirlstudio-Qdy8qERe.js                    10.92 kB │ gzip:     4.38 kB
+dist/assets/OrbitControls-C6x3WZ_t.js                  13.43 kB │ gzip:     3.87 kB
+dist/assets/fflate.module-XEyfgjbZ.js                  13.46 kB │ gzip:     6.65 kB
+dist/assets/elasticity-BV0m_i3f.js                     14.01 kB │ gzip:     5.43 kB
+dist/assets/enemyMotionReview-BboduNtl.js              14.56 kB │ gzip:     5.86 kB
+dist/assets/golfCartLab-DaC6J8Dt.js                    14.81 kB │ gzip:     6.75 kB
+dist/assets/enemyReferenceReview-DdmSVnwh.js           15.43 kB │ gzip:     6.43 kB
+dist/assets/milk-gSGrtocz.js                           16.52 kB │ gzip:     6.49 kB
+dist/assets/fieldstudio-DjBS0h_e.js                    16.71 kB │ gzip:     6.16 kB
+dist/assets/panel-CbtH6hkD.js                          17.44 kB │ gzip:     5.73 kB
+dist/assets/characterLab-Bbp38UJc.js                   17.88 kB │ gzip:     6.11 kB
+dist/assets/panel-CTfkIwjL.js                          26.65 kB │ gzip:     9.44 kB
+dist/assets/rooTypeLab-BTbPwpmY.js                     26.71 kB │ gzip:    10.44 kB
+dist/assets/atlas-BZVoTTQV.js                          34.76 kB │ gzip:     8.49 kB
+dist/assets/GLTFExporter-Cw4Z3zyM.js                   34.77 kB │ gzip:    10.78 kB
+dist/assets/GLTFLoader-UYzpdHd0.js                     45.07 kB │ gzip:    13.37 kB
+dist/assets/skateCatalog-qe2vni4Z.js                   46.87 kB │ gzip:    14.67 kB
+dist/assets/playableMotion-B1plAYG-.js                 58.20 kB │ gzip:    19.96 kB
+dist/assets/labs-BUf1OHmX.js                           59.77 kB │ gzip:    10.86 kB
+dist/assets/tuning-D9eXvqOE.js                         69.49 kB │ gzip:    24.38 kB
+dist/assets/characterAnimationRuntime-BWrabvg2.js      97.40 kB │ gzip:    27.76 kB
+dist/assets/jump-browser-review-fSIbp0oe.js           102.47 kB │ gzip:    22.13 kB
+dist/assets/sounds-Q5Pa7zkW.js                        131.34 kB │ gzip:    44.90 kB
+dist/assets/animationStudio-DTzpyFaC.js               134.32 kB │ gzip:    36.35 kB
+dist/assets/lab-B8VYtWrv.js                           134.76 kB │ gzip:    42.76 kB
+dist/assets/ledgeTraversal-B2eS1ABv.js                259.59 kB │ gzip:    95.99 kB
+dist/assets/panel-s06h4PRQ.js                         340.09 kB │ gzip:    68.47 kB
+dist/assets/meshyBoolieRooHead-nvWYnml4.js            392.47 kB │ gzip:   222.74 kB
+dist/assets/playerCatalog-CClmSVDy.js                 596.50 kB │ gzip:   194.72 kB
+dist/assets/three.module-CKIsmQSw.js                  604.75 kB │ gzip:   156.08 kB
+dist/assets/main-BErrPh-z.js                        1,127.75 kB │ gzip:   343.61 kB
+dist/assets/fleet-Crwuad0r.js                       1,395.89 kB │ gzip:   570.54 kB
+dist/assets/player-Ceg-h_2p.js                      1,820.68 kB │ gzip:   804.42 kB
+dist/assets/level-C02-exX7.js                      13,054.68 kB │ gzip: 3,721.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 49.46s
+Level sync: 4 overrides, 10 exact source copies omitted; 15502.4 KiB download.
+Release assets: kept active fonts; omitted 80 historical files (403.0 MiB) from generated output.
+Release metadata: removed 845.2 KiB of whitespace; all values and source files retained.
+Local review galleries: 432 files (240.0 MiB) kept in the authoring library.
+Font export: 1 on-demand archive(s), 34.8 MiB less hosted data.
+Reviewed textures: 472 reviewed images in 293 models, 510.1 MiB less hosted data; original art retained.
+Top-40 GLB textures: 104 images in 30 models resized and optimized, 160.3 MiB less hosted data.
+Shared textures: 136 exact images reused across 137 models, 36.9 MiB less hosted data.
+Native geometry: 575 complete models packed losslessly, 101.5 MiB less hosted data.
+Lossless images: 51 pixel-identical WebPs, 20.3 MiB less hosted data.
+Animation catalogue: exact keyframes packed losslessly, 8.8 MiB less hosted data.
+Offline game: 3301 files, 905.0 MiB, version 5fee8e7cd5373175835b

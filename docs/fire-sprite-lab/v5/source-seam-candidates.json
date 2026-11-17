@@ -1,0 +1,219 @@
+{
+  "note": "Candidate seam search on unchanged source pixels; numerical similarity is not visual approval. No images are warped, blended or repainted.",
+  "families": {
+    "Flame02": {
+      "native": {
+        "width": 256,
+        "height": 440,
+        "channels": 4
+      },
+      "medianAdjacent": 0.0034783774326461684,
+      "wholeSequenceJumpRatio": 21.919743542597804,
+      "candidates": [
+        {
+          "first": 319,
+          "last": 469,
+          "count": 151,
+          "jumpRatio": 2.2256519108413704,
+          "velocityRatio": 1.579293600710466,
+          "score": 2.4625459509479404
+        },
+        {
+          "first": 317,
+          "last": 469,
+          "count": 153,
+          "jumpRatio": 2.2473481277278444,
+          "velocityRatio": 1.613007928330975,
+          "score": 2.489299316977491
+        },
+        {
+          "first": 318,
+          "last": 469,
+          "count": 152,
+          "jumpRatio": 2.2165795364756766,
+          "velocityRatio": 1.8292493145408655,
+          "score": 2.4909669336568063
+        },
+        {
+          "first": 188,
+          "last": 324,
+          "count": 137,
+          "jumpRatio": 2.503351828881545,
+          "velocityRatio": 1.6660740883685992,
+          "score": 2.753262942136835
+        },
+        {
+          "first": 186,
+          "last": 324,
+          "count": 139,
+          "jumpRatio": 2.5088227708198167,
+          "velocityRatio": 1.728729093975622,
+          "score": 2.76813213491616
+        },
+        {
+          "first": 186,
+          "last": 323,
+          "count": 138,
+          "jumpRatio": 2.5162431476743743,
+          "velocityRatio": 1.7500134212448877,
+          "score": 2.7787451608611073
+        },
+        {
+          "first": 188,
+          "last": 323,
+          "count": 136,
+          "jumpRatio": 2.595746889391323,
+          "velocityRatio": 1.4100680780263093,
+          "score": 2.8072571010952694
+        },
+        {
+          "first": 317,
+          "last": 468,
+          "count": 152,
+          "jumpRatio": 2.5176022590100766,
+          "velocityRatio": 1.9341613031964424,
+          "score": 2.807726454489543
+        },
+        {
+          "first": 187,
+          "last": 324,
+          "count": 138,
+          "jumpRatio": 2.5815468756983737,
+          "velocityRatio": 1.7813174891383619,
+          "score": 2.848744499069128
+        },
+        {
+          "first": 318,
+          "last": 468,
+          "count": 151,
+          "jumpRatio": 2.6056060958945215,
+          "velocityRatio": 1.7076576142539612,
+          "score": 2.861754738032616
+        },
+        {
+          "first": 319,
+          "last": 471,
+          "count": 153,
+          "jumpRatio": 2.567224342466954,
+          "velocityRatio": 2.0102603367477005,
+          "score": 2.8687633929791088
+        },
+        {
+          "first": 186,
+          "last": 322,
+          "count": 137,
+          "jumpRatio": 2.487161297195376,
+          "velocityRatio": 2.5892190125737633,
+          "score": 2.87554414908144
+        }
+      ]
+    },
+    "Flame03": {
+      "native": {
+        "width": 128,
+        "height": 240,
+        "channels": 3
+      },
+      "medianAdjacent": 0.002139177967964754,
+      "wholeSequenceJumpRatio": 32.47727611574538,
+      "candidates": [
+        {
+          "first": 149,
+          "last": 257,
+          "count": 109,
+          "jumpRatio": 4.09432168745172,
+          "velocityRatio": 1.621706584007151,
+          "score": 4.337577675052793
+        },
+        {
+          "first": 150,
+          "last": 258,
+          "count": 109,
+          "jumpRatio": 4.20519925414256,
+          "velocityRatio": 1.5147156096552765,
+          "score": 4.432406595590852
+        },
+        {
+          "first": 150,
+          "last": 257,
+          "count": 108,
+          "jumpRatio": 4.2118388807332,
+          "velocityRatio": 1.7099316830770472,
+          "score": 4.468328633194758
+        },
+        {
+          "first": 148,
+          "last": 256,
+          "count": 109,
+          "jumpRatio": 4.324177119806649,
+          "velocityRatio": 1.6009146913249748,
+          "score": 4.564314323505395
+        },
+        {
+          "first": 151,
+          "last": 258,
+          "count": 108,
+          "jumpRatio": 4.372077652652071,
+          "velocityRatio": 1.535415676125824,
+          "score": 4.602390004070944
+        },
+        {
+          "first": 149,
+          "last": 256,
+          "count": 108,
+          "jumpRatio": 4.3276469312622226,
+          "velocityRatio": 1.8468172964448166,
+          "score": 4.604669525728945
+        },
+        {
+          "first": 151,
+          "last": 259,
+          "count": 109,
+          "jumpRatio": 4.630302026904587,
+          "velocityRatio": 1.4398882084803022,
+          "score": 4.846285258176633
+        },
+        {
+          "first": 147,
+          "last": 255,
+          "count": 109,
+          "jumpRatio": 4.629239219199322,
+          "velocityRatio": 1.7316255914644156,
+          "score": 4.888983057918984
+        },
+        {
+          "first": 148,
+          "last": 257,
+          "count": 110,
+          "jumpRatio": 4.664019054435251,
+          "velocityRatio": 1.8261616798616545,
+          "score": 4.937943306414499
+        },
+        {
+          "first": 149,
+          "last": 258,
+          "count": 110,
+          "jumpRatio": 4.672429633512067,
+          "velocityRatio": 1.7972201289959344,
+          "score": 4.942012652861457
+        },
+        {
+          "first": 148,
+          "last": 255,
+          "count": 108,
+          "jumpRatio": 4.672375151844231,
+          "velocityRatio": 1.8006412330383472,
+          "score": 4.942471336799983
+        },
+        {
+          "first": 179,
+          "last": 303,
+          "count": 125,
+          "jumpRatio": 4.798063529225606,
+          "velocityRatio": 1.8199272512223772,
+          "score": 5.071052616908963
+        }
+      ]
+    }
+  }
+}

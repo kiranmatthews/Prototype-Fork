@@ -1,0 +1,383 @@
+{
+  "trial": 15,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "73ee9cc8f41f2c63eae657e3064631400ae0a12bcc2bb5fc9804810664af9c82",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -3579
+  ],
+  "installed": {
+    "id": 15,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 15,
+    "frame": 2298,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 15 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the enclosed switch from its side",
+        "firstFrame": 137,
+        "lastFrame": 313
+      },
+      {
+        "name": "Read the switch behind the transparent panel",
+        "firstFrame": 331,
+        "lastFrame": 431
+      },
+      {
+        "name": "Leave the enclosed switch",
+        "firstFrame": 490,
+        "lastFrame": 589
+      },
+      {
+        "name": "Walk around the front of the TNT",
+        "firstFrame": 607,
+        "lastFrame": 717
+      },
+      {
+        "name": "Set up a falling stomp onto TNT",
+        "firstFrame": 735,
+        "lastFrame": 814
+      },
+      {
+        "name": "Stomp TNT to start its visible fuse",
+        "firstFrame": 859,
+        "lastFrame": 895
+      },
+      {
+        "name": "Retreat outside the blast radius",
+        "firstFrame": 895,
+        "lastFrame": 936
+      },
+      {
+        "name": "The timed blast operates the remote switch",
+        "firstFrame": 936,
+        "lastFrame": 1093
+      },
+      {
+        "name": "Approach the revealed steps",
+        "firstFrame": 1093,
+        "lastFrame": 1202
+      },
+      {
+        "name": "Jump onto the first revealed step",
+        "firstFrame": 1247,
+        "lastFrame": 1279
+      },
+      {
+        "name": "Cross the first step",
+        "firstFrame": 1279,
+        "lastFrame": 1357
+      },
+      {
+        "name": "Jump onto the revealed spring terrace",
+        "firstFrame": 1402,
+        "lastFrame": 1434
+      },
+      {
+        "name": "Approach the revealed bounce crate",
+        "firstFrame": 1434,
+        "lastFrame": 1521
+      },
+      {
+        "name": "Hold the revealed arrow rebound",
+        "firstFrame": 1566,
+        "lastFrame": 1602
+      },
+      {
+        "name": "Land on the high receiver",
+        "firstFrame": 1602,
+        "lastFrame": 1647
+      },
+      {
+        "name": "Collect the remote-switch crystal",
+        "firstFrame": 1647,
+        "lastFrame": 1726
+      },
+      {
+        "name": "Drop to the flat courtyard",
+        "firstFrame": 1771,
+        "lastFrame": 1825
+      },
+      {
+        "name": "Pass outside the enclosed switch",
+        "firstFrame": 1825,
+        "lastFrame": 2082
+      },
+      {
+        "name": "Finish the TNT circuit",
+        "firstFrame": 2100,
+        "lastFrame": 2280
+      }
+    ],
+    "evidence": [
+      {
+        "action": "direct spin cannot reach the enclosed switch"
+      },
+      {
+        "action": "TNT activates the enclosed switch",
+        "position": [
+          -4.920496747486181,
+          0,
+          -3593.996413512096
+        ],
+        "switchUsed": true,
+        "arrowRevealed": true
+      }
+    ],
+    "position": [
+      0.033690522009024004,
+      0,
+      -3579.0531942201533
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Finish the TNT circuit",
+    "result": {
+      "id": 15,
+      "collected": 1,
+      "position": [
+        0.033690522009024004,
+        0,
+        -3579.0531942201533
+      ],
+      "frames": 2298
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.033690522009024004,
+        0,
+        -3579.0531942201533
+      ],
+      "camera": [
+        0.033690522009024004,
+        9.873420384529114,
+        -3561.725477297383
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            1.2147730443910194e-05,
+            0.6188551396153058,
+            1.0005585646686448
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.002323323795981828,
+            0.6173377574840594,
+            1.0005632387935635
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            1.4573226344171478e-05,
+            0.6215927404281407,
+            1.0005702331116966
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            1.5744488021791168e-05,
+            0.6173759678837737,
+            1.0005758677533312
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.00458931543847062,
+            0.6160744580373343,
+            1.0005830822705004
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            1.9165819684421667e-05,
+            0.6165853046095,
+            1.0005923269086168
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            2.1695972792943355e-05,
+            0.6200789859037796,
+            1.0006044988308436
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.004386012123123284,
+            0.6150636086739655,
+            1.0006192723180405
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.0051149517558870886,
+            0.6178838526089655,
+            1.0006390741738114
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            3.515105333208824e-05,
+            0.6296046711611344,
+            1.0006692277965832
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            4.725361976738889e-05,
+            0.6315627428714052,
+            1.0007274501614267
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.014763516579014913,
+            0.5993238416180705,
+            1.0007827534199922
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            9.697179895043309e-05,
+            0.565402997763948,
+            1.0009666316592716
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            0.0002590146675174178,
+            0.5641251318433113,
+            1.0017461786309374
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.03759845368325369,
+            0.6625367746515433,
+            0.9997803513698454
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.012064250488747147,
+            0.6195160408493231,
+            1.000172396180437
+          ]
+        },
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            -5.1762105627174376e-05,
+            0.6447668719712264,
+            1.000251110723837
+          ]
+        },
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.006857936335023241,
+            0.6382350566628877,
+            1.0003138272089294
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            0.004706846260144958,
+            0.6383853766240517,
+            1.000346516145109
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.0046136614372082226,
+            0.6180528546785319,
+            1.000374793585073
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            0.004043179174885679,
+            0.644847759996509,
+            1.0003902909005853
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.0029807559543940086,
+            0.64079417694131,
+            1.0004028474537188
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.0030924095333547973,
+            0.6324948871289128,
+            1.0004161188326484
+          ]
+        },
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.005180759336018055,
+            0.6519877022202157,
+            1.0004235560221932
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

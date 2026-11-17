@@ -1,5 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import { DROWNED_CROWN_ASSETS } from '../drownedCrownAssets';
+import { arrangeLedgerCrates } from './drowned-crate-arrangement';
 
 type Point=[number,number,number];
 type Asset=keyof typeof DROWNED_CROWN_ASSETS;
@@ -49,4 +50,5 @@ export function dressDrownedCrownBonus(data:CustomLevelData,end:number):void {
   ambientSky:'#c4d6df',ambientGround:'#77634f',ambientIntensity:1.12,
   sunColor:'#ffddb0',sunIntensity:1.55,sunDirection:[-.35,.65,.65],
   fillColor:'#86b9ce',fillIntensity:.5,shadowStrength:.52};
+ arrangeLedgerCrates(data);
 }

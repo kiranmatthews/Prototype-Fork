@@ -11,10 +11,16 @@ export const CARLISLE_CARGO_GAPS = [
   { name: 'Crown cargo causeway', from: 3795, to: 3805, y: 24, lead: 3790.5, end: 3809, tier: 0 },
 ] as const;
 export const CARLISLE_CARGO_PILES = [
-  { name: 'Shore starter parcel', s: 5, y: 0, u: 1.8, heights: [[1, 2, 1], [1, 1, 1]], mask: true },
+  { name: 'Shore starter parcel', s: 5, y: 0, u: 1.8, heights: [[1, 2, 1], [2, 2, 2]], mask: true },
   { name: 'Scissor hub stair', s: 260, y: 1.05, u: 3.5, heights: [[1, 2, 3], [1, 2, 3]] },
-  { name: 'Winch transfer bundle', s: 905, y: 4.95, u: -2.5, heights: [[2, 2], [2, 2]] },
+  { name: 'Winch transfer bundle', s: 905, y: 4.95, u: -2.5, heights: [[2, 3], [2, 3]] },
+  // Supported checkpoint quays supply the three previously empty stretches.
+  // Keep the moving handoffs and spring flights free; protection is collected
+  // before committing to them, with the clear route open beside the parcels.
+  { name: 'Pinwheel quay stores', s: 1541, y: 16, u: -5, heights: [[1, 2, 1], [2, 2, 2]], mask: true },
   { name: 'Counterweight cargo steps', s: 2244, y: 24, u: 3, heights: [[3, 3, 3], [2, 2, 2], [1, 1, 1]] },
+  { name: 'Scissors departure stores', s: 2490, y: 24, u: -5, heights: [[1, 2, 1], [2, 2, 2]], mask: true },
+  { name: 'Helical quay stores', s: 2941, y: 24, u: -5, heights: [[1, 2, 1], [2, 2, 2]], mask: true },
   { name: 'Rigging launch parcels', s: 3360, y: 24, u: 2.6, heights: [[2, 1, 2], [2, 1, 2]] },
   { name: 'Home harbour cargo fan', s: 3976, y: 12, u: 2.8, heights: [[1, 1, 1, 1], [1, 2, 2, 1], [1, 1, 1, 1]] },
 ] as const;
@@ -31,7 +37,7 @@ export function buildCarlisleCargo(components: CustomComponent[], point: Point, 
       if (tier >= pile.heights[row][col]) continue;
       crate(`${pile.name} · ${row + 1}.${col + 1}.${tier + 1}`,
         [centre[0] + (col - (width - 1) / 2) * size, centre[1] + tier * size, centre[2] + (row - (depth - 1) / 2) * size],
-        pile.s, 'mask' in pile && pile.mask && tier === 1 ? 'mask' : 'wood');
+        pile.s, 'mask' in pile && pile.mask && row === 0 && col === 1 && tier === 1 ? 'mask' : 'wood');
     }
   }
   return CARLISLE_CARGO_GAPS.map(gap => {

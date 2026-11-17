@@ -1,0 +1,134 @@
+{
+  "course": "codex-lab",
+  "name": "Haunted Hassle",
+  "bonus": {
+    "countedBefore": 8,
+    "countedAfter": 29,
+    "physicalCrates": 31,
+    "patterns": [
+      "return",
+      "bridge",
+      "finite"
+    ]
+  },
+  "status": "validated",
+  "elapsedMinutes": 27.4,
+  "startedAtApprox": "2026-11-14T10:59:00Z",
+  "completedAt": "2026-11-14T11:26:23.569166+00:00",
+  "main": {
+    "countedBefore": 8,
+    "countedAfter": 70,
+    "clusters": 25,
+    "singles": 6,
+    "meanClusterSize": 2.8,
+    "checkpointSectionCounts": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "checkpoints": 6,
+    "physicalCrates": 773,
+    "structuralSteel": 700,
+    "structuralSwitches": 3,
+    "enemyKindsBefore": 4,
+    "enemyKindsAfter": 2,
+    "enemyActors": 5
+  },
+  "parentTotal": 105,
+  "native": {
+    "newCargoHarvests": 19,
+    "newCargoBoxes": 64,
+    "retainedHighAirTargets": 6,
+    "continuousRoute": {
+      "stage": "complete",
+      "seconds": 346.05,
+      "frames": 20763,
+      "distance": 3368.0534222163055,
+      "largestStep": 0.8404128065762824,
+      "checkpoints": [
+        {
+          "s": 422,
+          "frame": 2491
+        },
+        {
+          "s": 750,
+          "frame": 3350
+        },
+        {
+          "s": 1030,
+          "frame": 8096
+        },
+        {
+          "s": 1280,
+          "frame": 16209
+        },
+        {
+          "s": 1550,
+          "frame": 18443
+        },
+        {
+          "s": 1910,
+          "frame": 19559
+        }
+      ],
+      "finalPosition": [
+        62.698854978452424,
+        13.936666666443148,
+        -2114.601246105754
+      ]
+    },
+    "bonus": {
+      "state": "finished",
+      "gemEarned": true,
+      "totalCrates": 29,
+      "cratesBroken": 29,
+      "deaths": 0
+    },
+    "wrongOrderScenarios": 3,
+    "retryRestores": true,
+    "enemySupportAndCounters": "PASS"
+  },
+  "browser": {
+    "modes": 4,
+    "fullViews": 7,
+    "consoleErrors": []
+  },
+  "preservation": {
+    "main": {
+      "preservedNonCrateEnemyComponents": 3991,
+      "preservedStructuralCratesAndSwitches": 703,
+      "countedBefore": 8,
+      "countedAfter": 70,
+      "enemiesBefore": {
+        "turtle": 2,
+        "moa": 1,
+        "spiker": 1,
+        "grunt": 1
+      },
+      "enemiesAfter": {
+        "turtle": 2,
+        "grunt": 3
+      }
+    },
+    "bonus": {
+      "preservedNonCrateEnemyComponents": 143,
+      "preservedStructuralCratesAndSwitches": 2,
+      "countedBefore": 8,
+      "countedAfter": 29,
+      "enemiesBefore": {},
+      "enemiesAfter": {}
+    }
+  },
+  "releaseBytes": 959305099,
+  "buildVersion": "f4ff42fff48dd4aec559",
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Main all-box access uses separate cargo and high-air sessions, not one continuous all-box run.",
+    "Main browser opening, checkpoint/recovery and finish are separately staged. Full main traversal uses production physics in the native harness.",
+    "Three neighboring-cargo attempts failed to bypass the required tools; they do not prove every possible input sequence."
+  ]
+}

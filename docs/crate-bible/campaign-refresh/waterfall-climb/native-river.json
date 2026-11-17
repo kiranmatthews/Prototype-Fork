@@ -1,0 +1,1250 @@
+{
+  "actions": [
+    {
+      "name": "approach Reedwater mask",
+      "firstFrame": 20,
+      "lastFrame": 113
+    },
+    {
+      "name": "Reedwater mask",
+      "firstFrame": 133,
+      "lastFrame": 133
+    },
+    {
+      "name": "Reedwater mask return to the crossing line",
+      "firstFrame": 155,
+      "lastFrame": 248
+    },
+    {
+      "name": "Leave the river bank takeoff",
+      "firstFrame": 266,
+      "lastFrame": 458
+    },
+    {
+      "name": "Leave the river bank",
+      "firstFrame": 485,
+      "lastFrame": 598
+    },
+    {
+      "name": "approach TEACH / Wet-stone shoulder",
+      "firstFrame": 598,
+      "lastFrame": 689
+    },
+    {
+      "name": "TEACH / Wet-stone shoulder",
+      "firstFrame": 709,
+      "lastFrame": 709
+    },
+    {
+      "name": "TEACH / Wet-stone shoulder return to the crossing line",
+      "firstFrame": 731,
+      "lastFrame": 821
+    },
+    {
+      "name": "Land along the branch takeoff",
+      "firstFrame": 839,
+      "lastFrame": 956
+    },
+    {
+      "name": "Land along the branch",
+      "firstFrame": 983,
+      "lastFrame": 1022
+    },
+    {
+      "name": "Branch to raised stone takeoff",
+      "firstFrame": 1022,
+      "lastFrame": 1218
+    },
+    {
+      "name": "Branch to raised stone",
+      "firstFrame": 1245,
+      "lastFrame": 1359
+    },
+    {
+      "name": "Drifting lily boarding point",
+      "firstFrame": 1359,
+      "lastFrame": 1461
+    },
+    {
+      "name": "Drifting lily arrives",
+      "firstFrame": 1479,
+      "lastFrame": 1671
+    },
+    {
+      "name": "Drifting lily board",
+      "firstFrame": 1698,
+      "lastFrame": 1737
+    },
+    {
+      "name": "Drifting lily stand on the moving deck",
+      "firstFrame": 1737,
+      "lastFrame": 1816
+    },
+    {
+      "name": "Drifting lily exit edge",
+      "firstFrame": 1816,
+      "lastFrame": 1878
+    },
+    {
+      "name": "Drifting lily reach the exit",
+      "firstFrame": 1878,
+      "lastFrame": 2109
+    },
+    {
+      "name": "Drifting lily disembark",
+      "firstFrame": 2136,
+      "lastFrame": 2174
+    },
+    {
+      "name": "approach Reed shelter parcel",
+      "firstFrame": 2174,
+      "lastFrame": 2291
+    },
+    {
+      "name": "Reed shelter parcel",
+      "firstFrame": 2311,
+      "lastFrame": 2311
+    },
+    {
+      "name": "Reed shelter parcel return to the crossing line",
+      "firstFrame": 2333,
+      "lastFrame": 2450
+    },
+    {
+      "name": "Reach the cedar roots takeoff",
+      "firstFrame": 2468,
+      "lastFrame": 2608
+    },
+    {
+      "name": "Reach the cedar roots",
+      "firstFrame": 2635,
+      "lastFrame": 2674
+    },
+    {
+      "name": "Cedar root hopper safe approach",
+      "firstFrame": 2674,
+      "lastFrame": 2794
+    },
+    {
+      "name": "Cedar root hopper defeat",
+      "firstFrame": 2812,
+      "lastFrame": 2877
+    },
+    {
+      "name": "Cedar roots checkpoint approach",
+      "firstFrame": 2901,
+      "lastFrame": 2993
+    },
+    {
+      "name": "approach COUNT / Cedar boarding stores",
+      "firstFrame": 3036,
+      "lastFrame": 3141
+    },
+    {
+      "name": "COUNT / Cedar boarding stores",
+      "firstFrame": 3161,
+      "lastFrame": 3161
+    },
+    {
+      "name": "COUNT / Cedar boarding stores return to the crossing line",
+      "firstFrame": 3183,
+      "lastFrame": 3287
+    },
+    {
+      "name": "Line up with the fallen trunk",
+      "firstFrame": 3305,
+      "lastFrame": 3392
+    },
+    {
+      "name": "Ride the fallen cedar dismount",
+      "firstFrame": 3925,
+      "lastFrame": 3996
+    },
+    {
+      "name": "Ride the fallen cedar dismount release the held charge",
+      "firstFrame": 3997,
+      "lastFrame": 4036
+    },
+    {
+      "name": "Ride the fallen cedar bank arrival",
+      "firstFrame": 4044,
+      "lastFrame": 4255
+    },
+    {
+      "name": "approach TEST / Cedar mounting crown",
+      "firstFrame": 4255,
+      "lastFrame": 4310
+    },
+    {
+      "name": "TEST / Cedar mounting crown",
+      "firstFrame": 4330,
+      "lastFrame": 4330
+    },
+    {
+      "name": "Cedar spine over open river mount",
+      "firstFrame": 4352,
+      "lastFrame": 4451
+    },
+    {
+      "name": "Cedar spine over open river rail contact",
+      "firstFrame": 4502,
+      "lastFrame": 4503
+    },
+    {
+      "name": "Cedar spine over open river full grind",
+      "firstFrame": 4503,
+      "lastFrame": 5310
+    },
+    {
+      "name": "Cedar spine over open river dismount landing",
+      "firstFrame": 5312,
+      "lastFrame": 5345
+    },
+    {
+      "name": "Cedar spine over open river safe bank stop",
+      "firstFrame": 5345,
+      "lastFrame": 5403
+    },
+    {
+      "name": "Cedar spine over open river safe bank stop release the held charge",
+      "firstFrame": 5404,
+      "lastFrame": 5443
+    },
+    {
+      "name": "approach Far-bank cedar cache",
+      "firstFrame": 5451,
+      "lastFrame": 5573
+    },
+    {
+      "name": "Far-bank cedar cache",
+      "firstFrame": 5593,
+      "lastFrame": 5593
+    },
+    {
+      "name": "Far-bank cedar cache return to the crossing line",
+      "firstFrame": 5615,
+      "lastFrame": 5736
+    },
+    {
+      "name": "Lotus lookout checkpoint approach",
+      "firstFrame": 5754,
+      "lastFrame": 5797
+    },
+    {
+      "name": "Step off the cedar bank takeoff",
+      "firstFrame": 5840,
+      "lastFrame": 5944
+    },
+    {
+      "name": "Step off the cedar bank",
+      "firstFrame": 5971,
+      "lastFrame": 6010
+    },
+    {
+      "name": "approach TEACH / Sluice sill stores",
+      "firstFrame": 6010,
+      "lastFrame": 6102
+    },
+    {
+      "name": "TEACH / Sluice sill stores",
+      "firstFrame": 6122,
+      "lastFrame": 6122
+    },
+    {
+      "name": "TEACH / Sluice sill stores return to the crossing line",
+      "firstFrame": 6144,
+      "lastFrame": 6235
+    },
+    {
+      "name": "Open the first sluice takeoff",
+      "firstFrame": 6253,
+      "lastFrame": 6371
+    },
+    {
+      "name": "Open the first sluice opens",
+      "firstFrame": 6373,
+      "lastFrame": 6392
+    },
+    {
+      "name": "Open the first sluice cross the timed leaf",
+      "firstFrame": 6392,
+      "lastFrame": 6528
+    },
+    {
+      "name": "Open the first sluice leave the leaf",
+      "firstFrame": 6555,
+      "lastFrame": 6594
+    },
+    {
+      "name": "approach Sluice keeper parcel",
+      "firstFrame": 6594,
+      "lastFrame": 6681
+    },
+    {
+      "name": "Sluice keeper parcel",
+      "firstFrame": 6701,
+      "lastFrame": 6701
+    },
+    {
+      "name": "Sluice keeper parcel return to the crossing line",
+      "firstFrame": 6723,
+      "lastFrame": 6810
+    },
+    {
+      "name": "Choose the left footing takeoff",
+      "firstFrame": 6828,
+      "lastFrame": 6943
+    },
+    {
+      "name": "Choose the left footing",
+      "firstFrame": 6970,
+      "lastFrame": 7008
+    },
+    {
+      "name": "Do not linger on loose stone takeoff",
+      "firstFrame": 7008,
+      "lastFrame": 7112
+    },
+    {
+      "name": "Do not linger on loose stone",
+      "firstFrame": 7139,
+      "lastFrame": 7176
+    },
+    {
+      "name": "Land on the ferry bank takeoff",
+      "firstFrame": 7176,
+      "lastFrame": 7280
+    },
+    {
+      "name": "Land on the ferry bank",
+      "firstFrame": 7307,
+      "lastFrame": 7421
+    },
+    {
+      "name": "Lotus ferry boarding point",
+      "firstFrame": 7421,
+      "lastFrame": 7578
+    },
+    {
+      "name": "Lotus ferry arrives",
+      "firstFrame": 7596,
+      "lastFrame": 7974
+    },
+    {
+      "name": "Lotus ferry board",
+      "firstFrame": 8001,
+      "lastFrame": 8040
+    },
+    {
+      "name": "Lotus ferry stand on the moving deck",
+      "firstFrame": 8040,
+      "lastFrame": 8117
+    },
+    {
+      "name": "Lotus ferry exit edge",
+      "firstFrame": 8117,
+      "lastFrame": 8175
+    },
+    {
+      "name": "Lotus ferry reach the exit",
+      "firstFrame": 8175,
+      "lastFrame": 8275
+    },
+    {
+      "name": "Lotus ferry disembark",
+      "firstFrame": 8302,
+      "lastFrame": 8341
+    },
+    {
+      "name": "approach Ferry shore cache",
+      "firstFrame": 8341,
+      "lastFrame": 8464
+    },
+    {
+      "name": "Ferry shore cache",
+      "firstFrame": 8484,
+      "lastFrame": 8484
+    },
+    {
+      "name": "Ferry shore cache return to the crossing line",
+      "firstFrame": 8506,
+      "lastFrame": 8754
+    },
+    {
+      "name": "Leave the reedbeds takeoff",
+      "firstFrame": 8772,
+      "lastFrame": 8941
+    },
+    {
+      "name": "Leave the reedbeds",
+      "firstFrame": 8968,
+      "lastFrame": 9007
+    },
+    {
+      "name": "Millrace checkpoint approach",
+      "firstFrame": 9007,
+      "lastFrame": 9166
+    },
+    {
+      "name": "approach COUNT / Millrace boarding stores",
+      "firstFrame": 9209,
+      "lastFrame": 9354
+    },
+    {
+      "name": "COUNT / Millrace boarding stores",
+      "firstFrame": 9374,
+      "lastFrame": 9374
+    },
+    {
+      "name": "COUNT / Millrace boarding stores return to the crossing line",
+      "firstFrame": 9396,
+      "lastFrame": 9541
+    },
+    {
+      "name": "Mount at the millrace head",
+      "firstFrame": 9559,
+      "lastFrame": 9685
+    },
+    {
+      "name": "Ollie the broken millrace landing",
+      "firstFrame": 10179,
+      "lastFrame": 10217
+    },
+    {
+      "name": "Carve uphill into the catch basin dismount",
+      "firstFrame": 10733,
+      "lastFrame": 10788
+    },
+    {
+      "name": "Carve uphill into the catch basin dismount release the held charge",
+      "firstFrame": 10789,
+      "lastFrame": 10828
+    },
+    {
+      "name": "Carve uphill into the catch basin bank arrival",
+      "firstFrame": 10836,
+      "lastFrame": 11007
+    },
+    {
+      "name": "approach REWARD / Millrace landing stores",
+      "firstFrame": 11007,
+      "lastFrame": 11101
+    },
+    {
+      "name": "REWARD / Millrace landing stores",
+      "firstFrame": 11121,
+      "lastFrame": 11121
+    },
+    {
+      "name": "REWARD / Millrace landing stores return to the crossing line",
+      "firstFrame": 11143,
+      "lastFrame": 11258
+    },
+    {
+      "name": "approach Catch basin supplies",
+      "firstFrame": 11276,
+      "lastFrame": 11406
+    },
+    {
+      "name": "Catch basin supplies",
+      "firstFrame": 11426,
+      "lastFrame": 11426
+    },
+    {
+      "name": "Catch basin supplies return to the crossing line",
+      "firstFrame": 11448,
+      "lastFrame": 11577
+    },
+    {
+      "name": "Thunder pools checkpoint approach",
+      "firstFrame": 11595,
+      "lastFrame": 11746
+    }
+  ],
+  "evidence": [
+    {
+      "action": "Reedwater mask",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 0,
+      "name": "Reedwater mask",
+      "kind": "cache",
+      "position": [
+        0.030399999999997762,
+        0,
+        8.942100000000014
+      ]
+    },
+    {
+      "action": "Leave the river bank",
+      "launch": [
+        0.0033999999999977533,
+        0,
+        -7.893899999999992
+      ],
+      "landing": [
+        -1.7976655433417088,
+        0.3,
+        -13.157224845355227
+      ],
+      "ground": "First wet stone"
+    },
+    {
+      "action": "action complete",
+      "index": 1,
+      "name": "Leave the river bank",
+      "kind": "jump",
+      "position": [
+        -1.7976655433417088,
+        0.3,
+        -13.157224845355227
+      ]
+    },
+    {
+      "action": "TEACH / Wet-stone shoulder",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 2,
+      "name": "TEACH / Wet-stone shoulder",
+      "kind": "cache",
+      "position": [
+        -1.8228322100083687,
+        0.3,
+        -13.240024845355256
+      ]
+    },
+    {
+      "action": "Land along the branch",
+      "launch": [
+        -1.9968322100083675,
+        0.3,
+        -20.495524845355302
+      ],
+      "landing": [
+        -1.9991367094237134,
+        0.3000000238418579,
+        -26.182092336585438
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "action complete",
+      "index": 3,
+      "name": "Land along the branch",
+      "kind": "jump",
+      "position": [
+        -1.9991367094237134,
+        0.3000000238418579,
+        -26.182092336585438
+      ]
+    },
+    {
+      "action": "Branch to raised stone",
+      "launch": [
+        -1.9991367094237134,
+        0.3000000238418579,
+        -43.49809233658537
+      ],
+      "landing": [
+        -0.061051365218772524,
+        0.9,
+        -48.120379070434026
+      ],
+      "ground": "Dragonfly stone"
+    },
+    {
+      "action": "action complete",
+      "index": 4,
+      "name": "Branch to raised stone",
+      "kind": "jump",
+      "position": [
+        -0.061051365218772524,
+        0.9,
+        -48.120379070434026
+      ]
+    },
+    {
+      "action": "Drifting lily board",
+      "launch": [
+        0.9878866272735489,
+        0.9,
+        -53.43463569956237
+      ],
+      "landing": [
+        0.7365101665617311,
+        0.900000011920929,
+        -57.427407501920634
+      ],
+      "ground": "Drifting lily"
+    },
+    {
+      "action": "Drifting lily disembark",
+      "launch": [
+        -0.8441935200527146,
+        0.900000011920929,
+        -64.15235194636512
+      ],
+      "landing": [
+        -2.9020084797019012,
+        1.2,
+        -67.59631552413418
+      ],
+      "ground": "Reed shelter"
+    },
+    {
+      "action": "action complete",
+      "index": 5,
+      "name": "Drifting lily",
+      "kind": "mover",
+      "position": [
+        -2.9020084797019012,
+        1.2,
+        -67.59631552413418
+      ]
+    },
+    {
+      "action": "Reed shelter parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 6,
+      "name": "Reed shelter parcel",
+      "kind": "cache",
+      "position": [
+        -2.9020084797019012,
+        1.2,
+        -67.66081552413418
+      ]
+    },
+    {
+      "action": "Reach the cedar roots",
+      "launch": [
+        -2.996508479701905,
+        1.2,
+        -77.88931552413389
+      ],
+      "landing": [
+        -2.998812979117251,
+        1.2,
+        -83.68838301536431
+      ],
+      "ground": "Cedar root bank"
+    },
+    {
+      "action": "action complete",
+      "index": 7,
+      "name": "Reach the cedar roots",
+      "kind": "jump",
+      "position": [
+        -2.998812979117251,
+        1.2,
+        -83.68838301536431
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 8,
+      "name": "Cedar root hopper",
+      "kind": "enemy",
+      "position": [
+        -1.978450795862853,
+        1.2,
+        -90.97981940258553
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 9,
+      "name": "Cedar roots checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -4.854000419130264,
+        1.2,
+        -93.95313569251948
+      ]
+    },
+    {
+      "action": "COUNT / Cedar boarding stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 10,
+      "name": "COUNT / Cedar boarding stores",
+      "kind": "cache",
+      "position": [
+        -4.783500419130266,
+        1.2,
+        -93.96366902585284
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 11,
+      "name": "Line up with the fallen trunk",
+      "kind": "walk",
+      "position": [
+        -3.0359704132314356,
+        1.2,
+        -96.94045332252188
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 12,
+      "name": "Ride the fallen cedar",
+      "kind": "skate",
+      "position": [
+        -8.01645580178128,
+        7.000000023841858,
+        -288.90068120818853
+      ]
+    },
+    {
+      "action": "TEST / Cedar mounting crown",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 13,
+      "name": "TEST / Cedar mounting crown",
+      "kind": "cache",
+      "position": [
+        -9.86202648094637,
+        7.000000023841858,
+        -287.05641621800027
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 14,
+      "name": "Cedar spine over open river",
+      "kind": "grind",
+      "position": [
+        -2.89714784645655,
+        7,
+        -365.6471351539476
+      ]
+    },
+    {
+      "action": "Far-bank cedar cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 15,
+      "name": "Far-bank cedar cache",
+      "kind": "cache",
+      "position": [
+        -2.8386478464565505,
+        7,
+        -365.5901351539475
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 16,
+      "name": "Lotus lookout checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -2.889797212772425,
+        7,
+        -365.08589465920943
+      ]
+    },
+    {
+      "action": "Step off the cedar bank",
+      "launch": [
+        -0.05179721277242407,
+        7,
+        -369.91139465920924
+      ],
+      "landing": [
+        -0.02973657917624573,
+        7,
+        -371.3830434561655
+      ],
+      "ground": "Cedar far-bank catch"
+    },
+    {
+      "action": "action complete",
+      "index": 17,
+      "name": "Step off the cedar bank",
+      "kind": "jump",
+      "position": [
+        -0.02973657917624573,
+        7,
+        -371.3830434561655
+      ]
+    },
+    {
+      "action": "TEACH / Sluice sill stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 18,
+      "name": "TEACH / Sluice sill stores",
+      "kind": "cache",
+      "position": [
+        0.0050967541570857144,
+        7,
+        -371.4504101228321
+      ]
+    },
+    {
+      "action": "Open the first sluice leave the leaf",
+      "launch": [
+        0.0035967541570857144,
+        6.999999997615814,
+        -388.4993545672758
+      ],
+      "landing": [
+        0.0035967541570857144,
+        7,
+        -392.4680737944441
+      ],
+      "ground": "First sluice receiver"
+    },
+    {
+      "action": "Open the first sluice",
+      "verb": "timed spin",
+      "remaining": 3.6200000000000117
+    },
+    {
+      "action": "action complete",
+      "index": 19,
+      "name": "Open the first sluice",
+      "kind": "spin",
+      "position": [
+        0.0035967541570857144,
+        7,
+        -392.4680737944441
+      ]
+    },
+    {
+      "action": "Sluice keeper parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 20,
+      "name": "Sluice keeper parcel",
+      "kind": "cache",
+      "position": [
+        0.015377175543353888,
+        7,
+        -392.52956530694365
+      ]
+    },
+    {
+      "action": "Choose the left footing",
+      "launch": [
+        0.0033771755433538906,
+        7,
+        -399.5015653069433
+      ],
+      "landing": [
+        -1.8273222809486172,
+        7.500000011920929,
+        -403.07119010393006
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "action complete",
+      "index": 21,
+      "name": "Choose the left footing",
+      "kind": "jump",
+      "position": [
+        -1.8273222809486172,
+        7.500000011920929,
+        -403.07119010393006
+      ]
+    },
+    {
+      "action": "Do not linger on loose stone",
+      "launch": [
+        -1.9967222809486174,
+        7.070833345254263,
+        -408.69169010392955
+      ],
+      "landing": [
+        -0.14393213992105625,
+        7.700000011920929,
+        -412.0408206319713
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "action complete",
+      "index": 22,
+      "name": "Do not linger on loose stone",
+      "kind": "jump",
+      "position": [
+        -0.14393213992105625,
+        7.700000011920929,
+        -412.0408206319713
+      ]
+    },
+    {
+      "action": "Land on the ferry bank",
+      "launch": [
+        -0.0029321399210561912,
+        7.270833345254263,
+        -417.60135396530427
+      ],
+      "landing": [
+        1.4160392407574338,
+        7,
+        -422.5793788065958
+      ],
+      "ground": "Ferry boarding island"
+    },
+    {
+      "action": "action complete",
+      "index": 23,
+      "name": "Land on the ferry bank",
+      "kind": "jump",
+      "position": [
+        1.4160392407574338,
+        7,
+        -422.5793788065958
+      ]
+    },
+    {
+      "action": "Lotus ferry board",
+      "launch": [
+        3.48714389991642,
+        7,
+        -434.91790210238906
+      ],
+      "landing": [
+        3.470173337167943,
+        7.000000011920929,
+        -438.3220075094094
+      ],
+      "ground": "moving platform"
+    },
+    {
+      "action": "Lotus ferry disembark",
+      "launch": [
+        -0.7742800467440265,
+        7.000000011920929,
+        -441.93945643726585
+      ],
+      "landing": [
+        -6.389251816381713,
+        7,
+        -441.9903681255117
+      ],
+      "ground": "Ferry far bank"
+    },
+    {
+      "action": "action complete",
+      "index": 24,
+      "name": "Lotus ferry",
+      "kind": "mover",
+      "position": [
+        -6.389251816381713,
+        7,
+        -441.9903681255117
+      ]
+    },
+    {
+      "action": "Ferry shore cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 25,
+      "name": "Ferry shore cache",
+      "kind": "cache",
+      "position": [
+        -6.305075997733251,
+        7,
+        -441.9915812560986
+      ]
+    },
+    {
+      "action": "Leave the reedbeds",
+      "launch": [
+        -6.00357599773324,
+        7,
+        -455.8935812560979
+      ],
+      "landing": [
+        -5.034132600726476,
+        7,
+        -459.3963844622626
+      ],
+      "ground": "Millrace staging bank"
+    },
+    {
+      "action": "action complete",
+      "index": 26,
+      "name": "Leave the reedbeds",
+      "kind": "jump",
+      "position": [
+        -5.034132600726476,
+        7,
+        -459.3963844622626
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 27,
+      "name": "Millrace checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        -6.098737100141827,
+        7,
+        -465.92306749122974
+      ]
+    },
+    {
+      "action": "COUNT / Millrace boarding stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 28,
+      "name": "COUNT / Millrace boarding stores",
+      "kind": "cache",
+      "position": [
+        -6.032860146927571,
+        7,
+        -465.9240296584809
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 29,
+      "name": "Mount at the millrace head",
+      "kind": "walk",
+      "position": [
+        -0.04364385699349616,
+        7,
+        -471.9552459484146
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 30,
+      "name": "Millrace downhill carve",
+      "kind": "skate",
+      "position": [
+        11.838829562244813,
+        2.0091873305919776,
+        -610.1841584876796
+      ]
+    },
+    {
+      "action": "Ollie the broken millrace",
+      "verb": "ollie",
+      "position": [
+        11.585397351801335,
+        1.507899819888166,
+        -624.4199708250843
+      ],
+      "speed": 21.904720022611567
+    },
+    {
+      "action": "action complete",
+      "index": 31,
+      "name": "Ollie the broken millrace",
+      "kind": "ollie",
+      "position": [
+        11.585397351801335,
+        1.507899819888166,
+        -624.4199708250843
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 32,
+      "name": "Carve uphill into the catch basin",
+      "kind": "skate",
+      "position": [
+        -0.010488382763120658,
+        9,
+        -769.8905000000025
+      ]
+    },
+    {
+      "action": "REWARD / Millrace landing stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 33,
+      "name": "REWARD / Millrace landing stores",
+      "kind": "cache",
+      "position": [
+        0.06022105187005852,
+        9,
+        -769.9365766601275
+      ]
+    },
+    {
+      "action": "Catch basin supplies",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "action complete",
+      "index": 34,
+      "name": "Catch basin supplies",
+      "kind": "cache",
+      "position": [
+        0.03003546324551351,
+        9,
+        -770.0033620840127
+      ]
+    },
+    {
+      "action": "action complete",
+      "index": 35,
+      "name": "Thunder pools checkpoint",
+      "kind": "checkpoint",
+      "position": [
+        3.8753501078567205,
+        9,
+        -780.9295430889235
+      ]
+    }
+  ],
+  "source": "production source",
+  "started": "2026-11-14T08:39:14.811Z",
+  "beat": 35,
+  "stage": "Thunder pools checkpoint approach",
+  "result": {
+    "deaths": 0,
+    "beat": 35,
+    "position": [
+      3.8753501078567205,
+      9,
+      -780.9295430889235
+    ],
+    "metrics": {
+      "skateFrames": 1440,
+      "skateMetres": 445.13752231658424,
+      "grindFrames": 807,
+      "grindMetres": 71.18143619236548,
+      "moverRides": 2,
+      "drumLaunches": 0
+    }
+  }
+}

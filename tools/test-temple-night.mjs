@@ -48,5 +48,5 @@ await withBlockworksRuntime(async r=>{
  assert.equal(templeTikiPhase(2).phase,'cool');assert.equal(templeTikiPhase(4.8).phase,'warn');assert.equal(templeTikiPhase(6.3).phase,'fire');
  const tiki=l.fireTikis[0];tiki.update(2,p.pos);assert.ok(tiki.boxes.every(b=>b.isEmpty()));tiki.update(14*.75,p.pos);assert.ok(tiki.boxes.some(b=>!b.isEmpty()),'the sleeping sentinel still breathes on its slow cycle');
  const report={name:route.data.name,probes,floors:route.floors.length,end:route.end,peak:route.peak,countedCrates:route.countedCrates,checks:route.checks,checkpoints,torches:l.torches.length,tikis:l.fireTikis.length,enemies:l.enemies.length,rooms:route.rooms,components:route.data.components.length};
- await writeFile('/private/tmp/temple-night-structure.json',JSON.stringify(report,null,2));console.log(JSON.stringify({...report,checks:report.checks.length,rooms:report.rooms.length}));
+ await writeFile(`${process.env.TEMPLE_OUTPUT??'/tmp'}/temple-night-structure.json`,JSON.stringify(report,null,2));console.log(JSON.stringify({...report,checks:report.checks.length,rooms:report.rooms.length}));
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,endlessDeaths:true});

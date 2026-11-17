@@ -176,6 +176,7 @@ import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
 import { SkateCollectathon } from './skateCollectathon';
+import { CRYSTAL_TRIALS_LEVEL, CRYSTAL_REJECTS_LEVEL, REJECTED_GRID } from './levels/crystal-trials';
 import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
 import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
@@ -191,6 +192,8 @@ import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import { EMBER_COURT_LEVEL } from './levels/ember-court';
+import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
 import { bananaBayWaterShore, extendBananaBayBeachSand, BANANA_BAY_OCEAN_WIDTH } from './levels/banana-bay-water';
@@ -823,7 +826,7 @@ export interface CustomComponent {
     | "thorn" // visual-only pulsing procedural thorn cluster; pair with a deliberately smaller pit for lethal collision
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
-    | "crystal"; // one per level (the editor enforces it)
+    | "crystal"; // one per ordinary level; crystalTrials permits independent goals
   gemColour?: ColouredGemColour; // colouredgem only; distinct from box/combo rewards
   minefieldTrap?: number; // rail: detonate this pressure field on contact
   checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
@@ -1214,8 +1217,12 @@ export interface CustomLevelData {
   kiteTow?: boolean;
   /** Derelict warehouse art owner; all native gameplay surfaces are retained. */
   warehouseArt?: boolean;
+  /** Fire exhibition art; geometry and movement use the ordinary level pipeline. */
+  emberCourt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
+  /** Independent crystals in one practice park; archive keeps the exit open. */
+  crystalTrials?: "challenge" | "archive";
   /** Optional source calibration; other levels retain their authored movement. */
   skateReference?: SkateReferenceData;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -1662,7 +1669,7 @@ export function migrateCustomLevel(d: CustomLevelData, { crateLayout = true } = 
       component.t !== "clock" && component.t !== "comboorb");
   }
   const lastCrystal = d.components.map((component) => component.t).lastIndexOf("crystal");
-  if (lastCrystal >= 0)
+  if (lastCrystal >= 0 && !d.crystalTrials)
     d.components = d.components.filter(
       (component, index) => component.t !== "crystal" || index === lastCrystal,
     );
@@ -2644,6 +2651,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  {id:'ember-court',name:EMBER_COURT_LEVEL.name,data:EMBER_COURT_LEVEL},
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: 'powderkeg-peak', name: POWDERKEG_PEAK_LEVEL.name, data: POWDERKEG_PEAK_LEVEL },
@@ -2657,6 +2665,9 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "kona", name: KONA_LEVEL.name, data: KONA_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
+  { id: 'crystal-trials', name: CRYSTAL_TRIALS_LEVEL.name, data: CRYSTAL_TRIALS_LEVEL },
+  { id: 'crystal-trials-rejects', name: CRYSTAL_REJECTS_LEVEL.name, data: CRYSTAL_REJECTS_LEVEL },
+  { id: 'crystal-trials-grid-reject', name: REJECTED_GRID.name, data: REJECTED_GRID },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
@@ -2752,10 +2763,11 @@ export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
+  'crystalTrials',
   'encounter', 'kiteTow',
   "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere", "desertHeat",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "orbit", "spin", "bounce",
@@ -3020,9 +3032,13 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
+  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
+  if (source.crystalTrials !== undefined &&
+      (source.crystalTrials !== 'challenge' && source.crystalTrials !== 'archive' ||
+       !source.skatepark || source.skateCollectathon ||
+       source.crystalTrials === 'challenge' && !source.components.some(c => c?.t === 'crystal'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
@@ -5734,7 +5750,7 @@ export class Level {
     if (this.skateCollectathon && this.gateSpec)
       this.skateCollectathon.entrance(this.root, new THREE.Vector3(this.gateSpec.x, this.gateSpec.y, this.gateSpec.z));
     if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.skateRace && !this.boss && !isCompetitionLevel(entry.id)) {
-      this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
+      if(!this.builtFromData?.emberCourt)this.placeClock(); // exhibition remains free exploration
       this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
     if((isCampaignLevel(entry.id)||entry.id==='codex-lab')&&this.hudMode!=='bonus'&&this.hudMode!=='hub'&&!this.isBossLevel&&!this.skatepark&&!this.skateRace)
@@ -5744,6 +5760,7 @@ export class Level {
     this.cityAssets?.flush();
     if(this.builtFromData?.warehouseArt){this.warehouseKit().dress(this.builtFromData.components);if(this.skateCollectathon)this.warehouseKit().goals(this.skateCollectathon);}
     this.warehousePresentation?.flush();
+    if(this.builtFromData?.emberCourt)this.emberCourt=new EmberCourtPresentation(this.root);
     if(this.builtFromData?.components.some(c=>c.nm==='Motu / continuous concrete apron'))
       this.motuBeach=new MotuBeachPresentation(this.root,this.builtFromData.components);
     if (this.jungleAtmosphere) {
@@ -7817,7 +7834,9 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
-    this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
+    this.skateCollectathon = data.crystalTrials
+      ? new SkateCollectathon(false, data.crystalTrials === 'archive' ? 'archive' : 'crystals', data.name)
+      : data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
     this.skateReference = this.skatepark && data.skateReference ? {...data.skateReference, stats: {...data.skateReference.stats}} : undefined;
     this.skateReferencePhysics = this.skateReference ? createSkateReference(this.skateReference) : undefined;
     this.allBalanceCrates = data.allBalanceCrates === true;
@@ -8960,7 +8979,7 @@ export class Level {
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
-            if (this.skateCollectathon) this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
+            if (this.skateCollectathon?.mode === 'tokens') this.skateCollectathon.add(this.root, c.p, c.nm ?? 'Park token');
             else this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
             (c.cameraPresentationOnly?this.cameraPresentationViews:this.cameraViews).push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
@@ -8996,7 +9015,9 @@ export class Level {
             marker.userData.editorGhost = true;
             this.root.add(marker);
           } else if (c.t === "crystal") {
-            this.crystal(c.p[0], c.p[1], c.p[2]);
+            if (data.crystalTrials && this.skateCollectathon)
+              this.skateCollectathon.add(this.root, [c.p[0], c.p[1] + 1.3, c.p[2]], c.nm ?? 'Crystal', Level.crystalMesh(.7));
+            else this.crystal(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "trampoline") {
             const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
             pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);
@@ -9169,6 +9190,7 @@ export class Level {
     this.blockworksMattes?.dispose();this.blockworksMattes=null;
     this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
     this.warehousePresentation?.dispose();this.warehousePresentation=null;
+    this.emberCourt?.dispose();this.emberCourt=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -13227,114 +13249,75 @@ export class Level {
     // for one. Without this every crate would sit at its nominal height and
     // hover over (or sink into) the bumps.
     this.root.updateMatrixWorld(true);
-    // `up` stacks: crate() only auto-stacks when the deck height it is handed
-    // is within 0.9 of the crate below, and on a rolling floor that test can
-    // just miss — which silently drops the second crate INSIDE the first
-    // instead of on top of it. Handing it the stacked height is exact.
-    const crateAt = (
-      z: number,
-      off: number,
-      kind?: Parameters<Level["crate"]>[3],
-      up = 0,
-    ): void => this.crate(gx(z) + off, gy(z) + up * 0.96, z, kind);
-    const fruitAt = (z: number, off = 0, h = 1.25): void =>
-      this.pickup(gx(z) + off, gy(z) + h, z);
+    // Legacy-grid harvests become touching native 1.152 m formations. Groups
+    // sit on shoulders; the clear route and all-box route remain distinct.
+    const cargo = (z:number,off:number,kinds:Parameters<Level["crate"]>[3][],job:string,y=gy(z)):void => {
+      kinds.forEach((kind,i)=>{
+        this.crate(gx(z)+off+(i%2-.5)*.96,y+Math.floor(i/2)*.96,z,kind);
+        this.crates[this.crates.length-1].mesh.name=job;
+      });
+    };
+    const fruitAt = (z:number,off=0,h=1.25):void => this.pickup(gx(z)+off,gy(z)+h,z);
+    for (const fruit of jungleFruitClusters(gx,gy)) this.pickup(...fruit.p);
 
-    for (const fruit of jungleFruitClusters(gx, gy)) this.pickup(...fruit.p);
+    // Ten crates to the first bank: spin, a protected crab lesson, then an
+    // isolated TNT decision with a clear retreat across the broad corridor.
+    cargo(-8,-2.2,[undefined,undefined,'mystery','mystery'],'TEACH / clearing harvest wall');
+    cargo(-52,2.4,[undefined,undefined,'mask'],'PREPARE / crab lesson shelter');
+    this.crate(-2.2,gy(-88),-88,'tnt');this.crates[this.crates.length-1].mesh.name='TEACH / side fuse with open right refuge';
+    this.crate(-1.24,gy(-88),-88);this.crates[this.crates.length-1].mesh.name='TOOL / fuse-cleared stock';
+    this.crate(-1.24,gy(-88)+.96,-88,'mystery');this.crates[this.crates.length-1].mesh.name='REWARD / fuse stock lid';
+    fruitAt(-13,-1.5);fruitAt(-13,1.5);
+    this.log(gx(-28)-6.5,gx(-28)+6.5,gy(-28),-28);
+    for(let i=0;i<5;i++)fruitAt(-33-i*2.6,0,1.6);
+    this.enemy(-3.4,-.2,gy(-64),-64,1.8,'x','grunt'); // roomy debut; pass on the right
+    for(let i=0;i<4;i++)fruitAt(-70-i*2.4,0,1.5);
+    this.log(gx(-96)-6.5,gx(-96)+6.5,gy(-96),-96);
+    for(let i=0;i<5;i++)fruitAt(-103-i*2.4,0,1.6);
 
-    // A. the clearing: a crate line to learn the spin on, one arrow crate
-    crateAt(-8, -1.5);
-    crateAt(-8, 0);
-    crateAt(-8, 1.5);
-    crateAt(-18, -2.2);
-    crateAt(-18, 2.2);
-    crateAt(-24, 0, "bouncy");
-    fruitAt(-13, -1.5);
-    fruitAt(-13, 1.5);
-    this.log(gx(-28) - 6.5, gx(-28) + 6.5, gy(-28), -28); // first thing to hop
+    this.checkpoint(gy(-116),-116,gx(-116));
+    cargo(-124,-2.4,[undefined,undefined,'mystery'],'COUNT / stock just after the checkpoint');
+    this.enemy(.3,2.9,gy(-140),-140,1.6,'x','turtle'); // shell lesson; clear left opt-out
+    cargo(-146,2.4,[undefined,undefined,'mystery'],'TEST / harvest beyond the shell patrol');
+    for(let i=0;i<4;i++)fruitAt(-146-i*2.4,0,1.5);
+    cargo(-164,-2.5,[undefined,undefined,'mystery','mask'],'PREPARE / trunk departure harvest');
+    for(let i=0;i<9;i++){const z=-178-i*7;this.pickup(gx(z),gy(z)+1.5,z);}
 
-    // B. corridors: fruit strung over both cuts, crates around the dip
-    for (let i = 0; i < 5; i++) fruitAt(-33 - i * 2.6, 0, 1.6);
-    crateAt(-52, -1.4);
-    crateAt(-52, 1.4);
-    crateAt(-52, -1.4, undefined, 1); // stacked on the one below
-    this.enemy(gx(-64) - 3.6, gx(-64) + 3.6, gy(-64), -64, 3, "x", "grunt");
-    for (let i = 0; i < 4; i++) fruitAt(-70 - i * 2.4, 0, 1.5); // over the dip
-    crateAt(-88, 0, "tnt");
-    crateAt(-88, -1.6);
-    crateAt(-88, 1.6);
-    this.log(gx(-96) - 6.5, gx(-96) + 6.5, gy(-96), -96);
-    for (let i = 0; i < 5; i++) fruitAt(-103 - i * 2.4, 0, 1.6);
+    this.checkpoint(gy(-246),-246,gx(-246));
+    cargo(-254,2.4,[undefined,undefined,'mystery','mystery'],'REST / ravine receiving court');
+    this.enemy(-3.4,-1.4,gy(-266),-266,1.8,'x','grunt'); // repeat beside the optional left harvest
+    cargo(-278,-2.4,[undefined,undefined,'mask'],'PREPARE / temple climb stock');
+    this.enemy(.4,2.8,0,-314,1.6,'x','turtle'); // right shoulder; first left stair remains clear
+    cargo(-354,-3.5,[undefined,undefined,'mystery'],'COUNT / third temple course harvest',6.9);
+    this.pickup(-2.6,3.6,-334);this.pickup(2.6,5.9,-346);
+    this.pickup(-2.6,8.2,-358);this.pickup(2.6,10.5,-370);
 
-    this.checkpoint(gy(-116), -116, gx(-116));
-    crateAt(-124, -2.4);
-    crateAt(-124, 2.4);
-    crateAt(-131, 0, "nitro");
-    this.enemy(gx(-140) - 3.4, gx(-140) + 3.4, gy(-140), -140, 2.6, "x", "turtle");
-    for (let i = 0; i < 4; i++) fruitAt(-146 - i * 2.4, 0, 1.5);
-    crateAt(-160, -1.5);
-    crateAt(-160, 1.5);
-    crateAt(-168, 0, "mystery");
+    this.checkpoint(11.5,-396,0);
+    this.enemy(2.8,5.2,11.5,-404,2.1,'x','grunt'); // guarded shoulder, passing lane on the left
+    cargo(-414,-3.4,[undefined,undefined,'mystery','mystery'],'REST / temple terrace harvest',11.5);
+    this.fruitRow(-394,-424,12.8,7,0);
+    cargo(-428,3.4,[undefined,undefined,'mask'],'PREPARE / long-peck lesson refuge',11.5);
+    this.enemy(-2.2,2.2,11.5,-439,1.45,'x','moa'); // broad debut before the descent
+    // The descent and rail stay clear of the former stationary blade enemy.
+    this.crate(2.4,gy(-500),-500);this.crates[this.crates.length-1].mesh.name='LANDING / far-bank marker';
+    for(let i=0;i<5;i++)fruitAt(-508-i*2.6,0,1.5);
+    this.enemy(.5,2.9,gy(-512),-512,1.45,'x','moa'); // peck reprise after a generous receiving bank
+    cargo(-546,-2.4,[undefined,'mystery'],'TEST / guarded last straight harvest');
+    this.enemy(-3.4,-1.4,gy(-548),-548,2,'x','grunt');
+    for(let i=0;i<5;i++)fruitAt(-565-i*2.4,0,1.6);
 
-    // C. the trunk: fruit strung along it, so the grind pays
-    for (let i = 0; i < 9; i++) {
-      const z = -178 - i * 7;
-      this.pickup(gx(z), gy(z) + 1.5, z);
+    this.checkpoint(gy(-580),-580,gx(-580));
+    this.log(gx(-592)-6.5,gx(-592)+6.5,gy(-592),-592);
+    cargo(-604,2.4,[undefined,undefined,'mystery','mystery'],'COUNT / harvest behind the log');
+    this.enemy(-3,-.6,gy(-616),-616,1.8,'x','turtle'); // shell reprise; right-hand clear route
+    for(let i=0;i<4;i++)fruitAt(-622-i*2.4,0,1.5);
+    // A visible Nitro frame on the left. The centre/right route stays open;
+    // the final green switch credits this optional stock after checkpoint retry.
+    for(const [x,up,kind]of [[-3.2,0,'nitro'],[-2.24,0,undefined],[-1.28,0,'nitro'],[-2.24,.96,'mystery']] as const){
+      this.crate(x,gy(-636)+up,-636,kind);this.crates[this.crates.length-1].mesh.name='FRAME / deferred Nitro-side cache';
     }
-    this.checkpoint(gy(-246), -246, gx(-246));
-    crateAt(-254, -1.6);
-    crateAt(-254, 1.6);
-    this.enemy(gx(-266) - 3.8, gx(-266) + 3.8, gy(-266), -266, 4.4, "x", "charger");
-    crateAt(-282, 0, "bouncy");
-    crateAt(-290, -2);
-    crateAt(-290, 2);
-
-    // D. the temple: a hopper guarding the mouth, crates on the courses, a
-    //    sentry holding the terrace
-    this.enemy(-4, 4, 0, -314, 3.4, "x", "hopper");
-    this.crate(-2.6, 2.3, -330);
-    this.crate(2.6, 4.6, -342);
-    this.crate(-2.6, 6.9, -354, "mask");
-    this.crate(2.6, 9.2, -366);
-    this.pickup(-2.6, 3.6, -334);
-    this.pickup(2.6, 5.9, -346);
-    this.pickup(-2.6, 8.2, -358);
-    this.pickup(2.6, 10.5, -370);
-    this.enemy(-3, 3, 11.5, -404, 0, "x", "sentry");
-    this.fruitRow(-394, -424, 12.8, 7, 0);
-    this.crate(-3.4, 11.5, -414);
-    this.crate(3.4, 11.5, -414);
-    this.crate(0, 11.5, -428, "tnt");
-    this.checkpoint(11.5, -396, 0);
-    // The broad level terrace leaves room to read and dodge the long peck.
-    this.enemy(-2.2, 2.2, 11.5, -439, 1.45, "x", "moa");
-
-    // E. the run home: a spinner on the last straight, then the landing
-    this.enemy(0, 0, 0.4, -470, 0, "x", "spinner");
-    crateAt(-500, -1.8);
-    crateAt(-500, 1.8);
-    for (let i = 0; i < 5; i++) fruitAt(-508 - i * 2.6, 0, 1.5);
-    // This shallow stretch gives the long peck a level approach and clear sides.
-    this.enemy(gx(-512) - 1.5, gx(-512) + 1.5, gy(-512), -512, 1.45, "x", "moa");
-    this.enemy(gx(-528) - 4, gx(-528) + 4, gy(-528), -528, 3.2, "x", "floater");
-    crateAt(-542, 0, "bouncy");
-    crateAt(-556, -1.5);
-    crateAt(-556, 1.5);
-    for (let i = 0; i < 5; i++) fruitAt(-565 - i * 2.4, 0, 1.6);
-    this.checkpoint(gy(-580), -580, gx(-580));
-    this.log(gx(-592) - 6.5, gx(-592) + 6.5, gy(-592), -592);
-    crateAt(-604, -2.2);
-    crateAt(-604, 2.2);
-    crateAt(-604, -2.2, undefined, 1);
-    crateAt(-604, 2.2, undefined, 1);
-    // Keep the fixed-height patrol on the shallow centre of the undulating trail.
-    this.enemy(gx(-616) - 1.6, gx(-616) + 2.8, gy(-616), -616, 3, "x", "spiker");
-    for (let i = 0; i < 4; i++) fruitAt(-622 - i * 2.4, 0, 1.5);
-    crateAt(-636, 0, "nitro");
-    crateAt(-644, -1.6);
-    crateAt(-644, 1.6);
-    for (let i = 0; i < 4; i++) fruitAt(-656 - i * 2.4, 0, 1.6);
-    crateAt(-668, 0, "mystery");
+    cargo(-668,2.4,[undefined,'mystery'],'REST / sanctuary approach stock');
+    for(let i=0;i<4;i++)fruitAt(-656-i*2.4,0,1.6);
 
     // ---- CAMERA LANE -------------------------------------------------------
     // Share the ground centreline: screen-up stays straight along the main
@@ -13357,6 +13340,7 @@ export class Level {
     // Preserve exact source components for editor copies (notably boost
     // stones). A legacy mesh capture alone cannot retain their mechanics.
     const original = this.captureData();
+    original.components.filter(c=>c.t==='crate').forEach((c,i)=>{c.nm=this.crates[i]?.mesh.name||c.nm;});
     // The constructor applies the native jungle palette after this builder.
     // Capture that final palette, so editor copies do not keep the earlier
     // construction-time fog and lighting while the live course uses another.
@@ -16605,6 +16589,7 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    this.emberCourt?.view(this.time,camera);
     if(this.verticalLoop){
       this.verticalLoopView??=new VerticalLoopView(this.root,this.verticalLoop,index=>{
         const c=this.builtFromData?.components[index];
@@ -16657,11 +16642,12 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.emberCourt?.ready,this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
+  private emberCourt:EmberCourtPresentation|null=null;
   private warehousePresentation:WarehouseArt|null=null;
   private warehouseKit():WarehouseArt {return this.warehousePresentation??=new WarehouseArt(this.root,EDITOR_BUILD);}
   get warehouseDiagnostics(){return this.warehousePresentation?{...this.warehousePresentation.diagnostics,solidProps:this.carlisleScenery.meshes.filter(m=>m.userData.warehouseContact).length}:null;}

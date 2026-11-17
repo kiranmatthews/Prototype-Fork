@@ -1,0 +1,23 @@
+Original test-waterpark-cup.mjs stopped before its venue checks:
+Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   53,
++   3,
++   -160
+-   86,
+-   6,
+-   4
+  ]
+
+    at file:///workspace/Prototype-Fork/tools/test-waterpark-cup.mjs:15:10
+    at async withWaterparkRuntime (file:///workspace/Prototype-Fork/tools/waterpark-runner.mjs:50:12)
+    at async file:///workspace/Prototype-Fork/tools/test-waterpark-cup.mjs:5:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 53, 3, -160 ],
+  expected: [ 86, 6, 4 ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

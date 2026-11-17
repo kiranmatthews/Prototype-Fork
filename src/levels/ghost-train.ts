@@ -1,5 +1,6 @@
 import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
 import {GhostArt, type GhostPoint} from './ghost-train-art';
+import {arrangeGhostTrainCrates} from './ghost-train-crates';
 import {addGhostTrainShowScenes} from './ghost-train-show-scenes';
 import {addDerelictGhostScenes} from './ghost-train-derelict';
 
@@ -357,3 +358,5 @@ for(let s=0;s<2250;s+=12)if(!GHOST_TRAIN_GAPS.some(g=>s>g.a-2&&s<g.b+2))waypoint
 export const GHOST_TRAIN_LEVEL:CustomLevelData={v:1,name:'Haunted Castle · Ghost Train',spawn:ghostRoutePoint(2,.15),killY:-25,sky:'night',keepPlayFog:true,cameraAirLift:.28,
   atmosphere:{fogEnabled:true,fogNear:13,fogFar:74,fogColor:'#0d3426',backdrop:'fog',ambientSky:'#a6cdb0',ambientGround:'#314a38',ambientIntensity:.39,sunColor:'#a5dab0',sunIntensity:.07,fillColor:'#5aa889',fillIntensity:.13,drawDistance:130,shadowStrength:.7},
   medalTimes:{gold:340,silver:430,bronze:560},components:C,groups};
+
+arrangeGhostTrainCrates(GHOST_TRAIN_LEVEL,ghostRoutePoint);

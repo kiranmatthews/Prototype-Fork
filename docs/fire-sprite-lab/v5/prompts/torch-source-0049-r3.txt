@@ -1,0 +1,5 @@
+Use case: precise-object-edit.
+Image 1 is the edit target, a transparent extracted torch-flame animation cel. Image 2 is the original recorded pose, for checking the true outline and colours only.
+Make one narrowly scoped correction to Image 1: remove the spurious transparent hole at the bottom right of the bright base (roughly x 62–74%, y 74–85%). It was caused by the torch shaft occluding the recorded fire. Fill that one hole with the same smooth cream-yellow luminosity as the surrounding base, without adding a new curl, line or highlight.
+Keep EVERY other contour, gap, top wisp, flame position, base location, colour and transparency exactly as Image 1. Keep its 887×1774 canvas and current padding; do not recenter, zoom or rescale. Preserve the real central hole and the much larger thin upper red loop. Do not combine holes or invent new details.
+Only this one bottom-hole repair. Transparent RGBA PNG, same native canvas. This is a registered animation cel; any change to other shapes would create flicker.

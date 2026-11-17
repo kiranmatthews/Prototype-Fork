@@ -11,6 +11,7 @@ import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
+import {arrangeHauntedCrates} from './haunted-crate-arrangement';
 
 export { KONA_LEVEL } from './kona';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
@@ -367,6 +368,7 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
 // ordinary legacy reward arrangements once without moving the pier anchors.
 migrateCrateLayout({...CODEX_LAB_LEVEL,components:C.filter(c=>!currentSizeCrates.has(c))});
 CODEX_LAB_LEVEL.crateLayoutRevision=1;
+arrangeHauntedCrates(CODEX_LAB_LEVEL);
 
 // Three connected session areas, with five independent skill branches.
 // See docs/warehouse-flow/design.md for approach/receiver/recovery decisions.
@@ -785,8 +787,13 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  };
  for(const d of ROOFTOP_DISTRICTS){
   const r=ROOFTOP_ROOFS[d.first],s=r.a+18,u=d.index%2?5.6:-5.6;
-  supply(r,s,u);supply(r,s+1.15,u);supply(r,s,u,'wood',1);
-  supply(r,s+1.15,u,d.index===2||d.index===4||d.index===5?'mask':'multihit',1,'Supplies before the district challenge');
+  // Ten parcels on the fixed refuge roof, outside the wet running line.
+  // A single mask precedes the later districts; plain caps have no false
+  // multi-hit/tool promise. Author touching columns on the legacy crate grid.
+  for(let row=0;row<2;row++)for(let col=0;col<3;col++)for(let tier=0;tier<(col===2?1:2);tier++){
+   const protection=[2,4,5].includes(d.index)&&row===0&&col===1&&tier===1;
+   supply(r,s+row*.96,u+(col-1)*.96,protection?'mask':'wood',tier,`${d.name} · terrace deliveries · ${row+1}.${col+1}.${tier+1}`);
+  }
  }
  for(const r of ROOFTOP_ROOFS.filter(r=>r.kind==='garden'&&r.width>=24)){
   supply(r,r.b-18,-5.4,'wood',0,'Garden service delivery');
@@ -803,7 +810,9 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   for(const side of sides){
    const u=Math.sign(side)*4.4,s=r.a+34;
    for(const shift of [-.55,.55])for(const stack of [0,1,2])supply(r,s,u+shift,'metal',stack,'Club catering flight cases · solid cover');
-   supply(r,s-2,u,'wood',0,'Catering delivery beside the flight cases');
+   if(index===43)for(let col=0;col<2;col++)for(let tier=0;tier<2;tier++)
+    supply(r,s-2,u+Math.sign(u)*col*.96,'wood',tier,`Club catering delivery ${side} · ${col+1}.${tier+1}`);
+   else supply(r,s-2,u,'wood',0,'Catering delivery beside the flight cases');
   }
  }
  for(const c of ROOFTOP_CHECKPOINTS){

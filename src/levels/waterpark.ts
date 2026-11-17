@@ -3,6 +3,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { createLoopMeshData, sampleLoop } from '../loopRide';
 import { WATERPARK_CORE, WATERPARK_SPAWN, WATERPARK_GIANT, WATERPARK_GIANT_EXIT, WATERPARK_GIANT_EXIT_WIDTHS, WATERPARK_POOLS, WATERPARK_LOOPS, WATERPARK_COASTER_RAMPS, WATERPARK_CHECKPOINTS, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_JUMPS, WATERPARK_FINISH, waterparkSpillwayY } from './waterpark-route';
 import { buildWaterparkArt, WATERPARK_ART_GROUPS, WATERPARK_ART_LINEAR_LAYOUT, artSign, artBeam } from './waterpark-art';
+import { arrangeWaterparkCrates } from './waterpark-crate-arrangement';
 export { WATERPARK_POOLS, WATERPARK_GIANT, WATERPARK_GIANT_EXIT, WATERPARK_JUMPS, WATERPARK_CHECKPOINTS, WATERPARK_LOOP, WATERPARK_LOOPS, WATERPARK_COASTER_RAMPS, WATERPARK_SPAWN, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_FINISH } from './waterpark-route';
 
 type P=[number,number,number];
@@ -228,3 +229,4 @@ export const WATERPARK_LEVEL:CustomLevelData={
  atmosphere:{fogEnabled:true,fogNear:290,fogFar:950,fogColor:'#c9d3ce',backdrop:'sky',ambientSky:'#d5e6e4',ambientGround:'#8d7c60',ambientIntensity:.95,sunColor:'#fff0cf',sunIntensity:1.65,fillColor:'#a8c9d0',fillIntensity:.4,drawDistance:1100,shadowStrength:.8},
  medalTimes:{gold:105,silver:140,bronze:180},components:C,groups,
 };
+arrangeWaterparkCrates(WATERPARK_LEVEL);

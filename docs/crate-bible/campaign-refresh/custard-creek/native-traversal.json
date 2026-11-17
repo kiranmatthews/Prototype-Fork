@@ -1,0 +1,672 @@
+[
+  {
+    "name": "inner-bank",
+    "pass": true,
+    "seconds": 14.049999999999999,
+    "progress": 554.2560573541547,
+    "states": [
+      "ride",
+      "air"
+    ],
+    "grounds": [
+      "Inner millrace bank",
+      "Millrace reunion shelf"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 10
+  },
+  {
+    "name": "outer-bank",
+    "pass": true,
+    "seconds": 13.566666666666666,
+    "progress": 554.0321556444361,
+    "states": [
+      "ride"
+    ],
+    "grounds": [
+      "Outer millrace bank",
+      "crumble pad",
+      "Millrace reunion shelf"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 11
+  },
+  {
+    "name": "spillway",
+    "pass": true,
+    "seconds": 11.616666666666667,
+    "progress": 1170.3349651749163,
+    "states": [
+      "ride"
+    ],
+    "grounds": [
+      "vertramp",
+      "Spillway runout"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 10
+  },
+  {
+    "name": "sluice",
+    "pass": true,
+    "seconds": 13.549999999999999,
+    "progress": 1484.0721348932948,
+    "states": [
+      "ride",
+      "air"
+    ],
+    "grounds": [
+      "Spillway runout",
+      "Creek bank",
+      "Offset sluice island",
+      "Returning sluice island",
+      "crumble pad"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 20
+  },
+  {
+    "name": "ferry",
+    "pass": true,
+    "seconds": 29.483333333333334,
+    "progress": 1665.00712113394,
+    "states": [
+      "ride",
+      "air"
+    ],
+    "grounds": [
+      "Reedbed ferry approach",
+      "moving platform",
+      "Ferry receiver island"
+    ],
+    "rails": [],
+    "movers": [
+      1
+    ],
+    "cratesBroken": 0
+  },
+  {
+    "name": "boulder-run",
+    "pass": true,
+    "seconds": 13.166666666666666,
+    "progress": 2098.3218118315212,
+    "states": [
+      "ride"
+    ],
+    "grounds": [
+      "Boulder-run carving bank"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 10
+  },
+  {
+    "name": "continuous-chapter",
+    "pass": true,
+    "seconds": 38.983333333333334,
+    "progress": 1190.0114433825963,
+    "states": [
+      "ride",
+      "air",
+      "grind"
+    ],
+    "grounds": [
+      "Creek bank",
+      "Inner millrace bank",
+      "Millrace reunion shelf",
+      "Ascending mill crown",
+      "Measured Custard broken bank root Broken crown aqueduct -1",
+      "Measured Custard broken bank root Broken crown aqueduct 1",
+      "Upper mill terrace",
+      "vertramp",
+      "Spillway runout"
+    ],
+    "rails": [
+      1
+    ],
+    "movers": [],
+    "cratesBroken": 36
+  },
+  {
+    "name": "mill-roof-lift",
+    "course": "independent-folded-creek",
+    "startStation": 785,
+    "startOffset": -4,
+    "startWorld": [
+      299.563232421875,
+      14.310791015625,
+      -268.72021484375
+    ],
+    "startHeading": [
+      0.053466796875,
+      0.079345703125,
+      0.99853515625
+    ],
+    "initial": {
+      "frame": 30,
+      "time": 0.5,
+      "position": [
+        299.563232421875,
+        14.19113541977028,
+        -268.72021484375
+      ],
+      "heading": [
+        0.0545076166190724,
+        0,
+        0.9985133548082911
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Upper mill terrace",
+        "y": 14.19113541977028,
+        "normal": [
+          -0.0044574752610254936,
+          0.9969949135351819,
+          -0.0773386921228497
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "initialProgress": 784.9999481316926,
+    "boarded": {
+      "frame": 598,
+      "time": 9.966666666666667,
+      "position": [
+        305.3959632286436,
+        14.710865322328614,
+        -262.9020308190877
+      ],
+      "heading": [
+        0.03683770752802293,
+        0,
+        0.9993212613089346
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": -0.3181980515339464,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": 0,
+      "ground": {
+        "name": "moving platform",
+        "y": 14.710865322328614,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -1,
+        "moveY": -0.05,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "final": {
+      "frame": 963,
+      "time": 16.05,
+      "position": [
+        310.01293485863977,
+        19.67329978942871,
+        -263.02827565532635
+      ],
+      "heading": [
+        0.036057643556672875,
+        0,
+        0.9993497117331549
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Mill reward roof",
+        "y": 19.67329978942871,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "finalProgress": 791.0005070665333,
+    "pass": true,
+    "states": [
+      "ride",
+      "air"
+    ],
+    "grounds": [
+      "Upper mill terrace",
+      "moving platform",
+      "Mill reward roof"
+    ],
+    "rails": [],
+    "movers": [
+      0
+    ],
+    "cratesBroken": 0,
+    "seconds": 16.05,
+    "headingExtents": {
+      "x": [
+        0.03592226113169352,
+        0.05465074133375622
+      ],
+      "z": [
+        0.9985055315178133,
+        0.9993545872988158
+      ]
+    }
+  },
+  {
+    "name": "lockyard",
+    "course": "independent-folded-creek",
+    "startStation": 0,
+    "startOffset": 0,
+    "startWorld": [
+      0,
+      0.1201171875,
+      0
+    ],
+    "startHeading": [
+      -0.248046875,
+      0,
+      -0.96875
+    ],
+    "initial": {
+      "frame": 30,
+      "time": 0.5,
+      "position": [
+        0,
+        0.7366666664431492,
+        0
+      ],
+      "heading": [
+        -0.26384960497087245,
+        0,
+        -0.9645638319762537
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": 0.7366666664431492,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "initialProgress": 0,
+    "final": {
+      "frame": 847,
+      "time": 14.116666666666667,
+      "position": [
+        -30.852845047146527,
+        2.9985543666429377,
+        -233.63879517168849
+      ],
+      "heading": [
+        0.07164917361867609,
+        0,
+        -0.997429895240644
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.490099501,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Lockyard towpath",
+        "y": 2.9985543666429377,
+        "normal": [
+          -7.655183611409798e-05,
+          0.9999997188027031,
+          0.0007460122863539474
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.03,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "finalProgress": 238.0723435576858,
+    "pass": true,
+    "states": [
+      "ride"
+    ],
+    "grounds": [
+      "warp pad",
+      "warp plinth rim",
+      "Lockyard towpath"
+    ],
+    "rails": [],
+    "movers": [],
+    "cratesBroken": 3,
+    "seconds": 14.116666666666667,
+    "headingExtents": {
+      "x": [
+        -0.9990053851482843,
+        0.3764640186218481
+      ],
+      "z": [
+        -0.9999999371646037,
+        0.6062872098899925
+      ]
+    }
+  },
+  {
+    "name": "backwater-finish",
+    "course": "independent-folded-creek",
+    "startStation": 2110,
+    "startOffset": 3,
+    "startWorld": [
+      628.858642578125,
+      -9.8798828125,
+      -292.4697265625
+    ],
+    "startHeading": [
+      0.99365234375,
+      0,
+      0.113037109375
+    ],
+    "initial": {
+      "frame": 30,
+      "time": 0.5,
+      "position": [
+        628.858642578125,
+        -10,
+        -292.4697265625
+      ],
+      "heading": [
+        0.993770150113564,
+        0,
+        0.11144904101545483
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Backwater crown approach",
+        "y": -10,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "initialProgress": 2110.000031448585,
+    "catch": {
+      "frame": 565,
+      "time": 9.416666666666666,
+      "position": [
+        746.4281424338706,
+        -6,
+        -185.43575295544952
+      ],
+      "heading": [
+        0.1216280102415875,
+        0,
+        0.9925757538468655
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 23.060992450011373,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Backwater crown approach",
+        "y": -6,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": 5,
+      "railDistance": 13.512833542855688,
+      "balance": 0.1,
+      "input": {
+        "moveX": 0.1,
+        "moveY": 0.99,
+        "jumpHeld": true,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": true,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "final": {
+      "frame": 869,
+      "time": 14.483333333333333,
+      "position": [
+        728.749120392382,
+        -6,
+        -72.21712629063897
+      ],
+      "heading": [
+        -0.30652882438427037,
+        0,
+        0.9518613763682174
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 16.520732641801303,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Custard finish bank before the falls",
+        "y": -6,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "finalProgress": 2399.495869222864,
+    "pass": true,
+    "states": [
+      "ride",
+      "grind",
+      "air"
+    ],
+    "grounds": [
+      "Backwater crown approach",
+      "Measured Custard broken bank root Final backwater rail crescent 1",
+      "Custard finish bank before the falls"
+    ],
+    "rails": [
+      5
+    ],
+    "movers": [],
+    "cratesBroken": 11,
+    "seconds": 14.483333333333333,
+    "headingExtents": {
+      "x": [
+        -0.30652882438427037,
+        0.993770150113564
+      ],
+      "z": [
+        0.11144904101545483,
+        0.9999998782555635
+      ]
+    }
+  }
+]

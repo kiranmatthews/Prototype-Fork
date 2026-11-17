@@ -1,0 +1,287 @@
+{
+  "stage": "cross the real finish gate",
+  "evidence": [
+    {
+      "action": "QUAYSIDE / TEACH / arrival cargo",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 1 fuse: refuge reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "QUAYSIDE / REST / fuse recovery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "materialize the native bridge",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "pass the used switch",
+      "launch": [
+        29.82527777777787,
+        -1.1920928966180355e-08,
+        0
+      ],
+      "landing": [
+        33.37249999999998,
+        -1.1920928522091145e-08,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "QUAYSIDE / TEST / bridge cargo",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 2 bridge: receiver reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Room 2 bridge: receiver mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "QUAYSIDE / COUNT / exit cargo",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all crates in the active stage",
+      "totalCrates": 25,
+      "activeStageCrates": 25,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 25,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "approach QUAYSIDE / TEACH / arrival cargo",
+      "firstFrame": 20,
+      "lastFrame": 92
+    },
+    {
+      "name": "QUAYSIDE / TEACH / arrival cargo",
+      "firstFrame": 112,
+      "lastFrame": 112
+    },
+    {
+      "name": "inspect TNT support and overhead life",
+      "firstFrame": 134,
+      "lastFrame": 272
+    },
+    {
+      "name": "stomp the wooden takeoff cap",
+      "firstFrame": 317,
+      "lastFrame": 348
+    },
+    {
+      "name": "rebound apex above retained TNT",
+      "firstFrame": 348,
+      "lastFrame": 373
+    },
+    {
+      "name": "collect the high life first",
+      "firstFrame": 375,
+      "lastFrame": 380
+    },
+    {
+      "name": "land in the clear refuge",
+      "firstFrame": 380,
+      "lastFrame": 403
+    },
+    {
+      "name": "deliberate fuse approach",
+      "firstFrame": 423,
+      "lastFrame": 511
+    },
+    {
+      "name": "prime TNT by contact",
+      "firstFrame": 556,
+      "lastFrame": 592
+    },
+    {
+      "name": "leave the blast radius",
+      "firstFrame": 592,
+      "lastFrame": 633
+    },
+    {
+      "name": "wait for supported post-blast recovery",
+      "firstFrame": 633,
+      "lastFrame": 812
+    },
+    {
+      "name": "approach Room 1 fuse: refuge reward",
+      "firstFrame": 812,
+      "lastFrame": 953
+    },
+    {
+      "name": "Room 1 fuse: refuge reward",
+      "firstFrame": 973,
+      "lastFrame": 973
+    },
+    {
+      "name": "approach QUAYSIDE / REST / fuse recovery",
+      "firstFrame": 995,
+      "lastFrame": 1102
+    },
+    {
+      "name": "QUAYSIDE / REST / fuse recovery",
+      "firstFrame": 1122,
+      "lastFrame": 1122
+    },
+    {
+      "name": "approach materialize the native bridge",
+      "firstFrame": 1144,
+      "lastFrame": 1282
+    },
+    {
+      "name": "materialize the native bridge",
+      "firstFrame": 1302,
+      "lastFrame": 1302
+    },
+    {
+      "name": "pass the used switch",
+      "firstFrame": 1351,
+      "lastFrame": 1390
+    },
+    {
+      "name": "approach QUAYSIDE / TEST / bridge cargo",
+      "firstFrame": 1390,
+      "lastFrame": 1516
+    },
+    {
+      "name": "QUAYSIDE / TEST / bridge cargo",
+      "firstFrame": 1536,
+      "lastFrame": 1536
+    },
+    {
+      "name": "approach Room 2 bridge: receiver reward",
+      "firstFrame": 1558,
+      "lastFrame": 1696
+    },
+    {
+      "name": "Room 2 bridge: receiver reward",
+      "firstFrame": 1716,
+      "lastFrame": 1716
+    },
+    {
+      "name": "approach Room 2 bridge: receiver mystery",
+      "firstFrame": 1738,
+      "lastFrame": 1821
+    },
+    {
+      "name": "Room 2 bridge: receiver mystery",
+      "firstFrame": 1841,
+      "lastFrame": 1841
+    },
+    {
+      "name": "approach QUAYSIDE / COUNT / exit cargo",
+      "firstFrame": 1863,
+      "lastFrame": 1993
+    },
+    {
+      "name": "QUAYSIDE / COUNT / exit cargo",
+      "firstFrame": 2013,
+      "lastFrame": 2013
+    },
+    {
+      "name": "approach the earned gem",
+      "firstFrame": 2035,
+      "lastFrame": 2119
+    },
+    {
+      "name": "cross the real finish gate",
+      "firstFrame": 2139,
+      "lastFrame": 2169
+    }
+  ],
+  "result": {
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 25,
+    "cratesBroken": 25,
+    "deaths": 0
+  },
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 25,
+  "cratesBroken": 25,
+  "deaths": 0,
+  "frames": 2169,
+  "seconds": 36.15
+}

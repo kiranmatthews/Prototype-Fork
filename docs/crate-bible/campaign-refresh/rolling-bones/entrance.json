@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "entries": 1,
+  "entered": [
+    -24.642354137355515,
+    -4.446700001341104,
+    -736.8437741337772
+  ],
+  "returned": [
+    -29.6299,
+    -5.496699810028076,
+    -741
+  ],
+  "supportedReturn": true,
+  "sheltered": true,
+  "deaths": 0
+}

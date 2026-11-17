@@ -1,0 +1,22 @@
+[
+  {
+    "test": "spending arrow blocks direct double and air-spin reach",
+    "lifeAlive": true
+  },
+  {
+    "test": "actual cargo rebound, double and repeated air spins",
+    "maxHead": 14.83418051513907,
+    "capBottom": 15,
+    "lifeAlive": true
+  },
+  {
+    "test": "skipping breakaway footing produces real gap death",
+    "state": "dead"
+  },
+  {
+    "test": "complete bonus retry",
+    "physical": 22,
+    "counted": 22,
+    "credit": 0
+  }
+]

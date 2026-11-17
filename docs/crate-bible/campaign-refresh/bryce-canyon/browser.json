@@ -1,0 +1,531 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "renderSampling": "All normal fixed-step physics and callbacks; 3D draw calls sampled every 60 rendered frames.",
+    "inventory": {
+      "crates": 180,
+      "total": 215,
+      "bonus": 18,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "opening": {
+      "done": true,
+      "frames": 155,
+      "state": "ride",
+      "crates": 2,
+      "lives": 4,
+      "position": [
+        -1.0633333333333335,
+        349.8748875631012,
+        655.8019063649668
+      ],
+      "collected": 2,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 43,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        35.405301020319854,
+        266.2340695752203,
+        335.07356652993184
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 61,
+      "state": "ride",
+      "crates": 3,
+      "lives": 4,
+      "position": [
+        -53.661228562822416,
+        243.35283009861354,
+        274.2114914969069
+      ],
+      "collected": 2,
+      "checkpoint": false
+    },
+    "recovery": {
+      "lives": 3,
+      "alive": 2,
+      "position": [
+        33.5406693248339,
+        265.691854442331,
+        333.72814314741095
+      ]
+    },
+    "finish": {
+      "done": true,
+      "frames": 104,
+      "state": "finished",
+      "crates": 0,
+      "lives": 4,
+      "position": [
+        -101.40170921409724,
+        -822.2973676455643,
+        -3822.786090507433
+      ],
+      "collected": 0,
+      "checkpoint": false
+    },
+    "bonusFailure": {
+      "lives": 4,
+      "banked": 0,
+      "completed": false,
+      "sameParent": true,
+      "jump": {
+        "frames": 68,
+        "state": "dead",
+        "position": [
+          45.349999999801824,
+          -7.370833333333341,
+          -5.3996115018830326e-05
+        ]
+      }
+    },
+    "bonusRetry": {
+      "physical": 19,
+      "alive": true,
+      "bridgeHidden": true
+    },
+    "bonusJourney": {
+      "done": true,
+      "frame": 2612,
+      "state": "finished",
+      "crates": 18,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "bonus-bryce-canyon room 1 upper observation",
+            "firstFrame": 20,
+            "lastFrame": 134
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent takeoff",
+            "firstFrame": 152,
+            "lastFrame": 246
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent arrow contact",
+            "firstFrame": 291,
+            "lastFrame": 327
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent apex outside the shelf",
+            "firstFrame": 330,
+            "lastFrame": 363
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent rise above the shelf",
+            "firstFrame": 365,
+            "lastFrame": 370
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper conserved-arrow ascent",
+            "firstFrame": 370,
+            "lastFrame": 414
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 1 upper high target before support",
+            "firstFrame": 414,
+            "lastFrame": 480
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper high target before support",
+            "firstFrame": 500,
+            "lastFrame": 500
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper return-gallery edge",
+            "firstFrame": 522,
+            "lastFrame": 607
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper descend before clearing arrow",
+            "firstFrame": 652,
+            "lastFrame": 703
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 1 upper destroy arrow last",
+            "firstFrame": 703,
+            "lastFrame": 756
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper destroy arrow last",
+            "firstFrame": 776,
+            "lastFrame": 776
+          },
+          {
+            "name": "bonus-bryce-canyon room 1 upper supported room exit",
+            "firstFrame": 798,
+            "lastFrame": 1023
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge observation",
+            "firstFrame": 1041,
+            "lastFrame": 1115
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 2 bridge create visible bridge",
+            "firstFrame": 1133,
+            "lastFrame": 1216
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge create visible bridge",
+            "firstFrame": 1236,
+            "lastFrame": 1236
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge pass used switch",
+            "firstFrame": 1285,
+            "lastFrame": 1324
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge cross actual materialized bridge",
+            "firstFrame": 1324,
+            "lastFrame": 1514
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 2 bridge receiver reward",
+            "firstFrame": 1532,
+            "lastFrame": 1605
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge receiver reward",
+            "firstFrame": 1625,
+            "lastFrame": 1625
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 2 bridge receiver mystery",
+            "firstFrame": 1647,
+            "lastFrame": 1730
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge receiver mystery",
+            "firstFrame": 1750,
+            "lastFrame": 1750
+          },
+          {
+            "name": "bonus-bryce-canyon room 2 bridge supported room exit",
+            "firstFrame": 1772,
+            "lastFrame": 1864
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite observation",
+            "firstFrame": 1882,
+            "lastFrame": 1956
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite finite-stack approach",
+            "firstFrame": 1974,
+            "lastFrame": 2075
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite upper support contact",
+            "firstFrame": 2120,
+            "lastFrame": 2151
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite rebound apex",
+            "firstFrame": 2151,
+            "lastFrame": 2176
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite cap before spending support",
+            "firstFrame": 2178,
+            "lastFrame": 2182
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite clear landing",
+            "firstFrame": 2182,
+            "lastFrame": 2205
+          },
+          {
+            "name": "approach bonus-bryce-canyon room 3 finite spent upper finite support",
+            "firstFrame": 2225,
+            "lastFrame": 2278
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite spent upper finite support",
+            "firstFrame": 2298,
+            "lastFrame": 2298
+          },
+          {
+            "name": "bonus-bryce-canyon room 3 finite supported room exit",
+            "firstFrame": 2320,
+            "lastFrame": 2506
+          }
+        ],
+        "evidence": [
+          {
+            "action": "bonus-bryce-canyon room 1 upper conserved-arrow ascent",
+            "contact": {
+              "frame": 327,
+              "position": [
+                6.972499999970898,
+                1.172,
+                -9.630180584904887e-05
+              ],
+              "state": "air",
+              "grounded": false,
+              "bailing": false,
+              "speed": 0,
+              "verticalSpeed": 20,
+              "deaths": 0,
+              "ground": "Rounded sandstone cache shelf"
+            },
+            "landing": [
+              10.993666666529046,
+              7.8,
+              -0.00012584294569166376
+            ],
+            "launcherAlive": true
+          },
+          {
+            "action": "bonus-bryce-canyon room 1 upper high target before support",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "bonus-bryce-canyon room 1 upper descend before clearing arrow",
+            "launch": [
+              10.584266666540103,
+              7.8,
+              -0.00012283532535306378
+            ],
+            "landing": [
+              5.026766666690079,
+              0,
+              -8.200765062964211e-05
+            ],
+            "ground": "Rounded sandstone cache shelf"
+          },
+          {
+            "action": "bonus-bryce-canyon room 1 upper destroy arrow last",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "upper",
+            "index": 0,
+            "position": [
+              26.919588888321435,
+              0,
+              -0.0002428413032552099
+            ]
+          },
+          {
+            "action": "bonus-bryce-canyon room 2 bridge create visible bridge",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": true
+            }
+          },
+          {
+            "action": "bonus-bryce-canyon room 2 bridge pass used switch",
+            "launch": [
+              31.832411110411105,
+              0,
+              -0.000278932910571969
+            ],
+            "landing": [
+              35.3724999999062,
+              0,
+              -0.00030999720613076107
+            ],
+            "ground": "Rounded sandstone cache shelf"
+          },
+          {
+            "action": "bonus-bryce-canyon room 2 bridge receiver reward",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "bonus-bryce-canyon room 2 bridge receiver mystery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "bridge",
+            "index": 1,
+            "position": [
+              60.929111110327334,
+              0,
+              -0.0004977465548446464
+            ]
+          },
+          {
+            "action": "bonus-bryce-canyon room 3 finite spent upper finite support",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "finite",
+            "index": 2,
+            "position": [
+              84.92792222178956,
+              0,
+              -0.000682314418178376
+            ]
+          },
+          {
+            "action": "all actual authored bonus crates",
+            "totalCrates": 18,
+            "activeStageCrates": 18,
+            "bonusCrateTotal": 0,
+            "cratesBroken": 18,
+            "remaining": 0
+          }
+        ],
+        "stage": "cross real bonus gate to bank parent rewards"
+      }
+    },
+    "bonusBanked": {
+      "count": 18,
+      "completed": true,
+      "sameParent": true
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "inventory": {
+      "crates": 180,
+      "total": 215,
+      "bonus": 18,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "views": [
+      {
+        "name": "boardwalk",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          0,
+          349.9174141817718,
+          657.2012409111209
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "steep-supplies",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          34.618344279166514,
+          314.8608599501387,
+          477.4489739569512
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "basin-supplies",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          -74.08684025574983,
+          -562.8513831044544,
+          -2754.278297377848
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "bonus-gallery",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          3,
+          0,
+          0
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "bonus-finite",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          64,
+          0,
+          0
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true
+  }
+]

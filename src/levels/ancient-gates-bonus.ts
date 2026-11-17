@@ -1,5 +1,6 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {dressAncientHoard,ANCIENT_HOARD_ATMOSPHERE} from './ancient-gates-art';
+import {arrangeAncientHoardCrates} from './ancient-hoard-crates';
 
 /** Gatekeeper's Hoard: every box is earned by an ordered route. Steel anchors
  * and revealed masonry remain solid after their rewards have been collected. */
@@ -52,6 +53,7 @@ add({t:'zone',p:[92,0,0],s:[230,1,18],dir:'E',grp:80});
 add({t:'camnode',p:[-20,0,0],grp:80});add({t:'camnode',p:[210,0,0],grp:80});
 
 components.push(...dressAncientHoard(components));
+arrangeAncientHoardCrates(components);
 export const ANCIENT_GATES_BONUS:CustomLevelData={v:1,name:'Bonus: The Gatekeeper’s Hoard',spawn:[-12,.12,0],killY:-10,
  hudMode:'bonus',sky:'day',ledgeAssist:1,components,
  jungleAtmosphere:true,jungleDepthFade:false,jungleStyle:'painterly',keepPlayFog:true,atmosphere:ANCIENT_HOARD_ATMOSPHERE,

@@ -1,0 +1,15 @@
+{
+  "willowmillExact": true,
+  "main": {
+    "preservedNonCrateComponents": 3629,
+    "countedBefore": 17,
+    "countedAfter": 225,
+    "enemiesUnchanged": 15
+  },
+  "bonus": {
+    "preservedNonCrateComponents": 24,
+    "countedBefore": 18,
+    "countedAfter": 24,
+    "enemiesUnchanged": 0
+  }
+}

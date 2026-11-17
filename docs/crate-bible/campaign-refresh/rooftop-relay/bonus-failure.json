@@ -1,0 +1,35 @@
+{
+  "errors": [],
+  "before": {
+    "lives": 4,
+    "fruit": 0,
+    "deaths": 0
+  },
+  "jump": {
+    "frames": 62,
+    "position": [
+      75.6499999998261,
+      -2.77,
+      -4.738434583285111e-05
+    ],
+    "state": "dead",
+    "teetering": false,
+    "bonus": true
+  },
+  "after": {
+    "lives": 4,
+    "fruit": 0,
+    "deaths": 0,
+    "banked": 0,
+    "completed": false
+  },
+  "retry": {
+    "bonus": true,
+    "physical": 44,
+    "allAlive": true,
+    "hidden": true,
+    "folded": true,
+    "credit": 0
+  },
+  "passed": true
+}

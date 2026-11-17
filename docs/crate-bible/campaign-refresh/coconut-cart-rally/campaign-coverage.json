@@ -1,0 +1,174 @@
+{
+  "passed": true,
+  "playableCourses": [
+    {
+      "id": "treehouse-trail",
+      "name": "Treehouse Trail"
+    },
+    {
+      "id": "beachfront",
+      "name": "Banana Bay"
+    },
+    {
+      "id": "rumblewater-run",
+      "name": "Ripcord River"
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle Ruins"
+    },
+    {
+      "id": "coastal-street-run",
+      "name": "Beach Street"
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Motu Beach Invitational"
+    },
+    {
+      "id": "custard-creek",
+      "name": "Sunset Safari"
+    },
+    {
+      "id": "tribal-run",
+      "name": "Tribal Run"
+    },
+    {
+      "id": "waterfall-climb",
+      "name": "Waterfall Climb"
+    },
+    {
+      "id": "test",
+      "name": "Uga Ambush"
+    },
+    {
+      "id": "drowned-crown",
+      "name": "The Merchant Wreck"
+    },
+    {
+      "id": "crab-chief",
+      "name": "High Chief Uga Ha ku"
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park"
+    },
+    {
+      "id": "codex-lab",
+      "name": "Haunted Hassle"
+    },
+    {
+      "id": "ghost-train",
+      "name": "Ghost Train"
+    },
+    {
+      "id": "hollowwake-descent",
+      "name": "Tunnelbore Tracks"
+    },
+    {
+      "id": "slipstream-race",
+      "name": "Slipstream"
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup"
+    },
+    {
+      "id": "carlisle-coast",
+      "name": "Carlisle Coast"
+    },
+    {
+      "id": "country-club",
+      "name": "Country Club Circuit"
+    },
+    {
+      "id": "rooftop-relay",
+      "name": "Hogsworth Harbour"
+    },
+    {
+      "id": "mayfield-mall",
+      "name": "Mayfield Mall"
+    },
+    {
+      "id": "warehouse",
+      "name": "Factory Fuss"
+    },
+    {
+      "id": "bryce-canyon",
+      "name": "Dusty Road"
+    },
+    {
+      "id": "jungle-minefield",
+      "name": "Nightmare Grove"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "name": "Guptus Eruptus"
+    },
+    {
+      "id": "dark",
+      "name": "Torchlight Trouble"
+    },
+    {
+      "id": "spaghetti-rails",
+      "name": "Spaghetti Rails"
+    },
+    {
+      "id": "sky",
+      "name": "Sky Bridge"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "Temple of Embers"
+    },
+    {
+      "id": "jungle-gate-run",
+      "name": "The Ancient Gates"
+    },
+    {
+      "id": "rolling-bones",
+      "name": "Rolling Bones"
+    },
+    {
+      "id": "skystream",
+      "name": "The Skystream"
+    },
+    {
+      "id": "coconut-cart-rally",
+      "name": "Coconut Cart Rally"
+    }
+  ],
+  "unbuiltPlaceholders": [
+    "planned-maynard-course-5",
+    "planned-maynard-boss",
+    "planned-quagmire-boss",
+    "planned-secret-7",
+    "planned-secret-8"
+  ],
+  "uniqueBonusIds": [
+    "bonus-treehouse-trail",
+    "bonus-beachside-run",
+    "bonus-rumblewater-run",
+    "bonus-jungle",
+    "bonus-coastal",
+    "bonus-custard-creek",
+    "bonus-tribal-run",
+    "bonus-waterfall-climb",
+    "bonus-test-course",
+    "bonus-drowned-crown",
+    "bonus-waterpark",
+    "bonus-codex-switchback",
+    "bonus-easy",
+    "bonus-carlisle-coast",
+    "bonus-rooftop-relay",
+    "bonus-mayfield-mall",
+    "bonus-bryce-canyon",
+    "bonus-nightworks-after-hours",
+    "bonus-nightworks",
+    "bonus-sky-bridge",
+    "bonus-jungle-terraces",
+    "bonus-jungle-gate",
+    "bonus-rolling-bones",
+    "bonus-skystream"
+  ]
+}

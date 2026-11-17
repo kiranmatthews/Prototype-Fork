@@ -1,0 +1,388 @@
+{
+  "harvests": [
+    {
+      "name": "MERCHANT / 01 quay supplies / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 01 quay supplies / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 01 quay supplies / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 02 jetty recovery / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 02 jetty recovery / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 02 jetty recovery / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 03 mine and grotto count / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 03 mine and grotto count / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 03 mine and grotto count / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 03 mine and grotto count / 4",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 04 boarding preparation / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 04 boarding preparation / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 04 boarding preparation / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 05 cargo island choices / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 05 cargo island choices / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 05 cargo island choices / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 06 gangway recovery / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 06 gangway recovery / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 06 gangway recovery / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 07 ferry refuge and high consignment / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 07 ferry refuge and high consignment / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 07 ferry refuge and high consignment / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 07 ferry refuge and high consignment / 4",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 08 collapse recovery / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 08 collapse recovery / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 09 stern preparation / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 09 stern preparation / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 09 stern preparation / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 10 interlocking cargo / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 10 interlocking cargo / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 10 interlocking cargo / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 11 machinery outside shoulder / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 11 machinery outside shoulder / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 11 machinery outside shoulder / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 12 both shelf branches / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 12 both shelf branches / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 12 both shelf branches / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 13 balance refuge / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 13 balance refuge / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 13 balance refuge / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 14 descending timber / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 14 descending timber / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 14 descending timber / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 15 broadside stairs / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 15 broadside stairs / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 15 broadside stairs / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 16 hoist preparation / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 16 hoist preparation / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 16 hoist preparation / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 17 timber count / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 17 timber count / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 17 timber count / 3",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 18 treasury count / 1",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 18 treasury count / 2",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "MERCHANT / 18 treasury count / 3",
+      "count": 4,
+      "deaths": 0
+    }
+  ],
+  "patrols": [],
+  "resetRestores": true,
+  "patrolProbes": 260,
+  "enemies": [
+    {
+      "kind": "grunt",
+      "p": [
+        1002.1533333333359,
+        9.299999904632626,
+        -154.7
+      ]
+    },
+    {
+      "kind": "turtle",
+      "p": [
+        999.3646666666697,
+        9.899999809265138,
+        -163.6
+      ]
+    },
+    {
+      "kind": "grunt",
+      "p": [
+        1000.9625000000007,
+        10.43683585679517,
+        -221.4
+      ]
+    },
+    {
+      "kind": "turtle",
+      "p": [
+        1005.7333333333376,
+        11,
+        -255
+      ]
+    },
+    {
+      "kind": "grunt",
+      "p": [
+        996.1083333333344,
+        14.400000000000057,
+        -332.2
+      ]
+    },
+    {
+      "kind": "hopper",
+      "p": [
+        1003.7699999999999,
+        16.4,
+        -342.3
+      ]
+    },
+    {
+      "kind": "grunt",
+      "p": [
+        1005.0916666666676,
+        17.6,
+        -389
+      ]
+    },
+    {
+      "kind": "turtle",
+      "p": [
+        1003.317000000001,
+        18.4,
+        -433.2
+      ]
+    },
+    {
+      "kind": "turtle",
+      "p": [
+        1005.1333333333375,
+        21.2,
+        -482
+      ]
+    },
+    {
+      "kind": "hopper",
+      "p": [
+        1002.0999999999992,
+        23.2,
+        -493.6
+      ]
+    },
+    {
+      "kind": "turtle",
+      "p": [
+        998.9699999999968,
+        15.942888741308451,
+        -608.6
+      ]
+    },
+    {
+      "kind": "grunt",
+      "p": [
+        1036.6875000000039,
+        18.800000000000058,
+        -618.4
+      ]
+    },
+    {
+      "kind": "hopper",
+      "p": [
+        1072.5999999999992,
+        22.2,
+        -618.7
+      ]
+    }
+  ]
+}

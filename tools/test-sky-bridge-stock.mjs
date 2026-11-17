@@ -16,7 +16,7 @@ try {
   assert.equal(builtin.data.components.find(c => c.t === 'gate').p[2], -483);
   assert.equal(builtin.data.components.filter(c => c.t === 'checkpoint').length, 7);
   for (const file of ['sky-bridge-legacy.json', 'sky-bridge-placement-legacy.json',
-    'sky-bridge-cloud-v1.json.gz', 'sky-bridge-construction-v1.json.gz', 'sky-bridge-before-cloud-extension.json.gz']) {
+    'sky-bridge-cloud-v1.json.gz', 'sky-bridge-construction-v1.json.gz', 'sky-bridge-before-cloud-extension.json.gz', 'sky-bridge-before-crate-refresh.json.gz']) {
     const bytes = await readFile(new URL('./fixtures/' + file, import.meta.url));
     const raw = JSON.parse(file.endsWith('.gz') ? gunzipSync(bytes) : bytes);
     const alreadyMigrated = structuredClone(raw);
@@ -66,5 +66,5 @@ try {
     assert.ok(api.setUserLevels([edit]));
     assert.deepEqual(api.findLevel(entry.id).data, api.getUserLevels()[0].data, 'edited river must remain local');
   }
-  console.log('PASS 5 historical Sky Bridge versions, 10 raw/migrated saves, 70 authored variants, Carlisle/Ripcord stock selection, archive preservation and deferred crate layout.');
+  console.log('PASS 6 historical Sky Bridge versions, 12 raw/migrated saves, 84 authored variants, Carlisle/Ripcord stock selection, archive preservation and deferred crate layout.');
 } finally { await server.close(); }

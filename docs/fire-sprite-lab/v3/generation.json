@@ -1,0 +1,1615 @@
+{
+  "tool": "built-in image_gen",
+  "status": "COMPLETE \u2014 72 accepted new individual cels, combined with 36 original keys into three 36-frame cycles",
+  "frames": [
+    {
+      "family": "narrow",
+      "interval": 1,
+      "step": 1,
+      "file": "art/fire-sprites/v3/narrow/01-1.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8aed3085-26c3-4748-9d6b-85f789b1a3b5.png",
+      "sha256": "cf205441ec1e21d7bc878423f5b04fe9c917b650185432dc327594f1116913b1",
+      "prompt": "prompts/narrow-01-1.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/narrow/02.png",
+          "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e"
+        }
+      ],
+      "id": "t01"
+    },
+    {
+      "family": "medium",
+      "interval": 1,
+      "step": 1,
+      "file": "art/fire-sprites/v3/medium/01-1.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-f101acc8-a3d2-4521-bda4-09879e269d61.png",
+      "sha256": "ddc145107b98409017770617156b5bbb76f147224b97af44799cf8a93236e869",
+      "prompt": "prompts/medium-01-1.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/medium/02.png",
+          "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+        }
+      ],
+      "id": "t01"
+    },
+    {
+      "family": "broad",
+      "interval": 1,
+      "step": 1,
+      "file": "art/fire-sprites/v3/broad/01-1.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-efaede2b-5c59-4d94-80dc-16c5462b7eae.png",
+      "sha256": "6b1f0d989cddb039d97f7e47d2afff8eb99920116dcd6945c37d7028817b62bf",
+      "prompt": "prompts/broad-01-1.txt",
+      "references": [
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+        },
+        {
+          "file": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/public/fire-sprites/v2/broad/02.png",
+          "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+        }
+      ],
+      "id": "t01"
+    },
+    {
+      "family": "narrow",
+      "id": "t02",
+      "file": "art/fire-sprites/v3/narrow/t02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cc856c4e-42c1-4e69-a376-40e84ee3a045.png",
+      "sha256": "b0eefd3c73cf70088c0c45137e48ff8bab9c5afad0709d4f7532bde6548ef2fb",
+      "prompt": "prompts/narrow-t02.txt",
+      "between": [
+        "key07",
+        "key08"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/07.png",
+          "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t02",
+      "file": "art/fire-sprites/v3/medium/t02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-f9621052-2f9a-4ec2-90c5-df16013681a0.png",
+      "sha256": "b7086d33e471bbd0f30ca19766742a120fa891a7693e9576604aa3eb6fa1bcb1",
+      "prompt": "prompts/medium-t02.txt",
+      "between": [
+        "key07",
+        "key08"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/07.png",
+          "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/08.png",
+          "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t02",
+      "file": "art/fire-sprites/v3/broad/t02.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8c4d67ba-64f5-4cc8-a9e6-2cc57e461e7c.png",
+      "sha256": "807a8fba535f082adafa3f013608c87a01c510626e6f5d65576965bb17c3398e",
+      "prompt": "prompts/broad-t02.txt",
+      "between": [
+        "key11",
+        "key12"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/11.png",
+          "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/12.png",
+          "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t03",
+      "file": "art/fire-sprites/v3/narrow/t03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-62ae6e33-cf98-4aa7-8602-36fec580f32a.png",
+      "sha256": "a704d6bd06c205adfb3bbbdb7392ec3d30fad4ad509b8430f540ba0ca1a6125d",
+      "prompt": "prompts/narrow-t03.txt",
+      "between": [
+        "key08",
+        "key09"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/09.png",
+          "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t03",
+      "file": "art/fire-sprites/v3/medium/t03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-0fa44f9c-7a8b-4f13-bf80-43cc7520bfbc.png",
+      "sha256": "8d6a51e919f5dc1291402d6a1e094e391fcb0468863e687678f85b783ae5474f",
+      "prompt": "prompts/medium-t03.txt",
+      "between": [
+        "key09",
+        "key10"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/10.png",
+          "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t03",
+      "file": "art/fire-sprites/v3/broad/t03.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-925b66ff-d35c-4f9a-88ce-383b42ddae42.png",
+      "sha256": "c4aa0cb6558e845f60c802e9245ca8176f9f8610d34d84da0012e252796b8898",
+      "prompt": "prompts/broad-t03.txt",
+      "between": [
+        "key04",
+        "key05"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/04.png",
+          "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/05.png",
+          "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t04",
+      "file": "art/fire-sprites/v3/narrow/t04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-719919cd-dcd2-4c2d-920a-7cf4d7d91e67.png",
+      "sha256": "9447f6f3ab02d77f06251473f27d35ee169aa297b561134ba3a734dab0ace658",
+      "prompt": "prompts/narrow-t04.txt",
+      "between": [
+        "key08",
+        "t03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t03.png",
+          "sha256": "a704d6bd06c205adfb3bbbdb7392ec3d30fad4ad509b8430f540ba0ca1a6125d"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t04",
+      "file": "art/fire-sprites/v3/medium/t04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4b5a40a7-4740-4cd1-83e2-5ae843b39366.png",
+      "sha256": "c2c54068f2a3f3024c774dcf8dc60fc909d40b65509b44923120f8a26f8418e4",
+      "prompt": "prompts/medium-t04.txt",
+      "between": [
+        "key10",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/10.png",
+          "sha256": "4153a12331f13b0fb1089c3dd798fba45171763c793e2dc8bb8ffb7c59551d5c"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/11.png",
+          "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t04",
+      "file": "art/fire-sprites/v3/broad/t04.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3ec8ee11-98b3-4448-9fc7-aa743825211f.png",
+      "sha256": "2684a57a3d0860a14aba24a84b2b07de0f16f7c21f3e088a811815c71fb916d4",
+      "prompt": "prompts/broad-t04.txt",
+      "between": [
+        "key09",
+        "key10"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/09.png",
+          "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/10.png",
+          "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t05",
+      "file": "art/fire-sprites/v3/narrow/t05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-2489daad-31b7-4f64-8079-fc55f9f5bfef.png",
+      "sha256": "76f6c41e9f8d31a4d5b6fd833657057419296b46d01b159c1ab134733dce5cc2",
+      "prompt": "prompts/narrow-t05.txt",
+      "between": [
+        "key08",
+        "t04"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t04.png",
+          "sha256": "9447f6f3ab02d77f06251473f27d35ee169aa297b561134ba3a734dab0ace658"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t05",
+      "file": "art/fire-sprites/v3/medium/t05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-403b71a9-4225-452f-8275-710015e576a6.png",
+      "sha256": "a66d1214ab8f78e968e9af7ee8ddacfe57d477a6a1c286bd1f8806e158e1320d",
+      "prompt": "prompts/medium-t05.txt",
+      "between": [
+        "key08",
+        "key09"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/08.png",
+          "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t05",
+      "file": "art/fire-sprites/v3/broad/t05.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7aaff55b-5e0a-43e9-8845-24ea808fe1ae.png",
+      "sha256": "424c9fcad1c5aee8966164fe4f8a22c4ca4321153c50aa3df5a67084be4e1123",
+      "prompt": "prompts/broad-t05.txt",
+      "between": [
+        "t02",
+        "key12"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/broad/t02.png",
+          "sha256": "807a8fba535f082adafa3f013608c87a01c510626e6f5d65576965bb17c3398e"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/12.png",
+          "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t06",
+      "file": "art/fire-sprites/v3/narrow/t06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bdb33b3e-0b53-4ce8-9668-9e149e8b02ad.png",
+      "sha256": "da7ccfc66c22c16b143908d6c513b856375af333115372bb2ea99bb73d4fd3a0",
+      "prompt": "prompts/narrow-t06-alpha.txt",
+      "between": [
+        "key02",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/02.png",
+          "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+        }
+      ],
+      "replaces": "4b273f741351172b14fc60dec6f5cb9484c224becd3c24bf64a83dca3856cdb0",
+      "repairInput": {
+        "file": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d3a47985-d7ac-40ae-9e55-f9e55a649033.png",
+        "sha256": "4b273f741351172b14fc60dec6f5cb9484c224becd3c24bf64a83dca3856cdb0"
+      },
+      "repairNote": "Separate imagegen background-extraction edit using the rejected cel as its sole input; references records the original drawing neighbours."
+    },
+    {
+      "family": "medium",
+      "id": "t06",
+      "file": "art/fire-sprites/v3/medium/t06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d5c11128-586c-41ef-979b-72abffe540bb.png",
+      "sha256": "e844c5a68e8642fbf581325f8a47d5fc45bbba177023422afbebfd91eb56ca71",
+      "prompt": "prompts/medium-t06.txt",
+      "between": [
+        "key03",
+        "key04"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/03.png",
+          "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/04.png",
+          "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t06",
+      "file": "art/fire-sprites/v3/broad/t06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-da41b0ba-0886-4ca4-ab75-943a5063e105.png",
+      "sha256": "c040b93186c297902b18d1310355aae77d22b590163524975ce9745bfa8542ff",
+      "prompt": "prompts/broad-t06.txt",
+      "between": [
+        "key02",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/02.png",
+          "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/03.png",
+          "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t07",
+      "file": "art/fire-sprites/v3/narrow/t07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e79b456f-669a-485a-9aa5-39a507057c59.png",
+      "sha256": "a7f6b2bf42ef0aee22b586de0d746f388d099630f93524fc4a154167b2ba358a",
+      "prompt": "prompts/narrow-t07.txt",
+      "between": [
+        "key09",
+        "key10"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/09.png",
+          "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/10.png",
+          "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t07",
+      "file": "art/fire-sprites/v3/medium/t07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d89a3f6a-90e5-4c20-8908-07e300c8ea43.png",
+      "sha256": "b1cfe6eb4bc244d5275858a84c1f696afc95e6933c97413f483c6808139aa373",
+      "prompt": "prompts/medium-t07.txt",
+      "between": [
+        "key02",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/02.png",
+          "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/03.png",
+          "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t07",
+      "file": "art/fire-sprites/v3/broad/t07.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-9525b2c6-5d70-44c1-af70-ad3a7c28d8e0.png",
+      "sha256": "a7a1d32220e9447c16dc698f24e708b34be101a151486af0bc8fbf644ff53676",
+      "prompt": "prompts/broad-t07.txt",
+      "between": [
+        "key07",
+        "key08"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/07.png",
+          "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/08.png",
+          "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t08",
+      "file": "art/fire-sprites/v3/narrow/t08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-611546aa-771a-49d2-9ee8-5f413446f8df.png",
+      "sha256": "382c3585d48f5bb6de520f9fe9effe710241f0c2f6338203588dd31a0aa998aa",
+      "prompt": "prompts/narrow-t08.txt",
+      "between": [
+        "key10",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/10.png",
+          "sha256": "c6c9411ac9fd941eb930bf38b49a4c1d354b88fe1ea4d656347b3fc788619f8e"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/11.png",
+          "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t08",
+      "file": "art/fire-sprites/v3/medium/t08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-39bcce5d-4e70-413a-8615-0193f120afe6.png",
+      "sha256": "f209a601b5f5088757db3fc5333d449840d85ad56b38f66ab7c06c2043c925f4",
+      "prompt": "prompts/medium-t08.txt",
+      "between": [
+        "key06",
+        "key07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/06.png",
+          "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/07.png",
+          "sha256": "dc8a14995ffaa375e178d6920cc8e4f0b38be8a5f66864aa9dfa19bc0a9fcbe7"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t08",
+      "file": "art/fire-sprites/v3/broad/t08.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ce9a2c75-06a2-4616-989e-a79be2f93e06.png",
+      "sha256": "950173da86cad3ba3accd4c16cb84b627dab82c3d3e2be8f2ff4284d3c2f6c2e",
+      "prompt": "prompts/broad-t08.txt",
+      "between": [
+        "key08",
+        "key09"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/08.png",
+          "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/09.png",
+          "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t09",
+      "file": "art/fire-sprites/v3/narrow/t09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-4c0c9c4c-b4da-4f08-97f4-299660bb9681.png",
+      "sha256": "7acdab837cf3b8ed783492f2fc3e0652a56a19ff4fda617fbbe9bfaa294a8bf7",
+      "prompt": "prompts/narrow-t09.txt",
+      "between": [
+        "key06",
+        "key07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/06.png",
+          "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/07.png",
+          "sha256": "a9598ce2f946f5900a80ef49b443757ce3ce20a6755f7eabede6a5783ed1e86c"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t09",
+      "file": "art/fire-sprites/v3/medium/t09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-1ccd88cb-f879-4f0f-b259-ccf6e59bd976.png",
+      "sha256": "c395b93babb98c4ca6c96857aa666f044fa59409775112ef10d280e398a68850",
+      "prompt": "prompts/medium-t09.txt",
+      "between": [
+        "key04",
+        "key05"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/04.png",
+          "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/05.png",
+          "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t09",
+      "file": "art/fire-sprites/v3/broad/t09.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d4aa82dd-6e08-48c8-9330-f0cda57b18fe.png",
+      "sha256": "ca8409e920760e3b49f5f0c39f6ccd7fef085b734ccfcb52542958550b873c0c",
+      "prompt": "prompts/broad-t09.txt",
+      "between": [
+        "key03",
+        "key04"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/03.png",
+          "sha256": "6338b7304ace6abadfe02a50b3ce8bfd7177c807af88e20b353e9c805fbcb3c0"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/04.png",
+          "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t10",
+      "file": "art/fire-sprites/v3/narrow/t10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bc449564-fa06-49bd-8372-5c95fc0ec40c.png",
+      "sha256": "64c2f6fc0f07bd8c07589a2320bdffc5d970e0f01a856715251a79e78b537fa4",
+      "prompt": "prompts/narrow-t10.txt",
+      "between": [
+        "key04",
+        "key05"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/04.png",
+          "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/05.png",
+          "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t10",
+      "file": "art/fire-sprites/v3/medium/t10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c2417b97-7b9b-424a-9b7b-11f5d286c785.png",
+      "sha256": "ddc2221d78e684095cad6aad93f1d6ba7159863bcb5e6de3ef8e4ab9512217b1",
+      "prompt": "prompts/medium-t10.txt",
+      "between": [
+        "key05",
+        "key06"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/05.png",
+          "sha256": "ce0a488731589581774236ce95e824af716a387edc8b411486c1c0e92434385b"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/06.png",
+          "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t10",
+      "file": "art/fire-sprites/v3/broad/t10.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d4a01cc9-97ef-4433-9cca-1250619c012e.png",
+      "sha256": "58134275a7d8ea78879ba4a40e2785fe172d2de610596b825921284f143953ea",
+      "prompt": "prompts/broad-t10.txt",
+      "between": [
+        "t03",
+        "key05"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/broad/t03.png",
+          "sha256": "c4aa0cb6558e845f60c802e9245ca8176f9f8610d34d84da0012e252796b8898"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/05.png",
+          "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t11",
+      "file": "art/fire-sprites/v3/narrow/t11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-63e4be98-0ca5-4991-af36-1b8f682906aa.png",
+      "sha256": "ae8c3ae5a090f1b07683860f4f4238da53d1c75315e067e2b6e40afaf170661f",
+      "prompt": "prompts/narrow-t11.txt",
+      "between": [
+        "t02",
+        "key08"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/narrow/t02.png",
+          "sha256": "b0eefd3c73cf70088c0c45137e48ff8bab9c5afad0709d4f7532bde6548ef2fb"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t11",
+      "file": "art/fire-sprites/v3/medium/t11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-8d8f5850-2f6c-4252-b26e-baacc8313c2d.png",
+      "sha256": "e7509149c9a0c4f26a4c37b32747a9d36376bddef2e9f834b2d688e5800454dd",
+      "prompt": "prompts/medium-t11.txt",
+      "between": [
+        "key09",
+        "t03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t03.png",
+          "sha256": "8d6a51e919f5dc1291402d6a1e094e391fcb0468863e687678f85b783ae5474f"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t11",
+      "file": "art/fire-sprites/v3/broad/t11.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d1c55d4f-bea7-47c9-91c5-0164713a7d7e.png",
+      "sha256": "17b85d990f968ac2b98650db9a4600a6add5e90480b86c1badfa9881d99b4924",
+      "prompt": "prompts/broad-t11.txt",
+      "between": [
+        "key02",
+        "t06"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/02.png",
+          "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t06.png",
+          "sha256": "c040b93186c297902b18d1310355aae77d22b590163524975ce9745bfa8542ff"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t12",
+      "file": "art/fire-sprites/v3/narrow/t12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-dd3ac1cf-4fe2-4b0d-91ac-20efc6d1b487.png",
+      "sha256": "bac24c464b8f33eb3a3ea583651fa52aa8c803c88f5994049ed29779c746d4ec",
+      "prompt": "prompts/narrow-t12.txt",
+      "between": [
+        "t06",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/narrow/t06.png",
+          "sha256": "da7ccfc66c22c16b143908d6c513b856375af333115372bb2ea99bb73d4fd3a0"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t12",
+      "file": "art/fire-sprites/v3/medium/t12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7f68c4ef-34f4-4d68-9a96-8e308842f68b.png",
+      "sha256": "e95635f45ce366480b1df30fe6bc7056ecbfaf2c36c91e812bc85e22160ae2c4",
+      "prompt": "prompts/medium-t12.txt",
+      "between": [
+        "t04",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/medium/t04.png",
+          "sha256": "c2c54068f2a3f3024c774dcf8dc60fc909d40b65509b44923120f8a26f8418e4"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/11.png",
+          "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t12",
+      "file": "art/fire-sprites/v3/broad/t12.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b453c13c-c1d6-4f52-898e-767c1f080f69.png",
+      "sha256": "a4c5eedd19594eedaf0d94588c7b2efc60ed97018f899c7d9dbf8891baaabb35",
+      "prompt": "prompts/broad-t12.txt",
+      "between": [
+        "key06",
+        "key07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/06.png",
+          "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/07.png",
+          "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t13",
+      "file": "art/fire-sprites/v3/narrow/t13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7c2e35ef-4d74-4c72-8589-33c7c92800f5.png",
+      "sha256": "6c2f710057f0e8de90ea8593ed034b8377a6e547bd56633c459a5a2bf5e4b1fe",
+      "prompt": "prompts/narrow-t13.txt",
+      "between": [
+        "key03",
+        "key04"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/04.png",
+          "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t13",
+      "file": "art/fire-sprites/v3/medium/t13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-ec047e28-ac46-4c21-9c11-42e623e0e0fe.png",
+      "sha256": "6172f97d24462239a39aee90a9a6d451bcc44ef75b8e1cabb42df17624250461",
+      "prompt": "prompts/medium-t13.txt",
+      "between": [
+        "key02",
+        "t07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/02.png",
+          "sha256": "3d2b781114082e99a857dc4b503fa69e5acd809fbaee3fdbc1b8ae0e99104cdb"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t07.png",
+          "sha256": "b1cfe6eb4bc244d5275858a84c1f696afc95e6933c97413f483c6808139aa373"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t13",
+      "file": "art/fire-sprites/v3/broad/t13.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-bc111082-9e4b-40ca-8219-3abc1d15075f.png",
+      "sha256": "501cb417e529e6bb007d227cc38f10d7d2c71e7bde26591cc5f483eb4c4e2b77",
+      "prompt": "prompts/broad-t13.txt",
+      "between": [
+        "key12",
+        "key01"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/12.png",
+          "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t14",
+      "file": "art/fire-sprites/v3/narrow/t14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d6e2dac4-e183-4843-9e56-068ae86e379c.png",
+      "sha256": "b8558eed2032201e831f99c615ce2e76ea9e326c22680b78a0f999d66ad92248",
+      "prompt": "prompts/narrow-t14.txt",
+      "between": [
+        "key12",
+        "key01"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/12.png",
+          "sha256": "7b1c5be70ef1ded5ce7b08f234dc6292bf2fc48bed385c898e934c4fa1dab87b"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t14",
+      "file": "art/fire-sprites/v3/medium/t14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b6adb176-6f7d-43a0-b791-33af68aaacd1.png",
+      "sha256": "ea06c95c1c4afbb7a736fb6f36547c99a8590be7ba3cfa558d49ba3812785f77",
+      "prompt": "prompts/medium-t14.txt",
+      "between": [
+        "key03",
+        "t06"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/03.png",
+          "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t06.png",
+          "sha256": "e844c5a68e8642fbf581325f8a47d5fc45bbba177023422afbebfd91eb56ca71"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t14",
+      "file": "art/fire-sprites/v3/broad/t14.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-edbd19d0-7044-481c-95f2-b349e448887c.png",
+      "sha256": "f7cba6f4dbd9f22d740298fe860ecdabfa71118be0823a9d93386ef28b7dacb6",
+      "prompt": "prompts/broad-t14.txt",
+      "between": [
+        "key01",
+        "t01"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/01-1.png",
+          "sha256": "6b1f0d989cddb039d97f7e47d2afff8eb99920116dcd6945c37d7028817b62bf"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t15",
+      "file": "art/fire-sprites/v3/narrow/t15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-de902690-4a26-49e8-bfa5-53b9fb98637d.png",
+      "sha256": "57ff514e51ae991f066903f97cc4c26b260736cd6fc1bb2ad7d9a2dd3e9beb50",
+      "prompt": "prompts/narrow-t15.txt",
+      "between": [
+        "key09",
+        "t07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/09.png",
+          "sha256": "601f7c64bdc7c41a1ccbcd7fd2dbe0daf3a11fc64a6aa8d84da379f3b734dc35"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t07.png",
+          "sha256": "a7f6b2bf42ef0aee22b586de0d746f388d099630f93524fc4a154167b2ba358a"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t15",
+      "file": "art/fire-sprites/v3/medium/t15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-cc4f06b9-16d5-4e17-80bd-7ff97848594d.png",
+      "sha256": "726cffacb67b0efa2c45e28967346bab2583a947f4ccf145efe42ed3d3149d85",
+      "prompt": "prompts/medium-t15.txt",
+      "between": [
+        "t02",
+        "key08"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/medium/t02.png",
+          "sha256": "b7086d33e471bbd0f30ca19766742a120fa891a7693e9576604aa3eb6fa1bcb1"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/08.png",
+          "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t15",
+      "file": "art/fire-sprites/v3/broad/t15.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-c4604d75-41dc-484a-bc95-cce3931319d7.png",
+      "sha256": "452de7ac4b18e03b974b5995b056a5b94d68c56e7d3de6c279fe23d8395de6f9",
+      "prompt": "prompts/broad-t15.txt",
+      "between": [
+        "key09",
+        "t04"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/09.png",
+          "sha256": "197658520d39bd86b0df4e19b4f33994092cc659b4009a3d4628e97c5785855d"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t04.png",
+          "sha256": "2684a57a3d0860a14aba24a84b2b07de0f16f7c21f3e088a811815c71fb916d4"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t16",
+      "file": "art/fire-sprites/v3/narrow/t16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7573209c-a3a9-48bb-96af-020b749a8c73.png",
+      "sha256": "4269ee061ca4eca3a14a618c20f665756f80e65525b6b5f1a39284f13e01af34",
+      "prompt": "prompts/narrow-t16.txt",
+      "between": [
+        "key08",
+        "t05"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/08.png",
+          "sha256": "37b4c236159b385026684758cbcef11044ff3d7d3249a10003b67b54fefef724"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t05.png",
+          "sha256": "76f6c41e9f8d31a4d5b6fd833657057419296b46d01b159c1ab134733dce5cc2"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t16",
+      "file": "art/fire-sprites/v3/medium/t16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-99a319a0-d09b-4d51-898f-f71cc957d215.png",
+      "sha256": "c9ebf6e73aa6059b054ed7e436beb466b47ae7bf44ea8c8c779f2d7fd9325c7c",
+      "prompt": "prompts/medium-t16.txt",
+      "between": [
+        "t05",
+        "key09"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/medium/t05.png",
+          "sha256": "a66d1214ab8f78e968e9af7ee8ddacfe57d477a6a1c286bd1f8806e158e1320d"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t16",
+      "file": "art/fire-sprites/v3/broad/t16.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-f0b2360a-f70d-46a4-8624-6048902cbcce.png",
+      "sha256": "a253c9a6d39898d5e6eee4cb6574ea7fd00745f6915eaf0f69914ddf9f80f58e",
+      "prompt": "prompts/broad-t16.txt",
+      "between": [
+        "key10",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/10.png",
+          "sha256": "61ccd3cee0e1b3e47889ce541b166463f22f9776d6091b4fe63fd21c9f792994"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/11.png",
+          "sha256": "4cd48af62eee812c560cf9c69933a4c5579e46c71f8c7230212468b3a5a28fbb"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t17",
+      "file": "art/fire-sprites/v3/narrow/t17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-720a6a0d-229d-4b5d-bb04-353b5622b8ac.png",
+      "sha256": "91e3111bbc7309ef80236e2d386a7ba953b7bf0315fc3cf943e7feaaa8586a5e",
+      "prompt": "prompts/narrow-t17.txt",
+      "between": [
+        "t12",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/narrow/t12.png",
+          "sha256": "bac24c464b8f33eb3a3ea583651fa52aa8c803c88f5994049ed29779c746d4ec"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t17",
+      "file": "art/fire-sprites/v3/medium/t17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a435806d-e2bc-46ab-929f-d7738a5b3c24.png",
+      "sha256": "8ff9348a018d2bdd0bb12454b1009d7995178efa972a9453519ca2e8436fe86e",
+      "prompt": "prompts/medium-t17.txt",
+      "between": [
+        "key09",
+        "t11"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/09.png",
+          "sha256": "411c8ec84420250446f773cfecad2af512bc6e0e18d1fe6fa6197ecca052c176"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t11.png",
+          "sha256": "e7509149c9a0c4f26a4c37b32747a9d36376bddef2e9f834b2d688e5800454dd"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t17",
+      "file": "art/fire-sprites/v3/broad/t17.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a2baacbc-0587-4c6c-8c95-cd640cd59821.png",
+      "sha256": "495b6cab2362b04afb6cc2887dc9a855c11848e35204059560c5f17edd9ed799",
+      "prompt": "prompts/broad-t17.txt",
+      "between": [
+        "t05",
+        "key12"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/broad/t05.png",
+          "sha256": "424c9fcad1c5aee8966164fe4f8a22c4ca4321153c50aa3df5a67084be4e1123"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/12.png",
+          "sha256": "e623cbac0458bcf14ec0ca2b51aeed59a0945d29637ecde0d351b6233380548f"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t18",
+      "file": "art/fire-sprites/v3/narrow/t18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-a696bf45-1e44-4a3b-8346-2f5a1d2e1cfd.png",
+      "sha256": "6d58457dd36969a833112528ba5f7ecdd9d55090ed3783f39c5af3bc70c1c467",
+      "prompt": "prompts/narrow-t18.txt",
+      "between": [
+        "t02",
+        "t11"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/narrow/t02.png",
+          "sha256": "b0eefd3c73cf70088c0c45137e48ff8bab9c5afad0709d4f7532bde6548ef2fb"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t11.png",
+          "sha256": "ae8c3ae5a090f1b07683860f4f4238da53d1c75315e067e2b6e40afaf170661f"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t18",
+      "file": "art/fire-sprites/v3/medium/t18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-21fc88a5-f7e0-43f1-9144-1c792b2b75d1.png",
+      "sha256": "4bfbc12c8309a3049bf88286c931abda13f2cb2899f33302078a1567a50a0ebe",
+      "prompt": "prompts/medium-t18.txt",
+      "between": [
+        "key06",
+        "t08"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/06.png",
+          "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t08.png",
+          "sha256": "f209a601b5f5088757db3fc5333d449840d85ad56b38f66ab7c06c2043c925f4"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t18",
+      "file": "art/fire-sprites/v3/broad/t18.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6e77e060-c984-4534-adbd-955d67dcfbc4.png",
+      "sha256": "06d4de0d3d91b676fd28075215ef987695635b18cc80bd277f8eabffcb49dda2",
+      "prompt": "prompts/broad-t18.txt",
+      "between": [
+        "key05",
+        "key06"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/05.png",
+          "sha256": "bf1ff6089aefc9a21ce88833615587b98cc527adc3c644fb91b0396a79421349"
+        },
+        {
+          "file": "public/fire-sprites/v2/broad/06.png",
+          "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t19",
+      "file": "art/fire-sprites/v3/narrow/t19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-af8e79cb-fe1e-4ba6-80d2-c444b7d9c438.png",
+      "sha256": "9b20b55224a06ab690235d3d2728ee8c2b8a25ee93b051193973abb6302e4b57",
+      "prompt": "prompts/narrow-t19.txt",
+      "between": [
+        "key06",
+        "t09"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/06.png",
+          "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t09.png",
+          "sha256": "7acdab837cf3b8ed783492f2fc3e0652a56a19ff4fda617fbbe9bfaa294a8bf7"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t19",
+      "file": "art/fire-sprites/v3/medium/t19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-df73a991-aa3c-4479-a1a3-9a381dc33c2d.png",
+      "sha256": "147b3858ddefa2e1805fcb0e20d4741741ab18bd834b3c7262320845a45d7da7",
+      "prompt": "prompts/medium-t19.txt",
+      "between": [
+        "key03",
+        "t14"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/03.png",
+          "sha256": "0ccf67a058e0e46713e460f3b7e82a096a714efe539e576fc14486429894f344"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t14.png",
+          "sha256": "ea06c95c1c4afbb7a736fb6f36547c99a8590be7ba3cfa558d49ba3812785f77"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t19",
+      "file": "art/fire-sprites/v3/broad/t19.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-b88cc0ee-fd41-4b21-aec3-3d046a72f27d.png",
+      "sha256": "9c6dcf7cb0f9170b1528b31d11d6c4f58e5736eee2088330738592b033829ef1",
+      "prompt": "prompts/broad-t19.txt",
+      "between": [
+        "key07",
+        "t07"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/07.png",
+          "sha256": "989fae89575420fc3ddad2b9eaa33d0b0ffa8638c7c67d3e6f8464801ae81961"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t07.png",
+          "sha256": "a7a1d32220e9447c16dc698f24e708b34be101a151486af0bc8fbf644ff53676"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t20",
+      "file": "art/fire-sprites/v3/narrow/t20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-5b845d92-6925-4d54-80d3-f0465ba073d8.png",
+      "sha256": "f2bffc900b9bef03f15ed68e00576fa2bc4a17f59923be2f8f1c7f9a74846b89",
+      "prompt": "prompts/narrow-t20.txt",
+      "between": [
+        "key04",
+        "t10"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/04.png",
+          "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t10.png",
+          "sha256": "64c2f6fc0f07bd8c07589a2320bdffc5d970e0f01a856715251a79e78b537fa4"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t20",
+      "file": "art/fire-sprites/v3/medium/t20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-7e52e38f-fe43-445e-9217-ba00858858ae.png",
+      "sha256": "918e94a6e614ac78d030e1bb3eedfd4847ab7bdd2a159e4c2745e73cf23174ff",
+      "prompt": "prompts/medium-t20.txt",
+      "between": [
+        "key04",
+        "t09"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/04.png",
+          "sha256": "57fb52208714754c55c2e0f6797a5f0edab97335cd5a38f2b45dbb06899d794e"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t09.png",
+          "sha256": "c395b93babb98c4ca6c96857aa666f044fa59409775112ef10d280e398a68850"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t20",
+      "file": "art/fire-sprites/v3/broad/t20.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d1a4deb1-165b-4534-9840-3ff3e58260d9.png",
+      "sha256": "9177768a41cd6375bae54f75c599e02b72d7827f3073f645d8fffbff8e5890be",
+      "prompt": "prompts/broad-t20.txt",
+      "between": [
+        "key08",
+        "t08"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/08.png",
+          "sha256": "d95b8de7149515c152252ac6fbf66d21713fffb0e40b0e3c0f88db184eda43f5"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t08.png",
+          "sha256": "950173da86cad3ba3accd4c16cb84b627dab82c3d3e2be8f2ff4284d3c2f6c2e"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t21",
+      "file": "art/fire-sprites/v3/narrow/t21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-511ed245-21f8-44a5-9302-397df56f1a6e.png",
+      "sha256": "ef4f7747a39456a8ac4dc6d865ec054eae17e33fc160d7c55cdb16bfd6529d2a",
+      "prompt": "prompts/narrow-t21.txt",
+      "between": [
+        "key01",
+        "t01"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/01.png",
+          "sha256": "7ce9fbefb85db512582ce40c7786a62097890e6efac28f7569deba39b5648aa8"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/01-1.png",
+          "sha256": "cf205441ec1e21d7bc878423f5b04fe9c917b650185432dc327594f1116913b1"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t21",
+      "file": "art/fire-sprites/v3/medium/t21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-46c38791-1fa1-4635-9adf-5fb001f9d26d.png",
+      "sha256": "2c76264ab85a299a583ce93ac56f07e9021f3217738fed45c4cd6f3787f19984",
+      "prompt": "prompts/medium-t21.txt",
+      "between": [
+        "t12",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/medium/t12.png",
+          "sha256": "e95635f45ce366480b1df30fe6bc7056ecbfaf2c36c91e812bc85e22160ae2c4"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/11.png",
+          "sha256": "1a907df4bfc6340fd8bd862d67836ffa1ac8efe79406b10ae3105a56d7c43639"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t21",
+      "file": "art/fire-sprites/v3/broad/t21.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-e9634cb0-ea9c-43f3-a5e6-870da2273b77.png",
+      "sha256": "dad2cb8d2261e48258fdf775514f0c1b8dfcd36897f46c6a970bf5c3aed82c4a",
+      "prompt": "prompts/broad-t21.txt",
+      "between": [
+        "key02",
+        "t11"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/02.png",
+          "sha256": "5d05cab7c2b52a20877ee9a909389aa65826308b28a3052083a47e0ceba96c5d"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t11.png",
+          "sha256": "17b85d990f968ac2b98650db9a4600a6add5e90480b86c1badfa9881d99b4924"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t22",
+      "file": "art/fire-sprites/v3/narrow/t22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-edd2b465-4f82-4015-8ae9-9b03e3d074e8.png",
+      "sha256": "049e91f321ba505e0a49c5ca92cb6024afbdb8c88ff6b3e04ad3dbaf08fae447",
+      "prompt": "prompts/narrow-t22.txt",
+      "between": [
+        "key05",
+        "key06"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/05.png",
+          "sha256": "58c8b43dfa35c90e2012af514876d5dea0ef5c4ca3ac8d0d8313620552744a77"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/06.png",
+          "sha256": "4c90f920defb2252e95fc2a0799f09b6370f19efc050bcc0b0988f6e9333c634"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t22",
+      "file": "art/fire-sprites/v3/medium/t22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-74381501-833d-4b72-91ff-1a751be094da.png",
+      "sha256": "8cc4ae7cb905df836fdf334ba672bdc11cf680fc6c844a72c050c6bc5b59b7ac",
+      "prompt": "prompts/medium-t22.txt",
+      "between": [
+        "key08",
+        "t05"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/08.png",
+          "sha256": "13df9ad9160619a81294b90ab968dc3babea5370d7dadf2eaad54d24748096e6"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/t05.png",
+          "sha256": "a66d1214ab8f78e968e9af7ee8ddacfe57d477a6a1c286bd1f8806e158e1320d"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t22",
+      "file": "art/fire-sprites/v3/broad/t22.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-6f16c119-35d6-4e4e-926b-00328dc4752f.png",
+      "sha256": "78633da607b92ad725b86f8b824bdd27fbe41e69fcd780d10be08b286d7c0cd4",
+      "prompt": "prompts/broad-t22.txt",
+      "between": [
+        "key06",
+        "t12"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/06.png",
+          "sha256": "e7dbef6311bb7d4524c66242b696b531a4425bb4901ef8a0616ac32a2d35b5c9"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t12.png",
+          "sha256": "a4c5eedd19594eedaf0d94588c7b2efc60ed97018f899c7d9dbf8891baaabb35"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t23",
+      "file": "art/fire-sprites/v3/narrow/t23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-59532cb6-a34f-4b96-9c40-07ea3e185080.png",
+      "sha256": "9d4b0bb84c6aaa0daa1a3f9866ac445596a832e6efe673af38fd3e39de23baaa",
+      "prompt": "prompts/narrow-t23.txt",
+      "between": [
+        "t08",
+        "key11"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/narrow/t08.png",
+          "sha256": "382c3585d48f5bb6de520f9fe9effe710241f0c2f6338203588dd31a0aa998aa"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/11.png",
+          "sha256": "cc9425fb9ffbc17395793776c762410ef7f8525f1853fab215c32ac74c08921c"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t23",
+      "file": "art/fire-sprites/v3/medium/t23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-efb6419c-d6da-4c4a-a6c8-ec20415ab0ed.png",
+      "sha256": "f40e66ca57addd71c2400f09d50a705057a4e1e7225498fb47894a61e335988a",
+      "prompt": "prompts/medium-t23.txt",
+      "between": [
+        "key01",
+        "t01"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/medium/01.png",
+          "sha256": "833f87f199f5206cd0ef13b284b5817ee5683d05ba8339b3bf5663388932812b"
+        },
+        {
+          "file": "art/fire-sprites/v3/medium/01-1.png",
+          "sha256": "ddc145107b98409017770617156b5bbb76f147224b97af44799cf8a93236e869"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t23",
+      "file": "art/fire-sprites/v3/broad/t23.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-9cf4a363-b011-4dcc-851f-a9faad19ef88.png",
+      "sha256": "86000d116334a22584f683d023c5dcaeda4f24b834e6bad75dd67fcaaf63e850",
+      "prompt": "prompts/broad-t23.txt",
+      "between": [
+        "key01",
+        "t14"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/01.png",
+          "sha256": "803d24681330f4b1989f45554d0bdf49ce26610a5e6aed5f63018561b6b00a2e"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t14.png",
+          "sha256": "f7cba6f4dbd9f22d740298fe860ecdabfa71118be0823a9d93386ef28b7dacb6"
+        }
+      ]
+    },
+    {
+      "family": "narrow",
+      "id": "t24",
+      "file": "art/fire-sprites/v3/narrow/t24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-494ee657-6518-4215-8e73-b8ee088764a1.png",
+      "sha256": "36102e59a98bbe41d1f20e1cb573099818089fbc5ba54bda0f93df84edbe41e0",
+      "prompt": "prompts/narrow-t24.txt",
+      "between": [
+        "key04",
+        "t20"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/04.png",
+          "sha256": "03d37661cbcefa07f9abf44fff47669a6f642e8f6f95318c6138b7ff59dd1bcc"
+        },
+        {
+          "file": "art/fire-sprites/v3/narrow/t20.png",
+          "sha256": "f2bffc900b9bef03f15ed68e00576fa2bc4a17f59923be2f8f1c7f9a74846b89"
+        }
+      ]
+    },
+    {
+      "family": "medium",
+      "id": "t24",
+      "file": "art/fire-sprites/v3/medium/t24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-84b694e1-814e-4434-97c0-a37498453ce7.png",
+      "sha256": "a05a94d55f4117d0e8614063c56a49e09c6099e8f55ac12178122f7e1b0fc0d3",
+      "prompt": "prompts/medium-t24.txt",
+      "between": [
+        "t10",
+        "key06"
+      ],
+      "references": [
+        {
+          "file": "art/fire-sprites/v3/medium/t10.png",
+          "sha256": "ddc2221d78e684095cad6aad93f1d6ba7159863bcb5e6de3ef8e4ab9512217b1"
+        },
+        {
+          "file": "public/fire-sprites/v2/medium/06.png",
+          "sha256": "f2c58801209cc002de2ad44222733b3706fc36005de88a30842cf82b68f4af4e"
+        }
+      ]
+    },
+    {
+      "family": "broad",
+      "id": "t24",
+      "file": "art/fire-sprites/v3/broad/t24.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-3796d713-c8d0-4ae6-85a1-ebf6a4f92bd7.png",
+      "sha256": "c826f2ad19c2216a5937f83c182bcf09d337f33e23ffed97751ee2e529c088a5",
+      "prompt": "prompts/broad-t24.txt",
+      "between": [
+        "key04",
+        "t03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/broad/04.png",
+          "sha256": "57e3dfb73438a5c7e9ce2a0087cb91b831aaff0468e7c129c766ddaa3c5ead0c"
+        },
+        {
+          "file": "art/fire-sprites/v3/broad/t03.png",
+          "sha256": "c4aa0cb6558e845f60c802e9245ca8176f9f8610d34d84da0012e252796b8898"
+        }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "family": "narrow",
+      "id": "t06",
+      "file": "art/fire-sprites/v3/narrow/t06.png",
+      "source": "/Users/kiki/.codex/generated_images/01a1c8ec-de0e-7170-8fb4-a11a1c5af0ca/exec-d3a47985-d7ac-40ae-9e55-f9e55a649033.png",
+      "sha256": "4b273f741351172b14fc60dec6f5cb9484c224becd3c24bf64a83dca3856cdb0",
+      "prompt": "prompts/narrow-t06.txt",
+      "between": [
+        "key02",
+        "key03"
+      ],
+      "references": [
+        {
+          "file": "public/fire-sprites/v2/narrow/02.png",
+          "sha256": "13568f7844d243e03d28adf3613d30ff9de096278b2f71e691be8a520e7b249e"
+        },
+        {
+          "file": "public/fire-sprites/v2/narrow/03.png",
+          "sha256": "7670d715234602007e59d449bab0541dab38a6ff5f6d1cf5f8ffbf74320b5798"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2026-11-11T10:43:40Z"
+}

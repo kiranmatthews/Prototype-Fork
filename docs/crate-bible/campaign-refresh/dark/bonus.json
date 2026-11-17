@@ -1,0 +1,610 @@
+{
+  "stage": "collect earned gem and cross real bonus gate",
+  "evidence": [
+    {
+      "action": "Fuse Store arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store arrival delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-nightworks room 1 fuse recovery reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store refuge delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "fuse",
+      "index": 0,
+      "position": [
+        24.924355555555636,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-nightworks room 2 return pass intact arrow",
+      "launch": [
+        30.92421111111125,
+        0,
+        0
+      ],
+      "landing": [
+        35.94471111111122,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "bonus-nightworks room 2 return reveal earlier high row",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "bonus-nightworks room 2 return conserved-arrow ascent",
+      "contact": {
+        "frame": 2380,
+        "position": [
+          33.03126666666679,
+          1.172,
+          0
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "Supported bonus court"
+      },
+      "landing": [
+        37.112766666666765,
+        8.4,
+        0
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "bonus-nightworks room 2 return high target before support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-nightworks room 2 return descend before clearing arrow",
+      "launch": [
+        36.570466666666746,
+        8.4,
+        0
+      ],
+      "landing": [
+        31.033966666666792,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "bonus-nightworks room 2 return destroy arrow last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-nightworks room 2 return pass permanent switch",
+      "launch": [
+        46.92538888888891,
+        0,
+        0
+      ],
+      "landing": [
+        51.36688888888888,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "Fuse Store dispatch delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store dispatch delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store dispatch delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "return",
+      "index": 1,
+      "position": [
+        58.933200000000134,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "Fuse Store exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Fuse Store exit delivery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 20,
+      "activeStageCrates": 20,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 20,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "Fuse Store arrival delivery",
+      "firstFrame": 22,
+      "lastFrame": 22
+    },
+    {
+      "name": "approach Fuse Store arrival delivery",
+      "firstFrame": 44,
+      "lastFrame": 108
+    },
+    {
+      "name": "Fuse Store arrival delivery",
+      "firstFrame": 128,
+      "lastFrame": 128
+    },
+    {
+      "name": "approach Fuse Store arrival delivery",
+      "firstFrame": 150,
+      "lastFrame": 212
+    },
+    {
+      "name": "Fuse Store arrival delivery",
+      "firstFrame": 232,
+      "lastFrame": 232
+    },
+    {
+      "name": "approach Fuse Store arrival delivery",
+      "firstFrame": 254,
+      "lastFrame": 316
+    },
+    {
+      "name": "Fuse Store arrival delivery",
+      "firstFrame": 336,
+      "lastFrame": 336
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse observation",
+      "firstFrame": 358,
+      "lastFrame": 444
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse upper-first staging",
+      "firstFrame": 462,
+      "lastFrame": 560
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse takeoff cap rebound",
+      "firstFrame": 605,
+      "lastFrame": 636
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse upper-first rebound apex",
+      "firstFrame": 636,
+      "lastFrame": 661
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse collect cap before timed support",
+      "firstFrame": 663,
+      "lastFrame": 668
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse visible refuge",
+      "firstFrame": 668,
+      "lastFrame": 691
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse deliberate fuse approach",
+      "firstFrame": 711,
+      "lastFrame": 799
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse prime fuse by contact",
+      "firstFrame": 844,
+      "lastFrame": 880
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse leave blast radius",
+      "firstFrame": 880,
+      "lastFrame": 921
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse supported post-blast recovery",
+      "firstFrame": 941,
+      "lastFrame": 1100
+    },
+    {
+      "name": "approach bonus-nightworks room 1 fuse recovery reward",
+      "firstFrame": 1100,
+      "lastFrame": 1239
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse recovery reward",
+      "firstFrame": 1259,
+      "lastFrame": 1259
+    },
+    {
+      "name": "approach Fuse Store refuge delivery",
+      "firstFrame": 1281,
+      "lastFrame": 1343
+    },
+    {
+      "name": "Fuse Store refuge delivery",
+      "firstFrame": 1363,
+      "lastFrame": 1363
+    },
+    {
+      "name": "approach Fuse Store refuge delivery",
+      "firstFrame": 1385,
+      "lastFrame": 1447
+    },
+    {
+      "name": "Fuse Store refuge delivery",
+      "firstFrame": 1467,
+      "lastFrame": 1467
+    },
+    {
+      "name": "bonus-nightworks room 1 fuse supported room exit",
+      "firstFrame": 1489,
+      "lastFrame": 1619
+    },
+    {
+      "name": "bonus-nightworks room 2 return observation",
+      "firstFrame": 1637,
+      "lastFrame": 1711
+    },
+    {
+      "name": "bonus-nightworks room 2 return preserve arrow approach",
+      "firstFrame": 1729,
+      "lastFrame": 1820
+    },
+    {
+      "name": "bonus-nightworks room 2 return pass intact arrow",
+      "firstFrame": 1865,
+      "lastFrame": 1904
+    },
+    {
+      "name": "approach bonus-nightworks room 2 return reveal earlier high row",
+      "firstFrame": 1904,
+      "lastFrame": 2057
+    },
+    {
+      "name": "bonus-nightworks room 2 return reveal earlier high row",
+      "firstFrame": 2077,
+      "lastFrame": 2077
+    },
+    {
+      "name": "bonus-nightworks room 2 return backtrack to retained arrow",
+      "firstFrame": 2099,
+      "lastFrame": 2260
+    },
+    {
+      "name": "bonus-nightworks room 2 return conserved-arrow ascent takeoff",
+      "firstFrame": 2278,
+      "lastFrame": 2299
+    },
+    {
+      "name": "bonus-nightworks room 2 return conserved-arrow ascent arrow contact",
+      "firstFrame": 2344,
+      "lastFrame": 2380
+    },
+    {
+      "name": "bonus-nightworks room 2 return conserved-arrow ascent apex outside the shelf",
+      "firstFrame": 2383,
+      "lastFrame": 2416
+    },
+    {
+      "name": "bonus-nightworks room 2 return conserved-arrow ascent rise above the shelf",
+      "firstFrame": 2418,
+      "lastFrame": 2428
+    },
+    {
+      "name": "bonus-nightworks room 2 return conserved-arrow ascent",
+      "firstFrame": 2428,
+      "lastFrame": 2443
+    },
+    {
+      "name": "approach bonus-nightworks room 2 return high target before support",
+      "firstFrame": 2443,
+      "lastFrame": 2515
+    },
+    {
+      "name": "bonus-nightworks room 2 return high target before support",
+      "firstFrame": 2535,
+      "lastFrame": 2535
+    },
+    {
+      "name": "bonus-nightworks room 2 return return-gallery edge",
+      "firstFrame": 2557,
+      "lastFrame": 2635
+    },
+    {
+      "name": "bonus-nightworks room 2 return descend before clearing arrow",
+      "firstFrame": 2680,
+      "lastFrame": 2732
+    },
+    {
+      "name": "approach bonus-nightworks room 2 return destroy arrow last",
+      "firstFrame": 2732,
+      "lastFrame": 2785
+    },
+    {
+      "name": "bonus-nightworks room 2 return destroy arrow last",
+      "firstFrame": 2805,
+      "lastFrame": 2805
+    },
+    {
+      "name": "bonus-nightworks room 2 return spent-switch approach",
+      "firstFrame": 2827,
+      "lastFrame": 3005
+    },
+    {
+      "name": "bonus-nightworks room 2 return pass permanent switch",
+      "firstFrame": 3050,
+      "lastFrame": 3089
+    },
+    {
+      "name": "approach Fuse Store dispatch delivery",
+      "firstFrame": 3089,
+      "lastFrame": 3154
+    },
+    {
+      "name": "Fuse Store dispatch delivery",
+      "firstFrame": 3174,
+      "lastFrame": 3174
+    },
+    {
+      "name": "approach Fuse Store dispatch delivery",
+      "firstFrame": 3196,
+      "lastFrame": 3258
+    },
+    {
+      "name": "Fuse Store dispatch delivery",
+      "firstFrame": 3278,
+      "lastFrame": 3278
+    },
+    {
+      "name": "approach Fuse Store dispatch delivery",
+      "firstFrame": 3300,
+      "lastFrame": 3362
+    },
+    {
+      "name": "Fuse Store dispatch delivery",
+      "firstFrame": 3382,
+      "lastFrame": 3382
+    },
+    {
+      "name": "bonus-nightworks room 2 return supported room exit",
+      "firstFrame": 3404,
+      "lastFrame": 3495
+    },
+    {
+      "name": "approach Fuse Store exit delivery",
+      "firstFrame": 3513,
+      "lastFrame": 3594
+    },
+    {
+      "name": "Fuse Store exit delivery",
+      "firstFrame": 3614,
+      "lastFrame": 3614
+    },
+    {
+      "name": "approach Fuse Store exit delivery",
+      "firstFrame": 3636,
+      "lastFrame": 3698
+    },
+    {
+      "name": "Fuse Store exit delivery",
+      "firstFrame": 3718,
+      "lastFrame": 3718
+    },
+    {
+      "name": "approach Fuse Store exit delivery",
+      "firstFrame": 3740,
+      "lastFrame": 3802
+    },
+    {
+      "name": "Fuse Store exit delivery",
+      "firstFrame": 3822,
+      "lastFrame": 3822
+    },
+    {
+      "name": "collect earned gem and cross real bonus gate",
+      "firstFrame": 3846,
+      "lastFrame": 3898
+    }
+  ],
+  "result": {
+    "id": "bonus-nightworks",
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 20,
+    "cratesBroken": 20,
+    "deaths": 0
+  },
+  "id": "bonus-nightworks",
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 20,
+  "cratesBroken": 20,
+  "deaths": 0,
+  "frames": 3898,
+  "seconds": 64.96666666666667
+}

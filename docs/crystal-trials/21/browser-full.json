@@ -1,0 +1,345 @@
+{
+  "trial": 21,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "636d7c485450bd5b04fbfe761979f0700ab5a34467941f05f51e19e639e955ec",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Standalone source trial in the full game renderer",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        7.835185867704152,
+        22.19115446260227
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.06388681058950842,
+            0.7331711707721952,
+            0.9987743663638651
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.06863777212558565,
+        0,
+        8.999066518505098
+      ],
+      "camera": [
+        0.06863777212558565,
+        7.835185867704152,
+        26.190220981107366
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": []
+    },
+    {
+      "name": "trick-gate",
+      "position": [
+        0,
+        3.1,
+        -85
+      ],
+      "camera": [
+        15.549631660464483,
+        14.87481583023224,
+        -80.33511050186065
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            1.3122361440906418,
+            0.3848424425613735,
+            0.9872830282785265
+          ]
+        }
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.1,
+        -88
+      ],
+      "camera": [
+        15.549631660464483,
+        14.87481583023224,
+        -83.33511050186065
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            1.1267829908009073,
+            0.3075854398713929,
+            0.9866837360633055
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 21,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 21,
+    "frame": 3510,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 21 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Line up with the first rail",
+        "firstFrame": 137,
+        "lastFrame": 228
+      },
+      {
+        "name": "Catch the first transfer rail",
+        "firstFrame": 273,
+        "lastFrame": 308
+      },
+      {
+        "name": "Riding straight misses the offset rail and falls into the pit",
+        "firstFrame": 308,
+        "lastFrame": 519
+      },
+      {
+        "name": "Recover at the transfer checkpoint",
+        "firstFrame": 519,
+        "lastFrame": 652
+      },
+      {
+        "name": "Line up with the first rail",
+        "firstFrame": 652,
+        "lastFrame": 750
+      },
+      {
+        "name": "Catch the first transfer rail",
+        "firstFrame": 795,
+        "lastFrame": 830
+      },
+      {
+        "name": "Balance to the right transfer",
+        "firstFrame": 830,
+        "lastFrame": 904
+      },
+      {
+        "name": "Catch the right offset rail",
+        "firstFrame": 933,
+        "lastFrame": 976
+      },
+      {
+        "name": "Balance to the left transfer",
+        "firstFrame": 976,
+        "lastFrame": 1068
+      },
+      {
+        "name": "Catch the left offset rail",
+        "firstFrame": 1097,
+        "lastFrame": 1140
+      },
+      {
+        "name": "Balance to the final receiver",
+        "firstFrame": 1140,
+        "lastFrame": 1248
+      },
+      {
+        "name": "Pop onto the raised receiver",
+        "firstFrame": 1276,
+        "lastFrame": 1307
+      },
+      {
+        "name": "Brake on the receiver",
+        "firstFrame": 1307,
+        "lastFrame": 1340
+      },
+      {
+        "name": "Read the blade cycle from the safe terrace",
+        "firstFrame": 1340,
+        "lastFrame": 1439
+      },
+      {
+        "name": "Observe an extended blade cycle",
+        "firstFrame": 1457,
+        "lastFrame": 1511
+      },
+      {
+        "name": "Wait for the blades to retract",
+        "firstFrame": 1601,
+        "lastFrame": 1644
+      },
+      {
+        "name": "Approach inside the retracted window",
+        "firstFrame": 1644,
+        "lastFrame": 1699
+      },
+      {
+        "name": "Pass the defeated enemy",
+        "firstFrame": 1720,
+        "lastFrame": 1785
+      },
+      {
+        "name": "Approach the terrace bounce crate",
+        "firstFrame": 1803,
+        "lastFrame": 1912
+      },
+      {
+        "name": "Hold the terrace rebound",
+        "firstFrame": 1957,
+        "lastFrame": 1993
+      },
+      {
+        "name": "Land above the enemy terrace",
+        "firstFrame": 1993,
+        "lastFrame": 2037
+      },
+      {
+        "name": "Drop outside the terrace to the flat return",
+        "firstFrame": 2064,
+        "lastFrame": 2126
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 2126,
+        "lastFrame": 2209
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 2227,
+        "lastFrame": 2906
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2924,
+        "lastFrame": 3188
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 3206,
+        "lastFrame": 3297
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 3315,
+        "lastFrame": 3492
+      }
+    ],
+    "evidence": [
+      {
+        "action": "right rail transfer",
+        "position": [
+          3.4992107763866342,
+          1.3499999999999999,
+          -26.90374206022894
+        ],
+        "railLength": 34
+      },
+      {
+        "action": "left rail transfer",
+        "position": [
+          -0.2992107763866336,
+          1.3499999999999999,
+          -53.86879065059848
+        ],
+        "railLength": 31
+      },
+      {
+        "action": "kickflip from the rail unlocks the aperture"
+      },
+      {
+        "action": "defeated retracted enemy after reading its full dangerous cycle"
+      }
+    ],
+    "position": [
+      0.06863777212558565,
+      0,
+      8.999066518505098
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the local circuit",
+    "expectedDeaths": 0,
+    "result": {
+      "id": 21,
+      "collected": 1,
+      "position": [
+        0.06863777212558565,
+        0,
+        8.999066518505098
+      ],
+      "frames": 3510
+    }
+  },
+  "stagedVisualFixtures": [
+    {
+      "name": "trick-gate",
+      "position": [
+        0,
+        3.25,
+        -85
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.25,
+        -88
+      ]
+    }
+  ],
+  "passed": true
+}

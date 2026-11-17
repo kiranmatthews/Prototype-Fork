@@ -229,6 +229,23 @@ export function createNightworksLevel(): CustomLevelData {
     [-42,12,-107,1.2,"grunt"],[-44.5,26,-207,.9,"grunt"],
     [12,56,-284,1.2,"hopper"],
   ] as const) add({t:"enemy",nm:"Nightworks Snot Goblin",p:[x,y,z],range,speed:1.7,foe});
+  // Two optional five-box deliveries on each permanent reading island.
+  // Keep the checkpoint, bonus platform and moving-object run-ups clear.
+  // The raw .96 m crate grid expands once to the runtime's 1.152 m grid.
+  const supplies: [number,number,number][] = [
+    [-3.3,0,4],[-2.8,0,-1.5],[-4,0,-47],[3,0,-48],
+    [-51,12,-51],[-51,12,-56],[-44.5,12,-116.5],[-51,12,-114.8],
+    [6.4,12,-116],[13.6,12,-116],[6.8,12,-171.5],[13.2,12,-171.5],
+    [4,26,-199.5],[14,26,-201],[-51,26,-200],[-51,26,-205.2],
+    [-50.5,34,-275.5],[-50.5,34,-280.5],[5.5,56,-276.5],[5.5,56,-282],
+    [8,56,-321],[8,56,-327],[-45.4,64,-322],[-40.6,64,-322],
+  ];
+  for (const [i,[x,y,z]] of supplies.entries()) {
+    const section=Math.floor(i/2)+1,cap=[0,4,18].includes(i)?"mask":"mystery";
+    for (const [j,[dx,dy]] of [[-.96,0],[0,0],[.96,0],[-.48,.96],[.48,.96]].entries())
+      add({t:"crate",p:[x+dx,y+dy,z],kind:j===4?cap:"wood",
+        nm:`Torchlight supply / section ${section} / cache ${i%2+1} / box ${j+1}`});
+  }
   return {v:1,name:"The Nightworks",spawn:[0,.1,4],killY:-26,sky:"night",keepPlayFog:true,components};
 }
 export const NIGHTWORKS_LEVEL = createNightworksLevel();

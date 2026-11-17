@@ -1,0 +1,141 @@
+{
+  "id": 2,
+  "actions": [
+    {
+      "name": "Bank the bell courtyard checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Observe the spring and its high receiver",
+      "firstFrame": 137,
+      "lastFrame": 269
+    },
+    {
+      "name": "Try the spring before choosing the balcony line",
+      "firstFrame": 314,
+      "lastFrame": 353
+    },
+    {
+      "name": "A wrong-side drift returns to the courtyard",
+      "firstFrame": 353,
+      "lastFrame": 429
+    },
+    {
+      "name": "Retry from the same spring approach",
+      "firstFrame": 429,
+      "lastFrame": 550
+    },
+    {
+      "name": "Jump onto the bell spring",
+      "firstFrame": 595,
+      "lastFrame": 634
+    },
+    {
+      "name": "Gain height before drifting toward the balcony",
+      "firstFrame": 634,
+      "lastFrame": 646
+    },
+    {
+      "name": "Drift onto the high bell balcony",
+      "firstFrame": 646,
+      "lastFrame": 697
+    },
+    {
+      "name": "Claim the crystal inside the bell arch",
+      "firstFrame": 697,
+      "lastFrame": 774
+    },
+    {
+      "name": "Read the open return edge",
+      "firstFrame": 792,
+      "lastFrame": 862
+    },
+    {
+      "name": "Drop from the bell balcony into the courtyard",
+      "firstFrame": 907,
+      "lastFrame": 959
+    }
+  ],
+  "evidence": [
+    {
+      "action": "missed drift recovers safely",
+      "position": [
+        -4.96432356219143,
+        0,
+        -9.99707213730759
+      ]
+    },
+    {
+      "action": "spring launch",
+      "position": [
+        -0.03266144011143212,
+        0.11999999403953551,
+        -7.778633072698777
+      ],
+      "verticalSpeed": 27.5
+    },
+    {
+      "action": "balcony landing",
+      "position": [
+        5.943838761156956,
+        8.4,
+        -12.954111532024521
+      ],
+      "collected": true
+    }
+  ],
+  "passed": true,
+  "stage": "Drop from the bell balcony into the courtyard",
+  "result": {
+    "frame": 959,
+    "time": 15.983333333333333,
+    "position": [
+      5.996038761156958,
+      0,
+      -5.052077910974298
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": -0.6363961030678928,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0.01,
+      "moveY": -0.1,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

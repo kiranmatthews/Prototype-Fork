@@ -27,6 +27,9 @@ export class HeightFog {
      if(!shader.fragmentShader.includes('#include <fog_fragment>'))return;
      shader.uniforms.uHeightFogCamera=uniforms.camera;shader.uniforms.uHeightFogProfile=uniforms.profile;shader.uniforms.uHeightFogColor=uniforms.color;shader.uniforms.uHeightFogSlope=uniforms.slope;
      shader.uniforms.uHeightFogContour=uniforms.contour;shader.uniforms.uHeightFogCount=uniforms.count;
+     // A cloned material can inherit an already wrapped callback. Keep its
+     // own uniforms above, but install the inherited GLSL only once.
+     if(shader.fragmentShader.includes('float heightFogSection('))return;
      // A shared world material also draws in fog-free HUD/fruit-flight scenes.
      // Use Three's per-pass flag, which covers both scene fog and material opt-outs.
      shader.vertexShader='#ifdef USE_FOG\nvarying vec3 vHeightFogWorld;\n#endif\n'+shader.vertexShader;

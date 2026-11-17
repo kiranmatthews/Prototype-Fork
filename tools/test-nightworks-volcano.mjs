@@ -45,7 +45,7 @@ await withAfterHoursRuntime(async r=>{
   const bonus=(await r.server.ssrLoadModule('/src/levels/themed-bonuses.ts')).resolveBonusLevel('nightworks-after-hours');
   assert.ok(normalizeCustomLevelData(bonus),'bespoke bonus must survive editor validation');
   assert.equal(bonus.components.filter(c=>c.t==='gate').length,1);
-  assert.equal(bonus.components.filter(c=>c.t==='crate').length,16);
+  assert.equal(bonus.components.filter(c=>c.t==='crate').length,25);
   assert.equal(bonus.components.filter(c=>c.t==='mover').length,1);
   assert.equal(bonus.components.filter(c=>c.t==='phasepad').length,1);
   assert.ok(bonus.components.some(c=>c.tex==='nightworks-caldera'));
@@ -64,4 +64,4 @@ assert.ok(model.textures[0].extensions.KHR_texture_basisu,'mipmapped GPU-compres
 assert.equal(model.images[model.textures[0].source].mimeType,'image/jpeg','portable fallback remains available');
 assert.ok(bytes.length<3*1024*1024,'volcano download budget');
 assert.ok(model.nodes.some(n=>n.name.endsWith('LOD0'))&&model.nodes.some(n=>n.name.endsWith('LOD1')));
-console.log('PASS caldera: exact original ground/camera paths, non-colliding scenery, unique 16-crate bonus, native animation clock, compressed basalt asset.');
+console.log('PASS caldera: exact original ground/camera paths, non-colliding scenery, unique 25-crate bonus, native animation clock, compressed basalt asset.');

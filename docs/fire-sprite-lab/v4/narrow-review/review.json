@@ -1,0 +1,979 @@
+{
+  "id": "narrow",
+  "manifest": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/docs/fire-sprite-lab/v4/narrow-cycle.json",
+  "fps": 40,
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "frameCount": 48,
+  "durationMs": 1200,
+  "delaysMs": [
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25,
+    25
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "file": "../../../art/fire-sprites/v4/narrow/k00.png",
+      "bounds": {
+        "left": 369,
+        "top": 117,
+        "right": 862,
+        "bottom": 1149
+      },
+      "area": 273869,
+      "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+    },
+    {
+      "frame": 2,
+      "file": "../../../art/fire-sprites/v4/narrow/01.png",
+      "bounds": {
+        "left": 362,
+        "top": 111,
+        "right": 861,
+        "bottom": 1152
+      },
+      "area": 282839,
+      "sha256": "faaa7c8211a441835c866fead7216efcd2a7cffce582934523c3a17fe8487ef2"
+    },
+    {
+      "frame": 3,
+      "file": "../../../art/fire-sprites/v4/narrow/02-r2.png",
+      "bounds": {
+        "left": 360,
+        "top": 105,
+        "right": 862,
+        "bottom": 1151
+      },
+      "area": 279764,
+      "sha256": "b9d224243942aa648e4d48b36a6c703851d99113ee800ae5e7ec5cbd718d46b5"
+    },
+    {
+      "frame": 4,
+      "file": "../../../art/fire-sprites/v4/narrow/03.png",
+      "bounds": {
+        "left": 355,
+        "top": 98,
+        "right": 863,
+        "bottom": 1154
+      },
+      "area": 287347,
+      "sha256": "91827a944dc6563df16753706b244c26c7fe34af62f69de3872ef4c02fe08599"
+    },
+    {
+      "frame": 5,
+      "file": "../../../art/fire-sprites/v4/narrow/04.png",
+      "bounds": {
+        "left": 360,
+        "top": 87,
+        "right": 865,
+        "bottom": 1150
+      },
+      "area": 276891,
+      "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+    },
+    {
+      "frame": 6,
+      "file": "../../../art/fire-sprites/v4/narrow/05.png",
+      "bounds": {
+        "left": 359,
+        "top": 87,
+        "right": 867,
+        "bottom": 1153
+      },
+      "area": 283198,
+      "sha256": "b4ee235b5c14b72babb7072fcd39561c1647956f794edab62231309532cba054"
+    },
+    {
+      "frame": 7,
+      "file": "../../../art/fire-sprites/v4/narrow/06.png",
+      "bounds": {
+        "left": 357,
+        "top": 85,
+        "right": 868,
+        "bottom": 1153
+      },
+      "area": 279670,
+      "sha256": "7c4e308308b1e351acbc89f550473f7b2331bd0e4a380038836f48e54225f56f"
+    },
+    {
+      "frame": 8,
+      "file": "../../../art/fire-sprites/v4/narrow/07.png",
+      "bounds": {
+        "left": 358,
+        "top": 79,
+        "right": 868,
+        "bottom": 1155
+      },
+      "area": 283515,
+      "sha256": "3addeea512e3763aeb9e9b45043f616e53b769e09595548c855c65807f244e21"
+    },
+    {
+      "frame": 9,
+      "file": "../../../art/fire-sprites/v4/narrow/k08.png",
+      "bounds": {
+        "left": 364,
+        "top": 83,
+        "right": 863,
+        "bottom": 1151
+      },
+      "area": 269533,
+      "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+    },
+    {
+      "frame": 10,
+      "file": "../../../art/fire-sprites/v4/narrow/09.png",
+      "bounds": {
+        "left": 357,
+        "top": 92,
+        "right": 865,
+        "bottom": 1154
+      },
+      "area": 292276,
+      "sha256": "69a321fe34f48c3701d33673c9babf7d8ddbeed2aba23dade1e96578848278a4"
+    },
+    {
+      "frame": 11,
+      "file": "../../../art/fire-sprites/v4/narrow/10-r2.png",
+      "bounds": {
+        "left": 360,
+        "top": 113,
+        "right": 877,
+        "bottom": 1153
+      },
+      "area": 285186,
+      "sha256": "70c68014fae12f071ea916e55f91a3f208cebc67b1de9601a948f49513e67bdc"
+    },
+    {
+      "frame": 12,
+      "file": "../../../art/fire-sprites/v4/narrow/11.png",
+      "bounds": {
+        "left": 351,
+        "top": 134,
+        "right": 904,
+        "bottom": 1155
+      },
+      "area": 297473,
+      "sha256": "27b95a547f66813ca2154ca7b1a45df222ae307829795b5b6f0598e0f70f7944"
+    },
+    {
+      "frame": 13,
+      "file": "../../../art/fire-sprites/v4/narrow/12.png",
+      "bounds": {
+        "left": 354,
+        "top": 158,
+        "right": 914,
+        "bottom": 1153
+      },
+      "area": 287972,
+      "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+    },
+    {
+      "frame": 14,
+      "file": "../../../art/fire-sprites/v4/narrow/13.png",
+      "bounds": {
+        "left": 347,
+        "top": 160,
+        "right": 909,
+        "bottom": 1154
+      },
+      "area": 286822,
+      "sha256": "f924dfb663b366da92ddebc82433551b33e3eae973b9595722d4aaefb510359a"
+    },
+    {
+      "frame": 15,
+      "file": "../../../art/fire-sprites/v4/narrow/14-r3.png",
+      "bounds": {
+        "left": 349,
+        "top": 226,
+        "right": 917,
+        "bottom": 1156
+      },
+      "area": 275332,
+      "sha256": "b663f52888018f940f7b7672d46f75f9fc74918cccef30c61cfc2dd805dd2e24"
+    },
+    {
+      "frame": 16,
+      "file": "../../../art/fire-sprites/v4/narrow/15.png",
+      "bounds": {
+        "left": 344,
+        "top": 305,
+        "right": 919,
+        "bottom": 1156
+      },
+      "area": 279223,
+      "sha256": "7eb326beb9e8999024e37cb740953b1e8ae7337286ddcacdeae60d63223f3b70"
+    },
+    {
+      "frame": 17,
+      "file": "../../../art/fire-sprites/v4/narrow/k16-r2.png",
+      "bounds": {
+        "left": 352,
+        "top": 379,
+        "right": 936,
+        "bottom": 1154
+      },
+      "area": 266014,
+      "sha256": "152e044ee34271c9295ad2baa35e985c7d28f25ae26555e37667b1196e9ad908"
+    },
+    {
+      "frame": 18,
+      "file": "../../../art/fire-sprites/v4/narrow/17.png",
+      "bounds": {
+        "left": 346,
+        "top": 349,
+        "right": 938,
+        "bottom": 1155
+      },
+      "area": 276429,
+      "sha256": "9d235db0b4b3aa63165db0afbb13ea78fac4617de3e06282632440b61bb5de0d"
+    },
+    {
+      "frame": 19,
+      "file": "../../../art/fire-sprites/v4/narrow/18-r4.png",
+      "bounds": {
+        "left": 350,
+        "top": 334,
+        "right": 936,
+        "bottom": 1153
+      },
+      "area": 271498,
+      "sha256": "0f181fb9bf01e89bf8dd59eb0a5d65886023ae0abbc0131a74b01f685b3ddbe4"
+    },
+    {
+      "frame": 20,
+      "file": "../../../art/fire-sprites/v4/narrow/19.png",
+      "bounds": {
+        "left": 350,
+        "top": 308,
+        "right": 929,
+        "bottom": 1154
+      },
+      "area": 279945,
+      "sha256": "7337c9ef193359489b1392e9fa345c5ed58b59c8f11a1f123e4825ce05b297fa"
+    },
+    {
+      "frame": 21,
+      "file": "../../../art/fire-sprites/v4/narrow/20-r2.png",
+      "bounds": {
+        "left": 343,
+        "top": 279,
+        "right": 930,
+        "bottom": 1129
+      },
+      "area": 277807,
+      "sha256": "ea060bb443d7a5243465b6cd71eaf5b6da0ab85b8438697b546c0a221a2bf146"
+    },
+    {
+      "frame": 22,
+      "file": "../../../art/fire-sprites/v4/narrow/21.png",
+      "bounds": {
+        "left": 336,
+        "top": 249,
+        "right": 927,
+        "bottom": 1112
+      },
+      "area": 284058,
+      "sha256": "e2fd3be421bff4ecd96ae5fd439c6a24571ac5a4a94d5b8ebbbad11fd0cf1e03"
+    },
+    {
+      "frame": 23,
+      "file": "../../../art/fire-sprites/v4/narrow/22-r2.png",
+      "bounds": {
+        "left": 336,
+        "top": 219,
+        "right": 928,
+        "bottom": 1101
+      },
+      "area": 286982,
+      "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2"
+    },
+    {
+      "frame": 24,
+      "file": "../../../art/fire-sprites/v4/narrow/23-r2.png",
+      "bounds": {
+        "left": 331,
+        "top": 185,
+        "right": 927,
+        "bottom": 1117
+      },
+      "area": 291587,
+      "sha256": "c73140523dd1b50b3d4bb11fb27209411db28374ca8e9447c762437ee2d27f18"
+    },
+    {
+      "frame": 25,
+      "file": "../../../art/fire-sprites/v4/narrow/k24.png",
+      "bounds": {
+        "left": 343,
+        "top": 162,
+        "right": 937,
+        "bottom": 1152
+      },
+      "area": 295470,
+      "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+    },
+    {
+      "frame": 26,
+      "file": "../../../art/fire-sprites/v4/narrow/25.png",
+      "bounds": {
+        "left": 330,
+        "top": 166,
+        "right": 931,
+        "bottom": 1155
+      },
+      "area": 300310,
+      "sha256": "0d44f8afaadcc51593e1326346af596db0677891fa3f315f03c6099244efa664"
+    },
+    {
+      "frame": 27,
+      "file": "../../../art/fire-sprites/v4/narrow/26-r2.png",
+      "bounds": {
+        "left": 332,
+        "top": 170,
+        "right": 927,
+        "bottom": 1155
+      },
+      "area": 298662,
+      "sha256": "b468b8843ec55266b454d2c2b7a32d0deb8b052581a191680f324f030ccebd53"
+    },
+    {
+      "frame": 28,
+      "file": "../../../art/fire-sprites/v4/narrow/27.png",
+      "bounds": {
+        "left": 332,
+        "top": 172,
+        "right": 923,
+        "bottom": 1157
+      },
+      "area": 297004,
+      "sha256": "ea1e0e9a13b391ac3a3e8f160b2c78f2fe2fc425489fb3d68838542a350fa78f"
+    },
+    {
+      "frame": 29,
+      "file": "../../../art/fire-sprites/v4/narrow/28-r2.png",
+      "bounds": {
+        "left": 340,
+        "top": 171,
+        "right": 930,
+        "bottom": 1154
+      },
+      "area": 288585,
+      "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+    },
+    {
+      "frame": 30,
+      "file": "../../../art/fire-sprites/v4/narrow/29-r2.png",
+      "bounds": {
+        "left": 333,
+        "top": 176,
+        "right": 899,
+        "bottom": 1157
+      },
+      "area": 286038,
+      "sha256": "e284c49bf472e2eb91d669d06e738a07121c9a40483fad6ee6f24d6a7085c6cf"
+    },
+    {
+      "frame": 31,
+      "file": "../../../art/fire-sprites/v4/narrow/30.png",
+      "bounds": {
+        "left": 345,
+        "top": 181,
+        "right": 894,
+        "bottom": 1155
+      },
+      "area": 267264,
+      "sha256": "6f31d968ab4d56b51ebfa38da0367eb3ce9e1b8cf46bfc20d7c2f7472531f758"
+    },
+    {
+      "frame": 32,
+      "file": "../../../art/fire-sprites/v4/narrow/31.png",
+      "bounds": {
+        "left": 343,
+        "top": 185,
+        "right": 886,
+        "bottom": 1155
+      },
+      "area": 269791,
+      "sha256": "a9a13085973916b5947a075102404f358fee4f3815eba5a6a4aea7bd19ef0bb0"
+    },
+    {
+      "frame": 33,
+      "file": "../../../art/fire-sprites/v4/narrow/k32.png",
+      "bounds": {
+        "left": 353,
+        "top": 185,
+        "right": 883,
+        "bottom": 1154
+      },
+      "area": 256057,
+      "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+    },
+    {
+      "frame": 34,
+      "file": "../../../art/fire-sprites/v4/narrow/33.png",
+      "bounds": {
+        "left": 349,
+        "top": 185,
+        "right": 878,
+        "bottom": 1155
+      },
+      "area": 272040,
+      "sha256": "359087da58b09178c496ffcfc2751613bbb06d880b64f58933afb0bb87c03071"
+    },
+    {
+      "frame": 35,
+      "file": "../../../art/fire-sprites/v4/narrow/34.png",
+      "bounds": {
+        "left": 345,
+        "top": 216,
+        "right": 873,
+        "bottom": 1155
+      },
+      "area": 270668,
+      "sha256": "0df0acc234f363047dddaa41f5dd23ef65ad2b58c509e23303294efa28f7c125"
+    },
+    {
+      "frame": 36,
+      "file": "../../../art/fire-sprites/v4/narrow/35.png",
+      "bounds": {
+        "left": 342,
+        "top": 217,
+        "right": 872,
+        "bottom": 1156
+      },
+      "area": 272533,
+      "sha256": "3f4c6f0f07fa83dc3f43f3d7fd222d380bafb8146506be9f6ffc817a0de50dd7"
+    },
+    {
+      "frame": 37,
+      "file": "../../../art/fire-sprites/v4/narrow/36.png",
+      "bounds": {
+        "left": 351,
+        "top": 230,
+        "right": 868,
+        "bottom": 1155
+      },
+      "area": 263040,
+      "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+    },
+    {
+      "frame": 38,
+      "file": "../../../art/fire-sprites/v4/narrow/37.png",
+      "bounds": {
+        "left": 348,
+        "top": 225,
+        "right": 868,
+        "bottom": 1156
+      },
+      "area": 274515,
+      "sha256": "86a85b6906829a7476cc6ab25e70c8ba4a0151f8b0def1abe43b1ad16d15dd73"
+    },
+    {
+      "frame": 39,
+      "file": "../../../art/fire-sprites/v4/narrow/38.png",
+      "bounds": {
+        "left": 349,
+        "top": 218,
+        "right": 869,
+        "bottom": 1156
+      },
+      "area": 274172,
+      "sha256": "5f3ad2fbfb5508346a9b8e4d41aac6443b931e1cf023b29a48f90a50268eee04"
+    },
+    {
+      "frame": 40,
+      "file": "../../../art/fire-sprites/v4/narrow/39.png",
+      "bounds": {
+        "left": 344,
+        "top": 215,
+        "right": 866,
+        "bottom": 1159
+      },
+      "area": 275708,
+      "sha256": "3985f4639da6902b5c8968df34a0b8c854e2701c97d61fdde18abd4563de3e9d"
+    },
+    {
+      "frame": 41,
+      "file": "../../../art/fire-sprites/v4/narrow/k40-r2.png",
+      "bounds": {
+        "left": 339,
+        "top": 193,
+        "right": 861,
+        "bottom": 1162
+      },
+      "area": 289880,
+      "sha256": "ab3c889fb8e33fc4f409384ae14c883a05a98a27fe3cccda8c69e0ab741bb50c"
+    },
+    {
+      "frame": 42,
+      "file": "../../../art/fire-sprites/v4/narrow/41.png",
+      "bounds": {
+        "left": 351,
+        "top": 173,
+        "right": 858,
+        "bottom": 1156
+      },
+      "area": 281384,
+      "sha256": "12678b6580880364825324a020f5d0b8068dc5a9879be8ad060f7f7e0eb4f58b"
+    },
+    {
+      "frame": 43,
+      "file": "../../../art/fire-sprites/v4/narrow/42.png",
+      "bounds": {
+        "left": 356,
+        "top": 167,
+        "right": 858,
+        "bottom": 1154
+      },
+      "area": 273680,
+      "sha256": "96c6a5d1d958ed3a813d5e2d1ecff60d088ea214149da4fdf805a1e4e0af4f28"
+    },
+    {
+      "frame": 44,
+      "file": "../../../art/fire-sprites/v4/narrow/43.png",
+      "bounds": {
+        "left": 352,
+        "top": 149,
+        "right": 859,
+        "bottom": 1156
+      },
+      "area": 279843,
+      "sha256": "dbf6958299bb676105df1d1d9f2b488445cf54b5144b5eb7ad54e46ebfde7cd5"
+    },
+    {
+      "frame": 45,
+      "file": "../../../art/fire-sprites/v4/narrow/44.png",
+      "bounds": {
+        "left": 363,
+        "top": 134,
+        "right": 861,
+        "bottom": 1151
+      },
+      "area": 271293,
+      "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+    },
+    {
+      "frame": 46,
+      "file": "../../../art/fire-sprites/v4/narrow/45.png",
+      "bounds": {
+        "left": 356,
+        "top": 130,
+        "right": 862,
+        "bottom": 1156
+      },
+      "area": 282649,
+      "sha256": "0762c4cc89317e914abf1d81cf734d367d7e74def111f1dac24ee259d1125f88"
+    },
+    {
+      "frame": 47,
+      "file": "../../../art/fire-sprites/v4/narrow/46-r3.png",
+      "bounds": {
+        "left": 355,
+        "top": 127,
+        "right": 865,
+        "bottom": 1154
+      },
+      "area": 286479,
+      "sha256": "42089707500cf582020f52f72cc9d4c976dd8062b2bcb925e1910653363faf99"
+    },
+    {
+      "frame": 48,
+      "file": "../../../art/fire-sprites/v4/narrow/47.png",
+      "bounds": {
+        "left": 355,
+        "top": 127,
+        "right": 862,
+        "bottom": 1154
+      },
+      "area": 282181,
+      "sha256": "cdad4e78fa6dacd6c781ed4f06241509fdd3c97a4f20086b19fbe918c9b3c46e"
+    }
+  ],
+  "duplicateFrames": [],
+  "transitions": [
+    {
+      "from": 1,
+      "to": 2,
+      "seam": false,
+      "silhouetteOverlap": 0.9137791770783567,
+      "premultipliedDifference": 0.014808484385146847
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "seam": false,
+      "silhouetteOverlap": 0.9219894250737786,
+      "premultipliedDifference": 0.0112192621694035
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "seam": false,
+      "silhouetteOverlap": 0.9477607840174714,
+      "premultipliedDifference": 0.009650242983461064
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "seam": false,
+      "silhouetteOverlap": 0.8626691179625638,
+      "premultipliedDifference": 0.02156856964575523
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "seam": false,
+      "silhouetteOverlap": 0.9608683933253289,
+      "premultipliedDifference": 0.006870569630277019
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "seam": false,
+      "silhouetteOverlap": 0.9418963620120518,
+      "premultipliedDifference": 0.008795196884366287
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "seam": false,
+      "silhouetteOverlap": 0.9392505990250352,
+      "premultipliedDifference": 0.008982496949402556
+    },
+    {
+      "from": 8,
+      "to": 9,
+      "seam": false,
+      "silhouetteOverlap": 0.8841825229754678,
+      "premultipliedDifference": 0.01698376637920523
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "seam": false,
+      "silhouetteOverlap": 0.8426233808821119,
+      "premultipliedDifference": 0.02400575208803761
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "seam": false,
+      "silhouetteOverlap": 0.9308901503754371,
+      "premultipliedDifference": 0.010563392231685436
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "seam": false,
+      "silhouetteOverlap": 0.8321271378269618,
+      "premultipliedDifference": 0.02761623867384222
+    },
+    {
+      "from": 12,
+      "to": 13,
+      "seam": false,
+      "silhouetteOverlap": 0.9116491954308175,
+      "premultipliedDifference": 0.01565239743062862
+    },
+    {
+      "from": 13,
+      "to": 14,
+      "seam": false,
+      "silhouetteOverlap": 0.9235623184914549,
+      "premultipliedDifference": 0.012947796149032728
+    },
+    {
+      "from": 14,
+      "to": 15,
+      "seam": false,
+      "silhouetteOverlap": 0.9204466274097249,
+      "premultipliedDifference": 0.011673826733434417
+    },
+    {
+      "from": 15,
+      "to": 16,
+      "seam": false,
+      "silhouetteOverlap": 0.9592804937067927,
+      "premultipliedDifference": 0.00594466016109154
+    },
+    {
+      "from": 16,
+      "to": 17,
+      "seam": false,
+      "silhouetteOverlap": 0.8792455821134177,
+      "premultipliedDifference": 0.018723064972851873
+    },
+    {
+      "from": 17,
+      "to": 18,
+      "seam": false,
+      "silhouetteOverlap": 0.9335859116878673,
+      "premultipliedDifference": 0.011772824494459648
+    },
+    {
+      "from": 18,
+      "to": 19,
+      "seam": false,
+      "silhouetteOverlap": 0.94085438846271,
+      "premultipliedDifference": 0.00898283113813745
+    },
+    {
+      "from": 19,
+      "to": 20,
+      "seam": false,
+      "silhouetteOverlap": 0.9021068495890798,
+      "premultipliedDifference": 0.01441320593470614
+    },
+    {
+      "from": 20,
+      "to": 21,
+      "seam": false,
+      "silhouetteOverlap": 0.8356301868414645,
+      "premultipliedDifference": 0.024933982524207865
+    },
+    {
+      "from": 21,
+      "to": 22,
+      "seam": false,
+      "silhouetteOverlap": 0.8543686437042561,
+      "premultipliedDifference": 0.023543547032986015
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "seam": false,
+      "silhouetteOverlap": 0.8383685897848563,
+      "premultipliedDifference": 0.024608945571224276
+    },
+    {
+      "from": 23,
+      "to": 24,
+      "seam": false,
+      "silhouetteOverlap": 0.8260688453819063,
+      "premultipliedDifference": 0.02944200578645659
+    },
+    {
+      "from": 24,
+      "to": 25,
+      "seam": false,
+      "silhouetteOverlap": 0.7408138759172782,
+      "premultipliedDifference": 0.043322370314215125
+    },
+    {
+      "from": 25,
+      "to": 26,
+      "seam": false,
+      "silhouetteOverlap": 0.9091858639582199,
+      "premultipliedDifference": 0.01588299803083762
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "seam": false,
+      "silhouetteOverlap": 0.9704792071652474,
+      "premultipliedDifference": 0.005658952296520319
+    },
+    {
+      "from": 27,
+      "to": 28,
+      "seam": false,
+      "silhouetteOverlap": 0.9287342255718939,
+      "premultipliedDifference": 0.011660704309798958
+    },
+    {
+      "from": 28,
+      "to": 29,
+      "seam": false,
+      "silhouetteOverlap": 0.9087377501702837,
+      "premultipliedDifference": 0.015150237854692654
+    },
+    {
+      "from": 29,
+      "to": 30,
+      "seam": false,
+      "silhouetteOverlap": 0.8256960879302403,
+      "premultipliedDifference": 0.026261459992130434
+    },
+    {
+      "from": 30,
+      "to": 31,
+      "seam": false,
+      "silhouetteOverlap": 0.9181733102253032,
+      "premultipliedDifference": 0.012026511120450663
+    },
+    {
+      "from": 31,
+      "to": 32,
+      "seam": false,
+      "silhouetteOverlap": 0.9613784994687125,
+      "premultipliedDifference": 0.006590543443357434
+    },
+    {
+      "from": 32,
+      "to": 33,
+      "seam": false,
+      "silhouetteOverlap": 0.9214717067984788,
+      "premultipliedDifference": 0.012053045688183217
+    },
+    {
+      "from": 33,
+      "to": 34,
+      "seam": false,
+      "silhouetteOverlap": 0.924325112025939,
+      "premultipliedDifference": 0.011242187170319282
+    },
+    {
+      "from": 34,
+      "to": 35,
+      "seam": false,
+      "silhouetteOverlap": 0.9021375757788135,
+      "premultipliedDifference": 0.013503094611565148
+    },
+    {
+      "from": 35,
+      "to": 36,
+      "seam": false,
+      "silhouetteOverlap": 0.9716099203785827,
+      "premultipliedDifference": 0.006018405115780909
+    },
+    {
+      "from": 36,
+      "to": 37,
+      "seam": false,
+      "silhouetteOverlap": 0.9423876072436125,
+      "premultipliedDifference": 0.009498851168427736
+    },
+    {
+      "from": 37,
+      "to": 38,
+      "seam": false,
+      "silhouetteOverlap": 0.95546018294568,
+      "premultipliedDifference": 0.007985020887809502
+    },
+    {
+      "from": 38,
+      "to": 39,
+      "seam": false,
+      "silhouetteOverlap": 0.9509936364605923,
+      "premultipliedDifference": 0.009479090631765745
+    },
+    {
+      "from": 39,
+      "to": 40,
+      "seam": false,
+      "silhouetteOverlap": 0.9736490802477553,
+      "premultipliedDifference": 0.004191034353472441
+    },
+    {
+      "from": 40,
+      "to": 41,
+      "seam": false,
+      "silhouetteOverlap": 0.8403573496782422,
+      "premultipliedDifference": 0.022217328082721817
+    },
+    {
+      "from": 41,
+      "to": 42,
+      "seam": false,
+      "silhouetteOverlap": 0.8835728885079449,
+      "premultipliedDifference": 0.016911324618022746
+    },
+    {
+      "from": 42,
+      "to": 43,
+      "seam": false,
+      "silhouetteOverlap": 0.9286203123100172,
+      "premultipliedDifference": 0.010352856636461445
+    },
+    {
+      "from": 43,
+      "to": 44,
+      "seam": false,
+      "silhouetteOverlap": 0.9095258133053724,
+      "premultipliedDifference": 0.013312736125683974
+    },
+    {
+      "from": 44,
+      "to": 45,
+      "seam": false,
+      "silhouetteOverlap": 0.8886623793551216,
+      "premultipliedDifference": 0.016639516194458307
+    },
+    {
+      "from": 45,
+      "to": 46,
+      "seam": false,
+      "silhouetteOverlap": 0.8999897119341563,
+      "premultipliedDifference": 0.015109722288341022
+    },
+    {
+      "from": 46,
+      "to": 47,
+      "seam": false,
+      "silhouetteOverlap": 0.9561051716376108,
+      "premultipliedDifference": 0.010352394025930543
+    },
+    {
+      "from": 47,
+      "to": 48,
+      "seam": false,
+      "silhouetteOverlap": 0.9202167527600527,
+      "premultipliedDifference": 0.014589929363291825
+    },
+    {
+      "from": 48,
+      "to": 1,
+      "seam": true,
+      "silhouetteOverlap": 0.8944584108297395,
+      "premultipliedDifference": 0.01682273230006721
+    }
+  ],
+  "reviewStatus": "UNREVIEWED — inspect motion, silhouette progression, colour shapes, base registration and loop seam visually"
+}

@@ -1,7 +1,8 @@
 import type { CustomComponent, CustomLevelData } from '../level';
+import {arrangeCumulusCrates} from './skystream-bonus-crates';
 
-// Airborne +X bonus. Every reward has permanent smooth support; the density
-// volumes carry all of the billowing detail without changing jump physics.
+// Airborne +X bonus. Fixed landings support the deliveries; one optional life
+// rewards the final flight. Density volumes add detail without changing physics.
 export const SKYSTREAM_BONUS_ISLANDS = [
   {left:-14,right:4,top:180,depth:8.4,boxes:[-9,-6,-3,0]},
   {left:6.6,right:18.6,top:180.4,depth:7.8,boxes:[9,12,15]},
@@ -40,6 +41,7 @@ components.push(
   {t:'camnode',p:[78,180,0],radius:5,grp:3},
   {t:'gate',p:[72,180,0],yaw:90,nm:'Cloud bonus return',grp:3},
 );
+arrangeCumulusCrates(components);
 export const SKYSTREAM_BONUS_LEVEL:CustomLevelData={
   v:1,name:'Bonus: Cumulus Cache',spawn:[-12,180.12,0],killY:166,
   hudMode:'bonus',sky:'clouds',keepPlayFog:true,jungleDepthFade:false,ledgeGrabs:false,

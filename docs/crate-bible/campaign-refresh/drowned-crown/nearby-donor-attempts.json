@@ -1,0 +1,24 @@
+[
+  {
+    "donor": "LEDGER / arrival supplies",
+    "position": [
+      2.2499999999999982,
+      0,
+      0
+    ],
+    "maxY": 5.1185,
+    "hang": false,
+    "galleryReached": false
+  },
+  {
+    "donor": "LEDGER / return recovery",
+    "position": [
+      23.75000000000005,
+      0,
+      0
+    ],
+    "maxY": 5.1185,
+    "hang": false,
+    "galleryReached": false
+  }
+]

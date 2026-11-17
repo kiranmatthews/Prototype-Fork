@@ -5131,7 +5131,7 @@ function currentHudState(): HudState {
   return {
     competitionFinishing: competition?.phase === 'finishing',
     scoreChallengeActive: !!level.skateCollectathon,
-    parkGoal: level.skateCollectathon ? `${level.skateCollectathon.collected}/${level.skateCollectathon.tokens.length} ${level.skateCollectathon.complete ? 'EXIT OPEN' : 'TOKENS'}` : undefined,
+    parkGoal: level.skateCollectathon ? `${level.skateCollectathon.collected}/${level.skateCollectathon.tokens.length} ${level.skateCollectathon.exitReady ? 'EXIT OPEN' : level.skateCollectathon.noun}` : undefined,
     points: player.points,
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,

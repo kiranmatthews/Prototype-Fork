@@ -1,0 +1,536 @@
+{
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 25,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "cratesBroken": 25,
+    "totalCrates": 25,
+    "deaths": 0
+  },
+  "report": {
+    "stage": "Cloud return gate",
+    "actions": [
+      {
+        "name": "approach Cloud delivery 1",
+        "firstFrame": 24,
+        "lastFrame": 133
+      },
+      {
+        "name": "Cloud delivery 1",
+        "firstFrame": 153,
+        "lastFrame": 153
+      },
+      {
+        "name": "approach Cloud delivery 1",
+        "firstFrame": 175,
+        "lastFrame": 237
+      },
+      {
+        "name": "Cloud delivery 1",
+        "firstFrame": 257,
+        "lastFrame": 257
+      },
+      {
+        "name": "Cloud 1 takeoff",
+        "firstFrame": 279,
+        "lastFrame": 400
+      },
+      {
+        "name": "Cloud gap 1",
+        "firstFrame": 445,
+        "lastFrame": 483
+      },
+      {
+        "name": "approach Cloud delivery 2",
+        "firstFrame": 483,
+        "lastFrame": 566
+      },
+      {
+        "name": "Cloud delivery 2",
+        "firstFrame": 586,
+        "lastFrame": 586
+      },
+      {
+        "name": "approach Cloud delivery 2",
+        "firstFrame": 608,
+        "lastFrame": 670
+      },
+      {
+        "name": "Cloud delivery 2",
+        "firstFrame": 690,
+        "lastFrame": 690
+      },
+      {
+        "name": "Cloud 2 takeoff",
+        "firstFrame": 712,
+        "lastFrame": 818
+      },
+      {
+        "name": "Cloud gap 2",
+        "firstFrame": 863,
+        "lastFrame": 900
+      },
+      {
+        "name": "approach Cloud delivery 3",
+        "firstFrame": 900,
+        "lastFrame": 961
+      },
+      {
+        "name": "Cloud delivery 3",
+        "firstFrame": 981,
+        "lastFrame": 981
+      },
+      {
+        "name": "approach Cloud delivery 3",
+        "firstFrame": 1003,
+        "lastFrame": 1065
+      },
+      {
+        "name": "Cloud delivery 3",
+        "firstFrame": 1085,
+        "lastFrame": 1085
+      },
+      {
+        "name": "Cloud 3 takeoff",
+        "firstFrame": 1107,
+        "lastFrame": 1196
+      },
+      {
+        "name": "Cloud gap 3",
+        "firstFrame": 1241,
+        "lastFrame": 1281
+      },
+      {
+        "name": "approach Cloud delivery 4",
+        "firstFrame": 1281,
+        "lastFrame": 1351
+      },
+      {
+        "name": "Cloud delivery 4",
+        "firstFrame": 1371,
+        "lastFrame": 1371
+      },
+      {
+        "name": "approach Cloud delivery 4",
+        "firstFrame": 1393,
+        "lastFrame": 1455
+      },
+      {
+        "name": "Cloud delivery 4",
+        "firstFrame": 1475,
+        "lastFrame": 1475
+      },
+      {
+        "name": "approach Cloud delivery 4",
+        "firstFrame": 1497,
+        "lastFrame": 1559
+      },
+      {
+        "name": "Cloud delivery 4",
+        "firstFrame": 1579,
+        "lastFrame": 1579
+      },
+      {
+        "name": "approach Cloud delivery 4",
+        "firstFrame": 1601,
+        "lastFrame": 1663
+      },
+      {
+        "name": "Cloud delivery 4",
+        "firstFrame": 1683,
+        "lastFrame": 1683
+      },
+      {
+        "name": "Cloud 4 takeoff",
+        "firstFrame": 1705,
+        "lastFrame": 1803
+      },
+      {
+        "name": "Cloud gap 4",
+        "firstFrame": 1848,
+        "lastFrame": 1886
+      },
+      {
+        "name": "approach Cloud delivery 5",
+        "firstFrame": 1886,
+        "lastFrame": 1967
+      },
+      {
+        "name": "Cloud delivery 5",
+        "firstFrame": 1987,
+        "lastFrame": 1987
+      },
+      {
+        "name": "approach Cloud delivery 5",
+        "firstFrame": 2009,
+        "lastFrame": 2071
+      },
+      {
+        "name": "Cloud delivery 5",
+        "firstFrame": 2091,
+        "lastFrame": 2091
+      },
+      {
+        "name": "Cloud 5 takeoff",
+        "firstFrame": 2113,
+        "lastFrame": 2213
+      },
+      {
+        "name": "hold the final flight below its life",
+        "firstFrame": 2258,
+        "lastFrame": 2283
+      },
+      {
+        "name": "double-jump and spin for the cloud life",
+        "firstFrame": 2285,
+        "lastFrame": 2287
+      },
+      {
+        "name": "land after the cloud life",
+        "firstFrame": 2287,
+        "lastFrame": 2322
+      },
+      {
+        "name": "approach Cloud delivery 6",
+        "firstFrame": 2322,
+        "lastFrame": 2410
+      },
+      {
+        "name": "Cloud delivery 6",
+        "firstFrame": 2430,
+        "lastFrame": 2430
+      },
+      {
+        "name": "approach Cloud delivery 6",
+        "firstFrame": 2452,
+        "lastFrame": 2514
+      },
+      {
+        "name": "Cloud delivery 6",
+        "firstFrame": 2534,
+        "lastFrame": 2534
+      },
+      {
+        "name": "Cloud return gate",
+        "firstFrame": 2558,
+        "lastFrame": 2610
+      }
+    ],
+    "evidence": [
+      {
+        "action": "Cloud delivery 1",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 1",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 1",
+        "launch": [
+          3.184266666666664,
+          180.00000000357628,
+          0
+        ],
+        "landing": [
+          7.76826666666667,
+          180.40000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 2"
+      },
+      {
+        "action": "Cloud delivery 2",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 2",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 2",
+        "launch": [
+          17.781800000000054,
+          180.40000000357628,
+          0
+        ],
+        "landing": [
+          22.35830000000002,
+          181.00000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 3"
+      },
+      {
+        "action": "Cloud delivery 3",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 3",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 3",
+        "launch": [
+          28.370566666666743,
+          181.00000000357628,
+          0
+        ],
+        "landing": [
+          32.968066666666715,
+          180.3000000035763,
+          0
+        ],
+        "ground": "Cumulus landing 4"
+      },
+      {
+        "action": "Cloud delivery 4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 4",
+        "launch": [
+          42.97362222222245,
+          180.3000000035763,
+          0
+        ],
+        "landing": [
+          47.56812222222242,
+          180.70000000357626,
+          0
+        ],
+        "ground": "Cumulus landing 5"
+      },
+      {
+        "action": "Cloud delivery 5",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 5",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 5 reward flight",
+        "launch": [
+          56.572288888889254,
+          180.70000000357626,
+          0
+        ],
+        "landing": [
+          61.166788888889236,
+          180.00000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 6"
+      },
+      {
+        "action": "Cloud delivery 6",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud delivery 6",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "All cloud bonus rewards",
+        "totalCrates": 25,
+        "activeStageCrates": 25,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 25,
+        "remaining": 0
+      }
+    ]
+  },
+  "end": {
+    "frame": 2610,
+    "time": 43.5,
+    "position": [
+      70.40777777777791,
+      180.7266666691502,
+      0
+    ],
+    "heading": [
+      1,
+      0,
+      0
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp plinth rim",
+      "y": 180.7266666691502,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 1,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "densityBytes": 39172672
+}

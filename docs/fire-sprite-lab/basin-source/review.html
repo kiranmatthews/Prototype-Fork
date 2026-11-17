@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Broad basin source review</title>
+<style>body{margin:0;background:#13242b;color:#f4e8ce;font:15px system-ui}header,footer{padding:18px 24px}h1{font-size:22px;margin:0 0 8px}p{margin:4px 0;color:#bbcbc9}.views{display:grid;grid-template-columns:1fr 1fr;height:65vh;gap:12px;padding:0 24px}section{min-width:0;border:1px solid #567077;display:flex;flex-direction:column}h2{font-size:15px;margin:12px}canvas{width:100%;min-height:0;flex:1}footer{display:flex;gap:12px;align-items:center;flex-wrap:wrap}button,select{font:inherit;padding:10px;background:#304b56;color:white;border:1px solid #839d9d}input{flex:1}output{min-width:150px}</style>
+<header><h1>Independent broad campfire · native proportions</h1><p>One fixed camera, one broad fuel bed. No repeated torch sheets, widening, flared mesh or UV deformation.</p></header>
+<div class="views"><section><h2>Source simulation · uncoloured flame projection</h2><canvas id="source" aria-label="Original broad fire projection"></canvas></section><section><h2>Game material · shared imagegen palette</h2><canvas id="paint" aria-label="Broad fire with the game material"></canvas></section></div>
+<footer><button id="play">Pause</button><button id="restart">Restart</button><button id="step">Next frame</button><button id="join">Loop boundary</button><select id="speed" aria-label="Playback speed"><option value="1">1× speed</option><option value=".25">¼ speed</option></select><input id="seek" type="range" min="0" value="0" step="1" aria-label="Source frame"><output id="status">Loading…</output></footer>
+<script type="module">
+import * as THREE from 'three';import{SpriteFire}from '../../../src/spriteFire.ts';
+const $=id=>document.getElementById(id),data=await(await fetch('/fire-sprites/v5/cycles.json')).json(),cycle=data.basin,loader=new THREE.TextureLoader();
+cycle.textures=await Promise.all(cycle.pages.map(p=>loader.loadAsync('/fire-sprites/v5/'+p.file).then(t=>{t.colorSpace=THREE.SRGBColorSpace;t.minFilter=t.magFilter=THREE.LinearFilter;t.generateMipmaps=false;return t;})));
+const views=[];for(const id of ['source','paint']){
+ const canvas=$(id),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor('#13242b');
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(0,2.05,7.5);camera.lookAt(0,2.05,0);
+ const fire=new SpriteFire(cycle,{family:'basin',arrangement:'bonfire',hue:0});if(id==='source')fire.uniforms.sourcePaint.value=0;scene.add(fire);
+ const resize=()=>{renderer.setPixelRatio(devicePixelRatio);renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);camera.aspect=canvas.clientWidth/canvas.clientHeight;camera.updateProjectionMatrix();};new ResizeObserver(resize).observe(canvas);resize();views.push({renderer,scene,camera,fire});
+}
+let time=0,running=true,last=performance.now();$('seek').max=cycle.frameCount-1;
+function play(value){running=value;$('play').textContent=running?'Pause':'Play';}
+$('play').onclick=()=>play(!running);$('restart').onclick=()=>{time=0;};$('step').onclick=()=>{play(false);time=(Math.floor(time*cycle.fps+1e-5)+1)/cycle.fps+1e-6;};$('join').onclick=()=>{play(false);time=(cycle.frameCount-2)/cycle.fps+1e-6;};$('seek').oninput=()=>{play(false);time=Number($('seek').value)/cycle.fps+1e-6;};
+function draw(now){if(running)time+=Math.min(.1,(now-last)/1000)*Number($('speed').value);last=now;for(const v of views){v.fire.update(time,v.camera);v.renderer.render(v.scene,v.camera);}$('seek').value=views[0].fire.drawingFrame;$('status').textContent=`${views[0].fire.drawingFrame+1} / ${cycle.frameCount} · ${cycle.fps} fps`;requestAnimationFrame(draw);}requestAnimationFrame(draw);
+</script></html>

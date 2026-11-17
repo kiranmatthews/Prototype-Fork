@@ -18,7 +18,7 @@ await withBlockworksRuntime(r=>{
  }
  evidence.push({name:'supported curved-road patrols',probes,maxError});
 });
-for(const kind of ['grunt','spiker']){
+for(const kind of [...new Set(specs.map(c=>c.foe))].filter(kind=>kind==='grunt'||kind==='spiker')){
  const index=specs.findIndex(c=>c.foe===kind),c=specs[index];assert.ok(c);
  for(const attack of [false,true])await withBlockworksRuntime(r=>{
   const e=r.l.enemies[index];let frames=0;

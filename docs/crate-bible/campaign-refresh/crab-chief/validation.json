@@ -1,0 +1,39 @@
+{
+  "course": "crab-chief",
+  "name": "High Chief Uga Ha ku",
+  "bonus": null,
+  "status": "validated",
+  "decision": "retain existing four optional protection pickups and dedicated boss encounter",
+  "elapsedMinutes": 8.7,
+  "startedAtApprox": "2026-11-14T10:32:00Z",
+  "completedAt": "2026-11-14T10:40:42.108092+00:00",
+  "sourceChanged": false,
+  "inventory": {
+    "maskCrates": 4,
+    "patrolEnemies": 0,
+    "bosses": 1,
+    "checkpoints": 0,
+    "bonusPortals": 0
+  },
+  "native": {
+    "core": "PASS",
+    "retry": "PASS: eight real lagoon deaths across normal/endless modes and all phases/defeat settle",
+    "journey": "PASS: 5079 frames, 84.65 simulation seconds, nine phase-specific hits, zero player hits/deaths",
+    "maskPickups": "PASS: four separate staged normal-input harvests and complete reset"
+  },
+  "browser": {
+    "lite": "PASS: third-mask temporary invincibility and real lagoon retry",
+    "full": "PASS: fresh 1280x720 arena view, supported spawn, boss and all four mask crates",
+    "consoleErrors": [],
+    "limitations": "No complete browser boss fight. Native journey covers the full fight. Lite retry screenshot omitted because it caught the recovery fade."
+  },
+  "build": {
+    "reusedFrom": "6631639880a5910dad1576f882b9cc34d60e081a",
+    "reason": "Documentation-only review; runtime, assets and level data unchanged",
+    "levelChecks": "PASS",
+    "productionBuild": "PASS",
+    "version": "049c296150a8936710c3",
+    "releaseBytes": 959301735
+  },
+  "publication": "authorized; pending GitHub authentication"
+}

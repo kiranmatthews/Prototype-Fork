@@ -1,0 +1,300 @@
+{
+  "trial": 7,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0.15,
+      20
+    ],
+    "crystals": 7
+  },
+  "stagedStart": [
+    96,
+    0.15,
+    -123
+  ],
+  "installed": {
+    "id": 7,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 7,
+    "frame": 3614,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the timed staircase checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Observe the full staircase from its waiting bank",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Start as the first stair lights",
+        "firstFrame": 313,
+        "lastFrame": 450
+      },
+      {
+        "name": "Jump onto the first rising stair",
+        "firstFrame": 451,
+        "lastFrame": 486
+      },
+      {
+        "name": "Let the warned stair disappear and recover below",
+        "firstFrame": 486,
+        "lastFrame": 738
+      },
+      {
+        "name": "Walk below the stairs toward the retry route",
+        "firstFrame": 738,
+        "lastFrame": 890
+      },
+      {
+        "name": "Join the lower retry ramp",
+        "firstFrame": 908,
+        "lastFrame": 1085
+      },
+      {
+        "name": "Climb to the fixed waiting bank",
+        "firstFrame": 1103,
+        "lastFrame": 1397
+      },
+      {
+        "name": "Rejoin the staircase entrance",
+        "firstFrame": 1415,
+        "lastFrame": 1592
+      },
+      {
+        "name": "Observe the full staircase from its waiting bank",
+        "firstFrame": 1610,
+        "lastFrame": 1770
+      },
+      {
+        "name": "Start as the first stair lights",
+        "firstFrame": 1814,
+        "lastFrame": 1890
+      },
+      {
+        "name": "Jump onto the first rising stair",
+        "firstFrame": 1891,
+        "lastFrame": 1926
+      },
+      {
+        "name": "Cross stair 1 before its warning ends",
+        "firstFrame": 1926,
+        "lastFrame": 2007
+      },
+      {
+        "name": "Jump onto lit stair 2",
+        "firstFrame": 2052,
+        "lastFrame": 2087
+      },
+      {
+        "name": "Cross stair 2 before its warning ends",
+        "firstFrame": 2087,
+        "lastFrame": 2168
+      },
+      {
+        "name": "Jump onto lit stair 3",
+        "firstFrame": 2213,
+        "lastFrame": 2248
+      },
+      {
+        "name": "Cross stair 3 before its warning ends",
+        "firstFrame": 2248,
+        "lastFrame": 2329
+      },
+      {
+        "name": "Jump to the permanent crystal balcony",
+        "firstFrame": 2374,
+        "lastFrame": 2408
+      },
+      {
+        "name": "Collect the crystal after the rising rhythm",
+        "firstFrame": 2408,
+        "lastFrame": 2498
+      },
+      {
+        "name": "Read the lower return beside the balcony",
+        "firstFrame": 2516,
+        "lastFrame": 2599
+      },
+      {
+        "name": "Drop from the balcony into the recovery courtyard",
+        "firstFrame": 2644,
+        "lastFrame": 2703
+      },
+      {
+        "name": "Walk below the stairs toward the retry route",
+        "firstFrame": 2703,
+        "lastFrame": 2895
+      },
+      {
+        "name": "Join the lower retry ramp",
+        "firstFrame": 2913,
+        "lastFrame": 3089
+      },
+      {
+        "name": "Climb to the fixed waiting bank",
+        "firstFrame": 3107,
+        "lastFrame": 3401
+      },
+      {
+        "name": "Rejoin the staircase entrance",
+        "firstFrame": 3419,
+        "lastFrame": 3596
+      }
+    ],
+    "evidence": [
+      {
+        "action": "late step recovers without death",
+        "position": [
+          95.97623356857241,
+          -8,
+          -137.1422826041148
+        ]
+      },
+      {
+        "action": "rising transfer",
+        "stair": 1,
+        "position": [
+          96.00373459604485,
+          3.000000011920929,
+          -143.7562633954833
+        ],
+        "phases": [
+          0.41458333333324315,
+          0.17458333333324294,
+          0.9345833333332436
+        ]
+      },
+      {
+        "action": "rising transfer",
+        "stair": 2,
+        "position": [
+          96.00373459604485,
+          4.500000011920929,
+          -150.75500783992794
+        ],
+        "phases": [
+          0.7499999999998908,
+          0.5099999999998905,
+          0.2699999999998912
+        ]
+      },
+      {
+        "action": "rising transfer",
+        "stair": 3,
+        "position": [
+          96.00373459604485,
+          6.2,
+          -158.08205228437262
+        ],
+        "phases": [
+          0.08333333333320514,
+          0.8433333333332049,
+          0.6033333333332056
+        ]
+      }
+    ],
+    "position": [
+      96.06770122058975,
+      0,
+      -119.00393574376709
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Rejoin the staircase entrance",
+    "result": {
+      "id": 7,
+      "collected": 1,
+      "position": [
+        96.06770122058975,
+        0,
+        -119.00393574376709
+      ],
+      "frames": 3614
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        96.06770122058975,
+        0,
+        -119.00393574376709
+      ],
+      "camera": [
+        96.06770122058975,
+        8.56286783498061,
+        -101.73062195383324
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            1.281373795852888,
+            0.6684124456080682,
+            1.0026619401305945
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -0.0856318570180236,
+            0.6089832824164594,
+            1.0028396756838251
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -7.454810666170523,
+            1.2221812907770937,
+            1.0130949423512423
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -4.73786244161157,
+            0.5847165837513693,
+            1.0045009954780661
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            -5.4940287357215745,
+            0.5513647399445982,
+            1.0034989670836563
+          ]
+        },
+        {
+          "name": "06 / Vine Window",
+          "screen": [
+            -2.3027105747150602,
+            0.7354277350117191,
+            0.996615205185127
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

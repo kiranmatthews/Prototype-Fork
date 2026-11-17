@@ -1,0 +1,3288 @@
+{
+  "generatedBy": "node tools/crate-placement-report.mjs",
+  "commit": "e1049dd8",
+  "levelSources": "public/levels.json restored first (fresh-browser state)",
+  "constants": {
+    "crateSize": 1.152,
+    "hitboxHeight": 0.92,
+    "jump": {
+      "single": 2.97,
+      "double": 4.8,
+      "doubleAdd": 1.83,
+      "crateBounce": 2.97,
+      "arrow": 3.88,
+      "arrowPerfect": 6.06
+    },
+    "tntRadius": 2.75,
+    "nitroRadius": 2.75,
+    "blastReach": 3.35,
+    "smashSpeed": 12.5,
+    "thresholds": {
+      "link": 1.2,
+      "reach": 3,
+      "dropHeight": 1.5,
+      "nearDrop": 1.5,
+      "onPath": 3,
+      "detour": 8,
+      "near": 4,
+      "downhill": 0.1,
+      "padRunout": 40,
+      "floatLink": 4,
+      "groupLink": 4
+    }
+  },
+  "scope": {
+    "included": [
+      {
+        "id": "drowned-crown",
+        "title": "The Merchant Wreck",
+        "group": "campaign",
+        "island": "island-2",
+        "islandName": "The Uga Isles",
+        "source": "published-override"
+      },
+      {
+        "id": "bonus-drowned-crown",
+        "title": "Bonus: The Captain\u2019s Last Ledger",
+        "group": "extra",
+        "island": null,
+        "islandName": null,
+        "source": "builtin-data"
+      }
+    ],
+    "skipped": []
+  },
+  "aggregate": {
+    "campaign": {
+      "levels": 1,
+      "failed": 0,
+      "withCrates": 1,
+      "routeKm": 2.11,
+      "physical": 10,
+      "counted": 10,
+      "checkpoints": 17,
+      "byKind": {
+        "wood": 1,
+        "life": 2,
+        "multihit": 1,
+        "mystery": 3,
+        "mask": 3
+      },
+      "outlineByKind": {},
+      "per100m": {
+        "median": 0.47,
+        "min": 0.47,
+        "max": 0.47,
+        "overall": 0.47
+      },
+      "checkpointGap": {
+        "median": 53,
+        "min": 40,
+        "max": 1095.4
+      },
+      "clusters": 10,
+      "singles": 10,
+      "meanClusterSize": 1,
+      "sizeHist": {
+        "1": 10
+      },
+      "arrangements": {
+        "single": 10
+      },
+      "orientation": {},
+      "maxStack": 1,
+      "stackHist": {
+        "1": 10
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 1,
+      "floatingClusters": 0,
+      "tags": {
+        "ON-PATH": 4,
+        "DETOUR": 2,
+        "OFF-LINE": 4,
+        "EDGE-BAIT": 1
+      },
+      "support": {
+        "ground": 10
+      },
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 1,
+      "high": 0,
+      "highTools": {},
+      "route": {
+        "onPath": 4,
+        "offLine": 4,
+        "detour": 2,
+        "behindStart": 0,
+        "beyondGate": 0
+      },
+      "explosives": {
+        "tnt": 0,
+        "nitro": 0,
+        "levelsWithNitro": 0,
+        "greenAuthored": 0,
+        "greenSystemic": 0,
+        "explosiveClusters": 0,
+        "mixedClusters": 0,
+        "tntWithNeighbours": 0,
+        "rewardsInBlasts": 0
+      },
+      "switches": 0,
+      "outlineCrates": 0,
+      "orphanOutlines": 0,
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 1,
+      "multihitPlacement": {
+        "single/ground/above:nothing": 1
+      },
+      "runs": 0,
+      "runCrates": 0,
+      "runLengths": {},
+      "runSupport": {},
+      "runOrientation": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "patterns": {}
+    },
+    "puzzle": {
+      "levels": 0,
+      "failed": 0,
+      "withCrates": 0,
+      "routeKm": 0,
+      "physical": 0,
+      "counted": 0,
+      "checkpoints": 0,
+      "byKind": {},
+      "outlineByKind": {},
+      "per100m": {
+        "median": null,
+        "min": null,
+        "max": null,
+        "overall": 0
+      },
+      "checkpointGap": {
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "clusters": 0,
+      "singles": 0,
+      "meanClusterSize": null,
+      "sizeHist": {},
+      "arrangements": {},
+      "orientation": {},
+      "maxStack": 0,
+      "stackHist": {},
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 0,
+      "floatingClusters": 0,
+      "tags": {},
+      "support": {},
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "high": 0,
+      "highTools": {},
+      "route": {
+        "onPath": 0,
+        "offLine": 0,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0
+      },
+      "explosives": {
+        "tnt": 0,
+        "nitro": 0,
+        "levelsWithNitro": 0,
+        "greenAuthored": 0,
+        "greenSystemic": 0,
+        "explosiveClusters": 0,
+        "mixedClusters": 0,
+        "tntWithNeighbours": 0,
+        "rewardsInBlasts": 0
+      },
+      "switches": 0,
+      "outlineCrates": 0,
+      "orphanOutlines": 0,
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "multihitPlacement": {},
+      "runs": 0,
+      "runCrates": 0,
+      "runLengths": {},
+      "runSupport": {},
+      "runOrientation": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "patterns": {}
+    },
+    "extra": {
+      "levels": 1,
+      "failed": 0,
+      "withCrates": 1,
+      "routeKm": 0.11,
+      "physical": 11,
+      "counted": 9,
+      "checkpoints": 0,
+      "byKind": {
+        "bouncy": 1,
+        "bang": 2,
+        "tnt": 1,
+        "wood": 2,
+        "life": 1,
+        "mystery": 2
+      },
+      "outlineByKind": {
+        "life": 1,
+        "mystery": 1
+      },
+      "per100m": {
+        "median": 8.18,
+        "min": 8.18,
+        "max": 8.18,
+        "overall": 8.18
+      },
+      "checkpointGap": {
+        "median": 110,
+        "min": 110,
+        "max": 110
+      },
+      "clusters": 8,
+      "singles": 7,
+      "meanClusterSize": 1.13,
+      "sizeHist": {
+        "1": 7,
+        "2": 1
+      },
+      "arrangements": {
+        "single": 7,
+        "stack": 1
+      },
+      "orientation": {},
+      "maxStack": 2,
+      "stackHist": {
+        "1": 7,
+        "2": 1
+      },
+      "structuralClusters": 2,
+      "structuralCrates": 2,
+      "maxStackAll": 2,
+      "floatingClusters": 3,
+      "tags": {
+        "ON-PATH": 8,
+        "HIGH": 3,
+        "FLOATING": 3,
+        "OUTLINE": 2,
+        "MIXED-EXPLOSIVE": 1
+      },
+      "support": {
+        "ground": 7,
+        "crate": 1,
+        "none": 1
+      },
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "high": 1,
+      "highTools": {
+        "none-found": 1
+      },
+      "route": {
+        "onPath": 9,
+        "offLine": 0,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0
+      },
+      "explosives": {
+        "tnt": 1,
+        "nitro": 0,
+        "levelsWithNitro": 0,
+        "greenAuthored": 0,
+        "greenSystemic": 0,
+        "explosiveClusters": 1,
+        "mixedClusters": 1,
+        "tntWithNeighbours": 1,
+        "rewardsInBlasts": 1
+      },
+      "switches": 2,
+      "outlineCrates": 2,
+      "orphanOutlines": 0,
+      "arrows": 1,
+      "arrowTargets": {
+        "fruit-only": 1
+      },
+      "multihit": 0,
+      "multihitPlacement": {},
+      "runs": 0,
+      "runCrates": 0,
+      "runLengths": {},
+      "runSupport": {},
+      "runOrientation": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "patterns": {}
+    }
+  },
+  "levels": [
+    {
+      "id": "drowned-crown",
+      "title": "The Merchant Wreck",
+      "name": "The Drowned Crown",
+      "group": "campaign",
+      "island": "island-2",
+      "islandName": "The Uga Isles",
+      "progressKey": "drowned-crown",
+      "boss": false,
+      "source": "published-override",
+      "killY": -18,
+      "spawn": [
+        -72,
+        -5.33,
+        205
+      ],
+      "gate": [
+        1180,
+        20,
+        -693
+      ],
+      "route": {
+        "method": "camnode lane",
+        "length": 2112.5,
+        "laneNodes": 275
+      },
+      "summary": {
+        "physical": 10,
+        "counted": 10,
+        "checkpoints": 17,
+        "gemTally": 36,
+        "byKind": {
+          "wood": 1,
+          "life": 2,
+          "multihit": 1,
+          "mystery": 3,
+          "mask": 3
+        },
+        "outlineByKind": {},
+        "per100m": 0.47,
+        "physicalPer100m": 0.47,
+        "checkpointGaps": [
+          70.5,
+          84.7,
+          134.1,
+          1095.4,
+          48,
+          56,
+          43,
+          42,
+          45.1,
+          55,
+          51,
+          47.5,
+          43.6,
+          57.4,
+          44.9,
+          57,
+          97.2,
+          40
+        ],
+        "clusters": 10,
+        "singles": 10,
+        "meanClusterSize": 1,
+        "sizeHist": {
+          "1": 10
+        },
+        "structuralClusters": 0,
+        "structuralCrates": 0,
+        "maxStackAll": 1,
+        "arrangements": {
+          "single": 10
+        },
+        "maxStack": 1,
+        "largestCluster": 1,
+        "floatingClusters": 0,
+        "support": {
+          "ground": 10
+        },
+        "floatingCrates": 0,
+        "overVoid": 0,
+        "overPit": 0,
+        "nearDrop": 1,
+        "overhanging": 0,
+        "high": 0,
+        "highTools": {},
+        "onPath": 4,
+        "offLine": 4,
+        "detour": 2,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 3.3,
+        "enemyNear": 0,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 0,
+        "downhill": 0,
+        "afterPad": 0,
+        "plainOnSpeed": 0,
+        "runs": 0,
+        "runCrates": 0,
+        "longestRun": 0,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 0,
+          "crates": 0
+        },
+        "arrows": 0,
+        "arrowTargets": {},
+        "multihit": 1,
+        "emptiest": {
+          "length": 1157.5,
+          "from": 276.2,
+          "to": 1433.7
+        },
+        "authoredRails": 5,
+        "speedPads": 0,
+        "enemies": 13,
+        "hazards": {
+          "crusher": 2,
+          "mover": 6,
+          "crumble": 6
+        }
+      },
+      "checkpoints": [
+        70.5,
+        155.2,
+        289.3,
+        1384.7,
+        1432.7,
+        1488.7,
+        1531.7,
+        1573.8,
+        1618.8,
+        1673.9,
+        1724.9,
+        1772.4,
+        1815.9,
+        1873.4,
+        1918.3,
+        1975.3,
+        2072.5
+      ],
+      "sections": [
+        {
+          "index": 0,
+          "from": 0,
+          "to": 70.5,
+          "length": 70.5,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "wood": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 1,
+          "from": 70.5,
+          "to": 155.2,
+          "length": 84.7,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 2,
+          "from": 155.2,
+          "to": 289.3,
+          "length": 134.1,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "life": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 3,
+          "from": 289.3,
+          "to": 1384.7,
+          "length": 1095.4,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 4,
+          "from": 1384.7,
+          "to": 1432.7,
+          "length": 48,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 5,
+          "from": 1432.7,
+          "to": 1488.7,
+          "length": 56,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mystery": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 6,
+          "from": 1488.7,
+          "to": 1531.7,
+          "length": 43,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mask": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 7,
+          "from": 1531.7,
+          "to": 1573.8,
+          "length": 42,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "life": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 8,
+          "from": 1573.8,
+          "to": 1618.8,
+          "length": 45.1,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mask": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 9,
+          "from": 1618.8,
+          "to": 1673.9,
+          "length": 55,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 10,
+          "from": 1673.9,
+          "to": 1724.9,
+          "length": 51,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 11,
+          "from": 1724.9,
+          "to": 1772.4,
+          "length": 47.5,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mystery": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 12,
+          "from": 1772.4,
+          "to": 1815.9,
+          "length": 43.6,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 13,
+          "from": 1815.9,
+          "to": 1873.4,
+          "length": 57.4,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 14,
+          "from": 1873.4,
+          "to": 1918.3,
+          "length": 44.9,
+          "counted": 0,
+          "physical": 0,
+          "byKind": {},
+          "clusters": 0
+        },
+        {
+          "index": 15,
+          "from": 1918.3,
+          "to": 1975.3,
+          "length": 57,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mask": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 16,
+          "from": 1975.3,
+          "to": 2072.5,
+          "length": 97.2,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "mystery": 1
+          },
+          "clusters": 1
+        },
+        {
+          "index": 17,
+          "from": 2072.5,
+          "to": 2112.5,
+          "length": 40,
+          "counted": 1,
+          "physical": 1,
+          "byKind": {
+            "multihit": 1
+          },
+          "clusters": 1
+        }
+      ],
+      "explosives": {
+        "tnt": 0,
+        "nitro": 0,
+        "buriedNitro": 0,
+        "greenAuthored": 0,
+        "greenSystemic": 0,
+        "nitroWithoutGreen": false,
+        "greens": [],
+        "clusters": 0,
+        "mixedClusters": 0,
+        "tntWithNeighbours": 0,
+        "blasts": []
+      },
+      "switches": [],
+      "orphanOutlines": 0,
+      "arrows": [],
+      "multihit": [
+        {
+          "ref": "c2",
+          "cid": 824,
+          "nm": "The last hoard",
+          "sup": "ground",
+          "elev": 0,
+          "cluster": "single",
+          "clusterSize": 1,
+          "targetAbove": "nothing",
+          "enemyDist": 129,
+          "prog": 2103.6,
+          "p": [
+            1184,
+            20.58,
+            -684
+          ]
+        }
+      ],
+      "runs": [],
+      "patterns": [],
+      "clusters": [
+        {
+          "id": 0,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "wood": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 15.8,
+          "progRange": [
+            15.8,
+            15.8
+          ],
+          "lat": -1.7,
+          "p": [
+            -72.4,
+            -5.77,
+            189
+          ],
+          "members": [
+            "c0"
+          ],
+          "cids": [
+            27
+          ]
+        },
+        {
+          "id": 1,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH",
+            "EDGE-BAIT"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 70.5,
+          "progRange": [
+            70.5,
+            70.5
+          ],
+          "lat": 1.8,
+          "p": [
+            -55.5,
+            -6.05,
+            138
+          ],
+          "members": [
+            "cp0"
+          ],
+          "cids": [
+            379
+          ]
+        },
+        {
+          "id": 2,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 155.2,
+          "progRange": [
+            155.2,
+            155.2
+          ],
+          "lat": 0,
+          "p": [
+            -48,
+            -1.4,
+            60
+          ],
+          "members": [
+            "cp1"
+          ],
+          "cids": [
+            415
+          ]
+        },
+        {
+          "id": 3,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "life": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "DETOUR"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 276.2,
+          "progRange": [
+            276.2,
+            276.2
+          ],
+          "lat": -12.8,
+          "p": [
+            -58,
+            -4,
+            -50
+          ],
+          "members": [
+            "c1"
+          ],
+          "cids": [
+            522
+          ]
+        },
+        {
+          "id": 4,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 289.3,
+          "progRange": [
+            289.3,
+            289.3
+          ],
+          "lat": 0,
+          "p": [
+            -48,
+            -6.16,
+            -68
+          ],
+          "members": [
+            "cp2"
+          ],
+          "cids": [
+            575
+          ]
+        },
+        {
+          "id": 5,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1384.7,
+          "progRange": [
+            1384.7,
+            1384.7
+          ],
+          "lat": 4,
+          "p": [
+            1004,
+            8,
+            -129
+          ],
+          "members": [
+            "cp4"
+          ],
+          "cids": [
+            955
+          ]
+        },
+        {
+          "id": 6,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1432.7,
+          "progRange": [
+            1432.7,
+            1432.7
+          ],
+          "lat": 2.8,
+          "p": [
+            1002.8,
+            9.9,
+            -177
+          ],
+          "members": [
+            "cp5"
+          ],
+          "cids": [
+            962
+          ]
+        },
+        {
+          "id": 7,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "question": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1433.7,
+          "progRange": [
+            1433.7,
+            1433.7
+          ],
+          "lat": -3.5,
+          "p": [
+            996.5,
+            9.9,
+            -178
+          ],
+          "members": [
+            "c3"
+          ],
+          "cids": [
+            980
+          ]
+        },
+        {
+          "id": 8,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1488.7,
+          "progRange": [
+            1488.7,
+            1488.7
+          ],
+          "lat": 3.7,
+          "p": [
+            1003.7,
+            10.5,
+            -233
+          ],
+          "members": [
+            "cp6"
+          ],
+          "cids": [
+            1001
+          ]
+        },
+        {
+          "id": 9,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "aku": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1489.7,
+          "progRange": [
+            1489.7,
+            1489.7
+          ],
+          "lat": -2.5,
+          "p": [
+            997.5,
+            10.5,
+            -234
+          ],
+          "members": [
+            "c4"
+          ],
+          "cids": [
+            1006
+          ]
+        },
+        {
+          "id": 10,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1531.7,
+          "progRange": [
+            1531.7,
+            1531.7
+          ],
+          "lat": 1.8,
+          "p": [
+            1001.8,
+            11.8,
+            -276
+          ],
+          "members": [
+            "cp7"
+          ],
+          "cids": [
+            1012
+          ]
+        },
+        {
+          "id": 11,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "life": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "DETOUR",
+            "EDGE-BAIT"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1531.8,
+          "progRange": [
+            1531.8,
+            1531.8
+          ],
+          "lat": -13.5,
+          "p": [
+            986.5,
+            13.8,
+            -276
+          ],
+          "members": [
+            "c5"
+          ],
+          "cids": [
+            1031
+          ]
+        },
+        {
+          "id": 12,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1573.8,
+          "progRange": [
+            1573.8,
+            1573.8
+          ],
+          "lat": 2.7,
+          "p": [
+            1002.7,
+            13.4,
+            -318
+          ],
+          "members": [
+            "cp8"
+          ],
+          "cids": [
+            1047
+          ]
+        },
+        {
+          "id": 13,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "aku": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1574.8,
+          "progRange": [
+            1574.8,
+            1574.8
+          ],
+          "lat": -3.1,
+          "p": [
+            996.9,
+            13.4,
+            -319
+          ],
+          "members": [
+            "c6"
+          ],
+          "cids": [
+            1048
+          ]
+        },
+        {
+          "id": 14,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1618.8,
+          "progRange": [
+            1618.8,
+            1618.8
+          ],
+          "lat": 2.7,
+          "p": [
+            1002.7,
+            16,
+            -363
+          ],
+          "members": [
+            "cp9"
+          ],
+          "cids": [
+            1071
+          ]
+        },
+        {
+          "id": 15,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1673.9,
+          "progRange": [
+            1673.9,
+            1673.9
+          ],
+          "lat": 3,
+          "p": [
+            1003,
+            18.4,
+            -418
+          ],
+          "members": [
+            "cp10"
+          ],
+          "cids": [
+            1077
+          ]
+        },
+        {
+          "id": 16,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1724.9,
+          "progRange": [
+            1724.9,
+            1724.9
+          ],
+          "lat": 3,
+          "p": [
+            1003,
+            20.4,
+            -469
+          ],
+          "members": [
+            "cp11"
+          ],
+          "cids": [
+            1101
+          ]
+        },
+        {
+          "id": 17,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "question": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1738.1,
+          "progRange": [
+            1738.1,
+            1738.1
+          ],
+          "lat": -5.7,
+          "p": [
+            994.3,
+            21.2,
+            -482.2
+          ],
+          "members": [
+            "c7"
+          ],
+          "cids": [
+            1120
+          ]
+        },
+        {
+          "id": 18,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1772.4,
+          "progRange": [
+            1772.4,
+            1772.4
+          ],
+          "lat": 2.7,
+          "p": [
+            1002.7,
+            19.4,
+            -516.5
+          ],
+          "members": [
+            "cp12"
+          ],
+          "cids": [
+            1126
+          ]
+        },
+        {
+          "id": 19,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1815.9,
+          "progRange": [
+            1815.9,
+            1815.9
+          ],
+          "lat": 2.8,
+          "p": [
+            1002.8,
+            17.2,
+            -560
+          ],
+          "members": [
+            "cp13"
+          ],
+          "cids": [
+            1155
+          ]
+        },
+        {
+          "id": 20,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1873.4,
+          "progRange": [
+            1873.4,
+            1873.4
+          ],
+          "lat": -2.5,
+          "p": [
+            1000,
+            16,
+            -619
+          ],
+          "members": [
+            "cp14"
+          ],
+          "cids": [
+            1180
+          ]
+        },
+        {
+          "id": 21,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1918.3,
+          "progRange": [
+            1918.3,
+            1918.3
+          ],
+          "lat": 1.5,
+          "p": [
+            1046,
+            19.6,
+            -616.5
+          ],
+          "members": [
+            "cp15"
+          ],
+          "cids": [
+            1200
+          ]
+        },
+        {
+          "id": 22,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "aku": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1920.8,
+          "progRange": [
+            1920.8,
+            1920.8
+          ],
+          "lat": -2.2,
+          "p": [
+            1048.5,
+            19.6,
+            -620.2
+          ],
+          "members": [
+            "c8"
+          ],
+          "cids": [
+            1261
+          ]
+        },
+        {
+          "id": 23,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 1975.3,
+          "progRange": [
+            1975.3,
+            1975.3
+          ],
+          "lat": 1.6,
+          "p": [
+            1103,
+            18.6,
+            -616.4
+          ],
+          "members": [
+            "cp16"
+          ],
+          "cids": [
+            1207
+          ]
+        },
+        {
+          "id": 24,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "question": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 1979,
+          "progRange": [
+            1979,
+            1979
+          ],
+          "lat": -2.2,
+          "p": [
+            1106.7,
+            18.6,
+            -620.2
+          ],
+          "members": [
+            "c9"
+          ],
+          "cids": [
+            1262
+          ]
+        },
+        {
+          "id": 25,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "checkpoint": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "checkpoint"
+          ],
+          "prog": 2072.5,
+          "progRange": [
+            2072.5,
+            2072.5
+          ],
+          "lat": 0.9,
+          "p": [
+            1180,
+            18,
+            -653
+          ],
+          "members": [
+            "cp3"
+          ],
+          "cids": [
+            813
+          ]
+        },
+        {
+          "id": 26,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "multiHit": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "OFF-LINE"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 2103.6,
+          "progRange": [
+            2103.6,
+            2103.6
+          ],
+          "lat": 4,
+          "p": [
+            1184,
+            20.01,
+            -684
+          ],
+          "members": [
+            "c2"
+          ],
+          "cids": [
+            824
+          ]
+        }
+      ],
+      "crates": [
+        {
+          "ref": "c0",
+          "cid": 27,
+          "kind": "wood",
+          "p": [
+            -72.4,
+            -5.19,
+            189
+          ],
+          "base": -5.77,
+          "prog": 15.8,
+          "lat": -1.7,
+          "dy": 0.8,
+          "sec": 0,
+          "cl": 0,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Customs dock supplies"
+        },
+        {
+          "ref": "c1",
+          "cid": 522,
+          "kind": "life",
+          "p": [
+            -58,
+            -3.42,
+            -50
+          ],
+          "base": -4,
+          "prog": 276.2,
+          "lat": -12.8,
+          "dy": 2.6,
+          "sec": 2,
+          "cl": 3,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Lost expedition cache"
+        },
+        {
+          "ref": "c2",
+          "cid": 824,
+          "kind": "multihit",
+          "p": [
+            1184,
+            20.58,
+            -684
+          ],
+          "base": 20.01,
+          "prog": 2103.6,
+          "lat": 4,
+          "dy": 1.2,
+          "sec": 17,
+          "cl": 26,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "The last hoard"
+        },
+        {
+          "ref": "c3",
+          "cid": 980,
+          "kind": "mystery",
+          "p": [
+            996.5,
+            10.48,
+            -178
+          ],
+          "base": 9.9,
+          "prog": 1433.7,
+          "lat": -3.5,
+          "dy": 0.6,
+          "sec": 5,
+          "cl": 7,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "c4",
+          "cid": 1006,
+          "kind": "mask",
+          "p": [
+            997.5,
+            11.08,
+            -234
+          ],
+          "base": 10.5,
+          "prog": 1489.7,
+          "lat": -2.5,
+          "dy": 0.5,
+          "sec": 6,
+          "cl": 9,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "c5",
+          "cid": 1031,
+          "kind": "life",
+          "p": [
+            986.5,
+            14.38,
+            -276
+          ],
+          "base": 13.8,
+          "prog": 1531.8,
+          "lat": -13.5,
+          "dy": 2.6,
+          "sec": 7,
+          "cl": 11,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 0.92
+        },
+        {
+          "ref": "c6",
+          "cid": 1048,
+          "kind": "mask",
+          "p": [
+            996.9,
+            13.98,
+            -319
+          ],
+          "base": 13.4,
+          "prog": 1574.8,
+          "lat": -3.1,
+          "dy": 0.5,
+          "sec": 8,
+          "cl": 13,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "c7",
+          "cid": 1120,
+          "kind": "mystery",
+          "p": [
+            994.3,
+            21.78,
+            -482.2
+          ],
+          "base": 21.2,
+          "prog": 1738.1,
+          "lat": -5.7,
+          "dy": 1.7,
+          "sec": 11,
+          "cl": 17,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "c8",
+          "cid": 1261,
+          "kind": "mask",
+          "p": [
+            1048.5,
+            20.18,
+            -620.2
+          ],
+          "base": 19.6,
+          "prog": 1920.8,
+          "lat": -2.2,
+          "dy": 0.5,
+          "sec": 15,
+          "cl": 22,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "c9",
+          "cid": 1262,
+          "kind": "mystery",
+          "p": [
+            1106.7,
+            19.18,
+            -620.2
+          ],
+          "base": 18.6,
+          "prog": 1979,
+          "lat": -2.2,
+          "dy": 0.7,
+          "sec": 16,
+          "cl": 24,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Wreck cargo reward",
+          "drop": 1.52
+        },
+        {
+          "ref": "cp0",
+          "cid": 379,
+          "kind": "checkpoint",
+          "p": [
+            -55.5,
+            -5.47,
+            138
+          ],
+          "base": -6.05,
+          "prog": 70.5,
+          "lat": 1.8,
+          "dy": 0.5,
+          "sec": null,
+          "cl": 1,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Harbour \u00b7 cargo jetty",
+          "drop": 0.92
+        },
+        {
+          "ref": "cp1",
+          "cid": 415,
+          "kind": "checkpoint",
+          "p": [
+            -48,
+            -0.82,
+            60
+          ],
+          "base": -1.4,
+          "prog": 155.2,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 2,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Harbour \u00b7 smugglers sea gate",
+          "corners": 2
+        },
+        {
+          "ref": "cp2",
+          "cid": 575,
+          "kind": "checkpoint",
+          "p": [
+            -48,
+            -5.59,
+            -68
+          ],
+          "base": -6.16,
+          "prog": 289.3,
+          "lat": 0,
+          "dy": 0.4,
+          "sec": null,
+          "cl": 4,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "01 \u00b7 Moonpool lookout"
+        },
+        {
+          "ref": "cp3",
+          "cid": 813,
+          "kind": "checkpoint",
+          "p": [
+            1180,
+            18.58,
+            -653
+          ],
+          "base": 18,
+          "prog": 2072.5,
+          "lat": 0.9,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 25,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "04 \u00b7 The kings ransom"
+        },
+        {
+          "ref": "cp4",
+          "cid": 955,
+          "kind": "checkpoint",
+          "p": [
+            1004,
+            8.58,
+            -129
+          ],
+          "base": 8,
+          "prog": 1384.7,
+          "lat": 4,
+          "dy": 0.5,
+          "sec": null,
+          "cl": 5,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 01 \u00b7 boarding room",
+          "drop": 1.52
+        },
+        {
+          "ref": "cp5",
+          "cid": 962,
+          "kind": "checkpoint",
+          "p": [
+            1002.8,
+            10.48,
+            -177
+          ],
+          "base": 9.9,
+          "prog": 1432.7,
+          "lat": 2.8,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 6,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 02 \u00b7 broken gangways"
+        },
+        {
+          "ref": "cp6",
+          "cid": 1001,
+          "kind": "checkpoint",
+          "p": [
+            1003.7,
+            11.08,
+            -233
+          ],
+          "base": 10.5,
+          "prog": 1488.7,
+          "lat": 3.7,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 8,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 03 \u00b7 swinging freight"
+        },
+        {
+          "ref": "cp7",
+          "cid": 1012,
+          "kind": "checkpoint",
+          "p": [
+            1001.8,
+            12.38,
+            -276
+          ],
+          "base": 11.8,
+          "prog": 1531.7,
+          "lat": 1.8,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 10,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 04 \u00b7 loose cargo"
+        },
+        {
+          "ref": "cp8",
+          "cid": 1047,
+          "kind": "checkpoint",
+          "p": [
+            1002.7,
+            13.98,
+            -318
+          ],
+          "base": 13.4,
+          "prog": 1573.8,
+          "lat": 2.7,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 12,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 05 \u00b7 the broken stern"
+        },
+        {
+          "ref": "cp9",
+          "cid": 1071,
+          "kind": "checkpoint",
+          "p": [
+            1002.7,
+            16.58,
+            -363
+          ],
+          "base": 16,
+          "prog": 1618.8,
+          "lat": 2.7,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 14,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 06 \u00b7 interlocking cargo"
+        },
+        {
+          "ref": "cp10",
+          "cid": 1077,
+          "kind": "checkpoint",
+          "p": [
+            1003,
+            18.98,
+            -418
+          ],
+          "base": 18.4,
+          "prog": 1673.9,
+          "lat": 3,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 15,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 07 \u00b7 stamping machinery"
+        },
+        {
+          "ref": "cp11",
+          "cid": 1101,
+          "kind": "checkpoint",
+          "p": [
+            1003,
+            20.98,
+            -469
+          ],
+          "base": 20.4,
+          "prog": 1724.9,
+          "lat": 3,
+          "dy": 0.7,
+          "sec": null,
+          "cl": 16,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 08 \u00b7 split cargo shelves",
+          "drop": 1.52
+        },
+        {
+          "ref": "cp12",
+          "cid": 1126,
+          "kind": "checkpoint",
+          "p": [
+            1002.7,
+            19.98,
+            -516.5
+          ],
+          "base": 19.4,
+          "prog": 1772.4,
+          "lat": 2.7,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 18,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 09 \u00b7 balancing cargo"
+        },
+        {
+          "ref": "cp13",
+          "cid": 1155,
+          "kind": "checkpoint",
+          "p": [
+            1002.8,
+            17.78,
+            -560
+          ],
+          "base": 17.2,
+          "prog": 1815.9,
+          "lat": 2.8,
+          "dy": 0.5,
+          "sec": null,
+          "cl": 19,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 10 \u00b7 descending gangways"
+        },
+        {
+          "ref": "cp14",
+          "cid": 1180,
+          "kind": "checkpoint",
+          "p": [
+            1000,
+            16.58,
+            -619
+          ],
+          "base": 16,
+          "prog": 1873.4,
+          "lat": -2.5,
+          "dy": 0.4,
+          "sec": null,
+          "cl": 20,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 11 \u00b7 broadside stair"
+        },
+        {
+          "ref": "cp15",
+          "cid": 1200,
+          "kind": "checkpoint",
+          "p": [
+            1046,
+            20.18,
+            -616.5
+          ],
+          "base": 19.6,
+          "prog": 1918.3,
+          "lat": 1.5,
+          "dy": 0.6,
+          "sec": null,
+          "cl": 21,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 12 \u00b7 broadside hoist"
+        },
+        {
+          "ref": "cp16",
+          "cid": 1207,
+          "kind": "checkpoint",
+          "p": [
+            1103,
+            19.18,
+            -616.4
+          ],
+          "base": 18.6,
+          "prog": 1975.3,
+          "lat": 1.6,
+          "dy": 0.5,
+          "sec": null,
+          "cl": 23,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "checkpoint",
+          "nm": "Wreck refuge \u00b7 13 \u00b7 broadside broken timber"
+        }
+      ]
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "title": "Bonus: The Captain\u2019s Last Ledger",
+      "name": "Bonus: The Captain\u2019s Last Ledger",
+      "group": "extra",
+      "island": null,
+      "islandName": null,
+      "progressKey": null,
+      "boss": false,
+      "source": "builtin-data",
+      "killY": -12,
+      "spawn": [
+        -6,
+        0.12,
+        0
+      ],
+      "gate": [
+        104,
+        0,
+        0
+      ],
+      "route": {
+        "method": "camnode lane",
+        "length": 110,
+        "laneNodes": 2
+      },
+      "summary": {
+        "physical": 11,
+        "counted": 9,
+        "checkpoints": 0,
+        "gemTally": 9,
+        "byKind": {
+          "bouncy": 1,
+          "bang": 2,
+          "tnt": 1,
+          "wood": 2,
+          "life": 1,
+          "mystery": 2
+        },
+        "outlineByKind": {
+          "life": 1,
+          "mystery": 1
+        },
+        "per100m": 8.18,
+        "physicalPer100m": 10,
+        "checkpointGaps": [
+          110
+        ],
+        "clusters": 8,
+        "singles": 7,
+        "meanClusterSize": 1.13,
+        "sizeHist": {
+          "1": 7,
+          "2": 1
+        },
+        "structuralClusters": 2,
+        "structuralCrates": 2,
+        "maxStackAll": 2,
+        "arrangements": {
+          "single": 7,
+          "stack": 1
+        },
+        "maxStack": 2,
+        "largestCluster": 2,
+        "floatingClusters": 3,
+        "support": {
+          "ground": 7,
+          "crate": 1,
+          "none": 1
+        },
+        "floatingCrates": 1,
+        "overVoid": 0,
+        "overPit": 0,
+        "nearDrop": 0,
+        "overhanging": 0,
+        "high": 1,
+        "highTools": {
+          "none-found": 1
+        },
+        "onPath": 9,
+        "offLine": 0,
+        "detour": 0,
+        "behindStart": 0,
+        "beyondGate": 0,
+        "routeOffset": 0.6,
+        "enemyNear": 0,
+        "hazardNear": {},
+        "onRail": 0,
+        "nearRail": 0,
+        "downhill": 0,
+        "afterPad": 0,
+        "plainOnSpeed": 0,
+        "runs": 0,
+        "runCrates": 0,
+        "longestRun": 0,
+        "runsBridging": 0,
+        "runsAfterSwitches": {
+          "runs": 0,
+          "crates": 0
+        },
+        "arrows": 1,
+        "arrowTargets": {
+          "fruit-only": 1
+        },
+        "multihit": 0,
+        "emptiest": {
+          "length": 38,
+          "from": 55,
+          "to": 93
+        },
+        "authoredRails": 0,
+        "speedPads": 0,
+        "enemies": 0,
+        "hazards": {}
+      },
+      "checkpoints": [],
+      "sections": [
+        {
+          "index": 0,
+          "from": 0,
+          "to": 110,
+          "length": 110,
+          "counted": 9,
+          "physical": 11,
+          "byKind": {
+            "bouncy": 1,
+            "outline-life": 1,
+            "outline-mystery": 1,
+            "bang": 2,
+            "tnt": 1,
+            "wood": 2,
+            "life": 1,
+            "mystery": 2
+          },
+          "clusters": 10
+        }
+      ],
+      "explosives": {
+        "tnt": 1,
+        "nitro": 0,
+        "buriedNitro": 0,
+        "greenAuthored": 0,
+        "greenSystemic": 0,
+        "nitroWithoutGreen": false,
+        "greens": [],
+        "clusters": 1,
+        "mixedClusters": 1,
+        "tntWithNeighbours": 1,
+        "blasts": [
+          {
+            "ref": "c4",
+            "kind": "tnt",
+            "cid": 13,
+            "buried": false,
+            "rewardsInBlast": 1,
+            "explosivesChained": 0,
+            "switchesInBlast": 0,
+            "cluster": 4,
+            "prog": 48,
+            "p": [
+              42,
+              0.58,
+              0
+            ]
+          }
+        ]
+      },
+      "switches": [
+        {
+          "ref": "c3",
+          "cid": 6,
+          "nm": "Room 1 return: far reveal switch",
+          "prog": 29,
+          "outlines": 2,
+          "outlineKinds": {
+            "life": 1,
+            "mystery": 1
+          },
+          "surfaces": 1,
+          "dist": [
+            12.5,
+            13.5,
+            14.6
+          ],
+          "progDelta": [
+            -11,
+            -8
+          ],
+          "p": [
+            23,
+            0.58,
+            0
+          ]
+        },
+        {
+          "ref": "c8",
+          "cid": 25,
+          "nm": "Room 3 bridge: local switch",
+          "prog": 71,
+          "outlines": 0,
+          "outlineKinds": {},
+          "surfaces": 1,
+          "dist": null,
+          "progDelta": null,
+          "p": [
+            65,
+            0.58,
+            0
+          ]
+        }
+      ],
+      "orphanOutlines": 0,
+      "arrows": [
+        {
+          "ref": "c0",
+          "kind": "bouncy",
+          "cid": 2,
+          "nm": "Room 1 return: conserved arrow",
+          "target": "fruit-only",
+          "crates": 0,
+          "crateRefs": [],
+          "fruit": 3,
+          "ledge": false,
+          "need": null,
+          "gapAnchor": false,
+          "sup": "ground",
+          "outline": false,
+          "prog": 13,
+          "p": [
+            7,
+            0.58,
+            0
+          ]
+        }
+      ],
+      "multihit": [],
+      "runs": [],
+      "patterns": [],
+      "clusters": [
+        {
+          "id": 0,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "arrowWood": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 13,
+          "progRange": [
+            13,
+            13
+          ],
+          "lat": 0,
+          "p": [
+            7,
+            0,
+            0
+          ],
+          "members": [
+            "c0"
+          ],
+          "cids": [
+            2
+          ]
+        },
+        {
+          "id": 1,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "outline": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": true,
+          "tags": [
+            "ON-PATH",
+            "HIGH",
+            "FLOATING",
+            "OUTLINE"
+          ],
+          "access": [
+            "ledge-after-switch"
+          ],
+          "prog": 18,
+          "progRange": [
+            18,
+            18
+          ],
+          "lat": 0,
+          "p": [
+            12,
+            9.6,
+            0
+          ],
+          "members": [
+            "c1"
+          ],
+          "cids": [
+            4
+          ]
+        },
+        {
+          "id": 2,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "outline": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": true,
+          "tags": [
+            "ON-PATH",
+            "HIGH",
+            "FLOATING",
+            "OUTLINE"
+          ],
+          "access": [
+            "ledge-after-switch"
+          ],
+          "prog": 21,
+          "progRange": [
+            21,
+            21
+          ],
+          "lat": 0,
+          "p": [
+            15,
+            9.6,
+            0
+          ],
+          "members": [
+            "c2"
+          ],
+          "cids": [
+            5
+          ]
+        },
+        {
+          "id": 3,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "switch": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 29,
+          "progRange": [
+            29,
+            29
+          ],
+          "lat": 0,
+          "p": [
+            23,
+            0,
+            0
+          ],
+          "members": [
+            "c3"
+          ],
+          "cids": [
+            6
+          ]
+        },
+        {
+          "id": 4,
+          "count": 2,
+          "counted": 2,
+          "composition": {
+            "tnt": 1,
+            "wood": 1
+          },
+          "arrangement": "stack",
+          "shapeClass": "stack",
+          "stackHeight": 2,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            2
+          ],
+          "layerCounts": [
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH",
+            "MIXED-EXPLOSIVE"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 48,
+          "progRange": [
+            48,
+            48
+          ],
+          "lat": 0,
+          "p": [
+            42,
+            0,
+            0
+          ],
+          "members": [
+            "c4",
+            "c5"
+          ],
+          "cids": [
+            13,
+            14
+          ]
+        },
+        {
+          "id": 5,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "life": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": true,
+          "tags": [
+            "ON-PATH",
+            "HIGH",
+            "FLOATING"
+          ],
+          "access": [
+            "none-found"
+          ],
+          "prog": 48,
+          "progRange": [
+            48,
+            48
+          ],
+          "lat": 0,
+          "p": [
+            42,
+            9,
+            0
+          ],
+          "members": [
+            "c6"
+          ],
+          "cids": [
+            15
+          ]
+        },
+        {
+          "id": 6,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "question": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 55,
+          "progRange": [
+            55,
+            55
+          ],
+          "lat": 0,
+          "p": [
+            49,
+            0,
+            0
+          ],
+          "members": [
+            "c7"
+          ],
+          "cids": [
+            16
+          ]
+        },
+        {
+          "id": 7,
+          "count": 1,
+          "counted": 0,
+          "composition": {
+            "switch": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 71,
+          "progRange": [
+            71,
+            71
+          ],
+          "lat": 0,
+          "p": [
+            65,
+            0,
+            0
+          ],
+          "members": [
+            "c8"
+          ],
+          "cids": [
+            25
+          ]
+        },
+        {
+          "id": 8,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "wood": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 93,
+          "progRange": [
+            93,
+            93
+          ],
+          "lat": 0,
+          "p": [
+            87,
+            0,
+            0
+          ],
+          "members": [
+            "c9"
+          ],
+          "cids": [
+            26
+          ]
+        },
+        {
+          "id": 9,
+          "count": 1,
+          "counted": 1,
+          "composition": {
+            "question": 1
+          },
+          "arrangement": "single",
+          "shapeClass": "single",
+          "stackHeight": 1,
+          "footprint": 1,
+          "dims": [
+            1,
+            1,
+            1
+          ],
+          "floating": false,
+          "tags": [
+            "ON-PATH"
+          ],
+          "access": [
+            "walk"
+          ],
+          "prog": 96,
+          "progRange": [
+            96,
+            96
+          ],
+          "lat": 0,
+          "p": [
+            90,
+            0,
+            0
+          ],
+          "members": [
+            "c10"
+          ],
+          "cids": [
+            27
+          ]
+        }
+      ],
+      "crates": [
+        {
+          "ref": "c0",
+          "cid": 2,
+          "kind": "bouncy",
+          "p": [
+            7,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 13,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 0,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 1 return: conserved arrow"
+        },
+        {
+          "ref": "c1",
+          "cid": 4,
+          "kind": "life",
+          "p": [
+            12,
+            10.18,
+            0
+          ],
+          "base": 9.6,
+          "prog": 18,
+          "lat": 0,
+          "dy": 10.2,
+          "sec": 0,
+          "cl": 1,
+          "sup": "none",
+          "elev": 9.6,
+          "reach": "ledge-after-switch",
+          "nm": "Room 1 return: upper life",
+          "outline": true,
+          "reachGap": 9.6
+        },
+        {
+          "ref": "c2",
+          "cid": 5,
+          "kind": "mystery",
+          "p": [
+            15,
+            10.18,
+            0
+          ],
+          "base": 9.6,
+          "prog": 21,
+          "lat": 0,
+          "dy": 10.2,
+          "sec": 0,
+          "cl": 2,
+          "sup": "none",
+          "elev": 9.6,
+          "reach": "ledge-after-switch",
+          "nm": "Room 1 return: upper mystery",
+          "outline": true,
+          "reachGap": 9.6
+        },
+        {
+          "ref": "c3",
+          "cid": 6,
+          "kind": "bang",
+          "p": [
+            23,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 29,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 3,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 1 return: far reveal switch"
+        },
+        {
+          "ref": "c4",
+          "cid": 13,
+          "kind": "tnt",
+          "p": [
+            42,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 48,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 4,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 2 fuse: timed support"
+        },
+        {
+          "ref": "c5",
+          "cid": 14,
+          "kind": "wood",
+          "p": [
+            42,
+            1.73,
+            0
+          ],
+          "base": 1.15,
+          "prog": 48,
+          "lat": 0,
+          "dy": 1.7,
+          "sec": 0,
+          "cl": 4,
+          "sup": "crate",
+          "elev": 1.15,
+          "reach": "walk",
+          "nm": "Room 2 fuse: wooden takeoff cap"
+        },
+        {
+          "ref": "c6",
+          "cid": 15,
+          "kind": "life",
+          "p": [
+            42,
+            9.58,
+            0
+          ],
+          "base": 9,
+          "prog": 48,
+          "lat": 0,
+          "dy": 9.6,
+          "sec": 0,
+          "cl": 5,
+          "sup": "none",
+          "elev": 9,
+          "reach": "none-found",
+          "nm": "Room 2 fuse: upper cap before fuse",
+          "reachGap": 9
+        },
+        {
+          "ref": "c7",
+          "cid": 16,
+          "kind": "mystery",
+          "p": [
+            49,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 55,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 6,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 2 fuse: refuge reward"
+        },
+        {
+          "ref": "c8",
+          "cid": 25,
+          "kind": "bang",
+          "p": [
+            65,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 71,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 7,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 3 bridge: local switch"
+        },
+        {
+          "ref": "c9",
+          "cid": 26,
+          "kind": "wood",
+          "p": [
+            87,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 93,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 8,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 3 bridge: receiver reward"
+        },
+        {
+          "ref": "c10",
+          "cid": 27,
+          "kind": "mystery",
+          "p": [
+            90,
+            0.58,
+            0
+          ],
+          "base": 0,
+          "prog": 96,
+          "lat": 0,
+          "dy": 0.6,
+          "sec": 0,
+          "cl": 9,
+          "sup": "ground",
+          "elev": 0,
+          "reach": "walk",
+          "nm": "Room 3 bridge: receiver mystery"
+        }
+      ]
+    }
+  ]
+}

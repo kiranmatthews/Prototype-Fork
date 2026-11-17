@@ -83,9 +83,9 @@ try{
   if(state.done)break;
  }
  report.journey=await page.evaluate(()=>window.cloudBonusJourney);assert.equal(report.journey.error,null);assert.ok(report.journey.done);
- assert.equal(report.journey.result.cratesBroken,18);assert.equal(report.journey.result.deaths,0);
+ assert.equal(report.journey.result.cratesBroken,25);assert.equal(report.journey.result.deaths,0);
  await ready('skystream');report.returned=await snapshot();assert.ok(report.returned.sameParent);assert.equal(report.returned.completed,true);
- assert.equal(report.returned.bonusCrates,18);assert.equal(report.returned.deaths,report.parent.deaths);
+ assert.equal(report.returned.bonusCrates,25);assert.equal(report.returned.deaths,report.parent.deaths);
  await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);});
  await page.waitForTimeout(1000);report.normal=await snapshot();await page.screenshot({path:out+'/parent-return-normal.png'});
  assert.deepEqual(errors,[]);

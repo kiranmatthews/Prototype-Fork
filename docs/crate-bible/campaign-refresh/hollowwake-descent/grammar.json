@@ -1,0 +1,120 @@
+{
+  "harvests": [
+    {
+      "name": "TUNNELBORE / COUNT / before the release",
+      "count": 3,
+      "station": -7.999997347226085,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / first pursuit",
+      "count": 3,
+      "station": 6.000001949364922,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / REST / The dry notch arrival",
+      "count": 4,
+      "station": 359.0000037096344,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / The dry notch departure",
+      "count": 3,
+      "station": 369.9999958697304,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / The dry notch last supplies",
+      "count": 3,
+      "station": 376.0000032889994,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / REST / Old flood lock arrival",
+      "count": 4,
+      "station": 762.9999995161828,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / Old flood lock departure",
+      "count": 3,
+      "station": 774.0000006155399,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / Old flood lock last supplies",
+      "count": 3,
+      "station": 780.0000001747965,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / REST / Root cellar arrival",
+      "count": 4,
+      "station": 1173.000000870841,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / Root cellar departure",
+      "count": 3,
+      "station": 1183.999996989725,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / Root cellar last supplies",
+      "count": 3,
+      "station": 1190.0000028002692,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / REST / The listening hollow arrival",
+      "count": 4,
+      "station": 1612.9999978767646,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / The listening hollow departure",
+      "count": 3,
+      "station": 1624.0000021242206,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / The listening hollow last supplies",
+      "count": 3,
+      "station": 1629.9999983552984,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / REST / Last dry pocket arrival",
+      "count": 4,
+      "station": 2052.9999976306312,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / PREPARE / Last dry pocket departure",
+      "count": 3,
+      "station": 2064.0000023693688,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / Last dry pocket last supplies",
+      "count": 3,
+      "station": 2069.99999634757,
+      "deaths": 0
+    },
+    {
+      "name": "TUNNELBORE / COUNT / escaped wreck throat",
+      "count": 4,
+      "station": 2472.0000034695595,
+      "deaths": 0
+    }
+  ],
+  "maxFloorDifference": 0.39421497844726305,
+  "fullResetRestores": true,
+  "preservation": {
+    "nonCrateComponents": 2642,
+    "steel": 6,
+    "enemies": 17,
+    "settingsExact": true
+  }
+}

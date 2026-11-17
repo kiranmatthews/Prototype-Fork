@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-11-15T09:57:56.636836+00:00",
+  "checks": {
+    "npm run check:levels": {
+      "exitCode": 0
+    },
+    "npm run build": {
+      "exitCode": 0
+    },
+    "npm run check:release": {
+      "exitCode": 0,
+      "bytes": 959492775,
+      "budget": 1000000000
+    }
+  },
+  "nativeChallenges": 25,
+  "continuousCourse": true,
+  "movementAndAnimationFilesChanged": false,
+  "phoneLocalBytes": 36489355,
+  "phonePickerBytes": 26537,
+  "publicVerifiedAt": "2026-11-15T10:15:31.706581+00:00",
+  "publicPhoneBytes": 34688844,
+  "publicPickerBytes": 27286,
+  "sourceCommit": "0e87a0559fdf4e4f518cede18c53a0198ae1d48d",
+  "deployment": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/43702364012"
+}

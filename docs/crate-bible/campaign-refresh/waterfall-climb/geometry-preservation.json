@@ -1,0 +1,17 @@
+[
+  {
+    "name": "waterfall-climb",
+    "unchangedComponents": 845,
+    "sha256": "aac0c41198dc40a1ef0cf1e191452ef9c08d5aa898e26bb3c8a84824720d9ddd",
+    "sourceBefore": "eaeb6f59",
+    "retainedEnemyPlacements": 2,
+    "removedEnemies": 0
+  },
+  {
+    "name": "waterfall-climb-bonus",
+    "unchangedComponents": 124,
+    "sha256": "519ff1d499feb0f5ad94bf5c874a017d147927b1bbf7a9d7eeafc2728ab4b206",
+    "sourceBefore": "eaeb6f59",
+    "identicalBoxDimensionsWithWorkingOutline": 2
+  }
+]

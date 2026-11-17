@@ -1,0 +1,257 @@
+[
+  {
+    "stage": "attempt direct double, animated crown, air spin and ledge grab",
+    "evidence": [
+      {
+        "action": "pass arrow before revealing targets",
+        "launch": [
+          4.936144444444444,
+          0,
+          0
+        ],
+        "landing": [
+          9.947644444444453,
+          0,
+          0
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "reveal row before wrong-order test",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "wrong order: destroy required arrow before upper rewards",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      }
+    ],
+    "actions": [
+      {
+        "name": "return negative observation",
+        "firstFrame": 20,
+        "lastFrame": 20
+      },
+      {
+        "name": "preserve return arrow outward",
+        "firstFrame": 38,
+        "lastFrame": 129
+      },
+      {
+        "name": "pass arrow before revealing targets",
+        "firstFrame": 174,
+        "lastFrame": 213
+      },
+      {
+        "name": "approach reveal row before wrong-order test",
+        "firstFrame": 213,
+        "lastFrame": 366
+      },
+      {
+        "name": "reveal row before wrong-order test",
+        "firstFrame": 386,
+        "lastFrame": 386
+      },
+      {
+        "name": "return to destroy needed donor",
+        "firstFrame": 408,
+        "lastFrame": 569
+      },
+      {
+        "name": "approach wrong order: destroy required arrow before upper rewards",
+        "firstFrame": 587,
+        "lastFrame": 638
+      },
+      {
+        "name": "wrong order: destroy required arrow before upper rewards",
+        "firstFrame": 658,
+        "lastFrame": 658
+      },
+      {
+        "name": "direct reach attempt takeoff",
+        "firstFrame": 680,
+        "lastFrame": 709
+      },
+      {
+        "name": "charged-jump timing",
+        "firstFrame": 754,
+        "lastFrame": 767
+      },
+      {
+        "name": "attempt direct double, animated crown, air spin and ledge grab",
+        "firstFrame": 769,
+        "lastFrame": 805
+      },
+      {
+        "name": "direct reach attempt takeoff",
+        "firstFrame": 805,
+        "lastFrame": 891
+      },
+      {
+        "name": "charged-jump timing",
+        "firstFrame": 936,
+        "lastFrame": 956
+      },
+      {
+        "name": "attempt direct double, animated crown, air spin and ledge grab",
+        "firstFrame": 958,
+        "lastFrame": 995
+      },
+      {
+        "name": "direct reach attempt takeoff",
+        "firstFrame": 995,
+        "lastFrame": 1081
+      },
+      {
+        "name": "charged-jump timing",
+        "firstFrame": 1126,
+        "lastFrame": 1151
+      },
+      {
+        "name": "attempt direct double, animated crown, air spin and ledge grab",
+        "firstFrame": 1153,
+        "lastFrame": 1190
+      },
+      {
+        "name": "direct reach attempt takeoff",
+        "firstFrame": 1190,
+        "lastFrame": 1276
+      },
+      {
+        "name": "charged-jump timing",
+        "firstFrame": 1321,
+        "lastFrame": 1348
+      },
+      {
+        "name": "attempt direct double, animated crown, air spin and ledge grab",
+        "firstFrame": 1350,
+        "lastFrame": 1387
+      }
+    ],
+    "result": {
+      "pattern": "return",
+      "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+      "rewardRemaining": 2,
+      "gemEarned": false
+    },
+    "pattern": "return",
+    "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+    "rewardRemaining": 2,
+    "gemEarned": false,
+    "frames": 1387,
+    "seconds": 23.116666666666667,
+    "retryRestores": true
+  },
+  {
+    "stage": "wrong ground spin detonates useful TNT support",
+    "evidence": [],
+    "actions": [
+      {
+        "name": "fuse negative observation",
+        "firstFrame": 20,
+        "lastFrame": 20
+      },
+      {
+        "name": "unsafe direct spin approach",
+        "firstFrame": 38,
+        "lastFrame": 143
+      },
+      {
+        "name": "wrong ground spin detonates useful TNT support",
+        "firstFrame": 161,
+        "lastFrame": 168
+      }
+    ],
+    "result": {
+      "pattern": "fuse",
+      "test": "early ground spin destroys timed access and kills exposed player",
+      "capAlive": true,
+      "state": "dead",
+      "gemEarned": false
+    },
+    "pattern": "fuse",
+    "test": "early ground spin destroys timed access and kills exposed player",
+    "capAlive": true,
+    "state": "dead",
+    "gemEarned": false,
+    "frames": 168,
+    "seconds": 2.8,
+    "retryRestores": true
+  },
+  {
+    "stage": "jump into the gap without using the required crossing tool",
+    "evidence": [
+      {
+        "action": "skip bridge switch",
+        "launch": [
+          62.915677777777795,
+          0,
+          0
+        ],
+        "landing": [
+          67.36767777777787,
+          0,
+          0
+        ],
+        "ground": "Supported bonus court"
+      }
+    ],
+    "actions": [
+      {
+        "name": "bridge negative observation",
+        "firstFrame": 20,
+        "lastFrame": 20
+      },
+      {
+        "name": "unused switch approach",
+        "firstFrame": 38,
+        "lastFrame": 111
+      },
+      {
+        "name": "skip bridge switch",
+        "firstFrame": 156,
+        "lastFrame": 195
+      },
+      {
+        "name": "unsupported crossing approach",
+        "firstFrame": 195,
+        "lastFrame": 275
+      },
+      {
+        "name": "jump into the gap without using the required crossing tool",
+        "firstFrame": 320,
+        "lastFrame": 370
+      }
+    ],
+    "result": {
+      "pattern": "bridge",
+      "test": "skipping visible crossing footholds leads to real chasm death",
+      "state": "dead",
+      "gemEarned": false
+    },
+    "pattern": "bridge",
+    "test": "skipping visible crossing footholds leads to real chasm death",
+    "state": "dead",
+    "gemEarned": false,
+    "frames": 370,
+    "seconds": 6.166666666666667,
+    "retryRestores": true
+  }
+]

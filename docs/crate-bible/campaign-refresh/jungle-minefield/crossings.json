@@ -1,0 +1,572 @@
+[
+  {
+    "id": 1,
+    "pass": true,
+    "frames": 385,
+    "final": {
+      "frame": 385,
+      "time": 6.416666666666667,
+      "position": [
+        0,
+        2.384185793236071e-08,
+        -172.95473654455373
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 13.499247270153244,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.100878427678591
+  },
+  {
+    "id": 2,
+    "pass": true,
+    "frames": 1398,
+    "final": {
+      "frame": 1398,
+      "time": 23.3,
+      "position": [
+        0.39345833333333446,
+        2.384185793236071e-08,
+        -275.43153498245863
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 2.8541666905085226
+  },
+  {
+    "id": 3,
+    "pass": true,
+    "frames": 430,
+    "final": {
+      "frame": 430,
+      "time": 7.166666666666667,
+      "position": [
+        -0.8997038799847716,
+        2.384185837644992e-08,
+        -387.4040759175905
+      ],
+      "heading": [
+        -0.35050018762807406,
+        0,
+        -0.9365626612633481
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 11.825927942506638,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185837644992e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 0.7986359895831642
+  },
+  {
+    "id": 4,
+    "pass": true,
+    "frames": 1474,
+    "final": {
+      "frame": 1474,
+      "time": 24.566666666666666,
+      "position": [
+        3.2036491499253916,
+        2.384185793236071e-08,
+        -491.44856612613086
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 2.8541666905085226
+  },
+  {
+    "id": 5,
+    "pass": true,
+    "frames": 1658,
+    "final": {
+      "frame": 1658,
+      "time": 27.633333333333333,
+      "position": [
+        4.477785616863412,
+        2.384185793236071e-08,
+        -600.8690353066524
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.141666690508523
+  },
+  {
+    "id": 6,
+    "pass": true,
+    "frames": 1001,
+    "final": {
+      "frame": 1001,
+      "time": 16.683333333333334,
+      "position": [
+        -1.5,
+        2.384185793236071e-08,
+        -796.0999999999788
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 2.384185793236071e-08
+  },
+  {
+    "id": 7,
+    "pass": true,
+    "frames": 283,
+    "final": {
+      "frame": 283,
+      "time": 4.716666666666667,
+      "position": [
+        0,
+        2.384185793236071e-08,
+        -910.2164112615043
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 22.890093109183066,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.261071656679428
+  },
+  {
+    "id": 8,
+    "pass": true,
+    "frames": 1873,
+    "final": {
+      "frame": 1873,
+      "time": 31.216666666666665,
+      "position": [
+        2.9802415677055945,
+        2.384185793236071e-08,
+        -1017.4567478507548
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.141666690508523
+  },
+  {
+    "id": 9,
+    "pass": true,
+    "frames": 1485,
+    "final": {
+      "frame": 1485,
+      "time": 24.75,
+      "position": [
+        4.4882364001221475,
+        2.384185793236071e-08,
+        -1126.8793655126442
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.141666690508523
+  },
+  {
+    "id": 10,
+    "pass": true,
+    "frames": 1462,
+    "final": {
+      "frame": 1462,
+      "time": 24.366666666666667,
+      "position": [
+        1.5110670062376883,
+        2.384185793236071e-08,
+        -1234.8859548225391
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 2.384185793236071e-08,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "maxHeight": 4.141666690508523
+  }
+]

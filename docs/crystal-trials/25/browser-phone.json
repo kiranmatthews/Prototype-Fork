@@ -1,0 +1,377 @@
+{
+  "trial": 25,
+  "url": "http://127.0.0.1:4173/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "pilot": {
+    "id": 25,
+    "frame": 7164,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 25 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the enclosed switch from its side",
+        "firstFrame": 137,
+        "lastFrame": 313
+      },
+      {
+        "name": "Read the switch behind the transparent panel",
+        "firstFrame": 331,
+        "lastFrame": 431
+      },
+      {
+        "name": "Leave the enclosed switch",
+        "firstFrame": 490,
+        "lastFrame": 589
+      },
+      {
+        "name": "Walk around the front of the TNT",
+        "firstFrame": 607,
+        "lastFrame": 717
+      },
+      {
+        "name": "Set up a falling stomp onto TNT",
+        "firstFrame": 735,
+        "lastFrame": 814
+      },
+      {
+        "name": "Stomp TNT to start its visible fuse",
+        "firstFrame": 859,
+        "lastFrame": 895
+      },
+      {
+        "name": "Retreat outside the blast radius",
+        "firstFrame": 895,
+        "lastFrame": 936
+      },
+      {
+        "name": "The timed blast operates the remote switch",
+        "firstFrame": 936,
+        "lastFrame": 1093
+      },
+      {
+        "name": "Approach the revealed steps",
+        "firstFrame": 1093,
+        "lastFrame": 1202
+      },
+      {
+        "name": "Jump onto the first revealed step",
+        "firstFrame": 1247,
+        "lastFrame": 1279
+      },
+      {
+        "name": "Cross the first step",
+        "firstFrame": 1279,
+        "lastFrame": 1357
+      },
+      {
+        "name": "Jump onto the revealed spring terrace",
+        "firstFrame": 1402,
+        "lastFrame": 1434
+      },
+      {
+        "name": "Approach the revealed bounce crate",
+        "firstFrame": 1434,
+        "lastFrame": 1521
+      },
+      {
+        "name": "Hold the revealed arrow rebound",
+        "firstFrame": 1566,
+        "lastFrame": 1602
+      },
+      {
+        "name": "Land on the high receiver",
+        "firstFrame": 1602,
+        "lastFrame": 1647
+      },
+      {
+        "name": "Approach the second switch",
+        "firstFrame": 1647,
+        "lastFrame": 1734
+      },
+      {
+        "name": "approach Activate only the upper group",
+        "firstFrame": 1752,
+        "lastFrame": 1783
+      },
+      {
+        "name": "Activate only the upper group",
+        "firstFrame": 1803,
+        "lastFrame": 1803
+      },
+      {
+        "name": "Read the upper outlined flight",
+        "firstFrame": 1825,
+        "lastFrame": 1900
+      },
+      {
+        "name": "Jump onto the upper revealed step",
+        "firstFrame": 1945,
+        "lastFrame": 1977
+      },
+      {
+        "name": "Cross the upper step",
+        "firstFrame": 1977,
+        "lastFrame": 2061
+      },
+      {
+        "name": "Land on the upper spring terrace",
+        "firstFrame": 2106,
+        "lastFrame": 2138
+      },
+      {
+        "name": "Set up the second held rebound",
+        "firstFrame": 2138,
+        "lastFrame": 2225
+      },
+      {
+        "name": "Hold the second arrow rebound",
+        "firstFrame": 2270,
+        "lastFrame": 2306
+      },
+      {
+        "name": "Land on the final high receiver",
+        "firstFrame": 2306,
+        "lastFrame": 2350
+      },
+      {
+        "name": "Read the upper climbing rope from its terrace",
+        "firstFrame": 2350,
+        "lastFrame": 2484
+      },
+      {
+        "name": "Wait for the upper rope crossing",
+        "firstFrame": 2528,
+        "lastFrame": 2565
+      },
+      {
+        "name": "Catch the upper rope",
+        "firstFrame": 2566,
+        "lastFrame": 2569
+      },
+      {
+        "name": "Climb above the upper receiving platform",
+        "firstFrame": 2571,
+        "lastFrame": 2774
+      },
+      {
+        "name": "Read the upper release window",
+        "firstFrame": 2800,
+        "lastFrame": 3068
+      },
+      {
+        "name": "Release onto the upper receiving platform",
+        "firstFrame": 3069,
+        "lastFrame": 3109
+      },
+      {
+        "name": "Read the next timed flight from a permanent bank",
+        "firstFrame": 3109,
+        "lastFrame": 3209
+      },
+      {
+        "name": "Wait for the timed flight to begin",
+        "firstFrame": 3253,
+        "lastFrame": 3334
+      },
+      {
+        "name": "Jump onto the first timed step",
+        "firstFrame": 3335,
+        "lastFrame": 3370
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3370,
+        "lastFrame": 3451
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3496,
+        "lastFrame": 3531
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3531,
+        "lastFrame": 3612
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3657,
+        "lastFrame": 3692
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3692,
+        "lastFrame": 3773
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 3818,
+        "lastFrame": 3852
+      },
+      {
+        "name": "Read the next timed flight from a permanent bank",
+        "firstFrame": 4422,
+        "lastFrame": 4541
+      },
+      {
+        "name": "Wait for the timed flight to begin",
+        "firstFrame": 4585,
+        "lastFrame": 4834
+      },
+      {
+        "name": "Jump onto the first timed step",
+        "firstFrame": 4835,
+        "lastFrame": 4870
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4870,
+        "lastFrame": 4951
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 4996,
+        "lastFrame": 5031
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 5031,
+        "lastFrame": 5112
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 5157,
+        "lastFrame": 5192
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 5192,
+        "lastFrame": 5273
+      },
+      {
+        "name": "Transfer across the final timed flights",
+        "firstFrame": 5318,
+        "lastFrame": 5352
+      },
+      {
+        "name": "Approach the Nitro-framed spring through its front opening",
+        "firstFrame": 5352,
+        "lastFrame": 5428
+      },
+      {
+        "name": "Hold the final rebound between the Nitro crates",
+        "firstFrame": 5473,
+        "lastFrame": 5509
+      },
+      {
+        "name": "Clear the Nitro before drifting sideways",
+        "firstFrame": 5509,
+        "lastFrame": 5511
+      },
+      {
+        "name": "Land inside the final receiver",
+        "firstFrame": 5511,
+        "lastFrame": 5553
+      },
+      {
+        "name": "Collect the final crystal",
+        "firstFrame": 5553,
+        "lastFrame": 5635
+      },
+      {
+        "name": "Drop through the open side onto the recovery floor",
+        "firstFrame": 5680,
+        "lastFrame": 5778
+      },
+      {
+        "name": "Walk outside the entire combined route",
+        "firstFrame": 5778,
+        "lastFrame": 6904
+      },
+      {
+        "name": "Complete the final circuit",
+        "firstFrame": 6922,
+        "lastFrame": 7146
+      }
+    ],
+    "evidence": [
+      {
+        "action": "direct spin cannot reach the enclosed switch"
+      },
+      {
+        "action": "TNT activates the enclosed switch",
+        "position": [
+          -4.920494682619405,
+          0,
+          -9.99641475459683
+        ],
+        "switchUsed": true,
+        "arrowRevealed": true
+      },
+      {
+        "action": "Activate only the upper group",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "independent second switch reveals upper route"
+      },
+      {
+        "action": "upper rope after the preceding combinations",
+        "position": [
+          4.980765486392862,
+          30,
+          -69.63171272003827
+        ]
+      },
+      {
+        "action": "completed final timed flight 1",
+        "position": [
+          4.999169985808208,
+          36.2,
+          -101.08258021126834
+        ]
+      },
+      {
+        "action": "completed final timed flight 2",
+        "position": [
+          4.999169985808208,
+          42.4,
+          -135.0823579890462
+        ]
+      }
+    ],
+    "position": [
+      0.056141296373297296,
+      0,
+      4.960763928252118
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the final circuit",
+    "result": {
+      "id": 25,
+      "collected": 1,
+      "position": [
+        0.056141296373297296,
+        0,
+        4.960763928252118
+      ],
+      "frames": 7164
+    }
+  }
+}

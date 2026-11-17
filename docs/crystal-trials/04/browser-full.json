@@ -1,0 +1,162 @@
+{
+  "trial": 4,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "a8397563e9aadb773d8521485def8bed34073a48bb4a12b2c919fcdbbea3e452",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        8.372261940194218,
+        22.240873133980728
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0,
+            0.6975154841519844,
+            0.9975947623798938
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06816903779855123,
+        0,
+        8.99926177024023
+      ],
+      "camera": [
+        0.06816903779855123,
+        8.372261940194218,
+        26.24013490422096
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            -0.0011585872854799604,
+            0.7023506902518644,
+            0.9977455050060611
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lift-observation",
+      "position": [
+        0,
+        0,
+        -32
+      ],
+      "camera": [
+        0,
+        8.372261940194218,
+        -14.759126866019272
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0,
+            0.7495404791323573,
+            0.994505698338018
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -8,
+        -21
+      ],
+      "camera": [
+        15,
+        -2.9956038652002355,
+        -34.7741787413987
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            -1.0738517862484869,
+            -1.2359589966458953,
+            1.0121032024772179
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06816903779855123,
+        0,
+        8.99926177024023
+      ]
+    },
+    {
+      "name": "lift-observation",
+      "position": [
+        0,
+        0.15,
+        -32
+      ]
+    },
+    {
+      "name": "lower-return",
+      "position": [
+        15,
+        -7.85,
+        -21
+      ]
+    }
+  ],
+  "passed": true
+}

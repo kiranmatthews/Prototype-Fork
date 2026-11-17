@@ -1,0 +1,30 @@
+{
+  "id": "narrow-keys",
+  "fps": 5,
+  "frames": [
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k00.png",
+      "phase": 0
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k08.png",
+      "phase": 8
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k16.png",
+      "phase": 16
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k24.png",
+      "phase": 24
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k32.png",
+      "phase": 32
+    },
+    {
+      "file": "../../../art/fire-sprites/v4/narrow/k40.png",
+      "phase": 40
+    }
+  ]
+}

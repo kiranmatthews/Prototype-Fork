@@ -1,0 +1,21 @@
+{
+  "floorWithoutArrow": {
+    "maxContact": 9.946148715852896,
+    "rewardBase": 13.8,
+    "rewardAlive": true
+  },
+  "neighborStompWithoutArrow": {
+    "maxContact": 10.603844035854085,
+    "rewardBase": 13.8,
+    "rewardAlive": true
+  },
+  "unrevealed": {
+    "state": "dead",
+    "position": [
+      133.45000000000024,
+      -2.687499976158148,
+      0
+    ]
+  },
+  "retryRestores": true
+}

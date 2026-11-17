@@ -1,0 +1,270 @@
+{
+  "trial": 10,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 10
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -1723
+  ],
+  "installed": {
+    "id": 10,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 10,
+    "frame": 3078,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the bridge checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the upright bridge",
+        "firstFrame": 137,
+        "lastFrame": 291
+      },
+      {
+        "name": "Wait for the bridge to settle",
+        "firstFrame": 310,
+        "lastFrame": 339
+      },
+      {
+        "name": "Wait on the deployed bridge",
+        "firstFrame": 339,
+        "lastFrame": 454
+      },
+      {
+        "name": "A late crossing folds away and drops to the flat floor",
+        "firstFrame": 472,
+        "lastFrame": 662
+      },
+      {
+        "name": "Join the lower return",
+        "firstFrame": 662,
+        "lastFrame": 839
+      },
+      {
+        "name": "Walk to the return ramp",
+        "firstFrame": 857,
+        "lastFrame": 972
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 990,
+        "lastFrame": 1253
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 1271,
+        "lastFrame": 1362
+      },
+      {
+        "name": "Return to the bridge entrance",
+        "firstFrame": 1380,
+        "lastFrame": 1557
+      },
+      {
+        "name": "Approach the upright bridge",
+        "firstFrame": 1575,
+        "lastFrame": 1759
+      },
+      {
+        "name": "Wait for the bridge to settle",
+        "firstFrame": 1778,
+        "lastFrame": 1807
+      },
+      {
+        "name": "Cross before the bridge folds",
+        "firstFrame": 1807,
+        "lastFrame": 1975
+      },
+      {
+        "name": "Jump from the bridge onto the small raised receiver",
+        "firstFrame": 2020,
+        "lastFrame": 2052
+      },
+      {
+        "name": "Collect the bridge crystal",
+        "firstFrame": 2052,
+        "lastFrame": 2120
+      },
+      {
+        "name": "Drop beside the folded bridge into the recovery floor",
+        "firstFrame": 2165,
+        "lastFrame": 2219
+      },
+      {
+        "name": "Join the lower return",
+        "firstFrame": 2219,
+        "lastFrame": 2350
+      },
+      {
+        "name": "Walk to the return ramp",
+        "firstFrame": 2368,
+        "lastFrame": 2474
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2492,
+        "lastFrame": 2756
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 2774,
+        "lastFrame": 2865
+      },
+      {
+        "name": "Return to the bridge entrance",
+        "firstFrame": 2883,
+        "lastFrame": 3060
+      }
+    ],
+    "evidence": [
+      {
+        "action": "bridge timeout returns to flat floor",
+        "position": [
+          -0.0011196103449741266,
+          -8,
+          -1741.9168883747736
+        ]
+      },
+      {
+        "action": "timed bridge and precision landing",
+        "position": [
+          0.003556070837673926,
+          2.2,
+          -1754.9327841255695
+        ]
+      }
+    ],
+    "position": [
+      0.06835948068607015,
+      0,
+      -1719.003542734542
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return to the bridge entrance",
+    "result": {
+      "id": 10,
+      "collected": 1,
+      "position": [
+        0.06835948068607015,
+        0,
+        -1719.003542734542
+      ],
+      "frames": 3078
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06835948068607015,
+        0,
+        -1719.003542734542
+      ],
+      "camera": [
+        0.06835948068607015,
+        8.786721966264642,
+        -1701.6516756068327
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            5.159864845850679e-05,
+            0.607048673284319,
+            1.0006224625527187
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.005073573149320266,
+            0.6036503310013205,
+            1.0006387556652112
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            7.101708251898785e-05,
+            0.6134453399230659,
+            1.0006685025782736
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            8.134927750089861e-05,
+            0.6029954258724641,
+            1.0006929996370744
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.012687962678126117,
+            0.5988766127699027,
+            1.0007303650242623
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.00012255891739397184,
+            0.5991707057105274,
+            1.0007907053978922
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.00016984461716362256,
+            0.6105426703970737,
+            1.0009028171582421
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.022845732928090685,
+            0.585002261113223,
+            1.0011243632842084
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.05135504307057554,
+            0.5915757469749231,
+            1.0019033534795405
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

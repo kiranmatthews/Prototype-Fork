@@ -10,6 +10,18 @@ export const DUSTY_ROAD_BONUS_COURSE=makeBonusCourse({
   style:{color:'#ce9869',accent:'#e9c88a',tex:'desert-trail',sky:'bryce-golden-hour'},
 });
 const data=DUSTY_ROAD_BONUS_COURSE.data,C=data.components;
+// Group the earned caches above the arrow and beyond the switch bridge.
+// Leave the finite support's lone cap and both launch tools unchanged.
+for(const room of DUSTY_ROAD_BONUS_COURSE.rooms){
+  for(const base of [...room.crates]){
+    if(!(room.pattern==='upper'&&base.role.startsWith('upper ')||base.role.startsWith('receiver')))continue;
+    for(const tier of room.pattern==='upper'?[1,2,3]:[1,2]){
+      const role=base.role+' cache '+(tier+1),name=`Room ${room.index+1} ${room.pattern}: ${role}`,y=base.y+tier*.96;
+      C.push({t:'crate',p:[base.x,y,0],kind:'wood',grp:2,nm:name});
+      room.crates.push({role,x:base.x,y,kind:'wood',name});
+    }
+  }
+}
 type P=[number,number,number];
 
 // Rounded sandstone shelves keep every playable landing interval. The

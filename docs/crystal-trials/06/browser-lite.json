@@ -1,0 +1,224 @@
+{
+  "trial": 6,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0.15,
+      20
+    ],
+    "crystals": 6
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -123
+  ],
+  "installed": {
+    "id": 6,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 6,
+    "frame": 2145,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the rope courtyard checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Wait below the climbing vine",
+        "firstFrame": 137,
+        "lastFrame": 378
+      },
+      {
+        "name": "Read the rope as it crosses the courtyard center",
+        "firstFrame": 422,
+        "lastFrame": 617
+      },
+      {
+        "name": "Catch the moving lower rope with a normal jump",
+        "firstFrame": 618,
+        "lastFrame": 621
+      },
+      {
+        "name": "A low release misses the window and lands in the courtyard",
+        "firstFrame": 650,
+        "lastFrame": 693
+      },
+      {
+        "name": "Wait below the climbing vine",
+        "firstFrame": 693,
+        "lastFrame": 779
+      },
+      {
+        "name": "Read the rope as it crosses the courtyard center",
+        "firstFrame": 823,
+        "lastFrame": 838
+      },
+      {
+        "name": "Catch the moving lower rope with a normal jump",
+        "firstFrame": 839,
+        "lastFrame": 843
+      },
+      {
+        "name": "Climb the swinging rope above the window sill",
+        "firstFrame": 845,
+        "lastFrame": 1048
+      },
+      {
+        "name": "Wait for the high swing toward the window",
+        "firstFrame": 1074,
+        "lastFrame": 1342
+      },
+      {
+        "name": "Release through the framed window onto its sill",
+        "firstFrame": 1343,
+        "lastFrame": 1467
+      },
+      {
+        "name": "Collect the window crystal",
+        "firstFrame": 1467,
+        "lastFrame": 1533
+      },
+      {
+        "name": "Read the courtyard return beside the window",
+        "firstFrame": 1551,
+        "lastFrame": 1624
+      },
+      {
+        "name": "Drop into the broad courtyard beside the gallery",
+        "firstFrame": 1669,
+        "lastFrame": 1722
+      },
+      {
+        "name": "Pass outside the climbing rope",
+        "firstFrame": 1722,
+        "lastFrame": 1860
+      },
+      {
+        "name": "Return to the rope courtyard entrance",
+        "firstFrame": 1878,
+        "lastFrame": 2127
+      }
+    ],
+    "evidence": [
+      {
+        "action": "low rope catch",
+        "position": [
+          -0.0006657722504036509,
+          0.27613931315840956,
+          -146.78834300994436
+        ],
+        "gripDistance": 11.9
+      },
+      {
+        "action": "low rope catch",
+        "position": [
+          0.0017865947411664941,
+          0.2753638598872086,
+          -145.2234252822382
+        ],
+        "gripDistance": 11.9
+      },
+      {
+        "action": "climbed release",
+        "position": [
+          0.05498052814544825,
+          8.730276669966113,
+          -147.61944861903058
+        ],
+        "gripDistance": 3.7800000000000793
+      }
+    ],
+    "position": [
+      0.025988240321954466,
+      0,
+      -123.08045856513034
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return to the rope courtyard entrance",
+    "result": {
+      "id": 6,
+      "collected": 1,
+      "position": [
+        0.025988240321954466,
+        0,
+        -123.08045856513034
+      ],
+      "frames": 2145
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.025988240321954466,
+        0,
+        -123.08045856513034
+      ],
+      "camera": [
+        0.025988240321954466,
+        8.723529595870144,
+        -105.58297881081118
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            0.0003292348761943417,
+            0.5637875147019881,
+            1.0025534092358235
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -1.3955278754912452,
+            0.5089619572182762,
+            1.0027181637182827
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -11.888708493855306,
+            1.0362655311593998,
+            1.0105373196252716
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -6.554961380988364,
+            0.49523412194783895,
+            1.0041893653556422
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            -6.824016381689414,
+            0.45893570194485056,
+            1.0033145931689942
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

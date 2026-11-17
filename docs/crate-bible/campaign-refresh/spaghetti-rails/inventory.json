@@ -1,0 +1,22 @@
+{
+  "items": 706,
+  "gemBoxes": 0,
+  "enemies": 0,
+  "checkpoints": 0,
+  "bonus": false,
+  "winReward": true,
+  "itemHover": 0.9,
+  "itemSize": 2.304,
+  "roles": {
+    "Race item choice": 36,
+    "Air-route item": 3,
+    "Spring shortcut item": 18,
+    "rail": 649
+  },
+  "railItems": 649,
+  "groundItems": 57,
+  "maxRailAnchorDistance": 0.5992828827347777,
+  "minPickupMargin": 0.3057743154515009,
+  "maxFloorError": 7.105427357601002e-15,
+  "misses": []
+}

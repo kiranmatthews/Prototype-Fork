@@ -1,0 +1,138 @@
+{
+  "harvests": [
+    {
+      "name": "Camp 0 arrival supplies",
+      "count": 2,
+      "frames": 208,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 1 arrival supplies",
+      "count": 2,
+      "frames": 185,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 2 arrival supplies",
+      "count": 2,
+      "frames": 197,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 3 arrival supplies",
+      "count": 2,
+      "frames": 204,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 3 after-checkpoint supplies",
+      "count": 2,
+      "frames": 206,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 4 arrival supplies",
+      "count": 2,
+      "frames": 210,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 5 arrival supplies",
+      "count": 2,
+      "frames": 207,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 6 arrival supplies",
+      "count": 2,
+      "frames": 186,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 6 after-checkpoint supplies",
+      "count": 5,
+      "frames": 354,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 7 arrival supplies",
+      "count": 5,
+      "frames": 313,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 7 after-checkpoint supplies",
+      "count": 5,
+      "frames": 354,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 8 arrival supplies",
+      "count": 5,
+      "frames": 313,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 8 after-checkpoint supplies",
+      "count": 4,
+      "frames": 253,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 9 arrival supplies",
+      "count": 5,
+      "frames": 312,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 9 after-checkpoint supplies",
+      "count": 3,
+      "frames": 206,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Camp 10 arrival supplies",
+      "count": 4,
+      "frames": 256,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Abandoned tunnel supplies",
+      "count": 2,
+      "frames": 121,
+      "deaths": 0,
+      "fromCentreRoute": true
+    },
+    {
+      "name": "Final tunnel count check",
+      "count": 2,
+      "frames": 127,
+      "deaths": 0,
+      "fromCentreRoute": true
+    }
+  ],
+  "maxFloorError": 0.3808377883076801,
+  "explosivesExact": true,
+  "settingsExact": true,
+  "nonCratesExact": true,
+  "reset": {
+    "physical": 62,
+    "fieldsArmed": true
+  }
+}

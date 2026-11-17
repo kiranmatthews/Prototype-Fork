@@ -1,0 +1,1349 @@
+{
+  "narrow": {
+    "id": "narrow",
+    "width": 1254,
+    "height": 1254,
+    "fps": 40,
+    "frameCount": 48,
+    "pages": [
+      {
+        "file": "narrow/atlas-0.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-1.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 9,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-2.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 18,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-3.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 27,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-4.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 36,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "narrow/atlas-5.webp",
+        "columns": 3,
+        "rows": 1,
+        "first": 45,
+        "count": 3,
+        "width": 3762,
+        "height": 1254
+      }
+    ],
+    "frames": [
+      {
+        "file": "art/fire-sprites/v4/narrow/k00.png",
+        "anchor": [
+          0.496298250432453,
+          0.08492822966507174
+        ],
+        "sha256": "bf0b6fa3308f2643af8ed8f0e6ff0c7974bfefb49a5e99a6c46187e065253e6d"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/01.png",
+        "anchor": [
+          0.49296585749834443,
+          0.08253588516746413
+        ],
+        "sha256": "faaa7c8211a441835c866fead7216efcd2a7cffce582934523c3a17fe8487ef2"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/02-r2.png",
+        "anchor": [
+          0.4926246784895208,
+          0.08333333333333337
+        ],
+        "sha256": "b9d224243942aa648e4d48b36a6c703851d99113ee800ae5e7ec5cbd718d46b5"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/03.png",
+        "anchor": [
+          0.49199931968040495,
+          0.08094098883572565
+        ],
+        "sha256": "91827a944dc6563df16753706b244c26c7fe34af62f69de3872ef4c02fe08599"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/04.png",
+        "anchor": [
+          0.4928304570100236,
+          0.08333333333333337
+        ],
+        "sha256": "5c4322bd73c85395ef12c064ae949871a4dfb1374810e51d32cfe1f8525570da"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/05.png",
+        "anchor": [
+          0.4928092174008689,
+          0.08094098883572565
+        ],
+        "sha256": "b4ee235b5c14b72babb7072fcd39561c1647956f794edab62231309532cba054"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/06.png",
+        "anchor": [
+          0.49187124290559825,
+          0.08094098883572565
+        ],
+        "sha256": "7c4e308308b1e351acbc89f550473f7b2331bd0e4a380038836f48e54225f56f"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/07.png",
+        "anchor": [
+          0.4913760636736698,
+          0.07934609250398728
+        ],
+        "sha256": "3addeea512e3763aeb9e9b45043f616e53b769e09595548c855c65807f244e21"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/k08.png",
+        "anchor": [
+          0.4947832974910137,
+          0.08333333333333337
+        ],
+        "sha256": "96c9924ae6688e2b96d06289fae894600e17ef031063b4255f6905e4b5338c33"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/09.png",
+        "anchor": [
+          0.49161585850562345,
+          0.08094098883572565
+        ],
+        "sha256": "69a321fe34f48c3701d33673c9babf7d8ddbeed2aba23dade1e96578848278a4"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/10-r2.png",
+        "anchor": [
+          0.49326319114284656,
+          0.08173843700159489
+        ],
+        "sha256": "70c68014fae12f071ea916e55f91a3f208cebc67b1de9601a948f49513e67bdc"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/11.png",
+        "anchor": [
+          0.4919633795231882,
+          0.0801435406698564
+        ],
+        "sha256": "27b95a547f66813ca2154ca7b1a45df222ae307829795b5b6f0598e0f70f7944"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/12.png",
+        "anchor": [
+          0.49179279694398315,
+          0.08173843700159489
+        ],
+        "sha256": "28ea1b3e1f77b0ed641255271cb03e6a27cd45d97847cfb3de47fb7be01a0fba"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/13.png",
+        "anchor": [
+          0.48945014101242945,
+          0.0801435406698564
+        ],
+        "sha256": "f924dfb663b366da92ddebc82433551b33e3eae973b9595722d4aaefb510359a"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/14-r3.png",
+        "anchor": [
+          0.4898471080456598,
+          0.07934609250398728
+        ],
+        "sha256": "b663f52888018f940f7b7672d46f75f9fc74918cccef30c61cfc2dd805dd2e24"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/15.png",
+        "anchor": [
+          0.4885057515751859,
+          0.07934609250398728
+        ],
+        "sha256": "7eb326beb9e8999024e37cb740953b1e8ae7337286ddcacdeae60d63223f3b70"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/k16-r2.png",
+        "anchor": [
+          0.49156976585478634,
+          0.08094098883572565
+        ],
+        "sha256": "152e044ee34271c9295ad2baa35e985c7d28f25ae26555e37667b1196e9ad908"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/17.png",
+        "anchor": [
+          0.4902689115747766,
+          0.07934609250398728
+        ],
+        "sha256": "9d235db0b4b3aa63165db0afbb13ea78fac4617de3e06282632440b61bb5de0d"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/18-r4.png",
+        "anchor": [
+          0.4910917924805009,
+          0.08094098883572565
+        ],
+        "sha256": "0f181fb9bf01e89bf8dd59eb0a5d65886023ae0abbc0131a74b01f685b3ddbe4"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/19.png",
+        "anchor": [
+          0.49002284977083654,
+          0.0801435406698564
+        ],
+        "sha256": "7337c9ef193359489b1392e9fa345c5ed58b59c8f11a1f123e4825ce05b297fa"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/20-r2.png",
+        "anchor": [
+          0.4904555394887413,
+          0.10087719298245612
+        ],
+        "sha256": "ea060bb443d7a5243465b6cd71eaf5b6da0ab85b8438697b546c0a221a2bf146"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/21.png",
+        "anchor": [
+          0.48827040846854286,
+          0.11443381180223289
+        ],
+        "sha256": "e2fd3be421bff4ecd96ae5fd439c6a24571ac5a4a94d5b8ebbbad11fd0cf1e03"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/22-r2.png",
+        "anchor": [
+          0.48978819969742815,
+          0.12240829346092508
+        ],
+        "sha256": "292995ea2d35a8f8fabf172dfe12e16a50d5b848edd555c53fc72e66fe7f71e2"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/23-r2.png",
+        "anchor": [
+          0.4879956983791933,
+          0.11044657097288679
+        ],
+        "sha256": "c73140523dd1b50b3d4bb11fb27209411db28374ca8e9447c762437ee2d27f18"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/k24.png",
+        "anchor": [
+          0.49403217680099626,
+          0.08173843700159489
+        ],
+        "sha256": "ae1f434091418638ef740e7d0ca61ba2f91d8559252568253631a5190bca17d1"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/25.png",
+        "anchor": [
+          0.49047652511592016,
+          0.07934609250398728
+        ],
+        "sha256": "0d44f8afaadcc51593e1326346af596db0677891fa3f315f03c6099244efa664"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/26-r2.png",
+        "anchor": [
+          0.4912865413439103,
+          0.07934609250398728
+        ],
+        "sha256": "b468b8843ec55266b454d2c2b7a32d0deb8b052581a191680f324f030ccebd53"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/27.png",
+        "anchor": [
+          0.4907921919877232,
+          0.0777511961722488
+        ],
+        "sha256": "ea1e0e9a13b391ac3a3e8f160b2c78f2fe2fc425489fb3d68838542a350fa78f"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/28-r2.png",
+        "anchor": [
+          0.490283361831193,
+          0.0801435406698564
+        ],
+        "sha256": "89e773d1a237f69e118c358d706e2459f9c2c6020f8c614a6f13d7de9f363c40"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/29-r2.png",
+        "anchor": [
+          0.48779927086385516,
+          0.0777511961722488
+        ],
+        "sha256": "e284c49bf472e2eb91d669d06e738a07121c9a40483fad6ee6f24d6a7085c6cf"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/30.png",
+        "anchor": [
+          0.4890496516613696,
+          0.07934609250398728
+        ],
+        "sha256": "6f31d968ab4d56b51ebfa38da0367eb3ce9e1b8cf46bfc20d7c2f7472531f758"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/31.png",
+        "anchor": [
+          0.4886964173810625,
+          0.07934609250398728
+        ],
+        "sha256": "a9a13085973916b5947a075102404f358fee4f3815eba5a6a4aea7bd19ef0bb0"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/k32.png",
+        "anchor": [
+          0.49281864000923303,
+          0.08094098883572565
+        ],
+        "sha256": "0eee939fd4902a8c9f0f078cebef09e55bc9e821310ba0e3a8e9dc7f1bc7407b"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/33.png",
+        "anchor": [
+          0.4917395784533902,
+          0.0801435406698564
+        ],
+        "sha256": "359087da58b09178c496ffcfc2751613bbb06d880b64f58933afb0bb87c03071"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/34.png",
+        "anchor": [
+          0.4898118969861727,
+          0.07934609250398728
+        ],
+        "sha256": "0df0acc234f363047dddaa41f5dd23ef65ad2b58c509e23303294efa28f7c125"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/35.png",
+        "anchor": [
+          0.48958149334972123,
+          0.07854864433811803
+        ],
+        "sha256": "3f4c6f0f07fa83dc3f43f3d7fd222d380bafb8146506be9f6ffc817a0de50dd7"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/36.png",
+        "anchor": [
+          0.4922225871534365,
+          0.0801435406698564
+        ],
+        "sha256": "7d94127f2f59a4d32844ce5db5ea4de982c38e75158446809fcf7c6e9b225c54"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/37.png",
+        "anchor": [
+          0.49041801853414546,
+          0.07854864433811803
+        ],
+        "sha256": "86a85b6906829a7476cc6ab25e70c8ba4a0151f8b0def1abe43b1ad16d15dd73"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/38.png",
+        "anchor": [
+          0.4912845896148299,
+          0.07854864433811803
+        ],
+        "sha256": "5f3ad2fbfb5508346a9b8e4d41aac6443b931e1cf023b29a48f90a50268eee04"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/39.png",
+        "anchor": [
+          0.4906718587434743,
+          0.07695374800637955
+        ],
+        "sha256": "3985f4639da6902b5c8968df34a0b8c854e2701c97d61fdde18abd4563de3e9d"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/k40-r2.png",
+        "anchor": [
+          0.4871225669660727,
+          0.07456140350877194
+        ],
+        "sha256": "ab3c889fb8e33fc4f409384ae14c883a05a98a27fe3cccda8c69e0ab741bb50c"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/41.png",
+        "anchor": [
+          0.4876643600122173,
+          0.07854864433811803
+        ],
+        "sha256": "12678b6580880364825324a020f5d0b8068dc5a9879be8ad060f7f7e0eb4f58b"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/42.png",
+        "anchor": [
+          0.49069246825603163,
+          0.08094098883572565
+        ],
+        "sha256": "96c6a5d1d958ed3a813d5e2d1ecff60d088ea214149da4fdf805a1e4e0af4f28"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/43.png",
+        "anchor": [
+          0.48888882122662025,
+          0.07934609250398728
+        ],
+        "sha256": "dbf6958299bb676105df1d1d9f2b488445cf54b5144b5eb7ad54e46ebfde7cd5"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/44.png",
+        "anchor": [
+          0.49167217724742435,
+          0.08333333333333337
+        ],
+        "sha256": "033d4f8e59fb73b3d59632055da3663687c0fa5e5118f606e36ef3b5ccc61727"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/45.png",
+        "anchor": [
+          0.48912486929184973,
+          0.07934609250398728
+        ],
+        "sha256": "0762c4cc89317e914abf1d81cf734d367d7e74def111f1dac24ee259d1125f88"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/46-r3.png",
+        "anchor": [
+          0.4890989965718868,
+          0.0801435406698564
+        ],
+        "sha256": "42089707500cf582020f52f72cc9d4c976dd8062b2bcb925e1910653363faf99"
+      },
+      {
+        "file": "art/fire-sprites/v4/narrow/47.png",
+        "anchor": [
+          0.4888353278819384,
+          0.0801435406698564
+        ],
+        "sha256": "cdad4e78fa6dacd6c781ed4f06241509fdd3c97a4f20086b19fbe918c9b3c46e"
+      }
+    ]
+  },
+  "medium": {
+    "id": "medium",
+    "width": 1254,
+    "height": 1254,
+    "fps": 40,
+    "frameCount": 48,
+    "pages": [
+      {
+        "file": "medium/atlas-0.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 0,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-1.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 9,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-2.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 18,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-3.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 27,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-4.webp",
+        "columns": 3,
+        "rows": 3,
+        "first": 36,
+        "count": 9,
+        "width": 3762,
+        "height": 3762
+      },
+      {
+        "file": "medium/atlas-5.webp",
+        "columns": 3,
+        "rows": 1,
+        "first": 45,
+        "count": 3,
+        "width": 3762,
+        "height": 1254
+      }
+    ],
+    "frames": [
+      {
+        "file": "art/fire-sprites/v4/medium/k00-r2.png",
+        "anchor": [
+          0.49448541411018115,
+          0.0697767145135566
+        ],
+        "sha256": "085c0739b64694b6dec2f6820ca5fe8904dc994c95f751b09179bb17f83cc366"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/01.png",
+        "anchor": [
+          0.4936855996790488,
+          0.06897926634768736
+        ],
+        "sha256": "8450b890a74b3e7ac4e2d34398ff83679b350da12c58b3ee28713f67b67fd914"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/02.png",
+        "anchor": [
+          0.49417105964490543,
+          0.06738437001594899
+        ],
+        "sha256": "5c409d0a9969320b592354fa1905f463ba76a4e1424ba902b5176902c2c8e639"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/03.png",
+        "anchor": [
+          0.49170673650922364,
+          0.06658692185007975
+        ],
+        "sha256": "6729d4378f79c8a15a4f66c7d363c7dae50e1ebd306ac07e9821248873c53700"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/04.png",
+        "anchor": [
+          0.49333985207906894,
+          0.06738437001594899
+        ],
+        "sha256": "2864c3ce6c402a320bda8ec530f57a7b6aaa30a5b193015f3fbc5f8648cf7133"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/05.png",
+        "anchor": [
+          0.49380552993488014,
+          0.06738437001594899
+        ],
+        "sha256": "6a03bb956518e07cc5df84c7697cc2799f587de13d50ac4ea34010cd825d2be0"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/06.png",
+        "anchor": [
+          0.4929896295350328,
+          0.06818181818181823
+        ],
+        "sha256": "89b8316e678594bac41f0737f3fa0935d83e3fbcaef941df6ef043282942758b"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/07.png",
+        "anchor": [
+          0.4939566763055441,
+          0.06738437001594899
+        ],
+        "sha256": "86720a7d6e146f874b420e6a35a53343ca58aa948ba976bc556dce7ba5fab02a"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/k08-r2.png",
+        "anchor": [
+          0.4929946039097578,
+          0.06897926634768736
+        ],
+        "sha256": "05d4ff18dd2e9199ff221db1758d4ab9b67318de7ec282aa5fcb79709526f006"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/09.png",
+        "anchor": [
+          0.4918848068326936,
+          0.06578947368421051
+        ],
+        "sha256": "ee71c859a0be67264ee780393a0c01afc89fb62cda341b7e4573feba5c54a1d3"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/10-r2.png",
+        "anchor": [
+          0.4929640126878165,
+          0.06818181818181823
+        ],
+        "sha256": "67a8413d1e04f50498c56449d43b11a2e30a6e7fa2dad26d178c4e7d28b40295"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/11.png",
+        "anchor": [
+          0.49408793813396285,
+          0.06658692185007975
+        ],
+        "sha256": "cb65ddee896a408b4c203968235f77fac0ad821e62a1f9ce026383434fea59a3"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/12-r2.png",
+        "anchor": [
+          0.49432471315873117,
+          0.0697767145135566
+        ],
+        "sha256": "090229672f4b89f010c705765b4614398154963d5eda7c0f830972b69c102937"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/13-r2.png",
+        "anchor": [
+          0.4886272916476856,
+          0.06818181818181823
+        ],
+        "sha256": "1ef6b197df76e210f87ca4c5c1badbfdbe6ef6cf970566868206e2e8e5c106e6"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/14.png",
+        "anchor": [
+          0.49099578189780535,
+          0.06818181818181823
+        ],
+        "sha256": "e20c784cbd8e87857b764d8f8a1dcf56d569945678d662a0c87d9dd0c749c57b"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/15.png",
+        "anchor": [
+          0.49072438766229565,
+          0.06658692185007975
+        ],
+        "sha256": "bd2a5f4677dca36f97413da2df4a8bc26858934423b3dd956b3b7abf0669daa6"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/k16.png",
+        "anchor": [
+          0.4953515511458705,
+          0.06897926634768736
+        ],
+        "sha256": "c4b61d0048a57ffa9abecebef930b00da634f2f583a28d6c22ba0bd6c6dbf315"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/17.png",
+        "anchor": [
+          0.4955379875391925,
+          0.06818181818181823
+        ],
+        "sha256": "b0fdbc2f9031829166e2eeed5af614d6453bb9ba6628c26cd74009ba5165fee8"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/18-r2.png",
+        "anchor": [
+          0.49391446455891175,
+          0.06738437001594899
+        ],
+        "sha256": "fee77d457795d3c4064a1f6789c57c36189c186c012dbcf9298a622aa0dee437"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/19.png",
+        "anchor": [
+          0.4940005021826594,
+          0.06658692185007975
+        ],
+        "sha256": "1036be9686d5be6f2806b07998f121c3bcb02df7ad3f9e1c591e3949d8542868"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/20-r2.png",
+        "anchor": [
+          0.4941798857361719,
+          0.06499202551834127
+        ],
+        "sha256": "3dbb76c1906f9f5118ac3f98ef51e13c69566e5ce41dd9485d508ef0057b2678"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/21.png",
+        "anchor": [
+          0.49380310532428634,
+          0.06499202551834127
+        ],
+        "sha256": "2682aa4a13f1c9c5e2c7b6998017b2ed899f4717a14ec005c392b1812885db60"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/22.png",
+        "anchor": [
+          0.49516936697387826,
+          0.06499202551834127
+        ],
+        "sha256": "10fc378312d6f0b751eb7c4c69edb3d09ecb0552de6b66f8aa7a7ff8af980712"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/23.png",
+        "anchor": [
+          0.49377882328232053,
+          0.0633971291866029
+        ],
+        "sha256": "a358cb8b11108a5af73cd1401ae6e0b5ceaf282e36626643d18728d7b8f42060"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/k24.png",
+        "anchor": [
+          0.49367521928579206,
+          0.0697767145135566
+        ],
+        "sha256": "4be33570893abba99496b4a5abb9a4fa1588f715339caa71c91a226a28e53eb6"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/25.png",
+        "anchor": [
+          0.491844444967065,
+          0.06818181818181823
+        ],
+        "sha256": "0d77c468b15ed2009846e26de99e27dd0428bf022c83c3e799e0a8c6c2a359c2"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/26.png",
+        "anchor": [
+          0.49232508300107564,
+          0.06658692185007975
+        ],
+        "sha256": "c089d48bdb238e1653c46ed4047d0a1797473fc7c1c970ba55192b3f4c1686bc"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/27.png",
+        "anchor": [
+          0.4916210782422531,
+          0.06738437001594899
+        ],
+        "sha256": "2a03a318638c4e897635aff548aec8046d0bf9e723649bbed62c77979f941774"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/28-r2.png",
+        "anchor": [
+          0.493966847072973,
+          0.06818181818181823
+        ],
+        "sha256": "fa9dc276879b8ae1654e858c50a3c3eae9cbf0a8bc23c0091d44472a714fee5d"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/29-r2.png",
+        "anchor": [
+          0.48937262192747455,
+          0.06578947368421051
+        ],
+        "sha256": "de839d29dd45810208dee42572d172302b19cf3e9d1ab2cc1a7fae10a5dd79ca"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/30.png",
+        "anchor": [
+          0.4876074978822078,
+          0.06658692185007975
+        ],
+        "sha256": "646245d5fd829eee619175925d76e77aee61d3943331eb3fa8d75a693c01cd79"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/31.png",
+        "anchor": [
+          0.48559145803112475,
+          0.06578947368421051
+        ],
+        "sha256": "caf2d43a0ad0a50c987eeee0ada23d133a62a6c67ed17d63a1a76038b1faa08f"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/k32.png",
+        "anchor": [
+          0.48691640245320494,
+          0.0697767145135566
+        ],
+        "sha256": "a8b277bfe20bcaf00db943f620024e1c7bb3718e1dd7e46c283b8ee3d4e9fe9f"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/33-r2.png",
+        "anchor": [
+          0.48416857285695714,
+          0.06578947368421051
+        ],
+        "sha256": "46822ff096c1508af4d5f56f412f3ff9997c4196f80c6df8edaad236b47e6b75"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/34.png",
+        "anchor": [
+          0.4846864654352972,
+          0.06738437001594899
+        ],
+        "sha256": "4004cdb796cd1a354fca215f309755ca5dfcd761f55e850bcabb46391bbaff84"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/35.png",
+        "anchor": [
+          0.4849386465668675,
+          0.06658692185007975
+        ],
+        "sha256": "8edc383092964edb048013b541e68a637b3b89281bb5b8090686b73485fe3192"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/36.png",
+        "anchor": [
+          0.4856279258878198,
+          0.06897926634768736
+        ],
+        "sha256": "ed6e2105d068ce50a08709e9176e2358fd26165083beebc4dd1397c62f00a436"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/37.png",
+        "anchor": [
+          0.48237823812903796,
+          0.06658692185007975
+        ],
+        "sha256": "00f0a9c65536d041ceae6872a774822daae65ee6fb10d15a62e1102eef13e181"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/38.png",
+        "anchor": [
+          0.48973479322106367,
+          0.06738437001594899
+        ],
+        "sha256": "dcd977c77c5a79c8073bbaaa9fa5a453b5143078f01f28004e5fbaff1b3512d8"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/39.png",
+        "anchor": [
+          0.4896344452094591,
+          0.06578947368421051
+        ],
+        "sha256": "234c05eb85868204403d2f7da956b942198950db9e5561c2cda31bc88b10e914"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/k40.png",
+        "anchor": [
+          0.4933354474179798,
+          0.06897926634768736
+        ],
+        "sha256": "c0a7b6f86b259249d5b4ce9dfb3b2a81449109e8e795839621ecdf098341e4f0"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/41.png",
+        "anchor": [
+          0.48871295966685974,
+          0.06738437001594899
+        ],
+        "sha256": "ceaed1f95d69ae3c9281eac5b0a519260c6d544504fbf6a417d5689cc6b17e7d"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/42.png",
+        "anchor": [
+          0.49201182698035784,
+          0.06658692185007975
+        ],
+        "sha256": "7c1f682d9ca94610c44ce025bee3895e5516f32ecdb47d200266cff462176f26"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/43.png",
+        "anchor": [
+          0.4912801387746361,
+          0.06738437001594899
+        ],
+        "sha256": "db075f613993e4e33a67ae9e98e45b77fa3cd81789d3e8728bfb10c5d0ee65e7"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/44.png",
+        "anchor": [
+          0.4925995355961041,
+          0.06897926634768736
+        ],
+        "sha256": "e006e705927ee71076eeb173d87c6f6e17ab81942d4802544fb039dde6b3a968"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/45.png",
+        "anchor": [
+          0.4928202228059273,
+          0.06818181818181823
+        ],
+        "sha256": "21a25260e6cb647f75c2e862ed439917447b7ab8e5cbf10cd92c6dc29cd74b3a"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/46.png",
+        "anchor": [
+          0.49182360944294296,
+          0.06818181818181823
+        ],
+        "sha256": "e5085c54ff62006c4cad74d6107a8ba40919d3e108c10dd4880c9e7ee911a113"
+      },
+      {
+        "file": "art/fire-sprites/v4/medium/47.png",
+        "anchor": [
+          0.49039073041823456,
+          0.06897926634768736
+        ],
+        "sha256": "e782dfe2f3cc9dfe55e7efedf7a305ab0ab9ddcf2f12e6deb377132feafaec9d"
+      }
+    ]
+  },
+  "broad": {
+    "id": "broad",
+    "width": 1774,
+    "height": 887,
+    "fps": 40,
+    "frameCount": 48,
+    "pages": [
+      {
+        "file": "broad/atlas-0.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 0,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-1.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 8,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-2.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 16,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-3.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 24,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-4.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 32,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      },
+      {
+        "file": "broad/atlas-5.webp",
+        "columns": 2,
+        "rows": 4,
+        "first": 40,
+        "count": 8,
+        "width": 3548,
+        "height": 3548
+      }
+    ],
+    "frames": [
+      {
+        "file": "art/fire-sprites/v4/broad/k00.png",
+        "anchor": [
+          0.49589060221204306,
+          0.06820744081172492
+        ],
+        "sha256": "c03cfe66f2b326fdbafb583265042407d2d710824320f94dbe09f8db8dd35071"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/01.png",
+        "anchor": [
+          0.4974990588286751,
+          0.06933483652762118
+        ],
+        "sha256": "576dfb24d2c01b4b0d08ab03764bdd0244a6a9009b7f6ffd871d6da412a977c0"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/02-r2.png",
+        "anchor": [
+          0.4947467630506095,
+          0.06820744081172492
+        ],
+        "sha256": "81f67760829690a0bfdec65a3d89c9b3aa29e8726b0775d9d4cd3d1cad350cef"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/03-r2.png",
+        "anchor": [
+          0.4940418748144864,
+          0.06708004509582866
+        ],
+        "sha256": "eb2ed0c70236d3e1791d87dcdc7e0a4595295cfeeba6545eaa96e741b83a298d"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/04.png",
+        "anchor": [
+          0.49439517837008035,
+          0.06933483652762118
+        ],
+        "sha256": "c885f1ca8bd42b57fd6795943de009242b751f08a03a81da811794872affd966"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/05-r2.png",
+        "anchor": [
+          0.49494647632423616,
+          0.06708004509582866
+        ],
+        "sha256": "80156bd881f414b7b30f961304a5fe0d159f8e6acf9fe9d07acb7fa0b82012ae"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/06.png",
+        "anchor": [
+          0.4932066164191622,
+          0.06933483652762118
+        ],
+        "sha256": "d721ca20c0d25e2c57baff1bfb83a0b9eda284013f1997530cc44db02a232396"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/07-r2.png",
+        "anchor": [
+          0.4911800152612664,
+          0.0659526493799324
+        ],
+        "sha256": "daff3d76abaecd96f6873fb287dd15734761d242920e5fdaea4a2f0f205c7e88"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/k08-r2.png",
+        "anchor": [
+          0.4940235476407597,
+          0.06708004509582866
+        ],
+        "sha256": "97a63002e8089d4ca0705b1b133953a8f3132d9a58eef37f4061b85cbbf49664"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/09.png",
+        "anchor": [
+          0.49417220987277993,
+          0.06820744081172492
+        ],
+        "sha256": "2d6b8432c8e9908a7ead3c23b3ab8271bae20d20e643495715849d7439f4a091"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/10.png",
+        "anchor": [
+          0.4957562381924865,
+          0.06820744081172492
+        ],
+        "sha256": "57b9bb92ce5cfc237ce71973f2b48c885cdd9bfde4a796b593b93f79347b4a00"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/11.png",
+        "anchor": [
+          0.49703839835210456,
+          0.0659526493799324
+        ],
+        "sha256": "d51e0c7650db6f4f4e6718036c34ccf28e1fa1dc1b8b8a265ec48ca14da62f8e"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/12-r2.png",
+        "anchor": [
+          0.494321730190567,
+          0.06933483652762118
+        ],
+        "sha256": "e1cfe577400610146cd36600a187014c98519e60c9b5fa1e14e7c58d3f132ace"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/13-r3.png",
+        "anchor": [
+          0.49352884124609436,
+          0.06708004509582866
+        ],
+        "sha256": "310f93fc6cfb1a6d0fa1371fb6a5b69f6ef2bbeaad2e0738b30c5708b42e7862"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/14-r2.png",
+        "anchor": [
+          0.4957887652062714,
+          0.06820744081172492
+        ],
+        "sha256": "b6b26d14d00a757a06e3d3ee5f74197bbefb9950681efca3f8381dd71e840184"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/15.png",
+        "anchor": [
+          0.49549140106081585,
+          0.06933483652762118
+        ],
+        "sha256": "524e0cf01835f291779129b25f0e8d31840fd3397aeb4601e7509e0b1c29c1d8"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/k16.png",
+        "anchor": [
+          0.49705628326832496,
+          0.0715896279594137
+        ],
+        "sha256": "62dffe5d526e9bf70f7c9b18c2560ef0d8acb54af4433e79bdf5ee0880f6be37"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/17.png",
+        "anchor": [
+          0.498458934990712,
+          0.07046223224351744
+        ],
+        "sha256": "861497574810818fa666358f15c00aac2811f2a52881d560fa2f3d6f0757689f"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/18.png",
+        "anchor": [
+          0.49713583705820064,
+          0.0715896279594137
+        ],
+        "sha256": "84d7be4f2883c20780ed7eb0c34740fb86ea98843b120522c78790b46915718e"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/19.png",
+        "anchor": [
+          0.49376589107604857,
+          0.07046223224351744
+        ],
+        "sha256": "119770dfb1fc470aab69acd18af00fa3af1db435a80328c736c6fa12eb4dbc1e"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/20.png",
+        "anchor": [
+          0.4967833715306999,
+          0.07046223224351744
+        ],
+        "sha256": "d353be2d9f5743452978929b7f78ef445cb502a0106e32258b80d0ea460616f9"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/21-r2.png",
+        "anchor": [
+          0.495449090411363,
+          0.06933483652762118
+        ],
+        "sha256": "bacf28377565974e020b6a623d9c691cf1fd74168f3d4649606110fdd5ed002b"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/22.png",
+        "anchor": [
+          0.4950753317386747,
+          0.06820744081172492
+        ],
+        "sha256": "668ce33f2b55b17ae0801e8c1779bb17a0da726b17329dff37967ef0cdb570f7"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/23.png",
+        "anchor": [
+          0.4945698676135647,
+          0.0659526493799324
+        ],
+        "sha256": "82449921a6345f521483ec8a87b1af5a0ade3ce8e0065c62bc6143753a009895"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/k24.png",
+        "anchor": [
+          0.4947996530209599,
+          0.06933483652762118
+        ],
+        "sha256": "c8679d95776c95dad32cef6e5751588944a94adaa4968c314944bd53bb60e3f7"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/25.png",
+        "anchor": [
+          0.49605356200777945,
+          0.06820744081172492
+        ],
+        "sha256": "68860ad996d3d1fa7525c52eb56c2f4e2117fff548fce42b5c1f7a80b7cc8610"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/26.png",
+        "anchor": [
+          0.49271724196428773,
+          0.06820744081172492
+        ],
+        "sha256": "3907054a37f71b03253b0603be166db69a10763aab360dcea0a076e6474a017e"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/27.png",
+        "anchor": [
+          0.4946886219267687,
+          0.06933483652762118
+        ],
+        "sha256": "01d55fd4dc84fa163dbd0eb17f5122c2097b9ba46d62d35b35fb7b48f06e0aae"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/28.png",
+        "anchor": [
+          0.49508393593478905,
+          0.07046223224351744
+        ],
+        "sha256": "dd0298b6c28911a9c0306d0792d5cc7f61c3e7a021b14d95b7644cde8ec1839c"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/29-r3.png",
+        "anchor": [
+          0.4949345003399923,
+          0.07046223224351744
+        ],
+        "sha256": "b783cc2b8c20067d1b6c1c13cfa8a737b1b53d763612d05365b0b13d49b7282e"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/30-r3.png",
+        "anchor": [
+          0.49213707641549725,
+          0.06708004509582866
+        ],
+        "sha256": "124b6d0436f83c798e5742ed7662bc60a45cf5b5880e2cb2932763d01b00ec9b"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/31.png",
+        "anchor": [
+          0.4937884738512658,
+          0.06708004509582866
+        ],
+        "sha256": "fa94b7030dfd5a3f081747ed637f36c9a4fbc218a5280b1526093c7b74e8483a"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/k32.png",
+        "anchor": [
+          0.4985788871492011,
+          0.06708004509582866
+        ],
+        "sha256": "2527066c2e5aa61364d8d1429af6e73b6eb4c1d7841e9e8bd6b1a5052a8c181f"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/33.png",
+        "anchor": [
+          0.49890530783172665,
+          0.06820744081172492
+        ],
+        "sha256": "feef756fdfbbefe1e63bc153af5a14b258a786b4e742b1ae23560e79f5c3ddba"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/34-r2.png",
+        "anchor": [
+          0.5001509150619173,
+          0.06820744081172492
+        ],
+        "sha256": "ab1d622ba4f56082f93295267449f4ea0b3c8b5e1a7cf0d417730541f3c1ad16"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/35.png",
+        "anchor": [
+          0.49793278109418704,
+          0.06708004509582866
+        ],
+        "sha256": "3e100ffc705040917cc9a8015660134dde5e66be6398fad0fc968d25ddd8faab"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/36.png",
+        "anchor": [
+          0.5040488668841082,
+          0.06933483652762118
+        ],
+        "sha256": "2534db2862f86819cdc0ca671e74556d6bd7f9956973502b1c63edbe15a1fbec"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/37-r2.png",
+        "anchor": [
+          0.4983699536493198,
+          0.06933483652762118
+        ],
+        "sha256": "ce1dce80de4bbc2e629d183e1800292c74379d69e2c7a70d84b20f279203f24d"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/38.png",
+        "anchor": [
+          0.5032774103850182,
+          0.07046223224351744
+        ],
+        "sha256": "1e429d6a554382b37b8aed832c7ac5f4da27e40bde04db0170f939929bd6254f"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/39.png",
+        "anchor": [
+          0.5028142108199699,
+          0.06820744081172492
+        ],
+        "sha256": "d79238e978bf88700be257e61c45dfd5186e1272364de962887457d9e3cad464"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/k40.png",
+        "anchor": [
+          0.49824469168700664,
+          0.07046223224351744
+        ],
+        "sha256": "1c72cffe0ebc39e457905ca658d5c05a136d6a905250b192b2b14c8c22a5f063"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/41-r2.png",
+        "anchor": [
+          0.49872680752911197,
+          0.06708004509582866
+        ],
+        "sha256": "4bbed7032c315d61db4818c964518f09568c7fb00ac8fc9500dbfae3d6478979"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/42.png",
+        "anchor": [
+          0.4987918652799531,
+          0.06820744081172492
+        ],
+        "sha256": "1ba8c456ffb8c8094f612ce57d4751570b0f353753059f7e1d31d11776822e55"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/43.png",
+        "anchor": [
+          0.4981119535572624,
+          0.06820744081172492
+        ],
+        "sha256": "80c7527a922c4d993a25ce4ba6b4ebb1f07ed675feecd4d932caeaf94404dc53"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/44.png",
+        "anchor": [
+          0.4984539292379543,
+          0.07046223224351744
+        ],
+        "sha256": "adda8e22de4ff1a0fa8d32d99181898c0dfa3b635151e606ab701647f0846e51"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/45.png",
+        "anchor": [
+          0.4961478768056878,
+          0.06820744081172492
+        ],
+        "sha256": "e111279d660a448f5cc3fe0db2557610859d7259a2175c83bdd5b56c33308e3c"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/46-r2.png",
+        "anchor": [
+          0.4967198572962419,
+          0.0659526493799324
+        ],
+        "sha256": "76ffe347aebfe8c0be6bcf74dd8085b11aaf2f060196df34f57cfd9d42f16e7c"
+      },
+      {
+        "file": "art/fire-sprites/v4/broad/47-r2.png",
+        "anchor": [
+          0.49896716977398814,
+          0.06708004509582866
+        ],
+        "sha256": "0c29eb4612b5c6545be44edba57085ad31b48759f0e905d2c77fa47af7601304"
+      }
+    ]
+  }
+}

@@ -81,3 +81,12 @@ export function dressSkyBridgeBonus(data: CustomLevelData): void {
     fogNear:SKY_BRIDGE_LEVEL.atmosphere!.fogNear!+20,
     fogFar:SKY_BRIDGE_LEVEL.atmosphere!.fogFar!+20};
 }
+
+/** Single-tier deliveries mark arrival, relay recovery and the final court.
+ * They cannot replace the two-high striped tool below the 9 m reward.
+ * The steel relay and finite-stack components retain their authored positions. */
+export function arrangeSkyBridgeBonusCrates(data: CustomLevelData): void {
+  for(const [name,x] of [['arrival',-4.5],['receiver',23.5],['exit',55]] as const)
+    for(let i=0;i<5;i++)data.components.push({t:'crate',p:[x+i*.96,0,0],
+      kind:i===4?'mystery':'wood',nm:`Cloudtop cargo / ${name} / ${i+1}`});
+}

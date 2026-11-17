@@ -1,0 +1,2367 @@
+{
+  "result": {
+    "from": 0,
+    "to": 11,
+    "position": [
+      1374.394000000001,
+      18.40000002384186,
+      0
+    ],
+    "deaths": 0,
+    "frames": 21107,
+    "state": "finished",
+    "cratesBroken": 131,
+    "totalCrates": 177,
+    "bonusCrates": 0,
+    "gemEarned": false
+  },
+  "report": {
+    "stage": "clear the spent mine switch into the Ancient Gates finish",
+    "actions": [
+      {
+        "name": "approach",
+        "firstFrame": 20,
+        "lastFrame": 275
+      },
+      {
+        "name": "root tooth one",
+        "firstFrame": 320,
+        "lastFrame": 356
+      },
+      {
+        "name": "approach",
+        "firstFrame": 356,
+        "lastFrame": 469
+      },
+      {
+        "name": "rising root tooth",
+        "firstFrame": 514,
+        "lastFrame": 571
+      },
+      {
+        "name": "approach",
+        "firstFrame": 571,
+        "lastFrame": 660
+      },
+      {
+        "name": "falling root tooth",
+        "firstFrame": 705,
+        "lastFrame": 768
+      },
+      {
+        "name": "approach",
+        "firstFrame": 768,
+        "lastFrame": 864
+      },
+      {
+        "name": "long rising root gap",
+        "firstFrame": 909,
+        "lastFrame": 966
+      },
+      {
+        "name": "read the first crab safe approach",
+        "firstFrame": 966,
+        "lastFrame": 1041
+      },
+      {
+        "name": "read the first crab spin",
+        "firstFrame": 1059,
+        "lastFrame": 1096
+      },
+      {
+        "name": "approach",
+        "firstFrame": 1096,
+        "lastFrame": 1189
+      },
+      {
+        "name": "Bristle landing",
+        "firstFrame": 1234,
+        "lastFrame": 1295
+      },
+      {
+        "name": "spin the Bristleback safe approach",
+        "firstFrame": 1295,
+        "lastFrame": 1379
+      },
+      {
+        "name": "spin the Bristleback spin",
+        "firstFrame": 1397,
+        "lastFrame": 1434
+      },
+      {
+        "name": "read first split timber gate",
+        "firstFrame": 1434,
+        "lastFrame": 1558
+      },
+      {
+        "name": "wait for first split timber gate",
+        "firstFrame": 1577,
+        "lastFrame": 1618
+      },
+      {
+        "name": "cross first split timber gate",
+        "firstFrame": 1618,
+        "lastFrame": 1758
+      },
+      {
+        "name": "checkpoint 105 approach",
+        "firstFrame": 1776,
+        "lastFrame": 1898
+      },
+      {
+        "name": "bank checkpoint 105",
+        "firstFrame": 1917,
+        "lastFrame": 1918
+      },
+      {
+        "name": "read the nitro",
+        "firstFrame": 1936,
+        "lastFrame": 2125
+      },
+      {
+        "name": "clear the nitro without spinning",
+        "firstFrame": 2170,
+        "lastFrame": 2231
+      },
+      {
+        "name": "read second split timber gate",
+        "firstFrame": 2231,
+        "lastFrame": 2308
+      },
+      {
+        "name": "wait for second split timber gate",
+        "firstFrame": 2327,
+        "lastFrame": 2368
+      },
+      {
+        "name": "cross second split timber gate",
+        "firstFrame": 2368,
+        "lastFrame": 2508
+      },
+      {
+        "name": "climb the split gate takeoff",
+        "firstFrame": 2526,
+        "lastFrame": 2659
+      },
+      {
+        "name": "climb the split gate arrow contact",
+        "firstFrame": 2704,
+        "lastFrame": 2740
+      },
+      {
+        "name": "climb the split gate",
+        "firstFrame": 2740,
+        "lastFrame": 2894
+      },
+      {
+        "name": "approach",
+        "firstFrame": 2894,
+        "lastFrame": 3058
+      },
+      {
+        "name": "first falling lintel",
+        "firstFrame": 3103,
+        "lastFrame": 3143
+      },
+      {
+        "name": "second falling lintel",
+        "firstFrame": 3170,
+        "lastFrame": 3233
+      },
+      {
+        "name": "third falling lintel",
+        "firstFrame": 3260,
+        "lastFrame": 3323
+      },
+      {
+        "name": "falling lintel exit",
+        "firstFrame": 3350,
+        "lastFrame": 3413
+      },
+      {
+        "name": "checkpoint 221 approach",
+        "firstFrame": 3413,
+        "lastFrame": 3574
+      },
+      {
+        "name": "bank checkpoint 221",
+        "firstFrame": 3593,
+        "lastFrame": 3594
+      },
+      {
+        "name": "approach",
+        "firstFrame": 3612,
+        "lastFrame": 3869
+      },
+      {
+        "name": "lower Mossback stair",
+        "firstFrame": 3914,
+        "lastFrame": 3972
+      },
+      {
+        "name": "lower Mossback stomp safe approach",
+        "firstFrame": 3972,
+        "lastFrame": 4037
+      },
+      {
+        "name": "lower Mossback stomp stomp",
+        "firstFrame": 4082,
+        "lastFrame": 4119
+      },
+      {
+        "name": "lower Mossback stomp rebound landing",
+        "firstFrame": 4119,
+        "lastFrame": 4161
+      },
+      {
+        "name": "approach",
+        "firstFrame": 4161,
+        "lastFrame": 4245
+      },
+      {
+        "name": "frog stair arrival",
+        "firstFrame": 4290,
+        "lastFrame": 4347
+      },
+      {
+        "name": "read the Spring Frog safe approach",
+        "firstFrame": 4347,
+        "lastFrame": 4403
+      },
+      {
+        "name": "read the Spring Frog spin",
+        "firstFrame": 4421,
+        "lastFrame": 4434
+      },
+      {
+        "name": "approach",
+        "firstFrame": 4434,
+        "lastFrame": 4550
+      },
+      {
+        "name": "upper Mossback stair",
+        "firstFrame": 4595,
+        "lastFrame": 4653
+      },
+      {
+        "name": "upper Mossback stomp safe approach",
+        "firstFrame": 4653,
+        "lastFrame": 4726
+      },
+      {
+        "name": "upper Mossback stomp stomp",
+        "firstFrame": 4771,
+        "lastFrame": 4808
+      },
+      {
+        "name": "upper Mossback stomp rebound landing",
+        "firstFrame": 4808,
+        "lastFrame": 4850
+      },
+      {
+        "name": "approach",
+        "firstFrame": 4850,
+        "lastFrame": 4928
+      },
+      {
+        "name": "Watcher stair descent",
+        "firstFrame": 4973,
+        "lastFrame": 5036
+      },
+      {
+        "name": "spin the Watcher takeoff",
+        "firstFrame": 5036,
+        "lastFrame": 5131
+      },
+      {
+        "name": "spin the Watcher",
+        "firstFrame": 5176,
+        "lastFrame": 5234
+      },
+      {
+        "name": "land after spin the Watcher",
+        "firstFrame": 5234,
+        "lastFrame": 5234
+      },
+      {
+        "name": "approach",
+        "firstFrame": 5234,
+        "lastFrame": 5340
+      },
+      {
+        "name": "Mossback refuge",
+        "firstFrame": 5385,
+        "lastFrame": 5448
+      },
+      {
+        "name": "checkpoint 343 approach",
+        "firstFrame": 5448,
+        "lastFrame": 5582
+      },
+      {
+        "name": "bank checkpoint 343",
+        "firstFrame": 5601,
+        "lastFrame": 5602
+      },
+      {
+        "name": "read the counterweight whirler safe approach",
+        "firstFrame": 5620,
+        "lastFrame": 5822
+      },
+      {
+        "name": "read the counterweight whirler attack opening",
+        "firstFrame": 5840,
+        "lastFrame": 5939
+      },
+      {
+        "name": "read the counterweight whirler spin",
+        "firstFrame": 5939,
+        "lastFrame": 5954
+      },
+      {
+        "name": "ferry takeoff",
+        "firstFrame": 5954,
+        "lastFrame": 6097
+      },
+      {
+        "name": "wait for returning counterweight ferry",
+        "firstFrame": 6115,
+        "lastFrame": 6171
+      },
+      {
+        "name": "board the counterweight ferry",
+        "firstFrame": 6198,
+        "lastFrame": 6237
+      },
+      {
+        "name": "ride the counterweight across the chasm",
+        "firstFrame": 6237,
+        "lastFrame": 6434
+      },
+      {
+        "name": "leave ferry for transfer ledge",
+        "firstFrame": 6461,
+        "lastFrame": 6522
+      },
+      {
+        "name": "lift observation lip",
+        "firstFrame": 6522,
+        "lastFrame": 6676
+      },
+      {
+        "name": "wait for the low rising lift",
+        "firstFrame": 6694,
+        "lastFrame": 7003
+      },
+      {
+        "name": "board the rising crown lift",
+        "firstFrame": 7030,
+        "lastFrame": 7087
+      },
+      {
+        "name": "ride to the high counterweight court",
+        "firstFrame": 7087,
+        "lastFrame": 7210
+      },
+      {
+        "name": "leave lift at the upper court",
+        "firstFrame": 7237,
+        "lastFrame": 7297
+      },
+      {
+        "name": "checkpoint 456 approach",
+        "firstFrame": 7297,
+        "lastFrame": 7480
+      },
+      {
+        "name": "bank checkpoint 456",
+        "firstFrame": 7499,
+        "lastFrame": 7500
+      },
+      {
+        "name": "read hammer 477",
+        "firstFrame": 7518,
+        "lastFrame": 7720
+      },
+      {
+        "name": "fresh hammer 477 opening",
+        "firstFrame": 7738,
+        "lastFrame": 7741
+      },
+      {
+        "name": "cross hammer 477",
+        "firstFrame": 7741,
+        "lastFrame": 7815
+      },
+      {
+        "name": "approach",
+        "firstFrame": 7833,
+        "lastFrame": 7899
+      },
+      {
+        "name": "first hammer floor opening",
+        "firstFrame": 7944,
+        "lastFrame": 8005
+      },
+      {
+        "name": "read hammer 507",
+        "firstFrame": 8005,
+        "lastFrame": 8134
+      },
+      {
+        "name": "fresh hammer 507 opening",
+        "firstFrame": 8152,
+        "lastFrame": 8253
+      },
+      {
+        "name": "cross hammer 507",
+        "firstFrame": 8253,
+        "lastFrame": 8327
+      },
+      {
+        "name": "approach",
+        "firstFrame": 8345,
+        "lastFrame": 8427
+      },
+      {
+        "name": "drop to swinging gallery tooth",
+        "firstFrame": 8472,
+        "lastFrame": 8535
+      },
+      {
+        "name": "read wind bell 531",
+        "firstFrame": 8535,
+        "lastFrame": 8618
+      },
+      {
+        "name": "wind bell 531 swings away",
+        "firstFrame": 8636,
+        "lastFrame": 8756
+      },
+      {
+        "name": "cross wind bell 531",
+        "firstFrame": 8756,
+        "lastFrame": 8816
+      },
+      {
+        "name": "approach",
+        "firstFrame": 8828,
+        "lastFrame": 8862
+      },
+      {
+        "name": "low hammer descent",
+        "firstFrame": 8907,
+        "lastFrame": 8972
+      },
+      {
+        "name": "read hammer 557",
+        "firstFrame": 8972,
+        "lastFrame": 9092
+      },
+      {
+        "name": "fresh hammer 557 opening",
+        "firstFrame": 9110,
+        "lastFrame": 9139
+      },
+      {
+        "name": "cross hammer 557",
+        "firstFrame": 9139,
+        "lastFrame": 9213
+      },
+      {
+        "name": "approach",
+        "firstFrame": 9231,
+        "lastFrame": 9313
+      },
+      {
+        "name": "hammer gallery exit",
+        "firstFrame": 9358,
+        "lastFrame": 9420
+      },
+      {
+        "name": "checkpoint 589 approach",
+        "firstFrame": 9420,
+        "lastFrame": 9571
+      },
+      {
+        "name": "bank checkpoint 589",
+        "firstFrame": 9590,
+        "lastFrame": 9591
+      },
+      {
+        "name": "aqueduct skating run-up",
+        "firstFrame": 9609,
+        "lastFrame": 9775
+      },
+      {
+        "name": "accelerate up the aqueduct kicker",
+        "firstFrame": 9793,
+        "lastFrame": 9957
+      },
+      {
+        "name": "committed aqueduct skate landing",
+        "firstFrame": 9958,
+        "lastFrame": 10013
+      },
+      {
+        "name": "brake on the receiving arch",
+        "firstFrame": 10013,
+        "lastFrame": 10061
+      },
+      {
+        "name": "aqueduct grind approach",
+        "firstFrame": 10079,
+        "lastFrame": 10169
+      },
+      {
+        "name": "catch descending aqueduct rail",
+        "firstFrame": 10214,
+        "lastFrame": 10214
+      },
+      {
+        "name": "balance the descending aqueduct",
+        "firstFrame": 10214,
+        "lastFrame": 10442
+      },
+      {
+        "name": "roll off onto the last aqueduct arch",
+        "firstFrame": 10442,
+        "lastFrame": 10465
+      },
+      {
+        "name": "brake beyond the descending rail",
+        "firstFrame": 10465,
+        "lastFrame": 10524
+      },
+      {
+        "name": "checkpoint 709 approach",
+        "firstFrame": 10542,
+        "lastFrame": 10626
+      },
+      {
+        "name": "bank checkpoint 709",
+        "firstFrame": 10645,
+        "lastFrame": 10646
+      },
+      {
+        "name": "orchard Bristleback safe approach",
+        "firstFrame": 10664,
+        "lastFrame": 10803
+      },
+      {
+        "name": "orchard Bristleback spin",
+        "firstFrame": 10821,
+        "lastFrame": 10859
+      },
+      {
+        "name": "approach",
+        "firstFrame": 10859,
+        "lastFrame": 10995
+      },
+      {
+        "name": "orchard frog branch",
+        "firstFrame": 11040,
+        "lastFrame": 11098
+      },
+      {
+        "name": "orchard Spring Frog safe approach",
+        "firstFrame": 11098,
+        "lastFrame": 11168
+      },
+      {
+        "name": "orchard Spring Frog spin",
+        "firstFrame": 11186,
+        "lastFrame": 11196
+      },
+      {
+        "name": "approach",
+        "firstFrame": 11196,
+        "lastFrame": 11324
+      },
+      {
+        "name": "orchard watcher branch",
+        "firstFrame": 11369,
+        "lastFrame": 11432
+      },
+      {
+        "name": "orchard Violet Watcher takeoff",
+        "firstFrame": 11432,
+        "lastFrame": 11510
+      },
+      {
+        "name": "orchard Violet Watcher",
+        "firstFrame": 11555,
+        "lastFrame": 11587
+      },
+      {
+        "name": "land after orchard Violet Watcher",
+        "firstFrame": 11587,
+        "lastFrame": 11594
+      },
+      {
+        "name": "approach",
+        "firstFrame": 11594,
+        "lastFrame": 11684
+      },
+      {
+        "name": "orchard shell branch",
+        "firstFrame": 11729,
+        "lastFrame": 11788
+      },
+      {
+        "name": "orchard Mossback safe approach",
+        "firstFrame": 11788,
+        "lastFrame": 11857
+      },
+      {
+        "name": "orchard Mossback stomp",
+        "firstFrame": 11902,
+        "lastFrame": 11939
+      },
+      {
+        "name": "orchard Mossback rebound landing",
+        "firstFrame": 11939,
+        "lastFrame": 11981
+      },
+      {
+        "name": "approach",
+        "firstFrame": 11981,
+        "lastFrame": 12056
+      },
+      {
+        "name": "bull arena arrival",
+        "firstFrame": 12101,
+        "lastFrame": 12166
+      },
+      {
+        "name": "bait the Russet Bull and punish recovery safe approach",
+        "firstFrame": 12166,
+        "lastFrame": 12245
+      },
+      {
+        "name": "bait the Russet Bull and punish recovery spin",
+        "firstFrame": 12263,
+        "lastFrame": 12308
+      },
+      {
+        "name": "checkpoint 835 approach",
+        "firstFrame": 12308,
+        "lastFrame": 12545
+      },
+      {
+        "name": "bank checkpoint 835",
+        "firstFrame": 12564,
+        "lastFrame": 12565
+      },
+      {
+        "name": "read the lantern fire mouth",
+        "firstFrame": 12583,
+        "lastFrame": 12816
+      },
+      {
+        "name": "fresh cool fire-mouth window",
+        "firstFrame": 12834,
+        "lastFrame": 12951
+      },
+      {
+        "name": "cross behind cooling flames",
+        "firstFrame": 12951,
+        "lastFrame": 13111
+      },
+      {
+        "name": "reach the lantern staircase",
+        "firstFrame": 13156,
+        "lastFrame": 13214
+      },
+      {
+        "name": "approach",
+        "firstFrame": 13214,
+        "lastFrame": 13341
+      },
+      {
+        "name": "read a fresh lantern wave",
+        "firstFrame": 13359,
+        "lastFrame": 13801
+      },
+      {
+        "name": "first lantern step",
+        "firstFrame": 13828,
+        "lastFrame": 13887
+      },
+      {
+        "name": "approach",
+        "firstFrame": 13887,
+        "lastFrame": 13977
+      },
+      {
+        "name": "second lantern step",
+        "firstFrame": 14022,
+        "lastFrame": 14081
+      },
+      {
+        "name": "approach",
+        "firstFrame": 14081,
+        "lastFrame": 14173
+      },
+      {
+        "name": "third lantern step",
+        "firstFrame": 14218,
+        "lastFrame": 14277
+      },
+      {
+        "name": "approach",
+        "firstFrame": 14277,
+        "lastFrame": 14369
+      },
+      {
+        "name": "leave the lantern wave",
+        "firstFrame": 14414,
+        "lastFrame": 14475
+      },
+      {
+        "name": "checkpoint 945 approach",
+        "firstFrame": 14475,
+        "lastFrame": 14636
+      },
+      {
+        "name": "bank checkpoint 945",
+        "firstFrame": 14655,
+        "lastFrame": 14656
+      },
+      {
+        "name": "read wind bell 963",
+        "firstFrame": 14674,
+        "lastFrame": 14862
+      },
+      {
+        "name": "wind bell 963 swings away",
+        "firstFrame": 14880,
+        "lastFrame": 14948
+      },
+      {
+        "name": "cross wind bell 963",
+        "firstFrame": 14948,
+        "lastFrame": 15008
+      },
+      {
+        "name": "approach",
+        "firstFrame": 15020,
+        "lastFrame": 15091
+      },
+      {
+        "name": "first wind-bell tooth",
+        "firstFrame": 15136,
+        "lastFrame": 15195
+      },
+      {
+        "name": "approach",
+        "firstFrame": 15195,
+        "lastFrame": 15292
+      },
+      {
+        "name": "second wind-bell tooth",
+        "firstFrame": 15337,
+        "lastFrame": 15396
+      },
+      {
+        "name": "read wind bell 995",
+        "firstFrame": 15396,
+        "lastFrame": 15426
+      },
+      {
+        "name": "wind bell 995 swings away",
+        "firstFrame": 15444,
+        "lastFrame": 15544
+      },
+      {
+        "name": "cross wind bell 995",
+        "firstFrame": 15544,
+        "lastFrame": 15598
+      },
+      {
+        "name": "approach",
+        "firstFrame": 15610,
+        "lastFrame": 15620
+      },
+      {
+        "name": "third wind-bell tooth",
+        "firstFrame": 15665,
+        "lastFrame": 15724
+      },
+      {
+        "name": "approach",
+        "firstFrame": 15724,
+        "lastFrame": 15821
+      },
+      {
+        "name": "crown wind-bell tooth",
+        "firstFrame": 15866,
+        "lastFrame": 15925
+      },
+      {
+        "name": "read wind bell 1022",
+        "firstFrame": 15925,
+        "lastFrame": 15955
+      },
+      {
+        "name": "wind bell 1022 swings away",
+        "firstFrame": 15973,
+        "lastFrame": 15986
+      },
+      {
+        "name": "cross wind bell 1022",
+        "firstFrame": 15986,
+        "lastFrame": 16040
+      },
+      {
+        "name": "approach",
+        "firstFrame": 16052,
+        "lastFrame": 16062
+      },
+      {
+        "name": "wind-bell refuge",
+        "firstFrame": 16107,
+        "lastFrame": 16169
+      },
+      {
+        "name": "bell keeper Moa safe approach",
+        "firstFrame": 16169,
+        "lastFrame": 16265
+      },
+      {
+        "name": "bell keeper Moa spin",
+        "firstFrame": 16283,
+        "lastFrame": 16326
+      },
+      {
+        "name": "checkpoint 1055 approach",
+        "firstFrame": 16326,
+        "lastFrame": 16457
+      },
+      {
+        "name": "bank checkpoint 1055",
+        "firstFrame": 16476,
+        "lastFrame": 16477
+      },
+      {
+        "name": "sunken court descent",
+        "firstFrame": 16495,
+        "lastFrame": 16624
+      },
+      {
+        "name": "drop into the sunken court",
+        "firstFrame": 16669,
+        "lastFrame": 16714
+      },
+      {
+        "name": "approach Sunken masonry seal",
+        "firstFrame": 16714,
+        "lastFrame": 16835
+      },
+      {
+        "name": "Sunken masonry seal",
+        "firstFrame": 16855,
+        "lastFrame": 16855
+      },
+      {
+        "name": "clear the spent seal",
+        "firstFrame": 16904,
+        "lastFrame": 16943
+      },
+      {
+        "name": "first restored stair",
+        "firstFrame": 16970,
+        "lastFrame": 17031
+      },
+      {
+        "name": "second restored stair",
+        "firstFrame": 17058,
+        "lastFrame": 17120
+      },
+      {
+        "name": "third restored stair",
+        "firstFrame": 17147,
+        "lastFrame": 17209
+      },
+      {
+        "name": "reach the reliquary court",
+        "firstFrame": 17236,
+        "lastFrame": 17297
+      },
+      {
+        "name": "pass the optional reliquary alcove",
+        "firstFrame": 17297,
+        "lastFrame": 17524
+      },
+      {
+        "name": "sunken ferry lip",
+        "firstFrame": 17542,
+        "lastFrame": 17631
+      },
+      {
+        "name": "catch the sunken cross-current",
+        "firstFrame": 17649,
+        "lastFrame": 17791
+      },
+      {
+        "name": "board sunken ferry",
+        "firstFrame": 17818,
+        "lastFrame": 17879
+      },
+      {
+        "name": "ride out of the switchyard",
+        "firstFrame": 17879,
+        "lastFrame": 17972
+      },
+      {
+        "name": "sunken ferry receiver",
+        "firstFrame": 17999,
+        "lastFrame": 18060
+      },
+      {
+        "name": "checkpoint 1181 approach",
+        "firstFrame": 18060,
+        "lastFrame": 18190
+      },
+      {
+        "name": "bank checkpoint 1181",
+        "firstFrame": 18209,
+        "lastFrame": 18210
+      },
+      {
+        "name": "lower crown ascent takeoff",
+        "firstFrame": 18228,
+        "lastFrame": 18417
+      },
+      {
+        "name": "lower crown ascent arrow contact",
+        "firstFrame": 18462,
+        "lastFrame": 18498
+      },
+      {
+        "name": "lower crown ascent apex outside the shelf",
+        "firstFrame": 18501,
+        "lastFrame": 18534
+      },
+      {
+        "name": "lower crown ascent rise above the shelf",
+        "firstFrame": 18536,
+        "lastFrame": 18536
+      },
+      {
+        "name": "lower crown ascent",
+        "firstFrame": 18536,
+        "lastFrame": 18597
+      },
+      {
+        "name": "upper crown ascent takeoff",
+        "firstFrame": 18597,
+        "lastFrame": 18680
+      },
+      {
+        "name": "upper crown ascent arrow contact",
+        "firstFrame": 18725,
+        "lastFrame": 18761
+      },
+      {
+        "name": "upper crown ascent apex outside the shelf",
+        "firstFrame": 18764,
+        "lastFrame": 18797
+      },
+      {
+        "name": "upper crown ascent rise above the shelf",
+        "firstFrame": 18799,
+        "lastFrame": 18799
+      },
+      {
+        "name": "upper crown ascent",
+        "firstFrame": 18799,
+        "lastFrame": 18869
+      },
+      {
+        "name": "crown Violet Watcher takeoff",
+        "firstFrame": 18869,
+        "lastFrame": 18928
+      },
+      {
+        "name": "crown Violet Watcher",
+        "firstFrame": 18973,
+        "lastFrame": 18984
+      },
+      {
+        "name": "land after crown Violet Watcher",
+        "firstFrame": 18984,
+        "lastFrame": 19012
+      },
+      {
+        "name": "approach",
+        "firstFrame": 19012,
+        "lastFrame": 19093
+      },
+      {
+        "name": "narrow crown tooth",
+        "firstFrame": 19138,
+        "lastFrame": 19196
+      },
+      {
+        "name": "approach",
+        "firstFrame": 19196,
+        "lastFrame": 19295
+      },
+      {
+        "name": "highest crown tooth",
+        "firstFrame": 19340,
+        "lastFrame": 19398
+      },
+      {
+        "name": "approach",
+        "firstFrame": 19398,
+        "lastFrame": 19520
+      },
+      {
+        "name": "last gate refuge",
+        "firstFrame": 19565,
+        "lastFrame": 19627
+      },
+      {
+        "name": "checkpoint 1286 approach",
+        "firstFrame": 19627,
+        "lastFrame": 19735
+      },
+      {
+        "name": "bank checkpoint 1286",
+        "firstFrame": 19754,
+        "lastFrame": 19755
+      },
+      {
+        "name": "approach",
+        "firstFrame": 19773,
+        "lastFrame": 19895
+      },
+      {
+        "name": "last falling tooth one",
+        "firstFrame": 19940,
+        "lastFrame": 20002
+      },
+      {
+        "name": "last falling tooth two",
+        "firstFrame": 20029,
+        "lastFrame": 20092
+      },
+      {
+        "name": "last falling tooth three",
+        "firstFrame": 20119,
+        "lastFrame": 20182
+      },
+      {
+        "name": "last whirler receiver",
+        "firstFrame": 20209,
+        "lastFrame": 20272
+      },
+      {
+        "name": "last Brass Whirler safe approach",
+        "firstFrame": 20272,
+        "lastFrame": 20367
+      },
+      {
+        "name": "last Brass Whirler spin",
+        "firstFrame": 20385,
+        "lastFrame": 20400
+      },
+      {
+        "name": "approach",
+        "firstFrame": 20400,
+        "lastFrame": 20499
+      },
+      {
+        "name": "last isolated keystone",
+        "firstFrame": 20544,
+        "lastFrame": 20607
+      },
+      {
+        "name": "approach",
+        "firstFrame": 20607,
+        "lastFrame": 20705
+      },
+      {
+        "name": "sanctuary landing",
+        "firstFrame": 20750,
+        "lastFrame": 20812
+      },
+      {
+        "name": "sanctuary sentinel crab safe approach",
+        "firstFrame": 20812,
+        "lastFrame": 20881
+      },
+      {
+        "name": "sanctuary sentinel crab spin",
+        "firstFrame": 20899,
+        "lastFrame": 20926
+      },
+      {
+        "name": "approach Clear the gate mine",
+        "firstFrame": 20926,
+        "lastFrame": 21021
+      },
+      {
+        "name": "Clear the gate mine",
+        "firstFrame": 21041,
+        "lastFrame": 21041
+      },
+      {
+        "name": "clear the spent mine switch into the Ancient Gates finish",
+        "firstFrame": 21092,
+        "lastFrame": 21107
+      }
+    ],
+    "evidence": [
+      {
+        "action": "root tooth one",
+        "launch": [
+          4.923944444444434,
+          2.384185793236071e-08,
+          0
+        ],
+        "landing": [
+          10.323944444444447,
+          1.0000000238418578,
+          0
+        ],
+        "double": false,
+        "ground": "platform"
+      },
+      {
+        "action": "rising root tooth",
+        "launch": [
+          17.126388888888922,
+          1.0000000238418578,
+          0
+        ],
+        "landing": [
+          24.371388888888863,
+          2.600000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "falling root tooth",
+        "launch": [
+          28.122500000000002,
+          2.600000023841858,
+          0
+        ],
+        "landing": [
+          36.466999999999935,
+          1.200000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "long rising root gap",
+        "launch": [
+          41.12164444444444,
+          1.200000023841858,
+          0
+        ],
+        "landing": [
+          49.67164444444436,
+          3.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "read the first crab",
+        "kind": "grunt",
+        "alive": false,
+        "position": [
+          54.07212222222218,
+          3.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "Bristle landing",
+        "launch": [
+          61.029233333333295,
+          3.000000023841858,
+          0
+        ],
+        "landing": [
+          69.43673333333345,
+          3.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "spin the Bristleback",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          74.86994444444437,
+          3.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "first split timber gate",
+        "deployed": true
+      },
+      {
+        "action": "checkpoint",
+        "x": 105,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 0,
+        "position": [
+          103.83561111111023,
+          3.000000023841858,
+          0
+        ],
+        "frame": 1936
+      },
+      {
+        "action": "clear the nitro without spinning",
+        "launch": [
+          120.3265555555543,
+          3.000000023841858,
+          0
+        ],
+        "landing": [
+          127.46805555555454,
+          3.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "second split timber gate",
+        "deployed": true
+      },
+      {
+        "action": "climb the split gate",
+        "contact": {
+          "frame": 2740,
+          "position": [
+            150.9725,
+            4.172000023841857,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "platform"
+        },
+        "landing": [
+          161.7202,
+          10.000000023841858,
+          5.74836792573265e-20
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "first falling lintel",
+        "launch": [
+          177.714811111111,
+          10.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          182.93931111111115,
+          9.499999988079072,
+          5.74836792573265e-20
+        ],
+        "double": false,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "second falling lintel",
+        "launch": [
+          182.93931111111115,
+          9.499999988079072,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          191.8969777777781,
+          7.999999988079071,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "third falling lintel",
+        "launch": [
+          191.8969777777781,
+          7.999999988079071,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          199.97064444444499,
+          6.499999988079071,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "falling lintel exit",
+        "launch": [
+          199.97064444444499,
+          6.499999988079071,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          206.96814444444524,
+          5.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 221,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 1,
+        "position": [
+          219.83725555555634,
+          5.000000023841858,
+          5.74836792573265e-20
+        ],
+        "frame": 3612
+      },
+      {
+        "action": "lower Mossback stair",
+        "launch": [
+          244.93670000000057,
+          5.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          253.10270000000085,
+          6.200000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "lower Mossback stomp",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          259.79824444444506,
+          6.200000023841858,
+          5.74836792573265e-20
+        ]
+      },
+      {
+        "action": "frog stair arrival",
+        "launch": [
+          262.9173222222226,
+          6.200000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          271.21232222222136,
+          8.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "read the Spring Frog",
+        "kind": "hopper",
+        "alive": false,
+        "position": [
+          272.4179666666654,
+          8.000000023841858,
+          5.74836792573265e-20
+        ]
+      },
+      {
+        "action": "upper Mossback stair",
+        "launch": [
+          280.9365777777761,
+          8.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          289.6365777777748,
+          9.400000023841859,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "upper Mossback stomp",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          296.5597222222182,
+          9.400000023841859,
+          5.74836792573265e-20
+        ]
+      },
+      {
+        "action": "Watcher stair descent",
+        "launch": [
+          298.9278666666623,
+          9.400000023841859,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          308.37786666666085,
+          8.200000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "spin the Watcher",
+        "kind": "floater",
+        "alive": false
+      },
+      {
+        "action": "Mossback refuge",
+        "launch": [
+          323.92785555554855,
+          8.200000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          332.45535555554727,
+          7.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 343,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 2,
+        "position": [
+          341.8241111111107,
+          7.000000023841858,
+          5.74836792573265e-20
+        ],
+        "frame": 5620
+      },
+      {
+        "action": "read the counterweight whirler",
+        "kind": "spinner",
+        "alive": false,
+        "position": [
+          360.3335555555546,
+          7.000000023841858,
+          5.74836792573265e-20
+        ]
+      },
+      {
+        "action": "board the counterweight ferry",
+        "launch": [
+          372.5274999999984,
+          7.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          378.3774999999975,
+          7.000000011920929,
+          5.74836792573265e-20
+        ],
+        "double": false,
+        "ground": "moving platform"
+      },
+      {
+        "action": "leave ferry for transfer ledge",
+        "launch": [
+          399.1341274096083,
+          7.000000011920929,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          407.96722096075723,
+          7.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "board the rising crown lift",
+        "launch": [
+          419.93566540520123,
+          7.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          428.48566540519994,
+          8.54149018711412,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "moving platform"
+      },
+      {
+        "action": "leave lift at the upper court",
+        "launch": [
+          430.4356654051999,
+          13.108884447218543,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          439.0621654051986,
+          14.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 456,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 3,
+        "position": [
+          454.81877651630924,
+          14.000000023841858,
+          5.74836792573265e-20
+        ],
+        "frame": 7518
+      },
+      {
+        "action": "first hammer floor opening",
+        "launch": [
+          484.91529873852977,
+          14.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          494.0652987385284,
+          14.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "drop to swinging gallery tooth",
+        "launch": [
+          516.919587627417,
+          14.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          525.1650876274158,
+          12.500000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "low hammer descent",
+        "launch": [
+          535.9331431829725,
+          12.500000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          545.1926431829712,
+          10.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "hammer gallery exit",
+        "launch": [
+          566.919632071862,
+          10.000000023841858,
+          5.74836792573265e-20
+        ],
+        "landing": [
+          576.2196320718606,
+          9.000000023841858,
+          5.74836792573265e-20
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 589,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 4,
+        "position": [
+          587.833243182975,
+          9.000000023841858,
+          5.74836792573265e-20
+        ],
+        "frame": 9609
+      },
+      {
+        "action": "checkpoint",
+        "x": 709,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 5,
+        "position": [
+          707.8253019808919,
+          8.000000023841858,
+          0
+        ],
+        "frame": 10664
+      },
+      {
+        "action": "orchard Bristleback",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          720.3992464253397,
+          8.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "orchard frog branch",
+        "launch": [
+          732.9156908697888,
+          8.000000023841858,
+          0
+        ],
+        "landing": [
+          741.2556908697877,
+          9.200000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "orchard Spring Frog",
+        "kind": "hopper",
+        "alive": false,
+        "position": [
+          743.1046019808999,
+          9.200000023841858,
+          0
+        ]
+      },
+      {
+        "action": "orchard watcher branch",
+        "launch": [
+          752.9297130920141,
+          9.200000023841858,
+          0
+        ],
+        "landing": [
+          761.455713092013,
+          7.500000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "orchard Violet Watcher",
+        "kind": "floater",
+        "alive": false
+      },
+      {
+        "action": "orchard shell branch",
+        "launch": [
+          772.9271353142364,
+          7.500000023841858,
+          0
+        ],
+        "landing": [
+          781.3721353142352,
+          8.500000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "orchard Mossback",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          790.8702464253461,
+          8.500000023841858,
+          0
+        ]
+      },
+      {
+        "action": "bull arena arrival",
+        "launch": [
+          792.9292908697911,
+          8.500000023841858,
+          0
+        ],
+        "landing": [
+          802.4167908697897,
+          6.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "bait the Russet Bull and punish recovery",
+        "kind": "charger",
+        "alive": false,
+        "position": [
+          808.3680353142344,
+          6.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "checkpoint",
+        "x": 835,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 6,
+        "position": [
+          833.8161464253559,
+          6.000000023841858,
+          0
+        ],
+        "frame": 12583
+      },
+      {
+        "action": "reach the lantern staircase",
+        "launch": [
+          868.7255353142574,
+          6.000000023841858,
+          0
+        ],
+        "landing": [
+          877.1330353142563,
+          7.400000023841859,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "first lantern step",
+        "launch": [
+          885.7249797587033,
+          7.400000023841859,
+          0
+        ],
+        "landing": [
+          893.9239797587022,
+          7.999999988079071,
+          0
+        ],
+        "double": true,
+        "ground": "phase pad"
+      },
+      {
+        "action": "second lantern step",
+        "launch": [
+          897.7346575364805,
+          7.999999988079071,
+          0
+        ],
+        "landing": [
+          905.6561575364794,
+          8.999999988079072,
+          0
+        ],
+        "double": true,
+        "ground": "phase pad"
+      },
+      {
+        "action": "third lantern step",
+        "launch": [
+          909.734135314258,
+          8.999999988079072,
+          0
+        ],
+        "landing": [
+          917.6556353142568,
+          9.999999988079072,
+          0
+        ],
+        "double": true,
+        "ground": "phase pad"
+      },
+      {
+        "action": "leave the lantern wave",
+        "launch": [
+          921.7336130920353,
+          9.999999988079072,
+          0
+        ],
+        "landing": [
+          930.8641130920339,
+          10.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 945,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 7,
+        "position": [
+          943.8172242031491,
+          10.000000023841858,
+          0
+        ],
+        "frame": 14674
+      },
+      {
+        "action": "first wind-bell tooth",
+        "launch": [
+          970.9249130920437,
+          10.000000023841858,
+          0
+        ],
+        "landing": [
+          979.1239130920426,
+          11.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "second wind-bell tooth",
+        "launch": [
+          983.9172575364879,
+          11.000000023841858,
+          0
+        ],
+        "landing": [
+          991.8537575364868,
+          12.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "third wind-bell tooth",
+        "launch": [
+          998.0945908698197,
+          12.000000023841858,
+          0
+        ],
+        "landing": [
+          1006.2320908698186,
+          13.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "crown wind-bell tooth",
+        "launch": [
+          1010.9360019809305,
+          13.000000023841858,
+          0
+        ],
+        "landing": [
+          1018.8560019809294,
+          14.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "wind-bell refuge",
+        "launch": [
+          1025.0968353142623,
+          14.000000023841858,
+          0
+        ],
+        "landing": [
+          1034.1238353142676,
+          13.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "bell keeper Moa",
+        "kind": "moa",
+        "alive": false,
+        "position": [
+          1041.8845797587105,
+          13.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "checkpoint",
+        "x": 1055,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 8,
+        "position": [
+          1053.8163575364924,
+          13.000000023841858,
+          0
+        ],
+        "frame": 16495
+      },
+      {
+        "action": "drop into the sunken court",
+        "launch": [
+          1062.631801980938,
+          13.000000023841858,
+          0
+        ],
+        "landing": [
+          1067.9673019809406,
+          10.000000023841858,
+          0
+        ],
+        "double": false,
+        "ground": "platform"
+      },
+      {
+        "action": "Sunken masonry seal",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "clear the spent seal",
+        "launch": [
+          1075.8182464253864,
+          10.000000023841858,
+          0
+        ],
+        "landing": [
+          1080.994000000003,
+          10.000000023841858,
+          0
+        ],
+        "double": false,
+        "ground": "platform"
+      },
+      {
+        "action": "first restored stair",
+        "launch": [
+          1080.994000000003,
+          10.000000023841858,
+          0
+        ],
+        "landing": [
+          1088.467000000006,
+          10,
+          0
+        ],
+        "double": true,
+        "ground": "Restored sunken stair 1"
+      },
+      {
+        "action": "second restored stair",
+        "launch": [
+          1088.467000000006,
+          10,
+          0
+        ],
+        "landing": [
+          1097.368000000011,
+          9,
+          0
+        ],
+        "double": true,
+        "ground": "Restored sunken stair 2"
+      },
+      {
+        "action": "third restored stair",
+        "launch": [
+          1097.368000000011,
+          9,
+          0
+        ],
+        "landing": [
+          1106.3729444444607,
+          8,
+          0
+        ],
+        "double": true,
+        "ground": "Restored sunken stair 3"
+      },
+      {
+        "action": "reach the reliquary court",
+        "launch": [
+          1106.3729444444607,
+          8,
+          0
+        ],
+        "landing": [
+          1115.6312777777996,
+          8.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "board sunken ferry",
+        "launch": [
+          1140.6322666666954,
+          8.000000023841858,
+          0
+        ],
+        "landing": [
+          1149.782266666701,
+          8.000000011920928,
+          0
+        ],
+        "double": true,
+        "ground": "moving platform"
+      },
+      {
+        "action": "sunken ferry receiver",
+        "launch": [
+          1160.8068667728162,
+          8.000000011920928,
+          0
+        ],
+        "landing": [
+          1171.1405762441527,
+          8.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 1181,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 9,
+        "position": [
+          1179.8161111111124,
+          8.000000023841858,
+          0
+        ],
+        "frame": 18228
+      },
+      {
+        "action": "lower crown ascent",
+        "contact": {
+          "frame": 18498,
+          "position": [
+            1197.9725000000005,
+            9.172000023841859,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "platform"
+        },
+        "landing": [
+          1209.6838000000055,
+          15.000000023841858,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "upper crown ascent",
+        "contact": {
+          "frame": 18761,
+          "position": [
+            1216.9725000000005,
+            16.172000023841857,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "platform"
+        },
+        "landing": [
+          1229.7437000000045,
+          22.000000023841856,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "crown Violet Watcher",
+        "kind": "floater",
+        "alive": false
+      },
+      {
+        "action": "narrow crown tooth",
+        "launch": [
+          1240.9359222222313,
+          22.000000023841856,
+          0
+        ],
+        "landing": [
+          1248.930922222236,
+          23.500000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "highest crown tooth",
+        "launch": [
+          1253.9300666666802,
+          23.500000023841856,
+          0
+        ],
+        "landing": [
+          1261.9310666666847,
+          25.000000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "last gate refuge",
+        "launch": [
+          1269.9155111111306,
+          25.000000023841856,
+          0
+        ],
+        "landing": [
+          1279.056511111136,
+          24.000000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "checkpoint",
+        "x": 1286,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 10,
+        "position": [
+          1284.828111111111,
+          24.000000023841856,
+          0
+        ],
+        "frame": 19773
+      },
+      {
+        "action": "last falling tooth one",
+        "launch": [
+          1292.7330555555568,
+          24.000000023841856,
+          0
+        ],
+        "landing": [
+          1299.9720555555612,
+          22.99999998807907,
+          0
+        ],
+        "double": true,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "last falling tooth two",
+        "launch": [
+          1299.9720555555612,
+          22.99999998807907,
+          0
+        ],
+        "landing": [
+          1309.4220555555669,
+          21.49999998807907,
+          0
+        ],
+        "double": true,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "last falling tooth three",
+        "launch": [
+          1309.4220555555669,
+          21.49999998807907,
+          0
+        ],
+        "landing": [
+          1319.9505555555713,
+          19.99999998807907,
+          0
+        ],
+        "double": true,
+        "ground": "crumble pad"
+      },
+      {
+        "action": "last whirler receiver",
+        "launch": [
+          1319.9505555555713,
+          19.99999998807907,
+          0
+        ],
+        "landing": [
+          1329.4100000000215,
+          18.500000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "last Brass Whirler",
+        "kind": "spinner",
+        "alive": false,
+        "position": [
+          1334.3243111111328,
+          18.500000023841856,
+          0
+        ]
+      },
+      {
+        "action": "last isolated keystone",
+        "launch": [
+          1340.924755555578,
+          18.500000023841856,
+          0
+        ],
+        "landing": [
+          1350.0432555555833,
+          17.000000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "sanctuary landing",
+        "launch": [
+          1354.9277333333607,
+          17.000000023841856,
+          0
+        ],
+        "landing": [
+          1363.1657333333656,
+          16.000000023841856,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "sanctuary sentinel crab",
+        "kind": "grunt",
+        "alive": false,
+        "position": [
+          1365.9938777778098,
+          16.000000023841856,
+          0
+        ]
+      },
+      {
+        "action": "Clear the gate mine",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "all main-route Ancient Gates boxes",
+        "totalCrates": 177,
+        "activeStageCrates": 131,
+        "bonusCrateTotal": 46,
+        "cratesBroken": 131,
+        "remaining": 0
+      },
+      {
+        "action": "section complete",
+        "section": 11,
+        "position": [
+          1374.394000000001,
+          18.40000002384186,
+          0
+        ],
+        "frame": 21107
+      }
+    ],
+    "maskHits": 0,
+    "bonusEntries": 0,
+    "section": 11
+  }
+}

@@ -1,6 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import { moonbonePlatform } from './moonbone-platforms';
 import { moonboneBonusScenery } from './moonbone-scenery';
+import {arrangeMoonboneCrates} from './moonbone-crates';
 
 const components: CustomComponent[] = [];
 const add = (c: CustomComponent): void => { components.push(c); };
@@ -49,6 +50,7 @@ add({ t: 'camnode', nm: 'Moonbone side view', p: [40, 8, 0], s: [142, 54, 18], c
   cameraPosition: [2, 10, 26], cameraTarget: [2, 5.3, 0], cameraFollowDistance: 26, cameraFollowTargetHeight: 5.3,
   cameraIntroDistance: 0, cameraFov: 49, cameraAspect: 1.3, grp: 4 });
 
+arrangeMoonboneCrates(components);
 export const ROLLING_BONES_BONUS_LEVEL: CustomLevelData = {
   v: 1, name: 'Bonus: Moonbone Vault', spawn: [-7, .12, 0], killY: -13, hudMode: 'bonus', sky: 'night',
   startWarpPad: false, keepPlayFog: true, cameraAirLift: .85,
@@ -57,7 +59,7 @@ export const ROLLING_BONES_BONUS_LEVEL: CustomLevelData = {
     sunColor: '#c2dcff', sunIntensity: 1.6, sunDirection: [-.45, .75, .4],
     fillColor: '#6a8bce', fillIntensity: .55, drawDistance: 320, shadowStrength: .64 },
   components,
-  groups: [{ id: 1, nm: 'Moonbone crypt and upper galleries' }, { id: 2, nm: 'Sixteen moonbone offerings' },
+  groups: [{ id: 1, nm: 'Moonbone crypt and upper galleries' }, { id: 2, nm: 'Moonbone offerings' },
     { id: 3, nm: 'Rising sarcophagus and breakaway spine' }, { id: 4, nm: 'Side-view framing', editorOnly: true },
     { id: 90, nm: 'Moonlit ossuary and blackwater', editorOnly: true }],
 };

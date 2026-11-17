@@ -1,0 +1,292 @@
+{
+  "course": "jungle-cup",
+  "name": "Motu Beach Invitational",
+  "bonus": null,
+  "date": "2026-11-14",
+  "source_commit": "90f7af18",
+  "decision": "Retain the existing crate-free, enemy-free judged skating arena; no source or runtime changes.",
+  "counts": {
+    "crates": 0,
+    "enemies": 0,
+    "checkpoints": 0,
+    "bonus_rooms": 0
+  },
+  "mode": {
+    "competition": true,
+    "runs": 3,
+    "seconds_per_run": 60,
+    "counted_runs": 2,
+    "all_box_goal": false,
+    "clear_method": "win the judged competition"
+  },
+  "bible_application": [
+    "Every crate or enemy needs a named job; neither adds a necessary decision to this existing skating-only competition.",
+    "Preserve clear fast approaches, landings and connecting lanes; arena width supports alternative skating lines.",
+    "Adventure crate density, cluster and checkpoint quotas are inapplicable; the bible audit explicitly excludes judged competitions."
+  ],
+  "audit_scope": {
+    "included": [],
+    "skipped": [
+      {
+        "id": "jungle-cup",
+        "title": "Motu Beach Invitational",
+        "island": "island-1",
+        "islandName": "Motu Motu",
+        "progressKey": "jungle-cup",
+        "group": "campaign",
+        "boss": true,
+        "reason": "skate competition (judged trick runs, no platforming route)"
+      }
+    ]
+  },
+  "native_checks": {
+    "node tools/test-jungle-cup.mjs": {
+      "passed": true,
+      "result": "PASS Jungle Cup: exact 60-second runs, all three judges, bail curve, reveal gates, best two, rival consistency/placement, ordinary caps, and arena structure."
+    },
+    "node tools/test-jungle-cup-runtime.mjs": {
+      "passed": true,
+      "result": "PASS Jungle Cup runtime: continuous banks/floor/perimeter, supported spawn, containment at three heights, rail cash-in, competition death/buzzer accounting, and gate-free editor round trip."
+    },
+    "node tools/test-jungle-cup-layout.mjs": {
+      "passed": true,
+      "result": "PASS varied Jungle Cup: clear sky/foundation/circulation, exact new surface heights and nondegenerate meshes, outside-bank round trip, 4 pocket airs, smooth outside entry (0.456m max step), round hip and 38 new rail catches."
+    }
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "arena": {
+        "phase": "intro",
+        "position": [
+          0,
+          0.1,
+          14
+        ],
+        "grounded": true,
+        "crates": 0,
+        "enemies": 0,
+        "checkpoints": 0,
+        "bonus": null,
+        "crystal": null,
+        "clock": null,
+        "comboOrb": null,
+        "skatepark": true,
+        "rails": 256
+      },
+      "traversal": {
+        "start": [
+          0,
+          0,
+          14
+        ],
+        "maxTravel": 23.82084139585306,
+        "air": true,
+        "landed": true,
+        "position": [
+          0,
+          0,
+          -9.820841395853057
+        ],
+        "deaths": 0,
+        "phase": "running"
+      },
+      "recovery": {
+        "position": [
+          0,
+          0.4285714285714288,
+          -19.522166249297864
+        ],
+        "lives": 4,
+        "bails": 1,
+        "state": "ride",
+        "grounded": true,
+        "freeSkate": true
+      },
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "arena": {
+        "phase": "intro",
+        "position": [
+          0,
+          0.1,
+          14
+        ],
+        "grounded": true,
+        "crates": 0,
+        "enemies": 0,
+        "checkpoints": 0,
+        "bonus": null,
+        "crystal": null,
+        "clock": null,
+        "comboOrb": null,
+        "skatepark": true,
+        "rails": 256
+      },
+      "views": [
+        {
+          "name": "start",
+          "position": [
+            0,
+            0,
+            14
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 295,
+            "placements": 295,
+            "ready": 295,
+            "skipped": 0,
+            "draws": 154,
+            "triangles": 1156555,
+            "allLodTriangles": 1156555,
+            "cells": 154,
+            "residentCells": 154,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 7,
+            "textureMiB": 40.33,
+            "errors": [],
+            "windTime": 0.7953999999985107,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        },
+        {
+          "name": "rhythm",
+          "position": [
+            37,
+            1.149999976158142,
+            -47
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 295,
+            "placements": 295,
+            "ready": 295,
+            "skipped": 0,
+            "draws": 154,
+            "triangles": 1156555,
+            "allLodTriangles": 1156555,
+            "cells": 154,
+            "residentCells": 154,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 7,
+            "textureMiB": 40.33,
+            "errors": [],
+            "windTime": 1.39539999999851,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        },
+        {
+          "name": "pocket",
+          "position": [
+            -27,
+            0,
+            -94.5
+          ],
+          "grounded": true,
+          "deaths": 0,
+          "render": [
+            1280,
+            720
+          ],
+          "scenery": {
+            "components": 295,
+            "placements": 295,
+            "ready": 295,
+            "skipped": 0,
+            "draws": 154,
+            "triangles": 1156555,
+            "allLodTriangles": 1156555,
+            "cells": 154,
+            "residentCells": 154,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 7,
+            "textureMiB": 40.33,
+            "errors": [],
+            "windTime": 2.0953999999985076,
+            "weatherWind": {
+              "wind": [
+                0,
+                0
+              ],
+              "intensity": 0,
+              "time": 0
+            }
+          }
+        }
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "visual_review": {
+    "passed": true,
+    "resolution": [
+      1280,
+      720
+    ],
+    "views": [
+      "intro",
+      "start",
+      "rhythm",
+      "pocket"
+    ],
+    "notes": "All final captures inspected. Open skating paths, supported spawn and complete native artwork; no console errors."
+  },
+  "reused_checks": {
+    "from": "../coastal-street-run/validation.json",
+    "source_commit": "90f7af18",
+    "reason": "Only documentation changes in this review; previously validated production source and assets are unchanged.",
+    "npm run check:levels": "previous pass retained; final source validation also passed for the unchanged build",
+    "npm run build": "previous pass retained",
+    "npm run check:release": {
+      "passed": true,
+      "bytes": 945603211,
+      "budget_bytes": 1000000000
+    },
+    "build_version": "463f482cbc3f698b78b1"
+  },
+  "limitations": [
+    "No complete three-run competition playthrough is claimed in the browser. Native rules tests exercise full win/loss events and campaign cup progression.",
+    "Full-render park views use staged positions.",
+    "The generic crate audit intentionally skips this mode; zero runtime counts are separately confirmed in both browser modes and the native arena tests."
+  ],
+  "timing": {
+    "started_at": "2026-11-14T07:10:18+00:00",
+    "validated_at": "2026-11-14T07:18:00.881199+00:00",
+    "elapsed_minutes": 7.7,
+    "requested_main_minutes": 15,
+    "bonus_applicable": false,
+    "budget_exceeded": false
+  }
+}

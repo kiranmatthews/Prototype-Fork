@@ -1,0 +1,154 @@
+[
+  {
+    "mode": "lite",
+    "inventory": {
+      "crates": 4,
+      "total": 4,
+      "checkpoint": 0,
+      "bonus": 0,
+      "enemies": 0,
+      "masks": 2,
+      "bossHealth": 9,
+      "position": [
+        0,
+        0,
+        17
+      ]
+    },
+    "mask": {
+      "done": true,
+      "frames": 6,
+      "alive": false,
+      "masks": 2,
+      "uber": 11.899999999999995,
+      "state": "ride"
+    },
+    "retry": {
+      "lives": 3,
+      "masks": 2,
+      "phase": 1,
+      "health": 9,
+      "position": [
+        0,
+        0,
+        17
+      ],
+      "allMasksRestored": true,
+      "tongue": false,
+      "ramp": false
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "full",
+    "inventory": {
+      "crates": 4,
+      "total": 4,
+      "checkpoint": 0,
+      "bonus": 0,
+      "enemies": 0,
+      "masks": 2,
+      "bossHealth": 9,
+      "position": [
+        0,
+        0,
+        17
+      ]
+    },
+    "view": {
+      "position": [
+        0,
+        0,
+        17
+      ],
+      "state": "ride",
+      "grounded": true,
+      "render": [
+        1280,
+        720
+      ],
+      "blocked": false,
+      "boss": {
+        "state": "waiting",
+        "stateTime": 0.4833333333333333,
+        "phase": 1,
+        "health": 9,
+        "charged": false,
+        "charge": 0,
+        "canFinish": false,
+        "hits": 0,
+        "playerHits": 0,
+        "grindDistance": 0,
+        "skateDistance": 0,
+        "tongueRun": 0,
+        "tongueActive": false,
+        "tongueProgress": 0,
+        "rampActive": false,
+        "rampProgress": 0,
+        "launchTime": 0,
+        "rampSpeed": 0,
+        "activeWaves": [],
+        "activeBubbles": 0,
+        "bubblePositions": [],
+        "target": [
+          0,
+          0,
+          -14
+        ],
+        "history": [
+          {
+            "time": 0,
+            "state": "waiting",
+            "phase": 1,
+            "health": 9
+          }
+        ],
+        "strikes": [],
+        "model": {
+          "provider": "Meshy",
+          "triangles": 7667,
+          "meshes": 1,
+          "rootScale": [
+            1,
+            1,
+            1
+          ],
+          "ready": true,
+          "joints": 21,
+          "toes": [
+            [
+              -1.23,
+              0.48,
+              0.22
+            ],
+            [
+              1.23,
+              0.48,
+              0.22
+            ]
+          ],
+          "wrists": [
+            [
+              -3.05,
+              2.95,
+              -27.82
+            ],
+            [
+              3.05,
+              2.95,
+              -27.82
+            ]
+          ],
+          "pearl": [
+            -0.030329756700899192,
+            4.987233721013091,
+            -26.75
+          ]
+        }
+      }
+    },
+    "passed": true,
+    "errors": []
+  }
+]

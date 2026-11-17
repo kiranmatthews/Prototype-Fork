@@ -1,0 +1,109 @@
+[
+  {
+    "mode": "lite",
+    "arena": {
+      "phase": "intro",
+      "position": [
+        18,
+        12.15,
+        -12
+      ],
+      "grounded": true,
+      "crates": 0,
+      "enemies": 0,
+      "checkpoints": 0,
+      "bonus": null,
+      "crystal": null,
+      "clock": null,
+      "comboOrb": null,
+      "skatepark": true,
+      "rails": 442
+    },
+    "traversal": {
+      "start": [
+        18,
+        12,
+        -12
+      ],
+      "maxTravel": 23.10428457480247,
+      "air": true,
+      "landed": true,
+      "position": [
+        18,
+        12,
+        -35.10428457480247
+      ],
+      "deaths": 0,
+      "phase": "running"
+    },
+    "recovery": {
+      "position": [
+        18,
+        12.383333333333335,
+        -43.92393870461868
+      ],
+      "lives": 4,
+      "bails": 1,
+      "state": "ride",
+      "grounded": true,
+      "freeSkate": true
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "full",
+    "arena": {
+      "phase": "intro",
+      "position": [
+        18,
+        12.15,
+        -12
+      ],
+      "grounded": true,
+      "crates": 0,
+      "enemies": 0,
+      "checkpoints": 0,
+      "bonus": null,
+      "crystal": null,
+      "clock": null,
+      "comboOrb": null,
+      "skatepark": true,
+      "rails": 442
+    },
+    "views": [
+      {
+        "name": "courtyard",
+        "position": [
+          18,
+          12,
+          -12
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": null
+      },
+      {
+        "name": "bridge",
+        "position": [
+          30.72,
+          15.5,
+          -104
+        ],
+        "grounded": true,
+        "deaths": 0,
+        "render": [
+          1280,
+          720
+        ],
+        "scenery": null
+      }
+    ],
+    "passed": true,
+    "errors": []
+  }
+]

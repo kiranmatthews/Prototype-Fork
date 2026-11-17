@@ -1,0 +1,441 @@
+{
+  "trial": 14,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -7.85,
+      80
+    ],
+    "crystals": 16
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -2491
+  ],
+  "installed": {
+    "id": 14,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 14,
+    "frame": 6684,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 14 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Read the start of timed flight 1",
+        "firstFrame": 313,
+        "lastFrame": 419
+      },
+      {
+        "name": "Jump onto timed flight 1",
+        "firstFrame": 420,
+        "lastFrame": 455
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 455,
+        "lastFrame": 536
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 581,
+        "lastFrame": 616
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 616,
+        "lastFrame": 697
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 742,
+        "lastFrame": 777
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 777,
+        "lastFrame": 858
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 903,
+        "lastFrame": 937
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 1507,
+        "lastFrame": 1626
+      },
+      {
+        "name": "Read the start of timed flight 2",
+        "firstFrame": 1670,
+        "lastFrame": 2099
+      },
+      {
+        "name": "Jump onto timed flight 2",
+        "firstFrame": 2100,
+        "lastFrame": 2135
+      },
+      {
+        "name": "A late upper transfer falls to the flat recovery floor",
+        "firstFrame": 2135,
+        "lastFrame": 2428
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 2428,
+        "lastFrame": 2605
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 2623,
+        "lastFrame": 2855
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2873,
+        "lastFrame": 3137
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 3155,
+        "lastFrame": 3246
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 3264,
+        "lastFrame": 3441
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 3459,
+        "lastFrame": 3619
+      },
+      {
+        "name": "Read the start of timed flight 1",
+        "firstFrame": 3663,
+        "lastFrame": 3779
+      },
+      {
+        "name": "Jump onto timed flight 1",
+        "firstFrame": 3780,
+        "lastFrame": 3815
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3815,
+        "lastFrame": 3896
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 3941,
+        "lastFrame": 3976
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 3976,
+        "lastFrame": 4057
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 4102,
+        "lastFrame": 4137
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4137,
+        "lastFrame": 4218
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 4263,
+        "lastFrame": 4297
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 4297,
+        "lastFrame": 4417
+      },
+      {
+        "name": "Read the start of timed flight 2",
+        "firstFrame": 4461,
+        "lastFrame": 4799
+      },
+      {
+        "name": "Jump onto timed flight 2",
+        "firstFrame": 4800,
+        "lastFrame": 4835
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4835,
+        "lastFrame": 4916
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 4961,
+        "lastFrame": 4996
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 4996,
+        "lastFrame": 5077
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 5122,
+        "lastFrame": 5157
+      },
+      {
+        "name": "Cross the lit step before it withdraws",
+        "firstFrame": 5157,
+        "lastFrame": 5238
+      },
+      {
+        "name": "Jump to the next timed step or permanent island",
+        "firstFrame": 5283,
+        "lastFrame": 5317
+      },
+      {
+        "name": "Collect the crystal after both timed flights",
+        "firstFrame": 5317,
+        "lastFrame": 5407
+      },
+      {
+        "name": "Drop to the recovery floor beside the steps",
+        "firstFrame": 5452,
+        "lastFrame": 5518
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 5518,
+        "lastFrame": 5634
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 5652,
+        "lastFrame": 6080
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 6098,
+        "lastFrame": 6362
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 6380,
+        "lastFrame": 6471
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 6489,
+        "lastFrame": 6666
+      }
+    ],
+    "evidence": [
+      {
+        "action": "completed timed flight 1",
+        "position": [
+          -0.0039424950331065,
+          6.2,
+          -2526.0821805523315
+        ]
+      },
+      {
+        "action": "completed timed flight 1",
+        "position": [
+          0.0034597511377129366,
+          6.2,
+          -2526.0824650633526
+        ]
+      },
+      {
+        "action": "completed timed flight 2",
+        "position": [
+          0.0034597511377129366,
+          12.4,
+          -2560.082109507812
+        ]
+      }
+    ],
+    "position": [
+      0.06805627484772583,
+      0,
+      -2487.003814287665
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the local circuit",
+    "result": {
+      "id": 14,
+      "collected": 1,
+      "position": [
+        0.06805627484772583,
+        0,
+        -2487.003814287665
+      ],
+      "frames": 6684
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06805627484772583,
+        0,
+        -2487.003814287665
+      ],
+      "camera": [
+        0.06805627484772583,
+        9.335185867704151,
+        -2469.812659825063
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            3.5692120040202885e-05,
+            0.6828129736408298,
+            1.0005851260786949
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.003384737231299992,
+            0.6805305375928877,
+            1.0005926050783887
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            4.397021130316091e-05,
+            0.6868437934173858,
+            1.0006048404141656
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            4.76986106355121e-05,
+            0.680425733388304,
+            1.0006137196247071
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.006914748376786711,
+            0.6783493206191571,
+            1.0006255980968817
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            5.93401651577472e-05,
+            0.6789896993550734,
+            1.0006414440727665
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            6.853905188764703e-05,
+            0.6843035608318049,
+            1.000663351289441
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.006966117261636267,
+            0.6761101388352391,
+            1.00069045793117
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.00837032168583971,
+            0.680379713706198,
+            1.0007288245405865
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0.00012335330433600782,
+            0.7004493859546965,
+            1.0007938918364112
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            0.00019025162675832737,
+            0.7063197933693595,
+            1.0009532106852568
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.03133650177575549,
+            0.637876570698584,
+            1.0011024667162514
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            0.0007206352339817617,
+            0.47536849206885434,
+            1.0022163231623682
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            -0.005510382172083563,
+            0.7024265307123801,
+            0.9996639297919239
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.02593000474168884,
+            0.7166642724287416,
+            1.0000017055567498
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

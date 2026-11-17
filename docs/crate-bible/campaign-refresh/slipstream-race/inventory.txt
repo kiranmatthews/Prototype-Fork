@@ -1,0 +1,1 @@
+PASS {"inventory":{"physical":195,"gem":83,"ordinary":83,"itemBoxes":112,"ammo":["tnt","nitro","nitro","nitro"],"enemies":0,"checkpoints":0,"bonus":false,"courseLength":4093.31063425901},"harvests":83,"itemRows":27,"timeCrates":28,"fullReset":true}

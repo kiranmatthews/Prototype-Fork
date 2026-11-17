@@ -69,6 +69,10 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     }
   };
   const fruit = (p: Point, nm: string) => add({ t: 'wumpa', p, grp: 261, nm });
+  const cargo=(p:Point,count:number,nm:string,grp=261)=>{
+    for(let i=0;i<count;i++)add({t:'crate',p:[p[0]+(i%2-.5)*.96,p[1]+Math.floor(i/2)*.96,p[2]],
+      kind:i<2?'wood':'mystery',grp,nm});
+  };
   const checkpoint = (p: Point, nm: string) => add({ t: 'checkpoint', p, grp: 266, nm });
   const node = (p: Point, radius = 0) => add({ t: 'camnode', p, radius, grp: 266, nm: 'Finale camera spine' });
   const pit = (p: Point, s: Point, nm: string) => add({ t: 'pit', p, s, grp: 261, nm });
@@ -118,14 +122,16 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     }
     assembly('hangingarch', [0, -.18, toe + 32], [25, 17, 3.1], `${gap.name} · approach arch`, 0, 262);
     archFoundations(toe + 32);
-    // Optional rewards sit off the racing line, with broad, supported space.
-    for (const side of [-1, 1]) add({ t: 'crate', p: [side * 5.5, 0, gap.runway - 19],
-      kind: i === 2 && side < 0 ? 'mask' : 'wood', grp: 261, nm: 'Aqueduct side reward' });
+    // Harvest only on broad shoulders before the boost approach. The centre,
+    // takeoff, landing and optional rails remain clear for the high-speed line.
+    cargo([(i%2?1:-1)*4.4,0,gap.runway-19],i===0?4:3,`${gap.name} / OPTIONAL / pre-boost harvest`);
+    if(i===2)cargo([4.4,0,gap.runway-53],3,'COUNT / stock after the hanging-gardens checkpoint');
     if (i === 2) checkpoint([0, 0, gap.runway - 40], 'Hanging gardens checkpoint');
     node([0, 0, gap.runway - 8]); node([0, 0, toe]); node([0, 4.2, gap.near]); node([0, 0, gap.far]);
   }
   slab([0, 0, -1307], [16, 2.4, 58], 'Sun gate · long landing and braking deck');
   slab([2, 0, -1353], [28, 3, 34], 'Sunward ascent · turning court');
+  cargo([-4.4,0,-1320],4,'REST / braking-deck harvest after the last leap');
   checkpoint([0, 0, -1345], 'Sunward ascent checkpoint');
   assembly('hangingarch', [0, -.1, -1310], [25, 18, 3.1], 'Sun gate arrival', 0, 262);
   archFoundations(-1310);
@@ -182,13 +188,15 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     if (landing && i < 11) {
       checkpoint([x + 1, y, RUINS_CLIMB_Z], `Sunward ascent · terrace ${i === 3 ? 1 : 2} checkpoint`);
       assembly('hangingarch', [x, y, RUINS_CLIMB_Z - 3.35], [13, 12, 2], 'Crown of the terrace');
-      add({ t: 'crate', p: [x + 3, y, RUINS_CLIMB_Z - 2.8], kind: 'mystery', grp: 263, nm: 'Terrace refuge reward' });
-    } else if (i % 4 === 1) add({ t: 'crate', p: [x + 1.5, y, RUINS_CLIMB_Z - 2.6], kind: 'wood', grp: 263, nm: 'Climbing side reward' });
+    }
+    const harvests:Record<number,number>={0:3,1:3,2:4,3:3,4:3,5:4,7:3,9:3};
+    if(harvests[i])cargo([x+(landing?3:1.5),y,RUINS_CLIMB_Z-2.6],harvests[i],`${landing?'COUNT / after the checkpoint':'TEST / optional ledge harvest'} ${i+1}`,263);
     node([x, y, RUINS_CLIMB_Z]);
   }
   slab([179, 26.4, RUINS_CLIMB_Z], [24, 3.2, 13], 'Sunward summit · final sanctuary', 263);
   assembly('roofedtemple', [179, 26.35, RUINS_CLIMB_Z], [12, 16.5, 19], 'Sunward summit sanctuary', 90);
   for (const side of [-1, 1]) prop('junglefern', [174, 26.35, RUINS_CLIMB_Z + side * 5.4], [4, 2.2, 3.3], 'Summit garden', side * 40, 264);
+  cargo([174.5,26.4,RUINS_CLIMB_Z-2.6],4,'REWARD / summit harvest before the exit',263);
   add({ t: 'gate', p: [183, 26.4, RUINS_CLIMB_Z], yaw: 90, grp: 266, nm: 'Jungle Ruins · Sunward summit finish' });
   node([191, 26.4, RUINS_CLIMB_Z]);
   pit([101, -8, RUINS_CLIMB_Z], [184, 1, 22], 'Sunward ascent · ravine death volume');

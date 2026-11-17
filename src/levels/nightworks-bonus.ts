@@ -1,5 +1,6 @@
 import {isNightworksSurface} from '../nightworksRocks';
 import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
+import type { BonusCourse } from './bonus-course-kit';
 
 /** Source-owned image allowlist; editor data cannot request arbitrary URLs. */
 const NIGHTWORKS_ART: Record<string,{file:string;unlit?:boolean;cutout?:boolean;repeat?:boolean}> = {
@@ -83,4 +84,24 @@ export function rebuildNightworksBonus(data:CustomLevelData):void {
     sunColor:'#b9d4ff',sunIntensity:1.7,fillColor:'#e8b46f',fillIntensity:.6,
     shadowStrength:.68,drawDistance:340,backdrop:'sky',fallbackTop:'#111d36',fallbackBottom:'#304666'};
   data.groups??=[];data.groups.push({id:90,nm:'Nightworks quarry · layered moonlight, gantries and hanging stone'});
+}
+
+/** Single-tier deliveries cannot replace the fuse cap or retained arrow.
+ * Keep both original elevated targets and their independent reveal circuit. */
+export function arrangeNightworksBonusCrates(course:BonusCourse):void {
+  const C=course.data.components;
+  const row=(name:string,x:number,count:number)=>{
+    for(let i=0;i<count;i++)C.push({t:'crate',kind:i===count-1?'mystery':'wood',
+      p:[x+i*.96,0,0],grp:2,nm:`Fuse Store cargo / ${name} / ${i+1}`});
+  };
+  row('arrival',-4.44,4);
+  row('refuge',15.96,2);
+  row('dispatch',54.04,3);
+  row('exit',63.04,3);
+  const mystery=C.find(c=>c.nm==='Room 2 return: upper mystery')!;
+  mystery.p[0]=39.92;
+  course.rooms[1].crates.find(c=>c.role==='upper mystery')!.x=39.92;
+  const name='Room 2 return: upper wood';
+  C.push({t:'crate',kind:'wood',p:[38.96,9.6,0],grp:21,outline:true,nm:name});
+  course.rooms[1].crates.push({role:'upper wood',name,x:38.96,y:9.6,kind:'wood'});
 }

@@ -55,7 +55,6 @@ function floor(a:number,b:number,y:number,w:number,color=palette.tile) {
   for(let s=a+3;s<b-1;s+=6)box('Floor tile joint',[0,y+.012,-s],[w-.3,.012,.045],'#b4beb7');
 }
 function fruit(s:number,x=0,y=0){add({t:'wumpa',p:[x,y+1,-s]});}
-function crate(s:number,x=0,y=0,kind:CustomComponent['kind']='wood'){add({t:'crate',p:[x,y,-s],kind});}
 export const MAYFIELD_ROUTE:P[]=[];
 export const MAYFIELD_CHECKPOINTS:{s:number;y:number;x:number;name:string}[]=[];
 export const MAYFIELD_GAPS:{a:number;b:number;y:number;w:number}[]=[];
@@ -173,7 +172,7 @@ MAYFIELD_EXPLORATION_LINES.push(
 );
 const parkingStart=MAYFIELD_PARKING_ROUTE[0];
 add({t:'clock',p:[parkingStart[0]-3,parkingStart[1],parkingStart[2]-6],nm:'Mayfield time trial'});
-for(const [i,p]of upperPath.entries())if(i>0&&i<upperPath.length-1){fruit(-p[2],p[0],p[1]);if(i%2===0)crate(-p[2]+6,p[0]+4,p[1]);}
+for(const [i,p]of upperPath.entries())if(i>0&&i<upperPath.length-1){fruit(-p[2],p[0],p[1]);}
 
 const gymY=upperPath[upperPath.length-1][1],arcadeY=gymY-10.5;
 section(801,'02 · School Miami gym, banks and downhill courtyard');
@@ -408,6 +407,48 @@ for(const p of MAYFIELD_ROUTE)add({t:'camnode',p:[...p],radius:5,nm:'Mayfield or
 for(let i=2;i<MAYFIELD_ROUTE.length-1;i+=3){const p=MAYFIELD_ROUTE[i];fruit(-p[2],p[0],p[1]);}
 add({t:'pit',p:[0,-22,-800],s:[650,1,2300],invisible:true,nm:'Mayfield below-course recovery'});
 for(const b of paint.values())C.push({t:'mesh',nm:'Mayfield signs and connective trim',p:[0,0,0],vertices:b.vertices,indices:b.indices,solid:false,edgeGrinding:false,color:b.color,tex:'solid',grp:b.grp});
+// Stock deliveries sit on measured fixed floor, two five-box stops in each
+// checkpoint section. Replace the source skatepark's unsupported box copies;
+// the retained architecture, rails and normal clear route do not change.
+for(let i=C.length-1;i>=0;i--)if(C[i].t==='crate')C.splice(i,1);
+section(807,'Grouped deliveries beside the clear route');
+export const MAYFIELD_DELIVERIES: [number,number,number,'x'|'z'][] = [
+  [-33.999095, 136.250031, 39.860010, 'z'],
+  [-22.523549, 118.079620, 106.740000, 'z'],
+  [5.500000, 99.999626, -7.737658, 'x'],
+  [5.500000, 99.999619, -45.868829, 'z'],
+  [17.980000, 99.999626, -149.589199, 'x'],
+  [17.980000, 99.999626, -200.779434, 'x'],
+  [-18.445204, 79.605881, -356.914484, 'x'],
+  [-5.165154, 79.605881, -359.740516, 'x'],
+  [20.593947, 79.586614, -460.910446, 'x'],
+  [-11.450408, 68.428673, -539.933742, 'x'],
+  [5.500000, 67.068642, -685.565238, 'x'],
+  [5.500000, 67.080643, -738.925955, 'x'],
+  [5.500000, 58.247830, -866.000000, 'z'],
+  [5.500000, 58.226380, -912.000000, 'x'],
+  [5.500000, 58.232380, -1019.485124, 'x'],
+  [-24.478424, 60.924580, -1085.514386, 'x'],
+  [3.621447, 66.456679, -1192.367180, 'x'],
+  [4.171225, 66.681653, -1205.155588, 'x'],
+  [-0.855499, 66.239517, -1361.314038, 'x'],
+  [54.572192, 66.239517, -1393.979755, 'x'],
+  [182.407394, 38.672043, -1450.363424, 'x'],
+  [123.466467, 14.441107, -1594.982416, 'x'],
+];
+for(const [index,[x,y,z,axis]] of MAYFIELD_DELIVERIES.entries()){
+ const name=`Section ${Math.floor(index/2)+1} · ${index%2?'receiving':'dispatch'} supplies`;
+ for(let col=0;col<3;col++)for(let tier=0;tier<(col===2?1:2);tier++)
+  add({t:'crate',p:[x+(axis==='x'?(col-1)*.96:0),y+tier*.96,z+(axis==='z'?(col-1)*.96:0)],
+   kind:[3,9,17].includes(index)&&col===1&&tier===1?'mask':'wood',nm:`${name} · ${col+1}.${tier+1}`});
+}
+// Optional stockroom patrols teach the same spin counter on roomy floors.
+// Their wider later patrols guard supplies while the centre riding line stays open.
+for(const [stage,index] of [4,10,18].entries()){
+ const [x,y,z]=MAYFIELD_DELIVERIES[index];
+ add({t:'enemy',foe:'grunt',p:[x,y,z+3.8],range:.9+stage*.3,speed:1.2,
+  nm:`Stockroom patrol ${stage+1} · optional supply guard`});
+}
 export const MAYFIELD_VERT_TESTS=[
  {name:'Warehouse source halfpipe',p:transformPoint([20,0,-28.35],half)},
  {name:'Kona source spinal grooves',p:transformPoint([-1.43325,.000111,118],grooves)},

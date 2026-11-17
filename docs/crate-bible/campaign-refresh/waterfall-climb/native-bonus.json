@@ -1,0 +1,750 @@
+{
+  "actions": [
+    {
+      "name": "approach Arrival parcel",
+      "firstFrame": 20,
+      "lastFrame": 92
+    },
+    {
+      "name": "Arrival parcel",
+      "firstFrame": 112,
+      "lastFrame": 112
+    },
+    {
+      "name": "approach Arrival pair",
+      "firstFrame": 134,
+      "lastFrame": 225
+    },
+    {
+      "name": "Arrival pair",
+      "firstFrame": 245,
+      "lastFrame": 245
+    },
+    {
+      "name": "approach First wheel supplies",
+      "firstFrame": 267,
+      "lastFrame": 373
+    },
+    {
+      "name": "First wheel supplies",
+      "firstFrame": 393,
+      "lastFrame": 393
+    },
+    {
+      "name": "approach First wheel supplies \u00b7 upper 1",
+      "firstFrame": 415,
+      "lastFrame": 477
+    },
+    {
+      "name": "First wheel supplies \u00b7 upper 1",
+      "firstFrame": 497,
+      "lastFrame": 497
+    },
+    {
+      "name": "First waterwheel approach",
+      "firstFrame": 519,
+      "lastFrame": 620
+    },
+    {
+      "name": "First waterwheel opens",
+      "firstFrame": 640,
+      "lastFrame": 659
+    },
+    {
+      "name": "First waterwheel traverse",
+      "firstFrame": 659,
+      "lastFrame": 805
+    },
+    {
+      "name": "First waterwheel gap exit",
+      "firstFrame": 832,
+      "lastFrame": 868
+    },
+    {
+      "name": "approach First receiver cache",
+      "firstFrame": 868,
+      "lastFrame": 923
+    },
+    {
+      "name": "First receiver cache",
+      "firstFrame": 943,
+      "lastFrame": 943
+    },
+    {
+      "name": "approach First receiver pair",
+      "firstFrame": 965,
+      "lastFrame": 1048
+    },
+    {
+      "name": "First receiver pair",
+      "firstFrame": 1068,
+      "lastFrame": 1068
+    },
+    {
+      "name": "Bell balcony takeoff",
+      "firstFrame": 1090,
+      "lastFrame": 1176
+    },
+    {
+      "name": "Bell balcony jump",
+      "firstFrame": 1221,
+      "lastFrame": 1257
+    },
+    {
+      "name": "Keeper bell cache above the launcher takeoff",
+      "firstFrame": 1257,
+      "lastFrame": 1336
+    },
+    {
+      "name": "Keeper bell cache above the launcher arrow contact",
+      "firstFrame": 1381,
+      "lastFrame": 1417
+    },
+    {
+      "name": "Keeper bell cache above the launcher high reward ascent",
+      "firstFrame": 1417,
+      "lastFrame": 1453
+    },
+    {
+      "name": "Keeper bell cache above the launcher apex double-jump head bump",
+      "firstFrame": 1456,
+      "lastFrame": 1466
+    },
+    {
+      "name": "Keeper bell cache above the launcher leave intact launcher",
+      "firstFrame": 1466,
+      "lastFrame": 1492
+    },
+    {
+      "name": "approach Keeper bell cache above the launcher support last",
+      "firstFrame": 1492,
+      "lastFrame": 1553
+    },
+    {
+      "name": "Keeper bell cache above the launcher support last",
+      "firstFrame": 1573,
+      "lastFrame": 1573
+    },
+    {
+      "name": "approach Bell keeper provisions",
+      "firstFrame": 1595,
+      "lastFrame": 1717
+    },
+    {
+      "name": "Bell keeper provisions",
+      "firstFrame": 1737,
+      "lastFrame": 1737
+    },
+    {
+      "name": "Ferry boarding sill",
+      "firstFrame": 1759,
+      "lastFrame": 1860
+    },
+    {
+      "name": "Wait for the bell keeper ferry",
+      "firstFrame": 1878,
+      "lastFrame": 1878
+    },
+    {
+      "name": "Board the moving keeper ferry",
+      "firstFrame": 1905,
+      "lastFrame": 1944
+    },
+    {
+      "name": "Stand on the ferry",
+      "firstFrame": 1944,
+      "lastFrame": 2027
+    },
+    {
+      "name": "Ride toward the treasury bank",
+      "firstFrame": 2027,
+      "lastFrame": 2145
+    },
+    {
+      "name": "Ferry exit rim",
+      "firstFrame": 2145,
+      "lastFrame": 2224
+    },
+    {
+      "name": "Leave the moving ferry",
+      "firstFrame": 2251,
+      "lastFrame": 2290
+    },
+    {
+      "name": "approach Ferry shore pair",
+      "firstFrame": 2290,
+      "lastFrame": 2348
+    },
+    {
+      "name": "Ferry shore pair",
+      "firstFrame": 2368,
+      "lastFrame": 2368
+    },
+    {
+      "name": "First rotten beam takeoff",
+      "firstFrame": 2390,
+      "lastFrame": 2522
+    },
+    {
+      "name": "Reach the first rotten beam",
+      "firstFrame": 2567,
+      "lastFrame": 2604
+    },
+    {
+      "name": "Cross the first rotten beam",
+      "firstFrame": 2606,
+      "lastFrame": 2697
+    },
+    {
+      "name": "Transfer before the beam falls",
+      "firstFrame": 2724,
+      "lastFrame": 2760
+    },
+    {
+      "name": "Cross the second rotten beam",
+      "firstFrame": 2762,
+      "lastFrame": 2853
+    },
+    {
+      "name": "Reach the safe treasury terrace",
+      "firstFrame": 2880,
+      "lastFrame": 2916
+    },
+    {
+      "name": "approach Treasury pair",
+      "firstFrame": 2916,
+      "lastFrame": 2988
+    },
+    {
+      "name": "Treasury pair",
+      "firstFrame": 3008,
+      "lastFrame": 3008
+    },
+    {
+      "name": "approach Treasury pair \u00b7 upper 1",
+      "firstFrame": 3030,
+      "lastFrame": 3092
+    },
+    {
+      "name": "Treasury pair \u00b7 upper 1",
+      "firstFrame": 3112,
+      "lastFrame": 3112
+    },
+    {
+      "name": "approach Sluice seal switch",
+      "firstFrame": 3134,
+      "lastFrame": 3240
+    },
+    {
+      "name": "Sluice seal switch",
+      "firstFrame": 3260,
+      "lastFrame": 3260
+    },
+    {
+      "name": "Clear the spent seal switch",
+      "firstFrame": 3309,
+      "lastFrame": 3348
+    },
+    {
+      "name": "Revealed stones takeoff",
+      "firstFrame": 3348,
+      "lastFrame": 3431
+    },
+    {
+      "name": "Revealed spillway leap 1",
+      "firstFrame": 3476,
+      "lastFrame": 3513
+    },
+    {
+      "name": "Revealed spillway parcel 1",
+      "firstFrame": 3515,
+      "lastFrame": 3515
+    },
+    {
+      "name": "Revealed spillway exit 1",
+      "firstFrame": 3537,
+      "lastFrame": 3616
+    },
+    {
+      "name": "Revealed spillway leap 2",
+      "firstFrame": 3643,
+      "lastFrame": 3680
+    },
+    {
+      "name": "Revealed spillway parcel 2",
+      "firstFrame": 3682,
+      "lastFrame": 3682
+    },
+    {
+      "name": "Revealed spillway exit 2",
+      "firstFrame": 3704,
+      "lastFrame": 3783
+    },
+    {
+      "name": "Treasury landing",
+      "firstFrame": 3810,
+      "lastFrame": 3847
+    },
+    {
+      "name": "approach Treasury lower",
+      "firstFrame": 3847,
+      "lastFrame": 3932
+    },
+    {
+      "name": "Treasury lower",
+      "firstFrame": 3952,
+      "lastFrame": 3952
+    },
+    {
+      "name": "approach Treasury lower \u00b7 upper 1",
+      "firstFrame": 3974,
+      "lastFrame": 4036
+    },
+    {
+      "name": "Treasury lower \u00b7 upper 1",
+      "firstFrame": 4056,
+      "lastFrame": 4056
+    },
+    {
+      "name": "approach Keeper stores",
+      "firstFrame": 4078,
+      "lastFrame": 4192
+    },
+    {
+      "name": "Keeper stores",
+      "firstFrame": 4212,
+      "lastFrame": 4212
+    },
+    {
+      "name": "approach Last spillway parcel",
+      "firstFrame": 4234,
+      "lastFrame": 4349
+    },
+    {
+      "name": "Last spillway parcel",
+      "firstFrame": 4369,
+      "lastFrame": 4369
+    },
+    {
+      "name": "Return from the Hidden Spillway",
+      "firstFrame": 4393,
+      "lastFrame": 4452
+    }
+  ],
+  "evidence": [
+    {
+      "action": "Arrival parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Arrival pair",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "First wheel supplies",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "First wheel supplies \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "First waterwheel gap exit",
+      "launch": [
+        19.051888888888904,
+        2.980232227667301e-09,
+        0
+      ],
+      "landing": [
+        22.966833333333316,
+        1.200000023841858,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "First receiver cache",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "First receiver pair",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Bell balcony jump",
+      "launch": [
+        30.132100000000065,
+        1.200000023841858,
+        0
+      ],
+      "landing": [
+        34.83010000000003,
+        2.4000000238418577,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Keeper bell cache above the launcher support last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Keeper bell cache above the launcher",
+      "upperAlive": false,
+      "launcherAlive": false
+    },
+    {
+      "action": "Bell keeper provisions",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Board the moving keeper ferry",
+      "launch": [
+        51.03554444444462,
+        2.4000000238418577,
+        0
+      ],
+      "landing": [
+        54.98204444444461,
+        2.400000011920929,
+        0
+      ],
+      "ground": "moving platform"
+    },
+    {
+      "action": "Leave the moving ferry",
+      "launch": [
+        73.48441747696994,
+        2.400000011920929,
+        0
+      ],
+      "landing": [
+        78.86401103722207,
+        2.4000000238418577,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Ferry shore pair",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Reach the first rotten beam",
+      "launch": [
+        89.030633259444,
+        2.4000000238418577,
+        0
+      ],
+      "landing": [
+        93.92363325944414,
+        3.100000011920929,
+        0
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "Transfer before the beam falls",
+      "launch": [
+        97.89469992611066,
+        2.716666678587596,
+        0
+      ],
+      "landing": [
+        101.96564437055521,
+        3.800000011920929,
+        0
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "Reach the safe treasury terrace",
+      "launch": [
+        105.89624437055507,
+        3.4166666785875957,
+        0
+      ],
+      "landing": [
+        110.88218881499968,
+        4.500000023841858,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Treasury pair",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Treasury pair \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Sluice seal switch",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "Clear the spent seal switch",
+      "launch": [
+        119.81995548166587,
+        4.500000023841858,
+        0
+      ],
+      "landing": [
+        123.96350000000012,
+        4.500000023841858,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Revealed spillway leap 1",
+      "launch": [
+        126.92664444444439,
+        4.500000023841858,
+        0
+      ],
+      "landing": [
+        132.21714444444456,
+        5.2,
+        0
+      ],
+      "ground": "Revealed spillway stone 1"
+    },
+    {
+      "action": "Revealed spillway parcel 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Revealed spillway leap 2",
+      "launch": [
+        134.893177777778,
+        5.2,
+        0
+      ],
+      "landing": [
+        140.2181222222226,
+        6,
+        0
+      ],
+      "ground": "Revealed spillway stone 2"
+    },
+    {
+      "action": "Revealed spillway parcel 2",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Treasury landing",
+      "launch": [
+        142.89502222222282,
+        6,
+        0
+      ],
+      "landing": [
+        148.47946666666746,
+        6.800000023841858,
+        0
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "Treasury lower",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Treasury lower \u00b7 upper 1",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Keeper stores",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Last spillway parcel",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Every Hidden Spillway cache",
+      "totalCrates": 46,
+      "activeStageCrates": 46,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 46,
+      "remaining": 0
+    }
+  ],
+  "source": "production source",
+  "started": "2026-11-14T08:20:52.067Z",
+  "stage": "Return from the Hidden Spillway",
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 46,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "deaths": 0,
+    "cratesBroken": 46,
+    "frames": 4452
+  }
+}

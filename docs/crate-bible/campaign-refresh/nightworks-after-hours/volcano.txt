@@ -1,0 +1,1 @@
+PASS caldera: exact original ground/camera paths, non-colliding scenery, unique 25-crate bonus, native animation clock, compressed basalt asset.

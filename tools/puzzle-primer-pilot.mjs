@@ -4,8 +4,13 @@ import { puzzleControls } from './puzzle-controls.mjs';
 export function* runPrimer(r) {
   const {p,l}=r,c=puzzleControls(r),at=c.crateSpecAt;
   const beginDeaths=p.totalDeaths;
+  function* harvest(a,b,label){
+    const boxes=l.crates.filter(box=>box.alive&&!box.pending&&!box.bang&&!box.nitroBang&&!box.nitro&&!box.tnt&&!box.bouncy&&!box.metalBounce&&box.mesh.position.x>=a&&box.mesh.position.x<=b)
+      .sort((a,b)=>a.box.min.y-b.box.min.y||a.mesh.position.x-b.mesh.position.x);
+    for(const box of boxes)if(box.alive)yield* c.hit(box,label);
+  }
   yield* c.stepFor(20);c.check(p.grounded,'Primer source spawn unsupported');
-  for(const x of [-2,2,6])yield* c.hit(at(x,0),`opening reward ${x}`);
+  yield* harvest(-3.8,7,'opening harvest groups');
   yield* c.enemy(l.enemies[0],'grunt spin lesson');
   yield* c.walk([15.4,0,0],'first gap takeoff');
   yield* c.hop([20.8,.6,0],'first ordinary gap');
@@ -26,7 +31,7 @@ export function* runPrimer(r) {
   const highY=r.source.components.find(c=>c.nm==='High key gallery').p[1]+.3;
   const arrow=at(63,.6),key=at(72,highY);
   yield* c.bounce(arrow,[68,highY,0],'preserve launch and reach high key gallery',{double:true,airSpinAbove:highY-1.2});
-  for(const x of [67,69])if(at(x,highY).alive)yield* c.hit(at(x,highY),`upper key-gallery box ${x}`);
+  yield* harvest(66,71,'upper key-gallery harvest');
   yield* c.hit(key,'upper materialisation switch');
   c.check(key.bangUsed,'upper key never fired');
   yield* c.walk([66.4,highY,0],'return left through the cleared gallery');
@@ -35,16 +40,19 @@ export function* runPrimer(r) {
   yield* c.walk([101.8,.6,0],'cross the materialized twenty-metre bridge');
   yield* c.checkpoint(104,'bank the completed key circuit');
   for(const x of [107,111.8]) {
-    const tnt=at(x,.6);if(!tnt.alive)continue;
-    yield* c.walk([x-1.95,.6,0],`TNT ${x} takeoff`);
+    const tnt=at(x,.6);if(!tnt.alive)continue;const cx=tnt.mesh.position.x;
+    yield* c.walk([cx-1.95,.6,0],`TNT ${x} takeoff`);
+    r.report.evidence.push({action:'fuse approach',sourceX:x,x:cx,alive:tnt.alive,fuse:tnt.fuse??null});
+    if(!tnt.alive)continue;
     yield* c.charge();yield* c.tick({jumpReleased:true});
-    yield* c.until(()=>tnt.fuse!==undefined,()=>c.steer([x,.6,0]),{label:`prime TNT ${x} by a real stomp`,limit:160});
-    yield* c.until(()=>p.grounded,()=>c.steer([x-4,.6,0]),{label:`retreat left outside TNT ${x} radius`,limit:180});
+    yield* c.until(()=>tnt.fuse!==undefined||!tnt.alive,()=>c.steer([cx,.6,0]),{label:`prime TNT ${x} by a real stomp`,limit:160});
+    yield* c.until(()=>p.grounded,()=>c.steer([cx-4,.6,0]),{label:`retreat left outside TNT ${x} radius`,limit:180});
     yield* c.until(()=>!tnt.alive,{}, {label:`wait for TNT ${x} and its neighbor rewards`,limit:200});
     yield* c.stepFor(50);
   }
-  for(const x of [107,109.4,111.8])c.check(!at(x,.6).alive,`explosive cluster box ${x} remains`);
+  c.check(l.crates.filter(box=>box.mesh.position.x>=106&&box.mesh.position.x<=113.5).every(box=>!box.alive),'explosive cluster stock remains');
   if(at(114,.6).alive)yield* c.hit(at(114,.6),'takeoff reward beyond the chain');
+  yield* harvest(113,115,'takeoff stock beyond the chain');
   yield* c.walk([117.3,.6,0],'permanent-arrow gap takeoff');
   const gapArrow=at(121,.6);
   yield* c.charge();yield* c.tick({jumpReleased:true});
@@ -58,6 +66,7 @@ export function* runPrimer(r) {
   for(const x of [144,145,146])c.check(!at(x,1.2).alive,`Nitro ${x} remains`);
   yield* c.hop([140.2,1.2,0],'hop over the spent solid green switch');
   if(at(149,1.2).alive)yield* c.hit(at(149,1.2),'final mystery reward');
+  yield* harvest(148,152,'final sanctuary harvest');
   yield* c.clearAll('Primer active-stage crate route');
   const completion=yield* c.finish('cross the real Primer finish gate',{limit:200});
   c.check(p.totalDeaths===beginDeaths,'Primer positive route hid a death/reset');

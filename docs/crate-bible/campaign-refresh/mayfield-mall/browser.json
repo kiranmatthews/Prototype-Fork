@@ -1,0 +1,530 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "crates": 110,
+      "total": 138,
+      "bonus": 18,
+      "checkpoints": 10,
+      "enemies": 3
+    },
+    "opening": {
+      "done": true,
+      "frames": 184,
+      "state": "ride",
+      "crates": 5,
+      "lives": 4,
+      "position": [
+        -33.999095,
+        136.25003051757812,
+        40.48101
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 183,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        6.505213034913027e-19,
+        99.99962615966797,
+        -90.13400000000017
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 183,
+      "state": "ride",
+      "crates": 6,
+      "lives": 4,
+      "position": [
+        17.13262938643644,
+        99.99962615966797,
+        -148.00258761231018
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "recovery": {
+      "lives": 3,
+      "alive": 5,
+      "position": [
+        0,
+        100.09962615966796,
+        -92
+      ]
+    },
+    "finish": {
+      "done": true,
+      "frames": 123,
+      "state": "finished",
+      "crates": 0,
+      "lives": 4,
+      "position": [
+        99.19180945575759,
+        15.155773274843023,
+        -1635.9311235948785
+      ],
+      "collected": 0,
+      "checkpoint": false
+    },
+    "bonusFailure": {
+      "lives": 4,
+      "banked": 0,
+      "completed": false,
+      "sameParent": true,
+      "jump": {
+        "frames": 68,
+        "state": "dead",
+        "position": [
+          45.349999999801824,
+          -7.370833333333341,
+          -5.3996115018830326e-05
+        ]
+      }
+    },
+    "bonusRetry": {
+      "physical": 19,
+      "alive": true,
+      "bridgeHidden": true
+    },
+    "bonusJourney": {
+      "done": true,
+      "frame": 2605,
+      "state": "finished",
+      "crates": 18,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "bonus-mayfield-mall room 1 upper observation",
+            "firstFrame": 20,
+            "lastFrame": 134
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent takeoff",
+            "firstFrame": 152,
+            "lastFrame": 246
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent arrow contact",
+            "firstFrame": 291,
+            "lastFrame": 327
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent apex outside the shelf",
+            "firstFrame": 330,
+            "lastFrame": 363
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent rise above the shelf",
+            "firstFrame": 365,
+            "lastFrame": 370
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+            "firstFrame": 370,
+            "lastFrame": 393
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 1 upper high target before support",
+            "firstFrame": 393,
+            "lastFrame": 473
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper high target before support",
+            "firstFrame": 493,
+            "lastFrame": 493
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper return-gallery edge",
+            "firstFrame": 515,
+            "lastFrame": 600
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+            "firstFrame": 645,
+            "lastFrame": 696
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 1 upper destroy arrow last",
+            "firstFrame": 696,
+            "lastFrame": 749
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper destroy arrow last",
+            "firstFrame": 769,
+            "lastFrame": 769
+          },
+          {
+            "name": "bonus-mayfield-mall room 1 upper supported room exit",
+            "firstFrame": 791,
+            "lastFrame": 1016
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge observation",
+            "firstFrame": 1034,
+            "lastFrame": 1108
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 2 bridge create visible bridge",
+            "firstFrame": 1126,
+            "lastFrame": 1209
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge create visible bridge",
+            "firstFrame": 1229,
+            "lastFrame": 1229
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge pass used switch",
+            "firstFrame": 1278,
+            "lastFrame": 1317
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge cross actual materialized bridge",
+            "firstFrame": 1317,
+            "lastFrame": 1507
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 2 bridge receiver reward",
+            "firstFrame": 1525,
+            "lastFrame": 1598
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge receiver reward",
+            "firstFrame": 1618,
+            "lastFrame": 1618
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 2 bridge receiver mystery",
+            "firstFrame": 1640,
+            "lastFrame": 1723
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge receiver mystery",
+            "firstFrame": 1743,
+            "lastFrame": 1743
+          },
+          {
+            "name": "bonus-mayfield-mall room 2 bridge supported room exit",
+            "firstFrame": 1765,
+            "lastFrame": 1857
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite observation",
+            "firstFrame": 1875,
+            "lastFrame": 1949
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite finite-stack approach",
+            "firstFrame": 1967,
+            "lastFrame": 2068
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite upper support contact",
+            "firstFrame": 2113,
+            "lastFrame": 2144
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite rebound apex",
+            "firstFrame": 2144,
+            "lastFrame": 2169
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite cap before spending support",
+            "firstFrame": 2171,
+            "lastFrame": 2175
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite clear landing",
+            "firstFrame": 2175,
+            "lastFrame": 2198
+          },
+          {
+            "name": "approach bonus-mayfield-mall room 3 finite spent upper finite support",
+            "firstFrame": 2218,
+            "lastFrame": 2271
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite spent upper finite support",
+            "firstFrame": 2291,
+            "lastFrame": 2291
+          },
+          {
+            "name": "bonus-mayfield-mall room 3 finite supported room exit",
+            "firstFrame": 2313,
+            "lastFrame": 2499
+          }
+        ],
+        "evidence": [
+          {
+            "action": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+            "contact": {
+              "frame": 327,
+              "position": [
+                6.972499999970898,
+                1.172,
+                -9.630180584904887e-05
+              ],
+              "state": "air",
+              "grounded": false,
+              "bailing": false,
+              "speed": 0,
+              "verticalSpeed": 20,
+              "deaths": 0,
+              "ground": "Supported bonus court"
+            },
+            "landing": [
+              11.271499999854884,
+              7.8,
+              -0.00012788402332740962
+            ],
+            "launcherAlive": true
+          },
+          {
+            "action": "bonus-mayfield-mall room 1 upper high target before support",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+            "launch": [
+              10.58409999987343,
+              7.8,
+              -0.00012283410095136277
+            ],
+            "landing": [
+              5.028100000023366,
+              0,
+              -8.201744584325107e-05
+            ],
+            "ground": "Supported bonus court"
+          },
+          {
+            "action": "bonus-mayfield-mall room 1 upper destroy arrow last",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "upper",
+            "index": 0,
+            "position": [
+              26.920522221654732,
+              0,
+              -0.00024284815990473622
+            ]
+          },
+          {
+            "action": "bonus-mayfield-mall room 2 bridge create visible bridge",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": true
+            }
+          },
+          {
+            "action": "bonus-mayfield-mall room 2 bridge pass used switch",
+            "launch": [
+              31.832844443744417,
+              0,
+              -0.0002789360940163919
+            ],
+            "landing": [
+              35.3724999999062,
+              0,
+              -0.000310000389575184
+            ],
+            "ground": "Supported bonus court"
+          },
+          {
+            "action": "bonus-mayfield-mall room 2 bridge receiver reward",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "bonus-mayfield-mall room 2 bridge receiver mystery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "bridge",
+            "index": 1,
+            "position": [
+              60.929111110327334,
+              0,
+              -0.0004977497382890694
+            ]
+          },
+          {
+            "action": "bonus-mayfield-mall room 3 finite spent upper finite support",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "finite",
+            "index": 2,
+            "position": [
+              84.92792222178956,
+              0,
+              -0.000682317601622799
+            ]
+          },
+          {
+            "action": "all actual authored bonus crates",
+            "totalCrates": 18,
+            "activeStageCrates": 18,
+            "bonusCrateTotal": 0,
+            "cratesBroken": 18,
+            "remaining": 0
+          }
+        ],
+        "stage": "cross real bonus gate to bank parent rewards"
+      }
+    },
+    "bonusBanked": {
+      "count": 18,
+      "completed": true,
+      "sameParent": true
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "inventory": {
+      "crates": 110,
+      "total": 138,
+      "bonus": 18,
+      "checkpoints": 10,
+      "enemies": 3
+    },
+    "views": [
+      {
+        "name": "parking",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          -33.999095,
+          134.3296467057148,
+          47.86001
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "galleria-guard",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          17.98,
+          99.99962615966797,
+          -141.589199
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "atrium-guard",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          -0.855499,
+          66.23951721191406,
+          -1353.314038
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "bonus-gallery",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          3,
+          0,
+          0
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "bonus-finite",
+        "grounded": true,
+        "state": "ride",
+        "position": [
+          63.99999999999999,
+          0,
+          0
+        ],
+        "size": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true
+  }
+]

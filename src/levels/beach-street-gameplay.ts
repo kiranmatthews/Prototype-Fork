@@ -123,9 +123,11 @@ export function enhanceBeachStreet(data:CustomLevelData,heightAt:(z:number)=>num
       put({t:'crusher',p:at(side*3.55,z),s:[4.7,2.4,3.6],dkind:'baybody',color:'#526779',supports:true,cycle:3.8,phase:side>0?1.9:0,nm:`Kite ${name} load`});
       trim(`${name} warning`,at(side*3.55,z,.04),[5,.08,5],CORAL);
     }else if(beat.kind==='patrol'){
-      const foe=z<1000?'grunt':z<1600?'turtle':z<2000?'spiker':'spinner';
-      put({t:'enemy',p:at(side*3.8,z),foe,range:foe==='spinner'?0:.65,speed:2.4,nm:`Kite ${name} outer`});
-      put({t:'enemy',p:at(side*.5,z+2),foe:foe==='spinner'?'grunt':foe,range:.55,speed:2.1,nm:`Kite ${name} inner`});
+      // Steering is the counter on this forced ride. Give each silhouette a
+      // single, roomy debut; paired repeats narrow the occupied shoulder.
+      const foe=z===1295||z===2200?'turtle':'grunt';
+      put({t:'enemy',p:at(side*3.8,z),foe,range:.65,speed:2.4,nm:`Kite ${name} / ${z<1600?'TEACH / single patrol':'TEST / outer patrol'}`});
+      if(z>=1600)put({t:'enemy',p:at(side*.5,z+2),foe,range:.55,speed:2.1,nm:`Kite ${name} / TEST / inner patrol`});
     }else if(beat.kind==='checkpoint')put({t:'checkpoint',p:at(0,z),nm:`Kite ${name} checkpoint`});
   }
   // Fruit leads decisions instead of wandering through hazards. Canals retain
@@ -139,8 +141,27 @@ export function enhanceBeachStreet(data:CustomLevelData,heightAt:(z:number)=>num
       lift=Math.max(lift,ramp.p[1]+ramp.rise!*(.5-(-z-ramp.p[2])/ramp.len!)-heightAt(z)+.9);
     put({t:'wumpa',p:at(x,z,lift),nm:`Kite guide ${z}`});
   }
-  // Exit rewards are beyond the landing, where a player can settle their line.
-  for(const z of [220,690,1135,1475,2060,2360,2978])for(const dz of [0,4])
-    put({t:'crate',p:at(beachKiteLine(z+dz),z+dz),kind:'wood',nm:`Kite exit reward ${z+dz}`});
+  // Named cargo follows the suggested steering line, beyond jump receiving
+  // zones or before the next approach. Ordinary kite contact smashes these
+  // stacks even at brake speed; explosives and ineffective masks stay out.
+  // Long sections carry ten boxes. The four short canal/checkpoint sections
+  // carry six, preserving their clear approach and landing windows.
+  const cargo:readonly (readonly [number,number,string])[]=[
+    [44,3,'TEACH / first steering harvest'],[245,3,'LANDING / first hop exit'],[290,4,'TEST / completed S harvest'],
+    [386,3,'COUNT / first canal checkpoint'],[488,3,'LANDING / first canal exit'],
+    [520,3,'COUNT / harbour checkpoint'],[690,3,'LANDING / freight hop exit'],[802,4,'TEST / canal setup exit'],
+    [852,3,'COUNT / cliff approach checkpoint'],[965,3,'LANDING / second canal exit'],
+    [1000,3,'COUNT / cliff landing checkpoint'],[1142,4,'REST / balcony harvest'],[1324,3,'TEST / turtle crossing exit'],
+    [1378,3,'COUNT / surf checkpoint'],[1537,3,'TEST / surf cutback harvest'],[1665,4,'LANDING / completed surf S'],
+    [1766,3,'COUNT / festival approach checkpoint'],[1864,3,'LANDING / third canal exit'],
+    [1890,3,'COUNT / festival landing checkpoint'],[2070,3,'LANDING / uphill hop exit'],[2155,4,'REST / high terrace harvest'],
+    [2270,3,'COUNT / lighthouse checkpoint'],[2373,3,'LANDING / quay hop exit'],[2549,4,'LANDING / low quay hop exit'],
+    [2636,3,'COUNT / final canal checkpoint'],[2738,3,'LANDING / final canal exit'],
+    [2762,3,'COUNT / home stretch checkpoint'],[2860,4,'REST / last stair overlook'],[2918,3,'TEST / final steering harvest'],
+  ];
+  for(const [z,count,job]of cargo)for(let i=0;i<count;i++){
+    const dz=count===4?(i%2)*.96:0,tier=count===4?Math.floor(i/2):i;
+    put({t:'crate',p:at(beachKiteLine(z+dz),z+dz,tier*.96),kind:tier?'mystery':'wood',nm:`Kite ${job}`});
+  }
   data.groups=[...(data.groups??[]),{id:11,nm:'Kite run · steer, hop, combine'}];
 }

@@ -7,7 +7,9 @@ const out=process.env.BANANA_BAY_OUTPUT||resolve('docs/banana-bay/evidence');awa
 await withBananaBay(async r=>{
   const {p,l,THREE,source}=r,results=[];
   const spec=part=>source.components.find(c=>c.t==='crate'&&c.nm?.includes(part));
-  const crate=c=>l.crates.find(b=>Math.hypot(b.mesh.position.x-c.p[0],b.mesh.position.z-c.p[2])<.03&&Math.abs(b.box.min.y-c.p[1])<.03);
+  // Formation expansion moves both lids and columns from the authoring grid.
+  // Resolve the authored component identity, then use its native bounds.
+  const crate=c=>l.crates.find(b=>source.components[b.mesh.userData.editorIdx]===c);
   const distance=q=>Math.hypot(q[0]-p.pos.x,q[2]-p.pos.z);
   const steer=q=>{
     const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz);if(n<.03)return {};

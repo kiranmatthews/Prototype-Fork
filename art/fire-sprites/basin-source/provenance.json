@@ -1,0 +1,1235 @@
+{
+  "author": "JangaFX",
+  "name": "Small Camp Fire",
+  "license": "CC0-1.0",
+  "sourcePage": "https://jangafx.com/software/embergen/download/free-vdb-animations",
+  "download": "https://www.mediafire.com/file/9xx9icyomy2txv7/SmallCampfireVDB.zip/file",
+  "archiveSha256": "fce2ad670a4738957f15b742410162e26bb84790e8bddb72ec2a4bd64bcebe30",
+  "blenderVersion": "5.2.0 LTS",
+  "sourceFrames": 200,
+  "projection": {
+    "camera": "orthographic",
+    "centre": [
+      -0.07999999821186066,
+      1.5149999856948853,
+      -1.0499999523162842
+    ],
+    "verticalSpan": 1.6,
+    "resolution": [
+      512,
+      512
+    ],
+    "volumeScale": [
+      0.01,
+      0.01,
+      0.01
+    ],
+    "channel": "flames",
+    "density": 0.1,
+    "emission": 0.1,
+    "volumeSamples": 256,
+    "renderSamples": 64
+  },
+  "frames": [
+    {
+      "index": 0,
+      "vdb": "smallCampfire_0000.vdb",
+      "vdbSha256": "fe2c56e24e38f33aa300bb8f7e4236ab82b0830283de254e343d24e15fdc663c",
+      "pngSha256": "213f6ccbe02d313215336ef4d377c0fa0efe9a8b344b6b26a0ea89a74a7d86b4"
+    },
+    {
+      "index": 1,
+      "vdb": "smallCampfire_0001.vdb",
+      "vdbSha256": "8ec4ed1f0133402dd141fe590fa378660b7c34a16b0cf0a3f71a6ecbe4cda5c9",
+      "pngSha256": "de88fe05a5144e7fc136502999261bc6a8c422cbc8aa32b8e77a73d762840660"
+    },
+    {
+      "index": 2,
+      "vdb": "smallCampfire_0002.vdb",
+      "vdbSha256": "a6f9c8002349151f5b8840f13f7b77f3615a9b08e7d3187db47f6b236f6720f3",
+      "pngSha256": "2396f6d1c91c8e6d430a1d5d15a438bd1b18c08570de7fab3649d5d6dee4b685"
+    },
+    {
+      "index": 3,
+      "vdb": "smallCampfire_0003.vdb",
+      "vdbSha256": "2d73288a5d9c138baa0aaa1a4129cd61ce01d1a5d2201af49d97915e0c829834",
+      "pngSha256": "ffd9d9c54e99678fb46811c0501049b2786cc4d7088beadb2985236e25865f25"
+    },
+    {
+      "index": 4,
+      "vdb": "smallCampfire_0004.vdb",
+      "vdbSha256": "ac6bbf7dc4fb91eaf31a85d68bfcc7d4b8d71a030900f576d016554c9b71ff81",
+      "pngSha256": "47fe40fa7f935977a47628fabf30bd289a3f17a25ace95fd2264157e995eb8f5"
+    },
+    {
+      "index": 5,
+      "vdb": "smallCampfire_0005.vdb",
+      "vdbSha256": "87a6072a5ef2eb0941b794b1c37fed2322630fd9eede1063b45e10dcdfa01462",
+      "pngSha256": "a6dbc17cb0b95ac1781fbb373524c14fe67f006fdaa46390d85f2771b158f133"
+    },
+    {
+      "index": 6,
+      "vdb": "smallCampfire_0006.vdb",
+      "vdbSha256": "0f5ed31bc050ffa142a65bf5fde497c7754382f3611fbad65dfeab2c381497ab",
+      "pngSha256": "bbcd59a51fc4cfcbf761204952496f23dd25e91b258b500a10e272b5c51e27c2"
+    },
+    {
+      "index": 7,
+      "vdb": "smallCampfire_0007.vdb",
+      "vdbSha256": "2c610ffcfaa2c103bf95b9e859abcac8be352d0556ff03bfe991ab7cfbd2a92c",
+      "pngSha256": "a1a7e99c165d9cf14f11f523123af4c872b1fe46c84a60c9b649cfd822c33bad"
+    },
+    {
+      "index": 8,
+      "vdb": "smallCampfire_0008.vdb",
+      "vdbSha256": "e59458f87925047fa48c9dbf5cc8692ec706ba0e017ecc9f96b0bcd497f2e932",
+      "pngSha256": "c6cf6330e167af3d13f91ebb57e8432f9a4d266cdbf56ed192e7863b9018a707"
+    },
+    {
+      "index": 9,
+      "vdb": "smallCampfire_0009.vdb",
+      "vdbSha256": "9a808ee1958096a07b20d2c16823e4f58d36fa5edbbc64a1d6fbdcaf7cde89b5",
+      "pngSha256": "2ead895fee55683b8b90979e534f7c17575e71f0542278b1fd7a1ff0986b5e46"
+    },
+    {
+      "index": 10,
+      "vdb": "smallCampfire_0010.vdb",
+      "vdbSha256": "1ca05d2576fee1c63c3427f28120046ccd2f8a29a61c964ad7cd518329161468",
+      "pngSha256": "70e83e3c5abc55e50bafc8a7803df99b2b23ed6340d8ac19b2277abb18578849"
+    },
+    {
+      "index": 11,
+      "vdb": "smallCampfire_0011.vdb",
+      "vdbSha256": "fe606d30e16d1cf8a7b03038e1d69a820a38bc06c1b5a2c9754875cf9ce9c90b",
+      "pngSha256": "a8ef682774217b0eda11d81ff39b6d0e9c02f116c95845bd4196e9ef44528afa"
+    },
+    {
+      "index": 12,
+      "vdb": "smallCampfire_0012.vdb",
+      "vdbSha256": "2b6252810b3ec7785c341ae42478250d8747c9b925fac25cc3be7035bcec6a3d",
+      "pngSha256": "0488fecbf9ac4659f6787392d0eb6a65048d02a3ef0eefc94384f3dbd275a771"
+    },
+    {
+      "index": 13,
+      "vdb": "smallCampfire_0013.vdb",
+      "vdbSha256": "ffa34b9ea22b2d3591f7d9a2ff35c8ddf77fa1626f923c505a054d99085b26cc",
+      "pngSha256": "3a9c89cf0b7d9fe6a2ca8523f92e14f7ad02ee03cc4d099235e932ec2d6e593e"
+    },
+    {
+      "index": 14,
+      "vdb": "smallCampfire_0014.vdb",
+      "vdbSha256": "246018d14ff44f10fd55dc66f395d4c08e4f4f9d9363d90750f6e40dfeb42131",
+      "pngSha256": "9bb7f5ef1166f9ae68b15b163771ed6d36410ec67322bfec65c9c5f018c1bac7"
+    },
+    {
+      "index": 15,
+      "vdb": "smallCampfire_0015.vdb",
+      "vdbSha256": "b5e69e2b83630a28153951293e995338efcfaaaf8b669221c778b7abeaddd4e1",
+      "pngSha256": "417af0cfcf8a144974f7e7b0daba6de77e99c97ba3f40859fe0ad0ba03bfd39e"
+    },
+    {
+      "index": 16,
+      "vdb": "smallCampfire_0016.vdb",
+      "vdbSha256": "4c48138c2d336ca98682fc953a7a223da5a476f1bb5f9fc6fd06d465a3199f15",
+      "pngSha256": "75f4d1791db935e00d76abec2c01ce2bd1cd46cc19f7935a3833edb2c3424e43"
+    },
+    {
+      "index": 17,
+      "vdb": "smallCampfire_0017.vdb",
+      "vdbSha256": "5c83be5689172962bf84cf5ce5c87c5c81de2bfe8d3c6b1aeae72e5fb4c72d06",
+      "pngSha256": "7fd8ec35d4d1d846b98205dcd116a39449107d6762d6fcafad0b9ef001d30536"
+    },
+    {
+      "index": 18,
+      "vdb": "smallCampfire_0018.vdb",
+      "vdbSha256": "84b5201bc5498669c0211b207fcf3b337ba84f8ac58aed2c829ba90ce865e13b",
+      "pngSha256": "91bd4b6f4b2c06bc1ada93951b71a2e8953f0fcdfd23f5dab9069d237dca9f65"
+    },
+    {
+      "index": 19,
+      "vdb": "smallCampfire_0019.vdb",
+      "vdbSha256": "21bae8f479d9ac7e6ec01b6ebf450a8c9a5ac7171ea61902a0a81359acc6bd0e",
+      "pngSha256": "dcade0393e874a50cecdbd0dc407472b39843cdb9575ae0268576ea9f65d33ed"
+    },
+    {
+      "index": 20,
+      "vdb": "smallCampfire_0020.vdb",
+      "vdbSha256": "3ef908eafcca9fb7be03f92b6e60c591037f6e88883eb9c700b67ccf48536d91",
+      "pngSha256": "aa1dc22c313da07509058fb889a5232f4c3f8034f251ce0fca3f8b855e2b32c7"
+    },
+    {
+      "index": 21,
+      "vdb": "smallCampfire_0021.vdb",
+      "vdbSha256": "214318d1923c13332fbbf01065c4d9e7449b6d474b563cf5c6b282742371a484",
+      "pngSha256": "a4cb4921e6a462d463b252b8db9de1c32b1e29eec0bd52451634602dac62abd8"
+    },
+    {
+      "index": 22,
+      "vdb": "smallCampfire_0022.vdb",
+      "vdbSha256": "352d001535f3cab1ab1e6e2738b887c4b9fb0add75a8fa8276551b412b70ba91",
+      "pngSha256": "f8524f572ca7e42e8a13130e9714c3f7529f9452dc1d848e594300e386e2092e"
+    },
+    {
+      "index": 23,
+      "vdb": "smallCampfire_0023.vdb",
+      "vdbSha256": "db8e043a34f481decbdee73c0b6fbd23488616211f227c574badc2ef580ce8e4",
+      "pngSha256": "4ae118a6b5ce6caa0f9512f8e7179c354d2edbc341d1a7525ad751c9830bf255"
+    },
+    {
+      "index": 24,
+      "vdb": "smallCampfire_0024.vdb",
+      "vdbSha256": "69acad122e7b66ff0ae07a53db7300ec6bf1e6531dfdd7ca57ea6833e2295be2",
+      "pngSha256": "959aa81b7bab4635c1c0478c31b43bb0f9591d937698aa4036edd34571cba172"
+    },
+    {
+      "index": 25,
+      "vdb": "smallCampfire_0025.vdb",
+      "vdbSha256": "21ae149c459dbcf1fc18e4327c91f11980da20f7e48dc7870ac29386f929f717",
+      "pngSha256": "fc3d7b335717f667e5d30dd5b70573e4ce490447161ea247ab32f04c3b9d30ba"
+    },
+    {
+      "index": 26,
+      "vdb": "smallCampfire_0026.vdb",
+      "vdbSha256": "6a03ce337bc743c2c3bd82ae2178490c0eaa815d35b7d56970b0f8bfbc979728",
+      "pngSha256": "d27dc00562ab450132e1a3bfa161b6f188ede705fa16b8e8551a56b0a63bc5d3"
+    },
+    {
+      "index": 27,
+      "vdb": "smallCampfire_0027.vdb",
+      "vdbSha256": "3445ef25f3e10364bb200b8f2225cd4238f410fe38dd8f868c87b7bd947c6edd",
+      "pngSha256": "8af757146f6e35f5d9dc4bc18100e4cbbb00dd4736ae8dacf11738f4d9b153ef"
+    },
+    {
+      "index": 28,
+      "vdb": "smallCampfire_0028.vdb",
+      "vdbSha256": "eb4ef787cebf9a4d6707f096cc98efa66bd7ed7185ffdf8f847820036aee9c4d",
+      "pngSha256": "e4580bc2cd4764298205d73b9fc0f65057bf7c2c85de091d27afde1f8c21dd14"
+    },
+    {
+      "index": 29,
+      "vdb": "smallCampfire_0029.vdb",
+      "vdbSha256": "28de7572e7aee0fcf90d09f2de18a7557e6eac6b23de0dd68fe1967af52c2330",
+      "pngSha256": "e528f4e49a2b7c5c7fa96a77fcaee099aec7ff5a893a99b91ad789e2007e9f64"
+    },
+    {
+      "index": 30,
+      "vdb": "smallCampfire_0030.vdb",
+      "vdbSha256": "aa6b764746ea4f6f7d9204adc24704b21572269c83c3be0747e5e02cc2e50b31",
+      "pngSha256": "596dab8677e103ae50a6b467c64ae5af02ed7976a1653c4a86d03bb02e66d7fe"
+    },
+    {
+      "index": 31,
+      "vdb": "smallCampfire_0031.vdb",
+      "vdbSha256": "5197bc5c5e742ee63284b5a931a9983fd0123107e8adaae85d994422d7f4fede",
+      "pngSha256": "b5b022315b4c860e4e8173c03a94416627d10b0cdd685948282a6bff3de63148"
+    },
+    {
+      "index": 32,
+      "vdb": "smallCampfire_0032.vdb",
+      "vdbSha256": "f62dc75cd0b1bf9f4296ef9714920f3b51b2586f4a0059ced4cf9d81fb266863",
+      "pngSha256": "2806d2e3fe843735c59bbde341b3352828c0dcc486e63efd451d67081d46adb4"
+    },
+    {
+      "index": 33,
+      "vdb": "smallCampfire_0033.vdb",
+      "vdbSha256": "1d2bb068049ba483562c447ebaedea42b9ad97cba6bcfdf529d787ad59010142",
+      "pngSha256": "7be8c82a665263214b9cb83412c5d40405128324eb6fc8d4d3308d0fd906c545"
+    },
+    {
+      "index": 34,
+      "vdb": "smallCampfire_0034.vdb",
+      "vdbSha256": "387bd39ff7c27716d9464e81fbc6523e2f9ad3cd30f3d319f83d0aa4eb06e874",
+      "pngSha256": "8e41af5ed19c9506e228126e8c4207ca484ed0ce06b06be788055831b6f9b8b4"
+    },
+    {
+      "index": 35,
+      "vdb": "smallCampfire_0035.vdb",
+      "vdbSha256": "d6478f01d374a5badcc9327b42751cb876b625a974b3bcf4f74fe06f92e663cf",
+      "pngSha256": "1ac0dcae467e2bac526019ac3030a879aff96d102f1d61a86f1280653bd8ef80"
+    },
+    {
+      "index": 36,
+      "vdb": "smallCampfire_0036.vdb",
+      "vdbSha256": "5e6a4c30ac676b64f7eff9c31cb15b4ea92a6ef4bf8c3314a61adb1fcb4d6616",
+      "pngSha256": "2f2f9f48736cfa387edac728db5f4ef0ae0358bd470ddf8d52cd0fe6f17b6d0a"
+    },
+    {
+      "index": 37,
+      "vdb": "smallCampfire_0037.vdb",
+      "vdbSha256": "188fc18b32aa74ac6511c58b74e4937cf09a8abbe95129215a916637f2166c83",
+      "pngSha256": "720a8b01c50178f5682087903110fa57e4e91d3bade811653e7f23b0aa89cc87"
+    },
+    {
+      "index": 38,
+      "vdb": "smallCampfire_0038.vdb",
+      "vdbSha256": "98ca392679164e9e08f17511a2a69cdd3ec9869bb70a08d66c49cd8d933da6a8",
+      "pngSha256": "6d0af8184ebc2e7f13d0eeae29ae66f667c344136d67666afb8d34f2310e4140"
+    },
+    {
+      "index": 39,
+      "vdb": "smallCampfire_0039.vdb",
+      "vdbSha256": "137ff3c70690cf760a3904752e0772451e2ce0ac47fc51d9f494e501704b7c46",
+      "pngSha256": "eefd951f34462700b0c5422e13e520396797d55678050a25549ac5ce7bea06ed"
+    },
+    {
+      "index": 40,
+      "vdb": "smallCampfire_0040.vdb",
+      "vdbSha256": "53399683bef7d842cdf86c45e252a9eec87130c8de26781ff8672e136bb055c6",
+      "pngSha256": "82df8df50d8f12eb3b826bd5a996cf43499aa20323d86e625b61313ea701a7fa"
+    },
+    {
+      "index": 41,
+      "vdb": "smallCampfire_0041.vdb",
+      "vdbSha256": "bd394e7c93b8ccfbef80cf8a0a0c282b26e3e13e1214c44ae7e5ac6b8ec2801c",
+      "pngSha256": "8eacd06577bda1c3b693e8a8e2cf967730d98a739bbaa0ec8118a83a89cee139"
+    },
+    {
+      "index": 42,
+      "vdb": "smallCampfire_0042.vdb",
+      "vdbSha256": "bba5e7e7c400e7d89aeda613cf0810e877ba72bca5b8f78789046ae5be4a8d67",
+      "pngSha256": "e75419125c27a0e7c50a0bf4330e8434f470cebcf9cc1859641d1c9a9ff09181"
+    },
+    {
+      "index": 43,
+      "vdb": "smallCampfire_0043.vdb",
+      "vdbSha256": "a6dc3bf0107b6af5a2bfc775c8982f986027971972b61a45adf85013ac555dee",
+      "pngSha256": "efd793cdfcd24882a52d01f4e54bf7f79ef18616794a561a6b986f98fa44d881"
+    },
+    {
+      "index": 44,
+      "vdb": "smallCampfire_0044.vdb",
+      "vdbSha256": "417942fc7f2eb3b7f81d52c1f139b3b1fbdc732c8af47baf53fbe364a0d75e1a",
+      "pngSha256": "2feca61cca73e7f9ada2f649cc3547fed16ef6b0ac88b7a3c2266664c2e276d9"
+    },
+    {
+      "index": 45,
+      "vdb": "smallCampfire_0045.vdb",
+      "vdbSha256": "2c1c5bd291b521a46bfbfe61316d8ba5712a6366aeaec8935bed01201e173b25",
+      "pngSha256": "53cf60a498d73e287bd959e8ffcc69591f8dbff5740f5880cdd6befd1768b83c"
+    },
+    {
+      "index": 46,
+      "vdb": "smallCampfire_0046.vdb",
+      "vdbSha256": "38c91c3ea8e2a71c55e7f953d401c53b8afdd0a7bf549e88c96bbfdedf0dcae9",
+      "pngSha256": "46b3b05d109004a5cb6fc0c3794b4cf832cbaec3165cd7a299a2a5e29d8d5db5"
+    },
+    {
+      "index": 47,
+      "vdb": "smallCampfire_0047.vdb",
+      "vdbSha256": "9ab2ce86581c700eed4c37e022a2a2b2300c4fb1a20f9e633d511733e4d8ca29",
+      "pngSha256": "82da8f082cda93310240f5d01bb0ec0cb0db14538d359982bd98a209e35ae1f4"
+    },
+    {
+      "index": 48,
+      "vdb": "smallCampfire_0048.vdb",
+      "vdbSha256": "d7cd4eac34d2119269ddcd5a9559414a4adcf255059472efc3860ff732b1fd5f",
+      "pngSha256": "a9829dcc3a2302997db21cfa94716944b260e92225362dd4735ae92ebd1d6ef0"
+    },
+    {
+      "index": 49,
+      "vdb": "smallCampfire_0049.vdb",
+      "vdbSha256": "2cd00bcbd5703ec910adf29fad3c44cc5f011c0a63cbfe3bee152a8a5bd93ef1",
+      "pngSha256": "0e8bbe30fe31e77c30a0d6512e91cbbb29db27a55aa4a972eda831f8b8546a34"
+    },
+    {
+      "index": 50,
+      "vdb": "smallCampfire_0050.vdb",
+      "vdbSha256": "5fe88d555ab4d41e20c88959d31282046ac315ecb6dcbc47c5be05cf62e83b71",
+      "pngSha256": "2a3de7232bcd4ebe25700339408d37d5c7aaa8f9b98be453209efad3f99d4344"
+    },
+    {
+      "index": 51,
+      "vdb": "smallCampfire_0051.vdb",
+      "vdbSha256": "c3282c427571705104497fdf7a0f9eceb4450e2ddef077873dfa9f7900e1a7f5",
+      "pngSha256": "b022eadc3275cf171d000bbc25ecf54cf90ae9e50e9fc890ee71cfe6c581c382"
+    },
+    {
+      "index": 52,
+      "vdb": "smallCampfire_0052.vdb",
+      "vdbSha256": "9293faf34d6fc548f4b47b79a5829409d87848e524761818f0559693b7a2afc3",
+      "pngSha256": "39886796bcd623fd5a08ceef0beb25a1c24552df293a4a011c833288461386d6"
+    },
+    {
+      "index": 53,
+      "vdb": "smallCampfire_0053.vdb",
+      "vdbSha256": "4261cb724bf5be2f5927ad2040dce218a2927cb7dc9b1d59c574836f34a62acf",
+      "pngSha256": "4e020219320656e0253665f00bb705a1ffddfb7e239aa62866b1e7d4bd32f7b2"
+    },
+    {
+      "index": 54,
+      "vdb": "smallCampfire_0054.vdb",
+      "vdbSha256": "b6be55ebdfc9b8dcd2c160be4c8c11dae425ba47f75915fff945420610255c66",
+      "pngSha256": "b7cf3d42abd1bcf75fba1e5cc780e5818400a0accf866826d2c67f592ee83d3c"
+    },
+    {
+      "index": 55,
+      "vdb": "smallCampfire_0055.vdb",
+      "vdbSha256": "a4e3e6dfccac91d520eb516198c2129b7cc8f83bbe9589e0000d93502714c36b",
+      "pngSha256": "7ae28950d0ee247548865a98b47810ed5456428143cac84b02f5d4199d0089be"
+    },
+    {
+      "index": 56,
+      "vdb": "smallCampfire_0056.vdb",
+      "vdbSha256": "03debf3079e37968addd9da6880c6167b8de09ffc733b434c245388c8d3624e0",
+      "pngSha256": "349e888b6c5581dd1879152b442b199b9cf9b0d0c544b19286ce185e906527ab"
+    },
+    {
+      "index": 57,
+      "vdb": "smallCampfire_0057.vdb",
+      "vdbSha256": "0e86045ad15462877a203784c4052071bef4b0466bbe7b69f83dea2fe3ebb657",
+      "pngSha256": "767b37012d2f77f2af2812cc9c508011d70ba4dd3e383f20461c2fa3d5555486"
+    },
+    {
+      "index": 58,
+      "vdb": "smallCampfire_0058.vdb",
+      "vdbSha256": "e1103b0b4ed16008e263c797d52c9c20b438a67b5c2bd2f1b716820ebe720838",
+      "pngSha256": "314430f77d1cf1d0af8895df96e6493d4e355898058b12f300ab1b9dd0c5de1e"
+    },
+    {
+      "index": 59,
+      "vdb": "smallCampfire_0059.vdb",
+      "vdbSha256": "9797437ca395bd9359a580cf7689bcca899e5ceac5bf34fffa4e54973c8dd531",
+      "pngSha256": "fe86b829891dcc85e54226323135138326ea5ec240a54bb63be343d53f838223"
+    },
+    {
+      "index": 60,
+      "vdb": "smallCampfire_0060.vdb",
+      "vdbSha256": "aa47e76b71afc3f5bb3fddfbbf3ed619650c2b64ceb2cac70cea3f776497fcf9",
+      "pngSha256": "adac5250cd3c668d7c0a5d30f745b80fa5a25ce58d0f7ac0b6e531a127fb0054"
+    },
+    {
+      "index": 61,
+      "vdb": "smallCampfire_0061.vdb",
+      "vdbSha256": "4821b810ade1f531222dcaec560a0e9c4016785b93d0927b75d67b20c2d5f444",
+      "pngSha256": "99090c271aecc21b21ea5bd61b26551279a331f14dd3dc274be3df719b86ef1e"
+    },
+    {
+      "index": 62,
+      "vdb": "smallCampfire_0062.vdb",
+      "vdbSha256": "39959654cec809bf15f4d9f31c61e36ff01057f2f88f1e1c1af9ad19279d97f5",
+      "pngSha256": "1768bc39faa152b7d8b7f39ef5a68afd0392467cc0a5ba5e57e3066e04da403e"
+    },
+    {
+      "index": 63,
+      "vdb": "smallCampfire_0063.vdb",
+      "vdbSha256": "c21aaf440ae208b1035b5b3fcd3caf9e9f9ba3aec8caf0729fdbfc648ef20297",
+      "pngSha256": "304f657e98cf98509b7dc246069b661ba842766289933d7e321afabeaadfb873"
+    },
+    {
+      "index": 64,
+      "vdb": "smallCampfire_0064.vdb",
+      "vdbSha256": "00132d0535882e0690a8afad5ebbd03e219d5714c5df248ee767174ee2257699",
+      "pngSha256": "97bca7645eab4cb7b8815c4b6483dd8e4e6aa79ccef62dd6849bf3d4ee4c7911"
+    },
+    {
+      "index": 65,
+      "vdb": "smallCampfire_0065.vdb",
+      "vdbSha256": "fb3b0b33b6b6e9205622984a7f1562dafb55cf79a3876aced602777f09f7e5ad",
+      "pngSha256": "84c99697acbca9738786415b6badf7a01f2ff6dd1701dcbc79439c2449a7fae6"
+    },
+    {
+      "index": 66,
+      "vdb": "smallCampfire_0066.vdb",
+      "vdbSha256": "b6531dadadc53ad71f9a16671ca8729d523597793264f14c38d5020f11b6e77c",
+      "pngSha256": "084d56e4a3629302eb5e99f02977dfc1f0a0e48f917cc3017646fda6381232a9"
+    },
+    {
+      "index": 67,
+      "vdb": "smallCampfire_0067.vdb",
+      "vdbSha256": "cd4e4379be0d011b017b3a2452bfe96fa0e67bbc7bbfaf8b08536f1bc68ad381",
+      "pngSha256": "77c03a6d18bd0c12789804c04d973d5d90c7bf5729e51343c1c942d12af5c10f"
+    },
+    {
+      "index": 68,
+      "vdb": "smallCampfire_0068.vdb",
+      "vdbSha256": "0e37608e219ceac95eb2c38154e3c814cb84ccd44f1b5645475fdbb5c1a1abcf",
+      "pngSha256": "a898f6348e5bced22baa032c45922beb39775b3aa73ec257ad93649668047cc5"
+    },
+    {
+      "index": 69,
+      "vdb": "smallCampfire_0069.vdb",
+      "vdbSha256": "d62708a26fbfeeda13e8ff4a050f07d5a79a537f71859540aad2832a8992d8c9",
+      "pngSha256": "44ecb2ef6b15f4f82478dd735744c26d4cf3d5124141cbd15558805c5f2c1af9"
+    },
+    {
+      "index": 70,
+      "vdb": "smallCampfire_0070.vdb",
+      "vdbSha256": "7343211571b72ccabfdbc7ae389f82e7b98a1d6759884c9c100e342d31964b85",
+      "pngSha256": "48460e2ee98588147918836b13a3e5c9f8cc11a6613e976444f5bd3e66263998"
+    },
+    {
+      "index": 71,
+      "vdb": "smallCampfire_0071.vdb",
+      "vdbSha256": "d67a34015bd1d23c855996e08b2b6f1530a86787fab76fbb65df2d187a4be8ac",
+      "pngSha256": "e67b7f2b304232eb666127f4d8a3c123c057cb361b49ef2691c9f04f0e24375c"
+    },
+    {
+      "index": 72,
+      "vdb": "smallCampfire_0072.vdb",
+      "vdbSha256": "fc7a0d31c6af3e3317cbfb4b1eba20dcde664ad5669b73ab50559c7491162feb",
+      "pngSha256": "4ad5165e630c75b7647ce51c2890498ef94de03b51ca81554c163f6eaec46d3b"
+    },
+    {
+      "index": 73,
+      "vdb": "smallCampfire_0073.vdb",
+      "vdbSha256": "9646bca0defca48202faae3d7eb58b7c5fbe44f14178220653795055a4cd2287",
+      "pngSha256": "33820b1a36ef40913cbd2869c2439a2dbfb6b350524e6fe309b2d5e1937f66c9"
+    },
+    {
+      "index": 74,
+      "vdb": "smallCampfire_0074.vdb",
+      "vdbSha256": "f7ae2b1984c9552e87d8e778b22f7cf541c95017aac3eb69fe52cb1a626cf707",
+      "pngSha256": "d3aaa6a9c3c2a59e2342374ca8f57683130ea1953dc44e7df5ce8fb5d8146247"
+    },
+    {
+      "index": 75,
+      "vdb": "smallCampfire_0075.vdb",
+      "vdbSha256": "d722b302741b39adbfe13a253496fc3fe95da03e2297408cb3fba00890ab832c",
+      "pngSha256": "d3e48e5ed84dae65062bce5dd01e8b3f595632ec06b52675573b018fe58d4f8d"
+    },
+    {
+      "index": 76,
+      "vdb": "smallCampfire_0076.vdb",
+      "vdbSha256": "59133ee28dab5ebcb039f357468aaed8f5a63b90e5a6701038fd0acd0fdc079b",
+      "pngSha256": "2e96caa14e28d1392986afc983c0f7aa6fc0d359ec9d233456784bdb57dda8de"
+    },
+    {
+      "index": 77,
+      "vdb": "smallCampfire_0077.vdb",
+      "vdbSha256": "7b2aa095ae4397a03979982935d8ecd27e4224fa38d8403a9fc3210c299c9352",
+      "pngSha256": "1b652ca8adbfe60f9288bd4fe5ae59a6a9bd24df45e79698846694af9bd17206"
+    },
+    {
+      "index": 78,
+      "vdb": "smallCampfire_0078.vdb",
+      "vdbSha256": "8a08814e68369f237559089f41be93640bb67ef14950174a6e671cc79b8f1516",
+      "pngSha256": "ca4fc21f1ee2152845ddb94af778e7ddc86e9c6142392af84e40510a369e97ef"
+    },
+    {
+      "index": 79,
+      "vdb": "smallCampfire_0079.vdb",
+      "vdbSha256": "e1cbd8fd7afb460aa1f3ca928684df55ebdc31d1e0c4fd23f3e4c2162182b5fc",
+      "pngSha256": "d95913772dc16b82429fc30ed45e947b496e4eb9214d24601e1e50e0a4fb388f"
+    },
+    {
+      "index": 80,
+      "vdb": "smallCampfire_0080.vdb",
+      "vdbSha256": "a5ade7b9ff5b8aa9679cc18c78d8ec9cb4e05aa1a825c278512ff1d34cf74a1a",
+      "pngSha256": "41ffb78961ea22ab4062a41ee9d262e96a8fe2ec52c134cf5adbddede26fbae7"
+    },
+    {
+      "index": 81,
+      "vdb": "smallCampfire_0081.vdb",
+      "vdbSha256": "cb3944953a38a79965151682f01aa790dd198c07f37eae0416034db7f82a8246",
+      "pngSha256": "673b2d6fbd5f8571809d4985f67d4ffcdb2c5a71a5a3ff7273c6179089e21978"
+    },
+    {
+      "index": 82,
+      "vdb": "smallCampfire_0082.vdb",
+      "vdbSha256": "63bed62fc6b0a441082d4638a6fbd7b0b493e0ca302354558d3805249825e4a1",
+      "pngSha256": "24bd89726856ae1fad16cb12f69f76e4024c36f1ab8ae19915abca95bea1a7af"
+    },
+    {
+      "index": 83,
+      "vdb": "smallCampfire_0083.vdb",
+      "vdbSha256": "f5c94e8063c794ea84020ff4410f67ed9d136cce0d8e2bc68f383928af76e08e",
+      "pngSha256": "78c240797bbc5097cd4088345a91cce3c0f704d3f7c8e3dfcae94067c27c4eec"
+    },
+    {
+      "index": 84,
+      "vdb": "smallCampfire_0084.vdb",
+      "vdbSha256": "99793df8324bfd601ae193de664a2a5a113f5d18237e70b55dbe8db64ac96d0d",
+      "pngSha256": "2d8a5ba76afc1215f2217e6a13da2df8f2edc3f2d19b8fe832e5f3a622155bce"
+    },
+    {
+      "index": 85,
+      "vdb": "smallCampfire_0085.vdb",
+      "vdbSha256": "6f008785009ced3518950e0c5d3e22c3cd7143b973ad30b1407bfd594e45f900",
+      "pngSha256": "234f92ec655fbf0270da6f5deb0b95404b33872660ab47018dd8c699a8ddac4a"
+    },
+    {
+      "index": 86,
+      "vdb": "smallCampfire_0086.vdb",
+      "vdbSha256": "6f5575d3af87b9c4029da43e3b055b703d0113fa9ba1300324eed15f05f2fd65",
+      "pngSha256": "9dc42412227a798f524f1ee355ca0ab29a4fd6fa33cf1f54067a05e56c65a9a1"
+    },
+    {
+      "index": 87,
+      "vdb": "smallCampfire_0087.vdb",
+      "vdbSha256": "2aa9c26b460da92cb4f4648b92029a079b514c69e13c92ea6a63ed2431f3341e",
+      "pngSha256": "3b773330f61fc1d246a1c9841899085e23703200ae9f3a9e136faef71cb3c0f2"
+    },
+    {
+      "index": 88,
+      "vdb": "smallCampfire_0088.vdb",
+      "vdbSha256": "d90ffc59968399b97a6901990f7f35db6b91870bbb29ab5d32075253ebc5a103",
+      "pngSha256": "657f27f77fe8267a43baa0fbb04b64a813f02ba770a61723a4633b9aa2505551"
+    },
+    {
+      "index": 89,
+      "vdb": "smallCampfire_0089.vdb",
+      "vdbSha256": "9bf36c3ba04862d39b3417ec411ad1bdfa9e687e04689287090b6dcb6d771172",
+      "pngSha256": "d6ff45eedb244420c1e5b8d4241c8a0e554d636637b595e8e717865a7bd9b5d4"
+    },
+    {
+      "index": 90,
+      "vdb": "smallCampfire_0090.vdb",
+      "vdbSha256": "2da7a46483b7ffbb13be5e17d32adcfec4d4b9cca783579e5c78f3e8443d5da8",
+      "pngSha256": "ac5c761b1abb01ea99857e159352b654110550606ce026ed5f58d5729920fceb"
+    },
+    {
+      "index": 91,
+      "vdb": "smallCampfire_0091.vdb",
+      "vdbSha256": "6a655b212c8a4e47b2af650e23efd0c9c1cac5b6ef7ae87eba14c6ede4451e92",
+      "pngSha256": "c559b5e8d9909c0b79cc4e0191836f9f86cb0810e494cc418faa66982bb42f29"
+    },
+    {
+      "index": 92,
+      "vdb": "smallCampfire_0092.vdb",
+      "vdbSha256": "7ea36c81dd495fd2db2a4c637dc822c0a8ef91ac084c686d85448669de7ee390",
+      "pngSha256": "9179986eba1c25908a7f1c069a03caec39a495b6902c9e23447f6a996b81d7b6"
+    },
+    {
+      "index": 93,
+      "vdb": "smallCampfire_0093.vdb",
+      "vdbSha256": "a58d168de30ed918ea31b38d963713fb168404fd62640bb7f67a9013208a9eed",
+      "pngSha256": "8ca043f1c171bcad010d5a478c6e6cc79c57358e6e7c8a4c25526cee35e026e4"
+    },
+    {
+      "index": 94,
+      "vdb": "smallCampfire_0094.vdb",
+      "vdbSha256": "ed93c076c05eb8653939e604ee6d70e155a02fee3934aa6862b3d79022c807b3",
+      "pngSha256": "2084dd501407c57e51e6e4e721f1aa85799a45cfa23a01b592ac44547f3d4f41"
+    },
+    {
+      "index": 95,
+      "vdb": "smallCampfire_0095.vdb",
+      "vdbSha256": "b5e1bc3f01d4c008b9b3522405358d1376fc6320dd372b44d971e1d46bf61ae5",
+      "pngSha256": "b2c3fdd5e88c8675fd97fe24a36d10984ca02d695d54bada611be1823dd672d7"
+    },
+    {
+      "index": 96,
+      "vdb": "smallCampfire_0096.vdb",
+      "vdbSha256": "6ab848a5f1d4ca54332a7d0a2a502937222faa3af4329ff25447438195a84028",
+      "pngSha256": "9a8b577f08e758eb35b4448b19a4f85cdb719d027cc9e25aadf27895510b0deb"
+    },
+    {
+      "index": 97,
+      "vdb": "smallCampfire_0097.vdb",
+      "vdbSha256": "06431859403a2e7c5842d4a71fb751da0d409e8718aa84e9cf6213077ac291fd",
+      "pngSha256": "e9ab0c8f882ced413134fa54a9d1ccb69addd6d5a8c53e0024c7605bb512f13c"
+    },
+    {
+      "index": 98,
+      "vdb": "smallCampfire_0098.vdb",
+      "vdbSha256": "79a3b9a725089b6aad56da5c5ade74b2c8af0442784dc0f13e174d40d737142b",
+      "pngSha256": "4717d077256257aad68d9679dc027335db8c8a0c0211cab0faed9bb239ddd46e"
+    },
+    {
+      "index": 99,
+      "vdb": "smallCampfire_0099.vdb",
+      "vdbSha256": "9305199160d5be943a065ce27a53edd0d04464112f6f222462e4d9f29b9f5aea",
+      "pngSha256": "7e76718d70a342eaf8b72fa13fd7dedef66dd0d250fc2b363e98028281c25f28"
+    },
+    {
+      "index": 100,
+      "vdb": "smallCampfire_0100.vdb",
+      "vdbSha256": "843d8b3b6d0c6ea0b8b0a955b182682538faa000f0d8204cffa54278fdbb81c1",
+      "pngSha256": "958379b168620f0458ba8b8879721ec48d2789b809c1f1b62b2806fafb972890"
+    },
+    {
+      "index": 101,
+      "vdb": "smallCampfire_0101.vdb",
+      "vdbSha256": "a9a7b96e9e1358a407909c19cf35fe32c8faf717451513d10eb4e06afd9d3a61",
+      "pngSha256": "02b4884e233d832285a9e059781c40867dfbfdceda0a130f67e0df748165e039"
+    },
+    {
+      "index": 102,
+      "vdb": "smallCampfire_0102.vdb",
+      "vdbSha256": "9991c467b7cbfe1924d1cca06be00264b37a80f317b592336e2a66ccf1c655f6",
+      "pngSha256": "4b79f4d4a2b40a7b7e3750e4996d19e4517075686e8d0f2cd6851426bc6c191f"
+    },
+    {
+      "index": 103,
+      "vdb": "smallCampfire_0103.vdb",
+      "vdbSha256": "9c2eec425ee0a3252a7922964a8544fd923f5b7d7de93d2050d093081b195629",
+      "pngSha256": "f5d6c64a426c4f7afe753e86d8bf182fc1582dcac851fbd421ca2d7ed5b5224d"
+    },
+    {
+      "index": 104,
+      "vdb": "smallCampfire_0104.vdb",
+      "vdbSha256": "55a73aa1fa3301ee11e95db67ff6179a03d631a478cb04ce8784ee78dab76dca",
+      "pngSha256": "7c746a48cf74e7e7bd53a25cbdbff60ec76f2a4e8771b3277200791bd5959367"
+    },
+    {
+      "index": 105,
+      "vdb": "smallCampfire_0105.vdb",
+      "vdbSha256": "44638ac900896f35ffce15bb4ab25f45165bef965adabb3ceda5d1a0b66c4f32",
+      "pngSha256": "6b1ad21c21bf1816d0fd3b910b7f5fbc174f8c2b8413e61c5d1cde8d09ac1e14"
+    },
+    {
+      "index": 106,
+      "vdb": "smallCampfire_0106.vdb",
+      "vdbSha256": "dc45cea56077398d39c852aad8cf598857cc21e8e6c680e62264503467ddcef8",
+      "pngSha256": "838adee522c3fe6f1800ea8aaa04bafe0398f1b07c77c4bd2841c880a0e81b09"
+    },
+    {
+      "index": 107,
+      "vdb": "smallCampfire_0107.vdb",
+      "vdbSha256": "4fe01c902f76eb864701c82743897c74b942a650d7e7e8b72a78da070152ad1b",
+      "pngSha256": "295d0d245d8cb58def8ae73ab64d63cf3035ba9929d97d75a698f2e8ac9d7b91"
+    },
+    {
+      "index": 108,
+      "vdb": "smallCampfire_0108.vdb",
+      "vdbSha256": "294ad04159ddb82861d21b5d3b819aee744e92cb190fb933644007868d3b376b",
+      "pngSha256": "616069d6cc6084961f9a76f35edc07c3f82fb8922afeb9820bb641dcfc8fd2ea"
+    },
+    {
+      "index": 109,
+      "vdb": "smallCampfire_0109.vdb",
+      "vdbSha256": "52fdbff7ee26e349012d8ffd86ec69c55e375d631274ac0e932821cf05fbd732",
+      "pngSha256": "6cc18fa68c9dc79ea80fe13d23c4f36860652edff700847ae2a962dfde765b25"
+    },
+    {
+      "index": 110,
+      "vdb": "smallCampfire_0110.vdb",
+      "vdbSha256": "271932007096e792775d3b41f3f91b7bad452c9a8e5883c60b979fa699aa1caf",
+      "pngSha256": "6c1c78a8fe4e787228e8752ca751435bf1bbb5147b18f04737973c4b7ae7bb67"
+    },
+    {
+      "index": 111,
+      "vdb": "smallCampfire_0111.vdb",
+      "vdbSha256": "469552ba68dcb6639f973ebda88b52188ac77f228cf552e9a140c279ab5b82d6",
+      "pngSha256": "c58ce999d87ff9ae58cf9cd4dc89c64e38ce9f69abaf554a6ceac26d8b8644a6"
+    },
+    {
+      "index": 112,
+      "vdb": "smallCampfire_0112.vdb",
+      "vdbSha256": "d637dc0cc8e51aa07cd0e91cd75c177067fea484e104a55eff92df813c8ee880",
+      "pngSha256": "64c2f45ff781e1718a31887a5ce31c5ae95727cd77aaba3e9cf91a050dff0e10"
+    },
+    {
+      "index": 113,
+      "vdb": "smallCampfire_0113.vdb",
+      "vdbSha256": "f2111b42ff024b48176fc9f68161cb5a0052199c44bd56367bc3f57afd8f2b32",
+      "pngSha256": "6d6f9b2b554f9358cbb6be32a8e5b71ceeee60a60d942c6f850669d1a1fa48bd"
+    },
+    {
+      "index": 114,
+      "vdb": "smallCampfire_0114.vdb",
+      "vdbSha256": "a61e8a0f1ea58ca5ccf662c9dd28fd6460dac9ffe875fbc7452338951e6638fb",
+      "pngSha256": "1759852e4d4c79e07b6f3776a06aeb86cea563d1fd19f7f2a5e97d555a5865fc"
+    },
+    {
+      "index": 115,
+      "vdb": "smallCampfire_0115.vdb",
+      "vdbSha256": "07357a5ed57562676c38572645e0934373b1e5b0c2ae281622256adca8f3ae4a",
+      "pngSha256": "d053d3973f3d1a173190d930535bd57002b343dd9931590868d5e8544daac6ca"
+    },
+    {
+      "index": 116,
+      "vdb": "smallCampfire_0116.vdb",
+      "vdbSha256": "6900a869afbdd432edc4440359ffa63caac2c8f5983469ef299cfc5e3995980f",
+      "pngSha256": "c05f5374518fc03a00c4d868ada76cba9f876e271caf596f540a48da81989477"
+    },
+    {
+      "index": 117,
+      "vdb": "smallCampfire_0117.vdb",
+      "vdbSha256": "97adbc274e761b73bfe30596cdb0fbb91e47600420810a326a44fa0feea2b244",
+      "pngSha256": "a932b0e3d7ecce936b23fb36a6d3a939e2199bf60b1b541ab25e7f4a22752f31"
+    },
+    {
+      "index": 118,
+      "vdb": "smallCampfire_0118.vdb",
+      "vdbSha256": "b1640359e84af78203f3edb6baa79dba7e1706fb9c7daf2ef6d4786af81423b0",
+      "pngSha256": "22bf33292808c5d1cd08ae20d1262689d73d48484805ce97376f3427a588052d"
+    },
+    {
+      "index": 119,
+      "vdb": "smallCampfire_0119.vdb",
+      "vdbSha256": "6a45b253dcc19156cecde0b636db8bdd12a682248a30bdafd93db469f7a2a669",
+      "pngSha256": "b9f022254374c35550294cdc0534330291dec7d8131ff6b1d6343f57aae5f623"
+    },
+    {
+      "index": 120,
+      "vdb": "smallCampfire_0120.vdb",
+      "vdbSha256": "cd18705f292a9dc16793884c89c6f84af125a39c4e3b0ea0e1289ebc05fb67e2",
+      "pngSha256": "7191894aadd43112c2f0091b9cdcc579557ce339113737f17d5b058d25f90134"
+    },
+    {
+      "index": 121,
+      "vdb": "smallCampfire_0121.vdb",
+      "vdbSha256": "13a2765b724495b71fafb314091c3f92e2f5cc87d870f0ef9fe2e3b29289dc35",
+      "pngSha256": "25fb0453ebd5911d919dbdbf4a8fa7f538c2eb3024ef96d3d885c019babd9eca"
+    },
+    {
+      "index": 122,
+      "vdb": "smallCampfire_0122.vdb",
+      "vdbSha256": "87124d74a544c2fd34101d428d65546498708f73b52881cdeef5e7760cf4a2c7",
+      "pngSha256": "a363968a0ed2fdee676f7e6036ce13859e905b6a7849a4f4029ff76716b5ba65"
+    },
+    {
+      "index": 123,
+      "vdb": "smallCampfire_0123.vdb",
+      "vdbSha256": "d6e15fee2f72efb466f20bdaebe79351e99824653299d26bef014c9d74cf9415",
+      "pngSha256": "a0a2f33f750a8e283acf030ed7a0ce6c8f837c0616924c24f0f026e3326fbd3f"
+    },
+    {
+      "index": 124,
+      "vdb": "smallCampfire_0124.vdb",
+      "vdbSha256": "62a3f2569e3fcc830919f489e81271f46e606e4bdd31053dbf760618c76dc1a1",
+      "pngSha256": "e5478a1c6bad2acac43e41454304bab5215ef356e67edf54b43e7d5d6ef50b6d"
+    },
+    {
+      "index": 125,
+      "vdb": "smallCampfire_0125.vdb",
+      "vdbSha256": "b9fbc8c15bce1241f3bd6d527a2867843d354b9d55d42308bca1f5439b7c9472",
+      "pngSha256": "1599b9cf39ba745a872c8906db68e733cc532d28d9d3bad196dd88d95b624dfa"
+    },
+    {
+      "index": 126,
+      "vdb": "smallCampfire_0126.vdb",
+      "vdbSha256": "29dd5d8c345b28008b37f87b769d9a4842febf4e602e4b3cba0ee3a8eda377a3",
+      "pngSha256": "88e67a45211aee906786ba71216faef1ce658f050c0708417c5f99927fb78e2b"
+    },
+    {
+      "index": 127,
+      "vdb": "smallCampfire_0127.vdb",
+      "vdbSha256": "c4805fabcb4e4d43bfdb916a5101458a7652722e638a48001a28950fbd3f9406",
+      "pngSha256": "283ea936d3ab8df14890a5c52384c2438aefe895f711bd1269ce4257f26f5a8f"
+    },
+    {
+      "index": 128,
+      "vdb": "smallCampfire_0128.vdb",
+      "vdbSha256": "6fe98b5266d89f43042d28a31f186565fa8bc4da04d00fb30dc25366bb093307",
+      "pngSha256": "152d8fc953af5d4e34b4581354f8810e046a0e119b2bdf6bdfebfb614025643b"
+    },
+    {
+      "index": 129,
+      "vdb": "smallCampfire_0129.vdb",
+      "vdbSha256": "8e2acb0852795470eb357829bb59752c7e5de28e27db7898cee3fc4f063f1980",
+      "pngSha256": "71cfa0d1311ca104af400018d9b29b82a26bd99bcac209c8b742fcd65c6ceb38"
+    },
+    {
+      "index": 130,
+      "vdb": "smallCampfire_0130.vdb",
+      "vdbSha256": "bf25bc8e7eac94b937c59b6341404268c2a05a68091df1d2ac525c018614fd94",
+      "pngSha256": "3143ee5d88d0f4e3e60a2daf91fd048b159fd2496788b11496184659393c9c69"
+    },
+    {
+      "index": 131,
+      "vdb": "smallCampfire_0131.vdb",
+      "vdbSha256": "a499b90fe193bea01511e570a0c469e98c888bd183e3c7a04c8c73170489f257",
+      "pngSha256": "9a6ee9eae07c8fd4a9d314d5fb7cfc30d969f90d9ca7dd302dc7730c2290a81a"
+    },
+    {
+      "index": 132,
+      "vdb": "smallCampfire_0132.vdb",
+      "vdbSha256": "9019baf4be7e5afd19fef199337700767d9252fdc2d77e7353330ea4b598b51b",
+      "pngSha256": "50e7f41d96fb69f91e6a9a8c37d924e4d06aa383a1d0a76eb904495e8343ffc0"
+    },
+    {
+      "index": 133,
+      "vdb": "smallCampfire_0133.vdb",
+      "vdbSha256": "4736d29002712c877d08d0c6485940f5727feb30e21b73c6e36614ce4600a37e",
+      "pngSha256": "a33eed8dc71a3ac6f86903479800a641f0e64470d1147da50efe2a5c36a9db86"
+    },
+    {
+      "index": 134,
+      "vdb": "smallCampfire_0134.vdb",
+      "vdbSha256": "fb842c87334ff1faef0b4bd02c9ad968782592a7756bde1e778cddfdbe2af852",
+      "pngSha256": "50a387e49a955e2eb086eb348c3d4c4daabfa9bad0e35640555093a711f73ceb"
+    },
+    {
+      "index": 135,
+      "vdb": "smallCampfire_0135.vdb",
+      "vdbSha256": "d9597b3b38c6535a89484caf1cecd0521f8b4330e8585f8952da135873769ac1",
+      "pngSha256": "73d6d04597f7806c83e2428ab7036887d53f0440fdd9e9a8322fb7549ad02357"
+    },
+    {
+      "index": 136,
+      "vdb": "smallCampfire_0136.vdb",
+      "vdbSha256": "3ae8d41abe6e8aefc726e523d6cbb7be681366d6914e980c1ace93a0e592a36c",
+      "pngSha256": "da35d0f3c2b0cfaa96160a3432929674bf1cfdaf8e4e8ba78688f863bcdf556b"
+    },
+    {
+      "index": 137,
+      "vdb": "smallCampfire_0137.vdb",
+      "vdbSha256": "7c3ae5711c2d373b711eaf4765d3bb2ab6ccb1b0d97caacbcc97d10e8da6995f",
+      "pngSha256": "b65d7b332e9dda9c19692d37f344ae78785edf5fb3633eb1708617ceedf89456"
+    },
+    {
+      "index": 138,
+      "vdb": "smallCampfire_0138.vdb",
+      "vdbSha256": "1846890d04e8c1d244bcf20bef5569446a4782498348708603b754729717e385",
+      "pngSha256": "f41300c63023dd0c228e1e035ea256c13d957e82decbdbe435258b1e9f955fb9"
+    },
+    {
+      "index": 139,
+      "vdb": "smallCampfire_0139.vdb",
+      "vdbSha256": "387c47e2f065283c4c82b978e5d31bab063985997b9d3b4ffd92a489954cf5cb",
+      "pngSha256": "2f0cf8074a1ea9dad66a41f384ec04309804cc07dca6aa3233c94fad9c004554"
+    },
+    {
+      "index": 140,
+      "vdb": "smallCampfire_0140.vdb",
+      "vdbSha256": "7976a3a4fe5363d865c2c1ec317cd3262ae94f790ddd31aec9029125474f8b84",
+      "pngSha256": "5aebbd6494808fe0e0c251f0dfe5414919fbf317f23edd99152eeeea1c75525d"
+    },
+    {
+      "index": 141,
+      "vdb": "smallCampfire_0141.vdb",
+      "vdbSha256": "c24d59398d4dcae3dc4aedcb6053a9e5e1fb03d978088b9c62171db3bb13548e",
+      "pngSha256": "6fca9328302685c7d8a736e2060a71ea49e1dc441279a3e58e652d51a804ed85"
+    },
+    {
+      "index": 142,
+      "vdb": "smallCampfire_0142.vdb",
+      "vdbSha256": "be93530cc7adb5f8d1737acdc4638134a5ec02fa733c9493cdcb527f6fee049f",
+      "pngSha256": "e63023596ddcc8f6ed9a902868abca6d0f863274e67bd08a2b2e2b19a9050e0b"
+    },
+    {
+      "index": 143,
+      "vdb": "smallCampfire_0143.vdb",
+      "vdbSha256": "7f338fe21e189ee89dccdb21540e79790499077f4eeeb0e1e0cea38360f179b4",
+      "pngSha256": "9f658138cca406a8c2c30d9fe0cd82bec50d618c22e83e0a97c87405bcd358ce"
+    },
+    {
+      "index": 144,
+      "vdb": "smallCampfire_0144.vdb",
+      "vdbSha256": "111bd2e4967b3b03528b4778c4ad82f0c92b30912bf227d2ee7709e0ccdf2ab3",
+      "pngSha256": "f4903fe832b0773a02e0f4e7f7e5d8ccec896a30d147bf3b053a499d107da0c1"
+    },
+    {
+      "index": 145,
+      "vdb": "smallCampfire_0145.vdb",
+      "vdbSha256": "ccda986bf30715dcccd1425e9cf8096e01f7c4ec3e2f408ed315fda80a3ddbdb",
+      "pngSha256": "8a8a6511876d7638a1ede2f2dc6d36ac22158d724e0cff11a6a1410e99da19ff"
+    },
+    {
+      "index": 146,
+      "vdb": "smallCampfire_0146.vdb",
+      "vdbSha256": "53862e54e101e728386e729c8eca234a8b832d8f480a12ecab174899e6d416f8",
+      "pngSha256": "c74053bde96558e60a7fcf2211f3b201aa2ca12bfcbc606452401e43fdff6bf7"
+    },
+    {
+      "index": 147,
+      "vdb": "smallCampfire_0147.vdb",
+      "vdbSha256": "234acda6aaf20db193730d5f4ce67bee433889a2d385d91ffa0dde8229fd6111",
+      "pngSha256": "b3b7d1ada71dc9f165ac8620566b8691df94ca6c1fdfdf6ae429d8b9469e3ade"
+    },
+    {
+      "index": 148,
+      "vdb": "smallCampfire_0148.vdb",
+      "vdbSha256": "4bca0bef7f7b6b59a02af65eaabbfd442ce324a62d719ebc112f032c4a414fca",
+      "pngSha256": "b4d310e9b95d38ba079798f00c3373fa88ddb6d345a18f38983173ebdea4e855"
+    },
+    {
+      "index": 149,
+      "vdb": "smallCampfire_0149.vdb",
+      "vdbSha256": "aa20ac6f6a5573e50c5f976a27eff645c13ac4fea706abce2a2e836e62e4b0a6",
+      "pngSha256": "46b39828c7912dd62b6e6be61c52eabaf0d67834ccafea2cc5e3b8d792bb139f"
+    },
+    {
+      "index": 150,
+      "vdb": "smallCampfire_0150.vdb",
+      "vdbSha256": "8a5bb0b8c177eb6feabc3c08f36dafc8e194fd905514710219deeb6182ca4f3d",
+      "pngSha256": "b9e9d0b7e2a12870e430ee33b5ebc6b66c501ac0744e915d7a916d2be7126bee"
+    },
+    {
+      "index": 151,
+      "vdb": "smallCampfire_0151.vdb",
+      "vdbSha256": "1dbd2318c822b917a87b7cdefdef7325f9b39a41f1ca4b9b945bd350a31d0e6c",
+      "pngSha256": "e299db198deda3ec0eb6aebb30fd1468123e5da8d20ec0354702b340c747071b"
+    },
+    {
+      "index": 152,
+      "vdb": "smallCampfire_0152.vdb",
+      "vdbSha256": "a9e44f21cfb1b334e85c004dd7e8c7485d88ed6bd3033b9853591b61d46f4f69",
+      "pngSha256": "f9e500cf74af024116549e41b5ae37e394bf4cfc5aa4b3460639d279a9492626"
+    },
+    {
+      "index": 153,
+      "vdb": "smallCampfire_0153.vdb",
+      "vdbSha256": "52dcbcb8acf444e9c1fde51b25aaae98a386b02e203ff77879abbbd2f0c5d170",
+      "pngSha256": "6dc5a7e38747152b302a0a07ccc9b45441e1e2e4faa4de555cf01591dae5cd4b"
+    },
+    {
+      "index": 154,
+      "vdb": "smallCampfire_0154.vdb",
+      "vdbSha256": "64889ac9b86c2cb58d020afe9f46eead987fa7f084de7442ed1321586e490381",
+      "pngSha256": "fd90f2c028eb58cebef5cd291143176bac03605f4b6b477cebd67fda16eb890c"
+    },
+    {
+      "index": 155,
+      "vdb": "smallCampfire_0155.vdb",
+      "vdbSha256": "b6df3c23c9601948668c3f1c294a09baeb97ffed1028fe4ab1299aaa39dd4b2a",
+      "pngSha256": "ff9c857a2d12bc730924627b18b6cfe9832f98d891f63e096f24a40a337d8b07"
+    },
+    {
+      "index": 156,
+      "vdb": "smallCampfire_0156.vdb",
+      "vdbSha256": "b931b45d6e54a706b4f08c11cc7ddf6bb526deaf5de401a230cd748c9da98429",
+      "pngSha256": "27fd067d9fcdc65942797c712856017b98873aac73e270392ee962e3b733a415"
+    },
+    {
+      "index": 157,
+      "vdb": "smallCampfire_0157.vdb",
+      "vdbSha256": "c1dc57b952aa2b552b76717c994eedca1049f0e2283a78c17950c8292f9c28c9",
+      "pngSha256": "9293626298de8349de0ec9ffa5a15adb7d989c3d545ebd20d94e28de8367a405"
+    },
+    {
+      "index": 158,
+      "vdb": "smallCampfire_0158.vdb",
+      "vdbSha256": "936d128786254c29c87629bfa99cb2fa2a10e3d51fc64e0b2d51aa5890f68519",
+      "pngSha256": "7f461f8596f693ca5cbccdc51ae7c2dbb26e9dfd1633037b5da68690bb8b33a2"
+    },
+    {
+      "index": 159,
+      "vdb": "smallCampfire_0159.vdb",
+      "vdbSha256": "1ff5f6dfb6242adf829d32ddee522683a12c15e84d3c8ef620fa908c577d6913",
+      "pngSha256": "082596767d81a0b8797c579489531051ca748f476996070573670406aff6748a"
+    },
+    {
+      "index": 160,
+      "vdb": "smallCampfire_0160.vdb",
+      "vdbSha256": "6185f23029faaea849bfaadd30d9c09164da42d6c7558eb2a5e6d626d109f79b",
+      "pngSha256": "236b0e257a9313c3d2b937cbe1c01f3984a0b60cfb5da4b231d8ee7134a48e47"
+    },
+    {
+      "index": 161,
+      "vdb": "smallCampfire_0161.vdb",
+      "vdbSha256": "935d71912ccf651f1333c193e31e893b1831571068f1bb11fe13f3a5daacbbf5",
+      "pngSha256": "40ad8b946d57dde0b3706496a180a852c2b72f03ec91af9690e5d9b1f6e61922"
+    },
+    {
+      "index": 162,
+      "vdb": "smallCampfire_0162.vdb",
+      "vdbSha256": "6cf3f5b8cd2fe5b6d4d03f2e0f2b468c0ac6a1f2acbf614ef1b0637d52ee5990",
+      "pngSha256": "da2b34c60e5acfdd6cb5627f45e2cb0dc6608b8c9d0d4cdaa57bd847e3769ed6"
+    },
+    {
+      "index": 163,
+      "vdb": "smallCampfire_0163.vdb",
+      "vdbSha256": "6cb43348dc75debd17bccd266799b1b3af7379cca6bd665f86454f79eb292cc3",
+      "pngSha256": "dc069180cc861689c701dd3ac0de710592f707f3b8239224d467c3433880e67d"
+    },
+    {
+      "index": 164,
+      "vdb": "smallCampfire_0164.vdb",
+      "vdbSha256": "c0b5644d62de0b89df0bec26cfff45daee68fabda9e8b229ebe427e08143960f",
+      "pngSha256": "72c838c3635f0d1aece0dc6b7feb4e8bf08c476acf99ece088d8c755abb51697"
+    },
+    {
+      "index": 165,
+      "vdb": "smallCampfire_0165.vdb",
+      "vdbSha256": "a8a8a9baa47a02a6f9bb75a613d02269ebad2502180b43ec94db27147ff6111f",
+      "pngSha256": "58b10214c28f046acc8d76356af8f0648019066aa80e76dcfa624f3a027a04d1"
+    },
+    {
+      "index": 166,
+      "vdb": "smallCampfire_0166.vdb",
+      "vdbSha256": "394badc73f3c438be4535f9a86078c33fe70bfcc5503dad2d1f35b1fb870bffc",
+      "pngSha256": "324551a58fe2ef847eca2fc5000fd294a3b7edd9b9d34193cabfea2dcffbe797"
+    },
+    {
+      "index": 167,
+      "vdb": "smallCampfire_0167.vdb",
+      "vdbSha256": "fb87eb7c09f091ac4e1e804ad9e205c92b2fc76a1d2432fe08f3a9bdd426df46",
+      "pngSha256": "731005a5cb26acb2177429ff3fc279ff26e36dc5d1622753e90122d9ba1ba30c"
+    },
+    {
+      "index": 168,
+      "vdb": "smallCampfire_0168.vdb",
+      "vdbSha256": "e57c6068336cbe1deccc37840392a78fa7989a31fbd8d8e90f009e3e6686fe79",
+      "pngSha256": "c877cb883caaf1db07c7b0c8c6f99eb14db07cff08cb4518c1ca741a01bf70f5"
+    },
+    {
+      "index": 169,
+      "vdb": "smallCampfire_0169.vdb",
+      "vdbSha256": "76634c8654fe5098302ddc1e1304c49b0772291372b7d8fb654ffe266c313487",
+      "pngSha256": "e599d7768e9a3d5b489545b92ad90ee7f9568db2e8bed572ead3116f3742ce5e"
+    },
+    {
+      "index": 170,
+      "vdb": "smallCampfire_0170.vdb",
+      "vdbSha256": "09b20264f3652065781b109ab5d3313ffbcf66a601896c7a37f4850081771b83",
+      "pngSha256": "eb5ddfce748ade87ba3c549070abc2847f838820afc45205186a15d6ec3221c3"
+    },
+    {
+      "index": 171,
+      "vdb": "smallCampfire_0171.vdb",
+      "vdbSha256": "89a0493b0d91eb8b6418d0a45ba7dfa159d2e870b0fa8da5fdefcf17874dae94",
+      "pngSha256": "3670c5e4291fed9b0855f44c69dd543699fda104c9b3fa4d7eeae5c8f319dfed"
+    },
+    {
+      "index": 172,
+      "vdb": "smallCampfire_0172.vdb",
+      "vdbSha256": "5456aa9ff80a3532769aaccc97f5ff922c515a8603ed2b0009330689c8a5043b",
+      "pngSha256": "13c4e729b0a6a9916380816e3ffdad1665fc4b51ed447d7990d30b5d5afe4706"
+    },
+    {
+      "index": 173,
+      "vdb": "smallCampfire_0173.vdb",
+      "vdbSha256": "60f1bff279f110cd8a2d6585c562128bca3e4246a90792be16609acd4903b1c6",
+      "pngSha256": "aace320539274f06d9cb108e70988a26df173d55f2d2e658cac59ca98714b87e"
+    },
+    {
+      "index": 174,
+      "vdb": "smallCampfire_0174.vdb",
+      "vdbSha256": "022ba4fa8967a947543ccb027dbfbe455bf522360a3a4fd65413e82a292545ca",
+      "pngSha256": "2a8a3db107bab7c0314f918b90a715b0493bc9d2ed25f72c53c16d5987fd25c2"
+    },
+    {
+      "index": 175,
+      "vdb": "smallCampfire_0175.vdb",
+      "vdbSha256": "78f17b7742003f1e68758467f02ed623a8160a178be831666f1c29279ca8e105",
+      "pngSha256": "183ff4cbffaa48be256fd90adba351313535dc0f7530e83c18d054a9e10759cb"
+    },
+    {
+      "index": 176,
+      "vdb": "smallCampfire_0176.vdb",
+      "vdbSha256": "02ed6755a5972e7ef52f2e2667545289c811dae07cefe42d87e7d2bdb471742c",
+      "pngSha256": "190c98c6f7da7efd427557061de3e21ba6336549a2e8b38319fbcf3ccafda91d"
+    },
+    {
+      "index": 177,
+      "vdb": "smallCampfire_0177.vdb",
+      "vdbSha256": "40abaef0d58004411e19751af35348149af20eb079dafee45631735120845ee2",
+      "pngSha256": "8131dec6da20432f0270d91019742ed23b6f504845cd05faf4849fedaf5ff9fe"
+    },
+    {
+      "index": 178,
+      "vdb": "smallCampfire_0178.vdb",
+      "vdbSha256": "2b49e3b849bc255154c6995d4e98c67e6d13deca25cda27776a159c1b10ee971",
+      "pngSha256": "fbf34075074718088ba2e836565d5c75f39c84a2e80ec018055191c17e8baa9b"
+    },
+    {
+      "index": 179,
+      "vdb": "smallCampfire_0179.vdb",
+      "vdbSha256": "2bb7045914a8b7af30c9a8702658941e3faf18f330823e79b3a7a59fad36d78e",
+      "pngSha256": "3d1c4173a0d5ff265fb53da3c2446d24b69f62a025301067aac690e406d62d84"
+    },
+    {
+      "index": 180,
+      "vdb": "smallCampfire_0180.vdb",
+      "vdbSha256": "fee8e3eff97bac82f878162784f442da9a9008413f4bb880964f46fb3a2f60e0",
+      "pngSha256": "7297d6cbf174f6df4c34bac8b7aef754e39cd875b93d7c1007e5be6d69818c0a"
+    },
+    {
+      "index": 181,
+      "vdb": "smallCampfire_0181.vdb",
+      "vdbSha256": "163a74cbbf43b6ebc216da35cb431066a77b5beef4596fd30605cfbf40091ef3",
+      "pngSha256": "2004c2f2ff396be1b4419a27370fbe1c4762bb61058e3d4a0c49f668ebd8ed49"
+    },
+    {
+      "index": 182,
+      "vdb": "smallCampfire_0182.vdb",
+      "vdbSha256": "09abeca17305f058a3ef2727d02007e2c5dbb2584985d3ac72e7fea0be8e0ec6",
+      "pngSha256": "913b5707958aa257ee6a00831c56219eebbaed2749bded91a48103081bcc40ef"
+    },
+    {
+      "index": 183,
+      "vdb": "smallCampfire_0183.vdb",
+      "vdbSha256": "2be005d7c5d9f49c4fff080974bfcdc213f63627d0353037629bb484c9d254d9",
+      "pngSha256": "0032f57820268e4ab721d9b72f813e3232b0b4e907b24b4d3399be24397cedfc"
+    },
+    {
+      "index": 184,
+      "vdb": "smallCampfire_0184.vdb",
+      "vdbSha256": "a10dc34c25b6fa4a10b846a4359c9eaeec160fb50cd4972f51d72da347516f42",
+      "pngSha256": "355588902d5d8891e1c290fa937d04d0c45eb495194a87a6004ded41edb14f62"
+    },
+    {
+      "index": 185,
+      "vdb": "smallCampfire_0185.vdb",
+      "vdbSha256": "2ac82f30a2bd4cd97504dd822468b2f7e4003d919fe7bb79a33b761d60978077",
+      "pngSha256": "731720629cbace37c042adbcd69cb8743878ab494868eb39414d9beee80ecdd2"
+    },
+    {
+      "index": 186,
+      "vdb": "smallCampfire_0186.vdb",
+      "vdbSha256": "7dcf909522328dab506a1bdfa2742e5fbfbeba870c50c5860c52b4a5f78158ca",
+      "pngSha256": "d3deb833cb4b3730f4628715b4fa1ad64e44fd1581d4955b5a1a50f55dbaefa5"
+    },
+    {
+      "index": 187,
+      "vdb": "smallCampfire_0187.vdb",
+      "vdbSha256": "651b594d9a2997b22289b65d2b1642fe5568a5ae0da2d33fb76730b3a53c3e44",
+      "pngSha256": "607bc1a5253d9cde2212aacacab672bb52d9841eb403d1e6886adc956f1d9220"
+    },
+    {
+      "index": 188,
+      "vdb": "smallCampfire_0188.vdb",
+      "vdbSha256": "ee07f9715e686ba80d12b683f045b1e0402ef06b1e0771e551f0cbdafaa68066",
+      "pngSha256": "c1e7019b004d578f3571aa8972279ec786f52a01a727096810879d752b64a419"
+    },
+    {
+      "index": 189,
+      "vdb": "smallCampfire_0189.vdb",
+      "vdbSha256": "d639e8065d9de69762b5d7aec2219d5f725c445077de7667749ef97cb1f2a9dc",
+      "pngSha256": "1da7135e4d838245463124b99e02ce3cd6d128403760dc31b2b8e1d711607e95"
+    },
+    {
+      "index": 190,
+      "vdb": "smallCampfire_0190.vdb",
+      "vdbSha256": "f621190321a671d606c4162ee80d187ee625f58df5ccdd02c3d5f22af17e827c",
+      "pngSha256": "07f56ac0c74b56f752b3e4b12af2d79971020abf3d6a0d172105aee186068fc8"
+    },
+    {
+      "index": 191,
+      "vdb": "smallCampfire_0191.vdb",
+      "vdbSha256": "ad8b3296145d6e8d2c9ec0344fe92e8d14d794f0c7aa5ed7284a3f04a67c04ee",
+      "pngSha256": "d9ba1c8452547a57a1b5c8de01e53da403d371641645cd921933d797e2ce225b"
+    },
+    {
+      "index": 192,
+      "vdb": "smallCampfire_0192.vdb",
+      "vdbSha256": "01d8285bb493f9d880e36a809407cc5914251593800ca898c41eb362295743eb",
+      "pngSha256": "359dcde7ef5177eaa89417b72fe80ea8baa312404e1f647cc28c32f26309ffc6"
+    },
+    {
+      "index": 193,
+      "vdb": "smallCampfire_0193.vdb",
+      "vdbSha256": "7786a49d20d38787f8f95b63d39c3554bb8c14a5ba735afc845f0c3a48a3fc2f",
+      "pngSha256": "ed22b32e52f0e634bd1f5a8109cc928058176977188545f56dfaf7ba1e4ba5f5"
+    },
+    {
+      "index": 194,
+      "vdb": "smallCampfire_0194.vdb",
+      "vdbSha256": "fc3b97a04302bc9e5491626375c8f241dd3da9fa818706bcb0b9c60b7f3348e6",
+      "pngSha256": "3ef1d286b0824ed4261b3bf011b48011a714c44d1f429c01cd8425d54a77d68c"
+    },
+    {
+      "index": 195,
+      "vdb": "smallCampfire_0195.vdb",
+      "vdbSha256": "2609cbc67b68a832ad491f0b848838a89a466b953e3515c7919b651e705d3c68",
+      "pngSha256": "d311e74e5b04f4bbc1d1f669ba14b36194e81f986ef97ac508bd05d92b8361db"
+    },
+    {
+      "index": 196,
+      "vdb": "smallCampfire_0196.vdb",
+      "vdbSha256": "9da8520b00485a31f98d75de51d5ad9f8624e086e740e58b988956f25b910ec2",
+      "pngSha256": "d932bb454f6498075ca2a5b407f6acaf3fc9344a18642ed58d9ef71f8d78eb15"
+    },
+    {
+      "index": 197,
+      "vdb": "smallCampfire_0197.vdb",
+      "vdbSha256": "a925f1a2ebb98bda2d62619bf2662cf33a0f399d26e06d993fe5a5f53fc75b96",
+      "pngSha256": "9e499e54d21fbad88743d03b9e5a949169f6647ef7c5ea55c7b6d25c045b0a45"
+    },
+    {
+      "index": 198,
+      "vdb": "smallCampfire_0198.vdb",
+      "vdbSha256": "6d0075306786755c3c95aaef1be70e9dc95972355a4343bad7a2f1ca2db03e07",
+      "pngSha256": "f179b5d31bee2587f7d044178aebeba589e394bb489f1dd1be361c2910ecb80e"
+    },
+    {
+      "index": 199,
+      "vdb": "smallCampfire_0199.vdb",
+      "vdbSha256": "0e3b13fa07d4befaf9bd176b24a3e77d0f99e7b9d673d70269836b94ee89decf",
+      "pngSha256": "8e135495a3488f88210bd44812ef67454ed6e5b86696d96d2bbe153bb9eaac38"
+    }
+  ]
+}

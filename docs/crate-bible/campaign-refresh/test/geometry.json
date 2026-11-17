@@ -1,0 +1,590 @@
+[
+  {
+    "name": "carlisle-coast",
+    "sourceBefore": "ae71736a",
+    "unchangedComponents": 3892,
+    "sha256": "44ec75ddd3b4b3f7c6420bcd7985559e7d4268deddbf78f3f337cf824ad245a1",
+    "enemyBefore": [
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5,
+          -120
+        ],
+        "range": 3.5,
+        "speed": 5,
+        "nm": "Test Course 374"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5,
+          -187.52
+        ],
+        "range": 4,
+        "speed": 7,
+        "foe": "spiker",
+        "nm": "Test Course 375"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5.5,
+          -200
+        ],
+        "range": 4,
+        "speed": 6,
+        "foe": "turtle",
+        "nm": "Test Course 376"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5.5,
+          -228
+        ],
+        "range": 3,
+        "speed": 5,
+        "foe": "hopper",
+        "nm": "Test Course 377"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -8.69,
+          -252
+        ],
+        "range": 0,
+        "speed": 0,
+        "foe": "sentry",
+        "nm": "Test Course 378"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -340
+        ],
+        "range": 4.5,
+        "speed": 9,
+        "foe": "charger",
+        "nm": "Test Course 379"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -445
+        ],
+        "range": 4,
+        "speed": 7,
+        "nm": "Test Course 380"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -540
+        ],
+        "range": 4.5,
+        "speed": 8,
+        "foe": "floater",
+        "nm": "Test Course 381"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -556
+        ],
+        "range": 0,
+        "speed": 0,
+        "foe": "spinner",
+        "nm": "Test Course 382"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -562
+        ],
+        "range": 4,
+        "speed": 6,
+        "nm": "Test Course 383"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13.5,
+          -936
+        ],
+        "range": 4,
+        "speed": 6,
+        "foe": "turtle",
+        "nm": "Test Course 384"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -21.5,
+          -1150
+        ],
+        "range": 3.5,
+        "speed": 5,
+        "foe": "spiker",
+        "nm": "Test Course 385"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -22,
+          -1180
+        ],
+        "range": 4,
+        "speed": 6,
+        "foe": "hopper",
+        "nm": "Test Course 386"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -19,
+          -1293
+        ],
+        "range": 4,
+        "speed": 6,
+        "foe": "turtle",
+        "nm": "Test Course 387"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -16,
+          -1365
+        ],
+        "range": 3.5,
+        "speed": 7,
+        "nm": "Test Course 388"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -1527
+        ],
+        "range": 4,
+        "speed": 7,
+        "foe": "charger",
+        "nm": "Test Course 389"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -19,
+          -1605
+        ],
+        "range": 0,
+        "speed": 6,
+        "foe": "spinner",
+        "nm": "Test Course 390"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          109,
+          -16,
+          -1720
+        ],
+        "range": 0,
+        "speed": 5,
+        "foe": "sentry",
+        "nm": "Test Course 391"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1847
+        ],
+        "range": 4,
+        "speed": 6,
+        "foe": "hopper",
+        "nm": "Test Course 392"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1963.5
+        ],
+        "range": 5,
+        "speed": 6,
+        "nm": "Test Course 393"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1972.5
+        ],
+        "range": 4,
+        "speed": 5,
+        "nm": "Test Course 394"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1961.5
+        ],
+        "range": 5,
+        "speed": 8,
+        "foe": "spiker",
+        "nm": "Test Course 395"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1967.5
+        ],
+        "range": 5,
+        "speed": 7,
+        "foe": "spiker",
+        "nm": "Test Course 396"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1973.5
+        ],
+        "range": 4,
+        "speed": 9,
+        "foe": "spiker",
+        "nm": "Test Course 397"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          157.75,
+          -26,
+          -2002
+        ],
+        "range": 2.25,
+        "speed": 4,
+        "foe": "spiker",
+        "nm": "Test Course 398"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          146.25,
+          -26,
+          -2017
+        ],
+        "range": 2.25,
+        "speed": 4,
+        "foe": "turtle",
+        "nm": "Test Course 399"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -2255
+        ],
+        "range": 3.5,
+        "speed": 7,
+        "foe": "charger",
+        "nm": "Test Course 400"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -2270
+        ],
+        "range": 3,
+        "speed": 9,
+        "foe": "floater",
+        "nm": "Test Course 401"
+      }
+    ],
+    "enemyAfter": [
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5,
+          -120
+        ],
+        "range": 3.5,
+        "speed": 2,
+        "nm": "Test Course 374",
+        "foe": "grunt"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5,
+          -207
+        ],
+        "range": 2.5,
+        "speed": 2.2,
+        "foe": "spiker",
+        "nm": "Test Course 375"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -5.5,
+          -228
+        ],
+        "range": 3,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 377"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -340
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 379"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -445
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "nm": "Test Course 380",
+        "foe": "grunt"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -540
+        ],
+        "range": 4,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 381"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13.5,
+          -936
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 384"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -21.5,
+          -1150
+        ],
+        "range": 3.5,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 385"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -19,
+          -1293
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 387"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -16,
+          -1365
+        ],
+        "range": 3.5,
+        "speed": 3.2,
+        "nm": "Test Course 388",
+        "foe": "grunt"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -13,
+          -1527
+        ],
+        "range": 4,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 389"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          0,
+          -19,
+          -1605
+        ],
+        "range": 0,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 390"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          109,
+          -16,
+          -1720
+        ],
+        "range": 0,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 391"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1847
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 392"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1963.5
+        ],
+        "range": 4,
+        "speed": 3.2,
+        "nm": "Test Course 393",
+        "foe": "grunt"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -1972.5
+        ],
+        "range": 4,
+        "speed": 3,
+        "nm": "Test Course 394",
+        "foe": "spiker"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          157.75,
+          -26,
+          -2002
+        ],
+        "range": 2.25,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 398"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          146.25,
+          -26,
+          -2017
+        ],
+        "range": 2.25,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 399"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -2255
+        ],
+        "range": 3.5,
+        "speed": 3.2,
+        "foe": "grunt",
+        "nm": "Test Course 400"
+      },
+      {
+        "t": "enemy",
+        "p": [
+          152,
+          -26,
+          -2270
+        ],
+        "range": 3,
+        "speed": 3,
+        "foe": "spiker",
+        "nm": "Test Course 401"
+      }
+    ]
+  },
+  {
+    "name": "themed-bonuses",
+    "sourceBefore": "ae71736a",
+    "unchangedComponents": 134,
+    "sha256": "a0436e43a519c5fb1f99121d3d40df1a8b1f4e02374f00fd7bf87efae6eac2e9",
+    "enemyBefore": [],
+    "enemyAfter": []
+  }
+]

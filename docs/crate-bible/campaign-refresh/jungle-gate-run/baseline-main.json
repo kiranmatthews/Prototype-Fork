@@ -1,0 +1,16 @@
+{
+  "from": 0,
+  "to": 11,
+  "position": [
+    1374.394000000001,
+    18.40000002384186,
+    0
+  ],
+  "deaths": 0,
+  "frames": 22784,
+  "state": "finished",
+  "cratesBroken": 26,
+  "totalCrates": 54,
+  "bonusCrates": 0,
+  "gemEarned": false
+}

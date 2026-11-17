@@ -1,0 +1,810 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+    "inventory": {
+      "physical": 89,
+      "total": 117,
+      "bonus": 22,
+      "checkpoints": 7,
+      "enemies": 4
+    },
+    "bonusPlatform": {
+      "x": 5.2,
+      "y": 0,
+      "z": -138,
+      "laneFraction": 0.5,
+      "topY": 1.05,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "opening": {
+      "done": true,
+      "frames": 265,
+      "state": "ride",
+      "crates": 5,
+      "lives": 4,
+      "position": [
+        1.766522573251124,
+        -4.768371586472142e-08,
+        5.027671827142302
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 85,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        1.0609675382823311e-05,
+        -4.768371586472142e-08,
+        -65.15511111108171
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 276,
+      "state": "ride",
+      "crates": 6,
+      "lives": 4,
+      "position": [
+        -1.834240679279662,
+        -4.768371586472142e-08,
+        -71.79123738914089
+      ],
+      "collected": 5,
+      "checkpoint": true
+    },
+    "recovery": {
+      "lives": 3,
+      "alive": 5,
+      "position": [
+        0,
+        -4.768371586472142e-08,
+        -67
+      ]
+    },
+    "finish": {
+      "done": true,
+      "frames": 151,
+      "state": "finished",
+      "crates": 0,
+      "lives": 4,
+      "position": [
+        1.3434537002026573e-05,
+        0.7266666691501935,
+        -481.3849999999633
+      ],
+      "collected": 0,
+      "checkpoint": false
+    },
+    "bonusFailure": {
+      "lives": 4,
+      "banked": 0,
+      "completed": false,
+      "sameParent": true
+    },
+    "bonusRetry": {
+      "physical": 26,
+      "alive": true
+    },
+    "bonusJourney": {
+      "done": true,
+      "frame": 2862,
+      "state": "finished",
+      "crates": 22,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "Cloudtop arrival delivery",
+            "firstFrame": 22,
+            "lastFrame": 22
+          },
+          {
+            "name": "approach Cloudtop arrival delivery",
+            "firstFrame": 44,
+            "lastFrame": 105
+          },
+          {
+            "name": "Cloudtop arrival delivery",
+            "firstFrame": 125,
+            "lastFrame": 125
+          },
+          {
+            "name": "approach Cloudtop arrival delivery",
+            "firstFrame": 147,
+            "lastFrame": 209
+          },
+          {
+            "name": "Cloudtop arrival delivery",
+            "firstFrame": 229,
+            "lastFrame": 229
+          },
+          {
+            "name": "approach Cloudtop arrival delivery",
+            "firstFrame": 251,
+            "lastFrame": 313
+          },
+          {
+            "name": "Cloudtop arrival delivery",
+            "firstFrame": 333,
+            "lastFrame": 333
+          },
+          {
+            "name": "approach Cloudtop arrival delivery",
+            "firstFrame": 355,
+            "lastFrame": 417
+          },
+          {
+            "name": "Cloudtop arrival delivery",
+            "firstFrame": 437,
+            "lastFrame": 437
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay observation",
+            "firstFrame": 459,
+            "lastFrame": 537
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay inspect receiver chain",
+            "firstFrame": 555,
+            "lastFrame": 652
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "firstFrame": 697,
+            "lastFrame": 770
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "firstFrame": 797,
+            "lastFrame": 875
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "firstFrame": 902,
+            "lastFrame": 980
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "firstFrame": 1007,
+            "lastFrame": 1085
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay leave last steel receiver",
+            "firstFrame": 1112,
+            "lastFrame": 1153
+          },
+          {
+            "name": "Cloudtop receiver delivery",
+            "firstFrame": 1155,
+            "lastFrame": 1155
+          },
+          {
+            "name": "approach Cloudtop receiver delivery",
+            "firstFrame": 1177,
+            "lastFrame": 1235
+          },
+          {
+            "name": "Cloudtop receiver delivery",
+            "firstFrame": 1255,
+            "lastFrame": 1255
+          },
+          {
+            "name": "approach Cloudtop receiver delivery",
+            "firstFrame": 1277,
+            "lastFrame": 1339
+          },
+          {
+            "name": "Cloudtop receiver delivery",
+            "firstFrame": 1359,
+            "lastFrame": 1359
+          },
+          {
+            "name": "approach Cloudtop receiver delivery",
+            "firstFrame": 1381,
+            "lastFrame": 1443
+          },
+          {
+            "name": "Cloudtop receiver delivery",
+            "firstFrame": 1463,
+            "lastFrame": 1463
+          },
+          {
+            "name": "approach Cloudtop receiver delivery",
+            "firstFrame": 1485,
+            "lastFrame": 1547
+          },
+          {
+            "name": "Cloudtop receiver delivery",
+            "firstFrame": 1567,
+            "lastFrame": 1567
+          },
+          {
+            "name": "bonus-sky-bridge room 1 relay supported room exit",
+            "firstFrame": 1589,
+            "lastFrame": 1625
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite observation",
+            "firstFrame": 1643,
+            "lastFrame": 1718
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite finite-stack approach",
+            "firstFrame": 1736,
+            "lastFrame": 1837
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite upper support contact",
+            "firstFrame": 1882,
+            "lastFrame": 1913
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite rebound apex",
+            "firstFrame": 1913,
+            "lastFrame": 1938
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite cap before spending support",
+            "firstFrame": 1940,
+            "lastFrame": 1944
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite clear landing",
+            "firstFrame": 1944,
+            "lastFrame": 1967
+          },
+          {
+            "name": "approach bonus-sky-bridge room 2 finite spent upper finite support",
+            "firstFrame": 1987,
+            "lastFrame": 2040
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite spent upper finite support",
+            "firstFrame": 2060,
+            "lastFrame": 2060
+          },
+          {
+            "name": "bonus-sky-bridge room 2 finite supported room exit",
+            "firstFrame": 2082,
+            "lastFrame": 2268
+          },
+          {
+            "name": "approach Cloudtop exit delivery",
+            "firstFrame": 2286,
+            "lastFrame": 2365
+          },
+          {
+            "name": "Cloudtop exit delivery",
+            "firstFrame": 2385,
+            "lastFrame": 2385
+          },
+          {
+            "name": "approach Cloudtop exit delivery",
+            "firstFrame": 2407,
+            "lastFrame": 2469
+          },
+          {
+            "name": "Cloudtop exit delivery",
+            "firstFrame": 2489,
+            "lastFrame": 2489
+          },
+          {
+            "name": "approach Cloudtop exit delivery",
+            "firstFrame": 2511,
+            "lastFrame": 2573
+          },
+          {
+            "name": "Cloudtop exit delivery",
+            "firstFrame": 2593,
+            "lastFrame": 2593
+          },
+          {
+            "name": "approach Cloudtop exit delivery",
+            "firstFrame": 2615,
+            "lastFrame": 2677
+          },
+          {
+            "name": "Cloudtop exit delivery",
+            "firstFrame": 2697,
+            "lastFrame": 2697
+          },
+          {
+            "name": "approach Cloudtop exit delivery",
+            "firstFrame": 2719,
+            "lastFrame": 2781
+          },
+          {
+            "name": "Cloudtop exit delivery",
+            "firstFrame": 2801,
+            "lastFrame": 2801
+          }
+        ],
+        "evidence": [
+          {
+            "action": "Cloudtop arrival delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop arrival delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop arrival delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop arrival delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop arrival delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "launch": [
+              5.719599999683736,
+              -4.768371586472142e-08,
+              -8.609698905778035e-05
+            ],
+            "landing": [
+              9.165099999590758,
+              1.172,
+              -0.00011140904542477079
+            ],
+            "ground": "crate"
+          },
+          {
+            "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "launch": [
+              9.165099999590758,
+              1.172,
+              -0.00011140904542477079
+            ],
+            "landing": [
+              12.370599999504252,
+              1.172,
+              -0.0001349579633421669
+            ],
+            "ground": "crate"
+          },
+          {
+            "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "launch": [
+              12.370599999504252,
+              1.172,
+              -0.0001349579633421669
+            ],
+            "landing": [
+              15.571599999417868,
+              1.172,
+              -0.00015847382241363322
+            ],
+            "ground": "crate"
+          },
+          {
+            "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+            "launch": [
+              15.571599999417868,
+              1.172,
+              -0.00015847382241363322
+            ],
+            "landing": [
+              18.771099999331533,
+              1.172,
+              -0.0001819786618697896
+            ],
+            "ground": "crate"
+          },
+          {
+            "action": "bonus-sky-bridge room 1 relay leave last steel receiver",
+            "launch": [
+              18.771099999331533,
+              1.172,
+              -0.0001819786618697896
+            ],
+            "landing": [
+              22.00999999999999,
+              3.5762786898541066e-09,
+              -0.0002075662086195294
+            ],
+            "ground": "Cloudtop cumulus landing"
+          },
+          {
+            "action": "Cloudtop receiver delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop receiver delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop receiver delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop receiver delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop receiver delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "relay",
+            "index": 0,
+            "position": [
+              26.909444444312225,
+              3.5762786898541066e-09,
+              -0.00024383829274703182
+            ]
+          },
+          {
+            "action": "bonus-sky-bridge room 2 finite spent upper finite support",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "room complete",
+            "pattern": "finite",
+            "index": 1,
+            "position": [
+              50.927922221789366,
+              3.5762786898541066e-09,
+              -0.00042859593834443285
+            ]
+          },
+          {
+            "action": "Cloudtop exit delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop exit delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop exit delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop exit delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "Cloudtop exit delivery",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "all actual authored bonus crates",
+            "totalCrates": 22,
+            "activeStageCrates": 22,
+            "bonusCrateTotal": 0,
+            "cratesBroken": 22,
+            "remaining": 0
+          }
+        ],
+        "stage": "cross real bonus gate to bank parent rewards"
+      }
+    },
+    "bonusBanked": {
+      "count": 22,
+      "completed": true,
+      "sameParent": true
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+    "inventory": {
+      "physical": 89,
+      "total": 117,
+      "bonus": 22,
+      "checkpoints": 7,
+      "enemies": 4
+    },
+    "bonusPlatform": {
+      "x": 5.2,
+      "y": 0,
+      "z": -138,
+      "laneFraction": 0.5,
+      "topY": 1.05,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "views": [
+      {
+        "name": "opening",
+        "position": [
+          0,
+          0.7366666187594333,
+          5
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          0,
+          5.836666618759433,
+          10.05
+        ],
+        "cameraQuaternion": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "drawCalls": 481,
+        "frame": 11
+      },
+      {
+        "name": "keeper",
+        "position": [
+          0,
+          -4.768371586472142e-08,
+          -37
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          0,
+          5.099999952316284,
+          -31.95
+        ],
+        "cameraQuaternion": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "drawCalls": 560,
+        "frame": 22
+      },
+      {
+        "name": "sanctuary",
+        "position": [
+          0,
+          -4.768371586472142e-08,
+          -134
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          0,
+          5.099999952316284,
+          -128.95
+        ],
+        "cameraQuaternion": [
+          -0.21942052619456637,
+          0,
+          0,
+          0.9756303770816587
+        ],
+        "drawCalls": 533,
+        "frame": 34
+      },
+      {
+        "name": "bonus-relay",
+        "position": [
+          2,
+          -4.768371586472142e-08,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          2,
+          8.351491118495993,
+          25.820309867674464
+        ],
+        "cameraQuaternion": [
+          -0.05878417701898023,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "drawCalls": 119,
+        "frame": 45
+      },
+      {
+        "name": "bonus-finite",
+        "position": [
+          33,
+          3.5762786898541066e-09,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ],
+        "camera": [
+          33,
+          8.351491169755988,
+          25.820309867674464
+        ],
+        "cameraQuaternion": [
+          -0.05878417701898024,
+          0,
+          0,
+          0.9982707150528864
+        ],
+        "drawCalls": 122,
+        "frame": 56
+      }
+    ],
+    "passed": true
+  }
+]

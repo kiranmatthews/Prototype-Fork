@@ -1,0 +1,44 @@
+[
+  {
+    "pattern": "finite",
+    "test": "spending upper finite support first loses high cap access",
+    "capAlive": true,
+    "actualDoubleJump": true
+  },
+  {
+    "test": "unrevealed gallery cannot support clamber or award cargo",
+    "position": [
+      11.972500000000009,
+      0,
+      0
+    ]
+  },
+  {
+    "test": "unused causeway switch causes real gap death",
+    "state": "dead"
+  },
+  {
+    "test": "skipping relay footing causes real gap death",
+    "state": "dead"
+  },
+  {
+    "test": "ordinary cargo rebound and double stay below crown",
+    "maxHead": 8.756295959364387,
+    "capBottom": 9
+  },
+  {
+    "test": "final relay cap rebound and double cannot reach crown",
+    "capAlive": true,
+    "position": [
+      135.60000000000036,
+      0,
+      0
+    ]
+  },
+  {
+    "test": "complete retry",
+    "physical": 53,
+    "counted": 46,
+    "credit": 0
+  }
+]

@@ -1,0 +1,1431 @@
+{
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch",
+  "errors": [],
+  "passed": true,
+  "menuBytes": 19299,
+  "portraitButtons": [
+    {
+      "text": "Challenges",
+      "x": 18,
+      "y": 111,
+      "w": 119.640625,
+      "h": 48
+    },
+    {
+      "text": "Rejects",
+      "x": 145.640625,
+      "y": 111,
+      "w": 89.484375,
+      "h": 48
+    },
+    {
+      "text": "1",
+      "x": 21,
+      "y": 174,
+      "w": 63.1875,
+      "h": 83.84375
+    },
+    {
+      "text": "2",
+      "x": 92.1875,
+      "y": 174,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "3",
+      "x": 163.390625,
+      "y": 174,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "4",
+      "x": 234.59375,
+      "y": 174,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "5",
+      "x": 305.796875,
+      "y": 174,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "6",
+      "x": 21,
+      "y": 265.84375,
+      "w": 63.1875,
+      "h": 83.84375
+    },
+    {
+      "text": "7",
+      "x": 92.1875,
+      "y": 265.84375,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "8",
+      "x": 163.390625,
+      "y": 265.84375,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "9",
+      "x": 234.59375,
+      "y": 265.84375,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "10",
+      "x": 305.796875,
+      "y": 265.84375,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "11",
+      "x": 21,
+      "y": 357.6875,
+      "w": 63.1875,
+      "h": 83.859375
+    },
+    {
+      "text": "12",
+      "x": 92.1875,
+      "y": 357.6875,
+      "w": 63.203125,
+      "h": 83.859375
+    },
+    {
+      "text": "13",
+      "x": 163.390625,
+      "y": 357.6875,
+      "w": 63.203125,
+      "h": 83.859375
+    },
+    {
+      "text": "14",
+      "x": 234.59375,
+      "y": 357.6875,
+      "w": 63.203125,
+      "h": 83.859375
+    },
+    {
+      "text": "15",
+      "x": 305.796875,
+      "y": 357.6875,
+      "w": 63.203125,
+      "h": 83.859375
+    },
+    {
+      "text": "16",
+      "x": 21,
+      "y": 449.546875,
+      "w": 63.1875,
+      "h": 83.84375
+    },
+    {
+      "text": "17",
+      "x": 92.1875,
+      "y": 449.546875,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "18",
+      "x": 163.390625,
+      "y": 449.546875,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "19",
+      "x": 234.59375,
+      "y": 449.546875,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "20",
+      "x": 305.796875,
+      "y": 449.546875,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "21",
+      "x": 21,
+      "y": 541.390625,
+      "w": 63.1875,
+      "h": 83.84375
+    },
+    {
+      "text": "22",
+      "x": 92.1875,
+      "y": 541.390625,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "23",
+      "x": 163.390625,
+      "y": 541.390625,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "24",
+      "x": 234.59375,
+      "y": 541.390625,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "25",
+      "x": 305.796875,
+      "y": 541.390625,
+      "w": 63.203125,
+      "h": 83.84375
+    },
+    {
+      "text": "Play",
+      "x": 18,
+      "y": 707.25,
+      "w": 65.703125,
+      "h": 48
+    },
+    {
+      "text": "Whole course",
+      "x": 91.703125,
+      "y": 707.25,
+      "w": 139.703125,
+      "h": 48
+    }
+  ],
+  "start": [
+    0,
+    0,
+    5
+  ],
+  "afterTouch": [
+    0,
+    0,
+    0.7466666666666666
+  ],
+  "landscapeButtons": [
+    {
+      "text": "Challenges",
+      "x": 18,
+      "y": 94,
+      "w": 119.640625,
+      "h": 48
+    },
+    {
+      "text": "Rejects",
+      "x": 145.640625,
+      "y": 94,
+      "w": 89.484375,
+      "h": 48
+    },
+    {
+      "text": "1",
+      "x": 21,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "2",
+      "x": 101.5,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "3",
+      "x": 182,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "4",
+      "x": 262.5,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "5",
+      "x": 343,
+      "y": 152,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "6",
+      "x": 21,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "7",
+      "x": 101.5,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "8",
+      "x": 182,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "9",
+      "x": 262.5,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "10",
+      "x": 343,
+      "y": 208,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "11",
+      "x": 21,
+      "y": 264,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "12",
+      "x": 101.5,
+      "y": 264,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "13",
+      "x": 182,
+      "y": 264,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "14",
+      "x": 262.5,
+      "y": 264,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "15",
+      "x": 343,
+      "y": 264,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "16",
+      "x": 21,
+      "y": 320,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "17",
+      "x": 101.5,
+      "y": 320,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "18",
+      "x": 182,
+      "y": 320,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "19",
+      "x": 262.5,
+      "y": 320,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "20",
+      "x": 343,
+      "y": 320,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "21",
+      "x": 21,
+      "y": 376,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "22",
+      "x": 101.5,
+      "y": 376,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "23",
+      "x": 182,
+      "y": 376,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "24",
+      "x": 262.5,
+      "y": 376,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "25",
+      "x": 343,
+      "y": 376,
+      "w": 72.5,
+      "h": 48
+    },
+    {
+      "text": "Play",
+      "x": 425.5,
+      "y": 94,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Resume",
+      "x": 629.75,
+      "y": 94,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Retry",
+      "x": 425.5,
+      "y": 150,
+      "w": 196.25,
+      "h": 48
+    },
+    {
+      "text": "Whole course",
+      "x": 629.75,
+      "y": 150,
+      "w": 196.25,
+      "h": 48
+    }
+  ],
+  "gridCrystals": 8,
+  "wholeCourseCrystals": 25,
+  "rejectChoices": 26,
+  "archiveCrystals": 25,
+  "bytes": 34571875,
+  "resources": [
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/motion-study/skate/motion.json.gz",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8631682
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/level-l-DJ71ay.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3788204
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/board-scribble-1z1e6AP0.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 2005255
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/uber-music.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 1314876
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/motion-study/jak/motion.json.gz",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 927726
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/8496158275f2520c8b1dd764d42ae9cebdf060130c1289e42163d8e42953515d.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 837555
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/8496158275f2520c8b1dd764d42ae9cebdf060130c1289e42163d8e42953515d.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 837546
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/8496158275f2520c8b1dd764d42ae9cebdf060130c1289e42163d8e42953515d.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 837534
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/player-D5WdIXvz.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 806769
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/crate-vfx-atlas.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 781251
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/weather/rooftop-rain.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 706238
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/6da48849b50bbc852a6a2cbd5a7ad7cc2dcc050a72d8d7d7b4c1e33b2f117bd2.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 656545
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/6da48849b50bbc852a6a2cbd5a7ad7cc2dcc050a72d8d7d7b4c1e33b2f117bd2.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 656537
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/d440f4f0599dbde8c229b69bda344aa5e71cdb45340602e36b16713b5dc48198.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 653979
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/d440f4f0599dbde8c229b69bda344aa5e71cdb45340602e36b16713b5dc48198.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 653940
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/wood-fracture.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 592375
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/weather/rooftop-thunder.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 565011
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/enemies/spinner.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 536186
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/enemies/spinner.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 536176
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/explosive-stick.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 515481
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/enemies/turtle.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 485409
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/metal-fracture.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 454038
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/5d0be977ed0b425b6660a69cb3c1c6efd72b99bae1afbccef7fae5c0c89e6398.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 412560
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/__shared_textures/5d0be977ed0b425b6660a69cb3c1c6efd72b99bae1afbccef7fae5c0c89e6398.jpg",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 412475
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/three-finger-hand/three-finger-hand.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 386749
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/boulder-camera/rolling-rush.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 384451
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/boulder-camera/camera-hit-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 288351
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/boulder-camera/camera-hit-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 265325
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/skateboard/surf-cruiser-orange-sun.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 253348
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/boulder-camera/camera-hit-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 246116
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-shorts/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 228474
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/wood-sculpt.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 223264
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-torso/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 213723
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-head/base-color.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 204978
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/playerCatalog-BfYFdp0J.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 200981
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/boardwalk/rustic-atlas.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 183977
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/engine-rattle-v2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 178008
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/three.module-C5Nqj5WA.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 157280
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/skateboard/skateboard-truck.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 148021
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/fire-crackle-v2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 128948
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/metal-sculpt.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 127883
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/ledgeTraversal-BpvP1mcB.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 98455
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/explosion.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 79947
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/models/skull.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 78394
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/moa-caw.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 73213
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/bone-head.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 73176
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/models/crossbones.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 68580
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/roo.png",
+      "status": 200,
+      "type": "Image",
+      "bytes": 63774
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/skating-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 60185
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/crystal-collect.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 51758
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/mask-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 48304
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/sounds-DSOM5NRG.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 44957
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/life-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 43098
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/drone-swoop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 37654
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/explosion.m4a",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 37086
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/landing-crunch-v1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 34772
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/turtle-grumble.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 31882
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/grinding-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 31839
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/skating-loop-5.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 30955
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/goblin-mutter.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 30453
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/slide.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 29990
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/skateboard/skateboard-truck.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 29699
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/thruster-start.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28929
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/thruster-end.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28928
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/skid.m4a",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28812
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/thruster-loop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28449
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/spin-away.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28367
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/karts/crash.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 28242
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/characterAnimationRuntime-Bc3qrC4J.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 28097
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/sentry-charge.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26661
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/mask-loss.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26418
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/bull-snort.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26173
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/spiker-snuffle.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 26124
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/frog-croak.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 25676
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-torso/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 25091
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/tuning-D9eXvqOE.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 24699
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-head/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 23697
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-shorts/roughness.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 22828
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/bull-brake.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 22305
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/skate-halt.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 21562
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/drone-hover.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 21324
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/crab-clack.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 20366
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/playableMotion-CHmcRw6l.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 20123
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/bull-charge.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 19446
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/slide-jump.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 19421
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/machine-down.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 18482
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/props/crate-family/wood-brace.glb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 17352
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/special-trick.mp3",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 17114
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/spinner-open.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 16546
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/sentry-cool.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15597
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/organic-down.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15578
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/crate-break-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15154
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/spinner-close.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 15092
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/spin-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 14393
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/moa-caw-peck.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 14296
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/frog-land.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 13694
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/GLTFLoader-DSqmFct1.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 13595
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/crystal-trials-BQR1vbTR.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 13560
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/frog-hop.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 13156
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/sentry-fire.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11765
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/spin-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11313
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/turtle-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 11289
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/ollie.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10799
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/death.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10363
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/bouncy-box-bounce.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 10025
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/woosh.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 9991
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/rail-land.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 9688
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/crate-break-1.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 9243
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/characters/meshy-shorts/metallic.webp",
+      "status": 200,
+      "type": "Image",
+      "bytes": 9101
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/bull-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8858
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/metal-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8835
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/fonts/RooRegular.ttf",
+      "status": 200,
+      "type": "Font",
+      "bytes": 8390
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/unsure.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8355
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/crunch.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 8231
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/foot-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 7129
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/skate-transition.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 7126
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/spiker-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6915
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/spin-4.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6797
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/fflate.module-XEyfgjbZ.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 6759
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/milk-DCanU9nK.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 6641
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/enemies/crab-step.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6470
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/wumpa-get-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 6292
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/skateChaseCamera-UlFDCRSD.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 5858
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/woosh-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5658
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/tnt-count-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5602
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/elasticity-BV0m_i3f.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 5589
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/crate-bounce.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 5545
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/fruit-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4837
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/wumpa-get.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4813
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/foot-step-2.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 4388
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/geometry-ekXept3V.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 4158
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/take-damage.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 3775
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/tnt-count.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 3360
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/presentationLoading-HYPoaOc_.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3187
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/retarget-DvtW2a6E.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3082
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/runtime-CMnFOjp1.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 3053
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/BufferGeometryUtils-cQTEOgP4.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 2600
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/ledge-grab.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2265
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/woosh-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2208
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/skateCatalog-CS_t78jo.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 2151
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/sfx/foot-step-3.wav",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 2070
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/challengePlaytest-CsHmq78e.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 1779
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch",
+      "status": 200,
+      "type": "Document",
+      "bytes": 1364
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/challengePlaytest-CKJMx-TX.css",
+      "status": 200,
+      "type": "Stylesheet",
+      "bytes": 1203
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/preload-helper-CmsKOCeN.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 842
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/skateGrabMotion-_awZViYM.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 588
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/Pass-uJjVGx3X.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 570
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/modulepreload-polyfill-B5Qt9EMX.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 551
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/SkeletonUtils-BCVmgslc.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 504
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/localGameStorage-CkXwQ_fa.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 498
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/level-DJtrQsAn.css",
+      "status": 200,
+      "type": "Stylesheet",
+      "bytes": 373
+    },
+    {
+      "url": "https://kiranmatthews.github.io/Prototype-Fork/assets/storageKeys-Cs5plciI.js",
+      "status": 200,
+      "type": "Script",
+      "bytes": 286
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/751c9cfc-6b88-47a3-80ac-49c60cdd0917",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/275b9ee4-6ac7-4e95-9fed-4c070b28dbbb",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/9ac708be-149a-48d4-8419-4c905b9f7526",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/9d6d5a99-c781-418a-bd30-db7969eaae77",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/894ad86f-93dc-4d79-a3c2-a3458413136b",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/3c534886-19af-44f8-bf84-e4df19ee2b9e",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/203b673e-bbd8-48e5-a2ee-2acb187b5dd6",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/e06f22bf-7dbf-411b-aab4-f459c6dc9e6a",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/9a7b6387-c861-4ffa-a6cf-c3be1015da6d",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/7e46d57a-c020-454e-bff4-1b147cb2a9a2",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/728ea439-c314-4273-a6ef-210d55f21735",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    },
+    {
+      "url": "blob:https://kiranmatthews.github.io/91289fc6-c574-42a4-85a4-f3e515c21bb8",
+      "status": 200,
+      "type": "Fetch",
+      "bytes": 0
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "id": 8,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank the outline orchard checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Read the ghost steps before operating the switch",
+      "firstFrame": 137,
+      "lastFrame": 308
+    },
+    {
+      "name": "An unrevealed step lets the jump fall safely into the courtyard",
+      "firstFrame": 353,
+      "lastFrame": 392
+    },
+    {
+      "name": "approach Reveal the orchard steps and their arrow",
+      "firstFrame": 392,
+      "lastFrame": 508
+    },
+    {
+      "name": "Reveal the orchard steps and their arrow",
+      "firstFrame": 528,
+      "lastFrame": 528
+    },
+    {
+      "name": "Approach the now-solid first step",
+      "firstFrame": 550,
+      "lastFrame": 643
+    },
+    {
+      "name": "Jump onto the first revealed step",
+      "firstFrame": 688,
+      "lastFrame": 720
+    },
+    {
+      "name": "Set up the jump to the spring terrace",
+      "firstFrame": 720,
+      "lastFrame": 797
+    },
+    {
+      "name": "Jump onto the revealed spring terrace",
+      "firstFrame": 842,
+      "lastFrame": 874
+    },
+    {
+      "name": "Approach the intact steel arrow",
+      "firstFrame": 874,
+      "lastFrame": 961
+    },
+    {
+      "name": "Try the short arrow rebound",
+      "firstFrame": 1006,
+      "lastFrame": 1042
+    },
+    {
+      "name": "Read the height still missing from the short rebound",
+      "firstFrame": 1042,
+      "lastFrame": 1072
+    },
+    {
+      "name": "Land beside the arrow for a local retry",
+      "firstFrame": 1072,
+      "lastFrame": 1089
+    },
+    {
+      "name": "Approach the intact steel arrow",
+      "firstFrame": 1089,
+      "lastFrame": 1089
+    },
+    {
+      "name": "Hold the high arrow rebound",
+      "firstFrame": 1134,
+      "lastFrame": 1170
+    },
+    {
+      "name": "Drift from the arrow into the high orchard gallery",
+      "firstFrame": 1170,
+      "lastFrame": 1215
+    },
+    {
+      "name": "Collect the orchard crystal",
+      "firstFrame": 1215,
+      "lastFrame": 1294
+    },
+    {
+      "name": "Read the clear courtyard return edge",
+      "firstFrame": 1312,
+      "lastFrame": 1384
+    },
+    {
+      "name": "Drop into the orchard courtyard",
+      "firstFrame": 1429,
+      "lastFrame": 1483
+    },
+    {
+      "name": "Pass outside the raised outline route",
+      "firstFrame": 1483,
+      "lastFrame": 1691
+    },
+    {
+      "name": "Return to the orchard entrance",
+      "firstFrame": 1709,
+      "lastFrame": 1896
+    }
+  ],
+  "evidence": [
+    {
+      "action": "Reveal the orchard steps and their arrow",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "short rebound misses high gallery",
+      "apex": 9.309499999999996
+    },
+    {
+      "action": "held arrow launch",
+      "position": [
+        -0.02750000000000004,
+        5.571999999999999,
+        -21.996818638215178
+      ],
+      "verticalSpeed": 20
+    }
+  ],
+  "passed": true,
+  "stage": "Return to the orchard entrance",
+  "result": {
+    "frame": 1914,
+    "time": 31.9,
+    "position": [
+      0.05517343320950151,
+      0,
+      4.9450259864633885
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

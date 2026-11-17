@@ -14,23 +14,34 @@ const crate=(x:number,y:number,kind:CustomComponent['kind']='wood',nm='Temple st
 export const RUMBLEWATER_BONUS_TERRACES=[[-12,7,0],[7,12,.8],[12,17,1.6],[17,27,2.4],[30,39,1.2],[52,63,0],[68,90,0]] as const;
 for(const [a,b,y]of RUMBLEWATER_BONUS_TERRACES)deck(a,b,y,'Sluicekeeper stepped aqueduct');
 // Climb a real stepped spillway, collecting three progressively taller caches.
-crate(1,0);crate(1,.96);crate(9,.8,'mystery');crate(14,1.6);crate(14,2.56);
+crate(1,0,'wood','TEACH / arrival harvest base');crate(1,.96,'wood','TEACH / arrival harvest support');crate(1,1.92,'mystery','REWARD / arrival harvest lid');
+crate(1.96,0,'wood','TEACH / arrival harvest foot');
+crate(9,.8,'mystery','LANDING / first carved stair');
+crate(14,1.6,'wood','TEST / second stair harvest base');crate(14,2.56,'mystery','REWARD / second stair harvest lid');
 crate(21,2.4,'bouncy','Kept arrow below the carved bell');
-crate(21,9.6,'life','Bell-tower high cache');
-crate(25,2.4,'mystery');
-// The switch reveals three separate stepping stones and their rewards.
+// Above an ordinary crate rebound + double from either neighboring support.
+// Preserve the arrow, take its boosted rebound, then double into the bell cache.
+crate(21,12,'life','Bell-tower high cache');
+for(const y of [7.2,9.6])C.push({t:'wumpa',p:[21,y,0],grp:2,nm:'Bell cache vertical arrow clue'});
+crate(25,2.4,'mystery','COUNT / bell terrace departure');
+// The switch reveals rewards on three permanent stepping stones.
 // Water remains between them: this is a short hop sequence, not a filled bridge.
 crate(35,1.2,'bang','Sluicekeeper island switch');
 for(const x of [41,45.5,50]){
- C.push({t:'platform',p:[x,.6,0],s:[3.4,1.2,5.4],dkind:'bw-flagstone-deck-v4',outline:true,tex:'stone',color:'#b3b6a2',grp:20,nm:'Revealed river stepping stone'});
+ C.push({t:'platform',p:[x,.6,0],s:[3.4,1.2,5.4],dkind:'bw-flagstone-deck-v4',tex:'stone',color:'#b3b6a2',grp:20,nm:'River stepping stone below outlined rewards'});
  C.push({t:'decor',dkind:'stoneshaft',p:[x,-8,0],s:[1.8,8,1.8],scenerySolid:true,grp:90,nm:'Grounded river-island pier'});
  prop('stonebase',[x,-8.7,0],[3.6,.8,3.6],0,'River-island pier footing');
  crate(x,1.2,'wood','Revealed island reward '+x,true);
+ crate(x,2.16,'mystery','Revealed island reward lid '+x,true);
 }
-crate(55,0);crate(55,.96);crate(56,0);crate(56,.96);crate(56,1.92);crate(57,0);crate(60,0,'mystery');
+crate(55,0);crate(55,.96);crate(56,0);crate(56,.96);crate(56,1.92);crate(57,0);
+for(const x of [59.04,60,60.96])crate(x,0,'mystery','REST / storehouse stock before falling timber');
 // A five-metre collapsing timber sluice is crossed before the final cache.
 for(const x of [63.9,65.5,67.1])C.push({t:'crumble',p:[x,0,0],s:[1.7,.6,6.4],shake:.85,speed:18,tex:'bridge-timber',grp:3,nm:'Falling sluice teeth'});
-crate(71,0);crate(74,0,'life');crate(78,0,'mystery');
+// Leave the receiving bank clear, then reward the crossing on safe ground.
+// The only life remains the order-dependent bell-tower cache.
+for(const x of [74,79])for(const [dx,y,kind]of [[-.48,0,'wood'],[.48,0,'wood'],[-.48,.96,'mystery'],[.48,.96,'mystery']] as const)
+ crate(x+dx,y,kind,'REWARD / return-court harvest wall '+x);
 C.push({t:'gate',p:[84,0,0],yaw:90,nm:'Return to the protected mill culvert'});
 for(const [a,b,y]of [[5,18,2.5],[26,31,4],[37,52,2.3],[62,69,1.8]])for(let x=a;x<=b;x+=2)
  C.push({t:'wumpa',p:[x,y+Math.sin((x-a)/(b-a)*Math.PI),0],grp:2});

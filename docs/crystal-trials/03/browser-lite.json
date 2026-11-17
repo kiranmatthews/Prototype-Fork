@@ -1,0 +1,410 @@
+{
+  "trial": 3,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "1e07ee3532fd932866c74cacee82017b41d7848b89404e2d6a6918b05333ae2b",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -507
+  ],
+  "installed": {
+    "id": 3,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 3,
+    "frame": 3140,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the viaduct checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 137,
+        "lastFrame": 228
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 273,
+        "lastFrame": 308
+      },
+      {
+        "name": "Oversteer while the rail still has a floor beneath it",
+        "firstFrame": 308,
+        "lastFrame": 332
+      },
+      {
+        "name": "Recover from the balance mistake on the approach deck",
+        "firstFrame": 332,
+        "lastFrame": 418
+      },
+      {
+        "name": "Set up on the safe rail approach",
+        "firstFrame": 418,
+        "lastFrame": 604
+      },
+      {
+        "name": "Catch the long viaduct rail",
+        "firstFrame": 649,
+        "lastFrame": 683
+      },
+      {
+        "name": "Balance across the open pit",
+        "firstFrame": 683,
+        "lastFrame": 1117
+      },
+      {
+        "name": "Pop from the needle onto its raised receiver",
+        "firstFrame": 1144,
+        "lastFrame": 1176
+      },
+      {
+        "name": "Brake on the crystal receiver",
+        "firstFrame": 1176,
+        "lastFrame": 1201
+      },
+      {
+        "name": "Collect the viaduct crystal",
+        "firstFrame": 1201,
+        "lastFrame": 1286
+      },
+      {
+        "name": "Read the lower return landing",
+        "firstFrame": 1304,
+        "lastFrame": 1385
+      },
+      {
+        "name": "Drop onto the one-way return landing",
+        "firstFrame": 1430,
+        "lastFrame": 1485
+      },
+      {
+        "name": "Join the return below the crystal deck",
+        "firstFrame": 1485,
+        "lastFrame": 1584
+      },
+      {
+        "name": "Follow the lower return outside the pit",
+        "firstFrame": 1602,
+        "lastFrame": 2155
+      },
+      {
+        "name": "Climb back to the observation promenade",
+        "firstFrame": 2173,
+        "lastFrame": 2437
+      },
+      {
+        "name": "Turn onto the upper return junction",
+        "firstFrame": 2455,
+        "lastFrame": 2546
+      },
+      {
+        "name": "Finish the local circuit at the approach",
+        "firstFrame": 2564,
+        "lastFrame": 2741
+      },
+      {
+        "name": "Test a missed crossing by running into the visible pit",
+        "firstFrame": 2759,
+        "lastFrame": 3007
+      },
+      {
+        "name": "Respawn at the banked viaduct checkpoint",
+        "firstFrame": 3007,
+        "lastFrame": 3140
+      }
+    ],
+    "evidence": [
+      {
+        "action": "balance miss recovers on safe deck",
+        "position": [
+          -1.0860314602488715e-05,
+          0,
+          -528.1152946677792
+        ]
+      },
+      {
+        "action": "long rail crossing",
+        "seconds": 7.233333333333333,
+        "position": [
+          0,
+          1.3499999999999999,
+          -582.0999999999593
+        ],
+        "balance": -0.07253225974650072,
+        "speed": 8.999999999994415
+      },
+      {
+        "action": "receiver crystal",
+        "position": [
+          -4.5172260092872634e-07,
+          3.1,
+          -595.9345537182545
+        ]
+      },
+      {
+        "action": "pit recovery preserves crystal",
+        "position": [
+          -4,
+          0.1,
+          -507
+        ],
+        "deaths": 0,
+        "livesBefore": 4,
+        "livesAfter": 3
+      }
+    ],
+    "position": [
+      -4,
+      0.1,
+      -507
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Respawn at the banked viaduct checkpoint",
+    "pitDeathObserved": true,
+    "expectedDeaths": 0,
+    "result": {
+      "id": 3,
+      "collected": 1,
+      "position": [
+        -4,
+        0.1,
+        -507
+      ],
+      "frames": 3140
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        -4,
+        0,
+        -507
+      ],
+      "camera": [
+        -4,
+        7.419511492363866,
+        -491.9458014101004
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            -0.010777375939841561,
+            0.7907857970387089,
+            1.00093681493098
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.05863900436181628,
+            0.7662882574144988,
+            1.0014505256140158
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            0.01613155273197262,
+            0.8062197869287127,
+            0.9998464885445834
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            0.030249164842301796,
+            0.8054914447488039,
+            1.0001229958463547
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            0.0064384979235709815,
+            0.7988754793679373,
+            1.0002392426951217
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            0.004867330625947175,
+            0.789799406343501,
+            1.000302905027537
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            0.009903387884588272,
+            0.7973119051748464,
+            1.0003396143657166
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            0.008337837326024888,
+            0.7929969692910537,
+            1.00036498826453
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            0.0028510239821479826,
+            0.7844739996502541,
+            1.00038460401911
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            0.002434750991614469,
+            0.7863083217424244,
+            1.000401471038643
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.007028122755838532,
+            0.7983781184493102,
+            1.000408997536369
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            0.0020007581883313636,
+            0.8014169937189742,
+            1.0004190560495776
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            0.0018082835491819462,
+            0.795188613375062,
+            1.0004268549545556
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            0.0012599155968394597,
+            0.7930707473164479,
+            1.0004320574523204
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            0.004884430640858561,
+            0.795806765252484,
+            1.0004367929091929
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            0.00354267757061064,
+            0.7919797417883266,
+            1.0004427065456565
+          ]
+        },
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            0.0013445509397893593,
+            0.7976553695687453,
+            1.0004456449965682
+          ]
+        },
+        {
+          "name": "19 / Crumbling steps and bounce crate",
+          "screen": [
+            0.0031356621806796193,
+            0.7972563109723249,
+            1.0004493033094997
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            0.0026706707701057717,
+            0.798097667132879,
+            1.000452030250434
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.0027752285717804388,
+            0.7915395853122102,
+            1.0004551450920416
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            0.0026452536161182417,
+            0.8022110097367395,
+            1.0004572516809058
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.002268960735022474,
+            0.8012542180572375,
+            1.0004592644465424
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.002367336262266511,
+            0.7981940798233347,
+            1.0004617560686924
+          ]
+        },
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.003404538551432132,
+            0.8081035034253292,
+            1.0004633386469675
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

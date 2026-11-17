@@ -36,6 +36,13 @@ export function harbourPilot(boats) {
      const x=boat.x+Math.sin(t*boat.speed+boat.phase)*boat.amp;
      return{stage:label,input:controls({moveX:ahead(x,p,.4),jumpHeld:true})};
     }
+    // Nets now launch on an airborne landing. Walk onto the centre, then
+    // release an ordinary charged hop before holding Jump for the rebound.
+    if(p.grounded&&p.surface===`Mooring spring ${a}`&&Math.abs(a-p.at[0])<.35){
+     charge??=p.time;
+     if(p.time-charge>=.4){charge=null;return{stage:label,input:controls({})};}
+     return{stage:label,input:controls({jumpHeld:true})};
+    }
     return{stage:label,input:controls({moveX:ahead(a,p),jumpHeld:Math.abs(a-p.at[0])<4})};
    }
    if(kind==='ferry'){

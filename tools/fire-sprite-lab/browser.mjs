@@ -18,19 +18,19 @@ function difference(a,b){assert.equal(a.data.length,b.data.length);let changed=0
 try{
   // Lite fast path, then the actual full renderer and every arrangement.
   await page.goto(new URL('fire-sprite-lab.html?lite',base).href);await page.waitForFunction(()=>window.__fireLab?.state.ready);await settle();
-  assert.equal(await page.evaluate(()=>window.__fireLab.renderer.shadowMap.enabled),false);await snapshot('collection-lite');report.checks.push('Lite renderer opens all eight exhibits');
+  assert.equal(await page.evaluate(()=>window.__fireLab.renderer.shadowMap.enabled),false);assert.equal(await page.evaluate(()=>window.__fireLab.state.walking.active),true);await page.locator('#overview').click();await settle();await snapshot('collection-lite');report.checks.push('Lite renderer opens all eight exhibits');
   await page.goto(new URL('fire-sprite-lab.html',base).href);await page.waitForFunction(()=>window.__fireLab?.state.ready);await settle();
   assert.match(await page.locator('#build-stamp').innerText(),/Codex\/sol fork/);
   assert.equal(await page.evaluate(()=>window.__fireLab.renderer.shadowMap.enabled),true);
-  const initial=await page.evaluate(()=>window.__fireLab.state);assert.equal(initial.spriteCount,99);assert.equal(initial.heat.dropped,0);assert.equal(initial.heat.sources,8);
+  const courtyard=await page.evaluate(()=>window.__fireLab.state);assert.equal(courtyard.walking.active,true);assert.equal(courtyard.spriteCount,41);await snapshot('courtyard-native');await page.locator('#overview').click();await settle();const initial=await page.evaluate(()=>window.__fireLab.state);assert.equal(initial.spriteCount,34);assert.equal(initial.heat.dropped,0);assert.equal(initial.heat.sources,8);
   await snapshot('collection-native');
   for(let i=0;i<8;i++){
     await page.locator('.exhibit').nth(i).click();await settle();
     const state=await page.evaluate(()=>window.__fireLab.state);assert.equal(state.selected,i);assert.equal(state.heat.sources,1);assert.ok(state.heat.visible>0&&state.heat.visible<=36);
-    assert.equal(await page.evaluate(()=>new Set(window.__fireLab.fires.map(f=>f.uniforms.atlas.value)).size),3);
+    assert.equal(await page.evaluate(()=>new Set(window.__fireLab.fires.map(f=>f.uniforms.atlas.value)).size),2);
     await snapshot(`exhibit-${i+1}`);report.exhibits.push({name:await page.locator('#exhibit-name').innerText(),sprites:await page.evaluate(i=>window.__fireLab.fires[i].spriteCount,i),heat:state.heat});
   }
-  report.checks.push('All eight arrangements, three shared native cycle textures, selected exhibit isolation, live heat sources');
+  report.checks.push('All eight arrangements, two shared native cycle textures, selected exhibit isolation, live heat sources');
   await page.locator('.exhibit').nth(0).click();await settle();await page.evaluate(()=>window.__fireLab.setTime(1.25));await page.waitForTimeout(120);
   const frozenA=await canvasPixels();const timeA=await page.evaluate(()=>window.__fireLab.state.time);await page.waitForTimeout(250);const frozenB=await canvasPixels();
   assert.equal(await page.evaluate(()=>window.__fireLab.state.time),timeA);assert.equal(difference(frozenA,frozenB).changed,0);
@@ -44,7 +44,7 @@ try{
   await page.locator('#reset').click();assert.equal(await page.evaluate(()=>window.__fireLab.state.hues[0]),0);
   await page.locator('#grid').uncheck();await snapshot('plain-backdrop');await page.locator('#grid').check();
   await page.locator('#source-only').check();assert.ok(await page.evaluate(()=>window.__fireLab.fires.every(f=>f.sourceOnly)));
-  for(let i=0;i<3;i++){await page.locator('.exhibit').nth(i).click();await settle();await page.locator('#drawing-frame').fill('11');await page.locator('#drawing-frame').dispatchEvent('input');await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),11);await page.locator('#step').click();await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),0);}
+  for(let i=0;i<3;i++){await page.locator('.exhibit').nth(i).click();await settle();const last=Number(await page.locator('#drawing-frame').getAttribute('max'));await page.locator('#drawing-frame').fill(String(last));await page.locator('#drawing-frame').dispatchEvent('input');await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),last);await page.locator('#step').click();await page.waitForTimeout(50);assert.equal(await page.evaluate(()=>window.__fireLab.state.frame),0);}
   await page.locator('#source-only').uncheck();
   await page.locator('#interpolate').uncheck();assert.ok(await page.evaluate(()=>window.__fireLab.fires.every(f=>f.uniforms.blendFrames.value===0)));await page.locator('#interpolate').check();
   report.checks.push('Pixel-exact pause, advancing frames, playback, hue change, heat on/off, zero-strength identity, frame blend toggle');

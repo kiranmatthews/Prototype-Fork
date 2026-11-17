@@ -1,0 +1,6 @@
+PASS complete After Hours: 70.98333333333333s, eight required chapters, actual moving/phase/grind contacts, all-board normal-mode finish.
+PASS rejected forward bypass at 0.0, -35.5, -60.8 (dead).
+PASS rejected gate-homing bypass at 13.2, -35.7, -58.1 (dead).
+PASS rejected automatic-ollies bypass at 0.0, -35.2, -74.4 (dead).
+PASS rejected homing-ollies bypass at 21.6, -35.2, -101.4 (dead).
+PASS legacy map import, custom coordinate preservation and unchanged sequel identity.

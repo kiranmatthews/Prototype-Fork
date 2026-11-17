@@ -1,0 +1,444 @@
+[
+  {
+    "mode": "lite",
+    "errors": [],
+    "inventory": {
+      "physical": 62,
+      "total": 90,
+      "bonus": 24,
+      "checkpoints": 5,
+      "enemies": 0
+    },
+    "bonusPlatform": {
+      "x": 2.7,
+      "y": 2.384185793236071e-08,
+      "z": -633.6538944052863,
+      "laneFraction": 0.5,
+      "topY": 1.050000023841858,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "opening": {
+      "done": true,
+      "frames": 37,
+      "state": "ride",
+      "crates": 2,
+      "lives": 4,
+      "position": [
+        0.5715384288484212,
+        -29.37638829755131,
+        62.14269235672737
+      ],
+      "collected": 2,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "frames": 57,
+      "state": "ride",
+      "crates": 1,
+      "lives": 4,
+      "position": [
+        0,
+        2.384185793236071e-08,
+        -824.1638888888887
+      ],
+      "collected": 0,
+      "checkpoint": true
+    },
+    "afterCheckpoint": {
+      "done": true,
+      "frames": 328,
+      "state": "ride",
+      "crates": 6,
+      "lives": 4,
+      "position": [
+        2.5507140747415833,
+        2.384185793236071e-08,
+        -832.4102127540591
+      ],
+      "collected": 5,
+      "checkpoint": false
+    },
+    "recovery": {
+      "lives": 3,
+      "alive": 5,
+      "armed": true
+    },
+    "finish": {
+      "done": true,
+      "frames": 113,
+      "state": "finished",
+      "crates": 0,
+      "lives": 4,
+      "position": [
+        -0.3859223916779209,
+        -11.335405779488934,
+        -1352.4594210972787
+      ],
+      "collected": 0,
+      "checkpoint": false
+    },
+    "bonusJourney": {
+      "done": true,
+      "frame": 1588,
+      "state": "finished",
+      "crates": 24,
+      "deaths": 0,
+      "report": {
+        "actions": [
+          {
+            "name": "approach harvest group -9",
+            "firstFrame": 20,
+            "lastFrame": 92
+          },
+          {
+            "name": "harvest group -9",
+            "firstFrame": 112,
+            "lastFrame": 112
+          },
+          {
+            "name": "approach harvest group -4",
+            "firstFrame": 134,
+            "lastFrame": 233
+          },
+          {
+            "name": "harvest group -4",
+            "firstFrame": 253,
+            "lastFrame": 253
+          },
+          {
+            "name": "first terrace departure",
+            "firstFrame": 275,
+            "lastFrame": 380
+          },
+          {
+            "name": "first short gap",
+            "firstFrame": 425,
+            "lastFrame": 463
+          },
+          {
+            "name": "approach harvest group 7",
+            "firstFrame": 463,
+            "lastFrame": 515
+          },
+          {
+            "name": "harvest group 7",
+            "firstFrame": 535,
+            "lastFrame": 535
+          },
+          {
+            "name": "approach harvest group 13",
+            "firstFrame": 557,
+            "lastFrame": 664
+          },
+          {
+            "name": "harvest group 13",
+            "firstFrame": 684,
+            "lastFrame": 684
+          },
+          {
+            "name": "approach harvest group 18",
+            "firstFrame": 706,
+            "lastFrame": 805
+          },
+          {
+            "name": "harvest group 18",
+            "firstFrame": 825,
+            "lastFrame": 825
+          },
+          {
+            "name": "second terrace departure",
+            "firstFrame": 847,
+            "lastFrame": 921
+          },
+          {
+            "name": "second short gap",
+            "firstFrame": 966,
+            "lastFrame": 1006
+          },
+          {
+            "name": "approach harvest group 25",
+            "firstFrame": 1006,
+            "lastFrame": 1058
+          },
+          {
+            "name": "harvest group 25",
+            "firstFrame": 1078,
+            "lastFrame": 1078
+          },
+          {
+            "name": "approach harvest group 34",
+            "firstFrame": 1100,
+            "lastFrame": 1230
+          },
+          {
+            "name": "harvest group 34",
+            "firstFrame": 1250,
+            "lastFrame": 1250
+          },
+          {
+            "name": "approach harvest group 45",
+            "firstFrame": 1272,
+            "lastFrame": 1418
+          },
+          {
+            "name": "harvest group 45",
+            "firstFrame": 1438,
+            "lastFrame": 1438
+          },
+          {
+            "name": "last count before return",
+            "firstFrame": 1460,
+            "lastFrame": 1552
+          }
+        ],
+        "evidence": [
+          {
+            "action": "harvest group -9",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "harvest group -4",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "first short gap",
+            "launch": [
+              0.6244333333333466,
+              0,
+              0
+            ],
+            "landing": [
+              5.067433333333345,
+              0.349999952316284,
+              0
+            ],
+            "ground": "platform"
+          },
+          {
+            "action": "harvest group 7",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "harvest group 13",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "harvest group 18",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "second short gap",
+            "launch": [
+              18.822111111111198,
+              0.349999952316284,
+              0
+            ],
+            "landing": [
+              23.071611111111167,
+              0,
+              0
+            ],
+            "ground": "platform"
+          },
+          {
+            "action": "harvest group 25",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "harvest group 34",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "harvest group 45",
+            "before": {
+              "alive": true,
+              "pending": false,
+              "bangUsed": false
+            },
+            "after": {
+              "alive": false,
+              "pending": false,
+              "bangUsed": false
+            }
+          },
+          {
+            "action": "all crates in the active stage",
+            "totalCrates": 24,
+            "activeStageCrates": 24,
+            "bonusCrateTotal": 0,
+            "cratesBroken": 24,
+            "remaining": 0
+          }
+        ],
+        "stage": "cross the real finish gate"
+      }
+    },
+    "bonusBanked": {
+      "count": 24,
+      "completed": true,
+      "sameParent": true,
+      "grounded": true
+    },
+    "passed": true
+  },
+  {
+    "mode": "full",
+    "errors": [],
+    "inventory": {
+      "physical": 62,
+      "total": 90,
+      "bonus": 24,
+      "checkpoints": 5,
+      "enemies": 0
+    },
+    "bonusPlatform": {
+      "x": 2.7,
+      "y": 2.384185793236071e-08,
+      "z": -633.6538944052863,
+      "laneFraction": 0.5,
+      "topY": 1.050000023841858,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "views": [
+      {
+        "name": "tunnel",
+        "position": [
+          0,
+          -30.707111611554755,
+          68
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "arrival",
+        "position": [
+          0,
+          2.384185793236071e-08,
+          -80
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "sixth-refuge",
+        "position": [
+          0,
+          2.384185793236071e-08,
+          -818
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "eighth-refuge",
+        "position": [
+          0,
+          2.384185793236071e-08,
+          -1040
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "grid-explosives",
+        "position": [
+          0,
+          2.384185793236071e-08,
+          -548
+        ],
+        "state": "ride",
+        "grounded": true,
+        "size": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true
+  }
+]

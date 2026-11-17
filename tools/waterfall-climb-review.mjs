@@ -92,10 +92,10 @@ try{
   await ready('waterfall-climb');await page.waitForTimeout(500);const failed=await snapshot('bonus-failure-return');
   assert.equal(failed.bonusComplete,false);assert.equal(failed.bonusCrates,0);assert.equal(failed.lives,parent.lives);assert.equal(failed.crates,parent.crates);
   await pilot('enter');await ready('bonus:waterfall-climb');const complete=await pilot('bonus');await ready('waterfall-climb');await page.waitForTimeout(800);
-  const paid=await snapshot('bonus-success-return');assert.ok(paid.grounded);assert.equal(paid.bonusCrates,22);assert.equal(paid.bonusComplete,true);assert.equal(paid.crates,parent.crates);
+  const paid=await snapshot('bonus-success-return');assert.ok(paid.grounded);assert.equal(paid.bonusCrates,46);assert.equal(paid.bonusComplete,true);assert.equal(paid.crates,parent.crates);
   assert.ok(await page.evaluate(()=>window.waterfallParent===window.__game.getLevel()));
   assert.ok(await page.evaluate(()=>window.waterfallParentTuning===JSON.stringify(window.__game.TUNING)));
   assert.equal(complete.result.completionScope,'bonus-detour');assert.equal(complete.result.gemEarned,false);assert.deepEqual(errors,[]);
-  console.log('PASS actual jump entry, free failed return, retry, 22-box bonus, real payout and same-parent restoration');
+  console.log('PASS actual jump entry, free failed return, retry, 46-box bonus, real payout and same-parent restoration');
  }
 }finally{await writeFile(`${out}/${mode}-review.json`,JSON.stringify({evidence,errors},null,2));await browser.close();}

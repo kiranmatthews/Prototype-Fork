@@ -26,7 +26,7 @@ try{
    const {runThemedBonusJourney}=await import(new URL('tools/themed-bonus-pilot.mjs',source).href);
    const course=THEMED_BONUS_COURSES.find(c=>c.id===id);p.respawn(l,true);
    const report=window.bonusJourney={id,stage:'start',frame:0,done:false,failed:null,actions:[],evidence:[],trace:[],tuning:JSON.stringify(g.TUNING),raf:[]};
-   const ctx={id,p,l,course,source:course.data,report,trace:report.trace,get frame(){return report.frame;}};
+   const ctx={id,p,l,course,TUNING:g.TUNING,source:course.data,report,trace:report.trace,get frame(){return report.frame;}};
    const generator=runThemedBonusJourney(ctx);let next=generator.next(),last={},advanced=false;
    const step=p.step.bind(p),commit=p.commitRenderStep.bind(p);
    const snapshot=()=>({frame:report.frame,position:p.pos.toArray(),state:p.state,grounded:p.grounded,deaths:p.totalDeaths,lives:p.lives,crates:p.cratesBroken,gem:p.gemEarned});

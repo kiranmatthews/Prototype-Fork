@@ -1,0 +1,214 @@
+{
+  "course": "rumblewater-run",
+  "bonus": "bonus-rumblewater-run",
+  "date": "2026-11-14",
+  "source_commit_before_changes": "08c5661f",
+  "source": "Source-owned Ripcord River and Sluicekeeper data; public/levels.json unchanged.",
+  "main_native_routes": [
+    {
+      "route": "inner-low",
+      "frames": 5410,
+      "seconds": 90.16666666666667,
+      "state": "finished",
+      "deaths": 0,
+      "crystal": true,
+      "checkpoints": 4,
+      "crates": 4
+    },
+    {
+      "route": "outer-high",
+      "frames": 5436,
+      "seconds": 90.6,
+      "state": "finished",
+      "deaths": 0,
+      "crystal": true,
+      "checkpoints": 4,
+      "crates": 4
+    }
+  ],
+  "main_staged_native_cargo": {
+    "supported": 50,
+    "harvested": 50,
+    "fixtures": [
+      {
+        "fixture": "Terrace vault",
+        "harvested": 13,
+        "deaths": 0
+      },
+      {
+        "fixture": "Twinwater gatehouse",
+        "harvested": 10,
+        "deaths": 0
+      },
+      {
+        "fixture": "Willow culvert",
+        "harvested": 10,
+        "deaths": 0
+      },
+      {
+        "fixture": "Thunder watch",
+        "harvested": 10,
+        "deaths": 0
+      },
+      {
+        "fixture": "Sanctuary",
+        "harvested": 7,
+        "deaths": 0
+      }
+    ],
+    "checkpointRestore": true
+  },
+  "bonus_native": {
+    "result": {
+      "state": "finished",
+      "cratesBroken": 33,
+      "totalCrates": 33,
+      "deaths": 0,
+      "gem": true
+    },
+    "frames": 3427
+  },
+  "bonus_wrong_order": [
+    {
+      "kind": "departure-box",
+      "lifeRemains": true,
+      "highest": 11.157040833586553,
+      "lifeBase": 12,
+      "deaths": 0,
+      "retryRestores": true
+    },
+    {
+      "kind": "middle-stack",
+      "lifeRemains": true,
+      "highest": 11.533516564864708,
+      "lifeBase": 12,
+      "deaths": 0,
+      "retryRestores": true
+    }
+  ],
+  "wrong_order_fixture_notes": "Departure-box trial consumes the arrow with ordinary spin input, then attempts an ordinary-box rebound and double. Middle-stack trial starts beside that stack with the actual arrow consumed as fixture setup; all movement, stomp and double-jump inputs are native. Both maximum character silhouettes remain below the life base. Full reset restores all crates and pending outlines.",
+  "checks": {
+    "npm run check:levels": "passed",
+    "git diff --check": "passed",
+    "npm run build": "passed",
+    "source bonus normalization, resolution and tally": "passed",
+    "npm run check:release": {
+      "passed": true,
+      "bytes": 945598322,
+      "budget_bytes": 1000000000
+    },
+    "native completed-bonus retry": "passed: all consumed crates and outlined rewards restore; permanent island support remains"
+  },
+  "limitations": [
+    "Main native routes collect the four checkpoints and demonstrate traversal. All 50 cargo boxes are harvested in separate staged shelter/sanctuary trials, not one continuous all-box run.",
+    "Full-render views use staged starts.",
+    "Initial continuous main browser trials were interrupted by source hot reload or stopped because parallel software rendering was too slow. Final main browser proof uses staged harvest, checkpoint/fall recovery and finish checks.",
+    "Native headless tests suppress remote art fetches and emit fallback-art diagnostics. Actual browser consoles are checked separately."
+  ],
+  "reproduce": [
+    "RIPCORD_OUTPUT=<scratch> node tools/test-ripcord-crate-grammar.mjs",
+    "RIPCORD_OUTPUT=<scratch> node tools/test-sluicekeeper-order.mjs",
+    "RIPCORD_OUTPUT=<scratch> node tools/test-rumblewater-bonus.mjs",
+    "node tools/crate-placement-report.mjs --levels rumblewater-run,bonus-rumblewater-run --json <scratch>/audit.json --md <scratch>/audit.md"
+  ],
+  "bonus_browser": [
+    {
+      "mode": "bonus-lite",
+      "spawn": [
+        -7,
+        -2.384185793236071e-08,
+        0
+      ],
+      "journey": {
+        "done": true,
+        "failed": null,
+        "frame": 3428,
+        "stage": "return through the temple gate",
+        "result": {
+          "state": "finished",
+          "cratesBroken": 33,
+          "totalCrates": 33,
+          "deaths": 0,
+          "gem": true
+        }
+      },
+      "passed": true,
+      "errors": []
+    },
+    {
+      "mode": "bonus-full",
+      "spawn": [
+        -7,
+        -2.384185793236071e-08,
+        0
+      ],
+      "views": [
+        "bell",
+        "islands",
+        "storehouse",
+        "return-court"
+      ],
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "bonus_retry": {
+    "crates": true,
+    "outlineRewards": true,
+    "permanentIslandSupport": true
+  },
+  "main_browser_full": {
+    "mode": "main-full",
+    "spawn": [
+      0,
+      21.999999999809393,
+      0
+    ],
+    "views": [
+      "shelter-1",
+      "shelter-2",
+      "shelter-3",
+      "shelter-4",
+      "sanctuary"
+    ],
+    "passed": true,
+    "errors": []
+  },
+  "main_browser_lite": {
+    "mode": "main-lite",
+    "checks": [
+      "supported source spawn",
+      "keyboard spin collects native shelter cargo",
+      "keyboard spin activates sheltered checkpoint",
+      "real fall costs one life and returns to the checkpoint",
+      "ordinary keyboard movement enters actual finish gate"
+    ],
+    "spawn": [
+      0,
+      21.999999999809393,
+      0
+    ],
+    "livesBefore": 4,
+    "recovery": {
+      "lives": 3,
+      "position": [
+        10.7594,
+        10.119999710083007,
+        -360
+      ],
+      "checkpoint": true
+    },
+    "passed": true,
+    "errors": []
+  },
+  "browser_fixture_notes": "Keyboard actions are held across frames. Ripcord uses ArrowDown for downstream travel in its camera-facing lane. The finish fixture is a fresh staged start; it is not a continuous run after the fall.",
+  "validated_at": "2026-11-14T05:33:43+00:00",
+  "timing": {
+    "started_at": "2026-11-14T04:49:13+00:00",
+    "final_full_browser_at": "2026-11-14T05:30:00+00:00",
+    "evidence_packaged_at": "2026-11-14T05:33:43+00:00",
+    "elapsed_minutes_through_packaging": 44.5,
+    "requested_main_plus_bonus_minutes": 20,
+    "over_budget": true
+  }
+}

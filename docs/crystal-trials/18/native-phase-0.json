@@ -1,0 +1,186 @@
+{
+  "id": 18,
+  "phaseDelay": 0,
+  "actions": [
+    {
+      "name": "Bank challenge 18 checkpoint",
+      "firstFrame": 12,
+      "lastFrame": 93
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 137,
+      "lastFrame": 378
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 404,
+      "lastFrame": 432
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 433,
+      "lastFrame": 436
+    },
+    {
+      "name": "An early low release returns to the flat courtyard",
+      "firstFrame": 465,
+      "lastFrame": 508
+    },
+    {
+      "name": "Wait below climbing rope 1",
+      "firstFrame": 508,
+      "lastFrame": 610
+    },
+    {
+      "name": "Read rope 1 crossing its low point",
+      "firstFrame": 636,
+      "lastFrame": 654
+    },
+    {
+      "name": "Catch climbing rope 1",
+      "firstFrame": 655,
+      "lastFrame": 658
+    },
+    {
+      "name": "Climb rope 1 above its receiving platform",
+      "firstFrame": 660,
+      "lastFrame": 863
+    },
+    {
+      "name": "Wait for rope 1 to swing toward the landing",
+      "firstFrame": 889,
+      "lastFrame": 935
+    },
+    {
+      "name": "Release onto receiving platform 1",
+      "firstFrame": 936,
+      "lastFrame": 976
+    },
+    {
+      "name": "Wait below climbing rope 2",
+      "firstFrame": 1076,
+      "lastFrame": 1216
+    },
+    {
+      "name": "Read rope 2 crossing its low point",
+      "firstFrame": 1242,
+      "lastFrame": 1664
+    },
+    {
+      "name": "Catch climbing rope 2",
+      "firstFrame": 1665,
+      "lastFrame": 1675
+    },
+    {
+      "name": "Climb rope 2 above its receiving platform",
+      "firstFrame": 1677,
+      "lastFrame": 1864
+    },
+    {
+      "name": "Wait for rope 2 to swing toward the landing",
+      "firstFrame": 1890,
+      "lastFrame": 2146
+    },
+    {
+      "name": "Release onto receiving platform 2",
+      "firstFrame": 2147,
+      "lastFrame": 2187
+    },
+    {
+      "name": "Collect the crystal above both climbs",
+      "firstFrame": 2187,
+      "lastFrame": 2264
+    },
+    {
+      "name": "Drop beside both raised platforms into the courtyard",
+      "firstFrame": 2309,
+      "lastFrame": 2372
+    },
+    {
+      "name": "Walk around both climbing ropes",
+      "firstFrame": 2372,
+      "lastFrame": 2839
+    },
+    {
+      "name": "Finish the two-rope circuit",
+      "firstFrame": 2857,
+      "lastFrame": 2995
+    }
+  ],
+  "evidence": [
+    {
+      "action": "rope 1 high landing",
+      "position": [
+        -0.0194251511334923,
+        9.200000005960463,
+        -25.635555389982287
+      ]
+    },
+    {
+      "action": "moving rest carries the player before the second climb",
+      "distance": 3.22541252712944
+    },
+    {
+      "action": "rope 2 high landing",
+      "position": [
+        0.05810413140253996,
+        18.4,
+        -44.65520980478463
+      ]
+    }
+  ],
+  "passed": true,
+  "stage": "Finish the two-rope circuit",
+  "result": {
+    "frame": 3013,
+    "time": 50.21666666666667,
+    "position": [
+      0.0634521495098426,
+      0,
+      4.9963368454764705
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

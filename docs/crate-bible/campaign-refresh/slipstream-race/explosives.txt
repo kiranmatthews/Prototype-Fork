@@ -1,0 +1,2 @@
+PASS skate: pickups, full slot, respawn, deck, TNT unlit persistence/attachment/relay/no fuse reset/owner damage/shield/star, Nitro contact/air dodge, chain, interception, horn, cleanup, trials, campaign unchanged
+PASS golf-cart: pickups, full slot, respawn, deck, TNT unlit persistence/attachment/relay/no fuse reset/owner damage/shield/star, Nitro contact/air dodge, chain, interception, horn, cleanup, trials, campaign unchanged

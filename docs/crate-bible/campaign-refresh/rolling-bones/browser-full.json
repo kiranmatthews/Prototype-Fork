@@ -1,0 +1,123 @@
+{
+  "mode": "full",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 118,
+    "total": 105,
+    "bonus": 22,
+    "checkpoints": 6,
+    "enemies": 0
+  },
+  "views": [
+    {
+      "name": "first-shelter",
+      "position": [
+        -15.4698,
+        13.878999710083008,
+        -319
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -17.53178733047578,
+        19.579,
+        -336.8815046415217
+      ],
+      "cameraQuaternion": [
+        0.007879867707274215,
+        0.9888914831518508,
+        0.13712070888677813,
+        -0.056828280187210645
+      ],
+      "drawCalls": 631,
+      "frame": 11
+    },
+    {
+      "name": "bonus-shelter",
+      "position": [
+        -28.1185,
+        -5.496699810028076,
+        -734
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        -31.917373318502946,
+        0.20330000000000048,
+        -751.5945605659808
+      ],
+      "cameraQuaternion": [
+        0.014575743532459022,
+        0.984929472098722,
+        0.13657133114530157,
+        -0.1051178110550701
+      ],
+      "drawCalls": 714,
+      "frame": 24
+    },
+    {
+      "name": "bonus-gallery",
+      "position": [
+        19,
+        5.999999976158142,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        19,
+        14.35149114233785,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898023,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 157,
+      "frame": 36
+    },
+    {
+      "name": "bonus-arrow",
+      "position": [
+        57.6,
+        5.999999976158142,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "size": [
+        1280,
+        720
+      ],
+      "camera": [
+        57.6,
+        14.35149114233785,
+        25.820309867674464
+      ],
+      "cameraQuaternion": [
+        -0.05878417701898023,
+        0,
+        0,
+        0.9982707150528864
+      ],
+      "drawCalls": 169,
+      "frame": 51
+    }
+  ],
+  "passed": true
+}

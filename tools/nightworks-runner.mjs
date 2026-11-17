@@ -20,7 +20,8 @@ export async function withAfterHoursRuntime(run, options = {}) {
     const { Player } = await server.ssrLoadModule('/src/player.ts');
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
     const authored = await server.ssrLoadModule('/src/levels/nightworks-after-hours.ts');
-    const source={...authored,AFTER_HOURS_CUTBACK_PATH:vertRampSpine(authored.NIGHTWORKS_AFTER_HOURS_LEVEL.components.find(c=>c.nm==='Four quarry cutbacks')).map(q=>[q.x,q.y,q.z])};
+    const data=options.sourceData??authored.NIGHTWORKS_AFTER_HOURS_LEVEL;
+    const source={...authored,NIGHTWORKS_AFTER_HOURS_LEVEL:data,AFTER_HOURS_CUTBACK_PATH:vertRampSpine(data.components.find(c=>c.nm==='Four quarry cutbacks')).map(q=>[q.x,q.y,q.z])};
     const scene = new THREE.Scene();
     level = new Level(scene, { id: 'nightworks-after-hours', name: source.NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: source.NIGHTWORKS_AFTER_HOURS_LEVEL });
     level.update(options.timeOffset??0); scene.updateMatrixWorld(true);

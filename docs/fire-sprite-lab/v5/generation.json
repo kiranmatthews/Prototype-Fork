@@ -1,0 +1,95 @@
+{
+  "status": "V5 SHARED PAINT \u2014 source motion preserved under explicit user authorization",
+  "sourceSequence": "torch-source.json",
+  "frames": [
+    {
+      "file": "art/fire-sprites/v5/pilot/0049.png",
+      "sourceFrame": 49,
+      "sourceTime": 0.8,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/torch-frames/0049.png",
+      "prompt": "prompts/torch-source-0049.txt",
+      "sha256": "edd0a5568b5692692e86b50c84b3d93b2c721fa4f5881288bee71a6247783fa9",
+      "width": 953,
+      "height": 1651,
+      "review": "rejected: highest reference remnants clipped by source crop"
+    },
+    {
+      "file": "art/fire-sprites/v5/pilot/0049-r2.png",
+      "sourceFrame": 49,
+      "sourceTime": 0.8,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/torch-inputs/0049.png",
+      "prompt": "prompts/torch-source-0049-r2.txt",
+      "sha256": "f8f7dd3dd0c47bd0fed87353131f55f34679b1602c4c2a006020dd416ba5e641",
+      "width": 887,
+      "height": 1774,
+      "review": "rejected: false lower-right hole reconstructed from torch occlusion"
+    },
+    {
+      "file": "art/fire-sprites/v5/pilot/0049-r3.png",
+      "sourceFrame": 49,
+      "sourceTime": 0.8,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/torch-inputs/0049.png",
+      "prompt": "prompts/torch-source-0049-r3.txt",
+      "sha256": "f6d635125317f05b79411b7eb7d9f8dae284d7e290b0f240fab6ef3fd62d86e6",
+      "width": 953,
+      "height": 1651,
+      "review": "rejected: canvas changed and paint remains too opaque; no temporal sequence approved"
+    },
+    {
+      "file": "art/fire-sprites/v5/pilot/direct-basin-260.png",
+      "sourceTime": 260,
+      "sourceInput": "/private/tmp/fire-v4-reference/direct-basin-square-260.png",
+      "prompt": "prompts/direct-basin-260.txt",
+      "sha256": "8c52c1a89fb1219c201956cb6ed7a1ff045ce189e6af32ce37b9587c7889c15a",
+      "width": 1254,
+      "height": 1254,
+      "review": "rejected: improves palette, but expands/redesigns the captured flame outline; unsuitable as exact temporal extraction"
+    },
+    {
+      "file": "art/fire-sprites/v5/clean-pilot/120.png",
+      "sourceSequence": "Unity Labs Flame03",
+      "sourceFrame": 120,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/unity-Flame03-inputs/120.png",
+      "prompt": "prompts/clean-120.txt",
+      "sha256": "66da2d1571bfb406dcdd3b82a9ffa098dc6fccd32247b881ec93d7b1997ec0a5",
+      "width": 1254,
+      "height": 1254,
+      "review": "selected only as SHARED PALETTE ART; not used as an animation cel or silhouette"
+    },
+    {
+      "file": "art/fire-sprites/v5/clean-pilot/122.png",
+      "sourceSequence": "Unity Labs Flame03",
+      "sourceFrame": 122,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/unity-Flame03-inputs/122.png",
+      "prompt": "prompts/clean-122.txt",
+      "sha256": "e06daf3f0543359908e3260a576a4fb589771cfe7127ef99b1223e07ff3087bd",
+      "width": 1254,
+      "height": 1254,
+      "review": "rejected as independently redrawn animation: adjacent repaints do not retain source contours and consistent detail"
+    },
+    {
+      "file": "art/fire-sprites/v5/clean-pilot/124.png",
+      "sourceSequence": "Unity Labs Flame03",
+      "sourceFrame": 124,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/unity-Flame03-inputs/124.png",
+      "prompt": "prompts/clean-124.txt",
+      "sha256": "021bed9aed421848f34fa4793f5be8eec350c8a55cc3e1088eeedc7c6b1e1199",
+      "width": 1254,
+      "height": 1254,
+      "review": "rejected as temporal redraw: contour/paint inconsistency; 126 also introduces a halo"
+    },
+    {
+      "file": "art/fire-sprites/v5/clean-pilot/126.png",
+      "sourceSequence": "Unity Labs Flame03",
+      "sourceFrame": 126,
+      "sourceInput": "docs/fire-sprite-lab/v5/reference-media/unity-Flame03-inputs/126.png",
+      "prompt": "prompts/clean-126.txt",
+      "sha256": "2653f644d9f2bf05d9df6e3f9a7a4324cf639fb8263d7738b24723fdb7baf914",
+      "width": 1254,
+      "height": 1254,
+      "review": "rejected as temporal redraw: contour/paint inconsistency; 126 also introduces a halo"
+    }
+  ],
+  "authorization": "Preserve source motion with shared imagegen artwork (Recommended)",
+  "method": "Built-in image_gen; one native painting supplies a fixed six-colour palette. Runtime frames are the CC0 source flipbooks, not independent imagegen cels."
+}

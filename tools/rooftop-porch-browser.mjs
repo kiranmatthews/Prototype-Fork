@@ -105,13 +105,13 @@ try{for(const mode of (process.env.PORCH_MODES||'lite,native').split(',')){
  const journey=await page.evaluate(()=>window.porchJourney);
  await writeFile(`${out}/${mode}-journey.json`,JSON.stringify(journey,null,2));
  assert.ok(journey.done);assert.equal(journey.error,null);assert.ok(journey.sourceMatches&&journey.tuningUnchanged);
- assert.equal(journey.result.cratesBroken,23);assert.equal(journey.result.deaths,0);assert.ok(journey.trace.every(p=>!p.slippy));
+ assert.equal(journey.result.cratesBroken,43);assert.equal(journey.result.deaths,0);assert.ok(journey.trace.every(p=>!p.slippy));
  await ready('rooftop-relay');
  const after=await page.evaluate(()=>{const g=window.__game,material=g.getLevel().crates.find(c=>c.woodCrate).woodCrate.visual.material;
   const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};material.onBeforeCompile(shader,g.renderer);
   return {sameParent:g.getLevel()===window.porchParent,completed:g.getLevel().bonusRoundCompleted,sharedFogDensity:shader.uniforms.uHeightFogProfile?.value.y??0,
   boxes:g.player.bonusCrates,crates:g.player.cratesBroken,before:window.porchBefore,lens:g.getLookDiagnostics()?.rain,stamp:document.querySelector('.hud-build')?.textContent};});
- assert.ok(after.sameParent&&after.completed);assert.equal(after.boxes,23);assert.equal(after.crates,after.before.crates);assert.ok(after.sharedFogDensity>0);
+ assert.ok(after.sameParent&&after.completed);assert.equal(after.boxes,43);assert.equal(after.crates,after.before.crates);assert.ok(after.sharedFogDensity>0);
  assert.equal(after.lens.enabled,after.before.lens);assert.match(after.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
  reports.push({mode,shelter,gpu,failedAttempt,after,result:journey.result,frames:journey.frame,errors});
  await writeFile(`${out}/report.json`,JSON.stringify(reports,null,2));console.log('PASS',JSON.stringify(reports.at(-1)));await page.close();

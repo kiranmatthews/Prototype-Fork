@@ -1,0 +1,34 @@
+[
+  {
+    "test": "source contracts, spawn, checkpoints, enemy patrol support",
+    "movers": 16,
+    "axes": 10,
+    "enemies": 15,
+    "checkpoints": 23
+  },
+  {
+    "test": "moving cart rider carry",
+    "name": "Last Departure · moving carriage 2",
+    "carried": 17.9,
+    "deaths": 0
+  },
+  {
+    "test": "moving cart rider carry",
+    "name": "Funeral Freight · moving carriage 2",
+    "carried": 17.65,
+    "deaths": 0
+  },
+  {
+    "test": "input-only checkpoint contact and banked respawn",
+    "active": true
+  },
+  {
+    "test": "broken rail pit death and supported respawn",
+    "deaths": 1,
+    "grounded": true
+  },
+  {
+    "test": "reachable production finish gate",
+    "state": "finished"
+  }
+]

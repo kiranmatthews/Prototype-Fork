@@ -1,0 +1,1 @@
+PASS actual refuge bonus entrance once, supported parent return and armed fields

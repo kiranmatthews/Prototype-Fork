@@ -1,0 +1,465 @@
+{
+  "course": "nightworks-after-hours",
+  "name": "Guptus Eruptus",
+  "bonus": "bonus-nightworks-after-hours",
+  "status": "validated",
+  "startedAtApprox": "2026-11-14T16:39:50Z",
+  "completedAt": "2026-11-14T17:42:08.607080+00:00",
+  "elapsedMinutes": 62.3,
+  "changes": {
+    "mainBefore": 0,
+    "mainAfter": 80,
+    "groups": 16,
+    "masks": 3,
+    "retainedEnemies": 4,
+    "retainedEnemyKinds": 2,
+    "bonusBefore": 16,
+    "bonusAfter": 25,
+    "replacedIdleMultihit": true,
+    "highLifeHeightBefore": 13.2,
+    "highLifeHeightAfter": 15.2
+  },
+  "before": {
+    "nightworks-after-hours": {
+      "physical": 0,
+      "counted": 0,
+      "checkpoints": 7,
+      "gemTally": 23,
+      "byKind": {},
+      "outlineByKind": {},
+      "per100m": 0,
+      "physicalPer100m": 0,
+      "checkpointGaps": [
+        103.3,
+        87,
+        183.4,
+        95.9,
+        94.6,
+        95.9,
+        121.8,
+        95.7
+      ],
+      "clusters": 0,
+      "singles": 0,
+      "meanClusterSize": null,
+      "sizeHist": {},
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 1,
+      "arrangements": {},
+      "maxStack": 0,
+      "largestCluster": 0,
+      "floatingClusters": 0,
+      "support": {},
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 0,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 0,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 877.5,
+        "from": 0,
+        "to": 877.5
+      },
+      "authoredRails": 4,
+      "speedPads": 0,
+      "enemies": 4,
+      "hazards": {
+        "pendulum": 2,
+        "mover": 6,
+        "phasepad": 9
+      }
+    },
+    "bonus-nightworks-after-hours": {
+      "physical": 16,
+      "counted": 16,
+      "checkpoints": 0,
+      "gemTally": 16,
+      "byKind": {
+        "wood": 9,
+        "mystery": 3,
+        "multihit": 1,
+        "bouncy": 1,
+        "life": 2
+      },
+      "outlineByKind": {},
+      "per100m": 16.47,
+      "physicalPer100m": 16.47,
+      "checkpointGaps": [
+        97.2
+      ],
+      "clusters": 13,
+      "singles": 10,
+      "meanClusterSize": 1.23,
+      "sizeHist": {
+        "1": 10,
+        "2": 3
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "single": 10,
+        "stack": 3
+      },
+      "maxStack": 2,
+      "largestCluster": 2,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 12,
+        "crate": 3,
+        "none": 1
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 1,
+      "highTools": {
+        "arrow-perfect": 1
+      },
+      "onPath": 16,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 2.6,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 3
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 0,
+      "runCrates": 0,
+      "longestRun": 0,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 0,
+        "crates": 0
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "crate": 1
+      },
+      "multihit": 1,
+      "emptiest": {
+        "length": 21,
+        "from": 42.3,
+        "to": 63.3
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 1,
+        "phasepad": 1
+      }
+    }
+  },
+  "after": {
+    "nightworks-after-hours": {
+      "physical": 80,
+      "counted": 80,
+      "checkpoints": 7,
+      "gemTally": 112,
+      "byKind": {
+        "wood": 64,
+        "mystery": 13,
+        "mask": 3
+      },
+      "outlineByKind": {},
+      "per100m": 9.12,
+      "physicalPer100m": 9.12,
+      "checkpointGaps": [
+        103.3,
+        87,
+        183.4,
+        95.9,
+        94.6,
+        95.9,
+        121.8,
+        95.7
+      ],
+      "clusters": 16,
+      "singles": 0,
+      "meanClusterSize": 5,
+      "sizeHist": {
+        "5-9": 16
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 16
+      },
+      "maxStack": 2,
+      "largestCluster": 5,
+      "floatingClusters": 0,
+      "support": {
+        "ground": 48,
+        "crate": 32
+      },
+      "floatingCrates": 0,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 4,
+      "overhanging": 0,
+      "high": 0,
+      "highTools": {},
+      "onPath": 0,
+      "offLine": 43,
+      "detour": 37,
+      "behindStart": 5,
+      "beyondGate": 0,
+      "routeOffset": 8,
+      "enemyNear": 0,
+      "hazardNear": {},
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 16,
+      "runCrates": 32,
+      "longestRun": 2,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 16,
+        "crates": 32
+      },
+      "arrows": 0,
+      "arrowTargets": {},
+      "multihit": 0,
+      "emptiest": {
+        "length": 183.4,
+        "from": 192.3,
+        "to": 375.7
+      },
+      "authoredRails": 4,
+      "speedPads": 0,
+      "enemies": 4,
+      "hazards": {
+        "pendulum": 2,
+        "mover": 6,
+        "phasepad": 9
+      }
+    },
+    "bonus-nightworks-after-hours": {
+      "physical": 25,
+      "counted": 25,
+      "checkpoints": 0,
+      "gemTally": 25,
+      "byKind": {
+        "wood": 17,
+        "mystery": 5,
+        "bouncy": 1,
+        "life": 2
+      },
+      "outlineByKind": {},
+      "per100m": 25.73,
+      "physicalPer100m": 25.73,
+      "checkpointGaps": [
+        97.2
+      ],
+      "clusters": 10,
+      "singles": 3,
+      "meanClusterSize": 2.5,
+      "sizeHist": {
+        "1": 3,
+        "3": 6,
+        "4": 1
+      },
+      "structuralClusters": 0,
+      "structuralCrates": 0,
+      "maxStackAll": 2,
+      "arrangements": {
+        "pyramid": 6,
+        "wall-along-path": 1,
+        "single": 3
+      },
+      "maxStack": 2,
+      "largestCluster": 4,
+      "floatingClusters": 1,
+      "support": {
+        "ground": 16,
+        "crate": 8,
+        "none": 1
+      },
+      "floatingCrates": 1,
+      "overVoid": 0,
+      "overPit": 0,
+      "nearDrop": 0,
+      "overhanging": 0,
+      "high": 1,
+      "highTools": {
+        "arrow-perfect-double": 1
+      },
+      "onPath": 25,
+      "offLine": 0,
+      "detour": 0,
+      "behindStart": 0,
+      "beyondGate": 0,
+      "routeOffset": 2.5,
+      "enemyNear": 0,
+      "hazardNear": {
+        "mover": 4
+      },
+      "onRail": 0,
+      "nearRail": 0,
+      "downhill": 0,
+      "afterPad": 0,
+      "plainOnSpeed": 0,
+      "runs": 1,
+      "runCrates": 2,
+      "longestRun": 2,
+      "runsBridging": 0,
+      "runsAfterSwitches": {
+        "runs": 1,
+        "crates": 2
+      },
+      "arrows": 1,
+      "arrowTargets": {
+        "crate": 1
+      },
+      "multihit": 0,
+      "emptiest": {
+        "length": 20.4,
+        "from": 42.3,
+        "to": 62.7
+      },
+      "authoredRails": 0,
+      "speedPads": 0,
+      "enemies": 0,
+      "hazards": {
+        "mover": 1,
+        "phasepad": 1
+      }
+    }
+  },
+  "projectedSectionCounts": [
+    10,
+    10,
+    10,
+    10,
+    15,
+    5,
+    10,
+    10
+  ],
+  "preservation": {
+    "mainNonCrateComponents": 360,
+    "bonusNonCrateComponents": 94,
+    "serializedExact": true,
+    "settingsExact": true,
+    "publishedPackUntouched": true,
+    "movementAnimationArtworkUnchanged": true
+  },
+  "native": {
+    "mainCratesCollected": 80,
+    "stagedHarvests": 16,
+    "maximumFloorCornerError": 0,
+    "continuousMainSeconds": 70.98333333333333,
+    "continuousMainCheckpoints": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+    ],
+    "continuousMainDeaths": 0,
+    "continuousBonusCrates": 25,
+    "continuousBonusSeconds": 61.65,
+    "ferryAndPhaseContacts": true,
+    "bonusEntrance": {
+      "entries": 1,
+      "platform": {
+        "x": 139,
+        "y": 36,
+        "z": -692,
+        "laneFraction": 0.5,
+        "topY": 37.05,
+        "radius": 1.6,
+        "modelReady": false,
+        "tilt": 0
+      },
+      "stagedApproach": [
+        139,
+        36,
+        -687
+      ],
+      "landed": [
+        139,
+        37.0499999986589,
+        -691.7200000000006
+      ],
+      "returnPosition": [
+        136,
+        36,
+        -692
+      ],
+      "grounded": true,
+      "deaths": 0
+    }
+  },
+  "browser": {
+    "modes": 2,
+    "fullViews": 6,
+    "checkpointRestoresFiveBoxes": true,
+    "bonusFailurePreservesLives": true,
+    "all25BonusBanked": true,
+    "browserArrowLossChecked": true,
+    "consoleErrors": []
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "build": "passed",
+    "release": "passed",
+    "volcano": "passed",
+    "fullRouteAndBypassControls": "passed"
+  },
+  "buildVersion": "06dd1662d9c48a9825df",
+  "releaseBytes": 959313361,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "The 80 main rewards are collected in 16 separately staged normal-input approaches. The continuous mounted traversal is a separate run. No continuous all-main-box or main-gem clear is claimed.",
+    "The complete mounted run banks six of seven checkpoints (indices 0,1,2,3,5,6); it is not an all-checkpoint claim. Every original checkpoint remains unchanged.",
+    "Two caches belong to each authored chapter. The nearest-route audit assigns the west workbay cache to the preceding lateral rail leg, giving projected checkpoint counts 10/10/10/10/15/5/10/10, with a median of ten. The five-box opening cache is an intentional short backtrack behind the spawn.",
+    "Browser main collection, checkpoint, fall and finish checks are staged. Browser bonus flow starts through the debug entry trigger; the actual summit entrance and supported return are verified separately using normal native inputs.",
+    "Original and changed full-route traces matched exactly before the crown pilot handoff correction. The native test pilot alone now permits a safe wider handoff on the same dock.",
+    "The first cautious harvest timeout occurred while still approaching its last crate. Extending only the test frame budget collects all groups, with unchanged input pace and no deaths.",
+    "The first lost-arrow probe missed the input window. The corrected attempt exposed the original reward as reachable because head contact follows the character silhouette, not the 0.92m spin band. The final raised reward resists actual floor and cargo-stomp double jumps; both second jumps are explicitly asserted.",
+    "The full-page screenshot path returned blank world images on SwiftShader. Final visuals use the existing captureBonusReviewFrame hook, which invokes the normal gameplay renderer at 1280x720; no source rendering, materials, geometry or camera was changed. Canvas figures omit DOM HUD text; the fruit and crate icons at the bottom of bonus figures are HUD overlays."
+  ]
+}

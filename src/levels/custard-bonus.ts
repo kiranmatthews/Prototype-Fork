@@ -1,6 +1,7 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {EASY_BONUS_LEVEL} from './bonus-easy';
 import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terrain';
+import {arrangeWillowmillCrates} from './custard-crate-arrangement';
 
 type P=[number,number,number];
 const C:CustomComponent[]=[];
@@ -12,11 +13,12 @@ const sampler={point:(s:number,y=0,u=0):P=>[s,y,u],height:()=>0};
 const prop=(dkind:CustomComponent['dkind'],p:P,s:P,yaw=0,nm='Custard bonus scenery',color='#ffffff')=>
   C.push({t:'decor',dkind,p,s,yaw,color,scenerySolid:false,solid:false,edgeGrinding:false,grp:91,nm});
 
-// The established 18-box route, two 2m gaps and single-plane controls survive
-// the art rebuild. The visible sculpted rock cap owns every ground contact.
+// These established anchors define the sculpted bank. Keep that geometry
+// independent of subsequent crate changes in the shared Easy Street room.
+const BANK_ANCHORS=[-9,-6,-3,0,7,10,13,16,16,18,25,28,31,34,37,40,43,46,50];
 for(const [a,b,y] of [[-16,2,0],[4,20,.35],[22,54,0]]){
-  const anchors=EASY_BONUS_LEVEL.components.filter(c=>['crate','gate'].includes(c.t)&&c.p[0]>=a&&c.p[0]<=b)
-    .map(c=>({s:c.p[0],u:0,y,radius:1.3,along:1.7}));
+  const anchors=BANK_ANCHORS.filter(x=>x>=a&&x<=b)
+    .map(x=>({s:x,u:0,y,radius:1.3,along:1.7}));
   anchors.push({s:a+2,u:0,y,radius:1.8,along:2},{s:b-1,u:0,y,radius:1.8,along:2});
   const bank:CreekBank={a,b,top:y,width:6.4,offset:0,minHalf:2.85,protected:anchors,
     name:'Custard bonus moss-capped sandstone shelf',group:1,spacing:1,bare:()=>.84};
@@ -61,6 +63,7 @@ C.push({t:'mesh',p:[19,-2.8,-25],vertices:[-110,0,-65,110,0,-65,110,0,43,-110,0,
   nm:'Custard Creek water ribbon',grp:92,lethal:true,castShadow:false,edgeGrinding:false});
 for(const [a,b] of [[2,4],[20,22]])C.push({t:'pit',p:[(a+b)/2,-3.1,0],s:[b-a,1,9],invisible:true,nm:'Custard bonus water contact',grp:92});
 
+arrangeWillowmillCrates(C);
 export const CUSTARD_BONUS_LEVEL:CustomLevelData={
   ...EASY_BONUS_LEVEL,name:'Bonus: Willowmill Cache',sky:'sunset',killY:-9,
   jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,

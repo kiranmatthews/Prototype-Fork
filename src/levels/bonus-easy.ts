@@ -8,15 +8,14 @@ for (const [left, right, top] of [[-16, 2, 0], [4, 20, 0.35], [22, 54, 0]]) {
     s: [right - left, top + 5, 8.5], tex: "stone", color: "#827591",
      nm: "Wide bonus terrace", grp: 1 });
 }
-const boxes: [number, number, NonNullable<CustomComponent["kind"]>][] = [
-  [-9, 0, "wood"], [-6, 0, "wood"], [-3, 0, "wood"], [0, 0, "wood"],
-  [7, 0.35, "wood"], [10, 0.35, "wood"], [13, 0.35, "wood"],
-  [16, 0.35, "wood"], [16, 1.31, "wood"], [18, 0.35, "wood"],
-  [25, 0, "wood"], [28, 0, "wood"], [31, 0, "wood"], [34, 0, "wood"],
-  [37, 0, "wood"], [40, 0, "wood"], [43, 0, "life"], [46, 0, "mask"],
-];
-boxes.forEach(([x, y, kind], i) => components.push({ t: "crate", p: [x, y, 0], kind,
-  nm: `Bonus reward ${i + 1}`, grp: 2 }));
+const columns = [
+  [-9, 0, 'Arrival supplies'], [-4, 0, 'First departure count'],
+  [7, .35, 'First landing cache'], [13, .35, 'Terrace stack'], [18, .35, 'Second departure count'],
+  [25, 0, 'Second landing cache'], [34, 0, 'Final terrace stack'], [45, 0, 'Exit count'],
+] as const;
+for (const [x, y, name] of columns) for (let tier=0;tier<3;tier++)
+  components.push({ t:'crate',p:[x,y+tier*.96,0],kind:tier?'mystery':'wood',
+    nm:`Easy Street / ${name} / ${tier}`,grp:2 });
 for (const x of [-11, -8, -5, -2, 6, 9, 12, 15, 24, 27, 30, 33, 36, 39, 42])
   components.push({ t: "wumpa", p: [x, (x >= 4 && x <= 20 ? 0.35 : 0) + 1.15, 0], grp: 2 });
 for (const z of [-0.83, 0.83]) components.push({ t: "wall", p: [19, -14, z],
@@ -34,4 +33,4 @@ export const EASY_BONUS_LEVEL: CustomLevelData = {
   groups: [{ id: 1, nm: "Permanent broad terraces" }, { id: 2, nm: "Safe rewards" },
     { id: 3, nm: "Left-to-right camera and containment", editorOnly: true }, { id: 4, nm: "Return gate" }],
 };
-export const DEFAULT_BONUS_CRATE_COUNT = boxes.length;
+export const DEFAULT_BONUS_CRATE_COUNT = columns.length * 3;

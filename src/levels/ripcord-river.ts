@@ -1,4 +1,5 @@
 import { dressRollingBones } from './moonbone-scenery';
+import {arrangeRollingBonesCrates} from './rolling-bones-crates';
 import {BufferGeometry,Float32BufferAttribute} from 'three';
 import type {CustomComponent,CustomLevelData} from '../level';
 import {RUMBLEWATER_RUN_LEVEL,RUMBLEWATER_END,RUMBLEWATER_REFUGES,rumblePoint,rumbleHeight,rumbleProgress,rumbleTangent,rumbleYaw} from './rumblewater-run';
@@ -79,8 +80,9 @@ function bank(a:number,b:number,width=18,offset:Scalar=0,name='Ripcord worn terr
 function fruit(a:number,b:number,u:Scalar=0,lift:Scalar=1,step=8){
  for(let s=a;s<=b;s+=step)C.push({t:'wumpa',p:ripcordPoint(s,ripcordHeight(s)+val(lift,s),val(u,s)),grp:group(s),nm:'Ripcord route fruit'});
 }
-function box(s:number,u=0,kind:CustomComponent['kind']='wood'){
- C.push({t:'crate',p:ripcordPoint(s,ripcordHeight(s),u),kind,grp:group(s),nm:'Ripcord supplies'});
+function cargo(s:number,u:number,kinds:NonNullable<CustomComponent['kind']>[],job:string){
+ const p=ripcordPoint(s,ripcordHeight(s),u);
+ kinds.forEach((kind,i)=>C.push({t:'crate',p:[round(p[0]+(i%2-.5)*.96),round(p[1]+Math.floor(i/2)*.96),p[2]],kind,grp:group(s),nm:job}));
 }
 function gap(a:number,b:number,u:number,name:string,route?:'left'|'right',jumpMarkers=true){
  RIPCORD_GAPS.push({a,b,u,name,route});
@@ -115,7 +117,7 @@ buildBoulderCradle(C,sampler,ripcordYaw,-25,140,'Ripcord opening release');
 bank(-62,72,18,0,'Ripcord arrival court');bank(72,144,12,terraceLane,'Left broken terrace');
 gap(144,153,-4.8,'Terrace first leap');bank(153,236,12,terraceLane,'Crossing terrace');
 gap(236,247,4.8,'Terrace second leap');bank(247,330,12,terraceLane,'Right returning terrace');bank(330,410,18,0,'Terrace vault court');
-fruit(16,130,terraceLane);fruit(163,222,terraceLane);fruit(257,337,terraceLane);box(35,4,'mask');box(116,-1);box(210,6);box(304,-4,'mystery');
+fruit(16,130,terraceLane);fruit(163,222,terraceLane);fruit(257,337,terraceLane);
 C.push({t:'clock',p:ripcordPoint(2,ripcordHeight(2),5),nm:'Ripcord time trial'});
 
 bank(410,458,27,0,'Twinwater fan-out');
@@ -124,7 +126,7 @@ for(const side of [-1,1]){
  pipe(458,a,u,2.6,2.4,side<0?'Left spillway head':'Right spillway sweep');gap(a,b,u,side<0?'Left spillway jump':'Right spillway jump',side<0?'left':'right');
  pipe(b,690,u,2.6,2.4,side<0?'Left spillway return':'Right spillway return');
  bank(690,730,12,s=>twinLane(s,side),side<0?'Left spillway apron':'Right spillway apron');
- fruit(424,a-22,s=>twinLane(s,side));fruit(b+8,728,s=>twinLane(s,side));box(side<0?600:520,u,side<0?'wood':'life');
+ fruit(424,a-22,s=>twinLane(s,side));fruit(b+8,728,s=>twinLane(s,side));
 }
 bank(730,798,20,0,'Twinwater merge and gatehouse');
 
@@ -132,15 +134,15 @@ bank(798,904,18,sluiceLane,'Sluice sweeping left bank');gap(904,914,sluiceLane(9
 bank(914,1010,18,sluiceLane,'Sluice crossing bank');gap(1010,1018,sluiceLane(1010),'Sluice outlet jump');
 bank(1018,1194,18,sluiceLane,'Sluice willow approach');
 for(const [s,side]of [[840,-1],[880,1],[955,-1],[987,1],[1060,-1],[1103,1]]){
- const u=sluiceLane(s)+side*6.8;box(s,u,'metal');box(s+2.3,u,'metal');
+ const u=sluiceLane(s)+side*6.8;
  C.push({t:'decor',dkind:'coastpillar',p:ripcordPoint(s,ripcordHeight(s),u+side*3),s:[1.3,4.8,1.2],yaw:ripcordYaw(s),scenerySolid:true,grp:142,nm:'Sluice gate side pier'});
 }
-fruit(805,884,sluiceLane);fruit(925,990,sluiceLane);fruit(1030,1138,sluiceLane);box(1128,-4.5,'mask');
+fruit(805,884,sluiceLane);fruit(925,990,sluiceLane);fruit(1030,1138,sluiceLane);
 
 bank(1194,1340,20,canopyLane,'Canopy rail plaza');rail(1204,1284,canopyRailLane,'Canopy diagonal over supported plaza');
 gap(1340,1350,canopyLane(1340),'Canopy west-island leap');bank(1350,1454,14,canopyLane,'Canopy crossing island');
 gap(1454,1463,canopyLane(1454),'Canopy east-island leap');bank(1463,1600,20,canopyLane,'Thunder watch approach');
-fruit(1198,1320,0);fruit(1360,1436,canopyLane);fruit(1474,1537,canopyLane);box(1390,-6);box(1493,6,'life');
+fruit(1198,1320,0);fruit(1360,1436,canopyLane);fruit(1474,1537,canopyLane);
 
 pipe(1600,1706,0,4.5,3.5,'Thunder first bowl');gap(1706,1716,0,'Thunder bowl leap');bank(1716,1760,18,0,'Thunder landing island');
 pipe(1760,1800,0,4.5,3.5,'Thunder short bowl');gap(1800,1808,0,'Thunder stepping leap');
@@ -153,7 +155,6 @@ fruit(1612,1686);fruit(1726,1748);fruit(1770,1784);fruit(1820,RIPCORD_BOULDER_EN
 fruit(RIPCORD_BOULDER_END-36,RIPCORD_BOULDER_END-20,ripcordEscapeApproachLane,1,4);
 fruit(RIPCORD_SANCTUARY_START+12,RIPCORD_END-4,0,1,5);
 C.push({t:'crystal',p:ripcordPoint(RIPCORD_END-10,ripcordHeight(RIPCORD_END-10)+1.2),grp:144,nm:'Ripcord sanctuary crystal'},
- {t:'crate',kind:'nitrobang',p:ripcordPoint(RIPCORD_END-6,ripcordHeight(RIPCORD_END-6),8),grp:144,nm:'Ripcord nitro clear'},
  {t:'gate',p:ripcordPoint(RIPCORD_END),yaw:ripcordYaw(RIPCORD_END),grp:144,nm:'Ripcord sanctuary'});
 
 // Reuse the four architectural shelter kits, relocated into the new river.
@@ -178,7 +179,22 @@ function relocateShelter(source:CustomComponent,index:number):CustomComponent {
  if(c.pts)c.pts=c.pts.map(q=>{const v=local(transform(world(q[0],q[3]??0,q[1])));return[v[0],v[2],q[2]??0,v[1]];});
  if(c.to)c.to=transform(c.to);c.p=p;c.yaw=yaw;c.nm=c.nm?.replace(from.name,to.name);return c;
 }
-for(let i=0;i<4;i++)C.push(...RUMBLEWATER_RUN_LEVEL.components.filter(c=>c.grp===110+i).map(c=>relocateShelter(c,i)));
+for(let i=0;i<4;i++)C.push(...RUMBLEWATER_RUN_LEVEL.components.filter(c=>c.grp===110+i&&c.t!=='crate').map(c=>relocateShelter(c,i)));
+
+// Collection happens after the pursuer jams at the entrance. The centre lane,
+// checkpoint, bonus pad and exit threshold remain clear; both chase branches
+// can earn the same box gem without reversing into an active boulder.
+for(const [i,room]of RIPCORD_REFUGES.entries()){
+ const s=room.checkpoint;
+ if(i===0)cargo(s-9,-3.8,['wood','wood','mystery'],'TEACH / sheltered arrival harvest');
+ cargo(s-7,3.8,['wood','wood','mystery','mystery'],`${room.name} / REST / arrival wall`);
+ cargo(s-2,-3.8,['wood','mystery','mystery'],`${room.name} / COUNT / checkpoint-side harvest`);
+ // Boulder impacts and river falls bypass masks; do not promise protection
+ // that the next run cannot honor. Keep this a last safe harvest instead.
+ cargo(s+5,3.8,['wood','wood','mystery'],`${room.name} / LAST CHANCE / safe departure stock`);
+}
+cargo(RIPCORD_END-14,-4,['wood','wood','mystery','mystery'],'REWARD / sanctuary harvest after the escape rail');
+cargo(RIPCORD_END-6,4,['wood','mystery','mystery'],'COUNT / last sanctuary stock before the gate');
 
 // Retain the river's established art vocabulary around the new centreline.
 const artSampler={point:(s:number,y=ripcordHeight(s),u=0)=>ripcordPoint(s,y,u*1.3),height:ripcordHeight};
@@ -210,3 +226,4 @@ export const ROLLING_BONES_LEVEL:CustomLevelData={...structuredClone(RUMBLEWATER
 };
 
 dressRollingBones(ROLLING_BONES_LEVEL);
+arrangeRollingBonesCrates(ROLLING_BONES_LEVEL.components);

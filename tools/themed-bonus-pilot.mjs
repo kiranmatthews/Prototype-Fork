@@ -2,16 +2,31 @@ import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
 import { runEmberReliquaryJourney } from './ember-reliquary-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
+import { runQuaysideBonus } from './ambush-pilot.mjs';
+import { runLedgerBonus } from './merchant-pilot.mjs';
+import { runValveHouseBonus } from './valve-house-pilot.mjs';
+import { runHauntedBonus } from './haunted-bonus-pilot.mjs';
 
 /** Each yield is an ordinary device sample. No position, physics, crate state,
  * hit counters, gem flags or finish state are changed by these pilots. */
 export function* runThemedBonusJourney(r) {
+  if (r.course.parentId === 'codex-lab') return yield* runHauntedBonus(r);
+  if (r.course.parentId === 'waterpark') return yield* runValveHouseBonus(r);
+  if (r.course.parentId === 'drowned-crown') return yield* runLedgerBonus(r);
+  if (r.course.parentId === 'test') return yield* runQuaysideBonus(r);
   if (r.course.layout) return yield* runPuzzleJourney(Object.assign(Object.create(r),{id:r.course.layout}));
   if (r.course.parentId === 'nightworks-after-hours') return yield* runCalderaBonusJourney(r);
   if (r.course.parentId === 'jungle-terraces') return yield* runEmberReliquaryJourney(r);
   const c=puzzleControls(r), {p,l}=r, course=r.course;
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');
+  const cargo=function*(name){
+    const prefix=course.parentId==='dark'?'Fuse Store':course.parentId==='sky'?'Cloudtop':null;
+    if(!prefix)return;
+    const boxes=l.crates.filter(b=>r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith(`${prefix} cargo / ${name} /`));
+    for(const b of boxes)if(b.alive)yield* c.hit(b,`${prefix} ${name} delivery`);
+  };
+  yield* cargo('arrival');
   const box=(room,role)=>c.crateNamed(room.crates.find(crate=>crate.role===role)?.name);
   const settle=function*(target,label){yield* c.until(()=>p.grounded,()=>c.steer(target),{label,limit:240});yield* c.stepFor(20);};
   for(const room of course.rooms) {
@@ -55,6 +70,7 @@ export function* runThemedBonusJourney(r) {
       if(room.pattern==='return') {
         yield* c.walk([room.switchX-2,0,0],`${label} spent-switch approach`);
         yield* c.hop([room.switchX+2.4,0,0],`${label} pass permanent switch`);
+        yield* cargo('dispatch');
       }
     } else if(room.pattern==='finite') {
       const upper=box(room,'upper finite support'),cap=box(room,'upper cap'),hits=upper.hitsRemaining,x=room.launchX;
@@ -69,13 +85,14 @@ export function* runThemedBonusJourney(r) {
       for(const role of ['upper finite support','lower finite support']) {
         const support=box(room,role);if(support.alive)yield* c.hit(support,`${label} spent ${role}`);
       }
+      yield* cargo('finite-exit');
     } else if(room.pattern==='bridge') {
       const button=box(room,'local switch');
       yield* c.hit(button,`${label} create visible bridge`);
       c.check(button.bangUsed,'bridge switch did not activate');
       yield* c.hop([room.switchX+2.4,0,0],`${label} pass used switch`);
       yield* c.walk([room.gap.b+1,0,0],`${label} cross actual materialized bridge`);
-      for(const role of ['receiver reward','receiver mystery'])yield* c.hit(box(room,role),`${label} ${role}`);
+      for(const spec of room.crates.filter(crate=>crate.role.startsWith('receiver')))if(box(room,spec.role).alive)yield* c.hit(box(room,spec.role),`${label} ${spec.role}`);
     } else if(room.pattern==='fuse') {
       const x=room.launchX,wood=box(room,'wooden takeoff cap'),cap=box(room,'upper cap before fuse'),tnt=box(room,'timed support');
       yield* c.walk([x-2.1,0,0],`${label} upper-first staging`);
@@ -92,18 +109,23 @@ export function* runThemedBonusJourney(r) {
       yield* settle([room.refugeX,0,0],`${label} leave blast radius`);
       yield* c.until(()=>!tnt.alive&&l.explosions.length===0,{}, {label:`${label} supported post-blast recovery`,limit:240});
       yield* c.hit(box(room,'refuge reward'),`${label} recovery reward`);
+      yield* cargo('refuge');
     } else if(room.pattern==='relay') {
       yield* c.walk([room.gap.a-1.2,0,0],`${label} inspect receiver chain`);
       for(const x of room.anchors) {
         const anchor=c.crateSpecAt(x,0),reward=c.crateSpecAt(x,.96);
-        yield* c.hop([x,.96,0],`${label} air-spin cap and retain anchor`,{airButtons:{spinHeld:true},tolerance:.85});
+        // Crate formations expand from the authored .96 m grid at runtime.
+        // Land on the actual retained lid, not its pre-expansion source height.
+        yield* c.hop([anchor.mesh.position.x,anchor.box.max.y,anchor.mesh.position.z],`${label} air-spin cap and retain anchor`,{airButtons:{spinHeld:true},tolerance:.85});
         c.check(anchor.alive&&!reward.alive,'relay failed to preserve permanent footing while harvesting');
       }
       yield* c.hop([room.gap.b+1.2,0,0],`${label} leave last steel receiver`);
+      yield* cargo('receiver');
     }
     yield* c.walk([room.b-1,0,0],`${label} supported room exit`);
     r.report.evidence.push({action:'room complete',pattern:room.pattern,index:room.index,position:p.pos.toArray()});
   }
+  yield* cargo('exit');
   yield* c.clearAll('all actual authored bonus crates');
   yield* c.until(()=>p.state==='finished',{moveX:1},{label:p.bonusMode?'cross real bonus gate to bank parent rewards':'collect earned gem and cross real bonus gate',limit:300});
   // Active detours bank their boxes into the parent's gem objective. The

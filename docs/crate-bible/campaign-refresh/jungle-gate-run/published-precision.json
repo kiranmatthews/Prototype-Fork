@@ -1,0 +1,12 @@
+{
+  "main": {
+    "nonCrateComponents": 2991,
+    "numericDifferences": 0,
+    "maxAbsoluteDifference": 0
+  },
+  "bonus": {
+    "nonCrateComponents": 537,
+    "numericDifferences": 0,
+    "maxAbsoluteDifference": 0
+  }
+}

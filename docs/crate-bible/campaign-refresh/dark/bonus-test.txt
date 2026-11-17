@@ -1,0 +1,1 @@
+PASS continuous 20-box Fuse Store, both wrong orders, real cargo double-jump exclusion and full retry

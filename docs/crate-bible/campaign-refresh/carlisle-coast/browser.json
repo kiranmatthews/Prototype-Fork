@@ -1,0 +1,1062 @@
+[
+  {
+    "mode": "lite",
+    "inventory": {
+      "physical": 419,
+      "total": 376,
+      "bonus": 21,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "opening": {
+      "done": true,
+      "kind": "harvest",
+      "frames": 97,
+      "crates": 10,
+      "state": "ride",
+      "position": [
+        4.135115667599592,
+        221.27211374988292,
+        -3.721745263148756
+      ],
+      "lives": 4,
+      "checkpoint": null,
+      "remainingNitro": 22
+    },
+    "checkpoint": {
+      "done": true,
+      "kind": "checkpoint",
+      "frames": 17,
+      "crates": 1,
+      "state": "ride",
+      "position": [
+        -87.51791981577499,
+        139.44588790392947,
+        -1472.2427547073764
+      ],
+      "lives": 4,
+      "checkpoint": true,
+      "remainingNitro": 22
+    },
+    "quayHarvest": {
+      "done": true,
+      "kind": "harvest",
+      "frames": 77,
+      "crates": 11,
+      "state": "ride",
+      "position": [
+        -91.8916596130506,
+        139.44588790392947,
+        -1477.6966897055393
+      ],
+      "lives": 4,
+      "checkpoint": true,
+      "remainingNitro": 22
+    },
+    "recovery": {
+      "position": [
+        -87.22996789083612,
+        139.44588790392947,
+        -1474.1084634870415
+      ],
+      "spawn": [
+        -87.22996789083612,
+        139.89588789200857,
+        -1474.1084634870415
+      ],
+      "lives": 3,
+      "storesAlive": 10
+    },
+    "nitroClear": {
+      "done": true,
+      "kind": "clear",
+      "frames": 49,
+      "crates": 22,
+      "state": "ride",
+      "position": [
+        -57.96761870182816,
+        12,
+        -3835.287976886939
+      ],
+      "lives": 4,
+      "checkpoint": null,
+      "remainingNitro": 0
+    },
+    "stagedFinish": {
+      "done": true,
+      "kind": "finish",
+      "frames": 52,
+      "crates": 0,
+      "state": "finished",
+      "position": [
+        -51.69723626135789,
+        12.726666669150193,
+        -3848.7552597100525
+      ],
+      "lives": 4,
+      "checkpoint": null,
+      "remainingNitro": 22
+    },
+    "bonusJourney": {
+      "done": true,
+      "frames": 1784,
+      "history": [
+        {
+          "stage": "cargo / -5",
+          "at": [
+            -4.695999999999998,
+            1.200000023841858,
+            0
+          ],
+          "time": 1.100000000000001
+        },
+        {
+          "stage": "spring / 5 / First skiff",
+          "at": [
+            18.531777777777783,
+            1.199999988079071,
+            0
+          ],
+          "time": 4.7499999999999885
+        },
+        {
+          "stage": "ferry / First skiff / 27",
+          "at": [
+            27.779141705904244,
+            1.200000023841858,
+            0
+          ],
+          "time": 6.466666666666649
+        },
+        {
+          "stage": "cargo / 31",
+          "at": [
+            31.612475039237573,
+            1.200000023841858,
+            0
+          ],
+          "time": 7.216666666666646
+        },
+        {
+          "stage": "spring / 39 / Cargo lighter",
+          "at": [
+            48.818030594792965,
+            1.199999988079071,
+            0
+          ],
+          "time": 10.600000000000106
+        },
+        {
+          "stage": "ferry / Cargo lighter / 61",
+          "at": [
+            61.833955825481524,
+            1.200000023841858,
+            0
+          ],
+          "time": 17.45000000000029
+        },
+        {
+          "stage": "cargo / 64",
+          "at": [
+            63.7006224921482,
+            1.200000023841858,
+            0
+          ],
+          "time": 17.983333333333594
+        },
+        {
+          "stage": "spring / 70 / Spring skiff",
+          "at": [
+            79.65840026992653,
+            1.199999988079071,
+            0
+          ],
+          "time": 21.283333333333406
+        },
+        {
+          "stage": "rebound / Spring skiff / 92.9",
+          "at": [
+            92.70840026992703,
+            1.200000023841858,
+            0
+          ],
+          "time": 22.766666666666655
+        },
+        {
+          "stage": "cargo / 94",
+          "at": [
+            93.07840026992703,
+            1.200000023841858,
+            0
+          ],
+          "time": 22.816666666666652
+        },
+        {
+          "stage": "spring / 100 / Homeward ferry",
+          "at": [
+            113.53617804770555,
+            1.199999988079071,
+            0
+          ],
+          "time": 26.166666666666462
+        },
+        {
+          "stage": "ferry / Homeward ferry / 124",
+          "at": [
+            124.75636675154439,
+            1.200000023841858,
+            0
+          ],
+          "time": 28.049999999999688
+        },
+        {
+          "stage": "cargo / 129",
+          "at": [
+            129.18970008487776,
+            1.200000023841858,
+            0
+          ],
+          "time": 28.86666666666631
+        }
+      ],
+      "crates": 21,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        137.43970008487807,
+        1.9266666691501935,
+        0
+      ]
+    },
+    "bonusBanked": {
+      "count": 21,
+      "completed": true
+    },
+    "bonusFailure": {
+      "lives": 4,
+      "banked": 0,
+      "completed": false
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "full",
+    "inventory": {
+      "physical": 419,
+      "total": 376,
+      "bonus": 21,
+      "checkpoints": 17,
+      "enemies": 0
+    },
+    "views": [
+      {
+        "name": "shore",
+        "position": [
+          0,
+          221.27211374988292,
+          0
+        ],
+        "camera": [
+          -2.5199791220281957,
+          226.3721137498829,
+          4.376323254118919
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 18,
+          "models": 14,
+          "props": 1880,
+          "nets": 56,
+          "mountedMovers": 28,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 5,
+            "repairs": 16,
+            "openYards": 8
+          },
+          "timber": {
+            "decks": 131,
+            "sections": 966,
+            "intactModules": 567,
+            "instanceBatches": 177,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 27724901,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "ready",
+            "banks": 32,
+            "sourceTriangles": 100707,
+            "placedTriangles": 1657437,
+            "shoreSegments": 35080,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 6,
+            "sourceTriangles": 51177,
+            "placedTriangles": 307062,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 4146,
+            "ledgers": 1218,
+            "braces": 1604,
+            "plates": 2432,
+            "bolts": 4864,
+            "placedTriangles": 2177728,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "ready",
+            "decks": 20,
+            "templates": 8,
+            "panels": 893,
+            "girders": 183,
+            "fasteners": 538,
+            "placedTriangles": 126960,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 4,
+            "counterweightLifts": 4,
+            "winches": 2,
+            "triangles": 82512,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 4,
+            "metres": 402.68682126176265,
+            "strands": 28,
+            "collars": 39,
+            "fairleads": 8,
+            "triangles": 397600
+          },
+          "beacons": {
+            "beacons": 4,
+            "shafts": 4,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.11261791555043485,
+            "windGain": 0.03109709853211073,
+            "height": 8,
+            "verticalSpeed": 0,
+            "teleports": 0
+          },
+          "water": {
+            "staticWash": 1382,
+            "movingWash": 0
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "pinwheel",
+        "position": [
+          -85.20941362824568,
+          139.79588789200858,
+          -1475.89175870743
+        ],
+        "camera": [
+          -86.77340063724034,
+          144.89588789200857,
+          -1471.0022779177245
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 18,
+          "models": 14,
+          "props": 1880,
+          "nets": 56,
+          "mountedMovers": 28,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 5,
+            "repairs": 16,
+            "openYards": 8
+          },
+          "timber": {
+            "decks": 131,
+            "sections": 966,
+            "intactModules": 567,
+            "instanceBatches": 177,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 27724901,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "ready",
+            "banks": 32,
+            "sourceTriangles": 100707,
+            "placedTriangles": 1657437,
+            "shoreSegments": 35080,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 6,
+            "sourceTriangles": 51177,
+            "placedTriangles": 307062,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 4146,
+            "ledgers": 1218,
+            "braces": 1604,
+            "plates": 2432,
+            "bolts": 4864,
+            "placedTriangles": 2177728,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "ready",
+            "decks": 20,
+            "templates": 8,
+            "panels": 893,
+            "girders": 183,
+            "fasteners": 538,
+            "placedTriangles": 126960,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 4,
+            "counterweightLifts": 4,
+            "winches": 2,
+            "triangles": 82512,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 4,
+            "metres": 402.68682126176265,
+            "strands": 28,
+            "collars": 39,
+            "fairleads": 8,
+            "triangles": 397600
+          },
+          "beacons": {
+            "beacons": 4,
+            "shafts": 4,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.1850020438997156,
+            "windGain": 0.05682840500105741,
+            "height": 24.34999998807909,
+            "verticalSpeed": 0,
+            "teleports": 1
+          },
+          "water": {
+            "staticWash": 1382,
+            "movingWash": 0
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "scissors",
+        "position": [
+          111.19419539449889,
+          89.06409863438392,
+          -2385.3068669669833
+        ],
+        "camera": [
+          111.72977086424848,
+          94.16409863438392,
+          -2380.2853473846058
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 18,
+          "models": 14,
+          "props": 1880,
+          "nets": 56,
+          "mountedMovers": 28,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 5,
+            "repairs": 16,
+            "openYards": 8
+          },
+          "timber": {
+            "decks": 131,
+            "sections": 966,
+            "intactModules": 567,
+            "instanceBatches": 177,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 27724901,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "ready",
+            "banks": 32,
+            "sourceTriangles": 100707,
+            "placedTriangles": 1657437,
+            "shoreSegments": 35080,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 6,
+            "sourceTriangles": 51177,
+            "placedTriangles": 307062,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 4146,
+            "ledgers": 1218,
+            "braces": 1604,
+            "plates": 2432,
+            "bolts": 4864,
+            "placedTriangles": 2177728,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "ready",
+            "decks": 20,
+            "templates": 8,
+            "panels": 893,
+            "girders": 183,
+            "fasteners": 538,
+            "placedTriangles": 126960,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 4,
+            "counterweightLifts": 4,
+            "winches": 2,
+            "triangles": 82512,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 4,
+            "metres": 402.68682126176265,
+            "strands": 28,
+            "collars": 39,
+            "fairleads": 8,
+            "triangles": 397600
+          },
+          "beacons": {
+            "beacons": 4,
+            "shafts": 4,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.18410070326845035,
+            "windGain": 0.07681804347739196,
+            "height": 32.000000363634584,
+            "verticalSpeed": 0,
+            "teleports": 2
+          },
+          "water": {
+            "staticWash": 1382,
+            "movingWash": 0
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "helical",
+        "position": [
+          63.3199742239095,
+          67.4093616767634,
+          -2832.557037201478
+        ],
+        "camera": [
+          63.689415541932235,
+          72.50936167676339,
+          -2827.520568884042
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 18,
+          "models": 14,
+          "props": 1880,
+          "nets": 56,
+          "mountedMovers": 28,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 5,
+            "repairs": 16,
+            "openYards": 8
+          },
+          "timber": {
+            "decks": 131,
+            "sections": 966,
+            "intactModules": 567,
+            "instanceBatches": 177,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 27724901,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "ready",
+            "banks": 32,
+            "sourceTriangles": 100707,
+            "placedTriangles": 1657437,
+            "shoreSegments": 35080,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 6,
+            "sourceTriangles": 51177,
+            "placedTriangles": 307062,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 4146,
+            "ledgers": 1218,
+            "braces": 1604,
+            "plates": 2432,
+            "bolts": 4864,
+            "placedTriangles": 2177728,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "ready",
+            "decks": 20,
+            "templates": 8,
+            "panels": 893,
+            "girders": 183,
+            "fasteners": 538,
+            "placedTriangles": 126960,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 4,
+            "counterweightLifts": 4,
+            "winches": 2,
+            "triangles": 82512,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 4,
+            "metres": 402.68682126176265,
+            "strands": 28,
+            "collars": 39,
+            "fairleads": 8,
+            "triangles": 397600
+          },
+          "beacons": {
+            "beacons": 4,
+            "shafts": 4,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.17966367974563022,
+            "windGain": 0.08711505634770338,
+            "height": 32,
+            "verticalSpeed": 0,
+            "teleports": 3
+          },
+          "water": {
+            "staticWash": 1382,
+            "movingWash": 0
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "bonus-arrival",
+        "position": [
+          -10,
+          1.200000023841858,
+          0
+        ],
+        "camera": [
+          -10,
+          9.551491190021567,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 1,
+          "models": 14,
+          "props": 82,
+          "nets": 5,
+          "mountedMovers": 4,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 1,
+            "repairs": 1,
+            "openYards": 0
+          },
+          "timber": {
+            "decks": 12,
+            "sections": 34,
+            "intactModules": 8,
+            "instanceBatches": 4,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 638212,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "idle",
+            "banks": 0,
+            "sourceTriangles": 0,
+            "placedTriangles": 0,
+            "shoreSegments": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 2,
+            "sourceTriangles": 51177,
+            "placedTriangles": 102354,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 156,
+            "ledgers": 32,
+            "braces": 0,
+            "plates": 0,
+            "bolts": 0,
+            "placedTriangles": 66944,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "idle",
+            "decks": 0,
+            "templates": 0,
+            "panels": 0,
+            "girders": 0,
+            "fasteners": 0,
+            "placedTriangles": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 0,
+            "counterweightLifts": 0,
+            "winches": 0,
+            "triangles": 0,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 0,
+            "metres": 0,
+            "strands": 0,
+            "collars": 0,
+            "fairleads": 0,
+            "triangles": 0
+          },
+          "beacons": {
+            "beacons": 0,
+            "shafts": 0,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.1504654498885008,
+            "windGain": 0.026113854200002597,
+            "height": 1.250000023841858,
+            "verticalSpeed": 0,
+            "teleports": 0
+          },
+          "water": {
+            "staticWash": 52,
+            "movingWash": 4
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "bonus-skiffs",
+        "position": [
+          62.797999999999995,
+          1.200000023841858,
+          0
+        ],
+        "camera": [
+          62.797999999999995,
+          9.551491190021567,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 1,
+          "models": 14,
+          "props": 82,
+          "nets": 5,
+          "mountedMovers": 4,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 1,
+            "repairs": 1,
+            "openYards": 0
+          },
+          "timber": {
+            "decks": 12,
+            "sections": 34,
+            "intactModules": 8,
+            "instanceBatches": 4,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 638212,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "idle",
+            "banks": 0,
+            "sourceTriangles": 0,
+            "placedTriangles": 0,
+            "shoreSegments": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 2,
+            "sourceTriangles": 51177,
+            "placedTriangles": 102354,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 156,
+            "ledgers": 32,
+            "braces": 0,
+            "plates": 0,
+            "bolts": 0,
+            "placedTriangles": 66944,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "idle",
+            "decks": 0,
+            "templates": 0,
+            "panels": 0,
+            "girders": 0,
+            "fasteners": 0,
+            "placedTriangles": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 0,
+            "counterweightLifts": 0,
+            "winches": 0,
+            "triangles": 0,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 0,
+            "metres": 0,
+            "strands": 0,
+            "collars": 0,
+            "fairleads": 0,
+            "triangles": 0
+          },
+          "beacons": {
+            "beacons": 0,
+            "shafts": 0,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.2553963006160989,
+            "windGain": 0.038147274848766045,
+            "height": 1.250000023841858,
+            "verticalSpeed": 0,
+            "teleports": 1
+          },
+          "water": {
+            "staticWash": 52,
+            "movingWash": 4
+          },
+          "errors": []
+        }
+      },
+      {
+        "name": "bonus-reward",
+        "position": [
+          126,
+          1.200000023841858,
+          0
+        ],
+        "camera": [
+          126,
+          9.551491190021567,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "render": [
+          1280,
+          720
+        ],
+        "art": {
+          "status": "ready",
+          "sections": 1,
+          "models": 14,
+          "props": 82,
+          "nets": 5,
+          "mountedMovers": 4,
+          "decorativeColliders": 0,
+          "buildings": {
+            "markets": 1,
+            "repairs": 1,
+            "openYards": 0
+          },
+          "timber": {
+            "decks": 12,
+            "sections": 34,
+            "intactModules": 8,
+            "instanceBatches": 4,
+            "sourceTriangles": 23974,
+            "sceneryTriangles": 39367,
+            "fittedTriangles": 638212,
+            "slipperyOverlays": 0,
+            "errors": []
+          },
+          "coast": {
+            "status": "idle",
+            "banks": 0,
+            "sourceTriangles": 0,
+            "placedTriangles": 0,
+            "shoreSegments": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "fleet": {
+            "status": "ready",
+            "vessels": 2,
+            "sourceTriangles": 51177,
+            "placedTriangles": 102354,
+            "colliders": 0,
+            "errors": []
+          },
+          "piers": {
+            "status": "ready",
+            "piles": 156,
+            "ledgers": 32,
+            "braces": 0,
+            "plates": 0,
+            "bolts": 0,
+            "placedTriangles": 66944,
+            "colliders": 0,
+            "errors": []
+          },
+          "steelDecks": {
+            "status": "idle",
+            "decks": 0,
+            "templates": 0,
+            "panels": 0,
+            "girders": 0,
+            "fasteners": 0,
+            "placedTriangles": 0,
+            "colliders": 0,
+            "errors": []
+          },
+          "deckMachinery": {
+            "hydraulicLifts": 0,
+            "counterweightLifts": 0,
+            "winches": 0,
+            "triangles": 0,
+            "colliders": 0
+          },
+          "rigging": {
+            "cables": 0,
+            "metres": 0,
+            "strands": 0,
+            "collars": 0,
+            "fairleads": 0,
+            "triangles": 0
+          },
+          "beacons": {
+            "beacons": 0,
+            "shafts": 0,
+            "decorativeColliders": 0
+          },
+          "ambience": {
+            "waterGain": 0.2982831280776,
+            "windGain": 0.04106563295604694,
+            "height": 1.250000023841858,
+            "verticalSpeed": 0,
+            "teleports": 2
+          },
+          "water": {
+            "staticWash": 52,
+            "movingWash": 4
+          },
+          "errors": []
+        }
+      }
+    ],
+    "passed": true,
+    "errors": []
+  }
+]

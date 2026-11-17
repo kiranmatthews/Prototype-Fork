@@ -1,5 +1,6 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {dressWaterfallBonus} from './waterfall-climb-art';
+import {arrangeSpillwayCrates} from './waterfall-crate-arrangement';
 
 const C:CustomComponent[]=[];
 const deck=(a:number,b:number,y:number,name:string)=>C.push({t:'platform',p:[(a+b)/2,y-.6,0],s:[b-a,1.2,6],
@@ -41,3 +42,4 @@ export const WATERFALL_CLIMB_BONUS:CustomLevelData={v:1,name:'Bonus: The Hidden 
     {id:20,nm:'The sluice seal reveals two stepping stones'},
     {id:100,nm:'Ancient spillway masonry',editorOnly:true},{id:101,nm:'Water and foam',editorOnly:true},
     {id:102,nm:'Rooted ferns and hanging vegetation',editorOnly:true},{id:103,nm:'Carved sluice mechanisms',editorOnly:true}]};
+arrangeSpillwayCrates(WATERFALL_CLIMB_BONUS);

@@ -2,6 +2,7 @@ import type {CustomComponent,CustomGroup,CustomLevelData} from '../level';
 import {dressTribalRun} from './tribal-run-art';
 import {encloseTribalRun} from './tribal-run-enclosure';
 import {tribalDrum} from './tribal-run-drums';
+import {arrangeTribalCrates} from './tribal-crate-arrangement';
 import {tribalPoint as point,tribalTangent as tangent,tribalYaw as yaw,tribalRibbon,tribalMix as mix,tribalSmooth as smooth,type TribalScalar,TRIBAL_RUN_LENGTH} from './tribal-run-route';
 export {tribalPoint,tribalTangent,tribalYaw,tribalProgress,TRIBAL_RUN_LENGTH} from './tribal-run-route';
 
@@ -172,3 +173,4 @@ export const TRIBAL_RUN_LEVEL:CustomLevelData={v:1,crateLayoutRevision:1,name:'T
  medalTimes:{gold:330,silver:410,bronze:510},groups,components:C};
 dressTribalRun(TRIBAL_RUN_LEVEL,{roads:TRIBAL_RUN_ROADS,steps:TRIBAL_RUN_STEPS,checkpoints:TRIBAL_RUN_CHECKPOINTS});
 encloseTribalRun(TRIBAL_RUN_LEVEL,TRIBAL_RUN_ROADS,tribalHeight);
+arrangeTribalCrates(TRIBAL_RUN_LEVEL,tribalHeight,tribalOffset,group);

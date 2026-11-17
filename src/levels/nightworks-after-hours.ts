@@ -55,6 +55,15 @@ export const AFTER_HOURS_VOID_CUTS=[
  {grp:8,p:[126,28,-624] as Point,axis:'x' as const,halfWidth:24},
 ];
 
+// Two five-box caches in each checkpoint section, on permanent rock only.
+// Later caches sit after checkpoints; timed crossings and their run-ups stay clear.
+export const AFTER_HOURS_SUPPLIES:readonly Point[]=[
+ [-5,10,13],[12,10,-38],[-16,12,-96],[0,12,-96],
+ [-15.5,12,-178],[-.5,12,-178],[10,14,-281],[30,14,-281],
+ [26,14,-389],[34,14,-389],[105.5,14,-386],[122.5,14,-386],
+ [106,14,-482],[102,24,-536],[112,34,-595],[138,36,-675],
+];
+
 export function createNightworksAfterHours():CustomLevelData {
  const C:CustomComponent[]=[],groups=AFTER_HOURS_STAGES.map(s=>({id:s.grp,nm:`${s.grp} · ${s.name}`,editorOnly:true}));
  let grp=1;
@@ -189,6 +198,12 @@ export function createNightworksAfterHours():CustomLevelData {
  for(const p of lane)add({t:'camnode',p,radius:5,grp:1});
  for(const [x,y,z,yaw]of [[-42,-6,-45,20],[32,-7,-128,-15],[-35,-5,-213,10],[76,-9,-245,-20],[-17,-4,-332,15],
   [67,-5,-418,20],[155,1,-458,-18],[63,10,-550,14],[166,17,-651,-16]])add({t:'decor',dkind:'nightdistantarch',p:[x,y,z],s:[28,36,12],yaw,color:'#7588ac',grp:1});
+ for(const [i,[x,y,z]] of AFTER_HOURS_SUPPLIES.entries()){
+  const section=Math.floor(i/2)+1,cells=[[-.96,0],[0,0],[.96,0],[-.48,.96],[.48,.96]];
+  cells.forEach(([dx,dy],box)=>add({t:'crate',p:[x+dx,y+dy,z],grp:section,
+   kind:box===4?([10,12,14].includes(i)?'mask':'mystery'):'wood',
+   nm:`Guptus supply / section ${section} / cache ${i%2+1} / box ${box+1}`}));
+ }
  return {v:1,name:'Nightworks: After Hours',spawn:[0,10.1,10],killY:-35,sky:'night',keepPlayFog:true,
   cameraAirLift:.5,medalTimes:{gold:75,silver:105,bronze:150},components:C,groups};
 }

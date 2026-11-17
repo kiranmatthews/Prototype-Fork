@@ -1,0 +1,14 @@
+{
+  "url": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=crystal-trials&lite",
+  "errors": [],
+  "passed": true,
+  "status": 200,
+  "stamp": "Codex/sol fork \u00b7 build 11-15 03:31 UTC",
+  "crystals": 25,
+  "spawn": [
+    0,
+    -8,
+    80
+  ],
+  "state": "ride"
+}

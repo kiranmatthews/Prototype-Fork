@@ -88,9 +88,6 @@ for(const z of [-7,-15,-39,-49,-58,-90,-100,-149,-157,-166,-215,-224])fruit(z);
 for(const z of [-23,-28,-32])fruit(z,-.95);
 for(const z of [-117,-122,-127])fruit(z,.95);
 for(const z of [-184,-189,-193])fruit(z,-.95);
-for(const z of [-70,-140,-204,-237]){crate(z,-2.1);crate(z,2.1);}
-crate(5.2,-4.2);crate(5.2,4.2);crate(7,5,'mystery');crate(-69,3.6,'bouncy');crate(-139,-3.6,'life');
-crate(-110.5,2.6,'multihit');crate(-37.8,-2.9,'mask');crate(-230.9,4.9,'mystery');
 crate(-27,1.15,'nitro','Keep left across the first frozen span');
 crate(-123,-1.15,'nitro','Anticipate right before the second frozen span');
 crate(-188,1.15,'nitro','Keep left while carrying ice momentum');
@@ -122,8 +119,21 @@ for(const [i,gap] of SKY_BRIDGE_SKATE_GAPS.entries()){
     gap.takeoff+(gap.landing-gap.takeoff)*j/4],nm:`${gap.name} skate flight arc`,grp});
 }
 for(const [z,grp] of [[-237,8],[-309,9],[-377,10],[-433,11]])add({t:'checkpoint',p:[0,0,z],grp});
-for(const [z,grp] of [[-312,8],[-378,9],[-441,10],[-480,11]])
-  for(const side of [-1,1])add({t:'crate',p:[side*2.1,0,z],kind:'wood',nm:'Skyway landing cache',grp});
+// Two optional deliveries per checkpoint section, on fixed masonry. Their
+// long axis follows the landing, leaving the centre line and portal legs clear.
+// Recover masks before the first enemy, high span and final skating chapter.
+// Raw .96 m formations expand once to the runtime's 1.152 m crate grid.
+for(const [i,[x,z]] of [
+  [3.1,5.4],[1.8,-41.8],[-3,-71.5],[3,-71.5],
+  [-3.1,-141.5],[1.9,-176.5],[-3,-232.5],[3,-235],
+  [-3,-239.5],[3,-305.5],[-3,-312.5],[3,-373],
+  [-3,-381],[3,-381],[-3,-438],[3,-479],
+].entries()){
+  const section=Math.floor(i/2)+1,cap=[0,4,14].includes(i)?'mask':'mystery';
+  for(const [j,[dz,dy]] of [[-.96,0],[0,0],[.96,0],[-.48,.96],[.48,.96]].entries())
+    add({t:'crate',p:[x,dy,z+dz],kind:j===4?cap:'wood',
+      nm:`Sky supply / section ${section} / cache ${i%2+1} / box ${j+1}`});
+}
 // Keep the final ollie's touchdown clear of the default centre-line switch.
 add({t:'crate',p:[-3.2,0,-476.8],kind:'nitrobang',nm:'Nitro clear beside the observatory landing',grp:11});
 for(const [i,[x,y,z,w,d]] of [

@@ -1,0 +1,38 @@
+[
+  {
+    "baseline": true,
+    "corrected": false,
+    "passed": false,
+    "error": "land beyond the collapsed flagstones: {\"frame\":322,\"time\":5.366666666666666,\"position\":[6.071569560164602,-25.802144779180683,-1738.2227769611786],\"heading\":[-0.1203313675192374,0,-0.9927337820337085],\"state\":\"dead\",\"grounded\":false,\"speed\":6.590993784255999,\"verticalSpeed\":-50.853194783243545,\"bailing\":true,\"deaths\":0,\"mover\":null,\"ground\":null,\"rail\":null,\"railDistance\":null,\"balance\":0,\"input\":{\"moveX\":-0.18,\"moveY\":0.98,\"jumpHeld\":false,\"grindHeld\":false,\"spinHeld\":false,\"grabHeld\":false,\"transferHeld\":false,\"jumpPressed\":false,\"jumpReleased\":false,\"grindPressed\":false,\"spinPressed\":false,\"grabPressed\":false,\"transferPressed\":false,\"restartPressed\":false}}"
+  },
+  {
+    "baseline": true,
+    "corrected": true,
+    "passed": true,
+    "result": {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1747,
+        1750
+      ],
+      "landingStation": 1751.1581855746206,
+      "frames": 255,
+      "deaths": 0
+    }
+  },
+  {
+    "baseline": false,
+    "corrected": true,
+    "passed": true,
+    "result": {
+      "test": "input-only execution-gallery floor jump",
+      "gap": [
+        1747,
+        1750
+      ],
+      "landingStation": 1751.1581855746206,
+      "frames": 255,
+      "deaths": 0
+    }
+  }
+]

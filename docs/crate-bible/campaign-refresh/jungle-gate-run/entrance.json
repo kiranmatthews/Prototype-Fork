@@ -1,0 +1,54 @@
+{
+  "report": {
+    "stage": "continue from restored parent",
+    "actions": [
+      {
+        "name": "ordinary main route bypass",
+        "firstFrame": 20,
+        "lastFrame": 236
+      },
+      {
+        "name": "read the optional reliquary",
+        "firstFrame": 274,
+        "lastFrame": 435
+      },
+      {
+        "name": "turn into the reliquary alcove",
+        "firstFrame": 453,
+        "lastFrame": 545
+      },
+      {
+        "name": "land deliberately on the hoard stone",
+        "firstFrame": 590,
+        "lastFrame": 626
+      },
+      {
+        "name": "continue from restored parent",
+        "firstFrame": 656,
+        "lastFrame": 743
+      }
+    ],
+    "evidence": [
+      {
+        "action": "deliberate hoard landing",
+        "position": [
+          1127.7039601602662,
+          9.049999998658896,
+          -4.169448551778272
+        ],
+        "entriesBefore": 0,
+        "entriesAfter": 1
+      }
+    ],
+    "bonusEntries": 1,
+    "result": {
+      "position": [
+        1140.4322444444447,
+        8.000000023841858,
+        0
+      ],
+      "entries": 1,
+      "deaths": 0
+    }
+  }
+}

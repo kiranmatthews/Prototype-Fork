@@ -1,0 +1,77 @@
+{
+  "note": "Diagnostic only; inspect flagged poses visually, not an art approval.",
+  "results": [
+    {
+      "phase": 2,
+      "file": "art/fire-sprites/v4/narrow/02.png",
+      "ratio": 0.698,
+      "differenceA": 0.028016323317805004,
+      "differenceB": 0.012120805245123815,
+      "endpointDifference": 0.03288015228833056
+    },
+    {
+      "phase": 4,
+      "file": "art/fire-sprites/v4/narrow/04.png",
+      "ratio": 0.584,
+      "differenceA": 0.03288015228833056,
+      "differenceB": 0.0234336724655154,
+      "endpointDifference": 0.038933358604312886
+    },
+    {
+      "phase": 6,
+      "file": "art/fire-sprites/v4/narrow/06.png",
+      "ratio": 0.37,
+      "differenceA": 0.012500382519983089,
+      "differenceB": 0.021324625442422054,
+      "endpointDifference": 0.0234336724655154
+    },
+    {
+      "phase": 10,
+      "file": "art/fire-sprites/v4/narrow/10.png",
+      "ratio": 0.808,
+      "differenceA": 0.03890355840400529,
+      "differenceB": 0.009249189241848152,
+      "endpointDifference": 0.038331971378868845
+    },
+    {
+      "phase": 12,
+      "file": "art/fire-sprites/v4/narrow/12.png",
+      "ratio": 0.622,
+      "differenceA": 0.038331971378868845,
+      "differenceB": 0.02331375468414789,
+      "endpointDifference": 0.05141571622129494
+    },
+    {
+      "phase": 20,
+      "file": "art/fire-sprites/v4/narrow/20.png",
+      "ratio": 0.433,
+      "differenceA": 0.045428996133322894,
+      "differenceB": 0.05949318807726479,
+      "endpointDifference": 0.05608912158321758
+    },
+    {
+      "phase": 28,
+      "file": "art/fire-sprites/v4/narrow/28-r2.png",
+      "ratio": 0.463,
+      "differenceA": 0.026714559807294962,
+      "differenceB": 0.030978514713112578,
+      "endpointDifference": 0.04278462847929833
+    },
+    {
+      "phase": 36,
+      "file": "art/fire-sprites/v4/narrow/36.png",
+      "ratio": 0.525,
+      "differenceA": 0.01926473563223008,
+      "differenceB": 0.017414732726331667,
+      "endpointDifference": 0.02604171515995849
+    },
+    {
+      "phase": 44,
+      "file": "art/fire-sprites/v4/narrow/44.png",
+      "ratio": 0.592,
+      "differenceA": 0.03926719833131102,
+      "differenceB": 0.027079788991030487,
+      "endpointDifference": 0.047218290170750465
+    }
+  ]
+}

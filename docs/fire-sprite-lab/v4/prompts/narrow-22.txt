@@ -1,0 +1,8 @@
+Use case: stylized-concept. Asset: exactly ONE newly drawn fire animation cel.
+Image1 is the EARLIER drawing at phase20/48. Image2 is the LATER drawing at phase24/48. Generate the cel exactly HALFWAY between these poses, phase22/48. Time from either neighbour is0.050seconds. Do not duplicate either endpoint.
+
+Motion in this interval: The young broad right-hand orange head and its internal opening both travel UP and expand. The left lower lobe stretches upward. The dying upper remnant shrinks away; new lower light replaces the rising inner crests.
+
+Respect the very close temporal spacing. Draw one definite contour at each intermediate position: expanding holes, thinning bridges, moving shoulders and bright internal crests all occupy intermediate shapes. For disappearing material, reduce its thickness and opacity as it is consumed; for growing material, build it from its connected lower source. No double exposures, dissolve, optical-flow texture, blur, new unrelated tongues or whole-image sway. At fine intervals use tiny controlled changes, not a fresh key pose.
+
+Retain the exact1254×1254 square canvas, original pixel scale, stable foot position and native transparent padding. Keep the lumen/colour level continuous between the two references. Match the softly luminous warm white/lemon base, orange flowing sheets and thin reddish tips, painted as large cel colour masses with restrained soft transitions. The inner light shapes also move between their two references rather than remaining frozen. No outlines, nested flame-logo bands, extra miniature flames, sparks, smoke, exterior haze, noise, text, props, grid or sheet. Genuine alpha outside the effect and through its openings. Output one transparent PNG cel only.

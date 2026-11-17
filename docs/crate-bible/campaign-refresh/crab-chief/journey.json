@@ -1,0 +1,622 @@
+{
+  "result": {
+    "frame": 5079,
+    "hits": 9,
+    "playerHits": 0,
+    "grindDistance": 57.2398475793882,
+    "phases": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3
+    ],
+    "strikes": [
+      {
+        "time": 7.999999999999977,
+        "phase": 1,
+        "speed": 2.5886591222274133,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 13.000000000000226,
+        "phase": 1,
+        "speed": 3.2994442088957774,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 18.00000000000026,
+        "phase": 1,
+        "speed": 3.2926694032628165,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 32.283333333332784,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": false,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.079404351688392,
+        "rampSpeed": 0
+      },
+      {
+        "time": 43.51666666666548,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": true,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.080900289512993,
+        "rampSpeed": 0
+      },
+      {
+        "time": 54.81666666666484,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": false,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.079542938186627,
+        "rampSpeed": 0
+      },
+      {
+        "time": 65.99999999999754,
+        "phase": 3,
+        "speed": 12.127940244689709,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 12.281296606506386
+      },
+      {
+        "time": 73.09999999999714,
+        "phase": 3,
+        "speed": 10.368897981198227,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 10.522301987926342
+      },
+      {
+        "time": 81.19999999999668,
+        "phase": 3,
+        "speed": 11.912649151685365,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 12.066051984326307
+      }
+    ],
+    "position": [
+      0.049008151307062896,
+      -4.7683715642676816e-08,
+      -9.741844493449346
+    ]
+  },
+  "boss": {
+    "state": "defeated",
+    "stateTime": 3.4166666666666594,
+    "phase": 3,
+    "health": 0,
+    "charged": false,
+    "charge": 0,
+    "canFinish": true,
+    "hits": 9,
+    "playerHits": 0,
+    "grindDistance": 57.2398475793882,
+    "skateDistance": 60.94305851414545,
+    "tongueRun": 0,
+    "tongueActive": false,
+    "tongueProgress": 0,
+    "rampActive": false,
+    "rampProgress": 0,
+    "launchTime": 0,
+    "rampSpeed": 0,
+    "activeWaves": [],
+    "activeBubbles": 0,
+    "bubblePositions": [],
+    "target": [
+      0.34354363344634986,
+      0,
+      -7.117304589819315
+    ],
+    "history": [
+      {
+        "time": 0,
+        "state": "waiting",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 1.5999999999999992,
+        "state": "intro",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 3.816666666666658,
+        "state": "idle",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 4.666666666666655,
+        "state": "slam-tell",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 5.966666666666651,
+        "state": "slam",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 6.566666666666649,
+        "state": "recover",
+        "phase": 1,
+        "health": 9
+      },
+      {
+        "time": 7.999999999999977,
+        "state": "hurt",
+        "phase": 1,
+        "health": 8
+      },
+      {
+        "time": 9.05000000000003,
+        "state": "idle",
+        "phase": 1,
+        "health": 8
+      },
+      {
+        "time": 9.900000000000071,
+        "state": "slam-tell",
+        "phase": 1,
+        "health": 8
+      },
+      {
+        "time": 11.200000000000136,
+        "state": "slam",
+        "phase": 1,
+        "health": 8
+      },
+      {
+        "time": 11.800000000000166,
+        "state": "recover",
+        "phase": 1,
+        "health": 8
+      },
+      {
+        "time": 13.000000000000226,
+        "state": "hurt",
+        "phase": 1,
+        "health": 7
+      },
+      {
+        "time": 14.050000000000278,
+        "state": "idle",
+        "phase": 1,
+        "health": 7
+      },
+      {
+        "time": 14.90000000000032,
+        "state": "slam-tell",
+        "phase": 1,
+        "health": 7
+      },
+      {
+        "time": 16.20000000000036,
+        "state": "slam",
+        "phase": 1,
+        "health": 7
+      },
+      {
+        "time": 16.800000000000328,
+        "state": "recover",
+        "phase": 1,
+        "health": 7
+      },
+      {
+        "time": 18.00000000000026,
+        "state": "hurt",
+        "phase": 1,
+        "health": 6
+      },
+      {
+        "time": 19.0500000000002,
+        "state": "phase",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 22.066666666666695,
+        "state": "idle",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 22.916666666666647,
+        "state": "slam-tell",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 24.216666666666573,
+        "state": "slam",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 27.38333333333306,
+        "state": "tongue-form",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 28.58333333333299,
+        "state": "tongue-open",
+        "phase": 2,
+        "health": 6
+      },
+      {
+        "time": 32.283333333332784,
+        "state": "hurt",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 33.333333333332725,
+        "state": "idle",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 34.183333333332676,
+        "state": "volley-tell",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 35.33333333333261,
+        "state": "volley",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 38.14999999999912,
+        "state": "tongue-form",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 39.34999999999905,
+        "state": "tongue-open",
+        "phase": 2,
+        "health": 5
+      },
+      {
+        "time": 43.51666666666548,
+        "state": "hurt",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 44.56666666666542,
+        "state": "idle",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 45.41666666666537,
+        "state": "slam-tell",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 46.7166666666653,
+        "state": "slam",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 49.883333333331784,
+        "state": "tongue-form",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 51.083333333331716,
+        "state": "tongue-open",
+        "phase": 2,
+        "health": 4
+      },
+      {
+        "time": 54.81666666666484,
+        "state": "hurt",
+        "phase": 2,
+        "health": 3
+      },
+      {
+        "time": 55.86666666666478,
+        "state": "phase",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 58.88333333333127,
+        "state": "idle",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 59.733333333331224,
+        "state": "slam-tell",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 60.68333333333117,
+        "state": "slam",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 61.283333333331136,
+        "state": "ramp-form",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 63.0999999999977,
+        "state": "ramp-open",
+        "phase": 3,
+        "health": 3
+      },
+      {
+        "time": 65.99999999999754,
+        "state": "hurt",
+        "phase": 3,
+        "health": 2
+      },
+      {
+        "time": 67.04999999999748,
+        "state": "idle",
+        "phase": 3,
+        "health": 2
+      },
+      {
+        "time": 67.89999999999743,
+        "state": "volley-tell",
+        "phase": 3,
+        "health": 2
+      },
+      {
+        "time": 69.04999999999737,
+        "state": "volley",
+        "phase": 3,
+        "health": 2
+      },
+      {
+        "time": 70.66666666666394,
+        "state": "ramp-open",
+        "phase": 3,
+        "health": 2
+      },
+      {
+        "time": 73.09999999999714,
+        "state": "hurt",
+        "phase": 3,
+        "health": 1
+      },
+      {
+        "time": 74.14999999999708,
+        "state": "idle",
+        "phase": 3,
+        "health": 1
+      },
+      {
+        "time": 74.99999999999703,
+        "state": "sweep-tell",
+        "phase": 3,
+        "health": 1
+      },
+      {
+        "time": 76.41666666666362,
+        "state": "sweep",
+        "phase": 3,
+        "health": 1
+      },
+      {
+        "time": 78.33333333333017,
+        "state": "ramp-open",
+        "phase": 3,
+        "health": 1
+      },
+      {
+        "time": 81.19999999999668,
+        "state": "defeated",
+        "phase": 3,
+        "health": 0
+      }
+    ],
+    "strikes": [
+      {
+        "time": 7.999999999999977,
+        "phase": 1,
+        "speed": 2.5886591222274133,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 13.000000000000226,
+        "phase": 1,
+        "speed": 3.2994442088957774,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 18.00000000000026,
+        "phase": 1,
+        "speed": 3.2926694032628165,
+        "skating": false,
+        "grinding": false,
+        "charged": false,
+        "kind": "pearl",
+        "tongueMetres": 0,
+        "rampSpeed": 0
+      },
+      {
+        "time": 32.283333333332784,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": false,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.079404351688392,
+        "rampSpeed": 0
+      },
+      {
+        "time": 43.51666666666548,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": true,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.080900289512993,
+        "rampSpeed": 0
+      },
+      {
+        "time": 54.81666666666484,
+        "phase": 2,
+        "speed": 6.5,
+        "skating": false,
+        "grinding": true,
+        "charged": true,
+        "kind": "tongue",
+        "tongueMetres": 19.079542938186627,
+        "rampSpeed": 0
+      },
+      {
+        "time": 65.99999999999754,
+        "phase": 3,
+        "speed": 12.127940244689709,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 12.281296606506386
+      },
+      {
+        "time": 73.09999999999714,
+        "phase": 3,
+        "speed": 10.368897981198227,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 10.522301987926342
+      },
+      {
+        "time": 81.19999999999668,
+        "phase": 3,
+        "speed": 11.912649151685365,
+        "skating": true,
+        "grinding": false,
+        "charged": true,
+        "kind": "sand-spin",
+        "tongueMetres": 0,
+        "rampSpeed": 12.066051984326307
+      }
+    ],
+    "model": {
+      "provider": "Meshy",
+      "triangles": 7667,
+      "meshes": 1,
+      "rootScale": [
+        1,
+        1,
+        1
+      ],
+      "ready": true,
+      "joints": 21,
+      "toes": [
+        [
+          -1.23,
+          0.48,
+          0.22
+        ],
+        [
+          1.23,
+          0.48,
+          0.22
+        ]
+      ],
+      "wrists": [
+        [
+          -2.5,
+          2.95,
+          -22.1
+        ],
+        [
+          2.5,
+          2.95,
+          -22.1
+        ]
+      ],
+      "pearl": [
+        0,
+        2.617142576831048,
+        -22.048006607247817
+      ]
+    }
+  },
+  "traceSummary": {
+    "recordedRows": 5078,
+    "source": "tools/test-crab-chief-journey.mjs",
+    "simulationSeconds": 84.65,
+    "deaths": 0,
+    "note": "Complete native input-driven fight; full per-frame trace retained in the workspace. Browser does not claim a complete fight."
+  }
+}

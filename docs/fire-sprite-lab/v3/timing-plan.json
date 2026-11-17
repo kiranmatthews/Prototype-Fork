@@ -1,0 +1,266 @@
+{
+  "targetFrames": 36,
+  "fps": 36,
+  "createdAt": "2026-11-11T09:29:48.196Z",
+  "families": {
+    "narrow": [
+      {
+        "from": 1,
+        "to": 2,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.026233449433810768
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.041846608971421645
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.02436501730381581
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.03041628837801452
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.015987405105585457
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.030451213990310665
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "segments": 5,
+        "newDrawings": 4,
+        "difference": 0.051423970003515465
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "segments": 5,
+        "newDrawings": 4,
+        "difference": 0.048855764368471485
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.0392793801675608
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.03143224130786085
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "segments": 1,
+        "newDrawings": 0,
+        "difference": 0.006024254062564819
+      },
+      {
+        "from": 12,
+        "to": 1,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.02303805384345259
+      }
+    ],
+    "medium": [
+      {
+        "from": 1,
+        "to": 2,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.054533172497366444
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.07168174605346152
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.07240425944186192
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.05751375333396881
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.05590929491870949
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.06101512468455835
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.08420608660977828
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.07769267919396844
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.08211018808480916
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.0785633015606182
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "segments": 1,
+        "newDrawings": 0,
+        "difference": 0.007222519971771481
+      },
+      {
+        "from": 12,
+        "to": 1,
+        "segments": 1,
+        "newDrawings": 0,
+        "difference": 0.01608580003743893
+      }
+    ],
+    "broad": [
+      {
+        "from": 1,
+        "to": 2,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.05110392696636498
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.06142123537129723
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.05279005137605228
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.08115952602499207
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.03428983441559392
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.04118042566300378
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.054308205017225185
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "segments": 3,
+        "newDrawings": 2,
+        "difference": 0.053887906059165894
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "segments": 4,
+        "newDrawings": 3,
+        "difference": 0.0661696087384576
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.037987233569616134
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "segments": 5,
+        "newDrawings": 4,
+        "difference": 0.08610280554545947
+      },
+      {
+        "from": 12,
+        "to": 1,
+        "segments": 2,
+        "newDrawings": 1,
+        "difference": 0.039468662095231956
+      }
+    ]
+  },
+  "status": "Initial allocation estimate only; superseded by adaptive gap selection and the final sequence.json ordering."
+}

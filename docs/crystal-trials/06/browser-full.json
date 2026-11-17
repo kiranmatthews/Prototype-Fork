@@ -1,0 +1,370 @@
+{
+  "trial": 6,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0,
+      20
+    ],
+    "crystals": 6
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -123
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        -123
+      ],
+      "camera": [
+        0,
+        8.723529595870144,
+        -105.50252024568084
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -0.0,
+            0.56346457741584,
+            1.0025549842820718
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -1.3970402798742918,
+            0.5085676528557974,
+            1.0027200017802285
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -11.935037552764955,
+            1.0364591703568875,
+            1.0105750696443785
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -6.56459373621659,
+            0.4945589868377928,
+            1.0041944532089797
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            -6.831645344369188,
+            0.45838264240997145,
+            1.00331755330298
+          ]
+        },
+        {
+          "name": "06 / Vine Window",
+          "screen": [
+            0,
+            0.6057639553613422,
+            0.9963925261799729
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.025991798139467108,
+        0,
+        -123.0804609868463
+      ],
+      "camera": [
+        0.025991798139467108,
+        8.723529595870144,
+        -105.58298123252715
+      ],
+      "render": [
+        480,
+        270
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            0.00032927728918563973,
+            0.5637097676122196,
+            1.0025533926513446
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -1.395515650622916,
+            0.5088784501567157,
+            1.0027181443655793
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -11.888238880028542,
+            1.0358668327306917,
+            1.0105369233337866
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -6.554866172089491,
+            0.49509542556125324,
+            1.004189311816083
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            -6.823940769156815,
+            0.45883029398224223,
+            1.0033145620091652
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rope-and-window",
+      "position": [
+        0,
+        0,
+        -141
+      ],
+      "camera": [
+        0,
+        8.723529595870144,
+        -123.50252024568084
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "01 / First Lift",
+          "screen": [
+            -0.0,
+            0.5539083890784067,
+            1.0022411353468264
+          ]
+        },
+        {
+          "name": "02 / Bell Tower",
+          "screen": [
+            -1.1693209800989168,
+            0.5073174025093025,
+            1.0023581591145976
+          ]
+        },
+        {
+          "name": "03 / Needle Viaduct",
+          "screen": [
+            -6.335440890539771,
+            0.7851881097075896,
+            1.005848178256034
+          ]
+        },
+        {
+          "name": "04 / Passing Platforms",
+          "screen": [
+            -4.9577955826166225,
+            0.4961104389758354,
+            1.0032902023241144
+          ]
+        },
+        {
+          "name": "05 / Skylight",
+          "screen": [
+            -5.4777319616838165,
+            0.466808341149192,
+            1.00275918798254
+          ]
+        },
+        {
+          "name": "06 / Vine Window",
+          "screen": [
+            0,
+            0.6648411693483159,
+            0.9940784838909213
+          ]
+        }
+      ]
+    }
+  ],
+  "installed": {
+    "id": 6,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 6,
+    "frame": 2059,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank the rope courtyard checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Wait below the climbing vine",
+        "firstFrame": 137,
+        "lastFrame": 378
+      },
+      {
+        "name": "Read the rope as it crosses the courtyard center",
+        "firstFrame": 422,
+        "lastFrame": 531
+      },
+      {
+        "name": "Catch the moving lower rope with a normal jump",
+        "firstFrame": 532,
+        "lastFrame": 535
+      },
+      {
+        "name": "A low release misses the window and lands in the courtyard",
+        "firstFrame": 564,
+        "lastFrame": 607
+      },
+      {
+        "name": "Wait below the climbing vine",
+        "firstFrame": 607,
+        "lastFrame": 693
+      },
+      {
+        "name": "Read the rope as it crosses the courtyard center",
+        "firstFrame": 737,
+        "lastFrame": 752
+      },
+      {
+        "name": "Catch the moving lower rope with a normal jump",
+        "firstFrame": 753,
+        "lastFrame": 757
+      },
+      {
+        "name": "Climb the swinging rope above the window sill",
+        "firstFrame": 759,
+        "lastFrame": 962
+      },
+      {
+        "name": "Wait for the high swing toward the window",
+        "firstFrame": 988,
+        "lastFrame": 1256
+      },
+      {
+        "name": "Release through the framed window onto its sill",
+        "firstFrame": 1257,
+        "lastFrame": 1381
+      },
+      {
+        "name": "Collect the window crystal",
+        "firstFrame": 1381,
+        "lastFrame": 1447
+      },
+      {
+        "name": "Read the courtyard return beside the window",
+        "firstFrame": 1465,
+        "lastFrame": 1538
+      },
+      {
+        "name": "Drop into the broad courtyard beside the gallery",
+        "firstFrame": 1583,
+        "lastFrame": 1636
+      },
+      {
+        "name": "Pass outside the climbing rope",
+        "firstFrame": 1636,
+        "lastFrame": 1774
+      },
+      {
+        "name": "Return to the rope courtyard entrance",
+        "firstFrame": 1792,
+        "lastFrame": 2041
+      }
+    ],
+    "evidence": [
+      {
+        "action": "low rope catch",
+        "position": [
+          -0.0006657722504036509,
+          0.27613931315840956,
+          -146.78834300994436
+        ],
+        "gripDistance": 11.9
+      },
+      {
+        "action": "low rope catch",
+        "position": [
+          0.0017865947411664941,
+          0.2753638598872086,
+          -145.2234252822382
+        ],
+        "gripDistance": 11.9
+      },
+      {
+        "action": "climbed release",
+        "position": [
+          0.05498052814544825,
+          8.730276669966113,
+          -147.61944861903058
+        ],
+        "gripDistance": 3.7800000000000793
+      }
+    ],
+    "position": [
+      0.025991798139467108,
+      0,
+      -123.0804609868463
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Return to the rope courtyard entrance",
+    "result": {
+      "id": 6,
+      "collected": 1,
+      "position": [
+        0.025991798139467108,
+        0,
+        -123.0804609868463
+      ],
+      "frames": 2059
+    }
+  },
+  "stagedVisualFixtures": [
+    {
+      "name": "rope-and-window",
+      "position": [
+        0,
+        0.15,
+        -13
+      ]
+    }
+  ],
+  "passed": true
+}

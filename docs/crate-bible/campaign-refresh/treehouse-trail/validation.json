@@ -1,0 +1,73 @@
+{
+  "base_commit": "b499de87a671515f9acd16ad76a70225bb6692b5",
+  "main": {
+    "counted_crates": 62,
+    "checkpoint_sections": [
+      9,
+      10,
+      12,
+      10,
+      10,
+      11
+    ],
+    "mean_cluster_size": 2.7,
+    "singles_fraction": 0.08064516129032258,
+    "enemy_count": 4,
+    "native": "All 62 crates collected: 59 in 21 staged ground groups, two rewards through arrow bounce, then arrow; supported patrols; unbanked checkpoint restoration.",
+    "browser": "Lite native spin, arrow contact, checkpoint spin and finite-life fall/respawn. Full staged cluster views and finish gate. Not a continuous main-course all-box run.",
+    "console_errors": [],
+    "clearing_review": "Reviewed from authored +X approach; the lid reward and crab are visible with a clear bypass."
+  },
+  "bonus": {
+    "counted_crates": 18,
+    "mean_cluster_size": 3.14,
+    "singles_fraction": 0.05555555555555555,
+    "native_input_journey": {
+      "crates": 18,
+      "total": 18,
+      "gem": true,
+      "deaths": 0,
+      "frames": 2138
+    },
+    "wrong_order": "Breaking the arrow prevents direct double-jump, air-spin and clamber access to the gallery; reset restores the arrow and rewards.",
+    "browser": [
+      {
+        "mode": "lite",
+        "passed": true,
+        "errors": [],
+        "result": {
+          "id": "bonus-treehouse-trail",
+          "state": "finished",
+          "gemEarned": true,
+          "totalCrates": 18,
+          "cratesBroken": 18,
+          "deaths": 0
+        }
+      },
+      {
+        "mode": "full",
+        "passed": true,
+        "errors": [],
+        "result": null
+      }
+    ]
+  },
+  "checks": {
+    "npm run check:levels": "passed",
+    "node tools/validate-levels.mjs after bonus edit": "passed",
+    "npm run build": "passed",
+    "git diff --check": "passed",
+    "npm run check:release": "passed: 945594137 / 1000000000 bytes"
+  },
+  "limitations": [
+    "Main course collection uses staged approaches; no claim of a continuous all-box course run.",
+    "Audit void flags in the bonus are the intentional steel-supported stepping-stone puzzle, crossed in the native and normal browser loop.",
+    "Supplemental full-render post-fall recovery wait timed out after 30 seconds. The earlier lite finite-life recovery passed (4 to 3 lives, restored checkpoint position) and the independent full-render finish passed; full post-recovery finish is not established."
+  ],
+  "harness_corrections": [
+    "Arrow fixture must fall onto the lid rather than spawn grounded on it.",
+    "Checkpoint crates bank through spin/stomp, not passive proximity.",
+    "Finite lives decrement lives; totalDeaths counts endless/competition modes.",
+    "The relay pilot now uses runtime steel-lid heights instead of the unexpanded .96m authoring grid."
+  ]
+}

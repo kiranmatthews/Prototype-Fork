@@ -1,0 +1,3 @@
+dark: 120 crates (+11 checkpoints), 35 clusters, route 623.8 m [camnode lane] in 3876 ms
+bonus-nightworks: 21 crates (+0 checkpoints), 9 clusters, route 76 m [camnode lane] in 157 ms
+wrote ../crate-review/dark/after-audit.json and ../crate-review/dark/after-audit.md (2 levels)

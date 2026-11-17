@@ -1,0 +1,141 @@
+{
+  "mode": "lite",
+  "errors": [],
+  "keyboard": {
+    "drive": {
+      "speed": 31.58779617142384,
+      "yaw": 0.3330792126769199,
+      "progress": 274.44727950794726
+    },
+    "steeredYaw": -1.5559922701000088,
+    "brakedSpeed": -0.0
+  },
+  "pickups": [
+    {
+      "index": 1,
+      "target": [
+        26.65896,
+        28.176062545698173,
+        -66.16657
+      ],
+      "start": [
+        21.215017859374893,
+        25.809873968643153,
+        -53.26837268527705
+      ],
+      "done": true,
+      "collected": true,
+      "frames": 62,
+      "item": "mushroom",
+      "falls": 0,
+      "hits": 0,
+      "boxes": 0
+    },
+    {
+      "index": 29,
+      "target": [
+        -6.15875,
+        26.210400501514815,
+        -2338.88306
+      ],
+      "start": [
+        -0.9356063043602765,
+        23.852835320705232,
+        -2325.8938810446275
+      ],
+      "done": true,
+      "collected": true,
+      "frames": 62,
+      "item": "mushroom",
+      "falls": 0,
+      "hits": 0,
+      "boxes": 0
+    },
+    {
+      "index": 36,
+      "target": [
+        14.58176,
+        27.543227531720394,
+        -3175.14117
+      ],
+      "start": [
+        14.362127032530102,
+        25.671686008494945,
+        -3161.142892914601
+      ],
+      "done": true,
+      "collected": true,
+      "frames": 62,
+      "item": "mushroom",
+      "falls": 0,
+      "hits": 0,
+      "boxes": 0
+    },
+    {
+      "index": 42,
+      "target": [
+        35.60929,
+        26.197160869460397,
+        -3710.91824
+      ],
+      "start": [
+        39.896576302318664,
+        23.77133864602809,
+        -3697.5908555543574
+      ],
+      "done": true,
+      "collected": true,
+      "frames": 53,
+      "item": "mushroom",
+      "falls": 0,
+      "hits": 0,
+      "boxes": 0
+    },
+    {
+      "index": 51,
+      "target": [
+        2.48877,
+        26.882204698826946,
+        -4529.60162
+      ],
+      "start": [
+        2.129532736759063,
+        24.955659122252065,
+        -4521.609689783294
+      ],
+      "done": true,
+      "collected": true,
+      "frames": 42,
+      "item": "mushroom",
+      "falls": 0,
+      "hits": 0,
+      "boxes": 0
+    }
+  ],
+  "priorFixtureFailure": "{'done': True, 'collected': False, 'frames': 361, 'item': None, 'falls': 0, 'hits': 3, 'boxes': 0}",
+  "inventory": {
+    "physical": 52,
+    "items": 52,
+    "total": 0,
+    "checkpoints": 0,
+    "enemies": 0,
+    "racers": 8,
+    "bonus": false,
+    "gemReward": "win"
+  },
+  "stagedFinish": {
+    "done": true,
+    "frames": 229,
+    "phase": "finished",
+    "finish": 4.616666666666656,
+    "falls": 0,
+    "gem": false
+  },
+  "retry": {
+    "alive": 52,
+    "item": null,
+    "boxes": 0,
+    "phase": "grid"
+  },
+  "passed": true
+}

@@ -1,0 +1,13 @@
+{
+  "id": "broad-29-r3",
+  "family": "broad",
+  "celId": "29-r3",
+  "phase": 29,
+  "promptFile": "prompts/broad-29-r3.txt",
+  "refs": [
+    "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/29-r2.png",
+    "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/worktrees/sprite-fire-lab/art/fire-sprites/v4/broad/28.png"
+  ],
+  "reason": "Correct one-pixel native canvas mismatch while preserving the accepted intermediate pose",
+  "prompt": "Deliver one transparent native PNG flame animation cel, EXACTLY 1774 pixels wide and 887 pixels high. Reference 1 is the approved drawing, but accidentally has a 1774×886 canvas. Reference 2 supplies the correct 1774×887 canvas dimensions only. Preserve reference 1's entire artwork, pose, colour, translucent old thin membrane, internal aperture, fixed foot and all margins. Do NOT use reference 2's pose. Correct the canvas to 1774×887 with transparent padding while retaining the drawing at identical pixel scale. No resizing, no trimming, no new detail. Clean transparent exterior and hole; no background haze, sparks, detached fragments, text or shadows. The thin old membrane must stay faint and connected as in reference 1. A single cel only."
+}

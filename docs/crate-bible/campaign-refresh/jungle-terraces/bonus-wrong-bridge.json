@@ -1,0 +1,58 @@
+{
+  "stage": "jump into the gap without using the required crossing tool",
+  "evidence": [
+    {
+      "action": "skip bridge switch",
+      "launch": [
+        26.915677777777816,
+        0,
+        0
+      ],
+      "landing": [
+        31.367677777777782,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    }
+  ],
+  "actions": [
+    {
+      "name": "bridge negative observation",
+      "firstFrame": 5119,
+      "lastFrame": 5119
+    },
+    {
+      "name": "unused switch approach",
+      "firstFrame": 5137,
+      "lastFrame": 5210
+    },
+    {
+      "name": "skip bridge switch",
+      "firstFrame": 5255,
+      "lastFrame": 5294
+    },
+    {
+      "name": "unsupported crossing approach",
+      "firstFrame": 5294,
+      "lastFrame": 5374
+    },
+    {
+      "name": "jump into the gap without using the required crossing tool",
+      "firstFrame": 5419,
+      "lastFrame": 5469
+    }
+  ],
+  "result": {
+    "pattern": "bridge",
+    "test": "skipping visible crossing footholds leads to real chasm death",
+    "state": "dead",
+    "gemEarned": true
+  },
+  "pattern": "bridge",
+  "test": "skipping visible crossing footholds leads to real chasm death",
+  "state": "dead",
+  "gemEarned": true,
+  "frames": 5469,
+  "seconds": 91.15
+}

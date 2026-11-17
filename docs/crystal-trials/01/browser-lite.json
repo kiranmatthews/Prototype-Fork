@@ -1,0 +1,138 @@
+{
+  "trial": 1,
+  "mode": "lite",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      -24,
+      0,
+      20
+    ],
+    "crystals": 1
+  },
+  "installed": {
+    "id": 1,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 1,
+    "frame": 771,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Approach the first checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 322
+      },
+      {
+        "name": "Read the arrow and overhead crystal",
+        "firstFrame": 366,
+        "lastFrame": 505
+      },
+      {
+        "name": "Try an unboosted arrow rebound",
+        "firstFrame": 550,
+        "lastFrame": 586
+      },
+      {
+        "name": "See that the short rebound misses the crystal",
+        "firstFrame": 586,
+        "lastFrame": 616
+      },
+      {
+        "name": "Recover beside the spring for a local retry",
+        "firstFrame": 616,
+        "lastFrame": 633
+      },
+      {
+        "name": "Set up the held rebound",
+        "firstFrame": 633,
+        "lastFrame": 633
+      },
+      {
+        "name": "Land on the arrow for a held rebound",
+        "firstFrame": 678,
+        "lastFrame": 714
+      },
+      {
+        "name": "Retrieve the airborne crystal",
+        "firstFrame": 714,
+        "lastFrame": 735
+      },
+      {
+        "name": "Steer off the arrow onto the safe retry floor",
+        "firstFrame": 735,
+        "lastFrame": 771
+      }
+    ],
+    "evidence": [
+      {
+        "action": "short rebound misses fairly",
+        "apex": 4.909499999999996,
+        "collected": false
+      },
+      {
+        "action": "arrow rebound",
+        "position": [
+          -0.027500000001796258,
+          1.172,
+          -4.997624261391162
+        ],
+        "verticalSpeed": 20
+      },
+      {
+        "action": "crystal",
+        "position": [
+          -0.027500000001796258,
+          6.054499999999998,
+          -4.997624261391162
+        ],
+        "frame": 735
+      }
+    ],
+    "position": [
+      3.4719999999955977,
+      0,
+      -4.997622866750602
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Steer off the arrow onto the safe retry floor",
+    "result": {
+      "id": 1,
+      "collected": 1,
+      "position": [
+        3.4719999999955977,
+        0,
+        -4.997622866750602
+      ],
+      "frames": 771
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        3.4719999999955977,
+        0,
+        -4.997622866750602
+      ],
+      "camera": [
+        3.468807828901195,
+        5.100043754555994,
+        0.052377133774110796
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0
+    }
+  ],
+  "passed": true
+}

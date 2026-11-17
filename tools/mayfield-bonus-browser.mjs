@@ -78,9 +78,9 @@ try{
   for(const [key,label]of [['high target','prize-counter'],['cross actual','service-bridge'],['rebound apex','last-tokens']])if(s.stage.includes(key)&&!seen.has(key)){seen.add(key);await page.screenshot({path:out+'/'+label+'-native.png'});console.log(s.stage);}
   if(s.done)break;
  }
- report.journey=await awaitPilot();assert.ok(report.journey.sourceMatches);assert.equal(report.journey.result.cratesBroken,8);assert.equal(report.journey.result.deaths,0);
+ report.journey=await awaitPilot();assert.ok(report.journey.sourceMatches);assert.equal(report.journey.result.cratesBroken,18);assert.equal(report.journey.result.deaths,0);
  await ready('mayfield-mall');await page.waitForFunction(()=>window.__game.player.grounded);report.returned=await snapshot();
- assert.ok(report.returned.sameParent);assert.equal(report.returned.completed,true);assert.equal(report.returned.bonusCrates,8);assert.equal(report.returned.deaths,report.parent.deaths);
+ assert.ok(report.returned.sameParent);assert.equal(report.returned.completed,true);assert.equal(report.returned.bonusCrates,18);assert.equal(report.returned.deaths,report.parent.deaths);
  assert.ok(report.returned.lives>=report.parent.lives+2);assert.ok(report.returned.fruit>report.parent.fruit);
  await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);});
  await page.waitForTimeout(1000);report.normal=await snapshot();await page.screenshot({path:out+'/parent-return-normal.png'});

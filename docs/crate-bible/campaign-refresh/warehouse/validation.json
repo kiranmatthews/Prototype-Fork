@@ -1,0 +1,346 @@
+{
+  "course": "warehouse",
+  "name": "Factory Fuss",
+  "bonus": null,
+  "status": "validated",
+  "decision": "retain the existing crate-free five-token skate park",
+  "startedAtApprox": "2026-11-14T15:20:40Z",
+  "completedAt": "2026-11-14T15:35:28.333643+00:00",
+  "elapsedMinutes": 14.8,
+  "inventory": {
+    "crates": 0,
+    "enemies": 0,
+    "checkpoints": 3,
+    "tokens": 5,
+    "bonus": false,
+    "skatepark": true,
+    "alwaysSkate": false
+  },
+  "native": {
+    "scope": "Structural/mechanic probes; continuous flow acceptance is separate",
+    "spawn": {
+      "position": [
+        0,
+        3.200000023841858,
+        10
+      ],
+      "state": "ride",
+      "grounded": true,
+      "bail": false,
+      "speed": 0,
+      "tokens": 0
+    },
+    "enclosure": {
+      "width": 116,
+      "depth": 156,
+      "floor": 0,
+      "ceiling": 48.00000000000001,
+      "ceilingSamples": 9,
+      "boundarySamples": 32
+    },
+    "halfpipe": [
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": -0.3,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -54.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": -0.3,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -53.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -45.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -44.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0.3,
+        "side": -1,
+        "frames": 90,
+        "apex": 4.57056439069056,
+        "position": [
+          -38.523798474121094,
+          2.867532659686704,
+          -36.5319307579986
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372791787389357,
+        "tokens": 0
+      },
+      {
+        "name": "Standalone halfpipe / plywood session",
+        "fraction": 0.3,
+        "side": 1,
+        "frames": 90,
+        "apex": 4.570561550415432,
+        "position": [
+          -23.476199618530273,
+          2.8675408399364555,
+          -35.46807060729683
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 12.372795840032747,
+        "tokens": 0
+      }
+    ],
+    "grinds": [
+      {
+        "component": 132,
+        "length": 17.262466598948475,
+        "caught": true
+      },
+      {
+        "component": 139,
+        "length": 40.92760299268119,
+        "caught": true
+      },
+      {
+        "component": 140,
+        "length": 24.17785651623001,
+        "caught": true
+      },
+      {
+        "component": 141,
+        "length": 19.338561810929445,
+        "caught": true
+      },
+      {
+        "component": 152,
+        "length": 22.183277487936078,
+        "caught": true
+      },
+      {
+        "component": 155,
+        "length": 23.703409861232142,
+        "caught": true
+      },
+      {
+        "component": 160,
+        "length": 46.21982835860825,
+        "caught": true
+      },
+      {
+        "component": 168,
+        "length": 57.870176487276666,
+        "caught": true
+      },
+      {
+        "component": 173,
+        "length": 18.287436824575067,
+        "caught": true
+      },
+      {
+        "component": 182,
+        "length": 29.135897425505675,
+        "caught": true
+      },
+      {
+        "component": 183,
+        "length": 10,
+        "caught": true
+      }
+    ],
+    "checkpoints": [
+      {
+        "spawn": [
+          -15,
+          0.1,
+          -6
+        ],
+        "frames": 12,
+        "position": [
+          -15,
+          0,
+          -6
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      },
+      {
+        "spawn": [
+          8,
+          0.1,
+          -32
+        ],
+        "frames": 12,
+        "position": [
+          8,
+          0,
+          -32
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      },
+      {
+        "spawn": [
+          -28,
+          0.1,
+          -100
+        ],
+        "frames": 12,
+        "position": [
+          -28,
+          0,
+          -100
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "speed": 0,
+        "tokens": 0
+      }
+    ],
+    "objectives": {
+      "count": 5,
+      "heights": [
+        4.3,
+        6.9,
+        5.9,
+        9.1,
+        10.6
+      ],
+      "testCollectionOrder": [
+        5,
+        2,
+        4,
+        1,
+        3
+      ],
+      "undersideRejected": true,
+      "softRetryPreserves": true,
+      "hardResetClears": true,
+      "finishFrames": 1
+    },
+    "grindBoundaries": {
+      "surfaces": 24,
+      "boundaries": 428
+    }
+  },
+  "browser": {
+    "inputPlanAdjustment": {
+      "dockReleaseXBefore": -19.4,
+      "dockReleaseXAfter": -21.5,
+      "reason": "At six physics ticks per rendered frame, the original controller released at the lip and missed the jump; no runtime or geometry change."
+    },
+    "continuousFiveTokens": {
+      "finished": true,
+      "tokens": 5,
+      "pickupOrder": [
+        3,
+        4,
+        5,
+        1,
+        2
+      ],
+      "deaths": 0,
+      "snaps": 0,
+      "failure": null,
+      "missingCheckpoints": [],
+      "seconds": 70.58333333333333,
+      "grindFrames": 54,
+      "bails": 0,
+      "distance": 721.0304001446686
+    },
+    "checkpoint": {
+      "done": true,
+      "active": true,
+      "frames": 48
+    },
+    "recovery": {
+      "position": [
+        8,
+        0,
+        -32
+      ],
+      "lives": 3,
+      "grounded": true,
+      "tokens": 0
+    },
+    "fullViews": 3,
+    "consoleErrors": []
+  },
+  "preservation": {
+    "gameSourceUnchanged": true,
+    "publishedPackUnchanged": true,
+    "publishedOverrideAbsent": true
+  },
+  "checks": {
+    "checkLevels": "preceding Mayfield run remains valid; game source and assets unchanged",
+    "build": "preceding Mayfield run remains valid; game source and assets unchanged",
+    "release": "preceding Mayfield run remains valid; game source and assets unchanged"
+  },
+  "buildVersion": "33fa0d85bcda5732230f",
+  "releaseBytes": 959310252,
+  "publication": "authorized; pending GitHub authentication",
+  "limitations": [
+    "Native structure checks stage individual mechanic probes and directly exercise the token lifecycle. Continuous collection is proved separately by the rendered input plan.",
+    "The continuous browser run uses an adapted east-first plan through the standard Gamepad API at 480x270 lite resolution. Three 1280x720 full-render views use staged supported positions.",
+    "Automated controls do not establish novice discoverability. Only the east-first order was continuously replayed during this review.",
+    "The generic crate-placement report skips free-skate parks. Dedicated runtime inventory establishes zero regular crates and enemies."
+  ]
+}

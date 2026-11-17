@@ -1,0 +1,39 @@
+{
+  "id": 7,
+  "errors": [],
+  "passed": true,
+  "scope": "Full renderer at 1280x720; staged views are labelled separately from input routes.",
+  "stagedVisualFixtures": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0.15,
+        -5
+      ],
+      "render": [
+        1280,
+        720
+      ]
+    },
+    {
+      "name": "crystal-approach",
+      "position": [
+        -1.224529688887722,
+        2.946609768087078,
+        -395.5728781446967
+      ],
+      "heading": [
+        0.09869031250118782,
+        0,
+        -0.9951181950996665
+      ],
+      "render": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "fixtureNote": "Player simulation is frozen at each explicitly staged pose; this avoids a midair fixture falling before its screenshot. Moving geometry still renders normally.",
+  "nativeSourceHash": "ade4509f266ac6273a37caa490bab3d2351d2c15163a7bc3a25d72a8b3c97341"
+}

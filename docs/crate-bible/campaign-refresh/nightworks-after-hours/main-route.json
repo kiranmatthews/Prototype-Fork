@@ -1,0 +1,1031 @@
+{
+  "chapters": [
+    {
+      "id": "freight",
+      "firstFrame": 1,
+      "lastFrame": 345
+    },
+    {
+      "id": "ferries",
+      "firstFrame": 346,
+      "lastFrame": 645
+    },
+    {
+      "id": "cutbacks",
+      "firstFrame": 646,
+      "lastFrame": 1412
+    },
+    {
+      "id": "shift-lights",
+      "firstFrame": 1413,
+      "lastFrame": 1677
+    },
+    {
+      "id": "rail-ferry",
+      "firstFrame": 1678,
+      "lastFrame": 2521
+    },
+    {
+      "id": "workbay",
+      "firstFrame": 2522,
+      "lastFrame": 3088
+    },
+    {
+      "id": "crown",
+      "firstFrame": 3089,
+      "lastFrame": 3491
+    },
+    {
+      "id": "last-shift",
+      "firstFrame": 3492,
+      "lastFrame": 4259
+    }
+  ],
+  "checkpoints": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6
+  ],
+  "footFrames": 0,
+  "mountedFrames": 4226,
+  "finished": true,
+  "chapterEvidence": {
+    "freight": {
+      "launches": [
+        {
+          "index": 0,
+          "start": [
+            4.607844573778469,
+            10.746969529959031,
+            -22.270831036936666
+          ],
+          "peak": 10.746969529959031,
+          "airborne": false
+        },
+        {
+          "index": 1,
+          "start": [
+            3.164204245857081,
+            11.657020163506065,
+            -57.34313297830816
+          ],
+          "peak": 11.657020163506065,
+          "airborne": false
+        }
+      ],
+      "landings": [
+        {
+          "index": 0,
+          "start": [
+            4.607844573778469,
+            10.746969529959031,
+            -22.270831036936666
+          ],
+          "peak": 13.130279016582842,
+          "airborne": true,
+          "end": [
+            7.529691093058774,
+            10,
+            -41.5550180641865
+          ]
+        },
+        {
+          "index": 1,
+          "start": [
+            3.164204245857081,
+            11.657020163506065,
+            -57.34313297830816
+          ],
+          "peak": 14.806551433339116,
+          "airborne": true,
+          "end": [
+            -4.307608714888477,
+            12,
+            -76.1229155878864
+          ]
+        }
+      ],
+      "complete": true
+    },
+    "ferries": {
+      "moverContacts": [
+        {
+          "moverIndex": 0,
+          "component": 30,
+          "frame": 74,
+          "time": 6.983333333333314,
+          "position": [
+            -10.675612530017373,
+            12,
+            -110.04620926605193
+          ]
+        },
+        {
+          "moverIndex": 1,
+          "component": 31,
+          "frame": 153,
+          "time": 8.299999999999992,
+          "position": [
+            -4.9338618441834425,
+            12.5,
+            -130.83065535112007
+          ]
+        },
+        {
+          "moverIndex": 2,
+          "component": 32,
+          "frame": 228,
+          "time": 9.550000000000054,
+          "position": [
+            -5.004097970130981,
+            13.194318045556393,
+            -150.5749933024974
+          ]
+        }
+      ],
+      "landings": [
+        {
+          "goal": 0,
+          "start": [
+            -8.798469942939954,
+            12,
+            -98.43138950851016
+          ],
+          "startFrame": 37,
+          "startTime": 6.366666666666649,
+          "charge": 0.4,
+          "peak": 13.77907584806457,
+          "airborne": true,
+          "predicted": {
+            "t": 0.6333333333333336,
+            "position": [
+              -10.711189249134227,
+              12,
+              -110.26634021558722
+            ],
+            "peak": 13.77907584806457
+          },
+          "end": [
+            -10.675612530017373,
+            12,
+            -110.04620926605193
+          ],
+          "endFrame": 74,
+          "endTime": 6.983333333333314,
+          "moverIndex": 0,
+          "component": 30
+        },
+        {
+          "goal": 1,
+          "start": [
+            -10.725621618936556,
+            12,
+            -122.07784630222072
+          ],
+          "startFrame": 118,
+          "startTime": 7.716666666666645,
+          "charge": 0.4,
+          "peak": 13.77907584806457,
+          "airborne": true,
+          "predicted": {
+            "t": 0.6000000000000002,
+            "position": [
+              -4.809565828730659,
+              12.5,
+              -131.00571231289507
+            ],
+            "peak": 13.77907584806457
+          },
+          "end": [
+            -4.9338618441834425,
+            12.5,
+            -130.83065535112007
+          ],
+          "endFrame": 153,
+          "endTime": 8.299999999999992,
+          "moverIndex": 1,
+          "component": 31
+        },
+        {
+          "goal": 2,
+          "start": [
+            -1.7390212150181708,
+            12.5,
+            -141.0254889160639
+          ],
+          "startFrame": 194,
+          "startTime": 8.98333333333336,
+          "charge": 0.4,
+          "peak": 14.27907584806457,
+          "airborne": true,
+          "predicted": {
+            "t": 0.55,
+            "position": [
+              -4.51043398869115,
+              13.19551151582424,
+              -150.32727111256887
+            ],
+            "peak": 14.27907584806457
+          },
+          "end": [
+            -5.004097970130981,
+            13.194318045556393,
+            -150.5749933024974
+          ],
+          "endFrame": 228,
+          "endTime": 9.550000000000054,
+          "moverIndex": 2,
+          "component": 32
+        },
+        {
+          "goal": 3,
+          "start": [
+            -7.17000556273954,
+            13.166037407362397,
+            -158.80055190443116
+          ],
+          "startFrame": 259,
+          "startTime": 10.066666666666746,
+          "charge": 0.4,
+          "peak": 14.941973938325392,
+          "airborne": true,
+          "predicted": {
+            "t": 0.6833333333333338,
+            "position": [
+              -7.959261214562772,
+              12,
+              -170.07563264476303
+            ],
+            "peak": 14.945113255426968
+          },
+          "end": [
+            -7.966418700152007,
+            12,
+            -170.17788243889493
+          ],
+          "endFrame": 300,
+          "endTime": 10.750000000000114,
+          "moverIndex": null,
+          "component": 33
+        }
+      ],
+      "launches": [
+        {
+          "goal": 0,
+          "start": [
+            -8.798469942939954,
+            12,
+            -98.43138950851016
+          ],
+          "startFrame": 37,
+          "startTime": 6.366666666666649,
+          "charge": 0.4,
+          "peak": 12,
+          "airborne": false,
+          "predicted": {
+            "t": 0.6333333333333336,
+            "position": [
+              -10.711189249134227,
+              12,
+              -110.26634021558722
+            ],
+            "peak": 13.77907584806457
+          }
+        },
+        {
+          "goal": 1,
+          "start": [
+            -10.725621618936556,
+            12,
+            -122.07784630222072
+          ],
+          "startFrame": 118,
+          "startTime": 7.716666666666645,
+          "charge": 0.4,
+          "peak": 12,
+          "airborne": false,
+          "predicted": {
+            "t": 0.6000000000000002,
+            "position": [
+              -4.809565828730659,
+              12.5,
+              -131.00571231289507
+            ],
+            "peak": 13.77907584806457
+          }
+        },
+        {
+          "goal": 2,
+          "start": [
+            -1.7390212150181708,
+            12.5,
+            -141.0254889160639
+          ],
+          "startFrame": 194,
+          "startTime": 8.98333333333336,
+          "charge": 0.4,
+          "peak": 12.5,
+          "airborne": false,
+          "predicted": {
+            "t": 0.55,
+            "position": [
+              -4.51043398869115,
+              13.19551151582424,
+              -150.32727111256887
+            ],
+            "peak": 14.27907584806457
+          }
+        },
+        {
+          "goal": 3,
+          "start": [
+            -7.17000556273954,
+            13.166037407362397,
+            -158.80055190443116
+          ],
+          "startFrame": 259,
+          "startTime": 10.066666666666746,
+          "charge": 0.4,
+          "peak": 13.166037407362397,
+          "airborne": false,
+          "predicted": {
+            "t": 0.6833333333333338,
+            "position": [
+              -7.959261214562772,
+              12,
+              -170.07563264476303
+            ],
+            "peak": 14.945113255426968
+          }
+        }
+      ],
+      "mountedFrames": 300,
+      "footFrames": 0,
+      "complete": true,
+      "waitFrames": 0
+    },
+    "cutbacks": {
+      "complete": true,
+      "brakeFrames": 420,
+      "lateral": 90.12350851857036,
+      "last": [
+        20.02621185067865,
+        14,
+        -278.05681522108324
+      ]
+    },
+    "shift-lights": {
+      "phasePadContacts": [
+        {
+          "station": 0,
+          "lane": 1,
+          "component": 75,
+          "frame": 93,
+          "time": 25.08333333333319,
+          "position": [
+            21.99854232466888,
+            14,
+            -306.37367366372337
+          ],
+          "speed": 19.21264804105518,
+          "lit": true
+        },
+        {
+          "station": 1,
+          "lane": 0,
+          "component": 76,
+          "frame": 137,
+          "time": 25.81666666666648,
+          "position": [
+            18.433691989862997,
+            14,
+            -321.17968349770285
+          ],
+          "speed": 21.146419894936425,
+          "lit": true
+        },
+        {
+          "station": 2,
+          "lane": 0,
+          "component": 78,
+          "frame": 179,
+          "time": 26.516666666666442,
+          "position": [
+            17.98030886319353,
+            14,
+            -336.9885934330038
+          ],
+          "speed": 22.928240618077083,
+          "lit": true
+        },
+        {
+          "station": 3,
+          "lane": 1,
+          "component": 81,
+          "frame": 226,
+          "time": 27.29999999999973,
+          "position": [
+            21.47534667946995,
+            14,
+            -354.63573927993707
+          ],
+          "speed": 23,
+          "lit": true
+        }
+      ],
+      "jumps": [
+        {
+          "station": 0,
+          "target": {
+            "station": 0,
+            "lane": 1,
+            "x": 22,
+            "z": -308,
+            "firstTakeoff": -290,
+            "turnEarly": false,
+            "predictedLandingTime": 25.063082423357436
+          },
+          "start": [
+            20.858180239183405,
+            14.740922116753119,
+            -290.08278672821586
+          ],
+          "peak": 17.163720701095215,
+          "airborne": true,
+          "predicted": null,
+          "end": [
+            21.99854232466888,
+            14,
+            -306.37367366372337
+          ],
+          "component": 75,
+          "time": 25.08333333333319
+        },
+        {
+          "station": 1,
+          "target": {
+            "station": 1,
+            "lane": 0,
+            "x": 18,
+            "z": -325,
+            "firstTakeoff": -290,
+            "turnEarly": false,
+            "predictedLandingTime": 25.88440110725265
+          },
+          "start": [
+            21.39176347787196,
+            14,
+            -310.6620959847815
+          ],
+          "peak": 15.172626791800525,
+          "airborne": true,
+          "predicted": {
+            "safe": true,
+            "position": [
+              18.454674772074195,
+              14,
+              -321.10507804984024
+            ],
+            "time": 25.81666666666651,
+            "heading": [
+              -0.270745576918284,
+              0,
+              -0.9626509401538985
+            ],
+            "inside": true,
+            "lit": true
+          },
+          "end": [
+            18.433691989862997,
+            14,
+            -321.17968349770285
+          ],
+          "component": 76,
+          "time": 25.81666666666648
+        },
+        {
+          "station": 2,
+          "target": {
+            "station": 2,
+            "lane": 0,
+            "x": 18,
+            "z": -342,
+            "firstTakeoff": -290,
+            "turnEarly": false,
+            "predictedLandingTime": 26.697434969089567
+          },
+          "start": [
+            17.895274616257314,
+            14,
+            -325.5247884958571
+          ],
+          "peak": 15.124676707935908,
+          "airborne": true,
+          "predicted": {
+            "safe": true,
+            "position": [
+              17.767266031897424,
+              14,
+              -337.2928499542997
+            ],
+            "time": 26.533333333333136,
+            "heading": [
+              -0.010876983632237033,
+              0,
+              -0.9999408438638073
+            ],
+            "inside": true,
+            "lit": true
+          },
+          "end": [
+            17.98030886319353,
+            14,
+            -336.9885934330038
+          ],
+          "component": 78,
+          "time": 26.516666666666442
+        },
+        {
+          "station": 3,
+          "target": {
+            "station": 3,
+            "lane": 1,
+            "x": 22,
+            "z": -359,
+            "firstTakeoff": -290,
+            "turnEarly": false,
+            "predictedLandingTime": 27.4260309521281
+          },
+          "start": [
+            18.78847634717424,
+            14,
+            -342.6669532542553
+          ],
+          "peak": 15.273901492968076,
+          "airborne": true,
+          "predicted": {
+            "safe": true,
+            "position": [
+              21.475346679470004,
+              14,
+              -354.63573927993644
+            ],
+            "time": 27.299999999999763,
+            "heading": [
+              0.21903834230671987,
+              0,
+              -0.9757162520935704
+            ],
+            "inside": true,
+            "lit": true
+          },
+          "end": [
+            21.47534667946995,
+            14,
+            -354.63573927993707
+          ],
+          "component": 81,
+          "time": 27.29999999999973
+        },
+        {
+          "station": "dock",
+          "start": [
+            21.951711133445603,
+            14,
+            -358.43416515082856
+          ],
+          "peak": 15.029792570640984,
+          "airborne": true,
+          "predicted": {
+            "safe": true,
+            "position": [
+              22.465330627357577,
+              14,
+              -369.53896018690426
+            ],
+            "time": 27.949999999999722,
+            "heading": [
+              0.0462026531255151,
+              0,
+              -0.9989320872032109
+            ],
+            "inside": true,
+            "lit": true
+          },
+          "end": [
+            22.2714470042486,
+            14,
+            -369.54623276899537
+          ],
+          "component": 82,
+          "time": 27.949999999999694
+        }
+      ],
+      "mountedFrames": 265,
+      "footFrames": 0,
+      "complete": true
+    },
+    "rail-ferry": {
+      "kind": "counterweight",
+      "frame": 844,
+      "railCatches": [
+        {
+          "frame": 565,
+          "component": 96,
+          "name": "Counterweight ridge 1",
+          "time": 37.36666666666583,
+          "position": [
+            28.038182537382415,
+            14.339166666666666,
+            -375.64660054200004
+          ]
+        },
+        {
+          "frame": 705,
+          "component": 97,
+          "name": "Counterweight ridge 2",
+          "time": 39.69999999999903,
+          "position": [
+            70.27295594492672,
+            16.25,
+            -377.16755849196375
+          ]
+        }
+      ],
+      "pops": [
+        {
+          "name": "Catch first counterweight",
+          "frame": 562,
+          "takeoff": [
+            27.153889378331904,
+            14,
+            -375.628914678819
+          ],
+          "previousState": "ride",
+          "railComponent": null,
+          "time": 37.31666666666583,
+          "position": [
+            27.448653764682074,
+            14,
+            -375.634809966546
+          ]
+        },
+        {
+          "name": "Counterweight handoff",
+          "frame": 664,
+          "takeoff": [
+            57.89106916144863,
+            16.25,
+            -377.1636860020193
+          ],
+          "previousState": "grind",
+          "railComponent": 96,
+          "time": 39.016666666665735,
+          "position": [
+            58.18587598962668,
+            16.25,
+            -377.16755849196375
+          ]
+        },
+        {
+          "name": "Counterweight receiving dock",
+          "frame": 797,
+          "takeoff": [
+            97.10037730912902,
+            16.25,
+            -378.09742381223884
+          ],
+          "previousState": "grind",
+          "railComponent": 97,
+          "time": 41.233333333332276,
+          "position": [
+            97.39518413730707,
+            16.25,
+            -378.11753189670696
+          ]
+        }
+      ],
+      "phaseContacts": [],
+      "mountedFrames": 844,
+      "footFrames": 0,
+      "bails": 0,
+      "deaths": 0,
+      "exit": {
+        "frame": 844,
+        "position": [
+          111.25110506167559,
+          14,
+          -378.11753189670696
+        ],
+        "mounted": true,
+        "state": "ride"
+      },
+      "done": true,
+      "readFrames": 523,
+      "brakeFrames": 33
+    },
+    "workbay": {
+      "complete": true,
+      "points": [
+        {
+          "index": 0,
+          "at": [
+            114.0663449248776,
+            14,
+            -388.18531736632445
+          ]
+        },
+        {
+          "index": 1,
+          "at": [
+            116.31618938456305,
+            14,
+            -414.67510534948553
+          ]
+        },
+        {
+          "index": 2,
+          "at": [
+            113.23910206071479,
+            14,
+            -419.01786209805795
+          ]
+        },
+        {
+          "index": 3,
+          "at": [
+            111.2838063414414,
+            14,
+            -424.1679232328863
+          ]
+        },
+        {
+          "index": 4,
+          "at": [
+            111.45667331750059,
+            14,
+            -437.7592780004542
+          ]
+        },
+        {
+          "index": 5,
+          "at": [
+            116.05800412962651,
+            14,
+            -446.1172722861977
+          ]
+        },
+        {
+          "index": 6,
+          "at": [
+            116.88743619137455,
+            14,
+            -450.01008963637565
+          ]
+        },
+        {
+          "index": 7,
+          "at": [
+            116.97804145574311,
+            14,
+            -457.0088264775216
+          ]
+        }
+      ],
+      "setupFrames": 106,
+      "pendulumChoices": [
+        {
+          "index": 0,
+          "time": 45.99999999999867,
+          "predictedX": 118.48978262651622,
+          "lane": 110.8,
+          "position": [
+            116.31618938456305,
+            14,
+            -414.67510534948553
+          ]
+        },
+        {
+          "index": 1,
+          "time": 48.06666666666522,
+          "predictedX": 108.93004489911579,
+          "lane": 117.2,
+          "position": [
+            111.45667331750059,
+            14,
+            -437.7592780004542
+          ]
+        }
+      ]
+    },
+    "crown": {
+      "complete": true,
+      "launches": [
+        {
+          "index": 0,
+          "start": [
+            101.76895450979326,
+            21.725110620735514,
+            -517.7372999757097
+          ],
+          "peak": 21.725110620735514,
+          "airborne": false
+        },
+        {
+          "index": 1,
+          "start": [
+            107.71842708152391,
+            30.99023191681174,
+            -570.5984292067747
+          ],
+          "peak": 30.99023191681174,
+          "airborne": false
+        }
+      ],
+      "landings": [
+        {
+          "index": 0,
+          "start": [
+            101.76895450979326,
+            21.725110620735514,
+            -517.7372999757097
+          ],
+          "peak": 25.03654393562537,
+          "airborne": true,
+          "end": [
+            98.25380839361344,
+            24,
+            -528.873265886753
+          ]
+        },
+        {
+          "index": 1,
+          "start": [
+            107.71842708152391,
+            30.99023191681174,
+            -570.5984292067747
+          ],
+          "peak": 35.01360791943884,
+          "airborne": true,
+          "end": [
+            116.99729572787078,
+            34,
+            -585.3055892515222
+          ]
+        }
+      ]
+    },
+    "last-shift": {
+      "kind": "finale",
+      "frame": 768,
+      "railCatches": [
+        {
+          "frame": 622,
+          "component": 156,
+          "name": "Last-shift moving ridge",
+          "time": 68.5499999999974,
+          "position": [
+            127.42188394166013,
+            35.3,
+            -628.282305113198
+          ]
+        }
+      ],
+      "pops": [
+        {
+          "name": "Final phase approach",
+          "frame": 531,
+          "takeoff": [
+            123.60964253473372,
+            34,
+            -597.3171297861759
+          ],
+          "previousState": "ride",
+          "railComponent": null,
+          "time": 67.03333333333082,
+          "position": [
+            123.59391218539639,
+            34,
+            -597.6317367729224
+          ]
+        },
+        {
+          "name": "Final moving-ridge catch",
+          "frame": 592,
+          "takeoff": [
+            124.59281413235819,
+            34,
+            -617.026737664876
+          ],
+          "previousState": "ride",
+          "railComponent": null,
+          "time": 68.04999999999742,
+          "position": [
+            124.68633889912704,
+            34,
+            -617.3896137599392
+          ]
+        },
+        {
+          "name": "Higher summit landing",
+          "frame": 720,
+          "takeoff": [
+            129.34720080899163,
+            35.3,
+            -664.3094770441135
+          ],
+          "previousState": "grind",
+          "railComponent": 156,
+          "time": 70.18333333333064,
+          "position": [
+            129.3564362850715,
+            35.3,
+            -664.680891187731
+          ]
+        }
+      ],
+      "phaseContacts": [
+        {
+          "frame": 567,
+          "component": 155,
+          "name": "Last-shift phase approach",
+          "time": 67.63333333333078,
+          "lit": true,
+          "position": [
+            123.02761960925244,
+            34,
+            -608.9575882957973
+          ]
+        }
+      ],
+      "mountedFrames": 768,
+      "footFrames": 0,
+      "bails": 0,
+      "deaths": 0,
+      "exit": {
+        "frame": 768,
+        "position": [
+          131.81256908986128,
+          36.72666666915019,
+          -682.5009593583553
+        ],
+        "mounted": true,
+        "state": "finished"
+      },
+      "done": true
+    }
+  },
+  "end": {
+    "frame": 4259,
+    "time": 70.98333333333333,
+    "input": {
+      "moveX": 0.12,
+      "moveY": 0.99,
+      "jumpHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindHeld": false,
+      "grindPressed": false,
+      "spinHeld": false,
+      "spinPressed": false,
+      "grabHeld": false,
+      "grabPressed": false,
+      "transferHeld": false,
+      "transferPressed": false,
+      "restartPressed": false
+    },
+    "supportComponent": 167,
+    "railComponent": null,
+    "mover": null,
+    "heading": [
+      0.12033136751923737,
+      0,
+      -0.9927337820337082
+    ],
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "position": [
+      131.81256908986128,
+      36.72666666915019,
+      -682.5009593583553
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "pipe": -1,
+    "vertAir": false,
+    "pipeHang": false,
+    "releaseStage": 0,
+    "bailing": false,
+    "deaths": 0,
+    "freeSkate": true,
+    "rail": null
+  }
+}

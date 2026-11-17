@@ -1,0 +1,3 @@
+nightworks-after-hours: 80 crates (+7 checkpoints), 23 clusters, route 877.5 m [camnode lane] in 2316 ms
+bonus-nightworks-after-hours: 25 crates (+0 checkpoints), 10 clusters, route 97.2 m [camnode lane] in 542 ms
+wrote ../crate-review/guptus/after-audit.json and ../crate-review/guptus/after-audit.md (2 levels)

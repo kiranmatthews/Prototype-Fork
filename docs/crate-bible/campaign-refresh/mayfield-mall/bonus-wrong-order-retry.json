@@ -1,0 +1,37 @@
+{
+  "wrongOrder": [
+    {
+      "pattern": "upper",
+      "frames": 936,
+      "result": {
+        "pattern": "upper",
+        "test": "donor loss blocks ordinary double/air-spin/native-clamber bypass",
+        "rewardRemaining": 8,
+        "gemEarned": true
+      }
+    },
+    {
+      "pattern": "bridge",
+      "frames": 370,
+      "result": {
+        "pattern": "bridge",
+        "test": "skipping visible crossing footholds leads to real chasm death",
+        "state": "dead",
+        "gemEarned": true
+      }
+    },
+    {
+      "pattern": "finite",
+      "frames": 543,
+      "result": {
+        "pattern": "finite",
+        "test": "spending upper finite support first loses high cap access",
+        "capAlive": true,
+        "gemEarned": true
+      }
+    }
+  ],
+  "all19Restored": true,
+  "bridgeHidden": true,
+  "credit": 0
+}

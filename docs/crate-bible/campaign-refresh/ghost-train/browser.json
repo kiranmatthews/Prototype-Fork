@@ -1,0 +1,7169 @@
+[
+  {
+    "mode": "bonus-lite",
+    "inventory": {
+      "physicalCrates": 24,
+      "total": 24,
+      "bonus": 0,
+      "checkpoints": 0,
+      "enemies": 0
+    },
+    "journey": {
+      "id": "bonus-easy",
+      "stage": "cross the real finish gate",
+      "frame": 1588,
+      "done": true,
+      "failed": null,
+      "actions": [
+        {
+          "name": "approach harvest group -9",
+          "firstFrame": 20,
+          "lastFrame": 92
+        },
+        {
+          "name": "harvest group -9",
+          "firstFrame": 112,
+          "lastFrame": 112
+        },
+        {
+          "name": "approach harvest group -4",
+          "firstFrame": 134,
+          "lastFrame": 233
+        },
+        {
+          "name": "harvest group -4",
+          "firstFrame": 253,
+          "lastFrame": 253
+        },
+        {
+          "name": "first terrace departure",
+          "firstFrame": 275,
+          "lastFrame": 380
+        },
+        {
+          "name": "first short gap",
+          "firstFrame": 425,
+          "lastFrame": 463
+        },
+        {
+          "name": "approach harvest group 7",
+          "firstFrame": 463,
+          "lastFrame": 515
+        },
+        {
+          "name": "harvest group 7",
+          "firstFrame": 535,
+          "lastFrame": 535
+        },
+        {
+          "name": "approach harvest group 13",
+          "firstFrame": 557,
+          "lastFrame": 664
+        },
+        {
+          "name": "harvest group 13",
+          "firstFrame": 684,
+          "lastFrame": 684
+        },
+        {
+          "name": "approach harvest group 18",
+          "firstFrame": 706,
+          "lastFrame": 805
+        },
+        {
+          "name": "harvest group 18",
+          "firstFrame": 825,
+          "lastFrame": 825
+        },
+        {
+          "name": "second terrace departure",
+          "firstFrame": 847,
+          "lastFrame": 921
+        },
+        {
+          "name": "second short gap",
+          "firstFrame": 966,
+          "lastFrame": 1006
+        },
+        {
+          "name": "approach harvest group 25",
+          "firstFrame": 1006,
+          "lastFrame": 1058
+        },
+        {
+          "name": "harvest group 25",
+          "firstFrame": 1078,
+          "lastFrame": 1078
+        },
+        {
+          "name": "approach harvest group 34",
+          "firstFrame": 1100,
+          "lastFrame": 1230
+        },
+        {
+          "name": "harvest group 34",
+          "firstFrame": 1250,
+          "lastFrame": 1250
+        },
+        {
+          "name": "approach harvest group 45",
+          "firstFrame": 1272,
+          "lastFrame": 1418
+        },
+        {
+          "name": "harvest group 45",
+          "firstFrame": 1438,
+          "lastFrame": 1438
+        },
+        {
+          "name": "last count before return",
+          "firstFrame": 1460,
+          "lastFrame": 1552
+        },
+        {
+          "name": "cross the real finish gate",
+          "firstFrame": 1572,
+          "lastFrame": 1588
+        }
+      ],
+      "evidence": [
+        {
+          "action": "harvest group -9",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "harvest group -4",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "first short gap",
+          "launch": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "landing": [
+            5.067433333333345,
+            0.349999952316284,
+            0
+          ],
+          "ground": "platform"
+        },
+        {
+          "action": "harvest group 7",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "harvest group 13",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "harvest group 18",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "second short gap",
+          "launch": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "landing": [
+            23.071611111111167,
+            0,
+            0
+          ],
+          "ground": "platform"
+        },
+        {
+          "action": "harvest group 25",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "harvest group 34",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "harvest group 45",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "all crates in the active stage",
+          "totalCrates": 24,
+          "activeStageCrates": 24,
+          "bonusCrateTotal": 0,
+          "cratesBroken": 24,
+          "remaining": 0
+        }
+      ],
+      "trace": [
+        {
+          "frame": 6,
+          "position": [
+            -12,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -12,
+            8.351734332832384,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 12,
+          "position": [
+            -12,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -12,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 18,
+          "position": [
+            -12,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -12,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 24,
+          "position": [
+            -11.982333333333333,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.42400000000000004,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -12,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 30,
+          "position": [
+            -11.905233333333333,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.02,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.986446133333017,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 36,
+          "position": [
+            -11.774200000000002,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.5039999999999993,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.915127333332572,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 42,
+          "position": [
+            -11.601800000000004,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.847999999999999,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.788788799998882,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 48,
+          "position": [
+            -11.403333333333336,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.0719999999999996,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.619725599998626,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 54,
+          "position": [
+            -11.197166666666668,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.04,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.423431733331793,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 60,
+          "position": [
+            -10.993933333333334,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.0000000000000004,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.216954666665147,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 66,
+          "position": [
+            -10.808100000000003,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.71,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -11.013333333331843,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 72,
+          "position": [
+            -10.661100000000005,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.824686999998729,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 78,
+          "position": [
+            -10.5261,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.674194999999,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 84,
+          "position": [
+            -10.391099999999994,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.539194999998994,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 90,
+          "position": [
+            -10.25609999999999,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.404194999998989,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 96,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.01666666666666672,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.269194999998984,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 102,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.1768172222222,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 108,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 0,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 114,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 120,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 126,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 132,
+          "position": [
+            -10.176655555555545,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 138,
+          "position": [
+            -10.148322222222212,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.6799999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.176655555555545,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 144,
+          "position": [
+            -10.020822222222215,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.7,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.154918222221704,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 150,
+          "position": [
+            -9.791322222222211,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.719999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -10.037312222220947,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 156,
+          "position": [
+            -9.459822222222211,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.739999999999998,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -9.817706222220183,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 162,
+          "position": [
+            -9.026322222222214,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.759999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -9.496100222219422,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 168,
+          "position": [
+            -8.490822222222212,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.78,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -9.072494222218664,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 174,
+          "position": [
+            -7.859955555555544,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.480000000000003,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -8.5468882222179,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 180,
+          "position": [
+            -7.2504555555555426,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.67,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -7.922811555550711,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 186,
+          "position": [
+            -6.764455555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.32,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -7.3054545555513135,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 192,
+          "position": [
+            -6.392455555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.33,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -6.80635955555232,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 198,
+          "position": [
+            -6.108955555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.5200000000000005,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -6.424756555553059,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 204,
+          "position": [
+            -5.889955555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.98,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -6.1333995555536625,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 210,
+          "position": [
+            -5.723455555555542,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.44,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.909161555554067,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 216,
+          "position": [
+            -5.586955555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.737423555554468,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 222,
+          "position": [
+            -5.451955555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.600050555554535,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 228,
+          "position": [
+            -5.316955555555543,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.4650505555545354,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 234,
+          "position": [
+            -5.187511111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.0166666666666666,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.330050555554536,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 240,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.197372777777007,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 246,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 252,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 3,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 258,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 264,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 270,
+          "position": [
+            -5.170011111111099,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 276,
+          "position": [
+            -5.167177777777765,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.16999999999999998,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.170011111111099,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 282,
+          "position": [
+            -5.090677777777765,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.19,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.168826777777639,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 288,
+          "position": [
+            -4.9121777777777655,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.2099999999999995,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -5.1022207777768775,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 294,
+          "position": [
+            -4.631677777777765,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.2299999999999986,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -4.933614777776116,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 300,
+          "position": [
+            -4.249177777777765,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.249999999999998,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -4.663008777775354,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 306,
+          "position": [
+            -3.7646777777777647,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.27,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -4.290402777774593,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 312,
+          "position": [
+            -3.1781777777777647,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.290000000000001,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -3.8157967777738304,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 318,
+          "position": [
+            -2.4896777777777643,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.310000000000002,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -3.239190777773069,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 324,
+          "position": [
+            -1.769511111111098,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.57,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -2.560584777772307,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 330,
+          "position": [
+            -1.207011111111098,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.040000000000001,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -1.8332401111061927,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 336,
+          "position": [
+            -0.7795111111110979,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.78,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -1.255899111107335,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 342,
+          "position": [
+            -0.45101111111109793,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.88,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -0.8161771111082755,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 348,
+          "position": [
+            -0.20051111111109798,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.25,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -0.4789471111089475,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 354,
+          "position": [
+            -0.0070111111110979785,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.71,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -0.2223361111094179,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 360,
+          "position": [
+            0.13998888888890199,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            -0.023598111109821046,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 366,
+          "position": [
+            0.274988888888902,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.12689388888991013,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 372,
+          "position": [
+            0.4099888888889021,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.26189388888991016,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 378,
+          "position": [
+            0.5449888888889022,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.39689388888991034,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 384,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.01666666666666672,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.5318938888899104,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 390,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6242716666666923,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 396,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 402,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 408,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 414,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 420,
+          "position": [
+            0.6244333333333466,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 426,
+          "position": [
+            0.7744333333333466,
+            0.22416666666666665,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 13.45,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6244333333333466,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 432,
+          "position": [
+            1.6744333333333463,
+            1.3766666666666665,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 10.149999999999995,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            0.6871333333400702,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 438,
+          "position": [
+            2.574433333333346,
+            2.199166666666666,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 6.849999999999993,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            1.5871333333400703,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 444,
+          "position": [
+            3.4744333333333453,
+            2.691666666666665,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 3.5499999999999945,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            2.48713333334007,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 450,
+          "position": [
+            4.374433333333346,
+            2.8541666666666643,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 0.24999999999999467,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            3.3871333333400697,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 456,
+          "position": [
+            4.944433333333346,
+            2.3283333333333305,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.79,
+          "verticalSpeed": -10.216666666666672,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            4.28713333334007,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 462,
+          "position": [
+            5.067433333333345,
+            0.612499999999996,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.6300000000000001,
+          "verticalSpeed": -22.116666666666678,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            4.91737033333543,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 468,
+          "position": [
+            5.078433333333345,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.22,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.061322333333815,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 474,
+          "position": [
+            5.114133333333346,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.462,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.07629933333351,
+            8.489205416518207,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 480,
+          "position": [
+            5.171033333333345,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.6459999999999998,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.109651933333691,
+            8.572733331627846,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 486,
+          "position": [
+            5.243933333333345,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.7819999999999996,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.164767133333828,
+            8.623395573083718,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 492,
+          "position": [
+            5.326733333333346,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.8699999999999998,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.23634793333393,
+            8.654123775816467,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 498,
+          "position": [
+            5.424233333333346,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.05,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.318294333333996,
+            8.672761372891745,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 504,
+          "position": [
+            5.539733333333346,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.2300000000000002,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.41404833333413,
+            8.684065646941272,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 510,
+          "position": [
+            5.6717333333333455,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.527802333334265,
+            8.690922035738105,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 516,
+          "position": [
+            5.80117777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.0166666666666666,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.658638333334355,
+            8.695080645758294,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 522,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.791316111111883,
+            8.697602970237327,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 528,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.699132837367603,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 534,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 6,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.700060748687402,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 540,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.700623555352356,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 546,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.70096491485014,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 552,
+          "position": [
+            5.81867777777779,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.70117195985153,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 558,
+          "position": [
+            5.821511111111123,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.16999999999999998,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.81867777777779,
+            8.701297538992813,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 564,
+          "position": [
+            5.898011111111123,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.19,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.8198621111112505,
+            8.701373706592223,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 570,
+          "position": [
+            6.076511111111123,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.2099999999999995,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            5.886468111112013,
+            8.701419904576541,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 576,
+          "position": [
+            6.357011111111124,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.2299999999999986,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            6.055074111112775,
+            8.701447925070447,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 582,
+          "position": [
+            6.739511111111122,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.249999999999998,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            6.325680111113539,
+            8.7014649203591,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 588,
+          "position": [
+            7.224011111111123,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.27,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            6.6982861111143,
+            8.70147522852274,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 594,
+          "position": [
+            7.810511111111123,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.290000000000001,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            7.172892111115064,
+            8.701481480740034,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 600,
+          "position": [
+            8.499011111111122,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.310000000000002,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            7.749498111115827,
+            8.701485272901513,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 606,
+          "position": [
+            9.246177777777786,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.0200000000000005,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            8.428104111116589,
+            8.701487572963716,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 612,
+          "position": [
+            9.850677777777788,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.3999999999999995,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            9.178083777783037,
+            8.701488968021962,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 618,
+          "position": [
+            10.312677777777786,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.140000000000001,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            9.798297777781826,
+            8.70148981416756,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 624,
+          "position": [
+            10.666677777777789,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.15,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            10.272519777780882,
+            8.701490327380808,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 630,
+          "position": [
+            10.936677777777788,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.43,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            10.636122777780145,
+            8.701490638660378,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 636,
+          "position": [
+            11.142177777777786,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.89,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            10.913106777779607,
+            8.701490827460981,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 642,
+          "position": [
+            11.30117777777778,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.44,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.1238447777792,
+            8.701490941974335,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 648,
+          "position": [
+            11.436177777777786,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.287209777778859,
+            8.701491011430194,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 654,
+          "position": [
+            11.571177777777791,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.423082777778795,
+            8.701491053557303,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 660,
+          "position": [
+            11.706177777777796,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.5580827777788,
+            8.701491079108687,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 666,
+          "position": [
+            11.824511111111132,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.6833333333333333,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.693082777778805,
+            8.701491094606384,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 672,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.81788277777831,
+            8.701491104006212,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 678,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 9,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.701491109707497,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 684,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.7014911131655,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 690,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.701491115262886,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 696,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.701491116799703,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 702,
+          "position": [
+            11.830622222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.70149111746714,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 708,
+          "position": [
+            11.839122222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.33999999999999997,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.830622222222242,
+            8.701491117871962,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 714,
+          "position": [
+            11.93262222222224,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3599999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.849412888889418,
+            8.701491118117499,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 720,
+          "position": [
+            12.128122222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.3799999999999994,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            11.962598888890177,
+            8.701491118266425,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 726,
+          "position": [
+            12.425622222222243,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.399999999999998,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            12.177784888890944,
+            8.701491118356753,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 732,
+          "position": [
+            12.825122222222241,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.419999999999998,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            12.494970888891709,
+            8.701491118411539,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 738,
+          "position": [
+            13.326622222222241,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.4399999999999995,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            12.91415688889247,
+            8.70149111844477,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 744,
+          "position": [
+            13.930122222222243,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.460000000000001,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            13.435342888893235,
+            8.701491118464924,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 750,
+          "position": [
+            14.563322222222244,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.072000000000002,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            14.056386222227093,
+            8.701491118477149,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 756,
+          "position": [
+            15.092822222222242,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.68,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            14.677253222226488,
+            8.701491118484563,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 762,
+          "position": [
+            15.497822222222243,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.6,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            15.179198222225475,
+            8.701491118489061,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 768,
+          "position": [
+            15.808322222222245,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.79,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            15.563591222224737,
+            8.701491118491788,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 774,
+          "position": [
+            16.045322222222246,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.0700000000000003,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            15.858458222224131,
+            8.701491118493443,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 780,
+          "position": [
+            16.226822222222253,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.6199999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.083299222223662,
+            8.701491118494445,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 786,
+          "position": [
+            16.36782222222226,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.25611422222333,
+            8.701491118495055,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 792,
+          "position": [
+            16.502822222222264,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.39387722222327,
+            8.701491118495424,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 798,
+          "position": [
+            16.63782222222227,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.528877222223276,
+            8.701491118495648,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 804,
+          "position": [
+            16.772822222222274,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.66387722222328,
+            8.701491118495783,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 810,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.79799944444526,
+            8.701491118495866,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 816,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495916,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 822,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 12,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495946,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 828,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495964,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 834,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495976,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 840,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495982,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 846,
+          "position": [
+            16.829766666666718,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.829766666666718,
+            8.701491118495987,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 852,
+          "position": [
+            16.858600000000052,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.5700000000000001,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.83007213333347,
+            8.701491118495989,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 858,
+          "position": [
+            16.953533333333386,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.2100000000000002,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.87210140000065,
+            8.70149111849599,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 864,
+          "position": [
+            17.10536666666672,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.7339999999999993,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            16.97883053333444,
+            8.70149111849599,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 870,
+          "position": [
+            17.29953333333339,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.069999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            17.140269933334782,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 876,
+          "position": [
+            17.518900000000055,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.262,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            17.340395000001667,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 882,
+          "position": [
+            17.745666666666725,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.24,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            17.56294086666844,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 888,
+          "position": [
+            17.964533333333392,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.1320000000000006,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            17.78871266666839,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 894,
+          "position": [
+            18.16216666666673,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.8,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.00496853333494,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 900,
+          "position": [
+            18.315166666666737,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.194932666667945,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 906,
+          "position": [
+            18.450166666666743,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.34122166666775,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 912,
+          "position": [
+            18.585166666666748,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.476221666667755,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 918,
+          "position": [
+            18.720166666666753,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.61122166666776,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 924,
+          "position": [
+            18.82183333333342,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.35000000000000003,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.746221666667765,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 930,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 936,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 942,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 948,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 954,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 960,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 966,
+          "position": [
+            18.822111111111198,
+            0.349999952316284,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 14,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.822111111111198,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 972,
+          "position": [
+            19.72211111111119,
+            1.5574999523162838,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 10.699999999999996,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            18.99581111111794,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 978,
+          "position": [
+            20.62211111111118,
+            2.434999952316283,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 7.399999999999993,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            19.895811111117933,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 984,
+          "position": [
+            21.522111111111172,
+            2.9824999523162825,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 4.099999999999994,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            20.795811111117928,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 990,
+          "position": [
+            22.422111111111164,
+            3.199999952316282,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 9,
+          "verticalSpeed": 0.7999999999999947,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            21.69581111111792,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 996,
+          "position": [
+            22.957611111111163,
+            2.8486110634273922,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.5200000000000005,
+          "verticalSpeed": -8.233333333333338,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            22.59130811111663,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1002,
+          "position": [
+            23.071611111111167,
+            1.3311110634273913,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.54,
+          "verticalSpeed": -20.133333333333344,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            22.99464011111231,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1008,
+          "position": [
+            23.073811111111166,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.08800000000000001,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.071611111111167,
+            8.701491118495992,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1014,
+          "position": [
+            23.0971444444445,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.336,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.07647457777796,
+            8.563776868157495,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1020,
+          "position": [
+            23.1441444444445,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.5599999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.104550444444815,
+            8.480248953047855,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1026,
+          "position": [
+            23.209844444444496,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.7199999999999996,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.155745511111622,
+            8.429586711591984,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1032,
+          "position": [
+            23.288744444444493,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.8319999999999997,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.22441417777839,
+            8.398858508859234,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1038,
+          "position": [
+            23.377244444444493,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.96,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.304456444445123,
+            8.380220911783956,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1044,
+          "position": [
+            23.48374444444449,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.1400000000000001,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.396430444445258,
+            8.36891663773443,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1050,
+          "position": [
+            23.608244444444487,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3200000000000005,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.50640444444539,
+            8.362060248937597,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1056,
+          "position": [
+            23.743244444444493,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.6342994444455,
+            8.357901638917408,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1062,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.01666666666666672,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.769299444445505,
+            8.355379314438375,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1068,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.353849447308098,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1074,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 15,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.3529215359883,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1080,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.352358729323345,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1086,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.352017369825562,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1092,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.351810324824172,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1098,
+          "position": [
+            23.822688888888937,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.351684745682887,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1104,
+          "position": [
+            23.851022222222273,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0.6799999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.822688888888937,
+            8.351608578083479,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1110,
+          "position": [
+            23.978522222222274,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.7,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            23.867874888889705,
+            8.35156238009916,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1116,
+          "position": [
+            24.208022222222272,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.719999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            24.01506088889047,
+            8.351534359605255,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1122,
+          "position": [
+            24.53952222222227,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.739999999999998,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            24.264246888891236,
+            8.351517364316601,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1128,
+          "position": [
+            24.973022222222273,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.759999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            24.615432888892,
+            8.351507056152961,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1134,
+          "position": [
+            25.508522222222272,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.78,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            25.068618888892765,
+            8.351500803935668,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1140,
+          "position": [
+            26.146022222222268,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.800000000000002,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            25.62380488889353,
+            8.351497011774189,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1146,
+          "position": [
+            26.88268888888894,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            26.280990888894294,
+            8.351494711711986,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1152,
+          "position": [
+            27.647688888888947,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            27.03033388889468,
+            8.35149331665374,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1158,
+          "position": [
+            28.412688888888955,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            27.79533388889469,
+            8.351492470508141,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1164,
+          "position": [
+            29.177688888888962,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            28.560333888894696,
+            8.351491957294893,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1170,
+          "position": [
+            29.94268888888897,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            29.325333888894704,
+            8.351491646015324,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1176,
+          "position": [
+            30.619188888888974,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.03,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            30.087648888894375,
+            8.35149145721472,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1182,
+          "position": [
+            31.136688888888973,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.59,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            30.729645888893096,
+            8.351491342701367,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1188,
+          "position": [
+            31.532688888888966,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.5100000000000002,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            31.221327888892148,
+            8.351491273245507,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1194,
+          "position": [
+            31.834188888888963,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.6999999999999997,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            31.596720888891397,
+            8.351491231118398,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1200,
+          "position": [
+            32.06518888888897,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.0700000000000003,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            31.87947088889441,
+            8.351491205942978,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1206,
+          "position": [
+            32.240688888888975,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.53,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.09957488889321,
+            8.35149119029735,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1212,
+          "position": [
+            32.38018888888898,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.2672448888922,
+            8.351491180807798,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1218,
+          "position": [
+            32.515188888888986,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.40367888889201,
+            8.351491175052093,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1224,
+          "position": [
+            32.65018888888899,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.53611388889402,
+            8.351491171612448,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1230,
+          "position": [
+            32.785188888888996,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.66274388889504,
+            8.351491169578582,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1236,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.800235555560214,
+            8.35149116818531,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1242,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.35149116707415,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1248,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 18,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.351491166722214,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1254,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.351491166508755,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1260,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.351491166379285,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1266,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.35149116630076,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1272,
+          "position": [
+            32.81963333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.81963333333344,
+            8.35149116625313,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1278,
+          "position": [
+            32.87913333333345,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 1.02,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.856155000003916,
+            8.35149116622424,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1284,
+          "position": [
+            33.040633333333446,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 2.04,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            32.99348100000849,
+            8.351491166206719,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1290,
+          "position": [
+            33.304133333333446,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 3.0599999999999987,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            33.23280700001305,
+            8.35149116619609,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1296,
+          "position": [
+            33.669633333333444,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 4.079999999999998,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            33.40806000002039,
+            8.351491166192146,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1302,
+          "position": [
+            34.137133333333445,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 5.1,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            33.7053333333588,
+            8.351491166188172,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1308,
+          "position": [
+            34.70663333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 6.120000000000001,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            34.15610533336096,
+            8.351491166184967,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1314,
+          "position": [
+            35.378133333333444,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.140000000000002,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            34.729277333366284,
+            8.351491166182898,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1320,
+          "position": [
+            36.13463333333344,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            35.38105733337706,
+            8.351491166181674,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1326,
+          "position": [
+            36.899633333333426,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            36.67089833337337,
+            8.35149116618055,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1332,
+          "position": [
+            37.66463333333341,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            37.43589833337336,
+            8.35149116618022,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1338,
+          "position": [
+            38.4296333333334,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            38.200898333373345,
+            8.351491166180018,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1344,
+          "position": [
+            39.194633333333385,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 4,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            38.96589833337333,
+            8.351491166179896,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1350,
+          "position": [
+            39.95963333333337,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            39.71942333337332,
+            8.351491166179823,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1356,
+          "position": [
+            40.72463333333336,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 7.6499999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            40.587698333373304,
+            8.351491166179773,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1362,
+          "position": [
+            41.44463333333334,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 6.4799999999999995,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            40.8761033333676,
+            8.351491166179763,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1368,
+          "position": [
+            42.00113333333334,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 4.95,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            41.467610333351885,
+            8.351491166179745,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1374,
+          "position": [
+            42.42713333333336,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 3.78,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            41.965988333344434,
+            8.351491166179732,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1380,
+          "position": [
+            42.75263333333337,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 2.88,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            42.40029533334183,
+            8.351491166179722,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1386,
+          "position": [
+            43.00313333333338,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 2.25,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            42.73218533333983,
+            8.351491166179716,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1392,
+          "position": [
+            43.19663333333339,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.71,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.1486333333401,
+            8.351491166179713,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1398,
+          "position": [
+            43.34213333333339,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.30500833333843,
+            8.351491166179711,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1404,
+          "position": [
+            43.4771333333334,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.44000833333843,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1410,
+          "position": [
+            43.612133333333404,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.57500833333844,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1416,
+          "position": [
+            43.74713333333341,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.70528333333844,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1422,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0.01666666666666672,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.816252777780406,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1428,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1434,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 21,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1440,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1446,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1452,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1458,
+          "position": [
+            43.82657777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1464,
+          "position": [
+            43.85491111111119,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0.6799999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.82657777777786,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1470,
+          "position": [
+            43.9824111111112,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.7,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            43.867661111114366,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1476,
+          "position": [
+            44.21191111111119,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 2.719999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            44.010461111118175,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1482,
+          "position": [
+            44.54341111111119,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 3.739999999999998,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": false,
+          "camera": [
+            44.42919377779384,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1488,
+          "position": [
+            44.97691111111119,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 4.759999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            44.705336111133384,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1494,
+          "position": [
+            45.47644444444452,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 5.032000000000001,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            45.06422377779273,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1500,
+          "position": [
+            45.96381111111118,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 4.7200000000000015,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            45.70149977779608,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1506,
+          "position": [
+            46.407577777777846,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 4.140000000000001,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            46.1731204444612,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1512,
+          "position": [
+            46.76157777777786,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 3.15,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            46.648903777780426,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1518,
+          "position": [
+            47.03307777777787,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 2.43,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            46.94674977778566,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1524,
+          "position": [
+            47.24157777777788,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.89,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.18268777778526,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1530,
+          "position": [
+            47.40057777777788,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.44,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.356657777783255,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1536,
+          "position": [
+            47.53557777777789,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.50830777778393,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1542,
+          "position": [
+            47.67057777777789,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.60645277778293,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1548,
+          "position": [
+            47.8055777777779,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.3499999999999999,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.74725777778394,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1554,
+          "position": [
+            47.92391111111124,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0.6833333333333333,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.89035777778395,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1560,
+          "position": [
+            47.93002222222235,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.93002222222235,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1566,
+          "position": [
+            47.93002222222235,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.93002222222235,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1572,
+          "position": [
+            47.93002222222235,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.93002222222235,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1578,
+          "position": [
+            48.00002222222235,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 1.2,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            47.93948888889051,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        },
+        {
+          "frame": 1584,
+          "position": [
+            48.190022222222346,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "lives": 5,
+          "speed": 2.4,
+          "verticalSpeed": 0,
+          "crates": 24,
+          "crystal": false,
+          "gem": true,
+          "camera": [
+            48.04788888889498,
+            8.35149116617971,
+            25.820309867674464
+          ],
+          "progress": null
+        }
+      ],
+      "tuning": "{\"parkCruiseSpeed\":12,\"parkChargeSpeed\":23,\"parkCruiseAcceleration\":10,\"parkChargeAcceleration\":9,\"parkCamHeight\":5.1,\"parkCamDist\":5.05,\"parkCamPitch\":25.35,\"parkCamFov\":49,\"parkCamSpeedFovBoost\":6,\"maxSpeed\":23,\"walkSpeed\":9,\"walkRampTime\":0.75,\"walkSlowdownTime\":0.45,\"friction\":7,\"riseGravity\":33,\"fallGravity\":119,\"boardRiseGravity\":33,\"boardFallGravity\":70,\"rampFallGravity\":40,\"boardApexFloat\":0.35,\"boardApexBand\":4.5,\"jumpVelocity\":14,\"jumpMinVelocity\":12,\"ollieVelocity\":11,\"ollieMinVelocity\":6.5,\"ollieDownCouple\":0.65,\"jumpChargeTime\":0.4,\"flipHoldTime\":0.18,\"jumpFlipMinSpeed\":8.85,\"doubleJump\":1,\"doubleJumpWindow\":0.7,\"doubleJumpVelocity\":11,\"doubleJumpHorizontalScale\":1,\"launchBackLean\":0.15,\"trampolineAirJumpMin\":10.5,\"trampolineAirJumpMax\":15,\"launchSomersault\":1,\"launchSomersaultMinSpeed\":7.2,\"launchSomersaultStart\":22,\"launchSomersaultDeadline\":55,\"launchSomersaultEnd\":100,\"launchSomersaultEase\":1,\"chargeBoost\":9,\"cruiseSpeed\":12,\"chargeDecay\":10,\"downhillMax\":30.5,\"vertMax\":32,\"heavyDrag\":0.005,\"rollFriction\":3.5,\"windDrag\":0.0015,\"groundGravity\":45,\"pipeCarve\":16,\"pipePumpGain\":24,\"pipeFriction\":0.1,\"pipePop\":2.5,\"pipeAirGravity\":31,\"pipeSmooth\":25,\"footGrip\":0.3,\"steepStand\":0.76,\"vertLip\":0.59,\"hangLaunch\":2.5,\"hangSnapAngle\":6,\"hangLateral\":0.8,\"landingFlow\":1,\"vertLaunchConserve\":0.55,\"vertGravityBlend\":0.35,\"vertDrift\":4.5,\"wallStick\":5,\"landGive\":0.35,\"railSnapDistance\":2.1,\"grindApproachMargin\":15,\"railTripSpeed\":12.5,\"grindDrag\":0,\"railSpeedBoost\":0,\"perfectGrindSpeed\":48,\"perfectGrindHold\":3.9,\"grindSpeed\":5,\"grindJumpForce\":12.5,\"grindTransferSpeed\":4.8,\"grindTrickBoost\":3,\"underRailCooldown\":1.5,\"spinDuration\":0.3,\"spinAirCorrection\":0.5,\"turnaround\":35,\"brakeRampTime\":0.4,\"brakeLockTime\":0.6,\"brakeLockRamp\":0.55,\"trickLandBoost\":1.25,\"trickLandBoostMax\":5,\"trickLandBoostHold\":4,\"grabBoost\":2.5,\"landPumpBoost\":2.2,\"grabSpinRate\":9,\"grabRelease\":0.15,\"spinTolerance\":30,\"sketchyTolerance\":55,\"milkMagnetRange\":1.75,\"crateBounce\":14,\"crateHopSpeed\":14,\"crateHopGravity\":28,\"boardSpeed\":8.5,\"skateHoldTime\":0.55,\"skateEntrySpeed\":5,\"teeterEdgeDistance\":0.35,\"teeterCatchSpeed\":6,\"carveGripLow\":360,\"carveGripHigh\":60,\"pipeTurnRate\":104,\"slideMinSpeed\":2,\"slideDistance\":5,\"slideSpeed\":26,\"slideJumpHeight\":1.3,\"slideJumpTravel\":0.2,\"slideJumpGrace\":0.15,\"slideRecover\":0.5,\"wallrideGravity\":16,\"wallrideFriction\":1,\"wallrideMinSpeed\":7.5,\"wallrideMaxAngle\":76,\"wallrideMaxTime\":12,\"wallKickUp\":10.5,\"wallPumpBonus\":17,\"wallChargeMax\":1.5,\"wallKickOut\":1.5,\"ledgeGrabTime\":6,\"ledgeClimbTime\":0.38,\"ledgeClimbPop\":1,\"ledgeReach\":2.4,\"airControl\":0,\"boardAbandonSteering\":25,\"manualMinSpeed\":3.5,\"manualDrift\":0.5,\"manualControl\":4,\"manualCalm\":0.35,\"manualArmWindow\":0.35,\"manualFlickWindow\":0.28,\"manualLandGrace\":0.65,\"manualCoyote\":0.45,\"lipAngle\":10,\"lipMaxTime\":12,\"lipDrift\":0.95,\"lipControl\":2.2,\"balanceDrift\":0.7,\"balanceControl\":3.4,\"balanceEntryLean\":0.1,\"balanceReentryRelief\":0.1,\"grindCalm\":0.5,\"balanceSpeedEffect\":0.75,\"balanceGrace\":1,\"balanceRamp\":0.18,\"balanceRampMax\":2.5,\"bailSpeedKeep\":0.5,\"bailFriction\":14,\"bailMashWindow\":0.4,\"bailMashGain\":0.2,\"bailMashMax\":1,\"bailRollOutSpeed\":4,\"bailGrace\":0,\"ragBounce\":0.42,\"ragSpin\":1,\"ragFlail\":1,\"ragFlailJumpChance\":0.38,\"ragFlailJumpVelocity\":6.2,\"ragFlailSteerChance\":0.3,\"ragFlailSteerSpeed\":5,\"ragFlailSteerJitter\":55,\"wallBailSpeed\":12.5,\"wallBailFrontal\":0.68,\"tripMaxHeight\":1.15,\"tripLiftBase\":3.8,\"tripLiftPerSpeed\":0.16,\"tripLiftMax\":8.5,\"tripLiftVariation\":0.12,\"tripCarryMin\":0.58,\"tripCarryMax\":0.72,\"hugeDropDistance\":24,\"hugeDropImpact\":20,\"crateTripSpeed\":6,\"balanceInertia\":0.7,\"balanceGravity\":4.5,\"balanceEdgePower\":3,\"balanceNoise\":0.18,\"balanceNoiseFreq\":6,\"balanceSafePeriod\":0.25,\"crawlSpeed\":1.1,\"smashSpeed\":12.5,\"arrowBounce\":16,\"arrowBoostMult\":1.25,\"slamRadius\":3.41526,\"nitroRadius\":2.75,\"tntRadius\":2.75,\"boulderSpeed\":10,\"camFov\":49,\"camSpeedFovBoost\":6,\"chaseCam\":0,\"camDist\":5.05,\"camHeight\":5.1,\"camAirLift\":0,\"camPitch\":25.35,\"camBalanceRoll\":7}",
+      "raf": [
+        200,
+        316.6999999999971,
+        199.89999999999418,
+        1333.4000000000087,
+        633.1999999999971,
+        850.1000000000058,
+        1199.8999999999942,
+        1166.5,
+        250.10000000000582,
+        799.8999999999942,
+        1083.300000000003,
+        266.6999999999971,
+        749.8999999999942,
+        566.7000000000116,
+        483.29999999998836,
+        300,
+        150,
+        183.3000000000029,
+        1550,
+        1766.5,
+        1000,
+        1800,
+        200,
+        183.3000000000029,
+        166.60000000000582,
+        183.39999999999418,
+        216.60000000000582,
+        283.29999999998836,
+        300,
+        150,
+        200,
+        216.70000000001164,
+        183.1999999999971,
+        150.09999999999127,
+        166.60000000000582,
+        300,
+        300,
+        250,
+        416.6000000000058,
+        166.6999999999971,
+        150,
+        250,
+        433.3000000000029,
+        1300,
+        616.5999999999913,
+        666.6999999999971,
+        300,
+        199.90000000000873,
+        316.6999999999971,
+        200,
+        183.3000000000029,
+        200,
+        316.59999999999127,
+        233.40000000000873,
+        200,
+        233.3000000000029,
+        200,
+        983.2999999999884,
+        333.3000000000029,
+        233.3000000000029,
+        983.3000000000029,
+        366.6999999999971,
+        249.89999999999418,
+        183.40000000000873,
+        216.59999999999127,
+        283.3000000000029,
+        933.3000000000029,
+        333.3000000000029,
+        216.6999999999971,
+        200.10000000000582,
+        999.8999999999942,
+        633.3000000000029,
+        166.6999999999971,
+        216.60000000000582,
+        783.2999999999884,
+        750,
+        266.70000000001164,
+        783.2999999999884,
+        233.3000000000029,
+        216.60000000000582,
+        150,
+        166.6999999999971,
+        133.39999999999418,
+        183.20000000001164,
+        133.29999999998836,
+        100,
+        116.70000000001164,
+        116.69999999999709,
+        100,
+        283.3000000000029,
+        1050,
+        366.59999999999127,
+        1133.300000000003,
+        166.60000000000582,
+        650,
+        450,
+        250,
+        100,
+        116.69999999999709,
+        133.1999999999971,
+        116.69999999999709,
+        150,
+        183.3000000000029,
+        133.39999999999418,
+        183.3000000000029,
+        816.6999999999971,
+        383.20000000001164,
+        116.79999999998836,
+        133.20000000001164,
+        166.6999999999971,
+        116.59999999999127,
+        733.4000000000087,
+        349.8999999999942,
+        300,
+        16.69999999999709,
+        1766.6000000000058,
+        1283.300000000003,
+        1449.8999999999942,
+        1400.0000000000146,
+        216.69999999998254,
+        166.60000000000582,
+        966.7000000000116,
+        516.5999999999767,
+        633.3000000000175,
+        550,
+        150,
+        849.8999999999942,
+        233.29999999998836,
+        200,
+        1366.7000000000116,
+        833.2999999999884,
+        266.6000000000058,
+        150,
+        150,
+        133.30000000001746,
+        166.69999999998254,
+        166.70000000001164,
+        133.29999999998836,
+        266.70000000001164,
+        649.8999999999942,
+        483.29999999998836,
+        466.6000000000058,
+        183.39999999999418,
+        183.30000000001746,
+        183.39999999999418,
+        183.29999999998836,
+        166.60000000000582,
+        183.39999999999418,
+        216.60000000000582,
+        150,
+        816.6000000000058,
+        650,
+        716.6000000000058,
+        633.2999999999884,
+        316.70000000001164,
+        866.6999999999825,
+        433.30000000001746,
+        449.8999999999942,
+        500.1000000000058,
+        483.29999999998836,
+        366.6000000000058,
+        166.60000000000582,
+        366.69999999998254,
+        633.4000000000233,
+        233.29999999998836,
+        166.70000000001164,
+        183.29999999998836,
+        183.29999999998836,
+        150,
+        299.9000000000233,
+        316.69999999998254,
+        166.70000000001164,
+        133.29999999998836,
+        116.60000000000582,
+        133.39999999999418,
+        133.30000000001746,
+        133.39999999999418,
+        150,
+        166.60000000000582,
+        366.69999999998254,
+        749.8999999999942,
+        683.3000000000175,
+        433.29999999998836,
+        1316.6000000000058,
+        250,
+        116.70000000001164,
+        116.69999999998254,
+        116.60000000000582,
+        150,
+        183.29999999998836,
+        150,
+        250,
+        266.70000000001164,
+        166.60000000000582,
+        200.10000000000582,
+        616.5999999999767,
+        116.70000000001164,
+        116.60000000000582,
+        100,
+        166.60000000000582,
+        133.39999999999418,
+        100,
+        100,
+        100,
+        83.29999999998836,
+        16.60000000000582,
+        66.70000000001164,
+        83.39999999999418,
+        183.29999999998836,
+        133.30000000001746,
+        400,
+        2016.5999999999767,
+        533.2000000000116,
+        700.1000000000058,
+        199.89999999999418,
+        116.70000000001164,
+        66.69999999998254,
+        66.70000000001164,
+        99.89999999999418,
+        116.70000000001164,
+        83.39999999999418,
+        99.89999999999418,
+        66.70000000001164,
+        116.69999999998254,
+        99.89999999999418,
+        100.10000000000582,
+        100,
+        99.89999999999418,
+        16.70000000001164,
+        33.29999999998836,
+        83.30000000001746,
+        100,
+        116.69999999998254,
+        500,
+        100,
+        83.30000000001746,
+        116.69999999998254,
+        100,
+        116.60000000000582,
+        100,
+        83.30000000001746,
+        66.79999999998836,
+        83.29999999998836,
+        66.70000000001164,
+        33.29999999998836,
+        33.30000000001746,
+        66.60000000000582,
+        316.69999999998254,
+        500,
+        800,
+        599.8999999999942,
+        166.70000000001164,
+        66.60000000000582,
+        83.39999999999418,
+        50,
+        16.70000000001164,
+        66.59999999997672,
+        83.30000000001746,
+        66.69999999998254,
+        100,
+        66.70000000001164,
+        16.60000000000582,
+        33.39999999999418,
+        66.60000000000582,
+        33.39999999999418,
+        66.60000000000582,
+        50.10000000000582,
+        99.89999999999418,
+        66.69999999998254,
+        16.70000000001164,
+        16.60000000000582,
+        83.39999999999418,
+        33.29999999998836,
+        66.70000000001164,
+        66.60000000000582,
+        16.699999999982538,
+        16.60000000000582,
+        50,
+        33.30000000001746,
+        83.39999999999418,
+        50,
+        50,
+        50,
+        50,
+        200,
+        683.2999999999884
+      ],
+      "result": {
+        "state": "finished",
+        "cratesBroken": 24,
+        "totalCrates": 24,
+        "gemEarned": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 1588,
+        "position": [
+          48.38335555555568,
+          0.7266666691501937,
+          0
+        ],
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 5,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 24,
+        "crystal": false,
+        "gem": true,
+        "camera": [
+          48.276288888899465,
+          8.35149116617971,
+          25.820309867674464
+        ],
+        "progress": null
+      },
+      "finalTuning": "{\"parkCruiseSpeed\":12,\"parkChargeSpeed\":23,\"parkCruiseAcceleration\":10,\"parkChargeAcceleration\":9,\"parkCamHeight\":5.1,\"parkCamDist\":5.05,\"parkCamPitch\":25.35,\"parkCamFov\":49,\"parkCamSpeedFovBoost\":6,\"maxSpeed\":23,\"walkSpeed\":9,\"walkRampTime\":0.75,\"walkSlowdownTime\":0.45,\"friction\":7,\"riseGravity\":33,\"fallGravity\":119,\"boardRiseGravity\":33,\"boardFallGravity\":70,\"rampFallGravity\":40,\"boardApexFloat\":0.35,\"boardApexBand\":4.5,\"jumpVelocity\":14,\"jumpMinVelocity\":12,\"ollieVelocity\":11,\"ollieMinVelocity\":6.5,\"ollieDownCouple\":0.65,\"jumpChargeTime\":0.4,\"flipHoldTime\":0.18,\"jumpFlipMinSpeed\":8.85,\"doubleJump\":1,\"doubleJumpWindow\":0.7,\"doubleJumpVelocity\":11,\"doubleJumpHorizontalScale\":1,\"launchBackLean\":0.15,\"trampolineAirJumpMin\":10.5,\"trampolineAirJumpMax\":15,\"launchSomersault\":1,\"launchSomersaultMinSpeed\":7.2,\"launchSomersaultStart\":22,\"launchSomersaultDeadline\":55,\"launchSomersaultEnd\":100,\"launchSomersaultEase\":1,\"chargeBoost\":9,\"cruiseSpeed\":12,\"chargeDecay\":10,\"downhillMax\":30.5,\"vertMax\":32,\"heavyDrag\":0.005,\"rollFriction\":3.5,\"windDrag\":0.0015,\"groundGravity\":45,\"pipeCarve\":16,\"pipePumpGain\":24,\"pipeFriction\":0.1,\"pipePop\":2.5,\"pipeAirGravity\":31,\"pipeSmooth\":25,\"footGrip\":0.3,\"steepStand\":0.76,\"vertLip\":0.59,\"hangLaunch\":2.5,\"hangSnapAngle\":6,\"hangLateral\":0.8,\"landingFlow\":1,\"vertLaunchConserve\":0.55,\"vertGravityBlend\":0.35,\"vertDrift\":4.5,\"wallStick\":5,\"landGive\":0.35,\"railSnapDistance\":2.1,\"grindApproachMargin\":15,\"railTripSpeed\":12.5,\"grindDrag\":0,\"railSpeedBoost\":0,\"perfectGrindSpeed\":48,\"perfectGrindHold\":3.9,\"grindSpeed\":5,\"grindJumpForce\":12.5,\"grindTransferSpeed\":4.8,\"grindTrickBoost\":3,\"underRailCooldown\":1.5,\"spinDuration\":0.3,\"spinAirCorrection\":0.5,\"turnaround\":35,\"brakeRampTime\":0.4,\"brakeLockTime\":0.6,\"brakeLockRamp\":0.55,\"trickLandBoost\":1.25,\"trickLandBoostMax\":5,\"trickLandBoostHold\":4,\"grabBoost\":2.5,\"landPumpBoost\":2.2,\"grabSpinRate\":9,\"grabRelease\":0.15,\"spinTolerance\":30,\"sketchyTolerance\":55,\"milkMagnetRange\":1.75,\"crateBounce\":14,\"crateHopSpeed\":14,\"crateHopGravity\":28,\"boardSpeed\":8.5,\"skateHoldTime\":0.55,\"skateEntrySpeed\":5,\"teeterEdgeDistance\":0.35,\"teeterCatchSpeed\":6,\"carveGripLow\":360,\"carveGripHigh\":60,\"pipeTurnRate\":104,\"slideMinSpeed\":2,\"slideDistance\":5,\"slideSpeed\":26,\"slideJumpHeight\":1.3,\"slideJumpTravel\":0.2,\"slideJumpGrace\":0.15,\"slideRecover\":0.5,\"wallrideGravity\":16,\"wallrideFriction\":1,\"wallrideMinSpeed\":7.5,\"wallrideMaxAngle\":76,\"wallrideMaxTime\":12,\"wallKickUp\":10.5,\"wallPumpBonus\":17,\"wallChargeMax\":1.5,\"wallKickOut\":1.5,\"ledgeGrabTime\":6,\"ledgeClimbTime\":0.38,\"ledgeClimbPop\":1,\"ledgeReach\":2.4,\"airControl\":0,\"boardAbandonSteering\":25,\"manualMinSpeed\":3.5,\"manualDrift\":0.5,\"manualControl\":4,\"manualCalm\":0.35,\"manualArmWindow\":0.35,\"manualFlickWindow\":0.28,\"manualLandGrace\":0.65,\"manualCoyote\":0.45,\"lipAngle\":10,\"lipMaxTime\":12,\"lipDrift\":0.95,\"lipControl\":2.2,\"balanceDrift\":0.7,\"balanceControl\":3.4,\"balanceEntryLean\":0.1,\"balanceReentryRelief\":0.1,\"grindCalm\":0.5,\"balanceSpeedEffect\":0.75,\"balanceGrace\":1,\"balanceRamp\":0.18,\"balanceRampMax\":2.5,\"bailSpeedKeep\":0.5,\"bailFriction\":14,\"bailMashWindow\":0.4,\"bailMashGain\":0.2,\"bailMashMax\":1,\"bailRollOutSpeed\":4,\"bailGrace\":0,\"ragBounce\":0.42,\"ragSpin\":1,\"ragFlail\":1,\"ragFlailJumpChance\":0.38,\"ragFlailJumpVelocity\":6.2,\"ragFlailSteerChance\":0.3,\"ragFlailSteerSpeed\":5,\"ragFlailSteerJitter\":55,\"wallBailSpeed\":12.5,\"wallBailFrontal\":0.68,\"tripMaxHeight\":1.15,\"tripLiftBase\":3.8,\"tripLiftPerSpeed\":0.16,\"tripLiftMax\":8.5,\"tripLiftVariation\":0.12,\"tripCarryMin\":0.58,\"tripCarryMax\":0.72,\"hugeDropDistance\":24,\"hugeDropImpact\":20,\"crateTripSpeed\":6,\"balanceInertia\":0.7,\"balanceGravity\":4.5,\"balanceEdgePower\":3,\"balanceNoise\":0.18,\"balanceNoiseFreq\":6,\"balanceSafePeriod\":0.25,\"crawlSpeed\":1.1,\"smashSpeed\":12.5,\"arrowBounce\":16,\"arrowBoostMult\":1.25,\"slamRadius\":3.41526,\"nitroRadius\":2.75,\"tntRadius\":2.75,\"boulderSpeed\":10,\"camFov\":49,\"camSpeedFovBoost\":6,\"chaseCam\":0,\"camDist\":5.05,\"camHeight\":5.1,\"camAirLift\":0,\"camPitch\":25.35,\"camBalanceRoll\":7}"
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "main-lite",
+    "inventory": {
+      "physicalCrates": 225,
+      "total": 272,
+      "bonus": 24,
+      "checkpoints": 23,
+      "enemies": 15
+    },
+    "opening": {
+      "done": true,
+      "kind": "opening",
+      "frames": 97,
+      "crates": 3,
+      "state": "ride",
+      "position": [
+        -1.707860182680084,
+        0,
+        7.01080016929116
+      ],
+      "lives": 4,
+      "checkpoint": false
+    },
+    "checkpoint": {
+      "done": true,
+      "kind": "checkpoint",
+      "frames": 49,
+      "crates": 1,
+      "state": "ride",
+      "position": [
+        -0.461226427302667,
+        0,
+        -34.943995181798556
+      ],
+      "lives": 4,
+      "checkpoint": true
+    },
+    "recovery": {
+      "position": [
+        -0.45849609375,
+        0,
+        -36.453125
+      ],
+      "spawn": [
+        -0.45849609375,
+        0.1,
+        -36.453125
+      ],
+      "lives": 3
+    },
+    "stagedFinish": {
+      "done": true,
+      "kind": "finish",
+      "frames": 78,
+      "crates": 0,
+      "state": "finished",
+      "position": [
+        0,
+        8.726666669150193,
+        -2230.400000000003
+      ],
+      "lives": 4,
+      "checkpoint": false
+    },
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "bonus-full",
+    "inventory": {
+      "physicalCrates": 24,
+      "total": 24,
+      "bonus": 0,
+      "checkpoints": 0,
+      "enemies": 0
+    },
+    "views": [
+      {
+        "name": "arrival",
+        "position": [
+          -11,
+          0,
+          0
+        ],
+        "camera": [
+          -11,
+          8.35149116617971,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "terraces",
+        "position": [
+          11.894,
+          0.349999952316284,
+          0
+        ],
+        "camera": [
+          11.894,
+          8.701491118495992,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "exit",
+        "position": [
+          40,
+          0.08,
+          0
+        ],
+        "camera": [
+          11.894,
+          8.701491118495992,
+          25.820309867674464
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true,
+    "errors": []
+  },
+  {
+    "mode": "main-full",
+    "inventory": {
+      "physicalCrates": 225,
+      "total": 272,
+      "bonus": 24,
+      "checkpoints": 23,
+      "enemies": 15
+    },
+    "views": [
+      {
+        "name": "entry",
+        "position": [
+          0,
+          0,
+          13
+        ],
+        "camera": [
+          0,
+          3.6105133098671365,
+          19.19404931193971
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "axes",
+        "position": [
+          5,
+          -2,
+          -214
+        ],
+        "camera": [
+          4.434725626280925,
+          2.2890323490102924,
+          -208.3588299725259
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "armour",
+        "position": [
+          6.302001953125,
+          6,
+          -822
+        ],
+        "camera": [
+          7.5202717497908855,
+          11.1,
+          -817.0991512263148
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      },
+      {
+        "name": "exit",
+        "position": [
+          0,
+          8,
+          -2208
+        ],
+        "camera": [
+          0,
+          11.97368924696113,
+          -2201.3460481623592
+        ],
+        "grounded": true,
+        "state": "ride",
+        "blocked": false,
+        "render": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "passed": true,
+    "errors": []
+  }
+]

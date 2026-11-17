@@ -1,0 +1,170 @@
+{
+  "harvests": [
+    {
+      "name": "Reedwater mask",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Reed shelter parcel",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "Far-bank cedar cache",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "Sluice keeper parcel",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Ferry shore cache",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "Catch basin supplies",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "Upper pool cache",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Thunder basin stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Gatehouse hinge parcel",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Gatehouse upper cache",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "Waterwheel lookout cache",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Aqueduct bank parcel",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Lower bell reward",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Middle bell reward",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Cloud rest stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Crown refuge supplies",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "Source pool final cache",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TEACH / Wet-stone shoulder",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "COUNT / Cedar boarding stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TEST / Cedar mounting crown",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TEACH / Sluice sill stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "COUNT / Millrace boarding stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "REWARD / Millrace landing stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "PREPARE / Pool keeper mask",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "REWARD / Thunder root-bank stores",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "COUNT / Waterwheel boarding stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "REWARD / Waterwheel upper stores",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "COUNT / Aqueduct boarding stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "TEST / Aqueduct mounting stores",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "REWARD / Upper bell stores",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "TEST / Counterweight rest stores",
+      "count": 4,
+      "deaths": 0
+    },
+    {
+      "name": "COUNT / Last spray stores",
+      "count": 3,
+      "deaths": 0
+    },
+    {
+      "name": "REWARD / Summit landing stores",
+      "count": 3,
+      "deaths": 0
+    }
+  ],
+  "patrolProbes": 60
+}

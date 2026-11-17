@@ -1,0 +1,1 @@
+PASS 170 boxes in 15 sections, 8 box types, support/wall/rail clearance, both switch puzzles, crate-placement scope (terrain render audit excluded), side-view cutaway and collider retention.

@@ -1,0 +1,4 @@
+Sequential fire cel 126. Image 1 is the edit target (cel124). Image 2 is source pose124, image3 is source pose126, and image4 is the canonical colour/shading cel120.
+Apply just the upward motion from source124 to source126 to the edit target. The left lateral sheet rises and thins; its neck grows narrower. The red upper wisps are being consumed and should thin/break as in source126, while the bright lower stem flows upward into their place. Follow the actual next pose rather than making the whole shape sway.
+Preserve the registered foot, low yellow source, widths of unchanged lower regions, square canvas and overall size of image1. Hold the palette and luminosity to image4. Fade consumed red material with transparency rather than making it grey, brown or smoky. Retain simple soft cel shading, no added detail or highlights. Only the source's next-frame pose change.
+Output one 1254×1254 transparent RGBA frame126. Keep the same empty margins, do not zoom or recenter.

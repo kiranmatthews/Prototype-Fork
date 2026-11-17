@@ -1,0 +1,123 @@
+{
+  "harvests": [
+    {
+      "name": "Sky supply / section 1 / cache 1 /",
+      "count": 5,
+      "frames": 185,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 1 / cache 2 /",
+      "count": 5,
+      "frames": 379,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 2 / cache 1 /",
+      "count": 5,
+      "frames": 158,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 2 / cache 2 /",
+      "count": 5,
+      "frames": 157,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 3 / cache 1 /",
+      "count": 5,
+      "frames": 200,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 3 / cache 2 /",
+      "count": 5,
+      "frames": 380,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 4 / cache 1 /",
+      "count": 5,
+      "frames": 172,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 4 / cache 2 /",
+      "count": 5,
+      "frames": 170,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 5 / cache 1 /",
+      "count": 5,
+      "frames": 156,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 5 / cache 2 /",
+      "count": 5,
+      "frames": 174,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 6 / cache 1 /",
+      "count": 5,
+      "frames": 156,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 6 / cache 2 /",
+      "count": 5,
+      "frames": 174,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 7 / cache 1 /",
+      "count": 5,
+      "frames": 156,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 7 / cache 2 /",
+      "count": 5,
+      "frames": 174,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 8 / cache 1 /",
+      "count": 5,
+      "frames": 156,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    },
+    {
+      "name": "Sky supply / section 8 / cache 2 /",
+      "count": 5,
+      "frames": 174,
+      "deaths": 0,
+      "fromSupportedLanding": true
+    }
+  ],
+  "maxFloorError": 0,
+  "settingsExact": true,
+  "nonCratesExact": true,
+  "reset": {
+    "crates": 89,
+    "enemies": 4
+  }
+}

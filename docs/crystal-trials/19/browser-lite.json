@@ -1,0 +1,509 @@
+{
+  "trial": 19,
+  "mode": "lite",
+  "errors": [],
+  "fingerprint": "2d38b0ff1eddb2b80a5b6fac37527a9f16439f6539296f49ce0cebb0a393c33e",
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 25
+  },
+  "stagedStart": [
+    0,
+    0.15,
+    -4603
+  ],
+  "installed": {
+    "id": 19,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 19,
+    "frame": 5789,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 19 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Jump onto crumbling flight 1",
+        "firstFrame": 314,
+        "lastFrame": 349
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 349,
+        "lastFrame": 430
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 475,
+        "lastFrame": 508
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 508,
+        "lastFrame": 589
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 634,
+        "lastFrame": 667
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 667,
+        "lastFrame": 748
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 793,
+        "lastFrame": 825
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 1395,
+        "lastFrame": 1503
+      },
+      {
+        "name": "Jump onto crumbling flight 2",
+        "firstFrame": 1548,
+        "lastFrame": 1583
+      },
+      {
+        "name": "A late upper transfer falls to the flat recovery floor",
+        "firstFrame": 1583,
+        "lastFrame": 1783
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 1783,
+        "lastFrame": 1960
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 1978,
+        "lastFrame": 2210
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 2228,
+        "lastFrame": 2492
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 2510,
+        "lastFrame": 2601
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 2619,
+        "lastFrame": 2796
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 2814,
+        "lastFrame": 2974
+      },
+      {
+        "name": "Jump onto crumbling flight 1",
+        "firstFrame": 3019,
+        "lastFrame": 3054
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 3054,
+        "lastFrame": 3135
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 3180,
+        "lastFrame": 3213
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 3213,
+        "lastFrame": 3294
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 3339,
+        "lastFrame": 3372
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 3372,
+        "lastFrame": 3453
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 3498,
+        "lastFrame": 3530
+      },
+      {
+        "name": "Wait on the permanent bank",
+        "firstFrame": 3530,
+        "lastFrame": 3653
+      },
+      {
+        "name": "Jump onto crumbling flight 2",
+        "firstFrame": 3698,
+        "lastFrame": 3733
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 3733,
+        "lastFrame": 3814
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 3859,
+        "lastFrame": 3892
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 3892,
+        "lastFrame": 3973
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 4018,
+        "lastFrame": 4051
+      },
+      {
+        "name": "Cross the lit step before it crumbles",
+        "firstFrame": 4051,
+        "lastFrame": 4132
+      },
+      {
+        "name": "Jump to the next crumbling step or permanent island",
+        "firstFrame": 4177,
+        "lastFrame": 4209
+      },
+      {
+        "name": "Approach the bounce crate after the crumbling flights",
+        "firstFrame": 4209,
+        "lastFrame": 4302
+      },
+      {
+        "name": "Hold the high arrow rebound",
+        "firstFrame": 4347,
+        "lastFrame": 4383
+      },
+      {
+        "name": "Land above the crumbling route",
+        "firstFrame": 4383,
+        "lastFrame": 4427
+      },
+      {
+        "name": "Collect the crystal at the center of the receiver",
+        "firstFrame": 4427,
+        "lastFrame": 4507
+      },
+      {
+        "name": "Drop to the flat recovery floor",
+        "firstFrame": 4552,
+        "lastFrame": 4625
+      },
+      {
+        "name": "Join the flat return outside the hazard",
+        "firstFrame": 4625,
+        "lastFrame": 4708
+      },
+      {
+        "name": "Approach the return ramp",
+        "firstFrame": 4726,
+        "lastFrame": 5185
+      },
+      {
+        "name": "Climb the return ramp",
+        "firstFrame": 5203,
+        "lastFrame": 5467
+      },
+      {
+        "name": "Turn onto the approach",
+        "firstFrame": 5485,
+        "lastFrame": 5576
+      },
+      {
+        "name": "Complete the local circuit",
+        "firstFrame": 5594,
+        "lastFrame": 5771
+      }
+    ],
+    "evidence": [
+      {
+        "action": "completed crumbling flight 1",
+        "position": [
+          -0.003944637179598096,
+          6.2,
+          -4637.619999999985
+        ]
+      },
+      {
+        "action": "completed crumbling flight 1",
+        "position": [
+          0.00040519103246234445,
+          6.2,
+          -4637.619999999992
+        ]
+      },
+      {
+        "action": "completed crumbling flight 2",
+        "position": [
+          0.00040519103246234445,
+          12.4,
+          -4672.0002777777245
+        ]
+      }
+    ],
+    "position": [
+      0.06859560483048467,
+      0,
+      -4599.000596284216
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Complete the local circuit",
+    "result": {
+      "id": 19,
+      "collected": 1,
+      "position": [
+        0.06859560483048467,
+        0,
+        -4599.000596284216
+      ],
+      "frames": 5789
+    }
+  },
+  "views": [
+    {
+      "name": "returned",
+      "position": [
+        0.06859560483048467,
+        0,
+        -4599.000596284216
+      ],
+      "camera": [
+        0.06859560483048467,
+        9.335185867704151,
+        -4581.809441821614
+      ],
+      "render": [
+        240,
+        135
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "1 / Bounce crate",
+          "screen": [
+            1.9371949414691902e-05,
+            0.6819521648122502,
+            1.000545896741789
+          ]
+        },
+        {
+          "name": "2 / Trampoline and high platform",
+          "screen": [
+            -0.0017773319664076178,
+            0.680728053356697,
+            1.0005486908957242
+          ]
+        },
+        {
+          "name": "3 / Long rail over a pit",
+          "screen": [
+            2.2249952808358786e-05,
+            0.6839065088362466,
+            1.0005526968389513
+          ]
+        },
+        {
+          "name": "4 / Moving platform and lift",
+          "screen": [
+            2.355254336827239e-05,
+            0.6806899090125735,
+            1.000555774577633
+          ]
+        },
+        {
+          "name": "5 / Halfpipe and high crystal",
+          "screen": [
+            -0.003274150169519638,
+            0.6797143041582364,
+            1.0005595404205458
+          ]
+        },
+        {
+          "name": "6 / Climbing rope and high platform",
+          "screen": [
+            2.707550694834142e-05,
+            0.6800573052148942,
+            1.0005640985756852
+          ]
+        },
+        {
+          "name": "7 / Timed steps",
+          "screen": [
+            2.9439621048945324e-05,
+            0.6823725400124756,
+            1.0005696844640208
+          ]
+        },
+        {
+          "name": "8 / Switch, steps and bounce crate",
+          "screen": [
+            -0.00277283959914572,
+            0.6790152383732182,
+            1.0005758932921704
+          ]
+        },
+        {
+          "name": "9 / Turtle shell and high platform",
+          "screen": [
+            -0.0030468517792068698,
+            0.6807324905471621,
+            1.0005833807163829
+          ]
+        },
+        {
+          "name": "10 / Folding bridge and small platform",
+          "screen": [
+            3.941729553121855e-05,
+            0.6871197941940488,
+            1.0005932595425224
+          ]
+        },
+        {
+          "name": "11 / Offset rail transfers",
+          "screen": [
+            4.583066135240655e-05,
+            0.6869979061115288,
+            1.0006084129335218
+          ]
+        },
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            -0.0062061455600764415,
+            0.6724003112235919,
+            1.0006194254982572
+          ]
+        },
+        {
+          "name": "13 / Two climbing ropes",
+          "screen": [
+            6.046874548692198e-05,
+            0.6638113131912722,
+            1.0006429995481876
+          ]
+        },
+        {
+          "name": "14 / Timed platforms and resting island",
+          "screen": [
+            7.467232668224861e-05,
+            0.671934218364341,
+            1.0006765595267453
+          ]
+        },
+        {
+          "name": "15 / TNT, switch and revealed route",
+          "screen": [
+            0.0014303454540862178,
+            0.675336547744623,
+            1.00071706904087
+          ]
+        },
+        {
+          "name": "16 / Nitro frames and two launchers",
+          "screen": [
+            -0.014890874025099796,
+            0.6603807099129253,
+            1.000786371656965
+          ]
+        },
+        {
+          "name": "17 / Rails, timed enemy and bounce crate",
+          "screen": [
+            -0.019846899845217213,
+            0.6724636730091652,
+            1.001042444567606
+          ]
+        },
+        {
+          "name": "18 / Two ropes and moving platform",
+          "screen": [
+            0.00047646713346385873,
+            0.5456324456234304,
+            1.0016259134195944
+          ]
+        },
+        {
+          "name": "20 / TNT and two switch groups",
+          "screen": [
+            0.019184971035583143,
+            0.7741809327751795,
+            0.9998695879441255
+          ]
+        },
+        {
+          "name": "21 / Rails, trick gate, enemy and spring",
+          "screen": [
+            0.012019386181004545,
+            0.6861529005325873,
+            1.0001716934882108
+          ]
+        },
+        {
+          "name": "22 / Two ropes, timed steps and spring",
+          "screen": [
+            0.008799921302001482,
+            0.7441450122312852,
+            1.0002596658523626
+          ]
+        },
+        {
+          "name": "23 / Two switch groups and climbing rope",
+          "screen": [
+            0.005714110784398942,
+            0.728589131862621,
+            1.0003123239257539
+          ]
+        },
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.005275722164820079,
+            0.7087529904367785,
+            1.0003559651261524
+          ]
+        },
+        {
+          "name": "25 / Switches, rope, timed steps and Nitro spring",
+          "screen": [
+            0.008346712793168435,
+            0.738792052687163,
+            1.0003763709258189
+          ]
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

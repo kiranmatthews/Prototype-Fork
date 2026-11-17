@@ -1,0 +1,548 @@
+{
+  "harvests": [
+    {
+      "name": "SUNSET / TEACH / opening harvest",
+      "count": 3,
+      "position": [
+        -4.836181640625,
+        1.7279999999999998,
+        -23.64404296875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / lockyard exit",
+      "count": 4,
+      "position": [
+        -31.28955078125,
+        3.332244345513537,
+        -180.668212890625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / inner bank entry",
+      "count": 3,
+      "position": [
+        -30.5791015625,
+        4.728,
+        -276.36669921875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / inner jump court",
+      "count": 3,
+      "position": [
+        -22.50244140625,
+        4.753899952089075,
+        -305.80908203125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / inner receiver",
+      "count": 4,
+      "position": [
+        3.336669921875,
+        5.333175877921509,
+        -365.68994140625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / outer bank entry",
+      "count": 3,
+      "position": [
+        -17.766357421875,
+        4.728,
+        -278.551025390625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / timber approach",
+      "count": 3,
+      "position": [
+        -3.568115234375,
+        4.993491587794317,
+        -323.51513671875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / outer receiver",
+      "count": 4,
+      "position": [
+        65.107666015625,
+        7.838936500353032,
+        -409.031982421875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / mill crown entry",
+      "count": 3,
+      "position": [
+        184.17724609375,
+        10.950997849721961,
+        -428.890869140625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / crown shoulder",
+      "count": 3,
+      "position": [
+        203.53515625,
+        11.736017877055506,
+        -423.26171875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / crown rail approach",
+      "count": 4,
+      "position": [
+        230.48974609375,
+        12.585773601011969,
+        -409.19580078125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / upper terrace",
+      "count": 3,
+      "position": [
+        289.61669921875,
+        14.033056129909188,
+        -297.9091796875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / upper terrace exit",
+      "count": 4,
+      "position": [
+        292.89697265625,
+        17.715310232765255,
+        -238.621826171875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEACH / spillway smash choice",
+      "count": 3,
+      "position": [
+        282.122802734375,
+        19.088857971492523,
+        -165.20947265625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / spillway carve",
+      "count": 2,
+      "position": [
+        247.06591796875,
+        15.11500107607191,
+        -106.21728515625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / return carve",
+      "count": 2,
+      "position": [
+        173.706787109375,
+        9.563861320207296,
+        -67.638671875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / spillway exit",
+      "count": 3,
+      "position": [
+        118.493896484375,
+        6.1457508390890965,
+        -8.743896484375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / first sluice receiver",
+      "count": 3,
+      "position": [
+        141.00927734375,
+        4.671766023045365,
+        122.37646484375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / sluice shoulder",
+      "count": 4,
+      "position": [
+        155.734130859375,
+        3.502076731548622,
+        136.197509765625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / sluice checkpoint approach",
+      "count": 3,
+      "position": [
+        171.88330078125,
+        3.5057273481829996,
+        148.36669921875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / second sluice receiver",
+      "count": 3,
+      "position": [
+        227.056396484375,
+        2.7029843777420433,
+        165.1259765625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / returning island",
+      "count": 4,
+      "position": [
+        246.73779296875,
+        1.8771362369021687,
+        167.18212890625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / crumble court",
+      "count": 3,
+      "position": [
+        276.46875,
+        1.7290396919725808,
+        166.912841796875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / ferry approach",
+      "count": 3,
+      "position": [
+        386.945068359375,
+        -0.272,
+        132.2958984375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / ferry waiting bank",
+      "count": 3,
+      "position": [
+        410.8876953125,
+        -0.272,
+        113.722412109375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / ferry departure",
+      "count": 4,
+      "position": [
+        432.736572265625,
+        -0.8480000000000001,
+        92.7060546875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / ferry receiver",
+      "count": 3,
+      "position": [
+        473.865966796875,
+        -0.272,
+        7.765869140625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / reedbank split",
+      "count": 3,
+      "position": [
+        481.122802734375,
+        -0.272,
+        -21.020263671875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEACH / quarry harvest",
+      "count": 3,
+      "position": [
+        473.814208984375,
+        1.1897035130013052,
+        -138.14208984375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / first boulder exit",
+      "count": 3,
+      "position": [
+        473.197998046875,
+        -3.1233138727165386,
+        -196.00634765625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TEST / outside quarry harvest",
+      "count": 4,
+      "position": [
+        527.06982421875,
+        -7.4306076548929205,
+        -287.0751953125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / crown approach",
+      "count": 3,
+      "position": [
+        638.646728515625,
+        -8.271999999999998,
+        -291.165283203125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / pendulum shoulder",
+      "count": 4,
+      "position": [
+        667.27587890625,
+        -8.847999999999999,
+        -284.361328125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REWARD / crown rail receiver",
+      "count": 3,
+      "position": [
+        730.37939453125,
+        -4.272,
+        -77.46728515625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall brink",
+      "count": 4,
+      "position": [
+        728.472412109375,
+        -4.848000000000001,
+        -71.7783203125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / spring chapter entry",
+      "count": 4,
+      "position": [
+        726.555908203125,
+        -4.848000000000001,
+        -66.092529296875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / first spring",
+      "count": 3,
+      "position": [
+        722.782958984375,
+        -4.272,
+        -54.701171875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / protection before stamping locks",
+      "count": 3,
+      "position": [
+        -26.19287109375,
+        1.7279999999999998,
+        -69.5458984375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / protection before quarry",
+      "count": 4,
+      "position": [
+        481.405029296875,
+        0.5883066152769063,
+        -90.790283203125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TOOL / arrow and upper reward",
+      "count": 2,
+      "position": [
+        298.6181640625,
+        15.422301236022276,
+        -267.6640625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / TOOL / optional mill roof life",
+      "count": 1,
+      "position": [
+        313.830322265625,
+        20.24929978942871,
+        -263.167724609375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / COUNT / checkpoint shoulder before crown rail",
+      "count": 3,
+      "position": [
+        740.60205078125,
+        -4.279300252052652,
+        -189.60498046875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / PREPARE / sheltered spring supplies",
+      "count": 3,
+      "position": [
+        730.657958984375,
+        -4.272,
+        -62.605224609375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 4,
+      "position": [
+        682.576904296875,
+        -50.848,
+        149.453125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        668.9296875,
+        -50.272,
+        146.329833984375
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        676.422607421875,
+        -50.272,
+        144.967041015625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 4,
+      "position": [
+        640.18896484375,
+        -120.84800000000001,
+        334.66455078125
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        626.541748046875,
+        -120.272,
+        331.541015625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        634.03466796875,
+        -120.272,
+        330.178466796875
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 4,
+      "position": [
+        597.801025390625,
+        -188.848,
+        519.8759765625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        584.15380859375,
+        -188.272,
+        516.75244140625
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "SUNSET / REST / waterfall terrace harvest",
+      "count": 3,
+      "position": [
+        591.646728515625,
+        -188.272,
+        515.389892578125
+      ],
+      "deaths": 0
+    }
+  ],
+  "patrolProbes": 330,
+  "supported": 171,
+  "remoteNitro": {
+    "count": 3,
+    "deaths": 0
+  },
+  "checkpointRestores": true,
+  "enemies": [
+    "grunt",
+    "grunt",
+    "grunt",
+    "turtle",
+    "turtle",
+    "grunt",
+    "turtle",
+    "turtle",
+    "turtle",
+    "grunt",
+    "turtle"
+  ],
+  "kinds": [
+    "grunt",
+    "turtle"
+  ]
+}

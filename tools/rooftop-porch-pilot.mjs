@@ -5,7 +5,15 @@ import {puzzleControls} from './puzzle-controls.mjs';
 export function* runStormPorch(r){
  const c=puzzleControls(r),{p,l}=r,deaths=p.totalDeaths;
  const box=name=>c.crateNamed(name);
- const hit=function*(name){if(box(name).alive)yield* c.hit(box(name),name);};
+ const hit=function*(name){
+  const target=box(name),x=target.mesh.position.x;
+  if(target.alive)yield* c.hit(target,name);
+  // Finish the supply column here while its upper parcels settle. These
+  // are ordinary repeated spins; never defer missed caps across a gap.
+  const upper=l.crates.filter(b=>b!==target&&b.alive&&!b.pending&&!b.bang&&Math.abs(b.mesh.position.x-x)<.25)
+   .sort((a,b)=>a.box.min.y-b.box.min.y);
+  for(const parcel of upper)if(parcel.alive)yield* c.hit(parcel,`${name} remaining parcel`);
+ };
  yield* c.stepFor(20);c.check(p.grounded,'supported covered arrival');
  c.check(!p.groundHit.slippy,'covered floor must be dry');
  for(const name of ['Welcome parcel','Welcome parcel cap','Calling-card parcel'])yield* hit(name);
@@ -35,7 +43,7 @@ export function* runStormPorch(r){
  }
  yield* c.hop([87,0,0],'last porch landing');
  for(const name of ['Departure parcel','Departure parcel middle','Departure parcel crown','Last dry delivery'])yield* hit(name);
- yield* c.clearAll('all twenty-three storm deliveries');
+ yield* c.clearAll('all forty-three storm deliveries');
  const result=yield* c.finish('return from the Storm Parlour');
  c.check(p.totalDeaths===deaths,'porch traversal cannot conceal a reset');
  return {state:p.state,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,deaths:p.totalDeaths-deaths,...result};

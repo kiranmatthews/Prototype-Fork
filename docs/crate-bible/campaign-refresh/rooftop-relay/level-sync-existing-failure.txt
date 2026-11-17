@@ -1,0 +1,20 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: sky: refresh the reviewed stock certificate after changing its snapshot
++ actual - expected
+
++ '02664d8122f3094ccc406decee806dca0fa23ff3170c961679c3e64b43465b3f'
+- 'b97b0401ac7aa34866437c26d8d914a25cc1a91966b690a7ac932e375de61a0b'
+
+    at file:///workspace/Prototype-Fork/tools/test-level-sync.mjs:27:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '02664d8122f3094ccc406decee806dca0fa23ff3170c961679c3e64b43465b3f',
+  expected: 'b97b0401ac7aa34866437c26d8d914a25cc1a91966b690a7ac932e375de61a0b',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.5

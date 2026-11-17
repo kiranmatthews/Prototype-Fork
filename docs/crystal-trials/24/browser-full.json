@@ -1,0 +1,198 @@
+{
+  "trial": 24,
+  "mode": "full",
+  "errors": [],
+  "fingerprint": "82c779324d66c9e943f07451a26bfc488460128d570f35bfe00d28f59a9b5f09",
+  "routeEvidence": "browser-lite.json",
+  "initial": {
+    "spawn": [
+      0,
+      0,
+      5
+    ],
+    "crystals": 1
+  },
+  "scope": "Full-resolution visual fixtures; current-source real-input course route in browser-lite.json",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        7.835185867704152,
+        22.19115446260227
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.04599167356920851,
+            0.9380395835111204,
+            0.9992577632893339
+          ]
+        }
+      ]
+    },
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06794077215373674,
+        0,
+        8.999005306831885
+      ],
+      "camera": [
+        0.06794077215373674,
+        7.835185867704152,
+        26.190159769434153
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.04443907767175633,
+            0.9359969256892278,
+            0.9992859545664714
+          ]
+        }
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.1,
+        -88
+      ],
+      "camera": [
+        15.549631660464483,
+        14.87481583023224,
+        -83.33511050186065
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            3.6622818737471357,
+            2.324700352144256,
+            0.991082113258339
+          ]
+        }
+      ]
+    },
+    {
+      "name": "upper-rope",
+      "position": [
+        6,
+        9.3,
+        -105
+      ],
+      "camera": [
+        8.52515024579482,
+        21.244163175935757,
+        -88.58652340233367
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.15646228441838606,
+            1.1143887104006078,
+            0.9969517871231037
+          ]
+        }
+      ]
+    },
+    {
+      "name": "timed-finish",
+      "position": [
+        6,
+        18.5,
+        -121
+      ],
+      "camera": [
+        8.52515024579482,
+        30.444163175935756,
+        -104.58652340233367
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "24 / Rails, enemy, spring, rope and timed steps",
+          "screen": [
+            0.12856121743123727,
+            0.6904153244801653,
+            0.9960797263096939
+          ]
+        }
+      ]
+    }
+  ],
+  "stagedVisualFixtures": [
+    {
+      "name": "return-fixture",
+      "position": [
+        0.06794077215373674,
+        0,
+        8.999005306831885
+      ]
+    },
+    {
+      "name": "enemy-and-bounce",
+      "position": [
+        0,
+        3.25,
+        -88
+      ]
+    },
+    {
+      "name": "upper-rope",
+      "position": [
+        6,
+        9.45,
+        -105
+      ]
+    },
+    {
+      "name": "timed-finish",
+      "position": [
+        6,
+        18.65,
+        -121
+      ]
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-13",
+  "level": "ember-court",
+  "change": "Temple basin: one connected broad billboard instead of three independently timed copies",
+  "spriteBodies": {
+    "basin": 1,
+    "exhibition": 32,
+    "courtyard": 39
+  },
+  "sourceFrames": 64,
+  "sourceFps": 48,
+  "motion": "Existing Flame02 sequence, fixed width/flare for every pose",
+  "atlasAndPaletteChanged": false,
+  "checks": {
+    "build": "pass",
+    "release": "pass",
+    "releaseBytes": 935951410,
+    "diff": "pass"
+  },
+  "browser": {
+    "lite": "pass",
+    "fullProduction": "pass",
+    "normal720p": "pass",
+    "nativeResolution": "pass",
+    "frontAndBothSides": "pass",
+    "livePoseReview": "pass",
+    "consoleErrors": []
+  },
+  "scope": "Local production validation before publication. Existing shared Jak heat renderer retained; its per-emitter footprint now follows the wider body."
+}

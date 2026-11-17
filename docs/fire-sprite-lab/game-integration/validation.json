@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-13",
+  "level": "ember-court",
+  "entry": "fire-sprite-lab.html",
+  "gameUrl": "?playtest&level=ember-court",
+  "runtime": "normal Bone Man Player/Input/camera/game flow",
+  "checks": {
+    "levels": "pass",
+    "build": "pass",
+    "toolDirectory": "pass",
+    "releaseBytes": 935950966,
+    "releaseBudget": 1000000000
+  },
+  "browser": {
+    "lite": "pass",
+    "fullProduction": "pass",
+    "consoleErrors": [],
+    "verified": [
+      "old entry redirects to normal game",
+      "supported spawn",
+      "run",
+      "jump",
+      "spin",
+      "basin collision",
+      "checkpoint activation",
+      "fall and death",
+      "checkpoint respawn",
+      "temple access",
+      "normal run-complete receipt",
+      "MENU level entry",
+      "M hides and shows debug tabs",
+      "720p and native resolution",
+      "Gouraud on/off",
+      "Unity treatment on/off",
+      "CRT on/off"
+    ]
+  },
+  "unchanged": [
+    "movement tuning",
+    "player controller",
+    "character animation",
+    "v5 native fire atlases",
+    "shared imagegen palette",
+    "Jak heat-distortion implementation"
+  ],
+  "scope": "Inspection arena; no bespoke movement controller on the published lab route. Local production checks recorded before deployment."
+}

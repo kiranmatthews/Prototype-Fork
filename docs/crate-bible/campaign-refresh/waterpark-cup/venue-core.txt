@@ -1,0 +1,1 @@
+PASS recovered layout, competition physics/scoring, three-run event, separate trophy and current campaign graph (legacy map coordinates/migration excluded).

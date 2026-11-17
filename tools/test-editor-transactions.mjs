@@ -108,6 +108,30 @@ try {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
   }).outputText;
   const { requiresTerrainSupportBuildCheck } = await server.ssrLoadModule("/src/terrainSupportBudget.ts");
+  check("crystal practice preserves multiple goals across paste, save and reload", () => {
+    const data = base([{ t: 'platform', p: [0, -.5, 0], s: [20, 1, 20] },
+      { t: 'gate', p: [0, 0, -8] }]);
+    data.skatepark = true; data.crystalTrials = 'challenge';
+    data.components.push({ t: 'crystal', nm: 'Existing', p: [0, 6, 0] });
+    const editor = editorFor(migrateCustomLevel(data));
+    assert.equal(editor.addBatch([
+      { t: 'crystal', nm: 'Second', p: [3, 8, 0] },
+      { t: 'crystal', nm: 'Third', p: [-3, 10, 0] },
+    ]), true);
+    assert.equal(editor.data.components.filter(c => c.t === 'crystal').length, 3);
+    assert.equal(findLevel(editor.targetId).data.components.filter(c => c.t === 'crystal').length, 3);
+    const reloaded = migrateCustomLevel(normalizeCustomLevelData(clone(findLevel(editor.targetId).data)));
+    assert.equal(reloaded.components.filter(c => c.t === 'crystal').length, 3);
+    for (const invalid of [
+      { ...clone(reloaded), crystalTrials: 'unknown' },
+      { ...clone(reloaded), skatepark: false },
+      { ...clone(reloaded), skateCollectathon: true, components: [...clone(reloaded.components), { t: 'wumpa', p: [0, 1, 0] }] },
+    ]) assert.equal(normalizeCustomLevelData(invalid), null, 'invalid or conflicting practice mode must not import');
+    const ordinary = editorFor(base([{ t: 'crystal', p: [0, 0, 0] }]));
+    ordinary.addBatch([{ t: 'crystal', p: [1, 0, 0] }, { t: 'crystal', p: [2, 0, 0] }]);
+    assert.equal(ordinary.data.components.filter(c => c.t === 'crystal').length, 1);
+  });
+
   check("exact support-build rejection happens before registry or history changes", () => {
     const editor = editorFor(base([
       {t:"platform", p:[0,0,0], s:[20,1,40]},

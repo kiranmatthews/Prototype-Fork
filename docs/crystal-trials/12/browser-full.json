@@ -1,0 +1,198 @@
+{
+  "trial": 12,
+  "mode": "full",
+  "errors": [],
+  "initial": {
+    "spawn": [
+      0,
+      -8,
+      80
+    ],
+    "crystals": 18
+  },
+  "scope": "Standalone source trial in the full game renderer",
+  "stagedStart": [
+    0,
+    0.15,
+    5
+  ],
+  "views": [
+    {
+      "name": "approach",
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "camera": [
+        0,
+        14.054055145966812,
+        21.951354408707076
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": [
+        {
+          "name": "12 / Trampoline and airborne bounce crate",
+          "screen": [
+            0.3327975321960098,
+            0.8821829744154672,
+            0.9941543995903009
+          ]
+        }
+      ]
+    },
+    {
+      "name": "returned",
+      "position": [
+        0.06745344736340832,
+        0,
+        4.996588707488083
+      ],
+      "camera": [
+        0.06745344736340832,
+        14.054055145966812,
+        21.94794311619516
+      ],
+      "render": [
+        1280,
+        720
+      ],
+      "gl": 0,
+      "crystals": []
+    }
+  ],
+  "installed": {
+    "id": 12,
+    "frame": 0,
+    "done": false,
+    "failure": null,
+    "actions": [],
+    "evidence": []
+  },
+  "pilot": {
+    "id": 12,
+    "frame": 1263,
+    "done": true,
+    "failure": null,
+    "actions": [
+      {
+        "name": "Bank challenge 12 checkpoint",
+        "firstFrame": 12,
+        "lastFrame": 93
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 137,
+        "lastFrame": 269
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 314,
+        "lastFrame": 353
+      },
+      {
+        "name": "The trampoline alone cannot reach the high receiver",
+        "firstFrame": 353,
+        "lastFrame": 403
+      },
+      {
+        "name": "Land in the flat courtyard for a local retry",
+        "firstFrame": 403,
+        "lastFrame": 429
+      },
+      {
+        "name": "Approach the trampoline",
+        "firstFrame": 429,
+        "lastFrame": 538
+      },
+      {
+        "name": "Hold the trampoline launch",
+        "firstFrame": 583,
+        "lastFrame": 622
+      },
+      {
+        "name": "Rise beside the airborne crate without hitting its underside",
+        "firstFrame": 622,
+        "lastFrame": 651
+      },
+      {
+        "name": "Align above the airborne spring at the trampoline apex",
+        "firstFrame": 651,
+        "lastFrame": 672
+      },
+      {
+        "name": "Land on the airborne crate for a held second rebound",
+        "firstFrame": 672,
+        "lastFrame": 683
+      },
+      {
+        "name": "Gain height beside the receiver",
+        "firstFrame": 683,
+        "lastFrame": 694
+      },
+      {
+        "name": "Drift onto the high receiver after both launchers",
+        "firstFrame": 694,
+        "lastFrame": 727
+      },
+      {
+        "name": "Collect the two-launcher crystal",
+        "firstFrame": 727,
+        "lastFrame": 754
+      },
+      {
+        "name": "Return to the flat courtyard beside both launchers",
+        "firstFrame": 799,
+        "lastFrame": 858
+      },
+      {
+        "name": "Pass around the launchers",
+        "firstFrame": 858,
+        "lastFrame": 1050
+      },
+      {
+        "name": "Finish the two-launcher circuit",
+        "firstFrame": 1068,
+        "lastFrame": 1245
+      }
+    ],
+    "evidence": [
+      {
+        "action": "trampoline alone misses",
+        "apex": 11.349166660706187
+      },
+      {
+        "action": "airborne arrow contact",
+        "position": [
+          3.9117890858507662,
+          9.172,
+          -11.947572397092387
+        ],
+        "verticalSpeed": 20
+      }
+    ],
+    "position": [
+      0.06745344736340832,
+      0,
+      4.996588707488083
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "stage": "Finish the two-launcher circuit",
+    "result": {
+      "id": 12,
+      "collected": 1,
+      "position": [
+        0.06745344736340832,
+        0,
+        4.996588707488083
+      ],
+      "frames": 1263
+    }
+  },
+  "passed": true
+}

@@ -1,0 +1,1 @@
+PASS Storm Parlour native input-only journey, all boxes, dry traction, real gaps and shelter {"state":"finished","cratesBroken":43,"totalCrates":43,"deaths":0,"completionScope":"complete-stage","activeStageCrates":43,"bonusCrateTotal":0,"bonusCrates":0,"gemEarned":true}

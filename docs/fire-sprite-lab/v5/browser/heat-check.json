@@ -1,0 +1,21 @@
+{
+  "method": "Actual CUA screenshots; interior scene crop excludes live FPS text and inspector controls",
+  "region": {
+    "left": 100,
+    "top": 100,
+    "width": 690,
+    "height": 680
+  },
+  "pause": {
+    "changedPixelsAbove3": 0,
+    "peak": 0
+  },
+  "heat": {
+    "changedPixelsAbove3": 1592,
+    "peak": 58
+  },
+  "zeroStrength": {
+    "changedPixelsAbove3": 0,
+    "peak": 0
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "originalAndChangedRunIdentical": true,
+  "baselineFileSha256": "aa385f7c9b19ff555371cfa3ba59ac1369095f3724d4afb176c2e119de7cea48",
+  "changedFileSha256": "aa385f7c9b19ff555371cfa3ba59ac1369095f3724d4afb176c2e119de7cea48",
+  "originalEnd": {
+    "frame": 18000,
+    "time": 300,
+    "input": {
+      "moveX": 0.3,
+      "moveY": 0.46,
+      "jumpHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindHeld": false,
+      "grindPressed": false,
+      "spinHeld": false,
+      "spinPressed": false,
+      "grabHeld": false,
+      "grabPressed": false,
+      "transferHeld": false,
+      "transferPressed": false,
+      "restartPressed": false
+    },
+    "supportComponent": 141,
+    "railComponent": null,
+    "mover": null,
+    "heading": [
+      0.5535833550747181,
+      0,
+      0.8327937733815817
+    ],
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "position": [
+      116.76577545512686,
+      34,
+      -594.7707489515219
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 12,
+    "verticalSpeed": 0,
+    "pipe": -1,
+    "vertAir": false,
+    "pipeHang": false,
+    "releaseStage": 0,
+    "bailing": false,
+    "deaths": 0,
+    "freeSkate": true,
+    "rail": null
+  },
+  "originalChapters": [
+    {
+      "id": "freight",
+      "firstFrame": 1,
+      "lastFrame": 345
+    },
+    {
+      "id": "ferries",
+      "firstFrame": 346,
+      "lastFrame": 645
+    },
+    {
+      "id": "cutbacks",
+      "firstFrame": 646,
+      "lastFrame": 1412
+    },
+    {
+      "id": "shift-lights",
+      "firstFrame": 1413,
+      "lastFrame": 1677
+    },
+    {
+      "id": "rail-ferry",
+      "firstFrame": 1678,
+      "lastFrame": 2521
+    },
+    {
+      "id": "workbay",
+      "firstFrame": 2522,
+      "lastFrame": 3088
+    },
+    {
+      "id": "crown",
+      "firstFrame": 3089,
+      "lastFrame": null
+    }
+  ],
+  "correction": "The pilot now accepts a safe north-facing handoff within 4m of the checkpoint on its 24m-wide dock, instead of circling forever to satisfy 2.5m. No player or course geometry was changed.",
+  "harvestBudget": "The cautious pause-between-spins pilot needed up to 1250 frames for a 12m approach. Its 1000-frame timeout was raised to 1800; its trace showed continued progress, no obstacle or death.",
+  "negativeJumpTiming": "The first lost-arrow probe pressed after the double-jump window. A corrected apex tap exposed the original 13.2m life as reachable without the arrow because crate head contact follows the actual character silhouette. The life now sits at 15.2m; final floor and real cargo-stomp double jumps leave it intact."
+}

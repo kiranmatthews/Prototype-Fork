@@ -1,0 +1,709 @@
+{
+  "mode": "lite",
+  "errors": [],
+  "captureMethod": "captureBonusReviewFrame normal gameplay renderer at native resolution",
+  "inventory": {
+    "physical": 118,
+    "total": 105,
+    "bonus": 22,
+    "checkpoints": 6,
+    "enemies": 0
+  },
+  "firstCargo": {
+    "done": true,
+    "frames": 147,
+    "state": "ride",
+    "crates": 4,
+    "lives": 4,
+    "position": [
+      -18.01681470719467,
+      13.878999710083008,
+      -318.74806360816285
+    ],
+    "collected": 4,
+    "checkpoint": false
+  },
+  "checkpoint": {
+    "done": true,
+    "frames": 3,
+    "state": "ride",
+    "crates": 5,
+    "lives": 4,
+    "position": [
+      -17.1524,
+      13.878999710083008,
+      -324
+    ],
+    "collected": 4,
+    "checkpoint": true
+  },
+  "afterCheckpoint": {
+    "done": true,
+    "frames": 473,
+    "state": "ride",
+    "crates": 10,
+    "lives": 4,
+    "position": [
+      -12.352990736347529,
+      13.878999710083008,
+      -319.316974878811
+    ],
+    "collected": 5,
+    "checkpoint": true
+  },
+  "recovery": {
+    "lives": 3,
+    "credit": 5,
+    "bankedGone": 4,
+    "restored": 5,
+    "position": [
+      -16.0464,
+      13.978999710083007,
+      -324
+    ]
+  },
+  "finish": {
+    "done": true,
+    "frames": 212,
+    "state": "finished",
+    "crates": 0,
+    "lives": 4,
+    "position": [
+      7.519809428065878,
+      -64.27333333084981,
+      -2674.461174260748
+    ],
+    "collected": 0,
+    "checkpoint": false
+  },
+  "bonusFailure": {
+    "lives": 4,
+    "banked": 0,
+    "completed": false,
+    "sameParent": true
+  },
+  "bonusRetry": {
+    "physical": 22,
+    "alive": true
+  },
+  "bonusJourney": {
+    "done": true,
+    "failure": null,
+    "frame": 3187,
+    "stage": "Moonbone return gate",
+    "actions": [
+      {
+        "name": "approach crypt delivery",
+        "firstFrame": 20,
+        "lastFrame": 109
+      },
+      {
+        "name": "crypt delivery",
+        "firstFrame": 129,
+        "lastFrame": 129
+      },
+      {
+        "name": "approach crypt delivery",
+        "firstFrame": 151,
+        "lastFrame": 213
+      },
+      {
+        "name": "crypt delivery",
+        "firstFrame": 233,
+        "lastFrame": 233
+      },
+      {
+        "name": "approach crypt delivery",
+        "firstFrame": 255,
+        "lastFrame": 317
+      },
+      {
+        "name": "crypt delivery",
+        "firstFrame": 337,
+        "lastFrame": 337
+      },
+      {
+        "name": "read the sarcophagus lift",
+        "firstFrame": 359,
+        "lastFrame": 479
+      },
+      {
+        "name": "wait for the descending sarcophagus",
+        "firstFrame": 497,
+        "lastFrame": 526
+      },
+      {
+        "name": "board the rising sarcophagus",
+        "firstFrame": 553,
+        "lastFrame": 592
+      },
+      {
+        "name": "ride the sarcophagus into the upper crypt",
+        "firstFrame": 592,
+        "lastFrame": 834
+      },
+      {
+        "name": "leave the lift for the moon gallery",
+        "firstFrame": 861,
+        "lastFrame": 900
+      },
+      {
+        "name": "approach gallery delivery",
+        "firstFrame": 900,
+        "lastFrame": 986
+      },
+      {
+        "name": "gallery delivery",
+        "firstFrame": 1006,
+        "lastFrame": 1006
+      },
+      {
+        "name": "approach gallery delivery",
+        "firstFrame": 1028,
+        "lastFrame": 1090
+      },
+      {
+        "name": "gallery delivery",
+        "firstFrame": 1110,
+        "lastFrame": 1110
+      },
+      {
+        "name": "approach gallery delivery",
+        "firstFrame": 1132,
+        "lastFrame": 1194
+      },
+      {
+        "name": "gallery delivery",
+        "firstFrame": 1214,
+        "lastFrame": 1214
+      },
+      {
+        "name": "breakaway spine takeoff",
+        "firstFrame": 1236,
+        "lastFrame": 1354
+      },
+      {
+        "name": "cross the breakaway spine 34.8",
+        "firstFrame": 1399,
+        "lastFrame": 1438
+      },
+      {
+        "name": "cross the breakaway spine 40.4",
+        "firstFrame": 1465,
+        "lastFrame": 1504
+      },
+      {
+        "name": "cross the breakaway spine 45.7",
+        "firstFrame": 1531,
+        "lastFrame": 1570
+      },
+      {
+        "name": "cross the breakaway spine 49.3",
+        "firstFrame": 1597,
+        "lastFrame": 1636
+      },
+      {
+        "name": "approach far-crypt delivery",
+        "firstFrame": 1636,
+        "lastFrame": 1688
+      },
+      {
+        "name": "far-crypt delivery",
+        "firstFrame": 1708,
+        "lastFrame": 1708
+      },
+      {
+        "name": "approach far-crypt delivery",
+        "firstFrame": 1730,
+        "lastFrame": 1792
+      },
+      {
+        "name": "far-crypt delivery",
+        "firstFrame": 1812,
+        "lastFrame": 1812
+      },
+      {
+        "name": "approach far-crypt delivery",
+        "firstFrame": 1834,
+        "lastFrame": 1896
+      },
+      {
+        "name": "far-crypt delivery",
+        "firstFrame": 1916,
+        "lastFrame": 1916
+      },
+      {
+        "name": "approach far-crypt delivery",
+        "firstFrame": 1938,
+        "lastFrame": 2000
+      },
+      {
+        "name": "far-crypt delivery",
+        "firstFrame": 2020,
+        "lastFrame": 2020
+      },
+      {
+        "name": "approach far-crypt delivery",
+        "firstFrame": 2042,
+        "lastFrame": 2104
+      },
+      {
+        "name": "far-crypt delivery",
+        "firstFrame": 2124,
+        "lastFrame": 2124
+      },
+      {
+        "name": "moon-eye high cache before its arrow takeoff",
+        "firstFrame": 2146,
+        "lastFrame": 2234
+      },
+      {
+        "name": "moon-eye high cache before its arrow arrow contact",
+        "firstFrame": 2279,
+        "lastFrame": 2315
+      },
+      {
+        "name": "moon-eye high cache before its arrow high reward ascent",
+        "firstFrame": 2315,
+        "lastFrame": 2335
+      },
+      {
+        "name": "moon-eye high cache before its arrow leave intact launcher",
+        "firstFrame": 2335,
+        "lastFrame": 2358
+      },
+      {
+        "name": "approach moon-eye high cache before its arrow support last",
+        "firstFrame": 2358,
+        "lastFrame": 2419
+      },
+      {
+        "name": "moon-eye high cache before its arrow support last",
+        "firstFrame": 2439,
+        "lastFrame": 2439
+      },
+      {
+        "name": "read the descending jawbones",
+        "firstFrame": 2461,
+        "lastFrame": 2545
+      },
+      {
+        "name": "first jawbone landing",
+        "firstFrame": 2590,
+        "lastFrame": 2633
+      },
+      {
+        "name": "lower jawbone landing",
+        "firstFrame": 2660,
+        "lastFrame": 2703
+      },
+      {
+        "name": "descend into the last vault",
+        "firstFrame": 2730,
+        "lastFrame": 2773
+      },
+      {
+        "name": "approach vault delivery",
+        "firstFrame": 2773,
+        "lastFrame": 2870
+      },
+      {
+        "name": "vault delivery",
+        "firstFrame": 2890,
+        "lastFrame": 2890
+      },
+      {
+        "name": "approach vault delivery",
+        "firstFrame": 2912,
+        "lastFrame": 2974
+      },
+      {
+        "name": "vault delivery",
+        "firstFrame": 2994,
+        "lastFrame": 2994
+      },
+      {
+        "name": "approach vault delivery",
+        "firstFrame": 3016,
+        "lastFrame": 3078
+      },
+      {
+        "name": "vault delivery",
+        "firstFrame": 3098,
+        "lastFrame": 3098
+      },
+      {
+        "name": "Moonbone return gate",
+        "firstFrame": 3122,
+        "lastFrame": 3187
+      }
+    ],
+    "evidence": [
+      {
+        "action": "crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "board the rising sarcophagus",
+        "launch": [
+          6.634711110743182,
+          -2.384185793236071e-08,
+          -0.00010016618087130342
+        ],
+        "landing": [
+          11.910211110600814,
+          0.034505190939327246,
+          -0.00013892216791645178
+        ],
+        "ground": "Rising sarcophagus"
+      },
+      {
+        "action": "real vertical lift ride",
+        "boarded": 0.034505190939327246,
+        "exit": 5.799025990566281
+      },
+      {
+        "action": "leave the lift for the moon gallery",
+        "launch": [
+          11.967344443932607,
+          5.799025990566281,
+          -0.00013934189281959147
+        ],
+        "landing": [
+          17.379344443786554,
+          5.999999976158142,
+          -0.0001791006648579469
+        ],
+        "ground": "Moonbone upper gallery"
+      },
+      {
+        "action": "gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "gallery delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "cross the breakaway spine 34.8",
+        "launch": [
+          30.426588887878907,
+          5.999999976158142,
+          -0.00027495107461318776
+        ],
+        "landing": [
+          34.76608888776186,
+          5.999999988079071,
+          -0.00030683082170491723
+        ],
+        "ground": "Breakaway vertebra 34"
+      },
+      {
+        "action": "cross the breakaway spine 40.4",
+        "launch": [
+          34.76608888776186,
+          5.999999988079071,
+          -0.00030683082170491723
+        ],
+        "landing": [
+          40.25608888761383,
+          5.999999988079071,
+          -0.00034716261373938997
+        ],
+        "ground": "Breakaway vertebra 41.4"
+      },
+      {
+        "action": "cross the breakaway spine 45.7",
+        "launch": [
+          40.25608888761383,
+          5.999999988079071,
+          -0.00034716261373938997
+        ],
+        "landing": [
+          45.62203333191356,
+          5.999999988079071,
+          -0.00038658304277433867
+        ],
+        "ground": "Breakaway vertebra 45.1"
+      },
+      {
+        "action": "cross the breakaway spine 49.3",
+        "launch": [
+          45.62203333191356,
+          5.999999988079071,
+          -0.00038658304277433867
+        ],
+        "landing": [
+          49.27297777625956,
+          5.999999976158142,
+          -0.0004134043783048938
+        ],
+        "ground": "Moonbone upper gallery"
+      },
+      {
+        "action": "far-crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "far-crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "far-crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "far-crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "far-crypt delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "moon-eye high cache before its arrow support last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "moon-eye high cache before its arrow",
+        "upperAlive": false,
+        "launcherAlive": false
+      },
+      {
+        "action": "first jawbone landing",
+        "launch": [
+          61.92722222214021,
+          5.999999976158142,
+          -0.0005072887254352758
+        ],
+        "landing": [
+          66.47222222201763,
+          4.199999976158143,
+          -0.0005406781598244706
+        ],
+        "ground": "Descending jawbone perch"
+      },
+      {
+        "action": "lower jawbone landing",
+        "launch": [
+          66.47222222201763,
+          4.199999976158143,
+          -0.0005406781598244706
+        ],
+        "landing": [
+          71.66822222187753,
+          2.0999999761581423,
+          -0.0005788501072581903
+        ],
+        "ground": "Lower jawbone perch"
+      },
+      {
+        "action": "descend into the last vault",
+        "launch": [
+          71.66822222187753,
+          2.0999999761581423,
+          -0.0005788501072581903
+        ],
+        "landing": [
+          74.96522222178864,
+          -2.384185793236071e-08,
+          -0.0006030712217094939
+        ],
+        "ground": "Moonbone crypt landing"
+      },
+      {
+        "action": "vault delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "vault delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "vault delivery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all Moonbone offerings",
+        "totalCrates": 22,
+        "activeStageCrates": 22,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 22,
+        "remaining": 0
+      }
+    ],
+    "maskHits": 0,
+    "sourceMatches": true,
+    "position": [
+      88.43472222142543,
+      0.7266666691501935,
+      -0.0007020236939878764
+    ],
+    "state": "finished",
+    "deaths": 0,
+    "result": {
+      "state": "finished",
+      "cratesBroken": 22,
+      "totalCrates": 22,
+      "deaths": 0,
+      "completionScope": "bonus-detour",
+      "activeStageCrates": 22,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": false
+    }
+  },
+  "bonusBanked": {
+    "count": 22,
+    "completed": true,
+    "sameParent": true
+  },
+  "passed": true
+}

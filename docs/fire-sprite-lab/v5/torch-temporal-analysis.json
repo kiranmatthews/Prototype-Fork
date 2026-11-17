@@ -1,0 +1,2188 @@
+{
+  "note": "Temporal source diagnostics only. Phone capture contains repeated poses; do not assume every decoded frame is a new animation cel.",
+  "pairs": [
+    {
+      "from": 1,
+      "to": 2,
+      "difference": 67.82625
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "difference": 74.8671875
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "difference": 108.4171875
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "difference": 177.916796875
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "difference": 63.984765625
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "difference": 104.231640625
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "difference": 146.62484375
+    },
+    {
+      "from": 8,
+      "to": 9,
+      "difference": 70.604296875
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "difference": 116.58609375
+    },
+    {
+      "from": 10,
+      "to": 11,
+      "difference": 182.34
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "difference": 53.005
+    },
+    {
+      "from": 12,
+      "to": 13,
+      "difference": 113.793515625
+    },
+    {
+      "from": 13,
+      "to": 14,
+      "difference": 148.448359375
+    },
+    {
+      "from": 14,
+      "to": 15,
+      "difference": 228.5975
+    },
+    {
+      "from": 15,
+      "to": 16,
+      "difference": 97.099296875
+    },
+    {
+      "from": 16,
+      "to": 17,
+      "difference": 126.6196875
+    },
+    {
+      "from": 17,
+      "to": 18,
+      "difference": 184.61484375
+    },
+    {
+      "from": 18,
+      "to": 19,
+      "difference": 62.87546875
+    },
+    {
+      "from": 19,
+      "to": 20,
+      "difference": 53.355546875
+    },
+    {
+      "from": 20,
+      "to": 21,
+      "difference": 141.107890625
+    },
+    {
+      "from": 21,
+      "to": 22,
+      "difference": 15.330859375
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "difference": 23.570625
+    },
+    {
+      "from": 23,
+      "to": 24,
+      "difference": 42.9653125
+    },
+    {
+      "from": 24,
+      "to": 25,
+      "difference": 101.685234375
+    },
+    {
+      "from": 25,
+      "to": 26,
+      "difference": 34.56375
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "difference": 63.246796875
+    },
+    {
+      "from": 27,
+      "to": 28,
+      "difference": 90.326953125
+    },
+    {
+      "from": 28,
+      "to": 29,
+      "difference": 35.118515625
+    },
+    {
+      "from": 29,
+      "to": 30,
+      "difference": 63.18421875
+    },
+    {
+      "from": 30,
+      "to": 31,
+      "difference": 95.91125
+    },
+    {
+      "from": 31,
+      "to": 32,
+      "difference": 58.202578125
+    },
+    {
+      "from": 32,
+      "to": 33,
+      "difference": 73.511796875
+    },
+    {
+      "from": 33,
+      "to": 34,
+      "difference": 107.853515625
+    },
+    {
+      "from": 34,
+      "to": 35,
+      "difference": 173.62453125
+    },
+    {
+      "from": 35,
+      "to": 36,
+      "difference": 84.999296875
+    },
+    {
+      "from": 36,
+      "to": 37,
+      "difference": 81.284140625
+    },
+    {
+      "from": 37,
+      "to": 38,
+      "difference": 96.718359375
+    },
+    {
+      "from": 38,
+      "to": 39,
+      "difference": 32.411484375
+    },
+    {
+      "from": 39,
+      "to": 40,
+      "difference": 74.049921875
+    },
+    {
+      "from": 40,
+      "to": 41,
+      "difference": 110.01703125
+    },
+    {
+      "from": 41,
+      "to": 42,
+      "difference": 54.05265625
+    },
+    {
+      "from": 42,
+      "to": 43,
+      "difference": 53.73203125
+    },
+    {
+      "from": 43,
+      "to": 44,
+      "difference": 123.47796875
+    },
+    {
+      "from": 44,
+      "to": 45,
+      "difference": 212.27546875
+    },
+    {
+      "from": 45,
+      "to": 46,
+      "difference": 85.02609375
+    },
+    {
+      "from": 46,
+      "to": 47,
+      "difference": 134.453125
+    },
+    {
+      "from": 47,
+      "to": 48,
+      "difference": 189.078359375
+    },
+    {
+      "from": 48,
+      "to": 49,
+      "difference": 105.516875
+    },
+    {
+      "from": 49,
+      "to": 50,
+      "difference": 157.648515625
+    },
+    {
+      "from": 50,
+      "to": 51,
+      "difference": 241.321875
+    },
+    {
+      "from": 51,
+      "to": 52,
+      "difference": 119.561015625
+    },
+    {
+      "from": 52,
+      "to": 53,
+      "difference": 124.24203125
+    },
+    {
+      "from": 53,
+      "to": 54,
+      "difference": 75.491328125
+    },
+    {
+      "from": 54,
+      "to": 55,
+      "difference": 164.7190625
+    },
+    {
+      "from": 55,
+      "to": 56,
+      "difference": 51.96296875
+    },
+    {
+      "from": 56,
+      "to": 57,
+      "difference": 77.724296875
+    },
+    {
+      "from": 57,
+      "to": 58,
+      "difference": 168.450234375
+    },
+    {
+      "from": 58,
+      "to": 59,
+      "difference": 81.15375
+    },
+    {
+      "from": 59,
+      "to": 60,
+      "difference": 87.406171875
+    },
+    {
+      "from": 60,
+      "to": 61,
+      "difference": 131.195
+    },
+    {
+      "from": 61,
+      "to": 62,
+      "difference": 107.308671875
+    },
+    {
+      "from": 62,
+      "to": 63,
+      "difference": 125.88296875
+    },
+    {
+      "from": 63,
+      "to": 64,
+      "difference": 131.588984375
+    },
+    {
+      "from": 64,
+      "to": 65,
+      "difference": 114.280078125
+    },
+    {
+      "from": 65,
+      "to": 66,
+      "difference": 46.7409375
+    },
+    {
+      "from": 66,
+      "to": 67,
+      "difference": 42.9925
+    },
+    {
+      "from": 67,
+      "to": 68,
+      "difference": 56.879375
+    },
+    {
+      "from": 68,
+      "to": 69,
+      "difference": 51.79328125
+    },
+    {
+      "from": 69,
+      "to": 70,
+      "difference": 45.780625
+    },
+    {
+      "from": 70,
+      "to": 71,
+      "difference": 131.084375
+    },
+    {
+      "from": 71,
+      "to": 72,
+      "difference": 75.548046875
+    },
+    {
+      "from": 72,
+      "to": 73,
+      "difference": 105.888828125
+    },
+    {
+      "from": 73,
+      "to": 74,
+      "difference": 145.088984375
+    },
+    {
+      "from": 74,
+      "to": 75,
+      "difference": 185.09125
+    },
+    {
+      "from": 75,
+      "to": 76,
+      "difference": 117.06796875
+    },
+    {
+      "from": 76,
+      "to": 77,
+      "difference": 163.324921875
+    },
+    {
+      "from": 77,
+      "to": 78,
+      "difference": 182.49015625
+    },
+    {
+      "from": 78,
+      "to": 79,
+      "difference": 151.6471875
+    },
+    {
+      "from": 79,
+      "to": 80,
+      "difference": 129.969921875
+    },
+    {
+      "from": 80,
+      "to": 81,
+      "difference": 167.910703125
+    },
+    {
+      "from": 81,
+      "to": 82,
+      "difference": 93.8340625
+    },
+    {
+      "from": 82,
+      "to": 83,
+      "difference": 124.119140625
+    },
+    {
+      "from": 83,
+      "to": 84,
+      "difference": 152.158515625
+    },
+    {
+      "from": 84,
+      "to": 85,
+      "difference": 196.644140625
+    },
+    {
+      "from": 85,
+      "to": 86,
+      "difference": 110.80328125
+    },
+    {
+      "from": 86,
+      "to": 87,
+      "difference": 37.849921875
+    },
+    {
+      "from": 87,
+      "to": 88,
+      "difference": 138.5715625
+    },
+    {
+      "from": 88,
+      "to": 89,
+      "difference": 118.373515625
+    },
+    {
+      "from": 89,
+      "to": 90,
+      "difference": 141.988671875
+    },
+    {
+      "from": 90,
+      "to": 91,
+      "difference": 192.216484375
+    },
+    {
+      "from": 91,
+      "to": 92,
+      "difference": 91.309609375
+    },
+    {
+      "from": 92,
+      "to": 93,
+      "difference": 120.3021875
+    },
+    {
+      "from": 93,
+      "to": 94,
+      "difference": 85.877734375
+    },
+    {
+      "from": 94,
+      "to": 95,
+      "difference": 139.189296875
+    },
+    {
+      "from": 95,
+      "to": 96,
+      "difference": 30.811015625
+    },
+    {
+      "from": 96,
+      "to": 97,
+      "difference": 90.0503125
+    },
+    {
+      "from": 97,
+      "to": 98,
+      "difference": 123.697890625
+    },
+    {
+      "from": 98,
+      "to": 99,
+      "difference": 85.380703125
+    },
+    {
+      "from": 99,
+      "to": 100,
+      "difference": 69.767109375
+    },
+    {
+      "from": 100,
+      "to": 101,
+      "difference": 119.91203125
+    },
+    {
+      "from": 101,
+      "to": 102,
+      "difference": 30.399140625
+    },
+    {
+      "from": 102,
+      "to": 103,
+      "difference": 47.308984375
+    },
+    {
+      "from": 103,
+      "to": 104,
+      "difference": 45.015546875
+    },
+    {
+      "from": 104,
+      "to": 105,
+      "difference": 163.32421875
+    },
+    {
+      "from": 105,
+      "to": 106,
+      "difference": 67.6
+    },
+    {
+      "from": 106,
+      "to": 107,
+      "difference": 66.840390625
+    },
+    {
+      "from": 107,
+      "to": 108,
+      "difference": 116.97015625
+    },
+    {
+      "from": 108,
+      "to": 109,
+      "difference": 37.733125
+    },
+    {
+      "from": 109,
+      "to": 110,
+      "difference": 37.696015625
+    },
+    {
+      "from": 110,
+      "to": 111,
+      "difference": 169.658671875
+    },
+    {
+      "from": 111,
+      "to": 112,
+      "difference": 128.04734375
+    },
+    {
+      "from": 112,
+      "to": 113,
+      "difference": 120.414609375
+    },
+    {
+      "from": 113,
+      "to": 114,
+      "difference": 125.11625
+    },
+    {
+      "from": 114,
+      "to": 115,
+      "difference": 198.3740625
+    },
+    {
+      "from": 115,
+      "to": 116,
+      "difference": 123.292421875
+    },
+    {
+      "from": 116,
+      "to": 117,
+      "difference": 134.862734375
+    },
+    {
+      "from": 117,
+      "to": 118,
+      "difference": 177.84109375
+    },
+    {
+      "from": 118,
+      "to": 119,
+      "difference": 136.682890625
+    },
+    {
+      "from": 119,
+      "to": 120,
+      "difference": 146.481796875
+    },
+    {
+      "from": 120,
+      "to": 121,
+      "difference": 176.441328125
+    },
+    {
+      "from": 121,
+      "to": 122,
+      "difference": 105.78125
+    },
+    {
+      "from": 122,
+      "to": 123,
+      "difference": 124.988671875
+    },
+    {
+      "from": 123,
+      "to": 124,
+      "difference": 131.92890625
+    },
+    {
+      "from": 124,
+      "to": 125,
+      "difference": 109.066796875
+    },
+    {
+      "from": 125,
+      "to": 126,
+      "difference": 32.987890625
+    },
+    {
+      "from": 126,
+      "to": 127,
+      "difference": 34.052578125
+    },
+    {
+      "from": 127,
+      "to": 128,
+      "difference": 112.95578125
+    },
+    {
+      "from": 128,
+      "to": 129,
+      "difference": 76.259375
+    },
+    {
+      "from": 129,
+      "to": 130,
+      "difference": 100.163046875
+    },
+    {
+      "from": 130,
+      "to": 131,
+      "difference": 170.830703125
+    },
+    {
+      "from": 131,
+      "to": 132,
+      "difference": 129.647109375
+    },
+    {
+      "from": 132,
+      "to": 133,
+      "difference": 110.468203125
+    },
+    {
+      "from": 133,
+      "to": 134,
+      "difference": 101.23796875
+    },
+    {
+      "from": 134,
+      "to": 135,
+      "difference": 131.646328125
+    },
+    {
+      "from": 135,
+      "to": 136,
+      "difference": 91.079140625
+    },
+    {
+      "from": 136,
+      "to": 137,
+      "difference": 132.24609375
+    },
+    {
+      "from": 137,
+      "to": 138,
+      "difference": 162.903046875
+    },
+    {
+      "from": 138,
+      "to": 139,
+      "difference": 72.086484375
+    },
+    {
+      "from": 139,
+      "to": 140,
+      "difference": 71.538046875
+    },
+    {
+      "from": 140,
+      "to": 141,
+      "difference": 125.430078125
+    },
+    {
+      "from": 141,
+      "to": 142,
+      "difference": 36.797890625
+    },
+    {
+      "from": 142,
+      "to": 143,
+      "difference": 30.8359375
+    },
+    {
+      "from": 143,
+      "to": 144,
+      "difference": 94.04734375
+    },
+    {
+      "from": 144,
+      "to": 145,
+      "difference": 216.926328125
+    },
+    {
+      "from": 145,
+      "to": 146,
+      "difference": 106.8828125
+    },
+    {
+      "from": 146,
+      "to": 147,
+      "difference": 147.801953125
+    },
+    {
+      "from": 147,
+      "to": 148,
+      "difference": 214.569921875
+    },
+    {
+      "from": 148,
+      "to": 149,
+      "difference": 81.105078125
+    },
+    {
+      "from": 149,
+      "to": 150,
+      "difference": 121.113828125
+    },
+    {
+      "from": 150,
+      "to": 151,
+      "difference": 211.865703125
+    },
+    {
+      "from": 151,
+      "to": 152,
+      "difference": 109.8075
+    },
+    {
+      "from": 152,
+      "to": 153,
+      "difference": 109.164609375
+    },
+    {
+      "from": 153,
+      "to": 154,
+      "difference": 98.178125
+    },
+    {
+      "from": 154,
+      "to": 155,
+      "difference": 199.27015625
+    },
+    {
+      "from": 155,
+      "to": 156,
+      "difference": 116.858515625
+    },
+    {
+      "from": 156,
+      "to": 157,
+      "difference": 182.64046875
+    },
+    {
+      "from": 157,
+      "to": 158,
+      "difference": 256.202890625
+    },
+    {
+      "from": 158,
+      "to": 159,
+      "difference": 141.08546875
+    },
+    {
+      "from": 159,
+      "to": 160,
+      "difference": 169.283359375
+    },
+    {
+      "from": 160,
+      "to": 161,
+      "difference": 250.0384375
+    },
+    {
+      "from": 161,
+      "to": 162,
+      "difference": 69.048046875
+    },
+    {
+      "from": 162,
+      "to": 163,
+      "difference": 26.598359375
+    },
+    {
+      "from": 163,
+      "to": 164,
+      "difference": 31.482109375
+    },
+    {
+      "from": 164,
+      "to": 165,
+      "difference": 176.875
+    },
+    {
+      "from": 165,
+      "to": 166,
+      "difference": 33.39203125
+    },
+    {
+      "from": 166,
+      "to": 167,
+      "difference": 78.39296875
+    },
+    {
+      "from": 167,
+      "to": 168,
+      "difference": 191.3328125
+    },
+    {
+      "from": 168,
+      "to": 169,
+      "difference": 33.02828125
+    },
+    {
+      "from": 169,
+      "to": 170,
+      "difference": 72.36140625
+    },
+    {
+      "from": 170,
+      "to": 171,
+      "difference": 255.88921875
+    },
+    {
+      "from": 171,
+      "to": 172,
+      "difference": 142.916015625
+    },
+    {
+      "from": 172,
+      "to": 173,
+      "difference": 139.35984375
+    },
+    {
+      "from": 173,
+      "to": 174,
+      "difference": 104.06125
+    },
+    {
+      "from": 174,
+      "to": 175,
+      "difference": 180.988671875
+    },
+    {
+      "from": 175,
+      "to": 176,
+      "difference": 34.928671875
+    },
+    {
+      "from": 176,
+      "to": 177,
+      "difference": 69.157109375
+    },
+    {
+      "from": 177,
+      "to": 178,
+      "difference": 150.786640625
+    },
+    {
+      "from": 178,
+      "to": 179,
+      "difference": 53.86625
+    },
+    {
+      "from": 179,
+      "to": 180,
+      "difference": 74.30875
+    },
+    {
+      "from": 180,
+      "to": 181,
+      "difference": 129.393359375
+    },
+    {
+      "from": 181,
+      "to": 182,
+      "difference": 87.36734375
+    },
+    {
+      "from": 182,
+      "to": 183,
+      "difference": 144.290234375
+    },
+    {
+      "from": 183,
+      "to": 184,
+      "difference": 160.006328125
+    },
+    {
+      "from": 184,
+      "to": 185,
+      "difference": 250.07578125
+    },
+    {
+      "from": 185,
+      "to": 186,
+      "difference": 76.32328125
+    },
+    {
+      "from": 186,
+      "to": 187,
+      "difference": 60.082421875
+    },
+    {
+      "from": 187,
+      "to": 188,
+      "difference": 143.276484375
+    },
+    {
+      "from": 188,
+      "to": 189,
+      "difference": 80.586171875
+    },
+    {
+      "from": 189,
+      "to": 190,
+      "difference": 77.20890625
+    },
+    {
+      "from": 190,
+      "to": 191,
+      "difference": 193.786484375
+    },
+    {
+      "from": 191,
+      "to": 192,
+      "difference": 105.46578125
+    },
+    {
+      "from": 192,
+      "to": 193,
+      "difference": 129.003203125
+    },
+    {
+      "from": 193,
+      "to": 194,
+      "difference": 116.525625
+    },
+    {
+      "from": 194,
+      "to": 195,
+      "difference": 165.134453125
+    },
+    {
+      "from": 195,
+      "to": 196,
+      "difference": 29.120390625
+    },
+    {
+      "from": 196,
+      "to": 197,
+      "difference": 72.85046875
+    },
+    {
+      "from": 197,
+      "to": 198,
+      "difference": 166.492578125
+    },
+    {
+      "from": 198,
+      "to": 199,
+      "difference": 97.19234375
+    },
+    {
+      "from": 199,
+      "to": 200,
+      "difference": 135.363125
+    },
+    {
+      "from": 200,
+      "to": 201,
+      "difference": 224.924375
+    },
+    {
+      "from": 201,
+      "to": 202,
+      "difference": 84.815859375
+    },
+    {
+      "from": 202,
+      "to": 203,
+      "difference": 108.08875
+    },
+    {
+      "from": 203,
+      "to": 204,
+      "difference": 128.126328125
+    },
+    {
+      "from": 204,
+      "to": 205,
+      "difference": 196.025546875
+    },
+    {
+      "from": 205,
+      "to": 206,
+      "difference": 145.37859375
+    },
+    {
+      "from": 206,
+      "to": 207,
+      "difference": 175.465390625
+    },
+    {
+      "from": 207,
+      "to": 208,
+      "difference": 209.495703125
+    },
+    {
+      "from": 208,
+      "to": 209,
+      "difference": 124.023671875
+    },
+    {
+      "from": 209,
+      "to": 210,
+      "difference": 48.448046875
+    },
+    {
+      "from": 210,
+      "to": 211,
+      "difference": 142.871640625
+    },
+    {
+      "from": 211,
+      "to": 212,
+      "difference": 104.770390625
+    },
+    {
+      "from": 212,
+      "to": 213,
+      "difference": 126.44609375
+    },
+    {
+      "from": 213,
+      "to": 214,
+      "difference": 80.5996875
+    },
+    {
+      "from": 214,
+      "to": 215,
+      "difference": 161.050625
+    },
+    {
+      "from": 215,
+      "to": 216,
+      "difference": 76.456015625
+    },
+    {
+      "from": 216,
+      "to": 217,
+      "difference": 89.232734375
+    },
+    {
+      "from": 217,
+      "to": 218,
+      "difference": 100.115234375
+    },
+    {
+      "from": 218,
+      "to": 219,
+      "difference": 37.71859375
+    },
+    {
+      "from": 219,
+      "to": 220,
+      "difference": 54.735859375
+    },
+    {
+      "from": 220,
+      "to": 221,
+      "difference": 168.949140625
+    },
+    {
+      "from": 221,
+      "to": 222,
+      "difference": 76.422421875
+    },
+    {
+      "from": 222,
+      "to": 223,
+      "difference": 77.62296875
+    },
+    {
+      "from": 223,
+      "to": 224,
+      "difference": 57.016875
+    },
+    {
+      "from": 224,
+      "to": 225,
+      "difference": 137.87078125
+    },
+    {
+      "from": 225,
+      "to": 226,
+      "difference": 65.4246875
+    },
+    {
+      "from": 226,
+      "to": 227,
+      "difference": 95.124296875
+    },
+    {
+      "from": 227,
+      "to": 228,
+      "difference": 210.46328125
+    },
+    {
+      "from": 228,
+      "to": 229,
+      "difference": 119.52703125
+    },
+    {
+      "from": 229,
+      "to": 230,
+      "difference": 118.5046875
+    },
+    {
+      "from": 230,
+      "to": 231,
+      "difference": 215.36515625
+    },
+    {
+      "from": 231,
+      "to": 232,
+      "difference": 92.37015625
+    },
+    {
+      "from": 232,
+      "to": 233,
+      "difference": 80.884140625
+    },
+    {
+      "from": 233,
+      "to": 234,
+      "difference": 106.249453125
+    },
+    {
+      "from": 234,
+      "to": 235,
+      "difference": 205.13546875
+    },
+    {
+      "from": 235,
+      "to": 236,
+      "difference": 114.048203125
+    },
+    {
+      "from": 236,
+      "to": 237,
+      "difference": 151.046953125
+    },
+    {
+      "from": 237,
+      "to": 238,
+      "difference": 233.115703125
+    },
+    {
+      "from": 238,
+      "to": 239,
+      "difference": 101.788125
+    },
+    {
+      "from": 239,
+      "to": 240,
+      "difference": 115.617734375
+    },
+    {
+      "from": 240,
+      "to": 241,
+      "difference": 164.089609375
+    },
+    {
+      "from": 241,
+      "to": 242,
+      "difference": 63.7109375
+    },
+    {
+      "from": 242,
+      "to": 243,
+      "difference": 85.92890625
+    },
+    {
+      "from": 243,
+      "to": 244,
+      "difference": 86.364375
+    },
+    {
+      "from": 244,
+      "to": 245,
+      "difference": 205.54984375
+    },
+    {
+      "from": 245,
+      "to": 246,
+      "difference": 28.899921875
+    },
+    {
+      "from": 246,
+      "to": 247,
+      "difference": 73.13234375
+    },
+    {
+      "from": 247,
+      "to": 248,
+      "difference": 144.862421875
+    },
+    {
+      "from": 248,
+      "to": 249,
+      "difference": 77.12109375
+    },
+    {
+      "from": 249,
+      "to": 250,
+      "difference": 35.35421875
+    },
+    {
+      "from": 250,
+      "to": 251,
+      "difference": 182.8303125
+    },
+    {
+      "from": 251,
+      "to": 252,
+      "difference": 29.259765625
+    },
+    {
+      "from": 252,
+      "to": 253,
+      "difference": 32.493046875
+    },
+    {
+      "from": 253,
+      "to": 254,
+      "difference": 58.322109375
+    },
+    {
+      "from": 254,
+      "to": 255,
+      "difference": 204.335
+    },
+    {
+      "from": 255,
+      "to": 256,
+      "difference": 11.858125
+    },
+    {
+      "from": 256,
+      "to": 257,
+      "difference": 33.431875
+    },
+    {
+      "from": 257,
+      "to": 258,
+      "difference": 137.1940625
+    },
+    {
+      "from": 258,
+      "to": 259,
+      "difference": 53.476484375
+    },
+    {
+      "from": 259,
+      "to": 260,
+      "difference": 39.35875
+    },
+    {
+      "from": 260,
+      "to": 261,
+      "difference": 189.590546875
+    },
+    {
+      "from": 261,
+      "to": 262,
+      "difference": 36.453046875
+    },
+    {
+      "from": 262,
+      "to": 263,
+      "difference": 35.949765625
+    },
+    {
+      "from": 263,
+      "to": 264,
+      "difference": 28.043828125
+    },
+    {
+      "from": 264,
+      "to": 265,
+      "difference": 138.34015625
+    },
+    {
+      "from": 265,
+      "to": 266,
+      "difference": 31.54671875
+    },
+    {
+      "from": 266,
+      "to": 267,
+      "difference": 58.25140625
+    },
+    {
+      "from": 267,
+      "to": 268,
+      "difference": 111.81390625
+    },
+    {
+      "from": 268,
+      "to": 269,
+      "difference": 80.718046875
+    },
+    {
+      "from": 269,
+      "to": 270,
+      "difference": 116.400859375
+    },
+    {
+      "from": 270,
+      "to": 271,
+      "difference": 197.0415625
+    },
+    {
+      "from": 271,
+      "to": 272,
+      "difference": 91.559453125
+    },
+    {
+      "from": 272,
+      "to": 273,
+      "difference": 110.977578125
+    },
+    {
+      "from": 273,
+      "to": 274,
+      "difference": 149.3384375
+    },
+    {
+      "from": 274,
+      "to": 275,
+      "difference": 255.306171875
+    },
+    {
+      "from": 275,
+      "to": 276,
+      "difference": 143.475859375
+    },
+    {
+      "from": 276,
+      "to": 277,
+      "difference": 114.3903125
+    },
+    {
+      "from": 277,
+      "to": 278,
+      "difference": 198.18328125
+    },
+    {
+      "from": 278,
+      "to": 279,
+      "difference": 108.083515625
+    },
+    {
+      "from": 279,
+      "to": 280,
+      "difference": 130.632578125
+    },
+    {
+      "from": 280,
+      "to": 281,
+      "difference": 288.140625
+    },
+    {
+      "from": 281,
+      "to": 282,
+      "difference": 89.588203125
+    },
+    {
+      "from": 282,
+      "to": 283,
+      "difference": 69.00234375
+    },
+    {
+      "from": 283,
+      "to": 284,
+      "difference": 133.418828125
+    },
+    {
+      "from": 284,
+      "to": 285,
+      "difference": 275.06328125
+    },
+    {
+      "from": 285,
+      "to": 286,
+      "difference": 62.51765625
+    },
+    {
+      "from": 286,
+      "to": 287,
+      "difference": 126.4884375
+    },
+    {
+      "from": 287,
+      "to": 288,
+      "difference": 296.380625
+    }
+  ],
+  "lags": [
+    {
+      "lag": 2,
+      "difference": 174.33787368881121
+    },
+    {
+      "lag": 3,
+      "difference": 231.686897752193
+    },
+    {
+      "lag": 4,
+      "difference": 280.85411311619725
+    },
+    {
+      "lag": 5,
+      "difference": 321.19913372349805
+    },
+    {
+      "lag": 6,
+      "difference": 356.1232873448582
+    },
+    {
+      "lag": 7,
+      "difference": 380.90794289368347
+    },
+    {
+      "lag": 8,
+      "difference": 393.11799637276783
+    },
+    {
+      "lag": 9,
+      "difference": 404.87249047939076
+    },
+    {
+      "lag": 10,
+      "difference": 411.1552383093526
+    },
+    {
+      "lag": 11,
+      "difference": 414.3922436259028
+    },
+    {
+      "lag": 12,
+      "difference": 414.07518455615934
+    },
+    {
+      "lag": 13,
+      "difference": 411.6440619318183
+    },
+    {
+      "lag": 14,
+      "difference": 411.1980063868611
+    },
+    {
+      "lag": 15,
+      "difference": 408.25769888965186
+    },
+    {
+      "lag": 16,
+      "difference": 406.2043069278493
+    },
+    {
+      "lag": 17,
+      "difference": 405.2798356780444
+    },
+    {
+      "lag": 18,
+      "difference": 402.9586440972224
+    },
+    {
+      "lag": 19,
+      "difference": 401.3823867332711
+    },
+    {
+      "lag": 20,
+      "difference": 400.39961345615677
+    },
+    {
+      "lag": 21,
+      "difference": 401.5807057584268
+    },
+    {
+      "lag": 22,
+      "difference": 402.6772294995305
+    },
+    {
+      "lag": 23,
+      "difference": 404.7816420990564
+    },
+    {
+      "lag": 24,
+      "difference": 412.3576713423294
+    },
+    {
+      "lag": 25,
+      "difference": 420.5509675023766
+    },
+    {
+      "lag": 26,
+      "difference": 429.125677480916
+    },
+    {
+      "lag": 27,
+      "difference": 435.9563071719348
+    },
+    {
+      "lag": 28,
+      "difference": 440.5088497596155
+    },
+    {
+      "lag": 29,
+      "difference": 445.48294492036666
+    },
+    {
+      "lag": 30,
+      "difference": 446.66231044089164
+    },
+    {
+      "lag": 31,
+      "difference": 444.519105058366
+    },
+    {
+      "lag": 32,
+      "difference": 440.2865628051756
+    },
+    {
+      "lag": 33,
+      "difference": 435.0977889093138
+    },
+    {
+      "lag": 34,
+      "difference": 431.3269137549213
+    },
+    {
+      "lag": 35,
+      "difference": 426.4408365242097
+    },
+    {
+      "lag": 36,
+      "difference": 422.02178695436527
+    },
+    {
+      "lag": 37,
+      "difference": 416.7908848979087
+    },
+    {
+      "lag": 38,
+      "difference": 418.84125437499995
+    },
+    {
+      "lag": 39,
+      "difference": 419.96327999497976
+    },
+    {
+      "lag": 40,
+      "difference": 421.1638939642136
+    },
+    {
+      "lag": 41,
+      "difference": 424.18090334008104
+    },
+    {
+      "lag": 42,
+      "difference": 433.04220210873984
+    },
+    {
+      "lag": 43,
+      "difference": 437.5726447704082
+    },
+    {
+      "lag": 44,
+      "difference": 443.35370293288923
+    },
+    {
+      "lag": 45,
+      "difference": 450.753817515432
+    },
+    {
+      "lag": 46,
+      "difference": 457.3186715521694
+    },
+    {
+      "lag": 47,
+      "difference": 463.4310405860994
+    },
+    {
+      "lag": 48,
+      "difference": 467.19245898437526
+    },
+    {
+      "lag": 49,
+      "difference": 470.41835806746843
+    },
+    {
+      "lag": 50,
+      "difference": 473.23720982142845
+    },
+    {
+      "lag": 51,
+      "difference": 470.63435159546407
+    },
+    {
+      "lag": 52,
+      "difference": 466.1706203654657
+    },
+    {
+      "lag": 53,
+      "difference": 458.7535644946807
+    },
+    {
+      "lag": 54,
+      "difference": 444.168894230769
+    },
+    {
+      "lag": 55,
+      "difference": 424.68333154506445
+    },
+    {
+      "lag": 56,
+      "difference": 403.2529636988143
+    },
+    {
+      "lag": 57,
+      "difference": 377.2607514880955
+    },
+    {
+      "lag": 58,
+      "difference": 345.0256345108697
+    },
+    {
+      "lag": 59,
+      "difference": 311.59116607532764
+    },
+    {
+      "lag": 60,
+      "difference": 288.56949732730266
+    },
+    {
+      "lag": 61,
+      "difference": 300.62356690528645
+    },
+    {
+      "lag": 62,
+      "difference": 325.3708552267699
+    },
+    {
+      "lag": 63,
+      "difference": 352.62393784722224
+    },
+    {
+      "lag": 64,
+      "difference": 380.7417811802456
+    },
+    {
+      "lag": 65,
+      "difference": 407.2015484865473
+    },
+    {
+      "lag": 66,
+      "difference": 433.099520340653
+    },
+    {
+      "lag": 67,
+      "difference": 453.8054397624436
+    },
+    {
+      "lag": 68,
+      "difference": 465.76651704545424
+    },
+    {
+      "lag": 69,
+      "difference": 475.0051958476026
+    },
+    {
+      "lag": 70,
+      "difference": 481.70136002006836
+    },
+    {
+      "lag": 71,
+      "difference": 483.21090833813383
+    },
+    {
+      "lag": 72,
+      "difference": 482.69443395544005
+    },
+    {
+      "lag": 73,
+      "difference": 480.36715079941865
+    },
+    {
+      "lag": 74,
+      "difference": 477.22464040595787
+    },
+    {
+      "lag": 75,
+      "difference": 473.2512789759388
+    },
+    {
+      "lag": 76,
+      "difference": 468.506018204599
+    },
+    {
+      "lag": 77,
+      "difference": 464.3646904620855
+    },
+    {
+      "lag": 78,
+      "difference": 461.0194709821428
+    },
+    {
+      "lag": 79,
+      "difference": 457.66386326255974
+    },
+    {
+      "lag": 80,
+      "difference": 455.1568607271637
+    },
+    {
+      "lag": 81,
+      "difference": 454.01675611413026
+    },
+    {
+      "lag": 82,
+      "difference": 453.78610323118926
+    },
+    {
+      "lag": 83,
+      "difference": 455.82655678353643
+    },
+    {
+      "lag": 84,
+      "difference": 461.41556755514716
+    },
+    {
+      "lag": 85,
+      "difference": 468.28626116071456
+    },
+    {
+      "lag": 86,
+      "difference": 476.12319268254964
+    },
+    {
+      "lag": 87,
+      "difference": 483.9363588308457
+    },
+    {
+      "lag": 88,
+      "difference": 489.8314171874998
+    },
+    {
+      "lag": 89,
+      "difference": 494.9075859767587
+    },
+    {
+      "lag": 90,
+      "difference": 497.7714113794193
+    },
+    {
+      "lag": 91,
+      "difference": 496.3294098984768
+    },
+    {
+      "lag": 92,
+      "difference": 491.53804009885204
+    },
+    {
+      "lag": 93,
+      "difference": 486.67343429487147
+    },
+    {
+      "lag": 94,
+      "difference": 482.13670304445867
+    },
+    {
+      "lag": 95,
+      "difference": 475.6358808290158
+    },
+    {
+      "lag": 96,
+      "difference": 468.88550781249995
+    },
+    {
+      "lag": 97,
+      "difference": 465.25810822971215
+    },
+    {
+      "lag": 98,
+      "difference": 465.5327471217107
+    },
+    {
+      "lag": 99,
+      "difference": 467.70507729828006
+    },
+    {
+      "lag": 100,
+      "difference": 471.4753590425532
+    },
+    {
+      "lag": 101,
+      "difference": 477.6084567179141
+    },
+    {
+      "lag": 102,
+      "difference": 484.3681888440858
+    },
+    {
+      "lag": 103,
+      "difference": 491.14187922297276
+    },
+    {
+      "lag": 104,
+      "difference": 499.5441741677987
+    },
+    {
+      "lag": 105,
+      "difference": 507.8448053278688
+    },
+    {
+      "lag": 106,
+      "difference": 516.3403142170329
+    },
+    {
+      "lag": 107,
+      "difference": 523.4036602209944
+    },
+    {
+      "lag": 108,
+      "difference": 529.3518515625002
+    },
+    {
+      "lag": 109,
+      "difference": 533.4725816166201
+    },
+    {
+      "lag": 110,
+      "difference": 537.2603875526685
+    },
+    {
+      "lag": 111,
+      "difference": 536.6938850635593
+    },
+    {
+      "lag": 112,
+      "difference": 532.9885236150571
+    },
+    {
+      "lag": 113,
+      "difference": 528.5282758928572
+    },
+    {
+      "lag": 114,
+      "difference": 520.2873962823277
+    },
+    {
+      "lag": 115,
+      "difference": 510.3683295700868
+    },
+    {
+      "lag": 116,
+      "difference": 498.19695403343
+    },
+    {
+      "lag": 117,
+      "difference": 484.60380756578934
+    },
+    {
+      "lag": 118,
+      "difference": 469.7378892463236
+    },
+    {
+      "lag": 119,
+      "difference": 454.1484120747041
+    },
+    {
+      "lag": 120,
+      "difference": 441.12094401041657
+    },
+    {
+      "lag": 121,
+      "difference": 441.5231914296409
+    },
+    {
+      "lag": 122,
+      "difference": 447.85761954066277
+    },
+    {
+      "lag": 123,
+      "difference": 455.55218702651496
+    },
+    {
+      "lag": 124,
+      "difference": 468.3577429496948
+    },
+    {
+      "lag": 125,
+      "difference": 482.9042369631901
+    },
+    {
+      "lag": 126,
+      "difference": 499.12148726851836
+    },
+    {
+      "lag": 127,
+      "difference": 512.8148398680128
+    },
+    {
+      "lag": 128,
+      "difference": 522.4497807617188
+    },
+    {
+      "lag": 129,
+      "difference": 531.7389986242138
+    },
+    {
+      "lag": 130,
+      "difference": 538.9260279865508
+    },
+    {
+      "lag": 131,
+      "difference": 542.3284001791403
+    },
+    {
+      "lag": 132,
+      "difference": 542.2099123597754
+    },
+    {
+      "lag": 133,
+      "difference": 541.1551512096775
+    },
+    {
+      "lag": 134,
+      "difference": 537.8411901379873
+    },
+    {
+      "lag": 135,
+      "difference": 533.0786718750003
+    },
+    {
+      "lag": 136,
+      "difference": 527.1514828330594
+    },
+    {
+      "lag": 137,
+      "difference": 521.0106788079472
+    },
+    {
+      "lag": 138,
+      "difference": 516.6241364583333
+    },
+    {
+      "lag": 139,
+      "difference": 512.2443309563763
+    },
+    {
+      "lag": 140,
+      "difference": 509.7854951435814
+    },
+    {
+      "lag": 141,
+      "difference": 508.0727646683672
+    },
+    {
+      "lag": 142,
+      "difference": 507.1856571061643
+    },
+    {
+      "lag": 143,
+      "difference": 507.80163415948266
+    },
+    {
+      "lag": 144,
+      "difference": 510.60129557291685
+    },
+    {
+      "lag": 145,
+      "difference": 514.9272284746503
+    },
+    {
+      "lag": 146,
+      "difference": 519.8669982394365
+    },
+    {
+      "lag": 147,
+      "difference": 526.1604233156029
+    },
+    {
+      "lag": 148,
+      "difference": 532.9121049107144
+    },
+    {
+      "lag": 149,
+      "difference": 539.2180182104314
+    },
+    {
+      "lag": 150,
+      "difference": 544.5637579257249
+    },
+    {
+      "lag": 151,
+      "difference": 546.9441936587593
+    },
+    {
+      "lag": 152,
+      "difference": 548.0825292968752
+    },
+    {
+      "lag": 153,
+      "difference": 547.0378096064815
+    },
+    {
+      "lag": 154,
+      "difference": 543.7153801305972
+    },
+    {
+      "lag": 155,
+      "difference": 537.3203700657892
+    },
+    {
+      "lag": 156,
+      "difference": 530.0533931107957
+    },
+    {
+      "lag": 157,
+      "difference": 524.6438865696567
+    },
+    {
+      "lag": 158,
+      "difference": 523.2180318509613
+    },
+    {
+      "lag": 159,
+      "difference": 523.9330099321709
+    },
+    {
+      "lag": 160,
+      "difference": 525.3372186279299
+    },
+    {
+      "lag": 161,
+      "difference": 530.534872047244
+    },
+    {
+      "lag": 162,
+      "difference": 537.5195510912696
+    },
+    {
+      "lag": 163,
+      "difference": 544.4964312499999
+    },
+    {
+      "lag": 164,
+      "difference": 551.0791444052421
+    },
+    {
+      "lag": 165,
+      "difference": 556.562560340447
+    },
+    {
+      "lag": 166,
+      "difference": 562.2807402663934
+    },
+    {
+      "lag": 167,
+      "difference": 567.0571732954544
+    },
+    {
+      "lag": 168,
+      "difference": 571.2648072916671
+    },
+    {
+      "lag": 169,
+      "difference": 572.9013530724794
+    },
+    {
+      "lag": 170,
+      "difference": 575.6015591896187
+    },
+    {
+      "lag": 171,
+      "difference": 577.7344310897437
+    },
+    {
+      "lag": 172,
+      "difference": 578.7493238146553
+    },
+    {
+      "lag": 173,
+      "difference": 577.2595332880435
+    },
+    {
+      "lag": 174,
+      "difference": 571.1670744243421
+    },
+    {
+      "lag": 175,
+      "difference": 562.1320948561947
+    },
+    {
+      "lag": 176,
+      "difference": 550.1197084263391
+    },
+    {
+      "lag": 177,
+      "difference": 534.343471283784
+    },
+    {
+      "lag": 178,
+      "difference": 512.1670134943182
+    },
+    {
+      "lag": 179,
+      "difference": 488.68814865252284
+    }
+  ],
+  "minima": [
+    {
+      "lag": 60,
+      "difference": 288.56949732730266
+    },
+    {
+      "lag": 20,
+      "difference": 400.39961345615677
+    },
+    {
+      "lag": 37,
+      "difference": 416.7908848979087
+    },
+    {
+      "lag": 120,
+      "difference": 441.12094401041657
+    },
+    {
+      "lag": 82,
+      "difference": 453.78610323118926
+    },
+    {
+      "lag": 97,
+      "difference": 465.25810822971215
+    },
+    {
+      "lag": 142,
+      "difference": 507.1856571061643
+    },
+    {
+      "lag": 158,
+      "difference": 523.2180318509613
+    }
+  ]
+}

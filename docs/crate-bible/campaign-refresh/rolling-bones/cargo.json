@@ -1,0 +1,111 @@
+{
+  "groups": [
+    {
+      "name": "Bones shelter / section 1 / cache 1 /",
+      "count": 4,
+      "frames": 340,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 1 / cache 2 /",
+      "count": 5,
+      "frames": 377,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 2 / cache 1 /",
+      "count": 5,
+      "frames": 407,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 2 / cache 2 /",
+      "count": 5,
+      "frames": 350,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 3 / cache 1 /",
+      "count": 3,
+      "frames": 324,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 4 / cache 1 /",
+      "count": 3,
+      "frames": 288,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 5 / cache 1 /",
+      "count": 6,
+      "frames": 379,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 6 / cache 1 /",
+      "count": 2,
+      "frames": 284,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 7 / cache 1 /",
+      "count": 5,
+      "frames": 451,
+      "deaths": 0
+    },
+    {
+      "name": "Bones shelter / section 7 / cache 2 /",
+      "count": 6,
+      "frames": 424,
+      "deaths": 0
+    }
+  ],
+  "footprintProbes": 104,
+  "maxFloorError": 8.881784197001252e-16,
+  "retainedSlopeContacts": [
+    {
+      "kind": "metal",
+      "originalComponent": 665,
+      "minFloorDelta": -0.13577794565788004,
+      "maxFloorDelta": 0.2232675946435645
+    },
+    {
+      "kind": "metal",
+      "originalComponent": 679,
+      "minFloorDelta": -0.12535987933401138,
+      "maxFloorDelta": 0.2297122633045081
+    },
+    {
+      "kind": "nitro",
+      "originalComponent": 889,
+      "minFloorDelta": -0.1383901702350201,
+      "maxFloorDelta": 0.13839017023501654
+    },
+    {
+      "kind": "nitro",
+      "originalComponent": 890,
+      "minFloorDelta": -0.14334616943201794,
+      "maxFloorDelta": 0.13839017023501654
+    },
+    {
+      "kind": "metal",
+      "originalComponent": 1310,
+      "minFloorDelta": -0.1998815209725393,
+      "maxFloorDelta": 0.3297169613356914
+    },
+    {
+      "kind": "metal",
+      "originalComponent": 1311,
+      "minFloorDelta": -0.017519745756942484,
+      "maxFloorDelta": 0.08826935508169242
+    },
+    {
+      "kind": "wood",
+      "originalComponent": 1322,
+      "minFloorDelta": -0.04897630814586762,
+      "maxFloorDelta": 0.07561729893730984
+    }
+  ],
+  "nonCratesAndSettingsExact": true
+}

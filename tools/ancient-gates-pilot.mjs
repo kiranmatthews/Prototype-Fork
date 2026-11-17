@@ -4,6 +4,20 @@ import {approachAncientHoard} from './ancient-gates-entrance-pilot.mjs';
 /** All samples go through the production player. Tests may start at a section
  * before a run, but never move the player or mutate obstacles during a run. */
 export function* runAncientGates(r,{from=0,to=11,stopAtBonus=false,trial=false,resumeAfterBonus=false,requireAllMainBoxes=false}={}){
+ const route=runAncientGatesRoute(r,{from,to,stopAtBonus,trial,resumeAfterBonus,requireAllMainBoxes});
+ let next=route.next(),lastSpin=false;
+ while(!next.done){
+  const input={...next.value},p=r.p;
+  const nearby=r.l.crates.some(b=>b.alive&&r.source.components[b.mesh.userData.editorIdx]?.nm?.startsWith('Gates supplies /')&&b.box.distanceToPoint(p.pos)<2.15);
+  const explosive=r.l.crates.some(b=>b.alive&&(b.nitro||b.tnt)&&b.mesh.position.distanceTo(p.pos)<4.5);
+  if(nearby&&!explosive&&!p.freeSkate&&!input.grindHeld){input.spinHeld=p.spinning||!lastSpin;lastSpin=input.spinHeld;}
+  else lastSpin=!!input.spinHeld;
+  yield input;next=route.next();
+ }
+ return next.value;
+}
+
+function* runAncientGatesRoute(r,{from,to,stopAtBonus,trial,resumeAfterBonus,requireAllMainBoxes}){
  const c=puzzleControls(r),{p,l}=r;
  const hit=function*(name){const b=c.crateNamed(name);if(b?.alive)yield* c.hit(b,name);};
  const walk=function*(x,y,name='approach'){yield* c.walk([x,y,0],name);};
@@ -28,8 +42,14 @@ export function* runAncientGates(r,{from=0,to=11,stopAtBonus=false,trial=false,r
   c.check(e,`${name} exists`);
   if(e.kind==='floater'){
    yield* walk(e.x0-2,e.baseY,`${name} takeoff`);yield* c.charge();yield* c.tick({jumpReleased:true});
-   yield* c.until(()=>!e.alive,()=>({...c.steer([e.group.position.x,e.baseY,0]),
-    spinHeld:c.distance([e.group.position.x,e.baseY,0])<2.2&&p.pos.y>e.group.position.y-.9}),{label:name,limit:160});
+   let lastSpin=false;
+   yield* c.until(()=>!e.alive,()=>{
+    const band=p.pos.y<e.box.max.y&&p.pos.y+.92>e.box.min.y;
+    const ready=band&&(p.spinning||p.spinCd<=0);
+    const near=c.distance([e.group.position.x,e.baseY,0])<2.4;
+    const spinHeld=ready&&near&&(p.spinning||!lastSpin);lastSpin=spinHeld;
+    return{...c.steer([e.group.position.x-(ready?.6:2),e.baseY,0]),spinHeld};
+   },{label:name,limit:160});
    yield* c.until(()=>p.grounded,()=>c.steer([e.x1+2,e.baseY,0]),{label:`land after ${name}`,limit:180});
    r.report.evidence.push({action:name,kind:e.kind,alive:e.alive});
   }else yield* c.enemy(e,name);

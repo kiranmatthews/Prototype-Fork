@@ -1,0 +1,466 @@
+{
+  "url": "https://www.youtube.com/watch?v=BeqxgjRZv_A",
+  "title": "Rude Awakening – Full Walkthrough [4k]",
+  "creator": "SweetJohnnyCage",
+  "uploadDate": "2020-10-02",
+  "sourceDimensions": [
+    3840,
+    2160
+  ],
+  "fps": "60000/1001",
+  "crop": {
+    "x": 925,
+    "y": 350,
+    "width": 750,
+    "height": 750
+  },
+  "clipStart": 259.5,
+  "notes": "Continuous camera movement: useful for colour and motion observation, not yet stabilized source poses. No source footage is shipped as runtime art.",
+  "frames": [
+    {
+      "index": 0,
+      "file": "reference-media/direct-basin-square/0001.png",
+      "sourceTime": 259.50925
+    },
+    {
+      "index": 1,
+      "file": "reference-media/direct-basin-square/0002.png",
+      "sourceTime": 259.5259333
+    },
+    {
+      "index": 2,
+      "file": "reference-media/direct-basin-square/0003.png",
+      "sourceTime": 259.5426167
+    },
+    {
+      "index": 3,
+      "file": "reference-media/direct-basin-square/0004.png",
+      "sourceTime": 259.5593
+    },
+    {
+      "index": 4,
+      "file": "reference-media/direct-basin-square/0005.png",
+      "sourceTime": 259.5759833
+    },
+    {
+      "index": 5,
+      "file": "reference-media/direct-basin-square/0006.png",
+      "sourceTime": 259.5926667
+    },
+    {
+      "index": 6,
+      "file": "reference-media/direct-basin-square/0007.png",
+      "sourceTime": 259.60935
+    },
+    {
+      "index": 7,
+      "file": "reference-media/direct-basin-square/0008.png",
+      "sourceTime": 259.626033
+    },
+    {
+      "index": 8,
+      "file": "reference-media/direct-basin-square/0009.png",
+      "sourceTime": 259.642717
+    },
+    {
+      "index": 9,
+      "file": "reference-media/direct-basin-square/0010.png",
+      "sourceTime": 259.6594
+    },
+    {
+      "index": 10,
+      "file": "reference-media/direct-basin-square/0011.png",
+      "sourceTime": 259.676083
+    },
+    {
+      "index": 11,
+      "file": "reference-media/direct-basin-square/0012.png",
+      "sourceTime": 259.692767
+    },
+    {
+      "index": 12,
+      "file": "reference-media/direct-basin-square/0013.png",
+      "sourceTime": 259.70945
+    },
+    {
+      "index": 13,
+      "file": "reference-media/direct-basin-square/0014.png",
+      "sourceTime": 259.726133
+    },
+    {
+      "index": 14,
+      "file": "reference-media/direct-basin-square/0015.png",
+      "sourceTime": 259.742817
+    },
+    {
+      "index": 15,
+      "file": "reference-media/direct-basin-square/0016.png",
+      "sourceTime": 259.7595
+    },
+    {
+      "index": 16,
+      "file": "reference-media/direct-basin-square/0017.png",
+      "sourceTime": 259.776183
+    },
+    {
+      "index": 17,
+      "file": "reference-media/direct-basin-square/0018.png",
+      "sourceTime": 259.792867
+    },
+    {
+      "index": 18,
+      "file": "reference-media/direct-basin-square/0019.png",
+      "sourceTime": 259.80955
+    },
+    {
+      "index": 19,
+      "file": "reference-media/direct-basin-square/0020.png",
+      "sourceTime": 259.826233
+    },
+    {
+      "index": 20,
+      "file": "reference-media/direct-basin-square/0021.png",
+      "sourceTime": 259.842917
+    },
+    {
+      "index": 21,
+      "file": "reference-media/direct-basin-square/0022.png",
+      "sourceTime": 259.8596
+    },
+    {
+      "index": 22,
+      "file": "reference-media/direct-basin-square/0023.png",
+      "sourceTime": 259.876283
+    },
+    {
+      "index": 23,
+      "file": "reference-media/direct-basin-square/0024.png",
+      "sourceTime": 259.892967
+    },
+    {
+      "index": 24,
+      "file": "reference-media/direct-basin-square/0025.png",
+      "sourceTime": 259.90965
+    },
+    {
+      "index": 25,
+      "file": "reference-media/direct-basin-square/0026.png",
+      "sourceTime": 259.926333
+    },
+    {
+      "index": 26,
+      "file": "reference-media/direct-basin-square/0027.png",
+      "sourceTime": 259.943017
+    },
+    {
+      "index": 27,
+      "file": "reference-media/direct-basin-square/0028.png",
+      "sourceTime": 259.9597
+    },
+    {
+      "index": 28,
+      "file": "reference-media/direct-basin-square/0029.png",
+      "sourceTime": 259.976383
+    },
+    {
+      "index": 29,
+      "file": "reference-media/direct-basin-square/0030.png",
+      "sourceTime": 259.993067
+    },
+    {
+      "index": 30,
+      "file": "reference-media/direct-basin-square/0031.png",
+      "sourceTime": 260.00975
+    },
+    {
+      "index": 31,
+      "file": "reference-media/direct-basin-square/0032.png",
+      "sourceTime": 260.026433
+    },
+    {
+      "index": 32,
+      "file": "reference-media/direct-basin-square/0033.png",
+      "sourceTime": 260.043117
+    },
+    {
+      "index": 33,
+      "file": "reference-media/direct-basin-square/0034.png",
+      "sourceTime": 260.0598
+    },
+    {
+      "index": 34,
+      "file": "reference-media/direct-basin-square/0035.png",
+      "sourceTime": 260.076483
+    },
+    {
+      "index": 35,
+      "file": "reference-media/direct-basin-square/0036.png",
+      "sourceTime": 260.093167
+    },
+    {
+      "index": 36,
+      "file": "reference-media/direct-basin-square/0037.png",
+      "sourceTime": 260.10985
+    },
+    {
+      "index": 37,
+      "file": "reference-media/direct-basin-square/0038.png",
+      "sourceTime": 260.126533
+    },
+    {
+      "index": 38,
+      "file": "reference-media/direct-basin-square/0039.png",
+      "sourceTime": 260.143217
+    },
+    {
+      "index": 39,
+      "file": "reference-media/direct-basin-square/0040.png",
+      "sourceTime": 260.1599
+    },
+    {
+      "index": 40,
+      "file": "reference-media/direct-basin-square/0041.png",
+      "sourceTime": 260.176583
+    },
+    {
+      "index": 41,
+      "file": "reference-media/direct-basin-square/0042.png",
+      "sourceTime": 260.193267
+    },
+    {
+      "index": 42,
+      "file": "reference-media/direct-basin-square/0043.png",
+      "sourceTime": 260.20995
+    },
+    {
+      "index": 43,
+      "file": "reference-media/direct-basin-square/0044.png",
+      "sourceTime": 260.226633
+    },
+    {
+      "index": 44,
+      "file": "reference-media/direct-basin-square/0045.png",
+      "sourceTime": 260.243317
+    },
+    {
+      "index": 45,
+      "file": "reference-media/direct-basin-square/0046.png",
+      "sourceTime": 260.26
+    },
+    {
+      "index": 46,
+      "file": "reference-media/direct-basin-square/0047.png",
+      "sourceTime": 260.276683
+    },
+    {
+      "index": 47,
+      "file": "reference-media/direct-basin-square/0048.png",
+      "sourceTime": 260.293367
+    },
+    {
+      "index": 48,
+      "file": "reference-media/direct-basin-square/0049.png",
+      "sourceTime": 260.31005
+    },
+    {
+      "index": 49,
+      "file": "reference-media/direct-basin-square/0050.png",
+      "sourceTime": 260.326733
+    },
+    {
+      "index": 50,
+      "file": "reference-media/direct-basin-square/0051.png",
+      "sourceTime": 260.343417
+    },
+    {
+      "index": 51,
+      "file": "reference-media/direct-basin-square/0052.png",
+      "sourceTime": 260.3601
+    },
+    {
+      "index": 52,
+      "file": "reference-media/direct-basin-square/0053.png",
+      "sourceTime": 260.376783
+    },
+    {
+      "index": 53,
+      "file": "reference-media/direct-basin-square/0054.png",
+      "sourceTime": 260.393467
+    },
+    {
+      "index": 54,
+      "file": "reference-media/direct-basin-square/0055.png",
+      "sourceTime": 260.41015
+    },
+    {
+      "index": 55,
+      "file": "reference-media/direct-basin-square/0056.png",
+      "sourceTime": 260.426833
+    },
+    {
+      "index": 56,
+      "file": "reference-media/direct-basin-square/0057.png",
+      "sourceTime": 260.443517
+    },
+    {
+      "index": 57,
+      "file": "reference-media/direct-basin-square/0058.png",
+      "sourceTime": 260.4602
+    },
+    {
+      "index": 58,
+      "file": "reference-media/direct-basin-square/0059.png",
+      "sourceTime": 260.476883
+    },
+    {
+      "index": 59,
+      "file": "reference-media/direct-basin-square/0060.png",
+      "sourceTime": 260.493567
+    },
+    {
+      "index": 60,
+      "file": "reference-media/direct-basin-square/0061.png",
+      "sourceTime": 260.51025
+    },
+    {
+      "index": 61,
+      "file": "reference-media/direct-basin-square/0062.png",
+      "sourceTime": 260.526933
+    },
+    {
+      "index": 62,
+      "file": "reference-media/direct-basin-square/0063.png",
+      "sourceTime": 260.543617
+    },
+    {
+      "index": 63,
+      "file": "reference-media/direct-basin-square/0064.png",
+      "sourceTime": 260.5603
+    },
+    {
+      "index": 64,
+      "file": "reference-media/direct-basin-square/0065.png",
+      "sourceTime": 260.576983
+    },
+    {
+      "index": 65,
+      "file": "reference-media/direct-basin-square/0066.png",
+      "sourceTime": 260.593667
+    },
+    {
+      "index": 66,
+      "file": "reference-media/direct-basin-square/0067.png",
+      "sourceTime": 260.61035
+    },
+    {
+      "index": 67,
+      "file": "reference-media/direct-basin-square/0068.png",
+      "sourceTime": 260.627033
+    },
+    {
+      "index": 68,
+      "file": "reference-media/direct-basin-square/0069.png",
+      "sourceTime": 260.643717
+    },
+    {
+      "index": 69,
+      "file": "reference-media/direct-basin-square/0070.png",
+      "sourceTime": 260.6604
+    },
+    {
+      "index": 70,
+      "file": "reference-media/direct-basin-square/0071.png",
+      "sourceTime": 260.677083
+    },
+    {
+      "index": 71,
+      "file": "reference-media/direct-basin-square/0072.png",
+      "sourceTime": 260.693767
+    },
+    {
+      "index": 72,
+      "file": "reference-media/direct-basin-square/0073.png",
+      "sourceTime": 260.71045
+    },
+    {
+      "index": 73,
+      "file": "reference-media/direct-basin-square/0074.png",
+      "sourceTime": 260.727133
+    },
+    {
+      "index": 74,
+      "file": "reference-media/direct-basin-square/0075.png",
+      "sourceTime": 260.743817
+    },
+    {
+      "index": 75,
+      "file": "reference-media/direct-basin-square/0076.png",
+      "sourceTime": 260.7605
+    },
+    {
+      "index": 76,
+      "file": "reference-media/direct-basin-square/0077.png",
+      "sourceTime": 260.777183
+    },
+    {
+      "index": 77,
+      "file": "reference-media/direct-basin-square/0078.png",
+      "sourceTime": 260.793867
+    },
+    {
+      "index": 78,
+      "file": "reference-media/direct-basin-square/0079.png",
+      "sourceTime": 260.81055
+    },
+    {
+      "index": 79,
+      "file": "reference-media/direct-basin-square/0080.png",
+      "sourceTime": 260.827233
+    },
+    {
+      "index": 80,
+      "file": "reference-media/direct-basin-square/0081.png",
+      "sourceTime": 260.843917
+    },
+    {
+      "index": 81,
+      "file": "reference-media/direct-basin-square/0082.png",
+      "sourceTime": 260.8606
+    },
+    {
+      "index": 82,
+      "file": "reference-media/direct-basin-square/0083.png",
+      "sourceTime": 260.877283
+    },
+    {
+      "index": 83,
+      "file": "reference-media/direct-basin-square/0084.png",
+      "sourceTime": 260.893967
+    },
+    {
+      "index": 84,
+      "file": "reference-media/direct-basin-square/0085.png",
+      "sourceTime": 260.91065
+    },
+    {
+      "index": 85,
+      "file": "reference-media/direct-basin-square/0086.png",
+      "sourceTime": 260.927333
+    },
+    {
+      "index": 86,
+      "file": "reference-media/direct-basin-square/0087.png",
+      "sourceTime": 260.944017
+    },
+    {
+      "index": 87,
+      "file": "reference-media/direct-basin-square/0088.png",
+      "sourceTime": 260.9607
+    },
+    {
+      "index": 88,
+      "file": "reference-media/direct-basin-square/0089.png",
+      "sourceTime": 260.977383
+    }
+  ]
+}

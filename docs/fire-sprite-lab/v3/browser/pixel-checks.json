@@ -1,0 +1,14 @@
+{
+  "heat": {
+    "changed": 1101,
+    "peak": 29
+  },
+  "zero": {
+    "changed": 0,
+    "peak": 0
+  },
+  "hue": {
+    "changed": 17271,
+    "peak": 207
+  }
+}
