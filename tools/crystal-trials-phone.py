@@ -1,9 +1,8 @@
 """Controller routes through the lightweight phone entry, with touch-sized views."""
-import os,json,base64
+import os,json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 ids=[int(x) for x in os.environ.get('CRYSTAL_PHONE_TRIALS','1,3,5,13,16,21,25').split(',')]
-pilot_scale=float(os.environ.get('CRYSTAL_PHONE_PILOT_SCALE','1'))
 url=os.environ.get('CRYSTAL_PHONE_URL','http://127.0.0.1:5173/challenge-playtest.html?touch')
 with sync_playwright() as pw:
  browser=pw.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
@@ -16,14 +15,12 @@ with sync_playwright() as pw:
  page.goto(url,wait_until='networkidle')
  for trial in ids:
   out=Path(os.environ.get('CRYSTAL_PHONE_OUT','/workspace/crystal-trials')) / f'{trial:02}';out.mkdir(parents=True,exist_ok=True)
-  report={'trial':trial,'url':url,'errors':errors,'passed':False,'pilotRenderScale':pilot_scale}
+  report={'trial':trial,'url':url,'errors':errors,'passed':False}
   try:
    page.locator('#challenge-tab').tap();page.locator('#challenge-options button').nth(trial-1).tap();page.locator('#challenge-play').tap()
    page.wait_for_function('i=>window.__game?.getCurrentLevel().id===`phone-challenge-${i}` && !window.__game.paused',arg=trial-1)
-   page.evaluate('window.__game.renderer.setPixelRatio(1)')
    start=page.evaluate('window.__game.frameStats.totalFixedSteps');page.wait_for_function('n=>window.__game.frameStats.totalFixedSteps>n+12',arg=start)
    page.screenshot(path=str(out/'phone-approach-landscape.png'))
-   page.evaluate('scale=>window.__game.renderer.setPixelRatio(scale)',pilot_scale)
    page.evaluate('''async id => (await import('http://127.0.0.1:5173/tools/crystal-trials-browser-runtime.mjs')).installCrystalTrialPilot(id)''',trial)
    page.wait_for_function('window.crystalTrialReport.done')
    report['pilot']=page.evaluate('window.crystalTrialReport')

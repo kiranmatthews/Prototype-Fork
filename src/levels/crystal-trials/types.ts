@@ -1,3 +1,4 @@
+import type { AuthoredLine } from './street-line';
 import type { CustomComponent, CustomLevelData } from '../../level';
 
 export interface CrystalTrial {
@@ -5,7 +6,8 @@ export interface CrystalTrial {
   name: string;
   brief: string;
   spawn: [number, number, number];
-  /** Continuous board route; old rejected platforming layouts retain walking. */
+  line?: AuthoredLine;
+  /** Includes historical skating layouts, for corridor assembly. */
   skateLine?: boolean;
   exit?: [number, number, number];
   skateSections?: {
@@ -40,10 +42,10 @@ export function addExitNitroSwitch(components: CustomComponent[], [x, y, z]: [nu
 export function trialLevel(trial: CrystalTrial): CustomLevelData {
   const exit: [number, number, number] = trial.exit ?? [0, 0, 16];
   const components = structuredClone(trial.components);
-  if (trial.skateSections) addExitNitroSwitch(components, exit);
+  if (trial.skateSections || trial.line) addExitNitroSwitch(components, exit);
   return {
     v: 1, name: trial.name, spawn: [...trial.spawn], killY: -24,
-    skatepark: true, alwaysSkate: trial.skateLine === true, crystalTrials: 'challenge',
+    skatepark: false, alwaysSkate: false, crystalTrials: 'challenge',
     startWarpPad: false, hugeDropBail: false,
     groups: [...new Set(trial.components.flatMap(c => c.grp === undefined ? [] : [c.grp]))]
       .map(id => ({ id, nm: `${trial.name} / ${id}` })),

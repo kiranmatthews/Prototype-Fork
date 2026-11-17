@@ -29,13 +29,35 @@ with sync_playwright() as pw:
   page.wait_for_load_state('networkidle')
   report['firstPlayBytes']=sum(r['bytes'] for r in resources.values())
   report['start']=page.evaluate('window.__game.player.pos.toArray()')
+  assert page.evaluate('!window.__game.player.freeSkate && !window.__game.getLevel().skatepark'), 'Playtest forced park or mounted controls'
+  native=page.evaluate('''() => {const c=window.__game.renderer.domElement;return [c.width,c.height,innerWidth,innerHeight,devicePixelRatio]}''')
+  assert native[:2]==[int(n*native[4]) for n in native[2:4]],native
+  report['nativePortrait']=native
   pad=page.locator('.tc-pad').bounding_box();x=pad['x']+pad['width']/2;y=pad['y']+pad['height']*.18
   cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y,'id':1}]});frames(35)
   cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});frames(15)
   report['afterTouch']=page.evaluate('window.__game.player.pos.toArray()')
   assert report['afterTouch'][2]<report['start'][2]-2,'Touch pad did not move the player'
+  assert page.evaluate('!window.__game.player.freeSkate'), 'Direction alone mounted the board'
   page.screenshot(path=str(out/'play-portrait.png'))
+  jump=page.locator('.tc-btn[aria-label="Jump"]').bounding_box()
+  fingers=[{'x':x,'y':y,'id':1},{'x':jump['x']+jump['width']/2,'y':jump['y']+jump['height']/2,'id':2}]
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':fingers})
+  page.wait_for_function('window.__game.player.freeSkate',timeout=30000)
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});frames(90)
+  brake=page.locator('.tc-btn[aria-label="Grab"]').bounding_box()
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':brake['x']+brake['width']/2,'y':brake['y']+brake['height']/2,'id':3}]})
+  page.wait_for_function('!window.__game.player.freeSkate && window.__game.player.grounded',timeout=30000)
+  cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+  report['touchLocomotion']=['walk','mount','dismount']
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
+  for w,h,dpr in [(844,390,3),(1280,800,1)]:
+   cdp.send('Emulation.setDeviceMetricsOverride',{'width':w,'height':h,'deviceScaleFactor':dpr,'mobile':True})
+   page.wait_for_function('q=>{const c=window.__game.renderer.domElement;return c.width===q[0]&&c.height===q[1]}',arg=[w*dpr,h*dpr])
+   page.locator('#challenge-resume').tap();frames(3)
+   report.setdefault('drawingBuffers',[]).append(page.evaluate('[window.__game.renderer.domElement.width,window.__game.renderer.domElement.height]'))
+   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
+  cdp.send('Emulation.setDeviceMetricsOverride',{'width':390,'height':844,'deviceScaleFactor':1,'mobile':True})
   page.locator('#challenge-retry').tap();frames(15)
   assert abs(page.evaluate('window.__game.player.pos.z-window.__game.getCurrentLevel().data.spawn[2]'))<3,'Retry did not reset the single trial'
   # Isolate the finish menu from route timing. The native routes earn every
@@ -86,7 +108,7 @@ with sync_playwright() as pw:
   try: page.wait_for_function('window.__game.getLevel().checkpoints[1].active',timeout=30000)
   finally: page.keyboard.up('ArrowUp');page.keyboard.up('Space')
   hint=page.locator('#challenge-hint').inner_text()
-  assert hint.startswith('2 / '),f'Checkpoint 2 announced {hint!r}'
+  assert hint.startswith('2 · '),f'Checkpoint 2 announced {hint!r}'
   page.locator('.tc-pause').tap()
   page.wait_for_function('window.__game.paused && !document.getElementById("challenge-menu").hidden')
   retry=page.locator('#challenge-retry').inner_text()
@@ -98,11 +120,11 @@ with sync_playwright() as pw:
   report['checkpointRetry']={'challenge':2,'crystals':1}
   page.locator('.tc-pause').tap();page.wait_for_function('window.__game.paused')
   page.locator('#reject-tab').tap();report['rejectChoices']=page.locator('#challenge-options button').count()
-  assert report['rejectChoices']==76,'Missing preserved layouts in the rejects picker'
+  assert report['rejectChoices']==101,'Missing preserved layouts in the rejects picker'
   page.locator('#challenge-course').tap()
   page.wait_for_function('window.__game.getCurrentLevel().id === "phone-reject-all" && !window.__game.paused');frames(15)
   report['archiveCrystals']=page.evaluate('window.__game.getLevel().skateCollectathon.tokens.length')
-  assert report['archiveCrystals']==75,'The rejects course lost a preserved attempt'
+  assert report['archiveCrystals']==100,'The rejects course lost a preserved attempt'
   assert page.evaluate('window.__game.getLevel().skateCollectathon.exitReady')
   page.screenshot(path=str(out/'whole-archive.png'))
   page.wait_for_load_state('networkidle')

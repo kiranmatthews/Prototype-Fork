@@ -3036,7 +3036,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.crystalTrials !== undefined &&
       (source.crystalTrials !== 'challenge' && source.crystalTrials !== 'archive' ||
-       !source.skatepark || source.skateCollectathon ||
+       source.skateCollectathon ||
        source.crystalTrials === 'challenge' && !source.components.some(c => c?.t === 'crystal'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;

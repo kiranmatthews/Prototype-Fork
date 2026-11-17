@@ -1,63 +1,59 @@
-# Numbered skating challenges
+# Challenges 1–25
 
-[Play on your phone](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch).
+[Open the phone playtest](https://kiranmatthews.github.io/Prototype-Fork/challenge-playtest.html?touch) · [Open the course in Prototype Fork](https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=crystal-trials)
 
-Each of the 25 challenges is a continuous skating sequence with one starting checkpoint and one final crystal. Three to five linked sections require repeated ollies, catches, transfers, landings, carving or vert pumps. The later runs combine switches, timed or crumbling surfaces, moving rails, Nitro clearances and airborne bounce rows.
+Choose a number to practice one spot, or select **Whole course** to travel through all 25. Every number has a starting checkpoint and a single crystal. The whole-course exit opens when you have all 25. **From checkpoint** keeps the crystals you earned.
 
-Bank airs can land directly into grinds. Bounce chains feed elevated rails. Raised receiving roofs preserve the height earned in the previous section, so approaching the final crystal from the recovery floor cannot replace the intended sequence. The ordinary edges remain grindable. The authored player, movement tuning and animation baseline are unchanged.
+You start on foot. Move to walk, hold Jump while moving to mount, release to ollie, and hold Grab to brake back to walking. The phone page uses the main game's touch controls, keyboard and gamepad bindings. Its canvas follows the device's display resolution and orientation. The picker loads first. Allow about 40 MB for a session that includes the course and rejects.
 
-The source modules remain independently reusable. The whole course lays them in a straight corridor, with at least 512 metres between starts and longer spacing for the longer sequences. There are 224 metres between one trial's local exit and the next origin, leaving a clear run into the next approach. A flat floor 8 metres below the first approach catches ordinary misses; marked dark pits cause death. A wide side bank returns a missed run to its start. The course exit opens only after all 25 crystals. These practice rewards do not alter campaign progress.
+The fast line and the lower walking route meet on the same crystal terrace. You can switch between them or carry a line across the architecture above the corridor. Fruit arcs mark transfers and striped lips mark receiving banks. At a pulsing dock, the narrow side lip gives you a takeoff when the first sill goes dark. Marked pits sit beneath selected gaps. The flat floor sits eight metres below the entrance. Starts are at least 512 metres apart.
 
-| Number | Components |
+| Number | Brief description |
 |---|---|
-| 1 | Bank air → long grind → raised roof gap. |
-| 2 | Bank air → rope grind → moving roof → gap. |
-| 3 | Long balance → two rail transfers → bank air. |
-| 4 | Moving roof gaps → enemy carve → bank-to-rail air. |
-| 5 | Bank-to-rail air → transfers → high vert crystal. |
-| 6 | Rope air → spring and bounce row → high grind → roof gap. |
-| 7 | Timed roof gap → rail transfers → enemy carve and bank. |
-| 8 | Switch grind → roof gap → rope transfer → Nitro-framed air. |
-| 9 | Enemy carve → moving roof gaps → grind and kickflip gate. |
-| 10 | Bridge airs → rail catch → enemy carve → spring and bounce row. |
-| 11 | Rail transfers → switch roof → high grind → Nitro gap. |
-| 12 | Spring and bounce row → moving high rail → kickflip gap. |
-| 13 | Rope transfer → two rail transfers → moving roof gaps. |
-| 14 | Timed roof gaps → moving grind → switch roof and high rail. |
-| 15 | TNT-framed switch grind → enemy carve → rail catch and kickflip. |
-| 16 | Nitro gap → spring and bounce row → high rail transfers. |
-| 17 | Grind and enemy carve → rope transfer → bridge airs → roof gap. |
-| 18 | Moving grind → moving roof gaps → rail transfers → kickflip. |
-| 19 | Crumbling gaps → switch roof → high grind → spring and bounce row. |
-| 20 | Two switch grinds → rope transfer → Nitro air → rail and kickflip. |
-| 21 | Kickflip to rail → transfers → enemy carve → switch bank and high grind. |
-| 22 | Rope and timed gap → bounce-to-rail → enemy carve → bridge airs. |
-| 23 | Switch roof and high grind → moving rail → rope transfer → Nitro gap. |
-| 24 | Rail transfers and carve → crumbling gaps → bounce-to-rail → kickflip. |
-| 25 | Switch and Nitro kickflip → timed gap → rope transfer → enemy carve → high grind → bounce row. |
+| 1 | Cross a hip onto a bent rail, then cut inside the split plaza. |
+| 2 | Carve the drainage channel, clear the stair hip and land on the ferry. |
+| 3 | Grind down the stair flight, switch rails above the trench and bank out. |
+| 4 | Choose a crescent ledge, outrun two falling tongues and catch the cable. |
+| 5 | Pump the linked bowls, cross the hip and land a kickflip off the high lip. |
+| 6 | Drop past the swing, board the cross-ferry and pop onto the stair rail. |
+| 7 | Catch a pulsing quay, cut across the split and grind the rising seawall. |
+| 8 | Hit the switch for an inside grind, then carve the sluice into a rebound. |
+| 9 | Thread two pendulums, cut behind the patrol and kickflip the return hip. |
+| 10 | Drop onto a sagging cable, air into a landing bowl and split the far ledge. |
+| 11 | Transfer between offset rails, cut inside the switch and clear the stairwell. |
+| 12 | Rebound onto the high apron, catch the crest rail and dive onto a moving dock. |
+| 13 | Ride the cable across the cut, beat the falling shelf and hip onto the upper fork. |
+| 14 | Read the dock lights, transfer between rails and exit through the swinging bay. |
+| 15 | Skirt the patrol, open the inside ledge and pop a kickflip over the stair cut. |
+| 16 | Cross the bowl diagonally, take the ferry and spring onto the cable terrace. |
+| 17 | Drop down the spillway, cut behind the patrol and carry the hip into offset rails. |
+| 18 | Grind the curved parapet, land in the bowl, then clear the moving quay and hip. |
+| 19 | Carry speed over two breakaways, open the short bridge and rebound uphill. |
+| 20 | Choose the rail chord, cross two pendulums and kickflip from the inside ledge. |
+| 21 | Hip onto the high line, change rails, carve below the patrol and cross the sluice. |
+| 22 | Catch the moving dock, clear the lighted sills and thread a cable into the stairs. |
+| 23 | Open the crate bridge, carve the falling tongue, then take the rail to a rebound. |
+| 24 | Carve the bowl, dodge the sweep, transfer above the stairwell and flip the last hip. |
+| 25 | Link a switch shortcut, pulsing dock, cable transfer, two spring beds and a kickflip. |
 
-The previous platforming collection is preserved as rejects `01-p`–`25-p`; the short skating studies are `01-s`–`25-s`. There are 75 rejected attempts plus the original eight-station grid, all selectable from the same phone page. [Rejects index](rejects/README.md).
+**Rejects** opens 100 earlier layouts, including the last published series as `01-l` through `25-l`. The original eight-station grid is the separate **0** choice. [Rejects index](rejects/README.md)
 
-The phone picker loads before the game assets. Allow about 30 MB to try the challenges and rejects. Finishing a numbered challenge selects the next number. Tap Play to start it or Replay to take another run at the one you finished. In the whole course, From checkpoint returns to the numbered checkpoint and keeps earned crystals. Whole course starts a fresh run.
+## Verification
 
-The November 17 review covers the rolling exits, moving rail landings, temporary roofs, halfpipe camera and phone controls. [Review and measurements](../LEVEL_ITERATIONS.md#2026-11-17--numbered-skating-challenge-review).
-
-The November 15 skating release has its own [progress record](progress.json) and [route evidence](sequences/README.md). The numbered evidence directories, `course/`, `phone-public/` and `public/` at this directory's root describe the earlier platforming release. [Platforming progress record](platforming-version/progress.json).
-
-To verify the current geometry:
+Run the individual controller routes on foot and on the board, then walk the uninterrupted course from its actual start to its unlocked exit.
 
 ```sh
-CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate.mjs 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
-CRYSTAL_SKATE_OUT=/tmp/crystal-sequences node tools/test-crystal-skate-course.mjs
-CRYSTAL_SKATE_OUT=/tmp/crystal-early node tools/test-crystal-skate.mjs 18 3.3 -80
-CRYSTAL_SKATE_OUT=/tmp/crystal-late node tools/test-crystal-skate.mjs 18 3.3 -92
-node tools/test-crystal-skate-recovery.mjs
-node tools/test-crystal-trials.mjs 25
-CRYSTAL_SKATE_OUT=/tmp/crystal-sequences python3 tools/review-crystal-skate.py
-CRYSTAL_PHONE_TRIALS=1,3,5,13,16,21,25 python3 tools/crystal-trials-phone.py
-CRYSTAL_PHONE_URL=PRODUCTION_URL python3 tools/test-challenge-phone.py
+node tools/test-crystal-streets.mjs
+node tools/test-crystal-street-course.mjs
 ```
 
-The native pilots supply controller inputs to the production Player and Level; browser pilots use the application's ordinary fixed-step loop. They do not change movement, position, velocity or pickup state to complete a route. Visual fixtures are explicitly staged and separate from traversal evidence. Full-render screenshots use native 1280 × 720 output. The historical `test-crystal-trials-course.mjs` and platforming pilot modules document the prior collection.
+To check one spot, for example the rail and springs in 25, run `node tools/test-crystal-streets.mjs 25 skate`. Set `CRYSTAL_STREET_OUT` to a directory to save the individual position traces. With the development server running, the browser pilot uses the same controller samples inside the phone playtest. The phone smoke test exercises actual touch presses, screen rotation, high-density output, checkpoint retry, archive selection and the transfer budget.
 
-Design references: [THPS research](../warehouse-flow/research-principles.md) and the measured movement rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md).
+```sh
+CRYSTAL_PHONE_TRIALS=25 python3 tools/crystal-trials-phone.py
+CRYSTAL_PHONE_URL='http://localhost:4173/challenge-playtest.html?touch' python3 tools/test-challenge-phone.py
+```
+
+The existing numbered evidence directories and progress files describe previous releases. The historical skating pilots can be run against their matching [November 17 source revision](https://github.com/kiranmatthews/Prototype-Fork/tree/c1524e29). [Previous skating series](sequences/README.md) · [Previous platforming series](platforming-version/progress.json)
+
+The layout review used the measured transitions, hazard timings and recovery rules in the [Gameplay Design Bible](../GAMEPLAY_DESIGN_BIBLE.md) and the [THPS level-design research](../warehouse-flow/research-principles.md).

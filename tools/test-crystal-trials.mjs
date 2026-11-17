@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile, copyFile } from 'node:fs/promises';
+import { runStreet } from './crystal-street-pilot.mjs';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 const id = Number(process.argv[2] ?? 1);
 const historicalPilot = (await import(process.env.CRYSTAL_TRIAL_PILOT ?? (id > 10 ? `./crystal-trials-pilots/${id}.mjs` : './crystal-trials-pilot.mjs'))).runCrystalTrial;
@@ -27,8 +28,18 @@ await withBlockworksRuntime(async r => {
     'ordinary courses keep exactly one crystal');
   try {
     const trial = r.sourceModule.CRYSTAL_TRIALS.find(t => t.id === id);
-    const pilot = trial.skateLine && !process.env.CRYSTAL_TRIAL_PILOT ? runSkateTrial : historicalPilot;
-    for (const sample of pilot({ ...r, trial, report, phaseWait: Math.round(phaseDelay / r.dt), get frame() { return r.frame; } }, id)) r.tick(sample);
+    const inputRun = { ...r, trial, report, phaseWait: Math.round(phaseDelay / r.dt), get frame() { return r.frame; } };
+    let steps;
+    if (trial.line && !process.env.CRYSTAL_TRIAL_PILOT) {
+      const { lanePoint } = await r.server.ssrLoadModule('/src/levels/crystal-trials/street-line.ts');
+      const { JAK_DIRECT_PHYSICS } = await r.server.ssrLoadModule('/src/animation/jakDirectMotion.ts');
+      r.p.onFootJumpStudy = { ...JAK_DIRECT_PHYSICS, flip: true };
+      steps = runStreet(Object.assign(inputRun, {lanePoint}));
+    } else {
+      const pilot = trial.skateLine && !process.env.CRYSTAL_TRIAL_PILOT ? runSkateTrial : historicalPilot;
+      steps = pilot(inputRun, id);
+    }
+    for (const sample of steps) r.tick(sample);
     assert.equal(r.l.skateCollectathon.collected, 1);
     assert.equal(r.l.crystalPickup, null, 'practice rewards cannot write the campaign crystal');
     assert.equal(r.p.hasCrystal, false);

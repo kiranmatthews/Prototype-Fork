@@ -1,5 +1,6 @@
 import type { RejectedCrystalTrial } from './types';
 import { REJECTED_PLATFORMING } from './rejected-platforming';
+import { REJECTED_SEQUENCES } from './rejected-sequences';
 import { REJECTED_SKATING } from './rejected-skating';
 
 /** Abandoned layouts remain playable and editable in the rejects stage. */
@@ -6350,4 +6351,4 @@ const EARLY_REJECTS: RejectedCrystalTrial[] = [
   }
 ];
 
-export const REJECTED_CRYSTAL_TRIALS: RejectedCrystalTrial[] = [...EARLY_REJECTS, ...REJECTED_PLATFORMING, ...REJECTED_SKATING];
+export const REJECTED_CRYSTAL_TRIALS: RejectedCrystalTrial[] = [...EARLY_REJECTS, ...REJECTED_PLATFORMING, ...REJECTED_SKATING, ...REJECTED_SEQUENCES];

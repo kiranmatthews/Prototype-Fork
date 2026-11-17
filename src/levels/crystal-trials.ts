@@ -66,6 +66,7 @@ function assemble(name: string, trials: CrystalTrial[], archive = false): Custom
   ];
   for (let i = 0; i < trials.length; i++) {
     const z = placements[i][2];
+    if (trials[i].line) continue; // These sites include a street-level entrance.
     if (trials[i].skateLine) {
       components.push(
         { t: 'ramp', nm: `${trials[i].id} / Wide rolling approach`, p: [0, -8, z + 102], len: 48, rise: 8, w: 24 },
@@ -87,8 +88,8 @@ function assemble(name: string, trials: CrystalTrial[], archive = false): Custom
   }
   components.push(...trials.flatMap((trial, index) => placed(trial, index, placements[index])));
   if (!archive) addExitNitroSwitch(components, [0, -8, finishZ]);
-  return { v: 1, name, spawn: [0, -7.85, archive ? 80 : 144], killY: -24, skatepark: true,
-    alwaysSkate: !archive, crystalTrials: archive ? 'archive' : 'challenge',
+  return { v: 1, name, spawn: [0, -7.85, archive ? 80 : 144], killY: -24, skatepark: false,
+    alwaysSkate: false, crystalTrials: archive ? 'archive' : 'challenge',
     startWarpPad: false, hugeDropBail: false, sky: 'sunset',
     groups: trials.flatMap((trial, i) => [...new Set(trial.components.map(c => c.grp ?? 1))]
       .map(group => ({ id: i * 100 + group, nm: trial.name }))),

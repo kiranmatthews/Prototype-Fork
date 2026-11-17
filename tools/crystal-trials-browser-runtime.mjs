@@ -1,18 +1,19 @@
+import { lanePoint } from '../src/levels/crystal-trials/street-line';
 import { CRYSTAL_TRIALS, trialOrigin } from '../src/levels/crystal-trials';
 
 /** Run the same pilot through the application's ordinary fixed-step loop. */
 export async function installCrystalTrialPilot(id) {
   const trial = CRYSTAL_TRIALS.find(t => t.id === id);
-  const runCrystalTrial = trial?.skateLine
+  const runCrystalTrial = trial?.line ? (await import('./crystal-street-pilot.mjs')).runStreet : trial?.skateLine
     ? (await import('./crystal-skate-pilot.mjs')).runSkateTrial
     : (id > 10 ? await import(`./crystal-trials-pilots/${id}.mjs`) : await import('./crystal-trials-pilot.mjs')).runCrystalTrial;
   const g = window.__game, p = g.player, l = g.getLevel();
   const index = CRYSTAL_TRIALS.findIndex(t => t.id === id);
   if (index < 0) throw Error('Unknown trial');
   const report = window.crystalTrialReport = { id, frame: 0, done: false, failure: null, actions: [], evidence: [] };
-  const r = { p, l, trial, report, source: g.getCurrentLevel().data, offset: g.trialOffset ?? trialOrigin(index),
+  const r = { p, l, trial, report, lanePoint, source: g.getCurrentLevel().data, offset: g.trialOffset ?? trialOrigin(index),
     get frame() { return report.frame; } };
-  const pilot = runCrystalTrial(r, id);
+  const pilot = runCrystalTrial(r, trial.line ? 'skate' : id);
   let next = pilot.next(), last = {}, advanced = false;
   const original = { step: p.step, commit: p.commitRenderStep };
   const restore = () => { p.step = original.step; p.commitRenderStep = original.commit; };
@@ -24,8 +25,9 @@ export async function installCrystalTrialPilot(id) {
     }
     const s = next.value ?? {}, f = p.courseInputDirection(l) ?? p.camDir;
     const n = Math.hypot(f.x, f.z) || 1, dx = s.moveX ?? 0, dz = -(s.moveY ?? 0);
-    input.moveX = s.skateRelative ? dx : (dx * -f.z + dz * f.x) / n;
-    input.moveY = s.skateRelative ? -dz : (dx * f.x + dz * f.z) / n;
+    const nativeInput = trial.line || s.skateRelative;
+    input.moveX = nativeInput ? dx : (dx * -f.z + dz * f.x) / n;
+    input.moveY = nativeInput ? -dz : (dx * f.x + dz * f.z) / n;
     const length = Math.hypot(input.moveX, input.moveY);
     if (length > 1) { input.moveX /= length; input.moveY /= length; }
     input.moveX = Math.round(input.moveX * 100) / 100; input.moveY = Math.round(input.moveY * 100) / 100;

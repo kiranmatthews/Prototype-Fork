@@ -10,7 +10,7 @@ export const REJECTED_GRID: CustomLevelData = {
     20
   ],
   "killY": -24,
-  "skatepark": true,
+  "skatepark": false,
   "alwaysSkate": false,
   "crystalTrials": "archive",
   "startWarpPad": false,

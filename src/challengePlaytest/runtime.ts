@@ -9,6 +9,9 @@ import { createCharacterAnimationRuntime } from '../characterAnimationRuntime';
 import { GameplayAnimationPresentation, gameplayAnimationDocument, prepareGameplayAnimationAssets } from '../gameplayAnimationScheme';
 import { cameraViewAt, cameraViewDirection, CameraViewFraming } from '../cameraViews';
 import { SkateChaseCameraOverlay } from '../skateChaseCamera';
+import { resizeRendererSurface } from '../render-quality/surfaceSize';
+import { makeSkyTexture } from '../proceduralSky';
+import { CameraLookOffset } from '../cameraLook';
 import { CameraFallHold } from '../cameraRig';
 import { CameraPortraitFraming } from '../cameraPortraitFraming';
 import { presentationAssets } from '../presentationLoading';
@@ -32,19 +35,25 @@ export interface PlaytestRuntime {
  * has no campaign, editor or music player. */
 export async function createPlaytest(menu: (message?: string) => void): Promise<PlaytestRuntime> {
   const canvas = document.getElementById('challenge-world') as HTMLCanvasElement;
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(1);renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;renderer.toneMappingExposure = 1.1;
-  const scene = new THREE.Scene();scene.background = new THREE.Color('#c5cfcb');
-  scene.fog = new THREE.Fog('#c5cfcb', 140, 280);
-  scene.add(new THREE.HemisphereLight(0xe6f2ff, 0x788d68, 2.5));
-  const sun = new THREE.DirectionalLight(0xffedce, 2.8);sun.position.set(30, 70, 30);scene.add(sun);
-  const p = new Player(scene), input = new Input(false, () => true);
+  const scene = new THREE.Scene();scene.background = new THREE.Color('#aebdc2');
+  scene.fog = new THREE.Fog('#aebdc2', 140, 285);
+  scene.add(new THREE.HemisphereLight(0xcbdfff, 0x76634d, 1.25));
+  const sun = new THREE.DirectionalLight(0xffdfa8, 1.65);
+  sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.normalBias=.035;
+  Object.assign(sun.shadow.camera,{left:-42,right:42,top:42,bottom:-42,near:.5,far:145});
+  sun.shadow.camera.updateProjectionMatrix();scene.add(sun,sun.target);
+  renderer.shadowMap.enabled=true;
+  const sky=new THREE.Mesh(new THREE.SphereGeometry(290,32,16),new THREE.MeshBasicMaterial({side:THREE.BackSide,depthWrite:false,fog:false}));
+  sky.renderOrder=-1;scene.add(sky);
+  const p = new Player(scene), input = new Input();
   p.endlessDeaths = true;
   puffs.attach(scene);puffs.setQuality('low');
   const camera = new THREE.PerspectiveCamera(62, 1, .05, 350);
   const framing = new CameraViewFraming(), skateCamera = new SkateChaseCameraOverlay();
-  const portrait = new CameraPortraitFraming(), fall = new CameraFallHold();
+  const portrait = new CameraPortraitFraming(), fall = new CameraFallHold(), look = new CameraLookOffset();
   const binding = RigBinding.fromDefinition(p.animationRig.root,
     withSkatePresentationRig(RigBinding.fromSculptRuntime(p.animationRig.root, { strict: false }).definition), { strict: false });
   const assets = await prepareGameplayAnimationAssets();
@@ -73,8 +82,7 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   };
   p.onFinish = () => { paused = true;queueMicrotask(() => menu(`${current.name} complete.`)); };
   const resize = () => {
-    const scale = Math.min(1, 540 / Math.min(innerWidth, innerHeight));
-    renderer.setSize(Math.round(innerWidth * scale), Math.round(innerHeight * scale), false);
+    resizeRendererSurface(renderer, innerWidth, innerHeight, devicePixelRatio || 1);
     camera.aspect = innerWidth / innerHeight;camera.updateProjectionMatrix();snapVersion = -1;
   };
   resize();addEventListener('resize', resize);
@@ -85,7 +93,7 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
   };
   const reset = (hard: boolean) => {
     p.respawn(level, hard);level.setRunModesEnabled(false);
-    p.endlessDeaths = true;animation.restart();accumulator = 0;snapVersion = -1;
+    p.endlessDeaths = true;look.reset();animation.restart();accumulator = 0;snapVersion = -1;
   };
   const retry = () => {
     if (!active) return;
@@ -108,6 +116,8 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
     level?.dispose();
     current = { id: `phone-${selection.kind}-${selection.index ?? 'all'}`, name: data.name, data };
     level = new Level(scene, current);p.enterLevel(current.id);reset(true);
+    sky.material.map ??= makeSkyTexture(level.theme);sky.material.needsUpdate=true;
+    for(const mesh of level.groundMeshes){mesh.receiveShadow=true;mesh.castShadow=mesh.userData.castShadow!==false;}
     await Promise.all([level.prepareJungleAssets(), level.prepareSurfaceImages()]);
     await presentationAssets.waitUntilSettled();
     active = selection;
@@ -156,9 +166,11 @@ export async function createPlaytest(menu: (message?: string) => void): Promise<
           camDist: TUNING.parkCamDist, camHeight: TUNING.parkCamHeight, camPitch: TUNING.parkCamPitch, camFov: TUNING.parkCamFov,
         });
       }
+      look.step(input.lookX, input.lookY, dt);look.apply(camera, aim);
       snapVersion = p.renderSnapVersion;
       portrait.apply(camera, true);
       presentation.prepareRender(camera);p.prepareMaskPresentation();puffs.update(dt, camera);
+      sky.position.copy(camera.position);sun.target.position.copy(subject);sun.position.copy(subject);sun.position.x-=26;sun.position.y+=48;sun.position.z+=21;
       scene.updateMatrixWorld(true);camera.updateMatrixWorld();renderer.render(scene, camera);
     } finally { p.restoreRenderPose(); }
     const goals = level.skateCollectathon;
