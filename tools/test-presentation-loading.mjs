@@ -222,7 +222,7 @@ try {
   assert.match(main, /await waitForPresentationGpu\(renderer\)/);
   assert.match(main, /player\.preparePresentationAssets\(\)/);
   assert.match(main, /sfx\.prepare\(\)/);
-  assert.match(main, /waitForLevelData: \(\) => firstRunLevelSync/);
+  assert.doesNotMatch(main, /waitForLevelData|firstRunLevelSync/, 'the retired level-pack sync must not gate loading');
   const flow = await readFile(new URL('../src/gameFlowUI.ts', import.meta.url), 'utf8');
   assert.match(flow, /this\.transitionActive = true;\s*this\.cursor\.classList\.remove\("visible"\)/, 'loading must retire the menu cursor');
   console.log('PASS loading sequence: readiness gates, fully painted 2-second minimum, fast/slow/reduced-motion paths, black-guard warm-up, nested asset tracking and failed-request settlement');

@@ -12605,3 +12605,42 @@ Left as they were: the tap leap's flight pose is the source clip's (arms held
 forward); a catch made upside down in a flip still passes the head through the
 rope's end for about five frames; hands brush the rope's surface in a reach.
 
+
+## 2026-11-17 — Clean-up: retire unused systems and lighten the first visit
+
+Brief: do items 1–4 of the 16 November inventory, merge with the Codex work on
+main, and list what remains. Elapsed: about 2 hours 50 minutes from the
+request to the pushed, checked branch (23:50–02:40 UTC), including rerunning
+the check suites after a container restart.
+
+Merged main's 44 Codex commits (crate-bible passes, 25 crystal challenges, the
+phone playtest, the broad campfire). Temple of Embers keeps this branch's
+rebuild and its Ember Reliquary bonus; main's crate pass for the previous
+temple layout could not apply to it and was left out with its four tests.
+
+1. Retired offline mode, the desktop app and GitHub level syncing. Browsers
+   that saved an offline copy now get a worker that deletes it and removes
+   itself (`tools/test-offline-retirement-browser.mjs`); the game also clears a
+   leftover registration. The Update Game check stays. The first-run download
+   of `levels.json` (2.2 MB, and a stale Merchant Wreck copy), SYNC UP,
+   passcode, token and RESTORE FROM CLOUD are gone, and stored tokens are
+   cleared. `public/levels.json` is frozen test data and no longer ships.
+2. The game downloads a 1.24 MB gameplay skate file (26 of 218 clips, exact
+   copies) instead of the 8.6 MB study; golf carts load with Country Club and
+   Coconut Cart Rally; the level editor loads when first opened. Start-up code
+   fell from 6.2 to 5.6 MB compressed.
+3. Removed two-player split screen (about 600 lines of main.ts and the second
+   camera view every scenery streamer carried).
+4. Moved 3,244 unreferenced archive pictures and the retired v1–v9 font
+   atlases (3.6 GB) out of the working tree; README says how to restore them.
+
+Validation: type-check, production build (944 MB of the 1 GB budget), the
+focused suites for each area, and a browser pass over the built game: a first
+visit (no level pack, worker, full skate study, cart or editor download), Treehouse
+Trail in lite and full render, the editor opened on demand, Country Club's 20
+carts, Coconut Cart Rally's 26 race carts and Codex Lab movement, with no
+console errors. The last tests that still expected the removed parts were
+updated. Six tests fail the same way on main and were left alone: the HUD
+fruit-revision check, the time-trial rally finish, and four that run on the
+blockworks test harness (camera extraction, the Slipstream edge fingerprint,
+the time-trial number crates and the item-row spacing).

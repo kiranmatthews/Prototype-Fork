@@ -2,8 +2,9 @@
 // Uses installed Playwright; no downloads, uploads or external page requests.
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
-import {createRequire} from 'node:module';
-const {CSP}=createRequire(import.meta.url)('../desktop/policy.cjs');
+// A strict page policy (no inline scripts, no outside hosts). The retired
+// desktop shell enforced it; the web build must still start under it.
+const CSP=["default-src 'none'","script-src 'self' blob: 'wasm-unsafe-eval'","style-src 'self' 'unsafe-inline'","img-src 'self' data: blob:","font-src 'self' data:","media-src 'self' blob: data:","connect-src 'self' blob: data:","worker-src 'self' blob:","object-src 'none'","frame-src 'none'","base-uri 'none'","form-action 'none'","frame-ancestors 'none'"].join('; ');
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=new URL(process.argv[2]||'http://127.0.0.1:5348/');
 const output=process.env.STARTUP_OUTPUT||'/private/tmp/slipstream-startup-browser';

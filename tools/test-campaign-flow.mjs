@@ -444,13 +444,13 @@ assert.equal(campaign.loadGamePlayMode(), 'classic');
 const mainSource = await readFile(`${root}src/main.ts`, 'utf8');
 const applySource = mainSource.match(/function applyEndlessDeaths\(\): void \{[\s\S]*?\n\}/)?.[0];
 assert.ok(applySource);
-const applyRule = new Function('player', 'p2', 'ui', 'endlessDeathsOn', 'shellBypass',
+const applyRule = new Function('player', 'ui', 'endlessDeathsOn', 'shellBypass',
   ts.transpileModule(applySource, {compilerOptions:{target:ts.ScriptTarget.ES2020}}).outputText + '\napplyEndlessDeaths();');
 for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[true,true,false]]) {
   const player={bonusMode:bonus,endlessDeaths:!expected};
-  const p2={endlessDeaths:!expected};let hud=null;
-  applyRule(player,p2,{setEndlessDeaths:value=>{hud=value;}},modern,false);
-  assert.equal(player.endlessDeaths,expected);assert.equal(p2.endlessDeaths,expected);assert.equal(hud,expected);
+  let hud=null;
+  applyRule(player,{setEndlessDeaths:value=>{hud=value;}},modern,false);
+  assert.equal(player.endlessDeaths,expected);assert.equal(hud,expected);
 }
 const branches=new campaign.CampaignStore();branches.newGame(3);
 for(const id of ['jungle','test','sky','dark','beachfront','coastal-street-run'])branches.commitClear(id,{});

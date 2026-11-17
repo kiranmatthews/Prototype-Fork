@@ -63,7 +63,7 @@ for(const code of ['KeyK','KeyL']) {
  assert.equal(canWarp({id:'custom-map'},{developerChromeVisible:true},{active:false},{code},{isCampaignMap:true}),false,'copied maps must retain checkpoint-warp guard');
  assert.equal(canWarp({id:'jungle'},{developerChromeVisible:true},{active:true},{code}),false);
 }
-assert.equal((main.match(/new Input\((?:true|false), \(\) => gameFlow\?\.developerChromeVisible \?\? false\)/g)??[]).length,2,'both riders must follow live debug visibility');
+assert.equal((main.match(/new Input\((?:true|false), \(\) => gameFlow\?\.developerChromeVisible \?\? false\)/g)??[]).length,1,'the rider must follow live debug visibility');
 assert.match(main,/onRestart: restartCurrentRun/,'normal menu Restart must remain available');
 assert.match(main,/onResultsRetry: retryFromResults/,'normal results Retry must remain available');
-console.log('PASS debug-only keyboard/Share reset, P1/P2 gating, held-button release semantics, K/L guards and preserved menu actions');
+console.log('PASS debug-only keyboard/Share reset, keyboard and gamepad gating, held-button release semantics, K/L guards and preserved menu actions');

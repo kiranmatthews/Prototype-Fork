@@ -320,57 +320,6 @@ try {
   assert.equal(getUserLevels()[0].name, "Session copy", "quota failure must preserve exportable session state");
   denyWrites = false;
 
-  const { fetchRemoteLevels } = await server.ssrLoadModule("/src/sync.ts");
-  let responseFactory;
-  globalThis.fetch = async (url, options) => {
-    assert.match(url, /^\.\/levels\.json\?t=\d+$/);
-    assert.equal(options.cache, "no-store");
-    assert.ok(options.signal instanceof AbortSignal, "remote fetch must have a timeout signal");
-    return responseFactory();
-  };
-  const makePackResponse = value => new Response(JSON.stringify(value));
-  responseFactory = () => makePackResponse({ v: 2, levels: valid });
-  const remoteGood = await fetchRemoteLevels();
-  assert.ok(remoteGood);
-  assert.equal(remoteGood.levels[0].id, "u1");
-  const localBeforeRemote = JSON.stringify(getUserLevels());
-  let streamCancelled = false;
-  for (const [reason, factory] of [
-    ["future pack version", () => makePackResponse({ v: 3, levels: valid })],
-    ["opaque pack field", () => makePackResponse({ v: 2, levels: valid, script: "alert(1)" })],
-    ["partial invalid pack", () => makePackResponse({ v: 2, levels: [...valid, { id: "bad", name: "Bad", data: null }] })],
-    ["duplicate pack identity", () => makePackResponse({ v: 2, levels: [...valid, ...valid] })],
-    ["invalid JSON", () => new Response("{")],
-    ["deep raw JSON", () => new Response(nestedBomb)],
-    ["invalid UTF-8", () => new Response(new Uint8Array([123, 255, 125]))],
-    ["HTTP failure", () => new Response("server error", { status: 500 })],
-    ["declared oversized file", () => new Response("{}", { headers: { "content-length": String(MAX_LEVEL_PACK_BYTES + 1) } })],
-    ["stream exceeds size despite header", () => new Response(new ReadableStream({
-      start(controller) { controller.enqueue(new Uint8Array(MAX_LEVEL_PACK_BYTES + 1)); },
-      cancel() { streamCancelled = true; },
-    }), { headers: { "content-length": "2" } })],
-  ]) {
-    responseFactory = factory;
-    parserCalls = 0;
-    if (reason === "deep raw JSON") JSON.parse = (...args) => { parserCalls++; return nativeJsonParse(...args); };
-    try { assert.equal(await fetchRemoteLevels(), null, reason); }
-    finally { JSON.parse = nativeJsonParse; }
-    if (reason === "deep raw JSON") assert.equal(parserCalls, 0, "remote depth bomb reached JSON.parse");
-    assert.equal(JSON.stringify(getUserLevels()), localBeforeRemote, `${reason} mutated the local store`);
-    checks++;
-  }
-  assert.equal(streamCancelled, true, "oversized network stream was not cancelled");
-  // A multibyte character split across chunks still decodes correctly.
-  const chunkedPack = new TextEncoder().encode(JSON.stringify({ v: 2, levels: [{ ...valid[0], name: "Café" }] }));
-  const splitAt = chunkedPack.indexOf(0xc3) + 1;
-  responseFactory = () => new Response(new ReadableStream({
-    start(controller) {
-      controller.enqueue(chunkedPack.slice(0, splitAt));
-      controller.enqueue(chunkedPack.slice(splitAt));
-      controller.close();
-    },
-  }));
-  assert.equal((await fetchRemoteLevels()).levels[0].name, "Café");
 
   const publishedText = await readFile(new URL("../public/levels.json", import.meta.url), "utf8");
   assert.ok(api.levelJsonTextWithinLimits(publishedText, api.MAX_LEVEL_PACK_BYTES, 14),
