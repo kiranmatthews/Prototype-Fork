@@ -144,3 +144,12 @@ kicker ramp with a gap (carry speed!) → finish gate.
 - `src/groundAcceleration.ts` — per-geometry BVHs for universal ground queries
 - `src/tuning.ts` — every feel number in the game
 - `src/ui.ts` — debug stats + live tuning sliders
+
+## Archived pictures
+
+Review plates, storyboards, captures and retired font atlases that nothing in
+the project reads were moved out of the working tree on 17 November 2026
+(commit `bc41b016`). They remain in git history. List them with
+`git show --name-only --diff-filter=D bc41b016` and restore a folder with
+`git checkout bc41b016^ -- docs/<folder>`. Keep new review captures outside the
+repository unless a page or tool needs them.
