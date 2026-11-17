@@ -4,7 +4,7 @@
 
 Choose a number to practice one spot, or select **Whole course** to travel through all 25. Every number has a starting checkpoint and a single crystal. The whole-course exit opens when you have all 25. **From checkpoint** keeps the crystals you earned.
 
-You start on foot. Move to walk, hold Jump while moving to mount, release to ollie, and hold Grab to brake back to walking. The phone page uses the main game's touch controls, keyboard and gamepad bindings. Its canvas follows the device's display resolution and orientation. The picker loads first. Allow about 40 MB for a session that includes the course and rejects.
+You start on foot. Move to walk, hold Jump while moving to mount, release to ollie, and hold Grab to brake back to walking. The phone page uses the main game's touch controls, keyboard and gamepad bindings. Its canvas follows the device's display resolution and orientation. The picker loads first. A cache-disabled test of the published phone page transferred 36 KB for the picker, 20.1 MB through the first challenge and 38.3 MB after opening the whole course, the rejects archive and the original grid.
 
 The fast line and the lower walking route meet on the same crystal terrace. You can switch between them or carry a line across the architecture above the corridor. Fruit arcs mark transfers and striped lips mark receiving banks. At a pulsing dock, the narrow side lip gives you a takeoff when the first sill goes dark. Marked pits sit beneath selected gaps. The flat floor sits eight metres below the entrance. Starts are at least 512 metres apart.
 
