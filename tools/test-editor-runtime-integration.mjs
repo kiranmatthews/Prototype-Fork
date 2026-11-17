@@ -45,7 +45,7 @@ try {
     const mark = name => (...args) => events.push([name, ...args]);
     const context = {
       THREE, scene, level, current: target, loadedLevelId: from,
-      camera: new THREE.PerspectiveCamera(60, 1, 0.1, 12000), camera2: new THREE.PerspectiveCamera(),
+      camera: new THREE.PerspectiveCamera(60, 1, 0.1, 12000),
       editorViewActive: true, editorPlayFog: new THREE.Fog(0x777777, 50, 180), syncSkyBackdropVisibility() {},
       localStorage, findLevel: id => id === target.id ? target : original,
       editorPreviewLevel: null, editorSavedAcc: 9, editorSavedMessage: { title: "Retained message" }, acc: 0,
@@ -54,12 +54,12 @@ try {
       player: { pos: new THREE.Vector3(), hubMode: false, competitionMode: isCompetitionLevel(from),
         fruitCollectionRevision: 0, enterLevel: mark("player.enter"),
         respawn(candidate) { this.pos.copy(candidate.spawnPos); mark("player.respawn")(this.competitionMode); } },
-      p2: null, split2p: false, input: { inventoryHeld: false },
+      input: { inventoryHeld: false },
       ui: { setLevel: mark("ui.level"), setHUD: mark("ui.hud"), restoreMessage: mark("message.restore"),
         refreshLevels: mark("ui.refresh") },
       competitionUI: { render: mark("competition.render") }, isCompetitionLevel, competitionCourse, JungleCupEvent,
       competition: isCompetitionLevel(from) ? new JungleCupEvent(() => 0.5, () => {}, competitionCourse(from)) : null,
-      set2P(value) { context.split2p = value; }, sfx: { countdownBeep() {} },
+      sfx: { countdownBeep() {} },
       puffs: { clear() {}, attach() {} }, swirls: { clear() {} }, fieldSwirls: { clear() {} },
       gameFlow: { blocksGameplay: false, setWarpRoom: mark("flow.warp") },
       campaign: { recommendedMapLevelKey: () => "flats" },
@@ -120,30 +120,29 @@ try {
   assert.ok(retargetQuota.events.some(event => event[0] === "ui.refresh")); checks++;
 
   const scenery = environment("editor-scenery"), streamedViews = [], proxyViews = [];
-  scenery.split2p = true;
   scenery.level.updateSceneryView = (...args) => streamedViews.push(args);
   scenery.editorPreviewLevel = { updateSceneryView: (...args) => proxyViews.push(args) };
   scenery.camera.position.set(300, 40, -650);
   scenery.updateSceneryForCurrentView();
-  assert.deepEqual(streamedViews.at(-1), [scenery.camera, undefined, true],
+  assert.deepEqual(streamedViews.at(-1), [scenery.camera, true],
     "the retained world did not follow the clear full-canvas editor lens");
-  assert.deepEqual(proxyViews.at(-1), [scenery.camera, undefined, true],
+  assert.deepEqual(proxyViews.at(-1), [scenery.camera, true],
     "the working preview did not receive the editor view");
   scenery.editor.active = false;
   scenery.camera.far = 300;
   scenery.setEditorView(false, false);
-  assert.deepEqual(streamedViews.at(-1), [scenery.camera, scenery.camera2],
-    "leaving the editor did not restore the retained split-screen streaming view");
+  assert.deepEqual(streamedViews.at(-1), [scenery.camera],
+    "leaving the editor did not restore the retained play streaming view");
   scenery.updateSceneryForCurrentView();
-  assert.deepEqual(streamedViews.at(-1), [scenery.camera, scenery.camera2, false]);
+  assert.deepEqual(streamedViews.at(-1), [scenery.camera, false]);
   assert.equal(proxyViews.length, 1, "gameplay updated an inactive editor proxy"); checks++;
 
   const assetViews = [], streamed = { keepPlayFog: true, theme: { fogFar: 180 },
     jungleAssets: { setView: (...args) => assetViews.push(args), setWeatherWind() {} } };
   scenery.camera.far = 12000;
-  api.Level.prototype.updateSceneryView.call(streamed, scenery.camera, scenery.camera2);
+  api.Level.prototype.updateSceneryView.call(streamed, scenery.camera);
   assert.equal(assetViews.at(-1)[1], 180, "play no longer used its authored scenery distance");
-  api.Level.prototype.updateSceneryView.call(streamed, scenery.camera, undefined, true);
+  api.Level.prototype.updateSceneryView.call(streamed, scenery.camera, true);
   assert.equal(assetViews.at(-1)[1], 12000, "the clear editor lens still culled scenery at play fog distance"); checks++;
 
   for (const context of contexts) context.level.dispose();

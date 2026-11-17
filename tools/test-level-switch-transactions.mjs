@@ -80,7 +80,7 @@ try {
         enterLevel: mark("player.enter"),
         respawn(candidate, hard, inventory) { this.pos.copy(candidate.spawnPos); mark("player.respawn")(candidate, hard, inventory); },
         bankFlyingFruit() { this.fruit += 3; mark("fruit.bank")(); } },
-      p2: null, split2p: false, input: { inventoryHeld: false },
+      input: { inventoryHeld: false },
       ui: { showMessage: (...args) => messages.push(args), hideMessage: mark("message.hide"),
         setReplayBadge: mark("replay.badge"), setLevel: mark("ui.level"), setHUD: mark("ui.hud"),
         refreshLevels: mark("ui.refresh") },
@@ -186,18 +186,15 @@ try {
   assert.equal(direct.events.filter(event => event[0] === "player.respawn").length, 1);
   assert.equal(puffs.liveCount, 0); assert.equal(swirls.count, 0); assert.equal(fieldSwirls.count, 0); checks++;
 
-  // Existing preserve-editor, fallback and second-rider transitions retain
-  // their successful behavior with exactly one constructed destination.
+  // Existing preserve-editor and fallback transitions retain their
+  // successful behavior with exactly one constructed destination.
   direct.editor.active = true; api.setEditorBuild(true);
   assert.equal(direct.switchLevel("missing-alias", true, true), true);
   assert.equal(direct.editor.active, true);
   assert.ok(direct.events.some(event => event[0] === "editor.rebuilt"));
   assert.equal(api.setEditorBuild(true), false); checks++;
-  direct.split2p = true;
-  direct.p2 = { pos: new THREE.Vector3(), enterLevel() {},
-    respawn(level) { this.pos.copy(level.spawnPos); }, snapRenderInterpolation() {} };
   assert.equal(direct.switchLevel("missing-level"), true);
-  assert.equal(direct.current, regular); assert.equal(direct.p2.pos.x, direct.level.spawnPos.x + 1.6); checks++;
+  assert.equal(direct.current, regular); checks++;
 
   // Storage refusal affects persistence only; the accepted switch must finish.
   const storage = direct.localStorage;
@@ -209,7 +206,6 @@ try {
   // Course pads retain their luminous beacon and stationary collision. Torches
   // still emit global smoke on update, not construction. Clearing old global
   // transients after candidate construction must preserve both presentations.
-  direct.split2p = false;
   assert.equal(direct.switchLevel("dark"), true);
   const night = direct.level;
   assert.ok(night.warpPads.length > 0 && night.torches.length > 0);

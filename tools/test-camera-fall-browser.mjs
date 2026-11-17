@@ -8,7 +8,7 @@ const output = process.env.CAMERA_FALL_OUTPUT || '/private/tmp/camera-fall-revie
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const errors = [], reports = [];
-const modes = process.env.CAMERA_FALL_MODES?.split(',') || ['corridor', 'partial-follow', 'full-follow', 'chase', 'authored', 'split', 'lethal-floor'];
+const modes = process.env.CAMERA_FALL_MODES?.split(',') || ['corridor', 'partial-follow', 'full-follow', 'chase', 'authored', 'lethal-floor'];
 try {
   for (const lite of [true, false]) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
@@ -22,7 +22,7 @@ try {
     for (const mode of modes) {
       await page.evaluate(mode => {
         const g = window.__game;
-        g.set2P(false); g.gameFlow.hide();
+        g.gameFlow.hide();
         const data = { v: 1, name: `Camera fall ${mode}`, spawn: [0, 8.1, 0], killY: -35,
           cameraAirLift: mode === 'full-follow' ? 1 : mode === 'partial-follow' ? .8 : 0,
           components: [
@@ -39,8 +39,7 @@ try {
         const id = g.saveUserLevel({ id: '', name: data.name, data });
         if (!id || !g.switchLevel(id)) throw Error('Could not load isolated fall fixture');
         g.gameFlow.hide(); g.TUNING.chaseCam = mode === 'chase' ? 1 : 0;
-        if (mode === 'split') g.set2P(true, true);
-        const p = mode === 'split' ? g.getP2() : g.player, level = g.getLevel();
+        const p = g.player, level = g.getLevel();
         const neutral = { moveX: 0, moveY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false,
           grindHeld: false, grindPressed: false, spinHeld: false, spinPressed: false, grabHeld: false,
           grabPressed: false, transferHeld: false, transferPressed: false, inventoryHeld: true };

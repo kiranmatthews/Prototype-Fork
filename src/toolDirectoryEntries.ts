@@ -45,7 +45,7 @@ tool('Menu PNG focus filters', 'text', 'Flash rate, white duration, brightness, 
 tool('Game options', 'options', 'Sound, music, play mode, CRT, resolution, controller prompt style, trick guide and progress.', 'src/gameFlowUI.ts', 'Game & configuration', 'warproom');
 tool('Save / load', 'save-load', 'Campaign save slots and save management.', 'src/gameFlowUI.ts', 'Game & configuration', 'warproom');
 tool('Level Select', 'level-select', 'Player-facing course selection and earned collectibles.', 'src/gameFlowUI.ts', 'Game & configuration', 'warproom');
-tool('Developer MENU', 'menu', 'All registered levels; new/import, split screen, run modes, life rules and cloud sync controls.', 'src/ui.ts');
+tool('Developer MENU', 'menu', 'All registered levels; new/import, run modes and life rules.', 'src/ui.ts');
 tool('Replay & video capture', 'tuning', 'Save replay (F8), load a replay, and start/stop WebM recording (F9).', 'src/replay.ts');
 for (const [name, section, description] of [
   ['Level editor · selection', 'selection', 'Select and inspect pieces; transforms, materials, movement and component properties.'],

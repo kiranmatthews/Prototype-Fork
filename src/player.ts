@@ -318,8 +318,6 @@ const CROUCH_SPIN_HEIGHT = 0.6;
 // The 1 m-wide baseline sole fits on a 1.152 m crate. Leave at least 0.15 m
 // of sole on an edge catch; overlapping lids still share ONE landing below.
 const CRATE_STOMP_MARGIN = 0.35;
-const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
-const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
 const FRUIT_GRAB = new THREE.Vector3(WUMPA_SIZE, WUMPA_SIZE, WUMPA_SIZE); // physical fruit size; the magnet supplies the generous outer range
 
 export type MoveState = 'ride' | 'swim' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
@@ -680,7 +678,7 @@ const VERT_Q = new THREE.Quaternion();
 const VERT_Q2 = new THREE.Quaternion();
 const LEAN_AXIS = new THREE.Vector3(); // heading, for the carve/balance roll
 const LEAN_Q = new THREE.Quaternion();
-const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
+const _renderDelta = new THREE.Vector3(); // post-step root correction
 
 export class Player {
   /** Local comparison opt-in. A selection takes effect at the next foot launch. */
@@ -730,8 +728,8 @@ export class Player {
   private readonly netRenderOffset = new THREE.Vector3();
   private readonly previousNetRenderOffset = new THREE.Vector3();
   private _renderSnapVersion = 0;
-  // this rider's place on the camera lane — private, so split-screen players
-  // don't drag each other's frame around (see Level.laneDirAt)
+  // this rider's place on the camera lane — private, so race rivals don't
+  // drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
   private readonly laneSupportPoint = new THREE.Vector3();
   private viewInput = new CameraInputFrame();
@@ -3633,8 +3631,8 @@ export class Player {
     }
     level.ropeBridges.observe(this,this.grounded?this.groundHit?.mesh??null:null,this.pos,this.vVel,this.slamActive);
     this.fallCameraProbeValid = false;
-    // PVP separation/kicks run after Player.step() authored the pose. Fold that
-    // final root correction into the snapshot and carry player-attached world
+    // Contacts can move the root after Player.step() authored the pose. Fold
+    // that final correction into the snapshot and carry player-attached world
     // effects with it; the loose board/fruit/sparks have their own trajectories.
     const dx = this.pos.x - this.group.position.x;
     const dy = this.pos.y - this.group.position.y;
@@ -3644,7 +3642,7 @@ export class Player {
       if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
     }
     // Player.step authored the pose before Level.update advanced movers. Probe
-    // only now, at the final PVP-corrected player position against the final
+    // only now, at the final corrected player position against the final
     // world transforms, so the landing X cannot flash on stale/old ground.
     this.refreshGroundPresentation(level);
     this.previousNetRenderOffset.copy(this.netRenderOffset);
@@ -11988,7 +11986,8 @@ export class Player {
     );
   }
 
-  /** Split-screen knockdown: same recovery, without damage or a thrown deck. */
+  /** Side knockdown (race stuns, cart contacts): the bail recovery without
+   * damage or a thrown deck. */
   beginPvpKnockdown(pop: number, sideSign: number): boolean {
     if (
       this.isBailing ||
@@ -12219,7 +12218,7 @@ export class Player {
   }
 
   // Ballistic deck: gravity, restitution bounces, then a sleeping instance.
-  // Remount/P2 departure leave it behind; a death/respawn clears the pile.
+  // A remount leaves it behind; a death/respawn clears the pile.
   private updateFlyBoard(dt: number, level: Level): void {
     if (!this.looseBoard) return;
     level.discardedBoards.step(this.looseBoard, dt, level);
@@ -15866,7 +15865,7 @@ export class Player {
     for (const f of this.fruits) if (f.phase === 'idle'||f.phase==='magnet') this.retireFruit(f);
   }
 
-  /** P2 leaving must not strand reserved or uncollected world fruit. */
+  /** Pass reserved and uncollected world fruit to another rider. */
   handoffWorldFruit(recipient:Player):void {
     this.bankFlyingFruit();
     const world=this.captureIdleFruit();
@@ -16091,22 +16090,14 @@ export class Player {
    * One pass for every fruit in flight, over the finished frame, with the
    * depth buffer cleared so nothing in the level can occlude it.
    */
-  drawFlyingFruit(
-    renderer: THREE.WebGLRenderer,
-    half?: 'top' | 'bottom',
-    targetSize?: { width: number; height: number },
-  ): void {
+  drawFlyingFruit(renderer: THREE.WebGLRenderer): void {
     const layer = this.fruitLayer;
     const cam = this.fruitLayerCam;
     if (!layer || !cam) return;
     let any = false;
     const canvas = renderer.domElement;
     const cw = canvas.clientWidth;
-    // In split screen this rider owns half the canvas, and everything below —
-    // the aspect the flight is measured in, the frustum, the viewport it draws
-    // through — has to be that half. Drawn full-canvas it would launch from
-    // the wrong height and sail across the other player's view.
-    const ch = (canvas.clientHeight || 0) / (half ? 2 : 1);
+    const ch = canvas.clientHeight || 0;
     if (!cw || !ch) return;
     const aspect = cw / ch;
     this.fruitAspect = aspect;
@@ -16123,26 +16114,8 @@ export class Player {
     cam.right = aspect / 2;
     cam.updateProjectionMatrix();
     renderer.autoClear = false;
-    // setViewport/setScissor take RENDERER units and multiply by pixelRatio
-    // themselves — the same trap ui.drawIcons documents. Convert from CSS px,
-    // and put back whatever the caller had set.
-    if (half) {
-      const size = targetSize
-        ? FRUIT_SIZE.set(targetSize.width, targetSize.height)
-        : renderer.getSize(FRUIT_SIZE);
-      const k = size.y / (canvas.clientHeight || 1);
-      renderer.getViewport(FRUIT_PREV);
-      renderer.setScissorTest(true);
-      const y = half === 'top' ? ch * k : 0;
-      renderer.setViewport(0, y, size.x, ch * k);
-      renderer.setScissor(0, y, size.x, ch * k);
-    }
     renderer.clearDepth();
     renderer.render(layer, cam);
-    if (half) {
-      renderer.setScissorTest(false);
-      renderer.setViewport(FRUIT_PREV);
-    }
     renderer.autoClear = true;
   }
 

@@ -92,13 +92,13 @@ assert.match(
 assert.doesNotMatch(main, /showHud && !TOUCH_PRESENTATION/);
 assert.match(
   main,
-  /function fixedResolutionActive\(\)[\s\S]{0,500}renderQualitySettings\.enabled &&\s*!LITE_RENDER &&\s*!split2p/,
-  "fixed resolution presets must exclude lite and split-screen rendering",
+  /function fixedResolutionActive\(\)[\s\S]{0,500}renderQualitySettings\.enabled &&\s*!LITE_RENDER\s*\)/,
+  "fixed resolution presets must exclude lite rendering",
 );
 assert.doesNotMatch(main, /TOUCH_PRESENTATION \? 1 : renderQualitySettings\.outputMultiplier/,
   "resolution controls must apply the same output scale on every device");
 assert.match(main, /const fixedSurface = renderQualitySettings\.enabled && !LITE_RENDER/,
-  "split-screen canvas must retain the fixed physical-pixel preset");
+  "the canvas must retain the fixed physical-pixel preset");
 assert.match(main, /ui\.setPresentationTools\(\[/);
 assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
 assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);

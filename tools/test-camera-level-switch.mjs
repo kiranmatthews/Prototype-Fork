@@ -5,7 +5,7 @@ import ts from 'typescript';
 import * as THREE from 'three';
 import {createServer} from 'vite';
 
-// Execute both production base rigs, retaining their actual closure state
+// Execute the production base rig, retaining its actual closure state
 // while the destination and the player's render-snap version change.
 const main=await readFile(new URL('../src/main.ts',import.meta.url),'utf8');
 const ast=ts.createSourceFile('main.ts',main,ts.ScriptTarget.Latest,true);
@@ -13,17 +13,16 @@ const functionText=name=>{
  const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);
  assert.ok(node,`missing ${name}`);return node.getText(ast);
 };
-const declarations=ast.statements.filter(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>
- d.name.getText(ast).startsWith('cam2')||
- (n.getStart(ast)>=main.indexOf('const camTarget =')&&n.end<=main.indexOf('const cameraViewFraming ='))));
+const declarations=ast.statements.filter(n=>ts.isVariableStatement(n)&&
+ n.getStart(ast)>=main.indexOf('const camTarget =')&&n.end<=main.indexOf('const cameraViewFraming ='));
 const levelSource=await readFile(new URL('../src/level.ts',import.meta.url),'utf8');
 const levelAst=ts.createSourceFile('level.ts',levelSource,ts.ScriptTarget.Latest,true);
 const cursor=levelAst.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='newLaneCursor');
 assert.ok(cursor);
 const code=ts.transpileModule([
  cursor.getText(levelAst).replace(/^export /,''),...declarations.map(n=>n.getText(ast)),
- functionText('updateBaseCamera'),functionText('updateBaseCamera2'),
- '({step:updateBaseCamera,step2:updateBaseCamera2})',
+ functionText('updateBaseCamera'),
+ '({step:updateBaseCamera})',
 ].join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 try {
@@ -38,11 +37,11 @@ try {
    waterDeathSurface:null,swimming:false,waterJumping:false,state:'ride',alignPose:0,
    loopPresentationFrame:null,launchCameraPresentation:null,balanceMeter:null,camDir:new THREE.Vector3()});
   const context={...dependencies,
-   launchCamera:new dependencies.LaunchCamera(),launchCamera2:new dependencies.LaunchCamera(),
-   cameraFallHold:new dependencies.CameraFallHold(),cameraFallHold2:new dependencies.CameraFallHold(),
+   launchCamera:new dependencies.LaunchCamera(),
+   cameraFallHold:new dependencies.CameraFallHold(),
    TUNING:{...dependencies.TUNING,chaseCam:0},
-   camera:new THREE.PerspectiveCamera(49,16/9,.1,400),camera2:new THREE.PerspectiveCamera(49,16/9,.1,400),
-   player:rider(),p2:rider(),input:{lookX:0,lookY:0},input2:{lookX:0,lookY:0},
+   camera:new THREE.PerspectiveCamera(49,16/9,.1,400),
+   player:rider(),input:{lookX:0,lookY:0},
    current:{id:'camera-switch-fixture'},worldMapController:null,oceanOverview:false,oceanReview:false,BOULDER_FOV:27,
    loopCameraFraming:{active:false},cameraHeroFraming:new dependencies.CameraHeroFraming(),
    level:{skatepark:false,boulder:null,groundMeshes:[],zoneAt:()=>null,
@@ -63,16 +62,13 @@ try {
   rig.player.skateCameraUp.set(Math.sin(bank),Math.cos(bank),0);
   rig.step(1/60);
   assert.ok(Math.abs(rig.camera.up.x)>.5,'fixture did not establish a real banked skate shot');
-  // P2 may also receive a surface-relative presentation before its base rig.
-  rig.camera2.copy(rig.camera);
   rig.level.skatepark=false;
   rig.player.skateCameraUp.set(0,1,0);
-  rig.player.renderSnapVersion++;rig.p2.renderSnapVersion++;
-  rig.step(dt);rig.step2(dt);fresh.step(dt);fresh.step2(dt);
-  equalShot(rig.camera,fresh.camera,'P1 switch');equalShot(rig.camera2,fresh.camera2,'P2 switch');
-  assert.ok(rig.p2.camDir.distanceTo(fresh.p2.camDir)<1e-10,'switch rotated P2 controls');
-  for(let i=0;i<10;i++){rig.step(1/60);rig.step2(1/60);}
-  equalShot(rig.camera,fresh.camera,'P1 settled');equalShot(rig.camera2,fresh.camera2,'P2 settled');
+  rig.player.renderSnapVersion++;
+  rig.step(dt);fresh.step(dt);
+  equalShot(rig.camera,fresh.camera,'switch');
+  for(let i=0;i<10;i++)rig.step(1/60);
+  equalShot(rig.camera,fresh.camera,'settled');
   switches++;
  }
  // Disabling global chase mode can return to the course without a teleport.
@@ -91,5 +87,5 @@ try {
  assert.ok(easing>0&&easing<lean,'ordinary grind exit must still ease upright');
  grind.player.renderSnapVersion++;grind.step(0);
  assert.ok(grind.camera.quaternion.angleTo(neutral)<1e-7,'respawn retained the previous grind lean');
- console.log(`PASS ${switches} bank-to-course transitions for both cameras, first-frame/settled framing, chase toggle and grind reset/easing`);
+ console.log(`PASS ${switches} bank-to-course transitions, first-frame/settled framing, chase toggle and grind reset/easing`);
 }finally{await server.close();}

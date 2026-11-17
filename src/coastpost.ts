@@ -611,7 +611,7 @@ export class CoastPostRenderer {
     this.resumeFromGameFlow();
     this.syncPassEnablement();
     // EffectComposer owns a complete full-frame target. Preserve caller-owned
-    // split-screen viewports by using the direct path while scissoring.
+    // viewports by using the direct path while scissoring.
     if (!this.active || this.renderer.getScissorTest()) {
       if (!sceneRender?.(this.renderer, this.scene, this.camera, this.renderer.getRenderTarget()))
         this.renderer.render(this.scene, this.camera);

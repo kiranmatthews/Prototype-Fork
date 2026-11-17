@@ -32,21 +32,6 @@ const factory = source => {
 `);
 };
 const makeRig = factory(cameraBlock(main)), makeHistorical = factory(historical);
-const secondBegin = main.indexOf('const cam2LaneTarget = new THREE.Vector3();');
-const secondEnd = main.indexOf('\nplayer.cam = camera;', secondBegin);
-assert.ok(secondBegin >= 0 && secondEnd > secondBegin, 'P2 production camera extraction markers changed');
-const secondCode = ts.transpileModule(main.slice(secondBegin, secondEnd), { compilerOptions: {
-  target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-const makeSecondRig = new Function('deps', `
-  const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,LoopCameraFraming,CameraHeroFraming,
-    cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
-    ChiefCamera,SkateChaseCameraOverlay,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,level,p2,camera,camera2}=deps;
-  const current={id:'slip'},oceanOverview=false,oceanReview=false,BOULDER_FOV=27,boulderF=0,input2={lookX:0,lookY:0};
-  const cam2F=new THREE.Vector3(0,0,-1),cam2Aim=new THREE.Vector3(),cam2Look=new CameraLookOffset(),cam2LaneCursor=newLaneCursor();
-  let cam2RenderSnapVersion=-1,cam2SpeedFovBoost=0;
-  ${secondCode}
-  return {step:updateBaseCamera2,cursor:cam2LaneCursor,localHeading:cam2F};
-`);
 const yaw = p => Math.atan2(p.x, -p.z);
 const angle = value => Math.atan2(Math.sin(value), Math.cos(value)) * 180 / Math.PI;
 
@@ -180,37 +165,6 @@ await withBlockworksRuntime(async r => {
       cursorStress.samples++;
     }
   }
-  const secondPlayer = [];
-  for (const hz of [30, 60]) for (const aspect of [16 / 9, 9 / 16]) for (const s of [2, 440]) {
-    const base = at(s), tangent = l.cameraDirAt(...base.toArray());
-    const p2 = { renderPosition: base.clone(), renderSnapVersion: 1,
-      grounded: true, state: 'ride', speed: 0, cameraSkateSpeed: 0, swimming: false,
-      cameraPoseBounds: null, camDir: new THREE.Vector3(0, 0, -1) };
-    const camera = new THREE.PerspectiveCamera(TUNING.camFov, aspect, .1, 1800), camera2 = camera.clone();
-    const rig = makeSecondRig({ ...dependencies, level: l, p2, camera, camera2 });
-    let yawError = 0, controlError = 0, heroX = 0, angularJump = 0, previous, initialYaw, initialAnticipation;
-    for (let i = 0; i < hz * 4; i++) {
-      const side = 7.5 * Math.sin(i / hz * Math.PI / 2);
-      p2.renderPosition.copy(base).add(new THREE.Vector3(-tangent.z * side, 0, tangent.x * side));
-      rig.step(1 / hz); camera2.updateMatrixWorld(true);
-      const visual = yaw(camera2.getWorldDirection(new THREE.Vector3()));
-      if (i === 0) {
-        initialYaw = visual; initialAnticipation = Math.abs(angle(visual - yaw(p2.camDir)));
-        assert.ok(p2.camDir.distanceTo(new THREE.Vector3(tangent.x, 0, tangent.z)) < 1e-12,
-          'P2 snapped controls must retain the local lane tangent');
-      }
-      yawError = Math.max(yawError, Math.abs(angle(visual - initialYaw)));
-      controlError = Math.max(controlError, Math.abs(angle(yaw(p2.camDir) - yaw(rig.localHeading))));
-      if (previous !== undefined) angularJump = Math.max(angularJump, Math.abs(angle(visual - previous)));
-      previous = visual;
-      for (const x of [-.7, .7]) for (const y of [0, 2.8]) for (const z of [-.7, .7]) {
-        const ndc = p2.renderPosition.clone().add(new THREE.Vector3(x, y, z)).project(camera2);
-        heroX = Math.max(heroX, Math.abs(ndc.x));
-      }
-    }
-    secondPlayer.push({ hz, aspect, s, maximumYawError: yawError, maximumControlError: controlError,
-      initialAnticipation, maximumFrameYawJump: angularJump, maximumHeroX: heroX });
-  }
   const firstHeading = new dependencies.CourseCameraHeading(), secondHeading = new dependencies.CourseCameraHeading();
   const origin = new THREE.Vector3(), local = { x: 0, z: -1 };
   firstHeading.step(origin, new THREE.Vector3(10, 0, 0), local, 1 / 60, true);
@@ -218,13 +172,13 @@ await withBlockworksRuntime(async r => {
   const savedSecondHeading = secondHeading.forward.clone();
   firstHeading.step(null, null, local, 1 / 60, false);
   firstHeading.step(origin, new THREE.Vector3(0, 0, 10), local, 1 / 60, true);
-  assert.ok(secondHeading.forward.distanceTo(savedSecondHeading) < 1e-12, 'P1 heading reset must not alter P2');
+  assert.ok(secondHeading.forward.distanceTo(savedSecondHeading) < 1e-12, 'one heading reset must not alter another');
   const savedFirstHeading = firstHeading.forward.clone();
   secondHeading.step(null, null, local, 1 / 60, false);
   secondHeading.step(origin, new THREE.Vector3(-10, 0, 0), local, 1 / 60, true);
-  assert.ok(firstHeading.forward.distanceTo(savedFirstHeading) < 1e-12, 'P2 heading reset must not alter P1');
+  assert.ok(firstHeading.forward.distanceTo(savedFirstHeading) < 1e-12, 'one heading reset must not alter another');
   const report = { cameraLookAhead: l.cameraLookAhead, tuning: { camDist: TUNING.camDist, camHeight: TUNING.camHeight,
-    camPitch: TUNING.camPitch, camFov: TUNING.camFov }, phases, stationary, cursorStress, secondPlayer,
+    camPitch: TUNING.camPitch, camFov: TUNING.camFov }, phases, stationary, cursorStress,
     independentHeadingResets: true, end: r.snapshot(), deaths: p.totalDeaths, rows };
   await writeFile(`${tmpdir()}/slipstream-camera-dynamics.json`, JSON.stringify(report, null, 2));
   const opening = phases.filter(phase => phase.label.startsWith('opening'));
@@ -235,7 +189,7 @@ await withBlockworksRuntime(async r => {
     maximumMatchedCentreYawError: Math.max(...stationary.map(row => row.maximumMatchedCentreYawError)),
     maximumStationaryFrameYawJump: Math.max(...stationary.map(row => row.maximumFrameYawJump)),
     maximumHeroNdcX: Math.max(...stationary.map(row => row.maximumHeroX)), nodes: l.lanePts.length,
-    cursorStress, secondPlayer, independentHeadingResets: true }, null, 2));
+    cursorStress, independentHeadingResets: true }, null, 2));
   if (!process.argv.includes('--diagnostic')) {
     assert.ok(opening.every(phase => phase.maxVisualControlError[0] < .5), 'Actual opening strafes must not orbit the camera');
     assert.ok(opening.every(phase => phase.maxYawDegreesPerSecond[0] < 1), 'Opening lateral input must preserve stable yaw');
@@ -250,10 +204,6 @@ await withBlockworksRuntime(async r => {
     assert.ok(stationary.every(row => row.maximumHeroX < 1), 'Minimum lateral pan must keep the full rider envelope visible');
     assert.ok(cursorStress.maximumProjectionError < 12 && cursorStress.maximumArcStep < 40,
       'Forward/backward lateral airborne poses must retain the current corkscrew branch');
-    assert.ok(secondPlayer.every(row => row.maximumYawError < .5 && row.maximumControlError < 1e-6 && row.maximumFrameYawJump < 1),
-      'P2 lateral opening movement must preserve view and local control yaw');
-    assert.ok(secondPlayer.every(row => row.maximumHeroX < 1), 'P2 minimum pan must preserve the complete rider envelope');
-    assert.ok(secondPlayer.some(row => row.initialAnticipation > 2), 'P2 local-control check must exercise a real bend with different presentation yaw');
     assert.equal(TUNING.hugeDropDistance, 24); assert.equal(TUNING.hugeDropImpact, 20);
   }
 }, { modulePath: '/src/level.ts', source: () => source, levelId: 'slip', endlessDeaths: true,

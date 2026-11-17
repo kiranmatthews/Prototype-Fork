@@ -8,7 +8,7 @@ type Scalar = { value: number };
 
 /** Sea views use a real upper dome whose cut stays on the world sea plane.
  * Other skies retain a directional background. Each pass uses its own camera,
- * including reflected, split-screen and orthographic views. */
+ * including reflected and orthographic views. */
 export function installSkyProjection(
   sky: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>,
   hazeColor: THREE.IUniform<THREE.Color>,

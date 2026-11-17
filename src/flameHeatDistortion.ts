@@ -165,12 +165,12 @@ export class FlameHeatDistortion {
       renderer.shadowMap.autoUpdate=shadowAuto;renderer.shadowMap.needsUpdate=shadowNeeds;
       renderer.setViewport(this.previousViewport);renderer.setScissor(this.previousScissor);renderer.setScissorTest(scissorTest);
       // Preserve an offscreen target's physical viewport as well as the
-      // renderer's logical screen viewport (DPR, post chain and split-screen).
+      // renderer's logical screen viewport (DPR and post chain).
       if(previous){this.targetViewport.copy(previous.viewport);previous.viewport.copy(this.previousPhysicalViewport);
         try{renderer.setRenderTarget(previous,face,mip);}finally{previous.viewport.copy(this.targetViewport);}}
       else renderer.setRenderTarget(null,face,mip);
       // Binding a target resets its GL scissor, even when its viewport was
-      // preserved. Reapply the caller's explicit split-screen scissor last.
+      // preserved. Reapply the caller's explicit scissor last.
       renderer.setScissor(this.previousScissor);renderer.setScissorTest(scissorTest);
     }
   }

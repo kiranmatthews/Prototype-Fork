@@ -2473,8 +2473,7 @@ export const COMBO_GEM_TINT = 0x46e882;
  * Where a rider was on the camera lane last frame, in metres along the spine.
  * `s < 0` means "no history — take the global best and adopt it", which is
  * what a respawn or a level change wants. One of these per rider; sharing it
- * between two players in split-screen would have them yanking each other's
- * camera around.
+ * between race riders would have them yanking each other's camera around.
  */
 export interface LaneCursor extends RailChoiceCursor {
   s: number;
@@ -2687,9 +2686,7 @@ export function isBuiltin(id: string): boolean {
 }
 
 // ---- USER LEVELS: the editable, syncable half of the list ------------------
-// One localStorage key holds the whole list, in menu order, data and all. It
-// is also exactly the payload the cloud sync pushes and restores, so "what I
-// see" and "what I publish" can never drift apart.
+// One localStorage key holds the whole list, in menu order, data and all.
 const USER_KEY = "solProtoUserLevels";
 let USER_CACHE: LevelEntry[] | null = null;
 let LAST_USER_WRITE_OK = true;
@@ -16564,7 +16561,7 @@ export class Level {
   withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
-  updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+  updateSceneryView(camera:THREE.Camera,clearInspectionView=false):void {
     this.emberCourt?.view(this.time,camera);
     if(this.verticalLoop){
       this.verticalLoopView??=new VerticalLoopView(this.root,this.verticalLoop,index=>{
@@ -16597,9 +16594,9 @@ export class Level {
     // can be much closer than the actual atmosphere rendered by the camera.
     const fogFar=this.tribalTrampolines&&this.scene.fog instanceof THREE.Fog?this.scene.fog.far:this.atmosphere?.fogFar??this.theme.fogFar;
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
-    this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
-    this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
-    this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
+    this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
+    this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
+    this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far);
     if(this.nightworksFog===undefined){
       const data=this.builtFromData,island=data?.ocean?.look==='waterpark-island';
       this.nightworksFog=data&&(island||data.components.some(c=>c.dkind==='nightvolcano'||c.tex==='nightworks-caldera'))
@@ -16609,14 +16606,12 @@ export class Level {
     // fog plane inside the island's radial visibility range before culling.
     let visibilityFar=fogFar;
     if(this.builtFromData?.ocean?.look==='waterpark-island'){
-      let stretch=1;
-      for(const view of [camera,secondary])if(view instanceof THREE.PerspectiveCamera){
-        const tangent=Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV())/2);
-        stretch=Math.max(stretch,Math.hypot(1,tangent,tangent*view.aspect));
+      if(camera instanceof THREE.PerspectiveCamera){
+        const tangent=Math.tan(THREE.MathUtils.degToRad(camera.getEffectiveFOV())/2);
+        visibilityFar*=Math.hypot(1,tangent,tangent*camera.aspect);
       }
-      visibilityFar*=stretch;
     }
-    this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
+    this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.emberCourt?.ready,this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}

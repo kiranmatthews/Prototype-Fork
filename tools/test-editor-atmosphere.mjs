@@ -188,7 +188,6 @@ try{
         const actual=key==='fogNear'?result.fog.near:key==='fogFar'?result.fog.far:
           key==='fallbackSunU'?result.fallback.sunU:key==='fallbackSunV'?result.fallback.sunV:result[key];
         assert.equal(actual,value,'preset/map/jungle defaults ignored an authored value');
-        if(key==='drawDistance')assert.equal(result.secondDrawDistance,value);
       });
       for(const key of Object.keys(atmosphere.ATMOSPHERE_COLORS))for(const value of [tuple,hex])check(`${kind}: final color override ${key}/${typeof value}`,()=>{
         const normalized=api.normalizeCustomLevelData({...data,atmosphere:{[key]:value}});assert.ok(normalized);

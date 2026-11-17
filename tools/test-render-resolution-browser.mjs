@@ -198,10 +198,6 @@ try {
   assert.ok(low.crt.estimatedTargetBytes<high.crt.estimatedTargetBytes*.40);
   assert.ok(mid.crt.estimatedTargetBytes<high.crt.estimatedTargetBytes*.60);
   assert.ok(low.water.reflectionWidth*low.water.reflectionHeight<high.water.reflectionWidth*high.water.reflectionHeight*.26);
-  await page.evaluate(()=>window.__game.set2P(true,true));
-  await page.waitForFunction(()=>!!window.__game.getP2());
-  const split=await capture(page,480,{split:true});
-  report.checks.push({test:'split-screen canvas retains preset',split});
   await context.close();
   assert.deepEqual(report.errors,[]);
   console.log('PASS physical-pixel presets, DPR independence, rotation, actual world/SMAA/CRT/ocean buffers, lower resource use and gameplay smoke');

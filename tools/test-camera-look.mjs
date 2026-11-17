@@ -155,7 +155,7 @@ try {
     'touch look does not merge through Input');
   assert.match(inputSource,
     /Math\.hypot\(pad\.axes\[2\] \?\? 0, pad\.axes\[3\] \?\? 0\) > 0\.35/,
-    'P2 cannot claim a controller using the right stick');
+    'a pad-only input cannot claim a controller using the right stick');
   assert.match(inputSource,
     /armMenuReleaseGuard\(\): void \{[\s\S]*?this\.lookX = 0;[\s\S]*?this\.lookY = 0;/,
     'menu handoff can retain stale look intent');
@@ -199,9 +199,8 @@ try {
       `touch look is not cleared by ${blockedClass}`);
   }
 
-  // P1 publishes a canonical, un-peeked direction to the simulation. The
-  // visual offset is applied afterward, while P2 owns a separate state and
-  // still publishes its authored cam2F direction.
+  // The player publishes a canonical, un-peeked direction to the simulation.
+  // The visual offset is applied afterward.
   const canonicalAt = mainSource.indexOf('camControlDir.subVectors(aimSmooth, camera.position)');
   const p1ApplyAt = mainSource.indexOf('cameraLook.apply(camera, aimSmooth)');
   assert.ok(canonicalAt >= 0 && p1ApplyAt > canonicalAt,
@@ -211,11 +210,6 @@ try {
     'P1 simulation controls do not consume the canonical direction');
   assert.doesNotMatch(mainSource, /camera\.getWorldDirection\(camAimTmp\)/,
     'P1 simulation controls still sample the visually peeked camera');
-  assert.match(mainSource, /const cam2Look = new CameraLookOffset\(\)/,
-    'P2 does not own an independent look state');
-  assert.match(mainSource,
-    /cam2Look\.step\(input2\.lookX, input2\.lookY, dt\);\s*cam2Look\.apply\(camera2, cam2Aim\);\s*p2\.camDir\.set\(cam2F\.x, 0, cam2F\.z\);/,
-    'P2 look is not independently applied over its canonical control direction');
 
   // Peek input is presentation-only and must not expand replay v2 or become
   // simulation input. Existing takes therefore remain byte-compatible.
@@ -223,7 +217,7 @@ try {
     'camera look leaked into deterministic replay input');
 
   console.log(
-    'PASS gentle camera look deadzone, radial cap, easing/recenter, touch ownership, split independence, and replay isolation',
+    'PASS gentle camera look deadzone, radial cap, easing/recenter, touch ownership, and replay isolation',
   );
 } finally {
   await server.close();

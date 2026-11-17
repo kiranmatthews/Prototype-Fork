@@ -287,7 +287,7 @@ assert.match(
 assert.match(main, /ui\.setHUD\(currentHudState\(\), 0\);/);
 assert.match(
   main,
-  /player\.drawFlyingFruit\(context\.renderer,[\s\S]{0,220}ui\.drawIcons\(context\.renderer,[\s\S]{0,220}ui\.drawGameHud\(context\.renderer/,
+  /player\.drawFlyingFruit\(context\.renderer\)[\s\S]{0,220}ui\.drawIcons\(context\.renderer,[\s\S]{0,220}ui\.drawGameHud\(context\.renderer/,
   "pre-CRT overlay order must be fruit -> 3D icons -> 2D gameplay HUD",
 );
 const mainTree=ts.createSourceFile('main.ts',main,ts.ScriptTarget.Latest,true);

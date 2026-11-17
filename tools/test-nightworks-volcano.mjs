@@ -40,7 +40,7 @@ await withAfterHoursRuntime(async r=>{
   camera.position.copy(pad.mesh.position);r.l.updateSceneryView(camera);r.l.root.updateMatrixWorld(true);
   assert.equal(wrapper.visible,true);assert.equal(pad.mesh.visible,logicalVisible,'culling cannot reveal an inactive phase pad');
   assert.deepEqual(pad.mesh.getWorldPosition(new r.THREE.Vector3()).toArray(),worldBefore.toArray(),'render wrappers cannot transform collision');
-  camera.position.set(1500,300,1500);r.l.updateSceneryView(camera,undefined,true);
+  camera.position.set(1500,300,1500);r.l.updateSceneryView(camera,true);
   assert.equal(wrapper.visible,true,'editor inspection restores distant geometry');
   const bonus=(await r.server.ssrLoadModule('/src/levels/themed-bonuses.ts')).resolveBonusLevel('nightworks-after-hours');
   assert.ok(normalizeCustomLevelData(bonus),'bespoke bonus must survive editor validation');

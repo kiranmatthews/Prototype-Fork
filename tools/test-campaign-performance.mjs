@@ -17,7 +17,7 @@ const [main, flow, level, swirls, player] = await Promise.all([
 // false. Merely opening the debug panel does not prove a level click works.
 const levelSelectCallback = main.slice(
   main.indexOf("ui.onLevelSelect ="),
-  main.indexOf("ui.onToggle2P ="),
+  main.indexOf("ui.onToggleRunModes ="),
 );
 assert.ok(levelSelectCallback, "debug level callback is missing");
 for (const screen of [null, "launch", "pause", "results", "gameover"]) {

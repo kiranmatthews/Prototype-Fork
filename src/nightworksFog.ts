@@ -29,10 +29,10 @@ export class NightworksFogVisibility {
       this.entries.push({wrapper,point,radius});
     }
   }
-  update(primary: THREE.Vector3, far: number, secondary?: THREE.Vector3):void {
+  update(primary: THREE.Vector3, far: number):void {
     for(const {wrapper,point,radius}of this.entries){
       const limit=(far+radius)*(far+radius);
-      wrapper.visible=far===Infinity||point.distanceToSquared(primary)<=limit||!!secondary&&point.distanceToSquared(secondary)<=limit;
+      wrapper.visible=far===Infinity||point.distanceToSquared(primary)<=limit;
     }
   }
 }

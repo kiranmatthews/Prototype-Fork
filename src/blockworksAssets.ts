@@ -172,7 +172,7 @@ export class BlockworksAssetKit {
     }
     batch.positions.needsUpdate=true;batch.lines.geometry.computeBoundingBox();batch.lines.geometry.computeBoundingSphere();
   }
-  setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
+  setView(position:THREE.Vector3,far:number):void{
     for(const batch of this.boundBatches)this.updateBoundBatch(batch);
     for(const batch of this.ghostBatches)this.updateGhostBatch(batch);
     // Several visual states may share one native switch. Hide its original
@@ -182,7 +182,7 @@ export class BlockworksAssetKit {
     for(const [proxy,active]of covered)for(const mat of Array.isArray(proxy.material)?proxy.material:[proxy.material])mat.visible=!active&&!this.ghostProxies.has(proxy);
     for(const root of this.roots){
       const sphere=root.userData.viewSphere as THREE.Sphere|undefined,centre=sphere?.center??root.position;
-      const distance=Math.max(0,Math.sqrt(Math.min(centre.distanceToSquared(position),secondary?centre.distanceToSquared(secondary):Infinity))-(sphere?.radius??0));
+      const distance=Math.max(0,centre.distanceTo(position)-(sphere?.radius??0));
       root.visible=distance<Math.min(far,225);
       for(const child of root.children){const mesh=child as THREE.Mesh;if(!mesh.isMesh)continue;
         mesh.visible=true;

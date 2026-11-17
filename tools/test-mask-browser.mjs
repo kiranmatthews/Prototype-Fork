@@ -119,12 +119,7 @@ try {
     });
     await page.waitForFunction(() => !window.__game.player.maskMesh.visible);
     await page.waitForFunction(() => window.__game.player.state !== 'dead' && window.__game.player.grounded,null,{timeout:15000});
-    await page.evaluate(() => { const g=window.__game;g.set2P(true,true);const p=g.getP2();p.masks=2;p.uberTimer=.08;p.headM.rotation.set(2.6,.8,.4);p.prepareMaskPresentation(); });
-    await page.waitForFunction(() => { const p=window.__game.getP2();return p.maskBones&&p.maskMesh.geometry.attributes.position.count>100&&p.uberTimer===0; });
-    const second=await page.evaluate(() => { const p=window.__game.getP2();const up=p.pos.clone().set(0,1,0).applyQuaternion(p.maskMesh.quaternion).y;
-      const camera=p.cam.getWorldDirection(p.pos.clone()).setY(0).normalize().negate();return {up,facing:p.maskMesh.getWorldDirection(p.pos.clone()).dot(camera),bones:p.maskBones.visible}; });
-    assert.ok(second.up>.99999&&second.facing>.94&&second.bones);reports.push({lite,second});
-    await page.screenshot({path:`${output}/${lite?'lite':'full'}-split.png`});
+    reports.push({lite});
     const probe=await page.evaluate(() => window.__maskProbe);
     assert.deepEqual(probe.failures,[]);assert.ok(probe.held>30&&probe.worn>30);
     reports.push({lite,probe});

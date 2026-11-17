@@ -73,19 +73,19 @@ try {
   assert.ok(source.length > 0, 'render boundary missing');
   const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
   const makeRender = new Function('cameraPortraitFraming', 'camera', 'settings', 'drawPrimaryScene', `
-    const {TOUCH_PRESENTATION, split2p, level, current, editorViewActive, characterLab, animationStudio, resultsPresentation, gameFlow} = settings;
+    const {TOUCH_PRESENTATION, level, current, editorViewActive, characterLab, animationStudio, resultsPresentation, gameFlow} = settings;
     ${code}
     return renderPrimaryScene;
   `);
   camera.aspect = 390/844; camera.updateProjectionMatrix();
-  const settings = { TOUCH_PRESENTATION: true, split2p: false, level: {}, current: {id:"codex-lab"}, editorViewActive: false, characterLab: null,
+  const settings = { TOUCH_PRESENTATION: true, level: {}, current: {id:"codex-lab"}, editorViewActive: false, characterLab: null,
     animationStudio: null, resultsPresentation: null, gameFlow: { currentScreen: null } };
   const original = snapshot(camera);
   let draws = 0;
   const render = makeRender(layer, camera, settings, () => { draws++; assert.ok(camera.fov > 43); });
   for (let i=0; i<120; i++) { render(); assert.equal(snapshot(camera), original); }
   assert.equal(draws, 120);
-  for (const patch of [{TOUCH_PRESENTATION:false}, {split2p:true}, {level:{isCampaignMap:true}}, {current:{id:"warproom"}}, {editorViewActive:true}, {characterLab:{}},
+  for (const patch of [{TOUCH_PRESENTATION:false}, {level:{isCampaignMap:true}}, {current:{id:"warproom"}}, {editorViewActive:true}, {characterLab:{}},
     {animationStudio:{}}, {resultsPresentation:{}, gameFlow:{currentScreen:'results'}}]) {
     makeRender(layer, camera, {...settings, ...patch}, () => assert.equal(snapshot(camera), original))();
   }

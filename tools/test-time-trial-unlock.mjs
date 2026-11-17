@@ -51,15 +51,15 @@ const parsed = ts.createSourceFile('main.ts', source, ts.ScriptTarget.Latest, tr
 const fn = parsed.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'applyRunModes');
 assert.ok(fn);
 const apply = new Function('campaign', 'current', 'isCampaignLevel', 'shellBypass', 'runModesOn',
-  'editorViewActive', 'split2p', 'level', 'ui', 'player', 'p2',
+  'editorViewActive', 'level', 'ui', 'player',
   `${compile(fn.getText(parsed))};applyRunModes();`);
 for (const shellBypass of [false, true]) for (const cleared of [false, true]) for (const crystal of [false, true]) {
   Object.assign(secured.levelProgress('jungle'), { cleared, crystal });
   let visible;
   const player = { ttActive: false, comboRun: false };
-  apply(secured, { id: 'jungle' }, api.isCampaignLevel, shellBypass, true, false, false,
+  apply(secured, { id: 'jungle' }, api.isCampaignLevel, shellBypass, true, false,
     { hudMode: 'standard', setRunModesEnabled(on) { visible = on; }, setTimeTrial() {}, setComboRun() {} },
-    { setRunModes() {}, setTimeTrial() {}, comboHalo() {}, setRunRows() {} }, player, null);
+    { setRunModes() {}, setTimeTrial() {}, comboHalo() {}, setRunRows() {} }, player);
   assert.equal(visible, cleared && crystal, JSON.stringify({ shellBypass, cleared, crystal }));
 }
 console.log('PASS secured-crystal unlock, later clears, save reload/switch, legacy records, race wins and lite/playtest gate');

@@ -58,12 +58,12 @@ await withBlockworksRuntime(async r=>{
  const centre=ids.reduce((v,i)=>v.add(new r.THREE.Vector3().fromBufferAttribute(geometry.attributes.position,i)),new r.THREE.Vector3()).multiplyScalar(1/3).applyMatrix4(hidden.matrixWorld);
  const ray=new r.THREE.Raycaster(centre.clone().add(new r.THREE.Vector3(0,1,0)),new r.THREE.Vector3(0,-1,0),0,2);
  assert.ok(ray.intersectObject(hidden,false).length,'a culled forest face remains a real recovery contact');
- const secondary=new r.THREE.PerspectiveCamera(60,1,.1,2000);secondary.position.copy(centre);
- hidden.visible=false;r.l.updateSceneryView(camera,secondary);assert.equal(hidden.parent.visible,true);assert.equal(hidden.visible,false,'secondary views must not revive logically hidden pieces');hidden.visible=true;
+ const near=new r.THREE.PerspectiveCamera(60,1,.1,2000);near.position.copy(centre);
+ hidden.visible=false;r.l.updateSceneryView(near);assert.equal(hidden.parent.visible,true);assert.equal(hidden.visible,false,'a nearby view must not revive logically hidden pieces');hidden.visible=true;
  r.l.updateSceneryView(camera);assert.equal(hidden.parent.visible,false);
- r.l.updateSceneryView(camera,undefined,true);assert.ok(wrappers.every(o=>o.visible),'clear editor inspection restores the whole island');
+ r.l.updateSceneryView(camera,true);assert.ok(wrappers.every(o=>o.visible),'clear editor inspection restores the whole island');
  const enabled=r.l.atmosphere.fogEnabled;r.l.atmosphere.fogEnabled=false;r.l.updateSceneryView(camera);
  assert.ok(wrappers.every(o=>o.visible),'disabling fog restores distant scenery');r.l.atmosphere.fogEnabled=enabled;
  console.log(JSON.stringify({cells:tops.length,buriedCells:buried.length,visibleTriangles,hiddenTriangles,contactRays,maxSlope,visibilityWrappers:wrappers.length,unchangedCourseSupports:supportsBefore.length}));
- console.log('PASS forest tops and distant-fog visibility: exact return contacts, course support, transforms, editor data, secondary view and clear inspection.');
+ console.log('PASS forest tops and distant-fog visibility: exact return contacts, course support, transforms, editor data, nearby views and clear inspection.');
 },{modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-race'});

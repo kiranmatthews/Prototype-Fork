@@ -236,18 +236,17 @@ assert.match(
 );
 assert.match(
   adoption,
-  /player\.setCampaignRelics\([\s\S]*if \(split2p && p2\)[\s\S]*p2\.setCampaignRelics\(/,
-  "campaign adoption must project the same saved shelf into both riders",
+  /player\.setCampaignRelics\(/,
+  "campaign adoption must project the saved shelf into the rider",
 );
-for (const functionName of ["switchLevel", "set2P", "rebuildLevel"]) {
+for (const functionName of ["switchLevel", "rebuildLevel"]) {
   const body = topLevelFunction(mainFile, functionName);
   const adoptionAt = body.lastIndexOf("adoptCommittedCampaignProgress(");
   const p1ResetAt = body.lastIndexOf("player.respawn(level, true");
-  const p2ResetAt = body.lastIndexOf("p2.respawn(level, true");
-  assert.ok(p1ResetAt >= 0, `${functionName} lost its P1 hard reset`);
+  assert.ok(p1ResetAt >= 0, `${functionName} lost its hard reset`);
   assert.ok(
-    adoptionAt > p1ResetAt && adoptionAt > p2ResetAt,
-    `${functionName} must adopt campaign state after all P1/P2 hard resets`,
+    adoptionAt > p1ResetAt,
+    `${functionName} must adopt campaign state after the hard reset`,
   );
 }
 

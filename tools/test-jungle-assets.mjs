@@ -279,8 +279,6 @@ try{
  assert.equal(streamed.root.children.find(mesh=>mesh.userData.jungleAsset==='stoneblock').geometry,targetGeometry,'streaming keeps the exact authored mesh');
  streamed.setView(new THREE.Vector3(),155);streamed.setView(new THREE.Vector3(0,0,-600),155);await streamed.ready();
  assert.equal(streamed.diagnostics.ready,2,'late activation cannot resurrect a retired cell');
- streamed.setView(new THREE.Vector3(),155,new THREE.Vector3(0,0,-600));await streamed.ready();
- assert.equal(streamed.diagnostics.ready,3,'split-screen must retain both cameras');
  assert.deepEqual(streamed.errors,[]);streamed.dispose();await streamed.ready();
  assert.equal(streamed.root.children.length,0);
 
@@ -453,7 +451,7 @@ try{
  const viewCamera=new THREE.PerspectiveCamera();viewCamera.far=360;
  horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),280,'prefetch follows authored fog instead of inherited jungle fog');
  horizonLevel.atmosphere.fogEnabled=false;horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),360,'disabled fog retains all camera-visible scenery');
- horizonLevel.atmosphere.fogEnabled=true;horizonLevel.updateSceneryView(viewCamera,undefined,true);assert.equal(requested.at(-1),360,'editor inspection honors its full clear lens');horizonLevel.dispose();
+ horizonLevel.atmosphere.fogEnabled=true;horizonLevel.updateSceneryView(viewCamera,true);assert.equal(requested.at(-1),360,'editor inspection honors its full clear lens');horizonLevel.dispose();
 
  for(const depthFade of [undefined,true,false]){
   const data={v:1,name:'Low jungle floor',spawn:[0,-13.45,0],killY:-30,sky:'day',jungleAtmosphere:true,

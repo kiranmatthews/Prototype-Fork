@@ -1,6 +1,5 @@
 import { releaseImageUrl } from './releaseImageUrls';
-import {GameplayAnimationPresentation,gameplayAnimationDocument,prepareGameplayAnimationAssets,
-  type GameplayAnimationAssets} from './gameplayAnimationScheme';
+import {GameplayAnimationPresentation,gameplayAnimationDocument,prepareGameplayAnimationAssets} from './gameplayAnimationScheme';
 import { createSkystreamSun } from './skystreamSun';
 import { installBananaBaySkySun } from './bananaBaySkySun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
@@ -868,7 +867,7 @@ function setEditorView(editing: boolean, changed = false): void {
   editorPlayFog = null;
   // The editor may have streamed distant scenery for its clear inspection
   // lens. Restore the retained play view alongside its camera and fog.
-  level.updateSceneryView(camera, split2p ? camera2 : undefined);
+  level.updateSceneryView(camera);
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
@@ -936,8 +935,6 @@ function applyTheme(): void {
   if (!editorViewActive && camera.far !== atmosphere.drawDistance) {
     camera.far = atmosphere.drawDistance;
     camera.updateProjectionMatrix();
-    camera2.far = atmosphere.drawDistance;
-    camera2.updateProjectionMatrix();
   }
   // A short authored draw distance must still contain the camera-centred sky.
   // Scaling the backdrop preserves its angular painting and the world's
@@ -1048,8 +1045,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     gameFlow.resultsSceneViewport(window.innerWidth,window.innerHeight));
   else updateCamera(1);
   if(competitionOverview())frameCompetitionOverview();
-  if(split2p)updateCamera2(1);
-  level.updateSceneryView(camera,split2p?camera2:undefined);
+  level.updateSceneryView(camera);
   // Ocean reflection art is normally requested by the first gameplay frame.
   // Start it here so that first visible frame never owns network loading.
   updateWaterPresentation(0);
@@ -1061,7 +1057,6 @@ async function prepareActivePresentationAssets(): Promise<void> {
     skateRace.preparePresentationAssets(),
     level.prepareJungleAssets(),
     level.prepareSurfaceImages(),
-    p2?.preparePresentationAssets(),
     document.fonts?.ready,
     sfx.prepare(),
     animationPreparation,
@@ -1079,26 +1074,13 @@ function updateWaterPresentation(dt: number): void {
   } else {
     level.water.clearPreCrtRenderSize();
   }
-  level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.applyMotuOceanLook();
   level.water.setSkyUrl(import.meta.env.BASE_URL + SEA_SKY_ART[activeSky],
     scene.background as THREE.Color, presetHorizonV(activeSky));
   level.water.update(dt, camera);
 }
-// 2P split state (functions live further down, past the player):
-let split2p = false;
-let p2: Player | null = null;
-const input2 = new Input(true, () => gameFlow?.developerChromeVisible ?? false); // pad-only
-const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
-const cam2F = new THREE.Vector3(0, 0, -1);
-const cam2Aim = new THREE.Vector3();
-const cam2Look = new CameraLookOffset();
-const cam2LaneCursor = newLaneCursor();
-let cam2RenderSnapVersion = -1;
-let cam2SpeedFovBoost = 0;
-let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
-const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
 let coastPostCreateCount = 0;
 let coastPostSuspendCount = 0;
@@ -1187,8 +1169,8 @@ function renderOceanPrimaryScene(
 
 function updateSceneryForCurrentView(): void {
   const inspecting = editor?.active ?? false;
-  level.updateSceneryView(camera, inspecting ? undefined : split2p ? camera2 : undefined, inspecting);
-  if (inspecting) editorPreviewLevel?.updateSceneryView(camera, undefined, true);
+  level.updateSceneryView(camera, inspecting);
+  if (inspecting) editorPreviewLevel?.updateSceneryView(camera, true);
 }
 
 function renderPrimaryScene(
@@ -1198,7 +1180,7 @@ function renderPrimaryScene(
 ): void {
   // Fit only the rendered gameplay view, after every shared/level camera
   // layer. Restore before simulation, editor snapshots, and the next frame.
-  cameraPortraitFraming.apply(camera, TOUCH_PRESENTATION && !split2p &&
+  cameraPortraitFraming.apply(camera, TOUCH_PRESENTATION &&
     !level.isCampaignMap && current.id !== "warproom" && !editorViewActive && !characterLab && !animationStudio &&
     !(resultsPresentation && gameFlow.currentScreen === "results"));
   try {
@@ -1227,11 +1209,11 @@ function drawPrimaryScene(
     coastPostResumeCount++;
   }
   const mud=skateRace.carts?.mud;
-  coastPost?.setMud(!editorViewActive&&!gameFlow.blocksGameplay&&!split2p&&mud?mud.lens:null,camera);
+  coastPost?.setMud(!editorViewActive&&!gameFlow.blocksGameplay&&mud?mud.lens:null,camera);
   const rain=level.rainPresentation;
-  coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay||split2p?0:rain.amount,rain.time);
+  coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay?0:rain.amount,rain.time);
   const storm=stormSquall.update(level,rain.time,
-    !editorViewActive&&!gameFlow.blocksGameplay&&!paused&&!split2p&&!characterLab&&!animationStudio&&level.skyPreset==='coastal-storm'?(level.atmosphere?.rain?.intensity??0):0);
+    !editorViewActive&&!gameFlow.blocksGameplay&&!paused&&!characterLab&&!animationStudio&&level.skyPreset==='coastal-storm'?(level.atmosphere?.rain?.intensity??0):0);
   skyProjection.setStormGlow(storm.glow,storm.azimuth);
   const automaticWorldMatrices = prepareWorldFrame(scene);
   const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
@@ -1259,10 +1241,9 @@ function drawPrimaryScene(
  */
 function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
   gameplayAnimation?.prepareRender(camera);
-  p2GameplayAnimation?.prepareRender(camera);
   if (renderer.getContext().isContextLost()) return;
   // Game-owned UI shares the world resolution on every device.
-  const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
+  const wantsPreCrtUi = coastPost?.active ?? false;
   const wantsPreCrtHud = showHud && wantsPreCrtUi;
   let overlayRan = false;
   const raceUi=showHud&&!!ui.raceHud.state;
@@ -1280,7 +1261,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
           // Preserve the old visual stack: collected fruit behind the 3D
           // counter models, with all 2D HUD furniture on top of both.
           if (showHud) {
-            player.drawFlyingFruit(context.renderer, undefined, size);
+            player.drawFlyingFruit(context.renderer);
             ui.drawIcons(context.renderer, dt, size);
             ui.drawGameHud(context.renderer, size, context.target, crackedDisplay.paintFrame);
           }
@@ -1292,7 +1273,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   );
   if (overlayRan) return;
 
-  // Direct/lite/split fallback: the DOM copy remains visible, while the two
+  // Direct/lite fallback: the DOM copy remains visible, while the two
   // pre-existing WebGL overlay helpers still draw over the world.
   ui.setGameHudComposited(raceUi);
   gameInterface.setComposited(raceUi);
@@ -1315,8 +1296,7 @@ function fixedResolutionActive(): boolean {
   // Its canvas still obeys the preset, even while the composer is bypassed.
   return (
     renderQualitySettings.enabled &&
-    !LITE_RENDER &&
-    !split2p
+    !LITE_RENDER
   );
 }
 
@@ -1472,14 +1452,11 @@ function resize(): void {
   syncPostResolution();
   renderQualityPanel?.setMetrics(renderQualitySizes, optimized, fixedSurface);
   renderer.domElement.style.imageRendering = "";
-  const playAspect = split2p ? w / (h / 2) : w / h;
-  // The editor owns the full canvas even when the retained run is split-screen.
-  // Its saved play lens tracks resizes separately so closing cannot restore a
-  // stale pre-rotation aspect ratio.
-  camera.aspect = editorViewActive ? w / h : playAspect;
+  const playAspect = w / h;
+  // The editor's saved play lens tracks resizes separately so closing cannot
+  // restore a stale pre-rotation aspect ratio.
+  camera.aspect = playAspect;
   camera.updateProjectionMatrix();
-  camera2.aspect = playAspect;
-  camera2.updateProjectionMatrix();
   if (editorViewActive) editor.syncPlayAspect(playAspect);
   gameFlowVortex.invalidate();
   if (gameFlow?.loadingArtworkVisible && gameFlow.vortexContext && gameFlowVortex.diagnostics.loadingTitle) {
@@ -1519,9 +1496,7 @@ async function warmDestinationPresentation(): Promise<void> {
         gameFlow.resultsSceneViewport(window.innerWidth, window.innerHeight));
     } else {
       player.prepareStartPresentation(level,1/60);
-      p2?.prepareStartPresentation(level,1/60);
       updateCamera(1);
-      if (split2p) updateCamera2(1);
     }
     if(!gameFlow.currentScreen&&!bonusArrival&&level.startWarpPosition&&player.runTime===0&&
       player.pos.distanceTo(level.startWarpPosition)<1)beginBonusArrival();
@@ -1541,7 +1516,7 @@ async function warmDestinationPresentation(): Promise<void> {
     try {
       await warmPresentationScene(renderer,scene,camera,
         level.phasePads.map(pad=>({mesh:pad.mesh,material:pad.ghostMat})),
-        LITE_RENDER||split2p||!coastPost?.active?puffPreparation:[]);
+        LITE_RENDER||!coastPost?.active?puffPreparation:[]);
     } finally { for(const proxy of puffPreparation)proxy.removeFromParent(); }
   }
 }
@@ -1563,7 +1538,7 @@ async function prepareDestinationPresentation(): Promise<void> {
   recordPresentationStage('destination:prepare');
   configureCoastPost(levelPostEnabled||
     (visualTreatmentActivity(visualTreatmentSettings.value).any&&!NO_COAST_POST));
-  gameInterface.setComposited(!split2p&&(coastPost?.active??false));
+  gameInterface.setComposited(coastPost?.active??false);
   competitionUI.setInputBlocked(gameFlow.blocksGameplay);
   competitionUI.render(competition,competitionPresentationSuppressed());
   await gameFlow.prepareMenuPresentation();
@@ -1594,11 +1569,6 @@ setTimeout(resize, 1200);
 resize();
 
 const input = new Input(false, () => gameFlow?.developerChromeVisible ?? false);
-// Each player's input refuses the other's claimed pad — and P2 additionally
-// rejects any slot that mirrors P1's pad (one DualShock on USB + Bluetooth
-// at once shows up as TWO slots streaming identical state).
-input.rival = input2;
-input2.rival = input;
 const ui = new UI();
 const crackedDisplay=new CrackedDisplay();
 let competition: JungleCupEvent | null = null;
@@ -1796,8 +1766,6 @@ const frameStats = {
   cameraSpeedFovBoost: 0,
   cameraLookYaw: 0,
   cameraLookPitch: 0,
-  camera2Fov: TUNING.camFov,
-  camera2SpeedFovBoost: 0,
 };
 const frameProbe = new URLSearchParams(window.location.search).has("frameprobe")
   ? document.createElement("pre")
@@ -1884,10 +1852,7 @@ try {
 }
 const characterAnimationRuntime: CharacterAnimationRuntime =
   createCharacterAnimationRuntime(player, playerAnimationDocument);
-let p2CharacterAnimationRuntime: CharacterAnimationRuntime | null = null;
 let gameplayAnimation:GameplayAnimationPresentation|null=null;
-let p2GameplayAnimation:GameplayAnimationPresentation|null=null;
-let gameplayAnimationAssets:GameplayAnimationAssets|null=null;
 // The comparison lab owns A/B/C/D selection. Every ordinary game entry uses D.
 const comparisonAnimation=/\/(jump-review|skate-playtest)\.html$/.test(location.pathname);
 let animationPreparation: Promise<void> = Promise.resolve();
@@ -1903,7 +1868,6 @@ try {
       );
       playerAnimationDocument = reconciled;
       characterAnimationRuntime.setDocument(reconciled);
-      p2CharacterAnimationRuntime?.setDocument(reconciled);
     })
     .catch(() => {
       // The synchronous local draft or source starter remains authoritative.
@@ -1913,51 +1877,15 @@ try {
 }
 if(!comparisonAnimation){
   animationPreparation=Promise.all([animationPreparation,prepareGameplayAnimationAssets()]).then(([,assets])=>{
-    gameplayAnimationAssets=assets;
     playerAnimationDocument=gameplayAnimationDocument(playerAnimationDocument,playerAnimationBinding.definition,assets.jak);
     characterAnimationRuntime.setDocument(playerAnimationDocument);
     gameplayAnimation=new GameplayAnimationPresentation(player,scene,assets);
-    if(p2){
-      p2CharacterAnimationRuntime?.setDocument(playerAnimationDocument);
-      p2GameplayAnimation=new GameplayAnimationPresentation(p2,scene,assets);
-    }
   });
-}
-
-// ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
-// Two pads, two riders in the same world: top half = P1, bottom = P2. They
-// collide, stomp, and knock each other over. Time trial + combo runs are
-// parked while it's on, and a reset (Share/R on either side) resets both.
-// (the split2p/camera2 state lives up beside the main camera — resize() runs
-// at module init and reads both)
-
-function tintP2(): void {
-  if (!p2) return;
-  const apply = (): void =>
-    p2!.group.traverse((o) => {
-      const mesh = o as THREE.Mesh;
-      const mats = Array.isArray(mesh.material)
-        ? mesh.material
-        : mesh.material
-          ? [mesh.material]
-          : [];
-      for (const mat of mats as THREE.MeshLambertMaterial[]) {
-        if (!mat.color || mat.userData.p2Tint) continue;
-        mat.userData.p2Tint = true;
-        mat.color.lerp(new THREE.Color(0x508cff), 0.38); // P2 reads blue at a glance
-      }
-    });
-  apply();
-  // the GLB body streams in async — keep tinting until it has all arrived
-  setTimeout(apply, 1200);
-  setTimeout(apply, 3000);
-  setTimeout(apply, 6000);
 }
 
 // RUN MODES: the time trial and the combo run. Both start by walking into a
 // pickup that sits near the spawn, which is exactly wrong when you are testing
-// plain platforming — hence the MENU switch. Split-screen forces them off too:
-// they are single-player modes.
+// plain platforming — hence the MENU switch.
 // Called on every level load and whenever either input to it changes, so the
 // world, the player and the button label can never disagree.
 let runModesOn = localStorage.getItem("solProtoRunModes") !== "off";
@@ -1966,7 +1894,6 @@ let replaySavedEndlessDeaths: boolean | null = null;
 function applyEndlessDeaths(): void {
   const active = endlessDeathsOn && !player.bonusMode;
   player.endlessDeaths = active;
-  if (p2) p2.endlessDeaths = active;
   ui.setEndlessDeaths(active);
 }
 function restoreReplayRunRule(): void {
@@ -1977,7 +1904,7 @@ function restoreReplayRunRule(): void {
 }
 function applyRunModes(): void {
   // Editor previews show every authored activator even when the gameplay
-  // preference (or split-screen) normally hides run modes. The sim is frozen,
+  // preference normally hides run modes. The sim is frozen,
   // so visibility cannot accidentally start one.
   const campaignUnlocked =
     !isCampaignLevel(current.id) ||
@@ -1987,7 +1914,6 @@ function applyRunModes(): void {
     editorViewActive ||
     (campaignRunModesOn &&
       campaignUnlocked &&
-      !split2p &&
       level.hudMode === "standard");
   level.setRunModesEnabled(on);
   ui.setRunModes(campaignRunModesOn && campaignUnlocked);
@@ -1997,311 +1923,12 @@ function applyRunModes(): void {
   level.setComboRun(false);
   player.ttActive = false;
   player.comboRun = false;
-  if (p2) {
-    p2.ttActive = false;
-    p2.comboRun = false;
-  }
   ui.setTimeTrial(false);
   ui.comboHalo("off");
   ui.setRunRows(false);
 }
 
-function set2P(on: boolean, force = false): void {
-  if(on&&level.skateRace){ui.showMessage("SKATE RACE", "One player and seven racers",1800);return;}
-  if (on && isCompetitionLevel(current.id)) return;
-  if (on === split2p) return;
-  if (on) {
-    const pads = navigator.getGamepads
-      ? Array.from(navigator.getGamepads()).filter((g) => g && g.connected)
-      : [];
-    if (!force && pads.length < 2) {
-      ui.showMessage(
-        "NEED 2 CONTROLLERS",
-        `${pads.length} connected — wake pad 2 with a button press`,
-        2800,
-      );
-      return;
-    }
-    if (editor.active) closeEditorToPlay();
-    if (replayer.active) {
-      replayer.end();
-      restoreReplayRunRule();
-      ui.setReplayBadge(false);
-    }
-    if (!p2) {
-      p2 = new Player(scene);
-      p2CharacterAnimationRuntime = createCharacterAnimationRuntime(
-        p2,
-        playerAnimationDocument,
-      );
-      if(gameplayAnimationAssets)p2GameplayAnimation=new GameplayAnimationPresentation(p2,scene,gameplayAnimationAssets);
-      p2.endlessDeaths = endlessDeathsOn;
-      // The second rider's fruit needs the same two wires P1 got, or its
-      // collected wumpa are parked on a scene nothing renders and simply
-      // vanish. Its own lens; the one shared HUD counter.
-      p2.cam = camera2;
-      p2.hudFruitAt = () => ui.fruitIconAt();
-      tintP2();
-    }
-    p2.enterLevel(current.id);
-    p2.group.visible = true;
-    split2p = true;
-    // P1 = lowest connected slot; P2 claims itself on its first press. Slot
-    // NUMBERS can't be trusted (a USB+Bluetooth pad registers twice), so the
-    // second rider waits for a provably-different device to speak up.
-    input.releaseClaim();
-    input.claimedSlot = pads.length ? pads[0]!.index : null;
-    input2.releaseClaim();
-    p2Linked = false;
-    player.respawn(level, true);
-    p2.respawn(level, true);
-    p2.pos.x += 1.6; // side by side at the start line
-    p2.snapRenderInterpolation();
-    adoptCommittedCampaignProgress(current.id);
-    applyRunModes();
-    ui.set2P(true);
-    ui.showMessage(
-      "2-PLAYER SPLIT",
-      "P2 (blue, bottom): press a button on the other controller to join",
-      4200,
-    );
-  } else {
-    split2p = false;
-    if (p2) {
-      level.clearTrickPrimitiveSource(p2);
-      p2.handoffWorldFruit(player);
-      p2.group.visible = false;
-    }
-    // release both so the 1P scan is free to take any pad again
-    input.releaseClaim();
-    input2.releaseClaim();
-    ui.set2P(false);
-    ui.showMessage("1-PLAYER", "", 1200);
-  }
-  resize();
-}
-
-// PvP: stomps bounce the attacker and flatten the victim; spins, slides and
-// slams bowl the other rider over; bodies never share a spot. Playtest rules:
-// no damage, no score — the knockdown (bail tumble + a shove) IS the payoff.
-function pvpAttack(atk: Player, vic: Player): void {
-  const A = atk as unknown as Record<string, number & boolean>;
-  if (vic.state === "dead" || vic.state === "gameover" || atk.state === "dead")
-    return;
-  const dx = vic.pos.x - atk.pos.x;
-  const dz = vic.pos.z - atk.pos.z;
-  const planar = Math.hypot(dx, dz);
-  const ux = planar > 1e-4 ? dx / planar : 1;
-  const uz = planar > 1e-4 ? dz / planar : 0;
-  const dy = vic.pos.y - atk.pos.y;
-  const knock = (kick: number, pop: number): void => {
-    if (!vic.beginPvpKnockdown(pop, Math.sign(ux || uz || 1))) return;
-    pvpKicks.set(vic, { x: ux * kick, z: uz * kick, t: 0.3 });
-    sfx.play("takeDamage", 0.55);
-  };
-  if ((A.vVel as number) < -2 && dy < -0.9 && dy > -2.3 && planar < 0.9) {
-    // STOMP: bounce off their shoulders, they eat deck
-    knock(5, 2.5);
-    (A.vVel as number) = TUNING.crateBounce * 0.8;
-    atk.state = "air";
-    (A.grounded as boolean) = false;
-    sfx.play("crateBounce", 0.6);
-    return;
-  }
-  if (Math.abs(dy) > 1.7) return;
-  if (A.spinning as boolean) {
-    if (planar < 1.8) knock(11, 4.5);
-  } else if (A.sliding as boolean) {
-    if (planar < 1.2) knock(9, 4);
-  } else if (A.slamActive as boolean) {
-    if (planar < TUNING.slamRadius) knock(10, 5);
-  }
-}
-
-function stepPvp(dt: number): void {
-  if (!p2) return;
-  pvpAttack(player, p2);
-  pvpAttack(p2, player);
-  const dx = p2.pos.x - player.pos.x;
-  const dz = p2.pos.z - player.pos.z;
-  const dy = Math.abs(p2.pos.y - player.pos.y);
-  const d = Math.hypot(dx, dz);
-  if (d > 1e-4 && d < 0.9 && dy < 1.7) {
-    const push = (0.9 - d) / 2;
-    player.pos.x -= (dx / d) * push;
-    player.pos.z -= (dz / d) * push;
-    p2.pos.x += (dx / d) * push;
-    p2.pos.z += (dz / d) * push;
-  }
-  for (const kick of pvpKicks.values()) {
-    if (kick.t <= 0) continue;
-    kick.t -= dt;
-  }
-  for (const [pl, kick] of pvpKicks) {
-    if (kick.t > 0) {
-      pl.pos.x += kick.x * dt;
-      pl.pos.z += kick.z * dt;
-    }
-  }
-}
-
-// P2's rig: a light follow cam (lane-aware forward, ground-agnostic) — the
-// full Crash rig belongs to P1; this one just keeps P2 framed and onward.
-const cam2LaneTarget = new THREE.Vector3();
-const cam2ViewForward = new THREE.Vector3();
-const cam2LaneOrigin = new THREE.Vector3();
-const cam2LaneHeading = new CourseCameraHeading();
-const cameraViewFraming2 = new CameraViewFraming();
-const launchCamera2 = new LaunchCamera();
-const cameraFallHold2 = new CameraFallHold();
-const carlisleSceneryCamera2 = new CarlisleSceneryCamera();
-const chiefCamera2 = new ChiefCamera();
-const authoredSkateCamera2 = new SkateChaseCameraOverlay();
-const loopCameraFraming2 = new LoopCameraFraming();
-const cameraOverlayHeroFraming2 = new CameraHeroFraming();
-const boulderChaseCamera2=new BoulderChaseCamera();
-const periodicSightline2=new CameraSightline();
-let camera2VerticalLoopOffset=0;
 const cameraLoopMatrix=new THREE.Matrix4(),cameraLoopRotation=new THREE.Quaternion();
-function updateCamera2(dt: number): void {
-  if (!p2) return;
-  if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level), () => p2!.cameraCanRecoverFall(level))) return;
-  const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
-  periodicSightline2.restore(camera2);
-  carlisleSceneryCamera2.restore(camera2);
-  launchCamera2.restore(camera2);
-  chiefCamera2.restore(camera2);
-  authoredSkateCamera2.restore(camera2);
-  loopCameraFraming2.restore(camera2);
-  cameraViewFraming2.restore(camera2);
-  const wrapY=p2.verticalLoopOffset-camera2VerticalLoopOffset;
-  camera2VerticalLoopOffset=p2.verticalLoopOffset;
-  if(wrapY){
-    if(level.verticalLoop?.twist){
-      const yaw=verticalLoopYaw(level.verticalLoop,wrapY),matrix=verticalLoopTransform(level.verticalLoop,wrapY,cameraLoopMatrix);
-      const rotation=cameraLoopRotation.setFromAxisAngle(THREE.Object3D.DEFAULT_UP,yaw);
-      for(const point of [camera2.position,cam2Aim])point.applyMatrix4(matrix);
-      for(const direction of [cam2F,cam2ViewForward])direction.applyQuaternion(rotation);
-      camera2.quaternion.premultiply(rotation);cam2LaneHeading.rotateWorldY(yaw);
-      launchCamera2.transformWorld(matrix,rotation,yaw);cam2LaneCursor.s=-1;
-    }else{camera2.position.y+=wrapY;cam2Aim.y+=wrapY;launchCamera2.shiftY(wrapY);}
-  }
-  updateBaseCamera2(dt);
-  const subject = p2.renderPosition;
-  const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :
-    cameraViewAt(level.cameraPresentationViews, subject.x, subject.y, subject.z) ??
-    cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z);
-  const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
-  const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'
-    ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
-      (level.hudMode === 'bonus' ? {x:1,z:0} : null);
-  cameraViewFraming2.apply(camera2, viewMatch, subject, framingSnap,
-    level.hudMode === 'bonus' ? { groundY: p2.waterDeathSurface ?? (p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null), grounded: p2.grounded || p2.waterDeathSurface !== null, dt } : undefined,
-    level.hudMode === 'bonus' ? undefined : {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
-  loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
-  if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
-  else cameraOverlayHeroFraming2.reset();
-  authoredSkateCamera2.apply(camera2, p2.authoredSkateCamera ? {
-    position:subject,heading:p2.skateCameraHeading,up:p2.skateCameraUp,
-    vertAir:p2.vertAir,vertNormal:p2.vertNormal,verticalSpeed:p2.vVel,
-    speed:p2.cameraSkateSpeed,grounded:p2.skateCameraSupported,bailing:p2.skateCameraBailing,
-  } : null,dt,framingSnap,level.groundMeshes,{
-    camDist:level.cameraRig?.camDist??TUNING.parkCamDist,camHeight:level.cameraRig?.camHeight??TUNING.parkCamHeight,camPitch:level.cameraRig?.camPitch??TUNING.parkCamPitch,camFov:level.cameraRig?.camFov??TUNING.parkCamFov,
-  });
-  if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
-  chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
-  if(level.boss)p2.camDir.copy(chiefCamera2.heading);
-  launchCamera2.apply(camera2,subject,level.verticalLoop&&!level.verticalLoop.launchCamera?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
-  carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
-  periodicSightline2.apply(camera2,level.verticalLoop?p2.cameraPoseBounds:null,level,dt,framingSnap);
-}
-
-function updateBaseCamera2(dt: number): void {
-  if (!p2) return;
-  const subject = p2.renderPosition;
-  const snapped = cam2RenderSnapVersion !== p2.renderSnapVersion;
-  const cameraValues = level.cameraRig ?? TUNING;
-  if (snapped) {
-    cam2RenderSnapVersion = p2.renderSnapVersion;
-    cam2LaneCursor.s = -1;
-    cam2Look.reset();
-  }
-  if(level.boulder?.course){
-    boulderChaseCamera2.update(camera2,level.boulder.course,subject,p2.cameraSkateSpeed,dt,snapped,p2.cameraPoseBounds);
-    p2.camDir.copy(boulderChaseCamera2.control);return;
-  }
-  const fixedReviewShot =
-    current.id === "beachfront" && (oceanOverview || oceanReview);
-  const p2SkateSpeed = p2.cameraSkateSpeed;
-  const p2FovGoal = speedSkateFovTarget(
-    p2SkateSpeed,
-    p2SkateSpeed > 0 && !level.boulder && !fixedReviewShot,
-    TUNING.cruiseSpeed,
-    TUNING.maxSpeed,
-    TUNING.camSpeedFovBoost,
-  );
-  cam2SpeedFovBoost = stepSpeedSkateFov(
-    cam2SpeedFovBoost,
-    p2FovGoal,
-    dt,
-    snapped,
-  );
-  const sideZone = level.zoneAt(subject.x, subject.z)?.dir;
-  const p2Side = sideZone === 'E' || sideZone === 'W' ? 1 : 0;
-  const p2AuthoredFov = THREE.MathUtils.lerp(cameraValues.camFov, TUNING.camFov, p2Side);
-  const p2TargetFov = THREE.MathUtils.lerp(
-    p2AuthoredFov + cam2SpeedFovBoost,
-    BOULDER_FOV + TUNING.camFov - 49,
-    boulderF,
-  );
-  if (
-    Math.abs(camera2.fov - p2TargetFov) > 0.005 ||
-    camera2.aspect !== camera.aspect
-  ) {
-    camera2.fov = p2TargetFov;
-    camera2.aspect = camera.aspect;
-    camera2.updateProjectionMatrix();
-  }
-  if (cameraFallHold2.landedFromDrop) cam2LaneCursor.s = -1;
-  const twistingAir=p2.twistingSpaceAir;
-  const lf = (twistingAir&&!snapped ? cam2F : level.cameraDirAt(
-    subject.x,
-    subject.y,
-    subject.z,
-    cam2LaneCursor,
-  )) ?? { x: 0, z: -1 };
-  const turn = snapped ? 1 : Math.min(1, 3.5 * dt);
-  cam2F.x += (lf.x - cam2F.x) * turn;
-  cam2F.z += (lf.z - cam2F.z) * turn;
-  cam2F.y = 0;
-  if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
-  cam2F.normalize();
-  const framing = cameraRigFraming(cameraValues, p2Side, 0, 0, true, TUNING);
-  const laneTarget = !twistingAir && level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
-    ? level.cameraLanePointAhead(cam2LaneCursor, level.cameraLookAhead, cam2LaneTarget)
-    : null;
-  const laneOrigin = laneTarget ? level.cameraLanePointAhead(cam2LaneCursor, 0, cam2LaneOrigin) : null;
-  if(!twistingAir||snapped)cam2ViewForward.copy(cam2LaneHeading.step(laneOrigin, laneTarget, cam2F, dt, snapped));
-  const tx = subject.x - cam2ViewForward.x * framing.distance;
-  const tz = subject.z - cam2ViewForward.z * framing.distance;
-  const ty = subject.y + framing.height;
-  const k = snapped ? 1 : Math.min(1, 9 * dt);
-  camera2.position.x += (tx - camera2.position.x) * k;
-  if (p2.launchCameraPresentation || launchCamera2.diagnostics.weight > 0 || cameraFallHold2.followingDrop) camera2.position.y = ty;
-  else camera2.position.y += (ty - camera2.position.y) * k;
-  camera2.position.z += (tz - camera2.position.z) * k;
-  if (laneTarget) {
-    fitCameraRigHorizontal(camera2.position, cam2ViewForward, framing.pitch,
-      camera2.fov, camera2.aspect, subject, p2.cameraPoseBounds);
-  }
-  setCameraRigAim(cam2Aim, camera2.position, cam2ViewForward, framing.pitch);
-  camera2.up.set(0, 1, 0);
-  camera2.lookAt(cam2Aim);
-  if (fixedReviewShot) cam2Look.reset();
-  else cam2Look.step(input2.lookX, input2.lookY, dt);
-  cam2Look.apply(camera2, cam2Aim);
-  p2.camDir.set(cam2F.x, 0, cam2F.z);
-}
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
 // ...and it needs to know where the counter IS. Read live off the icon's own
 // box rather than a guessed corner: the HUD is sized in vh and the counter
@@ -2495,12 +2122,6 @@ function adoptCommittedCampaignProgress(levelId: string): void {
     gem: progress.boxGem,
     combo: progress.comboGem,
   });
-  if (split2p && p2)
-    p2.setCampaignRelics({
-      crystal: progress.crystal,
-      gem: progress.boxGem,
-      combo: progress.comboGem,
-    });
   runStartRewards = {
     crystal: progress.crystal,
     boxGem: progress.boxGem,
@@ -2589,33 +2210,11 @@ function switchLevel(
   player.competitionMode = isCompetitionLevel(entry.id);
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
-  if(level.skateRace&&split2p)set2P(false,true);
   skateRace.attach(level,entry.id);
   countryClubCarts.attach(level,entry.id);
   syncCampaignPortalProgress();
-  if (split2p && p2) {
-    p2.enterLevel(entry.id);
-    if (warpReturnPose) {
-      const p2Pose = {
-        position: warpReturnPose.position.clone().add(
-          new THREE.Vector3(
-            -warpReturnPose.heading.z,
-            0,
-            warpReturnPose.heading.x,
-          ).normalize().multiplyScalar(1.6),
-        ),
-        heading: warpReturnPose.heading.clone(),
-      };
-      p2.respawn(level, true, false, p2Pose);
-      level.playerPos.copy(player.pos);
-    } else {
-      p2.respawn(level, true);
-      p2.pos.x += 1.6;
-    }
-    p2.snapRenderInterpolation();
-  }
-  // Save data wins after every rider's hard reset. Level stores the crystal
-  // baseline too, so a later shared/P2 reset cannot resurrect it.
+  // Save data wins after the rider's hard reset. Level stores the crystal
+  // baseline too, so a later reset cannot resurrect it.
   adoptCommittedCampaignProgress(entry.id);
   runStartInventory = { lives: player.lives, fruit: player.fruit };
   applyRunModes(); // the new level's pickups obey the switch too
@@ -2649,7 +2248,6 @@ function switchLevel(
 
 function syncCompetitionLevel(editing = false): void {
   player.competitionMode = isCompetitionLevel(current.id) && !editing;
-  if (player.competitionMode && split2p) set2P(false);
   competition = player.competitionMode ? new JungleCupEvent(Math.random, () => sfx.countdownBeep(),competitionCourse(current.id)) : null;
   competitionUI.render(competition, gameFlow.blocksGameplay || editing);
   if (competition) {
@@ -2746,7 +2344,6 @@ function applyGamePlayMode(mode: GamePlayMode): void {
 
 function guardGameplayFromMenu(): void {
   input.armMenuReleaseGuard();
-  if (split2p) input2.armMenuReleaseGuard();
 }
 
 function startNewCampaign(slot: number): void {
@@ -2820,7 +2417,6 @@ function resumeFromPause(): void {
   gameFlow.hide();
   ui.hideMessage();
   input.armMenuReleaseGuard();
-  if (split2p) input2.armMenuReleaseGuard();
 }
 
 function openWorldMapSection(section: WorldMapSection): void {
@@ -3128,7 +2724,6 @@ function beginBonusArrival():void {
 }
 function renderWarpArrival(dt:number):void {
   player.prepareStartPresentation(level,dt);
-  p2?.prepareStartPresentation(level,dt);
   level.updateSceneryPresentation(dt);updateWaterPresentation(dt);
   const arrival=bonusArrival,baseY=player.group.position.y;
   if(arrival){
@@ -3632,12 +3227,6 @@ function rebuildLevel(): void {
     worldMapController.activate(level, campaign.recommendedMapLevelKey());
     worldMapUI.show(worldMapController.selectedKey);
   }
-  if (split2p && p2) {
-    if (changedLevelId) p2.enterLevel(current.id);
-    p2.respawn(level, true);
-    p2.pos.x += 1.6;
-    p2.snapRenderInterpolation();
-  }
   adoptCommittedCampaignProgress(current.id);
   applyRunModes();
   applyTheme();
@@ -3877,7 +3466,6 @@ async function openAnimationStudioTool(): Promise<void> {
       onDocumentChange: (document) => {
         playerAnimationDocument = document;
         characterAnimationRuntime.setDocument(document);
-        p2CharacterAnimationRuntime?.setDocument(document);
       },
       onClose: () => {
         disposeStudyStage();
@@ -4020,7 +3608,7 @@ function openEditor(
   editorSavedAcc = acc;
   editorSavedMessage = preservedMessage ?? ui.captureMessage();
   // The editor owns the frame and freezes the simulation. Do not respawn,
-  // cancel pause/replay, force 2P off, or otherwise disturb a no-op session.
+  // cancel pause/replay, or otherwise disturb a no-op session.
   ui.hideMessage();
   const workingData = initialData ?? entry.data!;
   setEditorBuild(true);
@@ -4292,13 +3880,6 @@ ui.onLevelSelect = (id) => {
     gameFlow.hide();
   });
 };
-ui.onToggle2P = () => {
-  if (!shellBypass) {
-    ui.showMessage("1 PLAYER CAMPAIGN", "split screen remains available in ?playtest", 1800);
-    return;
-  }
-  set2P(!split2p);
-};
 ui.onToggleRunModes = () => {
   if (!shellBypass) {
     ui.showMessage(
@@ -4336,11 +3917,6 @@ ui.onToggleEndlessDeaths = () => {
   // A ruleset switch starts a fresh standard run so lives, deaths, score and
   // checkpoint snapshots cannot straddle two incompatible economies.
   player.respawn(level, true);
-  if (split2p && p2) {
-    p2.respawn(level, true);
-    p2.pos.x += 1.6;
-    p2.snapRenderInterpolation();
-  }
   ui.setHUD(currentHudState(), 0);
   recorder.start(current.id, endlessDeathsOn);
   ui.showMessage(
@@ -4643,7 +4219,6 @@ function updateBaseCamera(dt: number): void {
       .normalize();
     cameraLook.reset();
     camSpeedFovBoost = 0;
-    cam2SpeedFovBoost = 0;
     prevPlayerPos.copy(subject);
     return;
   }
@@ -4674,7 +4249,6 @@ function updateBaseCamera(dt: number): void {
     cameraLook.reset();
     camera.updateProjectionMatrix();
     camSpeedFovBoost = 0;
-    cam2SpeedFovBoost = 0;
     prevPlayerPos.copy(subject);
     return;
   }
@@ -4691,7 +4265,6 @@ function updateBaseCamera(dt: number): void {
     cameraLook.reset();
     camera.updateProjectionMatrix();
     camSpeedFovBoost = 0;
-    cam2SpeedFovBoost = 0;
     prevPlayerPos.copy(subject);
     return;
   }
@@ -4956,7 +4529,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
   sfx.stopLoops();suspendStormSquall();
   level.invalidateWarehouseEnvironment();
-  releaseLostGraphicsResources([scene,level,player,p2,skateRace]);
+  releaseLostGraphicsResources([scene,level,player,skateRace]);
   level.water?.resetGraphicsContext();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
@@ -4968,7 +4541,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-restored');
   installSceneryShadowPass(renderer, () => level);
   acc=0;resetRenderFrameLimiter();input.consumeEdges(true);
-  player.snapRenderInterpolation();p2?.snapRenderInterpolation();
+  player.snapRenderInterpolation();
   renderer.shadowMap.needsUpdate=true;
   gameFlow.requestGameplayFrame();
 });
@@ -4984,13 +4557,10 @@ document.addEventListener('visibilitychange', () => {
   acc = 0;
   resetRenderFrameLimiter();
   input.consumeEdges(true);
-  input2.consumeEdges(true);
   player.snapRenderInterpolation();
-  p2?.snapRenderInterpolation();
   if (document.hidden) {sfx.stopLoops();suspendStormSquall();}
   else {
     input.armMenuReleaseGuard();
-    input2.armMenuReleaseGuard();
     gameFlow.requestGameplayFrame();
   }
 });
@@ -5039,7 +4609,6 @@ function updateAudio(): void {
   );
 
   if (!vehicleOwnsMovement) player.updateFootstepAudio();
-  if (split2p && p2 && current.id !== 'warproom' && !level.isCampaignMap) p2.updateFootstepAudio();
 }
 
 function currentHudState(): HudState {
@@ -5182,7 +4751,6 @@ function advanceFrame(nowMs: number): void {
   // warms the destination. Avoid rendering a second hidden vortex/CRT graph.
   if (loadingVortex.active && gameFlow.loadingPhase !== 'reveal') {
     input.update(); input.consumeEdges(true);
-    if (split2p) { input2.update(); input2.consumeEdges(true); }
     acc = 0; sfx.stopLoops(); suspendStormSquall();
     return;
   }
@@ -5204,17 +4772,6 @@ function advanceFrame(nowMs: number): void {
     return;
   }
   input.update();
-  if (split2p) {
-    input2.update();
-    // join/loss toasts: P2's pad is claimed by activity, not slot number
-    if (!p2Linked && input2.claimedSlot !== null) {
-      p2Linked = true;
-      ui.showMessage("P2 JOINED", input2.gamepadName, 1800);
-    } else if (p2Linked && input2.claimedSlot === null) {
-      p2Linked = false;
-      ui.showMessage("P2 PAD LOST", "press any button on it to rejoin", 3000);
-    }
-  }
   skateRace.attach(level,current.id);
   countryClubCarts.attach(level,current.id);
   countryClubCarts.setVisible(!editor.active);
@@ -5264,7 +4821,6 @@ function advanceFrame(nowMs: number): void {
       else {
         paused = true;
         player.collapseRenderInterpolation();
-        if (split2p && p2) p2.collapseRenderInterpolation();
         ui.hideMessage();
         gameFlow.showPause({
           levelName: currentCampaignName(),
@@ -5278,7 +4834,6 @@ function advanceFrame(nowMs: number): void {
 
   if (gameFlow.blocksGameplay) {
     input.consumeEdges(true);
-    if (split2p) input2.consumeEdges(true);
     acc = 0;
     sfx.stopLoops();suspendStormSquall();
     if (bonusDeparture && !gameFlow.loadingPhase) { renderBonusDeparture(dt); return; }
@@ -5382,7 +4937,7 @@ function advanceFrame(nowMs: number): void {
     const gameplayStep = competition?.phase !== 'finishing';
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
-    if (gameplayStep && !split2p && replayer.active && !replayer.feed(input, player.camDir)) {
+    if (gameplayStep && replayer.active && !replayer.feed(input, player.camDir)) {
       ui.setReplayBadge(false);
       ui.showMessage("REPLAY DONE", "", 1200);
       restoreReplayRunRule();
@@ -5394,14 +4949,8 @@ function advanceFrame(nowMs: number): void {
       handleCompetitionAction("retry");
       break;
     }
-    // 2P: a reset from EITHER side resets both riders to the start
-    if (split2p && (input.restartPressed || input2.restartPressed)) {
-      input.restartPressed = true;
-      input2.restartPressed = true;
-    }
     if (
       !shellBypass &&
-      !split2p &&
       input.restartPressed &&
       (bonusSession !== null || (current.id === "warproom" || level.isCampaignMap) || isCampaignLevel(current.id))
     ) {
@@ -5414,10 +4963,6 @@ function advanceFrame(nowMs: number): void {
     else if(skateRace.active){ui.raceHud.input(input);skateRace.step(CONST.fixedStep,input);}
     else
       player.step(CONST.fixedStep, input, level);
-    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
-      p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
-      stepPvp(CONST.fixedStep);
-    }
     if(!skateRace.active)level.update(CONST.fixedStep);
     countryClubCarts.step(CONST.fixedStep,player,skateRace);
     player.flushLevelCrateRewards(level);
@@ -5433,17 +4978,15 @@ function advanceFrame(nowMs: number): void {
     }
     flushPendingCompletion();
     checkCampaignEntrances();
-    // Player.step authors the fixed pose; PVP may then move either root. Only
-    // now is the simulation tick complete and safe to publish to rendering.
+    // Player.step authors the fixed pose. Only now is the simulation tick
+    // complete and safe to publish to rendering.
     player.commitRenderStep(level);
     if (skateRace.active) skateRace.commitRenderStep();
-    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     // The finish is a presentation, like countdown/judging. Its HUD-dependent
     // duration must not consume a replay's next inputs or extend the recording.
-    if (gameplayStep && !replayer.active && !split2p) recorder.record(input, player.camDir);
+    if (gameplayStep && !replayer.active) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
-    if (split2p) input2.consumeEdges();
     acc = Math.max(0, acc - CONST.fixedStep);
     simSteps++;
     frameStats.totalFixedSteps++;
@@ -5458,7 +5001,6 @@ function advanceFrame(nowMs: number): void {
   try {
     player.applyRenderInterpolation(renderAlpha);
     if(skateRace.active)skateRace.applyRenderInterpolation(renderAlpha);
-    if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
     level.discardedBoards.applyRenderInterpolation(renderAlpha);
     level.applyCartonRenderInterpolation(renderAlpha);
 
@@ -5492,7 +5034,6 @@ function advanceFrame(nowMs: number): void {
     launchReview?.restoreCamera?.();
     if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
     launchReview?.afterCamera?.();
-    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
     raceFinishPresentation.frame(camera,skateRace,dt,window.innerWidth,window.innerHeight,
       ui.raceHud.sceneViewport(window.innerWidth,window.innerHeight),raceFinishReducedMotion.matches);
     if(skateRace.active)skateRace.updateView(camera);
@@ -5571,54 +5112,10 @@ function advanceFrame(nowMs: number): void {
 
   // Unity Beachfront render contract: low-resolution mirrored capture first,
   // then opaque color+depth for refraction/intersection/caustics, then the
-  // main water draw and coast-only post chain below. In lite/split mode the
-  // ocean's quality switch makes these hooks a cheap feature-disable path.
-  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
-    player.prepareMaskPresentation();
-    p2.prepareMaskPresentation();
-    level.updateSceneryView(camera, camera2);
-    const automaticWorldMatrices = prepareWorldFrame(scene);
-    const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
-    const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
-    if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
-    try {
-      level.water?.renderPasses(renderer, scene, camera);
-      ui.setGameHudComposited(false);
-      gameInterface.setComposited(false);
-      const dw = renderer.domElement.width;
-      const dh = renderer.domElement.height;
-      renderer.setScissorTest(true);
-      renderer.setViewport(0, dh / 2, dw, dh / 2);
-      renderer.setScissor(0, dh / 2, dw, dh / 2);
-      level.renderWarehouseReflection(renderer,camera);
-      gameplayAnimation?.prepareRender(camera);p2GameplayAnimation?.prepareRender(camera);
-      if(!renderCloudPrimaryScene(renderer,scene,camera,renderer.getRenderTarget()))renderer.render(scene, camera);
-      // Both cameras see the same light and pose. Keep the complete primary
-      // shadow map instead of drawing every caster a second time for P2.
-      renderer.shadowMap.autoUpdate = false;
-      renderer.setViewport(0, 0, dw, dh / 2);
-      renderer.setScissor(0, 0, dw, dh / 2);
-      level.renderWarehouseReflection(renderer,camera2);
-      gameplayAnimation?.prepareRender(camera2);p2GameplayAnimation?.prepareRender(camera2);
-      if(!renderCloudPrimaryScene(renderer,scene,camera2,renderer.getRenderTarget()))renderer.render(scene, camera2);
-      renderer.setScissorTest(false);
-      renderer.setViewport(0, 0, dw, dh);
-    } finally {
-      renderer.shadowMap.autoUpdate = shadowAutoUpdate;
-      renderer.toneMapping=originalTone;renderer.toneMappingExposure=originalExposure;
-      finishWorldFrame(scene, automaticWorldMatrices);
-    }
-  } else {
-    renderGameplayScene(dt, true, level.hudMode !== "hub");
-  }
-  // Single-player fruit/icons/HUD were composed together above. Split screen
-  // retains its direct fallback, with each fruit flight confined to its half.
-  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
-    player.drawFlyingFruit(renderer, 'top');
-    p2.drawFlyingFruit(renderer, 'bottom');
-  }
-  // One shared set of 3D counter icons remains above both split viewports.
-  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) ui.drawIcons(renderer, dt);
+  // main water draw and coast-only post chain. In lite mode the ocean's
+  // quality switch makes these hooks a cheap feature-disable path.
+  renderGameplayScene(dt, true, level.hudMode !== "hub");
+  // Fruit, icons and the HUD were composed together above.
     frameStats.cameraTargetX = camTarget.x;
     frameStats.cameraTargetY = camTarget.y;
     frameStats.cameraTargetZ = camTarget.z;
@@ -5629,8 +5126,6 @@ function advanceFrame(nowMs: number): void {
     frameStats.cameraSpeedFovBoost = camSpeedFovBoost;
     frameStats.cameraLookYaw = cameraLook.yaw;
     frameStats.cameraLookPitch = cameraLook.pitch;
-    frameStats.camera2Fov = camera2.fov;
-    frameStats.camera2SpeedFovBoost = cam2SpeedFovBoost;
     if (frameProbe) frameProbe.textContent = JSON.stringify(frameStats);
     if (crtDiagnosticsProbe)
       crtDiagnosticsProbe.textContent = JSON.stringify(
@@ -5646,7 +5141,6 @@ function advanceFrame(nowMs: number): void {
     // tick must always see the exact current simulation-authored hierarchy.
     player.restoreRenderPose();
     if(skateRace.active)skateRace.restoreRenderPose();
-    if (split2p && p2) p2.restoreRenderPose();
     level.discardedBoards.restoreRenderPose();
     level.restoreCartonRenderPose();
   }
@@ -5681,7 +5175,6 @@ requestAnimationFrame(frame);
   competitionAction: handleCompetitionAction,
   getLevel: () => level,
   input,
-  input2,
   TUNING,
   switchLevel,
   scene,
@@ -5745,8 +5238,6 @@ requestAnimationFrame(frame);
   replayer,
   recorder,
   frameStats,
-  set2P, // debug/harness: force past the 2-pad gate with set2P(true, true)
-  getP2: () => p2,
   // The real editor once opened; until then its closed stand-in.
   get editor() { return loadedEditor ?? editor; },
   openEditor,

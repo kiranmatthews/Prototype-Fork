@@ -263,7 +263,7 @@ export class BlockworksSurfaces {
       });
     }
   }
-  setView(position:THREE.Vector3,far:number,secondary?:THREE.Vector3):void{
+  setView(position:THREE.Vector3,far:number):void{
     const world=new THREE.Vector3();
     for(const p of this.pieces){
       const proxy=this.proxies.get(p),mat=proxy?.material as THREE.MeshLambertMaterial|undefined;
@@ -274,7 +274,7 @@ export class BlockworksSurfaces {
       // keep their cached centres instead of walking the whole hierarchy.
       if(!this.staticScene||proxy?.userData.blockworksMoving)p.getWorldPosition(world);
       else world.copy(p.userData.viewPosition);
-      const distance=Math.sqrt(Math.min(world.distanceToSquared(position),secondary?world.distanceToSquared(secondary):Infinity));
+      const distance=world.distanceTo(position);
       p.visible=!ghost&&distance<Math.min(far+12,235);
       const meshes:THREE.Mesh[]=p.userData.lodMeshes??=[];if(!meshes.length)p.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
       for(const mesh of meshes){

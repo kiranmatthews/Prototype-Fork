@@ -64,14 +64,10 @@ export class Input {
   // physical DualShock connected over USB while still paired via Bluetooth
   // registers TWICE (two slots mirroring the same device), so "slot 1" can be
   // a copy of pad 1 while the real second controller sits at slot 2.
-  // null = unclaimed. The merged (P1) input claims whatever its scan lands on;
-  // a pad-only (P2) input claims by activity — see pollGamepad.
+  // null = unclaimed. The merged input claims whatever its scan lands on; a
+  // pad-only input claims by activity — see pollGamepad.
   claimedSlot: number | null = null;
-  // The other player's Input. Its claimed slot is off limits, and any slot
-  // mirroring that pad's live state is treated as the same physical device.
-  rival: Input | null = null;
-  // Claim-by-activity debounce: a mirror copy can lead/lag its twin by a
-  // frame around button transitions, so one differing frame proves nothing.
+  // Claim-by-activity debounce: one active frame proves nothing.
   private claimStreak = 0;
   private claimCandidate = -1;
 
@@ -90,8 +86,8 @@ export class Input {
   private prevLevelSelect = false;
   private menuReleaseGuard = false;
 
-  // padOnly: the split-screen P2 input — one claimed gamepad only, no
-  // keyboard, no touch overlay, no listeners.
+  // padOnly: one claimed gamepad only, no keyboard, no touch overlay and no
+  // listeners (headless harnesses use it).
   constructor(private padOnly = false, private debugShortcutsEnabled: () => boolean = () => false) {
     if (this.padOnly) return; // pad-only: polling does everything
     this.touch = new TouchControls(() => {
@@ -362,7 +358,7 @@ export class Input {
     this.prevLevelSelect = levelSelect;
   }
 
-  // Drop the claimed pad and restart the audition from scratch (2P toggles).
+  // Drop the claimed pad and restart the audition from scratch.
   releaseClaim(): void {
     this.claimedSlot = null;
     this.claimCandidate = -1;
@@ -423,26 +419,21 @@ export class Input {
       }
       this.claimedSlot = null; // pad went away — fall through and re-claim
     }
-    const rivalSlot = this.rival ? this.rival.claimedSlot : null;
     if (!this.padOnly) {
-      // Merged (P1) input: first connected pad that isn't the other player's.
-      // The scan result is claimed so the rival's exclusion check sees it.
+      // Merged input: the first connected pad.
       for (const pad of pads) {
-        if (!pad || !pad.connected || pad.index === rivalSlot) continue;
+        if (!pad || !pad.connected) continue;
         this.claimedSlot = pad.index;
         this.gamepadName = pad.id;
         return pad;
       }
       return null;
     }
-    // Pad-only (P2) input: claim the first slot showing deliberate input that
-    // is provably NOT the rival's device — its state must differ from the
-    // rival pad's for a few consecutive polls, because a USB+Bluetooth mirror
-    // matches its twin except for one-frame leads around transitions.
-    const rivalPad = rivalSlot !== null ? pads[rivalSlot] : null;
+    // Pad-only input: claim the first slot showing deliberate input for a few
+    // consecutive polls.
     for (const pad of pads) {
-      if (!pad || !pad.connected || pad.index === rivalSlot) continue;
-      if (!padActive(pad) || (rivalPad && sameState(pad, rivalPad))) continue;
+      if (!pad || !pad.connected) continue;
+      if (!padActive(pad)) continue;
       if (pad.index !== this.claimCandidate) {
         this.claimCandidate = pad.index;
         this.claimStreak = 0;
@@ -467,20 +458,4 @@ function padActive(pad: Gamepad): boolean {
     Math.hypot(pad.axes[0] ?? 0, pad.axes[1] ?? 0) > 0.35 ||
     Math.hypot(pad.axes[2] ?? 0, pad.axes[3] ?? 0) > 0.35
   );
-}
-
-// Same physical device test for a mirror copy (same id, same live state).
-// The axis tolerance is wide because the two HID streams sample the stick at
-// slightly different times — a fast whip can put them ~0.3 apart for a frame.
-function sameState(a: Gamepad, b: Gamepad): boolean {
-  if (a.id !== b.id) return false;
-  const nb = Math.max(a.buttons.length, b.buttons.length);
-  for (let i = 0; i < nb; i++) {
-    if (!!a.buttons[i]?.pressed !== !!b.buttons[i]?.pressed) return false;
-  }
-  const na = Math.max(a.axes.length, b.axes.length);
-  for (let i = 0; i < na; i++) {
-    if (Math.abs((a.axes[i] ?? 0) - (b.axes[i] ?? 0)) > 0.35) return false;
-  }
-  return true;
 }

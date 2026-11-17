@@ -832,14 +832,14 @@ export class JungleAssetKit {
   }
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
-  setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
+  setView(position:THREE.Vector3,visibleDistance:number):void {
     if(!this.streamed||this.disposed||this.capturingScenery||this.shadowLowDetail)return;
     this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
     // Preload 128 m beyond visible scenery, retaining full source detail.
     // Distance controls residency only; it never selects another mesh.
     const radius=Math.max(96,visibleDistance)+128;
     this.viewSet=true;
-    const views=secondary?[position,secondary]:[position];
+    const views=[position];
     if(views.length===this.lastViews.length&&views.every((p,i)=>this.lastViews[i].distanceToSquared(p)<16)&&this.lastRadius===radius)return;
     this.lastViews=views.map(p=>p.clone());this.lastRadius=radius;
     const distanceTo=(cell:Bucket)=>Math.min(...views.map(p=>cell.bounds.distanceToPoint(p)));

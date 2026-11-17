@@ -20,8 +20,8 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
     const SUN_SHADOW_MAP_SIZE=4096, DEFAULT_SKY='sunset', LITE=settings.lite??false, NO_COAST_POST=true, shellBypass=true;
     const editorViewActive=settings.editor??false;
     const competition=settings.competition??null,isCompetitionLevel=settings.isCompetitionLevel??(()=>false);
-    const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(), camera2=new THREE.PerspectiveCamera();
-    camera.far=camera2.far=settings.editor?1234:400;
+    const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera();
+    camera.far=settings.editor?1234:400;
     const hemi=new THREE.HemisphereLight(),sun=new THREE.DirectionalLight(),fill=new THREE.DirectionalLight();
     const sky=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyMist=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
@@ -46,7 +46,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
     if(settings.viewPosition)drownedCrownLighting?.update(...settings.viewPosition);
     if(settings.transitionTo){level=settings.transitionTo.level;current=settings.transitionTo.entry;applyTheme();}
     return {fog:scene.fog?{near:scene.fog.near,far:scene.fog.far,color:scene.fog.color.toArray()}:null,
-      background:scene.background.toArray(),drawDistance:camera.far,secondDrawDistance:camera2.far,
+      background:scene.background.toArray(),drawDistance:camera.far,
       ambientSky:hemi.color.toArray(),ambientGround:hemi.groundColor.toArray(),ambientIntensity:hemi.intensity,
       sunColor:sun.color.toArray(),sunIntensity:sun.intensity,shadowStrength:sun.shadow.intensity,
       fillColor:fill.color.toArray(),fillIntensity:fill.intensity,skyVisible:sky.visible,mistVisible:skyMist.visible,fallback};

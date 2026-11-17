@@ -54,10 +54,6 @@ try{
     delete document.hidden;return {before,after};
    });assert.equal(hidden.before,hidden.after,'hidden time does not advance simulation');
    await page.waitForTimeout(100);assert.ok(await page.evaluate(()=>window.__game.frameStats.simSteps<=1),'resume has no catch-up burst');
-   await page.evaluate(()=>window.__game.set2P(true,true));await page.waitForTimeout(1200);
-   assert.equal(await page.evaluate(()=>!!window.__game.getP2()),true);
-   await page.screenshot({path:`${output}/split.png`});
-   await page.evaluate(()=>window.__game.set2P(false,true));await page.waitForTimeout(500);
    await page.evaluate(()=>window.__game.renderQualitySettings.setEnabled(false));await page.waitForTimeout(500);
    await page.evaluate(()=>window.__game.renderQualitySettings.setEnabled(true));await page.waitForTimeout(500);
   }

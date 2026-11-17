@@ -860,7 +860,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camSpeedFovBoost:
     'HIGH-SPEED SKATE lens push in extra FOV degrees. It is 0 at cruiseSpeed, eases up to this full amount at maxSpeed, and holds through downhill/vert overspeed. It only applies while the board is live; walking and stopping ease back to camFov. 0 disables the trick.',
   camPitch:
-    'TILT in degrees below the horizon: 0 looks level, positive looks down, negative looks up. Rotates the camera without moving it. Height and distance never change this angle. Side, reverse, boulder and split-screen shots add their authored angle offsets; the right stick can still peek.',
+    'TILT in degrees below the horizon: 0 looks level, positive looks down, negative looks up. Rotates the camera without moving it. Height and distance never change this angle. Side, reverse and boulder shots add their authored angle offsets; the right stick can still peek.',
   camDist: 'DISTANCE in metres behind the character along the course. Changes position without changing tilt or height. Negative moves ahead of the character. Special shots add their authored distance offsets. The old camOffset has been combined into this one position control.',
   camBalanceRoll:
     'How far the horizon ROLLS with the grind balance needle, in degrees at a full lean. The shot leans the way you are falling off the rail, so a grind you are losing reads in the frame itself and not only in the meter. 0 turns it off.',

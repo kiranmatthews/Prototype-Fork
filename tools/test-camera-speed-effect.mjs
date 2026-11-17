@@ -109,7 +109,7 @@ try {
 
   const playerSource = await readFile(new URL('../src/player.ts', import.meta.url), 'utf8');
   const mainSource = await readFile(new URL('../src/main.ts', import.meta.url), 'utf8');
-  for (const declaration of ['authoredFov', 'p2AuthoredFov']) {
+  for (const declaration of ['authoredFov']) {
     const expression = mainSource.match(new RegExp(`const ${declaration} = ([^;]+);`))?.[1];
     assert.ok(expression, `missing ${declaration} camera path`);
     const resolve = new Function('TUNING', 'level', 'current', 'THREE', 'cameraValues', 'sideF', 'p2Side', `return ${expression}`);
@@ -168,20 +168,16 @@ try {
   assert.match(playerSource, /get cameraSkateSpeed\(\): number/,
     'Player does not expose deterministic board-owned camera speed');
   assert.match(mainSource, /const cameraSkateSpeed = player\.cameraSkateSpeed/,
-    'P1 camera is not wired to board-owned speed');
-  assert.match(mainSource, /const p2SkateSpeed = p2\.cameraSkateSpeed/,
-    'P2 camera is not wired to its own speed');
-  assert.doesNotMatch(mainSource, /camera2\.fov = camera\.fov/,
-    'P2 still inherits P1 speed FOV');
+    'the camera is not wired to board-owned speed');
   assert.match(mainSource,
     /authoredFov \+ camSpeedFovBoost,\s*BOULDER_FOV \+ TUNING.camFov - 49,\s*boulderF/s,
   'speed FOV is not composed below the authored boulder shot');
-  assert.match(mainSource, /camSpeedFovBoost = 0;\s*cam2SpeedFovBoost = 0;/,
+  assert.match(mainSource, /camSpeedFovBoost = 0;\s*prevPlayerPos\.copy\(subject\);/,
     'fixed review cameras do not clear the speed lens');
   assert.match(mainSource, /frameStats\.cameraSpeedFovBoost = camSpeedFovBoost/,
     'live frame diagnostics omit the speed lens');
 
-  console.log('PASS board-owned high-speed camera FOV curve, easing, split independence, and UI schema');
+  console.log('PASS board-owned high-speed camera FOV curve, easing, and UI schema');
 } finally {
   await server.close();
 }
