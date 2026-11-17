@@ -138,7 +138,7 @@ import { CameraPortraitFraming } from "./cameraPortraitFraming";
 import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
-import { Editor } from "./editor";
+import type { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls } from "./swirls";
@@ -3675,12 +3675,10 @@ function closeEditorToPlay(): boolean {
   return noOp;
 }
 let editorExitAlreadyBuilt = false;
-const editor = new Editor(
-  scene,
-  camera,
-  renderer.domElement,
-  () => editorPreviewLevel ?? level,
-  {
+// The level editor (about ten thousand lines and two thousand page elements)
+// loads the first time it is opened, not with the game. `editor` stands in
+// for it until then: closed, unchanged, and every call a no-op.
+const editorHooks: ConstructorParameters<typeof Editor>[4] = {
     preflight: prepared => preflightEditorWorking(prepared),
     rebuild: (committed = false) =>
       committed ? rebuildLevel() : rebuildEditorPreview(),
@@ -3725,8 +3723,35 @@ const editor = new Editor(
     showMsg: (t, s) => ui.showMessage(t, s ?? "", 1800),
     // drop fog + extend the far plane on enter, restore on every exit path
     setView: (editing, changed) => setEditorView(editing, changed),
-  },
-);
+};
+let loadedEditor: Editor | null = null;
+let editorLoading: Promise<Editor> | null = null;
+function loadEditor(): Promise<Editor> {
+  return editorLoading ??= import("./editor").then(
+    module => loadedEditor = new module.Editor(scene, camera, renderer.domElement, () => editorPreviewLevel ?? level, editorHooks),
+    error => { editorLoading = null; throw error; },
+  );
+}
+const editor = {
+  get active(): boolean { return loadedEditor?.active ?? false; },
+  get changedThisSession(): boolean { return loadedEditor?.changedThisSession ?? false; },
+  get targetId(): string { return loadedEditor?.targetId ?? DEFAULT_LEVEL_ID; },
+  syncPlayAspect(aspect: number): void { loadedEditor?.syncPlayAspect(aspect); },
+  exit(): void { loadedEditor?.exit(); },
+  onLevelRebuilt(): void { loadedEditor?.onLevelRebuilt(); },
+  workingEntry(): LevelEntry | null { return loadedEditor?.workingEntry() ?? null; },
+  showMessage(title: string, detail?: string): void { loadedEditor?.showMessage(title, detail); },
+  openToolSection(section: string): void { loadedEditor?.openToolSection(section); },
+  update(): void { loadedEditor?.update(); },
+};
+/** Run an editor action once the editor has loaded (at once after the first time). */
+function whenEditorLoaded(action: () => void): void {
+  if (loadedEditor) { action(); return; }
+  void loadEditor().then(action, error => {
+    console.error("Level editor failed to load.", error);
+    ui.showMessage("EDITOR UNAVAILABLE", "the level editor could not load · check the connection", 2600);
+  });
+}
 // Open the editor on a level (default: whatever is loaded). A level that has
 // never been edited has no data to bind to, so it goes through editLevel,
 // which captures it first.
@@ -3959,7 +3984,7 @@ async function openLinkedTool(): Promise<void> {
     case "fieldstudio": await openFieldStudioTool(); break;
     case "tuning": ui.openToolPanel("right", section); break;
     case "menu": ui.openToolPanel("left"); break;
-    case "editor": openEditor(); editor.openToolSection(section); break;
+    case "editor": await loadEditor(); openEditor(); editor.openToolSection(section); break;
     case "crt": crtGuestPanel.open(); break;
     case "render": renderQualityPanel?.setOpen(true); break;
     case "board": skateboardPanel.setOpen(true); break;
@@ -3980,6 +4005,7 @@ function openEditor(
   preservedMessage: ReturnType<UI["captureMessage"]> =
     paused ? ui.captureMessage() : null,
 ): void {
+  if (!loadedEditor) { whenEditorLoaded(() => openEditor(target, initialData, preservedMessage)); return; }
   if (editor.active) return;
   const entry = findLevel(target);
   if (!entry) return;
@@ -4015,7 +4041,7 @@ function openEditor(
   // sees them, while editorGhost guides (zones, camnodes, invisible walls)
   // remain visible over the untouched original world.
   maskInitialEditorProxy(editorPreviewLevel);
-  editor.enter(entry, workingData);
+  loadedEditor.enter(entry, workingData);
 }
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
 // under the tools, so a tab tap first CLOSES the editor (edits are already
@@ -4058,9 +4084,9 @@ function editLevel(
     2600,
   );
 }
-ui.onLevelEdit = (id: string) => editLevel(id);
+ui.onLevelEdit = (id: string) => whenEditorLoaded(() => editLevel(id));
 // NEW: a blank slate that joins the menu immediately.
-ui.onLevelNew = () => {
+ui.onLevelNew = () => whenEditorLoaded(() => {
   const data = starterCustomLevel();
   data.name = "New Level";
   const id = saveUserLevel({ id: "", name: data.name, data });
@@ -4076,7 +4102,7 @@ ui.onLevelNew = () => {
   ui.refreshLevels(id);
   openEditor(id);
   ui.showMessage(persisted ? "NEW LEVEL" : "NEW LEVEL · SAVE FAILED", persisted ? "rename it in the editor's PROJECT tab" : "session only · export before reloading", 3000);
-};
+});
 // IMPORT: a downloaded level file becomes a new menu row. Accepts both the
 // bare component data the editor exports and a whole {id,name,data} entry.
 function importLevelFile(txt: string, fallbackName: string): boolean {
@@ -5721,7 +5747,8 @@ requestAnimationFrame(frame);
   frameStats,
   set2P, // debug/harness: force past the 2-pad gate with set2P(true, true)
   getP2: () => p2,
-  editor,
+  // The real editor once opened; until then its closed stand-in.
+  get editor() { return loadedEditor ?? editor; },
   openEditor,
   ui, // debug: drive menu/sync controls from the console/harness
   campaign,

@@ -17,10 +17,11 @@ const fn = name => {
   assert.ok(node, `missing production ${name}`);
   return node.getText(ast);
 };
-const editorDeclaration = ast.statements.flatMap(node => ts.isVariableStatement(node) ? [...node.declarationList.declarations] : [])
-  .find(node => node.name.getText(ast) === "editor");
-assert.ok(editorDeclaration && ts.isNewExpression(editorDeclaration.initializer));
-const editorHooks = editorDeclaration.initializer.arguments[4];
+// The editor loads on first open; main.ts passes it this hooks object.
+const hooksDeclaration = ast.statements.flatMap(node => ts.isVariableStatement(node) ? [...node.declarationList.declarations] : [])
+  .find(node => node.name.getText(ast) === "editorHooks");
+assert.ok(hooksDeclaration && ts.isObjectLiteralExpression(hooksDeclaration.initializer));
+const editorHooks = hooksDeclaration.initializer;
 const code = ts.transpileModule([...["rebuildLevel", "closeEditorToPlay", "syncCompetitionLevel", "setEditorView", "updateSceneryForCurrentView"].map(fn),
   `globalThis.editorHooks = ${editorHooks.getText(ast)};`].join("\n"), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
