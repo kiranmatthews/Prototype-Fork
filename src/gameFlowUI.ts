@@ -1,4 +1,4 @@
-import { OFFLINE_STATUS_EVENT, offlineStatusText, gameUpdateAvailable, openGameUpdate } from "./offline";
+import { GAME_UPDATE_EVENT, gameUpdateAvailable, openGameUpdate } from "./gameUpdate";
 import { MENU_THEME_CSS } from './menuTheme';
 import {updateMenuPngFocus} from './menuPngFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
@@ -122,7 +122,6 @@ export interface GameFlowUICallbacks {
   prepareLoadingVortex?: () => Promise<void>;
   independentLoadingVortex?: () => boolean;
   revealLoadingVortex?: () => void;
-  waitForLevelData?: () => Promise<void>;
   waitForDestinationAssets?: () => Promise<void>;
   warmDestinationFrame?: () => Promise<void>;
   captureLoadingFrame?: () => HTMLCanvasElement | null;
@@ -304,8 +303,7 @@ export class GameFlowUI {
       }
     });
     window.addEventListener("keydown", (event) => this.onKey(event));
-    window.addEventListener(OFFLINE_STATUS_EVENT, () => {
-      for (const node of this.panel.querySelectorAll<HTMLElement>(".game-offline-status")) node.textContent = offlineStatusText();
+    window.addEventListener(GAME_UPDATE_EVENT, () => {
       if (this.screen === 'launch' && gameUpdateAvailable() && !this.panel.querySelector('[data-game-update-action]'))
         this.render();
       this.invalidatePreCrt();
@@ -784,7 +782,7 @@ export class GameFlowUI {
         },
         prepareVortex: () => this.callbacks.prepareLoadingVortex?.() ?? Promise.resolve(),
         independentVortex: () => this.callbacks.independentLoadingVortex?.() ?? false,
-        load: async () => { await this.callbacks.waitForLevelData?.(); await action(); },
+        load: action,
         waitForAssets: () => this.callbacks.waitForDestinationAssets?.() ?? Promise.resolve(),
         warmDestination: () => this.callbacks.warmDestinationFrame?.() ?? Promise.resolve(),
         prepareDestination: () => this.callbacks.prepareDestinationFrame?.() ?? Promise.resolve(),
@@ -1511,13 +1509,6 @@ export class GameFlowUI {
     }
   }
 
-  private offlineStatus(): HTMLElement {
-    const status = element("p", "game-panel-subtitle game-offline-status");
-    status.setAttribute("role", "status");
-    status.textContent = offlineStatusText();
-    return status;
-  }
-
   private renderOptions(): void {
     const card = element("div", "game-options-card timber-card");
     const title = element("h2", "game-panel-title");
@@ -1588,7 +1579,6 @@ export class GameFlowUI {
         this.render();
       }),
     );
-    toggles.append(this.offlineStatus());
     card.append(title, toggles);
     // Prompt style is constructed before its synchronizer; navigate in the
     // visible order rather than the order those controls were constructed.
@@ -2229,8 +2219,6 @@ export class GameFlowUI {
       .timber-card::before { top: 9px; left: 10px; }
       .timber-card::after { right: 10px; bottom: 9px; }
       .game-eyebrow { color: #703315; font: 400 clamp(14px, 1.6vw, 21px)/1 Roo, Impact, sans-serif; letter-spacing: .12em; text-align: center; }
-      .game-offline-status { font: 400 clamp(12px, 1.7vh, 17px)/1.35 "Staging Secondary", sans-serif; color: #d9e8e3; margin: 14px 0 0; text-align: center; }
-      .game-offline-status:empty { display: none; }
       .game-launch-card { width: min(520px, 90vw); padding: clamp(24px, 5vh, 48px) clamp(25px, 6vw, 64px) 24px; }
       .game-logo { margin: 5px 0 24px; display: grid; text-align: center; line-height: .72; filter: drop-shadow(0 6px 0 #68200e); }
       .game-logo span { font-size: clamp(36px, 8vw, 72px); color: var(--game-yellow); -webkit-text-stroke: 4px #b83a13; paint-order: stroke fill; }

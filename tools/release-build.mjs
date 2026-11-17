@@ -1,55 +1,26 @@
-import { createHash } from 'node:crypto';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets,prepareReviewCatalog,compactReleaseMetadata} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
 import {prepareTop40Textures} from './release-top40-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
-import {preparePublishedLevels} from './release-levels.mjs';
 import {prepareNativeGeometry} from './release-native-geometry.mjs';
 import {prepareReleaseImages} from './release-images.mjs';
 
-const hash = bytes => createHash('sha256').update(bytes).digest('hex');
-async function filesIn(directory, prefix = '') {
-  const files = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const name = prefix + entry.name;
-    if (entry.isDirectory()) files.push(...await filesIn(path.join(directory, entry.name), name + '/'));
-    else if (entry.isFile()) files.push(name);
-  }
-  return files.sort();
-}
-
-// Derive font versions from the same metrics used by the game. Current export
-// members can be saved offline; historical source artwork remains local.
-export function runtimeAsset(file, fontVersions) {
-  // An online escape hatch must remain reachable through stale cache-first workers.
-  if (file === 'update-game.html' || file === 'offline-save.html' || file === 'release.json') return false;
-  if (file === 'sw.js' || /(?:^|\/)(?:provenance|UpstreamSource)\//.test(file)) return false;
-  if (/^jak-lab\/assets\/(?:models\/[a-f0-9]{64}\.glb\.gz|death\/[a-f0-9]{64}\.json\.gz)$/.test(file)) return true;
-  if (/^motion-study\/(?:jak|skate)\/(?:motion\.json|eichar-lod0\.glb)\.gz$/.test(file)) return true;
-  if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
-  if (file.startsWith('fonts/')) {
-    if (/\.(?:otf|ttf|woff2?)$/.test(file)) return true;
-    const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.(?:png|webp|json)$/);
-    if(atlas)return Object.values(fontVersions).includes(Number(atlas[2]));
-    const exportFile=file.match(/^fonts\/roo-(?:image-font-v(\d+)\.manifest|font-v(\d+)-provenance)\.json$/);
-    return !!exportFile&&Object.values(fontVersions).includes(Number(exportFile[1]??exportFile[2]));
-  }
-  return true;
-}
-
-export function offlineBuild() {
+/** The release step after Vite: shrink hosted assets without changing what
+ * players see, then publish the tiny release descriptor the update check reads.
+ * public/levels.json is a frozen snapshot read only by local tools; the game
+ * no longer downloads it, so it is left out of the release. */
+export function releaseBuild() {
   let root, outDir;
   return {
-    name: 'boneman-offline', apply: 'build',
+    name: 'boneman-release', apply: 'build',
     configResolved(config) { root = config.root; outDir = path.resolve(root, config.build.outDir); },
     async closeBundle() {
-      const levels=await preparePublishedLevels({root,outDir});
-      console.log(`Level sync: ${levels.retained.length} overrides, ${levels.sourceBacked.length} exact source copies omitted; ${(levels.outputBytes/1024).toFixed(1)} KiB download.`);
+      await rm(path.join(outDir, 'levels.json'), { force: true });
       const metrics = await readFile(path.join(root, 'src/roo-type/atlas-metrics.ts'), 'utf8');
       const fontVersions = Object.fromEntries([...metrics.matchAll(/"(bonus|counter)":\{"version":(\d+)/g)].map(m => [m[1], Number(m[2])]));
-      if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Offline font versions could not be read');
+      if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Release font versions could not be read');
       const retired=await pruneRetiredFontAssets({root,outDir,fontVersions});
       console.log(`Release assets: kept active fonts; omitted ${retired.files.length} historical files (${(retired.bytes/1048576).toFixed(1)} MiB) from generated output.`);
       const metadata=await compactReleaseMetadata({root,outDir});
@@ -70,24 +41,12 @@ export function offlineBuild() {
       const images=await prepareReleaseImages({root,outDir});
       console.log(`Lossless images: ${images.images} pixel-identical WebPs, ${(images.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       console.log(`Animation catalogue: exact keyframes packed losslessly, ${(catalogue.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
-      const entries = [];
-      for (const file of await filesIn(outDir)) {
-        if (!runtimeAsset(file, fontVersions)) continue;
-        const bytes = await readFile(path.join(outDir, file));
-        entries.push({ url: file, revision: hash(bytes), size: bytes.length });
-      }
-      const worker = await readFile(path.join(root, 'src/offline-worker.js'), 'utf8');
-      const version = hash(JSON.stringify(entries) + worker).slice(0, 20);
-      const output = worker.replace('/* OFFLINE_MANIFEST */', JSON.stringify({ version, entries }));
-      await writeFile(path.join(outDir, 'sw.js'), output);
       const html = await readFile(path.join(outDir, 'index.html'), 'utf8');
       const script = [...html.matchAll(/<script\b[^>]*>/g)].map(match => match[0])
         .find(tag => /\btype=["']module["']/.test(tag));
       const entry = script?.match(/\bsrc=["'](?:\.\/)?(assets\/index-[\w-]+\.js)["']/)?.[1];
       if (!entry) throw new Error('Built game entry was not found for update discovery');
       await writeFile(path.join(outDir, 'release.json'), JSON.stringify({ entry }));
-      const total = entries.reduce((sum, entry) => sum + entry.size, 0);
-      console.log(`Offline game: ${entries.length} files, ${(total / 1048576).toFixed(1)} MiB, version ${version}`);
     },
   };
 }

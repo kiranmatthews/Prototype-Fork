@@ -19,7 +19,7 @@ try {
       ['solProtoTuning','old tuning'],['solProtoCampaignSavesV1','slot two'],
       ['solProtoUserLevels','custom levels'],['solProtoAnimationDraft:test','animation'],
       ['solProtoCharacterProportions.v1','old character'],['solProtoUnityOceanStudioV1','old water'],
-      ['solProtoGHToken','test-token'],['originalProtoTuning','other project'],
+      ['originalProtoTuning','other project'],
       ['puffStudioV1','shared legacy'],['fieldStudioV1','shared field'],['unrelated','keep'],
     ]);
     const session=new MemoryStorage([['solProtoAutoUpdate','old build'],['unrelatedSession','keep']]);
@@ -45,7 +45,7 @@ try {
   assert.deepEqual(await deps.drafts.read(),[]);assert.equal(deps.cachesCleared,true);
   assert.equal(readForkStudioDraft(deps.local,'solProtoPuffStudioV1','puffStudioV1'),null,'reset must not resurrect shared legacy drafts');
   assert.ok(deps.session.getItem(LOCAL_RESET_RECEIPT));
-  const backup=await deps.recovery.read();assert.ok(!backup.local.some(([k])=>k==='solProtoGHToken'));
+  const backup=await deps.recovery.read();assert.ok(backup.local.length);
   await undoLocalGameReset(deps);
   assert.deepEqual([...deps.local.values].sort(),beforeLocal.sort());
   assert.deepEqual([...deps.session.values].sort(),beforeSession.sort());assert.deepEqual(await deps.drafts.read(),beforeDrafts);
@@ -64,5 +64,5 @@ try {
   const root=new URL('../',import.meta.url);
   const ui=await readFile(new URL('src/ui.ts',root),'utf8');assert.match(ui,/reset-local-game-data/);
   const html=await readFile(new URL('reset-local-data.html',root),'utf8');assert.match(html,/id="reset" disabled/);assert.match(html,/id="confirm-reset" type="checkbox"/);assert.match(html,/Undo last reset/);
-  console.log('PASS scoped local data reset: settings/saves/drafts/session, foreign keys and token preservation, no legacy resurrection, durable undo, backup/partial-failure recovery, UI confirmation');
+  console.log('PASS scoped local data reset: settings/saves/drafts/session, foreign keys, no legacy resurrection, durable undo, backup/partial-failure recovery, UI confirmation');
 } finally {await server.close();}

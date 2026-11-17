@@ -26,7 +26,7 @@ export interface PlaytestRuntime {
 }
 
 /** Uses the production player, input, physics and animation scheme. This entry
- * has no campaign, editor sync, music player, or full-game offline installer. */
+ * has no campaign, editor or music player. */
 export async function createPlaytest(menu: (message?: string) => void): Promise<PlaytestRuntime> {
   const canvas = document.getElementById('challenge-world') as HTMLCanvasElement;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });

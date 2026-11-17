@@ -5,7 +5,6 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {prepareSharedReleaseTextures,shareGlbImages} from './release-shared-textures.mjs';
 import {parseTextureGlb,textureDigest as hash} from './release-textures.mjs';
-import {runtimeAsset} from './offline-build.mjs';
 const root=fileURLToPath(new URL('..',import.meta.url)),scratch=await mkdtemp(path.join(tmpdir(),'release-shared-textures-'));
 const paths=['drowned-crown/excellence/crash-cavern-rock.glb','drowned-crown/excellence/crash-cavern-canopy.glb','drowned-crown/excellence/crash-mine-shell.glb','treehouse-trail/tree.glb','treehouse-trail/canopy.glb','custard-creek/willow-grove.glb','custard-creek/willow-forest.glb'];
 try{
@@ -16,7 +15,7 @@ try{
  const result=await prepareSharedReleaseTextures({root:scratch,outDir:out});assert.ok(result.images>=6&&result.models===paths.length&&result.savedBytes>0);
  const proof=JSON.parse(await readFile(path.join(out,'provenance/shared-textures.json')));let packedBytes=0;
  assert.deepEqual(proof.unchangedUnsupported,['carlisle-kit/city.glb']);assert.deepEqual(await readFile(path.join(out,'carlisle-kit/city.glb')),virtual,'compressed virtual-buffer model remains exact');
- for(const asset of proof.assets){assert.equal(hash(await readFile(path.join(out,asset.file))),asset.sha256);assert.ok(runtimeAsset(asset.file,{bonus:1,counter:1}),'exact shared image belongs in the offline manifest');}
+ for(const asset of proof.assets)assert.equal(hash(await readFile(path.join(out,asset.file))),asset.sha256);
  for(const model of proof.models){
   const before=parseTextureGlb(originals.get(model.file)),bytes=await readFile(path.join(out,model.file)),after=parseTextureGlb(bytes);packedBytes+=bytes.length;
   assert.equal(hash(bytes),model.sha256);const movedViews=new Set();
@@ -39,5 +38,5 @@ try{
  await assert.rejects(prepareSharedReleaseTextures({root:scratch,outDir:out}),/output changed/);await writeFile(shared,saved);
  const linked=path.join(scratch,'linked');await mkdir(linked);await symlink(sentinel,path.join(linked,'model.glb'));await assert.rejects(prepareSharedReleaseTextures({root:scratch,outDir:linked}),/symlinks/);
  assert.deepEqual(await readFile(sentinel),sourceBytes,'authoring data is never rewritten');
- console.log(JSON.stringify({pass:true,...result,checks:'encoded image identity; all non-image data; nested base URLs; offline membership; source retention; repeat builds; corrupt output; URI containment; symlinks'}));
+ console.log(JSON.stringify({pass:true,...result,checks:'encoded image identity; all non-image data; nested base URLs; source retention; repeat builds; corrupt output; URI containment; symlinks'}));
 }finally{await rm(scratch,{recursive:true,force:true});}

@@ -13,7 +13,7 @@ import {LaunchCamera} from './launchCamera';
 import { requestedTool } from "./toolRoutes";
 import { debugLevelMenu } from './debugLevelMenu';
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
-import { startOfflineCache } from "./offline";
+import { startGameUpdateChecks } from "./gameUpdate";
 import { stabilityReport } from './stabilityReport';
 import { rooAtlasDiagnostics } from './roo-type/atlas';
 import { menuAssetsReady } from './roo-type/menuAssets';
@@ -56,7 +56,7 @@ import { installSceneryShadowPass } from "./sceneryShadowPass";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
 import { LoadingVortexPresentation } from './loadingVortex';
 import { loadingTitleAtlasUrl } from './loadingTitle';
-import { installLocalResetListener } from "./localGameStorage";
+import { forgetRetiredFeatureData, installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";
 import {
@@ -68,8 +68,6 @@ import {
   levelList,
   findLevel,
   saveUserLevel,
-  restoreUserLevels,
-  getUserLevels,
   deleteUserLevel,
   restoreBuiltin,
   adoptLegacyLevels,
@@ -79,12 +77,9 @@ import {
   parseCustomLevelJson,
   newLaneCursor,
   userLevelStorageHealthy,
-  isEditUnlocked,
-  checkEditPass,
   DEFAULT_SKY,
   type SkyPreset,
 } from "./level";
-import { pushLevels, fetchRemoteLevels, getToken, setToken, hasPulledLevels, markLevelsPulled } from "./sync";
 import {
   Player,
   type PlayerRunState,
@@ -1703,6 +1698,7 @@ visualTreatmentSettings.subscribe((value) => {
 const recorder = new Recorder();
 const replayer = new Replayer(() => ui.syncTuningReadouts());
 adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
+forgetRetiredFeatureData(window.localStorage); // level sync and its token are retired
 const oceanReview = new URLSearchParams(window.location.search).has(
   "oceanreview",
 );
@@ -2364,7 +2360,6 @@ gameFlow = new GameFlowUI(
     prepareLoadingVortex: prepareLoadingVortexPresentation,
     independentLoadingVortex: () => loadingVortex.active,
     revealLoadingVortex: () => loadingVortex.reveal(),
-    waitForLevelData: () => firstRunLevelSync,
     waitForDestinationAssets: prepareActivePresentationAssets,
     warmDestinationFrame: warmDestinationPresentation,
     captureLoadingFrame: captureLoadingPresentation,
@@ -4113,85 +4108,6 @@ ui.onLevelImport = (txt: string, filename: string) => {
   if (!importLevelFile(txt, filename))
     ui.showMessage("BAD LEVEL FILE", "unsupported format, invalid fields or excessive geometry", 3000);
 };
-// UNLOCK: the passcode gate for direct editing + phone sync.
-ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
-  const ok = await checkEditPass(pass);
-  if (ok) {
-    ui.setEditUnlocked(true);
-    ui.showMessage(
-      "DIRECT EDITING UNLOCKED",
-      "EDIT THIS LEVEL + SYNC are on",
-      2200,
-    );
-  }
-  return ok;
-};
-// SYNC UP: publish this session's whole level list to the repo file the phone
-// reads. The payload IS the list — what you see is what you push.
-ui.onSyncPush = async (): Promise<void> => {
-  const levels = getUserLevels();
-  ui.setSyncStatus(`pushing ${levels.length} level(s)…`, "busy");
-  const res = await pushLevels({ v: 2, levels });
-  ui.setSyncStatus(res.msg, res.ok ? "ok" : "err");
-  ui.refreshEditControls();
-};
-// RESTORE FROM CLOUD: replace this device's list with the published one. This
-// is the escape hatch for a device that has drifted — and the one-tap setup
-// for a phone that has never seen the levels. It DISCARDS local levels, so the
-// button is two-tap armed; and it fetches first, so an offline tap changes
-// nothing.
-ui.onForceResync = async (): Promise<void> => {
-  ui.setSyncStatus("reading the published levels…", "busy");
-  const remote = (await fetchRemoteLevels()) as {
-    v?: number;
-    levels?: LevelEntry[];
-  } | null;
-  if (!remote || !Array.isArray(remote.levels)) {
-    const msg = "couldn't reach the published levels — nothing changed";
-    ui.setSyncStatus(msg, "err");
-    ui.showMessage("RESTORE FAILED", msg, 2600);
-    return;
-  }
-  const before = getUserLevels().length;
-  if (!restoreUserLevels(remote.levels)) {
-    ui.setSyncStatus("restore failed · invalid pack or browser storage unavailable", "err");
-    ui.showMessage("RESTORE FAILED", "check the level pack and browser storage", 3000);
-    return;
-  }
-  markLevelsPulled();
-  const after = getUserLevels().length;
-  if (!switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID)) {
-    ui.refreshLevels(current.id);
-    ui.refreshEditControls();
-    ui.setSyncStatus("library restored · previous run retained because the selected level could not load", "err");
-    return;
-  }
-  player.respawn(level, true);
-  ui.refreshLevels(current.id);
-  ui.refreshEditControls();
-  ui.setSyncStatus(`restored ${after} level(s) from the cloud`, "ok");
-  ui.showMessage(
-    "LEVELS RESTORED",
-    `${before} local → ${after} published`,
-    2400,
-  );
-};
-ui.onTokenSet = (t: string) => {
-  setToken(t);
-  ui.setSyncStatus(
-    getToken() ? "token saved on this device" : "token cleared",
-    getToken() ? "ok" : "busy",
-  );
-  ui.refreshEditControls();
-};
-// Prime the UI with the current unlock/token/dirty state (state provider first,
-// so the initial refresh sees real values).
-ui.provideEditState = () => ({
-  unlocked: isEditUnlocked(),
-  hasToken: !!getToken(),
-  userCount: getUserLevels().length,
-});
-ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
@@ -4206,32 +4122,6 @@ if (!linkedTool && localStorage.getItem("solProtoEditorOpen") === "1") {
   }
 }
 
-// ---- CROSS-DEVICE SYNC: first-run pull ------------------------------------
-// A device that has never pulled and has no levels of its own adopts the
-// published list, so a phone picks up everything the Mac pushed with zero
-// setup. After that the list is yours: RESTORE FROM CLOUD is the only thing
-// that overwrites it, so a fetch can never eat your edits and a level you
-// deleted stays deleted.
-const firstRunLevelSync = (async () => {
-  if (hasPulledLevels()) return;
-  if (getUserLevels().length) {
-    markLevelsPulled(); // this device authored its own
-    return;
-  }
-  const remote = (await fetchRemoteLevels()) as { levels?: LevelEntry[] } | null;
-  if (!remote || !Array.isArray(remote.levels)) return;
-  // The request raced the UI. If anything was authored while it was in
-  // flight, local work wins and the automatic first-run pull retires itself;
-  // only the explicitly armed RESTORE action may replace a non-empty list.
-  if (getUserLevels().length) {
-    markLevelsPulled();
-    return;
-  }
-  if (!restoreUserLevels(remote.levels)) return;
-  markLevelsPulled();
-  ui.refreshLevels(current.id);
-  ui.refreshEditControls();
-})();
 
 // ---- playtest capture: input replays + gameplay video ----------------------
 
@@ -5863,7 +5753,7 @@ requestAnimationFrame(frame);
   characterAnimationRuntime,
 };
 
-// Foreground decoding owns startup. Offline status observation does no downloads.
+// Foreground decoding owns startup.
 updateCamera(1);
 if(competitionOverview())frameCompetitionOverview();
 level.updateSceneryView(camera);
@@ -5871,7 +5761,7 @@ level.updateSceneryView(camera);
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
   await prepareLoadingVortexPresentation();
-  await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
+  await Promise.all([menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
     player.preparePresentationAssets(), worldMapController?.preparePresentation(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
@@ -5900,7 +5790,7 @@ async function prepareStartupPresentation(): Promise<void> {
   recordPresentationStage('startup:ready');
   finishStartup();
   await openLinkedTool();
-  startOfflineCache();
+  startGameUpdateChecks();
 }
 void prepareStartupPresentation().catch(error=>{
   loadingVortex.release();

@@ -160,7 +160,7 @@ class SfxEngine {
     window.addEventListener('gamepadconnected', unlock);
     window.addEventListener('pagehide', () => {
       // A bounded queue must not start its remaining fetches in a detached
-      // document when navigating to the lightweight offline saver.
+      // document when navigating to the update page.
       this.loadController?.abort();this.stopLoops();
       void this.ctx?.suspend().catch(()=>{});
     });

@@ -21,7 +21,6 @@ const descriptions = {
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
   'public/update-game.html': ['Update game', 'Load the latest published build while retaining saves and settings.', 'Maintenance'],
-  'public/offline-save.html': ['Save game offline', 'Download and inspect offline game availability.', 'Maintenance'],
   'public/stability-report.html': ['Graphics stability report', 'Inspect the last three local sessions without loading the game.', 'Maintenance'],
 };
 

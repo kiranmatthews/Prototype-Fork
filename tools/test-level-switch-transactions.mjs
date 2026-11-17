@@ -17,11 +17,8 @@ const fn = name => {
 const selection = ast.statements.find(node => ts.isExpressionStatement(node) &&
   ts.isBinaryExpression(node.expression) && node.expression.left.getText(ast) === "ui.onLevelSelect");
 assert.ok(selection);
-const restore = ast.statements.find(node => ts.isExpressionStatement(node) &&
-  ts.isBinaryExpression(node.expression) && node.expression.left.getText(ast) === "ui.onForceResync");
-assert.ok(restore);
 const code = ts.transpileModule([fn("switchLevel"), fn("discardSuspendedBonus"),
-  selection.getText(ast), restore.getText(ast)].join("\n"), {
+  selection.getText(ast)].join("\n"), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;
 const server = await createServer({ appType: "custom", logLevel: "silent",
@@ -62,7 +59,7 @@ try {
     const context = {
       THREE, Error, Level, scene, level, current: entry, loadedLevelId: entry.id,
       DEFAULT_LEVEL_ID: regular.id, currentRunBonusBoxes: 7,
-      localStorage, markLevelsPulled() { localStorage.setItem("solProtoCloudPulled", "1"); }, findLevel: id => library.get(id),
+      localStorage, findLevel: id => library.get(id),
       campaignLevelById: id => id === "missing-alias" ? { fallbackLevelId: next.id } : undefined,
       setEditorBuild: api.setEditorBuild, bonusSession: null,
       resultsPresentation: { retained: true },
@@ -86,7 +83,7 @@ try {
       p2: null, split2p: false, input: { inventoryHeld: false },
       ui: { showMessage: (...args) => messages.push(args), hideMessage: mark("message.hide"),
         setReplayBadge: mark("replay.badge"), setLevel: mark("ui.level"), setHUD: mark("ui.hud"),
-        setSyncStatus: mark("sync.status"), refreshLevels: mark("ui.refresh"), refreshEditControls() {} },
+        refreshLevels: mark("ui.refresh") },
       campaign: { active: false, startEphemeral() { this.active = true; mark("campaign.ephemeral")(); },
         recommendedMapLevelKey: () => "flats" },
       gameFlow: { hidden: false, setWarpRoom: mark("flow.warp"),
@@ -248,26 +245,6 @@ try {
   assert.equal(parent.root.parent, null); assert.equal(activeBonus.root.parent, null);
   assert.equal(bonus.level.root.parent, bonus.scene); checks++;
 
-  // The real remote-library restore handler must not close an editor or
-  // respawn its old world after the accepted replacement fails to construct.
-  const remote = environment(), remoteOld = remote.level;
-  const remoteEntry = { ...refused, id: regular.id };
-  remote.fetchRemoteLevels = async () => ({ v: 2, levels: [remoteEntry] });
-  remote.getUserLevels = api.getUserLevels;
-  remote.restoreUserLevels = entries => {
-    if (!api.restoreUserLevels(entries)) return false;
-    for (const entry of api.getUserLevels()) library.set(entry.id, entry);
-    return true;
-  };
-  const remoteRoots = [...remote.scene.children];
-  await remote.ui.onForceResync();
-  assert.equal(remote.level, remoteOld); assert.equal(remote.current, regular);
-  assert.equal(remote.editor.active, true); assert.equal(remote.paused, true);
-  assert.deepEqual(remote.scene.children, remoteRoots);
-  assert.equal(remote.events.some(event => event[0] === "player.respawn"), false);
-  assert.ok(remote.events.some(event => event[0] === "sync.status" && /previous run retained/.test(event[1])));
-  assert.equal(api.getUserLevels()[0].name, remoteEntry.name, "requested library restoration was lost");
-  library.set(regular.id, regular); checks++;
 
   for (const context of environments) context.level.dispose();
   puffs.clear(); swirls.clear(); fieldSwirls.clear(); api.setEditorBuild(false);

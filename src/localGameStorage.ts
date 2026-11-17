@@ -2,10 +2,18 @@
 export const LOCAL_RESET_MARKER = 'solProtoIgnoreLegacyStudioDrafts';
 export const LOCAL_RESET_SIGNAL = 'solProtoLocalDataResetSignal';
 export const LOCAL_RESET_RECEIPT = 'solProtoLocalDataResetReceipt';
-export const SYNC_TOKEN_KEY = 'solProtoGHToken';
+/** Keys left by retired features: the GitHub level-sync token and passcode
+ * unlock, and the first-run level-download marker. The token is a credential
+ * for a feature that no longer exists, so it is not kept on the device. */
+export const RETIRED_STORAGE_KEYS = ['solProtoGHToken', 'solProtoEditUnlocked', 'solProtoCloudPulled'] as const;
 
 export function isResettableGameKey(key: string): boolean {
-  return key.startsWith('solProto') && key !== SYNC_TOKEN_KEY;
+  return key.startsWith('solProto');
+}
+
+export function forgetRetiredFeatureData(storage: Pick<Storage, 'removeItem'> | null): void {
+  try { for (const key of RETIRED_STORAGE_KEYS) storage?.removeItem(key); }
+  catch { /* blocked storage holds nothing to forget */ }
 }
 
 /** Old unprefixed studio drafts may also belong to the original prototype. */

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { offlineBuild } from './tools/offline-build.mjs';
+import { releaseBuild } from './tools/release-build.mjs';
 import { siteEntries } from './tools/site-entries.mjs';
 import { toolDirectory } from './tools/tool-directory.mjs';
 import { ktxFormatPreferences } from './tools/ktx-format-preferences.mjs';
@@ -10,7 +10,7 @@ import { localJakAudio } from './tools/local-jak-audio.mjs';
 export default defineConfig({
   base: './',
   cacheDir: '.motion-playtest-cache',
-  plugins: [ktxFormatPreferences(), toolDirectory(), offlineBuild(), localJakAudio()],
+  plugins: [ktxFormatPreferences(), toolDirectory(), releaseBuild(), localJakAudio()],
   build: {
     target: 'es2022',
     rollupOptions: {

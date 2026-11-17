@@ -12,8 +12,6 @@ const files={
 const manifest={phase,capturedAt:new Date().toISOString(),sources:{},reports:{}};
 for(const path of ['src/levels/ancient-gates-route.ts','src/levels/ancient-gates-bonus.ts','src/tuning.ts'])
  manifest.sources[path]=createHash('sha256').update(await readFile(path)).digest('hex');
-const certificates=JSON.parse(await readFile('tools/fixtures/stock-level-snapshots.json','utf8'));
-manifest.snapshotCertificates=Object.fromEntries(['jungle-gate-run','bonus-jungle-gate'].map(id=>[id,certificates.levels[id]]));
 for(const [name,path] of Object.entries(files)){
  const raw=await readFile(path,'utf8'),trace=raw.indexOf('"trace":');
  const data=JSON.parse(trace<0?raw:raw.slice(0,trace).replace(/,\s*$/,'')+'}');

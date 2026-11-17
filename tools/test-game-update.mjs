@@ -3,7 +3,6 @@ import {readFile} from 'node:fs/promises';
 import {createServer} from 'vite';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {runtimeAsset} from './offline-build.mjs';
 const server=await createServer({appType:'custom',logLevel:'silent',cacheDir:join(tmpdir(),`enemy-update-test-${process.pid}`),server:{middlewareMode:true}});
 try{
  const {newerGameAvailable}=await server.ssrLoadModule('/src/gameUpdate.ts');
@@ -23,14 +22,16 @@ try{
  assert.equal(await newerGameAvailable(base,'',()=>{throw Error('must not fetch without running entry');}),false);
  assert.equal(await newerGameAvailable(base,current,async()=>new Response('missing',{status:404})),false);
  assert.equal(await newerGameAvailable(base,current,async()=>{throw Error('offline');}),false);
- let reachable=0;
- await newerGameAvailable(base,current,async()=>{throw Error('offline');},()=>reachable++);
- assert.equal(reachable,0,'offline checks cannot trigger a worker update request');
- await newerGameAvailable(base,current,async()=>new Response('{"entry":"assets/index-old.js"}'),()=>reachable++);
- assert.equal(reachable,1,'a valid unchanged release still permits a lightweight worker check');
  assert.equal(await newerGameAvailable(base,current,async()=>new Response('x',{headers:{'content-length':'99999'}})),false);
- assert.equal(runtimeAsset('release.json',{bonus:10,counter:10}),false,'stale worker must not pin the update descriptor');
  const source=await readFile(new URL('../src/gameUpdate.ts',import.meta.url),'utf8');
- assert.doesNotMatch(source,/localStorage|sessionStorage|\.register\(|location\.(?:reload|replace)|caches\./,'discovery cannot install/download a release, reload or mutate saves');
- console.log('PASS bounded release discovery, unchanged/new entry, malformed/foreign metadata, offline failure and uncached descriptor.');
+ const discovery=source.slice(source.indexOf('export async function newerGameAvailable'),source.indexOf('export const GAME_UPDATE_EVENT'));
+ assert.ok(discovery.length>200);
+ assert.doesNotMatch(discovery,/localStorage|sessionStorage|\.register\(|location\.(?:reload|replace)|caches\./,'discovery cannot install/download a release, reload or mutate saves');
+ // Offline mode is retired: the start-up cleanup may only remove this
+ // project's own offline caches and worker, and never touches saves.
+ const cleanup=source.slice(source.indexOf('async function removeRetiredOfflineCopy'),source.indexOf('export function startGameUpdateChecks'));
+ assert.match(cleanup,/solProtoOffline:\$\{new URL\(scope\)\.pathname\}:/);assert.match(cleanup,/registration\.scope === scope/);
+ assert.doesNotMatch(cleanup,/localStorage|sessionStorage|indexedDB|\.register\(/);
+ assert.doesNotMatch(source,/\.register\(/,'the game never installs a service worker');
+ console.log('PASS bounded release discovery, unchanged/new entry, malformed/foreign metadata, offline failure, uncached descriptor and scoped retirement of old offline copies.');
 }finally{await server.close();}

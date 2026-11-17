@@ -6,7 +6,7 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 
 1. Use `src/levels/codex-lab.ts` for timed geometry briefs. It is a small source-owned data level, hot reloads cleanly, and uses the same component pipeline as the in-game editor.
 2. Before placing, moving or reviewing crates, platforms, gaps, hazards or enemies, read `docs/GAMEPLAY_DESIGN_BIBLE.md`: its laws (Part 0) and review checklist (Part XX) apply to every layout, and Part XV gives this engine's measured reach, jump and ollie ranges, gap-width bands, smash and grind rules, and enemy and hazard timings. Read the `CustomComponent` contract in `src/level.ts` before introducing a component shape. Prefer existing primitives (`platform`, `ramp`, `terrain`, `vertramp`, `rail`, `wall`, `pit`, `crate`, `checkpoint`, `gate`, `camnode`, and `decor`) over new engine systems.
-3. Put geometry in level data when possible. Change `src/level.ts` only when the shared toolkit cannot express the brief. `public/levels.json` is the synced, published editor snapshot; update it only when a lab result should join that shared level pack.
+3. Put geometry in level data when possible. Change `src/level.ts` only when the shared toolkit cannot express the brief. Level sources in `src/levels/` are the only published copy: the game no longer downloads or syncs a level pack. `public/levels.json` is a frozen snapshot that some older tools still read as test data; do not update it, and point new tools at the level sources.
 4. Run only focused checks relevant to the change (`npm run check:levels` after editing level data) and `npm run build` before handoff. Build type-checks, bundles and prepares the release assets. Normal Pages publishing runs install → build → release-size check → deploy; keep specialized regression suites out of that path. Run the full suite (`npm run check:all`) only when the user explicitly asks. Smoke-test the affected feature in a real browser and check the console for errors; do not rerun unrelated level or system audits for each release.
 5. Record each completed brief in `docs/LEVEL_ITERATIONS.md`, including elapsed prompt-to-playable time. Do not include unrelated cleanup in a timed iteration.
 6. By default, commit and publish completed, validated changes through `origin/main` and the existing GitHub Pages workflow. Verify the deployment before handoff. Stage only task-owned changes and preserve unrelated work; follow any explicit request to keep a change local or use a different delivery workflow.
@@ -24,8 +24,8 @@ as ended when that batch is done.
   wholesale.
 - Before pushing, fetch `origin/main` and rebase or merge onto it; rerun only the
   checks the integration invalidated. Never force-push `main`.
-- Shared runtime files and `public/levels.json` change often. Merge published
-  level data by level ID; never overwrite the pack with an older branch's copy.
+- Shared runtime files change often. Merge level sources with care; never
+  overwrite another chat's level edits with an older branch's copy.
 - Respect any publication hold the user places on a branch until they lift it.
 - Character movement/animation authority: the user designated Claude's
   `91fe4413` (11 November 2026) as the current baseline. Preserve it and later

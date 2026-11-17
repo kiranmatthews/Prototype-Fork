@@ -296,24 +296,10 @@ export class UI {
   onLevelEdit: ((id: string) => void) | null = null;
   onLevelNew: (() => void) | null = null;
   onLevelImport: ((text: string, filename: string) => void) | null = null;
-  // phone sync (main.ts wires these)
-  onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
-  onSyncPush: (() => Promise<void>) | null = null;
-  onTokenSet: ((token: string) => void) | null = null;
-  provideEditState:
-    | (() => {
-        unlocked: boolean;
-        hasToken: boolean;
-        userCount: number;
-      })
-    | null = null;
   // fired when a side tab (MENU / TUNER) is clicked, BEFORE the panel
   // toggles — main.ts uses it to close the editor so the panel isn't a
   // hidden husk while the tools own the screen
   onSideTab: ((side: "left" | "right") => void) | null = null;
-  // fired by the ungated RE-SYNC button: re-read the published levels and
-  // throw away whatever this device had saved
-  onForceResync: (() => Promise<void>) | null = null;
   private recBtn!: HTMLButtonElement;
   private presentationToolsHead!: HTMLElement;
   private presentationToolsRow!: HTMLElement;
@@ -322,12 +308,6 @@ export class UI {
   private runBtn!: HTMLButtonElement; // time trial + combo run toggle
   private endlessBtn!: HTMLButtonElement; // selectable standard-run death rule
   private unlockAllBtn!: HTMLButtonElement;
-  private syncPanel!: HTMLElement;
-  private unlockRow!: HTMLElement;
-  private tokenRow!: HTMLElement;
-  private pushRow!: HTMLElement;
-  private syncStatusEl!: HTMLElement;
-  private editUnlocked = false;
   private replayBadge!: HTMLElement;
   private recBadge!: HTMLElement;
 
@@ -341,7 +321,7 @@ export class UI {
     directory.textContent = "ALL LABS & TOOLS ↗";
     directory.href = new URL(`${import.meta.env.BASE_URL}labs/`, location.href).href;
     directory.style.cssText = "display:block;text-align:center;text-decoration:none;margin-bottom:10px";
-    if (import.meta.env.VITE_DESKTOP !== 'true') statsWrap.appendChild(directory);
+    statsWrap.appendChild(directory);
 
     this.unlockAllBtn = document.createElement("button");
     this.unlockAllBtn.className = "hud-levelbtn hud-editbtn";
@@ -442,106 +422,6 @@ export class UI {
     statsWrap.appendChild(endlessBtn);
     this.endlessBtn = endlessBtn;
     this.setEndlessDeaths(false);
-
-    // RESTORE FROM CLOUD (deliberately NOT behind the passcode — the phone is
-    // the device that needs it and is never unlocked). Replaces this device's
-    // whole level list with the published one: the setup tap for a new phone,
-    // and the escape hatch for a device that has drifted. Two taps, because it
-    // discards local levels and a fat-fingered scroll must not be enough.
-    const RESYNC_LABEL = import.meta.env.VITE_DESKTOP === 'true' ? "⟲ RESTORE BUNDLED LEVELS" : "⟲ RESTORE LEVELS FROM CLOUD";
-    const resyncBtn = document.createElement("button");
-    resyncBtn.className = "hud-levelbtn hud-editbtn";
-    resyncBtn.textContent = RESYNC_LABEL;
-    resyncBtn.title = "replace this device's levels with the published ones";
-    let armed = 0; // pending confirm timer; 0 = not armed
-    const disarm = (): void => {
-      if (armed) clearTimeout(armed);
-      armed = 0;
-      resyncBtn.textContent = RESYNC_LABEL;
-      resyncBtn.style.color = "";
-    };
-    resyncBtn.addEventListener("click", () => {
-      resyncBtn.blur();
-      if (!this.onForceResync) return;
-      if (!armed) {
-        resyncBtn.textContent = "⟲ TAP AGAIN — REPLACES YOUR LEVELS";
-        resyncBtn.style.color = "#ffd23f";
-        armed = window.setTimeout(disarm, 4000);
-        return;
-      }
-      disarm();
-      resyncBtn.disabled = true;
-      resyncBtn.textContent = "⟲ RESTORING…";
-      void this.onForceResync().finally(() => {
-        resyncBtn.disabled = false;
-        resyncBtn.textContent = RESYNC_LABEL;
-      });
-    });
-    statsWrap.appendChild(resyncBtn);
-
-    // UNLOCK / SYNC panel: a passcode row that expands into the phone-sync
-    // controls (GitHub token + push button + status) once unlocked.
-    const sync = div("hud-sync");
-    const unlockRow = div("hud-syncrow");
-    const passIn = document.createElement("input");
-    passIn.type = "password";
-    passIn.className = "hud-syncinput";
-    passIn.placeholder = "passcode to unlock direct editing";
-    const unlockBtn = document.createElement("button");
-    unlockBtn.className = "hud-syncbtn";
-    unlockBtn.textContent = "unlock";
-    const tryUnlock = async (): Promise<void> => {
-      if (!this.onUnlockEditing) return;
-      const ok = await this.onUnlockEditing(passIn.value);
-      passIn.value = "";
-      if (!ok) this.setSyncStatus("wrong passcode", "err");
-    };
-    unlockBtn.addEventListener("click", () => void tryUnlock());
-    passIn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") void tryUnlock();
-      e.stopPropagation(); // don't let level hotkeys eat the typing
-    });
-    unlockRow.appendChild(passIn);
-    unlockRow.appendChild(unlockBtn);
-    sync.appendChild(unlockRow);
-    this.unlockRow = unlockRow;
-
-    // token + push (shown only when unlocked)
-    const tokenRow = div("hud-syncrow hud-synctoken");
-    const tokIn = document.createElement("input");
-    tokIn.type = "password";
-    tokIn.className = "hud-syncinput";
-    tokIn.placeholder = "GitHub token (Contents: write)";
-    tokIn.addEventListener("keydown", (e) => e.stopPropagation());
-    const tokBtn = document.createElement("button");
-    tokBtn.className = "hud-syncbtn";
-    tokBtn.textContent = "save";
-    tokBtn.addEventListener("click", () => {
-      if (this.onTokenSet) this.onTokenSet(tokIn.value);
-      tokIn.value = "";
-    });
-    tokenRow.appendChild(tokIn);
-    tokenRow.appendChild(tokBtn);
-    sync.appendChild(tokenRow);
-    this.tokenRow = tokenRow;
-
-    const pushRow = div("hud-syncrow hud-syncpush");
-    const pushBtn = document.createElement("button");
-    pushBtn.className = "hud-syncbtn hud-syncpushbtn";
-    pushBtn.textContent = "☁ SYNC MY LEVELS UP";
-    pushBtn.addEventListener("click", () => {
-      if (this.onSyncPush) void this.onSyncPush();
-      pushBtn.blur();
-    });
-    pushRow.appendChild(pushBtn);
-    sync.appendChild(pushRow);
-    this.pushRow = pushRow;
-
-    const status = div("hud-syncstatus");
-    sync.appendChild(status);
-    this.syncStatusEl = status;
-    statsWrap.appendChild(sync);
-    this.syncPanel = sync;
 
     const stats = div("hud-statlines");
     statsWrap.appendChild(stats);
@@ -1851,7 +1731,6 @@ export class UI {
     this.levelRows.forEach((b, key) =>
       b.classList.toggle("active", key === id),
     );
-    this.refreshEditControls();
   }
 
   resetHudTransients(
@@ -1882,7 +1761,6 @@ export class UI {
   refreshLevels(activeId?: string): void {
     if (activeId !== undefined) this.currentLevelId = activeId;
     this.renderLevels();
-    this.refreshEditControls();
   }
 
   private renderLevels(): void {
@@ -1912,38 +1790,6 @@ export class UI {
       this.levelRowEl.appendChild(item);
       this.levelRows.set(entry.id, play);
     });
-  }
-
-  // ---- direct-edit + phone sync controls ----
-  setEditUnlocked(on: boolean): void {
-    this.editUnlocked = on;
-    this.refreshEditControls();
-  }
-
-  setSyncStatus(msg: string, kind: "ok" | "err" | "busy" = "busy"): void {
-    if (!this.syncStatusEl) return;
-    this.syncStatusEl.textContent = msg;
-    this.syncStatusEl.className = `hud-syncstatus hud-sync-${kind}`;
-  }
-
-  // Reflect the unlock/token state into the sync panel. Editing itself is
-  // never gated — every row has a ✎ — the passcode only guards PUBLISHING,
-  // whose real credential is the GitHub token behind it.
-  refreshEditControls(): void {
-    if (!this.syncPanel) return;
-    const st = this.provideEditState ? this.provideEditState() : null;
-    const unlocked = st ? st.unlocked : this.editUnlocked;
-    this.editUnlocked = unlocked;
-    this.tokenRow.style.display = unlocked && import.meta.env.VITE_DESKTOP !== 'true' ? "" : "none";
-    this.pushRow.style.display = unlocked && import.meta.env.VITE_DESKTOP !== 'true' ? "" : "none";
-    this.unlockRow.style.display = unlocked ? "none" : "";
-    if (unlocked && st && import.meta.env.VITE_DESKTOP !== 'true') {
-      const n = st.userCount;
-      this.pushRow.querySelector("button")!.textContent =
-        `☁ SYNC MY ${n} LEVEL${n === 1 ? "" : "S"} UP`;
-      if (!st.hasToken && !this.syncStatusEl.textContent)
-        this.setSyncStatus("paste a GitHub token to enable sync", "busy");
-    }
   }
 
   // THPS balance meters. Grinds show the HORIZONTAL bar (left/right needle);
@@ -2406,29 +2252,8 @@ export class UI {
         border-radius: 6px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
       }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
-      /* editing is green, everywhere: per-row ✎, NEW, IMPORT, SYNC UP */
+      /* editing is green, everywhere: per-row ✎, NEW, IMPORT */
       .hud-leveledit { background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
-      /* direct-edit unlock + phone sync */
-      .hud-sync {
-        margin-top: 8px; padding: 8px; border: 1px solid #33405a; border-radius: 8px;
-        background: rgba(14, 20, 32, 0.6); display: flex; flex-direction: column; gap: 6px;
-      }
-      .hud-syncrow { display: flex; gap: 6px; }
-      .hud-syncinput {
-        flex: 1; min-width: 0; font: 10px ui-monospace, Menlo, Consolas, monospace;
-        background: #10151f; color: #d6e2f0; border: 1px solid #3a4152; border-radius: 6px;
-        padding: 4px 6px;
-      }
-      .hud-syncinput::placeholder { color: #5f6f86; }
-      .hud-syncbtn {
-        font: 10px ui-monospace, Menlo, Consolas, monospace; cursor: pointer; white-space: nowrap;
-        background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152; border-radius: 6px; padding: 4px 8px;
-      }
-      .hud-syncpushbtn { width: 100%; background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
-      .hud-syncstatus { font-size: 10px; min-height: 12px; color: #9fb0c8; }
-      .hud-sync-ok { color: #6fe0a0; }
-      .hud-sync-err { color: #ff9a7a; }
-      .hud-sync-busy { color: #e8c86a; }
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
       .hud-secttitle { margin: 10px 0 2px; padding-bottom: 2px; border-bottom: 1px solid rgba(143, 212, 168, 0.35); color: #8fd4a8; font-size: 11px; letter-spacing: 2px; }
@@ -3076,8 +2901,6 @@ export class UI {
       @media (hover: hover) {
         .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
         .hud-leveledit:hover { background: #2b4c38; color: #c8ffe0; }
-        .hud-syncbtn:hover { background: #243044; color: #cfe3d8; }
-        .hud-syncpushbtn:hover { background: #2b4c38; }
       }
     `;
     document.head.appendChild(style);

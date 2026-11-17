@@ -1,10 +1,8 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {runInNewContext} from 'node:vm';
-import {runtimeAsset} from './offline-build.mjs';
 const html=await readFile(new URL('../public/update-game.html',import.meta.url),'utf8');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
-assert.equal(runtimeAsset('update-game.html',{bonus:10,counter:10}),false);
 assert.doesNotMatch(script,/localStorage|sessionStorage|indexedDB|caches\.delete/,'updating must not reset player data');
 for(const scope of ['https://example.test/Prototype-Fork/','https://example.test/',null])for(const online of [true,false]){
  const elements={update:{disabled:false},status:{textContent:''}};let unregistered=0,target=null;

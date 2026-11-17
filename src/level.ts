@@ -4431,30 +4431,6 @@ export function adoptLegacyLevels(): number {
   return n;
 }
 
-// ---- DIRECT-EDIT UNLOCK: a client-side passcode gate ----------------------
-// Flips a built-in level's edit button from "edit a copy" to "edit this level
-// directly" and reveals the phone-sync controls. Not real security (the real
-// write credential is the GitHub token) — just a gate so a casual visitor to
-// the public build never trips into overwriting levels. SHA-256 of the
-// passcode is baked in; the cleartext never ships.
-const EDIT_PASS_HASH =
-  "64145f0b744709a636dad052192339220347504f5c17ed4d0c22c5c27e416295";
-export async function checkEditPass(pass: string): Promise<boolean> {
-  const bytes = new TextEncoder().encode(pass);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  const hex = [...new Uint8Array(digest)]
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  if (hex === EDIT_PASS_HASH) {
-    localStorage.setItem("solProtoEditUnlocked", "1");
-    return true;
-  }
-  return false;
-}
-export function isEditUnlocked(): boolean {
-  return localStorage.getItem("solProtoEditUnlocked") === "1";
-}
-
 export class Level {
   minefields: Minefields | null = null;
   readonly isBossLevel: boolean;
