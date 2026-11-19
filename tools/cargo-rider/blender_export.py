@@ -116,6 +116,7 @@ for kind in sorted(set(p['mat'] for p in parts)):
         n.location = (-620, 200 - 280 * index)
         if not index:
             nt.links.new(n.outputs['Color'], bs.inputs['Base Color'])
+            nt.nodes.active = n
         else:
             norm = nt.nodes.new('ShaderNodeNormalMap')
             norm.inputs['Strength'].default_value = 0.53
@@ -303,6 +304,9 @@ for screen in bpy.data.screens:
         if area.type == 'VIEW_3D':
             area.spaces.active.region_3d.view_perspective = 'CAMERA'
             area.spaces.active.shading.color_type = 'TEXTURE'
+            area.spaces.active.shading.type = 'MATERIAL'
+            area.spaces.active.shading.use_scene_lights = True
+            area.spaces.active.shading.use_scene_world = True
             area.spaces.active.overlay.show_overlays = False
 scene.render.filepath = '//portrait.png'
 bpy.ops.wm.save_as_mainfile(filepath=str(ART / 'Cargo Roo.blend'), compress=True)
