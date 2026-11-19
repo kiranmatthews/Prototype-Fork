@@ -35,6 +35,10 @@ try {
   assert.equal(report.catalog.length, report.suites.gameplay + report.suites.starter + report.suites.studio + 2 * report.suites.liveSkate);
   assert.equal(new Set(report.catalog.map(clip => clip.id)).size, report.catalog.length);
 
+  report.secondary = await page.evaluate(() => review.secondaryAudit());
+  assert.ok(report.secondary.down.every(weight => weight > .98));
+  assert.ok(report.secondary.raised.every(weight => weight < .02));
+  assert.ok(report.secondary.sweep > .15 && report.secondary.settled < .001);
   report.motion = [];
   for (let start = 0; start < report.catalog.length; start += 5) {
     report.motion.push(...await page.evaluate(i => review.audit(i, 5), start));

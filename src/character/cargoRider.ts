@@ -12,10 +12,25 @@ type StretchLink = { joint: THREE.Object3D; tip: THREE.Object3D; palette: THREE.
 class RiderSkinSkeleton extends THREE.Skeleton {
   readonly spans: StretchLink[] = [];
   private readonly stretch = new THREE.Vector3(1, 1, 1);
+  private readonly chestSpace = new THREE.Matrix4();
+  private readonly direction = new THREE.Vector3();
+  private readonly shoulder = new THREE.Vector3();
+  readonly shoulderFolds: { joint: THREE.Object3D; elbow: THREE.Object3D; write: (weight: number) => void }[] = [];
+  chest?: THREE.Object3D;
   override update(): void {
     for (const { joint, tip, palette, length } of this.spans) {
       this.stretch.y = THREE.MathUtils.clamp(tip.position.length() / length, .2, 3.5);
       palette.matrixWorld.copy(joint.matrixWorld).scale(this.stretch);
+    }
+    if (this.chest && this.shoulderFolds.length) {
+      this.chestSpace.copy(this.chest.matrixWorld).invert();
+      for (const fold of this.shoulderFolds) {
+        this.shoulder.setFromMatrixPosition(fold.joint.matrixWorld).applyMatrix4(this.chestSpace);
+        this.direction.setFromMatrixPosition(fold.elbow.matrixWorld).applyMatrix4(this.chestSpace).sub(this.shoulder).normalize();
+        const close = THREE.MathUtils.clamp((.64 - Math.abs(this.direction.x)) / .35, 0, 1);
+        const lowered = THREE.MathUtils.clamp((-this.direction.y - .60) / .27, 0, 1);
+        fold.write(close * lowered);
+      }
     }
     super.update();
   }
@@ -42,6 +57,12 @@ export class CargoRider {
   private readonly nativeLayers = new Map<THREE.Mesh, number>();
   private readonly channels = new Map<string, { weights: number[]; index: number }[]>();
   private readonly blink = new RooBlinkClock();
+  private readonly headTurnBone: THREE.Object3D;
+  private readonly lastHeadRotation = new THREE.Quaternion();
+  private readonly headRotation = new THREE.Quaternion();
+  private readonly turnDelta = new THREE.Quaternion();
+  private hasHeadRotation = false;
+  private hairLag = 0;
   private time = 0;
   private lastExpression?: CargoExpression;
   private startle = 0;
@@ -52,6 +73,7 @@ export class CargoRider {
   }
 
   constructor(template: THREE.Object3D, rider: THREE.Object3D) {
+    this.headTurnBone = rider.getObjectByName('head-presentation') ?? rider;
     this.root.name = 'cargo-roo-surface';
     this.root.visible = false;
     this.root.userData.characterRenderProxy = true;
@@ -82,6 +104,12 @@ export class CargoRider {
           const relative = rest.get(span.joint.name)!.clone().invert().multiply(rest.get(span.tip.name)!);
           span.length = new THREE.Vector3().setFromMatrixPosition(relative).length();
           bound.spans.push(span);
+        }
+        bound.chest = rider.getObjectByName('chest');
+        for (const side of ['left', 'right']) {
+          const joint = rider.getObjectByName('shoulder-' + side), elbow = rider.getObjectByName('elbow-' + side);
+          const channel = side === 'left' ? 'ShoulderRelax.L' : 'ShoulderRelax.R';
+          if (joint && elbow) bound.shoulderFolds.push({ joint, elbow, write: weight => this.setChannel(channel, weight) });
         }
         skeleton = bound;
         palettes.set(source.skeleton, bound);
@@ -120,6 +148,8 @@ export class CargoRider {
       for (const [mesh, layers] of this.nativeLayers) mesh.layers.mask = layers;
       this.nativeLayers.clear();
       this.blink.reset();
+      this.hasHeadRotation = false;
+      this.hairLag = 0;
       this.lastExpression = undefined;
       this.startle = 0;
     }
@@ -160,6 +190,23 @@ export class CargoRider {
       }
       this.lastExpression = this.expression;
     }
+    const elapsed = Math.min(.1, Math.max(0, dt));
+    if (elapsed > 0) {
+      this.headTurnBone.getWorldQuaternion(this.headRotation);
+      let targetLag = 0;
+      if (this.hasHeadRotation && dt <= .1) {
+        this.turnDelta.copy(this.lastHeadRotation).invert().multiply(this.headRotation);
+        const sign = this.turnDelta.w < 0 ? -1 : 1;
+        const turn = 2 * Math.atan2(sign * this.turnDelta.y, Math.max(.001, sign * this.turnDelta.w));
+        targetLag = THREE.MathUtils.clamp(turn / (6 * elapsed), -.76, .76);
+      }
+      this.lastHeadRotation.copy(this.headRotation);
+      this.hasHeadRotation = true;
+      this.hairLag = THREE.MathUtils.damp(this.hairLag, targetLag, 8.5, elapsed);
+      if (Math.abs(this.hairLag) < .0002) this.hairLag = 0;
+    }
+    this.setChannel('HairSweep.L', Math.max(0, this.hairLag));
+    this.setChannel('HairSweep.R', Math.max(0, -this.hairLag));
     if (performanceControls(this.expression)) return;
     const blink = this.blink.step(dt, this.expression === 'live');
     const live = this.expression === 'live';
@@ -171,20 +218,25 @@ export class CargoRider {
     this.setChannel('FaceStretch', .24 * alert);
     this.setChannel('Funnel', .30 * alert);
     const activity = THREE.MathUtils.clamp(Math.abs(speed) / 15, 0, 1);
-    const gaze = live ? Math.sin(.91 * this.time) * .28 : wink ? .65 : 0;
+    const poise = live ? (1 - alert) * (1 - .3 * activity) : 0;
+    const gaze = live ? Math.sin(.91 * this.time) * .28 - .17 * poise : wink ? .65 : 0;
     this.setChannel('LookLeft', Math.max(0, gaze));
     this.setChannel('LookRight', Math.max(0, -gaze));
     this.setChannel('LookUp', .30 * alert);
-    this.setChannel('JawOpen', Math.max(.67 * alert, grin ? .47 : live ? activity * .13 : 0));
-    this.setChannel('Smile', grin ? .92 : wink ? .5 : live ? .12 : 0);
+    this.setChannel('LookDown', .07 * poise);
+    this.setChannel('JawOpen', Math.max(.67 * alert, grin ? .47 : live ? .018 * poise + activity * .13 : 0));
+    this.setChannel('Smile', grin ? .92 : wink ? .5 : .06 * poise);
     for (const suffix of ['.L', '.R']) {
       const left = suffix === '.L';
       this.setChannel(`Blink${suffix}`, live ? blink : wink && left ? 1 : 0);
       this.setChannel(`EyeWide${suffix}`, .82 * alert);
       this.setChannel(`EarPerk${suffix}`, .56 * alert);
-      this.setChannel(`Squint${suffix}`, grin ? .38 : 0);
-      this.setChannel(`BrowUp${suffix}`, Math.max(alert * .82, wink && !left ? .8 : grin ? .28 : 0));
-      this.setChannel(`BrowDown${suffix}`, wink && left ? .23 : 0);
+      this.setChannel(`EarStretch${suffix}`, .20 * alert);
+      this.setChannel(`EarFold${suffix}`, (left ? .07 : .14) * poise);
+      this.setChannel(`Smile${suffix}`, (left ? .04 : .14) * poise);
+      this.setChannel(`Squint${suffix}`, grin ? .38 : left ? .12 * poise : 0);
+      this.setChannel(`BrowUp${suffix}`, Math.max(alert * .82, wink && !left ? .8 : grin ? .28 : !left ? .13 * poise : 0));
+      this.setChannel(`BrowDown${suffix}`, wink && left ? .23 : left ? .055 * poise : 0);
       this.setChannel(`PonySwing${suffix}`, live ? activity * (.38 + .32 * Math.sin(this.time * 8 + (left ? .44 : 0))) : 0);
     }
   }

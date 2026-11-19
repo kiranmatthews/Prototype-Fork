@@ -84,7 +84,7 @@ def build_arm(tank, sign):
         + 0.25 * chord
     )
 
-    def geom(u, t):
+    def joined_arm(u, t):
         i = round(u * count) % count
         j = round(t * axial)
         if j >= section:
@@ -96,6 +96,16 @@ def build_arm(tank, sign):
             + incoming[i] * (f**3 - 2 * f * f + f)
             + outgoing[i] * (f**3 - f * f)
         )
+
+    def geom(u, t):
+        p = joined_arm(u, t)
+        i = round(u * count) % count
+        cap = math.sin(math.pi * min(t / 0.42, 1)) ** 1.45
+        rise = max(0, math.sin(angles[i]))
+        p[0] -= sign * 0.020 * cap
+        p[1] += 0.022 * rise**1.25 * cap
+        p[2] += 0.006 * math.cos(angles[i]) * cap
+        return p
 
     def weights(p, u, t):
         i = round(u * count) % count

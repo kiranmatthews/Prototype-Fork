@@ -111,6 +111,24 @@ def install_actions(bpy, rig, rest, work):
     animation.action = None
     for channel in channels:
         rig[channel] = 0.0
+    from reference_pose import reference_pose
+
+    ref = bpy.data.actions.new('Portrait | Three-quarter reference')
+    ref.asset_mark()
+    ref.use_fake_user = True
+    animation.action = ref
+    reference_pose(rig, True)
+    for name in channels:
+        rig.keyframe_insert(data_path='["' + name + '"]', frame=1, group='Portrait')
+    for bone in rig.pose.bones:
+        if bone.name in ('head', 'neck', 'chest') or bone.name.startswith(('shoulder-', 'clavicle-')):
+            bone.keyframe_insert(data_path='rotation_quaternion', frame=1, group=bone.name)
+            bone.keyframe_insert(data_path='location', frame=1, group=bone.name)
+    animation.action = None
+    for bone in rig.pose.bones:
+        bone.matrix_basis = Matrix.Identity(4)
+    for name in channels:
+        rig[name] = 0.0
     bpy.context.scene.render.fps = 24
     bpy.context.scene.frame_start = 1
     bpy.context.scene.frame_end = 201

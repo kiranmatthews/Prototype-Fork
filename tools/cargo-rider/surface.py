@@ -114,12 +114,6 @@ def head_fit(p):
     return np.array([x * head_scale, 1.542 + (766 - v) * head_scale, head_z + d * head_scale])
 
 
-def hair_fit(p):
-    x, v, d = p
-    s = 0.00258
-    return np.array([x * s, 1.542 + (291 - v) * s, head_z + d * s])
-
-
 def limb_fit(p, sg, kind):
     x, v, d = p
     if kind == 'arm':

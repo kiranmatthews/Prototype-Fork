@@ -1,7 +1,9 @@
 import math
 import pickle
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
+from maquette import coordinates
+from tank_binding import garment_edge
 from surface import ART, body_y, clamp, parts, pi, smooth
 
 
@@ -58,6 +60,167 @@ def bake_character(work):
             last = np.where(mask[:, :, None] > 0, orig, scaled).astype('uint8')
         return last.astype(np.float32) / 255
 
+    sheet = np.asarray(Image.open(ART / 'likeness/three-view.webp').convert('RGB'), dtype=np.float32) / 255
+    views = np.split(sheet, 3, axis=1)
+    gold_views = []
+    from study_pigment import masks
+
+    for index, reference in enumerate(views):
+        red, green, blue = reference.transpose(2, 0, 1)
+        hair = (
+            (red > 0.42)
+            & (green > red * 0.54)
+            & (green > blue * 1.13)
+            & (red > blue * 1.08)
+            & (green < red * 1.02)
+        )
+        # The orange pinnae and fur are outside the blonde pigment range.
+        hair &= (blue > red * 0.24) & ((green - red * 0.53) > 0.045)
+        gold_views.append(extend(reference, hair & masks(index, reference)[1]))
+    ear_rows = np.array(
+        [
+            (12, 207, 209),
+            (27, 205, 225),
+            (55, 205, 258),
+            (83, 207, 291),
+            (116, 212, 314),
+            (150, 223, 337),
+            (183, 239, 352),
+            (210, 258, 361),
+            (237, 284, 355),
+            (265, 313, 342),
+            (282, 316, 328),
+        ]
+    )
+    er, eg, eb = views[0].transpose(2, 0, 1)
+    ear_region = (
+        (np.indices(er.shape)[1] < 365)
+        & (np.indices(er.shape)[0] < 282)
+        & (er > eg * 1.4)
+        & (eg > eb * 0.8)
+        & (eb < er * 0.47)
+    )
+    ear_study = extend(views[0], ear_region)
+
+    def soft_mask(contour):
+        from PIL import ImageFilter
+
+        im = Image.new('L', (724, 724))
+        ImageDraw.Draw(im).polygon(contour, fill=255)
+        return (np.asarray(im.filter(ImageFilter.GaussianBlur(2.2)), dtype=np.float32) / 255)[:, :, None]
+
+    cheek_front = soft_mask(
+        [
+            (336, 464),
+            (342, 454),
+            (353, 449),
+            (367, 447),
+            (380, 448),
+            (393, 452),
+            (408, 455),
+            (423, 456),
+            (443, 452),
+            (458, 456),
+            (477, 461),
+            (493, 462),
+            (514, 467),
+            (530, 470),
+            (537, 479),
+            (532, 493),
+            (510, 515),
+            (486, 535),
+            (456, 545),
+            (431, 537),
+            (392, 521),
+            (366, 509),
+            (346, 493),
+            (337, 477),
+        ]
+    )
+    cheek_side = soft_mask(
+        [
+            (155, 464),
+            (163, 458),
+            (177, 452),
+            (189, 453),
+            (201, 456),
+            (212, 452),
+            (228, 446),
+            (241, 446),
+            (252, 451),
+            (265, 464),
+            (275, 481),
+            (280, 499),
+            (277, 514),
+            (266, 525),
+            (223, 538),
+            (208, 535),
+            (191, 524),
+            (179, 515),
+            (177, 506),
+            (163, 499),
+            (156, 489),
+            (152, 479),
+        ]
+    )
+    muzzle_plates = []
+    for panel, contour in [
+        (
+            views[0],
+            [
+                (468, 292),
+                (495, 294),
+                (530, 325),
+                (550, 365),
+                (556, 438),
+                (561, 465),
+                (549, 494),
+                (493, 532),
+                (455, 543),
+                (420, 532),
+                (376, 515),
+                (316, 489),
+                (272, 455),
+                (294, 425),
+                (316, 382),
+                (352, 342),
+                (397, 312),
+            ],
+        ),
+        (
+            views[2],
+            [
+                (195, 279),
+                (229, 296),
+                (253, 366),
+                (271, 417),
+                (296, 474),
+                (301, 496),
+                (272, 524),
+                (218, 537),
+                (193, 532),
+                (175, 514),
+                (154, 498),
+                (149, 473),
+                (158, 446),
+                (177, 438),
+                (175, 385),
+                (176, 327),
+            ],
+        ),
+    ]:
+        mask = Image.new('1', (panel.shape[1], panel.shape[0]))
+        ImageDraw.Draw(mask).polygon(contour, fill=1)
+        rr, gg, bb = panel.transpose(2, 0, 1)
+        yy = np.indices(rr.shape)[0]
+        pigment = (
+            np.asarray(mask)
+            & (rr > 0.42)
+            & (rr > gg * 1.12)
+            & (gg > bb * 1.35)
+            & ((bb < 0.32 * rr) | (yy > 445))
+        )
+        muzzle_plates.append(extend(panel, pigment))
     R, G, B = A.transpose(2, 0, 1)
     hr, hg, hb = H.transpose(2, 0, 1)
     plates = {
@@ -98,8 +261,8 @@ def bake_character(work):
 
     colors = {
         'fur': (240, 128, 17),
-        'brow': (57, 34, 24),
-        'lash': (36, 18, 28),
+        'brow': (35, 22, 18),
+        'lash': (17, 9, 17),
         'espresso': (49, 34, 42),
         'mouth': (79, 29, 40),
         'enamel': (247, 237, 216),
@@ -120,7 +283,8 @@ def bake_character(work):
         'eyelet': (219, 197, 190),
         'stitch': (228, 209, 201),
         'band': (128, 54, 163),
-        'nose': (59, 39, 29),
+        'violet_elastic': (107, 34, 133),
+        'nose': (45, 29, 21),
     }
 
     def texture(part):
@@ -152,7 +316,81 @@ def bake_character(work):
         def lin(t):
             return t[:, :, None]
 
-        if kind in ('face', 'lid', 'ear'):
+        if kind == 'maquette_ear':
+            sn = x
+            skin = ramp((225, 99, 10), (255, 153, 26), clamp(0.53 + 0.21 * cs + 0.15 * (1 - V)))
+            inside = (
+                smooth((0.794 - abs(sn)) / 0.112)
+                * smooth((V - 0.042) / 0.080)
+                * smooth((0.96 - V) / 0.075)
+                * smooth((cs + 0.02) / 0.25)
+            )
+            well = ramp((122, 27, 16), (211, 57, 31), clamp(0.42 + 0.32 * (1 - V) - 0.20 * sn + 0.15 * abs(sn)))
+            left = np.interp(v, ear_rows[:, 0], ear_rows[:, 1])
+            right = np.interp(v, ear_rows[:, 0], ear_rows[:, 2])
+            tex = sample(ear_study, left + (1 - sn) * 0.5 * (right - left), v)
+            pigment = skin * (1 - lin(inside)) + well * lin(inside)
+            front = smooth((cs - 0.02) / 0.39) * smooth((0.97 - V) / 0.14)
+            col = pigment * (1 - lin(front * 0.87)) + tex * lin(front * 0.87)
+            n = 0.18 * grain + 0.25 * np.exp(-(((abs(sn) - 0.85) / 0.065) ** 2))
+            roughness = 0.68 + 0.035 * grain
+        elif kind == 'nape_fur':
+            col = ramp((181, 73, 6), (241, 126, 17), clamp(0.31 + 0.36 * V + 0.15 * np.cos(2 * pi * U)))
+            n = 0.25 * grain
+            roughness = 0.67 + 0.04 * grain
+        elif kind == 'violet_elastic':
+            cord = np.cos(2 * pi * U * 74 + 0.18 * np.sin(2 * pi * V))
+            col = ramp((81, 26, 105), (148, 54, 163), clamp(0.53 + 0.16 * np.cos(2 * pi * V) + 0.027 * cord))
+            n = 0.31 * cord + 0.07 * grain
+            roughness = 0.39 + 0.037 * cord
+        elif kind == 'knit_binding':
+            ribs = np.sin(2 * pi * (U * 112 + 0.15 * np.sin(2 * pi * V)))
+            edge = np.cos(2 * pi * V)
+            col = ramp((184, 53, 133), (246, 118, 190), clamp(0.52 + 0.17 * edge + 0.055 * ribs))
+            n = 0.22 * ribs + 0.12 * grain
+            roughness = 0.65 + 0.033 * grain
+        elif kind == 'maquette_shell':
+            center = 0.50 + 0.012 * np.sin(2 * pi * U)
+            groove = np.exp(-(((V - center) / 0.023) ** 2))
+            col = ramp(
+                (222, 195, 188),
+                (254, 244, 232),
+                clamp(0.60 + 0.21 * np.cos(2 * pi * U) + 0.10 * np.sin(pi * V)),
+            )
+            col *= lin(1 - 0.18 * groove)
+            n = -1.1 * groove + 0.08 * grain
+            roughness = 0.315 + 0.08 * groove
+        elif kind.startswith('maquette_'):
+            if kind == 'maquette_fringe':
+                front = sample(gold_views[0], x, v)
+                side = sample(gold_views[2], cs, v)
+                col = front * (1 - lin(d)) + side * lin(d)
+            else:
+                rear = sample(gold_views[1], x, v)
+                side = sample(gold_views[2], d, v)
+                side_weight = clamp(cs)
+                col = rear * (1 - lin(side_weight)) + side * lin(side_weight)
+                if kind == 'maquette_crown':
+                    anterior = smooth((np.cos(2 * pi * U) - 0.06) / 0.64)
+                    front = sample(gold_views[0], 400 - 0.899 * (372 - x) + 0.438 * (330 - d), v)
+                    col = col * (1 - lin(anterior)) + front * lin(anterior)
+            lum = col @ np.array([0.23, 0.64, 0.13])
+            f = sample(
+                fibres,
+                (0.12 + 0.72 * U + 0.025 * np.sin(pi * V)) * (fibres.shape[1] - 1),
+                (0.07 + 0.85 * V) * (fibres.shape[0] - 1),
+            )
+            # Retain the drawing's honey valleys and the broad direction of its
+            # specular ribbons; add the separate strand plate at the fine scale.
+            col = col * 0.89 + f * 0.11
+            col *= np.array([0.985, 0.955, 0.92])
+            flow = U + 0.071 * np.sin(pi * V) + 0.023 * np.sin(2 * pi * V + U * 4)
+            strand = np.sin(2 * pi * flow * 51 + 0.45 * np.sin(2 * pi * (7 * U + 0.23 * V)))
+            strand += 0.39 * np.sin(2 * pi * (flow * 81 + 0.4 * V))
+            n = 4.4 * (lum - 0.62) + 0.65 * (f @ np.array([0.23, 0.64, 0.13]) - 0.65) + 0.24 * strand
+            col *= lin(1 + 0.009 * strand)
+            roughness = 0.40 + 0.085 * (1 - lum)
+        elif kind in ('face', 'lid', 'ear'):
             is_face = kind == 'face' or part['name'].startswith('Orbital skin')
             im = plates['ear' if kind == 'ear' else 'face']
             front = sample(im, 500 + x, v)
@@ -168,17 +406,54 @@ def bake_character(work):
                 front = sample(im, 500 + x, v)
             col = front * (1 - lin(b)) + prof * lin(b)
             if is_face:
-                # Neutralise the study's baked orbital shadows before the game
-                # lights the rebuilt lids, nose bridge and cheek volumes.
-                warm = ramp(
-                    (222, 108, 26), (255, 154, 41), clamp(0.45 + 0.32 * cs + 0.075 * np.sin((v - 400) / 115))
+                xyz = part['points'].reshape(part['nv'] + 1, part['nu'] + 1, 3)
+                X, Y, D = coordinates(sample(xyz, U * part['nu'], V * part['nv'])).transpose(2, 0, 1)
+                ax = abs(X)
+                front = sample(
+                    muzzle_plates[0], 400 - 0.899 * ax + 0.438 * D, Y + 0.061 * (0.438 * ax + 0.899 * D)
                 )
-                tone = 0.69 * smooth((715 - v) / 82)
-                col = col * (1 - lin(tone)) + warm * lin(tone)
-                start = 621 + 19 * np.exp(-((x / 47) ** 2)) + 18 * (abs(x) / 174) ** 2
-                muzzle = smooth((v - start) / 22) * smooth((205 - abs(x)) / 43) * smooth((d - 81) / 88)
-                cream = ramp((230, 157, 93), (255, 214, 155), clamp(0.55 + 0.29 * cs - 0.15 * (v - 671) / 101))
-                col = col * (1 - lin(0.76 * muzzle)) + cream * lin(0.76 * muzzle)
+                profile = sample(muzzle_plates[1], 330 - D, Y)
+                side = smooth((ax - 65) / 88) * 0.68
+                study = front * (1 - lin(side)) + profile * lin(side)
+                orange = ramp((205, 80, 7), (247, 125, 12), clamp(0.65 + 0.24 * cs + 0.065 * np.cos(X * 0.030)))
+                cream = ramp((234, 158, 85), (255, 210, 145), clamp(0.60 + 0.29 * cs - 0.09 * (Y - 479) / 52))
+                start = np.interp(
+                    ax,
+                    [0, 18, 39, 58, 77, 92, 102, 116, 129, 144, 160],
+                    [455, 452, 449, 447, 444, 441, 442, 450, 467, 498, 530],
+                )
+                edge = 0.39 * np.sin(X * 1.19 + 0.42 * np.sin(Y * 1.71)) + 0.28 * np.sin(X * 0.54 + Y * 0.73)
+                muzzle = smooth((Y - start + edge) / 5.2) * smooth((127 - ax) / 20) * smooth((D - 16) / 39)
+                observed_front = sample(
+                    cheek_front, 400 - 0.899 * ax + 0.438 * D, Y + 0.061 * (0.438 * ax + 0.899 * D)
+                )[:, :, 0]
+                observed_side = sample(cheek_side, 330 - D, Y)[:, :, 0]
+                anatomy = observed_front * (1 - side) + observed_side * side
+                muzzle = 0.29 * muzzle + 0.71 * anatomy * smooth((D - 15) / 35)
+                orange = orange * 0.77 + np.minimum(study, orange * 1.10) * 0.23
+                cream = cream * 0.76 + np.maximum(study, cream * 0.81) * 0.24
+                cleft = np.exp(-((X / 2.8) ** 2)) * smooth((Y - 476) / 7) * smooth((506 - Y) / 6)
+                soft = np.exp(-((X / 7.2) ** 2) - ((Y - 491) / 13) ** 2)
+                cream *= lin(1 - 0.22 * cleft - 0.072 * soft)
+                col = orange * (1 - lin(muzzle)) + cream * lin(muzzle)
+                if kind == 'lid':
+                    # Pigment at the mobile eyelid maintains the sculpted hood
+                    # and its crease through full blinks and widened expressions.
+                    ap = np.interp(
+                        np.clip((abs(x) - 50) / 128, 0, 1),
+                        [0, 0.10, 0.22, 0.40, 0.60, 0.80, 0.95, 1],
+                        [591, 566, 544, 527, 520, 519, 523, 530],
+                    )
+                    across = smooth((abs(x) - 53) / 27) * smooth((184 - abs(x)) / 29)
+                    dist = ap - v
+                    col *= lin(
+                        1
+                        + across
+                        * (
+                            0.043 * np.exp(-(((dist - 12) / 10) ** 2))
+                            - 0.16 * np.exp(-(((dist - 28) / 5.5) ** 2))
+                        )
+                    )
             n = 0.13 * grain
         elif kind in ('body', 'hair', 'pant', 'pocket', 'arm'):
             im = plates[{'body': 'turn', 'pocket': 'pant'}.get(kind, kind)]
@@ -215,39 +490,34 @@ def bake_character(work):
             if kind in ('arm', 'body'):
                 # Cut the front, rear and two shoulder straps in common model
                 # space. The fabric crosses the welded shoulder UV seam.
-                xyz = part['points'].reshape(part['nv'] + 1, part['nu'] + 1, 3)
+                xyz = part.get('tank_pattern', part['points']).reshape(part['nv'] + 1, part['nu'] + 1, 3)
                 model = sample(xyz, U * part['nu'], V * part['nv']).transpose(2, 0, 1)
                 lateral, y, z = np.abs(model[0]), model[1], model[2]
                 guide = np.array(body_y)[::-1]
                 level = np.interp(y, guide[:, 1], guide[:, 0])
                 front_face = smooth((z + 0.045) / 0.09)
 
-                def boundary(lateral):
-                    neck = (
-                        331 + 19 * front_face - (26 + 20 * front_face) * np.minimum(lateral / 0.122, 1) ** 1.9
-                    )
-                    arm = 302 + 81 * smooth((lateral - 0.149) / 0.060) + 240 * smooth((lateral - 0.205) / 0.040)
-                    return np.maximum(neck, arm)
-
-                slope = (boundary(lateral + 0.0005) - boundary(np.maximum(0, lateral - 0.0005))) / 0.001
-                edge = (level - boundary(lateral)) / np.hypot(1, slope / 420)
+                if 'garment_field' in part:
+                    edge = sample(part['garment_field'][:, :, None], U * part['nu'], V * part['nv'])[:, :, 0]
+                else:
+                    edge = garment_edge(model.transpose(1, 2, 0), V if kind == 'arm' else None)
                 gy, gx = np.gradient(edge)
                 aa = np.maximum(0.65, 0.5 * np.hypot(gx, gy))
                 inside = smooth((edge + aa) / (2 * aa))
-                trim = inside * (1 - smooth((edge - 3.1) / 1.3))
+                trim = 1 - smooth((abs(edge) - 1.35) / 2.1)
                 upper = smooth((level - 277) / 8) * smooth((405 - level) / 13)
                 if kind == 'arm':
                     upper *= 1 - smooth((V - 0.22) / 0.14)
                 fabric = ramp(
-                    (235, 202, 218),
-                    (255, 243, 246),
+                    (221, 195, 199),
+                    (254, 240, 235),
                     clamp(0.56 + 0.30 * front_face - 0.10 * np.cos(lateral * 21)),
                 )
                 skin = ramp(
-                    (236, 125, 25), (252, 151, 45), clamp(0.40 + 0.31 * front_face + 0.16 * np.sin(pi * V))
+                    (214, 90, 7), (249, 124, 15), clamp(0.40 + 0.31 * front_face + 0.16 * np.sin(pi * V))
                 )
                 pattern = skin * (1 - lin(inside)) + fabric * lin(inside)
-                pattern = pattern * (1 - lin(trim)) + lin(trim) * np.array([240, 79, 151]) / 255
+                # The separate knit tube supplies the pink at the cut edge.
                 col = col * (1 - lin(upper)) + pattern * lin(upper)
                 n = 0.15 * grain + upper * (
                     1.65 * np.exp(-(((edge - 1.55) / 1.8) ** 2)) + 0.22 * inside * grain
@@ -271,23 +541,26 @@ def bake_character(work):
             rim = 1 - smooth((rad - 0.81) / 0.18)
             light = smooth((py + 0.65) / 1.61)
             fibre = (np.sin(theta * 73 + rad * 3) + np.sin(theta * 117 - rad * 5)) * 0.021 * rad
-            iris = ramp((59, 14, 78), (210, 65, 226), light + fibre)
+            iris = ramp((37, 5, 55), (215, 57, 229), light + fibre)
             iris = iris * lin(rim) + np.array([46, 17, 56]) / 255 * lin(1 - rim)
             pupil = 1 - smooth((np.sqrt((px / 0.48) ** 2 + ((py + 0.10) / 0.61) ** 2) - 0.95) / 0.07)
-            iris = iris * (1 - lin(pupil)) + np.array([30, 10, 37]) / 255 * lin(pupil)
+            iris = iris * (1 - lin(pupil)) + np.array([13, 3, 17]) / 255 * lin(pupil)
             sclera = ramp((228, 215, 223), (255, 249, 242), smooth(0.15 + np.sin(pi * U) * 0.55 + V * 0.28))
             mask = 1 - smooth((rad - 0.988) / 0.015)
             col = iris * lin(mask) + sclera * lin(1 - mask)
-            for cx, cy, radius in [(-0.19, -0.065, 0.152), (0.27, 0.065, 0.069)]:
+            for cx, cy, radius in [(-0.30, -0.35, 0.130), (0.21, -0.17, 0.088)]:
                 dot = 1 - smooth((np.hypot(px - cx, py - cy) - radius) / 0.024)
                 col = col * (1 - lin(dot)) + lin(dot) * 0.998
         elif kind in ('upper_lip', 'lower_lip'):
             underside = 0.5 + 0.5 * np.sin(2 * pi * V) * (-1 if kind == 'lower_lip' else 1)
             warmth = np.sin(pi * U) ** 0.55
             if kind == 'upper_lip':
-                col = ramp((188, 117, 76), (83, 44, 34), 0.19 + 0.70 * warmth * underside)
+                col = ramp((200, 132, 77), (75, 35, 26), 0.12 + 0.76 * warmth * underside)
             else:
                 col = ramp((246, 188, 135), (170, 86, 66), 0.15 + 0.62 * warmth * underside**2)
+            if kind == 'lower_lip':
+                vermilion = np.exp(-(((U - 0.5) / 0.18) ** 4)) * (0.43 + 0.30 * underside)
+                col = col * (1 - lin(vermilion)) + np.array([226, 100, 82]) / 255 * lin(vermilion)
             n = 0.11 * grain
         elif kind == 'sclera':
             col = ramp((228, 207, 213), (255, 248, 239), smooth(0.25 + np.sin(pi * U) * 0.55 + V * 0.28))
@@ -419,6 +692,8 @@ def bake_character(work):
                 img, [(pad, pad), (pad, pad), (0, 0)], mode='edge'
             )
         del p['proj']
+        p.pop('tank_pattern', None)
+        p.pop('garment_field', None)
         p['weights'] = [
             {k: float(v) / sum(ww.values()) for k, v in ww.items() if v > 1e-8} for ww in p['weights']
         ]

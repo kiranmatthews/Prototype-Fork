@@ -172,6 +172,39 @@ export async function openReview() {
       }
       return renderer.getContext().getError();
     },
+    secondaryAudit() {
+      pose('player.idle', .3);
+      const channel = (name: string) => {
+        const mesh = skin.meshes.find(m => m.morphTargetDictionary?.[name] !== undefined);
+        if (!mesh) throw new Error('Missing shape ' + name);
+        return mesh.morphTargetInfluences![mesh.morphTargetDictionary![name]];
+      };
+      const chest = rig.root.getObjectByName('chest')!;
+      const down: number[] = [], raised: number[] = [];
+      for (const side of ['left', 'right']) {
+        const shoulder = rig.root.getObjectByName('shoulder-' + side)!, elbow = rig.root.getObjectByName('elbow-' + side)!;
+        const saved = shoulder.quaternion.clone(), axis = elbow.position.clone().normalize();
+        const parentRotation = shoulder.parent!.getWorldQuaternion(new THREE.Quaternion()).invert();
+        for (const [direction, result] of [[new THREE.Vector3(0,-1,0), down], [new THREE.Vector3(1,0,0), raised]] as const) {
+          direction.applyQuaternion(chest.getWorldQuaternion(new THREE.Quaternion())).applyQuaternion(parentRotation);
+          shoulder.quaternion.setFromUnitVectors(axis, direction.normalize());
+          scene.updateMatrixWorld(true);
+          for (const skeleton of unique) skeleton.update();
+          result.push(channel(side === 'left' ? 'ShoulderRelax.L' : 'ShoulderRelax.R'));
+        }
+        shoulder.quaternion.copy(saved);
+      }
+      pose('player.idle', .3);
+      const head = rig.root.getObjectByName('head-presentation')!, saved = head.quaternion.clone();
+      skin.step(1/60, 0, false);
+      for (let i=0;i<12;i++) {head.rotateY(.045);skin.step(1/60,0,false);}
+      const sweep = Math.max(channel('HairSweep.L'),channel('HairSweep.R'));
+      head.quaternion.copy(saved);
+      for (let i=0;i<125;i++) skin.step(1/60,0,false);
+      const settled = Math.max(channel('HairSweep.L'),channel('HairSweep.R'));
+      pose('player.idle', .3);
+      return {down, raised, sweep, settled};
+    },
     expressionAudit() {
       pose('player.idle',.3);
       const faces = skin.meshes.filter(m => ['Face', 'Eyes', 'Ears and hair', 'Dentition'].includes(m.userData.cargoSection));

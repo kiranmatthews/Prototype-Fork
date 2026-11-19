@@ -1,0 +1,32 @@
+{
+  "three-quarter": {
+    "previous": {
+      "wholeFrame": 0.691,
+      "headAndHair": 0.7135
+    },
+    "revised": {
+      "wholeFrame": 0.9136,
+      "headAndHair": 0.9291
+    }
+  },
+  "rear": {
+    "previous": {
+      "wholeFrame": 0.662,
+      "headAndHair": 0.681
+    },
+    "revised": {
+      "wholeFrame": 0.9294,
+      "headAndHair": 0.9316
+    }
+  },
+  "profile": {
+    "previous": {
+      "wholeFrame": 0.7085,
+      "headAndHair": 0.7188
+    },
+    "revised": {
+      "wholeFrame": 0.935,
+      "headAndHair": 0.9337
+    }
+  }
+}

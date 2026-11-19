@@ -62,6 +62,14 @@ def sculpt_wardrobe():
                 - 1.9 * math.exp(-((x / 4) ** 2) - ((v - 458) / 8) ** 2)
             ) * cs
         d -= 11 * (1 - smooth((v - 288) / 25))
+        # The chest of the cropped jersey falls forward below the scooped neck.
+        if cs > 0:
+            d += (
+                20.5
+                * math.exp(-(((v - 380) / 39) ** 2))
+                * cs**1.55
+                * (0.76 + 0.24 * math.exp(-(((abs(x) - 27) / 20) ** 2)))
+            )
         return [x, v, d]
 
     def upper_body_weights(p, u, t):
@@ -88,6 +96,9 @@ def sculpt_wardrobe():
     tank = parts[-1]
     for sg in [-1, 1]:
         build_arm(tank, sg)
+    from tank_binding import sew_bindings
+
+    sew_bindings([tank] + [p for p in parts if p['paint'] == 'arm'])
     loft(
         'Tank elastic hem',
         [
@@ -232,8 +243,8 @@ def sculpt_wardrobe():
 
     grid(
         'Gathered waistband',
-        88,
-        12,
+        76,
+        9,
         waist,
         torso_fit,
         lambda p, u, t: torso_weights(p[1]),
@@ -293,52 +304,9 @@ def sculpt_wardrobe():
         m=8,
         uvsize=(16, 16),
     )
-    # Necklace with shell grooves and a dark string visible in the gaps.
+    from maquette_details import shell_necklace
 
-    def necklace(u, t):
-        sn, cs = ring(u)
-        angle = t * 2 * pi
-        return [
-            (25 + 1.4 * math.cos(angle)) * sn,
-            305 + 5 * cs + 1.4 * math.sin(angle),
-            (22 + 1.4 * math.cos(angle)) * cs,
-        ]
-
-    grid('Shell necklace cord', 48, 6, necklace, torso_fit, 'neck', 'espresso', cyclic=True, uvsize=(54, 16))
-    for i in range(12):
-        theta = 2 * pi * i / 12
-        sn, cs = math.sin(theta), math.cos(theta)
-        c = [25 * sn, 305 + 5 * cs, 22 * cs]
-
-        def shell(u, t):
-            around, front = ring(u)
-            angle = 0.003 + (pi - 0.006) * t
-            lateral = math.sin(angle) * around
-            length = math.cos(angle)
-            across = 5.6 * lateral * (1 + 0.16 * length)
-            # Two convex lobes curve into the incision on the exposed shell face.
-            notch = (
-                math.exp(-(((lateral - 0.08 * length) / 0.15) ** 2))
-                * max(0, front) ** 1.5
-                * math.sin(angle) ** 0.7
-            )
-            deep = 4.0 * math.sin(angle) * front - 1.6 * notch
-            along = 3.65 * length + 0.42 * lateral
-            return [c[0] + cs * across + sn * deep, c[1] + along, c[2] - sn * across + cs * deep]
-
-        grid(
-            'Cowrie %02d' % i,
-            16,
-            9,
-            shell,
-            torso_fit,
-            'neck',
-            'shell',
-            cyclic=True,
-            group='Jewelry',
-            material='Pearl',
-            uvsize=(58, 42),
-        )
+    shell_necklace()
     # Feet are directly registered to the heel and toe contacts. The outsole has a real flat bearing surface.
 
     def shoe_fit(p, sg):
@@ -410,8 +378,8 @@ def sculpt_wardrobe():
 
         grid(
             'Leather upper ' + sx,
-            48,
-            30,
+            40,
+            25,
             upper_shoe,
             fit,
             fw,

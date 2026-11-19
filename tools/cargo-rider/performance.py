@@ -90,11 +90,26 @@ def orbital_skin(sign, skull, aperture, cornea, face_depth):
         i = round(u * count) % count
         a, b = outer[i], rim[i, :3]
         x, v, z = a * (1 - t) + b * t
-        # Blend into the local cheek curvature at the outside and make a small
-        # rolled edge under the lash. No free exterior lid margin remains.
-        depth = face_depth(x, v) + (b[2] - face_depth(b[0], b[1])) * t**1.7
-        depth += (a[2] - face_depth(a[0], a[1])) * (1 - t)
-        return [x, v, depth + 2.2 * math.sin(pi * t)]
+        # A Hermite section meets the cheek and cornea tangentially on each
+        # side. Above the upper lash it rolls into an oblique palpebral crease.
+        dx, dv = b[0] - a[0], b[1] - a[1]
+        dz = b[2] - a[2]
+        shoulder = (face_depth(a[0] + 0.025 * dx, a[1] + 0.025 * dv) - face_depth(a[0], a[1])) / 0.025
+        margin = (cornea(b[0], b[1]) - cornea(b[0] - 0.025 * dx, b[1] - 0.025 * dv)) / 0.025
+        span = math.hypot(dx, dv)
+        shoulder = float(np.clip(shoulder, -span * 0.91, span * 0.91))
+        margin = float(np.clip(margin, -span * 0.90, span * 0.90))
+        depth = a[2] + (3 * t * t - 2 * t**3) * dz + (t**3 - 2 * t * t + t) * shoulder + (t**3 - t * t) * margin
+        across = math.sin(pi * float(np.clip((abs(b[0]) - 50) / 128, 0, 1))) ** 0.70
+        distance = abs(v - b[1])
+        upper = loop[i][1] < mid
+        roll = (
+            (13.2 * math.exp(-(((distance - 13) / 12) ** 2)) - 5.3 * math.exp(-(((distance - 29) / 6.8) ** 2)))
+            if upper
+            else 2.5 * math.exp(-(((distance - 9) / 10) ** 2))
+        )
+        depth += across * roll * smooth(t / 0.19) * smooth((1 - t) / 0.075)
+        return [x, v, depth]
 
     def posed(p, u, t, amount, wide=False):
         i = round(u * count) % count
@@ -109,7 +124,7 @@ def orbital_skin(sign, skull, aperture, cornea, face_depth):
     grid(
         'Orbital skin' + suffix,
         count,
-        9,
+        13,
         surf,
         head_fit,
         'head-presentation',
@@ -157,9 +172,9 @@ def sculpt_iris(sign, aperture, cornea):
         scale = 1 - 0.72 * k('IrisPin')
         dxlook = sign * 26 * (k('LookLeft') - k('LookRight')) - 26 * k('CrossEyes') + 15 * k('WallEyes')
         dylook = 18 * (k('LookDown') - k('LookUp')) + sign * 26 * k('WallEyes')
-        x = sign * np.clip(105 + dxlook + 37 * scale * dx, 50.1, 177.9)
+        x = sign * np.clip((96 if sign > 0 else 106) + dxlook + 34 * scale * dx, 50.1, 177.9)
         a, b = aperture(x)
-        v = 554 + dylook + 43 * scale * dy
+        v = (563 if sign > 0 else 554) + dylook + 43.5 * scale * dy
         w = k(wide)
         da = eye_widen(x, a, 0)
         db = eye_widen(x, b, 0)
@@ -174,7 +189,7 @@ def sculpt_iris(sign, aperture, cornea):
         dxwide = w * eye_widen(x, v, 0)
         # Same cut surface as the white shell, offset only by the lens thickness.
         unwidened = a + (b - a) * (v - (a + w * da[1])) / max(0.01, (b - a) + w * (db[1] - da[1]))
-        z = cornea(x, unwidened) + dxwide[2] + 1.55 + 1.25 * (1 - t * t) - 3.1 * shut
+        z = cornea(x, unwidened) + dxwide[2] + 4.7 + 2.5 * (1 - t * t) - 6.1 * shut
         return np.array([x + dxwide[0], v, z])
 
     grid(
@@ -232,6 +247,7 @@ def detail_controls():
             sign = 1 if name.endswith('.L') else -1
             suffix = name[-2:]
             tip = 1 - np.repeat(np.linspace(0, 1, p['nv'] + 1), p['nu'] + 1)
+            add('EarStretch' + suffix, sign * 4.5 * smooth(tip), -44 * smooth(tip), 4 * smooth(tip))
             for control, degrees, depth in [('EarFold', 31, -57), ('EarPerk', -11, 26)]:
                 angle = np.radians(degrees) * sign * smooth(tip)
                 local_x, local_y = x - sign * 146, v - 455

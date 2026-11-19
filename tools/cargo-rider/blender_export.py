@@ -117,7 +117,21 @@ for kind in sorted(set(p['mat'] for p in parts)):
     bs = nt.nodes.get('Principled BSDF')
     bs.inputs['Roughness'].default_value = rough[kind]
     bs.inputs['Metallic'].default_value = 0.62 if kind == 'Metal' else 0
-    bs.inputs['Specular IOR Level'].default_value = 0.34 if kind != 'Cornea' else 0.46
+    bs.inputs['Specular IOR Level'].default_value = {
+        'Cornea': 0.11,
+        'Satin': 0.18,
+        'Facial fur': 0.19,
+        'Gold silk hair': 0.25,
+    }.get(kind, 0.32)
+    if kind == 'Facial fur':
+        bs.inputs['Sheen Weight'].default_value = 0.08
+        bs.inputs['Sheen Roughness'].default_value = 0.65
+        bs.inputs['Subsurface Weight'].default_value = 0.045
+        bs.inputs['Subsurface Scale'].default_value = 0.012
+    if kind == 'Pearl':
+        bs.inputs['IOR'].default_value = 1.55
+        bs.inputs['Coat Weight'].default_value = 0.27
+        bs.inputs['Coat Roughness'].default_value = 0.17
     if kind == 'Gold silk hair':
         bs.inputs['Anisotropic'].default_value = 0.33
         bs.inputs['Coat Weight'].default_value = 0.06
@@ -245,6 +259,9 @@ for idx, ((section, mat, keys), islands) in enumerate(groups.items()):
     mod = obj.modifiers.new(name='Bone Man • skin', type='ARMATURE')
     mod.object = rig
     obj.select_set(True)
+from shoulder_pose import add_shoulder_correctives, install_chest_space
+
+add_shoulder_correctives(bpy, rig)
 # Capture native expression channels independently of Blender drivers.
 # Blender keeps its slider rig in the source file.
 export_dir = ROOT / 'public/characters/cargo-rider'
@@ -269,6 +286,7 @@ options = dict(
 )
 bpy.ops.export_scene.gltf(**options)
 write_color_morphs(export_dir / 'cargo-roo.glb')
+install_chest_space(bpy, rig)
 install_source_shader(materials['Facial fur'], rig)
 install_actions(bpy, rig, rest, work)
 # Keep a rig- and render-ready studio with a shadow receiver in the editable source only.
@@ -285,7 +303,20 @@ def studio_object(o):
 world = bpy.data.worlds.new('Warm neutral cyclorama')
 world.use_nodes = True
 world.node_tree.nodes.get('Background').inputs[0].default_value = (0.62, 0.67, 0.78, 1)
-world.node_tree.nodes.get('Background').inputs[1].default_value = 0.56
+world.node_tree.nodes.get('Background').inputs[1].default_value = 0.38
+# Give camera rays the charcoal studio background while the neutral environment
+# supplies illumination to the character.
+world_nodes = world.node_tree.nodes
+camera_bg = world_nodes.new('ShaderNodeBackground')
+camera_bg.inputs['Color'].default_value = (0.256, 0.223, 0.238, 1)
+paths = world_nodes.new('ShaderNodeLightPath')
+mix = world_nodes.new('ShaderNodeMixShader')
+world.node_tree.links.new(paths.outputs['Is Camera Ray'], mix.inputs[0])
+world.node_tree.links.new(world_nodes['Background'].outputs[0], mix.inputs[1])
+world.node_tree.links.new(camera_bg.outputs[0], mix.inputs[2])
+world.node_tree.links.new(
+    mix.outputs[0], next(n for n in world_nodes if n.type == 'OUTPUT_WORLD').inputs['Surface']
+)
 scene.world = world
 bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, 0.1511))
 floor = bpy.context.object
@@ -303,9 +334,10 @@ def aim(o, p):
 
 
 for name, loc, power, size, c in [
-    ('Key softbox', (-3, -4, 5.4), 400, 4.5, (1, 0.87, 0.76)),
-    ('Cool fill', (3, -2.8, 3.2), 230, 3.5, (0.8, 0.88, 1)),
-    ('Rim', (1.1, 2.4, 4), 385, 3, (1, 0.83, 0.64)),
+    ('Key softbox', (-3, -4, 5.4), 375, 3.4, (1, 0.87, 0.76)),
+    ('Cool fill', (3, -2.8, 3.2), 140, 3.6, (0.8, 0.88, 1)),
+    ('Rim', (1.1, 2.4, 4), 183, 3.6, (1, 0.83, 0.64)),
+    ('Portrait bounce', (-0.65, -3.0, 0.28), 112, 3.8, (1, 0.85, 0.71)),
 ]:
     light = bpy.data.lights.new(name, 'AREA')
     light.energy = power
@@ -353,16 +385,27 @@ for screen in bpy.data.screens:
             area.spaces.active.shading.use_scene_lights = True
             area.spaces.active.shading.use_scene_world = True
             area.spaces.active.overlay.show_overlays = False
+from reference_pose import REFERENCE_VIEWS, place_camera, portrait_lights
+
+reference_cameras = {}
+for title, az, pitch, u0 in REFERENCE_VIEWS:
+    shot = link(bpy.data.objects.new('Reference | ' + title.title(), bpy.data.cameras.new(title + ' • 724 px')))
+    studio_object(shot)
+    frame = place_camera(shot, az, pitch, u0)
+    reference_cameras[title] = shot
+    if title == 'three-quarter':
+        portrait_lights(bpy.data.objects, frame)
+scene.camera = reference_cameras['three-quarter']
+scene.render.resolution_x = scene.render.resolution_y = 724
+rig.animation_data.action = bpy.data.actions['Portrait | Three-quarter reference']
+scene.frame_set(1)
+floor.hide_render = True
 scene.render.filepath = '//portrait.png'
 bpy.ops.wm.save_as_mainfile(filepath=str(ART / 'Cargo Roo.blend'), compress=True)
 # Render the actual rig for the life crate and HUD portrait, sharing the in-game face identity.
 if review:
     floor.hide_render = True
     scene.render.film_transparent = True
-    view(12, 'face')
-    cam.data.ortho_scale = 1.23
-    cam.location.z += 0.026
-    aim(cam, (0, 0, 1.852))
     scene.render.resolution_x = scene.render.resolution_y = 384
     scene.render.image_settings.file_format = 'WEBP'
     scene.render.image_settings.color_mode = 'RGBA'
@@ -372,6 +415,20 @@ if review:
     scene.render.image_settings.file_format = 'PNG'
     scene.render.film_transparent = False
     floor.hide_render = False
+# The source opens on its editable reference action. Keep the neutral calibration
+# available for the full-body gallery.
+rig.animation_data.action = None
+from mathutils import Matrix
+
+for bone in rig.pose.bones:
+    bone.matrix_basis = Matrix.Identity(4)
+for prop in list(rig.keys()):
+    if isinstance(rig[prop], float):
+        rig[prop] = 0.0
+rig.update_tag()
+bpy.context.view_layer.update()
+scene.camera = cam
+floor.hide_render = False
 if review:
     review.mkdir(parents=True, exist_ok=True)
     for angle, framing, title in [
