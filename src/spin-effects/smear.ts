@@ -95,6 +95,23 @@ export function captureSpinCharacter(
     geometry.deleteAttribute('skinIndex');
     geometry.deleteAttribute('skinWeight');
     geometry.deleteAttribute('tangent');
+    const colors = geometry.getAttribute('color');
+    const tintTargets: THREE.BufferAttribute[] | undefined = object.geometry.morphAttributes.color;
+    if (colors && tintTargets && object.morphTargetInfluences) {
+      const tint = new Float32Array(colors.count * colors.itemSize);
+      const active = tintTargets.map((target, i) => ({target, weight: object.morphTargetInfluences![i]}))
+        .filter(({weight}) => weight !== 0);
+      for (let i = 0; i < colors.count; i++) for (let c = 0; c < colors.itemSize; c++) {
+        const rest = colors.getComponent(i, c);
+        let value = rest;
+        for (const {target, weight} of active) {
+          const posed = c < target.itemSize ? target.getComponent(i, c) : 0;
+          value += weight * (object.geometry.morphTargetsRelative ? posed : posed - rest);
+        }
+        tint[i * colors.itemSize + c] = THREE.MathUtils.clamp(value, 0, 1);
+      }
+      geometry.setAttribute('color', new THREE.BufferAttribute(tint, colors.itemSize));
+    }
     geometry.morphAttributes = {};
     // Flattened reflected limbs must retain outward-facing triangles.
     if (matrix.determinant() * scale.x * scale.y * scale.z < 0) {

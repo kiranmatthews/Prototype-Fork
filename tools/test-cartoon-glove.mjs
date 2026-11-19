@@ -254,7 +254,10 @@ try {
   assert.match(playerSource, /this\.gloveRight = glove;/);
   assert.match(playerSource, /boneCountPerHand: 12/);
   assert.match(playerSource, /fingerIndexTip\$\{glove\.side/);
-  assert.match(playerSource, /setCartoonGlovePose\(this\.gloveLeft, glovePose\)/);
+  for (const side of ['Left', 'Right']) {
+    const call = `setCartoonGlovePose(this.glove${side}, ropeGrip${side} > 0 ? blendCartoonGlovePose(glovePose, ROPE_GLOVE_POSE, ropeGrip${side}) : glovePose)`;
+    assert.ok(playerSource.includes(call), `${side} glove receives its normal pose or its individual rope grip`);
+  }
   assert.match(playerSource, /setCartoonGlovePreviewPose\(name: CartoonGlovePoseName\)/);
   assert.doesNotMatch(playerSource, /const handGeo =/);
   assert.match(labSource, /\['open', 'relaxed', 'curl', 'fist', 'pinch', 'grab'\]/);

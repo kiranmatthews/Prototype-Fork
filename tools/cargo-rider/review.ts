@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Player } from '../../src/player';
+import { cargoPerformances, performanceControls, type CargoExpression } from '../../src/character/cargoRiderPerformance';
 import { RigBinding } from '../../src/animation/rigBinding';
 import { createPlayerStarterAnimationSuite } from '../../src/animation/playerCatalog';
 import { sampleClip } from '../../src/animation/sampling';
@@ -73,12 +74,13 @@ export async function openReview() {
     return box;
   }
   return {
+    style(style: 'cargo'|'skull') { player.setCharacterHeadStyle(style); },
     suites: {starter:starter.clips.length,gameplay:gameplay.clips.length,studio:studio.clips.length,liveSkate:assets.skate.clips.length},
     catalog: catalog.map(c=>({id:c.id,name:c.name,duration:c.duration})),
     sample(id: string, time: number, angle=15, zoom=1) {
       pose(id,time); const b=bounds(), center=b.getCenter(new THREE.Vector3());
       const maxDim=Math.max(1.85,b.max.y-b.min.y,(b.max.x-b.min.x)*.81); const d=maxDim*2.6/zoom;
-      const a=THREE.MathUtils.degToRad(angle);camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*d,.095*d,-Math.cos(a)*d));camera.lookAt(center);
+      const a=THREE.MathUtils.degToRad(angle);camera.position.copy(center).add(new THREE.Vector3(Math.sin(a)*d,.095*d,-Math.cos(a)*d));camera.up.set(0,1,0);camera.lookAt(center);
       renderer.render(scene,camera);
       return {min:b.min.toArray(),max:b.max.toArray(),gl:renderer.getContext().getError()};
     },
@@ -119,9 +121,26 @@ export async function openReview() {
       skin.setDetached(false);pose('player.idle',.3);return {tris,maxEdge};
     },
     spinCheck() {
+      player.setCargoExpression('puffer');
       const capture = player.captureSpinSmearSource();
       const surfaces = capture.children.filter((child): child is THREE.Mesh => child instanceof THREE.Mesh);
       const triangles = surfaces.reduce((sum, mesh) => sum + (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3, 0);
+      const cheek = skin.meshes.find(m => m.geometry.morphAttributes.color);
+      const still = surfaces.find(m => m.geometry.attributes.color?.count === cheek?.geometry.attributes.color.count);
+      if (!cheek || !still) throw new Error('Spin capture lost the facial vertex pigment');
+      const rest = cheek.geometry.attributes.color;
+      const colors = still.geometry.attributes.color;
+      const puff = cheek.geometry.morphAttributes.color![cheek.morphTargetDictionary!['Pose.puffer']];
+      let strongest = 0;
+      for (let i = 0; i < rest.count; i++) {
+        const delta = puff.getY(i);
+        strongest = Math.max(strongest, delta);
+        if (Math.abs(colors.getY(i) - Math.min(1, rest.getY(i) + delta)) > .005) {
+          throw new Error('Spin capture lost the inflated cheek colour');
+        }
+      }
+      if (strongest < .2) throw new Error('Missing inflation pigment');
+      player.setCargoExpression('live');
       for (const mesh of surfaces) {
         mesh.geometry.dispose();
         for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) material.dispose();
@@ -129,7 +148,67 @@ export async function openReview() {
       return triangles;
     },
     controls() { return skin.meshes.flatMap(m=>Object.keys(m.morphTargetDictionary??{})).filter((x,i,a)=>a.indexOf(x)===i).sort(); },
-    expression(name: 'wink'|'smile'|'live'|'surprise'){ player.setCargoExpression(name); },
+    expression(name: CargoExpression){ player.setCargoExpression(name); },
+    performances: cargoPerformances,
+    face(name: CargoExpression, angle=0, close=1, previous?: CargoExpression, blend=1) {
+      pose('player.idle', .3);
+      player.setCargoExpression(name);
+      const transition=previous && previous!==name && performanceControls(previous) && performanceControls(name);
+      if (transition) {
+        skin.setChannel('Pose.'+previous, 1-blend);
+        skin.setChannel('Pose.'+name, blend);
+      }
+      const idx=unique[0].bones.findIndex(b=>b.name==='head-presentation');
+      const matrix=unique[0].bones[idx].matrixWorld.clone().multiply(unique[0].boneInverses[idx]);
+      const target=new THREE.Vector3(0,1.676,.070);
+      const a=THREE.MathUtils.degToRad(angle), d=1.62/close;
+      camera.position.copy(target).add(new THREE.Vector3(Math.sin(a)*d,.035*d,Math.cos(a)*d)).applyMatrix4(matrix);
+      camera.up.set(0,1,0).transformDirection(matrix);
+      camera.lookAt(target.applyMatrix4(matrix));
+      renderer.render(scene,camera);
+      if (transition) {
+        skin.setChannel('Pose.'+previous, 0);
+        skin.setChannel('Pose.'+name, 1);
+      }
+      return renderer.getContext().getError();
+    },
+    expressionAudit() {
+      pose('player.idle',.3);
+      const faces = skin.meshes.filter(m => ['Face', 'Eyes', 'Ears and hair', 'Dentition'].includes(m.userData.cargoSection));
+      const points = faces.flatMap(mesh => {
+        const count = mesh.geometry.attributes.position.count;
+        return Array.from({length:Math.min(100,count)}, (_,i) => ({mesh, index:Math.floor(i*(count-1)/99)}));
+      });
+      const read = () => points.flatMap(({mesh,index}) => mesh.getVertexPosition(index,vertex).toArray());
+      player.setCargoExpression('live');
+      const baseline = read();
+      const result = cargoPerformances.map(name => {
+        player.setCargoExpression(name);
+        const required = performanceControls(name)!;
+        for (const [channel,value] of Object.entries(required)) {
+          const meshes=faces.filter(m => m.morphTargetDictionary?.[channel] !== undefined);
+          if (!meshes.length || !Number.isFinite(value)) throw new Error('Unbound control '+name+' / '+channel);
+        }
+        const macro='Pose.'+name;
+        const bindings=faces.filter(m=>m.morphTargetDictionary?.[macro]!==undefined);
+        if (!bindings.length || bindings.some(m=>m.morphTargetInfluences![m.morphTargetDictionary![macro]]!==1)) {
+          throw new Error('Unbound performance pose '+name);
+        }
+        const v=read();
+        skin.setChannel(macro,0);
+        for (const [channel,value] of Object.entries(required)) skin.setChannel(channel,value);
+        skin.setChannel('IrisFit.'+name,1);skin.setChannel('MaskFit.'+name,1);
+        const editable=read();
+        if (editable.some((n,i)=>Math.abs(n-v[i])>.00002)) throw new Error('Editable controls diverged from '+name);
+        if (!v.every(Number.isFinite)) throw new Error('Invalid posed vertex for '+name);
+        const maximum=Math.max(...v.map((n,i)=>Math.abs(n-baseline[i])));
+        return {name,maximum,signature:v.reduce((s,n,i)=>s+Math.sin(i+.7)*n,0)};
+      });
+      player.setCargoExpression('live');
+      const restored=read();
+      if (restored.some((v,i)=>Math.abs(v-baseline[i])>1e-6)) throw new Error('Expression residues after returning to Live');
+      return result;
+    },
     dimensions: { triangles:skin.meshes.reduce((s,m)=>s+(m.geometry.index?.count??m.geometry.attributes.position.count)/3,0), meshes:skin.meshes.length,nativeNodes:unique[0].bones.length },
   };
 }

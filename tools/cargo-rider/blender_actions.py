@@ -1,6 +1,7 @@
 """Editable examples sampled from the running player. The GLB remains a reusable rest rig."""
 
 import json
+from pathlib import Path
 from mathutils import Matrix
 
 
@@ -71,7 +72,46 @@ def install_actions(bpy, rig, rest, work):
     animation.action = None
     for name in tracks:
         rig[name] = 0.0
+    presets = json.loads(
+        (Path(__file__).resolve().parents[2] / 'src/character/cargoRiderExpressions.json').read_text()
+    )
+    channels = [name for name in rig.keys() if isinstance(rig[name], float)]
+
+    # One keyed asset per sign-off drawing, and one stepped-through reel. Explicit
+    # zeros let animators blend from any other pose without retaining old shapes.
+    def face_keys(frame, pose_name):
+        for channel in channels:
+            weight = presets.get(pose_name, {}).get(
+                channel, float(channel in ('IrisFit.' + pose_name, 'MaskFit.' + pose_name))
+            )
+            rig[channel] = weight
+            rig.keyframe_insert(
+                data_path='["' + channel + '"]',
+                frame=frame,
+                group='Eyes • fit' if channel.startswith('IrisFit.') else 'Face',
+            )
+
+    for name in presets:
+        pose = bpy.data.actions.new('Pose | ' + name.capitalize())
+        pose.asset_mark()
+        pose.use_fake_user = True
+        animation.action = pose
+        face_keys(1, name)
+    reel = bpy.data.actions.new('Face | Twelve performance poses')
+    reel.asset_mark()
+    reel.use_fake_user = True
+    animation.action = reel
+    face_keys(1, '')
+    for i, name in enumerate(presets):
+        start = 9 + i * 16
+        face_keys(start, name)
+        face_keys(start + 7, name)
+        reel.pose_markers.new(name.capitalize()).frame = start
+    face_keys(201, '')
+    animation.action = None
+    for channel in channels:
+        rig[channel] = 0.0
     bpy.context.scene.render.fps = 24
     bpy.context.scene.frame_start = 1
-    bpy.context.scene.frame_end = 83
+    bpy.context.scene.frame_end = 201
     bpy.context.scene.frame_set(1)

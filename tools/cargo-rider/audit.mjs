@@ -8,7 +8,7 @@ if (!origin || !directory) throw new Error('Usage: node tools/cargo-rider/audit.
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const output = resolve(directory);
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--use-angle=metal'] });
 const actions = ['player.idle', 'player.run', 'player.jump', 'player.crawl', 'studio/player.skate-study.basic-ollie'];
 
 try {
@@ -25,7 +25,13 @@ try {
   }));
   assert.ok(report.geometry.triangles > 0 && report.geometry.triangles <= 150_000, 'Character triangle budget');
   assert.equal(report.geometry.nativeNodes, 72);
-  assert.equal(report.channels.length, 21);
+  for(const channel of ['EyeJoy','EyeWide.L','IrisPin','CrossEyes','Clench','TongueOut','TongueCurl','JawOpen','CheekPuff.R','FaceSquash','FaceStretch']) {
+    assert.ok(report.channels.includes(channel), 'Missing facial control '+channel);
+  }
+  report.expressions = await page.evaluate(() => review.expressionAudit());
+  assert.equal(report.expressions.length,12);
+  assert.equal(new Set(report.expressions.map(e=>e.signature.toFixed(5))).size,12);
+  assert.ok(report.expressions.every(e=>e.maximum > .008));
   assert.equal(report.catalog.length, report.suites.gameplay + report.suites.starter + report.suites.studio + 2 * report.suites.liveSkate);
   assert.equal(new Set(report.catalog.map(clip => clip.id)).size, report.catalog.length);
 
@@ -36,6 +42,11 @@ try {
   const samples = [];
   for (const id of actions) samples.push(await page.evaluate(id => review.action(id), id));
   await writeFile(join(output, 'player-actions.json'), JSON.stringify(samples));
+  const reach=[];
+  for (const id of ['player.swim','player.run','player.grab','player.hang','player.climb','player.rope','player.rope-climb']) {
+    reach.push(await page.evaluate(id=>review.action(id),id));
+  }
+  await writeFile(join(output,'upper-actions.json'),JSON.stringify(reach));
   for (const id of [...actions, 'player.grind', 'player.slam', 'player.swim', 'player.rope']) {
     const clip = report.catalog.find(clip => clip.id === id);
     for (const angle of [0, 40, 90]) {
@@ -44,6 +55,13 @@ try {
       await page.screenshot({ path: join(output, id.replaceAll('/', '-') + '-' + angle + '.png') });
     }
   }
+  for (const {name} of report.expressions) {
+    for (const angle of [0,28]) {
+      assert.equal(await page.evaluate(([name,a])=>review.face(name,a,1.06),[name,angle]),0);
+      await page.screenshot({path:join(output,name+'-'+angle+'.png')});
+    }
+  }
+  await page.evaluate(()=>review.expression('live'));
   report.wipeout = await page.evaluate(() => review.wipeoutCheck());
   report.spinTriangles = await page.evaluate(() => review.spinCheck());
   assert.equal(report.spinTriangles, report.geometry.triangles, 'Spin Lab bakes the selected character');

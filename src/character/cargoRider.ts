@@ -3,7 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { wipeoutSurface } from './cargoRiderWipeout';
 import { RooBlinkClock } from './rooBlinkTiming';
 
-export type CargoExpression = 'live' | 'wink' | 'smile' | 'surprise';
+import { performanceControls, type CargoExpression } from './cargoRiderPerformance';
+export type { CargoExpression } from './cargoRiderPerformance';
 type StretchLink = { joint: THREE.Object3D; tip: THREE.Object3D; palette: THREE.Bone; length: number };
 
 /** The player lengthens individual shafts by translating their endpoints. Skin each shaft
@@ -42,6 +43,8 @@ export class CargoRider {
   private readonly channels = new Map<string, { weights: number[]; index: number }[]>();
   private readonly blink = new RooBlinkClock();
   private time = 0;
+  private lastExpression?: CargoExpression;
+  private startle = 0;
   expression: CargoExpression = 'live';
 
   static async load(rider: THREE.Object3D): Promise<CargoRider> {
@@ -117,6 +120,8 @@ export class CargoRider {
       for (const [mesh, layers] of this.nativeLayers) mesh.layers.mask = layers;
       this.nativeLayers.clear();
       this.blink.reset();
+      this.lastExpression = undefined;
+      this.startle = 0;
     }
   }
 
@@ -124,7 +129,7 @@ export class CargoRider {
     const bounds = new THREE.Box3();
     this.root.updateWorldMatrix(true, true);
     for (const mesh of this.meshes) {
-      if (!['Face', 'Eyes', 'Ears and hair'].includes(mesh.userData.cargoSection)) continue;
+      if (!['Face', 'Eyes', 'Ears and hair', 'Dentition'].includes(mesh.userData.cargoSection)) continue;
       mesh.skeleton.update();
       mesh.computeBoundingBox();
       if (mesh.boundingBox) bounds.union(mesh.boundingBox.clone().applyMatrix4(mesh.matrixWorld));
@@ -146,24 +151,39 @@ export class CargoRider {
   step(dt: number, speed: number, startled: boolean): void {
     if (!this.root.visible) return;
     this.time += Math.min(.1, Math.max(0, dt));
+    if (this.expression !== this.lastExpression) {
+      for (const name of this.channels.keys()) this.setChannel(name, 0);
+      const pose = performanceControls(this.expression);
+      if (pose) {
+        // The complete target has normals evaluated on the combined sculpture.
+        this.setChannel('Pose.' + this.expression, 1);
+      }
+      this.lastExpression = this.expression;
+    }
+    if (performanceControls(this.expression)) return;
     const blink = this.blink.step(dt, this.expression === 'live');
     const live = this.expression === 'live';
     const wink = this.expression === 'wink';
     const grin = this.expression === 'smile';
-    const alert = this.expression === 'surprise' || (live && startled);
+    this.startle = THREE.MathUtils.damp(this.startle, live && startled ? 1 : 0, startled ? 23 : 7, dt);
+    const alert = this.expression === 'surprise' ? 1 : live ? this.startle : 0;
+    this.setChannel('IrisPin', .42 * alert);
+    this.setChannel('FaceStretch', .24 * alert);
+    this.setChannel('Funnel', .30 * alert);
     const activity = THREE.MathUtils.clamp(Math.abs(speed) / 15, 0, 1);
     const gaze = live ? Math.sin(.91 * this.time) * .28 : wink ? .65 : 0;
     this.setChannel('LookLeft', Math.max(0, gaze));
     this.setChannel('LookRight', Math.max(0, -gaze));
-    this.setChannel('LookUp', alert ? .30 : 0);
-    this.setChannel('JawOpen', alert ? .76 : grin ? .6 : live ? activity * .17 : 0);
+    this.setChannel('LookUp', .30 * alert);
+    this.setChannel('JawOpen', Math.max(.67 * alert, grin ? .47 : live ? activity * .13 : 0));
     this.setChannel('Smile', grin ? .92 : wink ? .5 : live ? .12 : 0);
     for (const suffix of ['.L', '.R']) {
       const left = suffix === '.L';
       this.setChannel(`Blink${suffix}`, live ? blink : wink && left ? 1 : 0);
-      this.setChannel(`EyeWide${suffix}`, alert ? .82 : 0);
+      this.setChannel(`EyeWide${suffix}`, .82 * alert);
+      this.setChannel(`EarPerk${suffix}`, .56 * alert);
       this.setChannel(`Squint${suffix}`, grin ? .38 : 0);
-      this.setChannel(`BrowUp${suffix}`, alert ? .82 : wink && !left ? .8 : grin ? .28 : 0);
+      this.setChannel(`BrowUp${suffix}`, Math.max(alert * .82, wink && !left ? .8 : grin ? .28 : 0));
       this.setChannel(`BrowDown${suffix}`, wink && left ? .23 : 0);
       this.setChannel(`PonySwing${suffix}`, live ? activity * (.38 + .32 * Math.sin(this.time * 8 + (left ? .44 : 0))) : 0);
     }

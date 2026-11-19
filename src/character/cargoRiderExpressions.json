@@ -1,0 +1,14 @@
+{
+  "cackle": {"JawOpen":0.95,"Smile":1,"Blink.L":1,"Blink.R":1,"EyeJoy":1,"BrowUp.L":0.78,"BrowUp.R":0.7,"CheekPuff.L":0.28,"CheekPuff.R":0.28,"TongueCurl":0.17,"EarFold.L":0.16,"EarFold.R":0.22},
+  "yikes": {"JawOpen":1,"Funnel":0.7,"FaceStretch":1,"EyeWide.L":1,"EyeWide.R":1,"IrisPin":1,"BrowUp.L":1,"BrowUp.R":1,"CrossEyes":0.28,"EarPerk.L":1,"EarPerk.R":1,"TeethRetract":0.39},
+  "snarl": {"JawOpen":0.36,"Clench":0.84,"LipRaise.R":0.97,"Frown.L":0.83,"Frown.R":0.3,"BrowDown.L":0.96,"BrowDown.R":1,"Squint.R":0.56,"NoseScrunch":0.82,"JawSide.L":0.44,"EarFold.L":0.72,"EarFold.R":0.41},
+  "smug": {"Smile.L":0.96,"Smile.R":0.25,"Squint.R":0.83,"Squint.L":0.26,"BrowUp.L":0.9,"BrowDown.R":0.53,"LookLeft":0.85,"CheekPuff.L":0.13,"EarFold.L":0.08,"EarFold.R":0.36},
+  "puffer": {"Pucker":1,"Funnel":0.6,"CheekPuff.L":1,"CheekPuff.R":1,"CrossEyes":0.91,"EyeWide.L":0.35,"EyeWide.R":0.35,"IrisPin":0.4,"BrowUp.L":0.45,"BrowUp.R":0.45,"FaceSquash":0.25,"EarPerk.L":0.5,"EarPerk.R":0.5,"TeethRetract":0.8},
+  "splat": {"JawOpen":0.42,"Clench":0.8,"Smile":0.7,"Frown.L":0.5,"LipRaise.R":0.92,"FaceSquash":1,"CheekPuff.L":0.42,"Blink.R":1,"EyeWide.L":0.76,"BrowDown.R":1,"BrowUp.L":0.72,"LookRight":0.65,"EarFold.L":0.21,"EarFold.R":0.88},
+  "howl": {"JawOpen":1,"Funnel":0.92,"FaceStretch":0.48,"Pucker":0.3,"Blink.L":1,"Blink.R":1,"BrowUp.L":1,"BrowUp.R":1,"NoseScrunch":0.35,"TongueCurl":0.12,"EarPerk.L":0.62,"EarPerk.R":0.62,"TeethRetract":0.93},
+  "sour": {"JawSide.R":0.5,"Pucker":0.78,"Frown.L":0.76,"Frown.R":0.51,"CheekPuff.R":0.55,"NoseScrunch":0.91,"Blink.R":0.95,"Squint.L":0.4,"BrowDown.R":1,"BrowDown.L":0.9,"LookLeft":0.52,"EarFold.L":0.36,"EarFold.R":0.75,"TeethRetract":0.5},
+  "raspberry": {"JawOpen":0.24,"TongueOut":1,"TongueCurl":0.3,"CheekPuff.L":0.42,"CheekPuff.R":0.63,"CrossEyes":0.7,"Squint.L":0.75,"EyeWide.R":0.25,"BrowDown.R":0.93,"BrowUp.L":0.28,"JawSide.L":0.22,"EarFold.L":0.16,"EarFold.R":0.49,"TeethRetract":0.65},
+  "gasp": {"JawOpen":0.7,"Funnel":0.95,"Pucker":0.28,"EyeWide.L":0.83,"EyeWide.R":0.83,"IrisPin":0.42,"BrowUp.L":0.86,"BrowUp.R":0.86,"FaceStretch":0.3,"CrossEyes":0.28,"EarPerk.L":0.48,"EarPerk.R":0.65,"TeethRetract":0.87},
+  "dazed": {"JawOpen":0.6,"TongueOut":0.77,"TongueCurl":1,"JawSide.L":0.72,"Frown.R":0.45,"EyeWide.R":0.75,"Squint.L":0.82,"WallEyes":0.95,"BrowUp.R":1,"BrowDown.L":0.44,"EarFold.L":0.92,"EarPerk.R":0.38,"TeethRetract":0.3},
+  "suspicious": {"Frown.L":0.64,"Frown.R":0.24,"JawSide.L":0.35,"Pucker":0.31,"Squint.R":0.89,"Squint.L":0.55,"LookLeft":0.87,"BrowDown.R":1,"BrowUp.L":0.55,"NoseScrunch":0.31,"EarFold.L":0.24,"EarFold.R":0.64}
+}

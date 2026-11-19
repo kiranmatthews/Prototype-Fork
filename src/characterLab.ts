@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { cargoPerformances, type CargoPerformance } from './character/cargoRiderPerformance';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RigBinding } from './animation';
 import type { CharacterHeadStyle, Player } from './player';
@@ -343,6 +344,19 @@ class CharacterLab implements CharacterLabHandle {
     }
     this.panel.appendChild(headStyles);
     const faces = this.cargoFaces;
+    const library = element('select', 'clab-button');
+    library.setAttribute('aria-label', 'Performance expression');
+    library.add(new Option('Performance poses…', ''));
+    for (const name of cargoPerformances) library.add(new Option(name[0].toUpperCase() + name.slice(1), name));
+    const highlight = (active: HTMLElement) => {
+      for (const child of faces.children) (child as HTMLElement).dataset.active = String(child === active);
+    };
+    library.onchange = () => {
+      const name = library.value as CargoPerformance | '';
+      this.ctx.player.setCargoExpression(name || 'live');
+      highlight(name ? library : faces.firstElementChild as HTMLElement);
+      this.frameCamera('head');
+    };
     for (const expression of ['live', 'wink', 'smile', 'surprise'] as const) {
       const pick = element('button', 'clab-button', expression[0].toUpperCase() + expression.slice(1));
       pick.type = 'button';
@@ -350,10 +364,12 @@ class CharacterLab implements CharacterLabHandle {
       pick.onclick = () => {
         this.ctx.player.setCargoExpression(expression);
         this.frameCamera('head');
-        for (const child of faces.children) (child as HTMLElement).dataset.active = String(child === pick);
+        library.value = '';
+        highlight(pick);
       };
       faces.appendChild(pick);
     }
+    faces.appendChild(library);
     this.panel.appendChild(faces);
     this.panel.appendChild(element(
       'div',

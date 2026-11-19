@@ -76,6 +76,8 @@ export function wipeoutSurface(source: THREE.SkinnedMesh): THREE.BufferGeometry 
   geometry.setAttribute('skinWeight', new THREE.Float32BufferAttribute(pieceWeights, 4));
   geometry.morphTargetsRelative = original.morphTargetsRelative;
   if (original.morphAttributes.position) geometry.morphAttributes.position = original.morphAttributes.position.map(copy);
+  if (original.morphAttributes.normal) geometry.morphAttributes.normal = original.morphAttributes.normal.map(copy);
+  if (original.morphAttributes.color) geometry.morphAttributes.color = original.morphAttributes.color.map(copy);
   cache.set(original, geometry);
   return geometry;
 }

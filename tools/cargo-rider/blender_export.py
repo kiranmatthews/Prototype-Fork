@@ -13,6 +13,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from blender_actions import install_actions
+from pigment_morph import install_source_shader, write_color_morphs
 
 ROOT = HERE.parent.parent
 ART = ROOT / 'art/cargo-rider'
@@ -84,14 +85,21 @@ for b in rig.data.bones:
         coll.is_visible = False
 rig['rigSource'] = 'Bone Man / rider-local +Z forward / shipped proportions in calibration stance'
 images = []
-for file, colorspace in [('pigment.png', 'sRGB'), ('relief.png', 'Non-Color')]:
+for file, colorspace in [
+    ('pigment.png', 'sRGB'),
+    ('relief.png', 'Non-Color'),
+    ('surface-response.png', 'Non-Color'),
+]:
     im = bpy.data.images.load(str(work / file))
     im.colorspace_settings.name = colorspace
     im.pack()
     images.append(im)
 materials = {}
 rough = {
+    'Facial fur': 0.70,
     'Cornea': 0.24,
+    'Wet tongue': 0.31,
+    'Enamel': 0.37,
     'Gold silk hair': 0.39,
     'Nose leather': 0.35,
     'Metal': 0.30,
@@ -110,6 +118,10 @@ for kind in sorted(set(p['mat'] for p in parts)):
     bs.inputs['Roughness'].default_value = rough[kind]
     bs.inputs['Metallic'].default_value = 0.62 if kind == 'Metal' else 0
     bs.inputs['Specular IOR Level'].default_value = 0.34 if kind != 'Cornea' else 0.46
+    if kind == 'Gold silk hair':
+        bs.inputs['Anisotropic'].default_value = 0.33
+        bs.inputs['Coat Weight'].default_value = 0.06
+        bs.inputs['Sheen Weight'].default_value = 0.11
     for index, im in enumerate(images):
         n = nt.nodes.new('ShaderNodeTexImage')
         n.image = im
@@ -117,26 +129,37 @@ for kind in sorted(set(p['mat'] for p in parts)):
         if not index:
             nt.links.new(n.outputs['Color'], bs.inputs['Base Color'])
             nt.nodes.active = n
-        else:
+        elif index == 1:
             norm = nt.nodes.new('ShaderNodeNormalMap')
             norm.inputs['Strength'].default_value = 0.53
             norm.location = (-300, -100)
             nt.links.new(n.outputs['Color'], norm.inputs['Color'])
             nt.links.new(norm.outputs['Normal'], bs.inputs['Normal'])
+        else:
+            separate = nt.nodes.new('ShaderNodeSeparateColor')
+            separate.location = (-280, -450)
+            nt.links.new(n.outputs['Color'], separate.inputs['Color'])
+            nt.links.new(separate.outputs['Green'], bs.inputs['Roughness'])
+            nt.links.new(separate.outputs['Blue'], bs.inputs['Metallic'])
     materials[kind] = m
 # Merge islands which share a deformation contract. Each remains selectable as a named vertex group in Blender.
 groups = collections.defaultdict(list)
+skin_keys = tuple(sorted(set().union(*(p['keys'] for p in parts if p.get('skin_sheet')))))
 for p in parts:
-    groups[(p['group'], p['mat'], tuple(sorted(p['keys'])))].append(p)
+    keys = skin_keys if p.get('skin_sheet') else tuple(sorted(p['keys']))
+    groups[(p['group'], p['mat'], keys)].append(p)
 for idx, ((section, mat, keys), islands) in enumerate(groups.items()):
     vertices = []
+    undertones = []
     faces = []
     uvs = []
     influences = collections.defaultdict(list)
     landmarks = []
     deltas = {k: [] for k in keys}
+    patch_indices = {}
     for p in islands:
-        base = len(vertices)
+        mapped = {}
+        used = {k for face in p['faces'] for k in face}
         nu, nv = p['nu'], p['nv']
         wrap = p['cyclic']
         row = nu if wrap else nu + 1
@@ -144,16 +167,30 @@ for idx, ((section, mat, keys), islands) in enumerate(groups.items()):
         for j in range(nv + 1):
             for i in range(row):
                 k = j * (nu + 1) + i
-                vi = len(vertices)
+                wrapped = j * (nu + 1) if wrap and i == 0 else k
+                if k not in used and not (wrap and i == 0 and k + nu in used):
+                    continue
+                join = p.get('joins', {}).get(k)
+                vi = patch_indices[join[0]][join[1]] if join else len(vertices)
+                mapped[k] = vi
+                if wrap and i == 0:
+                    mapped[wrapped + nu] = vi
+                if join:
+                    continue
                 vertices.append(xyz(p['points'][k]))
+                if 'undertone' in p:
+                    undertones.append([*p['undertone'][k], 1])
                 for bone, w in p['weights'][k].items():
                     influences[bone].append((vi, w))
                 for key in keys:
-                    deltas[key].append(xyz(p['points'][k] + p['keys'][key][k]))
-        landmarks.append((p['name'], base, len(vertices)))
+                    deltas[key].append(
+                        xyz(p['points'][k] + p['keys'][key][k]) if key in p['keys'] else vertices[vi]
+                    )
+        patch_indices[p['name']] = mapped
+        landmarks.append((p['name'], sorted(set(mapped.values()))))
         for face in p['faces']:
             corners = [divmod(k, nu + 1) for k in face]
-            faces.append(tuple(base + j * row + (i % row) for j, i in corners))
+            faces.append(tuple(mapped[k] for k in face))
             uvs.extend(
                 ((rx + 0.5 + (rw - 1) * i / nu) / width, 1 - (ry + 0.5 + (rh - 1) * j / nv) / height)
                 for j, i in corners
@@ -169,6 +206,11 @@ for idx, ((section, mat, keys), islands) in enumerate(groups.items()):
     geo.materials.append(materials[mat])
     obj.parent = rig
     obj['cargoSection'] = section
+    if undertones:
+        tint = geo.color_attributes.new(name='Cheek undertone', type='FLOAT_COLOR', domain='POINT')
+        tint.data.foreach_set('color', np.asarray(undertones, dtype=np.float32).ravel())
+        geo.color_attributes.active_color = tint
+        obj['cargoCheekUndertone'] = True
     for n, values in influences.items():
         vg = obj.vertex_groups.new(name=n)
         solid = [i for i, w in values if w >= 0.999999]
@@ -177,9 +219,9 @@ for idx, ((section, mat, keys), islands) in enumerate(groups.items()):
         for i, w in values:
             if w < 0.999999:
                 vg.add([i], w, 'REPLACE')
-    for name, start, end in landmarks:
+    for name, indices in landmarks:
         vg = obj.vertex_groups.new(name='Island • ' + name)
-        vg.add(list(range(start, end)), 1, 'REPLACE')
+        vg.add(indices, 1, 'REPLACE')
     if keys:
         obj.shape_key_add(name='Basis')
         for key in keys:
@@ -215,9 +257,10 @@ options = dict(
     export_yup=True,
     export_skins=True,
     export_morph=True,
-    export_morph_normal=False,
+    export_morph_normal=True,
     export_all_influences=False,
     export_texcoords=True,
+    export_vertex_color='ACTIVE',
     export_normals=True,
     export_materials='EXPORT',
     export_cameras=False,
@@ -225,6 +268,8 @@ options = dict(
     export_def_bones=False,
 )
 bpy.ops.export_scene.gltf(**options)
+write_color_morphs(export_dir / 'cargo-roo.glb')
+install_source_shader(materials['Facial fur'], rig)
 install_actions(bpy, rig, rest, work)
 # Keep a rig- and render-ready studio with a shadow receiver in the editable source only.
 studio = bpy.data.collections.new('Studio • render only')

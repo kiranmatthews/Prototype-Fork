@@ -1,10 +1,11 @@
 import math
 from functools import partial
 import numpy as np
+from shoulder import build_arm
 from surface import (
     J,
     M,
-    arm_weights,
+    parts,
     atrow,
     ball,
     bn,
@@ -18,7 +19,6 @@ from surface import (
     loft,
     mixweights,
     pi,
-    profile_point,
     ring,
     side,
     smooth,
@@ -55,7 +55,7 @@ def sculpt_wardrobe():
         _, w, fd, bd, dc = atrow(bodyrows, v)
         sn, cs = ring(u)
         x = w * sn
-        d = (fd if cs >= 0 else bd) * cs
+        d = (fd if cs >= 0 else bd) * cs * (1 + 0.13 * math.exp(-(((v - 350) / 42) ** 2)))
         if cs > 0:
             d += (
                 8 * math.exp(-(((abs(x) - 27) / 19) ** 2) - ((v - 369) / 21) ** 2)
@@ -66,12 +66,11 @@ def sculpt_wardrobe():
 
     def upper_body_weights(p, u, t):
         x, v, d = p
-        side_weight = float(smooth((abs(x) - 25) / 29)) * math.exp(-(((v - 338) / 34) ** 2))
-        base = {k: n * (1 - side_weight) for k, n in torso_weights(v).items()}
-        sg = 1 if x > 0 else -1
-        shoulder = side_weight * smooth((v - 305) / 40)
-        base[bn('clavicle', sg)] = side_weight - shoulder
-        base[bn('shoulder', sg)] = shoulder
+        # The ribcage follows the chest, the outer shelf follows the clavicle.
+        # Arm rotation starts across the shared deltoid loops.
+        shelf = 0.48 * smooth((abs(x) - 25) / 36) * math.exp(-(((v - 332) / 31) ** 2))
+        base = {k: n * (1 - shelf) for k, n in torso_weights(v).items()}
+        base[bn('clavicle', 1 if x > 0 else -1)] = shelf
         return base
 
     grid(
@@ -86,51 +85,9 @@ def sculpt_wardrobe():
         uvsize=(408, 372),
         cyclic=True,
     )
-    # Trim and shoulder straps maintain a raised silhouette against the neck and upper arm.
+    tank = parts[-1]
     for sg in [-1, 1]:
-        sx = side(sg)
-        fit = partial(limb_fit, sg=sg, kind='arm')
-
-        def aw(p, u, t):
-            return arm_weights(p[1], sg)
-
-        armrows = [
-            (310, 46, 2, 4, 4, 0),
-            (314, 49, 13, 15, 15, 0),
-            (321, 55, 23, 22, 22, 0),
-            (333, 61, 25, 24, 24, 0),
-            (344, 67, 21, 21, 21, 0),
-            (362, 76, 17, 19, 18, 0),
-            (385, 89, 16, 17, 18, 0),
-            (406, 104, 13.8, 15, 16, 0),
-            (422, 114, 13.3, 14, 15, -1),
-            (436, 124, 15.5, 17, 15, 1),
-            (451, 135, 16, 16, 17, 0),
-            (473, 149, 13.4, 14, 14, 0),
-            (494, 163, 10.6, 11.5, 12, 0),
-            (517, 174, 9.6, 10.4, 10.8, 0),
-        ]
-        actual = [[v, c * sg, w, f, b, d] for v, c, w, f, b, d in armrows]
-        loft('Arm ' + sx, actual, 34, 47, fit, aw, 'arm', group='Body', uvsize=(190, 332))
-        # Skin runs beneath the shoulder binding; the band itself follows the chest and clavicle.
-        for back in [False, True]:
-            pts = []
-            if back:
-                lines = [(0, 330), (11, 329), (22, 323), (32, 317), (40, 314)]
-            else:
-                lines = [(0, 350), (15, 348), (28, 342), (33, 332), (35, 314)]
-            for x, v in lines:
-                pts.append([sg * x, v, (1 if not back else -1) * (profile_point(sg * x, v, bodyrows) + 0.7)])
-            stroke(
-                ('Back neck binding ' if back else 'Front neck binding ') + sx,
-                pts,
-                1.8,
-                torso_fit,
-                upper_body_weights,
-                'pink',
-                group='Wardrobe',
-                uvsize=(40, 22),
-            )
+        build_arm(tank, sg)
     loft(
         'Tank elastic hem',
         [
@@ -242,8 +199,8 @@ def sculpt_wardrobe():
             name = ('Pocket flap ' if flap else 'Bellows pocket ') + sx
             grid(
                 name,
-                19,
-                16,
+                15,
+                12,
                 partial(pocket, flap=flap),
                 fit,
                 lw,
@@ -275,7 +232,7 @@ def sculpt_wardrobe():
 
     grid(
         'Gathered waistband',
-        100,
+        88,
         12,
         waist,
         torso_fit,
@@ -352,18 +309,35 @@ def sculpt_wardrobe():
         theta = 2 * pi * i / 12
         sn, cs = math.sin(theta), math.cos(theta)
         c = [25 * sn, 305 + 5 * cs, 22 * cs]
-        ball(
+
+        def shell(u, t):
+            around, front = ring(u)
+            angle = 0.003 + (pi - 0.006) * t
+            lateral = math.sin(angle) * around
+            length = math.cos(angle)
+            across = 5.6 * lateral * (1 + 0.16 * length)
+            # Two convex lobes curve into the incision on the exposed shell face.
+            notch = (
+                math.exp(-(((lateral - 0.08 * length) / 0.15) ** 2))
+                * max(0, front) ** 1.5
+                * math.sin(angle) ** 0.7
+            )
+            deep = 4.0 * math.sin(angle) * front - 1.6 * notch
+            along = 3.65 * length + 0.42 * lateral
+            return [c[0] + cs * across + sn * deep, c[1] + along, c[2] - sn * across + cs * deep]
+
+        grid(
             'Cowrie %02d' % i,
-            c,
-            [5.2, 3.7, 4.2],
+            16,
+            9,
+            shell,
             torso_fit,
             'neck',
             'shell',
-            n=14,
-            m=8,
+            cyclic=True,
             group='Jewelry',
             material='Pearl',
-            uvsize=(30, 20),
+            uvsize=(58, 42),
         )
     # Feet are directly registered to the heel and toe contacts. The outsole has a real flat bearing surface.
 
@@ -392,7 +366,7 @@ def sculpt_wardrobe():
         grid(
             'Rubber cupsole ' + sx,
             60,
-            10,
+            8,
             sole,
             fit,
             fw,
@@ -406,7 +380,7 @@ def sculpt_wardrobe():
             x, v, z = sole(u, 1)
             return [x * t, 991, 38 + (z - 38) * t]
 
-        grid('Tread ' + sx, 56, 8, outsole, fit, fw, 'tread', material='Rubber', uvsize=(128, 38), cyclic=True)
+        grid('Tread ' + sx, 56, 2, outsole, fit, fw, 'tread', material='Rubber', uvsize=(128, 38), cyclic=True)
         sections = [
             (-43, 0.1, 969),
             (-42, 6, 942),
@@ -509,7 +483,6 @@ def sculpt_wardrobe():
         sx = side(sg)
         mount = bn('hand-rest-orientation', sg)
         T = M[mount]
-        wrist = J[mount]
 
         def handfit(p):
             return (T @ np.array([p[0], p[1], p[2], 1]))[:3]
@@ -518,20 +491,24 @@ def sculpt_wardrobe():
             sn, cs = ring(u)
             w, h = atrow(
                 [
-                    (0, 0.024, 0.024),
-                    (0.18, 0.036, 0.028),
-                    (0.4, 0.052, 0.031),
-                    (0.64, 0.058, 0.029),
-                    (0.79, 0.061, 0.025),
-                    (0.89, 0.053, 0.020),
-                    (0.96, 0.032, 0.014),
+                    (0, 0.032, 0.032),
+                    (0.18, 0.050, 0.045),
+                    (0.4, 0.068, 0.053),
+                    (0.64, 0.078, 0.052),
+                    (0.79, 0.080, 0.046),
+                    (0.89, 0.068, 0.036),
+                    (0.96, 0.042, 0.022),
                     (1, 0.005, 0.004),
                 ],
                 t,
             )
-            thenar = 0.033 * math.exp(-(((t - 0.42) / 0.19) ** 2)) * smooth(-sg * sn)
+            thenar = 0.028 * math.exp(-(((t - 0.42) / 0.19) ** 2)) * smooth(-sg * sn)
             base = math.exp(-(((t - 0.78) / 0.20) ** 2))
-            return [w * sn - sg * thenar, -0.158 * t, 0.004 + h * cs - 0.002 * base * math.cos(3 * pi * sn)]
+            return [
+                w * sn - sg * thenar,
+                -0.158 * t,
+                0.004 + h * cs + 0.004 * base * cs * math.cos(3 * pi * sn),
+            ]
 
         grid(
             'Palm and thenar eminence ' + sx,
@@ -556,7 +533,6 @@ def sculpt_wardrobe():
             points = [J[name] for name in [*names, tip]]
             inv = np.linalg.inv(T)
             local = [(inv @ np.array([*p, 1]))[:3] for p in points]
-            ts = [0, 0.33, 0.68, 1]
 
             def digit_mesh(u, t):
                 p = hermite(local, t)
@@ -567,16 +543,16 @@ def sculpt_wardrobe():
                 r = interp(
                     t,
                     [
-                        (0, 0.026 if digit == 'thumb' else 0.021),
-                        (0.32, 0.0175),
-                        (0.56, 0.0145),
-                        (0.7, 0.0136),
-                        (0.89, 0.0114),
-                        (0.98, 0.006),
+                        (0, 0.034 if digit == 'thumb' else 0.029),
+                        (0.32, 0.0265),
+                        (0.56, 0.024),
+                        (0.7, 0.022),
+                        (0.89, 0.019),
+                        (0.98, 0.009),
                         (1, 0.0004),
                     ],
                 )
-                return p + a * r * sn + b * r * 0.84 * cs
+                return p + a * r * sn + b * r * 0.98 * cs
 
             def dw(p, u, t):
                 return chain(
@@ -596,11 +572,11 @@ def sculpt_wardrobe():
                 cyclic=True,
             )
             tip_center = hermite(local, 0.88)
-            tip_center[2] += 0.008
+            tip_center[2] += 0.015
             ball(
                 'Claw ' + digit + ' ' + sx,
                 tip_center,
-                [0.0081, 0.012, 0.0042],
+                [0.011, 0.014, 0.0045],
                 handfit,
                 names[-1],
                 'claw',
@@ -614,8 +590,8 @@ def sculpt_wardrobe():
         def band(u, t):
             sn, cs = ring(u)
             v = -0.006 + (t - 0.5) * (0.027 if sg > 0 else 0.026)
-            r = 0.038 + 0.0024 * math.sin(pi * t)
-            return [r * sn, v, r * 0.79 * cs]
+            r = 0.045 + 0.0024 * math.sin(pi * t)
+            return [r * sn, v, r * 0.90 * cs]
 
         grid(
             ('Watch strap ' if sg > 0 else 'Braided bracelet ') + sx,
@@ -632,7 +608,7 @@ def sculpt_wardrobe():
         if sg > 0:
             ball(
                 'Watch bezel',
-                [0, -0.006, 0.033],
+                [0, -0.006, 0.043],
                 [0.019, 0.020, 0.006],
                 handfit,
                 mount,
@@ -643,7 +619,7 @@ def sculpt_wardrobe():
             )
             ball(
                 'Watch dial',
-                [0, -0.006, 0.038],
+                [0, -0.006, 0.048],
                 [0.015, 0.016, 0.003],
                 handfit,
                 mount,
@@ -657,7 +633,7 @@ def sculpt_wardrobe():
                 t = 2 * pi * j / 16
                 ball(
                     'Braided knot ' + str(j),
-                    [0.038 * math.sin(t), -0.005 + 0.004 * (-1) ** j, 0.031 * math.cos(t)],
+                    [0.045 * math.sin(t), -0.005 + 0.004 * (-1) ** j, 0.0405 * math.cos(t)],
                     [0.0085, 0.009, 0.008],
                     handfit,
                     mount,
