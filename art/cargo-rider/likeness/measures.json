@@ -1,32 +1,35 @@
 {
-  "three-quarter": {
-    "previous": {
-      "wholeFrame": 0.691,
-      "headAndHair": 0.7135
+  "measurement": "Foreground intersection over union after framing on the ear tips and necklace. Upper 548 rows measure head and hair.",
+  "views": {
+    "three-quarter": {
+      "scale": 1.1158,
+      "x": -2,
+      "y": -23,
+      "registration": "Ear tip, necklace height and nose or necklace center",
+      "silhouetteOverlap": {
+        "headAndHair": 0.8035,
+        "wholeFrame": 0.7802
+      }
     },
-    "revised": {
-      "wholeFrame": 0.9136,
-      "headAndHair": 0.9291
-    }
-  },
-  "rear": {
-    "previous": {
-      "wholeFrame": 0.662,
-      "headAndHair": 0.681
+    "rear": {
+      "scale": 1.1121,
+      "x": -28,
+      "y": -22,
+      "registration": "Ear tip, necklace height and nose or necklace center",
+      "silhouetteOverlap": {
+        "headAndHair": 0.7924,
+        "wholeFrame": 0.7774
+      }
     },
-    "revised": {
-      "wholeFrame": 0.9294,
-      "headAndHair": 0.9316
-    }
-  },
-  "profile": {
-    "previous": {
-      "wholeFrame": 0.7085,
-      "headAndHair": 0.7188
-    },
-    "revised": {
-      "wholeFrame": 0.935,
-      "headAndHair": 0.9337
+    "profile": {
+      "scale": 1.1071,
+      "x": -65,
+      "y": -19,
+      "registration": "Ear tip, necklace height and nose or necklace center",
+      "silhouetteOverlap": {
+        "headAndHair": 0.6958,
+        "wholeFrame": 0.6597
+      }
     }
   }
 }

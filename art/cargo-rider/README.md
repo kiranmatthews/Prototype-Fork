@@ -1,43 +1,45 @@
 # Cargo Roo
 
-Open **Cargo Roo.blend** in Blender. It opens on the editable **Portrait | Three-quarter reference** action. Three reference cameras frame the supplied three-quarter, rear and profile drawings at their original scale. A fourth camera frames the complete character. The selected **Cargo Roo • Bone Man** armature has the player’s 72 measured rig nodes. The source contains 74,544 quads in 34 skinned meshes. The game draws 149,088 triangles. Twelve materials share three packed 4096 × 2048 maps for colour, tangent-space normals and surface roughness/metalness.
+Open **Cargo Roo.blend** in Blender 5.2. The character opens in the frontal neutral bind, with a centered gaze, relaxed mouth and zero facial controls. Select **Cargo Roo • Bone Man** for the action library and the individual sculpt sliders. The packed source includes 30 skinned meshes, 19 materials and 13 images. The game asset draws 146,465 triangles on the player's 72-bone hierarchy.
 
-## Animate
+## Animate the face
 
-Select the armature and use the Action Editor. **Face | Twelve performance poses** plays all twelve expressions at 24 fps. Its named timeline markers locate the drawings. Choose an individual **Pose | …** action to edit the constituent controls. **Face | Glance, wink and grin** and five sampled Bone Man actions cover a quieter acting take, idle, run, jump, crawl and ollie.
+In front orthographic view, the twelve labelled pads beside the character control gaze, jaw, lids, brows, mouth corners, lips, tongue, pupils and cheeks. Select a circular handle and move it along local X or Z. Clear its location to return it to its neutral position. The handles combine with keyed facial sliders. The eyelids wrap over separate globes, each iris can track or constrict, and the upper teeth, lower arch, mouth lining and tongue have independent geometry.
 
-The armature’s Custom Properties include 45 facial and ear controls, four ponytail controls and two arms-down shoulder correctives. Animate the upper and lower dental exposure, asymmetric mouth corners, cheek volume, jaw offset, iris size, crossed or divergent gaze, tongue extension and curl, ear fold and ear perk. The shape keys are editable. Eighteen regional correctives keep the irises inside the moving lids, fit the upper and lower dental arches to each expression and round the inflated cheeks. Twelve complete pose targets carry normals evaluated on their final sculptures. The motion audit compares these targets with their editable component controls.
+The Action Editor contains 17 facial takes at 24 fps. **Face | Kling 1910** follows the supplied 15.04-second performance. Its timeline markers locate the first blink, gaze reversal, laugh, lowered eyes and final grin. Frame 1 and frame 362 share the neutral bind. The head and neck area turns with the recorded look through a keyed head rotation. The other facial takes layer onto the player's body animation.
 
-In the game, open **Character Lab → Cargo Roo**. The **Performance poses** selector contains Cackle, Yikes, Snarl, Smug, Puffer, Splat, Howl, Sour, Raspberry, Gasp, Dazed and Suspicious. The four quick buttons also preview Live, Wink, Smile and Surprise. Closing the lab restores live expression, gaze and blinking. The existing player hierarchy supplies body motion, individual finger curls, segment stretching and contact sockets.
+**Attentive idle**, **Wink**, **Smile** and **Surprise** provide the quieter performances. **Cackle**, **Yikes**, **Snarl**, **Smug**, **Puffer**, **Splat**, **Howl**, **Sour**, **Raspberry**, **Gasp**, **Dazed** and **Suspicious** each have their own anticipation, hold and release. **Portrait | Reference smile** stages the shoulders and the asymmetric expression for the supplied three-quarter drawing. **Portrait | Profile glance** gives the side portrait its own eyeline. Five Bone Man body actions are also available in the source.
 
-## Proportion and performance studies
+In the game, open **Character Lab → Cargo Roo**. The four quick buttons and the expression selector hold individual poses. **Play take** plays the complete selected performance. **Kling reference loop** repeats the source-matched take. Closing the lab restores normal gameplay acting. In a standalone GLB viewer, select clips by their lowercase names, including `kling1910`.
 
-The upper arm, forearm and hand use the original shoulder, elbow, wrist and finger positions. Each arm starts on a welded 44-vertex loop in the torso. The tank and the inner socket follow the chest and clavicle. The deltoid gradually transfers the surface to the humerus. Measured in glove space, the palm spans 0.169 × 0.109 units across and in depth. The stock Bone Man glove spans 0.174 × 0.128.
+## Surfaces and rig
 
-The ImageGen drawings cover four body views, three action poses and twelve expressions. A front three-quarter, rear and profile study guided the hair sculpt. Its longitudinal pigment comes from a separate blonde strand swatch. [Turnaround](performance/turnaround.webp) · [Movement](performance/movement.webp) · [Expressions 1](performance/expressions-1.webp) · [Expressions 2](performance/expressions-2.webp) · [Hair study](performance/hair-study.webp) · [Strand pigment](performance/hair-pigment.webp) · [Generation prompts](performance/reference-prompts.md) · [Study beside Blender renders](performance/sculpt-comparison.webp)
+The head uses the front-facing neutral Smart Mesh draft. Its open orbit and lip boundaries supply the deformation topology. Blender sculpts control the mandibular hinge, lip seal, unilateral corners, cheek compression and lift, brow angles, curved blink and gaze. The closed-lid driver fades the eyelid angle as the upper and lower lids meet. The upper teeth stay attached to the cranium while the lower arch follows the jaw. The cheek undertone is authored as an editable material response and a game vertex-colour morph.
 
-The three-view portrait supplied for the final sculpt shows the head, necklace and shoulders. The comparison pairs each drawing with the actual Blender render from the corresponding camera. Intersection-over-union measures projected foreground area. It measures the outline only. [Original three-view](likeness/three-view.webp) · [Drawing and Blender comparison](likeness/comparison.webp) · [Silhouette measurements](likeness/measures.json)
+The blonde cap fits the nape of the replacement head. The elastics and ear bases align across the skull, with independent tips, ponytail sway and ear motion. Twelve incised cowries wrap the neck. A skinned jersey panel joins the shoulders across the upper back. Its scoop and armholes use a narrow pink binding. The 2048-pixel base-colour maps, 1536-pixel tangent normals and roughness maps, 1024-pixel iris and separate jersey textures are packed into the source. The runtime includes the PBR textures and the full facial clip library.
 
-The game captures show the same exported mesh in the native player. [Body and movement](performance/game-proportions.webp) · [Facial poses](performance/game-expressions.webp)
+The private Tripo Smart Mesh inputs are recorded on the export armature.
 
-## Art construction
-
-The supplied illustration sets the silhouette, palette, facial proportions and costume. The supplied Kling loop and three related facial clips informed the wink, asymmetric brows, side glance and opening smile. Two built-in ImageGen edits provided construction views. The head study requested a neutral front and right profile on the same scale, retaining the violet eyes, eyeliner, cream muzzle, gold hair and pointed ears. The turnaround requested a front and rear orthographic with the same proportions, lilac cargo pants, pockets, trimmed tank, sneakers and jewelry. Those retained images are inputs to the pigment bake.
-
-The cranium, orbital surrounds, cheek tufts and chin share a continuous quad surface around two eye openings and an openable mouth. The whisker pads rise on either side of a central philtrum. Each folded ear has a hollow inner wall. The two ponytails have shaped bundles inside double elastic rings. Their swept sections follow rapid head turns and settle as the head slows. Twelve scored oval shells surround the neck. The pink neckline and armhole bindings are three closed pieces with their own geometry. The shoulder correctives follow the arm in chest space and carry the fabric edge through the pose. Each dental crown has depth behind the lips. The cheek undertone blends into cream during inflation in both the Blender shader and the game mesh. The GLB stores this tint alongside the shape as a vertex-color morph. The swept hair sections, corded pocket flaps, cowries, shoes and hands have named vertex groups in Blender.
+| Input | Tripo task | Generated triangles |
+| --- | --- | ---: |
+| Neutral head | `8476f9bd-b5b0-4b33-9c99-5ce1dcef8a0d` | 26,917 |
+| Coiffure and ears | `d5924dc5-8b39-4f70-8d31-974e1a02af90` | 28,705 |
+| Body and wardrobe | `5fead724-66d0-4511-9591-63125916b590` | 28,658 |
 
 ## Rebuild and verify
 
-Run these from the repository root with Node dependencies installed, Python with NumPy and Pillow, Blender 5.2 and Chrome. Use a scratch directory for intermediate geometry, sampled actions and review images.
+The artist file and the standalone GLB are self-contained. To rebuild from the generated drafts, place the original private files named `neutral.glb`, `bust.glb` and `body.glb` in one directory. The delivered **Components** folder has this layout. From the repository root, run the following commands with that directory substituted for `/path/to/Components`.
 
-1. Run `node tools/cargo-rider/measure-rig.mjs` to regenerate the bind measurements from the current player.
-2. Run `python3 tools/cargo-rider/sculpt.py /tmp/cargo-roo` to construct the quad surfaces and bake the three material maps.
-3. Start the project’s Vite dev server. Run `node tools/cargo-rider/audit.mjs http://localhost:5173 /tmp/cargo-roo` against the checked-in GLB to capture the current native actions. The runner uses the Playwright package or the module in `PLAYWRIGHT_MODULE`.
-4. Run `blender --background --factory-startup --python-exit-code 1 --python tools/cargo-rider/blender_export.py -- /tmp/cargo-roo`. Render the calibrated UVs and material surfaces with `blender --background 'art/cargo-rider/Cargo Roo.blend' --python-exit-code 1 --python tools/cargo-rider/likeness_review.py -- /tmp/cargo-roo/views --uv`.
-5. Create `/tmp/cargo-roo/painted` and copy `surface.pickle`, `surface-response.png` and `player-actions.json` there from the bake. Run `python3 tools/cargo-rider/study_pigment.py /tmp/cargo-roo /tmp/cargo-roo/views /tmp/cargo-roo/painted art/cargo-rider/likeness/registration.json` to transfer the photographed markings and fibre relief to their visible UVs.
-6. Run `blender --background --factory-startup --python-exit-code 1 --python tools/cargo-rider/blender_export.py -- /tmp/cargo-roo/painted /tmp/cargo-roo/studio`. This writes the packed source, game GLB, transparent HUD portrait and five studio views. Reopen the packed file with `blender --background 'art/cargo-rider/Cargo Roo.blend' --python-exit-code 1 --python tools/cargo-rider/verify_source.py` to check the rig, maps, expressions, and chest-relative drivers.
-7. Rerun the motion audit on the export. It samples the gameplay, starter and Studio clips, both skating stances, a two-metre detached wrist and a full-geometry spin capture. To exercise the real picker, reload persistence and three render modes against a running game, run `node tools/cargo-rider/playtest.mjs http://localhost:5173 /tmp/cargo-roo/playtest`.
+```sh
+python3 tools/cargo-rider/studio/prepare.py /path/to/Components /tmp/cargo-maps
+blender --background 'art/cargo-rider/Cargo Roo.blend' --python-exit-code 1 \
+  --python tools/cargo-rider/studio/assemble.py -- /tmp/cargo-maps /tmp/cargo-out asset
+blender --background '/tmp/cargo-out/Cargo Roo.blend' --python-exit-code 1 \
+  --python tools/cargo-rider/verify_source.py
+```
 
-The audit also writes `upper-actions.json`. To compare a previous bake with the current chest, run `python3 tools/cargo-rider/measure-performance.py <previous-surface.pickle> <current-surface.pickle> <upper-actions.json>`. It replays the same player matrices and compares edges present in both ribcages. A value of one means an edge kept its bind length.
+The preparation step uses NumPy and Pillow. `src/character/cargoRiderTakes.json` contains the original frame-level acting curves, event markers and reference head angles. `src/character/cargoRiderExpressions.json` contains the still-pose controls. Blender writes editable F-curves and exports sampled glTF weights with a separate clock for each take. The game reads the same score and adds the reference head rotation to the skin palette when that take is selected.
 
-The three contour cages and the tank pattern in `likeness/` are saved authoring data. To recut the shirt after a body edit, run `garment_review.py` in Blender with the bake directory and an output NPZ. Run `garment_pattern.py` with that same bake directory, the new NPZ and the destination `tank-pattern.npz`. The photo comparison uses a common set of three cameras on both revisions. Run `compare_likeness.py` with the previous render directory, the revised render directory and an output directory to reproduce the board and measurements.
+The native audit checks weights and bind matrices, packed images, lid and jaw geometry, dorsal coverage, shoulder corrections, picker drivers, every facial key and neutral endpoints. Against a running development server, `node tools/cargo-rider/audit.mjs http://127.0.0.1:5173 /tmp/cargo-review` evaluates the 193 player-animation entries, both skating stances, skin separation and the final GLB's facial playback. `tools/cargo-rider/playtest.mjs` accepts the same arguments and exercises the actual Character Lab buttons, hands and gameplay at three render settings.
+
+[Supplied turnaround and Blender renders](likeness/comparison.webp) · [In-game facial poses](performance/game-expressions.webp) · [Body animation frames](performance/game-proportions.webp)

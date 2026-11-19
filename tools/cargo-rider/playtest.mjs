@@ -44,6 +44,16 @@ try {
       },name);
       assert.ok(selected, 'Live preview for '+name);
     }
+    await page.getByRole('button',{name:'Play take',exact:true}).click();
+    await page.waitForFunction(() => {
+      const skin=window.__game.player.cargoSurface;
+      return skin.meshes.some(m=>m.morphTargetInfluences?.[m.morphTargetDictionary?.LookLeft]>.12);
+    });
+    await page.getByRole('button',{name:'Kling reference loop',exact:true}).click();
+    await page.waitForFunction(() => {
+      const skin=window.__game.player.cargoSurface;
+      return skin.meshes.some(m=>m.morphTargetInfluences?.[m.morphTargetDictionary?.['Blink.R']]>.55);
+    });
     if (mode === 'native') {
       await page.getByRole('button',{name:'Hand 3/4',exact:true}).click();
       for (const name of ['open','curl','fist','pinch','grab','relaxed']) {

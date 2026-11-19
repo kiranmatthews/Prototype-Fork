@@ -150,6 +150,10 @@ export async function openReview() {
     controls() { return skin.meshes.flatMap(m=>Object.keys(m.morphTargetDictionary??{})).filter((x,i,a)=>a.indexOf(x)===i).sort(); },
     expression(name: CargoExpression){ player.setCargoExpression(name); },
     performances: cargoPerformances,
+    async takeAudit() {
+      const { verifyTakes } = await import('./verify_takes');
+      return verifyTakes(skin, rig.root.getObjectByName('head')!);
+    },
     face(name: CargoExpression, angle=0, close=1, previous?: CargoExpression, blend=1) {
       pose('player.idle', .3);
       player.setCargoExpression(name);

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { cargoPerformances, type CargoPerformance } from './character/cargoRiderPerformance';
+import { cargoPerformances, type CargoPerformance, type CargoTake } from './character/cargoRiderPerformance';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RigBinding } from './animation';
 import type { CharacterHeadStyle, Player } from './player';
@@ -36,7 +36,7 @@ export interface CharacterLabDiagnostics {
 }
 
 export interface CharacterLabHandle {
-  frame(): void;
+  frame(dt?: number): void;
   close(): void;
   readonly isOpen: boolean;
   readonly diagnostics: CharacterLabDiagnostics;
@@ -228,9 +228,10 @@ class CharacterLab implements CharacterLabHandle {
     return this.root;
   }
 
-  frame(): void {
+  frame(dt = 0): void {
     if (!this.open) return;
     this.ctx.player.syncCharacterAppearance();
+    this.ctx.player.cargoSurface?.step(dt, 0, false);
     this.refreshHeadStyleButtons();
     this.controls.update();
     this.updateFloorAndStatus();
@@ -344,6 +345,7 @@ class CharacterLab implements CharacterLabHandle {
     }
     this.panel.appendChild(headStyles);
     const faces = this.cargoFaces;
+    let selectedTake: CargoTake = 'idle';
     const library = element('select', 'clab-button');
     library.setAttribute('aria-label', 'Performance expression');
     library.add(new Option('Performance poses…', ''));
@@ -353,6 +355,7 @@ class CharacterLab implements CharacterLabHandle {
     };
     library.onchange = () => {
       const name = library.value as CargoPerformance | '';
+      selectedTake = name || 'idle';
       this.ctx.player.setCargoExpression(name || 'live');
       highlight(name ? library : faces.firstElementChild as HTMLElement);
       this.frameCamera('head');
@@ -362,6 +365,7 @@ class CharacterLab implements CharacterLabHandle {
       pick.type = 'button';
       pick.dataset.active = String(expression === 'live');
       pick.onclick = () => {
+        selectedTake = expression === 'live' ? 'idle' : expression;
         this.ctx.player.setCargoExpression(expression);
         this.frameCamera('head');
         library.value = '';
@@ -370,6 +374,16 @@ class CharacterLab implements CharacterLabHandle {
       faces.appendChild(pick);
     }
     faces.appendChild(library);
+    for (const [label, reference] of [['Play take', false], ['Kling reference loop', true]] as const) {
+      const play = element('button', 'clab-button', label);
+      play.type = 'button';
+      play.onclick = () => {
+        this.ctx.player.playCargoTake(reference ? 'kling1910' : selectedTake, reference);
+        this.frameCamera('head');
+        highlight(play);
+      };
+      faces.appendChild(play);
+    }
     this.panel.appendChild(faces);
     this.panel.appendChild(element(
       'div',

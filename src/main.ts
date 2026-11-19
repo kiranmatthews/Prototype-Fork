@@ -3174,11 +3174,7 @@ function whenEditorLoaded(action: () => void): void {
 // which captures it first.
 // Character Lab owns the procedural rest silhouette while gameplay is frozen.
 // It is lazy so the authoring UI and OrbitControls cost nothing during play.
-let characterLab: {
-  frame: () => void;
-  close: () => void;
-  readonly diagnostics: unknown;
-} | null = null;
+let characterLab: import('./characterLab').CharacterLabHandle | null = null;
 async function openCharacterLabTool(): Promise<void> {
   if (characterLab || animationStudio) return;
   player.setCharacterUpperArmRestAngleWeight(1);
@@ -4594,7 +4590,7 @@ function advanceFrame(nowMs: number): void {
   // Character Lab owns the camera and persistent rest silhouette; the sim
   // stands down so slider edits never race gameplay or animation state.
   if (characterLab) {
-    characterLab.frame();
+    characterLab.frame(dt);
     ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
     return;

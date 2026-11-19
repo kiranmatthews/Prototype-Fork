@@ -32,6 +32,8 @@ try {
   assert.equal(report.expressions.length,12);
   assert.equal(new Set(report.expressions.map(e=>e.signature.toFixed(5))).size,12);
   assert.ok(report.expressions.every(e=>e.maximum > .008));
+  report.facialTakes = await page.evaluate(() => review.takeAudit());
+  assert.equal(report.facialTakes.length,17);
   assert.equal(report.catalog.length, report.suites.gameplay + report.suites.starter + report.suites.studio + 2 * report.suites.liveSkate);
   assert.equal(new Set(report.catalog.map(clip => clip.id)).size, report.catalog.length);
 
@@ -74,7 +76,8 @@ try {
   assert.deepEqual(errors, []);
   const poses = report.motion.reduce((sum, clip) => sum + clip.poses, 0);
   await writeFile(join(output, 'animation-audit.json'), JSON.stringify(report, null, 2) + '\n');
-  console.log(JSON.stringify({ poses, clips: report.catalog.length, ...report.geometry, wipeout: report.wipeout, errors }));
+  console.log(JSON.stringify({ poses, clips: report.catalog.length, facialTakes: report.facialTakes.length,
+    facialFrames: report.facialTakes.reduce((n,take)=>n+take.frames,0), ...report.geometry, wipeout: report.wipeout, errors }));
 } finally {
   await browser.close();
 }

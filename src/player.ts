@@ -176,6 +176,7 @@ import {
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
 import type { CargoRider, CargoExpression } from './character/cargoRider';
+import type { CargoTake } from './character/cargoRiderPerformance';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
 import { captureSpinCharacter } from './spin-effects/smear';
 import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';
@@ -1831,11 +1832,17 @@ export class Player {
   private cargoRider: CargoRider | null = null;
   private cargoState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
   private cargoExpression: CargoExpression = 'live';
+  private pendingCargoTake?: {name: CargoTake; loop: boolean};
   get cargoSurface(): CargoRider | null { return this.cargoRider; }
   get cargoLoadState(): string { return this.cargoState; }
   setCargoExpression(expression: CargoExpression): void {
     this.cargoExpression = expression;
-    if (this.cargoRider) { this.cargoRider.expression = expression; this.cargoRider.step(0, 0, false); }
+    this.pendingCargoTake = undefined;
+    this.cargoRider?.selectExpression(expression);
+  }
+  playCargoTake(name: CargoTake, loop = false): void {
+    if (this.cargoRider) this.cargoRider.playTake(name, loop);
+    else this.pendingCargoTake = {name, loop};
   }
   private characterHeadStyleValue: CharacterHeadStyle = DEFAULT_CHARACTER_HEAD_STYLE;
   private characterUpperArmRestAngleWeight = 1;
@@ -3334,6 +3341,10 @@ export class Player {
       this.bodyGroup.add(skin.root);
       this.cargoState = 'ready';
       this.syncCharacterHeadStyle();
+      if (this.pendingCargoTake) {
+        skin.playTake(this.pendingCargoTake.name, this.pendingCargoTake.loop);
+        this.pendingCargoTake = undefined;
+      }
       skin.step(0, 0, false);
       skin.setDetached(this.breakApart?.active ?? false);
     } catch (error) {
