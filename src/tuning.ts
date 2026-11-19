@@ -149,7 +149,7 @@ export const TUNING = {
   ledgeClimbPop: 1, // extra lift as you top out of the clamber (0 = plant flat)
   ledgeReach: 2.4, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
-  boardAbandonSteering: 25, // percent of the original heading response after jumping off the board
+  boardAbandonSteering: 25, // horizontal steering and braking response after jumping off the board
   manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
   manualDrift: 0.5, // manual balance: how fast the pitch needle runs away
   manualControl: 4, // slightly stronger up/down correction; edge shape and momentum stay unchanged
@@ -760,7 +760,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   boardAbandonSteering:
-    'How quickly held movement redirects you after jumping off the skateboard. 0% keeps the launch direction; 25% is gentle; 100% restores the original fast steering. Preserves carried speed and jump height. Applies to ordinary and vert board abandons; normal jumps and ragdoll bails keep their own controls.',
+    'How strongly you steer after jumping off the skateboard. Release the stick to carry your momentum, pull against travel to brake, or push sideways to turn. 0% carries the takeoff velocity. 25% gives gentle control and 100% responds fastest.',
   manualMinSpeed:
     'Minimum rolling speed to START a manual. An existing manual drops below 70% of this speed, allowing brief speed dips over slopes.',
   manualDrift: 'How fast the manual balance needle runs away on its own (fought with up/down on the stick). Pegging it = bail.',

@@ -12762,3 +12762,11 @@ Chrome exercised all twelve facial presets and six hand poses in Character Lab. 
 The replacement facial-animation brief reached a playable Character Lab take in about 16 minutes. The full pass rebuilt the neutral head, checked its moving lids and oral cavity, and authored 17 performances on the replacement topology. The supplied Kling 1910 footage sets the timing of the 15.04-second reference loop. The native file opens at rest and exposes twelve two-axis facial controls. The GLB carries the same playable takes.
 
 The final 146,465-triangle skin includes separate dental arches, two rolling lids per eye, a fitted blonde cap and a bound jersey back. Blender verifies the 72 native bones, 1,230 facial frames, iris coverage and lip separation. Chrome exercises the 193 existing player-animation entries at 6,898 sampled body poses and compares the exported facial weights to the live controls. Character Lab provides timed playback alongside the twelve held expression poses.
+
+### 2026-11-19 — Braking an Abandon Ship jump on a curved approach
+
+The Haunted Hassle replay reached a verified playable fix in about 14 minutes. At frame 6817 the rider released the jump button with straight back held, carrying 23 m/s about 1.6° off the course heading. The old controller interpreted that small angle as a turn at full speed. In Chrome the rider travelled 13.47 m left of the takeoff line and fell into the gap.
+
+Abandon Ship now brakes the component of velocity that opposes the input. Sideways input can steer the remaining momentum, and a held direction stays stable as the chase camera turns. With the recorded input, the rider slowed to 8.39 m/s forward after 0.2 seconds and landed in a roll 2.87 m ahead with 0.34 m of lateral travel. A neutral release from the identical takeoff carried 15.33 m forward. Both jumps landed on frame 6856 and followed the same vertical arc.
+
+Lite and full native-resolution Chrome reproduced the corrected flight with clean consoles. The steering regression covers left and right approach errors, partial analogue pullback and a rotating chase view. The existing ordinary, spring, vert and landing checks also passed.

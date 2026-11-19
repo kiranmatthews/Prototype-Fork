@@ -6896,7 +6896,15 @@ export class Player {
   private courseInputDirection(level:Level):{x:number;z:number}|null {
     if(this.twistingSpaceAir)return this.camDir;
     if (level.boss) return this.chiefInput.sample(this.rawInput?.moveX??0,this.rawInput?.moveY??0,this.camDir);
-    if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset();this.chiefInput.reset(); return null; }
+    if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) {
+      this.chiefInput.reset();
+      // The chase camera follows velocity. Keep a held dismount input in its
+      // sampled screen frame while braking or reversing turns the rider.
+      if (this.boardAbandonActive && !this.isBailing)
+        return this.viewInput.sample(this.rawInput.moveX, this.rawInput.moveY, this.camDir);
+      this.viewInput.reset();
+      return null;
+    }
     if(this.authoredVertReturnInput){
       // The same wall has an uphill approach and a downhill exit lane. A
       // left-side return must not select the nearby uphill lane after the
@@ -6981,27 +6989,27 @@ export class Player {
       .multiplyScalar(moveY)
       .addScaledVector(BAIL_CONTROL_L, moveX);
     if (BAIL_TARGET.lengthSq() <= 1e-8) return true;
-    const carrySpeed = Math.abs(this.speed);
-    BAIL_TARGET.normalize().multiplyScalar(abandon
-      ? Math.max(carrySpeed, TUNING.walkSpeed * intent) : TUNING.walkSpeed * intent);
-
+    BAIL_TARGET.normalize();
     BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
-    const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * steering * Math.max(0, dt));
-    if (abandon && carrySpeed > 1e-5) {
+    const rate = AIR_RESCUE_CONTROL_RESPONSE * (abandon ? steering * intent : 1);
+    const response = 1 - Math.exp(-rate * Math.max(0, dt));
+    if (abandon) {
+      // Resolve carry against the actual world-space stick. Only the part already
+      // moving across or with the input can turn. Opposing carry brakes on its
+      // own line, even when a curved lane puts the two headings slightly off-axis.
+      const opposing = Math.min(0, BAIL_V.dot(BAIL_TARGET));
+      BAIL_V.addScaledVector(BAIL_TARGET, -opposing);
+      const steerableSpeed = BAIL_V.length();
       const cross = BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x;
-      if (Math.abs(cross) <= 1e-6 * carrySpeed * BAIL_TARGET.length()) {
-        // Straight input has no chosen turning side. Brake/reverse on that
-        // line; atan2(0, negative) otherwise invents a sideways semicircle.
-        // Continue accelerating along it after crossing zero speed.
-        BAIL_V.lerp(BAIL_TARGET, response);
-      } else {
-        // Deliberate turns retain carried speed, including existing side carry.
-        const angle = Math.atan2(cross, BAIL_V.dot(BAIL_TARGET)) * response;
-        const x = BAIL_V.x, z = BAIL_V.z;
-        BAIL_V.set(x * Math.cos(angle) - z * Math.sin(angle), 0,
-          x * Math.sin(angle) + z * Math.cos(angle));
-      }
-    } else BAIL_V.lerp(BAIL_TARGET, response);
+      const angle = Math.atan2(cross, Math.max(0, BAIL_V.dot(BAIL_TARGET))) * response;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      const x = BAIL_V.x, z = BAIL_V.z;
+      BAIL_V.set(x * cos - z * sin, 0, x * sin + z * cos);
+      const drive = Math.max(0, TUNING.walkSpeed * intent - steerableSpeed);
+      BAIL_V.addScaledVector(BAIL_TARGET, opposing * (1 - response) + drive * response);
+    } else {
+      BAIL_V.lerp(BAIL_TARGET.multiplyScalar(TUNING.walkSpeed * intent), response);
+    }
     const velocity = BAIL_V.length();
     if (velocity > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
