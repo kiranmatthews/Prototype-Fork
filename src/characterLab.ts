@@ -51,6 +51,7 @@ function installStyles(): void {
   style.dataset.characterLab = 'styles';
   style.textContent = `
     body.character-lab-open { overflow: hidden; }
+    body.character-lab-open.game-debug-hidden .clab { display: block !important; }
     body.character-lab-open .game-hud-layer,
     body.character-lab-open .hud-tl, body.character-lab-open .hud-tr,
     body.character-lab-open .hud-trickplate, body.character-lab-open .hud-msg,
@@ -154,6 +155,7 @@ class CharacterLab implements CharacterLabHandle {
     decimals: number;
   }>();
   private readonly headStyleButtons = new Map<CharacterHeadStyle, HTMLButtonElement>();
+  private readonly cargoFaces = element('div', 'clab-actions');
   private readonly unsubscribe: () => void;
   private tailInput!: HTMLInputElement;
   private steered = false;
@@ -200,7 +202,7 @@ class CharacterLab implements CharacterLabHandle {
       this.updateFloorAndStatus();
       if (!this.steered) this.frameCamera('three-quarter');
     }, true);
-    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('keydown', this.onKeyDown, true);
   }
 
   get isOpen(): boolean {
@@ -235,6 +237,7 @@ class CharacterLab implements CharacterLabHandle {
 
   close(): void {
     if (!this.open) return;
+    this.ctx.player.setCargoExpression('live');
     this.open = false;
     this.unsubscribe();
     this.controls.dispose();
@@ -246,13 +249,16 @@ class CharacterLab implements CharacterLabHandle {
     this.ctx.camera.updateProjectionMatrix();
     this.root.remove();
     document.body.classList.remove('character-lab-open');
-    window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('keydown', this.onKeyDown, true);
     if (this.toastTimer !== undefined) window.clearTimeout(this.toastTimer);
     this.ctx.onClose();
   }
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') this.close();
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.close();
   };
 
   private buildPanel(): void {
@@ -317,11 +323,12 @@ class CharacterLab implements CharacterLabHandle {
     actions.append(reset, copy);
     this.panel.appendChild(actions);
 
-    this.panel.appendChild(element('div', 'clab-section', 'Head shape'));
+    this.panel.appendChild(element('div', 'clab-section', 'Character appearance'));
     const headStyles = element('div', 'clab-actions');
     for (const [style, label] of [
       ['skull', 'Skull'],
       ['alternate', 'BoolieRoo'],
+      ['cargo', 'Cargo Roo'],
     ] as const) {
       const button = element('button', 'clab-button', label);
       button.type = 'button';
@@ -335,6 +342,19 @@ class CharacterLab implements CharacterLabHandle {
       headStyles.appendChild(button);
     }
     this.panel.appendChild(headStyles);
+    const faces = this.cargoFaces;
+    for (const expression of ['live', 'wink', 'smile', 'surprise'] as const) {
+      const pick = element('button', 'clab-button', expression[0].toUpperCase() + expression.slice(1));
+      pick.type = 'button';
+      pick.dataset.active = String(expression === 'live');
+      pick.onclick = () => {
+        this.ctx.player.setCargoExpression(expression);
+        this.frameCamera('head');
+        for (const child of faces.children) (child as HTMLElement).dataset.active = String(child === pick);
+      };
+      faces.appendChild(pick);
+    }
+    this.panel.appendChild(faces);
     this.panel.appendChild(element(
       'div',
       'clab-note',
@@ -515,6 +535,8 @@ class CharacterLab implements CharacterLabHandle {
   }
 
   private headBounds(): THREE.Box3 {
+    const cargo = this.ctx.player.cargoSurface;
+    if (cargo?.root.visible) return cargo.headBounds();
     const preferred = this.ctx.rigRoot.getObjectByName(
       this.ctx.player.characterHeadStyle === 'alternate'
         ? 'meshy-boolieroo-alternate-head-surface'
@@ -602,13 +624,15 @@ class CharacterLab implements CharacterLabHandle {
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +
       `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
-      `Head style ${this.ctx.player.characterHeadStyle === 'alternate' ? 'BoolieRoo' : 'Skull'} · ` +
+      `Head style ${this.ctx.player.characterHeadStyle === 'cargo' ? 'Cargo Roo' : this.ctx.player.characterHeadStyle === 'alternate' ? 'BoolieRoo' : 'Skull'} · ` +
       `profile ${characterProportionSettings.activeHeadProfile} · alternate ` +
       `${alternateHead.textureState} · ${alternateHead.triangles.toLocaleString()} tris\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }
 
   private refreshHeadStyleButtons(): void {
+    this.cargoFaces.hidden = this.ctx.player.characterHeadStyle !== 'cargo';
+    this.cargoFaces.style.display = this.cargoFaces.hidden ? 'none' : 'flex';
     for (const [style, button] of this.headStyleButtons) {
       button.dataset.active = String(this.ctx.player.characterHeadStyle === style);
     }

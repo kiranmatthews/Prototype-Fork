@@ -637,8 +637,9 @@ try {
     /syncPresentation:[\s\S]{0,180}setCharacterUpperArmRestAngleWeight\([\s\S]{0,180}clip\?\.id === 'player\.idle'[\s\S]{0,120}\? 1 : 0/,
     'Animation Studio did not keep the resting arm angle off authored Run');
   assert.match(mainSource,
-    /p2CharacterAnimationRuntime = createCharacterAnimationRuntime\([\s\S]{0,120}p2,[\s\S]{0,120}playerAnimationDocument/,
-    'P2 must use the same animation runtime so its Run pose also excludes the idle arm angle');
+    /createCharacterAnimationRuntime\(player,\s*playerAnimationDocument\)/,
+    'Character appearances must use the active player animation document');
+  assert.match(labSource, /\['cargo', 'Cargo Roo'\]/, 'The fitted Bone Man skin must be selectable in Character Lab');
   assert.match(mainSource, /requestedTool\(location.search, location.hash\)/);
   assert.match(mainSource, /case "characterlab": await openCharacterLabTool\(\)/);
   assert.match(labSource, /CHARACTER LAB/);

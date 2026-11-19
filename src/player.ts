@@ -175,6 +175,7 @@ import {
   stepVertBoardRelease,
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
+import type { CargoRider, CargoExpression } from './character/cargoRider';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
 import { captureSpinCharacter } from './spin-effects/smear';
 import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';
@@ -250,7 +251,7 @@ import {
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 const CHARACTER_HEAD_STYLE_STORAGE_KEY = 'solProtoCharacterHeadStyleV1';
-export type CharacterHeadStyle = 'skull' | 'alternate';
+export type CharacterHeadStyle = 'skull' | 'alternate' | 'cargo';
 const CHARACTER_HEAD_STYLE_PLAYERS = new Set<Player>();
 let sharedCharacterHeadStyle: CharacterHeadStyle | null = null;
 
@@ -1827,6 +1828,15 @@ export class Player {
   private meshyBoolieRooHeadLoading: Promise<void> | null = null;
   private meshyBoolieRooHeadTextureDiagnostics:
     (() => MeshyBoolieRooHeadTextureDiagnostics) | null = null;
+  private cargoRider: CargoRider | null = null;
+  private cargoState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
+  private cargoExpression: CargoExpression = 'live';
+  get cargoSurface(): CargoRider | null { return this.cargoRider; }
+  get cargoLoadState(): string { return this.cargoState; }
+  setCargoExpression(expression: CargoExpression): void {
+    this.cargoExpression = expression;
+    if (this.cargoRider) { this.cargoRider.expression = expression; this.cargoRider.step(0, 0, false); }
+  }
   private characterHeadStyleValue: CharacterHeadStyle = DEFAULT_CHARACTER_HEAD_STYLE;
   private characterUpperArmRestAngleWeight = 1;
   private meshyShorts: MeshyShortsComponent | null = null;
@@ -3082,9 +3092,10 @@ export class Player {
   }
 
   setCharacterHeadStyle(style: CharacterHeadStyle): void {
-    const normalized = style === 'alternate' ? 'alternate' : 'skull';
+    const normalized = style === 'alternate' || style === 'cargo' ? style : 'skull';
     sharedCharacterHeadStyle = normalized;
     for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
+      if (normalized === 'cargo' && player.cargoState === 'failed') player.cargoState = 'idle';
       player.characterHeadStyleValue = normalized;
     }
     characterProportionSettings.setActiveHeadProfile(
@@ -3281,7 +3292,7 @@ export class Player {
     if (sharedCharacterHeadStyle === null) {
       try {
         const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
-        if (saved === 'alternate' || saved === 'skull') restored = saved;
+        if (saved === 'alternate' || saved === 'skull' || saved === 'cargo') restored = saved;
       } catch {
         // Keep the source-owned head style when persistence is blocked.
       }
@@ -3297,6 +3308,9 @@ export class Player {
   private syncCharacterHeadStyle(): void {
     this.interactionVersion++;
     if(this.rivalColor)return;
+    const cargo = this.characterHeadStyleValue === 'cargo';
+    if (this.riderG) this.cargoRider?.setVisible(cargo, this.riderG, this.characterRenderBatches?.root);
+    if (cargo && this.cargoState === 'idle' && this.riderG) void this.installCargoRider(this.riderG);
     const alternateReady =
       this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
     // Keep the skull visible while the optional chunk/texture arrives rather
@@ -3307,6 +3321,25 @@ export class Player {
       this.characterHeadStyleValue === 'alternate' &&
       this.meshyBoolieRooHeadLoadState === 'idle'
     ) void this.installMeshyBoolieRooHead();
+  }
+
+  private async installCargoRider(rider: THREE.Group): Promise<void> {
+    this.cargoState = 'loading';
+    try {
+      const { CargoRider } = await import('./character/cargoRider');
+      const skin = await CargoRider.load(rider);
+      this.cargoRider = skin;
+      skin.expression = this.cargoExpression;
+      // Keep the artwork outside the gameplay geometry measured for contacts and foot planting.
+      this.bodyGroup.add(skin.root);
+      this.cargoState = 'ready';
+      this.syncCharacterHeadStyle();
+      skin.step(0, 0, false);
+      skin.setDetached(this.breakApart?.active ?? false);
+    } catch (error) {
+      this.cargoState = 'failed';
+      console.error('Cargo Roo could not load its Bone Man skin', error);
+    }
   }
 
   private installMeshyBoolieRooHead(): Promise<void> {
@@ -3698,10 +3731,13 @@ export class Player {
 
   /** A/B render validation; authored geometry and animation stay identical. */
   setCharacterRenderBatching(enabled: boolean): void {
+    if (this.riderG) this.cargoRider?.setVisible(false, this.riderG);
     this.characterRenderBatches?.setEnabled(enabled);
+    this.syncCharacterHeadStyle();
   }
 
   private rebuildCharacterRenderBatches(): void {
+    if (this.riderG) this.cargoRider?.setVisible(false, this.riderG);
     const enabled = this.characterRenderBatches?.diagnostics.enabled ?? true;
     this.characterRenderBatches?.dispose();
     const sources: THREE.Mesh[] = [];
@@ -3714,6 +3750,7 @@ export class Player {
     });
     this.characterRenderBatches = new CharacterRigidMeshBatches(this.bodyGroup, sources);
     this.characterRenderBatches.setEnabled(enabled);
+    this.syncCharacterHeadStyle();
   }
 
   // Momentum-skate mode is live (board down, heading model driving) — used by
@@ -4056,7 +4093,8 @@ export class Player {
   captureSpinSmearSource(spinPose = true): THREE.Group {
     if (!this.riderG) throw new Error('The character is not ready to bake.');
     const capture = () => {
-      const source = captureSpinCharacter(this.riderG!, this.bodyGroup, this.bodyGroup.scale);
+      const skin = this.cargoRider?.root.visible ? this.cargoRider.root : null;
+      const source = captureSpinCharacter(skin ?? this.riderG!, this.bodyGroup, this.bodyGroup.scale, !!skin);
       if (spinPose) {
         const inverse = this.bodyGroup.matrixWorld.clone().invert();
         const landmarks: Record<string, number[]> = {};
@@ -4654,6 +4692,7 @@ export class Player {
     this.kiteVisual?.stepFlyaway(dt);
     this.breakApart?.step(dt, level, this.bailRecoverT >= 0,
       this.bailDownT / this.bailRush, this.isBailing);
+    if (this.cargoRider?.root.visible) this.cargoRider.setDetached(this.breakApart?.active ?? false);
   }
 
   /** Wind owns forward movement; native surfaces, collision and progression
@@ -20250,6 +20289,7 @@ export class Player {
         this.refreshCharacterBounds();
       }
     }
+    this.cargoRider?.step(dt, this.speed, this.isBailing);
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
     if (this.isBailing && this.bailRecoverT >= 0 && this.riderG && !this.playerAnimationBridge.previewActive) {

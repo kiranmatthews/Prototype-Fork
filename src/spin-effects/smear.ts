@@ -68,6 +68,7 @@ export function captureSpinCharacter(
   rider: THREE.Object3D,
   reference: THREE.Object3D,
   scale: THREE.Vector3 = new THREE.Vector3(1, 1, 1),
+  includeRenderProxies = false,
 ): THREE.Group {
   reference.updateWorldMatrix(true, true);
   const inverse = reference.matrixWorld.clone().invert();
@@ -75,7 +76,7 @@ export function captureSpinCharacter(
   const result = new THREE.Group();
   result.name = 'CurrentCharacter_StaticSurface';
   rider.traverseVisible(object => {
-    if (!(object instanceof THREE.Mesh) || object.userData.characterRenderProxy) return;
+    if (!(object instanceof THREE.Mesh) || (object.userData.characterRenderProxy && !includeRenderProxies)) return;
     const position = object.geometry.getAttribute('position');
     if (!position || !position.count) return;
     if (object instanceof THREE.SkinnedMesh) {
