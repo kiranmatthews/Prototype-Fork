@@ -180,8 +180,6 @@ import { SkateCollectathon } from './skateCollectathon';
 import { CRYSTAL_TRIALS_LEVEL, CRYSTAL_REJECTS_LEVEL, REJECTED_GRID } from './levels/crystal-trials';
 import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';
 import {warehouseContactMesh} from './warehouseContacts';
-import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
-import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { MALL_LEVEL } from './levels/mall';
 import { MAYFIELD_MALL_LEVEL } from './levels/mayfield-mall';
 import { KONA_LEVEL } from "./levels/kona";
@@ -1128,7 +1126,6 @@ export const TEX_KINDS = [
   "waterfall-bark",
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
-  ...ROOM_TEXTURE_KINDS,
   ...COUNTRY_CLUB_TEXTURES,
   ...Object.keys(COASTAL_TOWN_TEXTURES),
   ...Object.keys(ROOFTOP_KOOK_TEXTURES),
@@ -1165,6 +1162,18 @@ export const TEX_KINDS = [
   "solid",
   "metal",
 ] as const;
+
+// RETIRED: Inside Your Room and its nine images are deleted. These kinds are
+// accepted on import only so a copy saved in an editor library stays readable:
+// migration swaps the three surfaces for stock ones and drops the planes that
+// existed only to show a poster or a window matte.
+const RETIRED_ROOM_SURFACES = new Map<string, string>([
+  ['room-timber', 'wood'], ['room-bark', 'waterfall-bark'], ['room-rug', 'solid'],
+]);
+const RETIRED_ROOM_PICTURES = new Set<string>([
+  'room-poster-coast', 'room-poster-canopy', 'room-poster-orbit',
+  'room-shore', 'room-jungle', 'room-balustrade',
+]);
 
 // LEGACY: the old named-layer containers. Migration folds their locks into
 // per-component lk flags; the outliner (items + groups) replaced them.
@@ -1398,6 +1407,14 @@ export function migrateCustomLevel(d: CustomLevelData, { crateLayout = true } = 
   d.components = d.components.filter(c => c.t !== "enemy" || (c as { foe?: string }).foe !== "car");
   // Retire pig actors from old editor/offline saves without discarding their levels.
   d.components = d.components.filter(c => c.t !== "enemy" || c.kookRole === undefined);
+  // Retire Inside Your Room's art from saved copies without discarding their geometry.
+  if (d.components.some(c => c.tex !== undefined && (RETIRED_ROOM_PICTURES.has(c.tex) || RETIRED_ROOM_SURFACES.has(c.tex)))) {
+    d.components = d.components.filter(c => c.tex === undefined || !RETIRED_ROOM_PICTURES.has(c.tex));
+    for (const c of d.components) {
+      const stock = c.tex === undefined ? undefined : RETIRED_ROOM_SURFACES.get(c.tex);
+      if (stock) c.tex = stock;
+    }
+  }
   const ocean = d.ocean;
   if (ocean && ocean.geometryVersion !== 2) {
     // The first ocean format used clockwise yaw for straight coasts and
@@ -2626,7 +2643,6 @@ export interface LevelEntry {
 
 export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "treehouse-trail", name: TREEHOUSE_TRAIL_LEVEL.name, data: TREEHOUSE_TRAIL_LEVEL },
-  { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: 'cinder-sanctum', name: CINDER_SANCTUM_LEVEL.name, data: CINDER_SANCTUM_LEVEL },
@@ -2694,6 +2710,7 @@ const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
 const RETIRED_PUZZLE_IDS = new Set(PUZZLE_LEVELS.flatMap(({id}) => [id, `bonus-${id}`]));
 const RETIRED_ISLAND_HOPPER_IDS = new Set(['island-hopper', 'bonus-island-hopper']);
 const RETIRED_DESCENT_IDS = new Set(['descent', 'bonus-descent']);
+const RETIRED_ROOM_IDS = new Set(['inside-your-room']);
 export function isBuiltin(id: string): boolean {
   return BUILTIN_IDS.has(id);
 }
@@ -3190,7 +3207,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   const tricks = new Set<DeckTrickKind>(DECK_TRICKS.map((entry) => entry.kind));
   const directions = new Set(["E", "W", "N", "S"]);
   const structureStyles = new Set(["light", "island", "beach"]);
-  const textureKinds = new Set<string>(TEX_KINDS);
+  const textureKinds = new Set<string>([
+    ...TEX_KINDS, // retired room art is accepted only for legacy removal
+    ...(migrate ? [...RETIRED_ROOM_SURFACES.keys(), ...RETIRED_ROOM_PICTURES] : []),
+  ]);
   const booleanKeys: (keyof CustomComponent)[] = [
     "artProxy", "fog", "hangLock", "sideOn", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
@@ -4181,7 +4201,7 @@ export function levelList(): LevelEntry[] {
       if (!followsMergedSlipstream(u) && !edited.has(archive.id)) out.push(archive);
       continue;
     }
-    if (!isBuiltin(u.id) && !RETIRED_SLIPSTREAM_BONUS_IDS.has(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && !RETIRED_ISLAND_HOPPER_IDS.has(u.id) && !RETIRED_DESCENT_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
+    if (!isBuiltin(u.id) && !RETIRED_SLIPSTREAM_BONUS_IDS.has(u.id) && !RETIRED_PUZZLE_IDS.has(u.id) && !RETIRED_ISLAND_HOPPER_IDS.has(u.id) && !RETIRED_DESCENT_IDS.has(u.id) && !RETIRED_ROOM_IDS.has(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley" && u.id !== "jungle-skyline" && u.id !== "bonus-jungle-skyline" && !followsMergedSlipstream(u)) out.push(u);
   }
   return out;
 }
@@ -5004,12 +5024,6 @@ export class Level {
       const file=kind==='nightworks-basalt'?'nightworks-bonus/slate.webp':kind==='nightworks-caldera'?'nightworks-kit/caldera-panorama.webp':kind==='nightworks-magma'?'nightworks-kit/caldera-lake.webp':'nightworks-kit/quarry-albedo.webp';
       const texture = Level.finishTex(this.surfaceImage(file),kind!=='nightworks-caldera');
       this.surfTexCache.set(kind, texture); return texture;
-    }
-    const room = roomArt(kind);
-    if (room) {
-      const texture = Level.finishTex(this.surfaceImage(room.file), room.repeat === true);
-      this.surfTexCache.set(kind, texture);
-      return texture;
     }
     if(['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(kind))return this.surfaceTexture('wood');
     if (Object.prototype.hasOwnProperty.call(ROOFTOP_KOOK_TEXTURES, kind)) {
@@ -6719,12 +6733,6 @@ export class Level {
       });
     } else if (c.tex === 'nightworks-magma' || c.tex?.startsWith('nightworks-caldera') || c.tex === 'nightworks-heat' || c.tex === 'nightworks-ash') {
       material = createNightworksMagma(this.standingWaterClock, c, c.tex === 'nightworks-magma' || c.tex?.startsWith('nightworks-caldera') ? this.surfaceTexture(c.tex) : null);
-    } else if (roomArt(c.tex)?.unlit) {
-      material = new THREE.MeshBasicMaterial({
-        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
-        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
-        alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
-      });
     } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
     else if(c.tex==='desert-trail'||c.tex==='desert-sandstone'){material=createDesertMaterial(c.tex==='desert-trail'?'trail':'sandstone',!!c.colors);if(c.color)material.color.set(c.color);}
     else if(c.tex==='rally-mud')material=createRallyDirt(this.surfaceTexture('dirt'),c.color??'#a07c52',!!c.colors);

@@ -91,7 +91,7 @@ The Descent is deleted from the source catalogue, its native builder, and review
 
 Sky Bridge (`sky`), Temple of Embers (`jungle-terraces`) and The Ancient Gates (`jungle-gate-run`) occupy secret slots 1–3. Their editor IDs remain stable. Older progress from `sky-bridge`, `jungle-terraces` and `jungle-gate` merges into the corresponding secret slots with rewards, strongest medals and best times retained. This does not bypass secret-island discovery. Existing bonus rooms and preview images remain attached to their courses.
 
-All remaining proper courses are now assigned. Bonus rooms remain attached to their parents. Inside Your Room is the supporting bedroom scene; Flats & Pipes, Bone Yard / Wipeout Playground, Backport Mechanics Lab and MeshyLook Thorn Courtyards are test or study entries. Island World Map is the menu scene.
+All remaining proper courses are now assigned. Bonus rooms remain attached to their parents. Flats & Pipes, Bone Yard / Wipeout Playground, Backport Mechanics Lab and MeshyLook Thorn Courtyards are test or study entries. Inside Your Room, the supporting bedroom scene, was removed on 24 November 2026. Island World Map is the menu scene.
 
 ## Local verification and delivery
 
