@@ -14,11 +14,12 @@ const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
  *
  * `load` runs 0..1 through the hold on the wall. `age` is seconds since the
  * launch, negative while the feet are still planted. The body compresses into
- * the face, releases into a stretch that overshoots, rebounds once and ends
- * exactly neutral, so nothing keeps wobbling after the kick has gone. Segments
- * deform independently (never a whole-skeleton scale) and the arms trail the
- * legs and torso by a few hundredths, which is what makes the push read as a
- * push and not as a resize. Movement is not touched.
+ * the face, releases into a stretch, swings back through neutral into one
+ * shallow rebound and ends exactly neutral, so nothing keeps wobbling after
+ * the kick has gone. Segments deform independently (never a whole-skeleton
+ * scale) and the arms trail the legs and torso by a few hundredths, which is
+ * what makes the push read as a push and not as a resize. Movement is not
+ * touched.
  */
 export function sampleWallPlantMotion(load: number, age: number, board: boolean) {
   const planted = age < 0;
@@ -29,9 +30,10 @@ export function sampleWallPlantMotion(load: number, age: number, board: boolean)
   const stretchAt = (lag: number) => {
     const u = planted ? 0 : clamp01((age - lag) / WALL_PLANT_RELEASE_SECONDS);
     if (u <= 0 || u >= 1) return 0;
-    const out = Math.sin(Math.PI * Math.pow(u, .45)) * Math.pow(1 - u, 1.2);
-    const back = u > .35 ? -.22 * Math.sin(Math.PI * 2 * (u - .35) / .65) * (1 - u) : 0;
-    return out + back;
+    // One damped swing: out fast (peak near 0.05 s), back through neutral near
+    // 0.13 s into a single shallow rebound, then still. The window closes it
+    // to exactly zero, so the settle is finite.
+    return Math.sin(Math.PI * 2 * Math.pow(u, .7)) * Math.pow(1 - u, 1.5);
   };
   const amplitudes = characterElasticityAmplitudes(board ? 'wall-plant-board' : 'wall-plant');
   const deformations: Record<string, number> = {};

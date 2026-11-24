@@ -416,6 +416,32 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
     }
     report.push('mashed early press, legacy replays');
 
+    // Presentation contract: the body squashes into the wall, stretches off it
+    // and ends exactly neutral; segments deform independently, and on the board
+    // the deck keeps both leg lengths.
+    {
+      const { sampleWallPlantMotion, WALL_PLANT_RELEASE_SECONDS } = await server.ssrLoadModule('/src/wallPlantMotion.ts');
+      const leg = 'deform.leg.lower.left.length', torso = 'deform.torso.length', forearm = 'deform.arm.lower.left.length';
+      const planted = sampleWallPlantMotion(1, -1, false).deformations;
+      assert.ok(planted[leg] < .85 && planted[torso] < .9 && planted[leg] > .7, `the plant did not compress: ${JSON.stringify(planted)}`);
+      const pushed = sampleWallPlantMotion(1, .06, false).deformations;
+      assert.ok(pushed[leg] > 1.15 && pushed[torso] > 1.08, `the push did not stretch: ${JSON.stringify(pushed)}`);
+      assert.ok(pushed[forearm] < pushed[leg], 'the arms did not trail the legs');
+      let rebound = false;
+      for (let age = 0; age <= WALL_PLANT_RELEASE_SECONDS + .08; age += 1 / 120) {
+        const d = sampleWallPlantMotion(1, age, false).deformations;
+        for (const value of Object.values(d)) assert.ok(value > .7 && value < 1.35, `segment length left its range at ${age.toFixed(3)}: ${value}`);
+        rebound ||= d[leg] < .999 && age > .1;
+      }
+      assert.ok(rebound, 'the release never rebounded past neutral');
+      const settled = sampleWallPlantMotion(1, WALL_PLANT_RELEASE_SECONDS + .05, false);
+      assert.ok(Object.values(settled.deformations).every(value => value === 1), 'the release did not end neutral');
+      assert.ok(settled.knee === 0 && settled.spine === 0 && settled.armSwing === 0, 'the pose did not end neutral');
+      const deck = sampleWallPlantMotion(1, .06, true).deformations;
+      assert.ok(!(leg in deck) && deck[torso] > 1, 'the board plant stretched the legs off the deck');
+    }
+    report.push('squash, stretch, rebound and neutral settle');
+
     // 20. Deterministic: the same inputs make the same run.
     const record = () => {
       place(1.3, -10);
