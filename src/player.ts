@@ -1585,6 +1585,12 @@ export class Player {
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
   private transferCoolT = 0; // debounce after the one release-triggered spine transfer
+  // SIDE-ON PIPES. A direction that was already held when the air began is the
+  // travel stick, not a spin request: it stays inert until it is let go.
+  private sideOnSpinLatch = 0;
+  // ...and the same for a lean: of a rail caught on a side-on line, and of a
+  // lip stall parked on a side-on pipe's coping.
+  private sideOnBalanceLatch = 0;
   private spinePoseElapsed = 0;
   private spinePoseDuration = 0;
   private readonly spinePoseFrom = new THREE.Vector3(0,1,0);
@@ -4498,6 +4504,7 @@ export class Player {
     this.lipPipe = null;
     this.lipCoolT = 0;
     this.hangPipe = null;
+    this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -6001,6 +6008,8 @@ export class Player {
       this.wrapVerticalSpace(level);
       const beforeCollisionSpeed = Math.abs(this.speed);
       this.collide(level);
+      // (a solid's sideways push-out was just resolved: the hang goes back on its line)
+      this.pinSideOnHang();
       if (Math.abs(this.speed) < beforeCollisionSpeed - 1e-7) this.skateOverdrive.interrupt();
       this.flushLevelCrateRewards(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
@@ -7375,7 +7384,11 @@ export class Player {
       const runSign = Math.sign(this.balance || 1); // + drifts INTO the pipe (forgiving)
       // fight along the SCREEN axis the tip reads on (see lipAim)
       const lipSgn = this.lipAim(false);
-      const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+      let fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+      if (this.sideOnBalanceLatch !== 0) {
+        if (Math.abs(fightStick) > 0.3 && Math.sign(fightStick) === this.sideOnBalanceLatch) fightStick = 0;
+        else this.sideOnBalanceLatch = 0;
+      }
       let control = fightStick * lipSgn * TUNING.lipControl;
       control *= this.safeGain(this.balanceEntryAge, control, runSign);
       this.stepBalanceCore(dt, runSign, instability, control, lipRamp);
@@ -7522,6 +7535,11 @@ export class Player {
     // face (which is exactly what the old asymmetric ramp physics did).
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (onPipe) this.pipeRideT = 0.2; // any vert launch off this becomes a pipeHang (no phantom spin)
+    // A SIDE-ON pipe is a board section of the path, the way a rail is a grind
+    // section: setting foot on its surface while moving puts the deck under you.
+    const sidePipe = this.grounded && this.groundHit?.halfpipe?.sideOn ? this.groundHit.halfpipe : null;
+    // ...and a side-on ZONE is a floor played on one line: no room to carve.
+    const sideLine = sidePipe === null && !this.parkControls && level.zoneAt(this.pos.x, this.pos.z)?.line === true;
     // ON FOOT the ONE authority is footGrip: a walker (no board momentum, no
     // charge) can stand/walk on anything with rideNormal.y >= footGrip and
     // SLIPS down anything steeper — no matter the stick direction. This is what
@@ -7559,6 +7577,7 @@ export class Player {
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
           ((!this.directFootStudy || this.onFootJumpStudy?.nativeLocomotion) && planarSpeed > TUNING.walkSpeed + 0.5) ||
+          (sidePipe !== null && !this.isBailing && planarSpeed > 1) ||
           rollingOut));
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
@@ -7637,6 +7656,13 @@ export class Player {
       this.walkIntent.set(0, 0, 0);
     }
     this.freeSkate = free;
+    if (this.freeSkate && sidePipe && !this.isBailing) this.lockSideOnHeading(sidePipe);
+    else if (this.freeSkate && sideLine && this.grounded && !this.isBailing) {
+      // one line: the board points up it or down it, never across
+      const dir = Math.abs(this.axisF.x) >= 0.2 ? this.axisF.x : Math.abs(this.lastVelX) > 0.5 ? this.lastVelX : 1;
+      this.axisF.set(dir < 0 ? -1 : 1, 0, 0);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    }
 
     // Regular-walk intent envelope: fresh input reaches full pace over
     // walkRampTime; releasing it lets that intent and the physical velocity
@@ -7933,8 +7959,11 @@ export class Player {
         const slick = this.groundHit?.slippy
           ? iceGrip : this.greaseT > 0 ? 0.22 : 1; // authored grip is relative to dry steering
         this.iceSkateSteering = 0;
-        const rx = this.rawInput.moveX;
-        const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
+        // Across a side-on pipe the ride is one line: the stick works the
+        // walls (the carve below still reads it) but can neither turn the
+        // board out of the picture nor skid it to a halt mid-swing.
+        const rx = sidePipe ? 0 : this.rawInput.moveX;
+        const ry = sidePipe || this.manualing !== 0 ? 0 : this.rawInput.moveY;
         // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
         // pull-back brake — while left/right keeps steering the line; a pure
         // side stick sits at 90° off the heading, well under the brake angle)
@@ -7949,7 +7978,7 @@ export class Player {
             (TUNING.chaseCam > 0.5 && !level.boulder
               ? { x: this.camDir.x, z: this.camDir.z }
               : { x: 0, z: -1 });
-          const steering = solveSkateSteering(
+          let steering = solveSkateSteering(
             this.axisF.x,
             this.axisF.z,
             cfc.x,
@@ -7958,6 +7987,17 @@ export class Player {
             ry,
             CONST.carveBrakeAngle,
           );
+          if (sideLine) {
+            // On one line a reversal has nowhere to carve to. Read the stick
+            // along the travel axis only: with the board it rides on, against
+            // it is the pull-back brake (which rolls to a stop and steps off,
+            // so walking back is the way home). Toward or away from the lens
+            // asks for nothing.
+            const along = steering.targetX;
+            const against = Math.abs(along) > 0.35 && along * this.axisF.x < 0;
+            steering = { targetX: this.axisF.x, targetZ: 0, angle: against ? Math.PI : 0,
+              intent: against ? 'pullback-brake' : 'carve' };
+          }
           // A pull-back stop is a SCREEN-LONGITUDINAL reversal, not every
           // direction that happens to oppose the current heading. Left/right
           // reversals and diagonal redirects are hard carves on every surface.
@@ -8218,7 +8258,10 @@ export class Player {
       // pass untouched, and beating the pump lift (which fires just above)
       // is why this can't be a `speed <= 0` check — it would never trigger.
       if (this.freeSkate) {
-        if (onPipe && steepGround && this.rideNormal.y > 0.25 && this.speed < 2 && this.pipeFlipCd <= 0) {
+        // (A side-on pipe is a complete pendulum: it turns round wherever the
+        // swing dies, low on the transition included, instead of parking there.)
+        if (onPipe && (steepGround || (sidePipe !== null && this.rideNormal.y < 0.9995 && this.lastTy > -0.05)) &&
+            this.rideNormal.y > 0.25 && this.speed < 2 && this.pipeFlipCd <= 0) {
           // HALFPIPE APEX FLIP: stalled part-way up a wall (but below the coping,
           // rideNormal.y > 0.25) — turn the heading DOWN the fall line (in X,
           // toward centre) so you drop back in, but KEEP the channel (Z) heading
@@ -8299,6 +8342,7 @@ export class Player {
     }
     const previousGroundHit = this.groundHit;
     const previousRideNormal = this.rideNormal.clone();
+    const stepFromX = this.pos.x, stepFromZ = this.pos.z;
     if (this.parkControls && this.freeSkate)
       skateSurfaceDirection(this.parkVelocity, this.axisF, this.rideNormal).multiplyScalar(this.speed);
 
@@ -8377,6 +8421,11 @@ export class Player {
       }
     }
 
+    // SIDE-ON DROP-IN: this step carried the body off a pipe's deck and over
+    // its coping. Seat it on the wall, board down, before the ground follow
+    // below can read the empty air past the lip as a ledge to fall off.
+    this.tryPipeDropIn(stepFromX, stepFromZ);
+
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
     // taller window both ways so fast climbs and descents stick to the surface.
@@ -8398,7 +8447,8 @@ export class Player {
       this.freeSkate &&
       this.lipCoolT <= 0 &&
       this.rawInput.grindHeld &&
-      this.pos.y >= ridingPipe.lipY - 0.9 &&
+      this.pos.y >= ridingPipe.lipYOf(this.pipeSide(ridingPipe)) - 0.9 &&
+      !ridingPipe.isOpen(this.pipeSide(ridingPipe)) &&
       this.lipHeadOn(ridingPipe)
     ) {
       this.enterLipStall(ridingPipe);
@@ -8420,7 +8470,7 @@ export class Player {
         // |pen| window ≈ the old wallStick: near or into the surface = attached
         if (
           pr &&
-          Math.abs(pr.u) < ridingPipe.uLip - 0.02 &&
+          Math.abs(pr.u) < ridingPipe.uLipOf(pr.u) - 0.02 &&
           Math.abs(pr.pen) < TUNING.wallStick
         ) {
           if (ridingPipe.axis === 'z') this.pos.x = pr.cross;
@@ -8536,7 +8586,7 @@ export class Player {
       (!hit || hit.normal.y > 0.5 || hit.y < this.pos.y - 0.4 ||
         // Shared copings overlap: leave our own mouth before the down-ray
         // can adopt the opposite face of the neighbouring pipe.
-        (ridingPipe && this.pos.y >= ridingPipe.lipY - 0.02));
+        (ridingPipe && this.pos.y >= ridingPipe.lipYOf(this.pipeSide(ridingPipe)) - 0.02));
     // Reach the near-vertical tangent before a down-ray can skip the lip or
     // a raised deck's end cap catches the body. Preserve earned climb speed.
     const parkCrest = this.parkControls && this.freeSkate && !this.isBailing &&
@@ -8556,7 +8606,7 @@ export class Player {
       !this.isBailing && // a tumbling body must never be thrown into a hang
       this.lastTy > 0.15 && // heading is still climbing (not dropping back down)
       this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
-      (meshCrest || this.pos.y > hpNow!.lipY - 1.2) // and up near the lip
+      (meshCrest || this.pos.y > hpNow!.lipYOf(this.pipeSide(hpNow!)) - 1.2) // and up near the lip
     ) {
       // LIP STALL: reaching the top IS this launch condition — so the stall
       // check lives here, ahead of the pop. Holding Triangle, SQUARE to the
@@ -9372,6 +9422,7 @@ export class Player {
     // Non-pipe hangs first RE-AIM that plane at whatever the wall feeler
     // finds, so curved walls and bowl corners carry the hang around with them.
     if (!this.parkControls && this.vertAir && !this.hangPipe && !this.pipeHang) this.trackVertWall(level, dt);
+    if (this.pinSideOnHang()) this.stepSideOnCarry(level);
     if (this.vertAir && !this.parkControls) {
       // BALLISTIC VERT (THPS): the air is free flight. The launch already did
       // the assist work — enterVertAir zeroes the into-ramp component, so with
@@ -10634,6 +10685,8 @@ export class Player {
       this.pipeHang = true;
       this.grabSpinAngle = 0; // start the hang un-spun; a held direction rotates from here
     }
+    this.sideOnSpinLatch = this.groundHit?.halfpipe?.sideOn && Math.abs(this.rawInput.moveX) > 0.3
+      ? Math.sign(this.rawInput.moveX) : 0;
     if (launch) {
       this.vVel += TUNING.hangLaunch;
       this.charging = false;
@@ -11652,6 +11705,11 @@ export class Player {
 
   // --------------------------------------------------------------- lip stall --
 
+  /** Which wall of a pipe a point is over: -1 / +1 along its cross axis. */
+  private pipeSide(hp: Halfpipe, at: THREE.Vector3 = this.pos): 1 | -1 {
+    return hp.crossCoord(at.x, at.z) < hp.cross ? -1 : 1;
+  }
+
   // Was the approach square to the wall? The lip trick wants a (near) 90°
   // hit — within lipAngle of dead-on. Off-axis arrivals grind the coping.
   private lipHeadOn(hp: Halfpipe): boolean {
@@ -11699,10 +11757,10 @@ export class Player {
     this.lipStallT = TUNING.lipMaxTime;
     this.lipTickT = 0;
     // pin exactly on the lip point (stay wherever you are ALONG the pipe)
-    const lipCross = hp.cross + this.lipSide * hp.lipX;
+    const lipCross = hp.cross + this.lipSide * hp.lipXOf(this.lipSide);
     if (hp.axis === 'z') this.pos.x = lipCross;
     else this.pos.z = lipCross;
-    this.pos.y = hp.lipY;
+    this.pos.y = hp.lipYOf(this.lipSide);
     this.state = 'ride';
     this.grounded = true;
     this.surfaceName = 'coping';
@@ -11724,6 +11782,13 @@ export class Player {
     this.endManual();
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.beginBalance(0, this.lipDispSign);
+    // SIDE-ON: the direction held up this wall is the TRAVEL stick, and at the
+    // far lip it points out the back. Left live it pegs the needle and throws
+    // the rider off behind the wall in under half a second, so (as on a rail
+    // caught on a side-on line) it tips nothing until it has been let go. The
+    // stall's own drift then settles back INTO the pipe.
+    const heldAtStall = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+    this.sideOnBalanceLatch = hp.sideOn && Math.abs(heldAtStall) > 0.3 ? Math.sign(heldAtStall) : 0;
     this.rideNormal.set(0, 1, 0);
     // Either side input requests a tip stall. The physical board end that
     // arrived at the deck determines nose/tail; never turn it to fit a name.
@@ -11741,6 +11806,173 @@ export class Player {
     this.emitSparks(5, 0xffe08a, 1.2);
   }
 
+  // ------------------------------------------------------ side-on pipes --
+  // A pipe a side-scrolling stretch looks ACROSS is ridden as the one line
+  // the camera can see: in over one lip, wall to wall, out over the other.
+
+  /**
+   * A side-on hang rises and falls on ONE line. A solid met on the way (a
+   * switch crate floated over the coping to be headed) may stop the climb, but
+   * its sideways push-out must not walk the body off that line and drop it
+   * behind the wall. Returns whether such a hang is live.
+   */
+  private pinSideOnHang(): boolean {
+    if (!this.vertAir || this.parkControls || !this.pipeHang || !this.hangPipe?.sideOn) return false;
+    if (this.hangPipe.axis === 'z') this.pos.x = this.vertAnchor.x;
+    else this.pos.z = this.vertAnchor.z;
+    return true;
+  }
+
+  /** Keep the board on the pipe's cross axis; the swing only ever reverses. */
+  private lockSideOnHeading(hp: Halfpipe): void {
+    const zAxis = hp.axis === 'z';
+    let along = zAxis ? this.axisF.x : this.axisF.z;
+    if (Math.abs(along) < 0.2) {
+      // Arrived travelling down the pipe's length (a jump in from the end, a
+      // get-up after a spill): take the way the body is actually moving, or
+      // failing that roll toward the middle of the trough.
+      const drift = zAxis ? this.lastVelX : this.lastVelZ;
+      along = Math.abs(drift) > 0.5 ? drift : hp.cross - hp.crossCoord(this.pos.x, this.pos.z);
+    }
+    const dir = along < 0 ? -1 : 1;
+    this.axisF.set(zAxis ? dir : 0, 0, zAxis ? 0 : dir);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+  }
+
+  /**
+   * The automatic DROP-IN. Walking, running or rolling off a side-on pipe's
+   * deck across its coping puts the board on the wall just under the lip,
+   * pointing down the transition, with the approach speed still in it — the
+   * same hand-over a coping grind's drop-in makes, minus the grind.
+   */
+  private tryPipeDropIn(fromX: number, fromZ: number): boolean {
+    if (!this.grounded || this.state !== 'ride' || this.isBailing || this.lipPipe !== null ||
+        this.slideTimer > 0 || this.parkControls || this.boardMountBlocked) return false;
+    const deck = this.groundHit?.mesh?.userData.pipeDeck as { pipe: Halfpipe; side: 1 | -1 } | undefined;
+    if (!deck?.pipe.sideOn) return false;
+    const hp = deck.pipe, side = deck.side;
+    const lip = hp.lipXOf(side);
+    const before = (hp.crossCoord(fromX, fromZ) - hp.cross) * side;
+    const now = (hp.crossCoord(this.pos.x, this.pos.z) - hp.cross) * side;
+    if (before < lip || now >= lip) return false; // not a deck -> pipe crossing this step
+    const along = hp.alongCoord(this.pos.x, this.pos.z);
+    if (along < Math.min(hp.l0, hp.l1) || along > Math.max(hp.l0, hp.l1)) return false;
+    // Seat on the transition a forearm under the coping: low enough that the
+    // body has left the deck, high enough to keep the whole wall's drop.
+    const u = side * (hp.uLipOf(side) - Math.min(0.4, hp.radiusOf(side) * 0.2));
+    const cross = hp.cross + hp.crossOffset(u);
+    if (hp.axis === 'z') this.pos.x = cross;
+    else this.pos.z = cross;
+    this.pos.y = hp.surfaceY(u);
+    const normal = hp.normalAt(u, new THREE.Vector3());
+    const approach = Math.max(Math.abs(this.speed), this.lastPlanar);
+    const wasOnFoot = !this.freeSkate;
+    if (wasOnFoot) {
+      // the same hand-over the ordinary mount makes
+      this.iceSlideCarry = false;
+      this.boardRunCarry = false;
+      this.rollLandingT = -1;
+      this.skateMountT = 0;
+      if (this.flyBoard?.visible) {
+        this.releaseDiscardedBoard();
+        this.boardSnapT = 0;
+      }
+      this.walkVelocity.set(0, 0, 0);
+      this.walkTurnaround = false;
+      this.walkIntent.set(0, 0, 0);
+    }
+    this.crawling = false;
+    this.teetering = false;
+    this.skateBlockT = 0;
+    this.axisF.set(hp.axis === 'z' ? -side : 0, 0, hp.axis === 'z' ? 0 : -side);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.speed = Math.max(approach * 0.85, 4);
+    this.state = 'ride';
+    this.grounded = this.freeSkate = true;
+    this.groundHit = {
+      y: this.pos.y,
+      normal,
+      name: 'halfpipe',
+      halfpipe: hp,
+      vert: hp.walls[0]?.userData.vert !== false,
+      gravityTrack: hp.object.userData.gravityTrack === true,
+      skateCamera: hp.object.userData.skateCamera === true,
+    };
+    this.surfaceName = 'halfpipe';
+    this.rideNormal.copy(normal);
+    // The sweep origin moves onto the wall with the body, so the analytic
+    // attach reads this step as a ride along the curve, not a fall past it.
+    this.prevPos.copy(this.pos);
+    skateSurfaceDirection(this.parkVelocity, this.axisF, normal).multiplyScalar(this.speed);
+    this.lastTy = this.parkVelocity.y / this.speed;
+    this.liftTy = this.lastTy;
+    this.liftTyT = 0;
+    this.vVel = 0;
+    this.airMomentum = this.grindExitAir = this.airFromSkate = false;
+    this.charging = false;
+    this.chargeTimer = this.jumpBufferT = this.vertLaunchT = 0;
+    // An X already held on the approach must come up before it can pop an
+    // ollie off the wall; held, it goes straight to work as the pump.
+    if (this.rawInput.jumpHeld) this.jumpReleaseRearmRequired = true;
+    this.clearCoyoteJumpWindow();
+    this.lipCoolT = 0.5;
+    this.pipeRideT = 0.2;
+    this.pipeLandGraceT = this.grindDropSteerT = 0.35;
+    this.landingLaunchLockT = 0.1;
+    this.snapRenderInterpolation();
+    sfx.play('skateTransition', 0.6);
+    return true;
+  }
+
+  /**
+   * Hang time over a side-on lip: holding the stick OUT over the coping
+   * carries the air across it. A pipe mouth beyond a shared ridge takes the
+   * ordinary mirrored spine transfer; a deck takes a plain board air that
+   * drifts out and lands on it. A bare wall has nowhere to go, so the hang
+   * simply drops back in.
+   */
+  private stepSideOnCarry(level: Level): void {
+    const hp = this.hangPipe;
+    if (!hp || this.isBailing || this.transferCoolT > 0) return;
+    const side = this.pipeSide(hp, this.vertAnchor);
+    const outX = hp.axis === 'z' ? side : 0;
+    const outZ = hp.axis === 'z' ? 0 : side;
+    if (!spineTransferDirectionHeld(
+      this.rawInput?.moveX ?? 0,
+      this.rawInput?.moveY ?? 0,
+      this.camDir.x,
+      this.camDir.z,
+      outX,
+      outZ,
+    )) return;
+    if (this.tryAdjacentSpineTransfer(level)) return;
+    // Something to land on just past the lip, at about its height: the
+    // pipe's own deck, a platform butted against the wall, a ghost slab a
+    // switch has made real. A drop down the back of a bare wall is not an
+    // exit, and a ledge above the lip only once the air has cleared it.
+    const lipY = hp.lipYOf(side);
+    const landing = this.queryGround(level, outX * 1.2, outZ * 1.2);
+    if (!landing || landing.halfpipe || landing.normal.y < 0.7 || landing.lethal || landing.outOfBounds ||
+        landing.y < lipY - 0.75 || this.pos.y < landing.y + 0.12) return;
+    this.vertAir = false;
+    this.pipeHang = false;
+    this.hangPipe = null;
+    this.lockedCoping = null;
+    this.vertLatVel = 0;
+    this.vertGravT = TUNING.vertGravityBlend; // ease from vert gravity onto the street arc
+    this.airFromSkate = true;
+    this.airGrav = 'board';
+    this.floatAir = true; // it left a ramp: the ballistic board arc
+    this.airMomentum = true; // the drift flies on to the deck
+    this.axisF.set(outX, 0, outZ);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.speed = TUNING.vertDrift;
+    this.transferCoolT = 0.3;
+    this.pipeLandGraceT = 0.35;
+    resetVertBoardRelease(this.vertBoardRelease);
+    sfx.play('woosh2', 0.5);
+  }
+
   // SPINE TRANSFER — the second vert Jump release gets exactly one adjacent
   // pipe attempt. If another mouth sits across the ridge, mirror the live arc
   // onto it; no target means the release is still spent, with no generic
@@ -11749,10 +11981,10 @@ export class Player {
     if (this.isBailing || !this.vertAir || this.transferCoolT > 0) return false;
     if (!this.pipeHang || !this.hangPipe) return false;
     const hp = this.hangPipe;
-    if (this.pos.y < hp.lipY - 0.5) return false; // below the coping the ridge is solid
     const anchorCross = hp.crossCoord(this.vertAnchor.x, this.vertAnchor.z);
     const side = Math.sign(anchorCross - hp.cross) || 1;
-    const lipCross = hp.cross + side * hp.lipX;
+    if (this.pos.y < hp.lipYOf(side) - 0.5) return false; // below the coping the ridge is solid
+    const lipCross = hp.cross + side * hp.lipXOf(side);
     const along = hp.alongCoord(this.pos.x, this.pos.z);
     // probe a step past the coping on the far side
     const px = hp.axis === 'z' ? lipCross + side * 1.0 : along;
@@ -11763,7 +11995,8 @@ export class Player {
       const oAlong = other.alongCoord(px, pz);
       if (oAlong < Math.min(other.l0, other.l1) - 0.2) continue;
       if (oAlong > Math.max(other.l0, other.l1) + 0.2) continue;
-      if (Math.abs(other.crossCoord(px, pz) - other.cross) <= other.lipX - 0.3) {
+      const offset = other.crossCoord(px, pz) - other.cross;
+      if (!other.isOpen(offset) && Math.abs(offset) <= other.lipXOf(offset) - 0.3) {
         target = other;
         break;
       }
@@ -11799,7 +12032,7 @@ export class Player {
     this.spinePoseFrom.copy(this.alignNormal);
     this.spinePoseElapsed = 0;
     const fallTime = (this.vVel + Math.sqrt(this.vVel*this.vVel +
-      2*TUNING.pipeAirGravity*Math.max(0,this.pos.y-target.lipY))) / Math.max(1,TUNING.pipeAirGravity);
+      2*TUNING.pipeAirGravity*Math.max(0,this.pos.y-target.lipYOf(-side)))) / Math.max(1,TUNING.pipeAirGravity);
     this.spinePoseDuration = THREE.MathUtils.clamp(fallTime*.75,.3,1.05);
     this.vertNormal.negate(); // the far pipe's wall faces the other way
     // ...and the coping tangent is derived FROM the normal (tx=-n.z, tz=n.x),
@@ -11827,7 +12060,8 @@ export class Player {
       const along = other.alongCoord(px, pz);
       if (along < Math.min(other.l0, other.l1) - 0.2) continue;
       if (along > Math.max(other.l0, other.l1) + 0.2) continue;
-      if (Math.abs(other.crossCoord(px, pz) - other.cross) <= other.lipX - 0.3) return other;
+      const offset = other.crossCoord(px, pz) - other.cross;
+      if (!other.isOpen(offset) && Math.abs(offset) <= other.lipXOf(offset) - 0.3) return other;
     }
     return null;
   }
@@ -11847,7 +12081,7 @@ export class Player {
       this.axisF.set(0, 0, out);
     }
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.pos.y = hp.lipY + 0.1;
+    this.pos.y = hp.lipYOf(out) + 0.1;
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0.5;
@@ -11903,7 +12137,7 @@ export class Player {
     const iz = hp.axis === 'z' ? 0 : inward;
     const ridesOn = this.axisF.x * ix + this.axisF.z * iz > 0; // continuing the climb direction
     this.axisF.set(ix, 0, iz);
-    this.pos.y = hp.lipY - 0.3;
+    this.pos.y = hp.lipYOf(-inward) - 0.3;
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
     if (!ridesOn) {
       const oldStance = this.stance;
@@ -12030,6 +12264,7 @@ export class Player {
     this.vertAir = false;
     this.pipeHang = false;
     this.hangPipe = null;
+    this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.vertLatVel = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
@@ -12536,7 +12771,12 @@ export class Player {
       const runSign = Math.sign(this.balance || 1);
       // Read live tuning against the current catch, not the combo's age.
       const calm = this.balanceEntryEase(TUNING.grindCalm) * (this.runLevel?.skateRace?.grindBalanceScale ?? 1);
-      let control = this.rawInput.moveX * TUNING.balanceControl;
+      let lean = this.rawInput.moveX;
+      if (this.sideOnBalanceLatch !== 0) {
+        if (Math.abs(lean) > 0.3 && Math.sign(lean) === this.sideOnBalanceLatch) lean = 0;
+        else this.sideOnBalanceLatch = 0;
+      }
+      let control = lean * TUNING.balanceControl;
       control *= this.safeGain(this.balanceEntryAge, control, runSign);
       this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);
       if (rail.chiefTongueAssist || this.uberTimer > 0 || this.balanceBoostT > 0) {
@@ -13125,6 +13365,12 @@ export class Player {
       this.balanceVel = this.parkRailBalance.velocity * 30 / 4000;
       this.balanceCritT = 0;
     } else this.beginBalance((this.simRand() < 0.5 ? -1 : 1) * TUNING.balanceEntryLean);
+    // On a side-on line the direction held at the catch is the TRAVEL stick —
+    // it is what carried the rider to this rail — not a lean. It tips nothing
+    // until it has been let go; a fresh left/right balances as on any rail.
+    const heldAtCatch = Math.abs(this.rawInput.moveX) > 0.3 ? Math.sign(this.rawInput.moveX) : 0;
+    this.sideOnBalanceLatch = this.sideOnSpinLatch !== 0 ? this.sideOnSpinLatch
+      : level?.zoneAt(this.pos.x, this.pos.z)?.line ? heldAtCatch : 0;
     // landing-on-the-rail burst: one bright spray of the same sparks the
     // grind itself will now stream
     PUFF_DIR.set(-this.axisF.x * Math.sign(this.speed || 1), 0.5, -this.axisF.z * Math.sign(this.speed || 1));
@@ -13719,6 +13965,13 @@ export class Player {
     if (this.grindExitAir && this.grindSpinInput !== 0) {
       if (Math.abs(rx) > 0.3 && Math.sign(rx) === this.grindSpinInput) return 0;
       this.grindSpinInput = 0;
+    }
+    // Out of a side-on pipe the travel stick is usually still held: it is
+    // aiming the exit (or pumping the wall), so it spins nothing until it has
+    // been released once. A fresh direction is a spin, as in every other air.
+    if (this.sideOnSpinLatch !== 0) {
+      if (Math.abs(rx) > 0.3 && Math.sign(rx) === this.sideOnSpinLatch) return 0;
+      this.sideOnSpinLatch = 0;
     }
     return Math.abs(rx) > 0.3 ? rx : 0;
   }
@@ -22877,12 +23130,13 @@ export class Player {
       // supply their own neutral input. Use this pose's input, not rawInput.
       const copingPipe=this.lipPipe ?? (this.grounded && (input.grindHeld||input.jumpHeld) ? this.groundHit?.halfpipe : undefined);
       let coping: {center:THREE.Vector3;normal:THREE.Vector3}|undefined;
-      if(copingPipe && this.pos.y>copingPipe.lipY-1.8){
-        const side=Math.sign(copingPipe.crossCoord(this.pos.x,this.pos.z)-copingPipe.cross)||1;
+      const copingSide=copingPipe?this.pipeSide(copingPipe):1;
+      if(copingPipe && !copingPipe.isOpen(copingSide) && this.pos.y>copingPipe.lipYOf(copingSide)-1.8){
+        const side=copingSide;
         const normal=new THREE.Vector3(copingPipe.axis==='z'?side:0,0,copingPipe.axis==='x'?side:0);
-        const center=this.pos.clone();center.y=copingPipe.lipY+.05;
-        if(copingPipe.axis==='z')center.x=copingPipe.cross+side*copingPipe.lipX;
-        else center.z=copingPipe.cross+side*copingPipe.lipX;
+        const center=this.pos.clone();center.y=copingPipe.lipYOf(side)+.05;
+        if(copingPipe.axis==='z')center.x=copingPipe.cross+side*copingPipe.lipXOf(side);
+        else center.z=copingPipe.cross+side*copingPipe.lipXOf(side);
         coping={center,normal};
       }
       this.skateAnimation ??= new SkateAnimation(this.group, this.bodyGroup, this.riderG, this.boardG);

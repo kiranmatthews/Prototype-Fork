@@ -33,6 +33,17 @@ of gameplay rendering. The editor displays such a shell as a wireframe ghost;
 its **contain player** checkbox controls this field. The wall still uses the
 normal `pts`, `w`, `rise`, `collisionHeight` and `solid` fields.
 
+## Side-on pipes
+
+A straight, axis-aligned, 90-degree `vertramp` half may set `sideOn: true` for a pipe that a
+side-scrolling stretch looks across: the ride is locked to its cross axis, a decked coping drops a
+walker in on the board, and holding out over a lip carries the hang across it. Such a pipe may give
+each wall its own radius with `wallRise: [a, b]` (0–60; a non-zero radius is at least 0.5, and 0
+leaves that side open) and each coping its own deck depth with `wallDeck: [a, b]` (0–60). Both
+pairs are rejected on any other part. An east/west `zone` may also set `sideOn: true` to mark a
+stretch played on one line, where the board brakes instead of carving back. See
+[SIDE_ON_PIPES.md](SIDE_ON_PIPES.md).
+
 ## Authored values
 
 Coordinates use metres in Three.js's right-handed, Y-up world. The normal corridor travels toward negative Z. Component `p` is its authored anchor; anchors vary by primitive, so consult the comments on `CustomComponent` before generating files. For a box platform, `p` is its centre and the supported top is `p[1] + s[1] / 2`.

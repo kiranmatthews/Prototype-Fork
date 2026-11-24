@@ -12771,6 +12771,73 @@ Abandon Ship now brakes the component of velocity that opposes the input. Sidewa
 
 Lite and full native-resolution Chrome reproduced the corrected flight with clean consoles. The steering regression covers left and right approach errors, partial analogue pullback and a rotating chase view. The existing ordinary, spring, vert and landing checks also passed.
 
+## 2026-11-23 — Side Pipe Lab: halfpipes on a side-scrolling path
+
+Brief: a test level with only side scrolling whose path runs through halfpipes seen side on and open —
+walk up to one and be dropped in on the board automatically as you cross its edge — with one idea per
+pipe: pump up enough hang time to reach a higher right-hand side and spine-transfer out to the next
+landing, a rail to grind, an enemy in the middle, a `!` crate to hit.
+Elapsed: about 55 minutes from the request to the first complete run of the course by the real player
+(headless), about 65 minutes to the same course playing in Chrome. Times are approximate: the session
+was restarted once mid-task. Hardening, the route test and these notes took the rest of the session.
+
+**The course** (`side-pipe-lab`, `src/levels/side-pipe-lab.ts`): one east travel zone on a single plane,
+332 m from spawn to gate, five checkpoints, viewed from the south at the rig's widest
+side framing. Between pipes it is
+on-foot platforming; every pipe is about 12 m lip to lip so the far wall is in frame from the near lip.
+
+| Pipe | Shape | What it asks |
+|---|---|---|
+| P0 roll-in | 3.5 m walls, decks both sides | nothing: drop in, hold right, air out onto the far deck |
+| P1 pump | 2.5 m west wall, 7 m east wall that is a spine into a 5 m landing ramp with no east wall | the first swing climbs 4.45 m of the 7 m; the swing back hangs 7 m over the low lip; the second swing clears the ridge and transfers. Holding X on the walls does it in one. The ramp rolls out at 26 m/s through two smash stacks |
+| P2 enemy | 3.5 m walls, a crab patrolling the flat | the spin, from the board; a mask waits on the approach |
+| P3 switch | bare east wall over a hole; `!` floated 6 m over the west lip | the east hang goes nowhere; the west hang of the swing back heads the `!`, the exit slab turns solid, and the next east hang carries out |
+| P4 rail | bare east wall; a rail from 3.1 m over its lip down to the finish | the grind button in the east hang; the rail drops steeply first, so the 0.93 s grind gathers 20 m/s |
+
+**Runtime support**, all opt-in through `sideOn` (details and measurements in
+[SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); nothing in `src/tuning.ts` changed, symmetric pipes are untouched):
+
+- The analytic `Halfpipe` takes a per-wall shape: `wallRise: [west, east]` (0 leaves a side open),
+  `wallDeck`, and a filled section for a side camera. It was symmetric and deckless, and a swept quarter
+  ramp bails on re-entry under the normal (non-park) controls.
+- On a `sideOn` pipe: the automatic drop-in over a decked coping; the heading locked to the cross axis
+  (the stick carves the walls but never turns or brakes); a hang carried out over a lip when the stick is
+  held out over it — the existing mirrored spine transfer if a pipe mouth is beyond the ridge, a plain
+  board air if there is something to land on, nothing if there is not.
+- On a `sideOn` zone: the board keeps to the travel axis and the stick against travel is the pull-back
+  brake. On a zero-depth plane the ordinary reversal is a carve with nowhere to go.
+- "The stick you were already holding is the travel stick": until it has been released once it does not
+  spin the air out of a pipe, tip the balance of a rail caught on a side-on line, or tip a lip stall
+  parked on a side-on coping. Without those, held right is punished three ways.
+
+**What the layout had to learn.** A deck's side collider at the lip plane pinned the rider to the wall and
+handed him a ledge grab mid-climb, so decks belong to the pipe and carry none. A floor crate, a checkpoint
+and a 2.1 m-high "overhead" row all tripped the rider leaving a pipe on the board (his crate-contact box is
+3.0 m tall), so exit floors are bare, overhead rows start at 3.4 m and every on-foot stretch begins with a
+2.1 m catch ledge that stops the board — with its first 2.4 m bare, because that same box reaches over the
+ledge from below. The default stopwatch stood in the only lane and a time trial strips checkpoints, so it
+is authored behind the spawn. A straight exit rail bailed a rider who kept holding right after 0.4 s, and
+the grind button held a moment early turned the climb into a lip stall that the same held right tipped
+off the back of the bare wall. All of this is now in the bible (XV.14 and the Part XX checklist).
+
+**Checks.** `npm run check:side-pipe` plays the course with the real player on held right — jumping the
+gaps, spinning the crabs, boxes and checkpoints, pressing grind at the rail — in 49.0 s with no death or
+bail, and asserts each pipe's claim, the pumped shortcut, the cost of a missed spin, the one-line brake
+with a westward return through P0, a jump-in on a diagonal stick, a `!` headed over a bare lip, the grind
+button held up the rail pipe's wall, and the checkpoint a fall under the rail returns to. Each of the
+eight runtime rules was removed in turn in a scratch copy; the test fails by name without any one of them.
+
+**Handoff.** `npm run build`, `check:release`, `check:levels`, `check:pipe`, `check:side-pipe` and the
+focused carve, rail-air, air-rescue, grind, balance, lip-stall and platform-edge suites pass. The editor
+round-trip validator round-trips the level in lite and full, and the edge-policy sweep finds none of its
+22 surfaces needing review. Chrome with real keys, lite and full render: each pipe rides as the headless
+test says, with no console errors. Suites that fail here fail identically on the parent commit
+`b576f753`: `test-waterpark-vert`, `check:editor-roundtrip` (Test Course normalisation, Beachside crate
+count), `test-surface-edge-dedup`, `test-course-edge-policy`, `test-level-placement-polish`,
+`test-edge-grinding-migration` and `test-factory-defaults`; `test-stock-level-preservation` and
+`test-level-placement-traversal` need more than the cloud container's 14 GB on either commit. The release
+is 999.25 MB of the 1,000 MB hosting budget.
+
 ### 2026-11-23 — Wall plant: timed wall kick and wallplant
 
 The brief asked for a Mario 64-style wall kick that also works as a THPS wallplant. The first kick was playable in the browser about 43 minutes after the prompt; all three stations of the new practice course were playable after about 50 minutes.
@@ -12781,7 +12848,7 @@ On foot the move is a Wall Kick. It leaves at 9.5 m/s out and 12.5 m/s up, keeps
 
 On the board the move is a Wallplant worth 150 points. It has to be pressed before a wall the rider would otherwise wipe out on. It returns 90% of the approach speed, pops at 10 m/s and starts a fresh air for tricks, so `Kickflip + Wallplant + Kickflip` and `Wallplant + 50-50` are single combos. From a full charge at 23.9 m/s the rider leaves at 21.4 m/s, peaks at 3.2 m and lands riding 14 m back from the wall.
 
-`Wall Plant Lab` is the practice course: one bare wall, a 4 m kick shaft that ends on a ledge, and a 60 m board lane into an end wall with two return rails. A course can opt out with `wallPlants: false`; walls authored `invisible`, containment barriers and coast boundaries never give a kick. Takes recorded before the move replay without it, as with earlier movement changes. AI race rivals do not use it. The WALL PLANT tuning section holds the eleven values, the in-game trick guide has a page for it, and the design bible's XV.14 records the measured reach.
+`Wall Plant Lab` is the practice course: one bare wall, a 4 m kick shaft that ends on a ledge, and a 60 m board lane into an end wall with two return rails. A course can opt out with `wallPlants: false`; walls authored `invisible`, containment barriers and coast boundaries never give a kick. Takes recorded before the move replay without it, as with earlier movement changes. AI race rivals do not use it. The WALL PLANT tuning section holds the eleven values, the in-game trick guide has a page for it, and the design bible's XV.15 records the measured reach.
 
 `npm run check:wall-plant` drives the production player through twenty-two cases with device input only: both sides of the timing window, chaining, the one-wall and corner limits, climbable walls, the unanswered tap, diagonal and curved faces, the course switch, landing on foot, the three early board timings, a glancing board approach with a late press, a three-entry trick line, legacy takes, the squash, stretch and rebound of the pose, and determinism. Headless Chromium played the single kick, the shaft climb to its ledge and the wallplant into a rail grind in the lite renderer, and the board line again at full render, with clean consoles. On the practice course the browser also banked the checkpoint, fell off the side, respawned at the checkpoint and reached the finish gate. The production build, the release-size check and the tool directory check pass.
 

@@ -1985,7 +1985,30 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 | An enemy debuts alone on safe ground, then moves to the take-off, then the landing | the same three steps for each `foe` kind |
 | Enemies as steps or springs (turtle, hippo, frog) | `turtle` shell, a stomped `grunt` carcass as a projectile, `grindosaurus` spine |
 
-### XV.14 Wall kick and wallplant (measured)
+### XV.14 Side-on pipes (measured)
+
+A `vertramp` half with `sideOn: true` is a halfpipe on a side-scrolling path, ridden across its section:
+the walker is dropped in on the board as they cross the coping, and holding the stick out over a lip
+carries the hang across it ([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). Measured
+with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
+`tools/test-side-pipe-lab.mjs`):
+
+| Fact | Value | What it means for layout |
+|---|---|---|
+| Automatic drop-in | 0.85 × the approach speed, never under 4 m/s | the deck is a mode change: the checkpoint goes before it |
+| Equal 3.5 m walls | first far-lip launch 18 m/s; carried out about 5 m past the lip | exit deck plus the floor behind it ≥ 7 m |
+| 2.5 m wall against a 7 m wall | the first swing climbs 4.45 m; the second clears it; X held on the walls, or a charged approach, clears it at once | a far wall ≥ 2.5 × the entry wall asks for a second swing; pumping is the shortcut, never the only way |
+| Spine into a 5 m landing ramp | rolls out at 23–30 m/s | a smash lane or 40 m of run-out before the next stop |
+| Hang over the entry lip on the swing back | about 7 m | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m) |
+| Rail caught from a hang | the grind starts at 3.5 m/s | run exit rails downhill, steepest first |
+| Grind button held up the wall | a lip stall on the coping, not a hang; it settles back into the pipe | a rail over a lip starts ≥ 3 m above it, so it reads as "press in the air", and nothing behind a bare wall is the stall's fault |
+| A mounted rider's crate-contact box | about 3.0 m tall | a floor crate or a checkpoint on a pipe's exit floor trips him under 12.5 m/s; overhead rows start 3.4 m up |
+
+A pipe hands its rider on still on the board, so the on-foot stretch after it starts with a **catch
+ledge**: a 2.1 m step, over a charged ollie (1.7 m) and inside the ledge grab (2.4 m), which stops the
+board and has the rider climb up by the hands.
+
+### XV.15 Wall kick and wallplant (measured)
 
 Jump into a wall and press Jump as you meet it. The press counts from 0.2 s before the wall
 (`wallPlantBuffer`) to 0.2 s after first touching it (`wallPlantWindow`). On foot it is a **Wall Kick**
@@ -2883,6 +2906,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] The hardest run sits next to a checkpoint, right after it or closing into it.
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
+- [ ] A side-on pipe is about 12 m lip to lip (in frame from its near lip), its exit floor carries no floor
+  crate or checkpoint, and the on-foot stretch after it starts with a catch ledge (XV.14).
 - [ ] Every side-scroll stretch reads left to right (owner's rule, November 2026): its travel zone heads
   east (`dir: 'E'`), any fixed side view over it looks from the south, and bonus rounds run toward +X. A
   route that doubles back plays the westward leg into the screen, never side-on (Powderkeg Peak's upper

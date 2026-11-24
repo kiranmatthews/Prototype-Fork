@@ -195,6 +195,7 @@ import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { WALLPLANT_LAB_LEVEL } from "./levels/wallplant-lab";
 import { EMBER_COURT_LEVEL } from './levels/ember-court';
+import { SIDE_PIPE_LAB_LEVEL } from './levels/side-pipe-lab';
 import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
@@ -891,6 +892,11 @@ export interface CustomComponent {
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   hangLock?: boolean; // swept vertramp: retain airborne coping-plane contact around bends
+  // SIDE-ON PIPE: a straight, axis-aligned 90° half that a side-scrolling stretch looks ACROSS. It keeps the analytic pipe ride and adds what that view needs: the ride is locked to the cross axis (the stick pumps, it never steers out of the picture), a walker or rider crossing a decked coping drops in on the board, holding out over a lip carries the air across it (onto that wall's deck, or into the pipe mouth beyond a shared ridge), and the open ends show a filled section to the camera. `deck` then reads as the depth of the deck behind each coping.
+  // SIDE-ON ZONE (east/west `zone`): the stretch is played on ONE line. A board there cannot carve a U-turn in depth, so its heading stays on the travel axis and the stick held against travel is the pull-back brake.
+  sideOn?: boolean;
+  wallRise?: [number, number]; // side-on vertramp: transition radius of the wall on the -cross / +cross side (yaw 0: west / east), overriding `rise` per wall; 0 leaves that side open so the flat rolls straight out
+  wallDeck?: [number, number]; // side-on vertramp: deck depth behind the -cross / +cross coping, overriding `deck` per wall
   depthBias?: number; // render-only coplanar layering; positive values put an underlay behind ride surfaces
   shake?: number;
   kind?:
@@ -2655,6 +2661,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: 'side-pipe-lab', name: SIDE_PIPE_LAB_LEVEL.name, data: SIDE_PIPE_LAB_LEVEL }, // side-scrolling course through halfpipes seen across their section
   {id:'ember-court',name:EMBER_COURT_LEVEL.name,data:EMBER_COURT_LEVEL},
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
@@ -2777,7 +2784,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "minefieldTrap", "t", "p", "s", "to", "bridgeSpan", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "slipGravity", "groundSpeedLimit", "containment",
   "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock", "sideOn", "wallRise", "wallDeck",
   "cycle", "hold", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
@@ -3185,7 +3192,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor", "flatShading",
+    "artProxy", "fog", "hangLock", "sideOn", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
     "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
@@ -3385,6 +3392,20 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
         component.pts.some(p=>!finiteTuple(p,2,5)))return null;
     }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
+    // A side-on pipe is the analytic half only: one straight axis-aligned run
+    // with vertical lips. Its per-wall shape means nothing on any other part.
+    if(component.sideOn!==undefined&&component.t==='zone'){
+      // ...and a side-on ZONE is an east/west stretch played on one line.
+      if(component.dir==='N'||component.dir==='S')return null;
+    }else if(component.sideOn!==undefined&&(component.t!=='vertramp'||component.vert===false||component.pts!==undefined||
+      (component.vkind??'quarter')!=='half'||(component.arc??90)!==90||(component.lipRise??0)!==0||(component.outerBank??0)!==0||
+      (((component.yaw??0)%90)+90)%90!==0))return null;
+    for(const key of ['wallRise','wallDeck'] as const){
+      const pair=component[key];
+      if(pair===undefined)continue;
+      if(component.sideOn!==true||!finiteTuple(pair,2)||pair.some(value=>value<0||value>60))return null;
+    }
+    if(component.wallRise&&(component.wallRise.some(value=>value>0&&value<.5)||Math.max(...component.wallRise)<=0))return null;
     if (component.loopKind !== undefined && (!['vertical','wall'].includes(component.loopKind) || component.loopRadius===undefined)) return null;
     if (component.cloudRoad !== undefined && (!['platform','mesh','vertramp'].includes(component.t) ||
         component.solid===false&&component.t!=='platform' ||
@@ -4496,6 +4517,8 @@ export class Level {
     zMin: number;
     zMax: number;
     dir: "E" | "W" | "N" | "S";
+    /** Side-on stretch played on ONE line: the board neither carves nor U-turns in depth here. */
+    line?: boolean;
   }[] = [];
   finishBox = new THREE.Box3();
   // The pad's plasma column. Jumping through this ends the run too — you do
@@ -6370,17 +6393,18 @@ export class Level {
       const along = (hp.l0 + hp.l1) / 2;
       const len = Math.abs(hp.l1 - hp.l0);
       for (const side of [-1, 1]) {
-        const lipC = hp.cross + side * hp.lipX;
+        if (hp.isOpen(side)) continue; // no wall, so no back to seal: the flat rolls out
+        const lipC = hp.cross + side * hp.lipXOf(side);
         const probe = lipC + side * 1.0;
         const shared = this.halfpipes.some((o) => {
           if (o === hp || o.axis !== hp.axis) return false;
           const oAlong = (o.l0 + o.l1) / 2;
           if (Math.abs(oAlong - along) > (Math.abs(o.l1 - o.l0) + len) / 2)
             return false;
-          return Math.abs(probe - o.cross) <= o.lipX - 0.3; // inside its mouth
+          return Math.abs(probe - o.cross) <= o.lipXOf(probe - o.cross) - 0.3; // inside its mouth
         });
         if (shared) continue;
-        const h = hp.lipY - hp.yBottom - 0.4;
+        const h = hp.lipYOf(side) - hp.yBottom - 0.4;
         const cy = hp.yBottom + h / 2;
         // 1.45 clear of the lip line: a rider hugging the INSIDE face at the
         // coping reaches within a player-half of it, and the back slab must
@@ -6921,7 +6945,7 @@ export class Level {
       ...(m.userData.edgeGrinding === false ? { edgeGrinding: false } : {}),
       ...(m.userData.jungleSupport ? { invisible: true, edgeGrinding: true } : {}),
     });
-    const hpWalls = new Set(this.halfpipes.flatMap((hp) => hp.walls));
+    const hpWalls = new Set(this.halfpipes.flatMap((hp) => [...hp.walls, ...hp.decks]));
     const crumbleMeshes = new Set(this.crumbles.map((c) => c.mesh));
     // The warp pad's masonry stands in groundMeshes so you can ride onto it,
     // but it is NOT level geometry — the gate component rebuilds it. Without
@@ -7125,6 +7149,10 @@ export class Level {
     // as the vert part, straight and 90°, which rebuilds on the same backing.
     for (const hp of this.halfpipes) {
       const along = (hp.l0 + hp.l1) / 2;
+      // A shaped side-on pipe hands back the component that drew it: its two
+      // wall radii and decks are not recoverable from one nominal profile.
+      const shaped = hp.object.userData.vertComp as CustomComponent | undefined;
+      if (shaped) { C.push(JSON.parse(JSON.stringify(shaped)) as CustomComponent); continue; }
       C.push({
         t: "vertramp",
         p:
@@ -7163,13 +7191,13 @@ export class Level {
       ) ||
       this.halfpipes.some((hp) => {
         if (hp.object.userData.rails === false) return false;
-        const y = hp.lipY + 0.05;
         return pts.every((p) => {
           const crossV = hp.axis === "z" ? p.x : p.z;
           const alongV = hp.axis === "z" ? p.z : p.x;
+          const side = crossV - hp.cross;
           return (
-            Math.abs(p.y - y) < 0.2 &&
-            Math.abs(Math.abs(crossV - hp.cross) - hp.lipX) < 0.3 &&
+            Math.abs(p.y - (hp.lipYOf(side) + 0.05)) < 0.2 &&
+            Math.abs(Math.abs(side) - hp.lipXOf(side)) < 0.3 &&
             alongV > Math.min(hp.l0, hp.l1) - 1 &&
             alongV < Math.max(hp.l0, hp.l1) + 1
           );
@@ -7591,6 +7619,7 @@ export class Level {
         p: [r2((zn.xMin + zn.xMax) / 2), 0.5, r2((zn.zMin + zn.zMax) / 2)],
         s: [r2(zn.xMax - zn.xMin), 1, r2(zn.zMax - zn.zMin)],
         dir: zn.dir,
+        ...(zn.line ? { sideOn: true } : {}),
       });
     }
     if (this.crystalPickup) {
@@ -8716,6 +8745,7 @@ export class Level {
               zMin: c.p[2] - s[2] / 2,
               zMax: c.p[2] + s[2] / 2,
               dir: c.dir ?? "E",
+              ...(c.sideOn === true && (c.dir ?? "E") !== "N" && c.dir !== "S" ? { line: true } : {}),
             });
             const ghost = new THREE.Mesh(
               new THREE.BoxGeometry(s[0], 0.3, s[2]),
@@ -9611,7 +9641,7 @@ export class Level {
     });
   }
 
-  zoneAt(x: number, z: number): { dir: "E" | "W" | "N" | "S" } | null {
+  zoneAt(x: number, z: number): { dir: "E" | "W" | "N" | "S"; line?: boolean } | null {
     for (const zn of this.zones) {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax)
         return zn;
@@ -15817,11 +15847,13 @@ export class Level {
     );
     if(c.tex==='nightworks-path')addNightworksStoneLook(mat,this.surfaceTexture(c.tex));
 
+    const sideOn = c.sideOn === true && straight && vkind === "half" && arc === 90 &&
+      lipRise === 0 && outerBank === 0 && yawQ % 90 === 0;
     if (
       straight &&
       vkind === "half" &&
       arc === 90 &&
-      deck === 0 &&
+      (deck === 0 || sideOn) &&
       lipRise === 0 &&
       outerBank === 0 &&
       yawQ % 90 === 0
@@ -15840,9 +15872,18 @@ export class Level {
         mat,
         cross,
         axis,
+        sideOn ? {
+          sideOn: true,
+          wallRadius: c.wallRise ? [c.wallRise[0], c.wallRise[1]] : undefined,
+          deck: c.wallDeck ? [c.wallDeck[0], c.wallDeck[1]] : [deck, deck],
+        } : undefined,
       );
+      hp.object.userData.vertComp = sideOn ? (JSON.parse(JSON.stringify(c)) as CustomComponent) : undefined;
       if(c.tex==='coast-bedrock')applyCarlisleChannelUV(hp);
-      hp.object.userData.rails = c.rails !== false;
+      // A side-on coping runs INTO the picture: nothing can be ground along it,
+      // and a rail there is a curb across the very edge a walker drops in over.
+      const copingRails = sideOn ? c.rails === true : c.rails !== false;
+      hp.object.userData.rails = copingRails;
       hp.object.userData.gravityTrack = c.gravityTrack === true;
       hp.object.userData.skateCamera = c.skateCamera === true;
       if(c.invisible){hp.object.visible=false;hp.object.userData.editorGhost=true;}
@@ -15854,9 +15895,11 @@ export class Level {
         wm.userData.skateCamera = c.skateCamera === true;
         this.groundMeshes.push(wm);
       }
-      for (const side of c.rails === false ? [] : [-1, 1]) {
-        const lipC = cross + side * hp.lipX;
-        const y = hp.lipY + 0.05;
+      for (const deckMesh of hp.decks) this.groundMeshes.push(deckMesh);
+      for (const side of copingRails ? [-1, 1] : []) {
+        if (hp.isOpen(side)) continue; // an open side has no lip to rail
+        const lipC = cross + side * hp.lipXOf(side);
+        const y = hp.lipYOf(side) + 0.05;
         const a =
           axis === "z"
             ? new THREE.Vector3(lipC, y, along + len / 2)

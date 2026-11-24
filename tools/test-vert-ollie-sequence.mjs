@@ -376,8 +376,11 @@ try {
 
   // Exercise the real adjacent-pipe resolver once before isolating input
   // routing below. Two simple parallel mouths share a ridge probe.
+  // (Both walls of each stand-in are equal, so the per-wall measures the
+  // transfer reads answer with the one profile whichever side it asks about.)
   const sourcePipe = {
     axis: 'z', cross: 0, lipX: 5, lipY: 500, l0: -10, l1: 10,
+    lipXOf: () => 5, lipYOf: () => 500, isOpen: () => false,
     crossCoord: (x) => x,
     alongCoord: (_x, z) => z,
     rideSideCrossing: () => null,
@@ -385,6 +388,7 @@ try {
   };
   const targetPipe = {
     axis: 'z', cross: 6, lipX: 2, lipY: 500, l0: -10, l1: 10,
+    lipXOf: () => 2, lipYOf: () => 500, isOpen: () => false,
     crossCoord: (x) => x,
     alongCoord: (_x, z) => z,
     rideSideCrossing: () => null,

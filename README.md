@@ -136,6 +136,15 @@ the detected name shows in the debug panel.
 trampoline pads, trick gates/rails, return portals, and procedural wood/bamboo
 paths.
 
+`Side Pipe Lab` is a side-scrolling test course whose path runs through
+halfpipes seen across their section: walking off a deck over the coping drops
+you in on the board, holding the stick out over a lip carries the hang across
+it, and each of its five pipes asks one thing (a second swing or a pump for a
+taller far wall and a spine transfer, a crab on the flat, a `!` headed out of
+a hang, an exit rail). Direct link: `?playtest&level=side-pipe-lab`. See
+[docs/SIDE_ON_PIPES.md](docs/SIDE_ON_PIPES.md); `npm run check:side-pipe`
+plays it with the real player.
+
 `Jungle Cliff` is an authorized clean-room layout reconstruction from
 Kraftpaper's NST Maker mod: a winding jungle climb, west-facing cliff traverse,
 upper temple corridor, and condensed portal-linked death route. It ships only
