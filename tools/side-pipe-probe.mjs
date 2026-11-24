@@ -2,7 +2,7 @@
 // travel zone (docs/SIDE_ON_PIPES.md). Walks in from the west deck and prints
 // the swing-by-swing record. Read-only: a throwaway level, no tuning changed.
 //   RL/RR wall radii, F flat half-width, DL/DR deck depths, RUN approach length,
-//   MODES input sets (right, left, pump, charge, letgo, grind, spin, ...).
+//   MODES input sets (right, left, pump, charge, letgo, grind, grindhold, spin, ...).
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 const num = (k, d) => Number(process.env[k] ?? d);
@@ -41,7 +41,7 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
   const fmt = (v, n = 2) => v.toFixed(n);
   for (const mode of (process.env.MODES ?? 'right,right+pump').split(',')) {
     level.reset?.(true); p.respawn(level, true);
-    const events = []; let prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded };
+    const events = []; let prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded, stall: false };
     let apex = -Infinity, wallMax = -Infinity, lastSide = -1, t = 0, grindWas = false, spinWas = false, ollieWas = false;
     const foes = level.enemies ?? []; let foesAlive = foes.filter(e => e.alive).length; let bangs = level.crates.filter(c => c.bang && c.bangUsed).length; let deaths = p.totalDeaths; let masks = p.masks;
     for (let i = 0; i < num('N', 1500); i++) {
@@ -54,6 +54,8 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       // 'charge': skate the approach (X + direction) and arrive at the lip on the board
       if (mode.includes('charge') && !p.groundHit?.halfpipe && p.grounded && p.pos.x < lipL - 0.8) input.jumpHeld = true;
       if (mode.includes('grind')) { const want = p.state === 'air' && p.pos.y > num('GY', 0); input.grindHeld = want || p.state === 'grind'; input.grindPressed = want && !grindWas; grindWas = want; }
+      // 'grindhold': the grind button held from the drop-in on (what does the lip do with it?)
+      if (mode.includes('grindhold') && p.freeSkate) { input.grindHeld = true; input.grindPressed = !grindWas; grindWas = true; }
       if (mode.includes('neutralair') && p.state === 'air') input.moveX = 0;
       if (mode.includes('railneutral') && p.state === 'grind') input.moveX = 0;
       if (mode.includes('railup') && p.state === 'grind') { input.moveX = 0; input.moveY = 1; }
@@ -68,6 +70,7 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       if (!p.vertAir && prev.vert) events.push(`${at}   hang over, apex y${fmt(apex)} -> state=${p.state} gnd${+p.grounded} spd${fmt(p.speed)} vV${fmt(p.vVel)}`);
       if (p.state !== prev.state) events.push(`${at} state ${prev.state}->${p.state} spd${fmt(p.speed)} z${fmt(p.pos.z)}`);
       if (p.isBailing !== prev.bail) events.push(`${at} bail->${+p.isBailing} balance${fmt(p.balance ?? 0)}`);
+      if ((p.lipStallT > 0) !== prev.stall) events.push(`${at} lip stall ${p.lipStallT > 0 ? 'ON' : 'off'}`);
       if (p.state === 'grind' && i % 6 === 0) events.push(`${at} grinding spd${fmt(p.speed)} gv${fmt(p.grindVel ?? 0)} bal${fmt(p.balance ?? 0)} meter=${p.balanceMeter?.mode ?? '-'}/${p.balanceMeter?.horizontal ?? p.balanceMeter?.h ?? '?'}`);
       const alive = foes.filter(e => e.alive).length; if (alive !== foesAlive) { events.push(`${at} ENEMY count ${foesAlive}->${alive} spd${fmt(p.speed)}`); foesAlive = alive; }
       const used = level.crates.filter(c => c.bang && c.bangUsed).length; if (used !== bangs) { events.push(`${at} ! SWITCH hit vV${fmt(p.vVel)}`); bangs = used; }
@@ -76,7 +79,7 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       if (p.grounded && p.groundHit?.halfpipe && Math.abs(p.pos.x) > F) wallMax = Math.max(wallMax, p.pos.y);
       if (p.grounded && p.groundHit?.halfpipe && side !== lastSide && Math.abs(p.pos.x) < 0.4) {
         events.push(`${at} cross flat spd${fmt(p.speed)} (prev wall max y${wallMax > -1e9 ? fmt(wallMax) : '-'})`); wallMax = -Infinity; lastSide = side; }
-      prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded };
+      prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded, stall: p.lipStallT > 0 };
       if (p.state === 'dead' || p.state === 'finished' || events.length > num('MAXE', 26)) break;
       if (p.pos.x > lipR + DR + 14 && p.grounded) { events.push(`${at} OUT past the east side spd${fmt(p.speed)} free${+p.freeSkate}`); break; }
     }

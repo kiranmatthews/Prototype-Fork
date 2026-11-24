@@ -55,10 +55,7 @@ const CUBE = {
   indices: [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 3, 7, 6, 3, 6, 2, 0, 4, 7, 0, 7, 3, 1, 2, 6, 1, 6, 5],
 };
 
-export const SIDE_PIPE_GROUPS = {
-  floor: 1, pipes: 2, crates: 3, enemies: 4, camera: 5, switchExit: 6, finish: 7,
-} as const;
-const GR = SIDE_PIPE_GROUPS;
+const GR = { floor: 1, pipes: 2, crates: 3, enemies: 4, camera: 5, switchExit: 6, finish: 7 } as const;
 
 /** Heights are sums of a few decimals; keep the authored data free of float dust. */
 const r = (v: number): number => Math.round(v * 100) / 100;
@@ -118,11 +115,11 @@ function pipe(name: string, westLip: number, floor: number, flatHalf: number,
 }
 /** Fruit hung a little off a transition, so a clean swing collects the curve. */
 function fruitOnWall(p: SidePipe, side: -1 | 1, count: number): void {
-  const r = side < 0 ? p.westRise : p.eastRise;
+  const rise = side < 0 ? p.westRise : p.eastRise;
   for (let i = 1; i <= count; i++) {
     const phi = (i / (count + 1)) * (Math.PI / 2) * 0.85;
-    const x = p.cross + side * (p.flatHalf + r * Math.sin(phi) - 0.75 * Math.sin(phi));
-    fruit(x, p.floorY + r * (1 - Math.cos(phi)) + 0.75 * Math.cos(phi) + 0.2);
+    const x = p.cross + side * (p.flatHalf + rise * Math.sin(phi) - 0.75 * Math.sin(phi));
+    fruit(x, p.floorY + rise * (1 - Math.cos(phi)) + 0.75 * Math.cos(phi) + 0.2);
   }
 }
 /** Fruit stacked on the hang line over a lip: the height you earned, counted. */
@@ -269,6 +266,10 @@ add({ t: 'checkpoint', p: [RAIL_X0 + LEDGE_CP, RAIL_TOP, 0], grp: GR.floor, nm: 
 pyramid(RAIL_X0 + LEDGE_BOXES, RAIL_TOP, 'wood', 'Rail pipe: on-foot stack after the checkpoint');
 export const P4 = pipe('P4 rail pipe', RAIL_X0 + 12, RAIL_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
 fruitOverLip(P4, -1, [1.4, 2.6, 3.8]);
+// ...and up the EAST hang line to the rail: the way to it is a hang off the
+// lip with the grind button pressed in the air. (Held up the wall instead, the
+// button parks a lip stall on the coping, 3 m short.)
+fruitOverLip(P4, 1, [1.0, 2.0]);
 // A vertical hang brings no speed along the rail (the grind starts at 3.5 m/s,
 // where the balance needle runs away fastest), so the rail falls away steeply
 // at once and only then levels out: the whole grind lasts under a second and

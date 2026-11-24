@@ -12806,9 +12806,9 @@ on-foot platforming; every pipe is about 12 m lip to lip so the far wall is in f
   board air if there is something to land on, nothing if there is not.
 - On a `sideOn` zone: the board keeps to the travel axis and the stick against travel is the pull-back
   brake. On a zero-depth plane the ordinary reversal is a carve with nowhere to go.
-- Three "the stick you were already holding is the travel stick" rules, without which held right is
-  punished: it does not spin the air out of a pipe, and it does not tip the balance of a rail caught on a
-  side-on line, until it has been released once.
+- "The stick you were already holding is the travel stick": until it has been released once it does not
+  spin the air out of a pipe, tip the balance of a rail caught on a side-on line, or tip a lip stall
+  parked on a side-on coping. Without those, held right is punished three ways.
 
 **What the layout had to learn.** A deck's side collider at the lip plane pinned the rider to the wall and
 handed him a ledge grab mid-climb, so decks belong to the pipe and carry none. A floor crate, a checkpoint
@@ -12816,12 +12816,13 @@ and a 2.1 m-high "overhead" row all tripped the rider leaving a pipe on the boar
 3.0 m tall), so exit floors are bare, overhead rows start at 3.4 m and every on-foot stretch begins with a
 2.1 m catch ledge that stops the board — with its first 2.4 m bare, because that same box reaches over the
 ledge from below. The default stopwatch stood in the only lane and a time trial strips checkpoints, so it
-is authored behind the spawn. A straight exit rail bailed a rider who kept holding right after 0.4 s. All
-of this is now in the bible (XV.14 and the Part XX checklist).
+is authored behind the spawn. A straight exit rail bailed a rider who kept holding right after 0.4 s, and
+the grind button held a moment early turned the climb into a lip stall that the same held right tipped
+off the back of the bare wall. All of this is now in the bible (XV.14 and the Part XX checklist).
 
 **Checks.** `npm run check:side-pipe` plays the course with the real player on held right — jumping the
 gaps, spinning the crabs, boxes and checkpoints, pressing grind at the rail — in 49.0 s with no death or
 bail, and asserts each pipe's claim, the pumped shortcut, the cost of a missed spin, the one-line brake
-with a westward return through P0, a jump-in on a diagonal stick, a `!` headed over a bare lip, and the
-checkpoint a fall under the rail returns to. Each of the seven runtime rules was removed in turn in a
-scratch copy; the test fails by name without any one of them.
+with a westward return through P0, a jump-in on a diagonal stick, a `!` headed over a bare lip, the grind
+button held up the rail pipe's wall, and the checkpoint a fall under the rail returns to. Each of the
+eight runtime rules was removed in turn in a scratch copy; the test fails by name without any one of them.

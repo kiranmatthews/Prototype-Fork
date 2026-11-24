@@ -1579,7 +1579,9 @@ export class Player {
   // SIDE-ON PIPES. A direction that was already held when the air began is the
   // travel stick, not a spin request: it stays inert until it is let go.
   private sideOnSpinLatch = 0;
-  private sideOnBalanceLatch = 0; // ...and the same for the lean of a rail caught on a side-on line
+  // ...and the same for a lean: of a rail caught on a side-on line, and of a
+  // lip stall parked on a side-on pipe's coping.
+  private sideOnBalanceLatch = 0;
   private spinePoseElapsed = 0;
   private spinePoseDuration = 0;
   private readonly spinePoseFrom = new THREE.Vector3(0,1,0);
@@ -7303,7 +7305,11 @@ export class Player {
       const runSign = Math.sign(this.balance || 1); // + drifts INTO the pipe (forgiving)
       // fight along the SCREEN axis the tip reads on (see lipAim)
       const lipSgn = this.lipAim(false);
-      const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+      let fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+      if (this.sideOnBalanceLatch !== 0) {
+        if (Math.abs(fightStick) > 0.3 && Math.sign(fightStick) === this.sideOnBalanceLatch) fightStick = 0;
+        else this.sideOnBalanceLatch = 0;
+      }
       let control = fightStick * lipSgn * TUNING.lipControl;
       control *= this.safeGain(this.balanceEntryAge, control, runSign);
       this.stepBalanceCore(dt, runSign, instability, control, lipRamp);
@@ -11675,6 +11681,13 @@ export class Player {
     this.endManual();
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.beginBalance(0, this.lipDispSign);
+    // SIDE-ON: the direction held up this wall is the TRAVEL stick, and at the
+    // far lip it points out the back. Left live it pegs the needle and throws
+    // the rider off behind the wall in under half a second, so (as on a rail
+    // caught on a side-on line) it tips nothing until it has been let go. The
+    // stall's own drift then settles back INTO the pipe.
+    const heldAtStall = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+    this.sideOnBalanceLatch = hp.sideOn && Math.abs(heldAtStall) > 0.3 ? Math.sign(heldAtStall) : 0;
     this.rideNormal.set(0, 1, 0);
     // Either side input requests a tip stall. The physical board end that
     // arrived at the deck determines nose/tail; never turn it to fit a name.

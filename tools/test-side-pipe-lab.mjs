@@ -1,12 +1,14 @@
 // Side Pipe Lab: the REAL Player and Level play the course a side-scrolling
-// player would — held right, a jump at each gap, a spin at each crab, the
-// grind button at the rail — and every claim the level makes about its five
-// side-on pipes is measured rather than assumed.
+// player would — right held from the first step to the gate, a jump at each
+// gap, a spin at each crab, box and checkpoint, the grind button at the rail —
+// and every claim the level makes about its five side-on pipes is measured
+// rather than assumed.
 //
-//   node tools/test-side-pipe-lab.mjs
+//   node tools/test-side-pipe-lab.mjs        (npm run check:side-pipe)
 //
 // What is asserted:
-//   · the level data survives the same normaliser an imported level does;
+//   · the level data survives the same normaliser an imported level does, and
+//     the normaliser refuses the side-on fields anywhere they do not belong;
 //   · walking off a deck across a coping mounts the board on the wall (every
 //     pipe), and the ride never leaves the single play plane;
 //   · P1 PUMP: a held direction alone falls short of the 7 m east lip on the
@@ -17,8 +19,15 @@
 //     costs a rider who does not spin;
 //   · P3 SWITCH: with the `!` unhit there is no way out over the east wall;
 //     the west hang heads the `!`, and only then does the air carry out;
-//   · P4 RAIL: the hang catches the exit rail and the grind reaches the gate;
+//   · P4 RAIL: the hang catches the exit rail and, with right still held, the
+//     grind rides it to the end; the grind button held too early parks a lip
+//     stall on the bare coping instead, which settles back into the pipe;
+//   · on the one-line zone the stick against travel brakes the board, and the
+//     pipe is ridden back westward the same way;
+//   · a jump into a pipe on a diagonal stick still rides its cross axis;
+//   · a hang that heads a solid over a bare lip stays on its line;
 //   · a death returns to the last banked checkpoint, in front of its pipe.
+// Each of those rules, removed from src/player.ts, fails this file by name.
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
@@ -78,19 +87,23 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const pipeAt = x => [P0, P1, L1, P2, P3, P4].find(q => x > q.westLip - 0.6 && x < q.eastLip + 0.6) ?? null;
 
   /**
-   * One run of the course. `opts.pump` holds X on every transition; `opts.spin`
-   * (default true) spins at crabs and checkpoints; `opts.until` ends the run.
+   * One run of the course from the spawn (or `from`), right held throughout.
+   * `pump` holds X on every transition; `spin` (default on) spins at crabs,
+   * boxes and checkpoints; `grind` (default on) asks for the rail out of P4's
+   * east hang, and `grind: 'early'` also holds the button up P4's wall until it
+   * has parked one lip stall; `depth` adds a toward/away stick; `jumpInAt`
+   * leaves the deck before that lip in a jump; `until` ends the run early.
    */
   const play = (opts = {}) => {
     const { pump = false, spin = true, grind = true, until = () => false, seconds = 120, from = null, depth = 0, jumpInAt = null } = opts;
     level.reset(true);
     p.respawn(level, true);
     if (from) { p.pos.set(from[0], from[1], 0); p.prevPos.copy(p.pos); }
-    const log = { mounts: [], hangs: [], crabsOnBoard: 0, crabsOnFoot: 0, switchAt: null, grindAt: null,
-      maxZ: 0, deaths: 0, bails: 0, finished: false, t: 0, wallMax: new Map(), checkpoints: 0, respawns: [],
+    const log = { mounts: [], hangs: [], stalls: [], crabsOnBoard: 0, crabsOnFoot: 0, switchAt: null, grindAt: null, grindEnd: null,
+      maxZ: 0, deaths: 0, bails: 0, finished: false, t: 0, checkpoints: 0, respawns: [],
       transferAt: null, exitSpeed: null, masksSpent: 0, firstEastReach: new Map(), eastmostBeforeSwitch: -Infinity, trouble: [], maxHeadingZ: 0 };
     let jump = 0, stuck = 0, lastX = p.pos.x, spinWas = false, grindWas = false;
-    let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks };
+    let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: false };
     let foes = level.enemies.filter(e => e.alive).length;
     const swing = new Map(); // pipe -> { side, peak } for the wall currently being climbed
     for (let i = 0; i < seconds / CONST.fixedStep; i++) {
@@ -114,7 +127,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
         c.mesh.position.x > x && c.mesh.position.x - x < 1.7 && Math.abs(c.mesh.position.y - p.pos.y) < 2.4);
       const wantSpin = !!(foe || post || box);
       input.spinHeld = wantSpin; input.spinPressed = wantSpin && !spinWas; spinWas = wantSpin;
-      const wantGrind = grind && p.state === 'air' && Math.abs(x - P4.eastLip) < 1 && p.pos.y > RAIL.y0 - 1.9;
+      const wantGrind = (grind && p.state === 'air' && Math.abs(x - P4.eastLip) < 1 && p.pos.y > RAIL.y0 - 1.9) ||
+        (grind === 'early' && log.stalls.length === 0 && p.freeSkate && pipeAt(x) === P4);
       input.grindHeld = wantGrind || p.state === 'grind'; input.grindPressed = wantGrind && !grindWas; grindWas = wantGrind;
       // (right stays held on the rail too: on a side-on line the stick held at the catch is not a lean)
       lastX = x;
@@ -126,6 +140,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       if (p.freeSkate && !prev.free && p.groundHit?.halfpipe) log.mounts.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, speed: p.speed });
       if (p.vertAir && !prev.vert && here)
         log.hangs.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', vV: p.vVel, t: log.t });
+      const stalled = p.lipStallT > 0;
+      if (stalled && !prev.stall && here) log.stalls.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', t: log.t });
+      if (!stalled && prev.stall && log.stalls.length) Object.assign(log.stalls.at(-1), { seconds: log.t - log.stalls.at(-1).t,
+        backInPipe: !p.isBailing && here !== null && p.pos.x > here.westLip && p.pos.x < here.eastLip });
       // highest point reached on each wall, per swing (first east reach is the pump claim)
       if (here && p.grounded && p.groundHit?.halfpipe && Math.abs(p.pos.x - here.cross) > here.flatHalf) {
         const side = p.pos.x < here.cross ? 'west' : 'east';
@@ -150,7 +168,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       log.checkpoints = level.checkpoints.filter(c => c.active).length;
       if (p.totalDeaths > prev.deaths) { log.deaths++; log.trouble.push(`died at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
       if (prev.state === 'dead' && p.state !== 'dead') log.respawns.push({ x: p.pos.x, y: p.pos.y });
-      prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks };
+      prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: stalled };
       if (p.state === 'finished') { log.finished = true; break; }
       if (until(log, p)) break;
     }
@@ -289,6 +307,22 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   }
   assert.ok(back && back.x > P3.eastLip && back.x < P4.westLip,
     `a fall under the rail returns to the checkpoint before the rail pipe (respawned at x ${back?.x.toFixed(1)})`);
+
+  // ---- 8 · the grind button held too early is a lip stall, not a trap -----------
+  // A player who wants the rail holds the grind button all the way up P4's east
+  // wall. That is the game's lip stall: parked on the coping, 3 m under the
+  // rail. Right is still held, and on that bare wall right points out the back,
+  // over the hole. The stall must settle back INTO the pipe; with the button
+  // let go, the next swing east still catches the rail.
+  const early = play({ grind: 'early', from: [P4.westLip - 3, P4.westLipY + 0.15], seconds: 40 });
+  const stall = early.stalls[0];
+  assert.ok(stall && stall.pipe === P4.name && stall.side === 'east',
+    'P4: the grind button held up the wall parks a lip stall on the east coping');
+  assert.equal(early.bails + early.deaths, 0,
+    `P4: with right still held that stall never throws the rider off behind the wall (${early.trouble.join('; ')})`);
+  assert.ok(stall.backInPipe, 'P4: the stall settles back into the pipe');
+  assert.ok(early.grindAt && early.grindAt.t > stall.t && early.finished,
+    `P4: and the next swing still catches the rail and finishes (${early.trouble.join('; ')})`);
 
   level.dispose();
   console.log(`PASS Side Pipe Lab: finished in ${run.t.toFixed(1)} s on held right; P1 first swing climbed ` +

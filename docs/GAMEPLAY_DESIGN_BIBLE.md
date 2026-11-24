@@ -2001,6 +2001,7 @@ with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-pro
 | Spine into a 5 m landing ramp | rolls out at 23–30 m/s | a smash lane or 40 m of run-out before the next stop |
 | Hang over the entry lip on the swing back | about 7 m | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m) |
 | Rail caught from a hang | the grind starts at 3.5 m/s | run exit rails downhill, steepest first |
+| Grind button held up the wall | a lip stall on the coping, not a hang; it settles back into the pipe | a rail over a lip starts ≥ 3 m above it, so it reads as "press in the air", and nothing behind a bare wall is the stall's fault |
 | A mounted rider's crate-contact box | about 3.0 m tall | a floor crate or a checkpoint on a pipe's exit floor trips him under 12.5 m/s; overhead rows start 3.4 m up |
 
 A pipe hands its rider on still on the board, so the on-foot stretch after it starts with a **catch

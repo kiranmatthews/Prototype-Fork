@@ -52,6 +52,7 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 | A direction already held when the air began | Does not spin the rider until it has been released once (it is the travel stick). A fresh direction spins, as in every other air. |
 | A solid met in the hang (a `!` floated over the lip) | Stops the climb; the hang stays on its line instead of being pushed out behind the wall. |
 | A rail caught on a side-on line with a direction held | That direction does not tip the balance until it has been released once; a fresh left/right balances as on any rail. |
+| A lip stall (the grind button held up the wall) with a direction held | The same: that direction does not tip the stall until it has been released once, so the stall settles back **into** the pipe. Left live, the travel stick points out the back of the far wall and throws the rider off behind it in 0.4 s. A fresh direction tips the stall as on any coping. |
 
 Nothing in `src/tuning.ts` changed.
 
@@ -66,6 +67,7 @@ Walk-in at 9 m/s, right held unless noted.
 | Landing ramp, 5 m west wall, open east | Rolls out at 23–30 m/s: well over the 12.5 m/s crate-smash speed. |
 | `!` floated on the hang line | Headed from below by the hang. 6 m over a 3.5 m lip is beyond a double jump off the deck (5.5 m head reach) and inside the first west hang of a held-right swing. |
 | Rail starting over a bare lip | Caught with the grind button within the usual 2.1 m snap. The grind starts at only 3.5 m/s (a vertical hang has no speed along the rail), which is where the balance needle runs away fastest, so run it **downhill, steepest first**. A straight 19 m rail dropping 4.4 m took 1.65 s and shed a rider who gave no balance input after 1.18 s; dropping 2.6 m in its first 3 m and 1.8 m over the next 9 m, the grind lasts 0.93 s, leaves at 20 m/s and needs none. |
+| Grind button held from the drop-in, right held | A 0.8 s lip stall on each coping in turn, never a bail and never an exit. A rail over a lip wants the button pressed in the hang, not held up the wall. |
 | No input at all, decked pipe | The rider never stops: every coping launch adds the pipe's pop, so the swing settles at 5–6 m hangs. Leaving needs the stick held out over a lip. |
 
 ## Authoring rules the test course paid for
@@ -95,7 +97,8 @@ npm run check:side-pipe
 
 `tools/test-side-pipe-lab.mjs` plays the course with the real player on held right and asserts each
 pipe's claim: the drop-ins, the short first swing and the transfer, the pumped shortcut, the crab, the
-switch being the only way out, the rail, the one-line brake and the checkpoint a death returns to.
+switch being the only way out, the rail, the grind button held too early, the one-line brake and the
+checkpoint a death returns to.
 `npm run check:pipe` covers the unchanged symmetric pipe.
 
 ```bash
