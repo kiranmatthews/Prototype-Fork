@@ -46,7 +46,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     ['ragdoll',p=>p.ragActive=true],['recovery',p=>p.bailRiseAge=.2],
     ['spin',p=>p.spinTimer=.2],['deck trick',p=>p.flipT=.2],['grab release',p=>p.grabPose=.2],
     ['manual',p=>p.manualing=1],['revert',p=>p.revertPoseT=.2],
-    ['wallride',p=>p.wallridePose=.5],['lip stall',p=>p.lipStallT=.2],
+    ['wallride',p=>p.wallridePose=.5],['wallplant',p=>p.wallPlantDeckPose=true],['lip stall',p=>p.lipStallT=.2],
     ['vert',p=>p.vertAir=true],['pipe hang',p=>p.pipeHang=true],
     ['special launch',p=>{p.state='air';p.bounceJump=true;}],['kite',p=>p.kiteDock={}],
     ['slide',p=>p.slidePose=.4],['crawl',p=>p.crawlPose=.4],['slam',p=>p.slamFlatT=.3],
@@ -62,6 +62,29 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     const after=pose();assert.ok(Math.max(...after.map((v,i)=>Math.abs(v-before[i])))<1e-8,`${name} was overwritten by Skate`);
     assert.equal(motion.boardScribble.active,false,`${name} invented equipment ink`);
     for(const key of assigned)p[key]=saved[key];
+  }
+  // A wallplant is the one native action reached for on the way in. From a
+  // library pose it is not cut to: that pose is carried into it over a few
+  // frames, and after them the solved pose is left alone like any other.
+  {
+    reset();const saved={...p};
+    Object.assign(p,{freeSkate:true,airFromSkate:true,grounded:false,state:'air'});
+    const update=()=>motion.update({deltaSeconds:1/60,applyDeformations:v=>p.playerAnimationBridge.applyDeformations(v)});
+    update();update();
+    assert.equal(motion.phase,'air','the fixture ollie was not a library pose');
+    const library=pose();
+    const solve=()=>{p.armL.rotation.set(.9,.4,-.7);p.bodyGroup.rotation.y=1.1;};
+    const gap=(a,b)=>Math.max(...a.map((v,i)=>Math.abs(v-b[i])));
+    p.wallPlantDeckPose=true;
+    solve();const solved=pose();update();
+    assert.equal(motion.diagnostics.nativeOwner,'wallplant / release');
+    assert.ok(gap(solved,library)>.5,'the fixture poses do not differ');
+    assert.ok(gap(pose(),library)<gap(pose(),solved)*.5,'the wallplant cut straight in from the library pose');
+    for(let f=0;f<7;f++){solve();update();}
+    solve();const before=pose();update();
+    assert.ok(gap(pose(),before)<1e-8,'the wallplant was still being blended after the hand-over');
+    assert.equal(motion.boardScribble.active,false,'the wallplant invented equipment ink');
+    for(const key of Object.keys(p))if(p[key]!==saved[key])p[key]=saved[key];
   }
   // Preview, hidden map/vehicle bodies and split-screen cameras must never
   // display a stale gameplay scribble. Reset is independent for each player.

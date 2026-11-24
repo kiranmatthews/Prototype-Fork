@@ -331,21 +331,62 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       const entry = skateIn(-62, lead);
       assert.equal(p.isBailing, false, `a wallplant pressed ${lead}s early wiped out`);
       assert.equal(p.wallPlantChain, 1, `no wallplant ${lead}s before the wall`);
-      // The deck owns the feet on the board: the on-foot crouch never draws.
-      const noCrouch = () => { const d = p.wallPlantPoseDiagnostics; return d.seat === 0 && d.soles === 0 && d.palm === 0; };
-      assert.ok(noCrouch(), 'the on-foot crouch was drawn on a board wallplant');
-      for (let i = 0; i < 8 && p.wallPlantStickT > 0; i++) { tick({}); assert.ok(noCrouch(), 'the on-foot crouch was drawn during a board wallplant'); }
+      // The deck owns the feet on the board: no sole goes on the wall. The deck
+      // does, flat on the face under both feet, and the rider clings on it.
+      const pose = () => p.wallPlantPoseDiagnostics;
+      const noSoles = () => { const d = pose(); return d.seat === 0 && d.soles === 0; };
+      const drawn = () => {
+        // Where the deck and the trunk are in the frame that is drawn.
+        p.applyRenderInterpolation(1); p.group.updateMatrixWorld(true);
+        const q = p.boardG.getWorldQuaternion(new THREE.Quaternion());
+        const hips = p.legs.getWorldPosition(new THREE.Vector3());
+        const right = p.armL.getWorldPosition(new THREE.Vector3()), left = p.armR.getWorldPosition(new THREE.Vector3());
+        const spine = right.clone().add(left).multiplyScalar(.5).sub(hips);
+        const out = { at: p.boardG.getWorldPosition(new THREE.Vector3()), up: new THREE.Vector3(0, 1, 0).applyQuaternion(q),
+          nose: new THREE.Vector3(0, 0, 1).applyQuaternion(q), chest: spine.cross(right.sub(left)).normalize(), hips };
+        p.restoreRenderPose();
+        return out;
+      };
+      assert.ok(noSoles(), 'the on-foot crouch was drawn on a board wallplant');
+      for (let i = 0; i < 8 && p.wallPlantStickT > dt * 1.5; i++) { tick({}); assert.ok(noSoles(), 'the on-foot crouch was drawn during a board wallplant'); }
+      let d = pose();
+      const contact = () => p.boardG.userData.skateContact;
+      assert.ok(p.wallPlantStickT > 0 && d.deck > .99 && d.perch > .99 && d.palm > .99, `the perch is not fully drawn: ${JSON.stringify(d)}`);
+      assert.equal(contact().support, 'wall-wheels', 'the deck is not on the wall');
+      assert.ok(contact().footError < .01, `a foot is ${contact().footError} m off the deck on the wall`);
+      assert.ok(d.palmError > 0 && d.palmError < .05, `the palm is ${d.palmError} m off its mark beside the deck`);
+      const held = drawn();
+      assert.ok(held.up.z > .99, `the deck is not flat on the face, wheels to the wall: ${held.up.toArray()}`);
+      assert.ok(Math.abs(held.nose.x) > .85 && Math.abs(held.nose.y) > .2, `the deck does not lie along the wall with one end kicked up: ${held.nose.toArray()}`);
+      assert.ok(held.chest.z < -.6, `the rider is not chest in to the wall: ${held.chest.toArray()}`);
+      assert.ok(held.hips.z - held.at.z > .3 && held.hips.z - held.at.z < .7, `the hips are not sat back off the deck: ${held.hips.z - held.at.z}`);
+      // The legs fire against it: the deck is still on the wall while the hips drive away.
+      for (let i = 0; i < 4 && p.wallPlantStickT > 0; i++) tick({});
       assert.equal(p.lastJumpType, 'Wallplant');
-      assert.ok(noCrouch(), 'the on-foot crouch was drawn leaving a board wallplant');
+      d = pose();
+      const fired = drawn();
+      assert.ok(noSoles() && d.deck > .99 && d.palm < 1, `the deck left the wall with the launch: ${JSON.stringify(d)}`);
+      assert.ok(fired.at.distanceTo(held.at) < .02, `the deck slid ${fired.at.distanceTo(held.at)} m as the legs fired`);
+      assert.ok(fired.hips.z > held.hips.z + .03, 'the hips did not drive off the deck');
+      assert.ok(p.wallPlantOwnsRide, 'the wallplant gave its pose away as it launched');
       assert.ok(p.freeSkate && p.airFromSkate && !p.looseBoard, 'the wallplant lost the board');
       assert.ok(p.axisF.z > .99, `wallplant did not come straight back: ${p.axisF.toArray()}`);
       assert.ok(Math.abs(p.speed - entry * TUNING.wallPlantBoardKeep) < .6, `speed out ${p.speed.toFixed(2)} from ${entry.toFixed(2)} in`);
       assert.ok(p.comboLabels.includes('Wallplant'));
       assert.ok(p.comboMult >= 1, 'the wallplant did not count as a trick');
+      // Then the deck peels off and comes back under the feet, and the pose is handed back.
+      tick({});
+      assert.equal(pose().palm, 0, 'the palm did not shove off first');
+      let peeled = 0;
+      for (let i = 0; i < 30 && !p.grounded; i++) { tick({}); assert.ok(noSoles()); if (!peeled && pose().deck === 0) peeled = p.wallPlantAge; }
+      assert.ok(peeled > .1 && peeled < .25, `the deck came off the wall after ${peeled} s`);
+      assert.equal(contact().support, 'wheels', 'the deck never came back under the feet');
+      assert.ok(contact().footError < .01, 'a foot came off the deck on the way out');
       for (let i = 0; i < 240 && !p.grounded; i++) tick({});
+      assert.equal(p.wallPlantOwnsRide, false, 'the wallplant kept the pose after it was over');
       assert.ok(p.grounded && p.freeSkate && !p.isBailing && p.speed > 15, 'the wallplant did not ride away');
     }
-    report.push('wallplant 0.03/0.10/0.18 s early');
+    report.push('wallplant 0.03/0.10/0.18 s early, perched on the deck');
 
     // 15b. A glancing board approach is too soft to wipe out: the late press
     // counts there too, and the plant leaves on the mirrored line.
@@ -469,6 +510,12 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       assert.ok(c.hand.along < c.footLow.along && c.hand.up > c.footHigh.up, 'the palm is not planted up and out past the low foot');
       assert.ok(c.seat.out > .25 && c.seat.out < .6 && c.seat.up > c.footLow.up && c.seat.up < c.footHigh.up, 'the hips do not sit back between the feet');
       assert.ok(c.twist > .3 && c.twist < 1.2 && c.lean > 0 && c.lean < m.WALL_PLANT_LEAN, 'the trunk is not coiled short of the launch line');
+      // On the board: sat back off the deck, the palm up past the head, and the hips driven out as the legs fire.
+      const perch = m.WALL_PLANT_PERCH;
+      assert.ok(perch.seat.out > .15 && perch.seat.out < .5 && perch.hand.up > c.hand.up && perch.hand.along < 0, 'the perch is not a cling on the deck');
+      assert.ok(Math.hypot(perch.drive.out, perch.drive.up) > Math.hypot(perch.seat.out, perch.seat.up) + .3 && Math.hypot(perch.drive.out, perch.drive.up) < .85,
+        'the legs do not fire to a reachable stretch');
+      assert.ok(perch.tilt > .1 && perch.tilt < .7 && m.WALL_PLANT_PEEL_FROM < m.WALL_PLANT_PUSH_SECONDS && m.WALL_PLANT_PEEL_SECONDS > .08);
       // The lag: none before the launch, building through the push, spent by the end of the catch.
       assert.equal(m.wallPlantPushLag(0), 0);
       assert.equal(m.wallPlantPushLag(-1), 0);
@@ -525,14 +572,28 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       assert.ok(d.palmError > 0 && d.palmError < .05, `the palm is ${d.palmError} m off its mark on the wall`);
       assert.ok(Math.abs(d.lean - m.WALL_PLANT_CROUCH.lean) < .03, `the trunk is not coiled: ${d.lean}`);
       // The push: the palm lets go first, the hips leave their seat, the soles are still on the wall.
+      // As drawn, that is: the body is held back off the real one, which the camera stays with.
+      const drawnPush = () => {
+        p.applyRenderInterpolation(1); p.group.updateMatrixWorld(true);
+        const toe = ankle => ankle.getObjectByName('socket-foot-' + ankle.userData.anatomicalSide).getWorldPosition(new THREE.Vector3()).x + 2;
+        const out = { toes: Math.max(toe(p.ankleL), toe(p.ankleR)), body: p.group.position.x, camera: p.renderPosition.x };
+        p.restoreRenderPose();
+        return out;
+      };
       fly({}, () => p.wallKickAir, 6, 'plant hold');
       d = pose();
       assert.ok(d.soles > .99 && d.soleError < .05, `the soles left the wall with the launch: ${JSON.stringify(d)}`);
       assert.ok(d.seat < 1 && d.palm < 1, 'the push did not start');
+      let push = drawnPush();
+      assert.ok(push.toes < .04, `the soles are drawn ${push.toes} m off the wall as the legs fire`);
+      assert.ok(push.body < p.pos.x - .05, 'the drawn body was not held back through the push');
+      assert.ok(Math.abs(push.camera - p.pos.x) < 1e-6, 'the camera was held back with the drawn body');
       tick({});
       d = pose();
       assert.ok(d.palm === 0 && d.seat < .6 && d.soles > .99, `the palm did not shove off before the soles: ${JSON.stringify(d)}`);
       assert.ok(d.lean > m.WALL_PLANT_CROUCH.lean, 'the trunk did not lean out into the push');
+      push = drawnPush();
+      assert.ok(push.toes < .04, `the soles are drawn ${push.toes} m off the wall in the push`);
       // Then everything lets go, the leap plays, and nothing is left behind.
       for (let i = 0; i < 3; i++) tick({});
       assert.ok(off(), `a contact outlived the push: ${JSON.stringify(pose())}`);
@@ -541,6 +602,7 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       for (let i = 0; i < 40 && !p.grounded; i++) tick({});
       assert.ok(p.pos.x > x, 'the fixture kick stopped');
       assert.equal(pose().leap, 0, 'the leap never ended');
+      assert.ok(Math.abs(drawnPush().body - p.pos.x) < 1e-6, 'the drawn body never caught the real one up');
       // An early press reaches for the wall on the way in, the same side all the way.
       place(1.3, -10);
       runJump(-1, 0);

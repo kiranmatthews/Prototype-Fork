@@ -16,6 +16,9 @@ type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type FootContact = {side:'Left'|'Right';p:THREE.Vector3;q:THREE.Quaternion};
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
+const WALLPLANT_OWNER = 'wallplant / release';
+/** Seconds the library pose takes to give way to a wallplant's reach. */
+const WALLPLANT_HANDOVER_SECONDS = .08;
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
 /** Riding is never a held pose. The source's own ride loops barely move, and
  * its charge was one frame held still, so the rider stands on a few springs:
@@ -130,6 +133,10 @@ export class PlayableSkateMotion {
   private readonly boardLift = new THREE.Vector3();
   private boardGroundLift = 0;
   private nativeOwner: string | null = null;
+  // A wallplant is reached for on the way in, so the library pose is carried
+  // into it over a few frames where every other native action takes over at once.
+  private handover: Pose | null = null;
+  private handoverAge = 0;
   private iceBlend = 0;
   private iceFootError = 0;
   private stop: (() => void) | null = null;
@@ -225,6 +232,7 @@ export class PlayableSkateMotion {
     if(p.manualing||Math.abs(p.manualPitch)>.001)return 'manual / release';
     if(p.revertPoseT>0)return 'revert';
     if(p.wallriding||p.wallridePose>.001)return 'wallride / release';
+    if(p.wallPlantOwnsRide)return WALLPLANT_OWNER;
     if(p.lipStallT>0||Math.abs(p.lipYawPose)>.001)return 'lip stall / release';
     if(p.vertAir||p.pipeHang||p.freeSkate&&p.grounded&&p.onTransition)return 'vert / transition';
     if(p.nativeAirPresentation||p.launchPresentation)return 'special launch';
@@ -330,7 +338,7 @@ export class PlayableSkateMotion {
     this.dismountRunBlend=0;
     Object.assign(this.life,{down:0,downSpeed:0,lean:0,leanSpeed:0,bump:0,bumpSpeed:0,height:Number.NaN,climb:0,held:0,kicked:0,pumping:0});
     this.roadKnown=false;
-    this.lastPose = this.previousPose = this.fromPose = this.fromPreviousPose = null; this.fade = 1;
+    this.lastPose = this.previousPose = this.fromPose = this.fromPreviousPose = this.handover = null; this.fade = 1;
     this.transitionAge=0;
     this.wasMounted = false; this.wasGrounded = true; this.opacity(1);
   }
@@ -559,7 +567,10 @@ export class PlayableSkateMotion {
     this.speedRecoveryPush=recoveryEligible&&recoverySpeed>0&&(finishingPush||Math.abs(p.speed)<
       recoverySpeed*(this.speedRecoveryPush?.98:.65));
     if(mounted)this.sourceStance=this.previousSkateStance=p.stance;
+    const previousOwner=this.nativeOwner;
     this.nativeOwner=this.nativePoseOwner;
+    if(this.nativeOwner!==WALLPLANT_OWNER)this.handover=null;
+    else if(previousOwner===null&&this.phase!=='foot'&&this.lastPose){this.handover=this.lastPose;this.handoverAge=0;}
     if(!mounted||!p.grounded||!this.enabled)this.iceBlend=0;
     const ice=this.nativeOwner==='ice balance';
     const fakie=this.nativeOwner==='switch stance';
@@ -572,7 +583,13 @@ export class PlayableSkateMotion {
       // The controller resets stance for the NEXT mount when feet go down.
       // Remember the actual outgoing native pose (especially fakie), before
       // that reset can turn a pickup's first frame through 180 degrees.
-      p.clearCharacterAppearance();this.lastPose=this.capture();p.syncCharacterAppearance();
+      p.clearCharacterAppearance();
+      if(this.handover){
+        this.handoverAge+=Math.max(0,dt);
+        const arrived=smooth(this.handoverAge/WALLPLANT_HANDOVER_SECONDS);
+        if(arrived<1)this.blend(this.handover,arrived);else this.handover=null;
+      }
+      this.lastPose=this.capture();p.syncCharacterAppearance();
       this.iceBlend=p.stance!==DEFAULT_SKATE_STANCE?1:0;
       this.mountPreparation=0;this.preparedMount='';
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;

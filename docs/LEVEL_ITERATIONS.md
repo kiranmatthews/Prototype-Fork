@@ -12946,3 +12946,27 @@ One feel value changed. The plant hold (`wallPlantStick`) went from 0.05 s to 0.
 The pose was art-directed from close-up captures: a script steps the page one 60 Hz frame at a time and renders each step from fixed review cameras around the plant spot. Those captures caught the two faults that mattered: the planted palm stopping 12 cm short of a mark that was out of the arm's reach, and a rider arriving mid-roll landing sideways on the wall.
 
 `check:wall-plant` now asserts the crouch as well as the movement. It checks that a face just hit is braced on, that in the plant both soles end within 3 cm and the palm within 5 cm of their marks on the wall, that the palm lets go before the soles and the soles are still pinned on the launch step, that the leap ends and leaves nothing behind, that an early press reaches on the way in and keeps its side, and that a board wallplant never draws the on-foot crouch. It also checks the lag and leap curves. The twenty-two movement cases pass unchanged. The run-facing, ledge, crouch-jump, bail-recovery, camera-speed, teeter, roll-landing, animation, rope and Side Pipe Lab suites pass, as do all forty-five D-animation checks, the type check and the production build. The release is 995.44 MB of the 1,000 MB budget. In a real browser the early press, the late press and the shaft climb were recorded frame by frame in both renderers with clean consoles, and the rider's head stays inside the frame throughout. `test-factory-defaults` still differs only in the old `crawlSpeed` fixture value.
+
+### 2026-11-24 — Wall plant: the same cling on the board
+
+The brief was to make the skating version of the plant Spider-Man-like too. The first deck-on-the-wall pose was on screen in the browser about a quarter of an hour after the prompt, and the version described here after about two and a half hours.
+
+Before, a board wallplant was only a lean: the rider stayed upright in his ollie with the deck under his feet. Now the deck is slapped flat on the face under both feet, wheels to the wall and lying along it with one end kicked up, and the rider turns in a quarter turn and clings on it as he does on foot. His chest is to the wall, his hips sit back off the deck with the knees splayed over it, one palm is planted up beside the head, the other arm is thrown back, and he looks over his shoulder up the line of the launch.
+
+- **Reach.** An early press brings the deck round to the wall on the way in, from 1.7 m out, with the palm leading.
+- **Push.** The deck stays on the wall for 0.06 s while the legs fire and the hips drive out along the launch line. It then peels off and comes back under the feet over 0.14 s.
+- **One half turn.** He opens to the side his chest already faced, so the plant is one continuous half turn: in to the wall, the slap, and out the way he came.
+- **Leap.** The arms are thrown into the same diagonal as on foot, with the head turned back to the camera.
+- **Grab.** A grab keeps its own hands and its own deck. The cling gives way to it and only the lean is left.
+
+Three things had to change underneath for this to show at all.
+
+- **Who owns the pose.** The authored skate layer repaints the rider and the board in the air unless a native action claims them. A wallride claimed them and a wallplant did not, which is why the old board plant could only lean. It claims them now, from the reach to the end of the leap. Every other native action cuts in at once; this one is reached for, so the authored ollie is blended into it over 0.08 s and nothing pops.
+- **The contact layer.** The skate contact layer already laid the deck on a wall for a wallride. It now also takes a pinned spot on the wall, a seat for the hips, a line for the knees and a turn for the trunk, so the same solver keeps both feet on the planted deck (within a millimetre in the checks).
+- **The push was not being drawn.** The plant holds the drawn body back while the legs fire. That offset was thrown away when the frame was committed, so on foot the soles drifted up to 24 cm off the wall during the push instead of staying planted. The offset is now kept through the commit, and the camera still follows the real body. The on-foot kick shows the push it was designed with.
+
+Feel values, kick heights and the wallplant's speeds are unchanged.
+
+The pose was art-directed from the same frame-by-frame review captures as the crouch, and measured in the wall's own frame with a headless probe. That probe found the palm's first mark 30 cm out of reach: this rig's arm is shorter reaching level than reaching down. It also showed the same contacts for regular and goofy stance, a reversed deck, and approaches up to 60 degrees off square from either side.
+
+`check:wall-plant` now asserts the board cling. It checks that no sole goes on the wall, that the deck lies flat on the face along it with one end up, that both feet are within 1 cm of it and the palm within 5 cm of its mark, that the chest is in to the wall and the hips sat back, that the deck has not moved while the legs fire, that it is back under the feet within a quarter of a second, and that the pose is handed back afterwards. On foot it now measures the push in the frame as drawn: the soles within 4 cm of the wall, the drawn body held back, the camera not. The animation lifecycle check covers the new claim and its blend.

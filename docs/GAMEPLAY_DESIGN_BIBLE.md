@@ -2057,7 +2057,8 @@ cannot be climbed this way.
 
 **On the board.** The plant must be pressed *before* a wall the rider would otherwise wipe out on (any
 airborne hit at more than about 8 m/s into the face); below that speed the 0.2 s after the touch counts
-too. It returns 90 % of the speed carried into the wall (never less than 8 m/s) and pops at 10 m/s.
+too. For the same 0.08 s hold the deck is slapped flat on the face under both feet and the rider clings on
+it, chest to the wall. It returns 90 % of the speed carried into the wall (never less than 8 m/s) and pops at 10 m/s.
 From a full-charge ollie at 23.9 m/s: out at 21.4 m/s, apex 3.2 m, touchdown 14 m back from the wall,
 riding. A deck mid-flip is caught by the plant and the air after it is a fresh one for tricks, so
 `Kickflip + Wallplant + Kickflip` or `Wallplant + 50-50` is one combo. A rail on the return line belongs

@@ -12,8 +12,8 @@ import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { sampleWallPlantMotion, sampleWallPlantLeap, wallPlantPushLag, wallPlantPushProgress, WALL_PLANT_BRACE, WALL_PLANT_CROUCH,
-  WALL_PLANT_LEAN, WALL_PLANT_LEAP_SECONDS, WALL_PLANT_PUSH_SECONDS, WALL_PLANT_REACH, WALL_PLANT_REACH_FOR, WALL_PLANT_REACH_FROM,
-  WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
+  WALL_PLANT_LEAN, WALL_PLANT_LEAP_SECONDS, WALL_PLANT_PEEL_FROM, WALL_PLANT_PEEL_SECONDS, WALL_PLANT_PERCH, WALL_PLANT_PUSH_SECONDS,
+  WALL_PLANT_REACH_FOR, WALL_PLANT_REACH_FROM, WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
 import { legacyWallPlantReplay } from './wallPlantPolicy';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { kiteGrabElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
@@ -1729,12 +1729,29 @@ export class Player {
   private wallPlantAge = -1; // seconds since the last launch; -1 = none this air (presentation)
   private wallPlantPose = 0; // radians the rig is leant off the face, eased (presentation)
   private readonly wallPlantTilt = new THREE.Vector3(); // ...as a vector: the face's normal times that angle
+  // The push holds the drawn body back off the real one. The offset as posed
+  // this step, and as the last two committed steps had it (for the renderer).
+  private readonly wallPlantHoldBack = new THREE.Vector3();
+  private readonly wallPlantHoldBackDrawn = new THREE.Vector3();
+  private readonly wallPlantHoldBackBefore = new THREE.Vector3();
   // The plant as it is drawn: a three-point crouch on the face (presentation).
   private wallPlantSide = 1; // which way along the wall the chest opens: +1 or -1
   private wallPlantCling = 0; // 0..1 eased: how far the body is drawn onto the face
   private wallPlantSeatW = 0; // this frame: hips held in the crouch
   private wallPlantSoleW = 0; // this frame: soles pinned to their marks
   private wallPlantPalmW = 0; // this frame: one palm pinned to its mark
+  private wallPlantDeckW = 0; // this frame: on the board, the deck lies flat on the face
+  private wallPlantPerchW = 0; // ...and the rider is hunched in to the wall on it
+  private wallPlantFired = 0; // this frame: 0..1 through the push, the legs firing
+  // The perch, for the skate contact layer: the deck's line on the face, the
+  // hips' seat off the soles, the knees' line, and the turn that brings the
+  // trunk round.
+  private readonly wallPlantDeckLine = new THREE.Vector3(1, 0, 0);
+  private readonly wallPlantPerchSeat = new THREE.Vector3();
+  private readonly wallPlantPerchKnees = new THREE.Vector3(1, 0, 0);
+  private readonly wallPlantPerchTurn = new THREE.Quaternion();
+  private wallPlantFreeW = 0; // this frame: the other arm is thrown clear of the wall
+  private wallPlantDeckPose = false; // this frame: a board wallplant is the pose on show
   private wallPlantLookW = 0; // eased: the head looks back at the way out
   private wallPlantHighLegL = false; // which leg took the high mark, for the leap that follows
   private wallPlantFreeArmL = false; // ...and which arm was thrown wide
@@ -1743,9 +1760,10 @@ export class Player {
   private wallPlantPalmError = 0; // ...and the palm off its own
   /** Presentation diagnostics for the plant's pose: this frame's weights and
    * how far the pinned contacts ended from their marks on the wall. */
-  get wallPlantPoseDiagnostics(): { cling: number; seat: number; soles: number; palm: number; look: number; leap: number;
-    side: number; lean: number; soleError: number; palmError: number } {
+  get wallPlantPoseDiagnostics(): { cling: number; seat: number; soles: number; palm: number; deck: number; perch: number;
+    look: number; leap: number; side: number; lean: number; soleError: number; palmError: number } {
     return { cling: this.wallPlantCling, seat: this.wallPlantSeatW, soles: this.wallPlantSoleW, palm: this.wallPlantPalmW,
+      deck: this.wallPlantDeckW, perch: this.wallPlantPerchW,
       look: this.wallPlantLookW, leap: this.wallPlantLeapW, side: this.wallPlantDrawSide, lean: this.wallPlantPose,
       soleError: this.wallPlantSoleError, palmError: this.wallPlantPalmError };
   }
@@ -1762,6 +1780,10 @@ export class Player {
   /** Presentation only: how fully the camera should rise with the rider while a
    * wall-kick chain climbs. The ground-anchored rig would let a third kick leave the frame. */
   get wallPlantCameraLift(): number { return this.wallPlantLift; }
+  /** A board wallplant is the pose on show: the reach for the face, the hold
+   * on it, the push and the leap after. The authored skate layer leaves the
+   * solved rider and deck alone while it is, as it does through a wallride. */
+  get wallPlantOwnsRide(): boolean { return this.wallPlantDeckPose; }
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -3673,6 +3695,7 @@ export class Player {
   resetRenderInterpolation(): void {
     this.netRenderOffset.set(0,0,0);this.previousNetRenderOffset.set(0,0,0);
     this.dropInT = -1; this.dropInOffset.set(0,0,0); this.previousDropInOffset.set(0,0,0);
+    this.wallPlantHoldBack.set(0,0,0);this.wallPlantHoldBackDrawn.set(0,0,0);this.wallPlantHoldBackBefore.set(0,0,0);
     this.footstepAudio.contacts.reset();
     this.renderInterpolator.snap();
     this.group.position.copy(this.pos);
@@ -3683,6 +3706,7 @@ export class Player {
   collapseRenderInterpolation(): void {
     this.previousNetRenderOffset.copy(this.netRenderOffset);
     this.previousDropInOffset.copy(this.dropInOffset);
+    this.wallPlantHoldBackBefore.copy(this.wallPlantHoldBackDrawn);
     this.renderInterpolator.collapse();
     this.group.position.copy(this.pos);
     this.renderPosition.copy(this.pos);
@@ -3798,10 +3822,15 @@ export class Player {
     // Contacts can move the root after Player.step() authored the pose. Fold
     // that final correction into the snapshot and carry player-attached world
     // effects with it; the loose board/fruit/sparks have their own trajectories.
-    const dx = this.pos.x - this.group.position.x;
-    const dy = this.pos.y - this.group.position.y;
-    const dz = this.pos.z - this.group.position.z;
-    this.group.position.copy(this.pos);
+    // A wall plant's push was posed with the body held back off the real one
+    // (syncVisual): that offset is part of the picture, not a correction.
+    const held = this.wallPlantHoldBack;
+    this.wallPlantHoldBackBefore.copy(this.wallPlantHoldBackDrawn);
+    this.wallPlantHoldBackDrawn.copy(held);
+    const dx = this.pos.x + held.x - this.group.position.x;
+    const dy = this.pos.y + held.y - this.group.position.y;
+    const dz = this.pos.z + held.z - this.group.position.z;
+    this.group.position.copy(this.pos).add(held);
     if (dx * dx + dy * dy + dz * dz > 1e-12) {
       if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
     }
@@ -3845,11 +3874,14 @@ export class Player {
 
   /** Temporarily author the interpolated render pose for this RAF. */
   applyRenderInterpolation(alpha: number): void {
-    if (this.renderInterpolator.hasPose) this.renderInterpolator.apply(alpha);
+    const posed = this.renderInterpolator.hasPose;
+    if (posed) this.renderInterpolator.apply(alpha);
     else this.group.position.copy(this.pos);
     this.group.position.add(_renderDelta.lerpVectors(this.previousNetRenderOffset,this.netRenderOffset,alpha));
     this.group.position.add(_renderDelta.lerpVectors(this.previousDropInOffset,this.dropInOffset,alpha));
     this.renderPosition.copy(this.group.position);
+    // The body a wall plant's push holds back is only drawn there: the camera keeps to the real one.
+    if (posed) this.renderPosition.sub(_renderDelta.lerpVectors(this.wallPlantHoldBackBefore,this.wallPlantHoldBackDrawn,alpha));
   }
 
   /**
@@ -3877,7 +3909,7 @@ export class Player {
   /** Put authoritative fixed-step transforms back immediately after drawing. */
   restoreRenderPose(): void {
     this.renderInterpolator.restore();
-    this.group.position.copy(this.pos);
+    this.group.position.copy(this.pos).add(this.wallPlantHoldBackDrawn);
     this.renderPosition.copy(this.pos);
   }
 
@@ -4637,6 +4669,8 @@ export class Player {
     this.wallPlantPose = 0;
     this.wallPlantLift = this.wallPlantLiftHoldT = 0;
     this.wallPlantCling = this.wallPlantSeatW = this.wallPlantSoleW = this.wallPlantPalmW = this.wallPlantLookW = 0;
+    this.wallPlantDeckW = this.wallPlantPerchW = this.wallPlantFreeW = this.wallPlantFired = 0;
+    this.wallPlantDeckPose = false;
     this.wallPlantTilt.set(0, 0, 0);
     this.ledgeT = 0;
     this.ledgeCoolT = 0;
@@ -18568,12 +18602,17 @@ export class Player {
   }
 
   /** Presentation: the side the chest opens to off a face with normal (nx, nz),
-   * met at velocity (vx, vz). With the travel along the wall if there is any;
-   * else toward the camera, so the face and the free arm are in the shot;
-   * head-on to the lens it alternates up a chain. */
+   * met at velocity (vx, vz). On the board, the side it already faces. On
+   * foot, with the travel along the wall if there is any; else toward the
+   * camera, so the face and the free arm are in the shot; head-on to the lens
+   * it alternates up a chain. */
   private chooseWallPlantSide(nx: number, nz: number, vx: number, vz: number): void {
     const slide = vx * nz - vz * nx, lens = this.camDir.x * nz - this.camDir.z * nx;
-    this.wallPlantSide = Math.abs(slide) > 1.5 ? Math.sign(slide) : Math.abs(lens) > 0.25 ? -Math.sign(lens)
+    // A rider stands side-on, so his chest already faces one way along the
+    // wall: opening to that side, the turn in to the face is the short way round.
+    const chest = this.freeSkate ? this.stance * (Math.sin(this.visualYaw) * nx + Math.cos(this.visualYaw) * nz) : 0;
+    this.wallPlantSide = Math.abs(chest) > 0.3 ? -Math.sign(chest)
+      : Math.abs(slide) > 1.5 ? Math.sign(slide) : Math.abs(lens) > 0.25 ? -Math.sign(lens)
       : this.wallPlantChain % 2 ? -1 : 1;
   }
 
@@ -20576,6 +20615,53 @@ export class Player {
   }
 
   /**
+   * WALL PLANT on the board: the perch, worked out for the skate contact layer
+   * just before it runs. The same cling as on foot from the hips up; below
+   * them the deck lies along the face under both feet and the knees splay
+   * over it. This gives that layer the deck's line, the hips' seat off the
+   * soles, the knees' line, and the turn that brings the trunk round to the
+   * crouch's own — read off the rig as it stands (hips to shoulders, shoulder
+   * to shoulder), so it does not depend on what the jump was doing when it
+   * met the wall. Presentation only.
+   */
+  private prepareWallPlantPerch(): boolean {
+    if (!this.legs || !this.armL || !this.armR || this.wallPlantDrawNormal.lengthSq() < 0.5) return false;
+    const perch = WALL_PLANT_PERCH;
+    const out = WP_OUT.set(this.wallPlantDrawNormal.x, 0, this.wallPlantDrawNormal.z).normalize();
+    const along = WP_ALONG.set(out.z * this.wallPlantDrawSide, 0, -out.x * this.wallPlantDrawSide);
+    // Toes up the face puts the deck's nose this way along it; the end on the open side is kicked up.
+    const nose = this.stance * (Math.cos(this.deckYawOffset) >= 0 ? 1 : -1);
+    this.wallPlantDeckLine.set(out.z * nose, 0, -out.x * nose).multiplyScalar(Math.cos(perch.tilt));
+    this.wallPlantDeckLine.y = Math.sin(perch.tilt) * nose * this.wallPlantDrawSide;
+    // The hips: sat back off the deck, then driven out and up as the legs fire.
+    const fired = this.wallPlantFired;
+    this.wallPlantPerchSeat.copy(out).multiplyScalar(THREE.MathUtils.lerp(perch.seat.out, perch.drive.out, fired))
+      .addScaledVector(along, perch.seat.along * (1 - fired));
+    this.wallPlantPerchSeat.y += THREE.MathUtils.lerp(perch.seat.up, perch.drive.up, fired);
+    this.wallPlantPerchKnees.set(0, 0.25, 0).addScaledVector(out, 0.97);
+    // The trunk, as the crouch has it: spine hung back off the wall by the
+    // lean, chest in to the face and turned open by the twist.
+    this.bodyGroup.updateWorldMatrix(true, true);
+    this.legs.getWorldPosition(WP_A);
+    this.armL.getWorldPosition(WP_B);
+    this.armR.getWorldPosition(WP_C);
+    const spine = WP_Y.copy(WP_B).add(WP_C).multiplyScalar(0.5).sub(WP_A);
+    const chest = WP_Z.crossVectors(spine, WP_X.copy(WP_B).sub(WP_C)); // armL is the anatomical right shoulder
+    this.wallPlantPerchTurn.identity();
+    if (spine.lengthSq() < 1e-6 || chest.lengthSq() < 1e-8) return true;
+    spine.normalize();
+    chest.normalize();
+    const lean = this.wallPlantTilt.dot(out) - perch.hug, twist = WALL_PLANT_CROUCH.twist;
+    const up = WP_TARGET.set(0, Math.cos(lean), 0).addScaledVector(out, Math.sin(lean));
+    const front = WP_AIM.copy(out).multiplyScalar(-Math.cos(twist)).addScaledVector(along, Math.sin(twist));
+    front.addScaledVector(up, -front.dot(up)).normalize();
+    WP_Q.setFromRotationMatrix(WP_M.makeBasis(WP_X.crossVectors(spine, chest), spine, chest));
+    WP_Q2.setFromRotationMatrix(WP_M.makeBasis(WP_X.crossVectors(up, front), up, front));
+    this.wallPlantPerchTurn.slerp(WP_Q2.multiply(WP_Q.invert()), this.wallPlantPerchW);
+    return true;
+  }
+
+  /**
    * WALL PLANT contacts, after every other pose layer: seat the hips in the
    * crouch, pin both soles and one palm to their marks on the face, throw the
    * free arm wide and turn the head to the way out. The marks hang off the
@@ -20584,9 +20670,9 @@ export class Player {
    */
   private poseWallPlantContacts(): void {
     const seatW = this.wallPlantSeatW, soleW = this.wallPlantSoleW, palmW = this.wallPlantPalmW, lookW = this.wallPlantLookW;
-    const leapW = this.wallPlantLeapW;
+    const leapW = this.wallPlantLeapW, freeW = this.wallPlantFreeW;
     this.wallPlantSoleError = this.wallPlantPalmError = 0;
-    if (Math.max(seatW, soleW, palmW, lookW, leapW) <= 1e-3 || this.playerAnimationBridge.previewActive) return;
+    if (Math.max(seatW, soleW, palmW, lookW, leapW, freeW) <= 1e-3 || this.playerAnimationBridge.previewActive) return;
     if (this.wallPlantDrawNormal.lengthSq() < 0.5) return;
     // Out from the face, and along it toward the side the chest opens to.
     const out = WP_OUT.set(this.wallPlantDrawNormal.x, 0, this.wallPlantDrawNormal.z).normalize();
@@ -20699,11 +20785,12 @@ export class Player {
         (palmW > 1e-3 || seatW > 1e-3 || leapW > 1e-3)) {
       const armL = [this.armL, this.elbowL, this.wristL, this.gloveRight.gripSocket] as const;
       const armR = [this.armR, this.elbowR, this.wristR, this.gloveLeft.gripSocket] as const;
-      if (palmW > 1e-3 || seatW > 1e-3)
+      if (palmW > 1e-3 || freeW > 1e-3)
         this.wallPlantFreeArmL = this.armL.getWorldPosition(WP_A).dot(along) > this.armR.getWorldPosition(WP_B).dot(along);
       const planted = this.wallPlantFreeArmL ? armR : armL, free = this.wallPlantFreeArmL ? armL : armR;
-      if (palmW > 1e-3) this.plantWallPalm(planted, mark(WP_TARGET, WALL_PLANT_CROUCH.hand), out, along, palmW);
-      if (leapW > 1e-3 && seatW <= 1e-3) {
+      if (palmW > 1e-3)
+        this.plantWallPalm(planted, mark(WP_TARGET, this.wallPlantPerchW > 0 || this.wallPlantDeckW > 0 ? WALL_PLANT_PERCH.hand : WALL_PLANT_CROUCH.hand), out, along, palmW);
+      if (leapW > 1e-3 && freeW <= 1e-3) {
         // The leap: the arm that was free is thrown high to the open side and
         // the one that shoved off the wall trails low on the other, so the two
         // draw one diagonal through the shoulders. It lies across the wall, not
@@ -20721,15 +20808,16 @@ export class Player {
               accountForParentScale: true, tolerance: 0.004 });
         }
       }
-      if (seatW > 1e-3) {
+      if (freeW > 1e-3) {
         const [root, mid, end, grip] = free;
         root.getWorldPosition(WP_A);
+        // Thrown back off the wall and low.
         WP_TARGET.copy(WP_A).addScaledVector(out, 0.66).addScaledVector(along, 0.38);
         WP_TARGET.y -= 0.28;
         WP_POLE.copy(WP_A).addScaledVector(along, 0.6).addScaledVector(out, -0.2);
         WP_POLE.y += 0.3;
         for (let pass = 0; pass < 2; pass++)
-          solveTwoBoneIk({ root, mid, end, effector: grip, target: WP_TARGET, pole: WP_POLE, weight: seatW,
+          solveTwoBoneIk({ root, mid, end, effector: grip, target: WP_TARGET, pole: WP_POLE, weight: freeW,
             accountForParentScale: true, tolerance: 0.004 });
       }
     }
@@ -20741,7 +20829,7 @@ export class Player {
       WP_INV.copy(this.headM.parent.matrixWorld).invert();
       eye.getWorldDirection(WP_A).transformDirection(WP_INV);
       WP_B.copy(out).multiplyScalar(0.78).addScaledVector(along, 0.5);
-      WP_B.y += seatW > 0.5 ? 0.36 : 0.04; // up the kick's line while coiled; level once leaning into the leap
+      WP_B.y += Math.max(seatW, this.wallPlantPerchW) > 0.5 ? 0.36 : 0.04; // up the kick's line while coiled; level once leaning into the leap
       WP_B.normalize().transformDirection(WP_INV);
       WP_Q.setFromUnitVectors(WP_A, WP_B);
       // A neck only turns so far; past that the chest has to follow.
@@ -21892,14 +21980,19 @@ export class Player {
     const wallPlanted = wallAir && this.wallPlantStickT > 0;
     // The launch step has already flown: that step counts as time off the wall.
     const wallFlight = !wallPlanted && wallAir && this.wallPlantAge >= 0 ? this.wallPlantAge + CONST.fixedStep : -1;
-    const wallPushing = wallFlight >= 0 && wallFlight < WALL_PLANT_PUSH_SECONDS && !this.wallPlantBoard;
-    const wallBracing = !wallPlanted && !wallPushing && wallAir && !this.freeSkate && this.wallPlantContactT > 0;
-    const wallReaching = !wallPlanted && !wallBracing && wallAir && this.wallPlantBufferT > 0;
-    // On the board the deck owns the feet: the lean is the whole pose.
-    const wallCrouch = wallPlanted || wallPushing ? !this.wallPlantBoard : !this.freeSkate;
-    // The frame the pose is drawn in follows the wall in play, except through
-    // a push: those feet are still on the wall they planted on.
-    if (!wallPushing) {
+    const wallPushing = wallFlight >= 0 && wallFlight < WALL_PLANT_PUSH_SECONDS;
+    // The deck comes off the wall after the legs have fired, and takes a moment over it.
+    const wallPeel = this.wallPlantBoard && wallFlight >= 0
+      ? THREE.MathUtils.smoothstep(wallFlight, WALL_PLANT_PEEL_FROM, WALL_PLANT_PEEL_FROM + WALL_PLANT_PEEL_SECONDS) : 0;
+    const wallLeaving = wallPushing || this.wallPlantBoard && wallFlight >= 0 && wallPeel < 1;
+    const wallBracing = !wallPlanted && !wallLeaving && wallAir && !this.freeSkate && this.wallPlantContactT > 0;
+    const wallReaching = !wallPlanted && !wallBracing && !wallLeaving && wallAir && this.wallPlantBufferT > 0;
+    // On foot the soles go on the wall. On the board the deck does, flat on
+    // the face under both feet, and the skate contact layer keeps them on it.
+    const wallCrouch = wallPlanted || wallLeaving ? !this.wallPlantBoard : !this.freeSkate;
+    // The frame the pose is drawn in follows the wall in play, except while
+    // leaving one: those feet, or that deck, are still on the wall they planted on.
+    if (!wallLeaving) {
       this.wallPlantDrawNormal.copy(wallPlanted || wallBracing ? this.wallPlantNormal : this.wallPlantLeanNormal);
       this.wallPlantDrawSide = this.wallPlantSide;
       // A plant's marks stay put; the brace slides down the face with the
@@ -21916,7 +22009,7 @@ export class Player {
       const gap = (this.pos.x - this.wallPlantBase.x) * face.x + (this.pos.z - this.wallPlantBase.z) * face.z;
       wallReach = WALL_PLANT_REACH_FOR * (1 - THREE.MathUtils.smoothstep(gap, 0, WALL_PLANT_REACH_FROM));
     }
-    if (!wallPushing) {
+    if (!wallLeaving) {
       const clingTarget = wallPlanted ? 1 : wallBracing ? WALL_PLANT_BRACE : wallReach;
       this.wallPlantCling += (clingTarget - this.wallPlantCling) *
         Math.min(1, (wallPlanted ? 55 : clingTarget > this.wallPlantCling ? 24 : 30) * dt);
@@ -21925,21 +22018,31 @@ export class Player {
     // Reaching, the hips stay with the body; only the feet and the palm go ahead to the wall.
     if (wallReaching) this.wallPlantSeatBase.set(this.pos.x, this.pos.y, this.pos.z);
     else this.wallPlantSeatBase.copy(this.wallPlantBase);
-    const wallFired = wallPushing ? wallPlantPushProgress(wallFlight) : 0;
-    const wallOn = wallCrouch && (wallPlanted || wallBracing || wallPushing || wallReaching) ? this.wallPlantCling : 0;
+    const wallFired = this.wallPlantFired = wallLeaving ? wallPlantPushProgress(wallFlight) : 0;
+    const wallDrawn = wallPlanted || wallBracing || wallLeaving || wallReaching ? this.wallPlantCling : 0;
+    // A grab keeps its own hands, tuck and deck: the perch gives way to it, and only the lean is left.
+    const wallHandsFree = wallCrouch ? 1 : 1 - THREE.MathUtils.smoothstep(this.grabPose, 0, 0.5);
+    const wallOn = wallCrouch ? wallDrawn : 0, wallDeckOn = wallCrouch ? 0 : wallDrawn;
     this.wallPlantSeatW = wallOn * (1 - wallFired);
-    // The palm shoves off first; the soles are the last thing to leave.
-    this.wallPlantPalmW = wallOn * (wallPushing ? 1 - THREE.MathUtils.smoothstep(wallFlight, 0, WALL_PLANT_PUSH_SECONDS * 0.5) : 1);
-    this.wallPlantSoleW = wallOn * (wallPushing ? 1 - THREE.MathUtils.smoothstep(wallFlight, WALL_PLANT_PUSH_SECONDS * 0.7, WALL_PLANT_PUSH_SECONDS) : 1);
+    // The palm shoves off first; the soles, or the deck, are the last thing to leave.
+    const lastOff = wallPushing ? 1 - THREE.MathUtils.smoothstep(wallFlight, WALL_PLANT_PUSH_SECONDS * 0.7, WALL_PLANT_PUSH_SECONDS) : 1;
+    this.wallPlantPalmW = wallDrawn * wallHandsFree *
+      (wallFlight >= 0 ? 1 - THREE.MathUtils.smoothstep(wallFlight, 0, WALL_PLANT_PUSH_SECONDS * 0.5) : 1);
+    this.wallPlantSoleW = wallOn * lastOff;
+    this.wallPlantDeckW = wallDeckOn * wallHandsFree * (1 - wallPeel);
+    this.wallPlantPerchW = wallDeckOn * wallHandsFree * (1 - wallFired);
+    this.wallPlantFreeW = wallDrawn * wallHandsFree * (1 - wallFired);
+    this.wallPlantDeckPose = !wallCrouch && (wallDrawn > 1e-3 || wallFlight >= 0 && wallFlight < WALL_PLANT_LEAP_SECONDS);
     const wallLooking = wallPlanted || wallBracing || wallFlight >= 0 && wallFlight < WALL_PLANT_PUSH_SECONDS + 0.03;
     this.wallPlantLookW += ((wallLooking ? 1 : 0) - this.wallPlantLookW) * Math.min(1, (wallLooking ? 30 : 14) * dt);
     if (!wallLooking && this.wallPlantLookW < 0.004) this.wallPlantLookW = 0;
     // The lean: coiled a little back off the face, then out along the launch
     // line as the legs fire, and upright again over the first of the flight.
-    const wallLean = wallPlanted ? (wallCrouch ? WALL_PLANT_CROUCH.lean : WALL_PLANT_LEAN)
-      : wallPushing ? THREE.MathUtils.lerp(WALL_PLANT_CROUCH.lean, WALL_PLANT_LEAN, wallFired)
-      : wallBracing ? WALL_PLANT_CROUCH.lean * WALL_PLANT_BRACE
-      : wallReaching ? (wallCrouch ? WALL_PLANT_CROUCH.lean * this.wallPlantCling : WALL_PLANT_LEAN * 0.3) : 0;
+    const coiled = WALL_PLANT_CROUCH.lean;
+    const wallLean = wallPlanted ? coiled
+      : wallPushing ? THREE.MathUtils.lerp(coiled, WALL_PLANT_LEAN, wallFired)
+      : wallBracing ? coiled * WALL_PLANT_BRACE
+      : wallReaching ? coiled * this.wallPlantCling : 0;
     // Eased as a vector (the wall's normal times the angle), so a lean still
     // settling from the last wall blends through upright into the next one's
     // instead of flipping when the frame changes.
@@ -21953,13 +22056,15 @@ export class Player {
       VERT_Q.setFromUnitVectors(VERT_UP, face);
       VERT_Q2.identity().slerp(VERT_Q, this.wallPlantPose / (Math.PI / 2));
       this.group.quaternion.premultiply(VERT_Q2);
-      // On the board the feet come in from the collision skin to the face.
-      if (!wallCrouch)
-        this.group.position.addScaledVector(face, -WALL_PLANT_REACH * this.wallPlantPose / WALL_PLANT_LEAN);
     }
+    // Held back in the pose itself, so what is pinned to the wall is pinned
+    // against the body as drawn; commitRenderStep keeps the offset. On the
+    // board the deck does the holding: it stays on the wall and brings the
+    // rider away with it.
+    this.wallPlantHoldBack.set(0, 0, 0);
     if (wallFlight >= 0 && !this.wallPlantBoard) {
       const lag = wallPlantPushLag(wallFlight);
-      if (lag > 0) this.group.position.addScaledVector(this.wallPlantLaunch, -lag);
+      if (lag > 0) this.group.position.add(this.wallPlantHoldBack.copy(this.wallPlantLaunch).multiplyScalar(-lag));
     }
 
     // Ordinary travel follows velocity; ice and committed run reversals face
@@ -22034,14 +22139,13 @@ export class Player {
       const vz = this.walkVelocity.z;
       if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
-    } else if (this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0) {
+    } else if (this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 || this.wallPlantPerchW > 0) {
       // On the face: chest in to the wall and turned open toward the way out,
-      // so the launch finishes a turn instead of starting one.
+      // so the launch finishes a turn instead of starting one. A rider's
+      // chest is a quarter turn off his heading, and so is the deck under him:
+      // it comes round to lie along the wall.
       targetYaw = wrapAngle(Math.atan2(this.wallPlantDrawNormal.x, this.wallPlantDrawNormal.z) -
-        this.wallPlantDrawSide * WALL_PLANT_CROUCH.twist);
-    } else if (this.wallPlantStickT > 0 && Math.hypot(this.wallPlantLaunch.x, this.wallPlantLaunch.z) > 1e-4) {
-      // A board wallplant pivots off the face toward the line it leaves on.
-      targetYaw = wrapAngle(Math.atan2(this.wallPlantLaunch.x, this.wallPlantLaunch.z) - Math.PI);
+        this.wallPlantDrawSide * WALL_PLANT_CROUCH.twist - (this.wallPlantPerchW > 0 ? this.stance * Math.PI / 2 : 0));
     } else if (this.state === 'grind' && this.grindRail) {
       // axisF retains the catch heading until rail exit. A curved grind must
       // face its current tangent, or the gaze keeps twisting to compensate
@@ -22084,11 +22188,12 @@ export class Player {
         RUN_REVERSAL_YAW_RATE * dt,
         turnSign,
       );
-    } else if (this.wallPlantStickT > 0 || this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 ||
+    } else if (this.wallPlantStickT > 0 || this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 || this.wallPlantPerchW > 0 ||
         this.state === 'air' && this.wallPlantAge >= 0 && this.wallPlantAge < 0.3) {
       // Onto the face at once. Off it, the turn to the way out is the twist
       // of the leap: quicker than an ordinary change of travel.
-      const rate = this.wallPlantStickT > 0 ? 55 : this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 ? 26 : 20;
+      const rate = this.wallPlantStickT > 0 ? 55
+        : this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 || this.wallPlantPerchW > 0 ? 26 : 20;
       this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, rate * dt);
     } else {
       this.visualYaw +=
@@ -23441,7 +23546,7 @@ export class Player {
     // other layer has had its say (poseWallPlantContacts).
     const wallPlantHeld = this.wallPlantStickT > 0;
     const wallPlantLive = !this.isBailing && this.state === 'air' && !this.playerAnimationBridge.previewActive &&
-      (wallPlantHeld || this.wallPlantSeatW > 0 || this.wallPlantAge >= 0 &&
+      (wallPlantHeld || this.wallPlantSeatW > 0 || this.wallPlantPerchW > 0 || this.wallPlantAge >= 0 &&
         this.wallPlantAge < Math.max(WALL_PLANT_RELEASE_SECONDS + 0.06, WALL_PLANT_LEAP_SECONDS));
     this.wallPlantLeapW = 0;
     if (wallPlantLive) {
@@ -23453,13 +23558,13 @@ export class Player {
       const onBoard = coming ? this.freeSkate : this.wallPlantBoard;
       const plant = sampleWallPlantMotion(hold, wallPlantHeld || coming ? -1 : this.wallPlantAge, onBoard);
       if (onBoard) {
-        // The board wallplant: the deck owns the feet, so the upper body does the work.
-        if (this.spineG) this.spineG.rotation.x += plant.spine;
-        if (this.headM) this.headM.rotation.x += plant.head;
-        for (const [arm, elbow, side] of [[this.armR, this.elbowR, 1], [this.armL, this.elbowL, -1]] as const) {
-          if (arm) { arm.rotation.x += plant.armSwing; arm.rotation.z += side * plant.armSpread; }
-          if (elbow) elbow.rotation.x += plant.elbow;
-        }
+        // The board wallplant: the skate contact layer keeps both feet on the
+        // deck and the contact pass owns the hands. The back rounds over the
+        // knees while he is perched, then opens into the leap; a grab takes
+        // the arms straight back.
+        const leap = sampleWallPlantLeap(wallPlantHeld || coming || this.wallPlantAge < 0 ? -1 : this.wallPlantAge + CONST.fixedStep);
+        if (this.spineG) this.spineG.rotation.x += 0.3 * this.wallPlantPerchW - 0.22 * leap.arch;
+        this.wallPlantLeapW = this.grabbing || this.grabPose > 0.01 ? 0 : leap.spread;
       } else {
         // Coiled, the chest curls in over the knees. Off the wall it arches open:
         // arms thrown wide, the open-side knee driven up, the pushing leg long behind.
@@ -23604,6 +23709,7 @@ export class Player {
         coping={center,normal};
       }
       this.skateAnimation ??= new SkateAnimation(this.group, this.bodyGroup, this.riderG, this.boardG);
+      const wallPerch = this.wallPlantDeckW > this.wallridePose && this.prepareWallPlantPerch();
       skateContactOwned = this.skateAnimation.apply({
         dt, time: this.runTime,
         active: this.boardG.visible && !this.isBailing && !this.slamActive && this.starPose < .01 &&
@@ -23632,7 +23738,12 @@ export class Player {
         flipProgress: 1 - this.flipT / this.flipDuration, specialFlip: !!this.specialFlip,
         lip: this.lipStallT > 0 ? this.lipStyle : null,
         coping,
-        wallWeight: this.wallridePose, wallNormal: this.wallNormal, wallForward: this.axisF,
+        // A wallplant slaps the deck flat on the face and perches the rider on it, where a wallride lays it along the ride.
+        ...(wallPerch
+          ? { wallWeight: this.wallPlantDeckW, wallNormal: this.wallPlantDrawNormal, wallForward: this.wallPlantDeckLine,
+              wallSpot: this.wallPlantBase, wallCrouch: this.wallPlantDeckW, wallSeat: this.wallPlantPerchSeat,
+              wallKnees: this.wallPlantPerchKnees, wallTurn: this.wallPlantPerchTurn }
+          : { wallWeight: this.wallridePose, wallNormal: this.wallNormal, wallForward: this.axisF }),
       });
     }
     // Seat against the stable catch plane, then let the feet leave it. A

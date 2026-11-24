@@ -33,6 +33,17 @@ export interface SkatePoseInput {
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
   coping?: { center: THREE.Vector3; normal: THREE.Vector3 };
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
+  /** The wallplant's perch on a deck slapped flat on a wall, all in the world.
+   * The deck is pinned at `wallSpot` (the body's own point against that wall)
+   * instead of following the body. `wallCrouch` (0..1) seats the hips
+   * `wallSeat` from the point midway between the soles and points the knees
+   * along `wallKnees`, splayed toward each end of the deck; `wallTurn` is a
+   * turn of the whole body, already weighted. */
+  wallSpot?: THREE.Vector3;
+  wallCrouch?: number;
+  wallSeat?: THREE.Vector3;
+  wallKnees?: THREE.Vector3;
+  wallTurn?: THREE.Quaternion;
 }
 
 /** Final contact layer for the procedural skater. Physics never reads it.
@@ -273,7 +284,8 @@ export class SkateAnimation {
     const footFrame=deckAlignment>.999?this.body:undefined;
     const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
     const uprightGrind=!!p.grind && !p.darkslide && underProgress<.001;
-    const locomotionTarget = waistGrab || uprightGrind || p.nineHundred || p.lip || backflip || footFlip || impossible || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
+    // A wallplant's perch seats the hips itself and gives them back standing, not through a tuck.
+    const locomotionTarget = waistGrab || uprightGrind || p.nineHundred || p.lip || backflip || footFlip || impossible || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide || !!p.wallSeat) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
@@ -403,10 +415,12 @@ export class SkateAnimation {
       const wallRight = new THREE.Vector3().crossVectors(p.wallNormal, wallForward).normalize();
       const wallQ = new THREE.Quaternion().setFromRotationMatrix(this.matrix.makeBasis(wallRight, p.wallNormal, wallForward));
       this.boardQ.slerp(wallQ, p.wallWeight);
-      this.boardP.lerp(this.support.clone().addScaledVector(p.wallNormal, -.55).addScaledVector(Y, .34), p.wallWeight);
+      this.boardP.lerp((p.wallSpot ?? this.support).clone().addScaledVector(p.wallNormal, -.55).addScaledVector(Y, .34), p.wallWeight);
       this.up.copy(Y).applyQuaternion(this.boardQ);
       this.forward.copy(Z).applyQuaternion(this.boardQ);
       this.right.copy(X).applyQuaternion(this.boardQ);
+      // Turn the rider before the deck is placed under him and the legs are solved to it.
+      if (p.wallTurn) this.worldRotation(this.body, this.body.getWorldQuaternion(new THREE.Quaternion()).premultiply(p.wallTurn));
     }
 
     const hangAnchor = p.grind && p.rail ? p.rail.pointAt(p.railT)
@@ -553,6 +567,8 @@ export class SkateAnimation {
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
+    if (p.wallCrouch && p.wallSeat)
+      pelvis.lerp(footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5).add(p.wallSeat), p.wallCrouch);
     if(tweak){
       // Each silhouette owns its pelvis-to-deck relationship. The joints
       // fold in the free space around that relationship, not into the deck.
@@ -596,8 +612,11 @@ export class SkateAnimation {
     let footError = 0;
     for (let i = 0; i < 2; i++) {
       const kneeForward=tweak?grabForward:waistGrab||p.lip||uprightGrind||backflip||footFlip||impossible||this.deckCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
+      if (p.wallCrouch && p.wallKnees) kneeForward.lerp(p.wallKnees, p.wallCrouch).normalize();
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
+      // Perched on a wall each knee goes out over its own end of the deck.
+      if (p.wallCrouch && p.wallKnees) pole.addScaledVector(this.forward, (i === front ? 1 : -1) * parity * 1.4 * p.wallCrouch);
       if(tweak)pole.addScaledVector(grabForward,(tweak.kneeForward-.65)*tweakWeight).addScaledVector(this.up,-tweak.kneeDown*tweakWeight).addScaledVector(X.clone().applyQuaternion(grabFrame),tweak.kneeSide*p.stance*tweakWeight);
       const footWeight=underProgress>0?underMotion.footContact:1;
       const airFeet=underProgress>0?underMotion.airFeet:0;

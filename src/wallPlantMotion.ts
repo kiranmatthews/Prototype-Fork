@@ -4,8 +4,6 @@ import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animat
 export const WALL_PLANT_RELEASE_SECONDS = 0.34;
 /** How far the rig leans back off the face, feet to the wall: the launch line itself. */
 export const WALL_PLANT_LEAN = 0.62;
-/** Metres the feet come in from the collision skin to stand on the face. */
-export const WALL_PLANT_REACH = 0.36;
 
 /**
  * The three-point crouch on the face: both soles and one palm on the wall, the
@@ -24,6 +22,30 @@ export const WALL_PLANT_CROUCH = {
   twist: 0.62,
   lean: 0.26,
 } as const;
+/**
+ * The same cling on the board. The deck is slapped flat on the face under
+ * both feet — wheels to the wall, lying along it, the end on the open side
+ * kicked up — and the rider crouches on it as he would on the wall itself:
+ * toes up the face, knees splayed, the same trunk, a palm planted, the same
+ * look back. The seat and the drive are metres from the point midway between
+ * the soles, in the wall's frame.
+ */
+export const WALL_PLANT_PERCH = {
+  seat: { out: 0.24, up: -0.02, along: -0.02 },
+  /** The deck stands the feet off the wall, so the trunk leans in this many
+   * radians more than on foot to keep its palm on the face. */
+  hug: 0.3,
+  /** From the feet point, as on foot: the palm goes higher, up beside the head. */
+  hand: { up: 1.2, along: -0.56 },
+  /** Radians the deck's line leans off level. */
+  tilt: 0.35,
+  /** The legs fire: the hips drive this far off the soles, out and up the launch line. */
+  drive: { out: 0.6, up: 0.42 },
+} as const;
+/** The deck is the last thing off the wall: seconds into the flight it starts
+ * to come away, and the seconds it takes to get back under the feet. */
+export const WALL_PLANT_PEEL_FROM = 0.03;
+export const WALL_PLANT_PEEL_SECONDS = 0.14;
 /** How far the body is drawn onto a face it has just hit, while the press is
  * still open: the brace that a late plant grows out of. */
 export const WALL_PLANT_BRACE = 0.6;
