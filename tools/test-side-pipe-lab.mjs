@@ -82,13 +82,13 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
    * (default true) spins at crabs and checkpoints; `opts.until` ends the run.
    */
   const play = (opts = {}) => {
-    const { pump = false, spin = true, grind = true, until = () => false, seconds = 120, from = null } = opts;
+    const { pump = false, spin = true, grind = true, until = () => false, seconds = 120, from = null, depth = 0, jumpInAt = null } = opts;
     level.reset(true);
     p.respawn(level, true);
     if (from) { p.pos.set(from[0], from[1], 0); p.prevPos.copy(p.pos); }
     const log = { mounts: [], hangs: [], crabsOnBoard: 0, crabsOnFoot: 0, switchAt: null, grindAt: null,
       maxZ: 0, deaths: 0, bails: 0, finished: false, t: 0, wallMax: new Map(), checkpoints: 0, respawns: [],
-      transferAt: null, exitSpeed: null, masksSpent: 0, firstEastReach: new Map(), eastmostBeforeSwitch: -Infinity };
+      transferAt: null, exitSpeed: null, masksSpent: 0, firstEastReach: new Map(), eastmostBeforeSwitch: -Infinity, trouble: [], maxHeadingZ: 0 };
     let jump = 0, stuck = 0, lastX = p.pos.x, spinWas = false, grindWas = false;
     let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks };
     let foes = level.enemies.filter(e => e.alive).length;
@@ -96,7 +96,9 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     for (let i = 0; i < seconds / CONST.fixedStep; i++) {
       log.t = i * CONST.fixedStep;
       const x = p.pos.x, onFoot = !p.freeSkate;
-      const input = makeInput({ moveX: 1 });
+      const input = makeInput({ moveX: 1, moveY: depth });
+      // (optional) leave the deck in a jump instead of walking over the coping
+      if (jumpInAt !== null && onFoot && p.grounded && jump === 0 && x > jumpInAt - 3.2 && x < jumpInAt - 1.4) jump = 1;
       const gap = gaps.find(([a]) => x < a && a - x < 2.4);
       if (gap && onFoot && p.grounded && jump === 0) jump = 1;
       stuck = onFoot && p.grounded && p.state === 'ride' && Math.abs(x - lastX) < 0.002 ? stuck + 1 : 0;
@@ -107,7 +109,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
         Math.abs(e.group.position.y - p.pos.y) < 2.5);
       const post = spin && onFoot && level.checkpoints.find(c => !c.active && Math.abs(c.mesh.position.x - x) < 1.6 &&
         Math.abs(c.mesh.position.y - p.pos.y) < 2);
-      const wantSpin = !!(foe || post);
+      // a box standing in the lane of an on-foot floor: spin through it, as a player does
+      const box = spin && onFoot && level.crates.find(c => c.alive && !c.pending && !c.bang &&
+        c.mesh.position.x > x && c.mesh.position.x - x < 1.7 && Math.abs(c.mesh.position.y - p.pos.y) < 2.4);
+      const wantSpin = !!(foe || post || box);
       input.spinHeld = wantSpin; input.spinPressed = wantSpin && !spinWas; spinWas = wantSpin;
       const wantGrind = grind && p.state === 'air' && Math.abs(x - P4.eastLip) < 1 && p.pos.y > RAIL.y0 - 1.9;
       input.grindHeld = wantGrind || p.state === 'grind'; input.grindPressed = wantGrind && !grindWas; grindWas = wantGrind;
@@ -117,6 +122,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
 
       const here = pipeAt(p.pos.x);
       log.maxZ = Math.max(log.maxZ, Math.abs(p.pos.z));
+      if (p.freeSkate && p.grounded && p.groundHit?.halfpipe) log.maxHeadingZ = Math.max(log.maxHeadingZ, Math.abs(p.axisF.z));
       if (p.freeSkate && !prev.free && p.groundHit?.halfpipe) log.mounts.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, speed: p.speed });
       if (p.vertAir && !prev.vert && here)
         log.hangs.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', vV: p.vVel, t: log.t });
@@ -139,10 +145,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       if (p.state === 'grind' && prev.state !== 'grind' && log.grindAt === null) log.grindAt = { t: log.t, x: p.pos.x, y: p.pos.y };
       if (prev.state === 'grind' && p.state !== 'grind' && log.grindAt && !log.grindEnd)
         log.grindEnd = { x: p.pos.x, speed: Math.abs(p.speed), bailed: p.isBailing, seconds: log.t - log.grindAt.t };
-      if (p.isBailing && !prev.bail) log.bails++;
+      if (p.isBailing && !prev.bail) { log.bails++; log.trouble.push(`bailed at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
       if (p.masks < prev.masks) log.masksSpent++;
       log.checkpoints = level.checkpoints.filter(c => c.active).length;
-      if (p.totalDeaths > prev.deaths) log.deaths++;
+      if (p.totalDeaths > prev.deaths) { log.deaths++; log.trouble.push(`died at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
       if (prev.state === 'dead' && p.state !== 'dead') log.respawns.push({ x: p.pos.x, y: p.pos.y });
       prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks };
       if (p.state === 'finished') { log.finished = true; break; }
@@ -153,9 +159,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
 
   // ---- 1 · the whole course, the way it is meant to be held ------------------
   const run = play();
-  assert.ok(run.finished, `the course finishes on held right (stopped at x ${p.pos.x.toFixed(1)}, t ${run.t.toFixed(1)})`);
-  assert.equal(run.deaths, 0, 'no death on the intended line');
-  assert.equal(run.bails, 0, 'no bail on the intended line');
+  assert.ok(run.finished, `the course finishes on held right (stopped at x ${p.pos.x.toFixed(1)}, t ${run.t.toFixed(1)}; ${run.trouble.join('; ')})`);
+  assert.equal(run.deaths + run.bails, 0, `no death or bail on the intended line (${run.trouble.join('; ')})`);
   assert.ok(run.maxZ < 0.4, `the ride never leaves the play plane (max |z| ${run.maxZ.toFixed(2)})`);
   for (const q of [P0, P1, P2, P3, P4]) {
     const mount = run.mounts.find(m => m.pipe === q.name);
@@ -225,7 +230,52 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(home, 'and the west hang carries out onto the west deck: the pipe works in both directions');
   }
 
-  // ---- 5 · a death goes back to the checkpoint before its pipe ------------------
+  // ---- 5 · the pipe is ridden on its cross axis, whatever the stick says -------
+  // Jump into P0 instead of walking in, with the stick held up-and-right the
+  // whole time. Landing on the pipe mounts the board from a diagonal stick;
+  // the heading must still be the one line the camera sees.
+  const diagonal = play({ depth: 1, jumpInAt: P0.westLip, seconds: 20,
+    until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 3 });
+  assert.ok(p.grounded && p.pos.x > P0.eastLip + 3, `P0 jumped into with a diagonal stick: still exits east (${diagonal.trouble.join('; ')})`);
+  const jumpedIn = diagonal.mounts.find(m => m.pipe === P0.name);
+  assert.ok(jumpedIn && jumpedIn.y < P0.westLipY - 1, 'P0 jumped into: the board mounts on landing inside the pipe, not at the lip');
+  assert.equal(diagonal.maxHeadingZ, 0, 'a diagonal stick never turns the board off the cross axis');
+  assert.ok(diagonal.maxZ < 0.05 && diagonal.bails === 0, `...nor carries the ride out of the play plane (max |z| ${diagonal.maxZ.toFixed(3)})`);
+
+  // ---- 6 · a hang stays on its line when it heads a solid ------------------------
+  // The awkward case, in a pipe of its own: a `!` floated over a BARE lip with a
+  // drop behind it. The crate's sideways push-out must not walk the rider off
+  // the hang line and down the back of the wall.
+  {
+    const R = 4, F = 3, lip = F + R;
+    const fixture = new Level(scene, { id: '__side_pipe_pin', name: 'side pipe pin', data: { v: 1, name: 'side pipe pin',
+      spawn: [-lip - 5, R + 0.12, 0], killY: -20, components: [
+        { t: 'platform', p: [0, -1.5, 0], s: [90, 1, 6] },
+        { t: 'vertramp', vkind: 'half', sideOn: true, p: [0, 0, 0], len: 6, yaw: 0, rise: R, w: F, wallDeck: [8, 0] },
+        { t: 'crate', kind: 'bang', p: [lip - 0.1, R + 3, 0] },
+        { t: 'zone', p: [0, 0, 0], s: [120, 1, 18], dir: 'E', sideOn: true },
+        { t: 'camnode', p: [-50, 0, 0] }, { t: 'camnode', p: [50, 0, 0] },
+        { t: 'gate', p: [40, -1, 0], yaw: 90 },
+        ...[-0.83, 0.83].map(z => ({ t: 'wall', p: [0, -14, z], s: [120, 60, 0.6], invisible: true })),
+      ] } });
+    scene.updateMatrixWorld(true);
+    p.respawn(fixture, true);
+    const input = makeInput();
+    let eastmost = -Infinity, headed = false, behind = false;
+    for (let i = 0; i < 60 * 9; i++) {
+      input.moveX = 1;
+      p.step(CONST.fixedStep, input, fixture); fixture.update(CONST.fixedStep); input.consumeEdges();
+      eastmost = Math.max(eastmost, p.pos.x);
+      headed ||= fixture.crates.some(c => c.bang && c.bangUsed);
+      behind ||= p.pos.x > lip + 0.3;
+    }
+    fixture.dispose();
+    assert.ok(headed, 'fixture: the hang heads the ! over the bare east lip');
+    assert.ok(!behind, `fixture: the rider is never pushed out behind the wall (eastmost x ${eastmost.toFixed(2)}, lip ${lip})`);
+    p.respawn(level, true);
+  }
+
+  // ---- 7 · a death goes back to the checkpoint before its pipe ------------------
   const toRail = play({ until: (log, q) => log.checkpoints === level.checkpoints.length && q.pos.x > P4.westLip - 2 });
   assert.equal(toRail.checkpoints, level.checkpoints.length, 'the last checkpoint is banked on the way to the rail pipe');
   // Drop the rider into the hole under the rail, as a missed grind would.

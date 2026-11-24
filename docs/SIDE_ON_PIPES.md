@@ -28,7 +28,9 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 - `sideOn` on an east/west **zone** declares the stretch one line. On the board the heading stays on the
   travel axis and the stick held against travel is the pull-back brake (which rolls to a stop and steps
   off). Without it a reversal is a carve, and on a zero-depth plane a carve has nowhere to go: the board
-  rubs the plane wall and keeps rolling.
+  rubs the plane wall and keeps rolling. A rail caught there also ignores the direction that was held at
+  the catch until it is released: left/right is the balance on every rail, and on a side-on line it is
+  also the way you were travelling.
 - A pipe stands on nothing of its own. Put a floor block under its whole footprint with its top a few
   centimetres under `floorY`; the filled section the camera sees is seated on that.
 - Decks are part of the pipe and have **no side collider**. Butt level floors against the deck's outer
@@ -49,6 +51,7 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 | Hang, stick neutral or held in | Drops back into the pipe. |
 | A direction already held when the air began | Does not spin the rider until it has been released once (it is the travel stick). A fresh direction spins, as in every other air. |
 | A solid met in the hang (a `!` floated over the lip) | Stops the climb; the hang stays on its line instead of being pushed out behind the wall. |
+| A rail caught on a side-on line with a direction held | That direction does not tip the balance until it has been released once; a fresh left/right balances as on any rail. |
 
 Nothing in `src/tuning.ts` changed.
 
@@ -62,7 +65,7 @@ Walk-in at 9 m/s, right held unless noted.
 | 2.5 m west, 7 m east (a spine) | First swing climbs **4.45 m** of the 7 m wall. The swing back hangs about 7 m over the low west lip, and the second swing clears the east lip and transfers. Holding X on the walls clears it on the **first** swing; so does arriving on the board with X held down a 14 m approach (the same work, done early). |
 | Landing ramp, 5 m west wall, open east | Rolls out at 23–30 m/s: well over the 12.5 m/s crate-smash speed. |
 | `!` floated on the hang line | Headed from below by the hang. 6 m over a 3.5 m lip is beyond a double jump off the deck (5.5 m head reach) and inside the first west hang of a held-right swing. |
-| Rail starting over a bare lip | Caught with the grind button within the usual 2.1 m snap. The grind starts at only 3.5 m/s (a vertical hang has no speed along the rail), so run it **downhill**: a 4.4 m drop over 19 m leaves at 20 m/s. |
+| Rail starting over a bare lip | Caught with the grind button within the usual 2.1 m snap. The grind starts at only 3.5 m/s (a vertical hang has no speed along the rail), which is where the balance needle runs away fastest, so run it **downhill, steepest first**. A straight 19 m rail dropping 4.4 m took 1.65 s and shed a rider who gave no balance input after 1.18 s; dropping 2.6 m in its first 3 m and 1.8 m over the next 9 m, the grind lasts 0.93 s, leaves at 20 m/s and needs none. |
 | No input at all, decked pipe | The rider never stops: every coping launch adds the pipe's pop, so the swing settles at 5–6 m hangs. Leaving needs the stick held out over a lip. |
 
 ## Authoring rules the test course paid for
@@ -76,7 +79,9 @@ Walk-in at 9 m/s, right held unless noted.
   3.8 m).
 - **Start each on-foot stretch with a catch ledge.** A 2.1 m step is over a charged ollie (1.7 m) and
   inside the ledge grab (2.4 m): the board is stopped and its rider climbs up by the hands. Checkpoints
-  and small platforms go after it.
+  and small platforms go after it. Keep the first 2.4 m of the ledge bare: the rider's contact box
+  reaches a metre ahead and 3 m up, so from the floor below it clips a box standing near the edge and
+  trips him before the hands can catch.
 - **On a single plane the default stopwatch stands in the only lane**, two strides from the spawn, and a
   time trial strips the checkpoints. Author a `clock` behind the spawn.
 - **Float a `!` on the hang line** (0.08 m inside the lip) and out of on-foot reach, over the lip the

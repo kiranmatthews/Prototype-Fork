@@ -40,6 +40,8 @@ const BASE = -12; // floors are solid blocks down to here, below any camera fram
 const PIT_DROP = 7; // a pit's pool sits this far under the floors it divides
 // A step a charged ollie (1.7 m) cannot make and the hands can (2.4 m reach).
 const CATCH = 2.1;
+const LEDGE_CP = 2.8; // where a catch ledge's checkpoint stands, from its edge
+const LEDGE_BOXES = 4.4; // ...and where its stack of boxes starts
 const G = 0.96; // authored crate grid (crates are enlarged x1.2 at build time)
 
 const STONE = '#6f7f8a';
@@ -58,20 +60,29 @@ export const SIDE_PIPE_GROUPS = {
 } as const;
 const GR = SIDE_PIPE_GROUPS;
 
+/** Heights are sums of a few decimals; keep the authored data free of float dust. */
+const r = (v: number): number => Math.round(v * 100) / 100;
+
 const components: CustomComponent[] = [];
 const add = (c: CustomComponent): void => { components.push(c); };
 
 /** A solid floor block from x0 to x1 whose top is `top`. */
 const floor = (x0: number, x1: number, top: number, nm: string, color = STONE): void =>
-  add({ t: 'platform', p: [(x0 + x1) / 2, (top + BASE) / 2, 0], s: [x1 - x0, top - BASE, DEPTH],
+  add({ t: 'platform', p: [r((x0 + x1) / 2), r((top + BASE) / 2), 0], s: [r(x1 - x0), r(top - BASE), DEPTH],
     tex: 'stone', color, grp: GR.floor, nm });
 /** A lethal gap between two floors: the pool sits a short fall under `top`. */
 const pit = (x0: number, x1: number, top: number, nm: string): void =>
-  add({ t: 'pit', p: [(x0 + x1) / 2, top - PIT_DROP, 0], s: [x1 - x0, 1, DEPTH + 0.4], grp: GR.floor, nm });
+  add({ t: 'pit', p: [r((x0 + x1) / 2), r(top - PIT_DROP), 0], s: [r(x1 - x0), 1, DEPTH + 0.4], grp: GR.floor, nm });
 const crate = (x: number, y: number, kind: NonNullable<CustomComponent['kind']>, nm: string,
   extra: Partial<CustomComponent> = {}): void =>
-  add({ t: 'crate', p: [x, y, 0], kind, grp: GR.crates, nm, ...extra });
-const fruit = (x: number, y: number): void => add({ t: 'wumpa', p: [x, y, 0], grp: GR.crates });
+  add({ t: 'crate', p: [r(x), r(y), 0], kind, grp: GR.crates, nm, ...extra });
+const fruit = (x: number, y: number): void => add({ t: 'wumpa', p: [r(x), r(y), 0], grp: GR.crates });
+/** Two boxes and a cap, standing in the lane of a floor that is only ever WALKED: spin through. */
+const pyramid = (x: number, top: number, cap: NonNullable<CustomComponent['kind']>, nm: string): void => {
+  crate(x, top, 'wood', nm);
+  crate(x + G, top, 'wood', nm);
+  crate(x + G / 2, top + G, cap, `${nm} (cap)`);
+};
 /** A touching row floated clear over a rolling board's head; a jump or an ollie heads it. */
 const OVERHEAD = 3.4; // a mounted rider's crate-contact box stands 3.0 m; a full on-foot jump still heads 3.8 m
 const overhead = (x: number, top: number, kinds: NonNullable<CustomComponent['kind']>[], nm: string): void =>
@@ -91,18 +102,19 @@ export interface SidePipe {
  * that side is open). It stands on its own block so the filled section the
  * camera sees is seated on solid ground.
  */
-function pipe(name: string, westLip: number, floorY: number, flatHalf: number,
+function pipe(name: string, westLip: number, floor: number, flatHalf: number,
   rise: [number, number], deck: [number, number] = [0, 0]): SidePipe {
+  const floorY = r(floor);
   const cross = westLip + rise[0] + flatHalf;
   const eastLip = cross + flatHalf + rise[1];
-  add({ t: 'platform', p: [(westLip - deck[0] + eastLip + deck[1]) / 2, (floorY - 0.06 + BASE) / 2, 0],
-    s: [eastLip + deck[1] - (westLip - deck[0]), floorY - 0.06 - BASE, DEPTH],
+  add({ t: 'platform', p: [(westLip - deck[0] + eastLip + deck[1]) / 2, r((floorY - 0.06 + BASE) / 2), 0],
+    s: [eastLip + deck[1] - (westLip - deck[0]), r(floorY - 0.06 - BASE), DEPTH],
     tex: 'stone', color: STONE_DARK, grp: GR.floor, nm: `${name}: footing` });
   add({ t: 'vertramp', vkind: 'half', sideOn: true, p: [cross, floorY, 0], len: DEPTH, yaw: 0,
     w: flatHalf, rise: Math.max(rise[0], rise[1]), wallRise: rise, wallDeck: deck,
     tex: 'pavement', color: PIPE, grp: GR.pipes, nm: name });
   return { name, westLip, eastLip, cross, flatHalf, floorY, westRise: rise[0], eastRise: rise[1],
-    westDeck: deck[0], eastDeck: deck[1], westLipY: floorY + rise[0], eastLipY: floorY + rise[1] };
+    westDeck: deck[0], eastDeck: deck[1], westLipY: r(floorY + rise[0]), eastLipY: r(floorY + rise[1]) };
 }
 /** Fruit hung a little off a transition, so a clean swing collects the curve. */
 function fruitOnWall(p: SidePipe, side: -1 | 1, count: number): void {
@@ -151,13 +163,17 @@ overhead(27.5, START_TOP, ['wood', 'mystery', 'wood'], 'Roll-in: overhead row pa
 // nearly three times the height of the one you drop in from — and is the
 // back of the next ramp. (Every pipe here is about 12 m lip to lip: the widest
 // side view shows 13 m ahead, so the far wall is in frame from the near lip.)
-const PUMP_TOP = START_TOP + CATCH;
-floor(34, 42, PUMP_TOP, 'Pump: catch ledge');
-add({ t: 'checkpoint', p: [37.5, PUMP_TOP, 0], grp: GR.floor, nm: 'Checkpoint 1: on foot before the pump pipe' });
-pit(42, 45.5, PUMP_TOP, 'Gap before the pump pipe');
-floor(45.5, 51, PUMP_TOP, 'Pump: approach floor');
-for (const x of [46.5, 48, 49.5]) fruit(x, PUMP_TOP + 1.15);
-export const P1 = pipe('P1 pump pipe', 55, PUMP_TOP - 2.5, 1.5, [2.5, 7], [4, 0]);
+const PUMP_TOP = r(START_TOP + CATCH);
+// (A mounted rider's crate-contact box is 3 m tall and reaches a metre ahead:
+// from the floor BELOW it clips anything within 2 m of a 2.1 m ledge's edge.
+// So a catch ledge keeps its first 2.4 m bare, then checkpoint, then boxes.)
+floor(34, 44, PUMP_TOP, 'Pump: catch ledge');
+add({ t: 'checkpoint', p: [34 + LEDGE_CP, PUMP_TOP, 0], grp: GR.floor, nm: 'Checkpoint 1: on foot before the pump pipe' });
+pyramid(34 + LEDGE_BOXES, PUMP_TOP, 'mystery', 'Pump: on-foot stack after the checkpoint');
+pit(44, 47.5, PUMP_TOP, 'Gap before the pump pipe');
+floor(47.5, 53, PUMP_TOP, 'Pump: approach floor');
+for (const x of [48.5, 50, 51.5]) fruit(x, PUMP_TOP + 1.15);
+export const P1 = pipe('P1 pump pipe', 57, PUMP_TOP - 2.5, 1.5, [2.5, 7], [4, 0]);
 fruitOnWall(P1, 1, 5);
 fruitOverLip(P1, -1, [1.5, 3, 4.5]);
 // The reward for swinging back: a west hang's worth above the low lip.
@@ -181,22 +197,25 @@ for (let x = RUNOUT.x0 + 4; x < RUNOUT.x0 + 34; x += 3) fruit(x, RUN_TOP + 1.0);
 // The climb is on foot: the catch ledge, a gap, the crab met alone on a wide
 // floor, a step — then the same crab on a pipe's flat, where the answer is the
 // same spin at twice the speed. A mask waits on the approach first.
-const CLIMB_TOP = RUN_TOP + CATCH;
-floor(RUNOUT.x1, RUNOUT.x1 + 7, CLIMB_TOP, 'Climb: catch ledge');
-add({ t: 'checkpoint', p: [RUNOUT.x1 + 3.5, CLIMB_TOP, 0], grp: GR.floor, nm: 'Checkpoint 2: on foot after the run-out' });
-pit(RUNOUT.x1 + 7, RUNOUT.x1 + 10, CLIMB_TOP, 'Climb: gap');
-const CRAB_X0 = RUNOUT.x1 + 10;
+const CLIMB_TOP = r(RUN_TOP + CATCH);
+floor(RUNOUT.x1, RUNOUT.x1 + 9, CLIMB_TOP, 'Climb: catch ledge');
+add({ t: 'checkpoint', p: [RUNOUT.x1 + LEDGE_CP, CLIMB_TOP, 0], grp: GR.floor, nm: 'Checkpoint 2: on foot after the run-out' });
+pyramid(RUNOUT.x1 + LEDGE_BOXES, CLIMB_TOP, 'wood', 'Climb: on-foot stack after the checkpoint');
+pit(RUNOUT.x1 + 9, RUNOUT.x1 + 12, CLIMB_TOP, 'Climb: gap');
+const CRAB_X0 = RUNOUT.x1 + 12;
 floor(CRAB_X0, CRAB_X0 + 13, CLIMB_TOP, 'Climb: crab floor');
-add({ t: 'enemy', foe: 'grunt', p: [CRAB_X0 + 7.5, CLIMB_TOP, 0], range: 3.5, speed: 2.4, grp: GR.enemies,
+// The crab keeps to the far two thirds: the stack by the landing is cleared in peace first.
+add({ t: 'enemy', foe: 'grunt', p: [CRAB_X0 + 8.5, CLIMB_TOP, 0], range: 2.5, speed: 2.4, grp: GR.enemies,
   nm: 'Crab: first met on foot, on roomy ground' });
 crate(CRAB_X0 + 1.4, CLIMB_TOP, 'wood', 'Climb: crab floor stack');
 crate(CRAB_X0 + 1.4, CLIMB_TOP + G, 'wood', 'Climb: crab floor stack');
 crate(CRAB_X0 + 1.4 + G, CLIMB_TOP, 'mystery', 'Climb: crab floor stack');
-const ENEMY_TOP = CLIMB_TOP + 1.6;
+const ENEMY_TOP = r(CLIMB_TOP + 1.6);
 const ENEMY_X0 = CRAB_X0 + 13;
 floor(ENEMY_X0, ENEMY_X0 + 9, ENEMY_TOP, 'Enemy pipe: approach floor (one step up)');
 add({ t: 'checkpoint', p: [ENEMY_X0 + 2.5, ENEMY_TOP, 0], grp: GR.floor, nm: 'Checkpoint 3: before the enemy pipe' });
 crate(ENEMY_X0 + 6, ENEMY_TOP, 'mask', 'Enemy pipe: a mask before the crab on the line');
+crate(ENEMY_X0 + 6 + G, ENEMY_TOP, 'wood', 'Enemy pipe: the mask stands in a pair');
 export const P2 = pipe('P2 enemy pipe', ENEMY_X0 + 13, ENEMY_TOP - 3.5, 2.5, [3.5, 3.5], [4, 6]);
 add({ t: 'enemy', foe: 'grunt', p: [P2.cross, P2.floorY, 0], range: 1.4, speed: 1.6, grp: GR.enemies,
   nm: 'Crab: on the flat of the pipe, on the riding line' });
@@ -210,13 +229,13 @@ overhead(P2_OUT + 3.5, ENEMY_TOP, ['wood', 'wood', 'mystery'], 'Enemy pipe: over
 // no way out: its east wall backs onto a hole. The `!` hangs over the west
 // lip — the lip a held-right rider only visits on the swing BACK — and
 // heading it out of a hang turns the slab solid.
-const HOPS_TOP = ENEMY_TOP + CATCH;
+const HOPS_TOP = r(ENEMY_TOP + CATCH);
 const HOPS_X0 = P2_OUT + 10;
 floor(HOPS_X0, HOPS_X0 + 6, HOPS_TOP, 'Switch approach: catch ledge');
 pit(HOPS_X0 + 6, HOPS_X0 + 9.5, HOPS_TOP, 'Switch approach: first gap');
 floor(HOPS_X0 + 9.5, HOPS_X0 + 13.5, HOPS_TOP, 'Switch approach: stepping floor');
 pit(HOPS_X0 + 13.5, HOPS_X0 + 17, HOPS_TOP, 'Switch approach: second gap');
-const SWITCH_TOP = HOPS_TOP + 0.8;
+const SWITCH_TOP = r(HOPS_TOP + 0.8);
 floor(HOPS_X0 + 17, HOPS_X0 + 21, SWITCH_TOP, 'Switch approach: stepping floor (up)');
 pit(HOPS_X0 + 21, HOPS_X0 + 24, SWITCH_TOP, 'Switch approach: third gap');
 const SWITCH_X0 = HOPS_X0 + 24;
@@ -224,6 +243,7 @@ floor(SWITCH_X0, SWITCH_X0 + 10, SWITCH_TOP, 'Switch pipe: approach floor');
 for (const [x, top] of [[HOPS_X0 + 11.5, HOPS_TOP], [HOPS_X0 + 19, SWITCH_TOP], [SWITCH_X0 + 2, SWITCH_TOP]])
   fruit(x, top + 1.15);
 add({ t: 'checkpoint', p: [SWITCH_X0 + 3.5, SWITCH_TOP, 0], grp: GR.floor, nm: 'Checkpoint 4: before the switch pipe' });
+pyramid(SWITCH_X0 + 6, SWITCH_TOP, 'mystery', 'Switch pipe: on-foot stack on the approach');
 export const P3 = pipe('P3 switch pipe', SWITCH_X0 + 14, SWITCH_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
 // 6 m over the lip: a double jump off the deck heads 5.5 m, so only a hang
 // reaches it — and the first west hang of a held-right swing (7 m) does.
@@ -242,10 +262,11 @@ overhead(SWITCH_SLAB.x1 + 4, SWITCH_TOP, ['mystery', 'wood', 'wood'], 'Switch pi
 // The last pipe has the same bare east wall and no switch: the rail that
 // starts over its lip is the road out, and it runs downhill to the gate so
 // the grind gathers the speed a vertical hang could not bring to it.
-const RAIL_TOP = SWITCH_TOP + CATCH;
+const RAIL_TOP = r(SWITCH_TOP + CATCH);
 const RAIL_X0 = SWITCH_SLAB.x1 + 12;
 floor(RAIL_X0, RAIL_X0 + 8, RAIL_TOP, 'Rail pipe: catch ledge');
-add({ t: 'checkpoint', p: [RAIL_X0 + 3.5, RAIL_TOP, 0], grp: GR.floor, nm: 'Checkpoint 5: before the rail pipe' });
+add({ t: 'checkpoint', p: [RAIL_X0 + LEDGE_CP, RAIL_TOP, 0], grp: GR.floor, nm: 'Checkpoint 5: before the rail pipe' });
+pyramid(RAIL_X0 + LEDGE_BOXES, RAIL_TOP, 'wood', 'Rail pipe: on-foot stack after the checkpoint');
 export const P4 = pipe('P4 rail pipe', RAIL_X0 + 12, RAIL_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
 fruitOverLip(P4, -1, [1.4, 2.6, 3.8]);
 // A vertical hang brings no speed along the rail (the grind starts at 3.5 m/s,
@@ -254,14 +275,14 @@ fruitOverLip(P4, -1, [1.4, 2.6, 3.8]);
 // leaves at 20 m/s. That is a debut — caught, it carries you — not a balance
 // exam; a longer or flatter rail is the escalation.
 export const RAIL = {
-  x0: P4.eastLip - 0.25, y0: P4.eastLipY + 3.1,
-  kneeX: P4.eastLip + 2.75, kneeY: P4.eastLipY + 0.5,
-  x1: P4.eastLip + 12, y1: P4.eastLipY - 1.3,
+  x0: P4.eastLip - 0.25, y0: r(P4.eastLipY + 3.1),
+  kneeX: P4.eastLip + 2.75, kneeY: r(P4.eastLipY + 0.5),
+  x1: P4.eastLip + 12, y1: r(P4.eastLipY - 1.3),
 };
 add({ t: 'rail', p: [RAIL.x0, RAIL.y0, 0],
-  pts: [[0, 0, 0, 0], [RAIL.kneeX - RAIL.x0, 0, 0, RAIL.kneeY - RAIL.y0], [RAIL.x1 - RAIL.x0, 0, 0, RAIL.y1 - RAIL.y0]],
+  pts: [[0, 0, 0, 0], [r(RAIL.kneeX - RAIL.x0), 0, 0, r(RAIL.kneeY - RAIL.y0)], [r(RAIL.x1 - RAIL.x0), 0, 0, r(RAIL.y1 - RAIL.y0)]],
   color: ACCENT, grp: GR.finish, nm: 'Rail: out over the east lip and down to the finish' });
-const FINISH_TOP = P4.eastLipY - 2.6;
+const FINISH_TOP = r(P4.eastLipY - 2.6);
 export const FINISH = { x0: P4.eastLip + 8.5, x1: P4.eastLip + 40, top: FINISH_TOP };
 pit(P4.eastLip + 2.2, FINISH.x0, FINISH_TOP, 'Rail: the drop under the grind');
 floor(FINISH.x0, FINISH.x1, FINISH_TOP, 'Finish floor');

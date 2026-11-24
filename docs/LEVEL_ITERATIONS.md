@@ -12770,3 +12770,58 @@ The Haunted Hassle replay reached a verified playable fix in about 14 minutes. A
 Abandon Ship now brakes the component of velocity that opposes the input. Sideways input can steer the remaining momentum, and a held direction stays stable as the chase camera turns. With the recorded input, the rider slowed to 8.39 m/s forward after 0.2 seconds and landed in a roll 2.87 m ahead with 0.34 m of lateral travel. A neutral release from the identical takeoff carried 15.33 m forward. Both jumps landed on frame 6856 and followed the same vertical arc.
 
 Lite and full native-resolution Chrome reproduced the corrected flight with clean consoles. The steering regression covers left and right approach errors, partial analogue pullback and a rotating chase view. The existing ordinary, spring, vert and landing checks also passed.
+
+## 2026-11-23 — Side Pipe Lab: halfpipes on a side-scrolling path
+
+Brief: a test level with only side scrolling whose path runs through halfpipes seen side on and open —
+walk up to one and be dropped in on the board automatically as you cross its edge — with one idea per
+pipe: pump up enough hang time to reach a higher right-hand side and spine-transfer out to the next
+landing, a rail to grind, an enemy in the middle, a `!` crate to hit.
+Elapsed: about 55 minutes from the request to the first complete run of the course by the real player
+(headless), about 65 minutes to the same course playing in Chrome. Times are approximate: the session
+was restarted once mid-task. Hardening, the route test and these notes took the rest of the session.
+
+**The course** (`side-pipe-lab`, `src/levels/side-pipe-lab.ts`): one east travel zone on a single plane,
+332 m from spawn to gate, five checkpoints, viewed from the south at the rig's widest
+side framing. Between pipes it is
+on-foot platforming; every pipe is about 12 m lip to lip so the far wall is in frame from the near lip.
+
+| Pipe | Shape | What it asks |
+|---|---|---|
+| P0 roll-in | 3.5 m walls, decks both sides | nothing: drop in, hold right, air out onto the far deck |
+| P1 pump | 2.5 m west wall, 7 m east wall that is a spine into a 5 m landing ramp with no east wall | the first swing climbs 4.45 m of the 7 m; the swing back hangs 7 m over the low lip; the second swing clears the ridge and transfers. Holding X on the walls does it in one. The ramp rolls out at 26 m/s through two smash stacks |
+| P2 enemy | 3.5 m walls, a crab patrolling the flat | the spin, from the board; a mask waits on the approach |
+| P3 switch | bare east wall over a hole; `!` floated 6 m over the west lip | the east hang goes nowhere; the west hang of the swing back heads the `!`, the exit slab turns solid, and the next east hang carries out |
+| P4 rail | bare east wall; a rail from 3.1 m over its lip down to the finish | the grind button in the east hang; the rail drops steeply first, so the 0.93 s grind gathers 20 m/s |
+
+**Runtime support**, all opt-in through `sideOn` (details and measurements in
+[SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); nothing in `src/tuning.ts` changed, symmetric pipes are untouched):
+
+- The analytic `Halfpipe` takes a per-wall shape: `wallRise: [west, east]` (0 leaves a side open),
+  `wallDeck`, and a filled section for a side camera. It was symmetric and deckless, and a swept quarter
+  ramp bails on re-entry under the normal (non-park) controls.
+- On a `sideOn` pipe: the automatic drop-in over a decked coping; the heading locked to the cross axis
+  (the stick carves the walls but never turns or brakes); a hang carried out over a lip when the stick is
+  held out over it — the existing mirrored spine transfer if a pipe mouth is beyond the ridge, a plain
+  board air if there is something to land on, nothing if there is not.
+- On a `sideOn` zone: the board keeps to the travel axis and the stick against travel is the pull-back
+  brake. On a zero-depth plane the ordinary reversal is a carve with nowhere to go.
+- Three "the stick you were already holding is the travel stick" rules, without which held right is
+  punished: it does not spin the air out of a pipe, and it does not tip the balance of a rail caught on a
+  side-on line, until it has been released once.
+
+**What the layout had to learn.** A deck's side collider at the lip plane pinned the rider to the wall and
+handed him a ledge grab mid-climb, so decks belong to the pipe and carry none. A floor crate, a checkpoint
+and a 2.1 m-high "overhead" row all tripped the rider leaving a pipe on the board (his crate-contact box is
+3.0 m tall), so exit floors are bare, overhead rows start at 3.4 m and every on-foot stretch begins with a
+2.1 m catch ledge that stops the board — with its first 2.4 m bare, because that same box reaches over the
+ledge from below. The default stopwatch stood in the only lane and a time trial strips checkpoints, so it
+is authored behind the spawn. A straight exit rail bailed a rider who kept holding right after 0.4 s. All
+of this is now in the bible (XV.14 and the Part XX checklist).
+
+**Checks.** `npm run check:side-pipe` plays the course with the real player on held right — jumping the
+gaps, spinning the crabs, boxes and checkpoints, pressing grind at the rail — in 49.0 s with no death or
+bail, and asserts each pipe's claim, the pumped shortcut, the cost of a missed spin, the one-line brake
+with a westward return through P0, a jump-in on a diagonal stick, a `!` headed over a bare lip, and the
+checkpoint a fall under the rail returns to. Each of the seven runtime rules was removed in turn in a
+scratch copy; the test fails by name without any one of them.

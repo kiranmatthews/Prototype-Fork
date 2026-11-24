@@ -4459,6 +4459,7 @@ export class Player {
     this.lipPipe = null;
     this.lipCoolT = 0;
     this.hangPipe = null;
+    this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -5926,6 +5927,8 @@ export class Player {
       this.wrapVerticalSpace(level);
       const beforeCollisionSpeed = Math.abs(this.speed);
       this.collide(level);
+      // (a solid's sideways push-out was just resolved: the hang goes back on its line)
+      this.pinSideOnHang();
       if (Math.abs(this.speed) < beforeCollisionSpeed - 1e-7) this.skateOverdrive.interrupt();
       this.flushLevelCrateRewards(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
@@ -9319,15 +9322,7 @@ export class Player {
     // Non-pipe hangs first RE-AIM that plane at whatever the wall feeler
     // finds, so curved walls and bowl corners carry the hang around with them.
     if (!this.parkControls && this.vertAir && !this.hangPipe && !this.pipeHang) this.trackVertWall(level, dt);
-    if (this.vertAir && !this.parkControls && this.pipeHang && this.hangPipe?.sideOn) {
-      // A side-on hang rises and falls on ONE line. A solid met on the way (a
-      // switch crate floated over the coping to be headed) may stop the climb,
-      // but its sideways push-out must not walk the body off that line and
-      // drop it behind the wall.
-      if (this.hangPipe.axis === 'z') this.pos.x = this.vertAnchor.x;
-      else this.pos.z = this.vertAnchor.z;
-      this.stepSideOnCarry(level);
-    }
+    if (this.pinSideOnHang()) this.stepSideOnCarry(level);
     if (this.vertAir && !this.parkControls) {
       // BALLISTIC VERT (THPS): the air is free flight. The launch already did
       // the assist work — enterVertAir zeroes the into-ramp component, so with
@@ -11701,6 +11696,19 @@ export class Player {
   // A pipe a side-scrolling stretch looks ACROSS is ridden as the one line
   // the camera can see: in over one lip, wall to wall, out over the other.
 
+  /**
+   * A side-on hang rises and falls on ONE line. A solid met on the way (a
+   * switch crate floated over the coping to be headed) may stop the climb, but
+   * its sideways push-out must not walk the body off that line and drop it
+   * behind the wall. Returns whether such a hang is live.
+   */
+  private pinSideOnHang(): boolean {
+    if (!this.vertAir || this.parkControls || !this.pipeHang || !this.hangPipe?.sideOn) return false;
+    if (this.hangPipe.axis === 'z') this.pos.x = this.vertAnchor.x;
+    else this.pos.z = this.vertAnchor.z;
+    return true;
+  }
+
   /** Keep the board on the pipe's cross axis; the swing only ever reverses. */
   private lockSideOnHeading(hp: Halfpipe): void {
     const zAxis = hp.axis === 'z';
@@ -12139,6 +12147,7 @@ export class Player {
     this.vertAir = false;
     this.pipeHang = false;
     this.hangPipe = null;
+    this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.vertLatVel = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
