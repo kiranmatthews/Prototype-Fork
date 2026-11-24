@@ -2011,6 +2011,57 @@ Popping out of a pipe lands on foot, so the stretch after it is plain platformin
 wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
 a board.
 
+### XV.15 Wall kick and wallplant (measured)
+
+Jump into a wall and press Jump as you meet it. The press counts from 0.2 s before the wall
+(`wallPlantBuffer`) to 0.2 s after first touching it (`wallPlantWindow`). On foot it is a **Wall Kick**
+(60 points); on the board it is a **Wallplant** (150 points) that turns the rider around. All values are from
+`node tools/test-wall-plant.mjs` and the real Player; the tuning lives in the WALL PLANT section.
+
+**On foot.** A kick leaves the wall at 9.5 m/s out and 12.5 m/s up, and keeps whatever the approach was
+carrying along the wall. Between two facing walls, with nothing held but the timing of Jump:
+
+| Shaft width, face to face | Height gained per kick | Time between kicks |
+|---|---|---|
+| 2 m | 1.2 m | 0.15 s |
+| 3 m | 1.9 m | 0.25 s |
+| **4 m** | **2.2 m** | 0.35 s |
+| 5 m | 1.9 m | 0.48 s |
+| 6 m | 0.75 m | 0.57 s |
+| 6.5 m | loses 0.35 m per kick | 0.62 s |
+| 7 m or more | the far wall is out of reach | |
+
+Build kick shafts **3–5 m wide**; 4 m is the sweet spot and 6 m is the limit. A corridor wider than 6.5 m
+cannot be climbed this way.
+
+**What a kick is not.**
+
+- **One wall is one kick.** The face last kicked takes no second kick until the rider lands, grinds, hangs
+  or bounces, so a single wall cannot be climbed. A kick peaks about 2.3 m above the plant, some 2 m out
+  from the face. Steering straight back, the rider is far below the kick before reaching the wall again;
+  spending a double jump at the apex gets back to it about 0.8 m above the kick, which is less than the
+  double jump alone gives (1.74 m). A right-angle corner gives at most two kicks, one off each face,
+  before the rider is flying out of it: about 6.5 m above the floor from a full jump on a diagonal
+  approach, so a corner of tall walls reaches roughly 2 m higher than the double jump does.
+- **A wall you can still get on top of is climbed, not kicked** (`wallPlantLedgeYield`, on by default). If
+  the lip is within the jump you are in, an unspent double jump and the 2.4 m ledge grab, Jump there keeps
+  its old meaning. A kick shaft therefore has to be taller than the reach in XV.2 (lips above ≈ 7 m from
+  the floor), or have faces with no walkable top: a plain box `wall` offers no ledge, a `platform` side
+  does. Near the top of a block shaft the lip comes into reach, the last press
+  becomes the double jump, and the ledge grab finishes the climb.
+- **Not a kick off nothing.** Walls authored `invisible`, containment barriers and the coast boundary give
+  no kick.
+  A course can opt out entirely with `wallPlants: false` in its level data.
+- **It does not refresh the double jump**, and it does not spend it.
+
+**On the board.** The plant must be pressed *before* a wall the rider would otherwise wipe out on (any
+airborne hit at more than about 8 m/s into the face); below that speed the 0.2 s after the touch counts
+too. It returns 90 % of the speed carried into the wall (never less than 8 m/s) and pops at 10 m/s.
+From a full-charge ollie at 23.9 m/s: out at 21.4 m/s, apex 3.2 m, touchdown 14 m back from the wall,
+riding. A deck mid-flip is caught by the plant and the air after it is a fresh one for tricks, so
+`Kickflip + Wallplant + Kickflip` or `Wallplant + 50-50` is one combo. A rail on the return line belongs
+7–30 m back from the face, within the 2.1 m snap radius of the approach line (Wall Plant Lab, station C).
+
 ---
 
 ## Part XVI — Skate × crate patterns

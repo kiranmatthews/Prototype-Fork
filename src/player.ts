@@ -11,6 +11,8 @@ import { trampolineSurfacePresentations } from './trampolineSurface';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
+import { sampleWallPlantMotion, WALL_PLANT_LEAN, WALL_PLANT_REACH, WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
+import { legacyWallPlantReplay } from './wallPlantPolicy';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { kiteGrabElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
@@ -678,6 +680,13 @@ const OLLIE_DECK_TRICK_CHORD = 0.1;
 // Raw rail polylines may meet at hard nodes. Curves arrive as many shallow
 // turns; anything this sharp is an authored edge and ejects the grind.
 const MAX_CONTINUOUS_GRIND_CORNER_ANGLE = (50 * Math.PI) / 180;
+// Wall plant: seconds off a face before pressing into it again is a NEW impact
+// (and a new late window) rather than the same one continuing.
+const WALL_PLANT_REIMPACT = 0.1;
+// Wall plant camera ride (presentation): how fast the rig's full follow comes
+// in at a plant, and how long it is kept after the chain ends on support.
+const WALL_PLANT_LIFT_RATE = 30;
+const WALL_PLANT_LIFT_HOLD = 0.12;
 // Gentle analogue input still owns a real Walk. World/platform carry is
 // removed before this threshold, so it can stay low without waking the gait
 // while the player is merely standing on something that moves.
@@ -1679,6 +1688,40 @@ export class Player {
   private wallChargeT = 0; // how long X has been PUMPED on the wall — release to spring off, bigger with more charge
   private wallridePose = 0; // 0..1 visual tilt onto the wall
   private wallChargePose = 0; // 0..1 eased crouch while pumping the wall (visual charge tell)
+  // WALL PLANT — the timed wall kick. Jump INTO a wall and press X as you meet
+  // it: the feet (or the wheels) plant on the face for a beat, then spring you
+  // up and away. On foot it chains between facing walls; on the board it turns
+  // you around and scores as a trick. See the WALL PLANT block by stepWallride.
+  /** False for AI riders: they hold X as an accelerator, not as a timed press. */
+  wallPlantEnabled = true;
+  private wallPlantBufferT = 0; // an early X press, waiting for the wall it was aimed at
+  private wallPlantBufferTap = false; // ...and it has since been released (a tap, not a hold)
+  private wallPlantFallbackTap = false; // the wall never came: the tap goes back to the double jump
+  private wallPlantContactT = 0; // the late window: seconds left to press X after an impact
+  private wallPlantTouchT = Infinity; // seconds since the body last pressed on the remembered face
+  private readonly wallPlantTouchNormal = new THREE.Vector3(); // the face last pressed on, kickable or not
+  private readonly wallPlantNormal = new THREE.Vector3(); // the face the window is open on, pointing back at the rider
+  private readonly wallPlantSpot = new THREE.Vector3(); // feet position against that face
+  private readonly wallPlantIncoming = new THREE.Vector3(); // travel carried INTO the face (XZ)
+  private readonly wallPlantLastNormal = new THREE.Vector3(); // the face last kicked off
+  private readonly wallPlantLeanNormal = new THREE.Vector3(); // the face the rig is leaning off (presentation)
+  private wallPlantHasLast = false; // ...which will not take another kick until a real contact re-arms it
+  private wallPlantStickT = 0; // planted on the wall: the launch fires when this runs out
+  private wallPlantStickTotal = 0;
+  private readonly wallPlantLaunch = new THREE.Vector3(); // exit velocity decided at the plant (y = the pop)
+  private wallPlantBoard = false; // the live plant/flight is a board wallplant, not an on-foot kick
+  private wallPlantWall: THREE.Box3 | null = null; // the collider that face belongs to
+  private wallKickAir = false; // on-foot flight out of a kick: carried momentum the stick bends
+  private wallKickFresh = false; // the launch step: no travel has been measured yet
+  private static readonly WALL_PLANT_FACE = { nx: 0, nz: 0, x: 0, z: 0, bottom: 0, top: 0, t: 0 };
+  private wallPlantChain = 0; // plants since the last real contact
+  private wallPlantAge = -1; // seconds since the last launch; -1 = none this air (presentation)
+  private wallPlantPose = 0; // 0..1 eased "standing on the wall" tilt (presentation)
+  private wallPlantLift = 0; // 0..1 eased: the camera rides up with a kick chain (presentation)
+  private wallPlantLiftHoldT = 0; // seconds that ride is still held once the chain has ended
+  /** Presentation only: how fully the camera should rise with the rider while a
+   * wall-kick chain climbs. The ground-anchored rig would let a third kick leave the frame. */
+  get wallPlantCameraLift(): number { return this.wallPlantLift; }
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -4548,6 +4591,11 @@ export class Player {
     this.wallCoolT = 0;
     this.wallrideLatched = false;
     this.wallChargeT = 0;
+    this.wallKickAir = false;
+    this.rearmWallPlant();
+    this.wallPlantAge = -1;
+    this.wallPlantPose = 0;
+    this.wallPlantLift = this.wallPlantLiftHoldT = 0;
     this.ledgeT = 0;
     this.ledgeCoolT = 0;
     this.ledgeEaseT = 0;
@@ -4973,6 +5021,8 @@ export class Player {
       this.coyoteReleaseT = 0;
       this.emergencyEjectCharging = this.ropeJumpArm = false;
       this.emergencyEjectChargeT = 0;
+      this.wallPlantBufferT = 0;
+      this.wallPlantBufferTap = this.wallPlantFallbackTap = false;
     }
     if (this.competitionFinishT >= 0) { this.stepCompetitionFinish(dt, level); return; }
     this.previousCharacterBounds.copy(this.characterBounds);
@@ -4993,6 +5043,26 @@ export class Player {
     // here; an active slide step below relatches it before consuming any exact
     // final partial step and zeroing slideTimer.
     this.slideContactLatch = false;
+    // Presentation: the camera rides up with a kick chain. This reads the chain
+    // before the re-arm below clears it. The ride is kept through a ledge hang
+    // that ends the chain, and for a beat after any other support: the rig's
+    // ground anchor is far below a rider who has just climbed a shaft, and
+    // handing back at the grab sank the camera 1.5 m and lifted it 3.5 m again.
+    if (this.isBailing) this.wallPlantLiftHoldT = 0;
+    else if (this.wallPlantChain > 0) this.wallPlantLiftHoldT = WALL_PLANT_LIFT_HOLD;
+    else if (this.state !== 'hang') this.wallPlantLiftHoldT = Math.max(0, this.wallPlantLiftHoldT - dt);
+    // Any real contact re-arms the wall plant. The hang and rope steps return
+    // before the shared timers below, so this is the one place every state passes.
+    if (this.state !== 'air' || this.grounded) {
+      this.wallKickAir = false;
+      this.rearmWallPlant();
+    }
+    // The ride up has to keep pace with the pop. Measured frame by frame in the
+    // browser: at a rate of 7 the rider's head left the top of the frame for
+    // nine frames of a kick back toward the lens; at this rate it peaks where
+    // an ordinary jump's does, and the rig still eases instead of snapping.
+    const kickClimb = this.wallPlantLiftHoldT > 0;
+    this.wallPlantLift += ((kickClimb ? 1 : 0) - this.wallPlantLift) * Math.min(1, (kickClimb ? WALL_PLANT_LIFT_RATE : 3.5) * dt);
     // Moving ground: ride along with the platform you're standing on (the
     // platform advanced once in level.update since our last step — apply that
     // delta before this step's movement so we stay glued). Crumble pads get
@@ -5442,6 +5512,9 @@ export class Player {
     }
     this.haltCd = Math.max(0, this.haltCd - dt);
     this.wallCoolT = Math.max(0, this.wallCoolT - dt);
+    this.wallPlantTouchT += dt;
+    this.wallPlantContactT = Math.max(0, this.wallPlantContactT - dt);
+    if (this.wallPlantAge >= 0) this.wallPlantAge += dt;
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     // TIME TRIAL clock: runs through everything you do — except while a
     // broken time crate's freeze is counting down, and never once you're
@@ -5893,6 +5966,12 @@ export class Player {
       }
       case 'air': {
         this.runTime += dt;
+        // The wall reads X first: a press timed at a wall is a plant, and must
+        // not also arm the double jump, the board eject or a landing hop.
+        if (this.routeWallPlantInput(dt, input, level)) {
+          input = { ...input, jumpPressed: false, jumpReleased: false } as Input;
+          this.rawInput = { ...this.rawInput, jumpPressed: false, jumpReleased: false } as Input;
+        }
         // Vert X is a strict release sequence. Resolve it before attachments:
         // release 2 spends the single adjacent-spine attempt; release 3 throws
         // the board. A consumed edge is hidden from every later air handler so
@@ -9263,6 +9342,17 @@ export class Player {
       this.stepWallride(dt, input, level);
       return;
     }
+    // WALL PLANT: planted on the face. Nothing moves and gravity waits; when the
+    // hold runs out the launch flies in this same step.
+    if (this.wallPlantStickT > 0) {
+      this.wallPlantStickT -= dt;
+      if (this.wallPlantStickT > 1e-6) {
+        this.speed = 0; this.vVel = 0;
+        this.groundHit = this.queryGround(level);
+        return;
+      }
+      this.launchWallPlant();
+    }
     // Did this air ever actually GO UP? A jump did; rolling off an edge (a
     // drop-in across its own coping) never does. The rail smack reads this to
     // tell the two apart — fall speed alone can't: an ollie ONTO a deck-height
@@ -9361,7 +9451,10 @@ export class Player {
       if (input.jumpPressed && !this.airJumpUsed) this.airTapT = 1e-4; // arm the tap
       else if (this.airTapT > 0 && input.jumpHeld) this.airTapT += dt;
       if (this.airTapT > 0.2) this.airTapT = 0; // held past a tap: it's a charge
-      if (input.jumpReleased && this.airTapT > 0 && !this.airJumpUsed) {
+      // A tap the wall plant held for a wall that never came fires here, late.
+      const wallTap = this.wallPlantFallbackTap;
+      this.wallPlantFallbackTap = false;
+      if ((wallTap || input.jumpReleased && this.airTapT > 0) && !this.airJumpUsed) {
         this.airTapT = 0;
         this.airJumpUsed = true;
         this.doubleJumpAir = true;
@@ -9385,6 +9478,7 @@ export class Player {
       }
     } else {
       this.airTapT = 0;
+      this.wallPlantFallbackTap = false;
     }
 
     // On-foot Circle: pancake body slam, Wile E. Coyote rules — engage, FREEZE
@@ -9516,6 +9610,7 @@ export class Player {
       this.pendingSpecialGrab === null &&
       input.grabPressed;
     if (slamNow) {
+      this.retireWallKickFlight(); // the slam reads momentum as axisF * speed
       this.slamActive = true;
       this.debrisSlamToken = {};
       this.vertAir = false; // the slam plummets straight down, no wall glue
@@ -9598,6 +9693,9 @@ export class Player {
     // It is independent of the skate airControl tuner (which may legitimately
     // be zero) and leaves vertical gravity untouched.
     const rescueAirControl = this.loopFailure ? true : this.stepAirRescueControl(dt, level);
+    // A wall kick flies on its own momentum; the stick bends it (see steerWallKick).
+    const wallKickFlight = this.wallKickAir && !rescueAirControl && !this.isBailing && !this.slamActive &&
+      this.steerWallKick(dt, input);
 
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
@@ -9606,6 +9704,7 @@ export class Player {
     // coping-drift control and nothing zeroes the parked speed).
     if (
       !rescueAirControl &&
+      !wallKickFlight &&
       !this.isBailing &&
       !this.grabbing &&
       !this.slamActive &&
@@ -9841,6 +9940,8 @@ export class Player {
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
       this.airMomentum = false; // touchdown: normal ground rules resume
+      this.endWallKickFlight(!this.isBailing); // a kick's momentum becomes the run
+      this.rearmWallPlant();
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.floatAir = false; // the ballistic tag belongs to the air that just ended
       this.grindExitAir = false;
@@ -12222,6 +12323,9 @@ export class Player {
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
     this.clearCoyoteJumpWindow();
+    // A plant that was held, waiting or in its late window does not survive a wipeout.
+    this.wallPlantStickT = this.wallPlantBufferT = this.wallPlantContactT = 0;
+    this.wallPlantBufferTap = this.wallPlantFallbackTap = false;
     if (this.grindRail) this.railLeft();
     this.grindRail = null;
     this.grindRun = null;
@@ -12396,6 +12500,7 @@ export class Player {
   }
 
   private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
+    this.retireWallKickFlight(); // a tumble reads momentum as axisF * speed
     if (this.kiteTowing) { this.die(cause); return; }
     if(this.runLevel?.skateRace){if(this.raceHooks)this.raceHooks.hazard(cause);else this.beginRaceStun();return;}
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
@@ -14352,6 +14457,8 @@ export class Player {
         this.wallriding = false;
         this.wallBox = null;
         this.wallPath = null;
+        this.wallKickAir = false; // a portal is a traversal boundary for the kick too
+        this.rearmWallPlant();
         this.vertAir = false;
         this.pipeHang = false;
         this.hangPipe = null;
@@ -15374,6 +15481,7 @@ export class Player {
         // tripped on) must pass over the top, not get pinned at the face.
         if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
         if (this.playerBox.intersectsBox(w)) {
+          if (this.wallPlantTouch(w, level, dt)) break; // planted on it: the timed press owns this wall
           if (this.tryWallride(w, level)) break; // stuck to the wall — ride it
           const wallPath = level.wallPathForBox(w);
           if (wallPath) {
@@ -15759,6 +15867,8 @@ export class Player {
     this.clearCoyoteJumpWindow();
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
+    this.wallKickAir = false; // a bounce is a fresh foot air: direct control again
+    this.rearmWallPlant();
     this.airborneT = 0;
     this.airPeakY = this.pos.y;
     this.bounceJump = true;
@@ -18235,6 +18345,520 @@ export class Player {
     }
   }
 
+  // ---- WALL PLANT ----------------------------------------------------------
+  // Jump INTO a wall and press X as you meet it: the feet (or the wheels)
+  // plant on the face for a beat and spring you up and away from it. On foot
+  // it is the Mario 64 wall kick; on the board it is the THPS wallplant, and
+  // it scores as a trick that keeps a combo alive.
+  //
+  // THE PRESS counts two ways.
+  //  - EARLY: an X pressed just before the wall is held in wallPlantBufferT
+  //    and fires the instant the body touches. That press is only taken away
+  //    from the double jump and the board eject when a kickable face really is
+  //    within reach along the line of travel (wallPlantAhead); if the wall
+  //    never comes, a tap goes back to the double jump it would have been.
+  //  - LATE: the impact opens wallPlantContactT, and an X inside it kicks off
+  //    while the body is still on the face. A skater who hits a wall fast
+  //    enough to wipe out is already tumbling, so that plant has to be early.
+  //
+  // TWO RULES keep it a wall KICK and not a wall CLIMB.
+  //  - The face you last kicked off will not take another kick until a real
+  //    contact (ground, rail, ledge, rope, a bounce) re-arms it. Two facing
+  //    walls alternate freely; one wall alone cannot be climbed.
+  //  - On foot the kick carries its own momentum, which the stick bends at
+  //    wallPlantSteer instead of replacing. Foot air control is otherwise
+  //    direct drive, and the stick you were still holding INTO the wall would
+  //    cancel the kick on its first frame.
+  //
+  // AND ONE keeps it out of the way of ordinary platforming: on foot, a wall
+  // whose top you can still get onto (the jump you are in, a double jump you
+  // have not spent, the ledge grab) is CLIMBED, not kicked. X there does what
+  // it always did. wallPlantLedgeYield 0 turns that off.
+
+  /** Every air that may plant. The states left out own X themselves (vert, a
+   * held grab, the slam), own the body (bails, kite, loops) or are not play. */
+  private wallPlantAllowed(level: Level): boolean {
+    return this.wallPlantEnabled && level.wallPlants && !legacyWallPlantReplay() &&
+      this.state === 'air' && !this.grounded && !this.isBailing && !this.wallriding &&
+      !this.vertAir && !this.pipeHang && !this.slamActive && !this.grabbing &&
+      !this.hubMode && !this.kiteTowing && !level.kiteTow && !level.boss &&
+      !this.loopRide && !this.loopFall && !this.gravityTrackAir && this.competitionFinishT < 0;
+  }
+
+  /** Feet at `feetY` beside a face spanning bottom..top: is there wall to push
+   * off? A curb at the shins or a soffit at the head is not a plant. */
+  private wallPlantBand(feetY: number, bottom: number, top: number): boolean {
+    return top >= feetY + this.hitboxHalf.y && bottom <= feetY + this.hitboxHalf.y;
+  }
+
+  private wallPlantSameFace(nx: number, nz: number): boolean {
+    return this.wallPlantHasLast &&
+      nx * this.wallPlantLastNormal.x + nz * this.wallPlantLastNormal.z > CONST.wallPlantSameFace;
+  }
+
+  /** The double jump as stepAir will judge it this step. */
+  private doubleJumpOpen(): boolean {
+    const directStudy = this.footJumpStudyFlight?.direct === true;
+    const window = TUNING.doubleJumpWindow * (this.launchVy > 1
+      ? THREE.MathUtils.clamp(this.launchVy / Math.max(TUNING.jumpVelocity, 1), 0.3, 2) : 1);
+    return TUNING.doubleJump > 0.5 && !this.isBailing &&
+      (directStudy && this.footJumpStudyPhysics ? this.vVel < 3 && this.vVel > -15 : this.airborneT <= window) &&
+      (!this.airFromSkate || this.bounceJump) &&
+      !(this.coyotePressOpenThisStep || this.coyoteTimer > 0 || this.coyoteReleaseOpenThisStep || this.coyoteReleaseT > 0) &&
+      !this.vertAir && !this.slamActive && !this.grabbing;
+  }
+
+  /**
+   * On foot: can the rider still get on TOP of this wall from here? Then it is
+   * a wall to climb, and the kick stands aside for the double jump and the
+   * ledge grab. It mirrors tryLedgeGrab's own evidence (the touched box's top,
+   * a walkable surface just inside the face, room for the hanging body) so the
+   * seam between two stacked blocks of one tall facade is not mistaken for a lip.
+   */
+  private wallPlantClimbable(w: THREE.Box3, nx: number, nz: number, level: Level): boolean {
+    if (this.freeSkate || TUNING.wallPlantLedgeYield < 0.5) return false;
+    const grabs = level.ledgeGrabs !== false && !level.kiteTow && !this.alwaysSkate && !this.comboRun;
+    const rise = this.vVel > 0 ? this.vVel * this.vVel / (2 * Math.max(1, this.airGravityAt(1))) : 0;
+    const second = this.doubleJumpOpen() && !this.airJumpUsed
+      ? TUNING.doubleJumpVelocity ** 2 / (2 * Math.max(1, TUNING.riseGravity)) : 0;
+    const reach = grabs ? ledgeCatchEnvelope(TUNING.ledgeReach, level.ledgeAssist, this.ledgeEnvelope).reach : 0;
+    const lipRough = w.max.y;
+    // Platform side colliders stop 0.25 short of the deck they belong to.
+    if (lipRough - this.pos.y > rise + second + reach - 0.1) return false;
+    const useX = Math.abs(nx) >= Math.abs(nz);
+    const face = useX ? (nx > 0 ? w.max.x : w.min.x) : nz > 0 ? w.max.z : w.min.z;
+    const px = useX ? face - nx * 0.45 : THREE.MathUtils.clamp(this.pos.x, w.min.x + 0.1, w.max.x - 0.1);
+    const pz = useX ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.1, w.max.z - 0.1) : face - nz * 0.45;
+    const lip = this.probeWalkableLedgeTop(level, px, pz, lipRough + 1.6, lipRough - 1, lipRough - 0.05, lipRough + 0.75) ??
+      this.probeWalkableLedgeTop(level, useX ? face - nx * 0.04 : px, useX ? pz : face - nz * 0.04,
+        lipRough + 1.6, lipRough - 1, lipRough - 0.05, lipRough + 0.75);
+    if (lip === null) return false; // no walkable top: a bare wall, never a ledge
+    if (!grabs) return true; // the jump alone puts the feet on it
+    const skin = (useX ? CONST.playerHalf.x : CONST.playerHalf.z) + 0.06;
+    LEDGE_PATH.set(useX ? face + nx * skin : px, lip.y - LEDGE_HANG_DEPTH, useX ? pz : face + nz * skin);
+    return !this.ledgeBodyBlocked(LEDGE_PATH, lip.y, level);
+  }
+
+  /**
+   * Where exactly this wall stops a body that travelled from..to this step:
+   * the face normal and the feet position against it. False = no fresh contact
+   * (not reached, grazed past an end, or already inside — the resolver's job).
+   * The straight-box half repeats pushOutOf's swept slab test so a plant
+   * stands exactly where the push would have put the body.
+   */
+  private wallPlantFace(
+    w: THREE.Box3, level: Level, fromX: number, fromZ: number, toX: number, toZ: number,
+    out: { nx: number; nz: number; x: number; z: number; bottom: number; top: number; t: number },
+  ): boolean {
+    const path = level.wallPathForBox(w);
+    if (path) {
+      // Curved walls: the nearest point of the whole path, sampled along the travel.
+      const steps = Math.max(1, Math.min(8, Math.ceil(Math.hypot(toX - fromX, toZ - fromZ) / 0.2)));
+      for (let i = 1; i <= steps; i++) {
+        const k = i / steps, x = fromX + (toX - fromX) * k, z = fromZ + (toZ - fromZ) * k;
+        const c = level.closestWallPath(path, x, z);
+        if (c.cap) continue;
+        const radius = path.halfThickness + Math.abs(c.nx) * CONST.playerHalf.x + Math.abs(c.nz) * CONST.playerHalf.z + 0.02;
+        if (c.distance >= radius) continue;
+        const shift = radius - c.distance + 0.01;
+        out.nx = c.nx; out.nz = c.nz; out.x = x + c.nx * shift; out.z = z + c.nz * shift;
+        out.bottom = c.y; out.top = c.y + c.height; out.t = k;
+        return true;
+      }
+      return false;
+    }
+    const hx = CONST.playerHalf.x + 0.02, hz = CONST.playerHalf.z + 0.02;
+    const minX = w.min.x - hx, maxX = w.max.x + hx, minZ = w.min.z - hz, maxZ = w.max.z + hz;
+    if (fromX > minX && fromX < maxX && fromZ > minZ && fromZ < maxZ) return false;
+    const dx = toX - fromX, dz = toZ - fromZ;
+    let enterX = -Infinity, exitX = Infinity, enterZ = -Infinity, exitZ = Infinity;
+    if (dx !== 0) {
+      const a = (minX - fromX) / dx, b = (maxX - fromX) / dx;
+      enterX = Math.min(a, b); exitX = Math.max(a, b);
+    } else if (fromX <= minX || fromX >= maxX) return false;
+    if (dz !== 0) {
+      const a = (minZ - fromZ) / dz, b = (maxZ - fromZ) / dz;
+      enterZ = Math.min(a, b); exitZ = Math.max(a, b);
+    } else if (fromZ <= minZ || fromZ >= maxZ) return false;
+    const enter = Math.max(enterX, enterZ);
+    if (enter > Math.min(exitX, exitZ) || enter < 0 || enter > 1) return false;
+    const onX = enterX > enterZ || (enterX === enterZ && Math.abs(dz) < Math.abs(dx));
+    out.nx = onX ? (dx > 0 ? -1 : 1) : 0;
+    out.nz = onX ? 0 : dz > 0 ? -1 : 1;
+    out.x = onX ? (dx > 0 ? minX - 0.01 : maxX + 0.01) : fromX + dx * enter;
+    out.z = onX ? fromZ + dz * enter : dz > 0 ? minZ - 0.01 : maxZ + 0.01;
+    out.bottom = w.min.y; out.top = w.max.y; out.t = enter;
+    return true;
+  }
+
+  /** Is a kickable face within `seconds` of travel along the present line? */
+  private wallPlantAhead(level: Level, seconds: number): boolean {
+    const vx = this.lastVelX, vz = this.lastVelZ;
+    if (Math.hypot(vx, vz) < Math.max(0.5, TUNING.wallPlantMinSpeed)) return false;
+    const reach = seconds + CONST.fixedStep; // this step's own travel has not happened yet
+    const toX = this.pos.x + vx * reach, toZ = this.pos.z + vz * reach;
+    const hx = CONST.playerHalf.x + 0.03, hz = CONST.playerHalf.z + 0.03;
+    const loX = Math.min(this.pos.x, toX) - hx, hiX = Math.max(this.pos.x, toX) + hx;
+    const loZ = Math.min(this.pos.z, toZ) - hz, hiZ = Math.max(this.pos.z, toZ) + hz;
+    const gravity = this.airGravityAt();
+    const face = Player.WALL_PLANT_FACE;
+    let seen: WallPathRuntime | null = null;
+    for (const w of level.walls) {
+      if (w.max.x < loX || w.min.x > hiX || w.max.z < loZ || w.min.z > hiZ) continue;
+      if (!level.wallPlantSurface(w)) continue;
+      const path = level.wallPathForBox(w);
+      if (path) { if (path === seen) continue; seen = path; }
+      if (!this.wallPlantFace(w, level, this.pos.x, this.pos.z, toX, toZ, face)) continue;
+      if (-(vx * face.nx + vz * face.nz) < TUNING.wallPlantMinSpeed) continue;
+      if (this.wallPlantSameFace(face.nx, face.nz)) continue;
+      // Where the feet will be when the body gets there: it rises or falls meanwhile.
+      const t = face.t * reach, feetY = this.pos.y + this.vVel * t - 0.5 * gravity * t * t;
+      if (!this.wallPlantBand(feetY, face.bottom, face.top)) continue;
+      if (this.wallPlantClimbable(w, face.nx, face.nz, level)) continue;
+      this.wallPlantLeanNormal.set(face.nx, 0, face.nz); // presentation: the lean starts on the way in
+      return true;
+    }
+    return false;
+  }
+
+  /** Still beside the face the late window was opened on? Slides the remembered
+   * spot along with the body, so a late plant stands where the rider now is. */
+  private wallPlantOnFace(level: Level): boolean {
+    const w = this.wallPlantWall;
+    if (!w) return false;
+    const n = this.wallPlantNormal, reach = Math.max(0, CONST.wallPlantReach);
+    const path = level.wallPathForBox(w);
+    let off: number, bottom: number, top: number;
+    if (path) {
+      const c = level.closestWallPath(path, this.pos.x, this.pos.z);
+      if (c.cap || c.nx * n.x + c.nz * n.z < 0.5) return false;
+      const radius = path.halfThickness + Math.abs(c.nx) * CONST.playerHalf.x + Math.abs(c.nz) * CONST.playerHalf.z + 0.03;
+      off = c.distance - radius;
+      n.set(c.nx, 0, c.nz);
+      bottom = c.y; top = c.y + c.height;
+    } else if (n.x !== 0) {
+      const plane = n.x > 0 ? w.max.x + CONST.playerHalf.x + 0.03 : w.min.x - CONST.playerHalf.x - 0.03;
+      off = (this.pos.x - plane) * n.x;
+      if (this.pos.z < w.min.z - CONST.playerHalf.z || this.pos.z > w.max.z + CONST.playerHalf.z) return false;
+      bottom = w.min.y; top = w.max.y;
+    } else {
+      const plane = n.z > 0 ? w.max.z + CONST.playerHalf.z + 0.03 : w.min.z - CONST.playerHalf.z - 0.03;
+      off = (this.pos.z - plane) * n.z;
+      if (this.pos.x < w.min.x - CONST.playerHalf.x || this.pos.x > w.max.x + CONST.playerHalf.x) return false;
+      bottom = w.min.y; top = w.max.y;
+    }
+    if (off > reach || off < -0.25 || !this.wallPlantBand(this.pos.y, bottom, top)) return false;
+    this.wallPlantSpot.set(this.pos.x - n.x * off, this.pos.y, this.pos.z - n.z * off);
+    return true;
+  }
+
+  /**
+   * collide() calls this for every wall the body is found in, before any other
+   * owner looks at it. A fresh impact opens the late window; an early press
+   * that was waiting for this wall plants on it here. True = planted, and the
+   * wall is resolved: no ledge catch, wallride, stop or wipeout follows.
+   */
+  private wallPlantTouch(w: THREE.Box3, level: Level, dt: number): boolean {
+    if (this.wallPlantStickT > 0 || !this.wallPlantAllowed(level) || !level.wallPlantSurface(w)) return false;
+    const face = Player.WALL_PLANT_FACE;
+    if (!this.wallPlantFace(w, level, this.prevPos.x, this.prevPos.z, this.pos.x, this.pos.z, face)) return false;
+    if (!this.wallPlantBand(this.pos.y, face.bottom, face.top)) return false;
+    const vx = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
+    const vz = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    if (-(vx * face.nx + vz * face.nz) < TUNING.wallPlantMinSpeed) return false;
+    // Pressing on into the same face is one impact, not a new one every step —
+    // whether or not that face could be kicked when it was first met. A wall
+    // that was climbable (or just kicked) at the impact does not start offering
+    // a kick halfway down the slide.
+    const fresh = this.wallPlantTouchT > WALL_PLANT_REIMPACT ||
+      face.nx * this.wallPlantTouchNormal.x + face.nz * this.wallPlantTouchNormal.z < 0.7;
+    this.wallPlantTouchT = 0;
+    this.wallPlantTouchNormal.set(face.nx, 0, face.nz);
+    const early = this.wallPlantBufferT > 0;
+    if (!fresh && !early) return false;
+    if (this.wallPlantSameFace(face.nx, face.nz)) return false;
+    if (this.wallPlantClimbable(w, face.nx, face.nz, level)) return false;
+    this.wallPlantWall = w;
+    this.wallPlantNormal.set(face.nx, 0, face.nz);
+    this.wallPlantSpot.set(face.x, this.pos.y, face.z);
+    this.wallPlantIncoming.set(vx, 0, vz);
+    if (!early) {
+      this.wallPlantContactT = Math.max(0, TUNING.wallPlantWindow);
+      return false;
+    }
+    this.beginWallPlant();
+    return true;
+  }
+
+  /**
+   * First reader of X in the air. True = this step's jump edges belong to the
+   * wall and nothing else may see them (no double jump arm, no board eject,
+   * no landing-jump buffer).
+   */
+  private routeWallPlantInput(dt: number, input: Input, level: Level): boolean {
+    if (this.wallPlantBufferT > 0) {
+      // An early press is waiting on its wall. Its release is part of the same
+      // gesture; remember only whether it was a tap.
+      if (input.jumpReleased) this.wallPlantBufferTap = true;
+      this.wallPlantBufferT -= dt;
+      // Still waiting: a second press on the way in is the same request, not
+      // a double jump to spend before the wall arrives.
+      if (this.wallPlantBufferT > 0 && this.wallPlantAllowed(level)) return true;
+      // The wall never came. Hand the press back to what it would have been:
+      // a completed tap double-jumps now, a press still held is a tap in progress.
+      const held = Math.max(0, TUNING.wallPlantBuffer);
+      this.wallPlantBufferT = 0;
+      if (!this.freeSkate && this.doubleJumpOpen() && !this.airJumpUsed) {
+        if (this.wallPlantBufferTap) this.wallPlantFallbackTap = true;
+        else if (input.jumpHeld && held < 0.2) this.airTapT = Math.max(1e-4, held);
+      }
+      this.wallPlantBufferTap = false;
+      return !input.jumpPressed;
+    }
+    if (!input.jumpPressed || this.wallPlantStickT > 0 || !this.wallPlantAllowed(level)) return false;
+    // A press inside coyote time is the jump off the edge just left.
+    if (this.charging || this.coyotePressOpenThisStep || this.coyoteTimer > 0 ||
+        this.coyoteReleaseOpenThisStep || this.coyoteReleaseT > 0) return false;
+    if (this.wallPlantContactT > 0 && this.wallPlantOnFace(level) && !(this.wallPlantWall &&
+        this.wallPlantClimbable(this.wallPlantWall, this.wallPlantNormal.x, this.wallPlantNormal.z, level))) {
+      this.beginWallPlant();
+      return true;
+    }
+    if (TUNING.wallPlantBuffer > 0 && this.wallPlantAhead(level, TUNING.wallPlantBuffer)) {
+      this.wallPlantBufferT = TUNING.wallPlantBuffer;
+      this.wallPlantBufferTap = input.jumpReleased; // pressed and let go inside one step
+      return true;
+    }
+    return false;
+  }
+
+  /** The plant: stand on the face, drop everything the old air was doing, and
+   * decide the launch. The launch itself fires when the hold runs out. */
+  private beginWallPlant(): void {
+    const n = this.wallPlantNormal;
+    const board = this.freeSkate;
+    // Mirror the approach in the face: travel ALONG the wall is kept, travel
+    // INTO it is replaced by the kick. Head-on comes straight back out; a
+    // diagonal leaves on the mirrored diagonal.
+    const tx = -n.z, tz = n.x;
+    const along = this.wallPlantIncoming.x * tx + this.wallPlantIncoming.z * tz;
+    const into = Math.max(0, -(this.wallPlantIncoming.x * n.x + this.wallPlantIncoming.z * n.z));
+    let out: number, carry: number, up: number;
+    if (board) {
+      const keep = THREE.MathUtils.clamp(TUNING.wallPlantBoardKeep, 0, 1.2);
+      out = Math.max(TUNING.wallPlantBoardOutMin, into * keep);
+      carry = along * keep;
+      up = TUNING.wallPlantBoardUp;
+      // The same ceiling a landing is held to: a plant never mints speed.
+      const ceiling = Math.max(TUNING.downhillMax + this.trickSpeedBoost,
+        this.grindBoostT > 0 ? this.speedPadCap : 0, this.skateOverdriveCeiling);
+      const total = Math.hypot(out, carry);
+      if (total > ceiling) { out *= ceiling / total; carry *= ceiling / total; }
+    } else {
+      out = TUNING.wallPlantOut;
+      carry = along;
+      up = TUNING.wallPlantUp;
+    }
+    this.wallPlantLaunch.set(n.x * out + tx * carry, up, n.z * out + tz * carry);
+    this.wallPlantBoard = board;
+    this.wallPlantLeanNormal.copy(n);
+
+    const dx = this.wallPlantSpot.x - this.pos.x, dz = this.wallPlantSpot.z - this.pos.z;
+    this.pos.x += dx; this.pos.z += dz;
+    this.translateCollisionBoxes(dx, 0, dz);
+
+    // The plant is a fresh launch: whatever the last one left pending is over.
+    this.retireHeldVertRelease();
+    this.clearCoyoteJumpWindow();
+    this.charging = false; this.chargeTimer = 0; this.jumpBufferT = this.jumpBufferCharge = 0;
+    this.airTapT = 0;
+    // X is still down from the press that planted: its release is not a jump.
+    if (this.rawInput.jumpHeld) this.jumpReleaseRearmRequired = true;
+    this.boardOllieAir = false;
+    this.emergencyEjectCharging = false; this.emergencyEjectChargeT = 0;
+    this.emergencyEjectUsed = false; this.emergencyEjectLandingPending = false;
+    this.trampolineAir = false; this.bounceJump = false;
+    this.slideJumpAir = false; this.slideAirLat = 0; this.slideFromWalk = false;
+    this.grindExitAir = false; this.grindOllieAir = false; this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0; this.grindAirLat = this.grindSpinInput = 0;
+    this.pipeEndFly = false; this.rollOffT = 0; this.vertGravT = 0;
+    this.flipTimer = 0; this.starTimer = 0; this.doubleJumpAir = false;
+    this.footJumpStudyLaunch = null;
+    // A deck mid-flip is caught by the plant, and the next air is a new air
+    // for tricks: flip, plant, flip again is three entries on the plate.
+    this.flipT = 0; this.specialFlip = null; this.flipDuration = CONST.flipTime;
+    this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
+    // A rotation in progress is settled against the wall, not carried to the landing.
+    this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle);
+    this.grabSpinAngle = 0;
+
+    this.speed = 0; this.vVel = 0;
+    this.walkVelocity.set(0, 0, 0);
+    this.walkTurnaround = false; this.walkIntent.set(0, 0, 0);
+    this.wallKickAir = false;
+    this.wallPlantBufferT = 0; this.wallPlantBufferTap = false; this.wallPlantFallbackTap = false;
+    this.wallPlantContactT = 0;
+    this.wallPlantLastNormal.copy(n); this.wallPlantHasLast = true;
+    this.wallPlantChain++;
+    this.wallPlantAge = -1;
+    this.wallCoolT = Math.max(this.wallCoolT, 0.35); // Triangle still held must not turn the plant into a wallride
+    // Planted with the stick into the wall and a lip overhead, the near-miss
+    // ledge catch would take the body straight back off the kick.
+    this.ledgeCoolT = Math.max(this.ledgeCoolT, TUNING.wallPlantStick + 0.12);
+    this.state = 'air'; this.grounded = false;
+
+    const chain = Math.min(4, this.wallPlantChain - 1);
+    if (board) {
+      this.score(CONST.ptsWallplant, 'Wallplant');
+      sfx.play('skateTransition', 0.6, 1.25 + chain * 0.05);
+      this.emitSparks(7, 0xffd0a0, 1.6);
+    } else {
+      this.score(CONST.ptsWallKick, 'Wall Kick');
+      sfx.play('footstep1', 0.75, 0.85 + chain * 0.06);
+      this.emitDust(3);
+    }
+    this.wallPlantStickTotal = this.wallPlantStickT = Math.max(0, TUNING.wallPlantStick);
+    if (this.wallPlantStickT <= 0) this.launchWallPlant();
+  }
+
+  /** The hold has run out: leave the wall on the velocity decided at the plant. */
+  private launchWallPlant(): void {
+    const v = this.wallPlantLaunch;
+    const horizontal = Math.hypot(v.x, v.z);
+    this.wallPlantStickT = 0;
+    this.vVel = v.y;
+    this.launchVy = v.y;
+    this.airborneT = 0;
+    this.airPeakY = this.pos.y;
+    this.airRose = false;
+    this.wallPlantAge = 0;
+    this.lastJumpType = this.wallPlantBoard ? 'Wallplant' : 'Wall Kick';
+    const chain = Math.min(4, this.wallPlantChain - 1);
+    if (this.wallPlantBoard) {
+      if (horizontal > 1e-4) {
+        this.axisF.set(v.x / horizontal, 0, v.z / horizontal);
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      }
+      this.speed = horizontal;
+      this.airFromSkate = true;
+      this.airGrav = 'board';
+      this.airMomentum = true;
+      this.floatAir = false;
+      this.wallKickAir = false;
+      sfx.play('ollie', 0.7, 1.05 + chain * 0.04);
+      sfx.play('woosh2', 0.55);
+    } else {
+      this.walkVelocity.set(v.x, 0, v.z);
+      this.speed = this.walkVelocity.dot(this.axisF);
+      this.airFromSkate = false;
+      this.airGrav = 'foot';
+      this.airMomentum = false;
+      this.wallKickAir = true;
+      this.wallKickFresh = true;
+      // Presentation: the kick is a fresh upright launch for the authored jump,
+      // from its first frame. Movement stays on the live tuning either way.
+      if (this.onFootJumpStudy) {
+        this.footJumpStudyLaunch = { ...this.onFootJumpStudy, takeoffSpeed: horizontal,
+          flipMinSpeed: TUNING.jumpFlipMinSpeed, flip: false };
+        this.footStudyCharge = 1;
+        if (this.footJumpStudyLaunch.direct) {
+          this.footStudyFrame = 0;
+          this.footStudyLaunchY = this.footStudyApexY = this.pos.y;
+          this.footStudyFlipProgress = 0;
+        }
+      }
+      sfx.playJump(true);
+      sfx.play('woosh2', 0.4, 1.15 + chain * 0.05);
+    }
+  }
+
+  /** On-foot flight out of a kick. The kick's momentum is a world-space vector
+   * (walkVelocity, as on the ground); the stick bends it, never replaces it.
+   * False = the kick has just ended and ordinary foot air control owns this step. */
+  private steerWallKick(dt: number, input: Input): boolean {
+    const v = this.walkVelocity;
+    if (this.wallKickFresh) {
+      this.wallKickFresh = false;
+    } else if (Math.hypot(this.lastVelX - v.x, this.lastVelZ - v.z) > 0.25) {
+      // Collision is authoritative. Whatever stopped or turned the body last
+      // step took that travel out of the kick too; nothing may add to it.
+      const carried = v.length(), measured = Math.hypot(this.lastVelX, this.lastVelZ);
+      v.set(this.lastVelX, 0, this.lastVelZ);
+      if (measured > carried && measured > 1e-6) v.multiplyScalar(carried / measured);
+      if (measured < carried * 0.5) {
+        // Stopped square against something: the kick is spent. From here it
+        // is an ordinary foot air again — direct drive, which rests cleanly
+        // on a face (a slowly re-building push would creep in and be shoved
+        // back out, a few centimetres at a time).
+        this.wallKickAir = false;
+        this.speed = v.dot(this.axisF);
+        return false;
+      }
+    }
+    const intent = Math.min(1, Math.hypot(input.moveX, input.moveY));
+    // The first beat of the flight is committed. The stick that ran the rider
+    // into the wall is still held toward it when the kick fires, and nobody
+    // reverses a thumb in a tenth of a second; without this the kick is braked
+    // by the very input that set it up and stalls halfway across a shaft.
+    const authority = THREE.MathUtils.clamp(
+      (this.wallPlantAge - CONST.wallKickCommit) / Math.max(1e-3, CONST.wallKickSteerEase), 0, 1);
+    if (intent > 0.05 && TUNING.wallPlantSteer > 0 && authority > 0) {
+      // Steer toward the stick at run pace, or at the kick's own pace when it
+      // is carrying more: turning a fast diagonal never slows it for free.
+      const pace = Math.max(TUNING.walkSpeed, v.length());
+      const targetX = (this.axisF.x * input.moveY + this.axisL.x * input.moveX) * pace;
+      const targetZ = (this.axisF.z * input.moveY + this.axisL.z * input.moveX) * pace;
+      const dx = targetX - v.x, dz = targetZ - v.z, gap = Math.hypot(dx, dz);
+      const step = TUNING.wallPlantSteer * authority * intent * dt;
+      if (gap <= step) v.set(targetX, 0, targetZ);
+      else { v.x += dx / gap * step; v.z += dz / gap * step; }
+    }
+    // The shared integrator moves along axisF by `speed`; the rest is ours.
+    this.speed = v.dot(this.axisF);
+    this.pos.addScaledVector(this.axisL, v.dot(this.axisL) * dt);
+    return true;
+  }
+
+  /** A kick's flight has ended. On a touchdown its momentum becomes the run,
+   * at run pace: carried air speed must never read as a reason to mount the board. */
+  private endWallKickFlight(landed: boolean): void {
+    if (!this.wallKickAir) return;
+    this.wallKickAir = false;
+    if (!landed) return;
+    const carried = this.walkVelocity.length();
+    if (carried > TUNING.walkSpeed) this.walkVelocity.multiplyScalar(TUNING.walkSpeed / carried);
+    this.speed = this.walkVelocity.dot(this.axisF);
+    this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+    this.slideLandClamp = true;
+    this.walkRamp = Math.max(this.walkRamp, Math.min(1, carried / Math.max(TUNING.walkSpeed, 0.01)));
+  }
+
+  /** Something else now owns the body in mid-air (a bail, the slam). It reads
+   * velocity as axisF * speed, so hand the kick over in that form. */
+  private retireWallKickFlight(): void {
+    if (!this.wallKickAir) return;
+    this.wallKickAir = false;
+    const carried = this.walkVelocity.length();
+    if (carried > 1e-4) {
+      this.axisF.copy(this.walkVelocity).multiplyScalar(1 / carried);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    }
+    this.speed = carried;
+  }
+
+  /** A real contact (ground, rail, ledge, rope, water, a bounce): every face
+   * is kickable again and nothing of the last plant is pending. */
+  private rearmWallPlant(): void {
+    this.wallPlantBufferT = 0; this.wallPlantBufferTap = false; this.wallPlantFallbackTap = false;
+    this.wallPlantContactT = 0; this.wallPlantStickT = 0;
+    this.wallPlantTouchT = Infinity;
+    this.wallPlantTouchNormal.set(0, 0, 0);
+    this.wallPlantWall = null;
+    this.wallPlantHasLast = false;
+    this.wallPlantChain = 0;
+  }
+
   // Grind rails are SOLID to a grounded skater who meets them side-on without
   // jumping or grinding: a walk is stopped like a curb, and a fast skate CATCHES
   // a truck and TRIPS (a non-lethal stumble). Grinding (a held Triangle snaps you
@@ -18557,6 +19181,7 @@ export class Player {
     this.cancelSlideTraversal(); this.crawling = false;
     this.slopePose = this.slopeRoll = this.landingAlignPose = this.alignPose = 0;
     this.manualing = 0; this.lipStallT = 0; this.wallriding = false;
+    this.wallKickAir = false; this.rearmWallPlant();
     this.grounded = supported;
     if(cause!=='water')sfx.play('death', 0.9);
     // the pending combo dies with you; banked points survive
@@ -20971,6 +21596,24 @@ export class Player {
       this.group.quaternion.premultiply(VERT_Q2);
     }
 
+    // WALL PLANT: for the beat on the face the whole rig stands ON the wall —
+    // feet in against it, body leant back along the line it is about to leave
+    // on — and rights itself over the first of the flight. An early press
+    // starts the lean on the way in, so the plant is anticipated, not a pop.
+    const wallPlantTarget = this.wallPlantStickT > 0 ? 1 : this.wallPlantBufferT > 0 && !this.isBailing ? 0.3 : 0;
+    this.wallPlantPose += (wallPlantTarget - this.wallPlantPose) *
+      Math.min(1, (this.wallPlantStickT > 0 ? 45 : wallPlantTarget > this.wallPlantPose ? 16 : 11) * dt);
+    if (this.wallPlantPose < 0.002 && wallPlantTarget === 0) this.wallPlantPose = 0;
+    if (this.wallPlantPose > 0 && this.state !== 'hang' && !this.isBailing) {
+      const face = this.wallPlantLeanNormal;
+      if (face.lengthSq() > 0.5) {
+        VERT_Q.setFromUnitVectors(VERT_UP, face);
+        VERT_Q2.identity().slerp(VERT_Q, this.wallPlantPose * WALL_PLANT_LEAN / (Math.PI / 2));
+        this.group.quaternion.premultiply(VERT_Q2);
+        this.group.position.addScaledVector(face, -WALL_PLANT_REACH * this.wallPlantPose);
+      }
+    }
+
     // Ordinary travel follows velocity; ice and committed run reversals face
     // input first so the body can push against its existing momentum.
     // This changes presentation only, never the controller's travel axes.
@@ -21043,6 +21686,10 @@ export class Player {
       const vz = this.walkVelocity.z;
       if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+    } else if (this.wallPlantStickT > 0 && Math.hypot(this.wallPlantLaunch.x, this.wallPlantLaunch.z) > 1e-4) {
+      // Planted: the body is already pivoting off the face toward the line it
+      // leaves on, so the launch continues a turn instead of starting one.
+      targetYaw = wrapAngle(Math.atan2(this.wallPlantLaunch.x, this.wallPlantLaunch.z) - Math.PI);
     } else if (this.state === 'grind' && this.grindRail) {
       // axisF retains the catch heading until rail exit. A curved grind must
       // face its current tangent, or the gaze keeps twisting to compensate
@@ -21085,6 +21732,9 @@ export class Player {
         RUN_REVERSAL_YAW_RATE * dt,
         turnSign,
       );
+    } else if (this.wallPlantStickT > 0 || this.state === 'air' && this.wallPlantAge >= 0 && this.wallPlantAge < 0.2) {
+      // The pivot off a wall plant is quicker than an ordinary change of travel.
+      this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 24 * dt);
     } else {
       this.visualYaw +=
         wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
@@ -22426,6 +23076,28 @@ export class Player {
         if (wrist) wrist.rotation.x += motion.wrist;
       }
       this.playerAnimationBridge.modulateDeformations(teeter.deformations);
+    }
+
+    // WALL PLANT: the squash into the face and the stretch of the push.
+    const wallPlantLive = !this.isBailing && this.state === 'air' && !this.playerAnimationBridge.previewActive &&
+      (this.wallPlantStickT > 0 || this.wallPlantAge >= 0 && this.wallPlantAge < WALL_PLANT_RELEASE_SECONDS + 0.06);
+    if (wallPlantLive) {
+      const hold = this.wallPlantStickTotal > 0 ? 1 - this.wallPlantStickT / this.wallPlantStickTotal : 1;
+      const plant = sampleWallPlantMotion(hold, this.wallPlantStickT > 0 ? -1 : this.wallPlantAge, this.wallPlantBoard);
+      if (this.spineG) this.spineG.rotation.x += plant.spine;
+      if (this.headM) this.headM.rotation.x += plant.head;
+      for (const [arm, elbow, side] of [[this.armR, this.elbowR, 1], [this.armL, this.elbowL, -1]] as const) {
+        if (arm) { arm.rotation.x += plant.armSwing; arm.rotation.z += side * plant.armSpread; }
+        if (elbow) elbow.rotation.x += plant.elbow;
+      }
+      if (!this.wallPlantBoard) {
+        // On foot the legs fold and fire; on the board the deck owns the feet.
+        if (this.legL) this.legL.rotation.x += plant.hip;
+        if (this.legR) this.legR.rotation.x += plant.hip;
+        if (this.kneeL) this.kneeL.rotation.x += plant.knee;
+        if (this.kneeR) this.kneeR.rotation.x += plant.knee;
+      }
+      this.playerAnimationBridge.modulateDeformations(plant.deformations);
     }
 
     // Restore the old independent stretch/catch/rebound, not its on-foot leg

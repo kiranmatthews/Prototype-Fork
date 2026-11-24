@@ -90,6 +90,8 @@ export class SkateRace {
       const actorScene=id?new THREE.Scene():null;
       if(actorScene)this.scene.add(actorScene);
       const player=id?new Player(actorScene!,this.fullRivals?null:RACE_ROSTER[id].color):this.human;
+      // Rivals hold X as their accelerator; an edge near a wall is not a timed plant.
+      if(id)player.wallPlantEnabled=false;
       const marker=new THREE.Mesh(new THREE.ConeGeometry(.18,.34,4),new THREE.MeshBasicMaterial({color:RACE_ROSTER[id].color}));
       marker.rotation.z=Math.PI;this.root.add(marker);
       const bubble=createRaceItemModel('shield');bubble.scale.setScalar(1.55);

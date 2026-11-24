@@ -144,6 +144,20 @@ export const TUNING = {
   wallPumpBonus: 17, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
   wallChargeMax: 1.5, // seconds of pumping X to reach a full-power wall launch
   wallKickOut: 1.5, // push away from the wall when you kick off
+  // WALL PLANT (the Mario 64 wall kick / THPS wallplant): jump INTO a wall and
+  // press X as you meet it. On foot it is a kick you can chain between facing
+  // walls; on the board it turns you around and scores as a combo trick.
+  wallPlantWindow: 0.2, // seconds AFTER first touching the wall that X still plants (0 = only an early press counts)
+  wallPlantBuffer: 0.2, // seconds BEFORE the wall that an early X is remembered and fires on contact
+  wallPlantMinSpeed: 3, // slowest approach INTO the face that counts as an impact you can plant from
+  wallPlantStick: 0.05, // seconds the feet/wheels stay planted on the wall before the launch
+  wallPlantUp: 12.5, // ON FOOT: vertical pop of the kick (a tap jump is 12, a full jump 14)
+  wallPlantOut: 9.5, // ON FOOT: speed away from the wall
+  wallPlantSteer: 22, // ON FOOT: how fast the stick can bend the kick's momentum in the air (m/s^2)
+  wallPlantBoardUp: 10, // BOARD: vertical pop of the wallplant (an ollie is 6.5..11)
+  wallPlantBoardKeep: 0.9, // BOARD: fraction of the approach speed carried back out of the wall
+  wallPlantBoardOutMin: 8, // BOARD: slowest exit speed, so a soft approach still clears the wall
+  wallPlantLedgeYield: 1, // ON FOOT: 1 = a wall whose top you can still reach is climbed (double jump / ledge grab keep X), not kicked; 0 = every wall kicks
   ledgeGrabTime: 6, // seconds you can hang off a ledge before your grip fails
   ledgeClimbTime: 0.38, // seconds the animated clamber-up takes (pull up, then over the lip)
   ledgeClimbPop: 1, // extra lift as you top out of the clamber (0 = plant flat)
@@ -386,6 +400,17 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallPumpBonus: { min: 0, max: 40, step: 1 },
   wallChargeMax: { min: 0.05, max: 1.5, step: 0.05 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
+  wallPlantWindow: { min: 0, max: 0.6, step: 0.01 },
+  wallPlantBuffer: { min: 0, max: 0.5, step: 0.01 },
+  wallPlantMinSpeed: { min: 0, max: 15, step: 0.5 },
+  wallPlantStick: { min: 0, max: 0.25, step: 0.01 },
+  wallPlantUp: { min: 4, max: 24, step: 0.5 },
+  wallPlantOut: { min: 2, max: 20, step: 0.5 },
+  wallPlantSteer: { min: 0, max: 80, step: 1 },
+  wallPlantBoardUp: { min: 4, max: 24, step: 0.5 },
+  wallPlantBoardKeep: { min: 0, max: 1.2, step: 0.05 },
+  wallPlantBoardOutMin: { min: 2, max: 25, step: 0.5 },
+  wallPlantLedgeYield: { min: 0, max: 1, step: 1 },
   ledgeGrabTime: { min: 0.4, max: 6, step: 0.1 },
   ledgeClimbTime: { min: 0.15, max: 1.2, step: 0.05 },
   ledgeClimbPop: { min: 0, max: 12, step: 0.5 },
@@ -477,6 +502,17 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
   launchSomersaultEnd: 'Turn Finish (% rise)',
   launchSomersaultEase: 'Turn Easing',
   boardAbandonSteering: 'Board Abandon Steering (%)',
+  wallPlantWindow: 'Late Press Window (s)',
+  wallPlantBuffer: 'Early Press Buffer (s)',
+  wallPlantMinSpeed: 'Impact Speed (m/s)',
+  wallPlantStick: 'Plant Hold (s)',
+  wallPlantUp: 'Foot Kick Up (m/s)',
+  wallPlantOut: 'Foot Kick Out (m/s)',
+  wallPlantSteer: 'Foot Kick Steering (m/s²)',
+  wallPlantBoardUp: 'Board Plant Up (m/s)',
+  wallPlantBoardKeep: 'Board Speed Kept',
+  wallPlantBoardOutMin: 'Board Slowest Exit (m/s)',
+  wallPlantLedgeYield: 'Climbable Walls Keep X',
   teeterEdgeDistance: 'Teeter Edge Distance (m)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
   parkChargeSpeed: 'Park Charged Speed (m/s)',
@@ -753,6 +789,28 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Extra vertical launch at a FULL pump. On the wall, HOLD X to load a spring then RELEASE to leap off — a quick tap gives the base pop (wallKickUp), a full pump adds this whole bonus on top for a big jump.',
   wallChargeMax: 'How long you have to hold (pump) X on the wall to reach a full-power launch. Shorter = the pump maxes out faster.',
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
+  wallPlantWindow:
+    'WALL PLANT timing, the late side: jump into a wall and press X within this many seconds of first touching it to kick off. Longer is more forgiving; 0 leaves only the early press. A skater who hits a wall fast enough to wipe out has no late window at all — that plant has to be pressed just before the wall.',
+  wallPlantBuffer:
+    'WALL PLANT timing, the early side: an X pressed this long before you reach the wall is remembered and fires the instant you touch it. That press is taken away from the double jump and the board eject only when a wall really is that close in your line of travel.',
+  wallPlantMinSpeed:
+    'How fast you must be travelling INTO the face for the touch to count as an impact. Brushing along a wall, or drifting into it slowly, opens no window.',
+  wallPlantStick:
+    'How long the feet (or wheels) stay planted on the wall before the launch. A few hundredths reads as a push; 0 launches on the same frame; longer feels heavy.',
+  wallPlantUp:
+    'ON FOOT: the upward pop of a wall kick. For reference a tap jump is 12 and a full jump 14. This and wallPlantOut decide how wide a shaft can be climbed: the far wall has to be reached before you fall back below the kick.',
+  wallPlantOut:
+    'ON FOOT: the speed a wall kick throws you away from the wall. Sideways travel along the wall is kept, so a diagonal approach leaves on the mirrored diagonal.',
+  wallPlantSteer:
+    'ON FOOT: how hard the stick can bend the kick in the air. The kick carries its own momentum, so the stick you were still holding into the wall does not cancel it; holding back brakes and returns, holding nothing flies straight to the far wall. 0 commits the arc completely.',
+  wallPlantBoardUp:
+    'BOARD: the upward pop of a wallplant. An ollie runs 6.5 (tap) to 11 (charged); higher gives more air after the plant to land another trick in.',
+  wallPlantBoardKeep:
+    'BOARD: how much of the speed you carried into the wall comes back out of it. 1 = a perfect bounce, lower scrubs speed on every plant.',
+  wallPlantBoardOutMin:
+    'BOARD: the slowest a wallplant ever leaves the wall, so a gentle approach still gets clear of the face.',
+  wallPlantLedgeYield:
+    'ON FOOT only. 1 = a wall whose top you can still get onto from where you are (the jump you are in, a double jump you have not spent, the ledge grab) is a wall to CLIMB: X there keeps its old meaning and never kicks you away from the ledge. Taller walls, bare walls with no walkable top, and any wall once the double jump is spent and the lip is out of reach all kick. 0 = every wall kicks, wherever its top is. The board always plants.',
   ledgeGrabTime: 'How long you can hang off a grabbed ledge before your grip gives out and you drop. Longer = more time to decide climb up vs hop down.',
   ledgeClimbTime: 'How long the animated clamber-up takes — she pulls up the face, then over the lip. Shorter = snappier parkour; longer = a deliberate heave.',
   ledgeClimbPop: 'Extra lift as you top out of the clamber. 0 plants you flat on the landing; higher adds a springy finishing hop.',
@@ -941,6 +999,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallPumpBonus', 'wallChargeMax', 'wallKickOut'] },
+  { title: 'WALL PLANT', keys: ['wallPlantWindow', 'wallPlantBuffer', 'wallPlantMinSpeed', 'wallPlantStick', 'wallPlantUp', 'wallPlantOut', 'wallPlantSteer', 'wallPlantBoardUp', 'wallPlantBoardKeep', 'wallPlantBoardOutMin', 'wallPlantLedgeYield'] },
   { title: 'EDGE BALANCE', keys: ['teeterEdgeDistance', 'teeterCatchSpeed'] },
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
@@ -1016,6 +1075,12 @@ export const CONST = {
   ptsGrindTick: GRIND_TRICKS.normal.rate / 4, // accrues every quarter second on the rail (THPS-style)
   ptsWallride: 120, // base for a wallride (shows the plate immediately)
   ptsWallrideTick: 6, // accrues every quarter second on a wallride (THPS-style)
+  ptsWallplant: 150, // a board wallplant: one timed press, so it pays more than catching a wallride
+  ptsWallKick: 60, // the same move on foot: a platforming kick, priced like a slam rather than a board trick
+  wallPlantSameFace: 0.5, // a face within 60 degrees of the one last planted is the SAME wall: no second kick off it until you land, grind, hang or bounce
+  wallPlantReach: 0.3, // metres the body may drift off the face and still plant inside the late window
+  wallKickCommit: 0.1, // ON FOOT: seconds of a kick's flight the stick cannot bend at all — the stick you ran in with is still pointing at the wall
+  wallKickSteerEase: 0.25, // ...and how long steering then takes to come up to full wallPlantSteer
   ptsManualBase: 100, // popping a manual / nose manual
   ptsManualTick: 5, // accrues every quarter second balanced on two wheels
   ptsLip: 125, // catching a lip stall on the coping

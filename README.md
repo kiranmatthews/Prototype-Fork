@@ -83,6 +83,7 @@ handler in `src/toolRoutes.ts` / `src/main.ts`. Validate with
 | Forward / back up | Left stick or d-pad up/down | Up/Down (W/S) |
 | On-foot sidestep (ground / air) | Left stick left/right | Left/Right (A/D) |
 | Jump / vert transfer / board abandon | X (Cross) | Space |
+| Wall plant (in the air, as you meet a wall) | X (Cross) | Space |
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
 | Air grab (speed boost on landing) | Circle | Q |
@@ -105,6 +106,17 @@ the new press bails. A held transfer direction does not also spin: release it,
 then press again to add a rotation.
 Jump charge and stick deflection control transfer distance; R2 and grabs do
 not change the flight path.
+
+Jump into a wall and press Jump as you meet it to plant and spring back off
+it. The press counts from 0.2 s before the wall to 0.2 s after first touching
+it. On foot it is a Wall Kick: two facing walls up to about 6 m apart can be
+climbed kick by kick, and one wall takes a single kick until you land. A wall
+whose top you can still reach (the jump you are in, an unspent double jump, the
+ledge grab) is climbed instead, and Jump there keeps its usual meaning. On the
+board it is a Wallplant: it must be pressed just before a wall you would
+otherwise wipe out on, it sends you back out with 90% of your speed, and it
+scores as a trick that keeps the combo alive. `Wall Plant Lab` is the practice
+course, and the WALL PLANT tuning section holds every number.
 
 During an ordinary board ollie, press and release Jump a second time to perform
 the risky emergency eject. The menu’s **STANDARD RULE** switch selects classic

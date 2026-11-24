@@ -57,6 +57,7 @@ for (const [name, section, description] of [
 for (const [id, name, description] of [
   ['codex-lab', 'Haunted Hassle', 'A haunted castle and abandoned tropical theme park, with a matching castle bonus course.'],
   ['backport-lab', 'Backport Mechanics Lab', 'Procedural paths and reusable level primitives.'],
+  ['wallplant-lab', 'Wall Plant Lab', 'Wall kick and wallplant practice: one wall, a kick shaft, and a board lane into an end wall.'],
   ['bone-yard', 'Bone Yard · Wipeout Playground', 'Crash, trip, breakup, recovery and fatal-pit testing.'],
   ['flats', 'Flats & Pipes', 'Skate transitions, quarter pipes, rails and vert traversal.'],
   ['jungle-cup', 'Jungle Cup', 'Competition skating, balance, tricks and park camera tuning.'],
