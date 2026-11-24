@@ -2021,8 +2021,8 @@ a board.
 rest). A jump leaves the ground when Jump is *let go*: a tap carries 5.25 m, a 14-frame hold 5.3 m (5.85 m
 to a landing 1.5 m lower) after 2.1 m of run. A full stop from a run takes 1.9 m, so a waiting place is
 ≥ 4 m of fixed floor. A `trampoline` at `speed` 16 throws 3.7 m, and 7.6 m with Jump held through the
-landing and the rise (`amp` 1.4); a plain bounce grabs any lip within 2.4 m above its apex, and beside a
-wall the level wants `wallPlants: false` or the kick takes the held Jump. A `mover` coming down on a
+landing and the rise (`amp` 1.4; letting go on the way up cuts the rise at once); a plain bounce grabs
+any lip within 2.4 m above its apex. A `mover` coming down on a
 walker collects them unhurt. A Watcher hovering at 1.65 m is out of a grounded spin's reach and is
 walked under between swoops; a jump-spin takes it. A Mossback's shell bounce heads a row 5.7 m up; a
 double jump (5.5 m) does not. A stack's cap drops into the lane when its base is spun: keep stacks

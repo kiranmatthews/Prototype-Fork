@@ -241,9 +241,9 @@ add({ t: 'crumble', p: [(TRENCH.x0 + TRENCH.x1) / 2, TRENCH.top, 0], s: [5, 0.6,
   nm: 'Falling slab: first met over a trench you can jump out of' });
 const STAIRS_X0 = TRENCH.x1 + 12;
 floor(TRENCH.x1, STAIRS_X0, DOWN.top, 'Plunge: rest floor before the falling stairs');
-// (The stack stands first: 10 m back from the brink, because its cap drops into the lane.)
-pyramid(TRENCH.x1 + 0.8, DOWN.top, 'mystery', 'Plunge: stack before the falling stairs');
-checkpoint(TRENCH.x1 + 3.6, DOWN.top, 'Checkpoint 3: before the falling stairs');
+// (The stack stands 9 m back from the brink: its cap drops into the lane when the base is spun.)
+checkpoint(TRENCH.x1 + 0.9, DOWN.top, 'Checkpoint 3: before the falling stairs');
+pyramid(TRENCH.x1 + 2.3, DOWN.top, 'mystery', 'Plunge: stack before the falling stairs');
 // (A running jump carries 5.3 m, and 5.8 m to a landing 1.5 m lower: each
 // slab is 5 m long behind a 3 m gap, so the jump lands on its first half.)
 export const CRUMBLE_STAIRS = [0, 1, 2].map(k => ({
@@ -277,10 +277,11 @@ foe('turtle', BASIN.x0 + 41, BASIN.top, 1.5, 2, 'Mossback: land on it and its sh
 actStone = SAND;
 // Sixteen metres up, on foot, and no two stages of it the same. The way out
 // of the basin is a trampoline under a 3 m wall: any jump onto it clears the
-// wall, and Jump held as you land throws you onto the perch above the ledge.
+// wall, and Jump held from the landing to the top of the bounce throws you
+// onto the perch above the ledge. (Let go on the way up and the rise is cut.)
 floor(TRAMPOLINE.x0, TRAMPOLINE.x1, r(BASIN.top - 0.5), 'Basin: the bed under the trampoline', STONE_DARK);
 add({ t: 'trampoline', p: [(TRAMPOLINE.x0 + TRAMPOLINE.x1) / 2, TRAMPOLINE.top, 0], s: [TRAMPOLINE.x1 - TRAMPOLINE.x0, 0.5, DEPTH],
-  speed: TRAMPOLINE.speed, amp: TRAMPOLINE.held, grp: GR.hazards, nm: 'Trampoline: jump onto it; hold Jump as you land for the high bounce' });
+  speed: TRAMPOLINE.speed, amp: TRAMPOLINE.held, grp: GR.hazards, nm: 'Trampoline: jump onto it; keep Jump held through the bounce for the high one' });
 for (const h of [1.6, 2.8, 4]) fruit(TRAMPOLINE.x0 + 2, TRAMPOLINE.top + h);
 export const LEDGE_A = { x0: BASIN.x1, x1: BASIN.x1 + 18, top: r(BASIN.top + 3) };
 floor(LEDGE_A.x0, LEDGE_A.x1, LEDGE_A.top, 'Climb: first ledge');
@@ -561,9 +562,6 @@ export const SIDE_PIPE_LAB_LEVEL: CustomLevelData = {
   spawn: [-15, START_TOP + 0.12, 0],
   killY: -32,
   sky: 'day',
-  // The trampoline stands against a wall and asks for Jump held as you land:
-  // a timed wall kick would take that press. Nothing here is climbed by kicks.
-  wallPlants: false,
   components,
   groups,
 };
