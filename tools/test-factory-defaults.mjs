@@ -33,7 +33,7 @@ try {
     jumpFlipMinSpeed: 8.85, // D chooses the roll from the authored takeoff-speed threshold
     boardAbandonSteering: 25, // v28: gentler steering after the deliberate board jump-off
     // Wall plant (timed wall kick on foot, wallplant on the board).
-    wallPlantWindow:.2,wallPlantBuffer:.2,wallPlantMinSpeed:3,wallPlantStick:.05,wallPlantUp:12.5,wallPlantOut:9.5,
+    wallPlantWindow:.2,wallPlantBuffer:.2,wallPlantMinSpeed:3,wallPlantStick:.08,wallPlantUp:12.5,wallPlantOut:9.5,
     wallPlantSteer:22,wallPlantBoardUp:10,wallPlantBoardKeep:.9,wallPlantBoardOutMin:8,wallPlantLedgeYield:1,
     hugeDropDistance: 24, // v25: retain the historical capture while promoting forgiving drop judgement
     grindCalm:.5,balanceSpeedEffect:.75,balanceGrace:1,balanceRamp:.18,balanceRampMax:2.5,bailGrace:0,

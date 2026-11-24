@@ -2035,17 +2035,18 @@ Jump into a wall and press Jump as you meet it. The press counts from 0.2 s befo
 (60 points); on the board it is a **Wallplant** (150 points) that turns the rider around. All values are from
 `node tools/test-wall-plant.mjs` and the real Player; the tuning lives in the WALL PLANT section.
 
-**On foot.** A kick leaves the wall at 9.5 m/s out and 12.5 m/s up, and keeps whatever the approach was
+**On foot.** The rider holds on the face for 0.08 s (`wallPlantStick`), in a three-point crouch, before
+the kick fires. The kick leaves the wall at 9.5 m/s out and 12.5 m/s up, and keeps whatever the approach was
 carrying along the wall. Between two facing walls, with nothing held but the timing of Jump:
 
 | Shaft width, face to face | Height gained per kick | Time between kicks |
 |---|---|---|
-| 2 m | 1.2 m | 0.15 s |
-| 3 m | 1.9 m | 0.25 s |
-| **4 m** | **2.2 m** | 0.35 s |
-| 5 m | 1.9 m | 0.48 s |
-| 6 m | 0.75 m | 0.57 s |
-| 6.5 m | loses 0.35 m per kick | 0.62 s |
+| 2 m | 1.2 m | 0.18 s |
+| 3 m | 1.9 m | 0.28 s |
+| **4 m** | **2.2 m** | 0.38 s |
+| 5 m | 1.9 m | 0.52 s |
+| 6 m | 0.75 m | 0.60 s |
+| 6.5 m | loses 0.35 m per kick | 0.65 s |
 | 7 m or more | the far wall is out of reach | |
 
 Build kick shafts **3–5 m wide**; 4 m is the sweet spot and 6 m is the limit. A corridor wider than 6.5 m

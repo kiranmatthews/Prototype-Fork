@@ -150,7 +150,7 @@ export const TUNING = {
   wallPlantWindow: 0.2, // seconds AFTER first touching the wall that X still plants (0 = only an early press counts)
   wallPlantBuffer: 0.2, // seconds BEFORE the wall that an early X is remembered and fires on contact
   wallPlantMinSpeed: 3, // slowest approach INTO the face that counts as an impact you can plant from
-  wallPlantStick: 0.05, // seconds the feet/wheels stay planted on the wall before the launch
+  wallPlantStick: 0.08, // seconds the feet/wheels stay planted on the wall before the launch: long enough to read the crouch
   wallPlantUp: 12.5, // ON FOOT: vertical pop of the kick (a tap jump is 12, a full jump 14)
   wallPlantOut: 9.5, // ON FOOT: speed away from the wall
   wallPlantSteer: 22, // ON FOOT: how fast the stick can bend the kick's momentum in the air (m/s^2)
@@ -796,7 +796,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   wallPlantMinSpeed:
     'How fast you must be travelling INTO the face for the touch to count as an impact. Brushing along a wall, or drifting into it slowly, opens no window.',
   wallPlantStick:
-    'How long the feet (or wheels) stay planted on the wall before the launch. A few hundredths reads as a push; 0 launches on the same frame; longer feels heavy.',
+    'How long the feet (or wheels) stay planted on the wall before the launch. Under about 0.06 the crouch on the wall is too brief to read; 0 launches on the same frame; much past 0.12 feels heavy.',
   wallPlantUp:
     'ON FOOT: the upward pop of a wall kick. For reference a tap jump is 12 and a full jump 14. This and wallPlantOut decide how wide a shaft can be climbed: the far wall has to be reached before you fall back below the kick.',
   wallPlantOut:

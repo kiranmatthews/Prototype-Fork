@@ -12927,3 +12927,22 @@ and reads as tail on the coping, tip, roll; Jump released in the east hang with 
 wall and is on foot the step after touchdown; a board thrown in the hang tumbles and is at rest on the
 pipe's floor 2.7 s later with no step frozen in the air; walking into the first step for 110 steps only
 stops the skater, and a tap of Jump puts him on top. No console errors.
+
+### 2026-11-24 — Wall plant: a wall-crawler's crouch
+
+The brief was to make the plant on the wall much more Spider-Man-like and more satisfying. The first new crouch was on screen in the browser a little under an hour after the prompt, and the version described here after about an hour and a half.
+
+Before, the plant was two frames of the jump's own tuck that spun to face out: no hand on the wall, and the feet not visibly on it. Now the rider lands in a three-point crouch. Both soles and one palm are pinned to the face by the rig's own limb solver, the hips sit back off the wall between a wide, staggered stance, the chest is turned open and the head looks back over the shoulder up the line of the kick. The chest opens along the wall with the travel if there is any, otherwise toward the camera, otherwise to alternate sides up a chain, so in a kick shaft every plant shows its front.
+
+- **Reach.** An early press reaches for the wall on the way in, feet and palm leading, from 1.7 m out.
+- **Brace.** A wall hit without a press is braced on for as long as the late press is open, so a late plant grows out of a hold instead of popping in.
+- **Push.** At the launch the palm shoves off first and the soles stay on the wall for 0.06 s while the legs fire. The drawn body trails the real one by up to 0.04 s and catches it up over the next 0.14 s. Collision and the camera stay on the real body.
+- **Leap.** The arms are thrown into one diagonal across the wall, the open-side knee drives up and the back arches. It is over by 0.46 s.
+- **Trunk.** The spine and chest are squared to the designed pose from the rig itself, so a plant met in the middle of a tuck or a roll still lands upright.
+- **Impact.** The dust now bursts off the wall where the soles meet it, with a second puff as they leave, and the palm adds a slap to the footfall.
+
+One feel value changed. The plant hold (`wallPlantStick`) went from 0.05 s to 0.08 s, because at 0.05 s the crouch was on screen too briefly to read. Kick heights and distances are unchanged, re-measured at 2.2 m per kick in a 4 m shaft; a chain is 0.03 s slower per wall, and the design bible's cadence table is updated. On the board the deck still owns the feet and the wallplant keeps its lean, with the same longer hold.
+
+The pose was art-directed from close-up captures: a script steps the page one 60 Hz frame at a time and renders each step from fixed review cameras around the plant spot. Those captures caught the two faults that mattered: the planted palm stopping 12 cm short of a mark that was out of the arm's reach, and a rider arriving mid-roll landing sideways on the wall.
+
+`check:wall-plant` now asserts the crouch as well as the movement. It checks that a face just hit is braced on, that in the plant both soles end within 3 cm and the palm within 5 cm of their marks on the wall, that the palm lets go before the soles and the soles are still pinned on the launch step, that the leap ends and leaves nothing behind, that an early press reaches on the way in and keeps its side, and that a board wallplant never draws the on-foot crouch. It also checks the lag and leap curves. The twenty-two movement cases pass unchanged. The run-facing, ledge, crouch-jump, bail-recovery, camera-speed, teeter, roll-landing, animation, rope and Side Pipe Lab suites pass, as do all forty-five D-animation checks, the type check and the production build. The release is 995.44 MB of the 1,000 MB budget. In a real browser the early press, the late press and the shaft climb were recorded frame by frame in both renderers with clean consoles, and the rider's head stays inside the frame throughout. `test-factory-defaults` still differs only in the old `crawlSpeed` fixture value.
