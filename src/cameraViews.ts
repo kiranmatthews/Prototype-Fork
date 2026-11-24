@@ -14,6 +14,9 @@ export interface CameraView {
   cameraFollowDistance?: number;
   /** Opt in to the authored scale in side views instead of the live close rig. */
   cameraKeepDistance?: boolean;
+  /** A long lens: the kept distance may pass the close limit, so a narrow
+   * field of view holds its framing from far back and flattens the picture. */
+  cameraTelephoto?: boolean;
   /** Relative target height keeps tall crate goals visible at a close lens. */
   cameraFollowTargetHeight?: number;
   /** Legacy authoring metadata; gameplay no longer starts with a distant establishing shot. */
@@ -119,7 +122,8 @@ export class CameraViewFraming {
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
       const composed=!bonus&&groundFollow?.authoredComposition===true;
-      const authoredDistance=bonus ? view.cameraFollowDistance! : groundFollow && !composed ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const closeLimit=view.cameraTelephoto&&view.cameraKeepDistance?100:18;
+      const authoredDistance=bonus ? view.cameraFollowDistance! : groundFollow && !composed ? 13.4 : Math.min(closeLimit,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
       const desiredSide = !composed && sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
       this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
         ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));

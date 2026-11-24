@@ -5,29 +5,44 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * halfpipes seen across their section.
  *
  * The whole course is one east travel zone on a single plane (z = 0), viewed
- * from the south, so it reads left to right. Between pipes it is on-foot
- * platforming; at a pipe the walker crosses the coping of its west deck and is
- * dropped in on the board automatically (`sideOn` vertramps, see
- * `CustomComponent.sideOn`). Inside, the board rides the one line the camera
- * can see: holding a direction carves the walls for speed, holding X pumps
- * them harder, and reaching a lip pops a vertical hang. JUMP in that hang
- * with the stick held OUT over the lip — the spine transfer's input — pops
- * the air out across it: over a shared ridge into the next pipe, or onto a
- * deck, where the rider lands back on foot.
+ * from the south through a long lens, so it reads left to right and flat.
+ * Between pipes it is on-foot platforming; at a pipe the walker crosses the
+ * coping of its west deck and is dropped in on the board automatically
+ * (`sideOn` vertramps, see `CustomComponent.sideOn`). Inside, the board rides
+ * the one line the camera can see: holding a direction carves the walls for
+ * speed, holding X pumps them harder, and reaching a lip pops a vertical
+ * hang. JUMP in that hang with the stick held OUT over the lip — the spine
+ * transfer's input — pops the air out across it: over a shared ridge into the
+ * next pipe, or onto a deck, where the rider lands back on foot.
  *
- * Five pipes, one idea each:
- *   P0  ROLL-IN     equal walls, decks both sides: drop in, hold right, pop out.
- *   P1  PUMP        a low west wall and a 7 m east wall that is a spine. One
- *                   swing falls short; the west-lip hang on the way back buys
- *                   the height (or hold X and pump it in one), then the air
- *                   transfers over the ridge into a second pipe, whose far
- *                   deck is the next landing.
- *   P2  ENEMY       a crab patrols the flat: spin through it on the way across.
- *   P3  SWITCH      a bare east wall with nothing behind it. The `!` floats
- *                   over the WEST lip; head it out of a hang and the exit slab
- *                   turns solid.
- *   P4  RAIL        a bare east wall again: the way out is the rail above its
- *                   lip — catch it out of the hang and grind down to the gate.
+ * The height of the course is the other subject. It climbs, plunges, bottoms
+ * out, climbs half as far again and comes down twice, 830 m in all:
+ *
+ *   0  ROLL-IN   P0, equal walls, decks both sides: drop in, hold right, pop out.
+ *   1  PUMP      P1, a low west wall and a 7 m east wall that is a spine. One
+ *                swing falls short; the west hang on the way back buys the
+ *                height (or hold X and pump it in one), then the air transfers
+ *                over the ridge into a second pipe and out onto its deck.
+ *   2  PLUNGE    P2, a wall 8.5 m deep under your feet and a 3.5 m wall to
+ *                leave by: everything the drop gathers is one big air. Then
+ *                on foot down a stair of slabs that fall away.
+ *   3  BASIN     the low point, 11 m under the brink: the crab, the
+ *                Bristleback and the Mossback, each met alone on a wide floor.
+ *   4  CLIMB     16 m up on foot. A trampoline, a lift over solid ground,
+ *                timed pads, a lift over a drop, a frog, a ferry with a
+ *                Bristleback at its landing, two crushers with a crab behind
+ *                them. Each tool is met alone first, then with a partner.
+ *   5  VALLEY    P3, a 7 m drop into a 28 m flat with a stack to smash and a
+ *                crab to spin on the riding line.
+ *   6  SWITCH    P4, a bare east wall with nothing behind it. The `!` floats
+ *                over the WEST lip; head it out of a hang and the exit slab
+ *                turns solid. A Whirler guards the floor beyond.
+ *   7  CASCADE   P5–P7, three pipes sharing two ridges, each floor 7 m under
+ *                the ridge before it: two spine transfers in a row, downhill.
+ *   8  RAIL      P8, a bare east wall again: the way out is the rail over its
+ *                lip, a second long, which drops you into P9.
+ *   9  LONG RAIL P10, the same catch on a rail 52 m long that falls 16 m to
+ *                the gate: let go of the stick and balance it.
  *
  * Every number here was measured with the real player in this engine
  * (tools/test-side-pipe-lab.mjs replays the route; docs/SIDE_ON_PIPES.md has
@@ -37,7 +52,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  */
 
 const DEPTH = 6; // every floor and pipe is this deep; the play plane is z = 0
-const BASE = -12; // floors are solid blocks down to here, below any camera frame
+const BASE = -26; // floors are solid blocks down to here, below any camera frame (the basin floor is at -2.4)
 const PIT_DROP = 7; // a pit's pool sits this far under the floors it divides
 // A step up on an on-foot stretch. It is JUMPED: a tap rises 2.1 m. (Walking
 // into a wall lower than the skater's own reach is a bump, never a grab.)
@@ -48,6 +63,8 @@ const G = 0.96; // authored crate grid (crates are enlarged x1.2 at build time)
 
 const STONE = '#6f7f8a';
 const STONE_DARK = '#596872';
+const SLATE = '#5f7186'; // the plunge, the basin and the cascade: the way down
+const SAND = '#8a8271'; // the climb
 const PIPE = '#d7dcd6';
 const ACCENT = '#e2a640';
 
@@ -57,7 +74,7 @@ const CUBE = {
   indices: [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 3, 7, 6, 3, 6, 2, 0, 4, 7, 0, 7, 3, 1, 2, 6, 1, 6, 5],
 };
 
-const GR = { floor: 1, pipes: 2, crates: 3, enemies: 4, camera: 5, switchExit: 6, finish: 7 } as const;
+const GR = { floor: 1, pipes: 2, crates: 3, enemies: 4, camera: 5, switchExit: 6, finish: 7, hazards: 8 } as const;
 
 /** Heights are sums of a few decimals; keep the authored data free of float dust. */
 const r = (v: number): number => Math.round(v * 100) / 100;
@@ -66,7 +83,8 @@ const components: CustomComponent[] = [];
 const add = (c: CustomComponent): void => { components.push(c); };
 
 /** A solid floor block from x0 to x1 whose top is `top`. */
-const floor = (x0: number, x1: number, top: number, nm: string, color = STONE): void =>
+let actStone = STONE; // each act's floors carry one tint, so the height graph reads as acts
+const floor = (x0: number, x1: number, top: number, nm: string, color = actStone): void =>
   add({ t: 'platform', p: [r((x0 + x1) / 2), r((top + BASE) / 2), 0], s: [r(x1 - x0), r(top - BASE), DEPTH],
     tex: 'stone', color, grp: GR.floor, nm });
 /** A lethal gap between two floors: the pool sits a short fall under `top`. */
@@ -76,6 +94,14 @@ const crate = (x: number, y: number, kind: NonNullable<CustomComponent['kind']>,
   extra: Partial<CustomComponent> = {}): void =>
   add({ t: 'crate', p: [r(x), r(y), 0], kind, grp: GR.crates, nm, ...extra });
 const fruit = (x: number, y: number): void => add({ t: 'wumpa', p: [r(x), r(y), 0], grp: GR.crates });
+/** A floating slab, half a metre thick, whose top is `top`: a platform with air under it. */
+const slab = (x0: number, x1: number, top: number, nm: string): void =>
+  add({ t: 'platform', p: [r((x0 + x1) / 2), r(top - 0.25), 0], s: [r(x1 - x0), 0.5, DEPTH],
+    tex: 'stone', color: ACCENT, grp: GR.floor, nm });
+const checkpoint = (x: number, top: number, nm: string): void =>
+  add({ t: 'checkpoint', p: [r(x), r(top), 0], grp: GR.floor, nm });
+const foe = (kind: NonNullable<CustomComponent['foe']>, x: number, top: number, range: number, speed: number, nm: string): void =>
+  add({ t: 'enemy', foe: kind, p: [r(x), r(top), 0], range, speed, grp: GR.enemies, nm });
 /** Two boxes and a cap, standing in the lane of a floor that is only ever WALKED: spin through. */
 const pyramid = (x: number, top: number, cap: NonNullable<CustomComponent['kind']>, nm: string): void => {
   crate(x, top, 'wood', nm);
@@ -157,11 +183,12 @@ overhead(27.5, START_TOP, ['wood', 'mystery', 'wood'], 'Roll-in: overhead row pa
 // ============================================================== 1 · PUMP ==
 // A step, one plain gap on foot, then the pipe whose east wall is nearly
 // three times the height of the one you drop in from — and is the back of
-// the next pipe. (Every pipe here is about 12 m lip to lip: the widest side
-// view shows 13 m ahead, so the far wall is in frame from the near lip.)
+// the next pipe. (A pipe that has to be read at a glance is about 12 m lip
+// to lip: the view shows 13 m ahead, so the far wall is in frame from the
+// near lip. The plunge and the valley are longer on purpose.)
 const PUMP_TOP = r(START_TOP + STEP);
 floor(34, 44, PUMP_TOP, 'Pump: step up');
-add({ t: 'checkpoint', p: [34 + STEP_CP, PUMP_TOP, 0], grp: GR.floor, nm: 'Checkpoint 1: on foot before the pump pipe' });
+checkpoint(34 + STEP_CP, PUMP_TOP, 'Checkpoint 1: on foot before the pump pipe');
 pyramid(34 + STEP_BOXES, PUMP_TOP, 'mystery', 'Pump: on-foot stack after the checkpoint');
 pit(44, 47.5, PUMP_TOP, 'Gap before the pump pipe');
 floor(47.5, 53, PUMP_TOP, 'Pump: approach floor');
@@ -181,45 +208,191 @@ export const SPINE_LANDING = { x0: L1.eastLip + L1.eastDeck, x1: L1.eastLip + L1
 floor(SPINE_LANDING.x0, SPINE_LANDING.x1, SPINE_LANDING.top, 'Pump: landing floor past the spine');
 overhead(SPINE_LANDING.x0 + 2.5, SPINE_LANDING.top, ['wood', 'wood', 'mystery'], 'Pump: overhead row past the spine');
 
-// ============================================================= 2 · ENEMY ==
-// The climb is on foot: a step, a gap, the crab met alone on a wide floor,
-// another step — then the same crab on a pipe's flat, where the answer is the
-// same spin at twice the speed. A mask waits on the approach first.
-const CLIMB_TOP = r(SPINE_LANDING.top + STEP);
-const CLIMB_X0 = SPINE_LANDING.x1;
-floor(CLIMB_X0, CLIMB_X0 + 9, CLIMB_TOP, 'Climb: step up');
-add({ t: 'checkpoint', p: [CLIMB_X0 + STEP_CP, CLIMB_TOP, 0], grp: GR.floor, nm: 'Checkpoint 2: on foot after the spine' });
-pyramid(CLIMB_X0 + STEP_BOXES, CLIMB_TOP, 'wood', 'Climb: on-foot stack after the checkpoint');
-pit(CLIMB_X0 + 9, CLIMB_X0 + 12, CLIMB_TOP, 'Climb: gap');
-const CRAB_X0 = CLIMB_X0 + 12;
-floor(CRAB_X0, CRAB_X0 + 13, CLIMB_TOP, 'Climb: crab floor');
-// The crab keeps to the far two thirds: the stack by the landing is cleared in peace first.
-add({ t: 'enemy', foe: 'grunt', p: [CRAB_X0 + 8.5, CLIMB_TOP, 0], range: 2.5, speed: 2.4, grp: GR.enemies,
-  nm: 'Crab: first met on foot, on roomy ground' });
-crate(CRAB_X0 + 1.4, CLIMB_TOP, 'wood', 'Climb: crab floor stack');
-crate(CRAB_X0 + 1.4, CLIMB_TOP + G, 'wood', 'Climb: crab floor stack');
-crate(CRAB_X0 + 1.4 + G, CLIMB_TOP, 'mystery', 'Climb: crab floor stack');
-const ENEMY_TOP = r(CLIMB_TOP + STEP);
-const ENEMY_X0 = CRAB_X0 + 13;
-floor(ENEMY_X0, ENEMY_X0 + 9, ENEMY_TOP, 'Enemy pipe: approach floor (one step up)');
-add({ t: 'checkpoint', p: [ENEMY_X0 + 2.5, ENEMY_TOP, 0], grp: GR.floor, nm: 'Checkpoint 3: before the enemy pipe' });
-crate(ENEMY_X0 + 6, ENEMY_TOP, 'mask', 'Enemy pipe: a mask before the crab on the line');
-crate(ENEMY_X0 + 6 + G, ENEMY_TOP, 'wood', 'Enemy pipe: the mask stands in a pair');
-export const P2 = pipe('P2 enemy pipe', ENEMY_X0 + 13, ENEMY_TOP - 3.5, 2.5, [3.5, 3.5], [4, 6]);
-add({ t: 'enemy', foe: 'grunt', p: [P2.cross, P2.floorY, 0], range: 1.4, speed: 1.6, grp: GR.enemies,
-  nm: 'Crab: on the flat of the pipe, on the riding line' });
-fruitOverLip(P2, -1, [1.4, 2.6, 3.8]);
-const P2_OUT = P2.eastLip + P2.eastDeck;
-floor(P2_OUT, P2_OUT + 10, ENEMY_TOP, 'Enemy pipe: landing floor');
-overhead(P2_OUT + 3.5, ENEMY_TOP, ['wood', 'wood', 'mystery'], 'Enemy pipe: overhead row past the landing');
+// ============================================================ 2 · PLUNGE ==
+actStone = SLATE;
+// The first way DOWN. The floor past the spine ends at a pipe whose near wall
+// is 8.5 m deep and whose far wall is 3.5: the drop-in is a plunge, and all
+// it gathers goes into one air off the low east lip.
+const BRINK = { x0: SPINE_LANDING.x1, x1: SPINE_LANDING.x1 + 10, top: SPINE_LANDING.top };
+floor(BRINK.x0, BRINK.x1, BRINK.top, 'Plunge: the brink');
+checkpoint(BRINK.x0 + 2.5, BRINK.top, 'Checkpoint 2: at the brink of the deep pipe');
+pyramid(BRINK.x0 + 5, BRINK.top, 'wood', 'Plunge: stack at the brink');
+export const DEEP = pipe('P2 deep pipe', BRINK.x1 + 4, BRINK.top - 8.5, 3, [8.5, 3.5], [4, 6]);
+fruitOnWall(DEEP, -1, 7);
+for (const dx of [-2, 0, 2]) fruit(DEEP.cross + dx, DEEP.floorY + 1.0);
+fruitOnWall(DEEP, 1, 3);
+// Ridden instead of popped, that air has 10.5 m in it over the east lip —
+// 5.5 m more than the brink it dropped from — and hangs for 1.7 s. The fruit
+// counts it; the box near the top is for the rider who waits to press Jump
+// (it hangs a metre INSIDE the lip: an air popped out early has drifted clear
+// of it by the time it is that high).
+fruitOverLip(DEEP, 1, [1.5, 3, 4.5, 6, 7.5, 9]);
+export const BIG_AIR = { x: DEEP.eastLip - 1.2, y: r(DEEP.eastLipY + 10.2) };
+crate(BIG_AIR.x, BIG_AIR.y, 'life', 'Plunge: the big-air box, a full hang up');
+// Then down on foot. A slab that falls away is met first over a trench you
+// can jump back out of; the stairs after it are three of them over a drop,
+// each 1.5 m under the last, and they are run, not stood on.
+export const DOWN = { x0: DEEP.eastLip + DEEP.eastDeck, x1: DEEP.eastLip + DEEP.eastDeck + 11, top: DEEP.eastLipY };
+floor(DOWN.x0, DOWN.x1, DOWN.top, 'Plunge: landing floor');
+overhead(DOWN.x0 + 3.5, DOWN.top, ['wood', 'mystery', 'wood'], 'Plunge: overhead row past the landing');
+export const TRENCH = { x0: DOWN.x1, x1: DOWN.x1 + 5, top: DOWN.top, floor: r(DOWN.top - 1.5) };
+floor(TRENCH.x0, TRENCH.x1, TRENCH.floor, 'Plunge: the trench under the first falling slab', STONE_DARK);
+add({ t: 'crumble', p: [(TRENCH.x0 + TRENCH.x1) / 2, TRENCH.top, 0], s: [5, 0.6, DEPTH], grp: GR.hazards,
+  nm: 'Falling slab: first met over a trench you can jump out of' });
+const STAIRS_X0 = TRENCH.x1 + 12;
+floor(TRENCH.x1, STAIRS_X0, DOWN.top, 'Plunge: rest floor before the falling stairs');
+// (The stack stands 9 m back from the brink: its cap drops into the lane when the base is spun.)
+checkpoint(TRENCH.x1 + 0.9, DOWN.top, 'Checkpoint 3: before the falling stairs');
+pyramid(TRENCH.x1 + 2.3, DOWN.top, 'mystery', 'Plunge: stack before the falling stairs');
+// (A running jump carries 5.3 m, and 5.8 m to a landing 1.5 m lower: each
+// slab is 5 m long behind a 3 m gap, so the jump lands on its first half.)
+export const CRUMBLE_STAIRS = [0, 1, 2].map(k => ({
+  x0: STAIRS_X0 + 3 + 8 * k, x1: STAIRS_X0 + 8 + 8 * k, top: r(DOWN.top - 1.5 * (k + 1)),
+}));
+for (const pad of CRUMBLE_STAIRS) {
+  add({ t: 'crumble', p: [(pad.x0 + pad.x1) / 2, pad.top, 0], s: [pad.x1 - pad.x0, 0.6, DEPTH], grp: GR.hazards,
+    nm: 'Falling stairs: one jump each, and keep moving' });
+  fruit((pad.x0 + pad.x1) / 2, pad.top + 1.15);
+}
 
-// ============================================================ 3 · SWITCH ==
+// ============================================================= 3 · BASIN ==
+// The low point, and the roomiest floor on the course. Each enemy kind is
+// met here alone with space behind you: the crab (any attack), the
+// Bristleback (spin it, never land on it) and the Mossback, whose shell is a
+// spring — the one row in the basin hangs a shell bounce up.
+export const BASIN = { x0: STAIRS_X0 + 27, x1: STAIRS_X0 + 87, top: r(DOWN.top - 6) };
+pit(STAIRS_X0, BASIN.x0, BASIN.top, 'Plunge: the drop under the falling stairs');
+export const TRAMPOLINE = { x0: BASIN.x1 - 6, x1: BASIN.x1, top: BASIN.top, speed: 16, held: 1.4 };
+floor(BASIN.x0, TRAMPOLINE.x0, BASIN.top, 'Basin floor');
+checkpoint(BASIN.x0 + 3, BASIN.top, 'Checkpoint 4: the bottom of the plunge');
+pyramid(BASIN.x0 + 6.5, BASIN.top, 'wood', 'Basin: stack after the checkpoint');
+foe('grunt', BASIN.x0 + 16, BASIN.top, 2.5, 2.4, 'Crab: first met on foot, on roomy ground');
+foe('spiker', BASIN.x0 + 29, BASIN.top, 2.5, 2.4, 'Bristleback: first met alone. Spin it; never land on it');
+foe('turtle', BASIN.x0 + 41, BASIN.top, 1.5, 2, 'Mossback: land on it and its shell is a spring');
+// A shell bounce heads 6.1 m; a double jump off the floor heads 5.5.
+(['wood', 'mystery', 'wood'] as const).forEach((kind, i) =>
+  crate(BASIN.x0 + 40 + i * G, BASIN.top + 5.7, kind, 'Basin: the row over the Mossback, one shell bounce up'));
+
+// ============================================================= 4 · CLIMB ==
+actStone = SAND;
+// Sixteen metres up, on foot, and no two stages of it the same. The way out
+// of the basin is a trampoline under a 3 m wall: any jump onto it clears the
+// wall, and Jump held from the landing to the top of the bounce throws you
+// onto the perch above the ledge. (Let go on the way up and the rise is cut.)
+floor(TRAMPOLINE.x0, TRAMPOLINE.x1, r(BASIN.top - 0.5), 'Basin: the bed under the trampoline', STONE_DARK);
+add({ t: 'trampoline', p: [(TRAMPOLINE.x0 + TRAMPOLINE.x1) / 2, TRAMPOLINE.top, 0], s: [TRAMPOLINE.x1 - TRAMPOLINE.x0, 0.5, DEPTH],
+  speed: TRAMPOLINE.speed, amp: TRAMPOLINE.held, grp: GR.hazards, nm: 'Trampoline: jump onto it; keep Jump held through the bounce for the high one' });
+for (const h of [1.6, 2.8, 4]) fruit(TRAMPOLINE.x0 + 2, TRAMPOLINE.top + h);
+export const LEDGE_A = { x0: BASIN.x1, x1: BASIN.x1 + 18, top: r(BASIN.top + 3) };
+floor(LEDGE_A.x0, LEDGE_A.x1, LEDGE_A.top, 'Climb: first ledge');
+export const PERCH = { x0: LEDGE_A.x0 + 1.5, x1: LEDGE_A.x0 + 7.5, top: r(LEDGE_A.top + 3.8) };
+slab(PERCH.x0, PERCH.x1, PERCH.top, 'Climb: the perch only the held bounce reaches');
+pyramid(PERCH.x0 + 3, PERCH.top, 'mystery', 'Climb: stack on the perch');
+foe('floater', LEDGE_A.x0 + 12, LEDGE_A.top, 2, 2, 'Watcher: first met on roomy ground. Spin it as it swoops');
+// A lift, met with solid ground under it: its deck rests flush in a recess
+// of the ledge, and a walker who arrives while it is up is simply collected.
+export const LIFT1 = { x0: LEDGE_A.x1, x1: LEDGE_A.x1 + 4, low: LEDGE_A.top, high: r(LEDGE_A.top + 5), speed: 0.9 };
+floor(LIFT1.x0, LIFT1.x1, r(LIFT1.low - 0.5), 'Climb: the recess the first lift rests in', STONE_DARK);
+add({ t: 'mover', p: [(LIFT1.x0 + LIFT1.x1) / 2, r((LIFT1.low + LIFT1.high) / 2), 0], s: [LIFT1.x1 - LIFT1.x0, 0.5, DEPTH],
+  axis: 'y', amp: r((LIFT1.high - LIFT1.low) / 2), speed: LIFT1.speed, phase: -1.57, grp: GR.hazards,
+  nm: 'Lift: first met over solid ground' });
+export const LEDGE_B = { x0: LIFT1.x1, x1: LIFT1.x1 + 16, top: LIFT1.high };
+floor(LEDGE_B.x0, LEDGE_B.x1, LEDGE_B.top, 'Climb: second ledge');
+checkpoint(LEDGE_B.x0 + 3, LEDGE_B.top, 'Checkpoint 5: the top of the first lift');
+pyramid(LEDGE_B.x0 + 5.5, LEDGE_B.top, 'mystery', 'Climb: stack on the second ledge');
+// Timed footing. The first pad bridges a gap a jump clears anyway, in view of
+// a fixed floor to watch a whole cycle from: lit 2.4 s in every 4, strobing
+// through its last 0.9. The pair after it alternates over a drop — when the
+// pad under you starts to strobe, the one ahead has just lit.
+export const PHASE = { cycle: 4, share: 0.6 };
+export const PHASE_DEBUT = { x0: LEDGE_B.x1, x1: LEDGE_B.x1 + 4.5, phase: 0 };
+pit(PHASE_DEBUT.x0, PHASE_DEBUT.x1, LEDGE_B.top, 'Climb: a gap a jump clears, bridged by the first timed pad');
+const REST_X0 = PHASE_DEBUT.x1;
+const REST_X1 = REST_X0 + 12;
+floor(REST_X0, REST_X1, LEDGE_B.top, 'Climb: fixed floor between the timed pads');
+pyramid(REST_X0 + 2.5, LEDGE_B.top, 'wood', 'Climb: stack between the timed pads');
+export const PHASE_PAIR = [
+  { x0: REST_X1 + 0.5, x1: REST_X1 + 5.25, phase: 0 },
+  { x0: REST_X1 + 6.75, x1: REST_X1 + 11.5, phase: 0.5 },
+];
+const BANK_X0 = REST_X1 + 12;
+pit(REST_X1, BANK_X0, LEDGE_B.top, 'Climb: the drop under the timed pair');
+for (const pad of [PHASE_DEBUT, ...PHASE_PAIR])
+  add({ t: 'phasepad', p: [(pad.x0 + pad.x1) / 2, LEDGE_B.top, 0], s: [pad.x1 - pad.x0, 0.5, DEPTH],
+    cycle: PHASE.cycle, amp: PHASE.share, phase: pad.phase, grp: GR.hazards,
+    nm: pad === PHASE_DEBUT ? 'Timed pad: first met over a gap a jump clears' : 'Timed pair: each lights as the other starts to strobe' });
+// The lift again, now over a drop: wait on the bank for the deck, ride it up.
+const BANK_X1 = BANK_X0 + 14;
+floor(BANK_X0, BANK_X1, LEDGE_B.top, 'Climb: the bank of the second lift');
+foe('floater', BANK_X0 + 4, LEDGE_B.top, 1.5, 2, 'Watcher: over the bank where you wait for the lift');
+// (Its deck dips 0.4 m under the bank at the bottom of its travel, so there is
+// a second and more in which stepping on is stepping DOWN.)
+export const LIFT2 = { x0: BANK_X1, x1: BANK_X1 + 4, low: LEDGE_B.top, high: r(LEDGE_B.top + 5), dip: 0.4, speed: 0.9 };
+pit(LIFT2.x0, LIFT2.x1, LEDGE_B.top, 'Climb: the shaft under the second lift');
+add({ t: 'mover', p: [(LIFT2.x0 + LIFT2.x1) / 2, r((LIFT2.low - LIFT2.dip + LIFT2.high) / 2), 0], s: [LIFT2.x1 - LIFT2.x0, 0.5, DEPTH],
+  axis: 'y', amp: r((LIFT2.high - LIFT2.low + LIFT2.dip) / 2), speed: LIFT2.speed, phase: 1.57, grp: GR.hazards,
+  nm: 'Lift: the same lift over a drop' });
+export const LEDGE_C = { x0: LIFT2.x1, x1: LIFT2.x1 + 20, top: LIFT2.high };
+floor(LEDGE_C.x0, LEDGE_C.x1, LEDGE_C.top, 'Climb: third ledge');
+checkpoint(LEDGE_C.x0 + 3, LEDGE_C.top, 'Checkpoint 6: the top of the second lift');
+pyramid(LEDGE_C.x0 + 6, LEDGE_C.top, 'mask', 'Climb: a mask before the frog, the ferry and the gallery');
+overhead(LEDGE_C.x0 + 8.6, LEDGE_C.top, ['wood', 'wood', 'mystery'], 'Climb: overhead row on the third ledge');
+foe('hopper', LEDGE_C.x0 + 14, LEDGE_C.top, 2, 2.4, 'Spring frog: first met on roomy ground');
+// A ferry over a 16 m drop, and the Bristleback from the basin waiting where
+// it lands: the spin you learned on open ground, now at the end of a ride.
+export const FERRY = { x0: LEDGE_C.x1, x1: LEDGE_C.x1 + 16, top: LEDGE_C.top, width: 4, amp: 5.9, speed: 0.8 };
+pit(FERRY.x0, FERRY.x1, FERRY.top, 'Climb: the drop the ferry crosses');
+add({ t: 'mover', p: [(FERRY.x0 + FERRY.x1) / 2, FERRY.top, 0], s: [FERRY.width, 0.5, DEPTH],
+  axis: 'x', amp: FERRY.amp, speed: FERRY.speed, phase: 1.57, grp: GR.hazards, nm: 'Ferry: rests a moment at each bank' });
+export const GALLERY = { x0: FERRY.x1, x1: FERRY.x1 + 36, top: FERRY.top };
+floor(GALLERY.x0, GALLERY.x1, GALLERY.top, 'Climb: the crusher gallery');
+foe('spiker', GALLERY.x0 + 5, GALLERY.top, 2, 2.4, 'Bristleback: waiting where the ferry lands');
+checkpoint(GALLERY.x0 + 10, GALLERY.top, 'Checkpoint 7: the far bank, before the crushers');
+// Two crushers half a cycle apart (hang 1.2 s, slam, rest 0.8 s as a wall,
+// rise 1 s), six metres of fixed floor before the first, and a crab on the
+// far side of the second.
+export const CRUSHERS = [{ x: GALLERY.x0 + 15.5, phase: 0 }, { x: GALLERY.x0 + 24.5, phase: 1.6 }];
+for (const [i, c] of CRUSHERS.entries())
+  add({ t: 'crusher', p: [c.x, GALLERY.top, 0], s: [3, 3, DEPTH], cycle: 3.2, phase: c.phase, grp: GR.hazards,
+    nm: i === 0 ? 'Crusher: first met alone, with a floor to watch it from' : 'Crusher: half a cycle behind the first' });
+// (The row between them is the dare: there is a second and a half to head it in.)
+overhead(GALLERY.x0 + 19.05, GALLERY.top, ['wood', 'mystery', 'wood'], 'Climb: overhead row between the crushers');
+foe('grunt', GALLERY.x0 + 31, GALLERY.top, 2, 2.4, 'Crab: just past the second crusher');
+const RISE = { x0: GALLERY.x1, x1: GALLERY.x1 + 8, top: r(GALLERY.top + STEP) };
+floor(RISE.x0, RISE.x1, RISE.top, 'Climb: step up');
+pyramid(RISE.x0 + 3.2, RISE.top, 'wood', 'Climb: stack on the step');
+
+// ============================================================ 5 · VALLEY ==
+actStone = STONE;
+// The top of the course, and the long way down on the board: a 7 m drop into
+// a flat 28 m long. A stack stands on the riding line (the drop brings more
+// than the 12.5 m/s that smashes it) and the crab from the basin patrols
+// beyond it: the same spin, at twice the speed. A mask waits on the brink.
+export const VALLEY_BRINK = { x0: RISE.x1, x1: RISE.x1 + 10, top: r(RISE.top + STEP) };
+floor(VALLEY_BRINK.x0, VALLEY_BRINK.x1, VALLEY_BRINK.top, 'Valley: the brink');
+checkpoint(VALLEY_BRINK.x0 + STEP_CP, VALLEY_BRINK.top, 'Checkpoint 8: before the valley');
+crate(VALLEY_BRINK.x0 + 6, VALLEY_BRINK.top, 'mask', 'Valley: a mask before the crab on the line');
+crate(VALLEY_BRINK.x0 + 6 + G, VALLEY_BRINK.top, 'wood', 'Valley: the mask stands in a pair');
+export const VALLEY = pipe('P3 valley pipe', VALLEY_BRINK.x1 + 4, VALLEY_BRINK.top - 7, 14, [7, 4.5], [4, 6]);
+fruitOnWall(VALLEY, -1, 6);
+export const VALLEY_STACK = { x: VALLEY.cross - 8 };
+crate(VALLEY_STACK.x, VALLEY.floorY, 'wood', 'Valley: a stack on the riding line, smashed at speed');
+crate(VALLEY_STACK.x, VALLEY.floorY + G, 'wood', 'Valley: a stack on the riding line, smashed at speed');
+for (const dx of [-4, -2, 0]) fruit(VALLEY.cross + dx, VALLEY.floorY + 1.0);
+foe('grunt', VALLEY.cross + 6, VALLEY.floorY, 2, 1.6, 'Crab: on the flat of the valley, on the riding line');
+fruitOnWall(VALLEY, 1, 4);
+fruitOverLip(VALLEY, 1, [1.5, 3]);
+const VALLEY_OUT = VALLEY.eastLip + VALLEY.eastDeck;
+floor(VALLEY_OUT, VALLEY_OUT + 12, VALLEY.eastLipY, 'Valley: landing floor');
+overhead(VALLEY_OUT + 3.5, VALLEY.eastLipY, ['wood', 'wood', 'mystery'], 'Valley: overhead row past the landing');
+
+// ============================================================ 6 · SWITCH ==
 // A step and three short jumps on foot with a rest, then the pipe with no
 // way out: its east wall backs onto a hole. The `!` hangs over the west lip
 // — the lip a held-right rider only visits on the swing BACK — and heading
 // it out of a hang turns the slab solid.
-const HOPS_TOP = r(ENEMY_TOP + STEP);
-const HOPS_X0 = P2_OUT + 10;
+const HOPS_TOP = r(VALLEY.eastLipY + STEP);
+const HOPS_X0 = VALLEY_OUT + 12;
 floor(HOPS_X0, HOPS_X0 + 6, HOPS_TOP, 'Switch approach: step up');
 pit(HOPS_X0 + 6, HOPS_X0 + 9.5, HOPS_TOP, 'Switch approach: first gap');
 floor(HOPS_X0 + 9.5, HOPS_X0 + 13.5, HOPS_TOP, 'Switch approach: stepping floor');
@@ -231,58 +404,113 @@ const SWITCH_X0 = HOPS_X0 + 24;
 floor(SWITCH_X0, SWITCH_X0 + 10, SWITCH_TOP, 'Switch pipe: approach floor');
 for (const [x, top] of [[HOPS_X0 + 11.5, HOPS_TOP], [HOPS_X0 + 19, SWITCH_TOP], [SWITCH_X0 + 2, SWITCH_TOP]])
   fruit(x, top + 1.15);
-add({ t: 'checkpoint', p: [SWITCH_X0 + 3.5, SWITCH_TOP, 0], grp: GR.floor, nm: 'Checkpoint 4: before the switch pipe' });
+checkpoint(SWITCH_X0 + 3.5, SWITCH_TOP, 'Checkpoint 9: before the switch pipe');
 pyramid(SWITCH_X0 + 6, SWITCH_TOP, 'mystery', 'Switch pipe: on-foot stack on the approach');
-export const P3 = pipe('P3 switch pipe', SWITCH_X0 + 14, SWITCH_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
+export const SWITCH_PIPE = pipe('P4 switch pipe', SWITCH_X0 + 14, SWITCH_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
 // 6 m over the lip: a double jump off the deck heads 5.5 m, so only a hang
 // reaches it — and the first west hang of a held-right swing (7 m) does.
-export const SWITCH = { x: P3.westLip + 0.08, y: P3.westLipY + 6 };
+export const SWITCH = { x: SWITCH_PIPE.westLip + 0.08, y: SWITCH_PIPE.westLipY + 6 };
 crate(SWITCH.x, SWITCH.y, 'bang', 'Switch: the ! over the west lip, headed out of a hang',
   { grp: GR.switchExit });
-export const SWITCH_SLAB = { x0: P3.eastLip, x1: P3.eastLip + 9, top: SWITCH_TOP };
+export const SWITCH_SLAB = { x0: SWITCH_PIPE.eastLip, x1: SWITCH_PIPE.eastLip + 9, top: SWITCH_TOP };
 add({ t: 'mesh', p: [(SWITCH_SLAB.x0 + SWITCH_SLAB.x1) / 2, SWITCH_TOP - 0.45, 0],
   s: [SWITCH_SLAB.x1 - SWITCH_SLAB.x0, 0.9, DEPTH], ...CUBE, tex: 'stone', color: ACCENT,
   outline: true, grp: GR.switchExit, nm: 'Switch: exit slab, solid once the ! is hit' });
 pit(SWITCH_SLAB.x0 + 2.2, SWITCH_SLAB.x1, SWITCH_TOP, 'Switch: the hole behind the east wall');
-floor(SWITCH_SLAB.x1, SWITCH_SLAB.x1 + 12, SWITCH_TOP, 'Switch pipe: landing floor');
-overhead(SWITCH_SLAB.x1 + 4, SWITCH_TOP, ['mystery', 'wood', 'wood'], 'Switch pipe: overhead row past the landing');
+// The floor past the slab is long and plain, for one timed enemy met alone:
+// the Whirler's blades are out 2.2 s and in 1.35. Wait short of it; go in.
+export const SWITCH_OUT = { x0: SWITCH_SLAB.x1, x1: SWITCH_SLAB.x1 + 20, top: SWITCH_TOP };
+floor(SWITCH_OUT.x0, SWITCH_OUT.x1, SWITCH_TOP, 'Switch pipe: landing floor');
+overhead(SWITCH_OUT.x0 + 4, SWITCH_TOP, ['mystery', 'wood', 'wood'], 'Switch pipe: overhead row past the landing');
+foe('spinner', SWITCH_OUT.x0 + 14, SWITCH_TOP, 0, 0, 'Whirler: first met alone, with a floor to wait on');
 
-// ============================================================== 4 · RAIL ==
-// The last pipe has the same bare east wall and no switch: the rail that
-// starts over its lip is the road out, and it runs downhill to the gate so
-// the grind gathers the speed a vertical hang could not bring to it.
-const RAIL_TOP = r(SWITCH_TOP + STEP);
-const RAIL_X0 = SWITCH_SLAB.x1 + 12;
+// =========================================================== 7 · CASCADE ==
+actStone = SLATE;
+// Down again, by board, and this time the spine is the staircase: three
+// pipes share two ridges, and each floor lies 7 m under the ridge before it.
+// A held direction clears the first ridge in one swing; after that each
+// transfer drops you further than the wall ahead climbs.
+const CASCADE_X0 = SWITCH_OUT.x1;
+floor(CASCADE_X0, CASCADE_X0 + 9, SWITCH_TOP, 'Cascade: approach floor');
+checkpoint(CASCADE_X0 + 2.5, SWITCH_TOP, 'Checkpoint 10: before the cascade');
+pyramid(CASCADE_X0 + 5, SWITCH_TOP, 'wood', 'Cascade: on-foot stack on the approach');
+export const C1 = pipe('P5 cascade top pipe', CASCADE_X0 + 13, SWITCH_TOP - 3.5, 2, [3.5, 5.5], [4, 0]);
+fruitOverLip(C1, -1, [1.4, 2.6, 3.8]);
+fruitOnWall(C1, 1, 4);
+export const C2 = pipe('P6 cascade middle pipe', C1.eastLip, C1.eastLipY - 7, 2, [7, 5], [0, 0]);
+fruitOnWall(C2, -1, 5);
+fruitOnWall(C2, 1, 4);
+export const C3 = pipe('P7 cascade last pipe', C2.eastLip, C2.eastLipY - 7, 2.5, [7, 3.5], [0, 6]);
+fruitOnWall(C3, -1, 5);
+fruitOnWall(C3, 1, 3);
+fruitOverLip(C3, 1, [1.5, 3, 4.5]);
+export const CASCADE_OUT = { x0: C3.eastLip + C3.eastDeck, x1: C3.eastLip + C3.eastDeck + 14, top: C3.eastLipY };
+floor(CASCADE_OUT.x0, CASCADE_OUT.x1, CASCADE_OUT.top, 'Cascade: landing floor');
+overhead(CASCADE_OUT.x0 + 5, CASCADE_OUT.top, ['wood', 'mystery', 'wood'], 'Cascade: overhead row past the landing');
+
+// ============================================================== 8 · RAIL ==
+actStone = STONE;
+// A bare east wall again and no switch: the rail that starts over its lip is
+// the road out. A vertical hang brings no speed along a rail (the grind
+// starts at 3.5 m/s, where the balance needle runs away fastest), so this
+// one falls away steeply at once: caught, it carries you — under a second,
+// with the travel stick still held — and drops you into the next pipe.
+const RAIL_TOP = r(CASCADE_OUT.top + STEP);
+const RAIL_X0 = CASCADE_OUT.x1;
 floor(RAIL_X0, RAIL_X0 + 8, RAIL_TOP, 'Rail pipe: step up');
-add({ t: 'checkpoint', p: [RAIL_X0 + STEP_CP, RAIL_TOP, 0], grp: GR.floor, nm: 'Checkpoint 5: before the rail pipe' });
+checkpoint(RAIL_X0 + STEP_CP, RAIL_TOP, 'Checkpoint 11: before the rail pipe');
 pyramid(RAIL_X0 + STEP_BOXES, RAIL_TOP, 'wood', 'Rail pipe: on-foot stack after the checkpoint');
-export const P4 = pipe('P4 rail pipe', RAIL_X0 + 12, RAIL_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
-fruitOverLip(P4, -1, [1.4, 2.6, 3.8]);
+export const RAIL_PIPE = pipe('P8 rail pipe', RAIL_X0 + 12, RAIL_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
+fruitOverLip(RAIL_PIPE, -1, [1.4, 2.6, 3.8]);
 // ...and up the EAST hang line to the rail: the way to it is a hang off the
 // lip with the grind button pressed in the air. (Held up the wall instead, the
 // button parks a lip stall on the coping, 3 m short.)
-fruitOverLip(P4, 1, [1.0, 2.0]);
-// A vertical hang brings no speed along the rail (the grind starts at 3.5 m/s,
-// where the balance needle runs away fastest), so the rail falls away steeply
-// at once and only then levels out: the whole grind lasts under a second and
-// leaves at 20 m/s. That is a debut — caught, it carries you — not a balance
-// exam; a longer or flatter rail is the escalation.
-export const RAIL = {
-  x0: P4.eastLip - 0.25, y0: r(P4.eastLipY + 3.1),
-  kneeX: P4.eastLip + 2.75, kneeY: r(P4.eastLipY + 0.5),
-  x1: P4.eastLip + 12, y1: r(P4.eastLipY - 1.3),
-};
-add({ t: 'rail', p: [RAIL.x0, RAIL.y0, 0],
-  pts: [[0, 0, 0, 0], [r(RAIL.kneeX - RAIL.x0), 0, 0, r(RAIL.kneeY - RAIL.y0)], [r(RAIL.x1 - RAIL.x0), 0, 0, r(RAIL.y1 - RAIL.y0)]],
-  color: ACCENT, grp: GR.finish, nm: 'Rail: out over the east lip and down to the finish' });
-const FINISH_TOP = r(P4.eastLipY - 2.6);
-export const FINISH = { x0: P4.eastLip + 8.5, x1: P4.eastLip + 40, top: FINISH_TOP };
-pit(P4.eastLip + 2.2, FINISH.x0, FINISH_TOP, 'Rail: the drop under the grind');
+fruitOverLip(RAIL_PIPE, 1, [1.0, 2.0]);
+/** A rail from `[x0, y0]` through `nodes` ([dx, dy] from its start), with fruit along it. */
+function railLine(x0: number, y0: number, nodes: [number, number][], nm: string): { x0: number; y0: number; x1: number; y1: number } {
+  add({ t: 'rail', p: [x0, y0, 0], pts: nodes.map(([dx, dy]) => [dx, 0, 0, dy]), color: ACCENT, grp: GR.finish, nm });
+  for (let i = 1; i < nodes.length; i++) {
+    const [ax, ay] = nodes[i - 1];
+    const [bx, by] = nodes[i];
+    const count = Math.max(1, Math.round((bx - ax) / 4));
+    for (let k = 1; k <= count; k++)
+      fruit(x0 + ax + (bx - ax) * k / (count + 1), y0 + ay + (by - ay) * k / (count + 1) + 0.6);
+  }
+  const [dx, dy] = nodes[nodes.length - 1];
+  return { x0, y0, x1: x0 + dx, y1: r(y0 + dy) };
+}
+export const RAIL = railLine(RAIL_PIPE.eastLip - 0.25, r(RAIL_PIPE.eastLipY + 3.1), [[0, 0], [3, -2.6], [12.25, -4.4]],
+  'Rail: out over the east lip and down into the next pipe');
+// The pipe it ends in has a west wall a metre high and nothing behind it: its
+// flat lies 1.3 m under the rail's end, and its decked east wall is the exit.
+export const RAIL_CATCH = pipe('P9 rail catch pipe', RAIL.x1 - 1.5, RAIL.y1 - 1.3, 4, [1, 3.5], [0, 6]);
+pit(RAIL_PIPE.eastLip + 2.2, RAIL_CATCH.westLip, RAIL_CATCH.floorY, 'Rail: the drop under the grind');
+fruitOnWall(RAIL_CATCH, 1, 3);
+export const RAIL_OUT = { x0: RAIL_CATCH.eastLip + RAIL_CATCH.eastDeck, x1: RAIL_CATCH.eastLip + RAIL_CATCH.eastDeck + 12, top: RAIL_CATCH.eastLipY };
+floor(RAIL_OUT.x0, RAIL_OUT.x1, RAIL_OUT.top, 'Rail: landing floor');
+overhead(RAIL_OUT.x0 + 3.5, RAIL_OUT.top, ['wood', 'wood', 'mystery'], 'Rail: overhead row past the landing');
+
+// ========================================================= 9 · LONG RAIL ==
+// The same catch, and now the rail is 52 m long and falls 16 m to the gate.
+// It cannot be ridden on the travel stick: let go, and keep the needle in
+// the middle with left and right. It eases, steepens and runs out level over
+// the finish floor, and a clean grind leaves it at full speed.
+const LONG_TOP = r(RAIL_OUT.top + STEP);
+const LONG_X0 = RAIL_OUT.x1;
+floor(LONG_X0, LONG_X0 + 8, LONG_TOP, 'Long rail pipe: step up');
+checkpoint(LONG_X0 + STEP_CP, LONG_TOP, 'Checkpoint 12: before the long rail');
+pyramid(LONG_X0 + STEP_BOXES, LONG_TOP, 'mystery', 'Long rail pipe: on-foot stack after the checkpoint');
+export const LONG_PIPE = pipe('P10 long rail pipe', LONG_X0 + 12, LONG_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
+fruitOverLip(LONG_PIPE, -1, [1.4, 2.6, 3.8]);
+fruitOverLip(LONG_PIPE, 1, [1.0, 2.0]);
+export const LONG_RAIL = railLine(LONG_PIPE.eastLip - 0.25, r(LONG_PIPE.eastLipY + 3.1),
+  [[0, 0], [3, -2.6], [13, -4.6], [29, -11], [43, -15], [52, -16.2]], 'Long rail: down to the finish, on the balance');
+const FINISH_TOP = r(LONG_RAIL.y1 - 1.3);
+export const FINISH = { x0: LONG_RAIL.x1 - 3.5, x1: LONG_RAIL.x1 + 48.5, top: FINISH_TOP };
+pit(LONG_PIPE.eastLip + 2.2, FINISH.x0, FINISH_TOP, 'Long rail: the drop under the grind');
 floor(FINISH.x0, FINISH.x1, FINISH_TOP, 'Finish floor');
-for (const [x, y] of [[RAIL.x0 + 1.5, RAIL.y0 - 0.2], [RAIL.kneeX + 0.5, RAIL.kneeY + 1], [RAIL.kneeX + 3.5, RAIL.kneeY + 0.4],
-  [RAIL.kneeX + 6.5, RAIL.kneeY - 0.2]]) fruit(x, y + 0.3);
-overhead(FINISH.x0 + 16, FINISH_TOP, ['wood', 'mystery', 'wood'], 'Finish: overhead exit count');
-add({ t: 'gate', p: [FINISH.x0 + 24, FINISH_TOP, 0], yaw: 90, grp: GR.finish, nm: 'Finish gate' });
+overhead(FINISH.x0 + 26, FINISH_TOP, ['wood', 'mystery', 'wood'], 'Finish: overhead exit count');
+add({ t: 'gate', p: [FINISH.x0 + 38, FINISH_TOP, 0], yaw: 90, grp: GR.finish, nm: 'Finish gate' });
 
 // ====================================================== camera and plane ==
 const X_MIN = -20;
@@ -291,7 +519,7 @@ const MID = (X_MIN + X_MAX) / 2;
 const SPAN = X_MAX - X_MIN;
 // One plane: nothing on this course is ever played toward or away from the lens.
 for (const z of [-0.83, 0.83])
-  add({ t: 'wall', p: [MID, -16, z], s: [SPAN + 40, 70, 0.6], invisible: true, grp: GR.camera,
+  add({ t: 'wall', p: [MID, -30, z], s: [SPAN + 40, 90, 0.6], invisible: true, grp: GR.camera,
     nm: 'Single-plane side-scrolling boundary' });
 add({ t: 'wall', p: [X_MIN - 0.3, START_TOP, 0], s: [0.6, 14, DEPTH], invisible: true, grp: GR.camera, nm: 'West end stop' });
 add({ t: 'wall', p: [X_MAX + 0.3, FINISH_TOP, 0], s: [0.6, 14, DEPTH], invisible: true, grp: GR.camera, nm: 'East end stop' });
@@ -301,13 +529,19 @@ add({ t: 'zone', p: [MID, 0, 0], s: [SPAN + 40, 1, 18], dir: 'E', sideOn: true, 
   nm: 'The whole course reads left to right, on one line' });
 add({ t: 'camnode', p: [X_MIN - 10, START_TOP, 0], radius: 0, grp: GR.camera });
 add({ t: 'camnode', p: [X_MAX + 10, FINISH_TOP, 0], radius: 0, grp: GR.camera });
-// The widest side view the rig offers (18 m), from the south and a little
-// above: a whole pipe fits the frame from its west lip, and the raised eye
-// shows the open trough and the tops of the decks rather than a flat section.
-add({ t: 'camnode', p: [MID, 6, 0], s: [SPAN + 60, 120, 18], cameraView: true, cameraPresentationOnly: true,
-  cameraPosition: [MID, 8.4, 21.6], cameraTarget: [MID, 3.4, 0], cameraFollowDistance: 18,
-  cameraKeepDistance: true, cameraFov: 49, cameraAspect: 16 / 9, radius: 1, grp: GR.camera,
-  nm: 'Side view wide enough to read a whole pipe' });
+// A LONG LENS, for a flat picture. The frame is the size it was through the
+// rig's widest side view (18 m away at 49°: about 16 m tall on the play
+// plane, so a whole pipe still fits from its west lip), but it is taken from
+// 52 m through 18°. The 6 m of depth behind the line changes scale by 12 %
+// front to back instead of 40 %, and a 6° eye (it was 13°) shows the tops of
+// the decks as an edge rather than a floor running away from the camera.
+const LENS = { fov: 18, distance: 52, pitch: 6 };
+const EYE_UP = r(LENS.distance * Math.sin(LENS.pitch * Math.PI / 180));
+const EYE_OUT = r(LENS.distance * Math.cos(LENS.pitch * Math.PI / 180));
+add({ t: 'camnode', p: [MID, 6, 0], s: [SPAN + 60, 160, 18], cameraView: true, cameraPresentationOnly: true,
+  cameraPosition: [MID, r(3.4 + EYE_UP), EYE_OUT], cameraTarget: [MID, 3.4, 0], cameraFollowDistance: LENS.distance,
+  cameraKeepDistance: true, cameraTelephoto: true, cameraFov: LENS.fov, cameraAspect: 16 / 9, radius: 1, grp: GR.camera,
+  nm: 'Flat side view through a long lens, wide enough to read a whole pipe' });
 
 // Only the switch group wires anything (the `!` to its slab); the rest are
 // folders for the editor's outliner.
@@ -315,7 +549,8 @@ const groups: CustomGroup[] = [
   { id: GR.floor, nm: 'Floors, gaps and checkpoints', editorOnly: true },
   { id: GR.pipes, nm: 'Side-on pipes', editorOnly: true },
   { id: GR.crates, nm: 'Crates and fruit', editorOnly: true },
-  { id: GR.enemies, nm: 'Crabs', editorOnly: true },
+  { id: GR.enemies, nm: 'Enemies', editorOnly: true },
+  { id: GR.hazards, nm: 'Lifts, ferry, timed pads, falling slabs and crushers', editorOnly: true },
   { id: GR.camera, nm: 'Side view, travel zone and play plane', editorOnly: true },
   { id: GR.switchExit, nm: 'Switch pipe: the ! and its exit slab' },
   { id: GR.finish, nm: 'Exit rail and finish', editorOnly: true },
@@ -325,7 +560,7 @@ export const SIDE_PIPE_LAB_LEVEL: CustomLevelData = {
   v: 1,
   name: 'Side Pipe Lab',
   spawn: [-15, START_TOP + 0.12, 0],
-  killY: -16,
+  killY: -32,
   sky: 'day',
   components,
   groups,

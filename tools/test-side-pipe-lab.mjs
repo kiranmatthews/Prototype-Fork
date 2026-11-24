@@ -1,66 +1,101 @@
 // Side Pipe Lab: the REAL Player and Level play the course a side-scrolling
 // player would — right held from the first step to the gate, a jump at each
-// gap and step, a spin at each crab, box and checkpoint, Jump in each east
-// hang to pop out, the grind button at the rail — and every claim the level
-// makes about its side-on pipes is measured rather than assumed.
+// gap, step and falling stair, a spin at each enemy, box and checkpoint, Jump
+// in each east hang to pop out or transfer, a wait for each lift, ferry,
+// timed pad, crusher and Whirler, the grind button at the two rails — and
+// every claim the level makes is measured rather than assumed.
 //
 //   node tools/test-side-pipe-lab.mjs        (npm run check:side-pipe)
 //
 // What is asserted:
 //   · the level data survives the same normaliser an imported level does, and
-//     the normaliser refuses the side-on fields anywhere they do not belong;
+//     the normaliser refuses the side-on and long-lens fields anywhere they do
+//     not belong;
+//   · THE LONG LENS: the level's one camera view holds its 52 m distance (the
+//     close rig stops at 18 m) through an 18° lens, so the frame is the size
+//     it was and the picture is flat;
 //   · walking off a deck across a coping mounts the board on the wall (every
-//     pipe), the ride never leaves the single play plane, and the drop-in is
-//     DRAWN as one continuous curve from the deck onto the wall;
+//     pipe that is walked into), the ride never leaves the single play plane,
+//     and the drop-in is DRAWN as one continuous curve;
 //   · popping out takes the spine transfer's input — Jump in the hang with the
 //     stick held out over the lip — and lands on foot; the stick alone never
 //     leaves a pipe;
 //   · P1 PUMP: a held direction alone falls short of the 7 m east lip on the
 //     first swing, hangs off the WEST lip on the way back, clears the lip on a
-//     later swing and transfers over the ridge into the second pipe, whose
-//     far deck is popped out onto; holding X to pump clears it on the first
-//     swing;
-//   · P2 ENEMY: the crab on the flat is beaten by a spin from the board, and
-//     costs a rider who does not spin;
-//   · P3 SWITCH: with the `!` unhit there is no way out over the east wall;
+//     later swing and transfers over the ridge; holding X clears it at once;
+//   · P2 PLUNGE: the 8.5 m drop-in is seated like any other, and its air,
+//     ridden instead of popped, hangs higher than the brink it dropped from
+//     and heads the box that an early pop-out leaves alone;
+//   · the falling stairs are crossed one jump each, the trampoline clears its
+//     wall without touching the perch (and reaches the perch with Jump held),
+//     a stomp on the Mossback heads the row over it;
+//   · both lifts and the ferry are ridden, the three timed pads are stepped
+//     on while lit, both crushers are passed while raised — and a run that
+//     does not wait for them dies there;
+//   · every enemy kind on the course is beaten the way its floor teaches:
+//     crab, Bristleback, Watcher (a jump-spin), Spring Frog and Whirler
+//     (between its blades) by a spin, the Mossback jumped;
+//   · P3 VALLEY: the drop brings smashing speed to the stack on the riding
+//     line and the crab beyond it is spun from the board; unspun, it costs;
+//   · P4 SWITCH: with the `!` unhit there is no way out over the east wall;
 //     the west hang heads the `!`, and only then does the pop-out land;
-//   · P4 RAIL: the hang catches the exit rail and, with right still held, the
-//     grind rides it to the end; the grind button held too early parks a lip
-//     stall on the bare coping instead, which settles back into the pipe;
+//   · P5–P7 CASCADE: two spine transfers in a row, each ridge crossed in the
+//     air, and the last pipe popped out of on foot;
+//   · P8 RAIL: the hang catches the rail and, on the travel stick alone, the
+//     grind rides it into the next pipe; the grind button held too early
+//     parks a lip stall instead, which settles back into the pipe;
+//   · P10 LONG RAIL: on the travel stick alone the needle runs away and the
+//     grind is lost; let go and balanced, it is ridden to the finish floor;
+//   · on a rail the stick held at the catch is not a lean (held or let go, the
+//     needle ends in the same place), and in the air off a rail's end the
+//     stick toward travel never spins the board;
 //   · a step lower than the skater's reach is BUMPED, on foot or on the
 //     board — never grabbed — and jumped;
-//   · a board thrown away in a hang falls, lands in the pipe and comes to
-//     rest, on a plane narrower than the board is long;
+//   · a board thrown away in a hang falls, lands in the pipe and comes to rest;
 //   · on the one-line zone the stick against travel brakes the board, and the
 //     pipe is ridden back westward the same way;
 //   · a jump into a pipe on a diagonal stick still rides its cross axis;
 //   · a hang that heads a solid over a bare lip stays on its line;
 //   · a death returns to the last banked checkpoint, in front of its pipe.
-// Each of those rules, removed from the runtime, fails this file by name.
+// Each runtime rule among those, removed, fails this file by name.
 import assert from 'node:assert/strict';
+import * as THREE from 'three';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
+import { makeCourseBot } from './side-pipe-lab-bot.mjs';
 
 await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST }) => {
   const lab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');
   const { Level, findLevel, normalizeCustomLevelData } = await server.ssrLoadModule('/src/level.ts');
-  const { P0, P1, L1, P2, P3, P4, RAIL, SPINE_LANDING, SWITCH_SLAB, FINISH } = lab;
+  const { CameraViewFraming } = await server.ssrLoadModule('/src/cameraViews.ts');
+  const { P0, P1, L1, SPINE_LANDING, DEEP, BIG_AIR, CRUMBLE_STAIRS, BASIN, TRAMPOLINE, LEDGE_A, PERCH, LIFT1, LEDGE_B, PHASE_DEBUT, PHASE_PAIR,
+    LIFT2, LEDGE_C, FERRY, GALLERY, VALLEY_BRINK, VALLEY, VALLEY_STACK, SWITCH_PIPE, SWITCH_SLAB, C1, C2, C3, RAIL_PIPE, RAIL, RAIL_CATCH,
+    LONG_PIPE, LONG_RAIL, FINISH } = lab;
   stock.dispose();
 
   // ---- the data contract ----------------------------------------------------
   const entry = findLevel('side-pipe-lab');
   assert.ok(entry?.data, 'Side Pipe Lab is a registered, data-built level');
   const normalised = normalizeCustomLevelData(JSON.parse(JSON.stringify(entry.data)));
-  assert.ok(normalised, 'the level data passes the import normaliser (side-on pipe fields included)');
+  assert.ok(normalised, 'the level data passes the import normaliser (side-on pipe and long-lens fields included)');
   const parts = entry.data.components;
-  assert.equal(parts.filter(c => c.t === 'gate').length, 1, 'one finish gate');
+  const count = t => parts.filter(c => c.t === t).length;
+  assert.equal(count('gate'), 1, 'one finish gate');
   const pipes = parts.filter(c => c.t === 'vertramp');
-  assert.equal(pipes.length, 6, 'five pipes and the second pipe behind the spine');
+  assert.equal(pipes.length, 12, 'twelve pipes');
   assert.ok(pipes.every(c => c.sideOn === true && c.yaw === 0 && c.vkind === 'half'), 'every pipe is a side-on half');
   const zones = parts.filter(c => c.t === 'zone');
   assert.ok(zones.length === 1 && zones[0].dir === 'E' && zones[0].sideOn === true,
     'the whole course is one east travel zone, played on one line');
   const blocks = parts.filter(c => c.t === 'platform');
   assert.ok(entry.data.killY < Math.min(...blocks.map(c => c.p[1] - c.s[1] / 2)), 'killY sits below every floor');
+  assert.deepEqual([count('crumble'), count('trampoline'), count('mover'), count('phasepad'), count('crusher'), count('rail'), count('checkpoint')],
+    [4, 1, 3, 3, 2, 2, 12], 'the hazard vocabulary: 4 falling slabs, a trampoline, 2 lifts and a ferry, 3 timed pads, 2 crushers, 2 rails, 12 checkpoints');
+  const foes = parts.filter(c => c.t === 'enemy').map(c => c.foe).sort();
+  assert.deepEqual(foes, ['floater', 'floater', 'grunt', 'grunt', 'grunt', 'hopper', 'spiker', 'spiker', 'spinner', 'turtle'],
+    'six enemy kinds, ten enemies');
+  assert.ok(VALLEY_BRINK.top - BASIN.top >= 16 && SPINE_LANDING.top - BASIN.top >= 11 && LONG_RAIL.y0 - LONG_RAIL.y1 >= 16,
+    'the height graph: 11 m down to the basin, 16 m back up to the valley brink, 16 m down the last rail');
+  const withPart = extra => { const data = JSON.parse(JSON.stringify(entry.data)); data.components.push(extra); return normalizeCustomLevelData(data); };
   for (const bad of [
     { t: 'vertramp', p: [0, 0, 0], sideOn: true, vkind: 'half', pts: [[0, 0], [0, 10]] }, // swept path
     { t: 'vertramp', p: [0, 0, 0], sideOn: true, vkind: 'half', yaw: 30 }, // not axis-aligned
@@ -68,16 +103,17 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     { t: 'vertramp', p: [0, 0, 0], sideOn: true, vkind: 'half', wallRise: [0, 0] }, // no wall at all
     { t: 'platform', p: [0, 0, 0], sideOn: true }, // not a pipe
     { t: 'zone', p: [0, 0, 500], s: [10, 1, 10], dir: 'N', sideOn: true }, // a line zone runs east/west
-  ]) {
-    const data = JSON.parse(JSON.stringify(entry.data));
-    data.components.push(bad);
-    assert.equal(normalizeCustomLevelData(data), null, `the normaliser rejects ${JSON.stringify(bad)}`);
-  }
+  ]) assert.equal(withPart(bad), null, `the normaliser rejects ${JSON.stringify(bad)}`);
+  // the long lens is a kept distance or it is nothing
+  const lens = { t: 'camnode', p: [0, 900, 0], s: [10, 10, 10], cameraView: true, cameraPresentationOnly: true,
+    cameraPosition: [0, 905, 40], cameraTarget: [0, 900, 0], cameraFollowDistance: 40, cameraFov: 20, cameraTelephoto: true };
+  assert.equal(withPart(lens), null, 'the normaliser rejects a long lens that does not keep its distance');
+  assert.ok(withPart({ ...lens, cameraKeepDistance: true }), '...and accepts the same view with cameraKeepDistance');
 
   const level = new Level(scene, entry);
   scene.updateMatrixWorld(true);
-  assert.equal(level.halfpipes.length, 6);
-  assert.ok(level.halfpipes.every(hp => hp.sideOn), 'all six ride the analytic side-on backing');
+  assert.equal(level.halfpipes.length, 12);
+  assert.ok(level.halfpipes.every(hp => hp.sideOn), 'all twelve ride the analytic side-on backing');
   const second = level.halfpipes.find(hp => Math.abs(hp.cross - L1.cross) < 0.01);
   const pump = level.halfpipes.find(hp => Math.abs(hp.cross - P1.cross) < 0.01);
   assert.equal(pump.lipYOf(-1), P1.westLipY);
@@ -87,121 +123,41 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     'the pump pipe and the pipe behind it share one ridge');
   assert.ok(second.lipYOf(1) < second.lipYOf(-1) && second.deckOf(1) > 0, 'the second pipe has a lower, decked east wall: the next landing');
 
+  // ---- the long lens ----------------------------------------------------------
+  // One camera view frames the whole course. Through the rig's own widest side
+  // view it stood 18 m away at 49°; the long lens stands 52 m away at 18°, which
+  // is the same height of frame on the play plane with a third of the depth cue.
+  {
+    assert.equal(level.cameraPresentationViews.length, 1, 'one camera view frames the whole course');
+    const view = level.cameraPresentationViews[0];
+    assert.ok(view.cameraTelephoto && view.cameraKeepDistance && view.cameraFollowDistance === 52 && view.cameraFov === 18,
+      'it is the long lens: 52 m, kept, through 18°');
+    const shoot = v => {
+      const framing = new CameraViewFraming();
+      const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 2000);
+      camera.position.set(100, 9, 18); camera.lookAt(100, 4, 0); camera.updateMatrixWorld(true);
+      framing.apply(camera, { view: v, weight: 1 }, new THREE.Vector3(100, 4, 0), true);
+      return { out: camera.position.z, fov: camera.fov };
+    };
+    const long = shoot(view), close = shoot({ ...view, cameraTelephoto: false });
+    assert.ok(long.out > 50 && long.fov === 18, `the long lens stands ${long.out.toFixed(1)} m out from the play plane`);
+    assert.ok(close.out <= 18.01, `without the flag the same view is held to the close rig's 18 m (${close.out.toFixed(1)} m)`);
+    const frame = d => 2 * d * Math.tan(THREE.MathUtils.degToRad(long.fov) / 2);
+    assert.ok(Math.abs(frame(52) - 2 * 18 * Math.tan(THREE.MathUtils.degToRad(49) / 2)) < 0.2,
+      `the frame is the height it was at 18 m through 49° (${frame(52).toFixed(1)} m)`);
+    assert.ok((52 + 3) / (52 - 3) < 1.13, 'the 6 m of depth behind the line changes scale by under 13 % (it was 40 %)');
+  }
+
   p.competitionMode = false;
   p.endlessDeaths = true;
+  const measured = {};
+  const bot = makeCourseBot({ p, level, CONST, lab, makeInput, parts });
+  const { play, steps } = bot;
   // The drawn drop-in is advanced where the game advances it: after each step.
   const step = input => { p.step(CONST.fixedStep, input, level); level.update(CONST.fixedStep); p.stepDropInPresentation(); input.consumeEdges(); };
-  const gaps = parts.filter(c => c.t === 'pit').map(c => [c.p[0] - c.s[0] / 2, c.p[0] + c.s[0] / 2])
-    // the two holes behind bare east walls are crossed in the air, never jumped on foot
-    .filter(([a]) => !(a > P3.eastLip && a < SWITCH_SLAB.x1) && !(a > P4.eastLip && a < FINISH.x0));
-  // steps up on the on-foot floors: where one block's top meets a taller one's west face
-  const floors = blocks.filter(c => !/footing/.test(c.nm ?? '')).map(c => ({ x0: c.p[0] - c.s[0] / 2, x1: c.p[0] + c.s[0] / 2, top: c.p[1] + c.s[1] / 2 }));
-  const steps = floors.flatMap(b => floors.filter(a => Math.abs(a.x1 - b.x0) < 0.01 && b.top - a.top > 0.4 && b.top - a.top < 3)
-    .map(a => ({ x: b.x0, rise: b.top - a.top, below: a.top })));
-  assert.ok(steps.length >= 4 && steps.every(s => s.rise <= 1.61), `the on-foot steps are all within a tap jump (${steps.map(s => s.rise.toFixed(2))})`);
-  const pipeAt = x => [P0, P1, L1, P2, P3, P4].find(q => x > q.westLip - 0.6 && x < q.eastLip + 0.6) ?? null;
-
-  /**
-   * One run of the course from the spawn (or `from`), right held throughout.
-   * `pump` holds X on every transition; `spin` (default on) spins at crabs,
-   * boxes and checkpoints; `pop` (default on) presses Jump once in each east
-   * hang; `grind` (default on) asks for the rail out of P4's east hang, and
-   * `grind: 'early'` also holds the button up P4's wall until it has parked
-   * one lip stall; `depth` adds a toward/away stick; `jumpInAt` leaves the
-   * deck before that lip in a jump; `until` ends the run early.
-   */
-  const play = (opts = {}) => {
-    const { pump = false, spin = true, pop = true, grind = true, until = () => false, seconds = 120, from = null, depth = 0, jumpInAt = null } = opts;
-    level.reset(true);
-    p.respawn(level, true);
-    if (from) { p.pos.set(from[0], from[1], 0); p.prevPos.copy(p.pos); }
-    const log = { mounts: [], hangs: [], stalls: [], exits: new Map(), crabsOnBoard: 0, crabsOnFoot: 0, switchAt: null, grindAt: null, grindEnd: null,
-      maxZ: 0, deaths: 0, bails: 0, grabs: 0, finished: false, t: 0, checkpoints: 0, respawns: [],
-      transferAt: null, masksSpent: 0, firstEastReach: new Map(), eastmostBeforeSwitch: -Infinity, trouble: [], maxHeadingZ: 0 };
-    let jump = 0, stuck = 0, lastX = p.pos.x, spinWas = false, grindWas = false, hang = 0, heldWas = false;
-    let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: false };
-    let foes = level.enemies.filter(e => e.alive).length;
-    const swing = new Map(); // pipe -> { side, peak } for the wall currently being climbed
-    for (let i = 0; i < seconds / CONST.fixedStep; i++) {
-      log.t = i * CONST.fixedStep;
-      const x = p.pos.x, onFoot = !p.freeSkate, at = pipeAt(x);
-      const input = makeInput({ moveX: 1, moveY: depth });
-      // (optional) leave the deck in a jump instead of walking over the coping
-      if (jumpInAt !== null && onFoot && p.grounded && jump === 0 && x > jumpInAt - 3.2 && x < jumpInAt - 1.4) jump = 1;
-      const gap = gaps.find(([a]) => x < a && a - x < 2.4);
-      const stepUp = steps.find(s => x < s.x && s.x - x < 2.2 && Math.abs(p.pos.y - s.below) < 0.3);
-      if ((gap || stepUp) && onFoot && p.grounded && jump === 0) jump = 1;
-      stuck = onFoot && p.grounded && p.state === 'ride' && Math.abs(x - lastX) < 0.002 ? stuck + 1 : 0;
-      if (stuck > 15 && jump === 0) jump = 1; // a box in the lane: hop it
-      let held = false;
-      if (jump > 0) { jump++; held = jump < 15; if (jump > 40) jump = 0; }
-      if (pump && p.freeSkate && p.grounded && p.groundHit?.halfpipe) held = true;
-      // POP OUT: one Jump in each east hang, right still held — the spine transfer's input
-      hang = pop && p.vertAir && at && x > at.cross ? hang + 1 : 0;
-      if (hang >= 3 && hang < 7) held = true;
-      input.jumpHeld = held; input.jumpPressed = held && !heldWas; input.jumpReleased = !held && heldWas; heldWas = held;
-      const foe = spin && level.enemies.find(e => e.alive && Math.abs(e.group.position.x - x) < (p.freeSkate ? 5.5 : 2.6) &&
-        Math.abs(e.group.position.y - p.pos.y) < 2.5);
-      const post = spin && onFoot && level.checkpoints.find(c => !c.active && Math.abs(c.mesh.position.x - x) < 1.6 &&
-        Math.abs(c.mesh.position.y - p.pos.y) < 2);
-      // a box standing in the lane of an on-foot floor: spin through it, as a player does
-      const box = spin && onFoot && level.crates.find(c => c.alive && !c.pending && !c.bang &&
-        c.mesh.position.x > x && c.mesh.position.x - x < 1.7 && Math.abs(c.mesh.position.y - p.pos.y) < 2.4);
-      const wantSpin = !!(foe || post || box);
-      input.spinHeld = wantSpin; input.spinPressed = wantSpin && !spinWas; spinWas = wantSpin;
-      const wantGrind = (grind && p.state === 'air' && Math.abs(x - P4.eastLip) < 1 && p.pos.y > RAIL.y0 - 1.9) ||
-        (grind === 'early' && log.stalls.length === 0 && p.freeSkate && at === P4);
-      input.grindHeld = wantGrind || p.state === 'grind'; input.grindPressed = wantGrind && !grindWas; grindWas = wantGrind;
-      // (right stays held on the rail too: on a side-on line the stick held at the catch is not a lean)
-      lastX = x;
-      step(input);
-
-      const here = pipeAt(p.pos.x);
-      log.maxZ = Math.max(log.maxZ, Math.abs(p.pos.z));
-      if (p.freeSkate && p.grounded && p.groundHit?.halfpipe) log.maxHeadingZ = Math.max(log.maxHeadingZ, Math.abs(p.axisF.z));
-      if (p.freeSkate && !prev.free && p.groundHit?.halfpipe) log.mounts.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, speed: p.speed });
-      if (p.vertAir && !prev.vert && here)
-        log.hangs.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', vV: p.vVel, t: log.t });
-      const stalled = p.lipStallT > 0;
-      if (stalled && !prev.stall && here) log.stalls.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', t: log.t });
-      if (!stalled && prev.stall && log.stalls.length) Object.assign(log.stalls.at(-1), { seconds: log.t - log.stalls.at(-1).t,
-        backInPipe: !p.isBailing && here !== null && p.pos.x > here.westLip && p.pos.x < here.eastLip });
-      // the first touchdown past each pipe's east lip: is the rider on foot?
-      for (const q of [P0, L1, P2, P3]) if (!log.exits.has(q.name) && p.grounded && p.state === 'ride' && !p.groundHit?.halfpipe &&
-        p.pos.x > q.eastLip + 0.05 && p.pos.x < q.eastLip + 9 && Math.abs(p.pos.y - q.eastLipY) < 0.5)
-        log.exits.set(q.name, { onFoot: false, x: p.pos.x, t: log.t });
-      // (the step-off is the stride after the wheels touch)
-      for (const out of log.exits.values()) if (log.t - out.t < 0.25 && p.grounded && !p.freeSkate) out.onFoot = true;
-      // highest point reached on each wall, per swing (first east reach is the pump claim)
-      if (here && p.grounded && p.groundHit?.halfpipe && Math.abs(p.pos.x - here.cross) > here.flatHalf) {
-        const side = p.pos.x < here.cross ? 'west' : 'east';
-        const s = swing.get(here.name);
-        if (!s || s.side !== side) {
-          if (s && s.side === 'east' && !log.firstEastReach.has(here.name)) log.firstEastReach.set(here.name, s.peak);
-          swing.set(here.name, { side, peak: p.pos.y });
-        } else s.peak = Math.max(s.peak, p.pos.y);
-      }
-      if (log.transferAt === null && p.pos.x > P1.eastLip + 0.05 && p.pos.x < L1.eastLip && p.pos.y > L1.floorY + 0.5) log.transferAt = log.t;
-      const alive = level.enemies.filter(e => e.alive).length;
-      if (alive < foes) { if (p.freeSkate) log.crabsOnBoard++; else log.crabsOnFoot++; }
-      foes = alive;
-      if (log.switchAt === null && level.crates.some(c => c.bang && c.bangUsed)) log.switchAt = { t: log.t, x: p.pos.x, y: p.pos.y, vert: p.vertAir || prev.vert };
-      if (log.switchAt === null && here === P3) log.eastmostBeforeSwitch = Math.max(log.eastmostBeforeSwitch, p.pos.x);
-      if (p.state === 'grind' && prev.state !== 'grind' && log.grindAt === null) log.grindAt = { t: log.t, x: p.pos.x, y: p.pos.y };
-      if (prev.state === 'grind' && p.state !== 'grind' && log.grindAt && !log.grindEnd)
-        log.grindEnd = { x: p.pos.x, speed: Math.abs(p.speed), bailed: p.isBailing, seconds: log.t - log.grindAt.t };
-      if (p.state === 'hang' && prev.state !== 'hang') { log.grabs++; log.trouble.push(`ledge grab at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
-      if (p.isBailing && !prev.bail) { log.bails++; log.trouble.push(`bailed at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
-      if (p.masks < prev.masks) log.masksSpent++;
-      log.checkpoints = level.checkpoints.filter(c => c.active).length;
-      if (p.totalDeaths > prev.deaths) { log.deaths++; log.trouble.push(`died at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)}`); }
-      if (prev.state === 'dead' && p.state !== 'dead') log.respawns.push({ x: p.pos.x, y: p.pos.y });
-      prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: stalled };
-      if (p.state === 'finished') { log.finished = true; break; }
-      if (until(log, p)) break;
-    }
-    return log;
-  };
+  assert.ok(steps.length >= 6 && steps.every(s => s.rise <= 1.61), `the on-foot steps are all within a tap jump (${steps.map(s => s.rise.toFixed(2))})`);
+  const cratesAt = (x, y) => level.crates.filter(c => Math.abs(c.mesh.position.x - x) < 0.7 && (y === undefined || Math.abs(c.mesh.position.y - y) < 1.5));
+  const f1 = v => v.toFixed(1);
 
   // ---- 1 · the whole course, the way it is meant to be held ------------------
   const run = play();
@@ -209,7 +165,9 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.equal(run.deaths + run.bails, 0, `no death or bail on the intended line (${run.trouble.join('; ')})`);
   assert.equal(run.grabs, 0, `nothing on the course is climbed by the hands: every step is jumped (${run.trouble.join('; ')})`);
   assert.ok(run.maxZ < 0.4, `the ride never leaves the play plane (max |z| ${run.maxZ.toFixed(2)})`);
-  for (const q of [P0, P1, P2, P3, P4]) {
+  assert.ok(Math.abs(run.minY - BASIN.top) < 0.05 && run.maxY > VALLEY_BRINK.top + 5,
+    `the run goes from the basin floor to well over the valley brink (y ${f1(run.minY)} to ${f1(run.maxY)})`);
+  for (const q of [P0, P1, DEEP, VALLEY, SWITCH_PIPE, C1, RAIL_PIPE, LONG_PIPE]) {
     const mount = run.mounts.find(m => m.pipe === q.name);
     assert.ok(mount, `${q.name}: crossing the west coping on foot mounts the board`);
     assert.ok(Math.abs(mount.x - q.westLip) < 0.2 && mount.y < q.westLipY && mount.y > q.westLipY - 0.6,
@@ -217,7 +175,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(mount.speed >= 4, `${q.name}: the drop-in keeps rolling speed`);
   }
   // Popping out: Jump in the east hang, right held. It lands on the deck, on foot.
-  for (const q of [P0, L1, P2, P3]) {
+  for (const q of [P0, L1, DEEP, VALLEY, SWITCH_PIPE, C3, RAIL_CATCH]) {
     const out = run.exits.get(q.name);
     assert.ok(out, `${q.name}: Jump in the east hang with right held pops out past the east lip`);
     assert.ok(out.onFoot, `${q.name}: the pop-out lands on foot (touched down at x ${out.x.toFixed(1)})`);
@@ -229,24 +187,60 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const p1Hangs = run.hangs.filter(h => h.pipe === P1.name);
   assert.equal(p1Hangs[0]?.side, 'west', 'P1: the first hang is off the low WEST lip, on the swing back');
   assert.ok(p1Hangs.some(h => h.side === 'east'), 'P1: a later swing reaches the east lip');
-  assert.ok(run.transferAt !== null, 'P1: Jump in the east hang transfers over the ridge into the second pipe');
-  assert.ok(run.exits.get(L1.name).t > run.transferAt && run.exits.get(L1.name).x < SPINE_LANDING.x1,
+  assert.ok(run.transfers.has(P1.name), 'P1: Jump in the east hang transfers over the ridge into the second pipe');
+  assert.ok(run.exits.get(L1.name).t > run.transfers.get(P1.name).t && run.exits.get(L1.name).x < SPINE_LANDING.x1,
     'P1: the second pipe is popped out of onto its far deck, the next landing');
-  // P2 / P3 / P4.
-  assert.equal(run.crabsOnBoard, 1, 'P2: the crab on the flat is spun from the board');
-  assert.ok(run.switchAt?.vert && Math.abs(run.switchAt.x - P3.westLip) < 0.5 && run.switchAt.y > P3.westLipY + 4.5,
-    'P3: the ! is headed out of the WEST hang, well above anything a jump off the deck reaches');
-  const p3Hangs = run.hangs.filter(h => h.pipe === P3.name);
-  assert.ok(p3Hangs[0]?.side === 'east' && p3Hangs[0].t < run.switchAt.t,
-    'P3: the rider hangs over the bare east lip BEFORE the switch');
-  assert.ok(run.eastmostBeforeSwitch <= P3.eastLip + 0.05,
-    `P3: with the ! unhit that hang's pop-out has nowhere to land and is not taken (eastmost x ${run.eastmostBeforeSwitch.toFixed(2)}, lip ${P3.eastLip})`);
-  assert.ok(run.exits.get(P3.name).t > run.switchAt.t, 'P3: only after the switch does the pop-out land, on the slab it made solid');
-  assert.ok(run.grindAt && Math.abs(run.grindAt.x - P4.eastLip) < 1.5, 'P4: the east hang catches the exit rail');
-  assert.ok(run.grindEnd && !run.grindEnd.bailed && run.grindEnd.x > RAIL.x1 - 0.5,
-    `P4: with right still held, the grind rides the whole rail (left it at x ${run.grindEnd?.x.toFixed(1)}, rail ends ${RAIL.x1})`);
-  assert.ok(run.grindEnd.speed > 15 && run.grindEnd.seconds < 1.1,
-    `P4: the rail gathers speed and is over before the needle can run away (${run.grindEnd.seconds.toFixed(2)} s, ${run.grindEnd.speed.toFixed(1)} m/s)`);
+  // P2: the plunge.
+  assert.ok(run.topSpeed.get(DEEP.name) > 25, `P2: the 8.5 m drop reaches the flat at ${f1(run.topSpeed.get(DEEP.name))} m/s`);
+  assert.ok(cratesAt(BIG_AIR.x, BIG_AIR.y).every(c => c.alive), 'P2: an air popped out at once leaves the big-air box where it hangs');
+  // The way down on foot, and the basin.
+  assert.equal(run.stairs.size, CRUMBLE_STAIRS.length, `the falling stairs are crossed slab by slab (${[...run.stairs]})`);
+  const killed = kind => run.kills.filter(k => k.kind === kind);
+  assert.ok(killed('grunt').some(k => !k.onBoard && k.x < BASIN.x1), 'basin: the crab is spun on foot');
+  assert.ok(killed('spiker').some(k => k.x < BASIN.x1), 'basin: the Bristleback is spun');
+  assert.ok(level.enemies.some(e => e.kind === 'turtle' && e.alive) && run.stomps.length === 0, 'basin: the Mossback is jumped clean over');
+  // The climb.
+  assert.ok(run.bounces.length === 1 && Math.abs(run.bounces[0].vV - TRAMPOLINE.speed) < 0.6,
+    `trampoline: one bounce at its plain launch speed (${run.bounces.map(b => f1(b.vV))})`);
+  assert.ok(killed('floater').length === 2, 'climb: both Watchers fall to a jump-spin');
+  const rides = [LIFT1, LIFT2, FERRY].map(m => run.rides.find(r => r.x > m.x0 - 0.5 && r.x < m.x1 + 0.5));
+  assert.ok(rides.every(Boolean), `climb: both lifts and the ferry are ridden (${run.rides.map(r => f1(r.x))})`);
+  assert.ok(rides[1].y < LIFT2.low + 0.15 && rides[1].y > LIFT2.low - LIFT2.dip - 0.05,
+    `climb: the lift over the drop is boarded as its deck passes the bank (deck at ${rides[1].y.toFixed(2)}, bank ${LIFT2.low})`);
+  assert.equal(run.pads.size, 3, `climb: all three timed pads are stepped on while lit (${[...run.pads]})`);
+  assert.ok(killed('hopper').length === 1 && killed('spiker').some(k => k.x > FERRY.x1 - 4) && killed('grunt').some(k => !k.onBoard && k.x > GALLERY.x0),
+    'climb: the frog, the Bristleback at the ferry landing and the crab behind the crushers are all spun');
+  // P3: the valley.
+  assert.ok(run.topSpeed.get(VALLEY.name) > 12.5 && cratesAt(VALLEY_STACK.x).every(c => !c.alive),
+    `P3: the drop brings smashing speed to the stack on the line (${f1(run.topSpeed.get(VALLEY.name))} m/s)`);
+  assert.equal(killed('grunt').filter(k => k.onBoard).length, 1, 'P3: the crab on the flat is spun from the board');
+  // P4: the switch.
+  assert.ok(run.switchAt?.vert && Math.abs(run.switchAt.x - SWITCH_PIPE.westLip) < 0.5 && run.switchAt.y > SWITCH_PIPE.westLipY + 4.5,
+    'P4: the ! is headed out of the WEST hang, well above anything a jump off the deck reaches');
+  const switchHangs = run.hangs.filter(h => h.pipe === SWITCH_PIPE.name);
+  assert.ok(switchHangs[0]?.side === 'east' && switchHangs[0].t < run.switchAt.t,
+    'P4: the rider hangs over the bare east lip BEFORE the switch');
+  assert.ok(run.eastmostBeforeSwitch <= SWITCH_PIPE.eastLip + 0.05,
+    `P4: with the ! unhit that hang's pop-out has nowhere to land and is not taken (eastmost x ${run.eastmostBeforeSwitch.toFixed(2)}, lip ${SWITCH_PIPE.eastLip})`);
+  assert.ok(run.exits.get(SWITCH_PIPE.name).t > run.switchAt.t && run.exits.get(SWITCH_PIPE.name).x < SWITCH_SLAB.x1,
+    'P4: only after the switch does the pop-out land, on the slab it made solid');
+  assert.equal(killed('spinner').length, 1, 'the Whirler is spun between its blades');
+  // P5–P7: the cascade.
+  for (const [a, b] of [[C1, C2], [C2, C3]]) {
+    const over = run.transfers.get(a.name);
+    assert.ok(over && over.into === b.name && over.y > a.eastLipY, `${a.name}: the ridge is crossed in the air into ${b.name}`);
+  }
+  assert.ok(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t < 3, 'cascade: the two transfers are one run, under three seconds apart');
+  assert.ok(run.peak.get(C2.name) > C2.eastLipY + 5, `cascade: the second ridge is crossed ${f1(run.peak.get(C2.name) - C2.eastLipY)} m above it`);
+  // P8 and P10: the rails.
+  const [short, long] = run.grinds;
+  assert.ok(short && Math.abs(short.x - RAIL_PIPE.eastLip) < 1.5, 'P8: the east hang catches the exit rail');
+  assert.ok(!short.bailed && short.endX > RAIL.x1 - 0.5 && short.speed > 15 && short.seconds < 1.1,
+    `P8: the rail gathers speed and is over before the needle can run away (${short.seconds?.toFixed(2)} s, ${f1(short.speed ?? 0)} m/s)`);
+  assert.ok(long && Math.abs(long.x - LONG_PIPE.eastLip) < 1.5 && !long.bailed && long.endX > LONG_RAIL.x1 - 0.5,
+    `P10: balanced, the long rail is ridden to its end (left it at x ${long?.endX?.toFixed(1)}, rail ends ${LONG_RAIL.x1})`);
+  assert.ok(long.seconds > 2 && long.lean < 0.5 && long.speed > 25,
+    `P10: ${long.seconds.toFixed(2)} s on the needle, never past ${long.lean.toFixed(2)}, leaving at ${f1(long.speed)} m/s`);
   assert.equal(run.checkpoints, level.checkpoints.length, 'every checkpoint is on the on-foot line and gets banked');
 
   // ---- 2 · the stick alone never leaves a pipe ---------------------------------
@@ -262,16 +256,16 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   }
 
   // ---- 3 · pumping is the shortcut -------------------------------------------
-  const pumped = play({ pump: true, until: log => log.transferAt !== null, seconds: 30 });
-  assert.ok(pumped.transferAt !== null, 'P1 pumped: the transfer happens');
+  const pumped = play({ pump: true, until: log => log.transfers.has(P1.name), seconds: 30 });
+  assert.ok(pumped.transfers.has(P1.name), 'P1 pumped: the transfer happens');
   assert.equal(pumped.hangs.filter(h => h.pipe === P1.name && h.side === 'west').length, 0,
     'P1 pumped: holding X on the walls clears the east lip on the FIRST swing, with no trip back west');
 
   // ---- 4 · the crab charges for a missed spin ---------------------------------
-  const careless = play({ spin: false, from: [P2.westLip - 3, P2.westLipY + 0.15],
+  const careless = play({ spin: false, from: [VALLEY.westLip - 3, VALLEY.westLipY + 0.15],
     until: log => log.deaths > 0 || log.masksSpent > 0 || log.bails > 0, seconds: 12 });
   assert.ok(careless.deaths + careless.masksSpent + careless.bails > 0,
-    'P2: riding the flat without a spin runs into the crab');
+    'P3: riding the valley without a spin runs into the crab');
 
   // ---- 5 · a wall lower than the skater's reach is a bump, not a ledge ----------
   // The first step of the course is 1.6 m; the skater stands 2.8 m and reaches
@@ -499,10 +493,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   }
 
   // ---- 11 · a death goes back to the checkpoint before its pipe ------------------
-  const toRail = play({ until: (log, q) => log.checkpoints === level.checkpoints.length && q.pos.x > P4.westLip - 2 });
-  assert.equal(toRail.checkpoints, level.checkpoints.length, 'the last checkpoint is banked on the way to the rail pipe');
-  // Drop the rider into the hole under the rail, as a missed grind would.
-  p.respawn(level, false, false, { position: p.pos.clone().set(P4.eastLip + 6, FINISH.top + 1, 0), heading: p.pos.clone().set(1, 0, 0) });
+  const toRail = play({ until: (log, q) => log.checkpoints === level.checkpoints.length && q.pos.x > LONG_PIPE.westLip - 2 });
+  assert.equal(toRail.checkpoints, level.checkpoints.length, 'the last checkpoint is banked on the way to the long rail');
+  // Drop the rider into the hole under the rail, as a lost grind would.
+  p.respawn(level, false, false, { position: p.pos.clone().set(LONG_PIPE.eastLip + 12, FINISH.top + 4, 0), heading: p.pos.clone().set(1, 0, 0) });
   let back = null;
   const idle = makeInput();
   for (let i = 0, was = p.state; i < 900 && !back; i++) {
@@ -510,27 +504,116 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     if (was === 'dead' && p.state !== 'dead') back = { x: p.pos.x, y: p.pos.y };
     was = p.state;
   }
-  assert.ok(back && back.x > P3.eastLip && back.x < P4.westLip,
-    `a fall under the rail returns to the checkpoint before the rail pipe (respawned at x ${back?.x.toFixed(1)})`);
+  assert.ok(back && back.x > RAIL_CATCH.eastLip && back.x < LONG_PIPE.westLip,
+    `a fall under the long rail returns to the checkpoint before its pipe (respawned at x ${back?.x.toFixed(1)})`);
 
   // ---- 12 · the grind button held too early is a lip stall, not a trap -----------
-  // A player who wants the rail holds the grind button all the way up P4's east
+  // A player who wants the rail holds the grind button all the way up P8's east
   // wall. That is the game's lip stall: parked on the coping, 3 m under the
   // rail. Right is still held, and on that bare wall right points out the back,
   // over the hole. The stall must settle back INTO the pipe; with the button
   // let go, the next swing east still catches the rail.
-  const early = play({ grind: 'early', from: [P4.westLip - 3, P4.westLipY + 0.15], seconds: 40 });
+  const early = play({ grind: 'early', from: [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15], seconds: 40,
+    until: log => log.exits.get(RAIL_CATCH.name)?.onFoot === true });
   const stall = early.stalls[0];
-  assert.ok(stall && stall.pipe === P4.name && stall.side === 'east',
-    'P4: the grind button held up the wall parks a lip stall on the east coping');
+  assert.ok(stall && stall.pipe === RAIL_PIPE.name && stall.side === 'east',
+    'P8: the grind button held up the wall parks a lip stall on the east coping');
   assert.equal(early.bails + early.deaths, 0,
-    `P4: with right still held that stall never throws the rider off behind the wall (${early.trouble.join('; ')})`);
-  assert.ok(stall.backInPipe, 'P4: the stall settles back into the pipe');
-  assert.ok(early.grindAt && early.grindAt.t > stall.t && early.finished,
-    `P4: and the next swing still catches the rail and finishes (${early.trouble.join('; ')})`);
+    `P8: with right still held that stall never throws the rider off behind the wall (${early.trouble.join('; ')})`);
+  assert.ok(stall.backInPipe, 'P8: the stall settles back into the pipe');
+  assert.ok(early.grinds[0] && early.grinds[0].t > stall.t && early.exits.get(RAIL_CATCH.name)?.onFoot,
+    `P8: and the next swing still catches the rail and rides it into the next pipe (${early.trouble.join('; ')})`);
+
+  // ---- 13 · the plunge's air, ridden instead of popped ---------------------------
+  // Jump is never pressed. The first east hang of the deep pipe climbs past the
+  // brink the rider dropped from and heads the box that hangs inside the lip.
+  {
+    const air = play({ pop: false, from: [DEEP.westLip - 3, DEEP.westLipY + 0.15], seconds: 9,
+      until: () => cratesAt(BIG_AIR.x, BIG_AIR.y).every(c => !c.alive) });
+    const apex = air.peak.get(DEEP.name);
+    assert.ok(apex > DEEP.westLipY + 4 && apex > DEEP.eastLipY + 9,
+      `P2: the unpopped air tops out at y ${f1(apex)} — ${f1(apex - DEEP.eastLipY)} m over the east lip, ${f1(apex - DEEP.westLipY)} m over the brink`);
+    assert.ok(cratesAt(BIG_AIR.x, BIG_AIR.y).every(c => !c.alive) && air.hangs.filter(h => h.pipe === DEEP.name).length === 1,
+      'P2: that first hang heads the big-air box');
+    assert.equal(air.bails + air.deaths, 0, 'P2: and the box does not knock the rider off the hang line');
+    measured.plungeApex = f1(apex - DEEP.eastLipY);
+  }
+
+  // ---- 14 · the trampoline's two bounces, and the Mossback's ---------------------
+  {
+    const high = play({ heldBounce: true, from: [BASIN.x0 + 1, BASIN.top + 0.12], seconds: 14,
+      until: (log, q) => log.bounces.length > 0 && q.grounded });
+    assert.ok(high.bounces.length === 1 && Math.abs(high.bounces[0].vV - TRAMPOLINE.speed * TRAMPOLINE.held) < 0.8,
+      `trampoline: Jump held at the landing launches at ${f1(high.bounces[0]?.vV ?? 0)} m/s (${TRAMPOLINE.held} times the plain bounce)`);
+    measured.heldBounce = f1(high.bounces[0].vV);
+    assert.ok(Math.abs(p.pos.y - PERCH.top) < 0.05 && p.pos.x > PERCH.x0 && p.pos.x < PERCH.x1 && high.grabs === 0,
+      `trampoline: that bounce lands on the perch, ${f1(PERCH.top - LEDGE_A.top)} m over the ledge (x ${f1(p.pos.x)}, y ${p.pos.y.toFixed(2)})`);
+    const rowAt = BASIN.top + 5.7;
+    const row = () => level.crates.filter(c => Math.abs(c.mesh.position.y - rowAt) < 0.8 && c.mesh.position.x > BASIN.x0 + 38 && c.mesh.position.x < BASIN.x0 + 44);
+    const stomp = play({ stompTurtle: true, from: [BASIN.x0 + 1, BASIN.top + 0.12], seconds: 14,
+      until: (log, q) => log.stomps.length > 0 && q.grounded });
+    assert.equal(row().length, 3, 'reference: the row over the Mossback is three boxes');
+    assert.ok(stomp.stomps[0]?.kind === 'turtle', `Mossback: the jump lands on its back (${stomp.trouble.join('; ')})`);
+    assert.ok(row().some(c => !c.alive) && stomp.deaths + stomp.bails + stomp.masksSpent === 0,
+      `Mossback: the bounce off its shell heads the row ${rowAt - BASIN.top} m over the floor (rose to y ${f1(stomp.maxY)})`);
+  }
+
+  // ---- 15 · the timed stretch is not walked through blind ------------------------
+  // The same run from the top of the first lift, with every wait taken out.
+  {
+    const blind = play({ patient: false, from: [LEDGE_B.x0 + 1, LEDGE_B.top + 0.12], seconds: 40,
+      until: (log, q) => log.deaths > 0 || q.pos.x > VALLEY_BRINK.x0 });
+    assert.ok(blind.deaths > 0 && p.pos.x < VALLEY_BRINK.x0,
+      `a run that waits for nothing dies between the timed pads and the crushers (${blind.trouble.join('; ')})`);
+    assert.ok([...run.waits.values()].reduce((a, b) => a + b, 0) > 3,
+      `...where the intended line stood and waited ${f1([...run.waits.values()].reduce((a, b) => a + b, 0))} s in all (${[...run.waits].map(([k, v]) => `${k} ${v.toFixed(1)}`).join(', ')})`);
+  }
+
+  // ---- 16 · the rails on the travel stick alone ----------------------------------
+  // Right is held from the catch to the end and nothing else is touched. The
+  // short rail is over before the needle has gone anywhere; the long one is
+  // not, and the grind is lost over the drop.
+  {
+    const start = [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15];
+    const held = play({ balance: false, from: start, seconds: 40, until: log => log.deaths > 0 || log.bails > 0 || log.finished });
+    const [first, last] = held.grinds;
+    assert.ok(first && !first.bailed && first.endX > RAIL.x1 - 0.5 && first.lean < 0.7,
+      `P8 on the travel stick: the short rail is ridden whole, the needle at ${first?.lean.toFixed(2)} of 1`);
+    assert.ok(held.exits.get(RAIL_CATCH.name)?.onFoot, 'P9: and the pipe it drops into is popped out of on foot');
+    measured.longRailLost = last?.seconds?.toFixed(2);
+    assert.ok(last && last.bailed && last.endX < LONG_RAIL.x1 - 5 && last.seconds > 0.9,
+      `P10 on the travel stick: the needle runs away and the grind is lost ${last?.seconds?.toFixed(2)} s in, at x ${f1(last?.endX ?? 0)} of ${LONG_RAIL.x1}`);
+    // The stick held at the catch is the TRAVEL stick: it tips nothing. With the
+    // stick let go for the whole rail instead, the needle ends exactly where it did.
+    const loose = play({ balance: 'neutral', from: start, seconds: 20, until: log => log.exits.get(RAIL_CATCH.name)?.onFoot === true });
+    const free = loose.grinds[0];
+    assert.ok(free && Math.abs(first.needle) > 0.2 && Math.abs(free.needle - first.needle) < 0.02,
+      `a rail caught with right held: the needle ends at ${first.needle.toFixed(3)} with the stick held and ${free?.needle.toFixed(3)} with it let go — the held stick is not a lean`);
+    // ...and pressed again in the air off the rail's end, right is still travel:
+    // it carries the rider on and does not spin the board into the landing.
+    assert.ok(free.exitSpin < 0.05 && loose.bails === 0 && loose.exits.get(RAIL_CATCH.name)?.onFoot,
+      `after a rail ridden with the stick let go, right pressed in the air off its end turns the board ${(free.exitSpin * 180 / Math.PI).toFixed(0)}° (${loose.trouble.join('; ')})`);
+  }
+  // The same on the intended line, where the rail is balanced with left and right.
+  {
+    const landing = play({ from: [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15], seconds: 20, until: log => log.exits.has(RAIL_CATCH.name) });
+    assert.ok(landing.grinds[0] && !landing.grinds[0].bailed && landing.bails === 0 && landing.grinds[0].exitSpin < 0.05,
+      `after a balanced grind, right held in the air off the rail lands the board straight in the next pipe (${landing.trouble.join('; ')})`);
+    assert.ok(landing.topSpeed.get(RAIL_CATCH.name) > 12, `...still rolling at ${f1(landing.topSpeed.get(RAIL_CATCH.name) ?? 0)} m/s on its flat`);
+  }
 
   level.dispose();
-  console.log(`PASS Side Pipe Lab: finished in ${run.t.toFixed(1)} s on held right with Jump in each east hang; P1 first swing climbed ` +
-    `${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; pumped transfer at ${pumped.transferAt.toFixed(1)} s; ` +
-    `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs on foot, ${run.checkpoints} checkpoints banked, no ledge grabs.`);
+  const waited = [...run.waits.values()].reduce((a, b) => a + b, 0);
+  // The numbers docs/SIDE_ON_PIPES.md quotes, printed by every run.
+  const carry = q => f1(run.exits.get(q.name).x - q.eastLip);
+  console.log(`MEASURED flat speeds ${[DEEP, VALLEY, C1, C2, C3, RAIL_CATCH].map(q => `${q.name.slice(0, 3).trim()} ${f1(run.topSpeed.get(q.name))}`).join(', ')} m/s; ` +
+    `pop-outs carry ${[P0, L1, DEEP, VALLEY, C3, RAIL_CATCH].map(q => `${q.name.slice(0, 3).trim()} ${carry(q)}`).join(', ')} m past the lip; ` +
+    `plunge air ${measured.plungeApex} m over the east lip unpopped; second ridge crossed ${f1(run.peak.get(C2.name) - C2.eastLipY)} m up, ` +
+    `${f1(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t)} s after the first; short rail ${short.seconds.toFixed(2)} s to ${f1(short.speed)} m/s; ` +
+    `long rail ${long.seconds.toFixed(2)} s to ${f1(long.speed)} m/s, lost after ${measured.longRailLost} s on the travel stick; ` +
+    `held bounce ${measured.heldBounce} m/s.`);
+  console.log(`PASS Side Pipe Lab: ${(FINISH.x0 + 38 + 15).toFixed(0)} m finished in ${run.t.toFixed(1)} s (${waited.toFixed(1)} s of it waiting) on held right; ` +
+    `y ${f1(run.minY)} to ${f1(run.maxY)}; P1 first swing climbed ${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; ` +
+    `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs on foot, ${run.transfers.size} spine transfers, ${run.kills.length} enemies beaten, ` +
+    `${run.checkpoints} checkpoints banked, no ledge grabs.`);
 });

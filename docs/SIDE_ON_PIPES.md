@@ -40,6 +40,11 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
   wall and offers him a ledge to grab mid-climb.
 - Two pipes whose lips meet at one line and one height are a **spine**. The far pipe can have any radius
   as long as its floor is set so the ridge heights match.
+- The picture is a level's own choice. Side Pipe Lab takes it through a **long lens**: one `camnode`
+  view with `cameraKeepDistance: true` and `cameraTelephoto: true`, 52 m from the play plane through an
+  18° `cameraFov`. That is the frame an 18 m view has through 49° (16.4 m tall, 29 m wide at 16:9), but
+  the 6 m of depth behind the line changes scale by 12 % instead of 40 % and a 6° eye shows deck tops as
+  an edge, so the course reads flat. See [LEVEL_FILE_FORMAT.md](LEVEL_FILE_FORMAT.md).
 
 ## What the player gets
 
@@ -55,7 +60,8 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 | A second Jump in the same hang | The game's Board Abandon, as in every pipe: the board is thrown and the rider comes down on foot. |
 | A direction already held when the air began | Does not spin the rider until it has been released once (it is the travel stick). A fresh direction spins, as in every other air. |
 | A solid met in the hang (a `!` floated over the lip) | Stops the climb; the hang stays on its line instead of being pushed out behind the wall. |
-| A rail caught on a side-on line with a direction held | That direction does not tip the balance until it has been released once; a fresh left/right balances as on any rail. |
+| A rail caught on a side-on line with a direction held | That direction does not tip the balance until it has been released once; a fresh left/right balances as on any rail. A rail under about a second long can be ridden on the held stick; a longer one cannot: the needle runs away untouched in about 1.2 s. Let go, then lean. |
+| The air off the end of a rail on a side-on line | The stick **along the line, toward travel**, never spins the board: after a grind balanced with left and right the natural next press is on toward travel, and it carries the rider on. The stick against travel is a fresh direction and spins, as in every other air. |
 | A lip stall (the grind button held up the wall) with a direction held | The same: that direction does not tip the stall until it has been released once, so the stall settles back **into** the pipe. Left live, the travel stick points out the back of the far wall and throws the rider off behind it in 0.4 s. A fresh direction tips the stall as on any coping. |
 
 Nothing in `src/tuning.ts` changed.
@@ -75,29 +81,71 @@ Walk-in at 9 m/s, right held unless noted.
 | Grind button held from the drop-in, right held | A 0.8 s lip stall on each coping in turn, never a bail and never an exit. A rail over a lip wants the button pressed in the hang, not held up the wall. |
 | No input at all, or a direction alone, decked pipe | The rider never stops and never leaves: every coping launch adds the pipe's pop, so the swing settles at 5–6 m hangs. Leaving is Jump with the stick held out over a lip. |
 | A board thrown away in a hang | Two metres long, on a play plane 1.06 m wide. It falls, meets the transition and comes to rest on the flat in about 2 s (see below). |
+| **Deep pipe**: 8.5 m west wall, 3.5 m decked east wall, 3 m flat half | The drop-in is seated like any other. 30 m/s on the flat, 27 m/s at the east lip, and the air it launches has **10.5 m** in it over that lip (5.5 m more than the brink it left) and hangs 1.7 s. Popped out three frames into the hang it still rises 9 m, drifts out at 4.5 m/s and lands 6.6 m past the lip, on foot. |
+| A box on that hang line | One hung 10.2 m over the lip is headed by the first unpopped hang (feet 9.5 m up). On the hang line itself (0.08 m inside the lip) the popped air takes it too: a mounted rider's crate box is 3.7 m tall and 0.85 m to each side. Hung **1.2 m inside the lip** it is clear of the popped air and still under the hang. |
+| **Valley**: 7 m west wall, 28 m flat, 4.5 m decked east wall | 27.5 m/s along the flat: a two-high stack on the line is smashed (12.5 m/s does it), a crab 14 m further on is spun from the board, and the pop-out lands 5.8 m past the east lip. |
+| **Cascade**: 3.5 → 5.5 m, then two pipes each 7 m deep behind a shared ridge (5 m and 3.5 m far walls) | A held direction clears the first ridge on the first swing. The second ridge is crossed 7.5 m above it, 1.7 s after the first; the flats run 21, 28 and 32 m/s. The last pop-out lands 7.4 m past its lip. |
+| **Rail into a pipe**: the short rail ending 1.3 m over the flat of a pipe whose west wall is 1 m high | The rider leaves the rail at 20 m/s, is in the air 0.27 s and touches down 5.3 m on, still rolling at 20 m/s; an 8 m flat leaves room. Its 3.5 m decked east wall is the exit: the pop-out lands 4 m past it, on foot. |
+| **Long rail**: 52 m falling 16.2 m (2.6 m in its first 3 m, then 11°, 22°, 16° and 8°) | Balanced with left and right it takes 2.42 s and leaves at 30.5 m/s. On the held travel stick alone the needle is past the edge and the grind is lost 1.23 s in, over the drop. |
+
+## On foot between the pipes (measured on the same course)
+
+The floors between pipes carry the game's ordinary platforming, on one line. These are the numbers the
+expanded course was laid out with.
+
+| Thing | Measured | Layout it asks for |
+|---|---|---|
+| Run | 9 m/s, reached in 0.75 s (12 m/s²); a full stop from a run takes 1.9 m | a place to wait is ≥ 4 m of fixed floor short of the brink |
+| Jump | It leaves the ground when Jump is **let go**. A tap carries 5.25 m; held 14 frames it carries 5.3 m (5.85 m to a landing 1.5 m lower) and takes off 2.1 m after the press | falling stairs: 5 m slabs behind 3 m gaps, 1.5 m apart in height, so each jump lands on a slab's first half |
+| `crumble` | sags 0.13 m under the feet through its 0.85 s warning; a runner is across a 5 m slab in 0.56 s | debut over a trench shallow enough to jump out of (1.5 m), then over the drop |
+| `trampoline`, `speed` 16 | only an airborne landing launches: 3.7 m. With Jump held through the landing **and the rise** (`amp` 1.4): 7.6 m | a 3 m wall behind it is cleared by any jump onto it, even against the wall itself |
+| A ledge near that bounce | a plain bounce grabs any lip within 2.4 m above its apex | hang a bonus perch ≥ 2.5 m over the plain apex and under the held one (here 6.8 m over the net) |
+| Letting go of Jump on the way up | cuts the rise at once: the 22.4 m/s launch is down to 9 m/s three frames after the button comes up | the high bounce is Jump held from before the landing to the top of the rise. A wall beside the net changes nothing: with timed wall kicks on, a held bounce 1.1 m from the wall still tops out at 7.4 m |
+| `mover` on `y` (a lift) | a walker under a descending deck is collected onto it, unhurt | the first lift can rest flush in a 0.5 m recess over solid ground; over a drop let the deck dip 0.4 m under the bank, so boarding is a step down for over a second |
+| `mover` on `x` (a ferry), 5.9 m each way at 0.8 rad/s | within 0.45 m of a bank for 0.86 s in every 7.85 s | rest gap 0.1 m; a 0.25–0.5 m gap is walked over at a run |
+| `phasepad`, 4 s cycle, lit share 0.6 | lit 2.4 s, strobing through the last 0.9; two pads half a cycle apart overlap for 0.4 s | "when the pad under you starts to strobe, the one ahead has just lit" |
+| `crusher` | hangs 4.4 m up; passable while hanging and for the last half of its rise, about 1.6 s in each 3.2 | ≥ 6 m of fixed floor before the first; 5–6 m between two half a cycle apart |
+| Watcher (`floater`) | hovers 1.65 m up: a walker passes under it between swoops and a grounded spin does not reach it; a jump-spin does | keep it ≥ 10 m from a brink: the jump that takes it carries 5 m |
+| Mossback (`turtle`) | a spin leaves its shell standing in the lane; a stomp bounces 5.2 m | a row 5.7 m up is shell-only (a double jump heads 5.5 m); give it a beat (≥ 13 m) before the next tool |
+| Whirler (`spinner`) | blades out 2.2 s, in 1.35 s | a plain floor ≥ 6 m short of it to wait on |
+| A stack of boxes in the lane | its cap drops into the lane when the base is spun; a second spin takes it, a hop onto it is a 2.9 m bounce | keep stacks ≥ 9 m back from a brink or a timed footing |
 
 ## Authoring rules the test course paid for
 
-- **Keep pipes about 12 m lip to lip.** The widest side view (`cameraFollowDistance: 18`,
-  `cameraKeepDistance: true`) shows 13.4 m ahead of a centred rider at 16:9, so the far wall is in frame
-  from the near lip.
+- **Keep a pipe that must be read at a glance about 12 m lip to lip.** The view shows 13.4 m ahead of a
+  centred rider at 16:9, so the far wall is in frame from the near lip. A pipe that is a run (the 39 m
+  valley) can be longer: what matters there is on its flat.
 - **A pop-out lands on foot, so the floor past a pipe is ordinary platforming.** Checkpoints, boxes and
   small platforms can follow it directly. The exceptions are the exits that keep the board: a rail's
   landing and an open-sided ramp's run-out. There a rider arrives at 20 m/s or more, a floor crate or
   a **checkpoint** under 12.5 m/s is a tumble, a wall is a wipe-out, and his crate-contact box is about
-  3.0 m tall, so "overhead" rows start 3.4 m up (a full on-foot jump heads 3.8 m). End such a stretch
+  3.7 m tall, so "overhead" rows start 3.4 m up (a full on-foot jump heads 3.8 m). End such a stretch
   with the gate or another pipe, not a step.
+- **How far a pop-out carries depends on how high the hang was when Jump was pressed**: 2 m out of a low
+  hang, 5–7 m from the walls on this course. Give a decked exit ≥ 12 m of plain floor before anything
+  that hurts.
 - **Steps on an on-foot floor are jumped: keep them ≤ 1.6 m.** A tap jump rises 2.1 m and a held one
   2.7 m; a charged ollie 1.8 m. Walking or rolling into a wall lower than the skater's own reach
   (2.55 m, feet to raised fingertips; he stands 2.8 m) is a bump, never a ledge grab — the hanging body
   would be standing on the floor it never left — so a step is not a way to stop a board.
 - **Give a spine a pipe to transfer into, with a lower, decked far wall.** The transfer keeps the board
   and the speed; the second pipe turns that speed into a hang over its far lip, and the pop-out from
-  there is the landing.
+  there is the landing. Chained, with each floor well under the ridge before it, the spine is a
+  staircase down: every transfer arrives with more than the wall ahead needs.
+- **A rail debuts short and steep, then long.** The first is over inside a second and needs nothing; the
+  second is a balance exam, and it comes with a checkpoint in front of its pipe.
+- **End a rail in a pipe or on the finish floor.** In a pipe: a west wall a metre high with nothing
+  behind it, the flat 1.3 m under the rail's end and the rail's end half a metre onto that flat.
 - **On a single plane the default stopwatch stands in the only lane**, two strides from the spawn, and a
   time trial strips the checkpoints. Author a `clock` behind the spawn.
 - **Float a `!` on the hang line** (0.08 m inside the lip) and out of on-foot reach, over the lip the
-  held-right rider only visits on the swing back.
+  held-right rider only visits on the swing back. A reward meant for an air that is *ridden* hangs
+  1.2 m inside the lip instead.
+- **Every climb is on foot and every stage of it is a different tool.** Debut each tool alone over safe
+  ground or beside a fixed floor to watch it from, then give it a partner: the lift over a drop, the
+  ferry with an enemy at its landing, the crusher pair with a crab behind it.
+- **A checkpoint stands before each lethal stretch**, not only before each pipe: the falling stairs and
+  the crusher gallery have their own.
 
 ## Checks
 
@@ -106,11 +154,15 @@ npm run check:side-pipe
 ```
 
 `tools/test-side-pipe-lab.mjs` plays the course with the real player — right held, Jump in each east
-hang — and asserts each pipe's claim: the drop-ins and the curve they are drawn on, the pop-outs landing
-on foot, the stick alone never leaving a pipe, the short first swing and the transfer, the pumped
-shortcut, the crab, the switch being the only way out, the rail, the grind button held too early, a
-step that is bumped and not grabbed, a thrown board coming to rest, the one-line brake and the
-checkpoint a death returns to.
+hang, a wait for each lift, ferry, timed pad, crusher and Whirler (`tools/side-pipe-lab-bot.mjs` reads
+each hazard's own clock) — and asserts each claim: the long lens, the drop-ins and the curve they are
+drawn on, the pop-outs landing on foot, the stick alone never leaving a pipe, the short first swing and
+the transfer, the pumped shortcut, the plunge's air and its box, the falling stairs, both trampoline
+bounces, the Mossback's shell, the lifts, ferry, pads and crushers (and that a run which waits for
+nothing dies there), every enemy kind, the valley's stack and crab, the switch being the only way out,
+the two cascade transfers, the short rail on the travel stick, the long rail lost on it and ridden on the
+balance, the grind button held too early, a step that is bumped and not grabbed, a thrown board coming
+to rest, the one-line brake and the checkpoint a death returns to.
 `npm run check:pipe` covers the unchanged symmetric pipe.
 
 ```bash
@@ -120,6 +172,17 @@ RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump no
 prints the swing-by-swing record for a pipe of any shape (`RL`/`RR` wall radii, `F` flat half-width,
 `DL`/`DR` decks, `SPINE=floorY,flatHalf,radius[,eastRadius,eastDeck]` for a pipe beyond the east ridge,
 plus `RAIL`, `ENEMY`, `BANG`). `pop` presses Jump once in each east hang.
+
+## What the expansion added to the runtime
+
+Both are opt-in and change nothing for a level that does not ask.
+
+- **`cameraTelephoto`** on a `cameraView` camnode (`src/cameraViews.ts`): a kept follow distance may
+  pass the close rig's 18 m, up to 100 m. Only this level sets it.
+- **The air off a rail on a side-on line** (`spinStick` in `src/player.ts`): the stick along the line
+  toward travel is the travel stick, never a spin. Without it a grind that had been balanced — the
+  stick let go — ended with the first press of "right" turning the board sideways for the landing. It
+  applies only inside a `sideOn` zone.
 
 ## Two shared rules this course changed
 

@@ -12947,6 +12947,100 @@ The pose was art-directed from close-up captures: a script steps the page one 60
 
 `check:wall-plant` now asserts the crouch as well as the movement. It checks that a face just hit is braced on, that in the plant both soles end within 3 cm and the palm within 5 cm of their marks on the wall, that the palm lets go before the soles and the soles are still pinned on the launch step, that the leap ends and leaves nothing behind, that an early press reaches on the way in and keeps its side, and that a board wallplant never draws the on-foot crouch. It also checks the lag and leap curves. The twenty-two movement cases pass unchanged. The run-facing, ledge, crouch-jump, bail-recovery, camera-speed, teeter, roll-landing, animation, rope and Side Pipe Lab suites pass, as do all forty-five D-animation checks, the type check and the production build. The release is 995.44 MB of the 1,000 MB budget. In a real browser the early press, the late press and the shaft climb were recorded frame by frame in both renderers with clean consoles, and the rider's head stays inside the frame throughout. `test-factory-defaults` still differs only in the old `crawlSpeed` fixture value.
 
+## 2026-11-24 — Side Pipe Lab: longer, steeper, more of everything, through a long lens
+
+Brief: expand the quality and length of the level layout and platforms; add more severe and varied
+elevation changes, both up and down; increase the variety of the obstacles and of their combinations a
+lot, enemies included; and change the camera FOV so it all feels more flattened, with less sense of depth,
+for this test level only.
+Elapsed: about 1 h 25 min from the brief to the first complete run of the expanded course by the real
+player (headless); about 4 h 15 min to the rewritten route test, the rule-removal pass, the regression
+suites, the docs and a real-browser playthrough. Times are approximate.
+
+**The course.** 305 m becomes 830 m, five ideas become ten acts, and the height graph is the second
+subject. The first three pipes are untouched. After the spine the floor ends at a pipe whose near wall is
+8.5 m deep; three falling slabs step down to a basin 11 m under the spine's landing; the way back up is
+16 m on foot, each stage a different tool (a trampoline under a 3 m wall, a lift over solid ground, a
+timed pad over a gap a jump clears and then a timed pair over a drop, the lift again over a drop, a ferry,
+two crushers); the top is the brink of a 7 m drop into a valley 28 m long; the switch pipe follows; then
+three pipes sharing two ridges, each floor 7 m under the ridge before it; a rail that grinds from one pipe
+into the next; and a 52 m rail that falls 16 m to the gate. Twelve pipes, twelve checkpoints, 82 boxes
+(`tools/crate-placement-report.mjs`: 29 clusters, mean 2.8, 7 % singles — the two lives; 6 to 9 boxes in
+every checkpoint section but the falling stairs, which have 3), six enemy kinds and ten enemies. Each kind
+and each tool is met alone first (the crab, the Bristleback and the Mossback on the 60 m basin floor, the
+Watcher and the frog on their own ledges, the Whirler on the floor past the switch) and then with a
+partner: a Watcher over the bank where you wait for the lift, a Bristleback where the ferry lands, a crab
+behind the second crusher, a crab and a stack on the valley's riding line.
+
+**The camera.** One view frames the course. It was 18 m from the play plane through 49°; it is now 52 m
+away through 18°, the same 16.4 m of frame, with a 6° eye instead of 13°. The 6 m of floor behind the line
+changes scale by 12 % front to back instead of 40 %, and deck tops are an edge instead of a floor running
+away. The close rig holds a view to 18 m, so the level's camnode sets a new opt-in flag,
+`cameraTelephoto`, which lifts that to 100 m for a view that keeps its distance. No other level's camera
+changes.
+
+**What the real player taught the layout** (each was a failed run before it was a rule):
+
+- A jump leaves the ground when Jump is let go, 2.1 m of running after a held press. The first falling
+  stairs (4 m slabs, 2 m gaps) could not be taken one jump each; they are 5 m slabs behind 3 m gaps.
+- A stack's cap drops into the lane when its base is spun, and a hop onto it is a 2.9 m bounce: a stack
+  5 m short of the first timed pad threw the run over the brink. Stacks stand ≥ 9 m back from a brink.
+- A plain trampoline bounce grabs any lip within 2.4 m over its apex, so the bonus perch over the first
+  ledge caught every ordinary bounce by the hands. It now hangs 6.8 m over the net: clear of the plain
+  bounce (3.7 m), under the held one (7.6 m).
+- The trampoline's high bounce is Jump held from before the landing to the top of the rise: letting go
+  on the way up cuts a 22.4 m/s launch to 9 m/s in three frames. (The first suspect was the timed wall
+  kick, the net standing against a wall; measured, a held bounce 1.1 m from a wall tops out at 7.4 m
+  with wall kicks on or off, so the level keeps them on.)
+- A lift flush with its bank is boardable for half a second in seven. Over the drop the deck now dips
+  0.4 m under the bank, so stepping on is stepping down for over a second.
+- A Watcher 5 m from a brink is taken by a jump-spin that lands on the brink. It hovers 10 m back.
+- An air popped out of the deep pipe at once still rises 9 m and a mounted rider's crate box is 3.7 m
+  tall and 1.7 m wide, so a "ride the air" reward on the hang line was collected by everyone. It hangs
+  1.2 m inside the lip.
+- A rail over a second long cannot be ridden on the held travel stick (that stick is not a lean until it
+  is let go, and the needle runs away untouched in 1.2 s). So the long rail got a debut: the old short
+  rail now grinds out of one pipe into the next, and the 52 m rail is the exam behind its own
+  checkpoint.
+- After a grind balanced with left and right, the first press of "right" in the air off the rail's end
+  was a board spin, and the landing was sideways. On a side-on line the stick toward travel is now the
+  travel stick in that air too (`spinStick`, inside `sideOn` zones only).
+
+**Checks.** `npm run check:side-pipe` — the real player on held right, a jump at each gap, step and
+stair, a spin at each enemy, box and checkpoint, Jump in each east hang, and a wait at each lift, ferry,
+timed pad, crusher and Whirler read from the hazard's own clock: 832 m in 121.6 s (8.6 s of
+it waiting), y from −2.4 to 22.8, 8 drop-ins, 7 pop-outs on foot, 3 spine transfers, nine enemies beaten
+and the Mossback jumped, twelve checkpoints, no death, bail or ledge grab. The measured line it prints
+feeds the tables in `docs/SIDE_ON_PIPES.md` and XV.14: flats at 30, 27.5, 21, 28, 32 and 20 m/s; pop-outs
+carrying 4–7.4 m; the plunge's air 9.5 m over its lip to the box (10.5 m without it); the short rail
+0.93 s to 19.9 m/s; the long rail 2.42 s to 30.5 m/s balanced and lost after 1.23 s unbalanced.
+New scenarios: the long lens (52 m with the flag, 18 m without); the plunge's unpopped air and its box;
+Jump held on the trampoline landing on the perch; a stomp on the Mossback heading the row a double jump
+cannot; a run that waits for nothing dying in the timed stretch; the short rail ridden and the long rail
+lost on the travel stick alone; right held in the air after a balanced grind landing straight.
+Each of the twelve runtime rules the course stands on was then removed in turn (the six from the last
+round, the lip-stall and rail-catch latches from the first, and this round's rail-exit air, long lens and
+its normaliser guard): the test fails by name without any one of them. Two survived the first pass, the
+rail-catch latch and the rail-exit air, which is how the hands-off rail scenario came to be. With the
+latch gone the needle is at 0.97 of 1 by the end of the short rail; with the exit rule gone, right pressed
+in the air off that rail turns the board 129° before it lands.
+The two shared changes are narrow (`spinStick` inside `sideOn` zones; the view distance cap behind an
+opt-in flag). `test-rail-air-transfer`, `test-grind-ollie-intent`, `test-grind-catch-buffer`,
+`test-natural-grind-landings`, `test-grind-drop-in`, `test-grind-trick-speed`, `test-bare-spins`,
+`test-camera-rig`, `test-camera-look`, `test-camera-level-switch`, `test-park-camera-framing`,
+`test-jungle-cup-grind-camera` and `test-side-scroll-direction` pass on the changed code, with
+`npm run check:levels`, the editor round trip for this level in both modes, and the build. Main moved
+during the work (the wall-crouch change, which rewrites part of `src/player.ts`); the route test and
+`check:wall-plant` pass on the merged tree.
+
+In Chrome the same decisions were delivered to the real game as real key presses: the bot's run is split
+into `decide()` and `observe()`, the page runs them around each fixed step of the game's own review
+stepping (`?launchReview`), and the keys are pressed and released by the browser. The whole course in
+120.5 s: twelve checkpoints, 8 drop-ins, 7 pop-outs on foot, 3 transfers, nine enemies, both rails
+(0.93 s and 2.42 s), no death, bail or ledge grab, no console errors. In full render, a 31-stop tour
+(the camera 51.7 m out through 18° at every stop) and real-key action frames of the plunge's air, the
+cascade and the long rail, again with a clean console.
+
 ### 2026-11-24 — Wall plant: the same cling on the board
 
 The brief was to make the skating version of the plant Spider-Man-like too. The first deck-on-the-wall pose was on screen in the browser about a quarter of an hour after the prompt, and the version described here after about two and a half hours.

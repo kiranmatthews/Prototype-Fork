@@ -2004,12 +2004,29 @@ pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tool
 | Hang over the entry lip on the swing back | about 7 m | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m) |
 | Rail caught from a hang | the grind starts at 3.5 m/s | run exit rails downhill, steepest first |
 | Grind button held up the wall | a lip stall on the coping, not a hang; it settles back into the pipe | a rail over a lip starts ≥ 3 m above it, so it reads as "press in the air", and nothing behind a bare wall is the stall's fault |
-| A mounted rider's crate-contact box | about 3.0 m tall | where a rider arrives still on the board (a rail's landing, an open ramp's run-out) a floor crate or a checkpoint trips him under 12.5 m/s; overhead rows start 3.4 m up |
+| A mounted rider's crate-contact box | about 3.7 m tall, 0.85 m to each side | where a rider arrives still on the board (a rail's landing, an open ramp's run-out) a floor crate or a checkpoint trips him under 12.5 m/s; overhead rows start 3.4 m up |
+| Deep pipe: 8.5 m entry wall, 3.5 m decked far wall | 30 m/s on the flat; the air off the far lip has 10.5 m in it (5.5 m more than the brink) and hangs 1.7 s; popped out at once it still lands 6.6 m past the lip | the severe way down: a plunge by board; hang a reward for the *ridden* air 1.2 m inside the lip, clear of the popped one |
+| Valley: 7 m drop into a 28 m flat | 27.5 m/s along the flat | a stack on the line is a smash (≥ 12.5 m/s), an enemy beyond it a spin at twice walking speed |
+| Spine cascade: each floor 7 m under the ridge before it | the second ridge is crossed 7.5 m above it, 1.7 s after the first | chained spines are a staircase down; no pump is needed after the first |
+| Short rail (2.6 m down in 3 m, then 1.8 m in 9 m) | 0.93 s, leaves at 20 m/s, needs no balance | the rail's debut; it can end 1.3 m over the flat of the next pipe (8 m flat, 1 m near wall) |
+| Long rail (52 m falling 16 m) | 2.4 s balanced, leaves at 30.5 m/s; on the held travel stick the grind is lost 1.2 s in | the escalation, behind its own checkpoint; a rail over about a second long is a balance exam |
+| The air off a rail on a side-on line | the stick toward travel never spins the board | a balanced grind can be followed by "right" without a sideways landing |
 
 Popping out of a pipe lands on foot, so the stretch after it is plain platforming: steps of 1.6 m or less
 (a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands from the ground: a
 wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
 a board.
+
+**On one line, measured on the same course** (the table in [SIDE_ON_PIPES.md](SIDE_ON_PIPES.md) has the
+rest). A jump leaves the ground when Jump is *let go*: a tap carries 5.25 m, a 14-frame hold 5.3 m (5.85 m
+to a landing 1.5 m lower) after 2.1 m of run. A full stop from a run takes 1.9 m, so a waiting place is
+≥ 4 m of fixed floor. A `trampoline` at `speed` 16 throws 3.7 m, and 7.6 m with Jump held through the
+landing and the rise (`amp` 1.4; letting go on the way up cuts the rise at once); a plain bounce grabs
+any lip within 2.4 m above its apex. A `mover` coming down on a
+walker collects them unhurt. A Watcher hovering at 1.65 m is out of a grounded spin's reach and is
+walked under between swoops; a jump-spin takes it. A Mossback's shell bounce heads a row 5.7 m up; a
+double jump (5.5 m) does not. A stack's cap drops into the lane when its base is spun: keep stacks
+≥ 9 m back from a brink or a timed footing, and Watchers ≥ 10 m.
 
 ### XV.15 Wall kick and wallplant (measured)
 
@@ -2911,9 +2928,14 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] The hardest run sits next to a checkpoint, right after it or closing into it.
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
-- [ ] A side-on pipe is about 12 m lip to lip (in frame from its near lip) and is left by a pop-out onto
-  a deck (which lands on foot) or by a transfer into another pipe; an exit that keeps the board (a rail,
-  an open ramp) lands on a clear floor that ends in a gate or a pipe, never a step (XV.14).
+- [ ] A side-on pipe that must be read at a glance is about 12 m lip to lip (in frame from its near lip)
+  and is left by a pop-out onto a deck (which lands on foot) or by a transfer into another pipe; an exit
+  that keeps the board (a rail, an open ramp) lands in another pipe or on a clear floor that ends in a
+  gate or a pipe, never a step (XV.14).
+- [ ] A rail longer than about a second of grinding is a balance exam: it has a short rail before it and
+  its own checkpoint (XV.14).
+- [ ] On a one-line stretch a stack of boxes stands ≥ 9 m back from a brink or a timed footing, a
+  hovering enemy ≥ 10 m, and every place to wait has ≥ 4 m of fixed floor (XV.14).
 - [ ] No step on an on-foot route is taller than 1.6 m unless it is meant to be caught out of a jump:
   nothing lower than the skater's reach (2.55 m) is grabbed from the ground (XV.3).
 - [ ] Every side-scroll stretch reads left to right (owner's rule, November 2026): its travel zone heads
