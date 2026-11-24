@@ -336,8 +336,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(longestHover < 12, `the thrown board never hangs in the air (stuck for ${longestHover} steps)`);
     assert.ok(topSpeed < 40, `...nor gathers speed while it is held there (peaked at ${topSpeed.toFixed(1)} m/s)`);
     assert.ok(restAt && restAt.seconds < 8, 'it comes to rest');
-    assert.ok(restAt.x > P0.westLip && restAt.x < P0.eastLip && restAt.y < P0.eastLipY,
-      `...inside the pipe it was thrown in, on its surface (x ${restAt.x.toFixed(1)}, y ${restAt.y.toFixed(2)})`);
+    const p0 = level.halfpipes.find(hp => Math.abs(hp.cross - P0.cross) < 0.01);
+    const surface = p0.surfaceY(p0.crossToU(restAt.x));
+    assert.ok(restAt.x > P0.westLip && restAt.x < P0.eastLip && Math.abs(restAt.y - surface) < 0.5,
+      `...inside the pipe it was thrown in, ON its surface, not under it (x ${restAt.x.toFixed(1)}, y ${restAt.y.toFixed(2)}, the pipe there is at ${surface.toFixed(2)})`);
   }
 
   // ---- 7 · the drop-in is drawn as one curve --------------------------------------
