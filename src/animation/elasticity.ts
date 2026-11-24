@@ -4,7 +4,7 @@ import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
 import { sampleBackflip, sampleFootFlip, sampleImpossible } from '../skateTricks';
-import type { SpineTransferMotion } from '../vertSkateMotion';
+import type { SpineTransferMotion, VertAirPose } from '../vertSkateMotion';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -14,6 +14,7 @@ const PROFILES:Record<string,Amplitudes> = {
   'ice-skate':[.040,.020,.045,0,0], // independent upper-body rebound; feet retain deck contact
   'vert-pump':[.055,.025,.045,0,0],
   'spine-transfer':[.065,.035,.055,0,0], // planted deck contacts keep both leg lengths
+  'vert-air':[.045,.055,.085,0,0], // a thrown arm lengthens and the trunk gives with the tuck; the deck keeps both leg lengths
   'ice-walk':[.045,.025,.055,.008,.012], // delayed balance arms, restrained leg lengths keep low scuffs
   'slope-slide':[.030,.025,.035,0,0], // upper-body rebound; both sliding shoes retain their lengths
   'swim-idle':[.025,.035,.045,.015,.022], swim:[.055,.060,.090,.045,.060],
@@ -125,6 +126,17 @@ export function skateVertElasticity(pump:number,transfer:SpineTransferMotion|nul
     const air=PROFILES['spine-transfer'][part]*((transfer?.tuck??0)-.45*(transfer?.rebound??0));
     values[target]=1-load-air;
   }
+  return values;
+}
+
+/** A vert air nobody is steering: the trunk shortens into the tuck at the top
+ * and lengthens into the reach, and each arm lengthens as it is thrown about.
+ * Deck contact still owns the feet, so the legs keep their lengths. */
+export function skateVertAirElasticity(air:VertAirPose):Record<string,number>{
+  const values:Record<string,number>={},profile=PROFILES['vert-air'];
+  const fold=Math.max(-1,Math.min(1,air.knee/.38));
+  for(const [target,part]of ELASTIC_LENGTH_CONTROLS)
+    values[target]=part===0?1-profile[0]*air.weight*fold:1+profile[part]*air.weight*air.fling;
   return values;
 }
 

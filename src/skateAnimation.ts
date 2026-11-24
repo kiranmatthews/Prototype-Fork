@@ -5,7 +5,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
-import type { SpineTransferMotion } from './vertSkateMotion';
+import type { SpineTransferMotion, VertAirPose } from './vertSkateMotion';
 import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion, sampleSkateRevert } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
@@ -20,6 +20,12 @@ export interface SkatePoseInput {
   iceBrace?: number; // cosmetic knee bend; sole targets remain unchanged
   vertPump?: number;
   spineTransfer?: SpineTransferMotion | null;
+  /** The world axis a spine transfer turns about, in the sense of the turn.
+   * With it the transfer is thrown: chest, head and arms go over ahead of the
+   * deck, which is dragged round after them. */
+  spineAxis?: THREE.Vector3 | null;
+  /** The loose body of a vert air with nothing asked of it. */
+  vertAir?: VertAirPose | null;
   underWeight?: number;
   underReturning?: boolean;
   manual: number; grab: GrabTrickKind; grabWeight: number;
@@ -60,8 +66,14 @@ export class SkateAnimation {
   private waistRest = new THREE.Quaternion();
   private waistBefore: THREE.Quaternion | null = null;
   private head: THREE.Object3D | undefined;
+  private chest: THREE.Object3D | undefined;
   private hangFrame = new THREE.Quaternion();
   private spineBefore: THREE.Quaternion | null = null;
+  // Joints the vert air and the spine transfer turn in the world. The legacy
+  // pose writes only some of their angles, so each is put back before it runs.
+  private chestBefore: THREE.Quaternion | null = null;
+  private headBefore: THREE.Quaternion | null = null;
+  private armBefore: [THREE.Quaternion | null, THREE.Quaternion | null] = [null, null];
   private key = '';
   private age = 0;
   private airAge = 0;
@@ -121,6 +133,7 @@ export class SkateAnimation {
     this.waist = rider.getObjectByName('torso-root');
     if(this.waist)this.waistRest.copy(this.waist.quaternion);
     this.head = rider.getObjectByName('head');
+    this.chest = rider.getObjectByName('chest');
   }
 
   reset(): void { this.impossibleActive=false; this.deckCaught=false; this.shoveDeckYaw=null; this.footFlipAir=false; this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
@@ -131,6 +144,11 @@ export class SkateAnimation {
     if (this.waist && this.waistBefore) this.waist.quaternion.copy(this.waistBefore);
     this.spineBefore = null;
     this.waistBefore = null;
+    if (this.chest && this.chestBefore) this.chest.quaternion.copy(this.chestBefore);
+    if (this.head && this.headBefore) this.head.quaternion.copy(this.headBefore);
+    for (const i of [0, 1] as const) if (this.hands && this.armBefore[i]) this.hands[i].root.quaternion.copy(this.armBefore[i]!);
+    this.chestBefore = this.headBefore = null;
+    this.armBefore = [null, null];
     this.boardMount.scale.setScalar(1);
     this.board.scale.set(1 / 1.18, 1 / 1.36, 1 / 1.18);
   }
@@ -307,6 +325,12 @@ export class SkateAnimation {
         this.spine.rotation.x+=.24*vertLoad+.16*(transfer?.tuck??0);
       }
     }
+    // A vert air nobody is steering. A grab or a flip that begins in it takes
+    // over as the idle's own weight runs out (its solves come after and blend
+    // from wherever the body is); a new frame of reference ends it at once.
+    const air=p.vertAir&&p.vertAir.weight>.001&&!p.grind&&!p.lip&&!p.manual&&
+      !p.nineHundred&&!p.revert&&p.wallWeight<.01&&underProgress<=0?p.vertAir:null;
+    if(air)springFlex=clamp(springFlex+air.knee*air.weight,.55,1.72);
     const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,kiteIndy?1.65:method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
@@ -319,6 +343,20 @@ export class SkateAnimation {
     this.forward.copy(Z).applyQuaternion(this.frame);
     this.right.copy(X).applyQuaternion(this.frame);
     this.group.getWorldPosition(this.support);
+    // The hang's own axes: the rider's length (the wall's normal), the way up
+    // the wall and across it. On the flat "up the wall" means nothing.
+    const airUp=this.up.clone(),airAlong=Y.clone().addScaledVector(airUp,-airUp.y);
+    // ("Up the wall" means less and less as he comes upright, and a transfer
+    // takes the upper body off the idle a little at a time: neither is a cut.)
+    const airW=air?air.weight*smooth((airAlong.lengthSq()-.05)/.40)*(1-(transfer?.hold??0)):0;
+    airAlong.normalize();
+    const airAcross=airUp.clone().cross(airAlong);
+    // The way his chest faces goes round with him in a spin, so what is his
+    // (the fold over his toes, the carry of an arm) turns with it and never flips:
+    // `airFacing` is 1 facing across the wall one way, -1 the other, 0 between.
+    const airChest=this.right.clone().multiplyScalar(p.stance),airFacing=clamp(airChest.dot(airAcross),-1,1);
+    const airFold=airUp.clone().cross(airChest).normalize();
+    const thrown=transfer&&p.spineAxis&&p.spineAxis.lengthSq()>.5&&gw<.01&&!p.flip&&!p.grind&&!p.lip&&underProgress<=0?transfer:null;
     let pitch = 0, yaw = 0, roll = 0, pivotY = 0, pivotZ = 0;
     if (p.grind && p.rail) {
       const tangent = p.rail.tangentAt(p.railT).multiplyScalar(p.railDir).normalize();
@@ -372,6 +410,10 @@ export class SkateAnimation {
     this.boardQ.copy(this.frame).multiply(this.q.setFromAxisAngle(Y, p.deckYaw + this.grindYaw + (tweak?tweak.boardYaw*p.stance*tweakWeight:0)))
       .multiply(this.q.setFromAxisAngle(X, this.pitch + (backflip?0:tweak?tweak.boardPitch*(Math.cos(p.deckYaw)<0?-1:1)*tweakWeight:grab.pitch*gw)))
       .multiply(this.q.setFromAxisAngle(Z, roll + Math.PI * dark + (backflip?0:tweak?tweak.boardRoll*p.stance*(Math.cos(p.deckYaw)<0?-1:1)*tweakWeight:grab.roll*p.stance*gw)));
+    // The deck is loose under a floating rider, and hangs behind a thrown one.
+    if(airW>0)this.boardQ.premultiply(this.q.setFromAxisAngle(airAcross,air!.boardPitch*airW))
+      .premultiply(this.q.setFromAxisAngle(airAlong,air!.boardRoll*airW)).premultiply(this.q.setFromAxisAngle(airUp,air!.boardYaw*airW));
+    if(thrown)this.boardQ.premultiply(this.q.setFromAxisAngle(p.spineAxis!,-thrown.boardLag));
     // The support point is geometric, not the rig origin. Rocking the deck
     // cannot bury one truck or lift the one the named grind is loading.
     this.temp.set(0, this.supportY, this.supportZ).applyQuaternion(this.boardQ);
@@ -438,6 +480,21 @@ export class SkateAnimation {
       this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).slerp(this.hangFrame,underMotion.boardTurn));
     }
 
+    // The body tips over a deck that stays where it is: turned here, before the
+    // deck is placed under him and the legs are solved to it.
+    if(airW>0||thrown){
+      const tipped=this.body.getWorldQuaternion(new THREE.Quaternion());
+      if(airW>0)tipped.premultiply(this.q.setFromAxisAngle(airAcross,air!.lean*airW))
+        .premultiply(this.q.setFromAxisAngle(airFold,air!.crouch*airW))
+        .premultiply(this.q.setFromAxisAngle(airUp,-airFacing*.5*air!.twist*airW));
+      if(thrown){
+        const rock=p.spineAxis!.clone().cross(airUp);
+        tipped.premultiply(this.q.setFromAxisAngle(p.spineAxis!,.45*thrown.lead));
+        if(rock.lengthSq()>1e-4)tipped.premultiply(this.q.setFromAxisAngle(rock.normalize(),thrown.wobble));
+        tipped.premultiply(this.q.setFromAxisAngle(airUp,.5*thrown.twist));
+      }
+      this.worldRotation(this.body,tipped);
+    }
     // Cancel the body's nonuniform cartoon proportions BEFORE board rotation.
     this.boardMount.scale.copy(this.body.scale).set(1 / this.body.scale.x, 1 / this.body.scale.y, 1 / this.body.scale.z);
     this.board.scale.setScalar(1);
@@ -567,6 +624,7 @@ export class SkateAnimation {
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
+    if(airW>0)pelvis.addScaledVector(airAlong,air!.hipAlong*airW).addScaledVector(airChest,air!.hipAcross*airW);
     if (p.wallCrouch && p.wallSeat)
       pelvis.lerp(footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5).add(p.wallSeat), p.wallCrouch);
     if(tweak){
@@ -675,7 +733,69 @@ export class SkateAnimation {
         hand.mid.rotation.x+=.48*vertLoad+.34*(transfer?.tuck??0);
       }
     }
-    this.board.userData.vertMotion={pump:vertLoad,transfer:transfer??null,kneeFlex:bodyFlex};
+    if(airW>0||thrown){
+      // Everything above the hips, turned in the world about the hang's axes
+      // (or the transfer's), from the trunk outward so each part adds to the last.
+      // The axis is carried into the joint's parent and the joint is turned
+      // there. Nothing is read back out of a world matrix as a rotation: under
+      // the rider's cartoon proportions those matrices are sheared, and a
+      // side-on hang (a quarter turn, then a quarter turn) sits exactly where a
+      // sheared matrix has no one rotation to give, so the answer would jump.
+      const toParent=new THREE.Matrix4(),inParent=new THREE.Vector3(),turnQ=new THREE.Quaternion();
+      const turnJoint=(node:THREE.Object3D|undefined,axis:THREE.Vector3,angle:number):void=>{
+        if(!node||Math.abs(angle)<1e-5)return;
+        node.parent!.updateWorldMatrix(true,false);
+        inParent.copy(axis).transformDirection(toParent.copy(node.parent!.matrixWorld).invert());
+        node.quaternion.premultiply(turnQ.setFromAxisAngle(inParent,angle));
+      };
+      if(this.spine)this.spineBefore??=this.spine.quaternion.clone();
+      if(this.chest)this.chestBefore??=this.chest.quaternion.clone();
+      if(this.head)this.headBefore??=this.head.quaternion.clone();
+      if(airW>0){
+        turnJoint(this.spine,airAcross,.55*air!.bow*airW);
+        turnJoint(this.spine,airUp,-airFacing*.5*air!.twist*airW);
+        turnJoint(this.chest,airAcross,.45*air!.bow*airW);
+      }
+      if(thrown){
+        turnJoint(this.spine,p.spineAxis!,.30*thrown.lead);
+        turnJoint(this.spine,airUp,.5*thrown.twist);
+        turnJoint(this.chest,p.spineAxis!,.25*thrown.lead);
+        turnJoint(this.head,p.spineAxis!,thrown.head);
+      }
+      if(airW>0){
+        turnJoint(this.head,airAcross,air!.head*airW);
+        turnJoint(this.head,airUp,-airFacing*air!.look*airW);
+      }
+      const shoulders=[this.hands[0].root.getWorldPosition(new THREE.Vector3()),this.hands[1].root.getWorldPosition(new THREE.Vector3())];
+      const between=shoulders[0].clone().sub(shoulders[1]),half=Math.max(.05,between.length()*.5);
+      // The way the head is going over in a transfer: the arm on that side leads.
+      const over=thrown?p.spineAxis!.clone().cross(airUp):null;
+      for(const i of [0,1] as const){
+        const hand=this.hands[i],offset=between.clone().multiplyScalar(i?-.5:.5);
+        this.armBefore[i]??=hand.root.quaternion.clone();
+        if(airW>0){
+          // +1 for the arm on the up-the-wall side, -1 for the other; in between through a spin.
+          const side=clamp(offset.dot(airAlong)/half,-1,1),high=.5+.5*side;
+          const [upper,lower]=air!.arms,mix=(a:number,b:number)=>b+(a-b)*high;
+          turnJoint(hand.root,airAcross,(mix(upper.trail,lower.trail)-side*mix(upper.spread,lower.spread))*airW);
+          turnJoint(hand.root,airFold,-mix(upper.swing,lower.swing)*airW);
+          hand.mid.rotation.x-=mix(upper.elbow,lower.elbow)*airW;
+          hand.end.rotation.x+=mix(upper.wrist,lower.wrist)*airW;
+        }
+        if(thrown&&over){
+          // Each arm stands off the body on its own side: up and over for the
+          // leading one, which is also carried forward of the chest while the
+          // trailing one goes behind, and each folds at the elbow as it comes out.
+          const ahead=clamp(offset.dot(over)/half,-1,1),lead=.5+.5*ahead;
+          const stand=thrown.arms[1]+(thrown.arms[0]-thrown.arms[1])*lead;
+          turnJoint(hand.root,p.spineAxis!,-ahead*stand);
+          const toward=Math.sign(airUp.clone().cross(offset).dot(this.right)*p.stance)||1;
+          turnJoint(hand.root,airUp,toward*Math.abs(ahead)*(thrown.fore[1]+(thrown.fore[0]-thrown.fore[1])*lead));
+          hand.mid.rotation.x-=.32*Math.max(0,stand);
+        }
+      }
+    }
+    this.board.userData.vertMotion={pump:vertLoad,transfer:transfer??null,kneeFlex:bodyFlex,air:airW>0?air:null};
     const inward=p.flip==='inward-heel';
     const balanceMotion=impossible??(scoopFlip?footFlip:null);
     if(balanceMotion&&balanceMotion.arms>0){

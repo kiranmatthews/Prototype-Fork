@@ -16,7 +16,7 @@ import { sampleWallPlantMotion, sampleWallPlantLeap, wallPlantPushLag, wallPlant
   WALL_PLANT_REACH_FOR, WALL_PLANT_REACH_FROM, WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
 import { legacyWallPlantReplay } from './wallPlantPolicy';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { kiteGrabElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { kiteGrabElasticity, skateVertAirElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, launchSomersaultWindow, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
@@ -44,7 +44,7 @@ import type { BonusAlignmentPose } from './bonusDeparture';
 import { TUNING, CONST } from './tuning';
 import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
-import { sampleSpineTransfer, spineTransferNormal } from './vertSkateMotion';
+import { sampleSpineTransfer, spineTransferNormal, spineTransferTurnOffset, VertAirMotion, type SpineTransferMotion } from './vertSkateMotion';
 import { SkateOllieMotion } from './skateOllieMotion';
 import { IceSkateMotion } from './iceSkateMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
@@ -1634,6 +1634,15 @@ export class Player {
   private spinePoseElapsed = 0;
   private spinePoseDuration = 0;
   private readonly spinePoseFrom = new THREE.Vector3(0,1,0);
+  // A transfer is drawn thrown about this world axis (in the sense of the
+  // turn), through this many radians, and each one is a little unlike the last.
+  private readonly spinePoseAxis = new THREE.Vector3();
+  private spinePoseTurn = 0;
+  private spinePoseVariant = 0;
+  // A vert air nobody is steering: the loose body, and which air this is.
+  private readonly vertAirMotion = new VertAirMotion();
+  private vertAirVariant = 0;
+  private vertAirOwned = false;
   // Where the follow camera is AIMING (XZ-projected, unit), fed by main every
   // frame. The lip stall projects its tip axis onto this so the balance meter
   // and the stick axis that fights it match what's on screen.
@@ -4804,7 +4813,7 @@ export class Player {
         this.parkRailSweepStart,this.parkRailSweepEnd,this.parkPropSweepEnd,this.bailRecoveryAnchor])point.applyMatrix4(matrix);
       for(const direction of [this.axisF,this.axisL,this.camDir,this.walkVelocity,this.walkIntent,this.slideVec,
         this.parkVelocity,this.parkPropVelocity,this.parkCameraForward,this.naturalGrindVelocity,
-        this.alignNormal,this.rideNormal,this.vertNormal,this.wallNormal,this.spinePoseFrom,
+        this.alignNormal,this.rideNormal,this.vertNormal,this.wallNormal,this.spinePoseFrom,this.spinePoseAxis,
         this.bailVelocity,this.bailRecoveryMomentum,this.bailRecoverySpin,this.netRenderOffset,this.previousNetRenderOffset])direction.applyQuaternion(rotation);
       this.ragQ.premultiply(rotation);this.bailRecoveryOrientation.premultiply(rotation);
       this.visualYaw=wrapAngle(this.visualYaw+yaw);
@@ -12197,6 +12206,12 @@ export class Player {
       2*TUNING.pipeAirGravity*Math.max(0,this.pos.y-target.lipYOf(-side)))) / Math.max(1,TUNING.pipeAirGravity);
     this.spinePoseDuration = THREE.MathUtils.clamp(fallTime*.75,.3,1.05);
     this.vertNormal.negate(); // the far pipe's wall faces the other way
+    // The drawn turn goes from this wall's normal through wheels-down to the
+    // far wall's: about this axis, by this much.
+    this.spinePoseAxis.crossVectors(this.spinePoseFrom, VERT_UP);
+    if (this.spinePoseAxis.lengthSq() > 1e-6) this.spinePoseAxis.normalize(); else this.spinePoseAxis.set(0, 0, 0);
+    this.spinePoseTurn = this.spinePoseFrom.angleTo(VERT_UP) + this.vertNormal.angleTo(VERT_UP);
+    this.spinePoseVariant++;
     // ...and the coping tangent is derived FROM the normal (tx=-n.z, tz=n.x),
     // so the mirror flips it — negate the drift scalar too or the same
     // along-the-ridge momentum reverses world direction on the far side.
@@ -21809,6 +21824,13 @@ export class Player {
     this.group.updateMatrixWorld(true);
   }
 
+  /** The spine transfer in progress, while nothing else (a grab, a flip, a bail) owns the body. */
+  private spineTransferMotion(): SpineTransferMotion | null {
+    return this.spinePoseDuration>0 && this.spinePoseElapsed<this.spinePoseDuration &&
+      this.vertAir && !this.isBailing && this.grabPose<.01 && this.flipT<=0
+      ? sampleSpineTransfer(this.spinePoseElapsed,this.spinePoseDuration,this.spinePoseVariant) : null;
+  }
+
   private updateSurfaceAlignment(dt: number): void {
     if(this.spinePoseDuration>0){
       if(!this.vertAir||this.grounded||this.isBailing){this.spinePoseDuration=0;this.spinePoseElapsed=0;}
@@ -21976,6 +21998,15 @@ export class Player {
       }
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
+      // A spine transfer is thrown, not turned. The drawn body winds up
+      // against the turn, is driven late and hard, runs past the far wall and
+      // comes back to it; the normal the simulation eases (and a skate camera
+      // reads for its up) keeps its even turn underneath.
+      const thrown = this.spineTransferMotion();
+      if (thrown && this.spinePoseAxis.lengthSq() > .5) {
+        VERT_Q.setFromAxisAngle(this.spinePoseAxis, spineTransferTurnOffset(thrown) * this.spinePoseTurn * this.alignPose);
+        this.group.quaternion.premultiply(VERT_Q);
+      }
     }
 
     // WALL PLANT: the body is drawn onto the face in a three-point crouch —
@@ -23645,10 +23676,24 @@ export class Player {
     if (this.boardG) this.boardG.userData.iceSkateMotion = iceSkate;
 
     const vertPump = this.freeSkate && this.grounded && this.onTransition && !this.isBailing ? this.chargePose : 0;
-    const spineMotion = this.spinePoseDuration>0 && this.spinePoseElapsed<this.spinePoseDuration &&
-      this.vertAir && !this.isBailing && this.grabPose<.01 && this.flipT<=0
-      ? sampleSpineTransfer(this.spinePoseElapsed,this.spinePoseDuration) : null;
+    const spineMotion = this.spineTransferMotion();
     if(vertPump>0||spineMotion)this.playerAnimationBridge.modulateDeformations(skateVertElasticity(vertPump,spineMotion));
+    // A vert air nobody is steering is not a held pose (VertAirMotion): chest,
+    // head, arms, knees, hips and deck each follow the rise, the float and the
+    // fall on a spring of their own. Anything that owns the body stands it down.
+    const vertAirOwned = this.animationClipHint==='player.skate' && this.freeSkate && this.vertAir && !this.grounded &&
+      this.state==='air' && !this.isBailing && !this.boardAbandonActive && this.grabPhase==='none' && this.grabPose<.01 &&
+      this.flipT<=0 && !this.specialFlip && !this.specialGrab && this.lipStallT<=0 && this.underK<=0 &&
+      this.wallPlantDeckW<=0 && this.competitionFinishT<0 && !this.resultsPose;
+    if(vertAirOwned && !this.vertAirOwned)this.vertAirVariant++;
+    this.vertAirOwned = vertAirOwned;
+    const vertAirPose = this.vertAirMotion.step(dt, {
+      active:vertAirOwned, verticalVelocity:this.vVel, launchVelocity:this.launchVy, busy:spineMotion?.busy??0,
+      variant:this.vertAirVariant, time:this.runTime,
+      reset:this.playerAnimationBridge.previewActive || this.worldMapBaseScale!==null ||
+        this.isBailing || this.state==='dead' || this.state==='gameover',
+    });
+    if(vertAirPose)this.playerAnimationBridge.modulateDeformations(skateVertAirElasticity(vertAirPose));
     if(this.grabPose>0&&!this.specialGrab&&!this.specialFlip)this.playerAnimationBridge.modulateDeformations(skateGrabTweakElasticity(this.grabKind,this.grabPose,this.stance));
     if(this.kiteTowing&&this.kiteGrab.hang>0)this.playerAnimationBridge.modulateDeformations(
       kiteGrabElasticity(this.kiteGrab.hang,this.kiteGrab.pose,this.stance,this.kiteGrab.returnAge));
@@ -23732,7 +23777,7 @@ export class Player {
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
         iceBrace: iceSkate?.knee,
-        vertPump, spineTransfer:spineMotion,
+        vertPump, spineTransfer:spineMotion, spineAxis:spineMotion?this.spinePoseAxis:null, vertAir:vertAirPose,
         underWeight: this.underK,
         underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,

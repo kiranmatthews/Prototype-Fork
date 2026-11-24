@@ -13066,3 +13066,81 @@ The pose was art-directed from the same frame-by-frame review captures as the cr
 `check:wall-plant` now asserts the board cling. It checks that no sole goes on the wall, that the deck lies flat on the face along it with one end up, that both feet are within 1 cm of it and the palm within 5 cm of its mark, that the chest is in to the wall and the hips sat back, that the deck has not moved while the legs fire, that it is back under the feet within a quarter of a second, and that the pose is handed back afterwards. On foot it now measures the push in the frame as drawn: the soles within 4 cm of the wall, the drawn body held back, the camera not. The animation lifecycle check covers the new claim and its blend.
 
 The twenty-two wall plant movement cases pass unchanged, with the default animation scheme on as well as off. The render-interpolation, run-facing, ledge, crouch-jump, bail-recovery, teeter, roll-landing, trampoline, ice-skate, rope, motion-assets, animation and Side Pipe Lab suites pass, as do all forty-five D-animation checks, the type check and the production build. The release is 995.45 MB of the 1,000 MB budget. In a real browser the board line (charge, ollie, wallplant, flight, grind) and the on-foot kick and shaft climb were recorded frame by frame in both renderers with clean consoles, and the rider's head stays inside the frame throughout. Two checks fail the same way on the commit before this work: `test-camera-fall-replay` ("real fatal falls lost their hold") and `check:skate-playtest`, which needs a local reference file this checkout does not have.
+
+## 2026-11-24 — Side Pipe Lab: a vert air and a spine transfer that look alive
+
+Brief: make the spine transfer animation a bit more realistic, breathe life into it, like effort is being
+made to tilt his body and complete the transfer and it is not perfectly uniform and stable; make the
+vert-air "idle" animation more lifelike too, to really sell the momentum, the "air" and the looseness.
+Elapsed: about 25 min from the brief to the first version drawn in the real game; about 50 min to the
+version tuned frame by frame from four camera angles; about 2 h 55 min to the version that survived its
+own test (see below), the regression suites, the docs and a real-browser playthrough. Times are
+approximate.
+No level data changed, and nothing the simulation reads: `src/tuning.ts`, positions, speeds, timers,
+contacts and input windows are as they were, and the course's route test prints the same numbers
+(832 m in 121.6 s).
+
+**Before.** A hang with nothing pressed was one pose. Measured on the real rig in the first pipe's
+hang: the head stayed within 5 cm of the hips' line from lip to lip, the arms turned 0.15 rad through
+the whole fall, and for the last quarter second before the wall neither of them moved at all. A transfer
+was one even half turn of a stiff body with its arms at its sides.
+
+**The vert air** (`VertAirMotion`, `src/vertSkateMotion.ts`). The deck is thrown up the wall and the
+rider goes with it by his feet. Going up, his trunk and head hang back down the wall behind it (the
+head 0.36 m under the hips' line on the real rig, and 0.19 m over it coming down) and his arms are
+pulled back off the launch; at the
+top everything comes level, he folds over his toes, tucks his knees and his arms stand off him; coming
+down they trail up the wall while his legs reach for it; and from about half the lip's speed he stops
+trailing, his arms come down and forward and his trunk squares up to the wall. Each part follows on a
+spring of its own — trunk firm, head firmer, arms loose and unlike each other — so nothing arrives
+together and the loose parts swing past and come back. Over that the arms and the deck keep working
+for balance on two beats that never line up, seeded per air. The trunk shortens into the tuck and
+lengthens into the reach, and an arm lengthens as it is thrown (`vert-air` elasticity profile); the
+legs keep their lengths because the deck owns the feet.
+
+**The spine transfer** (`sampleSpineTransfer`). It is thrown, not turned: a wind-up against the turn,
+a drive that starts late and runs half again as fast as an even turn, 5–12° past the far wall, and a
+catch. The chest and head go over ahead of the deck and are held back at the end, the deck drags
+behind the feet and whips through, the body rocks a little out of the plane of the turn, and the arms
+have different jobs (the leading one up, over and forward; the trailing one half as far and behind).
+Timing and sizes move a little from one transfer to the next. The turn the simulation and a skate
+camera follow (`alignNormal`) is still the even one; the uneven turn is one extra rotation of the drawn
+rider that is zero at both ends.
+
+**What the test found that the eye had passed.** The first tuned version looked right on contact sheets
+of every third frame. Writing `tools/test-vert-air-motion.mjs` against the real rig then found four
+things, each fixed before this was published:
+
+- *The test was drawing twice.* `Player.step()` draws the pose itself; a test that also calls
+  `syncVisual` runs every visual spring at double speed. The numbers disagreed with the browser by a
+  factor of two in time, which is how it was caught. The arms had been tuned (in the browser, at true
+  speed) on springs so slow that they arrived a phase late — still trailing down at the top. They are
+  quicker now and each pose lands in its own phase.
+- *A joint popped by up to 0.28 rad in one frame.* The upper body was being turned through world
+  quaternions. Under the rider's cartoon proportions a bone's world matrix is sheared, and a sheared
+  matrix has no single rotation to give: the answer depends on a branch, and a side-on hang (a quarter
+  turn, then a quarter turn) sits exactly on the branch point. The joints are now turned in their
+  parents' space, with the axis carried there by the parent's inverse matrix.
+- *The idle was cut off in mid-transfer.* It stopped being drawn the frame the body came within 27° of
+  upright, with the arms still swinging: 0.45 rad in a frame. Its weight now follows how much "up the
+  wall" still means, and a transfer takes the upper body off it over its first quarter.
+- *The wind-up reversed in two frames.* 7° against the turn and back inside a tenth of a second is a
+  twitch. It is smaller, longer and scaled to the length of the transfer, and the hardest moment is now
+  the catch, at about three times an even turn's whatever the length.
+
+**Known and left.** The shared two-bone leg IK still converts through world quaternions. In a side-on
+pipe that can put one sole about a centimetre off the deck for a single frame (seen once: the cascade's
+first transfer, one frame in 53). It is the same branch point; the fix belongs in the shared solver, not
+in this pass.
+
+**Checks.** `npm run check:vert-air` — the curves, then the real rig in Side Pipe Lab's pipes: the
+trail going up and coming down, neither arm held through the fall, soles within 3 mm, one instant drawn
+five times giving one pose, no part's pace changing by more than 0.02 rad between frames in a hang, the
+drawn turn behind the even one, then ahead, then 0.20 rad past the far wall and on it at the end.
+Fifteen deliberate breakages of the motion each fail it by name. `npm run check:side-pipe` (the route:
+the same numbers as before), `check:pipe`, `check:animation`, `check:motion-assets`, `check:wall-plant`,
+`check:ice-skate`, the balance-arm and skate-contact fixtures, type-check, build and release size. Real
+Chrome, real keys: the whole course in 120.5 s, 12 of 12 checkpoints, no deaths or bails, console clean.
+Not run: `check:skate-playtest` needs `.skate-reference-data/motion.json`, which is not in the
+repository. `tools/test-waterpark-vert.mjs` stops at `'ride' !== 'finished'` (its line 46) with and
+without this change — checked against the unmodified sources — before it reaches its pose assertions.

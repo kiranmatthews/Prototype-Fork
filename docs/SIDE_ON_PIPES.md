@@ -66,6 +66,11 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 
 Nothing in `src/tuning.ts` changed.
 
+How a hang and a transfer are *drawn* — the trail behind the deck on the way up, the tuck and float at
+the top, the reach and the brace coming down, and a transfer that winds up, is driven over, runs past
+the far wall and is caught — is in `docs/CHARACTER_ELASTICITY.md` (Vert air and spine transfer). None of
+it moves the rider, his clock or his contacts: the rows above are the whole of what the pipe does.
+
 ## Measured (real `Player`/`Level`, `tools/side-pipe-probe.mjs` and `tools/test-side-pipe-lab.mjs`)
 
 Walk-in at 9 m/s, right held unless noted.
@@ -164,6 +169,11 @@ the two cascade transfers, the short rail on the travel stick, the long rail los
 balance, the grind button held too early, a step that is bumped and not grabbed, a thrown board coming
 to rest, the one-line brake and the checkpoint a death returns to.
 `npm run check:pipe` covers the unchanged symmetric pipe.
+
+The same command then runs `tools/test-vert-air-motion.mjs` (`npm run check:vert-air` on its own), which
+films nothing and measures everything: the hang off P0's east lip and the cascade's two transfers on the
+real rig — the trail going up and coming down, soles on the deck, nothing popping from one frame to the
+next, the drawn turn against the even one the simulation keeps.
 
 ```bash
 RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump node tools/side-pipe-probe.mjs
