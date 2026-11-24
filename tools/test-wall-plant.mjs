@@ -331,8 +331,12 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       const entry = skateIn(-62, lead);
       assert.equal(p.isBailing, false, `a wallplant pressed ${lead}s early wiped out`);
       assert.equal(p.wallPlantChain, 1, `no wallplant ${lead}s before the wall`);
-      for (let i = 0; i < 8 && p.wallPlantStickT > 0; i++) tick({});
+      // The deck owns the feet on the board: the on-foot crouch never draws.
+      const noCrouch = () => { const d = p.wallPlantPoseDiagnostics; return d.seat === 0 && d.soles === 0 && d.palm === 0; };
+      assert.ok(noCrouch(), 'the on-foot crouch was drawn on a board wallplant');
+      for (let i = 0; i < 8 && p.wallPlantStickT > 0; i++) { tick({}); assert.ok(noCrouch(), 'the on-foot crouch was drawn during a board wallplant'); }
       assert.equal(p.lastJumpType, 'Wallplant');
+      assert.ok(noCrouch(), 'the on-foot crouch was drawn leaving a board wallplant');
       assert.ok(p.freeSkate && p.airFromSkate && !p.looseBoard, 'the wallplant lost the board');
       assert.ok(p.axisF.z > .99, `wallplant did not come straight back: ${p.axisF.toArray()}`);
       assert.ok(Math.abs(p.speed - entry * TUNING.wallPlantBoardKeep) < .6, `speed out ${p.speed.toFixed(2)} from ${entry.toFixed(2)} in`);
@@ -455,6 +459,102 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
       assert.ok(!(leg in deck) && deck[torso] > 1, 'the board plant stretched the legs off the deck');
     }
     report.push('squash, stretch, rebound and neutral settle');
+
+    // The crouch on the wall, the push and the leap: their curves first.
+    {
+      const m = await server.ssrLoadModule('/src/wallPlantMotion.ts');
+      const c = m.WALL_PLANT_CROUCH;
+      // Three points on the face, hips sat back off it between them.
+      assert.ok(c.footHigh.up > c.footLow.up + .2 && c.footHigh.along - c.footLow.along > .7, 'the stance is not wide and staggered');
+      assert.ok(c.hand.along < c.footLow.along && c.hand.up > c.footHigh.up, 'the palm is not planted up and out past the low foot');
+      assert.ok(c.seat.out > .25 && c.seat.out < .6 && c.seat.up > c.footLow.up && c.seat.up < c.footHigh.up, 'the hips do not sit back between the feet');
+      assert.ok(c.twist > .3 && c.twist < 1.2 && c.lean > 0 && c.lean < m.WALL_PLANT_LEAN, 'the trunk is not coiled short of the launch line');
+      // The lag: none before the launch, building through the push, spent by the end of the catch.
+      assert.equal(m.wallPlantPushLag(0), 0);
+      assert.equal(m.wallPlantPushLag(-1), 0);
+      const end = m.WALL_PLANT_PUSH_SECONDS + m.WALL_PLANT_CATCH_SECONDS;
+      assert.equal(m.wallPlantPushLag(end), 0, 'the drawn body never catches the real one up');
+      assert.equal(m.wallPlantPushLag(end + 1), 0);
+      let lagPeak = 0, lagBefore = 0;
+      for (let t = 0; t <= end; t += 1 / 240) {
+        const lag = m.wallPlantPushLag(t);
+        assert.ok(lag >= 0 && lag < t + 1e-9, `the drawn body went backwards or ahead at ${t.toFixed(3)}`);
+        assert.ok(Math.abs(lag - lagBefore) < .004, `the lag jumped at ${t.toFixed(3)}`);
+        lagPeak = Math.max(lagPeak, lag); lagBefore = lag;
+      }
+      assert.ok(lagPeak > .025 && lagPeak < m.WALL_PLANT_PUSH_SECONDS, `the push holds the body back ${lagPeak} s`);
+      assert.equal(m.wallPlantPushProgress(0), 0);
+      assert.equal(m.wallPlantPushProgress(m.WALL_PLANT_PUSH_SECONDS), 1);
+      // The leap: nothing before the launch or after its window, and each part peaks inside it.
+      for (const t of [-1, 0, m.WALL_PLANT_LEAP_SECONDS, m.WALL_PLANT_LEAP_SECONDS + 1])
+        assert.deepEqual(m.sampleWallPlantLeap(t), { spread: 0, arch: 0, drive: 0, trail: 0 });
+      const peaks = { spread: 0, arch: 0, drive: 0, trail: 0 };
+      for (let t = 0; t < m.WALL_PLANT_LEAP_SECONDS; t += 1 / 240)
+        for (const [key, value] of Object.entries(m.sampleWallPlantLeap(t))) {
+          assert.ok(value >= 0 && value <= 1, `leap ${key} left 0..1 at ${t.toFixed(3)}`);
+          peaks[key] = Math.max(peaks[key], value);
+        }
+      assert.ok(Object.values(peaks).every(value => value > .9), `a part of the leap never arrives: ${JSON.stringify(peaks)}`);
+    }
+
+    // The crouch as the rig actually ends up, on the production player.
+    {
+      const m = await server.ssrLoadModule('/src/wallPlantMotion.ts');
+      const pose = () => p.wallPlantPoseDiagnostics;
+      const off = () => { const d = pose(); return d.seat === 0 && d.soles === 0 && d.palm === 0; };
+      // A late press: the wall is braced on while the press is open...
+      place(1.3, -10);
+      runJump(-1, 0);
+      assert.ok(off() && pose().cling === 0, 'the crouch was drawn in open air');
+      fly(toward(-1, 0), onFace);
+      for (let i = 0; i < 6; i++) tick(toward(-1, 0));
+      let d = pose();
+      assert.ok(d.cling > m.WALL_PLANT_BRACE * .8 && d.cling <= m.WALL_PLANT_BRACE + 1e-9, `no brace on the face just hit: ${d.cling}`);
+      assert.ok(d.seat === d.cling && d.soles === d.cling && d.palm === d.cling && d.look > .8, `the brace is not the whole crouch: ${JSON.stringify(d)}`);
+      const side = d.side;
+      assert.ok(side === 1 || side === -1);
+      // ...and the plant grows out of it: three points pinned to the wall.
+      tick({ ...toward(-1, 0), jumpHeld: true });
+      tick({ jumpHeld: true });
+      tick({});
+      d = pose();
+      assert.ok(p.wallPlantStickT > 0, 'the fixture plant did not hold');
+      assert.equal(d.side, side, 'the chest changed sides between the brace and the plant');
+      assert.ok(d.seat > .99 && d.soles > .99 && d.palm > .99, `the plant is not fully drawn: ${JSON.stringify(d)}`);
+      assert.ok(d.soleError > 0 && d.soleError < .03, `a sole is ${d.soleError} m off its mark on the wall`);
+      assert.ok(d.palmError > 0 && d.palmError < .05, `the palm is ${d.palmError} m off its mark on the wall`);
+      assert.ok(Math.abs(d.lean - m.WALL_PLANT_CROUCH.lean) < .03, `the trunk is not coiled: ${d.lean}`);
+      // The push: the palm lets go first, the hips leave their seat, the soles are still on the wall.
+      fly({}, () => p.wallKickAir, 6, 'plant hold');
+      d = pose();
+      assert.ok(d.soles > .99 && d.soleError < .05, `the soles left the wall with the launch: ${JSON.stringify(d)}`);
+      assert.ok(d.seat < 1 && d.palm < 1, 'the push did not start');
+      tick({});
+      d = pose();
+      assert.ok(d.palm === 0 && d.seat < .6 && d.soles > .99, `the palm did not shove off before the soles: ${JSON.stringify(d)}`);
+      assert.ok(d.lean > m.WALL_PLANT_CROUCH.lean, 'the trunk did not lean out into the push');
+      // Then everything lets go, the leap plays, and nothing is left behind.
+      for (let i = 0; i < 3; i++) tick({});
+      assert.ok(off(), `a contact outlived the push: ${JSON.stringify(pose())}`);
+      assert.ok(pose().leap > .5, 'no leap followed the push');
+      const x = p.pos.x;
+      for (let i = 0; i < 40 && !p.grounded; i++) tick({});
+      assert.ok(p.pos.x > x, 'the fixture kick stopped');
+      assert.equal(pose().leap, 0, 'the leap never ended');
+      // An early press reaches for the wall on the way in, the same side all the way.
+      place(1.3, -10);
+      runJump(-1, 0);
+      fly(toward(-1, 0), () => p.pos.x < -.55, 60, 'approach');
+      tick({ ...toward(-1, 0), jumpHeld: true });
+      assert.ok(p.wallPlantBufferT > 0, 'the fixture early press was not taken');
+      const early = pose().side;
+      let reached = 0;
+      for (let i = 0; i < 14 && p.wallPlantChain === 0; i++) { tick(toward(-1, 0)); reached = Math.max(reached, pose().seat); }
+      assert.equal(p.wallPlantChain, 1, 'the fixture early press did not plant');
+      assert.ok(reached > .15 || pose().seat > .9, `no reach for the wall on the way in: ${reached}`);
+      assert.equal(pose().side, early, 'the chest changed sides between the reach and the plant');
+    }
+    report.push('three-point crouch: brace, pinned soles and palm, push, leap, reach');
 
     // 20. Deterministic: the same inputs make the same run.
     const record = () => {

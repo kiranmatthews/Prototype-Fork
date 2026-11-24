@@ -11,7 +11,9 @@ import { trampolineSurfacePresentations } from './trampolineSurface';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
-import { sampleWallPlantMotion, WALL_PLANT_LEAN, WALL_PLANT_REACH, WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
+import { sampleWallPlantMotion, sampleWallPlantLeap, wallPlantPushLag, wallPlantPushProgress, WALL_PLANT_BRACE, WALL_PLANT_CROUCH,
+  WALL_PLANT_LEAN, WALL_PLANT_LEAP_SECONDS, WALL_PLANT_PUSH_SECONDS, WALL_PLANT_REACH, WALL_PLANT_REACH_FOR, WALL_PLANT_REACH_FROM,
+  WALL_PLANT_RELEASE_SECONDS } from './wallPlantMotion';
 import { legacyWallPlantReplay } from './wallPlantPolicy';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { kiteGrabElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
@@ -526,6 +528,15 @@ const LOW_LET_GO_FAR = 2.5; // and how many times longer the legs take, more, wh
 const LOW_HAND_KEEP = .3; // seconds over which a crawling hand lets go of the lift its last plant needed
 const IDLE_STANCE_SETTLE = 1.2; // seconds of settled idle before its stance is trusted (a landing finishes under the idle hint)
 const _soleUp = new THREE.Vector3(0, 1, 0);
+// Wall plant contact scratch (poseWallPlantContacts / plantWallPalm).
+const WP_OUT = new THREE.Vector3(), WP_ALONG = new THREE.Vector3(), WP_FACE = new THREE.Vector3();
+const WP_A = new THREE.Vector3(), WP_B = new THREE.Vector3(), WP_C = new THREE.Vector3();
+const WP_TARGET = new THREE.Vector3(), WP_POLE = new THREE.Vector3(), WP_AIM = new THREE.Vector3(), WP_SEAT = new THREE.Vector3();
+const WP_X = new THREE.Vector3(), WP_Y = new THREE.Vector3(), WP_Z = new THREE.Vector3();
+const WP_Q = new THREE.Quaternion(), WP_Q2 = new THREE.Quaternion(), WP_Q3 = new THREE.Quaternion();
+const WP_M = new THREE.Matrix4(), WP_INV = new THREE.Matrix4();
+/** Radians the heel is lifted off the face: the plant stands on the balls of the feet. */
+const WALL_PLANT_HEEL_LIFT = 0.3;
 /** A foot bone's own contact sockets. The bone knows which side it is on. */
 function soleSockets(ankle: THREE.Object3D | null) {
   const name = ankle?.userData.anatomicalSide;
@@ -1687,7 +1698,36 @@ export class Player {
   private static readonly WALL_PLANT_FACE = { nx: 0, nz: 0, x: 0, z: 0, bottom: 0, top: 0, t: 0 };
   private wallPlantChain = 0; // plants since the last real contact
   private wallPlantAge = -1; // seconds since the last launch; -1 = none this air (presentation)
-  private wallPlantPose = 0; // 0..1 eased "standing on the wall" tilt (presentation)
+  private wallPlantPose = 0; // radians the rig is leant off the face, eased (presentation)
+  private readonly wallPlantTilt = new THREE.Vector3(); // ...as a vector: the face's normal times that angle
+  // The plant as it is drawn: a three-point crouch on the face (presentation).
+  private wallPlantSide = 1; // which way along the wall the chest opens: +1 or -1
+  private wallPlantCling = 0; // 0..1 eased: how far the body is drawn onto the face
+  private wallPlantSeatW = 0; // this frame: hips held in the crouch
+  private wallPlantSoleW = 0; // this frame: soles pinned to their marks
+  private wallPlantPalmW = 0; // this frame: one palm pinned to its mark
+  private wallPlantLookW = 0; // eased: the head looks back at the way out
+  private wallPlantHighLegL = false; // which leg took the high mark, for the leap that follows
+  private wallPlantFreeArmL = false; // ...and which arm was thrown wide
+  private wallPlantLeapW = 0; // this frame: the arms hold the line of the leap
+  private wallPlantSoleError = 0; // metres the worse sole ended off its mark, when fully pinned
+  private wallPlantPalmError = 0; // ...and the palm off its own
+  /** Presentation diagnostics for the plant's pose: this frame's weights and
+   * how far the pinned contacts ended from their marks on the wall. */
+  get wallPlantPoseDiagnostics(): { cling: number; seat: number; soles: number; palm: number; look: number; leap: number;
+    side: number; lean: number; soleError: number; palmError: number } {
+    return { cling: this.wallPlantCling, seat: this.wallPlantSeatW, soles: this.wallPlantSoleW, palm: this.wallPlantPalmW,
+      look: this.wallPlantLookW, leap: this.wallPlantLeapW, side: this.wallPlantDrawSide, lean: this.wallPlantPose,
+      soleError: this.wallPlantSoleError, palmError: this.wallPlantPalmError };
+  }
+  private readonly wallPlantAheadSpot = new THREE.Vector3(); // where an early press expects to meet its wall
+  // The wall frame the pose is drawn in. Latched through a plant and its push,
+  // so an early press claimed for the NEXT wall cannot retarget feet that are
+  // still on this one.
+  private readonly wallPlantDrawNormal = new THREE.Vector3();
+  private wallPlantDrawSide = 1;
+  private readonly wallPlantBase = new THREE.Vector3(); // the feet point against the face those marks hang off
+  private readonly wallPlantSeatBase = new THREE.Vector3(); // ...and the one the hips hang off (the body's own, while reaching)
   private wallPlantLift = 0; // 0..1 eased: the camera rides up with a kick chain (presentation)
   private wallPlantLiftHoldT = 0; // seconds that ride is still held once the chain has ended
   /** Presentation only: how fully the camera should rise with the rider while a
@@ -4539,6 +4579,8 @@ export class Player {
     this.wallPlantAge = -1;
     this.wallPlantPose = 0;
     this.wallPlantLift = this.wallPlantLiftHoldT = 0;
+    this.wallPlantCling = this.wallPlantSeatW = this.wallPlantSoleW = this.wallPlantPalmW = this.wallPlantLookW = 0;
+    this.wallPlantTilt.set(0, 0, 0);
     this.ledgeT = 0;
     this.ledgeCoolT = 0;
     this.ledgeEaseT = 0;
@@ -18426,10 +18468,24 @@ export class Player {
       const t = face.t * reach, feetY = this.pos.y + this.vVel * t - 0.5 * gravity * t * t;
       if (!this.wallPlantBand(feetY, face.bottom, face.top)) continue;
       if (this.wallPlantClimbable(w, face.nx, face.nz, level)) continue;
-      this.wallPlantLeanNormal.set(face.nx, 0, face.nz); // presentation: the lean starts on the way in
+      // Presentation: the reach for the wall starts on the way in, at the
+      // spot the body is about to meet it.
+      this.wallPlantLeanNormal.set(face.nx, 0, face.nz);
+      this.wallPlantAheadSpot.set(face.x, feetY, face.z);
+      this.chooseWallPlantSide(face.nx, face.nz, vx, vz);
       return true;
     }
     return false;
+  }
+
+  /** Presentation: the side the chest opens to off a face with normal (nx, nz),
+   * met at velocity (vx, vz). With the travel along the wall if there is any;
+   * else toward the camera, so the face and the free arm are in the shot;
+   * head-on to the lens it alternates up a chain. */
+  private chooseWallPlantSide(nx: number, nz: number, vx: number, vz: number): void {
+    const slide = vx * nz - vz * nx, lens = this.camDir.x * nz - this.camDir.z * nx;
+    this.wallPlantSide = Math.abs(slide) > 1.5 ? Math.sign(slide) : Math.abs(lens) > 0.25 ? -Math.sign(lens)
+      : this.wallPlantChain % 2 ? -1 : 1;
   }
 
   /** Still beside the face the late window was opened on? Slides the remembered
@@ -18493,6 +18549,9 @@ export class Player {
     this.wallPlantNormal.set(face.nx, 0, face.nz);
     this.wallPlantSpot.set(face.x, this.pos.y, face.z);
     this.wallPlantIncoming.set(vx, 0, vz);
+    // An early press chose its side when it was claimed; the reach is already on its way.
+    if (!early) this.chooseWallPlantSide(face.nx, face.nz, vx, vz);
+    this.wallPlantLeanNormal.copy(this.wallPlantNormal);
     if (!early) {
       this.wallPlantContactT = Math.max(0, TUNING.wallPlantWindow);
       return false;
@@ -18626,8 +18685,13 @@ export class Player {
       this.emitSparks(7, 0xffd0a0, 1.6);
     } else {
       this.score(CONST.ptsWallKick, 'Wall Kick');
-      sfx.play('footstep1', 0.75, 0.85 + chain * 0.06);
-      this.emitDust(3);
+      sfx.play('footstep1', 0.9, 0.8 + chain * 0.06);
+      sfx.play('ledgeGrab', 0.45, 1.2 + chain * 0.05); // the palm slaps the face with the soles
+      // The hit lands on the wall, not in the air under the feet: a burst
+      // off the face where the soles meet it.
+      const skin = Math.abs(n.x) * CONST.playerHalf.x + Math.abs(n.z) * CONST.playerHalf.z;
+      puffs.burst('dustLand', this.wallPlantSpot.x - n.x * skin, this.wallPlantSpot.y + 0.5, this.wallPlantSpot.z - n.z * skin,
+        { count: 6, dir: n, strength: 1.3 });
     }
     this.wallPlantStickTotal = this.wallPlantStickT = Math.max(0, TUNING.wallPlantStick);
     if (this.wallPlantStickT <= 0) this.launchWallPlant();
@@ -18680,7 +18744,12 @@ export class Player {
         }
       }
       sfx.playJump(true);
-      sfx.play('woosh2', 0.4, 1.15 + chain * 0.05);
+      sfx.play('woosh2', 0.55, 1.15 + chain * 0.05);
+      // The soles kick a last puff off the face as they leave it.
+      const n = this.wallPlantNormal;
+      const skin = Math.abs(n.x) * CONST.playerHalf.x + Math.abs(n.z) * CONST.playerHalf.z;
+      puffs.burst('dustStep', this.wallPlantSpot.x - n.x * skin, this.wallPlantSpot.y + 0.28, this.wallPlantSpot.z - n.z * skin,
+        { count: 4, dir: n, strength: 1.3 });
     }
   }
 
@@ -20417,6 +20486,221 @@ export class Player {
     this.group.updateMatrixWorld(true);
   }
 
+  /**
+   * WALL PLANT contacts, after every other pose layer: seat the hips in the
+   * crouch, pin both soles and one palm to their marks on the face, throw the
+   * free arm wide and turn the head to the way out. The marks hang off the
+   * feet point against the wall (wallPlantBase), in the wall's own frame.
+   * Presentation only: nothing here is read by movement.
+   */
+  private poseWallPlantContacts(): void {
+    const seatW = this.wallPlantSeatW, soleW = this.wallPlantSoleW, palmW = this.wallPlantPalmW, lookW = this.wallPlantLookW;
+    const leapW = this.wallPlantLeapW;
+    this.wallPlantSoleError = this.wallPlantPalmError = 0;
+    if (Math.max(seatW, soleW, palmW, lookW, leapW) <= 1e-3 || this.playerAnimationBridge.previewActive) return;
+    if (this.wallPlantDrawNormal.lengthSq() < 0.5) return;
+    // Out from the face, and along it toward the side the chest opens to.
+    const out = WP_OUT.set(this.wallPlantDrawNormal.x, 0, this.wallPlantDrawNormal.z).normalize();
+    const along = WP_ALONG.set(out.z * this.wallPlantDrawSide, 0, -out.x * this.wallPlantDrawSide);
+    const skin = Math.abs(out.x) * CONST.playerHalf.x + Math.abs(out.z) * CONST.playerHalf.z + 0.03;
+    const face = WP_FACE.copy(this.wallPlantBase).addScaledVector(out, -skin); // on the surface, level with the feet
+    const mark = (target: THREE.Vector3, at: { readonly out?: number; readonly up: number; readonly along: number }) => {
+      target.copy(face).addScaledVector(out, at.out ?? 0).addScaledVector(along, at.along);
+      target.y += at.up;
+      return target;
+    };
+    this.bodyGroup.updateWorldMatrix(true, true);
+    const parent = this.bodyGroup.parent;
+
+    // 0. The trunk. Whatever the jump was doing when it met the wall — a tuck,
+    // a roll, a dive — the trunk on the face is the designed one: spine hung
+    // back off the wall by the lean, chest turned open by the twist. Measured
+    // off the rig itself (hips to shoulders, shoulder to shoulder), so it does
+    // not depend on which layer bent it.
+    if (seatW > 1e-3 && this.legs && this.armL && this.armR && parent) {
+      const lean = this.wallPlantTilt.dot(out), twist = WALL_PLANT_CROUCH.twist;
+      WP_Y.set(0, Math.cos(lean), 0).addScaledVector(out, Math.sin(lean)); // the spine as designed
+      WP_Z.copy(out).multiplyScalar(-Math.cos(twist)).addScaledVector(along, Math.sin(twist)); // the chest's facing as designed
+      for (let pass = 0; pass < 2; pass++) {
+        this.legs.getWorldPosition(WP_A);
+        this.armL.getWorldPosition(WP_B);
+        this.armR.getWorldPosition(WP_C);
+        if (pass === 0) {
+          // Stand the spine up on its line.
+          WP_X.copy(WP_B).add(WP_C).multiplyScalar(0.5).sub(WP_A);
+          if (WP_X.lengthSq() < 1e-6) break;
+          WP_Q.setFromUnitVectors(WP_X.normalize(), WP_Y);
+        } else {
+          // Then turn the chest about it. armL is the anatomical right shoulder.
+          WP_X.copy(WP_B).sub(WP_C);
+          WP_X.crossVectors(WP_Y, WP_X).addScaledVector(WP_Y, -WP_X.dot(WP_Y)); // the chest's facing now, square to the spine
+          WP_TARGET.copy(WP_Z).addScaledVector(WP_Y, -WP_Z.dot(WP_Y));
+          if (WP_X.lengthSq() < 1e-6 || WP_TARGET.lengthSq() < 1e-6) break;
+          WP_Q.setFromUnitVectors(WP_X.normalize(), WP_TARGET.normalize());
+        }
+        WP_Q2.identity().slerp(WP_Q, seatW);
+        // Turn the whole body about the hips, in the world.
+        parent.getWorldQuaternion(WP_Q3);
+        this.bodyGroup.getWorldPosition(WP_B).sub(WP_A).applyQuaternion(WP_Q2).add(WP_A);
+        this.bodyGroup.getWorldQuaternion(WP_Q).premultiply(WP_Q2);
+        this.bodyGroup.quaternion.copy(WP_Q3.invert()).multiply(WP_Q).normalize();
+        this.bodyGroup.position.copy(parent.worldToLocal(WP_B));
+        this.bodyGroup.updateWorldMatrix(true, true);
+      }
+    }
+
+    // 1. The seat: hips sat back off the face, between the marks.
+    if (seatW > 1e-3 && this.legs && parent) {
+      const seat = WALL_PLANT_CROUCH.seat;
+      WP_SEAT.copy(this.wallPlantSeatBase).addScaledVector(out, seat.out - skin).addScaledVector(along, seat.along);
+      WP_SEAT.y += seat.up;
+      this.legs.getWorldPosition(WP_A);
+      WP_B.copy(WP_SEAT).sub(WP_A).multiplyScalar(seatW).add(WP_A);
+      parent.worldToLocal(WP_B);
+      parent.worldToLocal(WP_A);
+      this.bodyGroup.position.add(WP_B.sub(WP_A));
+      this.bodyGroup.updateWorldMatrix(true, true);
+    }
+
+    // 2. The soles: on the balls of the feet, toes up the wall and turned out,
+    // knees splayed wide. The leg on the open side takes the high mark.
+    if (soleW > 1e-3 && this.legL && this.legR && this.kneeL && this.kneeR && this.ankleL && this.ankleR) {
+      this.wallPlantHighLegL = this.legL.getWorldPosition(WP_A).dot(along) > this.legR.getWorldPosition(WP_B).dot(along);
+      const legs = [
+        [this.legL, this.kneeL, this.ankleL, this.wallPlantHighLegL],
+        [this.legR, this.kneeR, this.ankleR, !this.wallPlantHighLegL],
+      ] as const;
+      for (const [root, mid, end, high] of legs) {
+        const { foot, heel } = soleSockets(end);
+        if (!foot || !heel) continue;
+        const spread = high ? 1 : -1;
+        mark(WP_TARGET, high ? WALL_PLANT_CROUCH.footHigh : WALL_PLANT_CROUCH.footLow).addScaledVector(out, 0.012);
+        WP_AIM.set(0, 0.82, 0).addScaledVector(along, 0.57 * spread);
+        for (let pass = 0; pass < 2; pass++) {
+          root.getWorldPosition(WP_POLE).addScaledVector(along, 1.0 * spread).addScaledVector(out, 0.4);
+          WP_POLE.y += 0.1;
+          solveTwoBoneIk({ root, mid, end, effector: foot, target: WP_TARGET, pole: WP_POLE, weight: soleW,
+            accountForParentScale: true, tolerance: 0.002 });
+          // Lay the shoe against the face and aim it, as plantSolesOnMarks does on the ground.
+          WP_Q.copy(end.quaternion);
+          for (let step = 0; step < 3; step++) {
+            end.updateWorldMatrix(true, true);
+            foot.getWorldPosition(WP_A).sub(heel.getWorldPosition(WP_B));
+            end.rotateX(Math.asin(THREE.MathUtils.clamp(WP_A.dot(out) / (WP_A.length() || 1), -1, 1)) + WALL_PLANT_HEEL_LIFT);
+            WP_A.addScaledVector(out, -WP_A.dot(out));
+            end.rotateY(Math.atan2(WP_B.crossVectors(WP_A, WP_AIM).dot(out), WP_A.dot(WP_AIM)));
+          }
+          WP_Q2.copy(end.quaternion);
+          end.quaternion.copy(WP_Q).slerp(WP_Q2, soleW);
+          end.updateWorldMatrix(true, true);
+        }
+        // Laying the shoe flat moved its toe: put the toe back on the mark.
+        root.getWorldPosition(WP_POLE).addScaledVector(along, 1.0 * spread).addScaledVector(out, 0.4);
+        WP_POLE.y += 0.1;
+        solveTwoBoneIk({ root, mid, end, effector: foot, target: WP_TARGET, pole: WP_POLE, weight: soleW,
+          accountForParentScale: true, tolerance: 0.002 });
+        end.updateWorldMatrix(true, true);
+        if (soleW > 0.99) this.wallPlantSoleError = Math.max(this.wallPlantSoleError, foot.getWorldPosition(WP_A).distanceTo(WP_TARGET));
+      }
+    }
+
+    // 3. The hands: the shoulder on the closed side plants its palm on the
+    // face; the other arm is thrown back and out, clear of the wall.
+    if (this.armL && this.armR && this.elbowL && this.elbowR && this.wristL && this.wristR && this.gloveLeft && this.gloveRight &&
+        (palmW > 1e-3 || seatW > 1e-3 || leapW > 1e-3)) {
+      const armL = [this.armL, this.elbowL, this.wristL, this.gloveRight.gripSocket] as const;
+      const armR = [this.armR, this.elbowR, this.wristR, this.gloveLeft.gripSocket] as const;
+      if (palmW > 1e-3 || seatW > 1e-3)
+        this.wallPlantFreeArmL = this.armL.getWorldPosition(WP_A).dot(along) > this.armR.getWorldPosition(WP_B).dot(along);
+      const planted = this.wallPlantFreeArmL ? armR : armL, free = this.wallPlantFreeArmL ? armL : armR;
+      if (palmW > 1e-3) this.plantWallPalm(planted, mark(WP_TARGET, WALL_PLANT_CROUCH.hand), out, along, palmW);
+      if (leapW > 1e-3 && seatW <= 1e-3) {
+        // The leap: the arm that was free is thrown high to the open side and
+        // the one that shoved off the wall trails low on the other, so the two
+        // draw one diagonal through the shoulders. It lies across the wall, not
+        // along the flight: a kick usually comes at the camera, and an arm
+        // reached down that line would cover the face.
+        for (const [arm, rise, wide, back] of [[free, 0.42, 0.66, 0.1], [planted, -0.3, -0.6, -0.16]] as const) {
+          const [root, mid, end, grip] = arm;
+          root.getWorldPosition(WP_A);
+          WP_TARGET.copy(WP_A).addScaledVector(along, wide).addScaledVector(out, back);
+          WP_TARGET.y += rise;
+          WP_POLE.copy(WP_A).addScaledVector(along, wide).addScaledVector(out, -0.4);
+          WP_POLE.y -= 0.3 * Math.sign(rise);
+          for (let pass = 0; pass < 2; pass++)
+            solveTwoBoneIk({ root, mid, end, effector: grip, target: WP_TARGET, pole: WP_POLE, weight: leapW * 0.9,
+              accountForParentScale: true, tolerance: 0.004 });
+        }
+      }
+      if (seatW > 1e-3) {
+        const [root, mid, end, grip] = free;
+        root.getWorldPosition(WP_A);
+        WP_TARGET.copy(WP_A).addScaledVector(out, 0.66).addScaledVector(along, 0.38);
+        WP_TARGET.y -= 0.28;
+        WP_POLE.copy(WP_A).addScaledVector(along, 0.6).addScaledVector(out, -0.2);
+        WP_POLE.y += 0.3;
+        for (let pass = 0; pass < 2; pass++)
+          solveTwoBoneIk({ root, mid, end, effector: grip, target: WP_TARGET, pole: WP_POLE, weight: seatW,
+            accountForParentScale: true, tolerance: 0.004 });
+      }
+    }
+
+    // 4. The look: back over the shoulder, up the line the kick will take.
+    const eye = this.headLookSocket ?? this.headM;
+    if (lookW > 1e-3 && this.headM?.parent && eye) {
+      this.headM.parent.updateWorldMatrix(true, true);
+      WP_INV.copy(this.headM.parent.matrixWorld).invert();
+      eye.getWorldDirection(WP_A).transformDirection(WP_INV);
+      WP_B.copy(out).multiplyScalar(0.78).addScaledVector(along, 0.5);
+      WP_B.y += seatW > 0.5 ? 0.36 : 0.04; // up the kick's line while coiled; level once leaning into the leap
+      WP_B.normalize().transformDirection(WP_INV);
+      WP_Q.setFromUnitVectors(WP_A, WP_B);
+      // A neck only turns so far; past that the chest has to follow.
+      const angle = 2 * Math.acos(Math.min(1, Math.abs(WP_Q.w)));
+      this.headM.quaternion.premultiply(WP_Q2.identity().slerp(WP_Q, lookW * Math.min(1, 1.35 / Math.max(angle, 1e-4))));
+      this.headM.updateWorldMatrix(false, true);
+    }
+    this.group.updateMatrixWorld(true);
+  }
+
+  /** Lay one palm flat on the face at `target` and reach the arm to it. */
+  private plantWallPalm(
+    arm: readonly [THREE.Object3D, THREE.Object3D, THREE.Object3D, THREE.Object3D],
+    target: THREE.Vector3, out: THREE.Vector3, along: THREE.Vector3, weight: number,
+  ): void {
+    const [root, mid, wrist, grip] = arm;
+    this.bodyGroup.updateWorldMatrix(true, true);
+    // The grip socket's +Z is the back of the hand and its -Y runs down the
+    // fingers (as alignCrawlHandsToGround reads it): back of the hand off the
+    // wall, fingers up it and splayed away from the body.
+    wrist.getWorldQuaternion(WP_Q);
+    grip.getWorldQuaternion(WP_Q2);
+    WP_Q3.copy(WP_Q).invert().multiply(WP_Q2); // the socket, in the wrist's frame
+    WP_Z.copy(out);
+    WP_Y.set(0, -0.9, 0).addScaledVector(along, 0.45);
+    WP_X.copy(WP_Y).cross(WP_Z).normalize();
+    WP_Y.copy(WP_Z).cross(WP_X).normalize();
+    WP_Q2.setFromRotationMatrix(WP_M.makeBasis(WP_X, WP_Y, WP_Z)).multiply(WP_Q3.invert()).normalize();
+    WP_Q.slerp(WP_Q2, weight); // the wrist's world orientation with the palm on the face
+    const layPalm = () => {
+      if (wrist.parent) wrist.parent.getWorldQuaternion(WP_Q3); else WP_Q3.identity();
+      wrist.quaternion.copy(WP_Q3.invert().multiply(WP_Q)).normalize();
+      this.bodyGroup.updateWorldMatrix(true, true);
+    };
+    layPalm();
+    // Reach with the wrist, not the offset socket, so the solve cannot roll
+    // the palm back off the wall; then lay it flat again.
+    wrist.getWorldPosition(WP_A);
+    grip.getWorldPosition(WP_B);
+    WP_C.copy(target).addScaledVector(out, 0.02).sub(WP_B.sub(WP_A));
+    root.getWorldPosition(WP_POLE).addScaledVector(along, -0.55).addScaledVector(out, 0.45);
+    WP_POLE.y -= 0.25;
+    for (let pass = 0; pass < 2; pass++)
+      solveTwoBoneIk({ root, mid, end: wrist, target: WP_C, pole: WP_POLE, weight, accountForParentScale: true, tolerance: 0.002 });
+    layPalm();
+    if (weight > 0.99) this.wallPlantPalmError = grip.getWorldPosition(WP_A).distanceTo(WP_B.copy(target).addScaledVector(out, 0.02));
+  }
+
   /** Seat idle and walking on their support plane. Fade out using the same
    * Walk/Run blend as animation, leaving the authored running pose intact.
    * The rider-only translation never moves collision, the board or the rig's
@@ -21507,22 +21791,86 @@ export class Player {
       this.group.quaternion.premultiply(VERT_Q2);
     }
 
-    // WALL PLANT: for the beat on the face the whole rig stands ON the wall —
-    // feet in against it, body leant back along the line it is about to leave
-    // on — and rights itself over the first of the flight. An early press
-    // starts the lean on the way in, so the plant is anticipated, not a pop.
-    const wallPlantTarget = this.wallPlantStickT > 0 ? 1 : this.wallPlantBufferT > 0 && !this.isBailing ? 0.3 : 0;
-    this.wallPlantPose += (wallPlantTarget - this.wallPlantPose) *
-      Math.min(1, (this.wallPlantStickT > 0 ? 45 : wallPlantTarget > this.wallPlantPose ? 16 : 11) * dt);
-    if (this.wallPlantPose < 0.002 && wallPlantTarget === 0) this.wallPlantPose = 0;
+    // WALL PLANT: the body is drawn onto the face in a three-point crouch —
+    // both soles and one palm on the wall, hips sat back off it, chest turned
+    // open, head looking over the shoulder at the way out — and leaves it
+    // with a push: the soles stay planted while the legs fire, then the drawn
+    // body catches the real one up in one surge. A face just hit is braced on
+    // while the press is still open, so a late plant grows out of a hold
+    // instead of popping in. This block sets the weights, the lean and the
+    // lag; poseWallPlantContacts() pins the contacts after every other layer.
+    const wallAir = this.state === 'air' && !this.grounded && !this.isBailing;
+    const wallPlanted = wallAir && this.wallPlantStickT > 0;
+    // The launch step has already flown: that step counts as time off the wall.
+    const wallFlight = !wallPlanted && wallAir && this.wallPlantAge >= 0 ? this.wallPlantAge + CONST.fixedStep : -1;
+    const wallPushing = wallFlight >= 0 && wallFlight < WALL_PLANT_PUSH_SECONDS && !this.wallPlantBoard;
+    const wallBracing = !wallPlanted && !wallPushing && wallAir && !this.freeSkate && this.wallPlantContactT > 0;
+    const wallReaching = !wallPlanted && !wallBracing && wallAir && this.wallPlantBufferT > 0;
+    // On the board the deck owns the feet: the lean is the whole pose.
+    const wallCrouch = wallPlanted || wallPushing ? !this.wallPlantBoard : !this.freeSkate;
+    // The frame the pose is drawn in follows the wall in play, except through
+    // a push: those feet are still on the wall they planted on.
+    if (!wallPushing) {
+      this.wallPlantDrawNormal.copy(wallPlanted || wallBracing ? this.wallPlantNormal : this.wallPlantLeanNormal);
+      this.wallPlantDrawSide = this.wallPlantSide;
+      // A plant's marks stay put; the brace slides down the face with the
+      // body; a reach aims at the spot the body is about to meet, level with it.
+      if (wallPlanted) this.wallPlantBase.copy(this.wallPlantSpot);
+      else if (wallBracing) this.wallPlantBase.set(this.pos.x, this.pos.y, this.pos.z);
+      else if (wallReaching) this.wallPlantBase.set(this.wallPlantAheadSpot.x, this.pos.y, this.wallPlantAheadSpot.z);
+    }
+    // An early press reaches for the wall on the way in: the nearer the face,
+    // the further into the crouch, feet and palm leading.
+    let wallReach = 0;
+    if (wallReaching) {
+      const face = this.wallPlantDrawNormal;
+      const gap = (this.pos.x - this.wallPlantBase.x) * face.x + (this.pos.z - this.wallPlantBase.z) * face.z;
+      wallReach = WALL_PLANT_REACH_FOR * (1 - THREE.MathUtils.smoothstep(gap, 0, WALL_PLANT_REACH_FROM));
+    }
+    if (!wallPushing) {
+      const clingTarget = wallPlanted ? 1 : wallBracing ? WALL_PLANT_BRACE : wallReach;
+      this.wallPlantCling += (clingTarget - this.wallPlantCling) *
+        Math.min(1, (wallPlanted ? 55 : clingTarget > this.wallPlantCling ? 24 : 30) * dt);
+      if (clingTarget === 0 && this.wallPlantCling < 0.004) this.wallPlantCling = 0;
+    }
+    // Reaching, the hips stay with the body; only the feet and the palm go ahead to the wall.
+    if (wallReaching) this.wallPlantSeatBase.set(this.pos.x, this.pos.y, this.pos.z);
+    else this.wallPlantSeatBase.copy(this.wallPlantBase);
+    const wallFired = wallPushing ? wallPlantPushProgress(wallFlight) : 0;
+    const wallOn = wallCrouch && (wallPlanted || wallBracing || wallPushing || wallReaching) ? this.wallPlantCling : 0;
+    this.wallPlantSeatW = wallOn * (1 - wallFired);
+    // The palm shoves off first; the soles are the last thing to leave.
+    this.wallPlantPalmW = wallOn * (wallPushing ? 1 - THREE.MathUtils.smoothstep(wallFlight, 0, WALL_PLANT_PUSH_SECONDS * 0.5) : 1);
+    this.wallPlantSoleW = wallOn * (wallPushing ? 1 - THREE.MathUtils.smoothstep(wallFlight, WALL_PLANT_PUSH_SECONDS * 0.7, WALL_PLANT_PUSH_SECONDS) : 1);
+    const wallLooking = wallPlanted || wallBracing || wallFlight >= 0 && wallFlight < WALL_PLANT_PUSH_SECONDS + 0.03;
+    this.wallPlantLookW += ((wallLooking ? 1 : 0) - this.wallPlantLookW) * Math.min(1, (wallLooking ? 30 : 14) * dt);
+    if (!wallLooking && this.wallPlantLookW < 0.004) this.wallPlantLookW = 0;
+    // The lean: coiled a little back off the face, then out along the launch
+    // line as the legs fire, and upright again over the first of the flight.
+    const wallLean = wallPlanted ? (wallCrouch ? WALL_PLANT_CROUCH.lean : WALL_PLANT_LEAN)
+      : wallPushing ? THREE.MathUtils.lerp(WALL_PLANT_CROUCH.lean, WALL_PLANT_LEAN, wallFired)
+      : wallBracing ? WALL_PLANT_CROUCH.lean * WALL_PLANT_BRACE
+      : wallReaching ? (wallCrouch ? WALL_PLANT_CROUCH.lean * this.wallPlantCling : WALL_PLANT_LEAN * 0.3) : 0;
+    // Eased as a vector (the wall's normal times the angle), so a lean still
+    // settling from the last wall blends through upright into the next one's
+    // instead of flipping when the frame changes.
+    const tilt = this.wallPlantTilt;
+    WP_A.copy(this.wallPlantDrawNormal).multiplyScalar(wallLean);
+    tilt.addScaledVector(WP_A.sub(tilt), Math.min(1, (wallLean > 0 ? 45 : 9) * dt));
+    this.wallPlantPose = tilt.length();
+    if (wallLean === 0 && this.wallPlantPose < 0.002) { tilt.set(0, 0, 0); this.wallPlantPose = 0; }
     if (this.wallPlantPose > 0 && this.state !== 'hang' && !this.isBailing) {
-      const face = this.wallPlantLeanNormal;
-      if (face.lengthSq() > 0.5) {
-        VERT_Q.setFromUnitVectors(VERT_UP, face);
-        VERT_Q2.identity().slerp(VERT_Q, this.wallPlantPose * WALL_PLANT_LEAN / (Math.PI / 2));
-        this.group.quaternion.premultiply(VERT_Q2);
-        this.group.position.addScaledVector(face, -WALL_PLANT_REACH * this.wallPlantPose);
-      }
+      const face = WP_A.copy(tilt).multiplyScalar(1 / this.wallPlantPose);
+      VERT_Q.setFromUnitVectors(VERT_UP, face);
+      VERT_Q2.identity().slerp(VERT_Q, this.wallPlantPose / (Math.PI / 2));
+      this.group.quaternion.premultiply(VERT_Q2);
+      // On the board the feet come in from the collision skin to the face.
+      if (!wallCrouch)
+        this.group.position.addScaledVector(face, -WALL_PLANT_REACH * this.wallPlantPose / WALL_PLANT_LEAN);
+    }
+    if (wallFlight >= 0 && !this.wallPlantBoard) {
+      const lag = wallPlantPushLag(wallFlight);
+      if (lag > 0) this.group.position.addScaledVector(this.wallPlantLaunch, -lag);
     }
 
     // Ordinary travel follows velocity; ice and committed run reversals face
@@ -21597,9 +21945,13 @@ export class Player {
       const vz = this.walkVelocity.z;
       if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+    } else if (this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0) {
+      // On the face: chest in to the wall and turned open toward the way out,
+      // so the launch finishes a turn instead of starting one.
+      targetYaw = wrapAngle(Math.atan2(this.wallPlantDrawNormal.x, this.wallPlantDrawNormal.z) -
+        this.wallPlantDrawSide * WALL_PLANT_CROUCH.twist);
     } else if (this.wallPlantStickT > 0 && Math.hypot(this.wallPlantLaunch.x, this.wallPlantLaunch.z) > 1e-4) {
-      // Planted: the body is already pivoting off the face toward the line it
-      // leaves on, so the launch continues a turn instead of starting one.
+      // A board wallplant pivots off the face toward the line it leaves on.
       targetYaw = wrapAngle(Math.atan2(this.wallPlantLaunch.x, this.wallPlantLaunch.z) - Math.PI);
     } else if (this.state === 'grind' && this.grindRail) {
       // axisF retains the catch heading until rail exit. A curved grind must
@@ -21643,9 +21995,12 @@ export class Player {
         RUN_REVERSAL_YAW_RATE * dt,
         turnSign,
       );
-    } else if (this.wallPlantStickT > 0 || this.state === 'air' && this.wallPlantAge >= 0 && this.wallPlantAge < 0.2) {
-      // The pivot off a wall plant is quicker than an ordinary change of travel.
-      this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 24 * dt);
+    } else if (this.wallPlantStickT > 0 || this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 ||
+        this.state === 'air' && this.wallPlantAge >= 0 && this.wallPlantAge < 0.3) {
+      // Onto the face at once. Off it, the turn to the way out is the twist
+      // of the leap: quicker than an ordinary change of travel.
+      const rate = this.wallPlantStickT > 0 ? 55 : this.wallPlantSeatW > 0 || this.wallPlantSoleW > 0 ? 26 : 20;
+      this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, rate * dt);
     } else {
       this.visualYaw +=
         wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
@@ -22178,6 +22533,9 @@ export class Player {
     );
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.grab, gloveGrip);
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.fist, gloveFist);
+    // On a wall both hands are thrown open: one flat on the face, one flung wide.
+    const wallOpen = Math.max(this.wallPlantSeatW, this.wallPlantPalmW);
+    if (wallOpen > 0.01) glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.open, wallOpen);
     // On a swing rope each hand closes round it, and opens as it reaches for its next hold.
     const [ropeGripRight, ropeGripLeft] = this.ropeBody.grip;
     if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, ropeGripLeft > 0 ? blendCartoonGlovePose(glovePose, ROPE_GLOVE_POSE, ropeGripLeft) : glovePose);
@@ -22989,24 +23347,41 @@ export class Player {
       this.playerAnimationBridge.modulateDeformations(teeter.deformations);
     }
 
-    // WALL PLANT: the squash into the face and the stretch of the push.
+    // WALL PLANT: the coil on the face, the stretch of the push and the leap
+    // that follows it. The contacts themselves are pinned later, once every
+    // other layer has had its say (poseWallPlantContacts).
+    const wallPlantHeld = this.wallPlantStickT > 0;
     const wallPlantLive = !this.isBailing && this.state === 'air' && !this.playerAnimationBridge.previewActive &&
-      (this.wallPlantStickT > 0 || this.wallPlantAge >= 0 && this.wallPlantAge < WALL_PLANT_RELEASE_SECONDS + 0.06);
+      (wallPlantHeld || this.wallPlantSeatW > 0 || this.wallPlantAge >= 0 &&
+        this.wallPlantAge < Math.max(WALL_PLANT_RELEASE_SECONDS + 0.06, WALL_PLANT_LEAP_SECONDS));
+    this.wallPlantLeapW = 0;
     if (wallPlantLive) {
-      const hold = this.wallPlantStickTotal > 0 ? 1 - this.wallPlantStickT / this.wallPlantStickTotal : 1;
-      const plant = sampleWallPlantMotion(hold, this.wallPlantStickT > 0 ? -1 : this.wallPlantAge, this.wallPlantBoard);
-      if (this.spineG) this.spineG.rotation.x += plant.spine;
-      if (this.headM) this.headM.rotation.x += plant.head;
-      for (const [arm, elbow, side] of [[this.armR, this.elbowR, 1], [this.armL, this.elbowL, -1]] as const) {
-        if (arm) { arm.rotation.x += plant.armSwing; arm.rotation.z += side * plant.armSpread; }
-        if (elbow) elbow.rotation.x += plant.elbow;
-      }
-      if (!this.wallPlantBoard) {
-        // On foot the legs fold and fire; on the board the deck owns the feet.
-        if (this.legL) this.legL.rotation.x += plant.hip;
-        if (this.legR) this.legR.rotation.x += plant.hip;
-        if (this.kneeL) this.kneeL.rotation.x += plant.knee;
-        if (this.kneeR) this.kneeR.rotation.x += plant.knee;
+      const hold = !wallPlantHeld ? this.wallPlantCling
+        : this.wallPlantStickTotal > 0 ? 1 - this.wallPlantStickT / this.wallPlantStickTotal : 1;
+      // Before the plant the body is whatever it is now; from the plant on, what it was then.
+      const coming = !wallPlantHeld && (this.wallPlantContactT > 0 || this.wallPlantBufferT > 0);
+      const bracing = coming;
+      const onBoard = coming ? this.freeSkate : this.wallPlantBoard;
+      const plant = sampleWallPlantMotion(hold, wallPlantHeld || coming ? -1 : this.wallPlantAge, onBoard);
+      if (onBoard) {
+        // The board wallplant: the deck owns the feet, so the upper body does the work.
+        if (this.spineG) this.spineG.rotation.x += plant.spine;
+        if (this.headM) this.headM.rotation.x += plant.head;
+        for (const [arm, elbow, side] of [[this.armR, this.elbowR, 1], [this.armL, this.elbowL, -1]] as const) {
+          if (arm) { arm.rotation.x += plant.armSwing; arm.rotation.z += side * plant.armSpread; }
+          if (elbow) elbow.rotation.x += plant.elbow;
+        }
+      } else {
+        // Coiled, the chest curls in over the knees. Off the wall it arches open:
+        // arms thrown wide, the open-side knee driven up, the pushing leg long behind.
+        const leap = sampleWallPlantLeap(wallPlantHeld || bracing || this.wallPlantAge < 0 ? -1 : this.wallPlantAge + CONST.fixedStep);
+        if (this.spineG) this.spineG.rotation.x += 0.34 * this.wallPlantSeatW - 0.3 * leap.arch;
+        this.wallPlantLeapW = leap.spread; // the arms are reached in the world, with the contacts
+        const [driveLeg, driveKnee] = this.wallPlantHighLegL ? [this.legL, this.kneeL] : [this.legR, this.kneeR];
+        const trailLeg = this.wallPlantHighLegL ? this.legR : this.legL;
+        if (driveLeg) driveLeg.rotation.x -= 0.95 * leap.drive;
+        if (driveKnee) driveKnee.rotation.x += 1.3 * leap.drive;
+        if (trailLeg) trailLeg.rotation.x += 0.4 * leap.trail;
       }
       this.playerAnimationBridge.modulateDeformations(plant.deformations);
     }
@@ -23194,6 +23569,7 @@ export class Player {
     this.seatPancakeSlam();
     this.plantPancakeSoles();
     this.plantKeyedSoles(dt);
+    this.poseWallPlantContacts();
     this.advancePancakeTail(dt);
     this.rememberIdleStance(dt);
     this.rememberLowFeet(dt);
