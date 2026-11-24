@@ -12845,7 +12845,8 @@ popping out should take the direction + Jump of a spine transfer, not direction 
 abandoned boards glitch out; ledge grabs should not happen when the skater just bumps into a wall lower
 off the floor than his own height with the arms up.
 Elapsed: about 45 minutes from the notes to the first complete run of the reworked course by the real
-player (headless). Times are approximate.
+player (headless); about 1 h 35 min to each note confirmed in Chrome with real keys, most of the
+difference spent on the regression suites for the two shared rules. Times are approximate.
 
 - **Drop-in.** The simulation still seats the board on the wall in the step the body crosses the coping
   (every pipe measurement stands: P1's first swing is still 4.45 m). What changed is what is drawn. For
@@ -12882,6 +12883,16 @@ wall: it transfers into a second pipe (5 m wall, 3.5 m decked far wall), launche
 **Checks.** `npm run check:side-pipe`: the course in 43.9 s on held right with one Jump in each east
 hang, no death, bail or ledge grab, every pop-out landing on foot; plus new scenarios for the stick alone
 never leaving a pipe, a step bumped on foot and on the board, a thrown board coming to rest in the pipe,
-and the drawn drop-in (no step more than about twice its neighbour, no turn over 30° in one step). The
-ledge, board-debris, vert and air suites pass on the changed code.
+and the drawn drop-in (no step more than about twice its neighbour, no turn over 30° in one step). Each
+of the six new rules was removed in turn; the test fails by name without any one of them. The ledge,
+board-debris, vert, rail and air suites pass on the changed code; the four that fail (`test-jak-d-polish`,
+`test-carlisle-layout`, `test-carlisle-pose-facing`, and `test-school-source`, which wants a file from the
+owner's machine) fail identically without it.
+
+In Chrome, stepped one simulation step per frame with the local review control (`?launchReview`) and real
+keys: the drawn drop-in never moves more than 1.19× its neighbouring step or turns more than 24° in one,
+and reads as tail on the coping, tip, roll; Jump released in the east hang with right held leaves the
+wall and is on foot the step after touchdown; a board thrown in the hang tumbles and is at rest on the
+pipe's floor 2.7 s later with no step frozen in the air; walking into the first step for 110 steps only
+stops the skater, and a tap of Jump puts him on top. No console errors.
 
