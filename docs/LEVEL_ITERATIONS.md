@@ -12837,3 +12837,51 @@ count), `test-surface-edge-dedup`, `test-course-edge-policy`, `test-level-placem
 `test-edge-grinding-migration` and `test-factory-defaults`; `test-stock-level-preservation` and
 `test-level-placement-traversal` need more than the cloud container's 14 GB on either commit. The release
 is 999.25 MB of the 1,000 MB hosting budget.
+
+## 2026-11-24 — Side Pipe Lab: the owner's playtest notes
+
+Brief (four notes on the published course): the drop-in should have the animation and be ultra smooth;
+popping out should take the direction + Jump of a spine transfer, not direction alone; fix whatever makes
+abandoned boards glitch out; ledge grabs should not happen when the skater just bumps into a wall lower
+off the floor than his own height with the arms up.
+Elapsed: about 45 minutes from the notes to the first complete run of the reworked course by the real
+player (headless). Times are approximate.
+
+- **Drop-in.** The simulation still seats the board on the wall in the step the body crosses the coping
+  (every pipe measurement stands: P1's first swing is still 4.45 m). What changed is what is drawn. For
+  0.26 s the picture rides a cubic that leaves the deck with the walker's own velocity and meets the
+  rider on the transition with his, so it is continuous in position and velocity at both ends, while
+  the mount animation's hop plays through it and the rig lays over onto the wall across the hop instead
+  of within three frames. The camera follows the drawn body, so it does not step either. It is the
+  trampoline's presentation-offset pattern (`netRenderOffset`), not a new physics state.
+- **Pop-out.** Leaving a pipe is now the spine transfer's own input: the first Jump press-and-release of
+  the hang, with the stick held out over the lip. With a pipe beyond the ridge that release is the
+  ordinary transfer; otherwise it is the air out onto the deck. The stick alone does nothing.
+- **Landing a pop-out is on foot.** The automatic drop-in needed its counterpart once the next note
+  removed the device the course had been using to stop the board.
+- **Ledge grabs** (shared rule, `tryLedgeGrab`). Measured on the rig, the skater stands 2.8 m and
+  reaches 2.55 m with the arms up, while the game caught any lip 1.45–2.4 m above the feet when he
+  walked or rolled into it: every one of those is lower than he is. A grounded catch now needs the lip
+  above his standing reach, which the default `ledgeReach` never is, so a wall walked into is a bump. A
+  level's `ledgeAssist` can still raise the reach past it. Catches out of a jump are unchanged.
+- **Abandoned boards** (shared, `src/skateboard/discarded.ts`). A board is two metres long and the play
+  plane's walls are 1.06 m apart. A thrown board turning across that gap was met at fraction zero by each
+  wall in turn, so the resolver returned the place it started from every step: it hung in the air,
+  shivering a few millimetres between the faces, while gravity piled onto its velocity (360 m/s after
+  15 s in the probe). The second Jump of a hang is the game's Board Abandon, so trying to jump out of a
+  pipe threw one every time. A deck now stops colliding with the one face it cannot fit beside and
+  resolves against everything else; its fall is capped at 60 m/s; and it lands on a halfpipe's transition
+  instead of dropping through it (the ribbon's face normal pointed into the wall).
+
+**The course.** The 2.1 m "catch ledges" existed to stop the board by that grounded grab, so they are
+gone: the floors between pipes are plain platforming with 1.6 m steps (a tap jump rises 2.1 m; the
+bible's 1.1–1.3 m figure was stale and is corrected). The spine no longer rolls out at 26 m/s toward a
+wall: it transfers into a second pipe (5 m wall, 3.5 m decked far wall), launches off that far lip at
+23 m/s and is popped out onto its deck. 305 m from spawn to gate.
+
+**Checks.** `npm run check:side-pipe`: the course in 43.9 s on held right with one Jump in each east
+hang, no death, bail or ledge grab, every pop-out landing on foot; plus new scenarios for the stick alone
+never leaving a pipe, a step bumped on foot and on the board, a thrown board coming to rest in the pipe,
+and the drawn drop-in (no step more than about twice its neighbour, no turn over 30° in one step). The
+ledge, board-debris, vert and air suites pass on the changed code.
+

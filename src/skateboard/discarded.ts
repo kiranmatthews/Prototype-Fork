@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {solidContact,type WorldSolids}from'../worldSolids';
+import {solidContact,type SolidQuery,type SolidSurface,type WorldSolids}from'../worldSolids';
 import { RenderInterpolator } from '../renderInterpolation';
 import { BoardFractures } from './fracture';
 export interface BoardDebrisWorld {
@@ -39,6 +39,8 @@ export interface DiscardedBoard {
     contactTime: number;
     airTime: number;
     impactCooldown: number;
+    /** Solids this body cannot fit beside any more (see `pinchedBy`). */
+    pinched: Set<SolidSurface> | null;
 }
 type Batch = {
     mesh: THREE.InstancedMesh;
@@ -52,6 +54,9 @@ const DOWN = new THREE.Vector3(0, -1, 0);
 const UP = new THREE.Vector3(0, 1, 0);
 const GRAVITY = 24;
 const CONTACT_SKIN = .006;
+// Nothing a rider throws falls faster than this; it also bounds what a deck
+// can gather while a contact is holding it up.
+const TERMINAL_SPEED = 60;
 const brake = (speed: number, amount: number) => Math.sign(speed) * Math.max(0, Math.abs(speed) - amount);
 type SurfaceBounds = { mesh: THREE.Mesh; geometry: THREE.BufferGeometry; matrix: THREE.Matrix4; bounds: THREE.Box3; epoch: number };
 /** Level-owned decorative debris. Remounting releases the current discard;
@@ -72,6 +77,8 @@ export class DiscardedBoards {
     private normal = new THREE.Vector3();
     private normalMatrix = new THREE.Matrix3();
     private hardContact=solidContact();
+    private pinchContact=solidContact();
+    private hardQuery:SolidQuery={low:0,high:0,radius:0,ignoreGround:true,groundStep:0};
     private hardResolved=new THREE.Vector3();
     private hardSurfaceVelocity=new THREE.Vector3();
     private frameBodies: DiscardedBoard[] = [];
@@ -144,7 +151,7 @@ export class DiscardedBoards {
         const board: DiscardedBoard = { root, external, stepped: false, breakStyle, velocity: new THREE.Vector3(), angular: new THREE.Vector3(), remaining: 30, rest: false, bounds: this.localBounds(root), broken, lastSpin, slots: [],
             center: new THREE.Vector3(), halfSize: new THREE.Vector3(), inverseInertia: new THREE.Vector3(),
             supported: false, support: null, supportMatrix: new THREE.Matrix4(), supportVelocity: new THREE.Vector3(),
-            quietTime: 0, contactTime: 0, airTime: 1, impactCooldown: 0 };
+            quietTime: 0, contactTime: 0, airTime: 1, impactCooldown: 0, pinched: null };
         this.measureBody(board);
         this.active.add(board);
         this.bodies.add(board);
@@ -392,6 +399,7 @@ export class DiscardedBoards {
                 this.supportRadius(board, UP), this.supportRadius(board, this.axis.set(0, 0, 1)));
         }
         velocity.y -= GRAVITY * dt;
+        velocity.clampLength(0, TERMINAL_SPEED);
         this.center.addScaledVector(velocity, dt);
         // World angular velocity + quaternion integration, about the centre of
         // mass rather than the old wheel/root pivot and ordered Euler angles.
@@ -407,13 +415,25 @@ export class DiscardedBoards {
             this.retire(board); this.lost++; return;
         }
         if (world.worldSolids?.enabled) {
-            this.hardResolved.copy(this.center);
-            if (world.worldSolids.resolve(this.previous, this.hardResolved, {
-                // The floor ray owns support. Skip upward faces before their
-                // triangle edges can masquerade as sideways hard contacts.
-                low: 0, high: 0, radius: board.halfSize.length(), ignoreGround: true, groundStep: 0,
-                supportRadius: normal => this.supportRadius(board, normal),
-            }, this.hardContact)) {
+            // The floor ray owns support. Skip upward faces before their
+            // triangle edges can masquerade as sideways hard contacts.
+            const query = this.hardQuery;
+            query.radius = board.halfSize.length();
+            query.supportRadius = normal => this.supportRadius(board, normal);
+            query.ignore = board.pinched ? surface => board.pinched!.has(surface) : undefined;
+            let contact = false;
+            for (let attempt = 0; attempt < 3; attempt++) {
+                this.hardResolved.copy(this.center);
+                contact = world.worldSolids.resolve(this.previous, this.hardResolved, query, this.hardContact);
+                if (!contact) break;
+                const wedge = this.pinchedBy(world.worldSolids, query);
+                if (!wedge) break;
+                // Never negotiate with that face again: resolve against the
+                // rest of the world and let the deck lie where it will.
+                (board.pinched ??= new Set()).add(wedge);
+                query.ignore = surface => board.pinched!.has(surface);
+            }
+            if (contact) {
                 this.center.copy(this.hardResolved);
                 this.placeRoot(board);
                 this.hardSurfaceVelocity.copy(this.hardContact.surfaceDelta).multiplyScalar(1 / Math.max(dt, 1e-6));
@@ -487,6 +507,24 @@ export class DiscardedBoards {
         }
     }
 
+    /**
+     * PINCHED: a deck that no longer fits where it is — two metres of board
+     * turning across a side-scrolling corridor one metre wide — is met at
+     * fraction zero by each face in turn, so the resolver can only hand back
+     * the place it started from. Left alone that repeats every step for good:
+     * the deck hangs in the air while gravity piles onto a velocity that never
+     * moves it (and shivers a few millimetres from face to face meanwhile).
+     * The sign is a resolved position that is STILL inside a solid facing the
+     * other way; that solid is the one to stop arguing with. A corner, or a
+     * wall the deck merely slides along, resolves clear and is not a pinch.
+     */
+    private pinchedBy(solids: WorldSolids, query: SolidQuery): SolidSurface | null {
+        if (this.hardContact.fraction > 1e-6) return null; // it was not touching when the step began
+        if (!solids.cast(this.hardResolved, this.hardResolved, query, this.pinchContact, false)) return null;
+        return this.pinchContact.depth > .002 && this.pinchContact.normal.dot(this.hardContact.normal) < -.5
+            ? this.pinchContact.surface : null;
+    }
+
     private slide(board: DiscardedBoard, dt: number, previousRadius: number): void {
         const q = board.root.quaternion, v = board.velocity, n = this.normal;
         // Keep a brief rocking settle. Alignment never snaps, and the actual
@@ -539,6 +577,12 @@ export class DiscardedBoards {
         let floor: number | null = null;
         for (const hit of this.hits) {
             this.normal.copy(hit.face?.normal ?? UP).applyNormalMatrix(this.normalMatrix.getNormalMatrix(hit.object.matrixWorld));
+            // A halfpipe's ribbon is double-sided with no promised winding (its
+            // rider is carried by the analytic curve, never by this mesh), so
+            // the face normal may point into the wall. The riding side always
+            // faces up: without this a deck dropped in a pipe fell straight
+            // through the transition.
+            if (hit.object.userData.halfpipe && this.normal.y < 0) this.normal.negate();
             if (this.normal.y < .15) continue;
             // Also reject the back/underside of double-sided ramp meshes.
             if (this.direction.copy(this.previous).sub(hit.point).dot(this.normal) < -.06) continue;

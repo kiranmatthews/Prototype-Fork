@@ -391,8 +391,24 @@ export interface PlayerAnimationIntent {
 // Ledge grab geometry: how far below the TRUE lip the body hangs (hands at the
 // lip, head just under it), and how long the catch takes to settle (a caught
 // grip eases in — never a teleport).
+// SIDE-ON DROP-IN, as it is SEEN. The simulation seats the board on the wall
+// the step the body crosses the coping; drawn like that it is a pop. For this
+// long the picture instead rides a curve that leaves the deck the way the body
+// was travelling and meets the simulated rider on the transition, moving as he
+// moves by then — the hop the mount animation is already playing, carried over
+// the coping. Presentation only: no timer or position here feeds the ride.
+const SIDE_ON_DROP_IN_SECONDS = 0.26;
+const SIDE_ON_DROP_IN_ALIGN_EASE = 9; // the rig lays over onto the wall across the hop, not within three frames
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
+// Feet to raised fingertips at the baseline stature (shoulders 1.67 m, arm
+// 0.86 m, measured on the rig). A wall whose lip is lower than this above the
+// floor the skater STANDS on is not a ledge to him: bumped into from the
+// ground it would hang a body that has no room under it — the feet are on the
+// floor they never left. It is caught from the ground only when the lip is
+// above that reach (which the default ledgeReach never is; an authored
+// ledgeAssist can be). Jumped at, it is a ledge like any other.
+const LEDGE_STANDING_REACH = 2.55;
 const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
 const LEDGE_EDGE = new THREE.Vector3();
 const LEDGE_CANDIDATE = new THREE.Vector3();
@@ -1582,6 +1598,19 @@ export class Player {
   // ...and the same for a lean: of a rail caught on a side-on line, and of a
   // lip stall parked on a side-on pipe's coping.
   private sideOnBalanceLatch = 0;
+  // The pop-out is asked for the way a spine transfer is: Jump in the hang,
+  // with the stick held out over the lip. That release arms it; it is taken
+  // as soon as the air has cleared what it is to land on.
+  private sideOnCarryArmed = false;
+  // ...and that air leaves the pipe behind. It lands on foot.
+  private sideOnExitAir = false;
+  // The drop-in's drawn path (see SIDE_ON_DROP_IN_SECONDS): where the picture
+  // was, and how it was moving, relative to the rider the step he was seated.
+  private dropInT = -1;
+  private readonly dropInLead = new THREE.Vector3();
+  private readonly dropInSlip = new THREE.Vector3();
+  private readonly dropInOffset = new THREE.Vector3();
+  private readonly previousDropInOffset = new THREE.Vector3();
   private spinePoseElapsed = 0;
   private spinePoseDuration = 0;
   private readonly spinePoseFrom = new THREE.Vector3(0,1,0);
@@ -3560,6 +3589,7 @@ export class Player {
    */
   resetRenderInterpolation(): void {
     this.netRenderOffset.set(0,0,0);this.previousNetRenderOffset.set(0,0,0);
+    this.dropInT = -1; this.dropInOffset.set(0,0,0); this.previousDropInOffset.set(0,0,0);
     this.footstepAudio.contacts.reset();
     this.renderInterpolator.snap();
     this.group.position.copy(this.pos);
@@ -3569,6 +3599,7 @@ export class Player {
   /** Freeze both endpoints at current without introducing resume latency. */
   collapseRenderInterpolation(): void {
     this.previousNetRenderOffset.copy(this.netRenderOffset);
+    this.previousDropInOffset.copy(this.dropInOffset);
     this.renderInterpolator.collapse();
     this.group.position.copy(this.pos);
     this.renderPosition.copy(this.pos);
@@ -3712,6 +3743,8 @@ export class Player {
       if(this.netRenderOffset.lengthSq()<1e-8)this.netRenderOffset.set(0,0,0);
     }
 
+    this.stepDropInPresentation();
+
     const objects = this.renderObjects;
     objects.length = 0;
     this.collectRenderHierarchy(this.group);
@@ -3732,7 +3765,30 @@ export class Player {
     if (this.renderInterpolator.hasPose) this.renderInterpolator.apply(alpha);
     else this.group.position.copy(this.pos);
     this.group.position.add(_renderDelta.lerpVectors(this.previousNetRenderOffset,this.netRenderOffset,alpha));
+    this.group.position.add(_renderDelta.lerpVectors(this.previousDropInOffset,this.dropInOffset,alpha));
     this.renderPosition.copy(this.group.position);
+  }
+
+  /**
+   * Where the drop-in is drawn this step, relative to the simulated rider: a
+   * cubic that starts at the lead with the slip as its rate and arrives at
+   * zero with none, so the picture is continuous in place AND in velocity at
+   * both ends. Whatever else takes the body (a spill, a grind, a new air)
+   * simply inherits a lead that is already closing.
+   */
+  private stepDropInPresentation(): void {
+    this.previousDropInOffset.copy(this.dropInOffset);
+    if (this.dropInT < 0) { this.dropInOffset.set(0, 0, 0); return; }
+    const k = this.dropInT / SIDE_ON_DROP_IN_SECONDS;
+    if (k >= 1 || this.state === 'dead') {
+      this.dropInT = -1;
+      this.dropInOffset.set(0, 0, 0);
+      return;
+    }
+    const k2 = k * k, k3 = k2 * k;
+    this.dropInOffset.copy(this.dropInLead).multiplyScalar(2 * k3 - 3 * k2 + 1)
+      .addScaledVector(this.dropInSlip, (k3 - 2 * k2 + k) * SIDE_ON_DROP_IN_SECONDS);
+    this.dropInT += CONST.fixedStep;
   }
 
   /** Put authoritative fixed-step transforms back immediately after drawing. */
@@ -4462,6 +4518,7 @@ export class Player {
     this.lipCoolT = 0;
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
+    this.sideOnCarryArmed = this.sideOnExitAir = false;
     this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -5847,7 +5904,11 @@ export class Player {
         const vertRelease = vertReleaseActive
           ? stepVertBoardRelease(this.vertBoardRelease, dt, input)
           : { action: 'none' as const, consumed: false, charge: 0 };
-        if (vertRelease.action === 'transfer') this.tryAdjacentSpineTransfer(level);
+        if (vertRelease.action === 'transfer') {
+          // No pipe mouth beyond the ridge: on a side-on pipe the same input
+          // asks for the air out over the lip instead.
+          if (!this.tryAdjacentSpineTransfer(level)) this.armSideOnCarry();
+        }
         else if (vertRelease.action === 'abandon')
           this.performBoardAbandon(vertRelease.charge, 'Board Abandon', this.vertAir);
 
@@ -7481,6 +7542,13 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
+    // The air that carried a rider out of a side-on pipe ends the board
+    // section its drop-in began: it lands on foot. (X held with a direction is
+    // the ordinary push-off, and keeps the board.)
+    if (this.sideOnExitAir) {
+      this.sideOnExitAir = false;
+      if (this.freeSkate && sidePipe === null && !pushingOff && !this.alwaysSkate && !this.parkControls) this.stepOff = true;
+    }
     if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
     const rollingOut = this.freeSkate && (this.alwaysSkate || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
@@ -10642,6 +10710,7 @@ export class Player {
     this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
     this.rollOffT = 0; // ...and re-owns a levelling ride-out's pose
     this.vertAir = true;
+    this.sideOnCarryArmed = this.sideOnExitAir = false;
     if (this.freeSkate && this.airFromSkate && this.airGrav === 'board')
       beginVertBoardRelease(this.vertBoardRelease);
     else resetVertBoardRelease(this.vertBoardRelease);
@@ -11760,9 +11829,11 @@ export class Player {
     // body has left the deck, high enough to keep the whole wall's drop.
     const u = side * (hp.uLipOf(side) - Math.min(0.4, hp.radiusOf(side) * 0.2));
     const cross = hp.cross + hp.crossOffset(u);
+    this.dropInLead.copy(this.pos); // where the picture is: on the deck, a stride past the lip
     if (hp.axis === 'z') this.pos.x = cross;
     else this.pos.z = cross;
     this.pos.y = hp.surfaceY(u);
+    this.dropInLead.sub(this.pos);
     const normal = hp.normalAt(u, new THREE.Vector3());
     const approach = Math.max(Math.abs(this.speed), this.lastPlanar);
     const wasOnFoot = !this.freeSkate;
@@ -11803,6 +11874,9 @@ export class Player {
     // attach reads this step as a ride along the curve, not a fall past it.
     this.prevPos.copy(this.pos);
     skateSurfaceDirection(this.parkVelocity, this.axisF, normal).multiplyScalar(this.speed);
+    // ...and how it was moving: level, at the approach speed, into the pipe.
+    this.dropInSlip.copy(this.axisF).multiplyScalar(approach).sub(this.parkVelocity);
+    this.dropInT = 0;
     this.lastTy = this.parkVelocity.y / this.speed;
     this.liftTy = this.lastTy;
     this.liftTyT = 0;
@@ -11818,21 +11892,30 @@ export class Player {
     this.pipeRideT = 0.2;
     this.pipeLandGraceT = this.grindDropSteerT = 0.35;
     this.landingLaunchLockT = 0.1;
-    this.snapRenderInterpolation();
     sfx.play('skateTransition', 0.6);
     return true;
   }
 
+  /** The spine-transfer release found no pipe to cross into: on a side-on
+   * pipe it asks for the air out over the lip instead. */
+  private armSideOnCarry(): void {
+    if (!this.vertAir || !this.pipeHang || !this.hangPipe?.sideOn || this.parkControls || this.isBailing) return;
+    this.sideOnCarryArmed = true; // stepSideOnCarry reads the stick, this same step
+  }
+
   /**
-   * Hang time over a side-on lip: holding the stick OUT over the coping
-   * carries the air across it. A pipe mouth beyond a shared ridge takes the
-   * ordinary mirrored spine transfer; a deck takes a plain board air that
-   * drifts out and lands on it. A bare wall has nowhere to go, so the hang
-   * simply drops back in.
+   * Popping OUT of a side-on pipe is the spine transfer's input with nowhere
+   * to transfer to: Jump in the hang with the stick held out over the lip.
+   * (Across a shared ridge that same release is the ordinary mirrored spine
+   * transfer, taken before this is ever armed.) The air then leaves the wall
+   * as a plain board air that drifts out and lands on the deck. Direction
+   * alone does nothing, and a bare wall has nowhere to go: both drop back in.
    */
   private stepSideOnCarry(level: Level): void {
+    if (!this.sideOnCarryArmed) return;
     const hp = this.hangPipe;
-    if (!hp || this.isBailing || this.transferCoolT > 0) return;
+    if (!hp || this.isBailing) { this.sideOnCarryArmed = false; return; }
+    if (this.transferCoolT > 0) return;
     const side = this.pipeSide(hp, this.vertAnchor);
     const outX = hp.axis === 'z' ? side : 0;
     const outZ = hp.axis === 'z' ? 0 : side;
@@ -11843,8 +11926,7 @@ export class Player {
       this.camDir.z,
       outX,
       outZ,
-    )) return;
-    if (this.tryAdjacentSpineTransfer(level)) return;
+    )) { this.sideOnCarryArmed = false; return; } // the stick is half of the input
     // Something to land on just past the lip, at about its height: the
     // pipe's own deck, a platform butted against the wall, a ghost slab a
     // switch has made real. A drop down the back of a bare wall is not an
@@ -11852,7 +11934,10 @@ export class Player {
     const lipY = hp.lipYOf(side);
     const landing = this.queryGround(level, outX * 1.2, outZ * 1.2);
     if (!landing || landing.halfpipe || landing.normal.y < 0.7 || landing.lethal || landing.outOfBounds ||
-        landing.y < lipY - 0.75 || this.pos.y < landing.y + 0.12) return;
+        landing.y < lipY - 0.75) { this.sideOnCarryArmed = false; return; }
+    if (this.pos.y < landing.y + 0.12) return; // not over it yet: stay armed while the stick is held
+    this.sideOnCarryArmed = false;
+    this.sideOnExitAir = true;
     this.vertAir = false;
     this.pipeHang = false;
     this.hangPipe = null;
@@ -12161,6 +12246,7 @@ export class Player {
     this.pipeHang = false;
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
+    this.sideOnCarryArmed = this.sideOnExitAir = false;
     this.vertLatVel = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
@@ -13115,6 +13201,7 @@ export class Player {
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
     this.naturalGrindRail = null; this.naturalGrindGrace = 0;
+    this.sideOnCarryArmed = this.sideOnExitAir = false; // a rail keeps the board
     if (this.manualing !== 0) this.endManual();
     if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
     // Use this flight's landed trick, not the combo total (which includes
@@ -17381,8 +17468,10 @@ export class Player {
     const lipRough = w.max.y;
     const rise = lipRough - this.pos.y;
     if (this.state === 'ride') {
-      // grounded: a chest-high-or-better step within reach
-      if (rise < LEDGE_HANG_DEPTH + 0.2 || rise > catchEnvelope.reach)
+      // Grounded, this is a bump. It is a catch only when the lip stands
+      // higher than the skater's own reach from the floor he is on.
+      const standingReach = LEDGE_STANDING_REACH * this.hitboxHalf.y / CONST.playerHalf.y;
+      if (rise < Math.max(LEDGE_HANG_DEPTH + 0.2, standingReach) || rise > catchEnvelope.reach)
         return false;
     } else {
       // Default airs catch only at the crest/downward phase. A level-authored
@@ -20746,7 +20835,7 @@ export class Player {
       this.alignNormal.copy(this.rideNormal);
       return;
     }
-    const ease = onPipe || this.pipeHang ? 24 : 12;
+    const ease = this.dropInT >= 0 ? SIDE_ON_DROP_IN_ALIGN_EASE : onPipe || this.pipeHang ? 24 : 12;
     this.landingAlignPose +=
       (alignTarget - this.landingAlignPose) * Math.min(1, ease * dt);
     // Public/debug presentation mirrors the simulation state, but gameplay
