@@ -1717,7 +1717,7 @@ enemy and hazard timings were read from the code named in each table.
 
 | Launch | Apex above its take-off surface | Highest stack top you can land on from the floor |
 |---|---|---|
-| Tap jump | 1.1–1.3 m | 1 crate, marginal |
+| Tap jump (X for 1–2 frames; re-measured November 2026) | **2.1 m**, rising with the hold: 2.3 m at 8 frames, 2.5 m at 14, 2.7 m at 20 | 1 crate with room to spare; a step up to 1.6 m |
 | Full jump | **2.85 m** | **2 crates** (2.30 m) |
 | Full jump + double jump at the apex | **4.59 m** | **3 crates**; 4 (4.61 m) is out of reach |
 | Stomp a wood crate (Jump held or not) | 2.87 m above its lid | from a 1-high crate: 4.0 m → 3 crates |
@@ -1729,7 +1729,7 @@ enemy and hazard timings were read from the code named in each table.
 | Board ollie, full charge | ≈ 1.7 m | 1 crate — the board cannot ollie onto a 2-stack |
 | Board ollie, tap | ≈ 0.56 m | cannot clear a crate |
 | Grind jump (pop 12.5 m/s) | ≈ 2.4 m above the rail | a row one crate higher |
-| Ledge grab (lip ≤ 2.4 m above the feet) | platform lips to ≈ 5.2 m (full jump) / ≈ 7.0 m (double) | never crate tops |
+| Ledge grab out of a jump (lip ≤ 2.4 m above the feet) | platform lips to ≈ 5.2 m (full jump) / ≈ 7.0 m (double) | never crate tops; never from the ground (XV.3) |
 
 The double jump fires after *any* launch (floor, crate bounce, arrow) and adds ≈ 1.74 m; all values
 in the table were measured with real inputs (`reach` rows in the probe output).
@@ -1789,7 +1789,7 @@ standing jumps were not measured and travel less.
 |---|---|---|
 | Coyote time | 0.28 s after leaving an edge (`coyoteTime`) | ≈ 2.5 m of travel at run speed, ≈ 3.4 m at cruise: a late press still jumps, so a take-off edge is not a precision test |
 | Edge catch | rolling or skating off a lethal edge slower than 6 m/s teeters at the brink (`teeterCatchSpeed`) | slow players are protected at every lethal edge; fast ones are not |
-| Ledge grab | lips up to 2.4 m above the feet, held up to 6 s (`ledgeReach`, `ledgeGrabTime`) | a jump that falls short of a platform *top* still catches its lip; platforms and walls only, never crate tops |
+| Ledge grab | in the air: lips up to 2.4 m above the feet, held up to 6 s (`ledgeReach`, `ledgeGrabTime`). From the ground: only a lip above the skater's standing reach (2.55 m, feet to raised fingertips), which the default reach never is | a jump that falls short of a platform *top* still catches its lip; a wall walked or rolled into is a bump, so a step is jumped (tap 2.1 m, held 2.7 m) and is never a way to stop a board; platforms and walls only, never crate tops |
 | Edge grinding | platform and road edges grind by default; rail snap radius 2.1 m (`railSnapDistance`) | a skater who comes up short can save the jump on the far edge's lip, and an edge on the line is always a grind option |
 
 ### XV.4 The board against single crates (measured)
@@ -1988,25 +1988,28 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 ### XV.14 Side-on pipes (measured)
 
 A `vertramp` half with `sideOn: true` is a halfpipe on a side-scrolling path, ridden across its section:
-the walker is dropped in on the board as they cross the coping, and holding the stick out over a lip
-carries the hang across it ([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). Measured
-with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
+the walker is dropped in on the board as they cross the coping, and Jump in the hang with the stick held
+out over a lip (the spine transfer's input) pops the air out across it, landing on foot
+([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). The stick alone never leaves a
+pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
 `tools/test-side-pipe-lab.mjs`):
 
 | Fact | Value | What it means for layout |
 |---|---|---|
 | Automatic drop-in | 0.85 × the approach speed, never under 4 m/s | the deck is a mode change: the checkpoint goes before it |
-| Equal 3.5 m walls | first far-lip launch 18 m/s; carried out about 5 m past the lip | exit deck plus the floor behind it ≥ 7 m |
+| Equal 3.5 m walls | first far-lip launch 18 m/s; popped out, it lands about 5 m past the lip, on foot | exit deck plus the floor behind it ≥ 7 m; that floor is ordinary on-foot platforming |
 | 2.5 m wall against a 7 m wall | the first swing climbs 4.45 m; the second clears it; X held on the walls, or a charged approach, clears it at once | a far wall ≥ 2.5 × the entry wall asks for a second swing; pumping is the shortcut, never the only way |
-| Spine into a 5 m landing ramp | rolls out at 23–30 m/s | a smash lane or 40 m of run-out before the next stop |
+| Spine into a second pipe (5 m wall, 3.5 m decked far wall) | lands on its near wall at 15 m/s, launches off the far lip at 23 m/s; popped out, lands 5.6 m past it | the far deck is the spine's landing; the transfer keeps the board, the pop-out ends it |
+| Spine into a 5 m ramp with an open far side | rolls out at 23–30 m/s, still on the board | only for a skated stretch: a smash lane and 40 m of run-out that ends in a gate or another pipe, never a step |
 | Hang over the entry lip on the swing back | about 7 m | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m) |
 | Rail caught from a hang | the grind starts at 3.5 m/s | run exit rails downhill, steepest first |
 | Grind button held up the wall | a lip stall on the coping, not a hang; it settles back into the pipe | a rail over a lip starts ≥ 3 m above it, so it reads as "press in the air", and nothing behind a bare wall is the stall's fault |
-| A mounted rider's crate-contact box | about 3.0 m tall | a floor crate or a checkpoint on a pipe's exit floor trips him under 12.5 m/s; overhead rows start 3.4 m up |
+| A mounted rider's crate-contact box | about 3.0 m tall | where a rider arrives still on the board (a rail's landing, an open ramp's run-out) a floor crate or a checkpoint trips him under 12.5 m/s; overhead rows start 3.4 m up |
 
-A pipe hands its rider on still on the board, so the on-foot stretch after it starts with a **catch
-ledge**: a 2.1 m step, over a charged ollie (1.7 m) and inside the ledge grab (2.4 m), which stops the
-board and has the rider climb up by the hands.
+Popping out of a pipe lands on foot, so the stretch after it is plain platforming: steps of 1.6 m or less
+(a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands from the ground: a
+wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
+a board.
 
 ### XV.15 Wall kick and wallplant (measured)
 
@@ -2214,8 +2217,8 @@ Three engine facts drive every pattern here:
   first gaps with time, not lives; Crash 4's landing shadow makes landings readable. Snow Go and
   Hang Eight put checkpoints on wide fixed floors, never on timed footing.
 - **Engine.** Platform and road edges grind by default; the grind snap radius is 2.1 m; a lip up to
-  2.4 m above the feet can be grabbed on foot. A skater who comes up short and presses Grind catches
-  the near edge of the landing.
+  2.4 m above the feet is grabbed out of a jump on foot (never by walking into it). A skater who comes
+  up short and presses Grind catches the near edge of the landing.
 - **Recipe.** Make the landing's near edge a clean straight lip at least 6 m long along travel
   (perpendicular gaps give a short lip; a gap crossed at an angle gives a long one). Keep that edge
   free of crates and walls. Use `edgeGrinding: false` only for a deliberate exception such as a
@@ -2907,8 +2910,11 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] The hardest run sits next to a checkpoint, right after it or closing into it.
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
-- [ ] A side-on pipe is about 12 m lip to lip (in frame from its near lip), its exit floor carries no floor
-  crate or checkpoint, and the on-foot stretch after it starts with a catch ledge (XV.14).
+- [ ] A side-on pipe is about 12 m lip to lip (in frame from its near lip) and is left by a pop-out onto
+  a deck (which lands on foot) or by a transfer into another pipe; an exit that keeps the board (a rail,
+  an open ramp) lands on a clear floor that ends in a gate or a pipe, never a step (XV.14).
+- [ ] No step on an on-foot route is taller than 1.6 m unless it is meant to be caught out of a jump:
+  nothing lower than the skater's reach (2.55 m) is grabbed from the ground (XV.3).
 - [ ] Every side-scroll stretch reads left to right (owner's rule, November 2026): its travel zone heads
   east (`dir: 'E'`), any fixed side view over it looks from the south, and bonus rounds run toward +X. A
   route that doubles back plays the westward leg into the screen, never side-on (Powderkeg Peak's upper

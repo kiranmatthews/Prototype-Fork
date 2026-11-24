@@ -10,16 +10,18 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * dropped in on the board automatically (`sideOn` vertramps, see
  * `CustomComponent.sideOn`). Inside, the board rides the one line the camera
  * can see: holding a direction carves the walls for speed, holding X pumps
- * them harder, and reaching a lip pops a vertical hang. Holding the stick OUT
- * over a lip during that hang carries the air across it — onto a deck, or
- * over a shared ridge into the next ramp (a spine transfer).
+ * them harder, and reaching a lip pops a vertical hang. JUMP in that hang
+ * with the stick held OUT over the lip — the spine transfer's input — pops
+ * the air out across it: over a shared ridge into the next pipe, or onto a
+ * deck, where the rider lands back on foot.
  *
  * Five pipes, one idea each:
- *   P0  ROLL-IN     equal walls, decks both sides: drop in, hold right, air out.
+ *   P0  ROLL-IN     equal walls, decks both sides: drop in, hold right, pop out.
  *   P1  PUMP        a low west wall and a 7 m east wall that is a spine. One
  *                   swing falls short; the west-lip hang on the way back buys
  *                   the height (or hold X and pump it in one), then the air
- *                   transfers over the ridge and rolls out of the landing ramp.
+ *                   transfers over the ridge into a second pipe, whose far
+ *                   deck is the next landing.
  *   P2  ENEMY       a crab patrols the flat: spin through it on the way across.
  *   P3  SWITCH      a bare east wall with nothing behind it. The `!` floats
  *                   over the WEST lip; head it out of a hang and the exit slab
@@ -31,17 +33,17 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * (tools/test-side-pipe-lab.mjs replays the route; docs/SIDE_ON_PIPES.md has
  * the table): a held direction alone climbs 4.45 m of P1's 7 m east wall on
  * the first swing and clears it on the second; the west hang of that swing
- * back heads a crate 6 m over a 3.5 m lip; the spine's landing ramp rolls
- * out at 23–30 m/s.
+ * back heads a crate 6 m over a 3.5 m lip; a tap jump on foot rises 2.1 m.
  */
 
 const DEPTH = 6; // every floor and pipe is this deep; the play plane is z = 0
 const BASE = -12; // floors are solid blocks down to here, below any camera frame
 const PIT_DROP = 7; // a pit's pool sits this far under the floors it divides
-// A step a charged ollie (1.7 m) cannot make and the hands can (2.4 m reach).
-const CATCH = 2.1;
-const LEDGE_CP = 2.8; // where a catch ledge's checkpoint stands, from its edge
-const LEDGE_BOXES = 4.4; // ...and where its stack of boxes starts
+// A step up on an on-foot stretch. It is JUMPED: a tap rises 2.1 m. (Walking
+// into a wall lower than the skater's own reach is a bump, never a grab.)
+const STEP = 1.6;
+const STEP_CP = 2.8; // where the checkpoint on top of a step stands, from its edge
+const STEP_BOXES = 4.4; // ...and where its stack of boxes starts
 const G = 0.96; // authored crate grid (crates are enlarged x1.2 at build time)
 
 const STONE = '#6f7f8a';
@@ -147,26 +149,20 @@ fruitOnWall(P0, -1, 3);
 fruitOnWall(P0, 1, 3);
 for (const x of [-1.5, 0, 1.5]) fruit(P0.cross + x, P0.floorY + 1.0);
 fruitOverLip(P0, -1, [1.4, 2.6, 3.8]);
-// A pipe hands its rider on to the next floor still on the board, so the
-// floor it lands on carries nothing a rolling board can trip over: a box or a
-// checkpoint under 12.5 m/s is a tumble. Those wait on the far side of a
-// CATCH LEDGE — a step just too tall to ollie, which stops the board and has
-// its rider climb up by the hands, on foot for the platforming that follows.
+// Popping out of a pipe lands its rider on the deck on foot, so everything
+// between pipes is ordinary platforming: steps to jump, gaps, boxes to spin.
 floor(P0.eastLip + P0.eastDeck, 34, START_TOP, 'Roll-in: landing floor');
 overhead(27.5, START_TOP, ['wood', 'mystery', 'wood'], 'Roll-in: overhead row past the landing');
 
 // ============================================================== 1 · PUMP ==
-// A catch ledge, one plain gap on foot, then the pipe whose east wall is
-// nearly three times the height of the one you drop in from — and is the
-// back of the next ramp. (Every pipe here is about 12 m lip to lip: the widest
-// side view shows 13 m ahead, so the far wall is in frame from the near lip.)
-const PUMP_TOP = r(START_TOP + CATCH);
-// (A mounted rider's crate-contact box is 3 m tall and reaches a metre ahead:
-// from the floor BELOW it clips anything within 2 m of a 2.1 m ledge's edge.
-// So a catch ledge keeps its first 2.4 m bare, then checkpoint, then boxes.)
-floor(34, 44, PUMP_TOP, 'Pump: catch ledge');
-add({ t: 'checkpoint', p: [34 + LEDGE_CP, PUMP_TOP, 0], grp: GR.floor, nm: 'Checkpoint 1: on foot before the pump pipe' });
-pyramid(34 + LEDGE_BOXES, PUMP_TOP, 'mystery', 'Pump: on-foot stack after the checkpoint');
+// A step, one plain gap on foot, then the pipe whose east wall is nearly
+// three times the height of the one you drop in from — and is the back of
+// the next pipe. (Every pipe here is about 12 m lip to lip: the widest side
+// view shows 13 m ahead, so the far wall is in frame from the near lip.)
+const PUMP_TOP = r(START_TOP + STEP);
+floor(34, 44, PUMP_TOP, 'Pump: step up');
+add({ t: 'checkpoint', p: [34 + STEP_CP, PUMP_TOP, 0], grp: GR.floor, nm: 'Checkpoint 1: on foot before the pump pipe' });
+pyramid(34 + STEP_BOXES, PUMP_TOP, 'mystery', 'Pump: on-foot stack after the checkpoint');
 pit(44, 47.5, PUMP_TOP, 'Gap before the pump pipe');
 floor(47.5, 53, PUMP_TOP, 'Pump: approach floor');
 for (const x of [48.5, 50, 51.5]) fruit(x, PUMP_TOP + 1.15);
@@ -175,31 +171,27 @@ fruitOnWall(P1, 1, 5);
 fruitOverLip(P1, -1, [1.5, 3, 4.5]);
 // The reward for swinging back: a west hang's worth above the low lip.
 crate(P1.westLip + 0.08, P1.westLipY + 8.2, 'life', 'Pump: life over the west lip, a full hang up');
-// The landing ramp shares P1's east ridge and has no east wall at all: the
-// transfer rolls straight out onto the run-out.
-export const L1 = pipe('P1 spine landing ramp', P1.eastLip, P1.eastLipY - 5, 2, [5, 0]);
-const RUN_TOP = L1.floorY;
-export const RUNOUT = { x0: L1.eastLip, x1: L1.eastLip + 45, top: RUN_TOP };
-floor(RUNOUT.x0, RUNOUT.x1, RUN_TOP, 'Pump: spine run-out');
-// Two stacks to plough through at the speed the spine hands you (>= 12.5 m/s
-// smashes; the exit leaves at 23+), spaced so one contact's loss recovers.
-export const SMASH_STACKS = [RUNOUT.x0 + 9, RUNOUT.x0 + 19];
-for (const x of SMASH_STACKS) {
-  crate(x, RUN_TOP, 'wood', 'Run-out: smash stack');
-  crate(x, RUN_TOP + G, 'wood', 'Run-out: smash stack');
-}
-for (let x = RUNOUT.x0 + 4; x < RUNOUT.x0 + 34; x += 3) fruit(x, RUN_TOP + 1.0);
+// The second pipe shares P1's east ridge: its 5 m west wall IS the back of
+// P1's east wall, so the transfer drops straight into it. Its own east wall is
+// lower and decked — the next landing — and the swing off the spine carries
+// far over that lip.
+export const L1 = pipe('P1 spine catch pipe', P1.eastLip, P1.eastLipY - 5, 2, [5, 3.5], [0, 6]);
+fruitOnWall(L1, 1, 3);
+export const SPINE_LANDING = { x0: L1.eastLip + L1.eastDeck, x1: L1.eastLip + L1.eastDeck + 8, top: L1.eastLipY };
+floor(SPINE_LANDING.x0, SPINE_LANDING.x1, SPINE_LANDING.top, 'Pump: landing floor past the spine');
+overhead(SPINE_LANDING.x0 + 2.5, SPINE_LANDING.top, ['wood', 'wood', 'mystery'], 'Pump: overhead row past the spine');
 
 // ============================================================= 2 · ENEMY ==
-// The climb is on foot: the catch ledge, a gap, the crab met alone on a wide
-// floor, a step — then the same crab on a pipe's flat, where the answer is the
+// The climb is on foot: a step, a gap, the crab met alone on a wide floor,
+// another step — then the same crab on a pipe's flat, where the answer is the
 // same spin at twice the speed. A mask waits on the approach first.
-const CLIMB_TOP = r(RUN_TOP + CATCH);
-floor(RUNOUT.x1, RUNOUT.x1 + 9, CLIMB_TOP, 'Climb: catch ledge');
-add({ t: 'checkpoint', p: [RUNOUT.x1 + LEDGE_CP, CLIMB_TOP, 0], grp: GR.floor, nm: 'Checkpoint 2: on foot after the run-out' });
-pyramid(RUNOUT.x1 + LEDGE_BOXES, CLIMB_TOP, 'wood', 'Climb: on-foot stack after the checkpoint');
-pit(RUNOUT.x1 + 9, RUNOUT.x1 + 12, CLIMB_TOP, 'Climb: gap');
-const CRAB_X0 = RUNOUT.x1 + 12;
+const CLIMB_TOP = r(SPINE_LANDING.top + STEP);
+const CLIMB_X0 = SPINE_LANDING.x1;
+floor(CLIMB_X0, CLIMB_X0 + 9, CLIMB_TOP, 'Climb: step up');
+add({ t: 'checkpoint', p: [CLIMB_X0 + STEP_CP, CLIMB_TOP, 0], grp: GR.floor, nm: 'Checkpoint 2: on foot after the spine' });
+pyramid(CLIMB_X0 + STEP_BOXES, CLIMB_TOP, 'wood', 'Climb: on-foot stack after the checkpoint');
+pit(CLIMB_X0 + 9, CLIMB_X0 + 12, CLIMB_TOP, 'Climb: gap');
+const CRAB_X0 = CLIMB_X0 + 12;
 floor(CRAB_X0, CRAB_X0 + 13, CLIMB_TOP, 'Climb: crab floor');
 // The crab keeps to the far two thirds: the stack by the landing is cleared in peace first.
 add({ t: 'enemy', foe: 'grunt', p: [CRAB_X0 + 8.5, CLIMB_TOP, 0], range: 2.5, speed: 2.4, grp: GR.enemies,
@@ -207,7 +199,7 @@ add({ t: 'enemy', foe: 'grunt', p: [CRAB_X0 + 8.5, CLIMB_TOP, 0], range: 2.5, sp
 crate(CRAB_X0 + 1.4, CLIMB_TOP, 'wood', 'Climb: crab floor stack');
 crate(CRAB_X0 + 1.4, CLIMB_TOP + G, 'wood', 'Climb: crab floor stack');
 crate(CRAB_X0 + 1.4 + G, CLIMB_TOP, 'mystery', 'Climb: crab floor stack');
-const ENEMY_TOP = r(CLIMB_TOP + 1.6);
+const ENEMY_TOP = r(CLIMB_TOP + STEP);
 const ENEMY_X0 = CRAB_X0 + 13;
 floor(ENEMY_X0, ENEMY_X0 + 9, ENEMY_TOP, 'Enemy pipe: approach floor (one step up)');
 add({ t: 'checkpoint', p: [ENEMY_X0 + 2.5, ENEMY_TOP, 0], grp: GR.floor, nm: 'Checkpoint 3: before the enemy pipe' });
@@ -222,13 +214,13 @@ floor(P2_OUT, P2_OUT + 10, ENEMY_TOP, 'Enemy pipe: landing floor');
 overhead(P2_OUT + 3.5, ENEMY_TOP, ['wood', 'wood', 'mystery'], 'Enemy pipe: overhead row past the landing');
 
 // ============================================================ 3 · SWITCH ==
-// A catch ledge and three short jumps on foot with a rest, then the pipe with
-// no way out: its east wall backs onto a hole. The `!` hangs over the west
-// lip — the lip a held-right rider only visits on the swing BACK — and
-// heading it out of a hang turns the slab solid.
-const HOPS_TOP = r(ENEMY_TOP + CATCH);
+// A step and three short jumps on foot with a rest, then the pipe with no
+// way out: its east wall backs onto a hole. The `!` hangs over the west lip
+// — the lip a held-right rider only visits on the swing BACK — and heading
+// it out of a hang turns the slab solid.
+const HOPS_TOP = r(ENEMY_TOP + STEP);
 const HOPS_X0 = P2_OUT + 10;
-floor(HOPS_X0, HOPS_X0 + 6, HOPS_TOP, 'Switch approach: catch ledge');
+floor(HOPS_X0, HOPS_X0 + 6, HOPS_TOP, 'Switch approach: step up');
 pit(HOPS_X0 + 6, HOPS_X0 + 9.5, HOPS_TOP, 'Switch approach: first gap');
 floor(HOPS_X0 + 9.5, HOPS_X0 + 13.5, HOPS_TOP, 'Switch approach: stepping floor');
 pit(HOPS_X0 + 13.5, HOPS_X0 + 17, HOPS_TOP, 'Switch approach: second gap');
@@ -259,11 +251,11 @@ overhead(SWITCH_SLAB.x1 + 4, SWITCH_TOP, ['mystery', 'wood', 'wood'], 'Switch pi
 // The last pipe has the same bare east wall and no switch: the rail that
 // starts over its lip is the road out, and it runs downhill to the gate so
 // the grind gathers the speed a vertical hang could not bring to it.
-const RAIL_TOP = r(SWITCH_TOP + CATCH);
+const RAIL_TOP = r(SWITCH_TOP + STEP);
 const RAIL_X0 = SWITCH_SLAB.x1 + 12;
-floor(RAIL_X0, RAIL_X0 + 8, RAIL_TOP, 'Rail pipe: catch ledge');
-add({ t: 'checkpoint', p: [RAIL_X0 + LEDGE_CP, RAIL_TOP, 0], grp: GR.floor, nm: 'Checkpoint 5: before the rail pipe' });
-pyramid(RAIL_X0 + LEDGE_BOXES, RAIL_TOP, 'wood', 'Rail pipe: on-foot stack after the checkpoint');
+floor(RAIL_X0, RAIL_X0 + 8, RAIL_TOP, 'Rail pipe: step up');
+add({ t: 'checkpoint', p: [RAIL_X0 + STEP_CP, RAIL_TOP, 0], grp: GR.floor, nm: 'Checkpoint 5: before the rail pipe' });
+pyramid(RAIL_X0 + STEP_BOXES, RAIL_TOP, 'wood', 'Rail pipe: on-foot stack after the checkpoint');
 export const P4 = pipe('P4 rail pipe', RAIL_X0 + 12, RAIL_TOP - 3.5, 2.5, [3.5, 3.5], [4, 0]);
 fruitOverLip(P4, -1, [1.4, 2.6, 3.8]);
 // ...and up the EAST hang line to the rail: the way to it is a hang off the

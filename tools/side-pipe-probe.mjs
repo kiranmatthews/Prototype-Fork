@@ -2,7 +2,8 @@
 // travel zone (docs/SIDE_ON_PIPES.md). Walks in from the west deck and prints
 // the swing-by-swing record. Read-only: a throwaway level, no tuning changed.
 //   RL/RR wall radii, F flat half-width, DL/DR deck depths, RUN approach length,
-//   MODES input sets (right, left, pump, charge, letgo, grind, grindhold, spin, ...).
+//   MODES input sets (right, left, pop, pump, charge, letgo, grind, grindhold, spin, ...).
+//   `pop` presses Jump once in each east hang: with `right` that is the pop-out.
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 const num = (k, d) => Number(process.env[k] ?? d);
@@ -16,12 +17,13 @@ const components = [
   { t: 'camnode', p: [-50, 0, 0] }, { t: 'camnode', p: [50, 0, 0] },
   { t: 'gate', p: [lipR + DR + 30, 0, 0], yaw: 90 },
 ];
-// optional receiving pipe beyond the east ridge: SPINE="floorY,flatHalf,wallRadius" (open on its east side)
+// optional receiving pipe beyond the east ridge: SPINE="floorY,flatHalf,wallRadius[,eastRadius,eastDeck]"
+// (open on its east side unless an east wall is given)
 if (process.env.SPINE) {
-  const [by, bf, br] = process.env.SPINE.split(',').map(Number);
+  const [by, bf, br, er = 0, ed = 0] = process.env.SPINE.split(',').map(Number);
   const bx = lipR + bf + br;
-  components.push({ t: 'vertramp', vkind: 'half', sideOn: true, p: [bx, by, 0], len: LEN, rise: br, w: bf, yaw: 0, wallRise: [br, 0] });
-  components.push({ t: 'platform', p: [bx + bf + 20, by - 0.5, 0], s: [40, 1, LEN] });
+  components.push({ t: 'vertramp', vkind: 'half', sideOn: true, p: [bx, by, 0], len: LEN, rise: Math.max(br, er), w: bf, yaw: 0, wallRise: [br, er], wallDeck: [0, ed] });
+  components.push({ t: 'platform', p: [bx + bf + er + ed + 20, by + er - 0.5, 0], s: [40, 1, LEN] });
 }
 // extras: RAIL="x0,x1,y" (along X) · ENEMY="foe,x,range,speed" · BANG="x,y" · CRATE="kind,x,y"
 if (process.env.RAIL) { const [x0, x1, y] = process.env.RAIL.split(',').map(Number);
@@ -42,7 +44,7 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
   for (const mode of (process.env.MODES ?? 'right,right+pump').split(',')) {
     level.reset?.(true); p.respawn(level, true);
     const events = []; let prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded, stall: false };
-    let apex = -Infinity, wallMax = -Infinity, lastSide = -1, t = 0, grindWas = false, spinWas = false, ollieWas = false;
+    let apex = -Infinity, wallMax = -Infinity, lastSide = -1, t = 0, grindWas = false, spinWas = false, ollieWas = false, hangN = 0, xWas = false;
     const foes = level.enemies ?? []; let foesAlive = foes.filter(e => e.alive).length; let bangs = level.crates.filter(c => c.bang && c.bangUsed).length; let deaths = p.totalDeaths; let masks = p.masks;
     for (let i = 0; i < num('N', 1500); i++) {
       t = i * CONST.fixedStep;
@@ -60,6 +62,9 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       if (mode.includes('railneutral') && p.state === 'grind') input.moveX = 0;
       if (mode.includes('railup') && p.state === 'grind') { input.moveX = 0; input.moveY = 1; }
       if (mode.includes('spin')) { const near = p.grounded && Math.abs(p.pos.x - num('SX', 0)) < num('SR', 4); input.spinHeld = near; input.spinPressed = near && !spinWas; spinWas = near; }
+      // 'pop': Jump once in each hang on the east side of whichever pipe the rider is in
+      if (mode.includes('pop')) { const hp = p.hangPipe; hangN = p.vertAir && hp && p.pos.x > hp.cross ? hangN + 1 : 0; if (hangN >= 3 && hangN < 7) input.jumpHeld = true; }
+      if (!mode.includes('ollie')) { input.jumpPressed = input.jumpHeld && !xWas; input.jumpReleased = !input.jumpHeld && xWas; xWas = input.jumpHeld; }
       if (mode.includes('ollie')) { const zone = p.grounded && p.freeSkate && p.pos.x > num('OX', -3) - 6 && p.pos.x < num('OX', -3); input.jumpHeld = zone; input.jumpPressed = zone && !ollieWas; input.jumpReleased = !zone && ollieWas; ollieWas = zone; }
       step(input);
       if (process.env.TRACE && i >= num('T0', 0) && i <= num('T1', 1e9)) console.log(i, p.state, 'x', fmt(p.pos.x), 'y', fmt(p.pos.y), 'z', fmt(p.pos.z), 'spd', fmt(p.speed), 'vV', fmt(p.vVel), 'free', +p.freeSkate, 'gnd', +p.grounded, 'vert', +p.vertAir, 'axF', fmt(p.axisF.x), fmt(p.axisF.z), 'ny', fmt(p.rideNormal.y), p.surfaceName, 'spin', fmt(p.grabSpinAngle ?? 0));
