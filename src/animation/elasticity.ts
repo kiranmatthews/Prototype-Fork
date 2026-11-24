@@ -38,6 +38,9 @@ const PROFILES:Record<string,Amplitudes> = {
   'crouch-enter':[.035,0,.012,.016,.016], 'crouch-exit':[.035,0,.012,.016,.016],
   slide:[.050,.025,.035,.020,.035], skate:[.020,.012,.020,.010,.015],
   teeter:[.060,.035,.080,0,0], // chest/arms rebound; planted legs keep their lengths
+  // Wall plant: the whole body loads into the face and springs off it. On the
+  // board the deck owns both foot contacts, so the legs keep their lengths.
+  'wall-plant':[.16,.07,.12,.20,.26], 'wall-plant-board':[.12,.07,.12,0,0],
   grind:[.024,.020,.040,.015,.025], grab:[.030,0,0,.018,.020],
   'kite-grab':[.045,.035,.055,.018,.020],
   hang:[0,0,0,.035,.050], climb:[0,0,0,.030,.050],

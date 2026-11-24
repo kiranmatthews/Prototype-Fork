@@ -193,6 +193,7 @@ import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import { WALLPLANT_LAB_LEVEL } from "./levels/wallplant-lab";
 import { EMBER_COURT_LEVEL } from './levels/ember-court';
 import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
@@ -1245,6 +1246,8 @@ export interface CustomLevelData {
   ledgeAssist?: number;
   /** False disables automatic wall/mesh ledge catches in this course. */
   ledgeGrabs?: boolean;
+  /** False disables the timed wall plant (wall kick / wallplant) in this course. */
+  wallPlants?: boolean;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
   relicTime?: number;
   /** Ordered, independently authored gold/silver/bronze targets in seconds. */
@@ -2677,6 +2680,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: BACKPORT_LAB_LEVEL.name,
     data: BACKPORT_LAB_LEVEL,
   }, // reusable Unity-backport mechanics and procedural-path validation course
+  { id: "wallplant-lab", name: WALLPLANT_LAB_LEVEL.name, data: WALLPLANT_LAB_LEVEL }, // wall kick / wallplant practice stations
 ];
 export const DEFAULT_LEVEL_ID = "treehouse-trail";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -2764,7 +2768,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'crystalTrials',
   'encounter', 'kiteTow',
-  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "wallPlants", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere", "desertHeat",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -3031,7 +3035,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
+  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "emberCourt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs", "wallPlants"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.crystalTrials !== undefined &&
@@ -4530,6 +4534,11 @@ export class Level {
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
   ledgeGrabs = true;
+  wallPlants = true; // timed wall kicks / wallplants; a course may opt out
+  // Collider-only walls: nothing is drawn there, so nothing can be kicked off.
+  private readonly unplantableWalls = new WeakSet<THREE.Box3>();
+  /** May a timed wall plant push off this collider? */
+  wallPlantSurface(box: THREE.Box3): boolean { return !this.unplantableWalls.has(box); }
   cameraLookAhead: number | undefined; // presentation only; lane/input direction stays local
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
@@ -7654,6 +7663,7 @@ export class Level {
       ...(this.capturedShoreFoam ? {shoreFoam:structuredClone(this.capturedShoreFoam)} : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       ledgeGrabs: this.ledgeGrabs ? undefined : false,
+      wallPlants: this.wallPlants ? undefined : false,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
       ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
       // only when it isn't the default, so the saved JSON stays quiet
@@ -7827,6 +7837,7 @@ export class Level {
     this.verticalLoop = data.verticalLoop;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.ledgeGrabs = data.ledgeGrabs !== false;
+    this.wallPlants = data.wallPlants !== false;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
     this.theme = { ...CUSTOM_LEVEL_THEME };
@@ -7882,6 +7893,7 @@ export class Level {
       if (surface.groundSpeedLimit !== undefined) for (let g=groundBefore;g<this.groundMeshes.length;g++)
         this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
+      else for(let w=wallBefore;w<this.walls.length;w++)this.unplantableWalls.add(this.walls[w]);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
       if (surface.tex === 'waterslide-fiberglass' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts && !surface.dkind) {
         for (let g=groundBefore;g<this.groundMeshes.length;g++) {

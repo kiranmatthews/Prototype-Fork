@@ -4237,7 +4237,8 @@ function updateBaseCamera(dt: number): void {
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
   const springFollow = player.launchCameraPresentation !== null || launchCamera.diagnostics.weight > 0;
-  const airLift = swimmingView||waterDeath!==null||springFollow ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
+  // A wall-kick chain climbs far past what the ground anchor frames; the rig rides up with it.
+  const airLift = swimmingView||waterDeath!==null||springFollow ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF, player.wallPlantCameraLift);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
   const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
