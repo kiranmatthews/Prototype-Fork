@@ -88,6 +88,10 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
     assert.ok(p.wallPlantStickT > 0 && Math.abs(p.pos.y - plantY) < 1e-9 && Math.abs(p.pos.x + 1.47) < .02, 'the body moved while planted');
     fly({ jumpHeld: true }, () => p.wallKickAir, 6, 'plant hold');
     assert.equal(p.lastJumpType, 'Wall Kick');
+    // The camera's ride up is over half done by the launch, two steps after
+    // the plant. Measured in the browser, a rise slow enough to fail this lets
+    // the pop carry the rider's head out of the top of the frame.
+    assert.ok(p.wallPlantCameraLift > .55 && p.wallPlantCameraLift < 1, `the camera lift lagged the kick: ${p.wallPlantCameraLift}`);
     assert.ok(Math.abs(p.walkVelocity.x - TUNING.wallPlantOut) < 1e-6 && Math.abs(p.walkVelocity.z) < 1e-6, 'head-on kick did not leave straight out');
     assert.ok(p.vVel > TUNING.wallPlantUp - 1, 'kick lost its pop');
     assert.deepEqual(p.comboLabels, ['Wall Kick']);
@@ -262,6 +266,12 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
     assert.ok(topDouble, 'the lip came into reach and X was still not the double jump');
     assert.ok(hung, `the climb did not finish on the shaft's ledge: ${JSON.stringify({ y: p.pos.y, state: p.state, kicks })}`);
     assert.ok(Math.abs(p.ledgeLip - 16) < .05, `hung on something that was not the top: ${p.ledgeLip}`);
+    // The camera's ride stays with a rider hanging 16 m up: handing back to
+    // the ground-anchored rig here sinks the shot and then lifts it again.
+    for (let i = 0; i < 45; i++) tick({});
+    assert.equal(p.state, 'hang', 'the fixture let go of the ledge');
+    assert.equal(p.wallPlantChain, 0, 'the ledge did not re-arm the walls');
+    assert.ok(p.wallPlantCameraLift > .99, `the camera ride was dropped during the hang: ${p.wallPlantCameraLift}`);
     report.push(`${kicks} kicks, a double jump and the ledge top out a 16 m shaft`);
 
     // 13. A kick lands on foot at run pace: carried air speed never mounts the board.
@@ -279,6 +289,10 @@ await withBlockworksRuntime(async ({ p, l, tick, worldDirectionInput, server, Le
     }
     assert.equal(p.wallKickAir, false);
     assert.equal(p.wallPlantChain, 0, 'landing did not re-arm the walls');
+    // The camera's ride is held for a beat on the landing, then eases away.
+    assert.ok(p.wallPlantCameraLift > .2, `the camera ride was cut at the landing: ${p.wallPlantCameraLift}`);
+    for (let i = 0; i < 60; i++) tick({});
+    assert.ok(p.wallPlantCameraLift < .02, `the camera ride did not ease away after the landing: ${p.wallPlantCameraLift}`);
 
     // 14. A corner is not a ladder: alternate two faces at right angles and the height runs out.
     // (A searched best case is two kicks, one off each face, about 6.5 m up.)

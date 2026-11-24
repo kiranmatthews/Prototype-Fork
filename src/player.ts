@@ -667,6 +667,10 @@ const MAX_CONTINUOUS_GRIND_CORNER_ANGLE = (50 * Math.PI) / 180;
 // Wall plant: seconds off a face before pressing into it again is a NEW impact
 // (and a new late window) rather than the same one continuing.
 const WALL_PLANT_REIMPACT = 0.1;
+// Wall plant camera ride (presentation): how fast the rig's full follow comes
+// in at a plant, and how long it is kept after the chain ends on support.
+const WALL_PLANT_LIFT_RATE = 30;
+const WALL_PLANT_LIFT_HOLD = 0.12;
 // Gentle analogue input still owns a real Walk. World/platform carry is
 // removed before this threshold, so it can stay low without waking the gait
 // while the player is merely standing on something that moves.
@@ -1679,6 +1683,7 @@ export class Player {
   private wallPlantAge = -1; // seconds since the last launch; -1 = none this air (presentation)
   private wallPlantPose = 0; // 0..1 eased "standing on the wall" tilt (presentation)
   private wallPlantLift = 0; // 0..1 eased: the camera rides up with a kick chain (presentation)
+  private wallPlantLiftHoldT = 0; // seconds that ride is still held once the chain has ended
   /** Presentation only: how fully the camera should rise with the rider while a
    * wall-kick chain climbs. The ground-anchored rig would let a third kick leave the frame. */
   get wallPlantCameraLift(): number { return this.wallPlantLift; }
@@ -4526,6 +4531,7 @@ export class Player {
     this.rearmWallPlant();
     this.wallPlantAge = -1;
     this.wallPlantPose = 0;
+    this.wallPlantLift = this.wallPlantLiftHoldT = 0;
     this.ledgeT = 0;
     this.ledgeCoolT = 0;
     this.ledgeEaseT = 0;
@@ -4973,14 +4979,26 @@ export class Player {
     // here; an active slide step below relatches it before consuming any exact
     // final partial step and zeroing slideTimer.
     this.slideContactLatch = false;
+    // Presentation: the camera rides up with a kick chain. This reads the chain
+    // before the re-arm below clears it. The ride is kept through a ledge hang
+    // that ends the chain, and for a beat after any other support: the rig's
+    // ground anchor is far below a rider who has just climbed a shaft, and
+    // handing back at the grab sank the camera 1.5 m and lifted it 3.5 m again.
+    if (this.isBailing) this.wallPlantLiftHoldT = 0;
+    else if (this.wallPlantChain > 0) this.wallPlantLiftHoldT = WALL_PLANT_LIFT_HOLD;
+    else if (this.state !== 'hang') this.wallPlantLiftHoldT = Math.max(0, this.wallPlantLiftHoldT - dt);
     // Any real contact re-arms the wall plant. The hang and rope steps return
     // before the shared timers below, so this is the one place every state passes.
     if (this.state !== 'air' || this.grounded) {
       this.wallKickAir = false;
       this.rearmWallPlant();
     }
-    const kickClimb = this.wallPlantChain > 0 && !this.isBailing;
-    this.wallPlantLift += ((kickClimb ? 1 : 0) - this.wallPlantLift) * Math.min(1, (kickClimb ? 7 : 3.5) * dt);
+    // The ride up has to keep pace with the pop. Measured frame by frame in the
+    // browser: at a rate of 7 the rider's head left the top of the frame for
+    // nine frames of a kick back toward the lens; at this rate it peaks where
+    // an ordinary jump's does, and the rig still eases instead of snapping.
+    const kickClimb = this.wallPlantLiftHoldT > 0;
+    this.wallPlantLift += ((kickClimb ? 1 : 0) - this.wallPlantLift) * Math.min(1, (kickClimb ? WALL_PLANT_LIFT_RATE : 3.5) * dt);
     // Moving ground: ride along with the platform you're standing on (the
     // platform advanced once in level.update since our last step — apply that
     // delta before this step's movement so we stay glued). Crumble pads get

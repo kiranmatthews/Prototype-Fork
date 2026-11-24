@@ -4227,9 +4227,13 @@ function updateBaseCamera(dt: number): void {
     floorY !== null
       ? Math.max(floorY, subject.y - maxRise)
       : Math.max(camAnchorY, subject.y - maxRise));
+  // While a wall-kick chain holds the rig in full follow the anchor is not on
+  // screen (the shot rides the rider), so it tracks its goal at once. When the
+  // ride is handed back the anchor is already under the rider and nothing moves.
+  const kickFollow = (player.wallPlantCameraLift ?? 0) > 0.98;
   camAnchorY +=
     (anchorGoal - camAnchorY) *
-    (snapped || railFollow || cameraFallHold.followingDrop ? 1 : Math.min(1, 4.5 * dt));
+    (snapped || railFollow || kickFollow || cameraFallHold.followingDrop ? 1 : Math.min(1, 4.5 * dt));
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
