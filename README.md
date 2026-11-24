@@ -139,9 +139,13 @@ paths.
 `Side Pipe Lab` is a side-scrolling test course whose path runs through
 halfpipes seen across their section: walking off a deck over the coping drops
 you in on the board, Jump in the hang with the stick held out over a lip pops
-you out across it and back onto your feet, and each of its five pipes asks
-one thing (a second swing or a pump for a taller far wall and a spine
-transfer, a crab on the flat, a `!` headed out of a hang, an exit rail).
+you out across it and back onto your feet. It is 830 m long, its height is
+the other subject, and it has twelve pipes (a pump and a spine, an 8.5 m plunge, a 28 m
+valley, a `!` headed out of a hang, a three-pipe spine cascade, a rail from
+one pipe into the next and a 52 m rail down to the gate) joined by on-foot
+climbs and descents with falling stairs, a trampoline, lifts, a ferry, timed
+pads, crushers and six kinds of enemy. It is framed through a long lens, so
+it reads flat.
 Direct link: `?playtest&level=side-pipe-lab`. See
 [docs/SIDE_ON_PIPES.md](docs/SIDE_ON_PIPES.md); `npm run check:side-pipe`
 plays it with the real player.

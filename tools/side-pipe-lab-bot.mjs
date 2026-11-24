@@ -7,7 +7,8 @@
 // Every wait reads the hazard's own clock; nothing here reaches into the
 // player to move it.
 //
-// Used by tools/test-side-pipe-lab.mjs (npm run check:side-pipe).
+// Used by tools/test-side-pipe-lab.mjs (npm run check:side-pipe). `start` exposes one run as decide/observe
+// halves, so the same decisions can be delivered to the game in a browser as real key presses.
 
 /**
  * @param {object} ctx  { p, level, CONST, lab, makeInput, parts } — the player, the built level,
@@ -57,7 +58,10 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
   const crusherClear = (cr, t0, t1) => { for (let t = t0; t <= t1 + 0.04; t += 0.04) { const f = ((t + cr.phase) % cr.cycle) / cr.cycle; if (f > 0.34 && f < 0.86) return false; } return true; };
 
   /**
-   * One run of the course from the spawn (or `from`), right held throughout.
+   * One run of the course from the spawn (or `from`), right held throughout,
+   * as two halves: `decide()` is what the pad does this step and `observe()`
+   * records what the step did. `play` below steps the simulation between
+   * them; a browser can press real keys between them instead.
    * `pump` holds X on every transition; `spin` (default on) spins at enemies,
    * boxes and checkpoints; `pop` (default on) presses Jump once in each east
    * hang; `grind` (default on) asks for the rail out of the rail pipe's east
@@ -65,11 +69,12 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
    * it has parked one lip stall; `depth` adds a toward/away stick; `jumpInAt`
    * leaves the deck before that lip in a jump; `patient: false` walks into
    * every timed hazard without waiting; `balance: false` rides the rails on
-   * the travel stick alone; `heldBounce` takes the trampoline from further
+   * the travel stick alone and `balance: 'neutral'` lets go of the stick for
+   * the length of each rail; `heldBounce` takes the trampoline from further
    * back with Jump held as it lands; `stompTurtle` lands on the Mossback and
    * rises straight off its shell; `until` ends the run early.
    */
-  const play = (opts = {}) => {
+  const start = (opts = {}) => {
     const { pump = false, spin = true, pop = true, grind = true, until = () => false, seconds = 240, from = null, depth = 0,
       jumpInAt = null, patient = true, balance = true, heldBounce = false, stompTurtle = false, trace = false, traceX = null } = opts;
     level.reset(true);
@@ -89,7 +94,10 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
     const startJump = (frames = 14) => { jump = 1; jumpFrames = frames; };
     const committed = new Set(); // brinks the bot has already decided to cross
     let turtleWas = null, straightUp = false;
-    for (let i = 0; i < seconds / dt; i++) {
+    let frame = 0, shown = { standing: false, moveX: 1 };
+    /** What the pad does this step, from what the player can see now. */
+    const decide = () => {
+      const i = frame;
       log.t = i * dt;
       const x = p.pos.x, y = p.pos.y, onFoot = !p.freeSkate, at = pipeAt(x), now = level.time;
       const walking = onFoot && p.grounded && p.state === 'ride';
@@ -114,8 +122,9 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       const turtle = level.enemies.find(e => e.alive && e.kind === 'turtle' && Math.abs(e.group.position.y - y) < 1.5);
       if (turtle && walking && jump === 0) {
         const tx = turtle.group.position.x, d = tx - x;
-        // (over it: thrown once the landing will be well past wherever it has walked to by then)
-        if (!stompTurtle) { if (d < 3.0 && d > 1.5 || (d < 4.6 && (x + 0.45 + TAP_JUMP) - (tx + (tx - (turtleWas ?? tx)) / dt * 0.66) > 1.4)) startJump(3); }
+        // (over it: a tapped jump is above its shell from 0.8 m to 4.5 m after take-off, so it is thrown to
+        // put the Mossback — wherever it will have walked to — under the middle of that)
+        if (!stompTurtle) { if (Math.abs(tx + (tx - (turtleWas ?? tx)) / dt * 0.35 - (x + 0.45 + 2.65)) < 0.35) startJump(3); }
         else if (Math.abs(tx + (tx - (turtleWas ?? tx)) / dt * 0.66 - (x + 0.45 + TAP_JUMP)) < 0.2) startJump(3);
         turtleWas = tx;
       }
@@ -168,12 +177,13 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       // THE LONG RAIL: let go of the travel stick and keep the needle in the middle
       // (the stick held at the catch is the travel stick and tips nothing until it is let go)
       grindAge = p.state === 'grind' ? grindAge + 1 : 0;
-      if (balance && grindAge > 0) { const lead = p.balance + p.balanceVel * 0.12; moveX = grindAge < 4 || Math.abs(lead) < 0.05 ? 0 : -Math.sign(lead); }
+      if (balance === 'neutral' && grindAge > 0) moveX = 0;
+      else if (balance && grindAge > 0) { const lead = p.balance + p.balanceVel * 0.12; moveX = grindAge < 4 || Math.abs(lead) < 0.05 ? 0 : -Math.sign(lead); }
       // a Watcher hovers over a walker's head: a jump-spin takes it
       const watcher = spin && level.enemies.find(e => e.alive && e.kind === 'floater' && e.group.position.x - x < 2.4 && e.group.position.x - x > 1.2 &&
         Math.abs(e.group.position.y - y) < 2.5);
       if (watcher && walking && jump === 0) startJump(3);
-      const input = makeInput({ moveX, moveY: depth });
+      const input = { moveX, moveY: depth };
 
       stuck = walking && !standing && moveX !== 0 && Math.abs(x - lastX) < 0.002 ? stuck + 1 : 0;
       const liftShaft = inside(x, LIFT1.x0 - 0.6, LIFT1.x1 + 0.3) || inside(x, LIFT2.x0 - 0.6, LIFT2.x1 + 0.3);
@@ -204,9 +214,12 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       input.grindHeld = wantGrind || p.state === 'grind'; input.grindPressed = wantGrind && !grindWas; grindWas = wantGrind;
       // (right stays held on the rail too: on a side-on line the stick held at the catch is not a lean)
       lastX = x;
-      // The drawn drop-in is advanced where the game advances it: after each step.
-      p.step(dt, input, level); level.update(dt); p.stepDropInPresentation(); input.consumeEdges();
-
+      shown = { standing, moveX };
+      return input;
+    };
+    /** Record what that step did. Returns true when the run is over. */
+    const observe = () => {
+      const i = frame++, { standing, moveX } = shown;
       const here = pipeAt(p.pos.x);
       log.maxZ = Math.max(log.maxZ, Math.abs(p.pos.z));
       log.minY = Math.min(log.minY, p.pos.y); log.maxY = Math.max(log.maxY, p.pos.y);
@@ -255,9 +268,12 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       if (log.switchAt === null && level.crates.some(c => c.bang && c.bangUsed)) log.switchAt = { t: log.t, x: p.pos.x, y: p.pos.y, vert: p.vertAir || prev.vert };
       if (log.switchAt === null && here === SWITCH_PIPE) log.eastmostBeforeSwitch = Math.max(log.eastmostBeforeSwitch, p.pos.x);
       if (p.state === 'grind' && prev.state !== 'grind') log.grinds.push({ t: log.t, x: p.pos.x, y: p.pos.y, lean: 0 });
-      if (p.state === 'grind') log.grinds.at(-1).lean = Math.max(log.grinds.at(-1).lean, Math.abs(p.balance));
+      if (p.state === 'grind') Object.assign(log.grinds.at(-1), { lean: Math.max(log.grinds.at(-1).lean, Math.abs(p.balance)), needle: p.balance });
       if (prev.state === 'grind' && p.state !== 'grind' && log.grinds.length)
-        Object.assign(log.grinds.at(-1), { endX: p.pos.x, speed: Math.abs(p.speed), bailed: p.isBailing, seconds: log.t - log.grinds.at(-1).t });
+        Object.assign(log.grinds.at(-1), { endX: p.pos.x, speed: Math.abs(p.speed), bailed: p.isBailing, seconds: log.t - log.grinds.at(-1).t, exitSpin: 0, flying: true });
+      // the air off the rail's end: how far the board is turned in it (radians)
+      const off = log.grinds.at(-1);
+      if (off?.flying) { if (p.state === 'air') off.exitSpin = Math.max(off.exitSpin, Math.abs(p.grabSpinAngle)); else off.flying = false; }
       if (p.state === 'hang' && prev.state !== 'hang') { log.grabs++; log.trouble.push(`ledge grab at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)} t ${log.t.toFixed(1)}`); }
       if (p.isBailing && !prev.bail) { log.bails++; log.trouble.push(`bailed at x ${p.pos.x.toFixed(1)} y ${p.pos.y.toFixed(1)} t ${log.t.toFixed(1)}`); }
       if (p.masks < prev.masks) log.masksSpent++;
@@ -268,10 +284,22 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
         console.log(`## t${log.t.toFixed(2)} x${p.pos.x.toFixed(2)} y${p.pos.y.toFixed(2)} v${p.speed.toFixed(1)} vV${p.vVel.toFixed(1)} ${p.state}/${p.freeSkate ? 'board' : 'foot'}/${p.grounded ? 'gnd' : 'air'}${p.vertAir ? '/vert' : ''}${standing ? '/WAIT' : ''} ${p.surfaceName}${p.state === 'grind' ? ` bal ${p.balance.toFixed(2)} stick ${moveX}` : ''} lt${level.time.toFixed(2)}`);
       prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: stalled,
         x: p.pos.x, surface: p.surfaceName, grounded: p.grounded, crates, vV: p.vVel };
-      if (p.state === 'finished') { log.finished = true; break; }
-      if (until(log, p)) break;
-    }
-    return log;
+      if (p.state === 'finished') { log.finished = true; return true; }
+      return !!until(log, p);
+    };
+    return { log, decide, observe, steps: Math.round(seconds / dt) };
   };
-  return { play, PIPES, DECKED, RIDGES, pipeAt, steps, floors, gaps, edges };
+  /** A whole run, headless: decide, step the real Player and Level, observe. Returns the log. */
+  const play = (opts = {}) => {
+    const run = start(opts);
+    for (let i = 0; i < run.steps; i++) {
+      const pad = run.decide();
+      const input = Object.assign(makeInput({ moveX: pad.moveX, moveY: pad.moveY }), pad);
+      // The drawn drop-in is advanced where the game advances it: after each step.
+      p.step(dt, input, level); level.update(dt); p.stepDropInPresentation(); input.consumeEdges();
+      if (run.observe()) break;
+    }
+    return run.log;
+  };
+  return { play, start, PIPES, DECKED, RIDGES, pipeAt, steps, floors, gaps, edges };
 }

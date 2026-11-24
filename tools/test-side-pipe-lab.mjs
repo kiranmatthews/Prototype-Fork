@@ -45,9 +45,10 @@
 //     grind rides it into the next pipe; the grind button held too early
 //     parks a lip stall instead, which settles back into the pipe;
 //   · P10 LONG RAIL: on the travel stick alone the needle runs away and the
-//     grind is lost; let go and balanced, it is ridden to the finish floor —
-//     and after a balanced grind the stick toward travel never spins the board
-//     in the air off the rail's end;
+//     grind is lost; let go and balanced, it is ridden to the finish floor;
+//   · on a rail the stick held at the catch is not a lean (held or let go, the
+//     needle ends in the same place), and in the air off a rail's end the
+//     stick toward travel never spins the board;
 //   · a step lower than the skater's reach is BUMPED, on foot or on the
 //     board — never grabbed — and jumped;
 //   · a board thrown away in a hang falls, lands in the pipe and comes to rest;
@@ -149,6 +150,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
 
   p.competitionMode = false;
   p.endlessDeaths = true;
+  const measured = {};
   const bot = makeCourseBot({ p, level, CONST, lab, makeInput, parts });
   const { play, steps } = bot;
   // The drawn drop-in is advanced where the game advances it: after each step.
@@ -534,6 +536,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(cratesAt(BIG_AIR.x, BIG_AIR.y).every(c => !c.alive) && air.hangs.filter(h => h.pipe === DEEP.name).length === 1,
       'P2: that first hang heads the big-air box');
     assert.equal(air.bails + air.deaths, 0, 'P2: and the box does not knock the rider off the hang line');
+    measured.plungeApex = f1(apex - DEEP.eastLipY);
   }
 
   // ---- 14 · the trampoline's two bounces, and the Mossback's ---------------------
@@ -542,6 +545,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       until: (log, q) => log.bounces.length > 0 && q.grounded });
     assert.ok(high.bounces.length === 1 && Math.abs(high.bounces[0].vV - TRAMPOLINE.speed * TRAMPOLINE.held) < 0.8,
       `trampoline: Jump held at the landing launches at ${f1(high.bounces[0]?.vV ?? 0)} m/s (${TRAMPOLINE.held} times the plain bounce)`);
+    measured.heldBounce = f1(high.bounces[0].vV);
     assert.ok(Math.abs(p.pos.y - PERCH.top) < 0.05 && p.pos.x > PERCH.x0 && p.pos.x < PERCH.x1 && high.grabs === 0,
       `trampoline: that bounce lands on the perch, ${f1(PERCH.top - LEDGE_A.top)} m over the ledge (x ${f1(p.pos.x)}, y ${p.pos.y.toFixed(2)})`);
     const rowAt = BASIN.top + 5.7;
@@ -570,26 +574,44 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   // short rail is over before the needle has gone anywhere; the long one is
   // not, and the grind is lost over the drop.
   {
-    const held = play({ balance: false, from: [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15], seconds: 40,
-      until: log => log.deaths > 0 || log.bails > 0 || log.finished });
+    const start = [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15];
+    const held = play({ balance: false, from: start, seconds: 40, until: log => log.deaths > 0 || log.bails > 0 || log.finished });
     const [first, last] = held.grinds;
     assert.ok(first && !first.bailed && first.endX > RAIL.x1 - 0.5 && first.lean < 0.7,
       `P8 on the travel stick: the short rail is ridden whole, the needle at ${first?.lean.toFixed(2)} of 1`);
     assert.ok(held.exits.get(RAIL_CATCH.name)?.onFoot, 'P9: and the pipe it drops into is popped out of on foot');
+    measured.longRailLost = last?.seconds?.toFixed(2);
     assert.ok(last && last.bailed && last.endX < LONG_RAIL.x1 - 5 && last.seconds > 0.9,
       `P10 on the travel stick: the needle runs away and the grind is lost ${last?.seconds?.toFixed(2)} s in, at x ${f1(last?.endX ?? 0)} of ${LONG_RAIL.x1}`);
+    // The stick held at the catch is the TRAVEL stick: it tips nothing. With the
+    // stick let go for the whole rail instead, the needle ends exactly where it did.
+    const loose = play({ balance: 'neutral', from: start, seconds: 20, until: log => log.exits.get(RAIL_CATCH.name)?.onFoot === true });
+    const free = loose.grinds[0];
+    assert.ok(free && Math.abs(first.needle) > 0.2 && Math.abs(free.needle - first.needle) < 0.02,
+      `a rail caught with right held: the needle ends at ${first.needle.toFixed(3)} with the stick held and ${free?.needle.toFixed(3)} with it let go — the held stick is not a lean`);
+    // ...and pressed again in the air off the rail's end, right is still travel:
+    // it carries the rider on and does not spin the board into the landing.
+    assert.ok(free.exitSpin < 0.05 && loose.bails === 0 && loose.exits.get(RAIL_CATCH.name)?.onFoot,
+      `after a rail ridden with the stick let go, right pressed in the air off its end turns the board ${(free.exitSpin * 180 / Math.PI).toFixed(0)}° (${loose.trouble.join('; ')})`);
   }
-  // ...and balanced with left and right, the stick pressed on toward travel in
-  // the air off the rail's end is the travel stick: the board lands straight.
+  // The same on the intended line, where the rail is balanced with left and right.
   {
     const landing = play({ from: [RAIL_PIPE.westLip - 3, RAIL_PIPE.westLipY + 0.15], seconds: 20, until: log => log.exits.has(RAIL_CATCH.name) });
-    assert.ok(landing.grinds[0] && !landing.grinds[0].bailed && landing.bails === 0,
+    assert.ok(landing.grinds[0] && !landing.grinds[0].bailed && landing.bails === 0 && landing.grinds[0].exitSpin < 0.05,
       `after a balanced grind, right held in the air off the rail lands the board straight in the next pipe (${landing.trouble.join('; ')})`);
     assert.ok(landing.topSpeed.get(RAIL_CATCH.name) > 12, `...still rolling at ${f1(landing.topSpeed.get(RAIL_CATCH.name) ?? 0)} m/s on its flat`);
   }
 
   level.dispose();
   const waited = [...run.waits.values()].reduce((a, b) => a + b, 0);
+  // The numbers docs/SIDE_ON_PIPES.md quotes, printed by every run.
+  const carry = q => f1(run.exits.get(q.name).x - q.eastLip);
+  console.log(`MEASURED flat speeds ${[DEEP, VALLEY, C1, C2, C3, RAIL_CATCH].map(q => `${q.name.slice(0, 3).trim()} ${f1(run.topSpeed.get(q.name))}`).join(', ')} m/s; ` +
+    `pop-outs carry ${[P0, L1, DEEP, VALLEY, C3, RAIL_CATCH].map(q => `${q.name.slice(0, 3).trim()} ${carry(q)}`).join(', ')} m past the lip; ` +
+    `plunge air ${measured.plungeApex} m over the east lip unpopped; second ridge crossed ${f1(run.peak.get(C2.name) - C2.eastLipY)} m up, ` +
+    `${f1(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t)} s after the first; short rail ${short.seconds.toFixed(2)} s to ${f1(short.speed)} m/s; ` +
+    `long rail ${long.seconds.toFixed(2)} s to ${f1(long.speed)} m/s, lost after ${measured.longRailLost} s on the travel stick; ` +
+    `held bounce ${measured.heldBounce} m/s.`);
   console.log(`PASS Side Pipe Lab: ${(FINISH.x0 + 38 + 15).toFixed(0)} m finished in ${run.t.toFixed(1)} s (${waited.toFixed(1)} s of it waiting) on held right; ` +
     `y ${f1(run.minY)} to ${f1(run.maxY)}; P1 first swing climbed ${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; ` +
     `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs on foot, ${run.transfers.size} spine transfers, ${run.kills.length} enemies beaten, ` +

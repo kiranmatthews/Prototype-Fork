@@ -16,7 +16,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * next pipe, or onto a deck, where the rider lands back on foot.
  *
  * The height of the course is the other subject. It climbs, plunges, bottoms
- * out, climbs twice as far and comes down again, 800 m in all:
+ * out, climbs half as far again and comes down twice, 830 m in all:
  *
  *   0  ROLL-IN   P0, equal walls, decks both sides: drop in, hold right, pop out.
  *   1  PUMP      P1, a low west wall and a 7 m east wall that is a spine. One
@@ -183,8 +183,9 @@ overhead(27.5, START_TOP, ['wood', 'mystery', 'wood'], 'Roll-in: overhead row pa
 // ============================================================== 1 · PUMP ==
 // A step, one plain gap on foot, then the pipe whose east wall is nearly
 // three times the height of the one you drop in from — and is the back of
-// the next pipe. (Every pipe here is about 12 m lip to lip: the widest side
-// view shows 13 m ahead, so the far wall is in frame from the near lip.)
+// the next pipe. (A pipe that has to be read at a glance is about 12 m lip
+// to lip: the view shows 13 m ahead, so the far wall is in frame from the
+// near lip. The plunge and the valley are longer on purpose.)
 const PUMP_TOP = r(START_TOP + STEP);
 floor(34, 44, PUMP_TOP, 'Pump: step up');
 checkpoint(34 + STEP_CP, PUMP_TOP, 'Checkpoint 1: on foot before the pump pipe');
@@ -238,10 +239,11 @@ export const TRENCH = { x0: DOWN.x1, x1: DOWN.x1 + 5, top: DOWN.top, floor: r(DO
 floor(TRENCH.x0, TRENCH.x1, TRENCH.floor, 'Plunge: the trench under the first falling slab', STONE_DARK);
 add({ t: 'crumble', p: [(TRENCH.x0 + TRENCH.x1) / 2, TRENCH.top, 0], s: [5, 0.6, DEPTH], grp: GR.hazards,
   nm: 'Falling slab: first met over a trench you can jump out of' });
-const STAIRS_X0 = TRENCH.x1 + 10;
+const STAIRS_X0 = TRENCH.x1 + 12;
 floor(TRENCH.x1, STAIRS_X0, DOWN.top, 'Plunge: rest floor before the falling stairs');
-checkpoint(TRENCH.x1 + 2, DOWN.top, 'Checkpoint 3: before the falling stairs');
-pyramid(TRENCH.x1 + 3.6, DOWN.top, 'mystery', 'Plunge: stack before the falling stairs');
+// (The stack stands first: 10 m back from the brink, because its cap drops into the lane.)
+pyramid(TRENCH.x1 + 0.8, DOWN.top, 'mystery', 'Plunge: stack before the falling stairs');
+checkpoint(TRENCH.x1 + 3.6, DOWN.top, 'Checkpoint 3: before the falling stairs');
 // (A running jump carries 5.3 m, and 5.8 m to a landing 1.5 m lower: each
 // slab is 5 m long behind a 3 m gap, so the jump lands on its first half.)
 export const CRUMBLE_STAIRS = [0, 1, 2].map(k => ({
@@ -333,6 +335,7 @@ export const LEDGE_C = { x0: LIFT2.x1, x1: LIFT2.x1 + 20, top: LIFT2.high };
 floor(LEDGE_C.x0, LEDGE_C.x1, LEDGE_C.top, 'Climb: third ledge');
 checkpoint(LEDGE_C.x0 + 3, LEDGE_C.top, 'Checkpoint 6: the top of the second lift');
 pyramid(LEDGE_C.x0 + 6, LEDGE_C.top, 'mask', 'Climb: a mask before the frog, the ferry and the gallery');
+overhead(LEDGE_C.x0 + 8.6, LEDGE_C.top, ['wood', 'wood', 'mystery'], 'Climb: overhead row on the third ledge');
 foe('hopper', LEDGE_C.x0 + 14, LEDGE_C.top, 2, 2.4, 'Spring frog: first met on roomy ground');
 // A ferry over a 16 m drop, and the Bristleback from the basin waiting where
 // it lands: the spin you learned on open ground, now at the end of a ride.
@@ -351,7 +354,8 @@ export const CRUSHERS = [{ x: GALLERY.x0 + 15.5, phase: 0 }, { x: GALLERY.x0 + 2
 for (const [i, c] of CRUSHERS.entries())
   add({ t: 'crusher', p: [c.x, GALLERY.top, 0], s: [3, 3, DEPTH], cycle: 3.2, phase: c.phase, grp: GR.hazards,
     nm: i === 0 ? 'Crusher: first met alone, with a floor to watch it from' : 'Crusher: half a cycle behind the first' });
-for (const dx of [19, 20, 21]) fruit(GALLERY.x0 + dx, GALLERY.top + 1.15);
+// (The row between them is the dare: there is a second and a half to head it in.)
+overhead(GALLERY.x0 + 19.05, GALLERY.top, ['wood', 'mystery', 'wood'], 'Climb: overhead row between the crushers');
 foe('grunt', GALLERY.x0 + 31, GALLERY.top, 2, 2.4, 'Crab: just past the second crusher');
 const RISE = { x0: GALLERY.x1, x1: GALLERY.x1 + 8, top: r(GALLERY.top + STEP) };
 floor(RISE.x0, RISE.x1, RISE.top, 'Climb: step up');
