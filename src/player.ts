@@ -1845,6 +1845,7 @@ export class Player {
   private grindAirTrickCompleted = false; // completed deck trick in this flight; landing owns its payout
   private grindAirLat = 0;
   private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
+  private grindExitLine = 0; // side-on line: the travel sign of the rail just left (the stick that way never spins its exit air)
   private readonly grindJumpInput = new THREE.Vector2();
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
@@ -13597,6 +13598,7 @@ export class Player {
     this.grindAirLat = this.parkReference ? 0 : lateral;
     this.grindSpinInput = lateral !== 0 && Math.abs(this.rawInput.moveX) > 0.3
       ? Math.sign(this.rawInput.moveX) : 0;
+    this.grindExitLine = 0;
     this.parkSpinHold = 0;
 
     // ...and the last box goes with the manoeuvre. Every earlier one already
@@ -13623,6 +13625,8 @@ export class Player {
       const hx = t.x * this.grindDir;
       const hz = t.z * this.grindDir;
       const len = Math.hypot(hx, hz);
+      // A rail on a side-on line runs along it: remember which way it was going.
+      if (level?.zoneAt(this.pos.x, this.pos.z)?.line && Math.abs(hx) > 0.3) this.grindExitLine = Math.sign(hx);
       // DOWNHILL RAIL HOP: the same float the downhill ollie had. The rail
       // (and the road under it) keeps dropping away beneath a flat pop, so
       // hops off a descending grind bought seconds of hangtime. Fold the
@@ -14049,6 +14053,12 @@ export class Player {
   // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
     const rx = this.rawInput.moveX;
+    // On a side-on line the stick ALONG the line is the travel stick in the air
+    // off a rail too. A grind balanced with left and right ends with the stick
+    // let go, and the natural next press is on toward travel: that carries the
+    // rider on, it never spins the board into a sideways landing. (Against
+    // travel is a fresh direction, and still a spin.)
+    if (this.grindExitAir && this.grindExitLine !== 0 && Math.abs(rx) > 0.3 && Math.sign(rx) === this.grindExitLine) return 0;
     if (this.grindExitAir && this.grindSpinInput !== 0) {
       if (Math.abs(rx) > 0.3 && Math.sign(rx) === this.grindSpinInput) return 0;
       this.grindSpinInput = 0;

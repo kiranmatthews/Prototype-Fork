@@ -983,6 +983,7 @@ export interface CustomComponent {
   cameraFollowTargetHeight?: number; // cameraView: follow look-target height above the subject, 0..8m
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
   cameraKeepDistance?: boolean; // cameraView: retain the authored distance through side-scrolling turns
+  cameraTelephoto?: boolean; // cameraView: a long lens. The kept follow distance may pass the close rig's 18 m limit (up to 100 m), so a narrow cameraFov holds its framing from far back and the picture flattens. Needs cameraKeepDistance.
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand" | "water" | "jungle-stream" | "crown-quartz"; // mesh only: registered material factory
@@ -2799,7 +2800,7 @@ const LEVEL_DATA_KEYS = new Set([
 const COMPONENT_DATA_KEYS = new Set([
   "orbit", "spin", "bounce",
   "minefieldTrap", "t", "p", "s", "to", "bridgeSpan", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "slipGravity", "groundSpeedLimit", "containment",
-  "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
+  "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraTelephoto", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock", "sideOn", "wallRise", "wallDeck",
   "cycle", "hold", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
@@ -3215,7 +3216,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     "artProxy", "fog", "hangLock", "sideOn", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraTelephoto", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3656,11 +3657,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     if (component.solidSides !== undefined && (component.t !== "mesh" || component.solid === false)) return null;
     if (component.arcSteps !== undefined && (component.t !== "vertramp" ||
         !Number.isInteger(component.arcSteps) || component.arcSteps < 8 || component.arcSteps > 48)) return null;
-    if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined || component.cameraAspect !== undefined || component.cameraFollowDistance !== undefined || component.cameraKeepDistance !== undefined || component.cameraIntroDistance !== undefined || component.cameraFollowTargetHeight !== undefined) {
+    if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined || component.cameraAspect !== undefined || component.cameraFollowDistance !== undefined || component.cameraKeepDistance !== undefined || component.cameraTelephoto !== undefined || component.cameraIntroDistance !== undefined || component.cameraFollowTargetHeight !== undefined) {
       if (component.t !== "camnode" || !component.cameraView || !component.s) return null;
       if (!!component.cameraPosition !== !!component.cameraTarget) return null;
       if (component.cameraFollowDistance !== undefined && (!component.cameraPosition || component.cameraFollowDistance < 2 || component.cameraFollowDistance > 100)) return null;
       if (component.cameraKeepDistance && component.cameraFollowDistance === undefined) return null;
+      if (component.cameraTelephoto && !component.cameraKeepDistance) return null;
       if (component.cameraFollowTargetHeight !== undefined && (component.cameraFollowDistance === undefined || component.cameraFollowTargetHeight < 0 || component.cameraFollowTargetHeight > 8)) return null;
       if (component.cameraIntroDistance !== undefined && (component.cameraFollowDistance === undefined || component.cameraIntroDistance < 0 || component.cameraIntroDistance > 100)) return null;
       if (component.cameraPosition && component.cameraTarget &&
@@ -7650,6 +7652,7 @@ export class Level {
       ...(view.cameraAspect !== undefined ? { cameraAspect: view.cameraAspect } : {}),
       ...(view.cameraFollowDistance !== undefined ? { cameraFollowDistance: view.cameraFollowDistance } : {}),
       ...(view.cameraKeepDistance !== undefined ? { cameraKeepDistance: view.cameraKeepDistance } : {}),
+      ...(view.cameraTelephoto ? { cameraTelephoto: true } : {}),
       ...(view.cameraFollowTargetHeight !== undefined ? { cameraFollowTargetHeight: view.cameraFollowTargetHeight } : {}),
       ...(view.cameraIntroDistance !== undefined ? { cameraIntroDistance: view.cameraIntroDistance } : {}),
     });
@@ -9014,6 +9017,7 @@ export class Level {
               ...(c.cameraAspect !== undefined ? {cameraAspect:c.cameraAspect} : {}),
               ...(c.cameraFollowDistance !== undefined ? {cameraFollowDistance:c.cameraFollowDistance} : {}),
               ...(c.cameraKeepDistance !== undefined ? {cameraKeepDistance:c.cameraKeepDistance} : {}),
+              ...(c.cameraTelephoto ? {cameraTelephoto:true} : {}),
               ...(c.cameraFollowTargetHeight !== undefined ? {cameraFollowTargetHeight:c.cameraFollowTargetHeight} : {}),
               ...(c.cameraIntroDistance !== undefined ? {cameraIntroDistance:c.cameraIntroDistance} : {})});
             const marker=new THREE.Mesh(new THREE.BoxGeometry(...c.s),new THREE.MeshBasicMaterial({color:0x52d7ed,wireframe:true,transparent:true,opacity:.3}));
