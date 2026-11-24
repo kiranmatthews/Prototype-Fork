@@ -12826,3 +12826,14 @@ bail, and asserts each pipe's claim, the pumped shortcut, the cost of a missed s
 with a westward return through P0, a jump-in on a diagonal stick, a `!` headed over a bare lip, the grind
 button held up the rail pipe's wall, and the checkpoint a fall under the rail returns to. Each of the
 eight runtime rules was removed in turn in a scratch copy; the test fails by name without any one of them.
+
+**Handoff.** `npm run build`, `check:release`, `check:levels`, `check:pipe`, `check:side-pipe` and the
+focused carve, rail-air, air-rescue, grind, balance, lip-stall and platform-edge suites pass. The editor
+round-trip validator round-trips the level in lite and full, and the edge-policy sweep finds none of its
+22 surfaces needing review. Chrome with real keys, lite and full render: each pipe rides as the headless
+test says, with no console errors. Suites that fail here fail identically on the parent commit
+`b576f753`: `test-waterpark-vert`, `check:editor-roundtrip` (Test Course normalisation, Beachside crate
+count), `test-surface-edge-dedup`, `test-course-edge-policy`, `test-level-placement-polish`,
+`test-edge-grinding-migration` and `test-factory-defaults`; `test-stock-level-preservation` and
+`test-level-placement-traversal` need more than the cloud container's 14 GB on either commit. The release
+is 999.25 MB of the 1,000 MB hosting budget.
