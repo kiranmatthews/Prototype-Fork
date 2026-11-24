@@ -305,6 +305,45 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(!onBoard.hung, 'on the board: rolling into the step is not a ledge grab either');
     assert.ok(!onBoard.bailed && onBoard.eastmost < wall.x, 'on the board: under wipe-out speed it is a bump, not a spill');
   }
+  // The rule itself, on the wall the owner met: 2.1 m, tall enough that the
+  // game used to hang him from it and shorter than he is. And its other side:
+  // where a level's ledgeAssist lets the hands reach a lip ABOVE his standing
+  // reach, walking into that wall is still a catch.
+  {
+    const bump = (height, ledgeAssist, mounted) => {
+      const fixture = new Level(scene, { id: '__side_pipe_wall', name: 'side pipe wall', data: { v: 1, name: 'side pipe wall',
+        spawn: [-12, 0.12, 0], killY: -20, ...(ledgeAssist ? { ledgeAssist } : {}), components: [
+          { t: 'platform', p: [-5, -0.5, 0], s: [50, 1, 6] },
+          { t: 'platform', p: [15, height / 2, 0], s: [20, height, 6] },
+          { t: 'zone', p: [0, 0, 0], s: [80, 1, 18], dir: 'E', sideOn: true },
+          { t: 'camnode', p: [-40, 0, 0] }, { t: 'camnode', p: [40, 0, 0] },
+          { t: 'gate', p: [20, height, 0], yaw: 90 },
+          ...[-0.83, 0.83].map(z => ({ t: 'wall', p: [0, -14, z], s: [80, 60, 0.6], invisible: true })),
+        ] } });
+      scene.updateMatrixWorld(true);
+      p.respawn(fixture, true);
+      const input = makeInput();
+      let hung = false, bailed = false, rolled = 0;
+      for (let k = 0; k < 60 * 5; k++) {
+        input.moveX = 1;
+        const push = mounted && k < 40;
+        input.jumpPressed = push && k === 0; input.jumpReleased = mounted && k === 40; input.jumpHeld = push;
+        p.step(CONST.fixedStep, input, fixture); fixture.update(CONST.fixedStep); input.consumeEdges();
+        hung ||= p.state === 'hang'; bailed ||= p.isBailing;
+        if (p.freeSkate && p.grounded && p.pos.x > 1 && p.pos.x < 4) rolled = Math.max(rolled, Math.abs(p.speed));
+      }
+      const end = { hung, bailed, rolled, x: p.pos.x, y: p.pos.y };
+      fixture.dispose();
+      return end;
+    };
+    const low = bump(2.1, 0, false);
+    assert.ok(!low.hung && low.y < 0.3 && low.x < 5, `a 2.1 m wall walked into is a bump: no hang, no climb (ended at x ${low.x.toFixed(2)}, y ${low.y.toFixed(2)})`);
+    const rolledIn = bump(2.1, 0, true);
+    assert.ok(rolledIn.rolled > 8 && !rolledIn.hung && !rolledIn.bailed, `...and rolled into on the board it is a bump too (${rolledIn.rolled.toFixed(1)} m/s)`);
+    const tall = bump(3.0, 1, false);
+    assert.ok(tall.hung, 'a 3 m wall, above his reach, is still caught from the ground where a level\'s ledgeAssist lets the hands get there');
+    p.respawn(level, true);
+  }
 
   // ---- 6 · a board thrown away in a hang lands and lies still --------------------
   // Jump twice in a hang with the stick neutral: the second release throws the
@@ -314,7 +353,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     level.reset(true); p.respawn(level, true);
     p.pos.set(P0.westLip - 3, P0.westLipY + 0.15, 0); p.prevPos.copy(p.pos);
     const input = makeInput();
-    let taps = 0, phase = 0, board = null, hover = 0, longestHover = 0, topSpeed = 0, restAt = null, last = null, thrownAt = null;
+    let taps = 0, phase = 0, board = null, longestHover = 0, topSpeed = 0, restAt = null, thrownAt = null;
+    const trail = [];
     for (let k = 0; k < 60 * 12 && restAt === null; k++) {
       const hanging = p.vertAir;
       input.moveX = hanging || board ? 0 : 1;
@@ -327,13 +367,14 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       thrownAt ??= k;
       const at = board.root.position;
       topSpeed = Math.max(topSpeed, board.velocity.length());
-      hover = last && !board.supported && !board.rest && at.distanceTo(last) < 1e-3 ? hover + 1 : 0;
-      longestHover = Math.max(longestHover, hover);
-      last = at.clone();
+      // in the air, yet within 5 cm of where it was half a second ago: held up by something
+      trail.push(board.supported || board.rest ? null : at.clone());
+      const then = trail.at(-31);
+      if (trail.length > 30 && trail.slice(-31).every(Boolean) && at.distanceTo(then) < 0.05) longestHover++;
       if (board.rest) restAt = { x: at.x, y: at.y, seconds: (k - thrownAt) * CONST.fixedStep };
     }
     assert.ok(board, 'reference: two Jump releases in a hang throw the board away');
-    assert.ok(longestHover < 12, `the thrown board never hangs in the air (stuck for ${longestHover} steps)`);
+    assert.equal(longestHover, 0, `the thrown board never hangs in the air (held in place for ${longestHover} steps beyond half a second)`);
     assert.ok(topSpeed < 40, `...nor gathers speed while it is held there (peaked at ${topSpeed.toFixed(1)} m/s)`);
     assert.ok(restAt && restAt.seconds < 8, 'it comes to rest');
     const p0 = level.halfpipes.find(hp => Math.abs(hp.cross - P0.cross) < 0.01);
