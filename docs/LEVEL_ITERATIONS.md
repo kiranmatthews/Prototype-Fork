@@ -13581,3 +13581,97 @@ one landing (below).
 - A take replays exactly only up to its first spill on a build whose poses differ: the time a spill
   takes to get up from depends on the pose it started in. This one is exact for 2,654 steps, and again
   after each restart.
+
+## 2026-11-25 — Verts, second pass: met in the air, let go of, rolled up to at three speeds
+
+Brief (a recorded take of Side Pipe Lab and seven notes): the end of the take shows him jumping at a vert
+and getting caught on the apex at a funny angle, instead of ledge grabbing or rolling down; the "comes up
+short" should go back into the idle more smoothly, it is jerky; the abandon-ship jump should be available
+after a spine transfer; on any ledge hang, dismount should hop off the ledge and fall, still facing it, a
+simple drop like Jak and Daxter's, unless he is dropping onto a vert, and then part of the roll back can be
+used; the transitions from these animations back to idle should be smoother, there are many jerky ones; the
+rider does not need to dismount coming out of a vert if his direction input continues; and skating into
+another vert looks like a bug and needs to look realistic, with eased timing and motion. Added while it was
+being built: the skating drop-in should be three things by speed (a slow approach drops onto the lip and
+waits for input to drop in or back out; a medium fast one drops in quickly with nothing to pause or stop
+it; a super fast one rolls off the edge, gets air and probably clears the curve), and to run the full suite
+this time.
+Elapsed: about 1 h 20 min from the brief to the first six playing in headless runs of the real player and
+filmed in the real game; about 2 h 50 min to the three-speed drop-in looking right frame by frame; the full
+suite, docs and the published build after that. Times are approximate. `src/tuning.ts` is untouched, no
+level data changed, and the course's route test finishes the same 832 m (in 124.1 s).
+
+**Met in the air, a vert's face is never stood on** (`Player.meetVertFaceAhead`, `meetVertFaceOnFoot`).
+The take's fault: a walker in the air who crossed a vert's steep or upright face was landed on it by the
+pipe's own contact and stood there, at whatever angle the face had (1,217 frames of the take, the last of
+them 0.13 m under a lip). He is now read against the same wall the run-up reads: a lip at his feet puts
+him on the deck, one in reach with a ledge is the ordinary ledge catch, and anything else is the
+come-up-short entered where he is, from the air (`VertRunPlan` takes `fromAir`: no leap, the slide from
+where he met the face, and the roll; landed on the transition itself, the roll alone, from where his feet
+are). The same take through the game's own replay has no such frame.
+
+**Letting go of a ledge** (`ledgeHopDown`, `releaseLedgeDrop`, `ledgeLetGo`). He gathers on the wall for
+0.15 s, hops off it (2.4 m/s up, 0.3 m out) and drops facing the ledge; the direction that let go is
+ignored until it has been released, and a fresh one steers the fall. The hang's push-off clip is paced to
+the height of the drop. Under a vert's lip the drop meets the transition, which is the rule above: he is
+rolled back onto the flat.
+
+**From these moves back to his feet** (`handOverPlacedPose`). The last pose drawn is kept every frame, and
+at each hand-over (a run-up ending, a hang let go of, a drop landing, a wall met in the air) every joint
+and the pelvis are eased from it into the new pose over 0.14 to 0.26 s, level at both ends; out of a hang
+the pelvis is carried by the fall itself. Measured per step on the drawn body: the come-up-short into the
+idle was 0.12 to 0.17 m in a frame and is 0.00; the climb-out into the run is continuous (it also carries
+its exit speed into the first step, where it used to stand for a frame and then jump to 9 m/s); a hang's
+release was 1.03 m in a frame and is 0.00.
+
+**Board Abandon after a transfer, and the board kept out of a pipe.** The Jump that makes a pop-out or a
+spine transfer no longer spends the abandon: a second Jump in that air throws the board. Landing a pop-out
+with a direction still held keeps the board; with the stick at rest he steps off, as before.
+
+**Rolling up to a lip on the board, by speed** (`SIDE_ON_DROP_IN`, `stepDropInSetup`, `tryPipeDropIn`).
+The shipped 0.2 s stop was a dead stop from any speed and read as a fault. Now: under 8 m/s he is slowed
+over the last of the deck, by where he is on it, sets his tail on the coping and waits with no clock; Jump
+or the stick pressed on drops in after a 0.16 s lean, the stick pressed back rolls him off the lip tail
+first, and the stick he arrived holding does neither. From 8 to 17 m/s he drops straight in, slowed to
+55 % over about 0.2 s, and nothing he presses stops it. From 17 m/s he leaves the edge in the air with all
+of his speed and clears the curve (8 m of air at 20 m/s off the yard's 5 m wall, landed on the board; the
+travel stick does not spin him). Two faults under the old behaviour came out with it: at speed the ground
+follow reached 3 m down the face and put him on the wall in one frame (the "glitch" of the first brief),
+and a held stick spun every roll-off into a sideways landing.
+
+**The stance** (`SkatePoseInput.dropIn`, `SkateAnimation`). Coming up to the coping his knees bend and the
+deck rocks back on its trailing wheels; at the lip those wheels go over the edge and the tail comes down on
+the deck behind it, so he stands on his tail with the nose up 23° over the drop, over his back foot. Told
+to go, his weight comes forward and the nose down, and he stays folded through the tip. Three things were
+in its way and are fixed: the imported riding motion owned the pose until he stopped, so the stance only
+appeared once he was at rest (the set-up is now a native pose owner, handed over to across 0.2 s as the
+wallplant's reach already was); a rule that keeps a deck clear of a coping rail threw the deck 0.6 m off
+the wall mid-tip and snapped it back (a side-on pipe has no rail there, and the stance stands clear of
+none); and the drop-in's crouch was read as a pump of the wall the moment he was on it.
+
+**Measured, per step, on the drawn body** (the picture, with the drop-in's own lead): through set-up,
+wait, lean and tip the pelvis's step never changes by more than 0.11 m from one frame to the next and the
+deck's pitch rate by more than 4°; the wheels are never below the deck; a straight drop-in at 12 m/s slows
+from 0.20 to 0.12 m a frame and leaves the lip at 0.22, in one movement; the back-out starts from rest.
+
+**Checks.**
+
+- `tools/test-vert-run-up.mjs`: walls met from the air (deck, catch, slide and roll, rising and falling),
+  the dismount from a platform's edge and from a vert's lip, the hand-overs measured frame to frame, and
+  the rolling drop-in on two walls at twelve speeds and scripts (the wait, Jump, the stick on, the stick
+  back, straight in with the stick pulled back at the last, an ollie tapped in the set-up, flown off, and
+  the 8 and 17 m/s edges).
+- `tools/test-side-pipe-lab.mjs`: a rider who holds his direction out of a pipe keeps his board, and one
+  who lets go steps off; the route is unchanged.
+- The full suite, as asked: see the handoff note for this entry's run.
+- Real browser, one fixed step at a time: each of the three speeds and the back-out filmed and read frame
+  by frame, with no console errors.
+
+**Known and left.**
+
+- At the foot of a transition the rig is laid level again within two or three frames (27° in one of them
+  at 22 m/s). That is every pipe descent, not the drop-in, and is outside this brief.
+- A side-on pipe authored with `rails: true` has a coping rail the drop-in stance does not stand on: the
+  tail would sit a few centimetres into it. No level has one.
+- With the stick held, an ordinary ollie on a side-on line still spins the board, as every board air does:
+  only the roll off a lip and the airs out of a pipe treat the held travel stick as travel.

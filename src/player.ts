@@ -407,10 +407,31 @@ export interface PlayerAnimationIntent {
 // moves by then — the hop the mount animation is already playing, carried over
 // the coping. Presentation only: no timer or position here feeds the ride.
 const SIDE_ON_DROP_IN_SECONDS = 0.26;
-// Rolling off a deck into a pipe is still a drop-in: the tail set down on the
-// coping, the slightest pause there with the board out over the transition,
-// and then in. This is the pause.
-const SIDE_ON_DROP_IN_PERCH_SECONDS = 0.2;
+// ROLLING OFF A DECK INTO A PIPE, by how fast the lip is reached:
+//  - slowly: he sets the tail down on the coping and stops there, deck out over
+//    the transition, and WAITS. Jump, or the stick pressed on into the pipe,
+//    drops in; the stick pressed back rolls him off the lip, back onto the deck.
+//  - at a roll (the board's own cruise is one): he drops in, at once and for
+//    good. Nothing pauses it and nothing calls it off.
+//  - flat out: he is going too fast to drop in at all. He rolls off the edge
+//    into the air, and most likely clears the curve altogether.
+// A slow or a middling roll is slowed over the last of the deck, by where he
+// is on it (so it is the same at any frame rate), so that the lip is arrived at
+// and not hit: the slow one all but to rest, the middling one to about half.
+const SIDE_ON_DROP_IN = {
+  slow: 8,                    // m/s at the start of the set-up: under this he perches and waits
+  fast: 17,                   // ...and from this up he flies off the edge
+  arrive: 1.1,                // m/s a perch rolls onto the coping at
+  perchBrake: 15,             // m/s², on average, a slow roll is brought to the coping with...
+  perchSetUp: [0.45, 2.2] as const, // ...so the set-up is as long as that takes, within these (m)
+  tapSeconds: 0.2,            // a middling roll is slowed over about this long...
+  tapSetUp: [1.2, 2.8] as const,    // ...which is this much deck, at the least and the most (m)
+  tapKeep: 0.55,              // ...down to this much of its speed at the lip
+  carry: [4.5, 9.5] as const, // m/s a committed drop-in takes into the wall, least and most
+  perchCarry: 4,              // ...and what one from rest does
+  tipSeconds: 0.16,           // told to go from the coping, the beat in which his weight comes forward and the nose down, before he is off it
+  backOut: 2.6,               // m/s he rolls back off the coping at, tail first
+};
 const SIDE_ON_DROP_IN_ALIGN_EASE = 9; // the rig lays over onto the wall across the hop, not within three frames
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
@@ -428,6 +449,10 @@ const LEDGE_CANDIDATE = new THREE.Vector3();
 const LEDGE_RAY_ORIGIN = new THREE.Vector3();
 const LEDGE_LANDING = new THREE.Vector3();
 const VERT_RUN_AT = new THREE.Vector3();
+const VERT_HANDOVER_Q = new THREE.Quaternion();
+// The ledge dismount (Jak's edge-grab-off, 0.4 s): the part of the clip played on the wall and how long that
+// takes; the hop and the drift out that the push is worth.
+const LEDGE_OFF = { clipSeconds: 0.4, windClip: 0.2, windSeconds: 0.15, hop: 2.4, push: 0.3, pushSeconds: 0.16 };
 const VERT_RUN_BASE = new THREE.Vector3();
 const VERT_RUN_TO = new THREE.Vector3();
 const VERT_RUN_POLE = new THREE.Vector3();
@@ -1623,6 +1648,24 @@ export class Player {
   // nothing to balance and nothing to score, that ends by dropping in.
   private dropInPerch = false;
   private dropInPerchSpeed = 0;
+  /** The stick as it was held on arriving at the lip: it asks for nothing until it has been let go. */
+  private dropInPerchLatch = false;
+  /** The last of a deck before a lip, being slowed for a drop-in (see SIDE_ON_DROP_IN). */
+  private dropInSetup: { hp: Halfpipe; side: 1 | -1; v0: number; d0: number; vEnd: number; perch: boolean } | null = null;
+  /** How far through that set-up he is (0..1), for the drawing: the crouch, and the nose coming up. */
+  private dropInSetK = 0;
+  /** A lip he is crossing too fast to drop in over: left alone until he is off this deck. */
+  private dropInFlyPipe: Halfpipe | null = null;
+  /** This step took him over such a lip: he leaves it in the air (the ground follow must not reach down the wall for him). */
+  private dropInFlewOff = false;
+  /** Stood on the coping and told to go: seconds into the lean that takes him off it (-1: not yet told). */
+  private dropInTipT = -1;
+  // How the drop-in stance is drawn (see SkatePoseInput.dropIn): presentation only.
+  private dropInStancePose = 0;
+  private dropInLeanPose = 0;
+  private dropInCrouchPose = 0;
+  /** The way into the pipe the stance was last set for (level): rolling back off the coping, the same end of the deck stays up. */
+  private readonly dropInStanceIn = new THREE.Vector3(0, 0, -1);
   private lipPipe: Halfpipe | null = null;
   private lipSide = 1; // sign of u at the stall (which coping)
   private lipTickT = 0;
@@ -1701,7 +1744,7 @@ export class Player {
   private ledgePose = 0; // visual weight of the hanging pose
   // the CLAMBER: a committed, animated pull-up-and-over (not a snap) — the
   // body eases up the face then over the lip along a rounded corner path
-  private ledgePhase: 'grip' | 'climb' | 'vert' = 'grip';
+  private ledgePhase: 'grip' | 'climb' | 'vert' | 'off' = 'grip';
   // RUNNING UP A VERT ON FOOT (src/vertRunUp.ts). The move is planned the
   // moment it begins and read off frame by frame; it rides in the hang state
   // (nothing else steps the body) as the phase 'vert'. The wall plane is
@@ -1835,6 +1878,12 @@ export class Player {
    * on it, the push and the leap after. The authored skate layer leaves the
    * solved rider and deck alone while it is, as it does through a wallride. */
   get wallPlantOwnsRide(): boolean { return this.wallPlantDeckPose; }
+  /** Setting up for a drop-in, stood on the coping for one, or tipping in off it: the stance is the pose (SkatePoseInput.dropIn). */
+  get dropInOwnsRide(): boolean {
+    if (this.state !== 'ride' || !this.grounded) return false;
+    return this.dropInSetup !== null || (this.lipStallT > 0 && this.dropInPerch) || this.dropInStancePose > .001 ||
+      this.dropInLeanPose > .001 || this.dropInCrouchPose > .001;
+  }
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -2907,9 +2956,8 @@ export class Player {
             ? Math.min(1, this.ledgeClimbRecovery / JAK_LEDGE_MOTION.climbRecoverySeconds) : -1,
           jakLedgeRunSpeed: this.directFootStudy && (this.state === 'hang' && this.ledgePhase === 'climb' || this.ledgeClimbRecovery === 0)
             ? TUNING.walkSpeed * this.walkRamp * Math.min(1, Math.hypot(this.rawInput.moveX,this.rawInput.moveY)) : 0,
-          jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
-            (this.hangClipName === 'drop' || this.hangClipName === 'fall')
-            ? this.hangClipT / this.hangClipRate : -1,
+          jakLedgeRelease: this.ledgeOffClip >= 0 && (this.state === 'air' && !this.doubleJumpAir ||
+            this.state === 'hang' && this.ledgePhase === 'off') ? Math.min(LEDGE_OFF.clipSeconds, this.ledgeOffClip) : -1,
           jakImpact: this.footStudyImpact,
           footSpeed: this.walkVelocity.length(),
           travelSign,
@@ -4694,6 +4742,8 @@ export class Player {
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0;
+    this.dropInPerch = false; this.dropInSetup = null; this.dropInFlyPipe = null; this.dropInSetK = 0; this.dropInTipT = -1;
+    this.dropInStancePose = this.dropInLeanPose = this.dropInCrouchPose = 0;
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.sideOnCarryArmed = this.sideOnExitAir = false;
@@ -4743,6 +4793,7 @@ export class Player {
     this.ledgePose = 0;
     this.ledgePhase = 'grip';
     this.vertRun = null; this.vertRunScan = null; this.vertRunCoolT = 0; this.vertRunStallT = 0; this.vertRunBlend = 0; this.vertRunGripped = false; this.ledgeOnVert = false;
+    this.handoverT = -1; this.handoverWas = ''; this.ledgeDropFall = this.ledgeDropLatch = false; this.ledgeOffClip = -1; this.ledgeDropPushT = 9;
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
     this.ledgeClimbRecovery = -1;
@@ -5302,6 +5353,11 @@ export class Player {
     if (this.ledgeClimbRecovery >= 0) this.ledgeClimbRecovery = this.ledgeClimbRecovery >= JAK_LEDGE_MOTION.climbRecoverySeconds
       ? -1 : Math.min(JAK_LEDGE_MOTION.climbRecoverySeconds, this.ledgeClimbRecovery + dt);
     this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
+    // The ledge's own let-go: its last part plays through the drop, paced to be done as he lands.
+    if (this.ledgeOffClip >= 0 && this.state !== 'hang') {
+      this.ledgeOffClip = this.state === 'air' && !this.doubleJumpAir && this.ledgeOffClip < LEDGE_OFF.clipSeconds
+        ? this.ledgeOffClip + dt * this.ledgeOffRate : -1;
+    }
     if (this.state !== 'hang' && this.hangClipName) {
       if (this.hangExitW > 0) this.hangClipT += dt * this.hangClipRate;
       else this.hangClipName = null; // overlay finished — release the clip
@@ -5404,6 +5460,7 @@ export class Player {
     // place a foot holds, the wall decides what he does (src/vertRunUp.ts).
     if (this.state === 'ride') this.tryBeginVertRun(dt, level);
     else if (this.state !== 'hang') { this.vertRunScan = null; this.ledgeOnVert = false; }
+    if (this.state !== 'air') this.ledgeDropFall = this.ledgeDropLatch = false;
     if (this.state === 'hang') {
       if (input.restartPressed) {
         this.respawn(level, true);
@@ -5710,6 +5767,14 @@ export class Player {
     this.grindDropSteerT = Math.max(0, this.grindDropSteerT - dt);
     this.landingLaunchLockT = Math.max(0, this.landingLaunchLockT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
+    // A set-up for a drop-in is only ever a board rolling along a deck. Off the ground (an ollie popped in the
+    // last of it, the deck's end rolled off) it is over, and so is its stance: the air is the air's to draw.
+    if ((this.dropInSetup !== null || this.dropInStancePose > 0 || this.dropInLeanPose > 0) && this.dropInT < 0 &&
+        (this.state !== 'ride' || !this.grounded || !this.freeSkate || this.isBailing)) {
+      this.dropInSetup = null;
+      this.dropInSetK = 0;
+      this.dropInStancePose = this.dropInLeanPose = this.dropInCrouchPose = 0;
+    }
     this.transferCoolT = Math.max(0, this.transferCoolT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
@@ -7571,11 +7636,28 @@ export class Player {
     //  - ollie out any time                    -> an air; land it and it banks
     //  - release Triangle / timer up           -> drop back in, trick kept
     if (this.lipStallT > 0 && this.dropInPerch) {
-      // The pause of a rolling drop-in. There is no needle here and nothing to do but go.
-      this.lipStallT -= dt;
+      // Tail on the coping, deck out over the drop, at rest: he waits to be told. There is no needle
+      // here and no clock. Jump, or the stick pressed on into the pipe, drops in; the stick pressed
+      // back the way he came takes him off the lip. (The direction he arrived holding is the roll
+      // that brought him here: it asks for nothing until it has been let go.)
+      this.lipStallT = 1;
       this.speed = 0;
       this.vVel = 0;
-      if (this.lipStallT <= 0) this.endDropInPerch();
+      const hp = this.lipPipe, raw = this.rawInput;
+      if (!hp) { this.dropInPerch = false; this.lipStallT = 0; this.dropInTipT = -1; return; }
+      if (this.dropInTipT >= 0) {
+        // Told to go: his weight comes forward and the nose down, and then he is off the coping. Nothing calls this back.
+        this.dropInTipT += dt;
+        if (this.dropInTipT >= SIDE_ON_DROP_IN.tipSeconds) this.endDropInPerch();
+        return;
+      }
+      if (Math.hypot(raw.moveX, raw.moveY) < 0.3) this.dropInPerchLatch = false;
+      const inX = hp.axis === 'z' ? -this.lipSide : 0, inZ = hp.axis === 'z' ? 0 : -this.lipSide;
+      const fresh = !this.dropInPerchLatch;
+      const on = fresh && spineTransferDirectionHeld(raw.moveX, raw.moveY, this.camDir.x, this.camDir.z, inX, inZ);
+      const back = fresh && spineTransferDirectionHeld(raw.moveX, raw.moveY, this.camDir.x, this.camDir.z, -inX, -inZ);
+      if (input.jumpPressed || on) { this.dropInTipT = 0; sfx.play('skateTransition', 0.35); }
+      else if (back) this.backOutOfDropInPerch();
       return;
     }
     if (this.lipStallT > 0) {
@@ -7776,11 +7858,13 @@ export class Player {
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
     // The air that carried a rider out of a side-on pipe ends the board
-    // section its drop-in began: it lands on foot. (X held with a direction is
-    // the ordinary push-off, and keeps the board.)
+    // section its drop-in began, IF HE LETS IT: landed with the stick at rest,
+    // he steps off. A direction still held as he lands is a rider who means to
+    // keep riding, and he does. (X held with a direction is the ordinary
+    // push-off, and keeps the board too.)
     if (this.sideOnExitAir) {
       this.sideOnExitAir = false;
-      if (this.freeSkate && sidePipe === null && !pushingOff && !this.alwaysSkate && !this.parkControls) this.stepOff = true;
+      if (this.freeSkate && sidePipe === null && !pushingOff && !stickHeld && !this.alwaysSkate && !this.parkControls) this.stepOff = true;
     }
     if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
     const rollingOut = this.freeSkate && (this.alwaysSkate || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
@@ -8566,6 +8650,7 @@ export class Player {
     }
     const previousGroundHit = this.groundHit;
     const previousRideNormal = this.rideNormal.clone();
+    this.stepDropInSetup(input);
     const stepFromX = this.pos.x, stepFromZ = this.pos.z;
     if (this.parkControls && this.freeSkate)
       skateSurfaceDirection(this.parkVelocity, this.axisF, this.rideNormal).multiplyScalar(this.speed);
@@ -8651,7 +8736,8 @@ export class Player {
     // SIDE-ON DROP-IN: this step carried the body off a pipe's deck and over
     // its coping. Seat it on the wall, board down, before the ground follow
     // below can read the empty air past the lip as a ledge to fall off.
-    if (this.tryPipeDropIn(stepFromX, stepFromZ) && this.dropInPerch) return; // tail on the coping: the drop is a beat away
+    this.dropInFlewOff = false;
+    if (this.tryPipeDropIn(stepFromX, stepFromZ) && this.dropInPerch) return; // tail on the coping: he waits there
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
@@ -8776,7 +8862,8 @@ export class Player {
     const leavingAuthoredVertDeck = !this.parkControls && previousGroundHit?.vert === true &&
       previousGroundHit.skateCamera === true && previousRideNormal.y > .9 &&
       hit?.vert === true && hit.normal.y < .5;
-    const downWindow = leavingMeshRim || leavingAuthoredVertDeck ? .25 : steepHit ? TUNING.wallStick : 1.4;
+    // (and a rider who came over a side-on pipe's lip flat out is not reached for at all: he has left it, in the air)
+    const downWindow = leavingMeshRim || leavingAuthoredVertDeck || this.dropInFlewOff ? .25 : steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
@@ -8915,7 +9002,8 @@ export class Player {
       // A real drop near the support centre starts the warning. Sample diagonals
       // as well, and treat lower landings as edges instead of seeing through them.
       this.teetering = false;
-      if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit &&
+      // (slowing to set his tail on a coping, or rolling back off one, he is not caught out at a brink)
+      if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit && this.dropInSetup === null && !(this.freeSkate && this.lipCoolT > 0) &&
           !this.crawling && this.slideTimer <= 0 && !this.isBailing) {
         const edge = probeTeeterEdge(TUNING.teeterEdgeDistance, (ox, oz) => {
           const support = this.queryGround(level, ox, oz);
@@ -9856,12 +9944,24 @@ export class Player {
     const wallKickFlight = this.wallKickAir && !rescueAirControl && !this.isBailing && !this.slamActive &&
       this.steerWallKick(dt, input);
 
+    // The direction that asked for a ledge dismount is spent on it: the drop is
+    // straight down until that stick has been let go (or a second jump is taken).
+    if (this.ledgeDropLatch && (!this.ledgeDropFall || this.doubleJumpAir || Math.hypot(this.rawInput.moveX, this.rawInput.moveY) < 0.3))
+      this.ledgeDropLatch = false;
+    // ...and what the push off the wall is worth: a forearm's length out from it, eased, over the hop.
+    if (this.ledgeDropFall && this.ledgeDropPushT < LEDGE_OFF.pushSeconds) {
+      const eased = (t: number): number => { const k = THREE.MathUtils.clamp(t / LEDGE_OFF.pushSeconds, 0, 1); return k * k * (3 - 2 * k); };
+      const by = LEDGE_OFF.push * (eased(this.ledgeDropPushT + dt) - eased(this.ledgeDropPushT));
+      this.pos.x += this.ledgeNormal.x * by; this.pos.z += this.ledgeNormal.z * by;
+      this.ledgeDropPushT += dt;
+    }
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
     // laterally. Locked while holding a grab, slamming, or GLUED IN HANG TIME
     // (there the wall glue + vertDrift own all motion, so vertDrift is the sole
     // coping-drift control and nothing zeroes the parked speed).
     if (
+      !this.ledgeDropLatch &&
       !rescueAirControl &&
       !wallKickFlight &&
       !this.isBailing &&
@@ -9961,6 +10061,9 @@ export class Player {
     }else if(this.trampolineAir)this.trampolineSomersaultStart=Infinity;
 
     if (this.tryNaturalGrindLanding(dt, input, level)) return;
+    // On foot, a vert's face is met by his body, an arm's length before the point under his feet
+    // would reach it: he is stopped at it, not eased back out of it.
+    if (!this.freeSkate && !this.airFromSkate && !this.isBailing && !this.wallriding && this.meetVertFaceAhead(level)) return;
     let hit = this.queryGround(level);
     // ANALYTIC PIPE CATCH: crossed a halfpipe's cross-section curve this step
     // (jumped/fell INTO the transition — rising or falling, any speed). Land
@@ -10046,6 +10149,18 @@ export class Player {
           (this.prevPos.y >= reachable.y - 0.05 || this.pos.y >= reachable.y - landGive);
       }
     }
+    // ON FOOT, the steep of a vert is nowhere to land. A body that flies into it (a jump at the
+    // wall, a drop from its lip) takes the lip if the lip is there to take, and otherwise goes
+    // down the wall the way the come-up-short does. It is never left stood on the face.
+    // (Let go of a hang over a vert, he comes down on its transition wherever his drop meets it:
+    // that is the same wall, and he goes down it the same way from as low as it still slopes.)
+    if (landNow && hit && hit.vert === true && hit.normal.y < (this.ledgeDropFall ? 0.92 : VERT_RUN_UP.runOutNormalY) &&
+        !this.freeSkate && !this.airFromSkate && !this.isBailing) {
+      const met = this.meetVertFaceOnFoot(level, hit);
+      if (met === 'taken') return;
+      if (met === 'up') { const deck = this.queryGround(level); if (deck) { hit = deck; this.groundHit = deck; } }
+    }
+    if (landNow) this.ledgeDropFall = false;
     let rollLanding = false;
     if (landNow && hit) {
       if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
@@ -12155,10 +12270,13 @@ export class Player {
   }
 
   /**
-   * The automatic DROP-IN. Walking, running or rolling off a side-on pipe's
-   * deck across its coping puts the board on the wall just under the lip,
-   * pointing down the transition, with the approach speed still in it — the
-   * same hand-over a coping grind's drop-in makes, minus the grind.
+   * The automatic DROP-IN. Walking or running off a side-on pipe's deck across
+   * its coping puts the board on the wall just under the lip, pointing down the
+   * transition, with the approach speed still in it — the same hand-over a
+   * coping grind's drop-in makes, minus the grind. Already on the board, what
+   * the lip does depends on how fast it is reached (SIDE_ON_DROP_IN): he stops
+   * on it and waits, or drops straight in, or leaves it in the air (and this
+   * returns false: the step goes on as a roll off an edge).
    */
   private tryPipeDropIn(fromX: number, fromZ: number): boolean {
     if (!this.grounded || this.state !== 'ride' || this.isBailing || this.lipPipe !== null ||
@@ -12173,23 +12291,101 @@ export class Player {
     const along = hp.alongCoord(this.pos.x, this.pos.z);
     if (along < Math.min(hp.l0, hp.l1) || along > Math.max(hp.l0, hp.l1)) return false;
     const approach = Math.max(Math.abs(this.speed), this.lastPlanar);
-    if (this.freeSkate) this.beginDropInPerch(hp, side, approach);
-    else this.seatPipeDropIn(hp, side, approach, false);
+    if (!this.freeSkate) { this.dropInSetup = null; this.seatPipeDropIn(hp, side, approach, false); return true; }
+    // On the board: by how fast he came at it (the set-up over the last of the deck decided, if there was one).
+    const setup = this.dropInSetup?.hp === hp ? this.dropInSetup : null;
+    this.dropInSetup = null;
+    const came = setup ? setup.v0 : approach;
+    if (this.dropInFlyPipe === hp || came >= SIDE_ON_DROP_IN.fast) {
+      // Off the edge and into the air. The stick that was rolling him here goes on being the way he
+      // is going: it spins nothing until it has been let go (see spinStick).
+      this.dropInFlyPipe = hp;
+      this.dropInFlewOff = true;
+      const rx = this.rawInput.moveX;
+      this.sideOnSpinLatch = Math.abs(rx) > 0.3 ? Math.sign(rx) : 0;
+      return false;
+    }
+    if (setup ? setup.perch : came < SIDE_ON_DROP_IN.slow) { this.beginDropInPerch(hp, side, came); return true; }
+    const lipSpeed = Math.abs(this.speed);
+    this.seatPipeDropIn(hp, side, lipSpeed, false,
+      THREE.MathUtils.clamp(setup ? lipSpeed : came * SIDE_ON_DROP_IN.tapKeep, SIDE_ON_DROP_IN.carry[0], SIDE_ON_DROP_IN.carry[1]));
     return true;
   }
 
   /**
-   * ALREADY ON THE BOARD at a pipe's lip: the roll stops with the tail on the
-   * coping and the rest of the deck out over the transition, for a beat. It is
-   * the tail stall's own stance (whichever end of the board trails is the one
-   * set down), held without its needle; `endDropInPerch` drops in from it.
+   * THE SET-UP. On a side-on pipe's deck, on the board, rolling at its lip: over
+   * the last of the deck a slow or a middling roll is slowed, by where he is on
+   * that stretch (so it is the same at any frame rate), to arrive at the lip:
+   * all but stopped, to perch; or at about half its pace, to tip straight in.
+   * A roll flat out is not touched: it leaves the edge.
+   * Pulling the stick back off the roll, braking or charging an ollie keep it
+   * from starting, and call off a slow one that has started (he was only
+   * creeping up to the edge). A roll that is going in is going in: once that
+   * set-up has begun nothing he presses stops it, short of leaving the deck.
+   */
+  private stepDropInSetup(input: Input): void {
+    const D = SIDE_ON_DROP_IN;
+    const deck = this.grounded && this.state === 'ride' && this.freeSkate && !this.isBailing && this.lipPipe === null && !this.parkControls
+      ? this.groundHit?.mesh?.userData.pipeDeck as { pipe: Halfpipe; side: 1 | -1 } | undefined : undefined;
+    if (!deck?.pipe.sideOn) { this.dropInSetup = null; this.dropInFlyPipe = null; this.dropInSetK = Math.max(0, this.dropInSetK - 0.1); return; }
+    const hp = deck.pipe, side = deck.side;
+    // how far he is from the lip, and how fast he is closing on it
+    const left = (hp.crossCoord(this.pos.x, this.pos.z) - hp.cross) * side - hp.lipXOf(side);
+    const inX = hp.axis === 'z' ? -side : 0, inZ = hp.axis === 'z' ? 0 : -side;
+    const closing = (this.axisF.x * inX + this.axisF.z * inZ) * this.speed;
+    const along = hp.alongCoord(this.pos.x, this.pos.z);
+    const onLength = along >= Math.min(hp.l0, hp.l1) && along <= Math.max(hp.l0, hp.l1);
+    const pulledBack = spineTransferDirectionHeld(this.rawInput.moveX, this.rawInput.moveY, this.camDir.x, this.camDir.z, -inX, -inZ);
+    const called = pulledBack || input.grabHeld || this.charging || this.manualing !== 0 || this.slideTimer > 0;
+    let setup = this.dropInSetup?.hp === hp ? this.dropInSetup : null;
+    if (setup && (closing < 0.3 || (called && setup.perch) || left < -0.02 || !onLength)) setup = null;
+    if (!setup && closing > 1 && !called && left > 0.05 && this.dropInFlyPipe !== hp && onLength) {
+      if (closing >= D.fast) {
+        // Too fast to drop in. Decided once, a little before the edge, and kept to: he flies.
+        if (left < 1.2) this.dropInFlyPipe = hp;
+      } else {
+        const perch = closing < D.slow;
+        const vEnd = perch ? Math.min(closing, D.arrive) : closing * D.tapKeep;
+        const need = perch
+          ? THREE.MathUtils.clamp((closing * closing - vEnd * vEnd) / (2 * D.perchBrake), D.perchSetUp[0], D.perchSetUp[1])
+          : THREE.MathUtils.clamp((closing + vEnd) * 0.5 * D.tapSeconds, D.tapSetUp[0], D.tapSetUp[1]);
+        if (left <= need) setup = { hp, side, v0: closing, d0: Math.max(0.05, left), vEnd, perch };
+      }
+    }
+    this.dropInSetup = setup;
+    if (!setup) { this.dropInSetK = Math.max(0, this.dropInSetK - 0.1); return; }
+    this.dropInStanceIn.set(inX, 0, inZ);
+    const k = THREE.MathUtils.clamp(1 - left / setup.d0, 0, 1);
+    this.dropInSetK = k;
+    if (setup.perch) {
+      // Brought to the coping: the slowing comes on over the first of the stretch and is firm by the
+      // end of it, where the tail is set down (the square of his speed falls with the deck he has left).
+      const e = (k * k + 0.3 * k) / 1.3;
+      this.speed = Math.sqrt(setup.v0 * setup.v0 + (setup.vEnd * setup.vEnd - setup.v0 * setup.v0) * e);
+    } else {
+      // Checked for the drop: eased on and eased off, so he goes over the coping at a steady roll.
+      this.speed = setup.v0 + (setup.vEnd - setup.v0) * k * k * (3 - 2 * k);
+    }
+    this.axisF.set(inX, 0, inZ);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+  }
+
+  /**
+   * ON THE BOARD, ROLLED UP TO A PIPE'S LIP SLOWLY: he stops there with his tail
+   * set on the coping and the rest of the deck out over the transition, and
+   * waits (stepRide: Jump or the stick pressed on drops in, the stick pressed
+   * back rolls him off the lip). It is held as a lip stall is, on the same
+   * fields, with no needle, no clock and no points; the stance itself is drawn
+   * by SkateAnimation (SkatePoseInput.dropIn).
    */
   private beginDropInPerch(hp: Halfpipe, side: 1 | -1, approach: number): void {
     this.dropInPerch = true;
+    this.dropInTipT = -1;
     this.dropInPerchSpeed = approach;
+    this.dropInPerchLatch = Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > 0.3;
     this.lipSide = side;
     this.lipPipe = hp;
-    this.lipStallT = SIDE_ON_DROP_IN_PERCH_SECONDS;
+    this.lipStallT = 1;
     this.lipTickT = 0;
     const lipCross = hp.cross + side * hp.lipXOf(side);
     if (hp.axis === 'z') this.pos.x = lipCross;
@@ -12199,6 +12395,7 @@ export class Player {
     // facing the way he is going: into the pipe
     this.axisF.set(hp.axis === 'z' ? -side : 0, 0, hp.axis === 'z' ? 0 : -side);
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.dropInStanceIn.copy(this.axisF);
     this.state = 'ride';
     this.grounded = true;
     this.surfaceName = 'coping';
@@ -12213,17 +12410,48 @@ export class Player {
     this.charging = false;
     this.chargeTimer = this.jumpBufferT = 0;
     this.endManual();
-    const noseYaw = this.visualYaw + this.deckYawOffset;
-    const noseOut = side * (hp.axis === 'z' ? -Math.sin(noseYaw) : -Math.cos(noseYaw));
-    this.lipStyle = noseOut >= 0 ? 'nose' : 'tail';
     this.lipCoolT = 0.5;
     sfx.play('railLand', 0.45);
   }
 
-  /** The beat is up: tip in off the coping, from rest, onto the wall under it. */
+  /**
+   * Stood on the coping, and thought better of it: the nose comes back over the
+   * deck and he rolls off the lip the way he came, tail first (so nothing spins:
+   * it is the same body, going backwards, exactly as a fakie drop is).
+   */
+  private backOutOfDropInPerch(): void {
+    const hp = this.lipPipe, out: 1 | -1 = this.lipSide < 0 ? -1 : 1;
+    this.dropInPerch = false;
+    this.dropInTipT = -1;
+    this.lipStallT = 0;
+    this.lipPipe = null;
+    this.lipCoolT = 0.5;
+    if (!hp) return;
+    this.axisF.set(hp.axis === 'z' ? out : 0, 0, hp.axis === 'z' ? 0 : out);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    const oldStance = this.stance;
+    this.stance = -this.stance as 1 | -1;
+    this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+    this.deckYawOffset = wrapAngle(this.deckYawOffset + Math.PI);
+    // a hand's width back from the edge, so this step is a roll along the deck and not a second arrival at the lip
+    if (hp.axis === 'z') this.pos.x += out * 0.04;
+    else this.pos.z += out * 0.04;
+    this.pos.y = hp.lipYOf(out);
+    this.prevPos.copy(this.pos);
+    this.state = 'ride';
+    this.grounded = true;
+    this.speed = SIDE_ON_DROP_IN.backOut;
+    this.vVel = 0;
+    this.rideNormal.set(0, 1, 0);
+    this.dropInPerchLatch = false;
+    sfx.play('skateTransition', 0.4);
+  }
+
+  /** Told to go: tip in off the coping, from rest, onto the wall under it. */
   private endDropInPerch(): void {
     const hp = this.lipPipe, side: 1 | -1 = this.lipSide < 0 ? -1 : 1;
     this.dropInPerch = false;
+    this.dropInTipT = -1;
     this.lipStallT = 0;
     this.lipPipe = null;
     if (hp) this.seatPipeDropIn(hp, side, this.dropInPerchSpeed, true);
@@ -12235,7 +12463,8 @@ export class Player {
    * what goes into the wall is the drop and only a little of the roll that
    * brought him to the lip.
    */
-  private seatPipeDropIn(hp: Halfpipe, side: 1 | -1, approach: number, fromPerch: boolean): void {
+  private seatPipeDropIn(hp: Halfpipe, side: 1 | -1, approach: number, fromPerch: boolean,
+      carry = fromPerch ? SIDE_ON_DROP_IN.perchCarry : Math.max(approach * 0.85, 4)): void {
     // Seat on the transition a forearm under the coping: low enough that the
     // body has left the deck, high enough to keep the whole wall's drop.
     const u = side * (hp.uLipOf(side) - Math.min(0.4, hp.radiusOf(side) * 0.2));
@@ -12266,7 +12495,7 @@ export class Player {
     this.skateBlockT = 0;
     this.axisF.set(hp.axis === 'z' ? -side : 0, 0, hp.axis === 'z' ? 0 : -side);
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = fromPerch ? THREE.MathUtils.clamp(approach * 0.5, 4, 7) : Math.max(approach * 0.85, 4);
+    this.speed = carry;
     this.state = 'ride';
     this.grounded = this.freeSkate = true;
     this.groundHit = {
@@ -12362,7 +12591,12 @@ export class Player {
     this.speed = TUNING.vertDrift;
     this.transferCoolT = 0.3;
     this.pipeLandGraceT = 0.35;
-    resetVertBoardRelease(this.vertBoardRelease);
+    // This air spent the transfer release, exactly as a transfer across a ridge
+    // does. The release after it is still the Board Abandon: it is the same
+    // sequence whether there was a pipe beyond the lip or a deck.
+    this.vertBoardRelease.stage = 2;
+    this.vertBoardRelease.pressArmed = false;
+    this.vertBoardRelease.holdT = 0;
     sfx.play('woosh2', 0.5);
   }
 
@@ -12654,6 +12888,7 @@ export class Player {
     this.balanceCritT = 0;
     this.lipStallT = 0;
     this.lipPipe = null;
+    this.dropInPerch = false; this.dropInSetup = null; this.dropInTipT = -1;
     this.lipCoolT = Math.max(this.lipCoolT, 0.5);
     this.wallriding = false;
     this.wallBox = null;
@@ -18020,6 +18255,17 @@ export class Player {
   }
 
   private ledgeCaughtVert = false;
+  /** He is falling because he let go of a ledge (until he next lands, or catches something). */
+  private ledgeDropFall = false;
+  /** ...with a direction still held from the hang: it steers nothing until it has been let go. */
+  private ledgeDropLatch = false;
+  /** The dismount: seconds into its beat on the wall; seconds into the let-go clip (< 0 = not playing) and its pace through the drop; and the push out from the wall. */
+  private ledgeOffT = 0;
+  private ledgeDropFromY = 0;
+  private ledgeDropToY = 0;
+  private ledgeOffClip = -1;
+  private ledgeOffRate = 1;
+  private ledgeDropPushT = 9;
 
   private catchLedgeMesh(level: Level): boolean {
     if (level.kiteTow || level.ledgeGrabs === false) return false;
@@ -18243,8 +18489,8 @@ export class Player {
    * looking straight down at each step along the way up it. Null when there
    * is no lip with a deck behind it to go for.
    */
-  private scanVertWall(level: Level, dx: number, dz: number): { wall: VertWall; ox: number; oz: number; dx: number; dz: number; ledge: boolean } | null {
-    const ox = this.pos.x, oz = this.pos.z, top = this.pos.y + 11, bottom = this.pos.y - 9, STEP = 0.08;
+  private scanVertWall(level: Level, dx: number, dz: number, from?: { x: number; z: number }): { wall: VertWall; ox: number; oz: number; dx: number; dz: number; ledge: boolean } | null {
+    const ox = from?.x ?? this.pos.x, oz = from?.z ?? this.pos.z, top = this.pos.y + 11, bottom = this.pos.y - 9, STEP = 0.08;
     const look = (s: number): { y: number; ny: number } | null => {
       this.raycaster.set(LEDGE_RAY_ORIGIN.set(ox + dx * s, top, oz + dz * s), LEDGE_DOWN);
       this.raycaster.near = 0;
@@ -18273,6 +18519,8 @@ export class Player {
     if (!here) return null;
     const up: WallPoint[] = [{ s: 0, y: here.y }];
     let prev = { s: 0, y: here.y, ny: here.ny }, lip: WallPoint | null = null;
+    // (read from out in front of it, the looks begin on the flat: that is not a bank that has levelled out)
+    let risen = from === undefined || here.ny <= 0.9;
     // Is there a ledge at the top: somewhere to stand, with room on it for him? A wall with none
     // (two verts back to back, a face that goes on up, a top with a box on it) is still a wall he
     // can run at: it is only ever come up short on.
@@ -18302,7 +18550,8 @@ export class Player {
         lip = { s: hi, y: hiY };
         break;
       }
-      if (hit.ny > 0.9 && prev.ny > 0.9 && s > 0.6) return null; // it levelled out without a lip: a bank, not a vert
+      if (hit.ny > 0.9 && prev.ny > 0.9 && s > 0.6 && (risen || s > 4.5)) return null; // it levelled out without a lip: a bank, not a vert
+      risen ||= hit.ny <= 0.9;
       up.push({ s, y: hit.y });
       prev = { s, y: hit.y, ny: hit.ny };
     }
@@ -18334,11 +18583,99 @@ export class Player {
     }
     if (down.length < 2) return null;
     const wall = new VertWall([...down.reverse(), ...up, lip], deck);
-    // (a top with no ledge that is no higher than his hips is nothing to leap for: it is left alone)
-    return wall.rise > (ledge ? 0.25 : VERT_RUN_UP.vaultRise) ? { wall, ox, oz, dx, dz, ledge } : null;
+    // (a top with no ledge that is no higher than his hips is nothing to leap for: it is left alone.
+    // A body that has met the wall in the air is given the wall whatever its height: it is on it)
+    return from !== undefined || wall.rise > (ledge ? 0.25 : VERT_RUN_UP.vaultRise) ? { wall, ox, oz, dx, dz, ledge } : null;
   }
 
-  private beginVertRun(level: Level, scan: NonNullable<Player['vertRunScan']>, s: number): boolean {
+  /**
+   * IN THE AIR, ON FOOT, AGAINST THE STEEP OF A VERT (where a running foot does
+   * not hold: past 60°). What the wall gives him depends on where its lip is:
+   *  - a hand's breadth over his feet: he is up. He lands on the deck.
+   *  - within his reach, with a ledge to it: he catches it, the ordinary hang.
+   *  - out of reach, or no ledge: down the face and over backwards onto his
+   *    feet, the come-up-short from its slide on.
+   * False leaves the contact to the ordinary landing (going away from the
+   * wall, or nothing here that reads as a wall), except on a face too upright
+   * to stand on at all: there he is put back off it and goes on falling.
+   */
+  /** In the air on foot: is the steep of a vert within his own depth ahead of this step's travel? Then it is met now. */
+  private meetVertFaceAhead(level: Level): boolean {
+    const vx = this.pos.x - this.prevPos.x, vz = this.pos.z - this.prevPos.z, moved = Math.hypot(vx, vz);
+    if (moved < 0.03 || level.ledgeGrabs === false) return false;
+    const dx = vx / moved, dz = vz / moved, REACH = 0.36;
+    for (const up of [1.3, 0.45]) { // at his chest, and at his shins
+      this.raycaster.set(LEDGE_RAY_ORIGIN.set(this.prevPos.x, this.pos.y + up, this.prevPos.z), VERT_RUN_AT.set(dx, 0, dz));
+      this.raycaster.near = 0;
+      this.raycaster.far = moved + REACH;
+      for (const contact of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+        if (!contact.face || contact.object.userData.vert !== true) continue;
+        const normal = meshContactNormal(contact).clone();
+        if (normal.x * dx + normal.z * dz > 0) normal.negate(); // (a ribbon is seen from either side: this is the side he is on)
+        if (Math.abs(normal.y) > VERT_RUN_UP.runOutNormalY || normal.x * dx + normal.z * dz > -0.5) continue;
+        normal.y = Math.abs(normal.y);
+        const reached = Math.max(0, contact.distance - REACH);
+        this.pos.x = this.prevPos.x + dx * Math.min(moved, reached);
+        this.pos.z = this.prevPos.z + dz * Math.min(moved, reached);
+        return this.meetVertFaceOnFoot(level, { y: this.pos.y, normal, name: contact.object.name, vert: true, mesh: contact.object,
+          halfpipe: contact.object.userData.halfpipe as Halfpipe | undefined }) === 'taken';
+      }
+    }
+    return false;
+  }
+
+  private meetVertFaceOnFoot(level: Level, hit: GroundHit): 'taken' | 'up' | null {
+    const n = hit.normal, flat = Math.hypot(n.x, n.z);
+    if (flat < 0.3 || level.ledgeGrabs === false || !!level.kiteTow || this.parkControls || this.swimming || this.playerAnimationBridge.previewActive) return null;
+    // into the wall: against the way its surface leans
+    const dx = -n.x / flat, dz = -n.z / flat;
+    const into = this.walkVelocity.x * dx + this.walkVelocity.z * dz;
+    const BACK = 2.6;
+    const scan = into > -1.5 ? this.scanVertWall(level, dx, dz, { x: this.pos.x - dx * BACK, z: this.pos.z - dz * BACK }) : null;
+    if (scan) {
+      const W = scan.wall, rise = W.lipY - this.pos.y;
+      const lipX = scan.ox + dx * W.lipS, lipZ = scan.oz + dz * W.lipS;
+      if (scan.ledge && rise <= 0.6) {
+        // Up, all but a step: onto the deck, still running.
+        this.pos.set(lipX + dx * 0.35, W.lipY + 0.02, lipZ + dz * 0.35);
+        this.prevPos.copy(this.pos);
+        this.vVel = Math.min(this.vVel, 0);
+        return 'up'; // (the ordinary landing takes it from here, on the deck that is now under him)
+      }
+      if (scan.ledge && rise <= ledgeCatchEnvelope(TUNING.ledgeReach, level.ledgeAssist, this.ledgeEnvelope).reach && this.ledgeCoolT <= 0) {
+        // His hands take it. (Rising or falling, however fast: he is against the wall under it.)
+        this.ledgeOnVert = true;
+        this.ledgeNormal.set(-dx, 0, -dz);
+        const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
+        this.ledgeAnchor.set(lipX - dx * (0.06 + basis.skin), W.lipY - LEDGE_HANG_DEPTH, lipZ - dz * (0.06 + basis.skin));
+        const held = this.resolveLedgeSupport(level, this.ledgeAnchor, basis, W.lipY, this.ledgeLanding);
+        if (held) {
+          this.ledgeNormal.set(basis.nx, 0, basis.nz);
+          this.ledgeLip = held.y; this.ledgeMoverId = held.moverId; this.ledgeAnchor.y = held.y - LEDGE_HANG_DEPTH;
+          // (caught from against the face: the catch eases him out from it onto his arms)
+          this.pos.x -= dx * 0.2; this.pos.z -= dz * 0.2;
+          if (this.commitLedgeCatch(level)) return 'taken';
+        }
+        this.ledgeOnVert = false;
+      }
+      // Nothing to take: down the wall, and over backwards off the transition.
+      this.vertRunScan = null;
+      if (this.beginVertRun(level, scan, BACK, true)) return 'taken';
+    }
+    if (n.y < 0.12) {
+      // A face that stands upright holds nobody. Off it by a hand's breadth, and he goes on down it.
+      this.pos.addScaledVector(n, 0.06);
+      const inward = this.walkVelocity.x * n.x + this.walkVelocity.z * n.z;
+      if (inward < 0) { this.walkVelocity.x -= n.x * inward; this.walkVelocity.z -= n.z * inward; }
+      this.speed = this.walkVelocity.dot(this.axisF);
+      this.groundHit = null;
+      this.vVel = Math.min(this.vVel, 0);
+      return 'taken';
+    }
+    return null;
+  }
+
+  private beginVertRun(level: Level, scan: NonNullable<Player['vertRunScan']>, s: number, fromAir = false): boolean {
     const W = scan.wall;
     // Where his pelvis is drawn right now, in the wall's plane.
     let hipS = s - 0.1, hipY = this.pos.y + 0.86;
@@ -18350,11 +18687,11 @@ export class Player {
       hipY = THREE.MathUtils.clamp(VERT_RUN_AT.y, this.pos.y + 0.5, this.pos.y + 1.8);
     }
     const speed = this.walkVelocity.x * scan.dx + this.walkVelocity.z * scan.dz;
-    const climbing = THREE.MathUtils.clamp((this.pos.y - this.prevPos.y) / CONST.fixedStep, 0, 18);
+    const climbing = fromAir ? this.vVel : THREE.MathUtils.clamp((this.pos.y - this.prevPos.y) / CONST.fixedStep, 0, 18);
     this.ledgeNormal.set(-scan.dx, 0, -scan.dz);
     const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
-    const plan = new VertRunPlan(W, { len: W.lenAtS(Math.min(s, W.lipS - 0.02)), hipS, hipY, velS: speed, velY: climbing,
-      hangSkin: basis.skin, hangDepth: LEDGE_HANG_DEPTH, ledge: scan.ledge });
+    const plan = new VertRunPlan(W, { len: fromAir ? W.lenAtY(this.pos.y) : W.lenAtS(Math.min(s, W.lipS - 0.02)), hipS, hipY, velS: speed, velY: climbing,
+      hangSkin: basis.skin, hangDepth: LEDGE_HANG_DEPTH, ledge: scan.ledge, fromAir });
     if (plan.outcome === 'grab') {
       // A leap for the lip needs a lip the hang can hold: checked now, while he can still simply not go.
       this.ledgeOnVert = true;
@@ -18437,9 +18774,16 @@ export class Player {
     const ground = this.queryGround(level);
     if (ground) { this.pos.y = ground.y; this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name; this.prevPos.copy(this.pos); }
     if (outcome === 'climb') {
+      // He comes off the move at the speed it ended on, and the run takes it up from there: his
+      // stride is already at that pace (not at the full run the held stick had before the wall),
+      // and this step carries him on at it instead of standing him still for a frame.
       this.walkVelocity.set(run.dx, 0, run.dz).multiplyScalar(VERT_RUN_UP.climbExitSpeed);
       this.speed = this.walkVelocity.dot(this.axisF);
-      this.walkRamp = Math.max(this.walkRamp, 0.6);
+      this.walkRamp = THREE.MathUtils.clamp(VERT_RUN_UP.climbExitSpeed / Math.max(1, TUNING.walkSpeed), 0, 1);
+      this.pos.addScaledVector(this.walkVelocity, dt);
+      const on = this.queryGround(level);
+      if (on && Math.abs(on.y - this.pos.y) < 0.3) { this.pos.y = on.y; this.groundHit = on; this.rideNormal.copy(on.normal); this.surfaceName = on.name; }
+      this.prevPos.copy(this.pos);
     } else {
       this.speed = 0;
       this.vertRunCoolT = 0.4;
@@ -18486,9 +18830,11 @@ export class Player {
       this.vertRunVel.set(run.dx * run.frame.velS, run.frame.velY, run.dz * run.frame.velS);
       this.vertRunOffset.copy(this.vertRunLast).sub(VERT_RUN_AT);
     } else {
-      // It has handed him on. For a moment his pelvis is drawn between where the move would have
-      // gone on to take it and where the run, the hang or his own two feet now have it: the one
-      // becomes the other, whatever else is easing in underneath at the same time.
+      // It has handed him on to the hang (a catch). For a moment his pelvis is drawn between where
+      // the move would have gone on to take it and where the hang now has it: the one becomes the
+      // other, whatever else is easing in underneath at the same time. (Handed on to his own feet,
+      // the whole body is eased across instead, after everything that seats it: handOverPlacedPose.)
+      if (this.state !== 'hang') { this.vertRunBlend = 0; this.vertRunPush = 0; this.vertRunLift = 0; return; }
       this.vertRunFadeT += dt;
       this.vertRunBlend = Math.max(0, this.vertRunBlend - dt / 0.2);
       this.vertRunOffset.copy(this.vertRunLast).addScaledVector(this.vertRunVel, this.vertRunFadeT).sub(VERT_RUN_AT);
@@ -18551,6 +18897,85 @@ export class Player {
     this.vertRunGripped = run.plan.outcome === 'grab' && frame.hands.weight > 0.9;
   }
 
+  // ---- handing the drawn body from one thing to the next ----------------------
+  // Some moves draw him from more than a clip: a vert run-up puts his pelvis
+  // where its plan has it and solves his hands and feet onto what they hold; a
+  // ledge hang holds him by his hands with the controller point at his chest.
+  // The frame such a move begins or ends, all of that changes together, and what
+  // replaces it is a different body. Measured: 12 cm at the pelvis and 17 cm at
+  // the feet when the come-up-short handed him to the idle; 93 cm, in a frame,
+  // when a hang let go into a fall; his legs thrown 1.4 m when a drop met a
+  // transition.
+  // So the body is remembered as it was last DRAWN, joint by joint and where its
+  // pelvis was over the controller point, and across each of those moments he is
+  // drawn between that and wherever the new pose has him: the one turns into the
+  // other, and nothing moves in a frame. It is drawing only.
+  private readonly drawnPose = new Map<THREE.Object3D, THREE.Quaternion>();
+  private readonly drawnHips = new THREE.Vector3();
+  private readonly handoverPose = new Map<THREE.Object3D, THREE.Quaternion>();
+  private readonly handoverHips = new THREE.Vector3();
+  private handoverT = -1;
+  private handoverSeconds = 0.26;
+  private handoverWas = '';
+  /** Through a drop from a hang, his pelvis comes across with the fall itself (see below). */
+  private handoverFalling = false;
+
+  private handOverPlacedPose(dt: number): void {
+    const hips = this.animationRig.jointsById.get('hips')?.node, parent = this.bodyGroup.parent;
+    if (!hips || !parent) { this.handoverT = -1; this.handoverWas = ''; return; }
+    // What is drawing him now: a placed run-up (and how it was entered), a hang, or nothing special.
+    const run = this.state === 'hang' && this.ledgePhase === 'vert' ? this.vertRun : null;
+    const now = run ? (run.plan.fromAir ? 'run-air' : 'run') : this.state === 'hang' ? 'hang' : this.isBailing || this.state === 'dead' || this.state === 'gameover' ? 'out'
+      : this.ledgeDropFall && this.state === 'air' ? 'drop' : 'free';
+    const was = this.handoverWas;
+    this.handoverWas = now;
+    if (now !== was && this.drawnPose.size > 0 && was !== '' && was !== 'out' && now !== 'out') {
+      // (a run-up met on his feet begins in the run's own pose and where it had drawn him, and a catch
+      // has the hang's own easing onto the lip: those two are already seamless and are left alone)
+      const seconds = now === 'run-air' ? 0.16                       // flown into a wall, or dropped onto one
+        : was.startsWith('run') && now === 'free' ? 0.26             // off the move onto his own feet
+        : was === 'hang' && (now === 'drop' || now === 'free') ? 0.16 // let go of a ledge
+        : was === 'drop' && now === 'free' ? 0.14                    // ...and his feet down from it
+        : 0;
+      if (seconds > 0) {
+        for (const [node, drawn] of this.drawnPose) {
+          let kept = this.handoverPose.get(node);
+          if (!kept) this.handoverPose.set(node, kept = new THREE.Quaternion());
+          kept.copy(drawn);
+        }
+        this.handoverHips.copy(this.drawnHips);
+        this.handoverT = 0;
+        this.handoverSeconds = seconds;
+        // A hang holds the controller point at his chest; in the air it is under his feet. Let go,
+        // that point falls well over a metre further than he does, and a pelvis eased across in a
+        // fixed time first hangs in the air and then drops. It is carried across by the fall instead:
+        // as far through that as the controller point is through its own drop, so he simply falls.
+        this.handoverFalling = was === 'hang' && now === 'drop';
+      } else { this.handoverT = -1; this.handoverFalling = false; }
+    }
+    if (now === 'out') { this.handoverT = -1; this.handoverFalling = false; }
+    if (this.handoverFalling && now !== 'drop') this.handoverFalling = false;
+    const through = this.handoverFalling ? THREE.MathUtils.clamp((this.ledgeDropFromY - this.pos.y) / Math.max(0.3, this.ledgeDropFromY - this.ledgeDropToY), 0, 1) : 1;
+    if (this.handoverT >= 0 && (this.handoverT < this.handoverSeconds || (this.handoverFalling && through < 1))) {
+      const k = Math.min(1, this.handoverT / this.handoverSeconds), w = k * k * k * (k * (k * 6 - 15) + 10); // eased at both ends
+      if (w < 1) for (const [node, from] of this.handoverPose) node.quaternion.copy(VERT_HANDOVER_Q.copy(from).slerp(node.quaternion, w));
+      this.bodyGroup.updateWorldMatrix(true, true);
+      hips.getWorldPosition(VERT_RUN_AT);
+      VERT_RUN_TO.copy(this.pos).add(this.handoverHips).sub(VERT_RUN_AT).multiplyScalar(1 - (this.handoverFalling ? through : w));
+      this.bodyGroup.getWorldPosition(VERT_RUN_BASE);
+      this.bodyGroup.position.add(parent.worldToLocal(VERT_RUN_TO.add(VERT_RUN_BASE)).sub(parent.worldToLocal(VERT_RUN_POLE.copy(VERT_RUN_BASE))));
+      this.handoverT += dt;
+    } else this.handoverT = -1;
+    // ...and this frame, as drawn, is what the next such moment starts from.
+    this.bodyGroup.updateWorldMatrix(true, true);
+    for (const joint of this.animationRig.jointsById.values()) {
+      let drawn = this.drawnPose.get(joint.node);
+      if (!drawn) this.drawnPose.set(joint.node, drawn = new THREE.Quaternion());
+      drawn.copy(joint.node.quaternion);
+    }
+    hips.getWorldPosition(this.drawnHips).sub(this.pos);
+  }
+
   /** The glove's grip under a wrist (the gloves are named for the mirrored pivots, so found by parentage). */
   private vertRunGrip(wrist: THREE.Object3D): THREE.Object3D {
     for (const glove of [this.gloveLeft, this.gloveRight]) {
@@ -18600,6 +19025,16 @@ export class Player {
     this.speed = 0;
     this.vVel = 0;
     if (this.ledgePhase === 'vert') { this.stepVertRun(dt, level); this.measurePlanar(dt); return; }
+    if (this.ledgePhase === 'off') {
+      // The dismount's first beat: still on the lip by his hands, his feet coming up onto the wall.
+      this.ledgeOffT += dt;
+      this.ledgeOffClip = Math.min(LEDGE_OFF.windClip, this.ledgeOffClip + dt * LEDGE_OFF.windClip / LEDGE_OFF.windSeconds);
+      this.pos.copy(this.ledgeAnchor);
+      if (this.ledgeOffT >= LEDGE_OFF.windSeconds) this.releaseLedgeDrop(level);
+      else this.collide(level, true);
+      this.measurePlanar(dt);
+      return;
+    }
     const n = this.ledgeNormal;
     // Presentation resolves the final live lip normal after catch/shimmy;
     // support motion must not compete with that facing or alter control axes.
@@ -18719,7 +19154,7 @@ export class Player {
         this.ledgeAwayT = 0;
         this.startLedgeClimb(level);
       } else if (this.ledgeAwayT > 0.1) {
-        this.ledgeHopDown(); // held away: let go (the debounce eats stick noise at the catch)
+        this.ledgeHopDown(level); // held away: let go (the debounce eats stick noise at the catch)
       } else if (this.ledgeT <= 0) {
         this.ledgeLetGo(); // the grip gave out
       }
@@ -18768,22 +19203,55 @@ export class Player {
     return true;
   }
 
-  // X + away: kick off the wall and drop back down where you came from.
-  // The push-off is a position offset + pop only — the control frame is
-  // untouched, so the stick keeps meaning what it meant before the grab.
-  private ledgeHopDown(): void {
+  // Away from the ledge: THE DISMOUNT, the way a ledge is let go of in Jak and
+  // Daxter, and with that game's own clip. He brings his feet up onto the wall
+  // (a beat, still on the lip by his hands), pushes off it in a small hop, and
+  // drops where he hung, STILL FACING THE LEDGE all the way down.
+  //
+  // The clip is 0.4 s and a fall here is far quicker than that: let run at its
+  // own pace through the drop, he landed in the middle of the kick with his
+  // feet at his hips, and was seated on them with his pelvis on the floor. So
+  // its first part is played on the wall, and the rest is paced to the drop he
+  // actually has, done as his feet come down.
+  //
+  // The push-off is a small drift and a pop only (the control frame is
+  // untouched), and the stick that asked for it does not steer the fall until
+  // it has been let go: a dismount is a drop, not a leap backwards.
+  private ledgeHopDown(level: Level): void {
+    this.ledgeAwayT = 0;
+    if (!this.directFootStudy || !this.authoredClip('player.hang')?.metadata?.jakLedge) { this.ledgeOffClip = -1; this.releaseLedgeDrop(level); return; }
+    this.ledgePhase = 'off';
+    this.ledgeOffT = 0;
+    this.ledgeOffClip = 0;
+    this.setHangClip('drop', 0.5);
+    sfx.play('woosh', 0.3, 1.25);
+  }
+
+  /** Hands off: the hop out from the wall, and the fall. */
+  private releaseLedgeDrop(level: Level): void {
     const n = this.ledgeNormal;
+    this.ledgePhase = 'grip';
     this.pos.copy(this.ledgeAnchor);
-    this.pos.x += n.x * 0.45;
-    this.pos.z += n.z * 0.45;
     this.state = 'air';
     this.grounded = false;
-    this.vVel = 3.2;
+    this.vVel = LEDGE_OFF.hop;
     this.speed = 0;
-    this.visualYaw = wrapAngle(Math.atan2(n.x, n.z) - Math.PI); // face away (visual only)
+    this.walkVelocity.set(0, 0, 0);
+    this.walkIntent.set(0, 0, 0);
     this.setHangClip('drop', 0.5);
-    this.hangExitW = 1; // the push-off pose bleeds into the first beat of the fall
+    this.hangExitW = 1; // (the older presentation: its push-off pose bleeds into the first beat of the fall)
     this.ledgeCoolT = 0.5;
+    this.ledgeDropFall = true;
+    this.ledgeDropLatch = Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > 0.3;
+    this.ledgeDropPushT = 0;
+    // How long he has: up through the hop, and down to whatever is under where he will be.
+    const under = this.queryGround(level, n.x * LEDGE_OFF.push, n.z * LEDGE_OFF.push, this.pos.y + 0.2);
+    const up = LEDGE_OFF.hop / Math.max(1, TUNING.riseGravity);
+    const drop = (under ? Math.max(0, this.pos.y - under.y) : 9) + 0.5 * LEDGE_OFF.hop * up;
+    const air = up + Math.sqrt(2 * Math.max(0.05, drop) / Math.max(1, TUNING.fallGravity));
+    this.ledgeDropFromY = this.pos.y;
+    this.ledgeDropToY = under ? under.y : this.pos.y - 9;
+    this.ledgeOffRate = THREE.MathUtils.clamp((LEDGE_OFF.clipSeconds - LEDGE_OFF.windClip) / Math.max(0.08, air - 0.03), 1, 2.6);
     this.prevPos.copy(this.pos);
     sfx.play('woosh', 0.4, 1.1);
   }
@@ -18897,9 +19365,18 @@ export class Player {
     this.grounded = false;
     this.vVel = -0.5;
     this.speed = 0;
+    this.walkVelocity.set(0, 0, 0);
+    this.walkIntent.set(0, 0, 0);
     this.setHangClip('fall', 0.45);
     this.hangExitW = 1; // the slip pose bleeds into the fall
+    this.ledgeOffClip = -1; // (a grip that gives out is a slip, not a push-off: his hands open and he drops)
+    this.ledgeDropFromY = this.pos.y; this.ledgeDropToY = this.pos.y - 3;
+    this.ledgeDropPushT = LEDGE_OFF.pushSeconds;
+    this.ledgePhase = 'grip';
     this.ledgeCoolT = 0.6;
+    // (he comes off it facing it, like any other way down from a hang)
+    this.ledgeDropFall = true;
+    this.ledgeDropLatch = Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > 0.3;
     this.prevPos.copy(this.pos);
     sfx.play('woosh3', 0.35, 0.7);
   }
@@ -22734,9 +23211,10 @@ export class Player {
       this.walkIntent.lengthSq() > 1e-6;
     if (this.state === 'dead' || this.state === 'gameover') {
       targetYaw = this.deathFacingYaw;
-    } else if (this.state === 'hang') {
+    } else if (this.state === 'hang' || (this.ledgeDropFall && this.state === 'air' && !this.doubleJumpAir)) {
       // The hands own facing from the first catch frame, including shimmy,
       // moving supports and mantle. Velocity is unrelated to the wall normal.
+      // Let go, he falls as he hung: facing the ledge, until his feet are down.
       targetYaw = Math.atan2(this.ledgeNormal.x, this.ledgeNormal.z);
     } else if (this.loopRide) {
       // Surface rotation already turns the board over. Resolve heading in that
@@ -22853,7 +23331,7 @@ export class Player {
     // travel don't care). sidePose blends it in; the board counter-rotates
     // below so the deck stays along the line of travel.
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
-    this.lipYawPose += ((this.lipStallT > 0 ? LIP_CONTACTS[this.lipStyle].yaw : 0) - this.lipYawPose) * (1 - Math.exp(-22 * dt));
+    this.lipYawPose += ((this.lipStallT > 0 && !this.dropInPerch ? LIP_CONTACTS[this.lipStyle].yaw : 0) - this.lipYawPose) * (1 - Math.exp(-22 * dt));
     const appliedGrindYaw = this.grindYawPose + this.lipYawPose;
     if(this.isBailing || this.state==='dead' || this.state==='gameover' || this.worldMapBaseScale!==null)this.revertPoseT=0;
     this.revertPoseT = Math.max(0, this.revertPoseT - dt);
@@ -23424,8 +23902,10 @@ export class Player {
     // Grind: arms come out wide for balance, tipping with the needle.
     // Balance arms come out for grinds, manuals, AND lip stalls (the manual
     // writes the same balance field, so the tipping visual just works).
+    // (a perch on the coping before a drop-in is not a balance: nothing to hold his arms out against)
+    const stalled = this.lipStallT > 0 && !this.dropInPerch;
     this.grindArmPose +=
-      ((this.state === 'grind' || this.manualing !== 0 || this.lipStallT > 0 ? 1 : 0) -
+      ((this.state === 'grind' || this.manualing !== 0 || stalled ? 1 : 0) -
         this.grindArmPose) *
       Math.min(1, 10 * dt);
 
@@ -23437,7 +23917,7 @@ export class Player {
     // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
     const railBal = this.state === 'grind' ? this.balance : 0;
     const balanceArms=this.balanceArmMotion.step(dt,
-      this.state==='grind'||this.manualing!==0||this.lipStallT>0,this.balance,this.balanceCritT>0);
+      this.state==='grind'||this.manualing!==0||stalled,this.balance,this.balanceCritT>0);
     const armBal=this.state==='grind'?balanceArms.tilt:0;
     const critFlail=balanceArms.swing;
     const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
@@ -23837,8 +24317,31 @@ export class Player {
     const manualTarget =
       this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : stallLean;
     this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
-    const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
+    // THE DROP-IN STANCE, as it is drawn (SIDE_ON_DROP_IN, SkatePoseInput.dropIn). Coming up to the lip his knees
+    // bend and, over the last of it, the nose comes up as the tail is set down on the coping. Stood there he is
+    // low, over his back foot. Told to go, his weight comes forward and the nose down; and he stays folded
+    // through the tip, to stand up out of it down the wall. A roll that goes straight in does the same in passing.
+    // (in the air none of it is drawn: the step that took him off the deck is already the air's)
+    const onDeckOrWall = this.state === 'ride' && this.grounded;
+    if (!onDeckOrWall && this.dropInT < 0) this.dropInStancePose = this.dropInLeanPose = this.dropInCrouchPose = 0;
+    const perched = this.lipStallT > 0 && this.dropInPerch, setUp = onDeckOrWall ? this.dropInSetup : null, setK = this.dropInSetK;
+    const eased = (x: number): number => THREE.MathUtils.smoothstep(x, 0, 1);
+    const tipping = perched && this.dropInTipT >= 0 ? eased(this.dropInTipT / SIDE_ON_DROP_IN.tipSeconds) : 0;
+    // (up to a half: rocked back on the trailing wheels as he rolls up; the rest, the tail down, only once he is on the coping)
+    const stanceTarget = perched ? 1 - 0.72 * tipping
+      : setUp ? (setUp.perch ? 0.5 * eased((setK - 0.35) / 0.6) : 0.42 * eased((setK - 0.3) / 0.5) * (1 - 0.6 * eased((setK - 0.8) / 0.2))) : 0;
+    const leanTarget = perched ? tipping : setUp && !setUp.perch ? 0.7 * eased((setK - 0.45) / 0.55) : this.dropInT >= 0 && this.dropInT < 0.1 ? (this.dropInLeanPose > 0.7 ? 1 : 0.7) : 0;
+    const dropInCrouch = perched ? 0.55 + 0.35 * tipping : setUp ? (setUp.perch ? 0.55 : 0.6) * eased(setK / 0.6)
+      : this.dropInT >= 0 && this.dropInT < 0.12 ? 0.85 : 0;
+    this.dropInStancePose += (stanceTarget - this.dropInStancePose) * (1 - Math.exp(-(stanceTarget > this.dropInStancePose ? 20 : 15) * dt));
+    this.dropInLeanPose += (leanTarget - this.dropInLeanPose) * (1 - Math.exp(-(leanTarget > this.dropInLeanPose ? (perched ? 20 : 14) : 9) * dt));
+    this.dropInCrouchPose += (dropInCrouch - this.dropInCrouchPose) * (1 - Math.exp(-(dropInCrouch > this.dropInCrouchPose ? 14 : 9) * dt));
+    if (stanceTarget === 0 && this.dropInStancePose < 0.002) this.dropInStancePose = 0;
+    if (leanTarget === 0 && this.dropInLeanPose < 0.002) this.dropInLeanPose = 0;
+    if (dropInCrouch === 0 && this.dropInCrouchPose < 0.002) this.dropInCrouchPose = 0;
+    const targetCharge = Math.max(this.dropInCrouchPose, this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0);
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
+    if (this.dropInCrouchPose > this.chargePose) this.chargePose = this.dropInCrouchPose; // (already eased: not eased twice)
     // Imported Unity clips own their hips translation, body pitch and 0.225 m
     // floor lift. Their ownership marker neutralizes this compatibility root;
     // a missing/invalid or preserved legacy clip deliberately keeps it.
@@ -24283,7 +24786,8 @@ export class Player {
     }
     if (this.boardG) this.boardG.userData.iceSkateMotion = iceSkate;
 
-    const vertPump = this.freeSkate && this.grounded && this.onTransition && !this.isBailing ? this.chargePose : 0;
+    // (the fold he drops in with is not a pump of the wall: only what is charged beyond it is)
+    const vertPump = this.freeSkate && this.grounded && this.onTransition && !this.isBailing ? Math.max(0, this.chargePose - this.dropInCrouchPose) : 0;
     const spineMotion = this.spineTransferMotion();
     if(vertPump>0||spineMotion)this.playerAnimationBridge.modulateDeformations(skateVertElasticity(vertPump,spineMotion));
     // A vert air nobody is steering is not a held pose (VertAirMotion): chest,
@@ -24361,7 +24865,9 @@ export class Player {
     if (this.boardG && this.riderG) {
       // Map/start/results poses run before the first gameplay input poll and
       // supply their own neutral input. Use this pose's input, not rawInput.
-      const copingPipe=this.lipPipe ?? (this.grounded && (input.grindHeld||input.jumpHeld) ? this.groundHit?.halfpipe : undefined);
+      // (not through a drop-in off the deck: see SkateAnimation, where the stance stands clear of no coping)
+      const droppingIn=this.dropInOwnsRide||this.dropInT>=0;
+      const copingPipe=droppingIn ? undefined : this.lipPipe ?? (this.grounded && (input.grindHeld||input.jumpHeld) ? this.groundHit?.halfpipe : undefined);
       let coping: {center:THREE.Vector3;normal:THREE.Vector3}|undefined;
       const copingSide=copingPipe?this.pipeSide(copingPipe):1;
       if(copingPipe && !copingPipe.isOpen(copingSide) && this.pos.y>copingPipe.lipYOf(copingSide)-1.8){
@@ -24400,8 +24906,9 @@ export class Player {
         darkslide: this.state === 'grind' && this.specialGrind?.id === 'darkslide',
         ollie: this.boardOllieAir, flip: this.flipT > 0 ? this.flipKind : null,
         flipProgress: 1 - this.flipT / this.flipDuration, specialFlip: !!this.specialFlip,
-        lip: this.lipStallT > 0 ? this.lipStyle : null,
-        lipPerch: this.lipStallT > 0 && this.dropInPerch,
+        lip: this.lipStallT > 0 && !this.dropInPerch ? this.lipStyle : null,
+        dropIn: this.dropInStancePose > 0 || this.dropInLeanPose > 0 ? { set: this.dropInStancePose, lean: this.dropInLeanPose,
+          toward: this.axisF.dot(this.dropInStanceIn) < 0 ? -1 : 1 } : undefined,
         coping,
         // A wallplant slaps the deck flat on the face and perches the rider on it, where a wallride lays it along the ride.
         ...(wallPerch
@@ -24438,6 +24945,7 @@ export class Player {
     this.advancePancakeTail(dt);
     this.rememberIdleStance(dt);
     this.rememberLowFeet(dt);
+    this.handOverPlacedPose(dt);
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),

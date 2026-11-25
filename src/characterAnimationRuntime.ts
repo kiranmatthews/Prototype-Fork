@@ -665,7 +665,10 @@ export class CharacterAnimationRuntime {
       requested = nativeAirClip.id;
     } else if (this.manualClipId === null && this.findPlayableClip('player.hang')?.metadata?.jakLedge) {
       const inputs = intent.motion.inputs ?? {};
-      if (hint === 'player.hang') {
+      if (hint === 'player.hang' && (inputs.jakLedgeRelease ?? -1) >= 0) {
+        // Letting go begins on the lip: his feet come up onto the wall before his hands leave it.
+        requested = 'player.jak-ledge-off'; directTime = inputs.jakLedgeRelease;
+      } else if (hint === 'player.hang') {
         const catchId = inputs.jakLedgeSide > 0 ? 'player.jak-ledge-left'
           : inputs.jakLedgeSide < 0 ? 'player.jak-ledge-right' : 'player.jak-ledge-catch';
         const catchDuration = this.findPlayableClip(catchId)!.duration;

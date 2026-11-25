@@ -76,7 +76,7 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
    */
   const start = (opts = {}) => {
     const { pump = false, spin = true, pop = true, grind = true, until = () => false, seconds = 240, from = null, depth = 0,
-      jumpInAt = null, patient = true, balance = true, heldBounce = false, stompTurtle = false, trace = false, traceX = null } = opts;
+      jumpInAt = null, patient = true, balance = true, heldBounce = false, stompTurtle = false, trace = false, traceX = null, ride = false } = opts;
     level.reset(true);
     p.respawn(level, true);
     if (from) { p.pos.set(from[0], from[1], 0); p.prevPos.copy(p.pos); }
@@ -102,6 +102,9 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       const x = p.pos.x, y = p.pos.y, onFoot = !p.freeSkate, at = pipeAt(x), now = level.time;
       const walking = onFoot && p.grounded && p.state === 'ride';
       let moveX = 1, standing = false;
+      // The air out of a pipe lands on foot only for a rider who has let the stick go: the course between
+      // the pipes is walked, so the bot lets go on the way down to each deck (`ride: true` keeps it held).
+      if (!ride && p.sideOnExitAir && (p.vVel < 0 || p.grounded)) moveX = 0;
       /** Stop short of `edge` until `ok()` says the crossing can be made from here, then commit to it. */
       const brink = (name, edge, ok) => {
         if (x < edge - 6 || x > edge - 0.05) { if (x > edge + 1) committed.delete(name); return; }
