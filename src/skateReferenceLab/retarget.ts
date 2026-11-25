@@ -77,9 +77,10 @@ export function sampleMotion(clip: SourceClip, time: number, output: Transform[]
   }
 }
 
-function relativeRotation(node: THREE.Object3D | null, root: THREE.Object3D): THREE.Quaternion {
-  if (!node || node === root) return new THREE.Quaternion();
-  return relativeRotation(node.parent, root).multiply(node.quaternion).normalize();
+export function relativeRotation(node: THREE.Object3D | null, root: THREE.Object3D): THREE.Quaternion {
+  const rotation = new THREE.Quaternion();
+  for (let joint = node; joint && joint !== root; joint = joint.parent) rotation.premultiply(joint.quaternion);
+  return rotation.normalize();
 }
 
 interface Binding {source: number; joint: PlayerRigJoint; sourceRestInverse: THREE.Quaternion; targetRest: THREE.Quaternion}

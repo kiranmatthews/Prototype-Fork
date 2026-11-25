@@ -13370,6 +13370,23 @@ the release-size check pass (995 MB of the 1,000 MB hosting budget).
 - In the hang that follows a catch, the game's pull-up is the game's: it was not re-authored here.
 - A wall with no flat at all in front of it is left alone (there is nowhere to be thrown back to).
 
+## 2026-11-25 — Skate poses in fakie
+
+About 11 minutes from the brief to the first browser playthrough of the fix.
+
+After a revert, the rider used the older standing pose for coasting and charging. The skate animation
+already supported either leading foot, but gameplay only used the fakie version for a recovery push.
+Riding, carving, pushing, charging, ollies and landings now use the current clips in both stances.
+The board keeps its own nose direction through a revert or shove-it. A pickup starts with the foot
+that led on the board, and a rolling stance change blends from the pose already on screen.
+
+In Chrome, a revert into fakie carried through a push, full charge, steered ollie and landing,
+then a second revert brought the original foot and nose forward. At 720p and MAX the rider's
+head dropped about 0.53 m under charge. Lite, 720p and MAX passed with a clean console.
+The controller checks cover both leading feet and both deck directions across ice at 30, 60 and
+120 Hz, including the shoe contacts during entry and exit. In Side Pipe Lab the dedicated vert
+poses played in both stances, with sole errors below 1.5 mm in the four-hang check.
+
 ## 2026-11-25 — Verts are verts: the roll back onto his feet, ledges on lips, drop-ins and transfers everywhere
 
 Brief (six notes on the vert run-up, after playing it): the "comes up short" should roll backwards and
