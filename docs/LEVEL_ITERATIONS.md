@@ -13538,6 +13538,9 @@ Where the authored ride and a native pose change hands on the ground (29 times) 
 up to 88.2° in that frame, more than 30° six times; now 37.8° at most and over 30° once, where the
 ground itself turns 20° in the frame and the native pose is still coming round to it.
 A plain 18.4° ramp: street 37.1° to 0.3°, park 18.8° to 0.4°.
+Merged with the vert work that landed on `main` meanwhile, the same inputs play a different run (the
+verts changed): 4,663 authored frames, median 0.5°, 99th 2.7°, and three frames over 15°, all of them
+one landing (below).
 
 **Checks.**
 
@@ -13563,7 +13566,9 @@ A plain 18.4° ramp: street 37.1° to 0.3°, park 18.8° to 0.4°.
 - Native poses are as they were. On vert and transitions the controller's own eased alignment has the
   deck a median 3.8° and at worst 56° behind the surface as it curves (448 of 2,857 frames over 15°), and
   in a street level a native pose (a manual, a revert) leaves the deck level on a slope under about 40°.
-- Getting on is drawn unsupported, as designed: on a slope the deck is level until he is on it.
+- Getting on is drawn unsupported, as designed: on a slope the deck is level until he is on it. A
+  landing is faded in over 0.07 s from the pose he flew in, so the deck is not on a steep face until its
+  fourth frame there: 53°, 38°, 21° and 7° off landing on the 63° drop out of a native air.
 - The deck follows the collision normal, so it steps with the facets of a curved surface (5 to 7° every
   three or four frames on the entry drop) and flicks once at a seam in the right exit chute where the
   normal jumps 27.6° for one frame. Both were there before, the wrong way round.
