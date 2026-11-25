@@ -111,7 +111,13 @@ A rider (`playableMotion.ts`) stands on springs: a deep charge crouch folded
 toward the hard landing's low point that keeps pumping, a lean into turns, a
 knee for the road, and weight shifts while he coasts. `test-jak-skid`,
 `test-jak-charge` and `test-skate-life` cover them at three frame rates
-against native controls.
+against native controls. His deck lies on the ground it is riding, at once,
+and he comes round to it over about a tenth of a second. The drawn root may
+already lie on that ground (a park lays it all the way, a street ramp not at
+all, and it comes round over a few frames either way), so the deck takes only
+what the root has left: the turn from `Player.rootSurfaceAlignment` to the
+ground normal, carried into the root's frame. `test-skate-ground-lie` rides
+ramps both ways, a bank and a carve in both kinds of level and both stances.
 
 The follow-up passes nine rubber-motion cases, 18 double-jump transitions,
 12 UI-tuning configurations, source-retarget and precision-jump checks. Paired

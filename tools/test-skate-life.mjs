@@ -125,8 +125,10 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     const kicked=Math.max(...frames.map(fr=>fr.life.bump)),thrown=Math.min(...frames.map(fr=>fr.life.bump));
     check(kicked>.12&&thrown<-.015,`bumps: the road never reached his knees (${kicked.toFixed(3)}, ${thrown.toFixed(3)})`);
     const head=step(frames);
-    // (He used to be thrown over with the board as it met each slope: 0.35 m in a frame over these humps.)
-    check(head<.09,`bumps: over a hump his head stepped ${head.toFixed(3)} m in a frame`);
+    // (He used to be thrown over with the board as it met each slope: 0.35 m in a frame over these humps.
+    // It is 0.092 m at the sharper crest now that the deck tips the way the road does; while it tipped the
+    // other way, his turn and the give of his scaled body partly cancelled there and it read 0.075.)
+    check(head<.11,`bumps: over a hump his head stepped ${head.toFixed(3)} m in a frame`);
     results.bumps={kicked,thrown,head};
   }
   if(problems.length){console.log(problems.join('\n'));process.exitCode=1;}

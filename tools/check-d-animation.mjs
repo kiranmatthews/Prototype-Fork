@@ -20,7 +20,7 @@ const tests=[
   ['test-playable-skate-motion.mjs',skate],
   ['test-jump-skate-integration.mjs',skate,jak],
   ['test-skate-equipment-ground.mjs',skate],
-  ...['skate-native-actions','skate-abandon-presentation','skate-stance-continuity','skate-dismount-flow',
+  ...['skate-native-actions','skate-abandon-presentation','skate-stance-continuity','skate-ground-lie','skate-dismount-flow',
     'skate-mount-reveal','skate-speed-recovery-motion','gameplay-animation-lifecycle','pancake-slam','keyed-slide','low-pose-carry','animation-ik','character-animation-runtime','character-elasticity']
     .map(name=>[`test-${name}.mjs`]),
 ];

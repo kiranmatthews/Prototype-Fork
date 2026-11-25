@@ -74,6 +74,12 @@ const mountStarts: Readonly<Record<string, number>> = {
   BR_STAND_0_INTO_MOUNT: 28,
 };
 const mountUpperBody = /^(torsoRoot|spine|chest|neck|head|clavicle|shoulder|elbow|wrist)/;
+/** A node's turn in the world, through its own joints. */
+const worldTurn = (node: THREE.Object3D | null): THREE.Quaternion => {
+  const turn = new THREE.Quaternion();
+  for (let joint = node; joint; joint = joint.parent) turn.premultiply(joint.quaternion);
+  return turn.normalize();
+};
 
 /** Shared source-motion presentation. It observes native gameplay; it never
  * writes position, speed, grounded, input, charge, or a controller state. */
@@ -122,6 +128,7 @@ export class PlayableSkateMotion {
   // The lie of the road as the rider has caught up with it.
   private readonly road = new THREE.Quaternion();
   private roadKnown = false;
+  private readonly groundNormal = new THREE.Vector3();
   private readonly clips: Map<string, SourceClip>;
   private readonly rider: THREE.Object3D;
   private readonly body: THREE.Object3D;
@@ -582,6 +589,9 @@ export class PlayableSkateMotion {
       // current native pose without inventing a mount, pickup or ink event.
       this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
       this.fromPose=this.fromPreviousPose=null;
+      // Whatever ground he comes back to, he comes back lying on it: the lie
+      // he had before a trick or a spill is not one to come round from.
+      this.roadKnown=false;
       // The controller resets stance for the NEXT mount when feet go down.
       // Remember the actual outgoing native pose (especially fakie), before
       // that reset can turn a pickup's first frame through 180 degrees.
@@ -600,7 +610,7 @@ export class PlayableSkateMotion {
     this.iceBlend=THREE.MathUtils.clamp(this.iceBlend+(iceTarget?1:-1)*Math.max(0,dt)/(iceTarget ? .24 : .28),0,1);
     if(this.iceBlend===1){
       // Once settled, native ice owns its exact live pose and elasticity.
-      this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
+      this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;this.roadKnown=false;
       p.clearCharacterAppearance();this.lastPose=this.capture();p.syncCharacterAppearance();
       this.fromPose=this.fromPreviousPose=null;
       this.idleClock+=dt;this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
@@ -726,22 +736,38 @@ export class PlayableSkateMotion {
       : this.phase==='mount' ? Math.sin(this.time/(clipDuration(this.clip!)-this.mountStart)*Math.PI*2) : 0;
     scalars['deform.torso.length'] = 1 + amplitude * beat;
     applyDeformations(scalars);
-    this.fitSourceContacts();
-    // Source samples carry their ground height. Terrain orientation belongs to
-    // the native support frame; do not tilt on-foot pickup around a deck axis.
+    // Source samples carry their ground height, above the ground the root
+    // stands him on: level, or as far onto the surface as the controller has
+    // laid it (all the way in a park, once it has come round).
+    const lie: THREE.Quaternion = p.rootSurfaceAlignment, stands = new THREE.Vector3(0,1,0).applyQuaternion(lie);
+    this.fitSourceContacts(1, stands);
+    // Terrain orientation belongs to the native support frame; do not tilt
+    // on-foot pickup around a deck axis.
     if (mounted && this.phase!=='mount' && p.grounded && p.groundHit?.normal) {
-      const support = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),p.groundHit.normal);
+      // The deck takes whatever of the ground the root has not: the turn from
+      // where the root stands him to the surface under the wheels. Both are
+      // world directions and the body hangs under the root, which faces the
+      // other way round and may already lie on the slope, so the turn is
+      // carried into the root's frame. Applied there as it stood in the world
+      // it tipped the deck the wrong way down a street ramp, and stood it
+      // back up level on every slope of a park.
+      const normal = this.groundNormal.copy(p.groundHit.normal).normalize();
+      const ground = new THREE.Quaternion().setFromUnitVectors(stands, normal).multiply(lie);
+      const root = worldTurn(this.body.parent), fromRoot = root.clone().invert(), upright = lie.clone().invert().multiply(root);
+      const inRoot = (world: THREE.Quaternion) => fromRoot.clone().multiply(world).multiply(upright);
       const turn = this.body.quaternion.clone();
-      this.body.quaternion.premultiply(support);
+      this.body.quaternion.premultiply(inRoot(ground));
       // The board takes the road as it comes. He takes it late: over the foot
       // of a ramp or a hump the deck tips under him and he comes round to it
       // after, where he used to be thrown over with it in a single frame.
-      if (!this.roadKnown) {this.road.copy(support); this.roadKnown = true;}
-      else this.road.slerp(support, 1 - Math.exp(-Math.max(0, dt) * RIDE_LIFE.road));
-      if (this.road.angleTo(support) > 1e-4) {
-        this.rider.quaternion.premultiply(this.body.quaternion.clone().invert().multiply(this.road).multiply(turn));
+      // (His lie is kept in the world, so the root coming round under him
+      // is not a second change for him to follow.)
+      if (!this.roadKnown) {this.road.copy(ground); this.roadKnown = true;}
+      else this.road.slerp(ground, 1 - Math.exp(-Math.max(0, dt) * RIDE_LIFE.road));
+      if (this.road.angleTo(ground) > 1e-4) {
+        this.rider.quaternion.premultiply(this.body.quaternion.clone().invert().multiply(inRoot(this.road)).multiply(turn));
         // His soles go back onto the deck as it now lies.
-        this.fitSourceContacts();
+        this.fitSourceContacts(1, normal);
       }
     } else this.roadKnown = false;
     this.retarget.board.updateWorldMatrix(true,false);
@@ -876,6 +902,9 @@ export class PlayableSkateMotion {
     }
   }
 
+  /** The ground the root stands him on, before the deck takes the rest of it. */
+  private stands(): THREE.Vector3 {return new THREE.Vector3(0,1,0).applyQuaternion(this.p.rootSurfaceAlignment);}
+
   private sourceDeckContact(boardHeight:number,foot:THREE.Vector3):number {
     // In the step-on clips the rear ankle is outside the deck while the sole
     // reaches across it. An ankle-only width test misread this as a ground
@@ -900,7 +929,10 @@ export class PlayableSkateMotion {
     }
   }
 
-  private fitSourceContacts(contactWeight=1): void {
+  /** `up` is the ground he stands on as the pose now lies: a foot the source
+   * has on the ground goes to that plane through the rider's place, and the
+   * pelvis is lowered along it. World up is only that ground on the flat. */
+  private fitSourceContacts(contactWeight=1, up: THREE.Vector3=this.stands()): void {
     const rt=this.retarget, rig=rt.rig, samples=rt.sampled, data=rt.data;
     const src=(name:string)=>new THREE.Vector3(...samples[data.bones.findIndex(b=>b.name===name)].slice(0,3));
     const sourceBoard=src('SKATEBOARD_ROOT'), board=rt.board;
@@ -917,14 +949,15 @@ export class PlayableSkateMotion {
       const ground=(1-deck)*(1-smooth((sourceBoard.y+source.y-.12)/.11));
       const weight=deck+ground;
       const height=(settings.boardToGroundDistance+evaluateSkateboardSurfaceHeight(settings,local.x/scale,local.z/scale))*scale;
-      const target=position.clone().setY(this.p.pos.y+.005).lerp(board.localToWorld(local.clone().setY(height)),deck/Math.max(.001,weight));
+      const grounded=position.clone().addScaledVector(up,.005-position.clone().sub(this.p.pos).dot(up));
+      const target=grounded.lerp(board.localToWorld(local.clone().setY(height)),deck/Math.max(.001,weight));
       return {side,ankle,socket,position,target,weight:weight*contactWeight};
     });
     const supported=contacts.filter(c=>c.weight>.001);
     if(!supported.length || this.phase==='air')return;
     // Lower the pelvis as one translation before the per-leg solve. No leg
     // length scaling or whole-character compression is needed to meet the deck.
-    const correction=supported.reduce((sum,c)=>sum+(c.target.y-c.position.y)*c.weight,0)/Math.max(1,supported.reduce((sum,c)=>sum+c.weight,0));
+    const correction=supported.reduce((sum,c)=>sum+c.target.clone().sub(c.position).dot(up)*c.weight,0)/Math.max(1,supported.reduce((sum,c)=>sum+c.weight,0));
     this.rider.position.y+=THREE.MathUtils.clamp(correction/this.bodyScale.y,-.28,.16);
     this.body.updateWorldMatrix(true,true);
     for(const c of supported) {

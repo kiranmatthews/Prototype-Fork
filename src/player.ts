@@ -1837,6 +1837,11 @@ export class Player {
   // reads this, never a transform that Animation Studio is allowed to edit.
   private landingAlignPose = 0;
   readonly alignNormal = new THREE.Vector3(0, 1, 0); // eased surface normal the rig lies on
+  /** The turn that laid the drawn root on the surface this step: identity
+   * while it stands upright, the whole lie of a park's ground once it has
+   * come round to it. A pose layered on the root reads this to know how much
+   * of the ground is still to take up. Presentation only. */
+  readonly rootSurfaceAlignment = new THREE.Quaternion();
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -22352,6 +22357,7 @@ export class Player {
     // tip. Rolling about the heading itself is right everywhere, and is
     // numerically identical to the old code whenever the heading is -Z.
     this.group.rotation.set(0, Math.PI, 0);
+    this.rootSurfaceAlignment.identity();
     const roll = this.lean;
     if (roll * roll > 1e-8 && this.lipStallT <= 0) {
       // visualYaw is updated below; a frame of lag on the AXIS is invisible
@@ -22380,6 +22386,7 @@ export class Player {
       }
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
+      this.rootSurfaceAlignment.copy(VERT_Q2);
       // A spine transfer is thrown, not turned. The drawn body winds up
       // against the turn, is driven late and hard, runs past the far wall and
       // comes back to it; the normal the simulation eases (and a skate camera
