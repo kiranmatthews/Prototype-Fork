@@ -13489,21 +13489,25 @@ slope:
 On the flat the tilt is nothing, which is why it went unseen in most levels. It is not new: trees from
 14, 19 and 24 November draw the same frames (the code dates from the rider's springs of the 11th).
 
-**What made it show all through this run.** Two things were bisected on the take with identical
-physics, by serving single files as they stood at an earlier commit:
+**Which change it was.** None of today's. Two were bisected on the take with identical physics, by
+serving single files as they stood at an earlier commit:
 
 - `fa94651f` (today, "Skate poses in fakie") hands fakie and reversed-deck riding to the authored ride.
   Until then those frames were the native pose, which lies on the ground. In the first 1,500 steps the
   authored ride goes from 242 grounded frames to 439, and its frames more than 45 degrees off the ground
   from 89 to 229; of the 1,057 frames with identical physics that changed hands, 888 moved away from
-  the ground. A third of this run's riding is in fakie (3,103 of 9,724 frames on the ground).
+  the ground. A third of this run's riding is in fakie (3,103 of 9,724 frames on the ground). So it
+  spread the fault, by about two fifths over the whole take. But the take cannot have been played on
+  it: the recording ends at 09:56:29 UTC and is 576 seconds of simulation long, so it began by 09:46:53;
+  the commit is stamped 09:49:36 and its deploy finished at 10:23.
 - The sheared-matrix change earlier today (`src/animation/ik.ts`, `src/skateAnimation.ts`) does nothing
   to it: with both files as they were, no frame of that stretch has the deck more than a degree
   different.
 
-So the fault was in the authored ride all along, in regular stance, and the fakie change put it under
-most of the run. What that change is for, the current clips in both stances and the deck keeping its own
-nose, is untouched.
+On the presentation as it stood before the fakie change the take already has the authored ride's deck
+more than 15 degrees off the ground on 2,719 of its 4,793 grounded frames (carve lean included), all in
+regular stance. The fault was in the authored ride from the start; what the fakie change is for, the
+current clips in both stances and the deck keeping its own nose, is untouched.
 
 **The fix.**
 
