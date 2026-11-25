@@ -15,9 +15,9 @@
 //                 full stretch of his arms, sags onto them, and hangs: from
 //                 there it is the game's own ledge hang and clamber;
 //   higher        he leaps the same metre, comes up short, slides down the
-//                 wall watching the lip get away, is thrown onto his back by
-//                 the transition and skids out along the flat, legs in the
-//                 air; and gets up.
+//                 wall watching the lip get away, is thrown over backwards by
+//                 the transition, and rolls right over, out along the flat,
+//                 onto his feet again.
 //
 // Everything here is plain geometry in the wall's own plane (`s` = metres
 // toward the wall along the ground, `y` = world height) and plain numbers, so
@@ -46,8 +46,12 @@ export const VERT_RUN_UP = {
   headOver: 2.7,
   /** What the spring off the wall is worth: how far a miss lifts his pelvis. */
   leapRise: 1.0,
-  /** Standable deck there has to be behind the lip for him to go for it at all. */
+  /** Standable deck there has to be behind the lip for it to be a ledge he can take: to climb out onto, or to hang from. */
   landingDepth: 0.9,
+  /** A lip with no ledge behind it (a spine, a wall going on up, a top with no room on it) that is
+   * no higher than this is left alone; higher, and he goes for it and comes up short. (At his hips
+   * when the wall stops his run: under that there is nothing to leap for.) */
+  vaultRise: 1.5,
   /** Pelvis height standing, and how far it sits out from a wall he is pressed to. */
   hipStand: 0.95,
   hipOut: 0.36,
@@ -80,8 +84,8 @@ export const VERT_RUN_UP = {
   rollFriction: 0.16,
   tumbleFriction: 0.80,
   slideDrag: 0.55,
-  /** Sitting up and standing after the tumble. */
-  recoverSeconds: 0.82,
+  /** Standing up out of the crouch the roll lands him in. */
+  recoverSeconds: 0.34,
   /** A planted foot holds until the pelvis is this far from it (his leg, to the sole), and is gone a little past it. */
   legReach: 0.96,
   /** He runs on from a climb at this speed (m/s): what the mantle leaves him with. */
@@ -92,28 +96,40 @@ export const VERT_RUN_UP = {
   /** Where the plan's own moments sit on each clip (0..1): the poses are authored to these. */
   climb: { hands: 0.26, over: 0.58 },
   leap: { load: 0.25, catch: 0.86 },
-  miss: { leap: 0.20, slide: 0.30, tumble: 0.70 },
+  miss: { leap: 0.20, slide: 0.30, tumble: 0.86 },
 } as const;
 
 /**
- * The fall back, through the tumble beat (0..1): how far back he has gone over
- * (radians; a quarter turn is flat on his back) and how far his pelvis rides
- * off the ground there. He falls back onto his seat, rolls on up his back with
- * his legs going over his head, and rocks down again to sit. The clip takes
- * its body pitch from this table and the plan takes the pelvis height from it,
- * so the two cannot drift apart.
+ * The roll back, through the tumble beat (0..1): how far over backwards he has
+ * gone (radians; a quarter turn is flat on his back, a whole turn is on his
+ * feet again) and how far his pelvis rides off the ground there. He is thrown
+ * back onto his seat, rolls on up his back and over his shoulders with his
+ * knees at his chest, and his feet come down under him. His head is 0.8 m
+ * across: going over it lifts his pelvis most of a metre, which is where the
+ * heights come from. The clip takes its body pitch from this table and the
+ * plan takes the pelvis height from it, so the two cannot drift apart.
  */
 export const VERT_MISS_ROLL: readonly { at: number; back: number; off: number }[] = [
   { at: 0, back: 0.22, off: 0.44 },    // feet caught on the transition, knees gone
-  { at: 0.15, back: 0.95, off: 0.34 }, // going over backwards
-  { at: 0.30, back: 1.38, off: 0.21 }, // the seat hits
-  { at: 0.50, back: 2.25, off: 0.30 }, // up onto his shoulders, legs over
-  { at: 0.75, back: 1.30, off: 0.23 }, // rocking back down
-  { at: 1, back: -0.18, off: 0.21 },   // sat, the trunk thrown forward over the legs
+  { at: 0.12, back: 0.95, off: 0.34 }, // going over backwards
+  { at: 0.24, back: 1.42, off: 0.22 }, // the seat hits
+  { at: 0.40, back: 2.40, off: 0.58 }, // up his back onto his shoulders
+  { at: 0.54, back: 3.25, off: 1.04 }, // over the top, on one shoulder and both hands, his head turned out of the way
+  { at: 0.70, back: 4.10, off: 1.42 }, // piked over his hands, hips at their highest
+  { at: 0.80, back: 4.80, off: 1.22 }, // feet down under him, his hands leaving the ground
+  { at: 0.90, back: 5.65, off: 0.94 }, // the trunk coming up
+  { at: 1, back: 6.12, off: 0.86 },    // on his feet, knees soft, nearly upright
 ];
 
-/** Which of the three it is, from the lip's height above the run-out point: that one number and nothing else. */
-export function vertRunOutcome(rise: number): VertRunOutcome {
+/**
+ * Which of the three it is, from the lip's height above the run-out point:
+ * that one number, and whether there is a ledge up there at all. A top he
+ * could not stand on or hang from (two verts back to back, a wall that goes on
+ * up, a deck with something on it) is not a ledge: whatever its height, he
+ * comes up short.
+ */
+export function vertRunOutcome(rise: number, ledge = true): VertRunOutcome {
+  if (!ledge) return 'miss';
   return rise <= VERT_RUN_UP.climbRise ? 'climb' : rise <= VERT_RUN_UP.grabRise ? 'grab' : 'miss';
 }
 
@@ -299,7 +315,7 @@ export interface VertRunFrame {
   /** Metres per second the pelvis is moving, for dust and for the hand-over at the end. */
   velS: number; velY: number;
 }
-export type VertRunBeat = 'step' | 'press' | 'over' | 'leap' | 'catch' | 'reach' | 'slide' | 'tumble' | 'rest' | 'rise';
+export type VertRunBeat = 'step' | 'press' | 'over' | 'leap' | 'catch' | 'reach' | 'slide' | 'tumble' | 'rise';
 
 export function emptyVertRunFrame(): VertRunFrame {
   return { done: false, progress: 0, beat: 'step', hipS: 0, hipY: 0, posS: 0, posY: 0,
@@ -315,6 +331,8 @@ export interface VertRunStart {
   /** How far out from a lip the game's hang holds the controller point, and how far under. */
   hangSkin: number;
   hangDepth: number;
+  /** False when there is nothing behind the lip to stand on or hang from: the wall is only ever come up short on. */
+  ledge?: boolean;
 }
 
 /**
@@ -338,8 +356,6 @@ export function throughKeys(at: readonly number[], values: readonly number[], x:
   return (2 * t * t * t - 3 * t * t + 1) * values[i] + (t * t * t - 2 * t * t + t) * span * slope(i) +
     (-2 * t * t * t + 3 * t * t) * values[i + 1] + (t * t * t - t * t) * span * slope(i + 1);
 }
-/** A foot is held by the ball of it. Sat with a leg out, that is this far off the ground: it is his heel that is down. */
-const HEEL_DOWN = 0.15;
 const ROLL_AT = VERT_MISS_ROLL.map(key => key.at), ROLL_OFF = VERT_MISS_ROLL.map(key => key.off);
 
 /** How far through a leap the hands take the lip. */
@@ -399,7 +415,7 @@ export class VertRunPlan {
   constructor(readonly wall: VertWall, start: VertRunStart) {
     const W = wall, A = VERT_RUN_UP;
     this.start = start;
-    this.outcome = vertRunOutcome(W.rise);
+    this.outcome = vertRunOutcome(W.rise, start.ledge !== false);
     this.startClear = start.hipY < W.lipY ? W.faceAt(start.hipY) - start.hipS : Infinity;
     // Where he stands on the wall for it: as high as the run has him, or as high as it would have had him.
     this.stand = Math.max(start.hipY, W.runOutY + A.stanceHips);
@@ -438,7 +454,10 @@ export class VertRunPlan {
     const grab = this.outcome === 'grab', stand = this.stand;
     // (a lip he can all but reach from where he stands is still hopped at: he takes it on bent arms and drops the rest;
     // and a miss is a miss, however high the run left him: his fingers never get nearer than a hand's breadth)
-    const apexY = grab ? Math.max(W.lipY - A.catchDrop, stand + 0.06) : Math.min(stand + A.leapRise, W.lipY - A.reachDrop - 0.12);
+    // (and a top with no ledge to it may be within his reach: there he does not sink to stay short of it. He springs
+    // a hand's breadth, his palms meet the face under the coping, and there is nothing there to take)
+    const apexY = grab ? Math.max(W.lipY - A.catchDrop, stand + 0.06)
+      : Math.max(stand + 0.06, Math.min(stand + A.leapRise, W.lipY - A.reachDrop - 0.12));
     // (a lip he can all but reach from where he stands wants a dip of the knees, not a crouch)
     const loadY = stand - lerp(0.12, 0.30, smooth((apexY - stand + 0.1) / 0.6));
     const loadS = W.faceAt(loadY) - A.loadOut;
@@ -564,7 +583,7 @@ export class VertRunPlan {
       }
       else {
         // Fingertips on the face, as high as they go: under the lip.
-        const tip = this.apexHipY + A.reachDrop - 0.06;
+        const tip = Math.min(this.apexHipY + A.reachDrop - 0.06, W.lipY - 0.10);
         out.hands = { weight: 0.85 * smooth((p - 0.56) / 0.28), s: W.faceAt(tip), y: tip };
         out.secondHand = 0.85 * smooth((p - 0.62) / 0.24);
       }
@@ -612,7 +631,7 @@ export class VertRunPlan {
     const tumble = clamp((t - this.slideSeconds) / this.tumbleSeconds);
     const off = t < this.slideSeconds ? lerp(A.hangOut, ROLL_OFF[0], smooth(t / this.slideSeconds))
       : t < moving ? throughKeys(ROLL_AT, ROLL_OFF, tumble)
-      : lerp(ROLL_OFF[ROLL_OFF.length - 1], A.hipStand, smooth((recover - 0.42) / 0.58));
+      : lerp(ROLL_OFF[ROLL_OFF.length - 1], A.hipStand, smooth(recover));
     // Off the surface along its own normal: out from a wall, up from a floor.
     out.hipS = p.s - Math.sin(p.slope) * off; out.hipY = p.y + Math.cos(p.slope) * off;
     // The first of the fall starts from where the leap ended, not from the surface under it.
@@ -657,18 +676,18 @@ export class VertRunPlan {
       this.fallen(this.slideSeconds, C);
       const stuck = 0.75 * (1 - smooth((tumble - 0.05) / 0.14)), a = toes(C.hipY, 0.80), b = toes(C.hipY, 0.93);
       out.feet[0] = { weight: stuck, s: a.s, y: a.y }; out.feet[1] = { weight: stuck, s: b.s, y: b.y };
-      // ...and at the end of it his heels come down on the flat out in front of him, one leg out and one knee up.
-      const down = smooth((tumble - 0.86) / 0.14);
-      if (down > 0) { out.feet[0] = { weight: down, s: F.s + 0.80, y: F.y + HEEL_DOWN }; out.feet[1] = { weight: down, s: F.s + 0.52, y: F.y + HEEL_DOWN * 0.5 }; }
+      // Going over the top his hands are on the ground by his ears, where they met it: he rolls over them.
+      this.fallen(this.slideSeconds + 0.46 * this.tumbleSeconds, C);
+      out.hands = { weight: 0.9 * smooth((tumble - 0.40) / 0.07) * (1 - smooth((tumble - 0.72) / 0.08)), s: C.s - 0.74, y: C.y + 0.03 };
+      out.secondHand = out.hands.weight;
+      // ...and his feet come down where he will stand, a little before the rest of him is over them.
+      const land = smooth((tumble - 0.68) / 0.12), rest = W.at(this.restLen);
+      if (land > 0) { out.feet[0] = { weight: land, s: rest.s + 0.16, y: rest.y }; out.feet[1] = { weight: land, s: rest.s - 0.12, y: rest.y }; }
     } else {
-      out.beat = recover < 0.3 ? 'rest' : 'rise';
+      out.beat = 'rise';
       out.progress = lerp(M.tumble, 1, recover);
-      // Sat: heels on the ground in front of him, hands on it behind. Then his feet come in under him and he gets up off them.
-      const under = smooth((recover - 0.30) / 0.26);
-      out.feet[0] = { weight: 1, s: F.s + lerp(0.80, 0.16, under), y: F.y + HEEL_DOWN * (1 - under) };
-      out.feet[1] = { weight: 1, s: F.s + lerp(0.52, -0.12, under), y: F.y + HEEL_DOWN * 0.5 * (1 - under) };
-      out.hands = { weight: smooth((recover - 0.05) / 0.10) * (1 - smooth((recover - 0.40) / 0.12)), s: F.s - 0.30, y: F.y + 0.03 };
-      out.secondHand = smooth((recover - 0.08) / 0.10) * (1 - smooth((recover - 0.36) / 0.12));
+      // Up out of the crouch, over the feet the roll put under him.
+      out.feet[0] = { weight: 1, s: F.s + 0.16, y: F.y }; out.feet[1] = { weight: 1, s: F.s - 0.12, y: F.y };
       out.posS = F.s; out.posY = F.y;
     }
     if (out.done) { out.posS = this.endS; out.posY = this.endY; }

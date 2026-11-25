@@ -19,6 +19,11 @@
 //   |u| in [0,F]      → flat bottom (θ = 0)
 //   |u| in [F,uLip]   → quarter-circle wall (θ ramps 0 → 90°)
 //
+// A wall may carry a STRAIGHT VERTICAL section above its curve (`lipRise`): the
+// arc ends vertical and the face goes on straight up to the coping. It is the
+// same one line, only longer: |u| past the arc is metres of vertical, θ stays
+// 90°, and the lip (`lipYOf`, `uLipOf`) is at the top of it.
+//
 // The two walls need not match. A `HalfpipeShape` gives each side its own
 // radius — so its own coping height and arc length — or none at all (an OPEN
 // side: the flat simply ends and the path rolls out), and a deck behind each
@@ -40,6 +45,8 @@ export interface HalfpipeShape {
   wallRadius?: readonly [number, number];
   /** Depth of the flat deck behind each coping; 0 = a bare lip. */
   deck?: readonly [number, number];
+  /** Straight vertical face above each wall's curve, up to its coping; 0 = the curve ends at the lip. */
+  lipRise?: readonly [number, number];
   /**
    * Viewed across the section: the ride is locked to the cross axis, a decked
    * coping drops a walker in on the board, holding out over a lip carries the
@@ -71,6 +78,7 @@ export class Halfpipe {
   readonly walls: THREE.Mesh[] = []; // transitions and flat floor; registered as one analytic surface
   readonly decks: THREE.Mesh[] = []; // walk surfaces behind the copings (ordinary ground, not transition)
   private readonly wallR: readonly [number, number];
+  private readonly wallLift: readonly [number, number];
   private readonly deckDepth: readonly [number, number];
 
   constructor(
@@ -96,13 +104,18 @@ export class Halfpipe {
       this.wallR[0] > 0 ? Math.max(0, shape.deck?.[0] ?? 0) : 0,
       this.wallR[1] > 0 ? Math.max(0, shape.deck?.[1] ?? 0) : 0,
     ];
+    this.wallLift = [
+      this.wallR[0] > 0 ? Math.max(0, shape.lipRise?.[0] ?? 0) : 0,
+      this.wallR[1] > 0 ? Math.max(0, shape.lipRise?.[1] ?? 0) : 0,
+    ];
     this.radius = shape.wallRadius ? Math.max(this.wallR[0], this.wallR[1]) : radius;
     this.cross = cross;
     this.axis = axis;
     this.lipX = flatHalf + this.radius;
-    this.lipY = yBottom + this.radius;
+    this.lipY = yBottom + Math.max(this.radius, this.wallR[0] + this.wallLift[0], this.wallR[1] + this.wallLift[1]);
     this.uWall = (this.radius * Math.PI) / 2;
-    this.uLip = flatHalf + this.uWall;
+    this.uLip = flatHalf + Math.max(this.uWall,
+      (this.wallR[0] * Math.PI) / 2 + this.wallLift[0], (this.wallR[1] * Math.PI) / 2 + this.wallLift[1]);
     this.sideOn = shape.sideOn === true;
     this.baseY = Math.min(yBottom, shape.baseY ?? yBottom);
     this.object = this.build(mat);
@@ -122,13 +135,21 @@ export class Halfpipe {
   lipXOf(side: number): number {
     return this.flatHalf + this.radiusOf(side);
   }
+  /** Straight vertical face above that wall's curve; 0 = the curve ends at the lip. */
+  lipRiseOf(side: number): number {
+    return this.wallLift[side < 0 ? 0 : 1];
+  }
+  /** Height at which that wall's curve ends (and any straight section begins). */
+  arcTopYOf(side: number): number {
+    return this.yBottom + this.radiusOf(side);
+  }
   /** Coping height of that wall (the floor when open). */
   lipYOf(side: number): number {
-    return this.yBottom + this.radiusOf(side);
+    return this.yBottom + this.radiusOf(side) + this.lipRiseOf(side);
   }
   /** Arc length from the centre of the flat to that coping. */
   uLipOf(side: number): number {
-    return this.flatHalf + (this.radiusOf(side) * Math.PI) / 2;
+    return this.flatHalf + (this.radiusOf(side) * Math.PI) / 2 + this.lipRiseOf(side);
   }
   /** Depth of the deck behind that coping. */
   deckOf(side: number): number {
@@ -151,7 +172,10 @@ export class Halfpipe {
     if (au <= this.flatHalf) return this.yBottom;
     const r = this.radiusOf(u);
     if (r <= 0) return this.yBottom;
-    const phi = Math.min((au - this.flatHalf) / r, Math.PI / 2);
+    const arc = (r * Math.PI) / 2;
+    // past the curve: the straight face, a metre of height per metre of it
+    if (au - this.flatHalf >= arc) return this.yBottom + r + Math.min(au - this.flatHalf - arc, this.lipRiseOf(u));
+    const phi = (au - this.flatHalf) / r;
     return this.yBottom + r * (1 - Math.cos(phi));
   }
 
@@ -169,21 +193,26 @@ export class Halfpipe {
     return Math.sign(u) * Math.sin(this.theta(u));
   }
 
-  // Invert a cross-axis WORLD coordinate to the nearest arc-position u.
-  crossToU(c: number): number {
+  // Invert a cross-axis WORLD coordinate to the nearest arc-position u. The
+  // straight face above a curve is one cross coordinate for its whole height:
+  // there the height `y` says how far up it (without one, its foot).
+  crossToU(c: number, y?: number): number {
     const d = c - this.cross;
     const ad = Math.abs(d);
     if (ad <= this.flatHalf) return d;
     const r = this.radiusOf(d);
     if (r <= 0) return Math.sign(d) * this.flatHalf;
-    if (ad >= this.flatHalf + r) return Math.sign(d) * this.uLipOf(d);
+    if (ad >= this.flatHalf + r) {
+      const up = y === undefined ? 0 : Math.min(Math.max(0, y - (this.yBottom + r)), this.lipRiseOf(d));
+      return Math.sign(d) * (this.flatHalf + (r * Math.PI) / 2 + up);
+    }
     const phi = Math.asin((ad - this.flatHalf) / r);
     return Math.sign(d) * (this.flatHalf + r * phi);
   }
 
   // World hit point → arc-position u (picks whichever axis is the cross axis).
-  pointToU(x: number, z: number): number {
-    return this.axis === 'z' ? this.crossToU(x) : this.crossToU(z);
+  pointToU(x: number, z: number, y?: number): number {
+    return this.axis === 'z' ? this.crossToU(x, y) : this.crossToU(z, y);
   }
 
   // NEAREST point on the cross-section curve to a (crossWorld, y) sample — the
@@ -207,7 +236,16 @@ export class Halfpipe {
     // Wall arc: quarter circle centred at (±flatHalf, yBottom + R), radius R.
     const vx = ac - this.flatHalf; // >= 0 toward the wall
     const vy = y - (this.yBottom + r);
-    if (vy > 0) return null; // above coping height: over the lip
+    if (vy > 0) {
+      // The straight face above the curve: its nearest point is level with the sample.
+      if (vy > this.lipRiseOf(s)) return null; // above coping height: over the lip
+      return {
+        u: s * (this.flatHalf + (r * Math.PI) / 2 + vy),
+        cross: this.cross + s * (this.flatHalf + r),
+        y,
+        pen: vx - r, // past the face = inside the wall
+      };
+    }
     const d = Math.hypot(vx, vy);
     if (d < 1e-6) return null; // dead on the arc centre: no unique projection
     const phi = Math.atan2(vx, -vy); // 0 at the arc's bottom, π/2 at the coping
@@ -245,8 +283,25 @@ export class Halfpipe {
     skin = 0.08,
   ): { u: number; cross: number; y: number; pen: number } | null {
     if (!this.isRideSide(previousCross, previousY, skin)) return null;
-    const current = this.project(currentCross, currentY);
-    if (current === null || current.pen <= 0) return null;
+    let current = this.project(currentCross, currentY);
+    if (current === null) {
+      // THROUGH THE WALL IN ONE STEP. A fast body moves further in a step than
+      // the 5 cm behind the coping line that still counts as the wall, and a
+      // straight face is metres of exactly that. A body that was in front of
+      // the wall, under its lip, and is now behind it went through the face:
+      // it is met where it crossed. (One that came over the top of the lip and
+      // is coming down behind the wall did not, and is left alone.)
+      const side = currentCross - this.cross < 0 ? -1 : 1, r = this.radiusOf(side), plane = this.flatHalf + r;
+      const before = (previousCross - this.cross) * side, now = (currentCross - this.cross) * side;
+      if (r <= 0 || previousY > this.lipYOf(side) || before > plane + 0.05 || now <= plane) return null;
+      const t = before >= plane ? 0 : (plane - before) / (now - before);
+      const y = previousY + (currentY - previousY) * t;
+      if (y > this.lipYOf(side)) return null; // over the lip after all
+      current = this.project(this.cross + side * plane, y);
+      if (current === null) return null;
+      return { ...current, pen: Math.max(current.pen, now - plane) };
+    }
+    if (current.pen <= 0) return null;
     // "Deeply buried" is measured against the wall actually crossed; the flat
     // keeps the pipe's nominal radius, exactly as a symmetric pipe always did.
     const reach = Math.abs(current.u) <= this.flatHalf ? this.radius : this.radiusOf(current.u);
@@ -306,15 +361,22 @@ export class Halfpipe {
       const wallArc = (this.radiusOf(sign) * Math.PI) / 2;
       if (wallArc <= 0) continue; // an open side has no wall to draw or ride
       const seg = 22; // arc samples per wall — plenty smooth
+      const lift = this.lipRiseOf(sign), wallRun = wallArc + lift;
       const verts: number[] = [];
       const uvs: number[] = [];
-      const cols = seg + 1;
+      const cols = seg + 1 + (lift > 0 ? 1 : 0);
       for (const l of [this.l0, this.l1]) {
         for (let i = 0; i <= seg; i++) {
           const u = sign * (this.flatHalf + (wallArc * i) / seg);
           this.worldPos(u, l, tmp);
           verts.push(tmp.x, tmp.y, tmp.z);
-          uvs.push(i / seg, (l - this.l1) / (this.l0 - this.l1));
+          uvs.push((wallArc * i) / seg / wallRun, (l - this.l1) / (this.l0 - this.l1));
+        }
+        if (lift > 0) {
+          // the straight face: one more row, at the coping
+          this.worldPos(sign * (this.flatHalf + wallRun), l, tmp);
+          verts.push(tmp.x, tmp.y, tmp.z);
+          uvs.push(1, (l - this.l1) / (this.l0 - this.l1));
         }
       }
       const idx: number[] = [];

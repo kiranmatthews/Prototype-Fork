@@ -13387,6 +13387,81 @@ The controller checks cover both leading feet and both deck directions across ic
 120 Hz, including the shoe contacts during entry and exit. In Side Pipe Lab the dedicated vert
 poses played in both stances, with sole errors below 1.5 mm in the four-hang check.
 
+## 2026-11-25 — Verts are verts: the roll back onto his feet, ledges on lips, drop-ins and transfers everywhere
+
+Brief (six notes on the vert run-up, after playing it): the "comes up short" should roll backwards and
+return to standing; a skater who really does jump or fall to a tall vert's lip should be allowed to ledge
+grab it, game-wide (the three cases are for running up verts on foot); spine transfers should work on the
+verts on the left of the test level, because these are universal vert height principles and not behaviours
+of a manually classified kind of vert; a vert that approaches vertical where a ledge grab would not work (a
+wall, or two verts meeting for a spine transfer with no gap or landing) is a "comes up short"; already
+skating and running down into another vert should drop in again, with the slightest pause of dropping the
+tail on the edge, instead of glitching past it; and hanging from a short vert, the body should follow the
+curve so the legs do not clip through it. Tested without the full suite, as asked.
+Elapsed: about 1 h 35 min from the brief to all six playing in the real game (filmed, and in headless runs
+of the real player); about 2 h to the focused checks, docs and the published build. Times are approximate.
+`src/tuning.ts` is untouched, and the course's route test prints the same numbers (832 m in 121.6 s).
+
+**One backing for every vert in a side-on stretch** (`src/halfpipe.ts`, `Level.buildVertRamp`). The yard's
+four walls were swept meshes and the course's pipes were analytic, and the drop-in, the air over a coping
+and the transfer out of it only existed on the second kind. Now the analytic profile carries a straight
+vertical face above its curve (per wall), and any straight vert standing in a side-on zone with its section
+along the line takes that backing by where it stands and what shape it is: a quarter (one wall, the flat
+open on the other side) as much as a half, with its `lipRise` and `deck`. Nothing is flagged. Riding a face
+that stands dead upright needed one fix in the shared ride step: a square heading has no slope to split
+there, so all of the travel is up the wall or down it (before, a board seated on such a face sat still).
+Measured on the real player: rolled at from the east at 12 m/s, the yard's first wall throws the rider into
+its air, and the stick over the lip with Jump carries him out onto its deck.
+
+**On foot, the same rules in every vert.** A side-on pipe's surface no longer puts a board under a walker
+(crossing its lip from the deck still drops him in): jumped into, he is on his feet, and its walls are the
+vert run-up. P0, jumped into, is now climbed out of on foot up its 3.5 m east wall.
+
+**No ledge, comes up short** (`Player.scanVertWall`, `vertRunOutcome`). The scan used to give up on a top
+with no deck. It now returns the wall with `ledge: false`, and such a wall is always come up short on: a
+deck under 0.9 m, a box on the deck, two verts back to back (the ground falls away past the top), and a
+curve at the foot of a face that goes on up. A straight face cannot be seen from above, so its height is
+found by looking at it, a hand's breadth higher each time. A ledgeless top no higher than his hips is left
+alone. Under a lip within his reach he does not leap: he springs a hand's breadth, palms on the face, and
+slides back into the same roll.
+
+**The roll** (`VERT_MISS_ROLL`, `buildVertMissClip`). He used to land on his seat, skid, sit up and get up
+(2.6 s). Now the transition throws him over backwards and he comes up out of one roll onto his feet (2.1 s):
+seat, back, one shoulder and both hands with his head tipped aside, feet down, up. His head is 0.8 m across:
+straight over it his hips would have to pass at 1.6 m, which reads as a handstand; over the shoulder they
+pass at 1.4 m and the head guard has nothing to do (1.7 cm at worst, measured). Tuned with a 30 s headless
+probe of the real rig per pass instead of a film.
+
+**A vert's lip is a ledge** (`Player.tryLedgeGrabMesh`). On foot in the air (never from the board) a vert's
+deck is a ledge top like any other, in every level: caught, hung from, climbed out of, dropped from.
+
+**Hanging along the curve** (`Player.alignHangToVertCurve`). Under a platform's edge the side is a wall all
+the way down; under a vert's lip the transition comes out toward him. The wall is looked at once per hang
+and the posed body is swung about the line through his hands, and his thighs about the same line, by the
+least that keeps hips, knees and heels off it. On the yard's first wall (no straight face) he lies along the
+transition; down the third wall's 2.5 m face he hangs straight, as before.
+
+**The rolling drop-in** (`Player.beginDropInPerch`). On the board, crossing a lip from the deck used to seat
+him on the wall at 85 % of his speed with a quarter-second ease, which at 20 m/s reads as a skip (and on
+the yard's walls there was no drop-in at all). Now the roll stops with the tail on the coping and the deck
+out over the drop for 0.2 s (the tail stall's stance, with no needle and no points), and he tips in from
+rest at 4 to 7 m/s. Skated east from the third wall's deck, the yard is three of those in a row.
+
+Also fixed on the way: the start of every run-up clamped the drawn pelvis to within 0.6 m behind the
+controller point, which on a plain curve (where the run leans him back further than that) moved him 0.34 m
+in the move's first step; the clamp is 1.1 m and that step is 0.06 m. The editor's capture handed a
+side-on pipe back twice (once from the pipe list, once from the parts that carry their component). And a
+body in the air at 9 m/s moves 15 cm in a step, three times the 5 cm behind a coping line that still counted
+as the wall, so it could fly into a pipe's straight face and come out under the level: a body that was in
+front of a wall, under its lip, and is now behind it is met where it crossed (`Halfpipe.rideSideCrossing`).
+The new tests were mutation-checked (nine mutants, one per behaviour; the first run left one standing, a
+rider's fall that never reached the lip, which is how the hole in the face was found).
+
+Checks run (focused, not the full suite): `npm run check:side-pipe` (pipe contact, the course route, vert
+air, and the run-up test, now fifteen fixture walls plus the fall-and-catch, the hang, the rolling drop-in
+and the ridden quarter), `check:pipe`, `check:ledge`, `check:levels`, `check:animation`, the type check and
+the production build; then the yard in a real browser with real keys.
+
 ## 2026-11-25 — The authored ride lies on the ground it is riding
 
 Brief: a Deadwater Park take (34,586 steps, 9.6 minutes) with "serious issues all throughout this run

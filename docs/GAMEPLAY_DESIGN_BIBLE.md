@@ -2091,13 +2091,20 @@ decided by **the lip's height above that point** (`rise / 2 + lipRise` for a qua
 |---|---|---|
 | ≤ 3.0 m (any plain quarter up to 6 m radius; a 2.5 m curve with ≤ 1.75 m of straight wall above it) | climbs out in 0.5–0.9 s and runs on along the deck at 4.4 m/s | the step itself on an uphill stretch: it costs half a second and no input |
 | 3.1–3.9 m | leaps, catches the lip and hangs (0.4–0.7 s), then the ordinary clamber | a ledge: the hang is the game's own, with its grip timer and its drop |
-| ≥ 4.0 m | leaps, misses, slides down the face and is thrown back onto the flat: 2.6 s, ending about 4 m back from the face | a wall that turns a walker back and says so. Give it ≥ 3 m of flat in front and make it plainly taller than the last wall he got up |
+| ≥ 4.0 m | leaps, comes up short, slides down the face and is rolled over backwards onto his feet: 2.1 s, ending about 4 m back from the face | a wall that turns a walker back and says so. Give it ≥ 3 m of flat in front and make it plainly taller than the last wall he got up |
+| any height over 1.5 m, with **no ledge** at the top (two verts back to back, a face that goes on up, a deck under 0.9 m deep or with a box on its first metre) | comes up short on it the same way | a spine is a board line: on foot it is a wall. Do not put the only way on over one |
 
-It needs a standable deck ≥ 0.9 m deep behind the lip, a direction held, and a run of ≥ 4 m/s up the wall:
-a walker who lets go of the stick before the wall simply stops on it, and a fence-top quarter with no deck
-is left alone. Keep the first metre of the deck clear (a box there blocks the move) and keep boxes out of
-the run-up lane (one stops the run). Nothing changes on the board, and a side-on pipe never sees it: it
-has the walker on his board at its edge.
+It needs a direction held and a run of ≥ 4 m/s up the wall: a walker who lets go of the stick before the
+wall simply stops on it. A ledgeless top no higher than his hips (≤ 1.5 m) is left alone. Keep the first
+metre of a deck clear and keep boxes out of the run-up lane (one stops the run). These are the rules of
+every vert, whatever part drew it and wherever it stands, the inside of a side-on pipe included: crossing
+a pipe's lip from its deck still drops a walker in on his board, but down in one on foot he is on his feet.
+
+On foot **in the air**, a vert's lip is an ordinary ledge: jumped to or fallen past, it is caught, hung
+from and climbed out of like a platform's edge (the body lies along the curve under it). Nothing changes on
+the board, except that rolling off a deck into a vert is a drop-in with a 0.2 s pause, tail on the coping:
+a rider arrives on the wall at 4 to 7 m/s whatever speed he reached the lip at, so a staircase of verts is
+ridden one drop at a time and cannot be chained into one fall.
 
 ---
 

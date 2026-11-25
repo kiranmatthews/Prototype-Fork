@@ -177,7 +177,7 @@ clip's own beats so the deformation lands with the pose and not near it.
 |---|---|---|
 | `vert-climb` | .12 .06 .09 .10 .13 | squash into the wall step, stretch up the wall reaching, squash folded over the coping, stretch through between the arms, squash onto the leading foot, stretch in the first stride |
 | `vert-leap` | .15 .09 .14 .14 .18 | a gather, the full squash of the load, full stretch off the toes, and full stretch again as his hands take the lip, let out to neutral as his weight comes onto his arms (the hang's own profile takes it from there) |
-| `vert-miss` | .15 .09 .14 .12 .16 | the same leap; full stretch at the top with the lip still above his fingers; a squash as the transition takes his knees; the hardest squash where his seat hits; stretch as his legs go over; a squash sat down; a last stretch standing up |
+| `vert-miss` | .15 .09 .14 .12 .16 | the same leap; full stretch at the top with the lip still above his fingers; a squash as the transition takes his knees; the hardest squash where his seat hits; packed tight going over his shoulder and his hands; a stretch as he pushes off them and his legs come down; a squash as his feet take him; a last stretch standing up, let out to neutral |
 
 The hands and feet these clips hold (coping, wall, ground) are solved after the segment lengths, so a
 stretched arm still has its palm on the coping. The pelvis is placed by gameplay and is not scaled.

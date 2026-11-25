@@ -48,14 +48,27 @@ const FIXTURES = [
   ['top of the grab', RADIUS, 2.55, 6, 'grab'],
   ['just too high', RADIUS, 2.8, 6, 'miss'],
   ['far too high', RADIUS, 5.0, 6, 'miss'],
-  ['no deck', RADIUS, 1.0, 0.4, 'none'],
+  // no ledge at the top: whatever its height, a wall he comes up short on
+  ['no deck', RADIUS, 1.0, 0.4, 'miss'],
+  ['spine', 5, 0, 0, 'miss', 'spine'],
+  ['wall going on up', RADIUS, 0, 0, 'miss', 'wall'],
+  ['boxed-in deck', RADIUS, 1.35, 6, 'miss', 'boxed'],
+  // ...unless it is no higher than his hips: nothing to leap for, and it is left alone
+  ['low spine', RADIUS, 0, 0, 'none', 'spine'],
 ];
 const components = [{ t: 'zone', p: [0, 0, LANE * FIXTURES.length / 2], s: [160, 1, LANE * (FIXTURES.length + 2)], dir: 'E', sideOn: true },
   { t: 'camnode', p: [-40, 0, 0] }, { t: 'camnode', p: [60, 0, 0] }, { t: 'gate', p: [-38, 0, 0], yaw: 90 }];
-FIXTURES.forEach(([, radius, lipRise, deck], lane) => {
+FIXTURES.forEach(([, radius, lipRise, deck, , extra], lane) => {
   const z = lane * LANE;
   components.push({ t: 'platform', p: [-10, -0.5, z], s: [44, 1, 8] });
   components.push({ t: 'vertramp', vkind: 'quarter', p: [WALL_X, 0, z], len: 8, rise: radius, w: 0, yaw: 0, deck, lipRise });
+  // two verts back to back: the same wall again, facing the other way, lip to lip
+  if (extra === 'spine') components.push({ t: 'platform', p: [WALL_X + 2 * radius + 10, -0.5, z], s: [20 + 2 * radius, 1, 8] },
+    { t: 'vertramp', vkind: 'quarter', p: [WALL_X + 2 * radius, 0, z], len: 8, rise: radius, w: 0, yaw: 180, deck: 0 });
+  // a curve at the foot of a building: the face goes on up, far over his head
+  if (extra === 'wall') components.push({ t: 'platform', p: [WALL_X + radius + 2, 6, z], s: [4, 12, 8] });
+  // a deck with no room on it
+  if (extra === 'boxed') components.push({ t: 'platform', p: [WALL_X + radius + 1.0, radius + lipRise + 1.5, z], s: [1.6, 3, 8] });
 });
 const levelEntry = { id: '__vert_run_up', name: 'vert run-up', data: { v: 1, name: 'vert run-up', spawn: [-6, 0.2, 0], killY: -30, components } };
 
@@ -125,7 +138,7 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       for (const hold of [b.hands, ...b.feet]) assert.ok(hold.weight >= -1e-9 && hold.weight <= 1 + 1e-9, `${name}: a hold is held between not at all and fully`);
       // under the lip his pelvis keeps off the wall
       // (as much room as the move keeps, or as much as the run had left him, whichever is less)
-      if (b.hipY < W.lipY - 0.36 && b.beat !== 'tumble' && b.beat !== 'rest' && b.beat !== 'rise')
+      if (b.hipY < W.lipY - 0.36 && b.beat !== 'tumble' && b.beat !== 'rise')
         assert.ok(W.faceAt(b.hipY) - b.hipS > Math.min(0.27, startClear - 0.005), `${name}: pelvis ${f2(W.faceAt(b.hipY) - b.hipS)} m off the wall at ${f2(b.progress)}`);
     }
     assert.ok(maxStep < 0.17, `${name}: the pelvis never moves more than ${f2(maxStep)} m in a step`);
@@ -165,12 +178,12 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       } else {
         assert.ok(W.lipY - (top.hipY + A.reachDrop) >= 0.1, `${name}: his fingers stop ${f2(W.lipY - (top.hipY + A.reachDrop))} m short`);
         const beats = frames.map(frame => frame.beat).filter((beat, i, all) => beat !== all[i - 1]);
-        assert.deepEqual(beats, ['leap', 'reach', 'slide', 'tumble', 'rest', 'rise'], `${name}: leap, reach, slide, tumble, rest, rise`);
+        assert.deepEqual(beats, ['leap', 'reach', 'slide', 'tumble', 'rise'], `${name}: leap, reach, slide, the roll, up`);
         const rest = W.at(W.lenAtS(last.posS));
         assert.ok(rest.slope < 0.12 && Math.abs(last.posY - rest.y) < 0.02, `${name}: he ends on the flat`);
         assert.ok(Math.abs(last.hipY - (rest.y + A.hipStand)) < 0.02 && Math.hypot(last.velS, last.velY) < 0.05, `${name}: stood, and still`);
         assert.ok(last.posS < W.footS + 0.3 && last.posS > W.s[0] + 0.3, `${name}: in front of the wall, on ground that was looked at`);
-        for (const frame of frames) if (frame.beat === 'tumble' || frame.beat === 'rest') assert.ok(frame.hipY - W.groundAt(frame.hipS) > 0.15, `${name}: his seat is never in the ground`);
+        for (const frame of frames) if (frame.beat === 'tumble' || frame.beat === 'rise') assert.ok(frame.hipY - W.groundAt(frame.hipS) > 0.15, `${name}: his seat is never in the ground`);
         const slide = frames.filter(frame => frame.beat === 'slide'), tumble = frames.filter(frame => frame.beat === 'tumble');
         assert.ok(slide.length >= 7 && tumble.length >= 25, `${name}: the slide (${slide.length} steps) and the fall back (${tumble.length}) are long enough to be seen`);
       }
@@ -191,9 +204,10 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   assert.deepEqual(clips.map(clip => clip.id), [VERT_RUN_CLIP_IDS.climb, VERT_RUN_CLIP_IDS.leap, VERT_RUN_CLIP_IDS.miss]);
   const angleAt = (clip, joint, progress, axis = 0) => {
     const track = clip.tracks.find(candidate => candidate.target === joint), keys = track.keys;
-    const i = Math.max(0, Math.min(keys.length - 1, Math.round(progress * (keys.length - 1))));
-    assert.ok(Math.abs(keys[i].time / clip.duration - progress) < 0.006, `${clip.id} is keyed at ${f2(progress)}`);
-    return new THREE.Euler().setFromQuaternion(new THREE.Quaternion().fromArray(keys[i].value), 'XYZ').toArray()[axis];
+    // (read between the two samples either side of the moment asked for)
+    const at = Math.max(0, Math.min(keys.length - 1, progress * (keys.length - 1))), i = Math.min(keys.length - 2, Math.floor(at));
+    const q = new THREE.Quaternion().fromArray(keys[i].value).slerp(new THREE.Quaternion().fromArray(keys[i + 1].value), at - i);
+    return new THREE.Euler().setFromQuaternion(q, 'XYZ').toArray()[axis];
   };
   for (const clip of clips) {
     assert.ok(isVertRunClip(clip.id) && catalog.PLAYER_STARTER_CLIP_IDS.includes(clip.id), `${clip.id} is on the starter catalogue`);
@@ -216,9 +230,16 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   assert.ok(Math.abs(angleAt(leap, 'shoulderLeft', 0.47) - angleAt(leap, 'shoulderRight', 0.47)) > 0.4, 'the leap is thrown with one arm ahead of the other');
   assert.ok(Math.abs(angleAt(leap, 'kneeLeft', 0.66) - angleAt(leap, 'kneeRight', 0.66)) > 0.25, 'and its legs do not trail as a pair');
   // the miss falls back as far as the plan's roll says, when it says
+  // (a whole turn: compared as angles, since the clip stores the turn and not how many times round)
+  const turned = v => Math.atan2(Math.sin(v), Math.cos(v));
   VERT_MISS_ROLL.forEach(key => { const at = A.miss.slide + (A.miss.tumble - A.miss.slide) * key.at;
-    assert.ok(Math.abs(angleAt(miss, 'root', at) + key.back) < 0.02, `the miss is ${f2(key.back)} rad over backwards at ${f2(at)} of its clip (drawn ${f2(-angleAt(miss, 'root', at))})`); });
-  assert.ok(Math.max(...VERT_MISS_ROLL.map(key => key.back)) > 2, 'he goes right over onto his shoulders');
+    assert.ok(Math.abs(turned(angleAt(miss, 'root', at) + key.back)) < 0.02, `the miss is ${f2(key.back)} rad over backwards at ${f2(at)} of its clip (drawn ${f2(-angleAt(miss, 'root', at))})`); });
+  for (let i = 1; i < VERT_MISS_ROLL.length; i++) assert.ok(VERT_MISS_ROLL[i].back > VERT_MISS_ROLL[i - 1].back && VERT_MISS_ROLL[i].at > VERT_MISS_ROLL[i - 1].at, 'the roll only ever goes over backwards');
+  assert.ok(VERT_MISS_ROLL[VERT_MISS_ROLL.length - 1].back > 5.9 && VERT_MISS_ROLL[VERT_MISS_ROLL.length - 1].back < 2 * Math.PI, 'he goes right over, all the way round onto his feet');
+  assert.ok(Math.abs(turned(angleAt(miss, 'root', 1))) < 0.06, 'and the clip ends with him upright');
+  // over the top of the roll his pelvis is above his head, and it comes down as his feet do
+  const top = VERT_MISS_ROLL.reduce((best, key) => key.off > best.off ? key : best);
+  assert.ok(top.back > 3.4 && top.back < 4.6 && top.off > 1.2, `his hips are highest (${f2(top.off)} m) as he goes over his hands`);
   assert.ok(Math.abs(throughKeys([0, 1, 2], [0, 1, 0], 1) - 1) < 1e-12 && throughKeys([0, 1, 2], [0, 1, 0], 0.5) <= 1 && throughKeys([0, 1, 2], [0, 1, 0], 1.5) <= 1, 'the shared curve never overshoots a key');
 
   // ---- the real player ---------------------------------------------------------------
@@ -267,8 +288,12 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
     const first = runAt(lane), again = runAt(lane);
     assert.equal(first.outcome, expected, `${label}: ${expected === 'none' ? 'left alone' : `he ${expected}s`} (got ${first.outcome}, rise ${f2(first.rise)})`);
     assert.equal(again.outcome, first.outcome, `${label}: the same wall ends the same way every time`);
-    if (expected === 'none') { assert.equal(p.state, 'ride', `${label}: he is still simply on his feet`); continue; }
-    assert.ok(Math.abs(first.rise - (radius / 2 + lipRise)) < 0.12, `${label}: read as ${f2(first.rise)} m, built as ${f2(radius / 2 + lipRise)}`);
+    const kind = FIXTURES[lane][5];
+    // (left alone, the run takes him wherever running at it takes him: here, over the top of a hip-high spine)
+    if (expected === 'none') { assert.ok(p.state !== 'hang' && !p.vertRun, `${label}: it is only a wall`); continue; }
+    // (a face that goes on up is as high as the building it is the foot of; a boxed-in deck is its box)
+    if (kind !== 'wall' && kind !== 'boxed') assert.ok(Math.abs(first.rise - (radius / 2 + lipRise)) < (kind ? 0.25 : 0.12), `${label}: read as ${f2(first.rise)} m, built as ${f2(radius / 2 + lipRise)}`);
+    if (kind === 'wall') assert.ok(first.rise > 8, `${label}: the face is read all the way up (${f2(first.rise)} m)`);
     assert.ok(first.ended > first.began, `${label}: it ends`);
     assert.ok(first.rows.every(row => row.state === 'hang/vert' && row.clip === `player.vert-${expected === 'grab' ? 'leap' : expected}`), `${label}: the move owns him, and plays its own clip`);
     // the drawn body
@@ -314,7 +339,7 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       assert.ok(first.after.state === 'ride' && first.after.grounded, `${label}: he is on his feet again`);
       assert.ok(first.after.pos.x < WALL_X - 0.5 && Math.abs(first.after.pos.y) < 0.06, `${label}: back on the flat (${f2(WALL_X - first.after.pos.x)} m out from the foot of the wall)`);
       const beats = first.rows.map(row => row.beat).filter((beat, i, all) => beat !== all[i - 1]);
-      assert.deepEqual(beats, ['leap', 'reach', 'slide', 'tumble', 'rest', 'rise'], `${label}: leap, reach, slide, tumble, rest, rise`);
+      assert.deepEqual(beats, ['leap', 'reach', 'slide', 'tumble', 'rise'], `${label}: leap, reach, slide, the roll, up`);
       assert.ok(first.rows.every(row => row.pos.y > -0.05), `${label}: the controller point never goes under the ground`);
       for (let i = 0; i < 12; i++) step(idle());
       assert.ok(p.state === 'ride' && Math.hypot(p.walkVelocity.x, p.walkVelocity.z) < 0.5, `${label}: stood still, his to move again`);
@@ -324,6 +349,128 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   // A wall he is not running at is only a wall: stick let go before it, he just stops on it.
   const coasting = runAt(1, i => (i < 22 ? hold() : idle()), 240);
   assert.equal(coasting.outcome, 'none', 'letting go of the stick before the wall is not a run at it');
+
+  // ---- a vert's lip is a ledge to a body that jumped or fell to it ------------------
+  // Falling past a coping on foot with the stick toward it catches it, like any ledge. And a body
+  // hung from a vert lies along what is under that lip: straight down a straight face, swung out
+  // onto the curve where the face curves away, with no part of his legs inside it.
+  const lane = name => FIXTURES.findIndex(fixture => fixture[0] === name);
+  const fallAt = (name, steps = 70) => {
+    const [, radius, lipRise] = FIXTURES[lane(name)], lipX = WALL_X + radius, lipY = radius + lipRise;
+    place(lane(name), -5);
+    p.pos.set(lipX - 1.3, lipY - 0.8, lane(name) * LANE); p.prevPos.copy(p.pos);
+    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.walkVelocity.set(2.5, 0, 0);
+    let caught = -1;
+    for (let i = 0; i < steps; i++) { step(p.state === 'hang' ? idle() : hold()); if (caught < 0 && p.state === 'hang') caught = i; }
+    return { caught, radius, lipX, lipY };
+  };
+  // (how far a joint is on the air side of the wall: of its curve below the top of it, of its face above)
+  const offWall = (joint, radius) => { const at = world(node(joint)), s = at.x - WALL_X;
+    return at.y < radius ? radius - Math.hypot(s, at.y - radius) : WALL_X + radius - at.x; };
+  for (const [name, leans] of [['plain quarter', true], ['extended', true], ['grab', false]]) {
+    const fall = fallAt(name), label = `${name}: fallen to`;
+    assert.ok(fall.caught >= 0 && fall.caught < 20 && p.state === 'hang' && p.ledgePhase === 'grip', `${label}: his hands take the lip (state ${p.state}/${p.ledgePhase})`);
+    assert.ok(p.ledgeOnVert && Math.abs(p.pos.y - (fall.lipY - 1.25)) < 0.05, `${label}: it is the ordinary hang, under a vert's lip`);
+    assert.ok(p.ledgeGripError < 0.06, `${label}: his hands are on the coping (${f2(p.ledgeGripError)} m off)`);
+    const clear = Math.min(...['hips', 'kneeLeft', 'kneeRight', 'ankleLeft', 'ankleRight'].map(joint => offWall(joint, fall.radius)));
+    assert.ok(clear > 0.1, `${label}: no part of his legs is in the wall (${f2(clear)} m off it at the nearest)`);
+    if (leans) assert.ok(p.vertHangLean > 0.03 || p.vertHangLegs > 0.03, `${label}: he lies out along the curve (swung ${f2(p.vertHangLean)} rad, legs ${f2(p.vertHangLegs)} more)`);
+    else assert.ok(p.vertHangLean < 0.02 && p.vertHangLegs < 0.02, `${label}: down a straight face he hangs straight`);
+    // drawing the same instant again swings him no further
+    const before = world(node('ankleLeft')).clone();
+    for (let again = 0; again < 3; again++) { p.syncVisual(idle(), 0); p.group.updateMatrixWorld(true); }
+    assert.ok(world(node('ankleLeft')).distanceTo(before) < 2e-3, `${label}: drawn twice, he is drawn the same`);
+    // ...and it is a hang like any other: the stick toward the deck clambers up onto it
+    for (let i = 0; i < 150 && p.state === 'hang'; i++) step(hold());
+    for (let i = 0; i < 12; i++) step(idle());
+    assert.ok(p.state === 'ride' && p.grounded && p.pos.x > fall.lipX && Math.abs(p.pos.y - fall.lipY) < 0.08, `${label}: and the ordinary clamber takes him up onto the deck`);
+  }
+  // On the board the same lip is never a ledge: a rider over a coping is in the pipe's own air.
+  {
+    const [, radius, lipRise] = FIXTURES[lane('grab')], lipX = WALL_X + radius, lipY = radius + lipRise;
+    place(lane('grab'), -5);
+    // (at a run's speed, with the lip at arm's length over him: where a walker's hands take it)
+    p.pos.set(lipX - 1.3, lipY - 1.2, lane('grab') * LANE); p.prevPos.copy(p.pos);
+    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.freeSkate = true; p.airFromSkate = true; p.airGrav = 'board'; p.speed = 9;
+    let hung = false, through = false;
+    for (let i = 0; i < 40; i++) { const input = makeInput(); input.moveY = 1; step(input); hung ||= p.state === 'hang'; through ||= p.pos.x > lipX + 0.2 && p.pos.y < lipY - 0.2; }
+    assert.ok(!hung, 'a rider falling past a coping does not ledge-grab it');
+    // ...and what he meets instead is the wall: a straight face is solid to a body that flies into it,
+    // however much further than its thickness that body moves in a step.
+    assert.ok(!through && p.pos.y > -0.1, `a body that flies into the straight face of a wall is met by it (x ${f2(p.pos.x - lipX)} past the face, y ${f2(p.pos.y)})`);
+  }
+  // The same face, flown into on foot below where his hands could take the lip: he does not pass through it either.
+  {
+    const [, radius, lipRise] = FIXTURES[lane('far too high')], lipX = WALL_X + radius, lipY = radius + lipRise;
+    place(lane('far too high'), -5);
+    p.pos.set(lipX - 1.3, radius + 1.2, lane('far too high') * LANE); p.prevPos.copy(p.pos);
+    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.walkVelocity.set(9, 0, 0);
+    let through = false;
+    for (let i = 0; i < 60; i++) { step(hold()); through ||= p.pos.x > lipX + 0.2 && p.pos.y < lipY - 0.2; }
+    assert.ok(!through && p.pos.y > -0.1 && p.pos.x < lipX + 0.2, `a walker who jumps into a tall face is stopped by it (x ${f2(p.pos.x - lipX)} past the face, y ${f2(p.pos.y)})`);
+  }
+
+  // ---- rolling off a deck into a vert is a drop-in: tail on the coping, a beat, and in ----
+  const rollIn = name => {
+    const [, radius, lipRise] = FIXTURES[lane(name)], lipX = WALL_X + radius, lipY = radius + lipRise, z = lane(name) * LANE;
+    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(lipX + 5.2, lipY + 0.15, z), heading: new THREE.Vector3(-1, 0, 0) });
+    for (let i = 0; i < 20; i++) step(idle());
+    const log = { perch: 0, perchAt: null, meter: false, mounted: false, seat: null, lowest: Infinity, bailed: false, out: false, scoreBefore: 0, scoreAfter: 0 };
+    for (let k = 0; k < 420 && !log.out; k++) {
+      const input = makeInput(); input.moveX = -1;
+      const push = k < 40; input.jumpPressed = push && k === 0; input.jumpReleased = k === 40; input.jumpHeld = push;
+      const was = p.dropInPerch;
+      if (!was && log.perch === 0) log.scoreBefore = p.score ?? 0;
+      step(input);
+      log.mounted ||= p.freeSkate && p.grounded && p.pos.x > lipX + 0.5;
+      if (p.dropInPerch) { log.perch++; log.perchAt ??= p.pos.clone(); log.meter ||= p.balanceMeter !== null; log.still = Math.max(log.still ?? 0, Math.abs(p.speed)); }
+      if (was && !p.dropInPerch) { log.seat = { pos: p.pos.clone(), speed: p.speed, pipe: !!p.groundHit?.halfpipe, board: p.freeSkate }; log.scoreAfter = p.score ?? 0; }
+      if (log.seat) log.lowest = Math.min(log.lowest, p.pos.y);
+      log.bailed ||= p.isBailing;
+      log.out = !!log.seat && p.grounded && p.pos.x < WALL_X - 2;
+    }
+    return { ...log, lipX, lipY };
+  };
+  for (const name of ['plain quarter', 'grab']) {
+    const roll = rollIn(name), label = `${name}: rolled into`;
+    assert.ok(roll.mounted, `${label}: he is on the board on the deck`);
+    assert.ok(roll.perch >= 10 && roll.perch <= 16, `${label}: the tail is set on the coping for a beat (${roll.perch} steps)`);
+    assert.ok(Math.abs(roll.perchAt.x - roll.lipX) < 1e-6 && Math.abs(roll.perchAt.y - roll.lipY) < 1e-6 && roll.still === 0, `${label}: there, at the lip, at rest`);
+    assert.ok(!roll.meter && roll.scoreAfter === roll.scoreBefore, `${label}: it is a pause, not a stall: no needle, no points`);
+    assert.ok(roll.seat && roll.seat.pipe && roll.seat.board && roll.seat.pos.y < roll.lipY - 0.2 && roll.seat.pos.y > roll.lipY - 0.6 && roll.seat.speed >= 4 && roll.seat.speed <= 7.01,
+      `${label}: then he drops in onto the wall just under it (${roll.seat ? f2(roll.lipY - roll.seat.pos.y) + ' m under, ' + f2(roll.seat.speed) + ' m/s' : 'never'})`);
+    // (down a face that stands dead upright as much as down a curve: all of the travel is down the wall)
+    assert.ok(roll.out && roll.lowest < 0.05 && !roll.bailed, `${label}: and rides the whole wall down and out along the flat (lowest ${f2(roll.lowest)})`);
+  }
+  // On foot the same lip is the same drop-in as ever: the board comes out as he crosses it, with no pause.
+  {
+    const [, radius, lipRise] = FIXTURES[lane('plain quarter')], lipX = WALL_X + radius, lipY = radius + lipRise;
+    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(lipX + 3, lipY + 0.15, lane('plain quarter') * LANE), heading: new THREE.Vector3(-1, 0, 0) });
+    for (let i = 0; i < 20; i++) step(idle());
+    let perched = false, seated = false;
+    for (let k = 0; k < 120 && !seated; k++) { const input = makeInput(); input.moveX = -1; step(input); perched ||= p.dropInPerch; seated = p.freeSkate && !!p.groundHit?.halfpipe; }
+    assert.ok(seated && !perched, 'walked over the lip: the board mounts on the wall at once, as it always did');
+  }
+
+  // ---- and on the board, a quarter is a pipe: up it, into its air, and out over its lip ----
+  {
+    const [, radius, lipRise] = FIXTURES[lane('plain quarter')], lipX = WALL_X + radius, lipY = radius + lipRise, z = lane('plain quarter') * LANE;
+    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(-8, 0.15, z), heading: new THREE.Vector3(1, 0, 0) });
+    for (let i = 0; i < 20; i++) step(idle());
+    let hang = 0, heldWas = false, aired = false, popped = false;
+    for (let k = 0; k < 600; k++) {
+      const input = makeInput(); input.moveX = 1;
+      let held = k < 40 || (p.freeSkate && p.grounded && !!p.groundHit?.halfpipe && p.lastTy > 0.05); // push off, then pump the wall
+      hang = p.vertAir ? hang + 1 : 0;
+      aired ||= p.vertAir && p.hangPipe !== null;
+      if (hang >= 3 && hang < 7) { held = true; popped = true; } // the spine transfer's input: the stick out over the lip, and Jump
+      input.jumpHeld = held; input.jumpPressed = held && !heldWas; input.jumpReleased = !held && heldWas; heldWas = held;
+      step(input);
+      if (popped && p.grounded && p.pos.x > lipX + 0.5) break;
+    }
+    assert.ok(aired, 'ridden at on the board, the quarter throws him into its own air over the coping');
+    assert.ok(popped && p.grounded && p.pos.x > lipX + 0.5 && Math.abs(p.pos.y - lipY) < 0.1, `the stick over the lip and Jump carries that air out onto its deck (x ${f2(p.pos.x - lipX)} past the lip, y ${f2(p.pos.y)})`);
+  }
 
   // ---- Side Pipe Lab's wall yard ----------------------------------------------------
   const lab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');
