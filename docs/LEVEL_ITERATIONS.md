@@ -13386,3 +13386,114 @@ head dropped about 0.53 m under charge. Lite, 720p and MAX passed with a clean c
 The controller checks cover both leading feet and both deck directions across ice at 30, 60 and
 120 Hz, including the shoe contacts during entry and exit. In Side Pipe Lab the dedicated vert
 poses played in both stances, with sole errors below 1.5 mm in the four-hang check.
+
+## 2026-11-25 — The authored ride lies on the ground it is riding
+
+Brief: a Deadwater Park take (34,586 steps, 9.6 minutes) with "serious issues all throughout this run
+when it comes to the board following the angle of the ground"; find the regression and fix it, keeping
+the good of whatever caused it.
+Elapsed: about 12 min from the brief to the fault reproduced from the take, headless; about 25 min to
+its cause; about 55 min to a fix measured on the take; about 2 h 40 min to the regression test, the D
+suite, the build and the browser passes. Times are approximate.
+No level data changed, and nothing the simulation reads: the first 2,654 steps of the take put the
+rider in exactly the same place, at the same speed, with and without the change.
+
+**What was wrong.** The authored ride (`src/skateReferenceLab/playableMotion.ts`, what D draws for
+ordinary riding) turned the body by the ground's tilt as that tilt stands in the world, and applied it
+one level under the drawn root, in the root's frame. Two things about that root made it wrong on any
+slope:
+
+- The root's yaw is pinned half a turn round (the facing lives one level down). A world tilt applied
+  under it comes out mirrored: down an 18.4 degree street ramp the deck tipped 18.4 degrees the wrong
+  way, 37.1 degrees off the road.
+- In a park the controller already lays the root on the surface. The same tilt applied again in that
+  turned frame cancelled it: deck and rider were stood back up level in the world. On the entry drop to
+  the giant vert (63 degrees) the deck stuck out of the slope with its wheels in the air; through a
+  loop it was up to 179 degrees from the track.
+
+On the flat the tilt is nothing, which is why it went unseen in most levels. It is not new: trees from
+14, 19 and 24 November draw the same frames (the code dates from the rider's springs of the 11th).
+
+**What made it show all through this run.** Two things were bisected on the take with identical
+physics, by serving single files as they stood at an earlier commit:
+
+- `fa94651f` (today, "Skate poses in fakie") hands fakie and reversed-deck riding to the authored ride.
+  Until then those frames were the native pose, which lies on the ground. In the first 1,500 steps the
+  authored ride goes from 242 grounded frames to 439, and its frames more than 45 degrees off the ground
+  from 89 to 229; of the 1,057 frames with identical physics that changed hands, 888 moved away from
+  the ground. A third of this run's riding is in fakie (3,103 of 9,724 frames on the ground).
+- The sheared-matrix change earlier today (`src/animation/ik.ts`, `src/skateAnimation.ts`) does nothing
+  to it: with both files as they were, no frame of that stretch has the deck more than a degree
+  different.
+
+So the fault was in the authored ride all along, in regular stance, and the fakie change put it under
+most of the run. What that change is for, the current clips in both stances and the deck keeping its own
+nose, is untouched.
+
+**The fix.**
+
+- `Player.rootSurfaceAlignment` (new, presentation only): the turn that laid the drawn root on the
+  surface this step, identity while it stands upright.
+- The deck takes what the root has left: the turn from where the root stands him to the ground normal,
+  carried into the root's frame. It is exact in a street level (the root upright), in a park (the root
+  all the way over, a few frames late) and through a loop, and it leaves the controller's carve lean
+  alone. The board still takes the road at once.
+- The rider still comes round late (`RIDE_LIFE.road`, about a tenth of a second). His lie is kept in the
+  world, so the root coming round under him is not a second change to follow, and it is forgotten when a
+  native pose takes him: he used to come back from a spill still leaning the way he lay before it.
+- The sole fit measured heights along world up. It measures along the ground he stands on.
+
+**Measured, the whole take** (authored ride on the ground, deck against the ground normal with the
+carve lean taken out; before is `fa94651f`):
+
+| | frames | median | 90th | 99th | most | over 15° | over 45° |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| before | 6,552 | 9.3° | 64.0° | 162.9° | 179.4° | 3,115 | 1,768 |
+| after | 6,556 | 0.5° | 0.8° | 2.1° | 14.4° | 0 | 0 |
+
+By surface, median before and after: entry drop (63°) 58.3° to 0.5°; the 73° ramp 32.2° to 0.7°; the
+three loops 102.9°, 102.1° and 62.9° to 0.6°, 0.6° and 0.5°; the loop drops 45.9°, 25.7° and 49.0° to
+0.6° or less; the curved pool exit 47.7° to 0.7°; the right exit chute 0.8° to 0.3° (most 50.5° to
+9.6°); the flats unchanged. Of the 24 frames still over 5°, 21 are a pose being faded in (the first
+frames of a landing, and of the authored ride taking over from a native pose) and three are 5 to 6° in
+a push, which is the clip's own.
+The rider's own up against the ground: median 12.6° to 0.5°, over 45° on 1,633 frames to 7 (the first
+frames over a 69 degree drop-in, coming round as designed).
+Where the authored ride and a native pose change hands on the ground (29 times) the deck used to jump
+up to 88.2° in that frame, more than 30° six times; now 37.8° at most and over 30° once, where the
+ground itself turns 20° in the frame and the native pose is still coming round to it.
+A plain 18.4° ramp: street 37.1° to 0.3°, park 18.8° to 0.4°.
+
+**Checks.**
+
+- `tools/test-skate-ground-lie.mjs`, new, in `check:animation-d`: ramps down and up, a bank and a
+  weaving carve, in a street level and a park, regular, fakie and with the deck reversed, against a
+  native control. The deck within 2.5° of the ground in every settled frame and pointing the way he
+  goes; the rider late onto each slope (15.9° of 18.4° left after one frame), round to it within half a
+  second (0.1°) and never swinging back; soles as far off the deck on the slopes as on the flat (within
+  4 mm); a carve leaning the deck as far as the native one. On the old code it fails 37.2° off the ramp.
+- `tools/test-skate-life.mjs`: the head's largest step over the humps is 0.092 m, was 0.075, and its
+  limit goes from 0.09 to 0.11. Thrown with the board it would be 0.37. The old figure had his turn and
+  the give of his scaled body partly cancelling at the crest, because the deck tipped the wrong way.
+- `check:animation-d` (46 checks): 45 passed in the run and the 46th, the limit above, after it.
+  `check:side-pipe` (halfpipe contact, the Side Pipe Lab route at the same 832 m in 121.6 s, vert air
+  and transfers, vert run-up), `test-skate-contacts`, `test-animation-ik`, TypeScript and the build.
+- Real browser, the take loaded through the game's own replay: the first 900 steps on the production
+  build, lite and full render, and 4,000 on the dev build, with no console errors; 229 frames with the
+  deck over 45° off the ground before, none after. Close-ups of the entry drop in both stances show the
+  wheels on the face and the rider square to it, where the deck stood out level.
+
+**Known and left.**
+
+- Native poses are as they were. On vert and transitions the controller's own eased alignment has the
+  deck a median 3.8° and at worst 56° behind the surface as it curves (448 of 2,857 frames over 15°), and
+  in a street level a native pose (a manual, a revert) leaves the deck level on a slope under about 40°.
+- Getting on is drawn unsupported, as designed: on a slope the deck is level until he is on it.
+- The deck follows the collision normal, so it steps with the facets of a curved surface (5 to 7° every
+  three or four frames on the entry drop) and flicks once at a seam in the right exit chute where the
+  normal jumps 27.6° for one frame. Both were there before, the wrong way round.
+- Over a very sharp crest he is far behind the deck for a few frames; drawn through the scaled body,
+  that lag is a slight shear, and his soles keep his attitude and not the deck's until he is round.
+- A take replays exactly only up to its first spill on a build whose poses differ: the time a spill
+  takes to get up from depends on the pose it started in. This one is exact for 2,654 steps, and again
+  after each restart.
