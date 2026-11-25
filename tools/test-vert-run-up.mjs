@@ -22,8 +22,9 @@
 //     plan's roll;
 //   · THE REAL PLAYER on fixture walls: the same wall always ends the same way
 //     and each way ends where it should (on the deck running, in the game's
-//     own hang and from it up the ordinary clamber, back on the flat); a wall
-//     he is not running at, or with no deck behind its lip, is left alone;
+//     own hang and from it up the ordinary clamber, at once if Jump is pressed
+//     as he catches; back on the flat); a wall he is not running at, or with no
+//     deck behind its lip, is left alone;
 //   · THE DRAWN BODY in every one of them: its pelvis is where the plan has it
 //     from the first frame (no pop from the run into the move, none from the
 //     move into the hang), a hand that holds is on the coping and a foot that
@@ -43,9 +44,9 @@ const FIXTURES = [
   ['extended', RADIUS, 1.35, 6, 'climb'],
   ['top of the climb', RADIUS, 1.7, 6, 'climb'],
   ['low grab', RADIUS, 1.85, 6, 'grab'],
-  ['grab', RADIUS, 2.75, 6, 'grab'],
-  ['top of the grab', RADIUS, 2.8, 6, 'grab'],
-  ['just too high', RADIUS, 2.95, 6, 'miss'],
+  ['grab', RADIUS, 2.3, 6, 'grab'],
+  ['top of the grab', RADIUS, 2.55, 6, 'grab'],
+  ['just too high', RADIUS, 2.8, 6, 'miss'],
   ['far too high', RADIUS, 5.0, 6, 'miss'],
   ['no deck', RADIUS, 1.0, 0.4, 'none'],
 ];
@@ -250,8 +251,9 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
         // Drawing the same instant again changes nothing: no turn or shove is added twice.
         if (log.rows.length % 7 === 3) {
           const at = id => { const o = node(id); o.updateWorldMatrix(true, false); return o.matrixWorld.elements.slice(); };
+          p.group.updateMatrixWorld(true);
           const was = ['hips', 'head', 'wristLeft', 'ankleLeft'].map(at);
-          p.alignVertRun(0);
+          for (let again = 0; again < 3; again++) { p.syncVisual(hold(), 0); p.group.updateMatrixWorld(true); }
           const now = ['hips', 'head', 'wristLeft', 'ankleLeft'].map(at);
           log.redraw = Math.max(log.redraw ?? 0, ...was.flatMap((m, k) => m.map((v, e) => Math.abs(v - now[k][e]))));
         }
@@ -303,6 +305,11 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       for (let i = 0; i < 150 && p.state === 'hang'; i++) step(hold());
       for (let i = 0; i < 20; i++) step(idle());
       assert.ok(p.state === 'ride' && p.grounded && p.pos.x > lipX && Math.abs(p.pos.y - lipY) < 0.08, `${label}: and the ordinary clamber takes him up onto the deck`);
+      // The catch is not a wait: Jump pressed as his hands take the lip starts the clamber at once.
+      runAt(lane);
+      let waited = 0;
+      for (; waited < 30 && p.ledgePhase !== 'climb'; waited++) { const input = makeInput(); input.moveX = 1; input.jumpPressed = waited === 0; input.jumpHeld = waited < 4; step(input); }
+      assert.ok(p.state === 'hang' && waited <= 2, `${label}: Jump pressed as he catches starts the clamber at once (${waited} steps)`);
     } else {
       assert.ok(first.after.state === 'ride' && first.after.grounded, `${label}: he is on his feet again`);
       assert.ok(first.after.pos.x < WALL_X - 0.5 && Math.abs(first.after.pos.y) < 0.06, `${label}: back on the flat (${f2(WALL_X - first.after.pos.x)} m out from the foot of the wall)`);

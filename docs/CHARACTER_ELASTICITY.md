@@ -148,7 +148,7 @@ clip's own beats so the deformation lands with the pose and not near it.
 | Clip | Profile (torso, upper arm, forearm, thigh, shin) | Where it squashes and stretches |
 |---|---|---|
 | `vert-climb` | .12 .06 .09 .10 .13 | squash into the wall step, stretch up the wall reaching, squash folded over the coping, stretch through between the arms, squash onto the leading foot, stretch in the first stride |
-| `vert-leap` | .15 .09 .14 .14 .18 | a gather, the full squash of the load, full stretch off the toes, and stretch again (not a rebound) as his weight comes onto his arms at the lip |
+| `vert-leap` | .15 .09 .14 .14 .18 | a gather, the full squash of the load, full stretch off the toes, and full stretch again as his hands take the lip, let out to neutral as his weight comes onto his arms (the hang's own profile takes it from there) |
 | `vert-miss` | .15 .09 .14 .12 .16 | the same leap; full stretch at the top with the lip still above his fingers; a squash as the transition takes his knees; the hardest squash where his seat hits; stretch as his legs go over; a squash sat down; a last stretch standing up |
 
 The hands and feet these clips hold (coping, wall, ground) are solved after the segment lengths, so a

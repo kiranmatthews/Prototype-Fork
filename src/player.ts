@@ -1708,7 +1708,6 @@ export class Player {
   private vertRunPush = 0;
   private vertRunLift = 0;
   private readonly vertRunOffset = new THREE.Vector3();
-  private readonly vertRunGaze = { neck: 0, head: 0, neckAt: NaN, headAt: NaN };
   private readonly vertRunBasis = { ox: 0, oz: 0, dx: 1, dz: 0, s: 0, y: 0 };
   private vertRunGripped = false;
   private readonly vertRunLast = new THREE.Vector3();
@@ -18287,22 +18286,14 @@ export class Player {
     // His eyes are on what he is going for. The lip is wherever this wall has it, so the look at
     // it is turned here, on top of a pose whose head is authored level: up at a lip over him,
     // down at a coping by his knees.
-    const neck = joints.get('neck')?.node, skull = joints.get('head')?.node, gaze = this.vertRunGaze;
-    if (neck && skull) {
-      // (a pose that was not sampled afresh since the last draw still has the last turn on it: that comes off first,
-      // so drawing the same instant twice turns his head once)
-      if (Math.abs(neck.rotation.x - gaze.neckAt) < 1e-9) neck.rotation.x -= gaze.neck;
-      if (Math.abs(skull.rotation.x - gaze.headAt) < 1e-9) skull.rotation.x -= gaze.head;
-      gaze.neck = gaze.head = 0;
-      if (frame.look > 0.002) {
-        this.bodyGroup.updateWorldMatrix(true, true);
-        skull.getWorldPosition(VERT_RUN_POLE);
-        const eyeS = (VERT_RUN_POLE.x - run.ox) * run.dx + (VERT_RUN_POLE.z - run.oz) * run.dz, eyeY = VERT_RUN_POLE.y + 0.25;
-        const up = THREE.MathUtils.clamp(Math.atan2(run.plan.wall.lipY + 0.05 - eyeY, Math.max(0.3, run.plan.wall.lipS + 0.05 - eyeS)), -0.85, 1.05);
-        gaze.neck = -up * 0.40 * frame.look; gaze.head = -up * 0.50 * frame.look;
-        neck.rotation.x += gaze.neck; skull.rotation.x += gaze.head;
-      }
-      gaze.neckAt = neck.rotation.x; gaze.headAt = skull.rotation.x;
+    // (Only over the authored clips: they are sampled afresh for every draw, so a turn added to one is
+    // added once. The older presentation keeps a joint's last rotation, and gets no look.)
+    const neck = joints.get('neck')?.node, skull = joints.get('head')?.node;
+    if (frame.look > 0.002 && neck && skull && this.directFootStudy) {
+      skull.getWorldPosition(VERT_RUN_POLE);
+      const eyeS = (VERT_RUN_POLE.x - run.ox) * run.dx + (VERT_RUN_POLE.z - run.oz) * run.dz, eyeY = VERT_RUN_POLE.y + 0.25;
+      const up = THREE.MathUtils.clamp(Math.atan2(run.plan.wall.lipY + 0.05 - eyeY, Math.max(0.3, run.plan.wall.lipS + 0.05 - eyeS)), -0.85, 1.05);
+      neck.rotation.x -= up * 0.40 * frame.look; skull.rotation.x -= up * 0.50 * frame.look;
       this.bodyGroup.updateWorldMatrix(true, true);
     }
     // Whatever the pose does, his head does not go into the wall or the floor: the body is moved

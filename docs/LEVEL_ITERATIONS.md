@@ -13152,14 +13152,14 @@ ledge grab the edge lip, or jump to grab the lip and miss because it is too high
 all based on the height of the lip above the vertical part of the vert curve; make very polished
 animations to cover these cases.
 Elapsed: about an hour and a quarter from the brief to all three outcomes playing in the real game on test walls;
-about 4 h 10 min to the animations as they are now, reviewed frame by frame. **Not published yet:** this
-entry was written with validation still in progress (see Checks), on the session branch only. Times are
-approximate.
+about 4 h 10 min to the animations reviewed frame by frame; about 6 h 30 min to the version that survived
+its own test, a mutation run, the regression suites, a merge with the IK work that landed on `main`
+meanwhile, the docs and the published build. Times are approximate.
 `src/tuning.ts` is untouched. Nothing changes on the board, and the course's route test prints the same
 numbers (832 m in 121.6 s).
 
 **The rule** (`src/vertRunUp.ts`, `docs/VERT_RUN_UP.md`). A walker runs out of slope where the wall passes
-60°. The lip's height above that point, and nothing else, decides: up to 3.0 m he climbs out; up to 4.1 m
+60°. The lip's height above that point, and nothing else, decides: up to 3.0 m he climbs out; up to 3.9 m
 he leaps and catches the lip; higher, he leaps, misses, slides down the face and is thrown back onto the
 flat. For a `vertramp` that height is `rise / 2 + lipRise`. Before this a walker tunnelled through the top
 of a quarter into the hollow under its deck, or was stopped by a small one as if by a step.
@@ -13184,7 +13184,7 @@ of a quarter into the hollow under its deck, or was stopped by a small one as if
   lip, shakes his head, gets his feet under him and stands.
 
 **Side Pipe Lab** has a wall yard behind the start for it (walk west): four quarters of one 2.5 m curve,
-each on the last one's deck, 1.25 m (vaulted), 2.6 m (climbed), 4.0 m (caught) and 4.9 m (missed).
+each on the last one's deck, 1.25 m (vaulted), 2.6 m (climbed), 3.75 m (caught) and 4.9 m (missed).
 
 **What looking closely, and then measuring, changed.** The first version of all three played within the
 hour and read correctly on contact sheets. Most of the time after that went on things a still does not
@@ -13211,20 +13211,27 @@ then by a test on the real rig:
   sky at a plain quarter. His look and his hands' way to the lip are now turned to where this wall has it.
 - *The test was measuring a pose the game never draws.* The headless harness defaults to the older
   presentation, which does not sample these clips at all; switched to the shipped one, it found that the
-  catch left his hands up to 28 cm short of the coping (his poses reach 1.55 m from pelvis to grip, not the
-  1.8 m first assumed), that a head turn accumulated when a pose was redrawn without being re-sampled, and
-  that a hand was left reaching back down for a coping his pelvis had already passed. All three are fixed
-  and held by the test.
+  catch left his hands up to 28 cm short of the coping (his arms reach 1.45 m from pelvis to grip with no
+  stretch in them, not the 1.8 m first assumed), that a head turn accumulated in the older presentation
+  (the look is now only turned over the authored clips, which are sampled afresh for every draw), and that
+  a hand was left reaching back down for a coping his pelvis had already passed. All three are fixed and
+  held by the test.
+- *The catch was leaning on its own stretch.* The elasticity suite does not let a one-shot end stretched
+  ("finite settles"), and with the leap's stretch let out by its last frame his hands came 13 cm off the
+  coping. The catch is now inside his reach with no stretch at all, which put the top of the catch band at
+  3.9 m and not 4.1 m.
 
-**Checks (in progress when this was written).** `npm run check:vert-run-up` (new; also the last step of
-`check:side-pipe`): the rule, the plan on walls from a 1.2 m kicker to a 9 m face, the clips, and the real
-Player with the shipped clips on eleven fixture walls. It passed; one assertion added after that run
-(drawing the same instant twice draws the same body) has not been run yet. `npm run check:levels` (14 of
-14), the course route test, `check:motion-assets`, `check:ledge`, `check:pipe`, `check:vert-air` and
-`check:interpolation` pass. `check:animation` failed on its catalogue pin (version 38; it is 39 now, with
-three more clips): the pin has been moved and the suite not yet re-run. `check:animation-d` was stopped at
-a 15-minute limit with 15 of its families passing and none failing. Still to do: those two, a mutation run
-against the new test, `npm run build`, the release-size check, and publishing.
+**Checks.** `npm run check:vert-run-up` (new; also the last step of `check:side-pipe`): the rule, the plan
+on walls from a 1.2 m kicker to a 9 m face, the clips, and the real Player with the shipped clips on eleven
+fixture walls. Ten deliberate breakages of the mechanic (a band widened, the pelvis half way to its plan,
+no early start under a straight face, hands not solved onto the coping, a leap that hovers and rockets,
+the hang's own ease left in under the hand-over, feet held beyond the reach of his legs, a clip that falls
+back less far than the plan, a catch beyond his reach, a miss that reaches the lip) are all caught by it;
+the first run let three through, which is where the Jump-at-the-catch assertion and the simpler look came
+from. `npm run check:levels` (14 of 14), the course route test, `check:animation` (the catalogue is version
+39 with three more clips, and the route list is three longer, on its end), `check:animation-d`,
+`check:motion-assets`, `check:ledge`, `check:pipe`, `check:vert-air` and `check:interpolation` pass;
+`npm run build` and the release-size check pass (995 MB of the 1,000 MB hosting budget).
 
 **Left as it is.**
 

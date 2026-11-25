@@ -68,9 +68,10 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 37);
-  assert.equal(new Set(allIds).size, 37);
-  for (const id of ['player.swim', 'player.swim-idle', 'player.death'])
+  // (40 with the three vert run-up one-shots: docs/VERT_RUN_UP.md)
+  assert.equal(allIds.length, 40);
+  assert.equal(new Set(allIds).size, 40);
+  for (const id of ['player.swim', 'player.swim-idle', 'player.death', 'player.vert-climb', 'player.vert-leap', 'player.vert-miss'])
     assert.ok(allIds.includes(id), `missing authored ${id} route`);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
@@ -78,7 +79,7 @@ try {
     'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall',
     'player.native-air-jump', 'player.native-air-fall', 'player.native-air-double-jump',
     'player.launch-rise', 'player.launch-gather', 'player.launch-board-rise', 'player.launch-board-gather',
-    'player.roll-land', 'player.rope-climb',
+    'player.roll-land', 'player.vert-climb', 'player.vert-leap', 'player.vert-miss', 'player.rope-climb',
     'player.rope-release', 'player.slam',
   ]);
 

@@ -8,13 +8,13 @@ its curve that is `rise / 2 + lipRise`.
 | Lip above the 60° point | What he does | Takes | Where it leaves him |
 |---|---|---|---|
 | up to **3.0 m** | **climbs out**. A plain quarter's lip is by his knees by then and he bounds over it, arms swinging; a lip at his hips or his chest he takes in his hands and goes over between his arms; a lip over his head is two steps up the wall, a hand and then the other on the coping, and a mantle | 0.5 s (plain quarter) to 0.9 s (3 m) | on the deck 1 m past the lip, running at 4.4 m/s |
-| up to **4.1 m** | **leaps and catches the lip** at the top of the jump, at the full stretch of his arms, and sags onto them | 0.4–0.7 s | in the game's own ledge hang: the ordinary clamber, drop and grip timer from there |
+| up to **3.9 m** | **leaps and catches the lip** at the top of the jump, at the full stretch of his arms, and sags onto them | 0.4–0.7 s | in the game's own ledge hang: the ordinary clamber, drop and grip timer from there |
 | higher | **leaps, and misses**. The same leap, a metre of it; his fingers stop short; he slides down the face looking back over his shoulder, the transition takes his feet, he goes over onto his back with his legs in the air and skids out along the flat; sits up, looks at the lip, gets up | 2.6 s | stood on the flat about 4 m back from the face, his to move again |
 
 The bands are the wall's alone (`vertRunOutcome` in `src/vertRunUp.ts`): the same wall always ends the same
 way, whatever stride he arrives on. They come from where he is drawn when the wall stops his run (pelvis
-about 1.5 m over the 60° point), the metre his leap is worth, and the 1.55 m from his pelvis to his grip at
-full stretch.
+about 1.5 m over the 60° point), the metre his leap is worth, and the 1.4 m from his pelvis to a lip his
+hands can hold with no stretch in his arms.
 
 ## When it happens
 
@@ -38,17 +38,17 @@ carry his head (it is 0.8 m across) into the wall before his feet ran out of slo
 - **A quarter the route climbs on foot** wants its lip within 3.0 m: any radius up to 6 m with no straight
   section, or a 2.5 m curve with up to 1.75 m of straight above it. It costs a runner half a second and
   reads as a step up, so it can be the step itself on an uphill stretch.
-- **A wall to hang from** is 3.1–4.1 m. The hang is the ordinary one: Jump or the stick toward the deck
+- **A wall to hang from** is 3.1–3.9 m. The hang is the ordinary one: Jump or the stick toward the deck
   clambers up, away drops, and it lets go by itself after `ledgeGrabTime`.
-- **A wall that turns a walker back** is 4.2 m or more, and it costs him 2.6 s and four metres. Make it
-  plainly taller than the last wall he got up (the yard's last wall is 0.9 m over the one before it), and
+- **A wall that turns a walker back** is 4.0 m or more, and it costs him 2.6 s and four metres. Make it
+  plainly taller than the last wall he got up (the yard's last wall is 1.15 m over the one before it), and
   leave 3 m or more of flat in front of it: he comes to rest about 1.8 m out from the foot of the curve.
   On a shorter flat he is braked to stop on what there is; with none at all the wall is left alone.
 - The deck behind the lip is the landing. Keep the first metre of it clear: a box standing there blocks the
   move altogether, and one standing in the run-up stops the run.
 
 Side Pipe Lab's **wall yard** (behind the start, walking west) is four walls of the same 2.5 m curve, each
-on the last one's deck: 1.25 m (vaulted), 2.6 m (climbed), 4.0 m (caught) and 4.9 m (missed).
+on the last one's deck: 1.25 m (vaulted), 2.6 m (climbed), 3.75 m (caught) and 4.9 m (missed).
 
 ## How it is built
 

@@ -2090,8 +2090,8 @@ decided by **the lip's height above that point** (`rise / 2 + lipRise` for a qua
 | Lip above the 60° point | The walker | Use it as |
 |---|---|---|
 | ≤ 3.0 m (any plain quarter up to 6 m radius; a 2.5 m curve with ≤ 1.75 m of straight wall above it) | climbs out in 0.5–0.9 s and runs on along the deck at 4.4 m/s | the step itself on an uphill stretch: it costs half a second and no input |
-| 3.1–4.1 m | leaps, catches the lip and hangs (0.4–0.7 s), then the ordinary clamber | a ledge: the hang is the game's own, with its grip timer and its drop |
-| ≥ 4.2 m | leaps, misses, slides down the face and is thrown back onto the flat: 2.6 s, ending about 4 m back from the face | a wall that turns a walker back and says so. Give it ≥ 3 m of flat in front and make it plainly taller than the last wall he got up |
+| 3.1–3.9 m | leaps, catches the lip and hangs (0.4–0.7 s), then the ordinary clamber | a ledge: the hang is the game's own, with its grip timer and its drop |
+| ≥ 4.0 m | leaps, misses, slides down the face and is thrown back onto the flat: 2.6 s, ending about 4 m back from the face | a wall that turns a walker back and says so. Give it ≥ 3 m of flat in front and make it plainly taller than the last wall he got up |
 
 It needs a standable deck ≥ 0.9 m deep behind the lip, a direction held, and a run of ≥ 4 m/s up the wall:
 a walker who lets go of the stick before the wall simply stops on it, and a fence-top quarter with no deck

@@ -11,7 +11,7 @@
 //                 and he is running on the deck. (A plain quarter's lip is at
 //                 his hips by then, and it is a vault; a lip at the top of the
 //                 band is two steps up the wall and a mantle.)
-//   up to 4.1 m   he LEAPS and catches the lip at the top of the jump, at the
+//   up to 3.9 m   he LEAPS and catches the lip at the top of the jump, at the
 //                 full stretch of his arms, sags onto them, and hangs: from
 //                 there it is the game's own ledge hang and clamber;
 //   higher        he leaps the same metre, comes up short, slides down the
@@ -37,7 +37,7 @@ export const VERT_RUN_UP = {
   climbRise: 3.0,
   /** A lip this far above it, or nearer, is leapt for and caught; higher is leapt for and missed.
    * (Where he stands on the wall, the metre of his leap, and the length of him from pelvis to fingers.) */
-  grabRise: 4.1,
+  grabRise: 3.9,
   /** Where the run has his pelvis when the wall stops it: this far above the run-out point. */
   stanceHips: 1.5,
   /** Running, his head leads his pelvis by this much and its centre is this far above the controller
@@ -55,11 +55,13 @@ export const VERT_RUN_UP = {
   loadOut: 0.66,
   /** At full stretch his grip is this far over his pelvis (measured on him): as high as a miss gets it. */
   reachDrop: 1.60,
-  /** A grab takes the lip at the top of the jump with his pelvis this far under it, at the full
-   * stretch of his arms; then his weight comes onto them and he sags this far under it. (The game's
-   * own hang, with his shoulders pulled up round his ears, lets him down a little further.) */
-  catchDrop: 1.53,
-  deadHang: 1.58,
+  /** A grab takes the lip at the top of the jump with his pelvis this far under it; then his weight
+   * comes onto his arms and he sags this far under it. Both are within his reach with no stretch in
+   * his arms at all (1.45 m, measured on him): the stretch the clip puts into the catch is over and
+   * above it, and is let out again before the hang takes him. (The game's own hang, with his
+   * shoulders pulled up round his ears, lets him down further.) */
+  catchDrop: 1.40,
+  deadHang: 1.45,
   /** The sag takes this long. */
   sagSeconds: 0.08,
   /** A vert's coping is flush with the face under it, so there he hangs this far out from it. */

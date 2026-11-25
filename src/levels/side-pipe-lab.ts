@@ -181,7 +181,7 @@ export const P0 = pipe('P0 roll-in pipe', 4, START_TOP - 3.5, 2.5, [3.5, 3.5], [
 // changes is that measurement, and it reads at a glance as "taller":
 //   1.25 m  he climbs out: the lip is at his hips, and it is a vault
 //   2.6 m   he climbs out: two steps up the wall, hands on the coping, a mantle
-//   4.0 m   he leaps, catches the lip at the top of the jump and hangs (then the ordinary pull-up)
+//   3.75 m  he leaps, catches the lip at the top of the jump and hangs (then the ordinary pull-up)
 //   4.9 m   he leaps, comes up short, slides down the face and is thrown back down the transition.
 // Nothing here is on the course: it is a place to see all of them in a row.
 /** A quarter facing east (its wall rises to the west), with a deck behind its lip, on solid ground. */
@@ -210,7 +210,7 @@ export const YARD_VAULT = yardWall('Wall yard 1: vaulted out of', YARD_X0, START
 overhead(YARD_VAULT.lipX - 4.9, YARD_VAULT.lipY, ['wood', 'mystery', 'wood'], 'Wall yard: overhead row on the first deck');
 export const YARD_CLIMB = yardWall('Wall yard 2: climbed out of', YARD_VAULT.lipX - YARD_VAULT.deck, YARD_VAULT.lipY, 1.35, 7);
 for (const x of [1.6, 2.6, 3.6, 4.6]) fruit(YARD_CLIMB.lipX - x, YARD_CLIMB.lipY + 1.15);
-export const YARD_GRAB = yardWall('Wall yard 3: leapt for and caught', YARD_CLIMB.lipX - YARD_CLIMB.deck, YARD_CLIMB.lipY, 2.75, 7);
+export const YARD_GRAB = yardWall('Wall yard 3: leapt for and caught', YARD_CLIMB.lipX - YARD_CLIMB.deck, YARD_CLIMB.lipY, 2.5, 7);
 for (const x of [1.6, 2.6, 3.6, 4.6]) fruit(YARD_GRAB.lipX - x, YARD_GRAB.lipY + 1.15);
 export const YARD_MISS = yardWall('Wall yard 4: too high', YARD_GRAB.lipX - YARD_GRAB.deck, YARD_GRAB.lipY, 3.65, 4);
 fruitOnWall(P0, -1, 3);

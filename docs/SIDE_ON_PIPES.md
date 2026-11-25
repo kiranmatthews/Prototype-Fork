@@ -121,7 +121,7 @@ Walk west from the start instead of east. Four quarters of the same 2.5 m curve 
 decks, each with more straight wall above the curve than the last, and nothing else changes between them.
 They are met on foot, and what a runner does at the top of each is decided by the lip's height above the
 last place his feet hold (`docs/VERT_RUN_UP.md`): 1.25 m, he bounds over the lip; 2.6 m, he runs two steps
-up the wall and mantles out; 4.0 m, he leaps, catches the lip and hangs; 4.9 m, he leaps, misses, slides
+up the wall and mantles out; 3.75 m, he leaps, catches the lip and hangs; 4.9 m, he leaps, misses, slides
 down the face and is thrown back down the transition. Nothing in the yard is on the course.
 
 ## Authoring rules the test course paid for

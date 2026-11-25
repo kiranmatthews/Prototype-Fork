@@ -1707,7 +1707,6 @@ export function createCharacterAnimationRuntime(
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   ROLL_LANDING_CLIP_ID,
-  ...Object.values(VERT_RUN_CLIP_IDS),
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
   SLOPE_SLIDE_CLIP_ID,
@@ -1735,4 +1734,6 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.death',
   'player.spin',
   ...Object.values(LAUNCH_CLIPS),
+  // (new routes go on the end: positions in this list are leaned on by saved diagnostics and tests)
+  ...Object.values(VERT_RUN_CLIP_IDS),
 ];
