@@ -118,6 +118,176 @@ try {
     assert.deepEqual(mid.position.toArray(),[0,-2,0]);assert.deepEqual(end.position.toArray(),[0,-2,0]);
   }
 
+  // ---- under the rider's proportions, through the side-on hang ----------------
+  // A bone below a rotated (1.18, 1.36, 1.18) body has a sheared world matrix,
+  // and a sheared matrix holds no single rotation: taking one apart answers
+  // differently on each branch of the matrix-to-quaternion conversion. A
+  // side-on halfpipe hang is a quarter turn, then a quarter turn: a 120 degree
+  // rotation whose trace is zero and whose diagonal is all zeros, so every
+  // branch condition is undecided at once. The solve must not notice. It works
+  // in each joint's parent, so its answer cannot depend on which way the whole
+  // rig faces: the same leg, turned as one piece, must solve to the same joint
+  // rotations, and its foot must simply turn with it.
+  {
+    const world = new THREE.Group();
+    const body = new THREE.Group();
+    body.scale.set(1.18, 1.36, 1.18);
+    body.position.set(3, 7, -2);
+    world.add(body);
+    const hip = new THREE.Group();
+    const knee = new THREE.Group();
+    const ankle = new THREE.Group();
+    hip.position.set(0.12, 0.9, 0);
+    knee.position.set(0, -0.45, 0);
+    ankle.position.set(0, -0.42, 0);
+    body.add(hip);
+    hip.add(knee);
+    knee.add(ankle);
+    const quarterTurns = (x, y, z, turns) =>
+      new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(x, y, z), turns * Math.PI / 2);
+    // Onto the wall, the rig's own half turn, then a quarter turn of facing.
+    const hang = quarterTurns(0, 0, 1, 1).multiply(quarterTurns(0, 1, 0, 2)).multiply(quarterTurns(0, 1, 0, -1));
+    body.quaternion.copy(hang);
+    world.updateWorldMatrix(true, true);
+    const hung = body.matrixWorld.elements;
+    assert.ok([hung[0], hung[5], hung[10]].every((value) => Math.abs(value) < 1e-12),
+      'reference: in the side-on hang the body\'s rotation has an all-zero diagonal, and so a zero trace');
+
+    /** A node's own axes in the world, read off its matrix: never a decomposed rotation. */
+    const axesOf = (node) => {
+      const e = node.matrixWorld.elements;
+      return [0, 4, 8].map((i) => new THREE.Vector3(e[i], e[i + 1], e[i + 2]).normalize());
+    };
+    const modes = [
+      // [how it is asked for, the option, the miss three passes may leave (metres)]
+      ['by default', {}, 2e-3],
+      ['accounting for parent scale', { accountForParentScale: true }, 2e-3],
+      ['in the body\'s solve space', { solveSpace: body }, 1e-5],
+    ];
+    // Target and pole are given in the body's own frame, so they ride with it.
+    const legs = [
+      { name: 'a nearly straight leg', rest: [[-0.10, 0.04, 0.06], [0.16, 0, 0]],
+        target: [0.16, 0.10, 0.10], pole: [0.12, 0.5, 1.5], loop: 0.03 },
+      { name: 'a bent leg', rest: [[-0.5, 0.15, 0.2], [0.9, 0, 0]],
+        target: [0.30, 0.22, 0.28], pole: [0.15, 0.6, 1.5], loop: 0.06 },
+    ];
+    const solveLeg = (leg, options, target = leg.target) => {
+      hip.quaternion.setFromEuler(new THREE.Euler(...leg.rest[0]));
+      knee.quaternion.setFromEuler(new THREE.Euler(...leg.rest[1]));
+      world.updateWorldMatrix(true, true);
+      const worldTarget = body.localToWorld(new THREE.Vector3(...target));
+      const worldPole = body.localToWorld(new THREE.Vector3(...leg.pole));
+      let result;
+      for (let pass = 0; pass < 3; pass++) {
+        result = solveTwoBoneIk({ root: hip, mid: knee, end: ankle, target: worldTarget, pole: worldPole, ...options });
+      }
+      world.updateWorldMatrix(true, true);
+      return result;
+    };
+
+    for (const leg of legs) {
+      for (const [label, options, reach] of modes) {
+        // The whole rig turned through the hang about three different axes, a
+        // thousandth of a radian at a time. Turning about the hang's own axis
+        // takes the trace through zero; the middle step is the hang exactly.
+        let first = null;
+        let jointSpread = 0;
+        let footSpread = 0;
+        let worstMiss = 0;
+        for (const axis of [[-1, 1, -1], [1, 0, 0], [0.3, -0.5, 0.8]]) {
+          const about = new THREE.Vector3(...axis).normalize();
+          for (let k = -600; k <= 600; k++) {
+            const turned = new THREE.Quaternion().setFromAxisAngle(about, k * 0.001);
+            body.quaternion.copy(turned).multiply(hang);
+            const result = solveLeg(leg, options);
+            assert.notEqual(result.status, 'invalid', `${leg.name}, ${label}: solved at ${k * 0.001} rad off the hang`);
+            const back = turned.clone().invert();
+            const now = { joints: [hip.quaternion.clone(), knee.quaternion.clone()],
+              foot: axesOf(ankle).map((direction) => direction.applyQuaternion(back)) };
+            first ??= now;
+            jointSpread = Math.max(jointSpread, ...now.joints.map((q, i) => q.angleTo(first.joints[i])));
+            footSpread = Math.max(footSpread, ...now.foot.map((direction, i) => direction.angleTo(first.foot[i])));
+            worstMiss = Math.max(worstMiss, result.error);
+          }
+        }
+        assert.ok(jointSpread < 1e-6, `${leg.name}, ${label}: turned as one piece through the side-on hang, ` +
+          `the solved hip and knee change by ${jointSpread.toExponential(1)} rad (they should not change at all)`);
+        assert.ok(footSpread < 1e-6, `${leg.name}, ${label}: and the foot turns with the rig, ` +
+          `to within ${footSpread.toExponential(1)} rad`);
+        if (process.env.IK_TRACE) console.log('TRACE turned', JSON.stringify({ leg: leg.name, label, jointSpread, footSpread, worstMiss }));
+        assert.ok(worstMiss < reach, `${leg.name}, ${label}: three passes reach the target under the body's ` +
+          `proportions (worst miss ${(worstMiss * 1000).toFixed(3)} mm)`);
+
+        // Held exactly in the hang while the foot is carried round a loop: the
+        // joints follow it. A pop is one step many times the size of the rest.
+        body.quaternion.copy(hang);
+        const steps = 720;
+        let last = null;
+        let worstStep = 0;
+        let worstFootStep = 0;
+        let travelled = 0;
+        for (let k = 0; k <= steps; k++) {
+          const angle = k / steps * 2 * Math.PI;
+          solveLeg(leg, options, [leg.target[0] + leg.loop * Math.cos(angle),
+            leg.target[1] + leg.loop * 0.5 * Math.sin(2 * angle), leg.target[2] + leg.loop * Math.sin(angle)]);
+          const now = { joints: [hip.quaternion.clone(), knee.quaternion.clone()], foot: axesOf(ankle) };
+          if (last) {
+            const step = Math.max(...now.joints.map((q, i) => q.angleTo(last.joints[i])));
+            worstStep = Math.max(worstStep, step);
+            travelled += step;
+            worstFootStep = Math.max(worstFootStep, ...now.foot.map((direction, i) => direction.angleTo(last.foot[i])));
+          }
+          last = now;
+        }
+        const usual = travelled / steps;
+        assert.ok(usual > 5e-4, `reference: ${leg.name} really is carried round its loop (${usual.toFixed(4)} rad a step)`);
+        if (process.env.IK_TRACE) console.log('TRACE loop', JSON.stringify({ leg: leg.name, label, worstStep, worstFootStep, usual }));
+        assert.ok(worstStep < 4 * usual && worstFootStep < 4 * usual, `${leg.name}, ${label}: held in the hang with its foot ` +
+          `carried round a loop, no step is a pop (the largest is ${worstStep.toFixed(4)} rad for the joints and ` +
+          `${worstFootStep.toFixed(4)} rad for the foot; the usual one is ${usual.toFixed(4)})`);
+      }
+    }
+
+    // The scale-aware aim used to be asked for by name. It is now the only
+    // conversion there is, so asking for it changes nothing; and where nothing
+    // is stretched unevenly it is what it always was, the shortest world turn
+    // conjugated into the parent, which solves a rigid or evenly scaled rig
+    // exactly in one pass, whichever way it faces.
+    body.quaternion.copy(hang);
+    solveLeg(legs[1], {});
+    const byDefault = [hip.quaternion.clone(), knee.quaternion.clone()];
+    solveLeg(legs[1], { accountForParentScale: true });
+    assert.ok(byDefault[0].equals(hip.quaternion) && byDefault[1].equals(knee.quaternion),
+      'accountForParentScale no longer changes the solve: every solve aims through the parent\'s whole transform');
+    body.scale.setScalar(1.36);
+    for (const facing of [hang, new THREE.Quaternion().setFromEuler(new THREE.Euler(0.7, -1.9, 0.4))]) {
+      body.quaternion.copy(facing);
+      hip.quaternion.setFromEuler(new THREE.Euler(...legs[1].rest[0]));
+      knee.quaternion.setFromEuler(new THREE.Euler(...legs[1].rest[1]));
+      world.updateWorldMatrix(true, true);
+      const even = solveTwoBoneIk({ root: hip, mid: knee, end: ankle,
+        target: body.localToWorld(new THREE.Vector3(...legs[1].target)), pole: body.localToWorld(new THREE.Vector3(...legs[1].pole)) });
+      assert.ok(even.status === 'reached' && even.error < 1e-5, `an evenly scaled rig is solved exactly in one pass (${even.error})`);
+    }
+
+    // A small rig is not a collapsed one; a flattened parent still is, and is refused.
+    body.scale.set(1.18e-3, 1.36e-3, 1.18e-3);
+    body.quaternion.copy(hang);
+    for (const [label, options] of modes) {
+      const small = solveLeg(legs[1], options);
+      assert.notEqual(small.status, 'invalid', `a rig a thousandth of the size is still solved ${label}`);
+    }
+    body.scale.set(1.18, 0, 1.18);
+    hip.quaternion.setFromEuler(new THREE.Euler(...legs[1].rest[0]));
+    knee.quaternion.setFromEuler(new THREE.Euler(...legs[1].rest[1]));
+    const before = [hip.quaternion.clone(), knee.quaternion.clone()];
+    world.updateWorldMatrix(true, true);
+    const flat = solveTwoBoneIk({ root: hip, mid: knee, end: ankle,
+      target: body.localToWorld(new THREE.Vector3(...legs[1].target)), pole: body.localToWorld(new THREE.Vector3(...legs[1].pole)) });
+    assert.ok(flat.status === 'invalid' || flat.status === 'degenerate', `a flattened parent is refused (${flat.status})`);
+    assert.ok(hip.quaternion.equals(before[0]) && knee.quaternion.equals(before[1]), 'and the refused solve leaves the joints as they were');
+  }
+
   // Semantic inference is topology checked, but remains independent of Bone/humanoid classes.
   const semanticRoot = new THREE.Group();
   const joints = new Map();

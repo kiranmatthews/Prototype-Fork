@@ -9,6 +9,8 @@ import type {
 } from './types';
 
 const EPSILON = 1e-8;
+/** A matrix whose axes span less than this share of their own box is flat. */
+const SINGULAR_MATRIX_RATIO = 1e-12;
 const DEFAULT_TOLERANCE = 1e-4;
 const MAX_FINITE_ERROR = Number.MAX_SAFE_INTEGER;
 
@@ -84,7 +86,8 @@ export interface ResolveIkChainOptions {
 }
 
 export interface TwoBoneIkOptions {
-  /** Aim through the complete parent linear transform on proportioned rigs. */
+  /** No longer needed, and kept for existing callers: every solve now aims
+   * through the complete parent linear transform, proportioned rig or not. */
   accountForParentScale?: boolean;
   /** Measure lengths in a common ancestor's affine space. This avoids using
    * changing world lengths beneath a non-uniform character proportion scale. */
@@ -223,40 +226,60 @@ function clampQuaternionFrom(
   return true;
 }
 
-function writeWorldRotationDelta(
+/**
+ * Invert a world matrix, or report that it has no usable inverse. Flatness is
+ * judged against the matrix's own size, so a small rig is not mistaken for a
+ * collapsed one.
+ */
+function invertWorldMatrix(world: THREE.Matrix4, out: THREE.Matrix4): boolean {
+  const e = world.elements;
+  const determinant = world.determinant();
+  const size = Math.hypot(e[0], e[1], e[2]) * Math.hypot(e[4], e[5], e[6]) * Math.hypot(e[8], e[9], e[10]);
+  if (!Number.isFinite(determinant) || !Number.isFinite(size)
+    || !(Math.abs(determinant) > size * SINGULAR_MATRIX_RATIO)) return false;
+  out.copy(world).invert();
+  return true;
+}
+
+/**
+ * Turn a joint so that a world direction it carries lands on another, working
+ * in the joint's parent.
+ *
+ * No rotation is ever read back out of a world matrix here. Beneath a rotated,
+ * non-uniformly scaled ancestor (the player's 1.18 x 1.36 x 1.18 body) a
+ * joint's world matrix is sheared, and a sheared matrix holds no single
+ * rotation: decomposing one gives a different answer on each branch of the
+ * matrix-to-quaternion conversion. A side-on halfpipe hang (a quarter turn,
+ * then a quarter turn: a 120 degree rotation with a zero trace and an all-zero
+ * diagonal) sits on every branch boundary at once, so a world rotation
+ * converted through decomposed quaternions flipped on floating-point noise
+ * and the solved limb popped.
+ *
+ * The parent's inverse matrix carries both directions into the parent's own
+ * space instead, and the joint takes the shortest turn between them there.
+ * That is continuous however the ancestors are scaled, does not depend on
+ * which way the whole rig faces, and ends the segment on the requested world
+ * direction even where the parent stretches it. Under a rigid or evenly
+ * scaled parent it is exactly the shortest world turn, conjugated into the
+ * parent.
+ */
+function aimJointInParent(
   node: THREE.Object3D,
-  worldDelta: THREE.Quaternion,
+  worldFrom: THREE.Vector3,
+  worldTo: THREE.Vector3,
   weight: number,
   globalMaxStep: number,
   limit: IkRotationLimit | undefined,
-  directions?: readonly [THREE.Vector3, THREE.Vector3],
 ): RotationWriteResult {
-  if (!finiteQuaternion(worldDelta) || !finiteQuaternion(node.quaternion)) {
+  if (!finiteVector(worldFrom) || !finiteVector(worldTo) || !finiteQuaternion(node.quaternion)) {
     return { ok: false, limited: false };
   }
   const startLocal = node.quaternion.clone().normalize();
-  const startWorld = new THREE.Quaternion();
-  node.getWorldQuaternion(startWorld);
-  if (!finiteQuaternion(startWorld)) return { ok: false, limited: false };
-
-  const desiredWorld = worldDelta.clone().normalize().multiply(startWorld).normalize();
-  const parentWorld = new THREE.Quaternion();
-  if (node.parent) node.parent.getWorldQuaternion(parentWorld);
-  else parentWorld.identity();
-  if (!finiteQuaternion(parentWorld)) return { ok: false, limited: false };
-
-  let candidate = parentWorld.invert().multiply(desiredWorld).normalize();
-  if (directions) {
-    // World quaternions discard shear introduced by rotated, non-uniformly
-    // scaled ancestors. Aim in the parent's actual affine space instead.
-    const inverse = node.parent?.matrixWorld.clone() ?? new THREE.Matrix4();
-    if (Math.abs(inverse.determinant()) < EPSILON) return { ok: false, limited: false };
-    inverse.invert();
-    const from = directions[0].clone().transformDirection(inverse);
-    const to = directions[1].clone().transformDirection(inverse);
-    candidate = new THREE.Quaternion().setFromUnitVectors(from, to)
-      .multiply(startLocal).normalize();
-  }
+  const toParent = new THREE.Matrix4();
+  if (node.parent && !invertWorldMatrix(node.parent.matrixWorld, toParent)) return { ok: false, limited: false };
+  const from = worldFrom.clone().transformDirection(toParent);
+  const to = worldTo.clone().transformDirection(toParent);
+  const candidate = new THREE.Quaternion().setFromUnitVectors(from, to).multiply(startLocal).normalize();
   if (!finiteQuaternion(candidate)) return { ok: false, limited: false };
 
   let limited = false;
@@ -363,9 +386,9 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
   if(options.solveSpace){
     const space=options.solveSpace;
     space.updateWorldMatrix(true,false);
-    if(!isDescendant(root,space)||space===root||Math.abs(space.matrixWorld.determinant())<EPSILON)
+    const inverse=new THREE.Matrix4();
+    if(!isDescendant(root,space)||space===root||!invertWorldMatrix(space.matrixWorld,inverse))
       return resultForFailure('invalid','IK solve space must be a nonsingular ancestor of the chain',effector,target);
-    const inverse=space.matrixWorld.clone().invert();
     for(const point of [a,b,c,solveTarget,pole])point.applyMatrix4(inverse);
   }
 
@@ -429,9 +452,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
 
   const weight = finiteClamp(options.weight, 1, 0, 1);
   const maxStep = finiteClamp(options.maxAngularStepRadians, Math.PI, 0, Math.PI);
-  const rootDelta = new THREE.Quaternion().setFromUnitVectors(currentUpper, desiredUpper).normalize();
-  const rootWrite = writeWorldRotationDelta(root, rootDelta, weight, maxStep, options.rootLimit,
-    options.accountForParentScale || options.solveSpace ? [currentUpper, desiredUpper] : undefined);
+  const rootWrite = aimJointInParent(root, currentUpper, desiredUpper, weight, maxStep, options.rootLimit);
   if (!rootWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);
@@ -459,9 +480,7 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
   currentLower.normalize();
   desiredLower.normalize();
 
-  const midDelta = new THREE.Quaternion().setFromUnitVectors(currentLower, desiredLower).normalize();
-  const midWrite = writeWorldRotationDelta(mid, midDelta, weight, maxStep, options.midLimit,
-    options.accountForParentScale || options.solveSpace ? [currentLower, desiredLower] : undefined);
+  const midWrite = aimJointInParent(mid, currentLower, desiredLower, weight, maxStep, options.midLimit);
   if (!midWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);

@@ -13145,6 +13145,130 @@ Not run: `check:skate-playtest` needs `.skate-reference-data/motion.json`, which
 repository. `tools/test-waterpark-vert.mjs` stops at `'ride' !== 'finished'` (its line 46) with and
 without this change — checked against the unmodified sources — before it reaches its pose assertions.
 
+## 2026-11-25 — Skate pose: no rotation is read back out of a sheared world matrix
+
+Brief: the shared two-bone IK turns a world rotation into a joint's local one by decomposing world
+matrices. Under the rider's 1.18 × 1.36 × 1.18 body those matrices are sheared and hold no one rotation;
+in a side-on hang the decomposition changes branch on floating-point noise, and for one frame of the
+cascade's first transfer a sole was 13.1 mm off the deck. Make that step work in the joint's parent with
+the parent's inverse matrix, consider the same for `SkateAnimation.worldRotation`, keep each change
+separately testable, and leave the animation baseline, the physics and the tuning alone.
+Elapsed: about 30 min from the brief to the cause measured on the real rig and a first fix; about 2 h to
+the reported frame reproduced exactly on the old code, headless and in a browser; about 3 h 45 min to the
+tests, the regression suites, the docs and the browser passes. Times are approximate.
+No level data changed, and nothing the simulation reads: over the whole course (7,300 steps) the rider's
+position is identical with and without the change, and the route test prints the same numbers (832 m in
+121.6 s).
+
+**What was wrong, and where.** Two different conversions took rotations out of sheared matrices, and the
+one the brief named is not the one on the skate path.
+
+- `solveTwoBoneIk` (`src/animation/ik.ts`), asked for by default, converted its world turn through two
+  decomposed quaternions. Measured on a leg under a (1.18, 1.36, 1.18) body turned as one piece: the
+  solved hip and knee changed by up to 0.45 rad with the heading, popped 0.15 rad between two
+  neighbouring targets in the hang, and three passes still missed by 39–51 mm. But the skate legs ask for
+  `accountForParentScale`, whose aim already went through the parent's inverse matrix and threw the
+  decomposed quaternions away. Putting the old `ik.ts` back changes nothing about the skate soles.
+- `SkateAnimation.worldRotation`'s default branch set an ankle (and a wrist, and the spine) against the
+  rotation read back out of its parent's world matrix, and a knee's is sheared. Every refinement step of
+  the leg solve read it again, so the ankle sat on one of two attitudes some ten degrees apart, chosen by
+  a branch. Usually the leg still settled, on whichever it met last: the sole stayed on its mark and
+  turned on it. Where the two answers kept pulling the knee back across the branch it never settled, and
+  the frame was drawn with a sole a centimetre off.
+
+The reported frame is drawn by the game's authored animation runtime, which the route test's native
+poses do not run: frame 22 of 30 of the cascade's first transfer, at 0.72 of the turn, 13.13 mm, with
+0.95 and 0.86 mm either side. It reproduces exactly, headless and in Chromium.
+
+It was never only the pipe. A rider turning on the flat crosses the same branches: one settled pose,
+turned on the spot and drawn again, moved a leg joint by up to 14 mm in his own frame and a sole by up
+to 0.18 rad against the deck (air, ride, charge and manual alike), and a grabbing wrist by up to 0.31 rad.
+
+**The change.** Nothing in `ik.ts` or `skateAnimation.ts` reads a rotation out of a world matrix now.
+
+- *An aim* (`ik.ts`): both directions are carried into the joint's parent by the parent's inverse matrix
+  and the joint takes the shortest turn between them. This was the `accountForParentScale` path; it is
+  now the only one. Callers that asked for it, or for a solve space, compute exactly what they did; the
+  flag is kept for them and changes nothing. Whether a parent is collapsed is judged against its own
+  size, so a small rig is not refused.
+- *A whole attitude* (a sole on the deck, a palm on a rail, the deck itself): set against the rotation
+  the joints themselves give, every turn from the root down multiplied out (`rotationOf`). That is what
+  the grabs' `orientationFrame` paths already did, from the body down, and where nothing is sheared it is
+  the rotation the world matrix holds.
+- *A turn about a world axis* (the spine's lean on a rail, its tuck under one): `turnJoint`, as the
+  hang's upper body already was.
+- *A hand's mount* (how its socket sits against its wrist) is read off the joints between the two, not
+  off two decomposed matrices.
+
+**What it did to the picture** (the same whole-course run drawn by both builds, 2,195 frames on the
+board; and the settled poses turned through 36 headings):
+
+| | Before | After |
+| --- | --- | --- |
+| Cascade's first transfer, frame 22, the game's own runtime | 13.13 mm | 0.89 mm |
+| Vert-air frames with a sole over 3 mm off the deck | 2 (10.5 and 11.3 mm) | 0 (worst 2.1 mm) |
+| Frames on which a sole turns over 0.05 rad against the deck | 76 | 3 (his stance swapping as he lands back on a wall) |
+| The same turn, drawn eight times a frame through both transfers | up to 0.11 rad | 0.002 rad |
+| A sole out of the deck's plane, median / 99th percentile | 1.8° / 5.1° | 0.6° / 3.1° |
+| A sole's length off square across the deck, median | 2.2° | 0.0° |
+| One pose turned on the spot: a leg joint, in his own frame | up to 14.4 mm | 0.03 mm |
+| ...a sole against the deck; a grabbing wrist | 0.18 rad; 0.31 rad | 0; 0 |
+| Ankle quaternions changing hemisphere in 566 vert-air frames | 8 | 0 |
+
+Against the old build the hips sit 1.4 mm away on average and the knees and ankles 4.5 mm, which is less
+than the old build disagreed with itself from one heading to the next; the soles' contact points moved
+0.2 mm and the deck not at all. Close-ups of the reported frame and of all eight grabs, old against new,
+show the same silhouettes.
+
+One pose outside the skate layer moves: the legacy Unity crawl clip plants its hands with the solve's
+default path. Its palms land nearer the plane they are aimed at (spread about it 28 and 13 mm, from 47
+and 43) and its hands sit up to 7 cm from where the old conversion left them on a given frame. The
+shipped default crawl (Quaternius) does not use that pass and is unchanged.
+
+**Tests, each failing by name on the code before its step.** `tools/test-animation-ik.mjs`: a leg under
+the body's proportions turned as one piece through the side-on hang (3,603 orientations a thousandth of a
+radian apart, about three axes, the middle one the hang exactly), solved hip and knee unchanged and the
+foot turning with the rig to 1e-6 rad, in all three ways of asking; then held in the hang with its foot
+carried round a loop, no step a pop. `tools/test-vert-air-motion.mjs`: the transfers' sole bound is 3 mm
+(it was 20); the transfers again at eight instants a frame, soles on the deck and not turning on it; and
+the transfers through the game's authored runtime, 3 mm on every frame. `tools/test-skate-contacts.mjs`:
+552 settled poses turned on the spot.
+
+**Known and left.**
+
+- *Stepping onto the board at a lip.* For the first two to four frames of a lip mount one leg is at
+  99.9% of its length and its sole is up to 11 mm short of the deck: 14 frames on the course. It is a
+  reach limit in the mount hop, present before (those frames and the unsettled ones made 23), and not
+  this bug.
+- *The same reading elsewhere.* `Player.alignCrawlHandsToGround` and the wall plant's contacts
+  (`src/player.ts`), `src/animation/ropeSwingBody.ts`, `src/kiteBonus.ts`, the golf cart's driver and
+  `src/skateReferenceLab/playableMotion.ts` still set or read a wrist or an ankle through
+  `getWorldQuaternion` below the body. None is on a path measured here.
+- *A knee's twist carries over.* The legacy pose rewrites `knee.rotation.x` and `.z` but never `.y`, so
+  the twist a solve leaves is the next frame's start. Where a joint is, and how a sole sits, do not
+  depend on it; which way the kneecap faces can.
+- *Melon's free hand* is sent 8 cm beyond the arm's reach, so its solve does not settle and still moves
+  with the heading (24 mm).
+
+**Checks.** `npm run check:animation`, `node tools/test-skate-contacts.mjs`, `npm run check:vert-air`
+and `npm run check:side-pipe` (the route: the same numbers as before); `check:pipe`,
+`check:motion-assets`, `check:crouch-jump` (the legacy crawl's own test included), `check:rope`,
+`check:wall-plant`, `check:ice-skate`, `check:spin-effects`, `check:roll-landing`, `check:golf-cart`,
+`check:skate-speed`, `check:rail-air`, 22 per-trick and pose tests, and `check:animation-d` (all 45,
+which is the game's authored runtime over the jump, skate, kite, trampoline and crawl scenarios);
+type-check, build and release size. Real Chromium on `?playtest&level=side-pipe-lab`: the reported
+scenario with the clock stepped once a frame (the old sources 13.13 mm on frame 22, these 1.00 mm at
+worst over both transfers, lite and full render, console clean), and eight runs from the checkpoint
+before the cascade on held Right and a pressed Jump (16 transfers, 640 steps, 1.00 mm at worst).
+Failing with and without this change, each run against the unmodified sources and stopping at the same
+assertion: `tools/test-waterpark-vert.mjs` (`'ride' !== 'finished'`), `test-waterpark-cup.mjs` and
+`test-waterpark-camera-air.mjs`, so `check:waterpark` does not pass; and seven standalone skate tests
+that stop in their own setup before a pose is asserted: `test-skate-backflip-motion.mjs` ("vert launch
+never occurred"), `test-skate-grab-definitions.mjs`, `test-skate-indy-motion.mjs`,
+`test-skate-mute-motion.mjs`, `test-skate-nosegrab-motion.mjs` and `test-skate-tailgrab-motion.mjs`
+(`assert.ok(p.vertAir)`), and `test-skate-grind-posture.mjs` ("wrong grind catch"). In `check:animation-d`,
+`test-ice-slide-carry.mjs` writes its report to `/private/tmp`; that directory had to be made here first.
+
 ## 2026-11-25 — Running up a vert on foot: climb out, catch the lip, or miss it
 
 Brief: running uphill on a (steep, ends vertical) vert should either have the skater climb out, or jump to

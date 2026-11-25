@@ -147,6 +147,65 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     const gripNormal=world(0,1,0).sub(world(0,0,0)).normalize();
     assert.ok(gripNormal.dot(normal)>.999,'wallride wheels face away from wall');checkFeet('wallride');
   }
+  // The drawn pose does not depend on which way he faces. One settled instant,
+  // then the rider turned on the spot and drawn again at that same instant: in
+  // his own frame every leg joint is where it was, and each sole sits against
+  // the deck exactly as it did. Under his cartoon proportions a bone's world
+  // matrix is sheared and has no one rotation to give, so a pose that reads
+  // one back out of it changes with the heading, by whichever branch of the
+  // conversion that heading lands on: a centimetre and ten degrees at a time.
+  let facings=0,maxLegDrift=0,maxSoleTurn=0,maxHandDrift=0,maxHandTurn=0;
+  {
+    const within=(frame,name)=>new THREE.Matrix4().copy(frame.matrixWorld).invert().multiply(p.riderG.getObjectByName(name).matrixWorld).elements;
+    // (read off the matrices: where a joint is in his frame, and a joint's own axes against the deck)
+    const place=name=>{const e=within(p.bodyGroup,name);return v(e[12],e[13],e[14]);};
+    const against=name=>{const e=within(p.boardG,name);return [0,4,8].map(i=>v(e[i],e[i+1],e[i+2]).normalize());};
+    const apart=(a,b)=>Math.max(...a.map((point,i)=>point.distanceTo(b[i])));
+    const turned=(a,b)=>Math.max(...a.flatMap((axes,i)=>axes.map((axis,j)=>axis.angleTo(b[i][j]))));
+    const LEGS=['hips','knee-left','knee-right','ankle-left','ankle-right','socket-foot-left','socket-foot-right'];
+    const SOLES=['ankle-left','ankle-right'];
+    const start=v(Math.sin(.13),0,Math.cos(.13)),STEPS=24;
+    /** Draw the settled instant facing each way in turn; `each` gets the first drawing and this one. */
+    const faceEveryWay=(joints,contacts,each)=>{
+      const yaw=p.visualYaw,draw=()=>{p.syncVisual(makeInput(),0);p.group.updateMatrixWorld(true);frames++;
+        return {at:joints.map(place),on:contacts.map(against)};};
+      const first=draw();
+      for(let k=1;k<STEPS;k++){p.visualYaw=yaw+k*2*Math.PI/STEPS;each(first,draw(),Math.round(k*360/STEPS));facings++;}
+    };
+    const poses={
+      air(){},
+      ride(){p.state='ride';p.grounded=true;p.speed=0;},
+      charge(){p.state='ride';p.grounded=true;p.speed=0;p.charging=true;p.chargeTimer=999;},
+      manual(){p.state='ride';p.grounded=true;p.manualing=1;p.balance=.4;},
+    };
+    for(const stance of [-1,1])for(const [name,pose] of Object.entries(poses)){
+      reset(stance,start);pose();settle();
+      faceEveryWay(LEGS,SOLES,(first,now,degrees)=>{
+        const drift=apart(now.at,first.at),turn=turned(now.on,first.on);
+        maxLegDrift=Math.max(maxLegDrift,drift);maxSoleTurn=Math.max(maxSoleTurn,turn);
+        assert.ok(drift<.0002,`${name}/${stance}: turned ${degrees}° on the spot, a leg joint is ${(drift*1000).toFixed(2)} mm from where it was in his own frame`);
+        assert.ok(turn<.001,`${name}/${stance}: turned ${degrees}° on the spot, a sole sits ${turn.toFixed(4)} rad differently against the deck`);
+        checkFeet(`${name} turned ${degrees}°`,.003);
+      });
+    }
+    // In a grab the same holds for the hand that has the deck: the palm keeps
+    // its hold and the wrist its attitude whichever way he faces. (The elbow
+    // is free to swivel about the line from shoulder to wrist; it is not held to this.)
+    for(const stance of [-1,1])for(const grab of GRAB_TRICKS){
+      reset(stance,start);p.grabKind=grab.kind;p.grabPhase='held';settle();
+      const side=p.boardG.userData.skateGrab.hand.replace('socket-grip-','');
+      faceEveryWay([`wrist-${side}`,`socket-grip-${side}`],[...SOLES,`wrist-${side}`,`socket-grip-${side}`],(first,now,degrees)=>{
+        const drift=apart(now.at,first.at),turn=turned(now.on,first.on);
+        maxHandDrift=Math.max(maxHandDrift,drift);maxHandTurn=Math.max(maxHandTurn,turn);
+        assert.ok(turn<.001,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the grabbing hand (or a sole) sits ${turn.toFixed(4)} rad differently against the deck`);
+        assert.ok(drift<.001,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the grabbing hand is ${(drift*1000).toFixed(2)} mm from where it was in his own frame`);
+        const info=p.boardG.userData.skateGrab,err=p.riderG.getObjectByName(info.hand).getWorldPosition(v()).distanceTo(v(...info.target));
+        assert.ok(err<.006,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the palm is ${(err*1000).toFixed(2)} mm off its hold`);
+        checkFeet(`${grab.kind} turned ${degrees}°`,.003);
+      });
+    }
+    if(process.env.SKATE_CONTACT_TRACE)console.log('TRACE facings',JSON.stringify({facings,maxLegDrift,maxSoleTurn,maxHandDrift,maxHandTurn}));
+  }
   // Every flip is finite through its complete cycle and returns upright.
   // The Impossible rolls its contact around the moving trailing shoe.
   for(const stance of [-1,1])for(const trick of DECK_TRICKS){
@@ -170,5 +229,8 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   assert.ok(skateContactBounce(.08)>0&&skateContactBounce(.26)<0,'cartoon contact must compress then rebound');assert.equal(skateContactBounce(.7),0);
   reset();p.pos.set(0,.1,10);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.revertT=.4;p.speed=10;
   step(makeInput({transferPressed:true}));assert.ok(p.comboLabels.includes('Revert'));assert.ok(p.revertPoseT>0);assert.ok(Math.abs(p.deckYawOffset)>3);
-  console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, Backflip definition and live revert. ${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
+  console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, Backflip definition and live revert. `+
+    `${facings} poses turned on the spot: legs within ${(maxLegDrift*1000).toFixed(3)} mm and soles within ${maxSoleTurn.toExponential(1)} rad of themselves, `+
+    `a grabbing hand within ${(maxHandDrift*1000).toFixed(3)} mm and ${maxHandTurn.toExponential(1)} rad. `+
+    `${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
 });

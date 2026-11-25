@@ -109,6 +109,9 @@ export class SkateAnimation {
   private temp = new THREE.Vector3();
   private q = new THREE.Quaternion();
   private matrix = new THREE.Matrix4();
+  private turnAxis = new THREE.Vector3();
+  private turnQ = new THREE.Quaternion();
+  private turnMatrix = new THREE.Matrix4();
 
   constructor(private group: THREE.Group, private body: THREE.Group,
     private rider: THREE.Group, private board: THREE.Group) {
@@ -166,14 +169,40 @@ export class SkateAnimation {
       return;
     }
     if(orientationFrame){
-      const desired=orientationFrame.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(rotation);
+      const desired=this.rotationOf(orientationFrame).invert().multiply(rotation);
       const chain=new THREE.Quaternion();
       for(let parent=node.parent;parent&&parent!==orientationFrame;parent=parent.parent)chain.premultiply(parent.quaternion);
       node.quaternion.copy(chain.invert()).multiply(desired).normalize();
       return;
     }
-    node.parent!.getWorldQuaternion(this.q).invert();
-    node.quaternion.copy(this.q).multiply(rotation).normalize();
+    // Against the joints above it, never against the parent's world matrix: a
+    // knee's is sheared, and reading a rotation out of it put the sole on one
+    // of two attitudes some ten degrees apart, chosen by a branch (rotationOf).
+    node.quaternion.copy(this.rotationOf(node.parent!,this.q).invert()).multiply(rotation).normalize();
+  }
+
+  /** A node's rotation in the world as its joints give it: every turn from the
+   * root down to it, multiplied out. It is never read back out of a world
+   * matrix. Under the rider's cartoon proportions (1.18 × 1.36 × 1.18) a
+   * bone's world matrix is sheared and has no one rotation to give: taking it
+   * apart answers differently on each branch of the conversion, and a side-on
+   * hang (a quarter turn, then a quarter turn) sits where every branch meets.
+   * Where nothing is sheared this is the rotation the world matrix holds; it
+   * is what the `orientationFrame` paths already did, from the body down. */
+  private rotationOf(node: THREE.Object3D, out = new THREE.Quaternion()): THREE.Quaternion {
+    out.copy(node.quaternion);
+    for(let parent=node.parent;parent;parent=parent.parent)out.premultiply(parent.quaternion);
+    return out;
+  }
+
+  /** Turn a joint about a world axis. The axis is carried into the joint's
+   * parent by the parent's inverse matrix and the joint is turned there, so
+   * the turn is about that axis however the body above it is stretched. */
+  private turnJoint(node: THREE.Object3D|undefined, axis: THREE.Vector3, angle: number): void {
+    if(!node||Math.abs(angle)<1e-5)return;
+    node.parent!.updateWorldMatrix(true,false);
+    this.turnAxis.copy(axis).transformDirection(this.turnMatrix.copy(node.parent!.matrixWorld).invert());
+    node.quaternion.premultiply(this.turnQ.setFromAxisAngle(this.turnAxis,angle));
   }
 
   private putBoard(): void {
@@ -187,8 +216,8 @@ export class SkateAnimation {
     pole: THREE.Vector3, weight = 1, iterations = 64, orientationFrame?:THREE.Object3D, surfaceAligned=false): number {
     // The socket is offset from the ankle/wrist. Restore its orientation after
     // each two-bone solve, then remeasure the offset (also handles scaled rigs).
-    const desired = limb.end.getWorldQuaternion(new THREE.Quaternion()).slerp(rotation, weight);
-    const frameDesired=orientationFrame?orientationFrame.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(desired):null;
+    const desired = this.rotationOf(limb.end).slerp(rotation, weight);
+    const frameDesired=orientationFrame?this.rotationOf(orientationFrame).invert().multiply(desired):null;
     const chainRotation=new THREE.Quaternion();
     const orient=()=>{
       if(surfaceAligned){this.worldRotation(limb.end,desired,undefined,true);return;}
@@ -251,7 +280,7 @@ export class SkateAnimation {
       : p.grabWeight > .01 ? `grab:${p.grab}` : p.grounded ? 'ride' : 'air';
     if (key !== this.key || !this.lastActive) {
       if(p.lip && this.lastActive){this.lipEntryP.copy(this.boardP);this.lipEntryQ.copy(this.boardQ);}
-      else if(p.lip){this.lipEntryP.copy(this.board.getWorldPosition(new THREE.Vector3()));this.lipEntryQ.copy(this.board.getWorldQuaternion(new THREE.Quaternion()));}
+      else if(p.lip){this.lipEntryP.copy(this.board.getWorldPosition(new THREE.Vector3()));this.rotationOf(this.board,this.lipEntryQ);}
       this.age = 0; this.key = key;
       // Taking off is extension, not another ground-contact compression.
       if (key !== 'air') this.bounceAge = 0;
@@ -291,7 +320,7 @@ export class SkateAnimation {
     const japan=grabKind==='japan'&&gw>.001&&!p.nineHundred;
     const tweak=!p.nineHundred&&!backflip&&gw>.001?skateGrabTweak(grabKind):null;
     const tweakWeight=smooth(gw);
-    const grabFrame=this.group.getWorldQuaternion(new THREE.Quaternion()).multiply(new THREE.Quaternion().setFromAxisAngle(Y,p.yaw+p.stance*Math.PI/2));
+    const grabFrame=this.rotationOf(this.group).multiply(new THREE.Quaternion().setFromAxisAngle(Y,p.yaw+p.stance*Math.PI/2));
     const grabForward=Z.clone().applyQuaternion(grabFrame);
     const tweakBody=tweak?grabFrame.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(tweak.bodyPitch,0,tweak.bodyBank*p.stance,'ZXY'))):grabFrame;
     const stalefish=grabKind==='stalefish'&&gw>.001&&!p.nineHundred;
@@ -337,7 +366,7 @@ export class SkateAnimation {
       this.spine.rotation.x-=.50*smooth(gw);
     }
 
-    this.group.getWorldQuaternion(this.frame);
+    this.rotationOf(this.group,this.frame);
     this.frame.multiply(this.q.setFromAxisAngle(Y, p.yaw));
     this.up.copy(Y).applyQuaternion(this.frame);
     this.forward.copy(Z).applyQuaternion(this.frame);
@@ -434,7 +463,7 @@ export class SkateAnimation {
       const boardUp=Y.clone().applyQuaternion(this.boardQ);
       this.up.copy(Y).lerp(boardUp,1-enter).normalize();
       const tilt=new THREE.Quaternion().setFromUnitVectors(Y,this.up);
-      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).premultiply(tilt));
+      this.worldRotation(this.rider,this.rotationOf(this.rider).premultiply(tilt));
     }
     if(p.coping){this.coping=p.coping;this.copingAge=0;}else this.copingAge+=p.dt;
     if(this.coping && this.copingAge<.8 && !p.grind){
@@ -462,7 +491,7 @@ export class SkateAnimation {
       this.forward.copy(Z).applyQuaternion(this.boardQ);
       this.right.copy(X).applyQuaternion(this.boardQ);
       // Turn the rider before the deck is placed under him and the legs are solved to it.
-      if (p.wallTurn) this.worldRotation(this.body, this.body.getWorldQuaternion(new THREE.Quaternion()).premultiply(p.wallTurn));
+      if (p.wallTurn) this.worldRotation(this.body, this.rotationOf(this.body).premultiply(p.wallTurn));
     }
 
     const hangAnchor = p.grind && p.rail ? p.rail.pointAt(p.railT)
@@ -477,13 +506,13 @@ export class SkateAnimation {
       if(p.grind&&!p.underReturning)this.boardP.addScaledVector(hangUp,.12*Math.sin(Math.PI*underMotion.boardTurn));
       // On release the board passes beside the head on its way to the feet.
       if (!p.grind) this.boardP.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.2*underMotion.boardSwing);
-      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).slerp(this.hangFrame,underMotion.boardTurn));
+      this.worldRotation(this.rider,this.rotationOf(this.rider).slerp(this.hangFrame,underMotion.boardTurn));
     }
 
     // The body tips over a deck that stays where it is: turned here, before the
     // deck is placed under him and the legs are solved to it.
     if(airW>0||thrown){
-      const tipped=this.body.getWorldQuaternion(new THREE.Quaternion());
+      const tipped=this.rotationOf(this.body);
       if(airW>0)tipped.premultiply(this.q.setFromAxisAngle(airAcross,air!.lean*airW))
         .premultiply(this.q.setFromAxisAngle(airFold,air!.crouch*airW))
         .premultiply(this.q.setFromAxisAngle(airUp,-airFacing*.5*air!.twist*airW));
@@ -514,13 +543,12 @@ export class SkateAnimation {
       // Turn before the body's nonuniform proportion scale; a counter-turn
       // inside that scale shears the leg frame and can pull a sole loose.
       const alignment=waistGrab||backflip||footFlip||impossible||this.deckCaught?deckAlignment:1;
-      this.worldRotation(this.body,this.body.getWorldQuaternion(new THREE.Quaternion()).slerp(tweak?tweakBody:footQ,alignment));
+      this.worldRotation(this.body,this.rotationOf(this.body).slerp(tweak?tweakBody:footQ,alignment));
       this.putBoard();
       if(!tweak)this.up.lerp(Y.clone().applyQuaternion(catchQ),alignment).normalize();
       if(this.spine && uprightGrind){
         this.spineBefore=this.spine.quaternion.clone();
-        const lean=new THREE.Quaternion().setFromAxisAngle(this.forward,.14*p.balance);
-        this.worldRotation(this.spine,this.spine.getWorldQuaternion(new THREE.Quaternion()).premultiply(lean));
+        this.turnJoint(this.spine,this.forward,.14*p.balance);
       }
     }
     const shove=(p.flip==='shove'||scoopFlip)&&footFlip&&flipPose;
@@ -651,8 +679,7 @@ export class SkateAnimation {
       const hangingPelvis=hangAnchor.clone();hangingPelvis.y-=headAboveHips+SKATE_UNDER_RAIL_HEADROOM;
       if(this.spine && underMotion.torsoDuck>0){
         this.spineBefore=this.spine.quaternion.clone();
-        const tuck=new THREE.Quaternion().setFromAxisAngle(Z.clone().applyQuaternion(this.hangFrame),-1.20*underMotion.torsoDuck);
-        this.worldRotation(this.spine,this.spine.getWorldQuaternion(new THREE.Quaternion()).premultiply(tuck));
+        this.turnJoint(this.spine,Z.clone().applyQuaternion(this.hangFrame),-1.20*underMotion.torsoDuck);
       }
       // During release the rider falls independently while the deck returns
       // below the feet; the moving board must not pull the body upward.
@@ -736,18 +763,12 @@ export class SkateAnimation {
     if(airW>0||thrown){
       // Everything above the hips, turned in the world about the hang's axes
       // (or the transfer's), from the trunk outward so each part adds to the last.
-      // The axis is carried into the joint's parent and the joint is turned
-      // there. Nothing is read back out of a world matrix as a rotation: under
-      // the rider's cartoon proportions those matrices are sheared, and a
-      // side-on hang (a quarter turn, then a quarter turn) sits exactly where a
-      // sheared matrix has no one rotation to give, so the answer would jump.
-      const toParent=new THREE.Matrix4(),inParent=new THREE.Vector3(),turnQ=new THREE.Quaternion();
-      const turnJoint=(node:THREE.Object3D|undefined,axis:THREE.Vector3,angle:number):void=>{
-        if(!node||Math.abs(angle)<1e-5)return;
-        node.parent!.updateWorldMatrix(true,false);
-        inParent.copy(axis).transformDirection(toParent.copy(node.parent!.matrixWorld).invert());
-        node.quaternion.premultiply(turnQ.setFromAxisAngle(inParent,angle));
-      };
+      // Each joint is turned in its own parent (turnJoint). Nothing is read
+      // back out of a world matrix as a rotation: under the rider's cartoon
+      // proportions those matrices are sheared, and a side-on hang (a quarter
+      // turn, then a quarter turn) sits exactly where a sheared matrix has no
+      // one rotation to give, so the answer would jump.
+      const turnJoint=(node:THREE.Object3D|undefined,axis:THREE.Vector3,angle:number):void=>this.turnJoint(node,axis,angle);
       if(this.spine)this.spineBefore??=this.spine.quaternion.clone();
       if(this.chest)this.chestBefore??=this.chest.quaternion.clone();
       if(this.head)this.headBefore??=this.head.quaternion.clone();
@@ -812,7 +833,7 @@ export class SkateAnimation {
           .addScaledVector(toeDirection,armForward+(scoopFlip?.50:.42)*balanceMotion.armSweep).normalize();
         const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
           hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
-        const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const relative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
         const along=(axis:THREE.Vector3)=>{
           const y=axis.clone().negate(),x=y.clone().cross(this.up);
           if(x.lengthSq()<1e-8)x.crossVectors(y,this.forward);x.normalize();
@@ -822,7 +843,7 @@ export class SkateAnimation {
         const pole=shoulder.clone().addScaledVector(toeDirection,.25).addScaledVector(this.up,.2);
         this.solve(hand,target,along(direction),pole,balanceMotion.arms);
         const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
-        this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(along(forearm),balanceMotion.arms));
+        this.worldRotation(hand.end,this.rotationOf(hand.end).slerp(along(forearm),balanceMotion.arms));
       }
     }
     let handError = 0;
@@ -834,7 +855,7 @@ export class SkateAnimation {
       outward.addScaledVector(this.up,-outward.dot(this.up)).normalize().addScaledVector(this.up,-.95-.12*p.revert.rebound).normalize();
       const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
         hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
-      const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+      const relative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
       const wristAlong=(direction:THREE.Vector3)=>{
         // The glove's fingers extend along -Y; -Z is its palm normal.
         const handY=direction.clone().negate(),handX=handY.clone().cross(this.up);
@@ -866,7 +887,7 @@ export class SkateAnimation {
       for(const [i,z] of [[1,frontZ],[0,rearZ]]) {
         const hand=this.hands[i];
         const target=this.board.localToWorld(new THREE.Vector3(0,s.wheelRadius*scale,z));
-        const socketRelative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const socketRelative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
         const handX=X.clone().applyQuaternion(this.boardQ).multiplyScalar(z>0?-1:1);
         const handY=Y.clone().applyQuaternion(this.boardQ).negate();
         const handZ=handX.clone().cross(handY).normalize();
@@ -909,8 +930,7 @@ export class SkateAnimation {
       // A palm-down floor-plant basis points the fingers away from the deck
       // and forces the wrist below it. Resolve the
       // persistent glove mount too: left/right rest orientations differ.
-      const socketQ = hand.socket.getWorldQuaternion(new THREE.Quaternion());
-      const relative = hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(socketQ);
+      const relative = this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
       const across = new THREE.Vector3(x || 0, 0, grab.edge === 'nose' || grab.edge === 'tail' ? Math.sign(z) : 0);
       if (across.lengthSq() < .001) across.set(toeSign, 0, 0);
       across.normalize().applyQuaternion(this.boardQ);
@@ -972,7 +992,7 @@ export class SkateAnimation {
         outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
         const direction=outward.addScaledVector(toe,method?.70:japan?-.60:stalefish?-.65:mute?-.90:-.95).addScaledVector(this.up,japan?.22:stalefish?.50:mute?.12:method?-.35:.18).normalize();
         const length=shoulder.distanceTo(free.mid.getWorldPosition(new THREE.Vector3()))+free.mid.getWorldPosition(new THREE.Vector3()).distanceTo(free.end.getWorldPosition(new THREE.Vector3()));
-        const mount=free.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(free.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const mount=this.rotationOf(free.end).invert().multiply(this.rotationOf(free.socket));
         const y=direction.clone().negate(),x=y.clone().cross(this.up).normalize();
         const rotation=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,y,x.clone().cross(y).normalize())).multiply(mount.invert());
         const freeJoints=[free.root,free.mid,free.end],freeBase=method?freeJoints.map(joint=>joint.quaternion.clone()):null;
