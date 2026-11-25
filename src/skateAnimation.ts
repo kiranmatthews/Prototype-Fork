@@ -833,7 +833,7 @@ export class SkateAnimation {
           .addScaledVector(toeDirection,armForward+(scoopFlip?.50:.42)*balanceMotion.armSweep).normalize();
         const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
           hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
-        const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const relative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
         const along=(axis:THREE.Vector3)=>{
           const y=axis.clone().negate(),x=y.clone().cross(this.up);
           if(x.lengthSq()<1e-8)x.crossVectors(y,this.forward);x.normalize();
@@ -843,7 +843,7 @@ export class SkateAnimation {
         const pole=shoulder.clone().addScaledVector(toeDirection,.25).addScaledVector(this.up,.2);
         this.solve(hand,target,along(direction),pole,balanceMotion.arms);
         const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
-        this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(along(forearm),balanceMotion.arms));
+        this.worldRotation(hand.end,this.rotationOf(hand.end).slerp(along(forearm),balanceMotion.arms));
       }
     }
     let handError = 0;
@@ -855,7 +855,7 @@ export class SkateAnimation {
       outward.addScaledVector(this.up,-outward.dot(this.up)).normalize().addScaledVector(this.up,-.95-.12*p.revert.rebound).normalize();
       const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
         hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
-      const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+      const relative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
       const wristAlong=(direction:THREE.Vector3)=>{
         // The glove's fingers extend along -Y; -Z is its palm normal.
         const handY=direction.clone().negate(),handX=handY.clone().cross(this.up);
@@ -887,7 +887,7 @@ export class SkateAnimation {
       for(const [i,z] of [[1,frontZ],[0,rearZ]]) {
         const hand=this.hands[i];
         const target=this.board.localToWorld(new THREE.Vector3(0,s.wheelRadius*scale,z));
-        const socketRelative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const socketRelative=this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
         const handX=X.clone().applyQuaternion(this.boardQ).multiplyScalar(z>0?-1:1);
         const handY=Y.clone().applyQuaternion(this.boardQ).negate();
         const handZ=handX.clone().cross(handY).normalize();
@@ -930,8 +930,7 @@ export class SkateAnimation {
       // A palm-down floor-plant basis points the fingers away from the deck
       // and forces the wrist below it. Resolve the
       // persistent glove mount too: left/right rest orientations differ.
-      const socketQ = hand.socket.getWorldQuaternion(new THREE.Quaternion());
-      const relative = hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(socketQ);
+      const relative = this.rotationOf(hand.end).invert().multiply(this.rotationOf(hand.socket));
       const across = new THREE.Vector3(x || 0, 0, grab.edge === 'nose' || grab.edge === 'tail' ? Math.sign(z) : 0);
       if (across.lengthSq() < .001) across.set(toeSign, 0, 0);
       across.normalize().applyQuaternion(this.boardQ);
@@ -993,7 +992,7 @@ export class SkateAnimation {
         outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
         const direction=outward.addScaledVector(toe,method?.70:japan?-.60:stalefish?-.65:mute?-.90:-.95).addScaledVector(this.up,japan?.22:stalefish?.50:mute?.12:method?-.35:.18).normalize();
         const length=shoulder.distanceTo(free.mid.getWorldPosition(new THREE.Vector3()))+free.mid.getWorldPosition(new THREE.Vector3()).distanceTo(free.end.getWorldPosition(new THREE.Vector3()));
-        const mount=free.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(free.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const mount=this.rotationOf(free.end).invert().multiply(this.rotationOf(free.socket));
         const y=direction.clone().negate(),x=y.clone().cross(this.up).normalize();
         const rotation=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,y,x.clone().cross(y).normalize())).multiply(mount.invert());
         const freeJoints=[free.root,free.mid,free.end],freeBase=method?freeJoints.map(joint=>joint.quaternion.clone()):null;

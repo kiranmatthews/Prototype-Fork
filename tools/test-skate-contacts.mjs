@@ -154,7 +154,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   // matrix is sheared and has no one rotation to give, so a pose that reads
   // one back out of it changes with the heading, by whichever branch of the
   // conversion that heading lands on: a centimetre and ten degrees at a time.
-  let facings=0,maxLegDrift=0,maxSoleTurn=0;
+  let facings=0,maxLegDrift=0,maxSoleTurn=0,maxHandDrift=0,maxHandTurn=0;
   {
     const within=(frame,name)=>new THREE.Matrix4().copy(frame.matrixWorld).invert().multiply(p.riderG.getObjectByName(name).matrixWorld).elements;
     // (read off the matrices: where a joint is in his frame, and a joint's own axes against the deck)
@@ -188,7 +188,23 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
         checkFeet(`${name} turned ${degrees}°`,.003);
       });
     }
-    if(process.env.SKATE_CONTACT_TRACE)console.log('TRACE facings',JSON.stringify({facings,maxLegDrift,maxSoleTurn}));
+    // In a grab the same holds for the hand that has the deck: the palm keeps
+    // its hold and the wrist its attitude whichever way he faces. (The elbow
+    // is free to swivel about the line from shoulder to wrist; it is not held to this.)
+    for(const stance of [-1,1])for(const grab of GRAB_TRICKS){
+      reset(stance,start);p.grabKind=grab.kind;p.grabPhase='held';settle();
+      const side=p.boardG.userData.skateGrab.hand.replace('socket-grip-','');
+      faceEveryWay([`wrist-${side}`,`socket-grip-${side}`],[...SOLES,`wrist-${side}`,`socket-grip-${side}`],(first,now,degrees)=>{
+        const drift=apart(now.at,first.at),turn=turned(now.on,first.on);
+        maxHandDrift=Math.max(maxHandDrift,drift);maxHandTurn=Math.max(maxHandTurn,turn);
+        assert.ok(turn<.001,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the grabbing hand (or a sole) sits ${turn.toFixed(4)} rad differently against the deck`);
+        assert.ok(drift<.001,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the grabbing hand is ${(drift*1000).toFixed(2)} mm from where it was in his own frame`);
+        const info=p.boardG.userData.skateGrab,err=p.riderG.getObjectByName(info.hand).getWorldPosition(v()).distanceTo(v(...info.target));
+        assert.ok(err<.006,`${grab.kind}/${stance}: turned ${degrees}° on the spot, the palm is ${(err*1000).toFixed(2)} mm off its hold`);
+        checkFeet(`${grab.kind} turned ${degrees}°`,.003);
+      });
+    }
+    if(process.env.SKATE_CONTACT_TRACE)console.log('TRACE facings',JSON.stringify({facings,maxLegDrift,maxSoleTurn,maxHandDrift,maxHandTurn}));
   }
   // Every flip is finite through its complete cycle and returns upright.
   // The Impossible rolls its contact around the moving trailing shoe.
@@ -214,6 +230,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   reset();p.pos.set(0,.1,10);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.revertT=.4;p.speed=10;
   step(makeInput({transferPressed:true}));assert.ok(p.comboLabels.includes('Revert'));assert.ok(p.revertPoseT>0);assert.ok(Math.abs(p.deckYawOffset)>3);
   console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, Backflip definition and live revert. `+
-    `${facings} poses turned on the spot: legs within ${(maxLegDrift*1000).toFixed(3)} mm and soles within ${maxSoleTurn.toExponential(1)} rad of themselves. `+
+    `${facings} poses turned on the spot: legs within ${(maxLegDrift*1000).toFixed(3)} mm and soles within ${maxSoleTurn.toExponential(1)} rad of themselves, `+
+    `a grabbing hand within ${(maxHandDrift*1000).toFixed(3)} mm and ${maxHandTurn.toExponential(1)} rad. `+
     `${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
 });
