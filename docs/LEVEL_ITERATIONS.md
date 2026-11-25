@@ -13276,7 +13276,7 @@ ledge grab the edge lip, or jump to grab the lip and miss because it is too high
 all based on the height of the lip above the vertical part of the vert curve; make very polished
 animations to cover these cases.
 Elapsed: about an hour and a quarter from the brief to all three outcomes playing in the real game on test walls;
-about 4 h 10 min to the animations reviewed frame by frame; about 6 h 30 min to the version that survived
+about 4 h 10 min to the animations reviewed frame by frame; about 6 h 20 min to the version that survived
 its own test, a mutation run, the regression suites, a merge with the IK work that landed on `main`
 meanwhile, the docs and the published build. Times are approximate.
 `src/tuning.ts` is untouched. Nothing changes on the board, and the course's route test prints the same
@@ -13353,9 +13353,12 @@ the hang's own ease left in under the hand-over, feet held beyond the reach of h
 back less far than the plan, a catch beyond his reach, a miss that reaches the lip) are all caught by it;
 the first run let three through, which is where the Jump-at-the-catch assertion and the simpler look came
 from. `npm run check:levels` (14 of 14), the course route test, `check:animation` (the catalogue is version
-39 with three more clips, and the route list is three longer, on its end), `check:animation-d`,
-`check:motion-assets`, `check:ledge`, `check:pipe`, `check:vert-air` and `check:interpolation` pass;
-`npm run build` and the release-size check pass (995 MB of the 1,000 MB hosting budget).
+39 with three more clips, and the route list is three longer, on its end), `check:animation-d` (45 of 45),
+`check:motion-assets`, `check:ledge`, `check:pipe`, `check:vert-air` and `check:interpolation` pass.
+After the merge with the two-bone IK work that landed on `main` meanwhile (these holds are solved by it),
+the type-check, this test, `check:vert-air`, the IK and skate-contact tests, the animation suite and the
+course route test were run again on the merged code and pass with the same numbers; `npm run build` and
+the release-size check pass (995 MB of the 1,000 MB hosting budget).
 
 **Left as it is.**
 
