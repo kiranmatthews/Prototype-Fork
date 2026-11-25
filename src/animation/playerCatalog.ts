@@ -10,6 +10,7 @@ import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
 import { buildIceWalkClip, ICE_WALK_CLIP_ID } from './iceWalk';
 import { buildSlopeSlideClip, SLOPE_SLIDE_CLIP_ID } from './slopeSlide';
 import { buildRollLandingClip, ROLL_LANDING_CLIP_ID } from './rollLanding';
+import { buildVertRunClips, VERT_RUN_CLIP_IDS } from './vertRunUp';
 import { buildLaunchClips, LAUNCH_CLIPS } from './launchJump';
 import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
   QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
@@ -125,6 +126,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   ...Object.values(LAUNCH_CLIPS),
   'player.land',
   ROLL_LANDING_CLIP_ID,
+  ...Object.values(VERT_RUN_CLIP_IDS),
   'player.crouch-enter',
   'player.crouch',
   'player.crawl',
@@ -151,7 +153,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 38;
+export const PLAYER_STARTER_CATALOG_VERSION = 39;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -426,6 +428,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.fall': 1,
   'player.land': 1,
   [ROLL_LANDING_CLIP_ID]: 33,
+  [VERT_RUN_CLIP_IDS.climb]: 39, [VERT_RUN_CLIP_IDS.leap]: 39, [VERT_RUN_CLIP_IDS.miss]: 39,
   'player.crouch-enter': 23,
   'player.crouch': 1,
   'player.crawl': 1,
@@ -1565,6 +1568,7 @@ function buildPlayerStarterClips(rig: string | RigDefinition, referenceMotion: b
     ...buildLaunchClips(rigId, includeTorsoRoot),
     buildLand(rigId),
     buildRollLandingClip(rigId),
+    ...buildVertRunClips(rigId),
     buildQuaterniusCrouchTransition(rigId, includeTorsoRoot, true),
     buildQuaterniusLowPose(rigId, includeTorsoRoot, false),
     buildQuaterniusLowPose(rigId, includeTorsoRoot, true),

@@ -80,9 +80,12 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const parts = entry.data.components;
   const count = t => parts.filter(c => c.t === t).length;
   assert.equal(count('gate'), 1, 'one finish gate');
-  const pipes = parts.filter(c => c.t === 'vertramp');
+  const pipes = parts.filter(c => c.t === 'vertramp' && c.vkind === 'half');
   assert.equal(pipes.length, 12, 'twelve pipes');
-  assert.ok(pipes.every(c => c.sideOn === true && c.yaw === 0 && c.vkind === 'half'), 'every pipe is a side-on half');
+  assert.ok(pipes.every(c => c.sideOn === true && c.yaw === 0), 'every pipe is a side-on half');
+  // (the only other verts are the wall yard's four quarters behind the start: met on foot, and not on the course)
+  const walls = parts.filter(c => c.t === 'vertramp' && c.vkind !== 'half');
+  assert.ok(walls.length === 4 && walls.every(c => c.vkind === 'quarter' && c.yaw === 180 && c.p[0] < 0 && /^Wall yard/.test(c.nm)), 'four yard walls, all behind the start');
   const zones = parts.filter(c => c.t === 'zone');
   assert.ok(zones.length === 1 && zones[0].dir === 'E' && zones[0].sideOn === true,
     'the whole course is one east travel zone, played on one line');

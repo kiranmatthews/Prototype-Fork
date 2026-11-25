@@ -344,8 +344,10 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 38);
-  assert.equal(starterClips.length, 39);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 39);
+  assert.equal(starterClips.length, 42);
+  // (39 added the three vert run-up one-shots: docs/VERT_RUN_UP.md)
+  for (const id of ['player.vert-climb', 'player.vert-leap', 'player.vert-miss']) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',

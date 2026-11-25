@@ -13144,3 +13144,94 @@ Chrome, real keys: the whole course in 120.5 s, 12 of 12 checkpoints, no deaths 
 Not run: `check:skate-playtest` needs `.skate-reference-data/motion.json`, which is not in the
 repository. `tools/test-waterpark-vert.mjs` stops at `'ride' !== 'finished'` (its line 46) with and
 without this change — checked against the unmodified sources — before it reaches its pose assertions.
+
+## 2026-11-25 — Running up a vert on foot: climb out, catch the lip, or miss it
+
+Brief: running uphill on a (steep, ends vertical) vert should either have the skater climb out, or jump to
+ledge grab the edge lip, or jump to grab the lip and miss because it is too high and tumble back down,
+all based on the height of the lip above the vertical part of the vert curve; make very polished
+animations to cover these cases.
+Elapsed: about an hour and a quarter from the brief to all three outcomes playing in the real game on test walls;
+about 4 h 10 min to the animations as they are now, reviewed frame by frame. **Not published yet:** this
+entry was written with validation still in progress (see Checks), on the session branch only. Times are
+approximate.
+`src/tuning.ts` is untouched. Nothing changes on the board, and the course's route test prints the same
+numbers (832 m in 121.6 s).
+
+**The rule** (`src/vertRunUp.ts`, `docs/VERT_RUN_UP.md`). A walker runs out of slope where the wall passes
+60°. The lip's height above that point, and nothing else, decides: up to 3.0 m he climbs out; up to 4.1 m
+he leaps and catches the lip; higher, he leaps, misses, slides down the face and is thrown back onto the
+flat. For a `vertramp` that height is `rise / 2 + lipRise`. Before this a walker tunnelled through the top
+of a quarter into the hollow under its deck, or was stopped by a small one as if by a step.
+
+**What he does.**
+
+- *Climb out* (0.5–0.9 s). A plain quarter's lip is by his knees when the wall stops him: he bounds over
+  it, arms swinging, eyes on the coping. A lip at his chest he takes in his hands and goes over between
+  his arms. A lip over his head is two steps up the wall with his eyes on it, a hand and then the other
+  on the coping, his chest over his hands, a knee through, and a low stride away. He comes over the edge
+  already moving the way he will run and never stops on the deck.
+- *Leap and catch* (0.4–0.7 s). He runs the last of the transition up into a stance on the wall, sat back
+  off it over both feet with his arms cocked behind him, and springs: arms up his sides, one ahead of the
+  other, toes last, the trailing leg peeling off the wall before the leading one. The leap is a throw
+  (it slows all the way to its top) and he takes the lip at the top of it, at the full stretch of his
+  arms. His weight comes onto them, and from there it is the game's own hang and pull-up.
+- *Miss* (2.6 s). The same leap, a metre of it, and his fingers stop short. He slides down the face with
+  his palms dragging at arm's length and looks back over his shoulder at where he is going; the transition
+  takes his feet and his knees go; he sits back off the wall with nothing behind him, his seat hits, he
+  goes on over onto his shoulders with his legs in the air, skids out along the flat in his own dust and
+  rocks down again to sit, thrown forward over his legs. He settles back on his hands, looks up at the
+  lip, shakes his head, gets his feet under him and stands.
+
+**Side Pipe Lab** has a wall yard behind the start for it (walk west): four quarters of one 2.5 m curve,
+each on the last one's deck, 1.25 m (vaulted), 2.6 m (climbed), 4.0 m (caught) and 4.9 m (missed).
+
+**What looking closely, and then measuring, changed.** The first version of all three played within the
+hour and read correctly on contact sheets. Most of the time after that went on things a still does not
+show, found by stepping the real game one frame at a time with numbers printed beside the pictures, and
+then by a test on the real rig:
+
+- *His head is 0.8 m across.* Tucked forward against a wall it was 0.36 m inside it, and in the first
+  version of the fall (a full backward roll) it went 0.6 m through the floor. Under a lip he now stands
+  tall; the fall is onto his seat and up onto his shoulders instead of over his head; and the pelvis
+  height through it comes from the same table the clip takes its body pitch from, so the two cannot drift.
+- *The leap hovered and then rocketed.* The pelvis sat in the crouch for 60 % of the leap and covered the
+  rise in the last tenth of a second. It is one throw now, and the catch is at its top.
+- *The run draws him higher than the controller point says.* On the steep of a wall his pelvis is 1.5 m
+  over the point his feet are reckoned at, not the 1 m of a man standing. Every move began with a 0.4 m
+  pop, and the height bands were a third of a metre out: a "leap" of 20 cm. The plan now begins exactly
+  where the run drew him, and the bands are measured from there.
+- *Two eases fought at the catch.* The hang eases a falling body onto the lip; the move was easing the leap
+  away at the same time, and the sum dipped 15 cm. The move now hands on a trajectory, not an offset: for
+  a fifth of a second the pelvis is drawn between where the move would have gone and where the next thing
+  has it, with his hands kept on the coping.
+- *The game's own run put his head in the wall first.* Under a face that stands up straight the move
+  begins a stride sooner, and its own upright steps take him up.
+- *Looking up at a lip that is by his knees.* Poses authored for a lip overhead had him reaching for the
+  sky at a plain quarter. His look and his hands' way to the lip are now turned to where this wall has it.
+- *The test was measuring a pose the game never draws.* The headless harness defaults to the older
+  presentation, which does not sample these clips at all; switched to the shipped one, it found that the
+  catch left his hands up to 28 cm short of the coping (his poses reach 1.55 m from pelvis to grip, not the
+  1.8 m first assumed), that a head turn accumulated when a pose was redrawn without being re-sampled, and
+  that a hand was left reaching back down for a coping his pelvis had already passed. All three are fixed
+  and held by the test.
+
+**Checks (in progress when this was written).** `npm run check:vert-run-up` (new; also the last step of
+`check:side-pipe`): the rule, the plan on walls from a 1.2 m kicker to a 9 m face, the clips, and the real
+Player with the shipped clips on eleven fixture walls. It passed; one assertion added after that run
+(drawing the same instant twice draws the same body) has not been run yet. `npm run check:levels` (14 of
+14), the course route test, `check:motion-assets`, `check:ledge`, `check:pipe`, `check:vert-air` and
+`check:interpolation` pass. `check:animation` failed on its catalogue pin (version 38; it is 39 now, with
+three more clips): the pin has been moved and the suite not yet re-run. `check:animation-d` was stopped at
+a 15-minute limit with 15 of its families passing and none failing. Still to do: those two, a mutation run
+against the new test, `npm run build`, the release-size check, and publishing.
+
+**Left as it is.**
+
+- The hand-over from a climb into the run is measured where the move's drawing hook sits, and the run's own foot
+  planting moves the body a few centimetres after it: one frame can be up to 9 cm off. The catch and the
+  miss hand over to things that do not do that.
+- Left and right are fixed (his left foot and left hand lead). A run that arrives on the other foot is
+  blended to it over the first three frames.
+- In the hang that follows a catch, the game's pull-up is the game's: it was not re-authored here.
+- A wall with no flat at all in front of it is left alone (there is nowhere to be thrown back to).

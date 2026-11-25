@@ -141,6 +141,8 @@ import {
 } from './animation/bridge';
 import type { ProceduralMotionContext } from './animation/types';
 import { solveTwoBoneIk } from './animation/ik';
+import { VERT_RUN_CLIP_IDS, isVertRunClip } from './animation/vertRunUp';
+import { VERT_RUN_UP, VertWall, VertRunPlan, emptyVertRunFrame, type VertRunFrame, type VertRunBeat, type WallPoint } from './vertRunUp';
 import { RopeSwingBody } from './animation/ropeSwingBody';
 import { drawnRopeLocalPoint, flexibleRopePoint } from './ropeGeometry';
 import { JAK_SLIDE, JAK_SLIDE_JUMP } from './animation/jakSlide';
@@ -369,6 +371,9 @@ export type PlayerAnimationClipHint =
   | 'player.jump-charge'
   | 'player.fall'
   | 'player.roll-land'
+  | 'player.vert-climb'
+  | 'player.vert-leap'
+  | 'player.vert-miss'
   | 'player.crouch'
   | 'player.crawl'
   | 'player.slide'
@@ -418,6 +423,10 @@ const LEDGE_EDGE = new THREE.Vector3();
 const LEDGE_CANDIDATE = new THREE.Vector3();
 const LEDGE_RAY_ORIGIN = new THREE.Vector3();
 const LEDGE_LANDING = new THREE.Vector3();
+const VERT_RUN_AT = new THREE.Vector3();
+const VERT_RUN_BASE = new THREE.Vector3();
+const VERT_RUN_TO = new THREE.Vector3();
+const VERT_RUN_POLE = new THREE.Vector3();
 const LEDGE_PATH = new THREE.Vector3();
 const LEDGE_FACE_NORMAL = new THREE.Vector3();
 const LEDGE_NORMAL_MATRIX = new THREE.Matrix3();
@@ -1682,7 +1691,31 @@ export class Player {
   private ledgePose = 0; // visual weight of the hanging pose
   // the CLAMBER: a committed, animated pull-up-and-over (not a snap) — the
   // body eases up the face then over the lip along a rounded corner path
-  private ledgePhase: 'grip' | 'climb' = 'grip';
+  private ledgePhase: 'grip' | 'climb' | 'vert' = 'grip';
+  // RUNNING UP A VERT ON FOOT (src/vertRunUp.ts). The move is planned the
+  // moment it begins and read off frame by frame; it rides in the hang state
+  // (nothing else steps the body) as the phase 'vert'. The wall plane is
+  // (ox + dx·s, y, oz + dz·s).
+  private vertRun: { plan: VertRunPlan; t: number; frame: VertRunFrame; beat: VertRunBeat | '';
+    ox: number; oz: number; dx: number; dz: number } | null = null;
+  // The wall ahead, read once per approach.
+  private vertRunScan: { wall: VertWall; ox: number; oz: number; dx: number; dz: number } | null = null;
+  private vertRunCoolT = 0;
+  private vertRunStallT = 0;
+  // Drawing: how much of the move's own placement of the pelvis is applied (it
+  // eases away after the move), and what that placement last added.
+  private vertRunBlend = 0;
+  private vertRunPush = 0;
+  private vertRunLift = 0;
+  private readonly vertRunOffset = new THREE.Vector3();
+  private readonly vertRunGaze = { neck: 0, head: 0, neckAt: NaN, headAt: NaN };
+  private readonly vertRunBasis = { ox: 0, oz: 0, dx: 1, dz: 0, s: 0, y: 0 };
+  private vertRunGripped = false;
+  private readonly vertRunLast = new THREE.Vector3();
+  private readonly vertRunVel = new THREE.Vector3();
+  private vertRunFadeT = 0;
+  // A hang caught off a run-up holds a coping: for it, a vert's lip is a ledge.
+  private ledgeOnVert = false;
   private ledgeClimbT = 0; // clamber clock
   private ledgeClimbK = 0; // clamber progress 0..1 (drives the mantle pose)
   private ledgeClimbRecovery = -1; // D's short pose settle after control returns
@@ -2629,6 +2662,10 @@ export class Player {
         ? UNITY_ROPE_CLIP_IDS.hang
         : UNITY_ROPE_CLIP_IDS.climb;
     }
+    if (this.state === 'hang' && this.ledgePhase === 'vert' && this.vertRun) {
+      const outcome = this.vertRun.plan.outcome;
+      return outcome === 'climb' ? VERT_RUN_CLIP_IDS.climb : outcome === 'grab' ? VERT_RUN_CLIP_IDS.leap : VERT_RUN_CLIP_IDS.miss;
+    }
     if (this.state === 'hang') return this.ledgePhase === 'climb' ? 'player.climb' : 'player.hang';
     if (this.state === 'grind') return 'player.grind';
     if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
@@ -2762,6 +2799,8 @@ export class Player {
         ? launch?.gather ?? 0 : launch?.rise ?? 0;
     } else if (clipId === ROLL_LANDING_CLIP_ID) {
       actionProgress = this.rollLandingT / this.rollLandingDuration;
+    } else if (isVertRunClip(clipId)) {
+      actionProgress = this.vertRun?.frame.progress ?? 1;
     } else if (clipId === JUMP_CHARGE_CLIP_ID) {
       actionProgress = this.chargePose;
     } else if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
@@ -4689,6 +4728,7 @@ export class Player {
     this.ledgeMoverId = undefined;
     this.ledgePose = 0;
     this.ledgePhase = 'grip';
+    this.vertRun = null; this.vertRunScan = null; this.vertRunCoolT = 0; this.vertRunStallT = 0; this.vertRunBlend = 0; this.vertRunGripped = false; this.ledgeOnVert = false;
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
     this.ledgeClimbRecovery = -1;
@@ -5346,6 +5386,10 @@ export class Player {
       this.updateFruit(dt, level);
       return;
     }
+    // Running up a vert on foot: when the next stride would be past the last
+    // place a foot holds, the wall decides what he does (src/vertRunUp.ts).
+    if (this.state === 'ride') this.tryBeginVertRun(dt, level);
+    else if (this.state !== 'hang') { this.vertRunScan = null; this.ledgeOnVert = false; }
     if (this.state === 'hang') {
       if (input.restartPressed) {
         this.respawn(level, true);
@@ -11330,6 +11374,9 @@ export class Player {
     const hips=this.animationRig.jointsById.get('hips')!.node.getWorldPosition(new THREE.Vector3());
     const facing=new THREE.Vector3(Math.sin(this.visualYaw),0,Math.cos(this.visualYaw));
     const bodyCentre=centre.clone().addScaledVector(facing,hips.clone().sub(midpoint).dot(facing));
+    // A platform's lip overhangs its side; a vert's coping is flush with the face under it. Hung
+    // straight below his hands there he would be half inside the wall, so he hangs off it.
+    if(this.ledgeOnVert)bodyCentre.addScaledVector(this.ledgeNormal,VERT_RUN_UP.hangOut-.02);
     delta.x=(bodyCentre.x-hips.x)*weight;delta.z=(bodyCentre.z-hips.z)*weight;
     // Leave a small elbow bend on Bone Man's longer gloves; a perfectly
     // straight source arm otherwise puts the opposite grip beyond reach.
@@ -17455,7 +17502,7 @@ export class Player {
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     for (const hit of hits) {
       const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
-      if (data.halfpipe || data.vert === true || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
+      if ((!this.ledgeOnVert && (data.halfpipe || data.vert === true)) || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
       LEDGE_FACE_NORMAL.copy(hit.face.normal)
         .applyNormalMatrix(
           LEDGE_NORMAL_MATRIX.getNormalMatrix(hit.object.matrixWorld),
@@ -17954,6 +18001,349 @@ export class Player {
     return true;
   }
 
+  // ------------------------------------------------------------------
+  // RUNNING UP A VERT ON FOOT. See src/vertRunUp.ts for the rule: the lip's
+  // height above the last place a running foot holds picks a climb out, a
+  // leap to the lip, or a leap that comes up short and a tumble back down.
+  // ------------------------------------------------------------------
+
+  /** Called while riding: begin the move when his next stride would be past the run-out point. */
+  private tryBeginVertRun(dt: number, level: Level): boolean {
+    const A = VERT_RUN_UP;
+    this.vertRunCoolT = Math.max(0, this.vertRunCoolT - dt);
+    const hit = this.groundHit;
+    // (a side-on pipe has put him on his board long before this, and the other analytic pipes have no deck to climb onto)
+    if (this.vertRunCoolT > 0 || !this.grounded || this.freeSkate || !hit || hit.vert !== true ||
+        this.isBailing || this.crawling || this.sliding || this.slideTimer > 0 || this.charging || this.swimming ||
+        this.teetering || this.slamActive || this.spinTimer > 0 || this.parkControls || !!level.kiteTow ||
+        level.ledgeGrabs === false || this.playerAnimationBridge.previewActive) { this.vertRunScan = null; this.vertRunStallT = 0; return false; }
+    const n = this.rideNormal, flat = Math.hypot(n.x, n.z);
+    if (flat < 0.3) { this.vertRunScan = null; this.vertRunStallT = 0; return false; } // still on the flat of it
+    // Up the wall: against the way its surface leans.
+    const dx = -n.x / flat, dz = -n.z / flat;
+    const speed = this.walkVelocity.x * dx + this.walkVelocity.z * dz;
+    // Only a wall he is running up, with a direction held.
+    if (speed < A.minSpeed || Math.hypot(this.rawInput.moveX, this.rawInput.moveY) < 0.3) { this.vertRunScan = null; this.vertRunStallT = 0; return false; }
+    // A small wall stops him with its steep part before his feet are ever on it: running at it
+    // and getting nowhere is the same moment, met lower down.
+    const moved = (this.pos.x - this.prevPos.x) * dx + (this.pos.z - this.prevPos.z) * dz;
+    this.vertRunStallT = moved < 0.25 * speed * dt ? this.vertRunStallT + dt : 0;
+    const stalled = this.vertRunStallT > 0.06;
+    let scan = this.vertRunScan;
+    if (scan && (Math.abs((this.pos.x - scan.ox) * scan.dz - (this.pos.z - scan.oz) * scan.dx) > 0.3 || scan.dx * dx + scan.dz * dz < 0.97)) scan = null;
+    if (!scan) {
+      // Read the wall once per approach, from his first stride up it.
+      if (n.y > 0.90 && !stalled) return false;
+      scan = this.vertRunScan = this.scanVertWall(level, dx, dz);
+      if (!scan) { this.vertRunCoolT = 0.25; return false; } // nothing to go for here: do not keep asking
+    }
+    const s = (this.pos.x - scan.ox) * scan.dx + (this.pos.z - scan.oz) * scan.dz, W = scan.wall;
+    // Under a face that stands up straight the run would carry his head into it before his feet
+    // ran out of slope: there the move begins a stride sooner, and its own upright steps take him up.
+    const headY = this.pos.y + A.headOver;
+    const headIn = headY - A.headRadius < W.lipY && s + speed * dt + A.headLead + A.headRadius + 0.06 >= W.faceAt(Math.min(headY, W.lipY - 0.01));
+    if (!stalled && !headIn && s + speed * dt < W.runOutS && n.y > A.runOutNormalY) return false;
+    return this.beginVertRun(level, scan, s);
+  }
+
+  /**
+   * The wall ahead as one line in its own plane: the flat behind him, the
+   * transition, any straight vertical section and the coping, found by
+   * looking straight down at each step along the way up it. Null when there
+   * is no lip with a deck behind it to go for.
+   */
+  private scanVertWall(level: Level, dx: number, dz: number): { wall: VertWall; ox: number; oz: number; dx: number; dz: number } | null {
+    const ox = this.pos.x, oz = this.pos.z, top = this.pos.y + 11, bottom = this.pos.y - 9, STEP = 0.08;
+    const look = (s: number): { y: number; ny: number } | null => {
+      this.raycaster.set(LEDGE_RAY_ORIGIN.set(ox + dx * s, top, oz + dz * s), LEDGE_DOWN);
+      this.raycaster.near = 0;
+      this.raycaster.far = top - bottom;
+      for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+        if (!hit.face) continue;
+        LEDGE_FACE_NORMAL.copy(hit.face.normal).applyNormalMatrix(LEDGE_NORMAL_MATRIX.getNormalMatrix(hit.object.matrixWorld)).normalize();
+        return { y: hit.point.y, ny: Math.abs(LEDGE_FACE_NORMAL.y) };
+      }
+      return null;
+    };
+    const here = look(0);
+    if (!here) return null;
+    const up: WallPoint[] = [{ s: 0, y: here.y }];
+    let prev = { s: 0, y: here.y, ny: here.ny }, lip: WallPoint | null = null;
+    // (closer looks where it is steep, so they stay about as far apart along the wall itself)
+    for (let s = STEP; s < 14; s += THREE.MathUtils.clamp(STEP * prev.ny * 1.2, 0.012, STEP)) {
+      const hit = look(s);
+      if (!hit || hit.y < prev.y - 0.06) return null; // a hole, or the ground falls away: not a wall going up
+      if (hit.ny > 0.9 && (prev.ny < 0.62 || hit.y - prev.y > 0.25)) {
+        // The coping is between the last look at the wall and this one at the deck.
+        let lo = prev.s, loY = prev.y, hi = s, hiY = hit.y;
+        for (let i = 0; i < 9; i++) {
+          const mid = (lo + hi) / 2, m = look(mid);
+          if (m && m.ny > 0.9 && Math.abs(m.y - hit.y) < 0.08) { hi = mid; hiY = m.y; } else if (m) { lo = mid; loY = m.y; } else return null;
+        }
+        if (lo > prev.s + 1e-4) up.push({ s: lo, y: loY });
+        lip = { s: hi, y: hiY };
+        break;
+      }
+      if (hit.ny > 0.9 && prev.ny > 0.9 && s > 0.6) return null; // it levelled out without a lip: a bank, not a vert
+      up.push({ s, y: hit.y });
+      prev = { s, y: hit.y, ny: hit.ny };
+    }
+    if (!lip) return null;
+    // Standable deck behind the lip, with room on it for him.
+    let deck = 0;
+    for (const depth of [0.15, 0.45, 0.9, 1.4, 2.0]) {
+      const hit = look(lip.s + depth);
+      if (!hit || hit.ny < 0.9 || Math.abs(hit.y - lip.y) > 0.15) break;
+      deck = depth;
+    }
+    if (deck < VERT_RUN_UP.landingDepth) return null;
+    LEDGE_LANDING.set(ox + dx * (lip.s + 0.98), lip.y, oz + dz * (lip.s + 0.98));
+    if (this.ledgeBodyBlocked(LEDGE_LANDING, lip.y, level)) return null;
+    // The flat he would tumble back onto: as far as it stays flat and his.
+    const down: WallPoint[] = [];
+    let last = here.y, level0 = 0;
+    for (let s = -STEP; s > -9; s -= STEP) {
+      const hit = look(s);
+      if (!hit || hit.y > last + 0.03 || hit.y < last - 0.6) break;
+      down.push({ s, y: hit.y });
+      last = hit.y;
+      level0 = hit.ny > 0.985 ? level0 + STEP : 0;
+      if (level0 > 4.8) break;
+    }
+    if (down.length < 2) return null;
+    const wall = new VertWall([...down.reverse(), ...up, lip], deck);
+    return wall.rise > 0.25 ? { wall, ox, oz, dx, dz } : null;
+  }
+
+  private beginVertRun(level: Level, scan: NonNullable<Player['vertRunScan']>, s: number): boolean {
+    const W = scan.wall;
+    // Where his pelvis is drawn right now, in the wall's plane.
+    let hipS = s - 0.1, hipY = this.pos.y + 0.86;
+    const hips = this.animationRig.jointsById.get('hips')?.node;
+    if (hips) {
+      hips.getWorldPosition(VERT_RUN_AT);
+      // (as it is DRAWN: on the steep of a wall the run has him well up over the controller point)
+      hipS = THREE.MathUtils.clamp((VERT_RUN_AT.x - scan.ox) * scan.dx + (VERT_RUN_AT.z - scan.oz) * scan.dz, s - 0.6, s + 0.3);
+      hipY = THREE.MathUtils.clamp(VERT_RUN_AT.y, this.pos.y + 0.5, this.pos.y + 1.8);
+    }
+    const speed = this.walkVelocity.x * scan.dx + this.walkVelocity.z * scan.dz;
+    const climbing = THREE.MathUtils.clamp((this.pos.y - this.prevPos.y) / CONST.fixedStep, 0, 18);
+    this.ledgeNormal.set(-scan.dx, 0, -scan.dz);
+    const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
+    const plan = new VertRunPlan(W, { len: W.lenAtS(Math.min(s, W.lipS - 0.02)), hipS, hipY, velS: speed, velY: climbing,
+      hangSkin: basis.skin, hangDepth: LEDGE_HANG_DEPTH });
+    if (plan.outcome === 'grab') {
+      // A leap for the lip needs a lip the hang can hold: checked now, while he can still simply not go.
+      this.ledgeOnVert = true;
+      this.ledgeAnchor.set(scan.ox + scan.dx * plan.hangS, plan.hangY, scan.oz + scan.dz * plan.hangS);
+      const held = this.resolveLedgeSupport(level, this.ledgeAnchor, basis, W.lipY, this.ledgeLanding);
+      this.ledgeOnVert = false;
+      if (!held) { this.vertRunScan = null; this.vertRunCoolT = 0.25; return false; }
+    }
+    this.vertRun = { plan, t: 0, frame: emptyVertRunFrame(), beat: '', ox: scan.ox, oz: scan.oz, dx: scan.dx, dz: scan.dz };
+    plan.sample(0, this.vertRun.frame);
+    this.vertRunScan = null;
+    this.ledgeLip = W.lipY;
+    this.ledgeMoverId = undefined;
+    this.ledgePhase = 'vert';
+    this.ledgeEaseT = 0; this.ledgeClimbT = 0; this.ledgeClimbK = 0; this.ledgeAwayT = 0; this.ledgeShimmy = 0;
+    this.ledgeClimbQueued = false; this.ledgeSourceSeconds = 0; this.ledgeRestSeconds = 0; this.ledgeReachLift = 0;
+    this.ledgeHands.reset(); this.ledgeVisualCentre = null;
+    this.setHangClip(null);
+    this.state = 'hang';
+    this.speed = 0; this.vVel = 0;
+    this.walkVelocity.set(0, 0, 0); this.walkIntent.set(0, 0, 0); this.walkTurnaround = false;
+    this.grounded = false; this.charging = false; this.chargeTimer = 0;
+    this.airFromSkate = false; this.airGrav = 'foot'; this.teetering = false;
+    this.clearCoyoteJumpWindow();
+    this.jumpBufferT = this.jumpBufferCharge = this.airTapT = 0;
+    this.vertRunBlend = 0;
+    return true;
+  }
+
+  /** One step of the move: the plan says where he is; this hands him on when it ends. */
+  private stepVertRun(dt: number, level: Level): void {
+    const run = this.vertRun;
+    if (!run) { this.ledgePhase = 'grip'; this.ledgeLetGo(); return; }
+    run.t += dt;
+    const frame = run.plan.sample(run.t, run.frame);
+    this.pos.set(run.ox + run.dx * frame.posS, frame.posY, run.oz + run.dz * frame.posS);
+    if (frame.beat !== run.beat) {
+      // A footfall, a slap on the coping, the scrape, the seat.
+      if (frame.beat === 'step' || frame.beat === 'over') { sfx.play('footstep2', 0.55, frame.beat === 'step' ? 1.15 : 1); this.emitDust(2); }
+      else if (frame.beat === 'press') sfx.play('ledgeGrab', 0.45, 1.1);
+      else if (frame.beat === 'leap') { sfx.play('footstep2', 0.6, 1.25); this.emitDust(3); }
+      else if (frame.beat === 'reach') sfx.play('ledgeGrab', 0.35, 0.7);
+      else if (frame.beat === 'slide') sfx.play('woosh3', 0.3, 0.6);
+      else if (frame.beat === 'tumble') { sfx.play('footstep2', 0.7, 0.75); this.emitDust(3); }
+      else if (frame.beat === 'rest') { sfx.play('footstep2', 0.8, 0.6); this.emitDust(5); }
+      run.beat = frame.beat;
+    }
+    // Skidding out along the flat on his back kicks dust up the whole way.
+    if (frame.beat === 'tumble' && Math.hypot(frame.velS, frame.velY) > 2.5 && Math.floor(run.t * 14) !== Math.floor((run.t - dt) * 14)) this.emitDust(1);
+    if (!frame.done) return;
+    const outcome = run.plan.outcome;
+    this.vertRun = null;
+    this.prevPos.copy(this.pos);
+    if (outcome === 'grab') {
+      // The hands have the lip: from here it is the game's own ledge hang.
+      const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
+      this.ledgeOnVert = true;
+      this.ledgeAnchor.copy(this.pos);
+      const held = this.resolveLedgeSupport(level, this.ledgeAnchor, basis, run.plan.wall.lipY, this.ledgeLanding);
+      if (held) {
+        this.ledgeLip = held.y; this.ledgeMoverId = held.moverId; this.ledgeAnchor.y = held.y - LEDGE_HANG_DEPTH;
+        this.commitLedgeCatch(level);
+        // The hang's own catch opens by easing a falling body onto the lip and dropping it to its
+        // dead hang. He is on the lip and in his dead hang already: it is entered there, and what
+        // plays is its pull up onto bent arms.
+        this.ledgeSourceSeconds = VERT_RUN_UP.catchSettleFrom;
+        this.ledgeEaseT = LEDGE_EASE;
+        return;
+      }
+      this.ledgeOnVert = false; this.ledgePhase = 'grip'; this.ledgeLetGo(); // the lip went while he was in the air
+      return;
+    }
+    // On the deck running, or sat at the foot of the wall and stood back up.
+    this.ledgePhase = 'grip';
+    this.state = 'ride';
+    this.grounded = true;
+    this.vVel = 0; this.airborneT = 0; this.launchVy = 0; this.airPeakY = this.pos.y;
+    this.jumpReleaseRearmRequired = this.rawInput.jumpHeld;
+    this.ledgeCoolT = 0.35;
+    const ground = this.queryGround(level);
+    if (ground) { this.pos.y = ground.y; this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name; this.prevPos.copy(this.pos); }
+    if (outcome === 'climb') {
+      this.walkVelocity.set(run.dx, 0, run.dz).multiplyScalar(VERT_RUN_UP.climbExitSpeed);
+      this.speed = this.walkVelocity.dot(this.axisF);
+      this.walkRamp = Math.max(this.walkRamp, 0.6);
+    } else {
+      this.speed = 0;
+      this.vertRunCoolT = 0.4;
+    }
+  }
+
+  /**
+   * Drawing. After the clip's pose: the pelvis is put where the move has it,
+   * and each hand and foot that is holding something is solved onto it. When
+   * the move ends, what the placement was adding eases away, so the hand-over
+   * to the run, the hang or standing never moves the body in a frame.
+   */
+  private alignVertRun(dt: number): void {
+    const run = this.state === 'hang' && this.ledgePhase === 'vert' ? this.vertRun : null;
+    const joints = this.animationRig.jointsById, hips = joints.get('hips')?.node, parent = this.bodyGroup.parent;
+    if (!hips || !parent) { this.vertRunBlend = 0; return; }
+    if (!run && this.vertRunBlend <= 0) return;
+    this.bodyGroup.updateWorldMatrix(true, true);
+    hips.getWorldPosition(VERT_RUN_AT);
+    // The wall's plane, his left as he faces it, and each joint by its anatomical name.
+    const B = this.vertRunBasis;
+    if (run) { B.ox = run.ox; B.oz = run.oz; B.dx = run.dx; B.dz = run.dz; }
+    const leftX = B.dz, leftZ = -B.dx;
+    const hold = (side: 'Left' | 'Right', limb: 'arm' | 'leg', s: number, y: number, spread: number, grip: number): void => {
+      if (grip <= 0.002) return;
+      const sign = side === 'Left' ? 1 : -1;
+      const root = joints.get(`${limb === 'arm' ? 'shoulder' : 'hip'}${side}`)?.node;
+      const mid = joints.get(`${limb === 'arm' ? 'elbow' : 'knee'}${side}`)?.node;
+      const end = joints.get(`${limb === 'arm' ? 'wrist' : 'ankle'}${side}`)?.node;
+      if (!root || !mid || !end) return;
+      const effector = limb === 'arm' ? this.vertRunGrip(end) : soleSockets(end).foot ?? end;
+      const target = VERT_RUN_TO.set(B.ox + B.dx * s + leftX * sign * spread, y, B.oz + B.dz * s + leftZ * sign * spread);
+      // Elbows stand out and a little back from the wall; knees point at it.
+      const pole = mid.getWorldPosition(VERT_RUN_POLE);
+      if (limb === 'arm') pole.x += leftX * sign * 0.3 - B.dx * 0.12, pole.z += leftZ * sign * 0.3 - B.dz * 0.12;
+      else pole.x += B.dx * 0.4 + leftX * sign * 0.08, pole.y += 0.15, pole.z += B.dz * 0.4 + leftZ * sign * 0.08;
+      for (let i = 0; i < 3; i++) solveTwoBoneIk({ root, mid, end, effector, target, pole, weight: grip, accountForParentScale: true, tolerance: 0.002 });
+    };
+    if (run) {
+      // The move begins where the run had drawn him, so from its first frame his pelvis is simply where the move has it.
+      this.vertRunBlend = 1;
+      this.vertRunFadeT = 0;
+      this.vertRunLast.set(run.ox + run.dx * run.frame.hipS, run.frame.hipY, run.oz + run.dz * run.frame.hipS);
+      this.vertRunVel.set(run.dx * run.frame.velS, run.frame.velY, run.dz * run.frame.velS);
+      this.vertRunOffset.copy(this.vertRunLast).sub(VERT_RUN_AT);
+    } else {
+      // It has handed him on. For a moment his pelvis is drawn between where the move would have
+      // gone on to take it and where the run, the hang or his own two feet now have it: the one
+      // becomes the other, whatever else is easing in underneath at the same time.
+      this.vertRunFadeT += dt;
+      this.vertRunBlend = Math.max(0, this.vertRunBlend - dt / 0.2);
+      this.vertRunOffset.copy(this.vertRunLast).addScaledVector(this.vertRunVel, this.vertRunFadeT).sub(VERT_RUN_AT);
+    }
+    const weight = THREE.MathUtils.smoothstep(this.vertRunBlend, 0, 1);
+    if (weight <= 0) return;
+    VERT_RUN_AT.copy(this.vertRunOffset).multiplyScalar(weight);
+    this.bodyGroup.getWorldPosition(VERT_RUN_BASE);
+    this.bodyGroup.position.add(parent.worldToLocal(VERT_RUN_TO.copy(VERT_RUN_BASE).add(VERT_RUN_AT)).sub(parent.worldToLocal(VERT_RUN_BASE)));
+    this.bodyGroup.updateWorldMatrix(true, true);
+    if (!run) {
+      this.vertRunPush = 0; this.vertRunLift = 0;
+      // A catch has handed him to the hang with his hands on the coping. They stay on it while his
+      // body is eased across; then they are the hang's own.
+      if (this.vertRunGripped) { hold('Left', 'arm', B.s, B.y, 0.24, weight); hold('Right', 'arm', B.s, B.y, 0.24, weight); }
+      return;
+    }
+    const frame = run.frame;
+    // His eyes are on what he is going for. The lip is wherever this wall has it, so the look at
+    // it is turned here, on top of a pose whose head is authored level: up at a lip over him,
+    // down at a coping by his knees.
+    const neck = joints.get('neck')?.node, skull = joints.get('head')?.node, gaze = this.vertRunGaze;
+    if (neck && skull) {
+      // (a pose that was not sampled afresh since the last draw still has the last turn on it: that comes off first,
+      // so drawing the same instant twice turns his head once)
+      if (Math.abs(neck.rotation.x - gaze.neckAt) < 1e-9) neck.rotation.x -= gaze.neck;
+      if (Math.abs(skull.rotation.x - gaze.headAt) < 1e-9) skull.rotation.x -= gaze.head;
+      gaze.neck = gaze.head = 0;
+      if (frame.look > 0.002) {
+        this.bodyGroup.updateWorldMatrix(true, true);
+        skull.getWorldPosition(VERT_RUN_POLE);
+        const eyeS = (VERT_RUN_POLE.x - run.ox) * run.dx + (VERT_RUN_POLE.z - run.oz) * run.dz, eyeY = VERT_RUN_POLE.y + 0.25;
+        const up = THREE.MathUtils.clamp(Math.atan2(run.plan.wall.lipY + 0.05 - eyeY, Math.max(0.3, run.plan.wall.lipS + 0.05 - eyeS)), -0.85, 1.05);
+        gaze.neck = -up * 0.40 * frame.look; gaze.head = -up * 0.50 * frame.look;
+        neck.rotation.x += gaze.neck; skull.rotation.x += gaze.head;
+      }
+      gaze.neckAt = neck.rotation.x; gaze.headAt = skull.rotation.x;
+      this.bodyGroup.updateWorldMatrix(true, true);
+    }
+    // Whatever the pose does, his head does not go into the wall or the floor: the body is moved
+    // off the surface by what the head is in by (at once), and let back (slowly). The poses and the
+    // pelvis path are authored to leave this nothing to do.
+    const head = joints.get('head')?.node, wall = run.plan.wall;
+    let inBy = 0, under = 0;
+    if (head) {
+      head.getWorldPosition(VERT_RUN_POLE);
+      const m = head.matrixWorld.elements, up = Math.hypot(m[4], m[5], m[6]) || 1, lift = VERT_RUN_UP.headUp / up, R = VERT_RUN_UP.headRadius;
+      const cx = VERT_RUN_POLE.x + m[4] * lift, cy = VERT_RUN_POLE.y + m[5] * lift, cz = VERT_RUN_POLE.z + m[6] * lift;
+      const cs = (cx - run.ox) * run.dx + (cz - run.oz) * run.dz;
+      if (cy < wall.lipY) inBy = Math.max(0, cs + R - wall.faceAt(cy));
+      if (cs < wall.lipS) under = Math.max(0, wall.groundAt(cs) + R - cy);
+      // (on the curve either would do: take the nearer way out)
+      if (inBy > 0 && under > 0) { if (inBy < under) under = 0; else inBy = 0; }
+    }
+    this.vertRunPush = inBy > this.vertRunPush ? Math.min(0.6, inBy) : Math.max(inBy, this.vertRunPush - 1.6 * dt);
+    this.vertRunLift = under > this.vertRunLift ? Math.min(0.6, under) : Math.max(under, this.vertRunLift - 1.6 * dt);
+    if (this.vertRunPush > 1e-4 || this.vertRunLift > 1e-4) {
+      this.bodyGroup.getWorldPosition(VERT_RUN_BASE);
+      VERT_RUN_TO.copy(VERT_RUN_BASE); VERT_RUN_TO.x -= run.dx * this.vertRunPush; VERT_RUN_TO.z -= run.dz * this.vertRunPush; VERT_RUN_TO.y += this.vertRunLift;
+      this.bodyGroup.position.add(parent.worldToLocal(VERT_RUN_TO).sub(parent.worldToLocal(VERT_RUN_BASE)));
+      this.bodyGroup.updateWorldMatrix(true, true);
+    }
+    hold('Left', 'leg', frame.feet[0].s, frame.feet[0].y, 0.13, frame.feet[0].weight * weight);
+    hold('Right', 'leg', frame.feet[1].s, frame.feet[1].y, 0.13, frame.feet[1].weight * weight);
+    hold('Left', 'arm', frame.hands.s, frame.hands.y, 0.24, frame.hands.weight * weight);
+    hold('Right', 'arm', frame.hands.s, frame.hands.y, 0.24, frame.secondHand * weight);
+    B.s = frame.hands.s; B.y = frame.hands.y;
+    this.vertRunGripped = run.plan.outcome === 'grab' && frame.hands.weight > 0.9;
+  }
+
+  /** The glove's grip under a wrist (the gloves are named for the mirrored pivots, so found by parentage). */
+  private vertRunGrip(wrist: THREE.Object3D): THREE.Object3D {
+    for (const glove of [this.gloveLeft, this.gloveRight]) {
+      for (let node: THREE.Object3D | null = glove?.gripSocket ?? null; node; node = node.parent) if (node === wrist) return glove!.gripSocket;
+    }
+    return wrist;
+  }
+
   // Hanging off a ledge. The hang owns the whole step (no physics/collide).
   // GRIP phase: X or a dominant stick push TOWARD the landing requests the
   // CLAMBER; holding AWAY for a beat lets go (hop down — no button needed); the
@@ -17994,6 +18384,7 @@ export class Player {
     if (this.hangHazards(level)) return;
     this.speed = 0;
     this.vVel = 0;
+    if (this.ledgePhase === 'vert') { this.stepVertRun(dt, level); this.measurePlanar(dt); return; }
     const n = this.ledgeNormal;
     // Presentation resolves the final live lip normal after catch/shimmy;
     // support motion must not compete with that facing or alter control axes.
@@ -23727,6 +24118,7 @@ export class Player {
     }
     this.alignHandsToRopeGrip(dt);
     this.alignAuthoredLedgeHands(dt);
+    this.alignVertRun(dt);
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.
     // The hop needs a fully seated reference from its first frame; the old

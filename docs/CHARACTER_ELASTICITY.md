@@ -139,12 +139,29 @@ Order: legacy pose → authored keys/procedural drivers → independent elastici
 character proportions/garment response → final foot/palm contacts → render
 interpolation. Gameplay movement and normalized collision stature are unchanged.
 
+## Vert run-up
+
+`player.vert-climb`, `player.vert-leap` and `player.vert-miss` (`src/animation/vertRunUp.ts`; the rule and
+the plan they are scrubbed by are in `docs/VERT_RUN_UP.md`) each have a profile of their own, keyed to the
+clip's own beats so the deformation lands with the pose and not near it.
+
+| Clip | Profile (torso, upper arm, forearm, thigh, shin) | Where it squashes and stretches |
+|---|---|---|
+| `vert-climb` | .12 .06 .09 .10 .13 | squash into the wall step, stretch up the wall reaching, squash folded over the coping, stretch through between the arms, squash onto the leading foot, stretch in the first stride |
+| `vert-leap` | .15 .09 .14 .14 .18 | a gather, the full squash of the load, full stretch off the toes, and stretch again (not a rebound) as his weight comes onto his arms at the lip |
+| `vert-miss` | .15 .09 .14 .12 .16 | the same leap; full stretch at the top with the lip still above his fingers; a squash as the transition takes his knees; the hardest squash where his seat hits; stretch as his legs go over; a squash sat down; a last stretch standing up |
+
+The hands and feet these clips hold (coping, wall, ground) are solved after the segment lengths, so a
+stretched arm still has its palm on the coping. The pelvis is placed by gameplay and is not scaled.
+
 ## Focused verification
 
 - `npm run check:animation`: core suite/migrations, IK, runtime routing, fixed-length
   leg solve, arm clearance, charged ollies and all-clip elasticity coverage.
 - `npm run check:vert-air`: the vert-air idle and the spine transfer, as curves
   and on the real rig in Side Pipe Lab's pipes (see above).
+- `npm run check:vert-run-up`: the three vert run-up clips on the real rig on
+  eleven fixture walls: hands on the coping, pelvis on its path, nothing popping.
 - `tools/test-skate-contacts.mjs`: 10,014 contact/trick frames; roughly 1.15 mm maximum
   sole and 0.94 mm palm error in the fixture.
 - `tools/test-skate-charge-ollie.mjs`: 1,344 campaign/park tap/full ollie frames in

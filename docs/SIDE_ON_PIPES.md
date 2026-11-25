@@ -115,6 +115,15 @@ expanded course was laid out with.
 | Whirler (`spinner`) | blades out 2.2 s, in 1.35 s | a plain floor ≥ 6 m short of it to wait on |
 | A stack of boxes in the lane | its cap drops into the lane when the base is spun; a second spin takes it, a hop onto it is a 2.9 m bounce | keep stacks ≥ 9 m back from a brink or a timed footing |
 
+## The wall yard (behind the start)
+
+Walk west from the start instead of east. Four quarters of the same 2.5 m curve stand on each other's
+decks, each with more straight wall above the curve than the last, and nothing else changes between them.
+They are met on foot, and what a runner does at the top of each is decided by the lip's height above the
+last place his feet hold (`docs/VERT_RUN_UP.md`): 1.25 m, he bounds over the lip; 2.6 m, he runs two steps
+up the wall and mantles out; 4.0 m, he leaps, catches the lip and hangs; 4.9 m, he leaps, misses, slides
+down the face and is thrown back down the transition. Nothing in the yard is on the course.
+
 ## Authoring rules the test course paid for
 
 - **Keep a pipe that must be read at a glance about 12 m lip to lip.** The view shows 13.4 m ahead of a
@@ -174,6 +183,9 @@ The same command then runs `tools/test-vert-air-motion.mjs` (`npm run check:vert
 films nothing and measures everything: the hang off P0's east lip and the cascade's two transfers on the
 real rig — the trail going up and coming down, soles on the deck, nothing popping from one frame to the
 next, the drawn turn against the even one the simulation keeps.
+
+It ends with `tools/test-vert-run-up.mjs` (`npm run check:vert-run-up`): the yard's rule, on fixture walls
+of every band.
 
 ```bash
 RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump node tools/side-pipe-probe.mjs

@@ -31,6 +31,9 @@ const PROFILES:Record<string,Amplitudes> = {
   'jak-ledge-climb':[.10,.03,.04,0,0], // supported feet retain their lengths during the settle
   fall:[.08,.06,.08,.08,.10], land:[.10,.06,.08,.10,.12],
   'roll-land':[.18,.08,.12,.12,.15],
+  // Running up a vert on foot: he loads over the planted leg and stretches for the coping; the
+  // leap folds right down and goes off the toes at full length; the miss does that, then lands on it.
+  'vert-climb':[.12,.06,.09,.10,.13], 'vert-leap':[.15,.09,.14,.14,.18], 'vert-miss':[.15,.09,.14,.12,.16],
   'launch-rise':[.14,.10,.15,.08,.10], 'launch-float':[.045,.05,.075,.045,.065],
   'launch-gather':[.05,.035,.05,.025,.035],
   'launch-board-rise':[.12,.10,.15,0,0], 'launch-board-float':[.04,.05,.075,0,0],
@@ -94,6 +97,9 @@ export function withCharacterElasticity(clip:AnimationClip,rig?:RigDefinition):A
       const beats=name==='launch-rise'||name==='launch-board-rise'?[[0,0],[.065,-1],[.22,.75],[.46,.25],[.72,-.2],[1,0]]
         :name==='launch-gather'||name==='launch-board-gather'?[[0,0],[.5,-.4],[1,0]]
         :name==='roll-land'?[[0,0],[.10,-.75],[.34,-1],[.53,-.8],[.68,.45],[.84,-.12],[1,0]]
+        :name==='vert-climb'?[[0,0],[.09,-.85],[.18,.75],[.26,.2],[.42,-.9],[.58,.55],[.73,-.65],[.87,.7],[1,0]]
+        :name==='vert-leap'?[[0,0],[.10,-.35],[.25,-1],[.36,.2],[.47,1],[.66,.7],[.86,.85],[.94,1],[1,.5]]
+        :name==='vert-miss'?[[0,0],[.023,-.35],[.058,-1],[.084,.2],[.109,1],[.153,.8],[.20,1],[.222,.5],[.262,.15],[.30,-.6],[.36,.3],[.42,-1],[.50,.7],[.60,0],[.70,-.9],[.77,.25],[.83,-.2],[.89,-.6],[.95,.45],[1,0]]
         :name==='slam'?[[0,0],[.60,.35],[.84,-1],[.94,.5],[1,0]]
         :[[0,0],[.24,-1],[.55,.55],[.78,-.15],[1,0]];
       tracks.push({id,kind:'scalar',target,keys:beats.map(([phase,value],i)=>({

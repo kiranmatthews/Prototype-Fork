@@ -2081,6 +2081,24 @@ riding. A deck mid-flip is caught by the plant and the air after it is a fresh o
 `Kickflip + Wallplant + Kickflip` or `Wallplant + 50-50` is one combo. A rail on the return line belongs
 7–30 m back from the face, within the 2.1 m snap radius of the approach line (Wall Plant Lab, station C).
 
+### XV.16 A vert met on foot (measured)
+
+A walker who runs up a `vertramp` runs out of slope where the wall passes 60°. What he does there is
+decided by **the lip's height above that point** (`rise / 2 + lipRise` for a quarter or half of radius
+`rise`), and by nothing else; `node tools/test-vert-run-up.mjs` and `docs/VERT_RUN_UP.md`.
+
+| Lip above the 60° point | The walker | Use it as |
+|---|---|---|
+| ≤ 3.0 m (any plain quarter up to 6 m radius; a 2.5 m curve with ≤ 1.75 m of straight wall above it) | climbs out in 0.5–0.9 s and runs on along the deck at 4.4 m/s | the step itself on an uphill stretch: it costs half a second and no input |
+| 3.1–4.1 m | leaps, catches the lip and hangs (0.4–0.7 s), then the ordinary clamber | a ledge: the hang is the game's own, with its grip timer and its drop |
+| ≥ 4.2 m | leaps, misses, slides down the face and is thrown back onto the flat: 2.6 s, ending about 4 m back from the face | a wall that turns a walker back and says so. Give it ≥ 3 m of flat in front and make it plainly taller than the last wall he got up |
+
+It needs a standable deck ≥ 0.9 m deep behind the lip, a direction held, and a run of ≥ 4 m/s up the wall:
+a walker who lets go of the stick before the wall simply stops on it, and a fence-top quarter with no deck
+is left alone. Keep the first metre of the deck clear (a box there blocks the move) and keep boxes out of
+the run-up lane (one stops the run). Nothing changes on the board, and a side-on pipe never sees it: it
+has the walker on his board at its edge.
+
 ---
 
 ## Part XVI — Skate × crate patterns

@@ -171,6 +171,48 @@ crate(-10.5 + G, START_TOP, 'wood', 'Start: arrival supplies');
 crate(-10.5 + G, START_TOP + G, 'mystery', 'Start: arrival supplies (cap)');
 for (const x of [-6, -4, -2]) fruit(x, START_TOP + 1.15);
 export const P0 = pipe('P0 roll-in pipe', 4, START_TOP - 3.5, 2.5, [3.5, 3.5], [4, 6]);
+
+// =========================================== 0b · THE WALL YARD (optional) ==
+// Behind the start, four verts met ON FOOT, each on the last one's deck.
+// What a runner does at the top of a transition depends on one measurement:
+// the lip's height above the last place a running foot holds (where the wall
+// passes 60°; src/vertRunUp.ts). The four walls are the same 2.5 m curve
+// with more straight vertical above it each time, so the only thing that
+// changes is that measurement, and it reads at a glance as "taller":
+//   1.25 m  he climbs out: the lip is at his hips, and it is a vault
+//   2.6 m   he climbs out: two steps up the wall, hands on the coping, a mantle
+//   4.0 m   he leaps, catches the lip at the top of the jump and hangs (then the ordinary pull-up)
+//   4.9 m   he leaps, comes up short, slides down the face and is thrown back down the transition.
+// Nothing here is on the course: it is a place to see all of them in a row.
+/** A quarter facing east (its wall rises to the west), with a deck behind its lip, on solid ground. */
+function yardWall(name: string, baseX: number, floorY: number, lipRise: number, deck: number): YardWall {
+  const RADIUS = 2.5, lipX = baseX - RADIUS, lipY = r(floorY + RADIUS + lipRise);
+  floor(lipX - deck, baseX, floorY, `${name}: footing`, STONE_DARK);
+  add({ t: 'vertramp', vkind: 'quarter', p: [baseX, floorY, 0], len: DEPTH, yaw: 180, rise: RADIUS, w: 0, deck, lipRise,
+    tex: 'pavement', color: PIPE, grp: GR.pipes, nm: name });
+  // Fruit up the face: a line the eye follows to the lip (and what a short leap still collects).
+  for (const phi of [0.42, 0.78, 1.12]) fruit(baseX - RADIUS * Math.sin(phi) + 0.6 * Math.sin(phi), floorY + RADIUS * (1 - Math.cos(phi)) + 0.6 * Math.cos(phi) + 0.2);
+  for (let h = 0.5; h < lipRise - 0.4; h += 0.75) fruit(lipX + 0.55, floorY + RADIUS + h);
+  return { name, baseX, lipX, floorY, lipY, deck, rise: r(RADIUS / 2 + lipRise) };
+}
+export interface YardWall {
+  name: string;
+  /** World x of the foot of the transition and of the coping; the wall rises to the west. */
+  baseX: number; lipX: number;
+  floorY: number; lipY: number; deck: number;
+  /** The lip's height above the last place a running foot holds. */
+  rise: number;
+}
+const YARD_X0 = -26;
+floor(YARD_X0, -20, START_TOP, 'Wall yard: run-up floor behind the start');
+export const YARD_VAULT = yardWall('Wall yard 1: vaulted out of', YARD_X0, START_TOP, 0, 7);
+// (overhead, because a deck here is a run-up: a box standing in the lane would stop the run at the wall)
+overhead(YARD_VAULT.lipX - 4.9, YARD_VAULT.lipY, ['wood', 'mystery', 'wood'], 'Wall yard: overhead row on the first deck');
+export const YARD_CLIMB = yardWall('Wall yard 2: climbed out of', YARD_VAULT.lipX - YARD_VAULT.deck, YARD_VAULT.lipY, 1.35, 7);
+for (const x of [1.6, 2.6, 3.6, 4.6]) fruit(YARD_CLIMB.lipX - x, YARD_CLIMB.lipY + 1.15);
+export const YARD_GRAB = yardWall('Wall yard 3: leapt for and caught', YARD_CLIMB.lipX - YARD_CLIMB.deck, YARD_CLIMB.lipY, 2.75, 7);
+for (const x of [1.6, 2.6, 3.6, 4.6]) fruit(YARD_GRAB.lipX - x, YARD_GRAB.lipY + 1.15);
+export const YARD_MISS = yardWall('Wall yard 4: too high', YARD_GRAB.lipX - YARD_GRAB.deck, YARD_GRAB.lipY, 3.65, 4);
 fruitOnWall(P0, -1, 3);
 fruitOnWall(P0, 1, 3);
 for (const x of [-1.5, 0, 1.5]) fruit(P0.cross + x, P0.floorY + 1.0);
@@ -513,7 +555,7 @@ overhead(FINISH.x0 + 26, FINISH_TOP, ['wood', 'mystery', 'wood'], 'Finish: overh
 add({ t: 'gate', p: [FINISH.x0 + 38, FINISH_TOP, 0], yaw: 90, grp: GR.finish, nm: 'Finish gate' });
 
 // ====================================================== camera and plane ==
-const X_MIN = -20;
+const X_MIN = YARD_MISS.lipX - YARD_MISS.deck;
 const X_MAX = FINISH.x1;
 const MID = (X_MIN + X_MAX) / 2;
 const SPAN = X_MAX - X_MIN;
@@ -521,7 +563,7 @@ const SPAN = X_MAX - X_MIN;
 for (const z of [-0.83, 0.83])
   add({ t: 'wall', p: [MID, -30, z], s: [SPAN + 40, 90, 0.6], invisible: true, grp: GR.camera,
     nm: 'Single-plane side-scrolling boundary' });
-add({ t: 'wall', p: [X_MIN - 0.3, START_TOP, 0], s: [0.6, 14, DEPTH], invisible: true, grp: GR.camera, nm: 'West end stop' });
+add({ t: 'wall', p: [X_MIN - 0.3, START_TOP + 12, 0], s: [0.6, 40, DEPTH], invisible: true, grp: GR.camera, nm: 'West end stop' });
 add({ t: 'wall', p: [X_MAX + 0.3, FINISH_TOP, 0], s: [0.6, 14, DEPTH], invisible: true, grp: GR.camera, nm: 'East end stop' });
 // `sideOn` on the zone: the floors between pipes are one line too, so a board on
 // them brakes when the stick is held against travel instead of trying to carve round.

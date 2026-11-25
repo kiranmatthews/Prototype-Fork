@@ -12,6 +12,7 @@ import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { LAUNCH_CLIPS, isLaunchClip, tuneLaunchBackLean } from './animation/launchJump';
 import { TUNING } from './tuning';
 import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
+import { VERT_RUN_CLIP_IDS, isVertRunClip } from './animation/vertRunUp';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import { jakSkidSize } from './animation/jakSkid';
 import {
@@ -61,6 +62,7 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.native-air-double-jump',
   LAUNCH_CLIPS.rise, LAUNCH_CLIPS.gather, LAUNCH_CLIPS.boardRise, LAUNCH_CLIPS.boardGather,
   ROLL_LANDING_CLIP_ID,
+  ...Object.values(VERT_RUN_CLIP_IDS),
   'player.rope-climb',
   'player.rope-release',
   'player.slam',
@@ -179,6 +181,10 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpRefere
   if (isLaunchClip(from)) return to === LAND_CLIP_ID ? LAND_IMPACT_CROSSFADE_SECONDS : .12;
   if (to === SLOPE_SLIDE_CLIP_ID) return .12;
   if (from === SLOPE_SLIDE_CLIP_ID) return .14;
+  // Running up a vert: the wall is met in the run's own pose, so the hand-over in is short; out of
+  // it the hang takes the leap's last pose, and the run or the idle takes the others'.
+  if (isVertRunClip(to)) return .06;
+  if (isVertRunClip(from)) return to === 'player.hang' ? .10 : to === 'player.run' ? .10 : .16;
   if (to === ROLL_LANDING_CLIP_ID) return .045;
   if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
   if (to === ICE_WALK_CLIP_ID) return .06;
@@ -1701,6 +1707,7 @@ export function createCharacterAnimationRuntime(
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   ROLL_LANDING_CLIP_ID,
+  ...Object.values(VERT_RUN_CLIP_IDS),
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
   SLOPE_SLIDE_CLIP_ID,
