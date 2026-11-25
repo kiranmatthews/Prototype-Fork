@@ -5,7 +5,7 @@ import {characterElasticityAmplitudes,ELASTIC_LENGTH_CONTROLS} from '../animatio
 import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
-import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
+import {SkateRetargeter, clipDuration, relativeRotation, type MotionData, type SourceClip} from './retarget';
 import {BoardScribbleSequence, MOUNT_CLEAR_DURATION, SCRIBBLE_DURATION, type BoardScribbleEffect} from './boardScribble';
 import {TUNING} from '../tuning';
 import {groundSpeedLimit} from '../softGround';
@@ -92,10 +92,9 @@ export class PlayableSkateMotion {
   readonly visits = new Map<string, number>();
   private readonly regularRetarget: SkateRetargeter;
   private readonly fakieRetarget: SkateRetargeter;
-  private sourceStance = DEFAULT_SKATE_STANCE as number;
-  private previousSkateStance = DEFAULT_SKATE_STANCE as number;
+  private sourceStance: 1 | -1 = DEFAULT_SKATE_STANCE;
   private dismountRunBlend = 0;
-  get retarget(): SkateRetargeter {return this.sourceStance===1?this.fakieRetarget:this.regularRetarget;}
+  get retarget(): SkateRetargeter {return this.sourceStance===DEFAULT_SKATE_STANCE?this.regularRetarget:this.fakieRetarget;}
   private readonly nodes: THREE.Object3D[];
   private readonly upperBodyNodes: ReadonlySet<THREE.Object3D>;
   private lastPose: Pose | null = null;
@@ -186,7 +185,7 @@ export class PlayableSkateMotion {
     this.wasMounted=Boolean(this.p.freeSkate||!this.p.grounded&&this.p.airFromSkate);
     this.wasGrounded=this.p.grounded;
     // Joining D while already on ice should preserve the current native pose.
-    if(this.nativePoseOwner==='ice balance'&&this.p.groundHit?.slippy||this.nativePoseOwner==='switch stance')this.iceBlend=1;
+    if(this.nativePoseOwner==='ice balance'&&this.p.groundHit?.slippy)this.iceBlend=1;
     this.stop = this.p.setFinalPoseOverlay((context: PlayerAnimationOverlayContext) => {
       const previousPhase = this.phase;
       const previousPose = this.lastPose;
@@ -219,7 +218,7 @@ export class PlayableSkateMotion {
   /** The imported library covers ordinary mounts, riding, ollies and pickups.
    * Native actions, contacts and their finite releases keep the complete pose
    * already solved by Player. Input/score alone is not enough: replacing that
-   * final pose also erased spins, switch stance and a releasing grab's hand. */
+   * final pose also erased spins and a releasing grab's hand. */
   private get nativePoseOwner(): string | null {
     const p=this.p;
     if(!['ride','air'].includes(p.state))return p.state;
@@ -244,12 +243,6 @@ export class PlayableSkateMotion {
     if(p.competitionFinishT>=0||p.resultsPose||p.worldMapBaseScale!=null)return 'course presentation';
     if(!ordinaryMotionHints.has(p.animationClipHint))return p.animationClipHint;
     if(this.retarget.board.userData.iceSkateMotion)return 'ice balance';
-    // These source clips have one authored stance/deck orientation. Preserve
-    // actual switch/reversed riding until a deliberate new mount resets it.
-    if(p.freeSkate||!p.grounded&&p.airFromSkate){
-      if(p.stance!==DEFAULT_SKATE_STANCE)return 'switch stance';
-      if(Math.abs(Math.atan2(Math.sin(p.deckYawOffset),Math.cos(p.deckYawOffset)))>.0001)return 'reversed deck';
-    }
     return null;
   }
 
@@ -334,7 +327,7 @@ export class PlayableSkateMotion {
     this.sourceName='';this.previousFootSpeed=0;this.mountHold=false;this.visits.clear();
     this.mountPreparation=this.mountStart=0;this.preparedMount='';
     this.speedRecoveryPush=false;
-    this.sourceStance=this.previousSkateStance=DEFAULT_SKATE_STANCE;
+    this.sourceStance=DEFAULT_SKATE_STANCE;
     this.dismountRunBlend=0;
     Object.assign(this.life,{down:0,downSpeed:0,lean:0,leanSpeed:0,bump:0,bumpSpeed:0,height:Number.NaN,climb:0,held:0,kicked:0,pumping:0});
     this.roadKnown=false;
@@ -399,7 +392,9 @@ export class PlayableSkateMotion {
     // A dip on the press, down as the charge fills, and at full charge two beats that never settle.
     const pumping=life.pumping=smooth((charge-.9)/.1);
     const pump=RIDE_LIFE.pump.reduce((sum,[depth,rate,phase])=>sum+depth*Math.sin(life.clock*rate+phase),0);
-    const carve=riding?THREE.MathUtils.clamp((p.lean??0)*RIDE_LIFE.carve,-1,1):0;
+    // The same carve loads opposite sides of the authored pose in fakie.
+    const carveSign=this.sourceStance===DEFAULT_SKATE_STANCE?1:-1;
+    const carve=riding?THREE.MathUtils.clamp((p.lean??0)*RIDE_LIFE.carve*carveSign,-1,1):0;
     const sway=riding&&!charging?RIDE_LIFE.sway.reduce((sum,[size,rate,phase])=>sum+size*Math.sin(life.clock*rate+phase),0):0;
     const breath=riding&&!charging?RIDE_LIFE.breath[0]*(1+Math.sin(life.clock*RIDE_LIFE.breath[1])):0;
     // (A charge taken over from a landing starts where the landing had him, and is not let up to fill again.)
@@ -442,7 +437,7 @@ export class PlayableSkateMotion {
       for(const key of new Set([...Object.keys(was),...Object.keys(now)]))out[key]=THREE.MathUtils.lerp(was[key]??1,now[key]??1,weight);
       return out;
     };
-    // (The controller's lean is positive toward the side the source calls N.)
+    // A positive lean is toward the side the source calls N.
     const lean=THREE.MathUtils.clamp(life.lean,-1,1),tilt=Math.abs(lean),toward=lean>=0?'N100':'P100';
     const down=THREE.MathUtils.clamp(life.down+Math.max(0,life.bump),0,1/RIDE_LIFE.depth);
     // Upright: the ride loop, drifting toward the looser stance and back, leaned into a turn, lifted off a crest.
@@ -478,9 +473,12 @@ export class PlayableSkateMotion {
     return {down:+life.down.toFixed(4),lean:+life.lean.toFixed(4),bump:+life.bump.toFixed(4)};
   }
 
-  private enter(phase: Phase, name = ''): void {
+  private startTransition(): void {
     this.fromPose = this.lastPose ?? this.capture(); this.fade = 0;
     this.fromPreviousPose=this.previousPose;this.transitionDt=this.previousDt;this.transitionAge=0;
+  }
+  private enter(phase: Phase, name = ''): void {
+    this.startTransition();
     this.phase = phase; this.time = 0; this.sourceName = name;
     if(phase==='dismount')this.dismountRunBlend=0;
     this.clip = name ? this.clips.get(name)! : null;
@@ -519,6 +517,7 @@ export class PlayableSkateMotion {
     if(holding&&!this.preparedMount)this.preparedMount=this.mountName(this.previousFootSpeed);
     this.mountPreparation=THREE.MathUtils.clamp(this.mountPreparation+(holding?dt/Math.max(1/60,TUNING.skateHoldTime):-dt/.18),0,1);
     if(!this.mountPreparation){this.preparedMount='';return;}
+    this.sourceStance=this.p.stance;
     // Keep native running feet, charge compression and turn behaviour. Only the
     // source's reaching/balancing upper body eases in, and reverses on cancel.
     const lengths=Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id])=>[id,this.p.playerAnimationBridge.deformationValue(id)]));
@@ -527,6 +526,7 @@ export class PlayableSkateMotion {
     this.sourceFrame();
     const clip=this.clips.get(this.preparedMount)!;
     this.retarget.apply(clip,mountStarts[clip.name]/clip.fps,{travel:false,rest:false});
+    this.retarget.board.rotateY(this.p.deckYawOffset);
     const source=this.capture(),board=this.retarget.board;
     board.updateWorldMatrix(true,false);const boardWorld=board.matrixWorld.clone();
     const sourceHips=this.retarget.rig.jointsById.get('hips')!.node.getWorldPosition(new THREE.Vector3());
@@ -566,15 +566,17 @@ export class PlayableSkateMotion {
       this.phase==='push'&&this.clip!==null&&this.time+dt<clipDuration(this.clip));
     this.speedRecoveryPush=recoveryEligible&&recoverySpeed>0&&(finishingPush||Math.abs(p.speed)<
       recoverySpeed*(this.speedRecoveryPush?.98:.65));
-    if(mounted)this.sourceStance=this.previousSkateStance=p.stance;
+    // A revert, a 180 landing or rolling back on a ramp can change the lead
+    // foot. Keep the outgoing stance through pickup, when Player is on foot.
+    const stanceChanged=mounted&&p.stance!==this.sourceStance;
+    if(mounted)this.sourceStance=p.stance;
     const previousOwner=this.nativeOwner;
     this.nativeOwner=this.nativePoseOwner;
     if(this.nativeOwner!==WALLPLANT_OWNER)this.handover=null;
     else if(previousOwner===null&&this.phase!=='foot'&&this.lastPose){this.handover=this.lastPose;this.handoverAge=0;}
     if(!mounted||!p.grounded||!this.enabled)this.iceBlend=0;
     const ice=this.nativeOwner==='ice balance';
-    const fakie=this.nativeOwner==='switch stance';
-    if((this.nativeOwner!==null&&!ice&&!fakie) || (!this.enabled&&(ice||fakie))){
+    if(this.nativeOwner!==null&&(!ice||!this.enabled)){
       // Do not even clear/reapply proportions under a different pose owner.
       // Clear outgoing source poses immediately; recovery blends from the
       // current native pose without inventing a mount, pickup or ink event.
@@ -590,14 +592,11 @@ export class PlayableSkateMotion {
         if(arrived<1)this.blend(this.handover,arrived);else this.handover=null;
       }
       this.lastPose=this.capture();p.syncCharacterAppearance();
-      this.iceBlend=p.stance!==DEFAULT_SKATE_STANCE?1:0;
+      this.iceBlend=0;
       this.mountPreparation=0;this.preparedMount='';
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
     }
-    // Fakie retains native riding. Only its speed-recovery push borrows the
-    // opposite source stance, through the same contact-preserving handoff as
-    // ice. A completed push blends back rather than snapping at the speed cap.
-    const iceTarget=ice&&p.groundHit?.slippy||fakie&&!this.speedRecoveryPush?1:0;
+    const iceTarget=ice&&p.groundHit?.slippy;
     this.iceBlend=THREE.MathUtils.clamp(this.iceBlend+(iceTarget?1:-1)*Math.max(0,dt)/(iceTarget ? .24 : .28),0,1);
     if(this.iceBlend===1){
       // Once settled, native ice owns its exact live pose and elasticity.
@@ -633,13 +632,11 @@ export class PlayableSkateMotion {
     if (!wanted) {
       if (this.phase !== 'foot') this.enter('foot');
     } else if (entered && p.grounded) {
-      this.sourceStance=p.stance;
       this.mountHold = Boolean(input.jumpHeld);
       this.enter('mount', this.preparedMount||this.mountName(this.previousFootSpeed));
       this.mountStart=mountStarts[this.sourceName]/this.clip!.fps;
       this.mountPreparation=0;this.preparedMount='';
     } else if (left && p.grounded) {
-      this.sourceStance=this.previousSkateStance;
       this.enter('dismount', p.walkVelocity.length()>2 ? 'BR_DISMOUNT_LO_INTO_RUN_FWD' : 'BR_DISMOUNT_LO_INTO_STAND_0');
     } else if (mounted && !p.grounded) {
       if (this.phase !== 'air') this.enter('air','OLLIE_LOW_A');
@@ -690,6 +687,9 @@ export class PlayableSkateMotion {
       else if (this.phase === 'ride' && this.sourceName !== rideNames[this.style]) this.ride();
     } else if (this.phase !== 'foot') this.enter('foot');
 
+    // A rolling reversal can keep the same clip and clock, even mid-charge.
+    // Carry the outgoing pose across when the phase did not start its own fade.
+    if(stanceChanged && this.fade>0 && this.phase!=='foot')this.startTransition();
     if(!mounted)this.previousFootSpeed=p.walkVelocity.length();
     if (this.phase === 'foot') {
       this.opacity(1);
@@ -715,6 +715,10 @@ export class PlayableSkateMotion {
       this.blend(airPose,weight);
       for(const key of Object.keys(scalars))scalars[key]=THREE.MathUtils.lerp(airScalars[key]??1,scalars[key],weight);
     }
+    // Stance selects the rider's lead foot. Reverts and shove-its can turn the
+    // physical deck independently. Turn it about its own normal so the source
+    // pitch, foot placement and hand pickup still follow the sampled motion.
+    this.retarget.board.rotateY(p.deckYawOffset);
     // The shared profile adds a small, finite chest settle. Source limb stretch
     // stays intact, and no parent/skeleton squash is used.
     const amplitude = characterElasticityAmplitudes(this.phase==='land'?'land':'skate')[0];
@@ -801,19 +805,21 @@ export class PlayableSkateMotion {
   private captureFootContacts(): FootContact[] {
     const board=this.retarget.board;
     board.updateWorldMatrix(true,true);
-    const inverse=board.getWorldQuaternion(new THREE.Quaternion()).normalize().invert();
+    // The scaled rig can shear an ankle's world matrix. Read its rotation
+    // through the actual joints, in the same frame as the deck.
+    const inverse=relativeRotation(board,this.body).invert();
     return (['Left','Right'] as const).map(side=>{
       const ankle=this.retarget.rig.jointsById.get(`ankle${side}`)!.node;
       const socket=ankle.getObjectByName(`socket-foot-${side.toLowerCase()}`)!;
       return {side,p:board.worldToLocal(socket.getWorldPosition(new THREE.Vector3())),
-        q:inverse.clone().multiply(ankle.getWorldQuaternion(new THREE.Quaternion()).normalize()).normalize()};
+        q:inverse.clone().multiply(relativeRotation(ankle,this.body)).normalize()};
     });
   }
 
   private fitBlendedFeet(source:FootContact[],native:FootContact[],weight:number):void {
     const board=this.retarget.board,rig=this.retarget.rig;
     board.updateWorldMatrix(true,true);
-    const boardQ=board.getWorldQuaternion(new THREE.Quaternion()).normalize();
+    const boardQ=relativeRotation(board,this.body);
     for(let i=0;i<source.length;i++){
       const {side}=source[i],root=rig.jointsById.get(`hip${side}`)!.node,mid=rig.jointsById.get(`knee${side}`)!.node;
       const ankle=rig.jointsById.get(`ankle${side}`)!.node,socket=ankle.getObjectByName(`socket-foot-${side.toLowerCase()}`)!;
@@ -823,16 +829,14 @@ export class PlayableSkateMotion {
       // Reorienting a scaled shoe moves its sole socket. Iterate to contact,
       // rather than assuming three passes suffice at every blend fraction.
       for(let n=0;n<8;n++){
-        ankle.quaternion.copy(ankle.parent!.getWorldQuaternion(new THREE.Quaternion()).normalize().invert()).multiply(orientation).normalize();
+        ankle.quaternion.copy(relativeRotation(ankle.parent,this.body).invert()).multiply(orientation).normalize();
         ankle.updateWorldMatrix(true,true);
         const end=target.clone().sub(socket.getWorldPosition(new THREE.Vector3())).add(ankle.getWorldPosition(new THREE.Vector3()));
         solveTwoBoneIk({root,mid,end:ankle,target:end,pole,solveSpace:root.parent!,tolerance:.0005});
-        ankle.quaternion.copy(ankle.parent!.getWorldQuaternion(new THREE.Quaternion()).normalize().invert()).multiply(orientation).normalize();
+        ankle.quaternion.copy(relativeRotation(ankle.parent,this.body).invert()).multiply(orientation).normalize();
         ankle.updateWorldMatrix(true,true);
         if(socket.getWorldPosition(new THREE.Vector3()).distanceToSquared(target)<.0005**2)break;
       }
-      ankle.quaternion.copy(ankle.parent!.getWorldQuaternion(new THREE.Quaternion()).normalize().invert()).multiply(orientation).normalize();
-      ankle.updateWorldMatrix(true,true);
       this.iceFootError=Math.max(this.iceFootError,socket.getWorldPosition(new THREE.Vector3()).distanceTo(target));
     }
   }

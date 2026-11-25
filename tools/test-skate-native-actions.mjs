@@ -5,7 +5,7 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 
 const bank=async name=>JSON.parse(gunzipSync(await readFile(new URL(`../public/motion-study/${name}/motion.json.gz`,import.meta.url))));
 const [skate,jak]=await Promise.all([bank('skate'),bank('jak')]);
-await withSkateRuntime(async({server,scene,level,Player,CONST})=>{
+await withSkateRuntime(async({server,scene,level,Player,CONST,THREE})=>{
   const {PlayableSkateMotion}=await server.ssrLoadModule('/src/skateReferenceLab/playableMotion.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const {RigBinding,createPlayerStarterAnimationSuite}=await server.ssrLoadModule('/src/animation/index.ts');
@@ -86,12 +86,50 @@ await withSkateRuntime(async({server,scene,level,Player,CONST})=>{
   for(const [x,y] of [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-1,1],[1,1],[-1,-1],[1,-1]])
     run(`grab including release ${x},${y}`,air,p=>p.grabPhase!=='none'||p.grabPose>.001,
       f=>({grabPressed:f===2,grabHeld:f>=2&&f<16,moveX:f===2?x:0,moveY:f===2?y:0}),55);
-  run('revert and switch stance',p=>{p.revertT=.3;},p=>p.revertPoseT>0||p.stance!==DEFAULT_SKATE_STANCE,
+  run('revert into fakie',p=>{p.revertT=.3;},p=>p.revertPoseT>0,
     f=>({transferPressed:f===0}),75);
+  rejoined();
+  assert.equal(p.stance,-DEFAULT_SKATE_STANCE);
+  const phases=new Set(),nose=new THREE.Vector3();
+  for(let f=0;f<230;f++){
+    step({moveY:f<60?1:0,jumpHeld:f>=90&&f<135,jumpPressed:f===90,jumpReleased:f===135});
+    phases.add(motion.phase);
+    assert.equal(motion.diagnostics.nativeOwner,null,'ordinary fakie skating lost its authored pose');
+    assert.equal(motion.diagnostics.sourceStance,p.stance);
+    p.boardG.updateWorldMatrix(true,false);
+    const heading=nose.set(0,0,1).transformDirection(p.boardG.matrixWorld).setY(0).normalize().dot(p.axisF);
+    assert.ok(heading<-.95,`revert lost the trailing nose during ${motion.phase} at frame ${f}: ${heading}`);
+  }
+  for(const phase of ['push','push-recover','ride','charge','air','land'])assert.ok(phases.has(phase),`fakie missed ${phase}`);
+  assert.equal(motion.boardScribble.appearances,0);
+  assert.equal(motion.boardScribble.disappearances,0);
+  // The next fakie ollie can still hand both the reach and release to a grab.
+  players.forEach(air);
+  current={name:'fakie grab',owns:player=>player.grabPhase!=='none'||player.grabPose>.001,checked:0};
+  for(let f=0;f<125;f++)step({grabPressed:f===2,grabHeld:f>=2&&f<16});
+  assert.ok(current.checked>0);
+  results.push({name:current.name,frames:current.checked});current=null;
+  rejoined();
+  players.forEach(player=>{player.revertT=.3;});
+  for(let f=0;f<75;f++)step({transferPressed:f===0});
+  rejoined();
+  assert.equal(p.stance,DEFAULT_SKATE_STANCE);
+  assert.ok(nose.set(0,0,1).transformDirection(p.boardG.matrixWorld).dot(p.axisF)>.99,'second revert did not bring the nose forward');
+  // A rollback can change stance while the same charge is still running.
+  // Its first frame must carry the outgoing hips; the clip keeps its clock.
+  for(let f=0;f<50;f++)step({jumpHeld:true});
+  assert.equal(motion.phase,'charge');
+  const hips=p.animationRig.jointsById.get('hips').node,hipQ=()=>hips.getWorldQuaternion(new THREE.Quaternion()).normalize();
+  const beforeTurn=hipQ(),beforeTime=motion.time;
+  players.forEach(player=>{player.stance=-player.stance;});
+  step({jumpHeld:true});
+  assert.ok(hipQ().angleTo(beforeTurn)<.1,'rolling stance change snapped the hips');
+  for(let f=0;f<20;f++)step({jumpHeld:true});
+  assert.equal(motion.phase,'charge');
+  assert.ok(motion.time>beforeTime&&hipQ().angleTo(beforeTurn)>2,'rolling stance change restarted the clip or kept the old hips');
   run('manual and release',()=>{},p=>p.manualing!==0||Math.abs(p.manualPitch)>.001,
     f=>({moveY:f===1?1:f===3?-1:0,jumpHeld:f===35,jumpPressed:f===35,jumpReleased:f===36}),100);
   assert.equal(p.manualing,0,'ollie did not release the manual');rejoined();
-  run('reversed deck',p=>{p.deckYawOffset=Math.PI;},()=>true,()=>({}),30);
   run('ice stride and brace',p=>{p.pos.set(300,.2,0);p.prevPos.copy(p.pos);p.groundHit=p.queryGround(level);},
     // Entry is now an intentional source/native blend. Settled ice must still
     // preserve the exact native pose; all discrete actions retain that rule.

@@ -20,12 +20,13 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const point=(player,id)=>player.animationRig.jointsById.get(id).node.getWorldPosition(new THREE.Vector3());
   const lead=player=>point(player,'ankleRight').sub(point(player,'ankleLeft')).dot(player.axisF);
   const chest=player=>new THREE.Vector3(0,0,-1).applyQuaternion(player.animationRig.jointsById.get('chest').node.getWorldQuaternion(new THREE.Quaternion()));
+  const nose=player=>new THREE.Vector3(0,0,1).transformDirection(player.boardG.matrixWorld);
   const results=[];let frames=0;
-  for(const fps of [30,60,120])for(const stance of [-1,1]){
+  for(const fps of [30,60,120])for(const stance of [-1,1])for(const deckYaw of [0,Math.PI]){
     source.setActive(false);
     players.forEach((player,i)=>{
       player.enterLevel('stance-flow');player.respawn(level,true,true);runtimes[i].restart();
-      player.freeSkate=true;player.speed=18;player.lastPlanar=18;player.stance=stance;
+      player.freeSkate=true;player.speed=18;player.lastPlanar=18;player.stance=stance;player.deckYawOffset=deckYaw;
       player.grounded=true;player.state='ride';player.groundHit=player.queryGround(level);
     });
     source.setActive(true);
@@ -44,6 +45,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
       minLeadAgreement=Math.min(minLeadAgreement,Math.sign(a*b));
       assert.ok(a*b>0,`lead foot inverted at ${stance}/${f}: source ${a}, native ${b}, owner ${owner}`);
       assert.ok(chest(p).dot(chest(native))>0,`chest faces opposite side at ${stance}/${f}`);
+      assert.ok(nose(p).dot(nose(native))>.95,`deck turned around under the rider at ${fps}/${stance}/${deckYaw}/${f}`);
       const hip=p.animationRig.jointsById.get('hips').node.getWorldQuaternion(new THREE.Quaternion()).normalize();
       const head=point(p,'head').sub(p.pos),weight=source.diagnostics.iceBlend;
       if(previousHip)maxHipTurn=Math.max(maxHipTurn,hip.angleTo(previousHip)*fps/60);
@@ -59,15 +61,13 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
       assert.equal(source.boardScribble.disappearances,0,'ice/fakie invented a pickup');
     }
     assert.ok(iceFrames>fps*.25,'fixture missed ice');
-    if(stance===-1){
-      assert.ok(sourceFrames>fps*.3&&returnedFrames>fps*.3,'source did not resume after ice');
-      assert.ok(entryFrames>=fps*.2&&exitFrames>=fps*.25,'ice entry/exit skipped the finite blend');
-      assert.ok(blendReversals>=2,'short ice patches did not reverse an unfinished blend');
-    }
+    assert.ok(sourceFrames>fps*.3&&returnedFrames>fps*.3,'source did not resume after ice');
+    assert.ok(entryFrames>=fps*.2&&exitFrames>=fps*.25,'ice entry/exit skipped the finite blend');
+    assert.ok(blendReversals>=2,'short ice patches did not reverse an unfinished blend');
     assert.ok(maxHipTurn<.16,`stance snapped on ice boundary: ${maxHipTurn}`);
     assert.ok(maxHeadStep<.07,`head snapped on ice boundary: ${maxHeadStep}`);
     assert.ok(maxFootError<.004,`feet left their blended contacts: ${maxFootError}, ${fps} Hz, stance ${stance}`);
-    results.push({fps,stance,sourceFrames,iceFrames,returnedFrames,minLeadAgreement,maxHipTurn,maxHeadStep,maxFootError,entryFrames,exitFrames,blendReversals});
+    results.push({fps,stance,deckYaw,sourceFrames,iceFrames,returnedFrames,minLeadAgreement,maxHipTurn,maxHeadStep,maxFootError,entryFrames,exitFrames,blendReversals});
   }
   source.dispose();runtimes.forEach(r=>r.dispose());
   console.log(JSON.stringify({status:'pass',frames,results},null,2));
