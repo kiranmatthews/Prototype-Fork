@@ -24,7 +24,12 @@
 //   · IN A REAL TRANSFER the drawn body is behind the even turn, then ahead of
 //     it, then past the far wall, and exactly on it at the end — while the
 //     normal the simulation eases (and a skate camera reads) turns as evenly
-//     as it always did, and the soles stay on the deck.
+//     as it always did, and the soles stay on the deck: within 3 mm at every
+//     frame and at seven instants between each two, with neither sole turning
+//     against the deck from one instant to the next;
+//   · THE WAY THE GAME DRAWS THEM, through its authored animation runtime, the
+//     same two transfers keep both soles within 3 mm on every frame (the frame
+//     that was 13.1 mm off, at 0.72 of the first turn, is this one).
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 import { makeCourseBot } from './side-pipe-lab-bot.mjs';
@@ -276,13 +281,93 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST, T
       assert.ok(Math.abs(mine.at(-1).ahead) < 0.06, `transfer ${turn}, drawn: and it ends on the far wall (${f2(mine.at(-1).ahead)} rad off)`);
     }
     assert.ok(past > 0.08, `the drawn body runs ${f2(past)} rad past the far wall before it is caught`);
-    assert.ok(worstSole < 0.02, `both soles stay on the deck through both transfers (worst ${(worstSole * 1000).toFixed(1)} mm)`);
+    assert.ok(worstSole < 0.003, `both soles stay on the deck through both transfers (worst ${(worstSole * 1000).toFixed(1)} mm)`);
     assert.ok(repeat < 1e-4, `and drawing one instant of a transfer five times gives one pose (${repeat.toExponential(1)} rad)`);
     assert.ok(popped.worst.trunk < 0.06 && popped.worst.head < 0.07 && popped.worst.arms < 0.15,
       `nothing pops in a transfer either: ${f2(popped.worst.trunk)} (trunk), ${f2(popped.worst.head)} (head), ${f2(popped.worst.arms)} (arms) rad a frame, each frame`);
   }
 
+  // The cascade's transfers once more, for the soles alone, and between the frames too: each frame of a
+  // turn is also drawn at seven instants on the way to the next (the transfer's own clock moved on by an
+  // eighth of a step, and nothing else). The feet are planted, so against the deck a sole does not turn,
+  // and it stays on it. Under his proportions a knee's world matrix is sheared: an ankle set against a
+  // rotation read back out of one sat on either of two attitudes some ten degrees apart, chosen by a
+  // branch of the conversion and changing from one instant to the next, and where neither would hold the
+  // leg did not settle and the sole was left a centimetre off the deck for a frame.
+  {
+    const SUB = 8; let turns = 0, wasTurning = false, worstSole = 0, worstTurn = 0, instants = 0, last = null;
+    /** Each sole's own axes in the deck's frame, read off the matrices. */
+    const soles = () => ['left', 'right'].map(side => {
+      const e = new THREE.Matrix4().copy(p.boardG.matrixWorld).invert().multiply(node(`ankle-${side}`).matrixWorld).elements;
+      return [0, 4, 8].map(i => new THREE.Vector3(e[i], e[i + 1], e[i + 2]).normalize()); });
+    const drawAt = (elapsed, input) => { p.spinePoseElapsed = elapsed; p.updateSurfaceAlignment(0); p.syncVisual(input, 0); p.group.updateMatrixWorld(true); };
+    drive({ from: [C1.westLip - 3, C1.westLipY + 0.15] }, 12, (k, input) => {
+      const turning = p.spinePoseDuration > 0 && p.spinePoseElapsed < p.spinePoseDuration && p.vertAir;
+      if (turning && !wasTurning) turns++;
+      if (!turning && wasTurning && turns === 2) return false;
+      wasTurning = turning;
+      if (!turning) { last = null; return true; }
+      const elapsed = p.spinePoseElapsed, duration = p.spinePoseDuration;
+      for (let part = 0; part < SUB; part++) {
+        if (part) drawAt(Math.min(elapsed + CONST.fixedStep * part / SUB, duration * (1 - 1e-9)), input);
+        const now = soles(); instants++;
+        worstSole = Math.max(worstSole, p.boardG.userData.skateContact.footError);
+        if (last) worstTurn = Math.max(worstTurn, ...now.flatMap((sole, i) => sole.map((axis, j) => axis.angleTo(last[i][j]))));
+        last = now;
+      }
+      drawAt(elapsed, input); // the frame's own instant, before the simulation steps on
+      return true;
+    });
+    if (process.env.VERT_AIR_TRACE) console.log('TRACE soles', JSON.stringify({ turns, instants, worstSole, worstTurn }));
+    assert.ok(turns === 2 && instants > 500, `reference: both transfers again, drawn at ${instants} instants`);
+    assert.ok(worstSole < 0.003, `at every one of them both soles are on the deck (worst ${(worstSole * 1000).toFixed(1)} mm)`);
+    assert.ok(worstTurn < 0.02, `and against the deck neither sole jumps: the most one turns between two instants is ${worstTurn.toFixed(4)} rad ` +
+      `(read back out of a sheared knee it flipped by 0.11)`);
+  }
+
   level.dispose();
   console.log('PASS vert air and spine transfer: the hang trails, floats and reaches on springs of its own; the transfer winds up, is driven late, ' +
-    'runs past and is caught; soles stay on the deck; nothing accumulates; the simulation\'s even turn is untouched.');
+    'runs past and is caught; soles stay on the deck and do not turn on it, between frames too; nothing accumulates; the simulation\'s even turn is untouched.');
 });
+
+// ---- the same transfers, drawn the way the game draws them ---------------------------------------
+// Everything above poses the rider with the native controller alone. The game also runs its authored
+// animation runtime, which stands his legs a little differently, and it was there that this was seen: in
+// the cascade's first transfer, as the first transfer of a session with Jump on the third step of the hang,
+// one sole was 13.1 mm off the deck for a single frame, at 0.72 of the turn, with a millimetre either side.
+// The knee's sheared world matrix sat on a branch of the matrix-to-quaternion conversion there; the ankle,
+// set against whichever rotation came back out of it, took one of two attitudes on each refinement step,
+// and the leg never settled.
+await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST }) => {
+  const lab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');
+  const { Level, findLevel } = await server.ssrLoadModule('/src/level.ts');
+  stock.dispose();
+  const entry = findLevel('side-pipe-lab'), level = new Level(scene, entry);
+  scene.updateMatrixWorld(true);
+  p.competitionMode = false; p.endlessDeaths = true;
+  const bot = makeCourseBot({ p, level, CONST, lab, makeInput, parts: entry.data.components });
+  const run = bot.start({ from: [lab.C1.westLip - 3, lab.C1.westLipY + 0.15] });
+  const frames = []; let turns = 0, wasTurning = false;
+  for (let k = 0; k < 12 * 60; k++) {
+    const pad = run.decide(), input = Object.assign(makeInput({ moveX: pad.moveX, moveY: pad.moveY }), pad);
+    p.step(CONST.fixedStep, input, level); level.update(CONST.fixedStep); p.stepDropInPresentation();
+    const over = run.observe();
+    const turning = p.spinePoseDuration > 0 && p.spinePoseElapsed < p.spinePoseDuration && p.vertAir;
+    if (turning && !wasTurning) turns++;
+    if (!turning && wasTurning && turns === 2) break;
+    wasTurning = turning;
+    if (turning) frames.push({ turn: turns, variant: p.spinePoseVariant, progress: p.spinePoseElapsed / p.spinePoseDuration, sole: p.boardG.userData.skateContact.footError });
+    if (over) break;
+  }
+  const worst = frames.reduce((a, b) => (b.sole > a.sole ? b : a), { sole: 0 });
+  const first = frames.filter(f => f.turn === 1);
+  if (process.env.VERT_AIR_TRACE) console.log('TRACE authored', JSON.stringify({ turns, frames: [1, 2].map(t => frames.filter(f => f.turn === t).length), worst,
+    firstTransfer: first.map(f => +(f.sole * 1000).toFixed(2)) }));
+  assert.ok(turns === 2 && first.length > 20 && first[0].variant === 1, `reference: the cascade's two transfers through the game's own animation runtime, ` +
+    `the first of them (${first.length} frames) the first transfer of the session`);
+  assert.ok(worst.sole < 0.003, `drawn the way the game draws them, both soles are within 3 mm of the deck on every frame of both transfers ` +
+    `(worst ${(worst.sole * 1000).toFixed(2)} mm, on frame ${frames.filter(f => f.turn === worst.turn).indexOf(worst) + 1} of transfer ${worst.turn} at ${(worst.progress ?? 0).toFixed(2)} of the turn; ` +
+    `set against a rotation read back out of the sheared knee: 13.13 mm on frame 22 of the first, at 0.72)`);
+  level.dispose();
+  console.log(`PASS the same transfers through the game's own animation runtime: ${frames.length} frames, soles within ${(worst.sole * 1000).toFixed(2)} mm.`);
+}, { animationScheme: 'D' });
