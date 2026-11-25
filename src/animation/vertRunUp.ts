@@ -44,13 +44,13 @@ const trunk = (pitch: number, spine: number, chest: number, neck: number, head: 
 const pose = (...parts: Pose[]): Pose => Object.assign({}, ...parts);
 
 function build(id: VertRunClipId, name: string, rigId: string, duration: number, beats: Beat[],
-  markers: [string, number][], design: string): AnimationClip {
+  markers: [string, number][], design: string, samplesPerSecond = 90): AnimationClip {
   const clip = createAnimationClip({ id, name, rigId, duration });
   clip.loop.mode = 'once';
   const joints = [...new Set(beats.flatMap(beat => Object.keys(beat.pose)))];
   const ps = beats.map(beat => beat.p);
   // (sampled finely enough that the fastest thing in it, an arm thrown up in a tenth of a second, is an arc and not a corner)
-  const count = Math.max(120, Math.round(duration * 90));
+  const count = Math.max(120, Math.round(duration * samplesPerSecond));
   const samples = Array.from({ length: count + 1 }, (_, i) => i / count);
   for (const joint of joints) {
     // A joint a beat does not mention keeps the value it last had.
@@ -174,15 +174,16 @@ export function buildVertLeapClip(rigId: string): AnimationClip {
     'gather / sit back over the feet / drive, arms up the sides / full stretch off the toes / one hand leads / the lip at the top of the jump / the sag onto his arms');
 }
 
-/** The same spring, the lip out of reach, the slide down the face, the fall back onto his shoulders, and getting up. */
+/** The same spring, the lip out of reach, the slide down the face, and the roll over backwards that puts him on his feet again. */
 export function buildVertMissClip(rigId: string): AnimationClip {
   const M = VERT_RUN_UP.miss;
   // The leap is the same leap, played over the first fifth (gameplay scrubs it there at the same pace).
   const leap: Beat[] = LEAP.filter(beat => beat.p <= .66).map(beat => ({ p: beat.p * M.leap / VERT_RUN_UP.leap.catch, pose: beat.pose }));
-  // The fall back is the plan's own roll: its moments are where the poses are keyed, and its turn is the body's.
+  // The roll is the plan's own: its moments are where the poses are keyed, and its turn is the body's.
   const roll = (key: number): number => M.slide + (M.tumble - M.slide) * VERT_MISS_ROLL[key].at;
   const back = (key: number): number => -VERT_MISS_ROLL[key].back;
-  return build(VERT_RUN_CLIP_IDS.miss, 'Vert Run-Up — Miss and Tumble', rigId, 2.7, [
+  const TURN = Math.PI * 2;
+  return build(VERT_RUN_CLIP_IDS.miss, 'Vert Run-Up — Miss and Roll', rigId, 2.3, [
     ...leap,
     // The top: everything he has, and the lip is still above his fingers.
     { p: M.leap, pose: pose(trunk(-.06, -.12, -.10, -.28, -.50, -.04),
@@ -205,42 +206,44 @@ export function buildVertMissClip(rigId: string): AnimationClip {
       leg('Left', -1.96, 2.30, -.30), leg('Right', -1.74, 2.10, -.20),
       arm('Left', -1.52, .50, .34, 0), arm('Right', -1.20, .62, .50, 0)) },
     // The seat hits: chin tucked, everything folded round it.
-    { p: roll(2), pose: pose(trunk(back(2), .58, .26, .30, .54),
-      leg('Left', -2.06, 1.50, -.10, .10), leg('Right', -1.84, 1.24, -.05, .12),
-      arm('Left', -1.02, .80, .60, .10), arm('Right', -.86, .88, .70, .10)) },
-    // Up onto his shoulders with his legs going over his head, one after the other, arms out flat to stop it.
-    { p: roll(3), pose: pose(trunk(back(3), .40, .18, .36, .62, .05),
-      leg('Left', -2.30, .34, .30, .20), leg('Right', -1.96, .92, .10, .22),
-      arm('Left', -.24, 1.22, .50, .30), arm('Right', -.14, 1.30, .64, .30)) },
-    // Rocking back down: the legs come over and the arms come with them.
-    { p: roll(4), pose: pose(trunk(back(4), .52, .24, .24, .46, .02),
-      leg('Left', -1.76, .70, .10, .18), leg('Right', -1.60, .48, .15, .20),
-      arm('Left', -.56, .82, .58, .30), arm('Right', -.44, .88, .66, .30)) },
-    // Sat down hard: the trunk is thrown forward over his legs and his hands land beside him.
-    { p: roll(5), pose: pose(trunk(back(5), .48, .24, .18, .32),
-      leg('Left', -1.66, .08, -.35, .20), leg('Right', -2.10, 1.10, -.10, .24),
-      arm('Left', .30, .40, .50, .50), arm('Right', .38, .44, .42, .50)) },
-    // ...and settles back onto them. He looks up at the lip.
-    { p: .77, pose: pose(trunk(-.24, .14, .02, -.22, -.44),
-      leg('Left', -1.22, .08, -.30, .20), leg('Right', -1.74, 1.16, -.05, .24),
-      arm('Left', .80, .34, .20, .85), arm('Right', .86, .36, .16, .85)) },
-    // A shake of the head, one way...
-    { p: .83, pose: pose(trunk(.06, .32, .14, .04, .10, 0, 0, -.55, -.10),
-      leg('Left', -1.70, 1.80, -.30, .14), leg('Right', -1.46, 1.50, -.24, .18),
-      arm('Left', .42, .40, .62, .70), arm('Right', .56, .38, .46, .70)) },
-    // ...and the other, as his feet come in under him and he tips forward onto them.
-    { p: .89, pose: pose(trunk(.34, .42, .18, .02, .10, 0, 0, .40, .08),
-      leg('Left', -1.96, 2.16, -.46), leg('Right', -1.76, 2.00, -.40),
-      arm('Left', -.50, .40, .80, .30), arm('Right', -.18, .42, .70, .40)) },
-    // Up through a crouch, head coming up last.
-    { p: .95, pose: pose(trunk(.30, .26, .12, .02, .04),
-      leg('Left', -1.02, 1.30, -.24), leg('Right', -.90, 1.18, -.22),
-      arm('Left', -.30, .30, .62, .10), arm('Right', -.08, .30, .56, .10)) },
-    { p: 1, pose: pose(trunk(.04, .04, .02, -.02, -.04),
+    { p: roll(2), pose: pose(trunk(back(2), .60, .28, .32, .56),
+      leg('Left', -2.10, 1.70, -.10, .10), leg('Right', -1.90, 1.46, -.05, .12),
+      arm('Left', -1.30, .74, .70, .10), arm('Right', -1.10, .82, .80, .10)) },
+    // Up his back onto his shoulders, knees at his chest, hands going back past his ears for the ground.
+    { p: roll(3), pose: pose(trunk(back(3), .72, .32, .38, .64, .10, 0, 0, .50),
+      leg('Left', -2.42, 2.10, -.10, .14), leg('Right', -2.24, 1.84, .00, .16),
+      arm('Left', -2.70, .46, 1.36, .60), arm('Right', -2.50, .52, 1.46, .60)) },
+    // Over the top: the back of his head and both hands on the ground, the tightest he gets.
+    { p: roll(4), pose: pose(trunk(back(4), .66, .28, .34, .58, .22, 0, 0, 1.25),
+      leg('Left', -2.50, 2.10, -.10, .12), leg('Right', -2.36, 1.90, -.05, .14),
+      arm('Left', -3.02, .44, 1.10, .90), arm('Right', -2.94, .48, 1.18, .90)) },
+    // He pushes up off his hands into a pike: hips at their highest, legs unfolding down past them for the ground.
+    { p: roll(5), pose: pose(trunk(back(5), .64, .28, .32, .56, .26, 0, 0, 1.35),
+      leg('Left', -2.58, .70, -.20, .10), leg('Right', -2.40, 1.00, -.10, .12),
+      arm('Left', -2.90, .40, .30, .70), arm('Right', -2.80, .44, .40, .70)) },
+    // Feet down under him, one a little before the other; his hands leave the ground and his head comes up off it.
+    { p: roll(6), pose: pose(trunk(back(6), .52, .22, .26, .46, .10, 0, 0, .70),
+      leg('Left', -1.72, .26, -.10), leg('Right', -1.56, .40, -.05),
+      arm('Left', -2.30, .40, .40, .40), arm('Right', -2.10, .46, .52, .40)) },
+    // The trunk swings up over his feet, arms coming through for balance, eyes up.
+    { p: roll(7), pose: pose(trunk(back(7), .30, .12, .04, .08),
+      leg('Left', -.84, .36, -.08), leg('Right', -.70, .46, -.06),
+      arm('Left', -1.10, .40, .60, .20), arm('Right', -.84, .46, .52, .20)) },
+    // On his feet, knees soft, nearly upright.
+    { p: roll(8), pose: pose(trunk(back(8), .14, .06, -.08, -.12),
+      leg('Left', -.40, .44, -.10), leg('Right', -.30, .38, -.08),
+      arm('Left', -.30, .30, .60, .10), arm('Right', -.12, .34, .54, .10)) },
+    // Up out of it, the arms swinging down past his hips.
+    { p: .93, pose: pose(trunk(-TURN + .10, .08, .04, -.04, -.06),
+      leg('Left', -.22, .28, -.06), leg('Right', -.14, .22, -.06),
+      arm('Left', .16, .22, .44, .10), arm('Right', .26, .24, .38, .10)) },
+    { p: 1, pose: pose(trunk(-TURN + .04, .04, .02, -.02, -.04),
       leg('Left', -.08, .14, -.04), leg('Right', -.02, .10, -.04),
       arm('Left', .04, .14, .30), arm('Right', .06, .14, .30)) },
-  ], [['off', .47 * M.leap / VERT_RUN_UP.leap.catch], ['short', M.leap], ['slide', .262], ['caught', roll(0)], ['seat', roll(2)], ['over', roll(3)], ['sat', roll(5)], ['up', .95]],
-  'the same leap / fingertips short / palms drag down the face, a look down / thrown back onto his seat / legs over his head / sat down hard / a shake of the head / up');
+  ], [['off', .47 * M.leap / VERT_RUN_UP.leap.catch], ['short', M.leap], ['slide', .262], ['caught', roll(0)], ['seat', roll(2)], ['over', roll(4)], ['pike', roll(5)], ['feet', roll(6)], ['up', 1]],
+  'the same leap / fingertips short / palms drag down the face, a look down / thrown back onto his seat / over his shoulders, knees at his chest / piked over his hands / feet under him / up',
+  // (its whole leap is the first fifth of it, and a whole turn of the body the middle: sampled finer than the others)
+  120);
 }
 
 export const buildVertRunClips = (rigId: string): AnimationClip[] =>

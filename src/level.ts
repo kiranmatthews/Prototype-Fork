@@ -891,6 +891,7 @@ export interface CustomComponent {
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   hangLock?: boolean; // swept vertramp: retain airborne coping-plane contact around bends
   // SIDE-ON PIPE: a straight, axis-aligned 90° half that a side-scrolling stretch looks ACROSS. It keeps the analytic pipe ride and adds what that view needs: the ride is locked to the cross axis (the stick pumps, it never steers out of the picture), a walker or rider crossing a decked coping drops in on the board, Jump in the hang with the stick held out over a lip pops the air out across it (onto that wall's deck, landing on foot, or into the pipe mouth beyond a shared ridge), and the open ends show a filled section to the camera. `deck` then reads as the depth of the deck behind each coping.
+  // A vert does not need the flag to be one: ANY straight vertramp standing in a side-on zone with its section along the line (yaw 0 or 180, arc 90, no outerBank) is seen across its section and rides the same analytic profile, a quarter (one wall, the flat open on the other side) as much as a half, with its `lipRise` and its `deck`. The flag is only what lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
   // SIDE-ON ZONE (east/west `zone`): the stretch is played on ONE line. A board there cannot carve a U-turn in depth, so its heading stays on the travel axis and the stick held against travel is the pull-back brake.
   sideOn?: boolean;
   wallRise?: [number, number]; // side-on vertramp: transition radius of the wall on the -cross / +cross side (yaw 0: west / east), overriding `rise` per wall; 0 leaves that side open so the flat rolls straight out
@@ -4542,6 +4543,8 @@ export class Level {
     /** Side-on stretch played on ONE line: the board neither carves nor U-turns in depth here. */
     line?: boolean;
   }[] = [];
+  /** The side-on stretches of the level being built, known before any of its parts is. */
+  private sideViewZones: { xMin: number; xMax: number; zMin: number; zMax: number }[] = [];
   finishBox = new THREE.Box3();
   // The pad's plasma column. Jumping through this ends the run too — you do
   // not have to touch down on the masonry.
@@ -7161,8 +7164,8 @@ export class Level {
       const along = (hp.l0 + hp.l1) / 2;
       // A shaped side-on pipe hands back the component that drew it: its two
       // wall radii and decks are not recoverable from one nominal profile.
-      const shaped = hp.object.userData.vertComp as CustomComponent | undefined;
-      if (shaped) { C.push(JSON.parse(JSON.stringify(shaped)) as CustomComponent); continue; }
+      // (it is collected below, with every other part that carries its component)
+      if (hp.object.userData.vertComp) continue;
       C.push({
         t: "vertramp",
         p:
@@ -8053,6 +8056,14 @@ export class Level {
     // scaffold posts must see every ordinary floor no matter where either
     // component appears in the authored array, then entities need to see the
     // finished wood deck in turn.
+    // Side-on stretches first: a vert standing in one is seen across its
+    // section whichever of the two was authored before the other.
+    this.sideViewZones = data.components
+      .filter((c) => c.t === "zone" && c.sideOn === true && c.dir !== "N" && c.dir !== "S")
+      .map((c) => {
+        const s = c.s ?? [14, 1, 10];
+        return { xMin: c.p[0] - s[0] / 2, xMax: c.p[0] + s[0] / 2, zMin: c.p[2] - s[2] / 2, zMax: c.p[2] + s[2] / 2 };
+      });
     for (const phase of [0, 1, 2] as const) {
       if (phase > 0) this.root.updateMatrixWorld(true);
       data.components.forEach((c, i) => {
@@ -15859,35 +15870,48 @@ export class Level {
     );
     if(c.tex==='nightworks-path')addNightworksStoneLook(mat,this.surfaceTexture(c.tex));
 
-    const sideOn = c.sideOn === true && straight && vkind === "half" && arc === 90 &&
-      lipRise === 0 && outerBank === 0 && yawQ % 90 === 0;
+    // SEEN ACROSS ITS SECTION. A straight vert whose section lies along a
+    // side-on stretch is one line to the player there, and that is decided by
+    // where it stands and what shape it is, never by what kind of part it was
+    // authored as: a quarter as much as a half, with or without a straight
+    // face above its curve or a deck behind its lip. Every such vert rides the
+    // one analytic profile, so the drop-in over its lip, the pendulum, the air
+    // above its coping and the transfer out of it are the same on all of them.
+    const acrossSection = straight && arc === 90 && outerBank === 0 && c.vert !== false && yawQ % 180 === 0 &&
+      this.sideViewZones.some((z) => c.p[0] >= z.xMin && c.p[0] <= z.xMax && c.p[2] >= z.zMin && c.p[2] <= z.zMax);
+    const sideOn = acrossSection || (c.sideOn === true && straight && vkind === "half" && arc === 90 &&
+      lipRise === 0 && outerBank === 0 && yawQ % 90 === 0);
     if (
       straight &&
-      vkind === "half" &&
       arc === 90 &&
-      (deck === 0 || sideOn) &&
-      lipRise === 0 &&
       outerBank === 0 &&
-      yawQ % 90 === 0
+      yawQ % 90 === 0 &&
+      (sideOn || (vkind === "half" && deck === 0 && lipRise === 0))
     ) {
       // ---- analytic backing: full lip-trick / pendulum / transfer physics ----
       const len = c.len ?? 30;
       const axis: "z" | "x" = yawQ === 90 || yawQ === 270 ? "x" : "z";
       const along = axis === "z" ? c.p[2] : c.p[0];
-      const cross = axis === "z" ? c.p[0] : c.p[2];
+      // A quarter is the half with one side left open: its flat runs from the
+      // spine out to the foot of its one wall, which yaw 0 stands to the east.
+      const quarter = vkind !== "half";
+      const wallSide = yawQ === 180 ? -1 : 1;
+      const perWall = (value: number): [number, number] => (quarter ? (wallSide < 0 ? [value, 0] : [0, value]) : [value, value]);
+      const cross = (axis === "z" ? c.p[0] : c.p[2]) + (quarter ? (wallSide * F) / 2 : 0);
       const hp = new Halfpipe(
         along + len / 2,
         along - len / 2,
         c.p[1],
-        F,
+        quarter ? F / 2 : F,
         R,
         mat,
         cross,
         axis,
         sideOn ? {
           sideOn: true,
-          wallRadius: c.wallRise ? [c.wallRise[0], c.wallRise[1]] : undefined,
-          deck: c.wallDeck ? [c.wallDeck[0], c.wallDeck[1]] : [deck, deck],
+          wallRadius: quarter ? perWall(R) : c.wallRise ? [c.wallRise[0], c.wallRise[1]] : undefined,
+          deck: !quarter && c.wallDeck ? [c.wallDeck[0], c.wallDeck[1]] : perWall(deck),
+          lipRise: perWall(lipRise),
         } : undefined,
       );
       hp.object.userData.vertComp = sideOn ? (JSON.parse(JSON.stringify(c)) as CustomComponent) : undefined;

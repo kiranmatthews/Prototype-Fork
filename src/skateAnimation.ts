@@ -37,6 +37,8 @@ export interface SkatePoseInput {
   revert?: ReturnType<typeof sampleSkateRevert> | null;
   revertSign?: number;
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
+  /** The stall is the pause of a drop-in from the deck (he faces the pipe), not one ridden up to. */
+  lipPerch?: boolean;
   coping?: { center: THREE.Vector3; normal: THREE.Vector3 };
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
   /** The wallplant's perch on a deck slapped flat on a wall, all in the world.
@@ -415,7 +417,8 @@ export class SkateAnimation {
       // Authored coping centre is 5 cm above the pipe's analytic lip.
       this.support.addScaledVector(this.up, .05 + .09);
       const d = LIP_CONTACTS[p.lip];
-      yaw = d.yaw; pitch = d.pitch + clamp(p.balance * .06, -.06, .06);
+      // (set down from the deck to drop in, the rider faces the pipe: the same end on the coping, and the deck all but level over the drop)
+      yaw = d.yaw; pitch = p.lipPerch ? -.22 * d.pitch : d.pitch + clamp(p.balance * .06, -.06, .06);
       pivotZ = p.lip === 'nose' ? s.deckNoseLength * scale * .94 : p.lip === 'tail' ? -s.deckTailLength * scale * .94 : 0;
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
     } else if (backflip) {

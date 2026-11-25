@@ -407,6 +407,10 @@ export interface PlayerAnimationIntent {
 // moves by then — the hop the mount animation is already playing, carried over
 // the coping. Presentation only: no timer or position here feeds the ride.
 const SIDE_ON_DROP_IN_SECONDS = 0.26;
+// Rolling off a deck into a pipe is still a drop-in: the tail set down on the
+// coping, the slightest pause there with the board out over the transition,
+// and then in. This is the pause.
+const SIDE_ON_DROP_IN_PERCH_SECONDS = 0.2;
 const SIDE_ON_DROP_IN_ALIGN_EASE = 9; // the rig lays over onto the wall across the hop, not within three frames
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
@@ -638,6 +642,8 @@ interface LedgeTop {
   y: number;
   moverId?: number;
   receiverDrop?: number;
+  /** The top belongs to a vert: its deck, behind its coping. */
+  vert?: boolean;
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -1613,6 +1619,10 @@ export class Player {
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
   // held, release/jump/timeout drops back in fakie.
   lipStallT = 0; // > 0 = stalled on the coping (counts down to auto-drop)
+  // ...or the pause of a rolling drop-in: the same stance on the same coping, with
+  // nothing to balance and nothing to score, that ends by dropping in.
+  private dropInPerch = false;
+  private dropInPerchSpeed = 0;
   private lipPipe: Halfpipe | null = null;
   private lipSide = 1; // sign of u at the stall (which coping)
   private lipTickT = 0;
@@ -1699,7 +1709,7 @@ export class Player {
   private vertRun: { plan: VertRunPlan; t: number; frame: VertRunFrame; beat: VertRunBeat | '';
     ox: number; oz: number; dx: number; dz: number } | null = null;
   // The wall ahead, read once per approach.
-  private vertRunScan: { wall: VertWall; ox: number; oz: number; dx: number; dz: number } | null = null;
+  private vertRunScan: { wall: VertWall; ox: number; oz: number; dx: number; dz: number; ledge: boolean } | null = null;
   private vertRunCoolT = 0;
   private vertRunStallT = 0;
   // Drawing: how much of the move's own placement of the pelvis is applied (it
@@ -7555,6 +7565,14 @@ export class Player {
     //  - tip OUT THE BACK (needle pegs high)  -> the honest bail
     //  - ollie out any time                    -> an air; land it and it banks
     //  - release Triangle / timer up           -> drop back in, trick kept
+    if (this.lipStallT > 0 && this.dropInPerch) {
+      // The pause of a rolling drop-in. There is no needle here and nothing to do but go.
+      this.lipStallT -= dt;
+      this.speed = 0;
+      this.vVel = 0;
+      if (this.lipStallT <= 0) this.endDropInPerch();
+      return;
+    }
     if (this.lipStallT > 0) {
       this.lipStallT -= dt;
       this.balanceAge += dt;
@@ -7726,7 +7744,9 @@ export class Player {
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (onPipe) this.pipeRideT = 0.2; // any vert launch off this becomes a pipeHang (no phantom spin)
     // A SIDE-ON pipe is a board section of the path, the way a rail is a grind
-    // section: setting foot on its surface while moving puts the deck under you.
+    // section: crossing its lip from the deck drops a walker in on his board
+    // (tryPipeDropIn). Its surface does not: a walker who is down in one is on
+    // his feet like anywhere else, and running at its wall is the vert run-up.
     const sidePipe = this.grounded && this.groundHit?.halfpipe?.sideOn ? this.groundHit.halfpipe : null;
     // ...and a side-on ZONE is a floor played on one line: no room to carve.
     const sideLine = sidePipe === null && !this.parkControls && level.zoneAt(this.pos.x, this.pos.z)?.line === true;
@@ -7774,7 +7794,6 @@ export class Player {
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
           ((!this.directFootStudy || this.onFootJumpStudy?.nativeLocomotion) && planarSpeed > TUNING.walkSpeed + 0.5) ||
-          (sidePipe !== null && !this.isBailing && planarSpeed > 1) ||
           rollingOut));
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
@@ -8324,6 +8343,9 @@ export class Player {
         const tz = this.axisF.z - n.z * fdotn;
         const tl = Math.hypot(tx, tyRaw, tz);
         if (tl > 1e-4) ty = tyRaw / tl; // > 0 climbing, < 0 descending
+        // A face that stands dead upright (the straight section above a curve) has no slope to
+        // split a square heading on: all of it is up the wall, or all of it is down.
+        else if (Math.abs(fdotn) > 0.5) ty = -Math.sign(fdotn);
       }
       // ONE SYMMETRIC GRAVITY, every surface. Downhill used to accelerate you
       // 1.4x harder than uphill decelerated (3.3x with X held), so every dip-and-
@@ -8568,6 +8590,9 @@ export class Player {
         this.pos.x += tx * s;
         this.pos.y += tyRaw * s;
         this.pos.z += tz * s;
+      } else if (Math.abs(fdotn) > 0.5) {
+        // dead upright, met square: the travel is straight up or straight down the face
+        this.pos.y -= Math.sign(fdotn) * this.speed * dt;
       } else {
         this.pos.addScaledVector(this.axisF, this.speed * dt);
       }
@@ -8621,7 +8646,7 @@ export class Player {
     // SIDE-ON DROP-IN: this step carried the body off a pipe's deck and over
     // its coping. Seat it on the wall, board down, before the ground follow
     // below can read the empty air past the lip as a ledge to fall off.
-    this.tryPipeDropIn(stepFromX, stepFromZ);
+    if (this.tryPipeDropIn(stepFromX, stepFromZ) && this.dropInPerch) return; // tail on the coping: the drop is a beat away
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
@@ -11311,11 +11336,11 @@ export class Player {
     if (this.state !== 'hang' || !this.directFootStudy || !this.authoredClip('player.hang')?.metadata?.jakLedge ||
         !this.armL || !this.armR || !this.elbowL || !this.elbowR || !this.wristL || !this.wristR ||
         !this.gloveLeft || !this.gloveRight || !this.bodyGroup.parent) {
-      this.ledgeHands.reset();this.ledgeVisualCentre=null;this.ledgeReachLift=0;return;
+      this.ledgeHands.reset();this.ledgeVisualCentre=null;this.ledgeReachLift=0;this.vertHangLean=this.vertHangLegs=0;return;
     }
     const weight = this.ledgePhase === 'climb' ? 1 - THREE.MathUtils.smoothstep(this.ledgeClimbK, .45, .8)
       : THREE.MathUtils.smoothstep(this.ledgeEaseT / LEDGE_EASE, 0, 1);
-    if (weight <= 0) return;
+    if (weight <= 0) { this.vertHangLean=this.vertHangLegs=0; return; }
     const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
     const centre = ledgeEdgePoint(new THREE.Vector3(), this.ledgeAnchor, basis);
     centre.y = this.ledgeLip + .025;
@@ -11419,6 +11444,89 @@ export class Player {
       this.bodyGroup.updateWorldMatrix(true,true);this.ledgeGripError=0;
       solve(this.armR,this.elbowR,this.wristR,left,leftTarget);
       solve(this.armL,this.elbowL,this.wristL,right,rightTarget);
+    }
+    this.alignHangToVertCurve(dt, weight, gripCentre);
+  }
+
+  // ---- hanging from a vert whose face curves away under him ----------------
+  // A platform's side is a wall all the way down. A vert's is only a wall as
+  // far as its straight section goes: under that the transition comes out
+  // from the face, toward him, and a body hung straight down from the lip
+  // would have its legs inside it. So he hangs the way a body does there: swung
+  // out from under his hands until his hips are off the curve, and his legs
+  // out further still, lying along it.
+  private vertHangProfile: { key: string; out: number[] } | null = null;
+  private vertHangLean = 0;
+  private vertHangLegs = 0;
+
+  /** How far out from the face under the lip the wall's own surface is, `depth` metres below the lip. */
+  private vertHangSurface(level: Level, centre: THREE.Vector3, depth: number): number {
+    const n = this.ledgeNormal, STEP = 0.2, FROM = 3.2;
+    const key = `${centre.x.toFixed(2)}:${centre.z.toFixed(2)}:${this.ledgeLip.toFixed(2)}:${n.x.toFixed(2)}:${n.z.toFixed(2)}`;
+    if (this.vertHangProfile?.key !== key) {
+      // Looked at from out in front of it, a hand's breadth lower each time. (The furthest thing a
+      // look meets is the wall: anything nearer is something standing in front of it.)
+      const out: number[] = [0];
+      for (let i = 1; i <= 17; i++) {
+        this.raycaster.set(LEDGE_RAY_ORIGIN.set(centre.x + n.x * FROM, this.ledgeLip - STEP * i, centre.z + n.z * FROM), VERT_RUN_AT.set(-n.x, 0, -n.z));
+        this.raycaster.near = 0;
+        this.raycaster.far = FROM + 0.25;
+        let far = -1;
+        for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) if (hit.face && hit.distance > far) far = hit.distance;
+        // (a look that meets nothing is past the foot of the wall: the floor is out there, as far as he is concerned)
+        out.push(far < 0 ? (out[i - 1] > 0.05 ? FROM : 0) : Math.max(0, FROM - far));
+      }
+      this.vertHangProfile = { key, out };
+    }
+    const P = this.vertHangProfile.out, x = THREE.MathUtils.clamp(depth / STEP, 0, P.length - 1), i = Math.min(P.length - 2, Math.floor(x));
+    return P[i] + (P[i + 1] - P[i]) * (x - i);
+  }
+
+  private alignHangToVertCurve(dt: number, weight: number, centre: THREE.Vector3): void {
+    const level = this.runLevel, parent = this.bodyGroup.parent;
+    const hips = this.animationRig.jointsById.get('hips')?.node;
+    let lean = 0, legs = 0;
+    const n = this.ledgeNormal;
+    const at = (o: THREE.Object3D): { out: number; depth: number } => { o.getWorldPosition(VERT_RUN_AT);
+      return { out: (VERT_RUN_AT.x - centre.x) * n.x + (VERT_RUN_AT.z - centre.z) * n.z, depth: centre.y - VERT_RUN_AT.y }; };
+    const swung = (p: { out: number; depth: number }, by: number): { out: number; depth: number } => {
+      const r = Math.hypot(p.out, p.depth), a = Math.atan2(p.out, p.depth) + by; return { out: r * Math.sin(a), depth: r * Math.cos(a) }; };
+    if (level && parent && hips && this.ledgeOnVert && this.legL && this.legR && this.kneeL && this.kneeR && this.ankleL && this.ankleR) {
+      const surface = (p: { out: number; depth: number }): number => this.vertHangSurface(level, centre, p.depth);
+      // His hips: the front of them is a hand's breadth nearer the wall than the joint is.
+      const P = at(hips);
+      for (; lean < 1.3; lean += 0.01) { const q = swung(P, lean); if (q.out >= surface(q) + 0.27) break; }
+      // His legs, from wherever that has put his hips: knees and heels both off the curve, toes and all.
+      for (const [thigh, knee, ankle] of [[this.legL, this.kneeL, this.ankleL], [this.legR, this.kneeR, this.ankleR]] as const) {
+        const H = swung(at(thigh), lean), K = swung(at(knee), lean), A = swung(at(ankle), lean);
+        const about = (p: { out: number; depth: number }, by: number): { out: number; depth: number } => {
+          const q = swung({ out: p.out - H.out, depth: p.depth - H.depth }, by); return { out: H.out + q.out, depth: H.depth + q.depth }; };
+        let b = 0;
+        for (; b < 1.2; b += 0.01) { const k = about(K, b), a = about(A, b); if (k.out >= surface(k) + 0.14 && a.out >= surface(a) + 0.24) break; }
+        legs = Math.max(legs, b);
+      }
+    }
+    // (eased, so a catch swings him out onto the curve and a climb gathers him back in)
+    const ease = 1 - Math.exp(-11 * dt);
+    this.vertHangLean += (lean * weight - this.vertHangLean) * ease;
+    this.vertHangLegs += (legs * weight - this.vertHangLegs) * ease;
+    if (!parent || (this.vertHangLean < 1e-4 && this.vertHangLegs < 1e-4)) return;
+    // About the line through his hands: they stay exactly where they are on the coping.
+    const axis = new THREE.Vector3(n.z, 0, -n.x);
+    const turn = new THREE.Quaternion().setFromAxisAngle(axis, -this.vertHangLean);
+    const about = new THREE.Matrix4().makeTranslation(centre.x, centre.y, centre.z)
+      .multiply(new THREE.Matrix4().makeRotationFromQuaternion(turn))
+      .multiply(new THREE.Matrix4().makeTranslation(-centre.x, -centre.y, -centre.z));
+    parent.updateWorldMatrix(true, false);
+    this.bodyGroup.applyMatrix4(parent.matrixWorld.clone().invert().multiply(about).multiply(parent.matrixWorld));
+    this.bodyGroup.updateWorldMatrix(true, true);
+    if (this.vertHangLegs > 1e-4 && this.legL && this.legR) {
+      const more = new THREE.Quaternion().setFromAxisAngle(axis, -this.vertHangLegs);
+      for (const thigh of [this.legL, this.legR]) {
+        const base = thigh.parent!.getWorldQuaternion(new THREE.Quaternion()), now = thigh.getWorldQuaternion(new THREE.Quaternion());
+        thigh.quaternion.copy(base.invert().multiply(more.clone().multiply(now)));
+        thigh.updateWorldMatrix(false, true);
+      }
     }
   }
 
@@ -11833,7 +11941,7 @@ export class Player {
     const critical = Math.abs(this.balance) >= 0.7 || this.balanceCritT > 0;
     if (this.state === 'grind') return this.grindRail?.chiefTongueAssist
       ? null : { mode: 'grind', bal: this.balance, crit: critical };
-    if (this.lipStallT > 0)
+    if (this.lipStallT > 0 && !this.dropInPerch)
       // stall: whichever bar reads true on screen ('grind' = the horizontal
       // bar, 'manual' = the vertical one), needle signed to the screen too
       return {
@@ -11952,6 +12060,7 @@ export class Player {
   // tips between the pipe below and the deck behind. Ride-side entry ONLY —
   // climb square holding Triangle through the crest; airs never catch it.
   private enterLipStall(hp: Halfpipe): void {
+    this.dropInPerch = false;
     const pr = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
     this.lipSide = Math.sign(pr ? pr.u : hp.crossCoord(this.pos.x, this.pos.z) - hp.cross) || 1;
     this.lipPipe = hp;
@@ -12058,6 +12167,70 @@ export class Player {
     if (before < lip || now >= lip) return false; // not a deck -> pipe crossing this step
     const along = hp.alongCoord(this.pos.x, this.pos.z);
     if (along < Math.min(hp.l0, hp.l1) || along > Math.max(hp.l0, hp.l1)) return false;
+    const approach = Math.max(Math.abs(this.speed), this.lastPlanar);
+    if (this.freeSkate) this.beginDropInPerch(hp, side, approach);
+    else this.seatPipeDropIn(hp, side, approach, false);
+    return true;
+  }
+
+  /**
+   * ALREADY ON THE BOARD at a pipe's lip: the roll stops with the tail on the
+   * coping and the rest of the deck out over the transition, for a beat. It is
+   * the tail stall's own stance (whichever end of the board trails is the one
+   * set down), held without its needle; `endDropInPerch` drops in from it.
+   */
+  private beginDropInPerch(hp: Halfpipe, side: 1 | -1, approach: number): void {
+    this.dropInPerch = true;
+    this.dropInPerchSpeed = approach;
+    this.lipSide = side;
+    this.lipPipe = hp;
+    this.lipStallT = SIDE_ON_DROP_IN_PERCH_SECONDS;
+    this.lipTickT = 0;
+    const lipCross = hp.cross + side * hp.lipXOf(side);
+    if (hp.axis === 'z') this.pos.x = lipCross;
+    else this.pos.z = lipCross;
+    this.pos.y = hp.lipYOf(side);
+    this.prevPos.copy(this.pos);
+    // facing the way he is going: into the pipe
+    this.axisF.set(hp.axis === 'z' ? -side : 0, 0, hp.axis === 'z' ? 0 : -side);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.state = 'ride';
+    this.grounded = true;
+    this.surfaceName = 'coping';
+    this.speed = 0;
+    this.vVel = 0;
+    this.parkVelocity.set(0, 0, 0);
+    this.rideNormal.set(0, 1, 0);
+    this.balance = 0;
+    this.balanceVel = 0;
+    this.balanceCritT = 0;
+    this.sideOnBalanceLatch = 0;
+    this.charging = false;
+    this.chargeTimer = this.jumpBufferT = 0;
+    this.endManual();
+    const noseYaw = this.visualYaw + this.deckYawOffset;
+    const noseOut = side * (hp.axis === 'z' ? -Math.sin(noseYaw) : -Math.cos(noseYaw));
+    this.lipStyle = noseOut >= 0 ? 'nose' : 'tail';
+    this.lipCoolT = 0.5;
+    sfx.play('railLand', 0.45);
+  }
+
+  /** The beat is up: tip in off the coping, from rest, onto the wall under it. */
+  private endDropInPerch(): void {
+    const hp = this.lipPipe, side: 1 | -1 = this.lipSide < 0 ? -1 : 1;
+    this.dropInPerch = false;
+    this.lipStallT = 0;
+    this.lipPipe = null;
+    if (hp) this.seatPipeDropIn(hp, side, this.dropInPerchSpeed, true);
+  }
+
+  /**
+   * Seat the rider on the wall just under the lip, board down the transition.
+   * `fromPerch`: he was stood on the coping at rest (see beginDropInPerch), so
+   * what goes into the wall is the drop and only a little of the roll that
+   * brought him to the lip.
+   */
+  private seatPipeDropIn(hp: Halfpipe, side: 1 | -1, approach: number, fromPerch: boolean): void {
     // Seat on the transition a forearm under the coping: low enough that the
     // body has left the deck, high enough to keep the whole wall's drop.
     const u = side * (hp.uLipOf(side) - Math.min(0.4, hp.radiusOf(side) * 0.2));
@@ -12068,7 +12241,6 @@ export class Player {
     this.pos.y = hp.surfaceY(u);
     this.dropInLead.sub(this.pos);
     const normal = hp.normalAt(u, new THREE.Vector3());
-    const approach = Math.max(Math.abs(this.speed), this.lastPlanar);
     const wasOnFoot = !this.freeSkate;
     if (wasOnFoot) {
       // the same hand-over the ordinary mount makes
@@ -12089,7 +12261,7 @@ export class Player {
     this.skateBlockT = 0;
     this.axisF.set(hp.axis === 'z' ? -side : 0, 0, hp.axis === 'z' ? 0 : -side);
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = Math.max(approach * 0.85, 4);
+    this.speed = fromPerch ? THREE.MathUtils.clamp(approach * 0.5, 4, 7) : Math.max(approach * 0.85, 4);
     this.state = 'ride';
     this.grounded = this.freeSkate = true;
     this.groundHit = {
@@ -12107,8 +12279,8 @@ export class Player {
     // attach reads this step as a ride along the curve, not a fall past it.
     this.prevPos.copy(this.pos);
     skateSurfaceDirection(this.parkVelocity, this.axisF, normal).multiplyScalar(this.speed);
-    // ...and how it was moving: level, at the approach speed, into the pipe.
-    this.dropInSlip.copy(this.axisF).multiplyScalar(approach).sub(this.parkVelocity);
+    // ...and how it was moving: level, at the approach speed, into the pipe (or, off the coping, not at all).
+    this.dropInSlip.copy(this.axisF).multiplyScalar(fromPerch ? 0 : approach).sub(this.parkVelocity);
     this.dropInT = 0;
     this.lastTy = this.parkVelocity.y / this.speed;
     this.liftTy = this.lastTy;
@@ -12126,7 +12298,6 @@ export class Player {
     this.pipeLandGraceT = this.grindDropSteerT = 0.35;
     this.landingLaunchLockT = 0.1;
     sfx.play('skateTransition', 0.6);
-    return true;
   }
 
   /** The spine-transfer release found no pipe to cross into: on a side-on
@@ -17500,8 +17671,9 @@ export class Player {
     this.raycaster.far = Math.max(0.05, rayTop - rayBottom);
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     for (const hit of hits) {
-      const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
-      if ((!this.ledgeOnVert && (data.halfpipe || data.vert === true)) || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
+      const data = hit.object.userData as { halfpipe?: unknown; pipeDeck?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
+      const vert = !!data.halfpipe || !!data.pipeDeck || data.vert === true;
+      if ((!this.ledgeOnVert && vert) || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
       LEDGE_FACE_NORMAL.copy(hit.face.normal)
         .applyNormalMatrix(
           LEDGE_NORMAL_MATRIX.getNormalMatrix(hit.object.matrixWorld),
@@ -17513,6 +17685,7 @@ export class Player {
         y: hit.point.y,
         moverId: hit.object.userData.moverId as number | undefined,
         receiverDrop: data.ledgeReceiverDrop,
+        vert,
       };
     }
     return null;
@@ -17830,6 +18003,20 @@ export class Player {
   // hand height with open air at your own column IS a ledge, whatever
   // geometry made it.
   private tryLedgeGrabMesh(level: Level): boolean {
+    // A vert's lip is a ledge like any other to a body that JUMPED or FELL to it on foot: it is
+    // caught and hung from exactly as a platform's is, anywhere. (Never from the board: a rider
+    // over a coping is in the pipe's own air. And running up the transition to it on foot is the
+    // vert run-up, which reaches the same hang its own way.)
+    this.ledgeOnVert = !this.freeSkate && !this.airFromSkate;
+    this.ledgeCaughtVert = false;
+    const caught = this.catchLedgeMesh(level);
+    this.ledgeOnVert = caught && this.ledgeCaughtVert;
+    return caught;
+  }
+
+  private ledgeCaughtVert = false;
+
+  private catchLedgeMesh(level: Level): boolean {
     if (level.kiteTow || level.ledgeGrabs === false) return false;
     if (this.parkControls) return false; // always-mounted parks never enter an on-foot ledge hang
     if (
@@ -17923,6 +18110,7 @@ export class Player {
       this.ledgeLanding,
     );
     if (resolvedLip === null) return false;
+    this.ledgeCaughtVert = resolvedLip.vert === true;
     this.ledgeNormal.set(basis.nx, 0, basis.nz);
     this.ledgeLip = resolvedLip.y;
     this.ledgeMoverId = resolvedLip.moverId;
@@ -18011,7 +18199,6 @@ export class Player {
     const A = VERT_RUN_UP;
     this.vertRunCoolT = Math.max(0, this.vertRunCoolT - dt);
     const hit = this.groundHit;
-    // (a side-on pipe has put him on his board long before this, and the other analytic pipes have no deck to climb onto)
     if (this.vertRunCoolT > 0 || !this.grounded || this.freeSkate || !hit || hit.vert !== true ||
         this.isBailing || this.crawling || this.sliding || this.slideTimer > 0 || this.charging || this.swimming ||
         this.teetering || this.slamActive || this.spinTimer > 0 || this.parkControls || !!level.kiteTow ||
@@ -18051,7 +18238,7 @@ export class Player {
    * looking straight down at each step along the way up it. Null when there
    * is no lip with a deck behind it to go for.
    */
-  private scanVertWall(level: Level, dx: number, dz: number): { wall: VertWall; ox: number; oz: number; dx: number; dz: number } | null {
+  private scanVertWall(level: Level, dx: number, dz: number): { wall: VertWall; ox: number; oz: number; dx: number; dz: number; ledge: boolean } | null {
     const ox = this.pos.x, oz = this.pos.z, top = this.pos.y + 11, bottom = this.pos.y - 9, STEP = 0.08;
     const look = (s: number): { y: number; ny: number } | null => {
       this.raycaster.set(LEDGE_RAY_ORIGIN.set(ox + dx * s, top, oz + dz * s), LEDGE_DOWN);
@@ -18064,14 +18251,41 @@ export class Player {
       }
       return null;
     };
+    // A face that stands up straight cannot be seen from above. How high it goes is found by
+    // looking AT it, a hand's breadth higher each time, until a look goes over the top of it.
+    const faceTop = (s: number, from: number): number => {
+      let y = from;
+      for (let h = from + 0.2; h < from + 12; h += 0.2) {
+        this.raycaster.set(LEDGE_RAY_ORIGIN.set(ox + dx * (s - 1.1), h, oz + dz * (s - 1.1)), VERT_RUN_AT.set(dx, 0, dz));
+        this.raycaster.near = 0;
+        this.raycaster.far = 1.6;
+        if (!this.raycaster.intersectObjects(level.groundMeshes, false).some(hit => hit.face !== null && hit.face !== undefined)) break;
+        y = h;
+      }
+      return y;
+    };
     const here = look(0);
     if (!here) return null;
     const up: WallPoint[] = [{ s: 0, y: here.y }];
     let prev = { s: 0, y: here.y, ny: here.ny }, lip: WallPoint | null = null;
+    // Is there a ledge at the top: somewhere to stand, with room on it for him? A wall with none
+    // (two verts back to back, a face that goes on up, a top with a box on it) is still a wall he
+    // can run at: it is only ever come up short on.
+    let ledge = true;
     // (closer looks where it is steep, so they stay about as far apart along the wall itself)
     for (let s = STEP; s < 14; s += THREE.MathUtils.clamp(STEP * prev.ny * 1.2, 0.012, STEP)) {
       const hit = look(s);
-      if (!hit || hit.y < prev.y - 0.06) return null; // a hole, or the ground falls away: not a wall going up
+      if (!hit || hit.y < prev.y - 0.06) {
+        // A hole, or the ground falls away. Off the top of a face that has stood up, that is the
+        // far side of a wall with nothing on top of it.
+        if (prev.ny > 0.5 || up.length < 4) return null; // off a slope: not a wall going up
+        up.pop();
+        const y = faceTop(prev.s, prev.y);
+        if (y > prev.y + 0.05) up.push({ s: prev.s, y: prev.y });
+        lip = { s: prev.s + (y > prev.y + 0.05 ? 0 : 1e-3), y };
+        ledge = false;
+        break;
+      }
       if (hit.ny > 0.9 && (prev.ny < 0.62 || hit.y - prev.y > 0.25)) {
         // The coping is between the last look at the wall and this one at the deck.
         let lo = prev.s, loY = prev.y, hi = s, hiY = hit.y;
@@ -18090,14 +18304,18 @@ export class Player {
     if (!lip) return null;
     // Standable deck behind the lip, with room on it for him.
     let deck = 0;
-    for (const depth of [0.15, 0.45, 0.9, 1.4, 2.0]) {
-      const hit = look(lip.s + depth);
-      if (!hit || hit.ny < 0.9 || Math.abs(hit.y - lip.y) > 0.15) break;
-      deck = depth;
+    if (ledge) {
+      for (const depth of [0.15, 0.45, 0.9, 1.4, 2.0]) {
+        const hit = look(lip.s + depth);
+        if (!hit || hit.ny < 0.9 || Math.abs(hit.y - lip.y) > 0.15) break;
+        deck = depth;
+      }
+      if (deck < VERT_RUN_UP.landingDepth) { ledge = false; deck = 0; }
+      else {
+        LEDGE_LANDING.set(ox + dx * (lip.s + 0.98), lip.y, oz + dz * (lip.s + 0.98));
+        if (this.ledgeBodyBlocked(LEDGE_LANDING, lip.y, level)) { ledge = false; deck = 0; }
+      }
     }
-    if (deck < VERT_RUN_UP.landingDepth) return null;
-    LEDGE_LANDING.set(ox + dx * (lip.s + 0.98), lip.y, oz + dz * (lip.s + 0.98));
-    if (this.ledgeBodyBlocked(LEDGE_LANDING, lip.y, level)) return null;
     // The flat he would tumble back onto: as far as it stays flat and his.
     const down: WallPoint[] = [];
     let last = here.y, level0 = 0;
@@ -18111,7 +18329,8 @@ export class Player {
     }
     if (down.length < 2) return null;
     const wall = new VertWall([...down.reverse(), ...up, lip], deck);
-    return wall.rise > 0.25 ? { wall, ox, oz, dx, dz } : null;
+    // (a top with no ledge that is no higher than his hips is nothing to leap for: it is left alone)
+    return wall.rise > (ledge ? 0.25 : VERT_RUN_UP.vaultRise) ? { wall, ox, oz, dx, dz, ledge } : null;
   }
 
   private beginVertRun(level: Level, scan: NonNullable<Player['vertRunScan']>, s: number): boolean {
@@ -18122,7 +18341,7 @@ export class Player {
     if (hips) {
       hips.getWorldPosition(VERT_RUN_AT);
       // (as it is DRAWN: on the steep of a wall the run has him well up over the controller point)
-      hipS = THREE.MathUtils.clamp((VERT_RUN_AT.x - scan.ox) * scan.dx + (VERT_RUN_AT.z - scan.oz) * scan.dz, s - 0.6, s + 0.3);
+      hipS = THREE.MathUtils.clamp((VERT_RUN_AT.x - scan.ox) * scan.dx + (VERT_RUN_AT.z - scan.oz) * scan.dz, s - 1.1, s + 0.3);
       hipY = THREE.MathUtils.clamp(VERT_RUN_AT.y, this.pos.y + 0.5, this.pos.y + 1.8);
     }
     const speed = this.walkVelocity.x * scan.dx + this.walkVelocity.z * scan.dz;
@@ -18130,7 +18349,7 @@ export class Player {
     this.ledgeNormal.set(-scan.dx, 0, -scan.dz);
     const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
     const plan = new VertRunPlan(W, { len: W.lenAtS(Math.min(s, W.lipS - 0.02)), hipS, hipY, velS: speed, velY: climbing,
-      hangSkin: basis.skin, hangDepth: LEDGE_HANG_DEPTH });
+      hangSkin: basis.skin, hangDepth: LEDGE_HANG_DEPTH, ledge: scan.ledge });
     if (plan.outcome === 'grab') {
       // A leap for the lip needs a lip the hang can hold: checked now, while he can still simply not go.
       this.ledgeOnVert = true;
@@ -18175,7 +18394,7 @@ export class Player {
       else if (frame.beat === 'reach') sfx.play('ledgeGrab', 0.35, 0.7);
       else if (frame.beat === 'slide') sfx.play('woosh3', 0.3, 0.6);
       else if (frame.beat === 'tumble') { sfx.play('footstep2', 0.7, 0.75); this.emitDust(3); }
-      else if (frame.beat === 'rest') { sfx.play('footstep2', 0.8, 0.6); this.emitDust(5); }
+      else if (frame.beat === 'rise') { sfx.play('footstep2', 0.8, 0.7); this.emitDust(4); }
       run.beat = frame.beat;
     }
     // Skidding out along the flat on his back kicks dust up the whole way.
@@ -24175,6 +24394,7 @@ export class Player {
         ollie: this.boardOllieAir, flip: this.flipT > 0 ? this.flipKind : null,
         flipProgress: 1 - this.flipT / this.flipDuration, specialFlip: !!this.specialFlip,
         lip: this.lipStallT > 0 ? this.lipStyle : null,
+        lipPerch: this.lipStallT > 0 && this.dropInPerch,
         coping,
         // A wallplant slaps the deck flat on the face and perches the rider on it, where a wallride lays it along the ride.
         ...(wallPerch

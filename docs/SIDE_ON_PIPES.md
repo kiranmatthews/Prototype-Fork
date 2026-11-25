@@ -6,7 +6,12 @@ coping drops you in on the board; **Jump in the hang with the stick held out ove
 again, back on foot. The test course is **Side Pipe Lab** (`side-pipe-lab`,
 `src/levels/side-pipe-lab.ts`).
 
-Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exactly as before.
+A stretch is side-on because its **zone** says so. A vert is seen across its section because of where it
+stands and what shape it is, not because of how it was authored: any straight `vertramp` standing in a
+side-on zone with its section along the line (yaw 0 or 180, `arc` 90, no `outerBank`) rides the analytic
+profile and gets everything below, a quarter as much as a half, with or without a straight face above its
+curve (`lipRise`) or a deck behind its lip. `sideOn: true` on a half pipe is only needed for the per-wall
+shape (`wallRise`, `wallDeck`). Outside a side-on zone nothing changes.
 
 ## Data
 
@@ -27,6 +32,11 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
   `wallRise` and `wallDeck` are only accepted with it. Sides are `[-cross, +cross]`: west / east at yaw 0.
   Coping rails are off unless `rails: true` (the coping runs into the picture; a rail there is a curb
   across the edge a walker drops in over).
+- Any other straight vert in the zone takes the same backing by itself. A **quarter** is the half with one
+  side left open: its flat (`w`) runs from `p` to the foot of its one wall, which yaw 0 stands to the east
+  and yaw 180 to the west; `deck` is the deck behind that wall's coping. `lipRise` is a straight vertical
+  face above the curve: the profile is one line from the flat, round the curve and up the face to the lip,
+  and a board rides all of it (straight up or straight down the face).
 - `sideOn` on an east/west **zone** declares the stretch one line. On the board the heading stays on the
   travel axis and the stick held against travel is the pull-back brake (which rolls to a stop and steps
   off). Without it a reversal is a carve, and on a zero-depth plane a carve has nowhere to go: the board
@@ -51,7 +61,9 @@ Everything here is opt-in. A `vertramp` or `zone` without `sideOn` behaves exact
 | Moment | Rule |
 |---|---|
 | Crossing a decked coping from the deck, walking, running or rolling | **Automatic drop-in.** The board is put on the wall up to 0.4 m of arc under the lip, heading in, at `max(0.85 × approach speed, 4 m/s)`. It is *drawn* as one curve: for 0.26 s the picture leaves the deck the way the body was travelling, bends over the coping through the mount animation's hop and joins the rider on the transition, continuous in position and velocity at both ends, while the rig lays over onto the wall. The simulation is not delayed by any of it. |
-| On the pipe's surface on foot and moving (jumped in, got up from a spill) | The board mounts as soon as the feet move faster than 1 m/s. |
+| Crossing it **already on the board** | The same drop-in, as a skater makes one: the roll stops with the **tail on the coping** and the deck out over the transition for a beat (0.2 s, the tail stall's own stance, with no needle and no points), then he tips in from rest onto the wall under the lip at half the speed he arrived with (4 to 7 m/s). Every lip he rolls over is one, a staircase of verts included. |
+| On the pipe's surface on foot (jumped in, got up from a spill) | **On his feet**, like anywhere else: a pipe's surface does not put a board under a walker. Running at its wall is the vert run-up (`docs/VERT_RUN_UP.md`): climbed out of, caught, or come up short on, by the lip's height; a ridge shared with another pipe has no ledge and is always come up short on. X held with a direction is the ordinary push-off. |
+| On foot in the air at a lip (jumped to it, fell past it) | An ordinary **ledge catch**, hung from lying along the curve under it (`docs/VERT_RUN_UP.md`). |
 | Riding | The heading is locked to the cross axis. The stick never turns or brakes the board; any held direction still **carves** the walls for speed, and X held on a wall **pumps**. Circle is still the brake. The swing reverses wherever it dies, low on the transition included. |
 | Reaching a lip | The ordinary coping launch: a vertical hang. |
 | Hang: **Jump, with the stick held out** over that lip | **The pop-out**, on the spine transfer's own input (the first Jump press-and-release of the hang). Another pipe's mouth beyond the ridge takes the ordinary mirrored **spine transfer**. Otherwise the air leaves the wall as a plain board air drifting out at `vertDrift` (4.5 m/s), if there is something to land on within 0.75 m under the lip's height 1.2 m past it (the pipe's deck, a floor, a ghost slab a `!` has made solid). A ledge higher than the lip is taken once the air has cleared it, while the stick stays held. A bare wall with a drop behind it is never an exit. |
@@ -119,10 +131,16 @@ expanded course was laid out with.
 
 Walk west from the start instead of east. Four quarters of the same 2.5 m curve stand on each other's
 decks, each with more straight wall above the curve than the last, and nothing else changes between them.
-They are met on foot, and what a runner does at the top of each is decided by the lip's height above the
-last place his feet hold (`docs/VERT_RUN_UP.md`): 1.25 m, he bounds over the lip; 2.6 m, he runs two steps
-up the wall and mantles out; 3.75 m, he leaps, catches the lip and hangs; 4.9 m, he leaps, misses, slides
-down the face and is thrown back down the transition. Nothing in the yard is on the course.
+Met on foot, what a runner does at the top of each is decided by the lip's height above the last place his
+feet hold (`docs/VERT_RUN_UP.md`): 1.25 m, he bounds over the lip; 2.6 m, he runs two steps up the wall and
+mantles out; 3.75 m, he leaps, catches the lip and hangs; 4.9 m, he leaps, comes up short, slides down the
+face and is rolled back onto his feet. Nothing in the yard is on the course.
+
+They are not a kind of their own. They are plain `vertramp` quarters with `lipRise` and `deck`, standing
+in the course's side-on zone, so they are pipes: ridden at on the board from the east, a wall throws the
+rider into the air over its coping, and the stick over the lip with Jump carries that air out onto its
+deck; rolled off from above, each lip is a drop-in with the tail set on the coping first, all the way down
+the four of them.
 
 ## Authoring rules the test course paid for
 

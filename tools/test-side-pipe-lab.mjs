@@ -115,8 +115,22 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
 
   const level = new Level(scene, entry);
   scene.updateMatrixWorld(true);
-  assert.equal(level.halfpipes.length, 12);
-  assert.ok(level.halfpipes.every(hp => hp.sideOn), 'all twelve ride the analytic side-on backing');
+  // Every vert in the side-on stretch rides the one analytic profile: the twelve pipes of the course, and the
+  // wall yard's four quarters with their straight faces and decks. None of them is a special kind of part.
+  assert.equal(level.halfpipes.length, 16);
+  assert.ok(level.halfpipes.every(hp => hp.sideOn), 'all sixteen ride the analytic side-on backing');
+  for (const wall of [lab.YARD_VAULT, lab.YARD_CLIMB, lab.YARD_GRAB, lab.YARD_MISS]) {
+    const hp = level.halfpipes.find(candidate => Math.abs(candidate.cross - wall.baseX) < 0.01);
+    assert.ok(hp && hp.isOpen(1) && !hp.isOpen(-1), `${wall.name}: one wall, to the west, and the flat open to the east`);
+    assert.ok(Math.abs(hp.lipYOf(-1) - wall.lipY) < 1e-9 && Math.abs((hp.cross - hp.lipXOf(-1)) - wall.lipX) < 1e-9, `${wall.name}: its coping is where the level puts it`);
+    assert.ok(Math.abs(hp.lipRiseOf(-1) - (wall.lipY - wall.floorY - 2.5)) < 1e-9 && hp.deckOf(-1) === wall.deck, `${wall.name}: with its straight face and its deck`);
+    // the profile is one line from the flat to the coping: the curve, then the face
+    const top = hp.uLipOf(-1), arc = 2.5 * Math.PI / 2;
+    assert.ok(Math.abs(hp.surfaceY(-arc) - (wall.floorY + 2.5)) < 1e-9 && Math.abs(hp.surfaceY(-top) - wall.lipY) < 1e-9 && Math.abs(hp.theta(-top) - Math.PI / 2) < 1e-9, `${wall.name}: the face stands straight up from the top of the curve to the lip`);
+    const mid = hp.project(wall.lipX + 0.2, wall.lipY - 0.3);
+    assert.ok(hp.lipRiseOf(-1) < 0.31 || (mid && Math.abs(mid.cross - wall.lipX) < 1e-9 && Math.abs(mid.y - (wall.lipY - 0.3)) < 1e-9 && Math.abs(mid.pen + 0.2) < 1e-9), `${wall.name}: a body beside the face is beside it, level with itself`);
+    assert.equal(hp.project(wall.lipX + 0.2, wall.lipY + 0.2), null, `${wall.name}: and over the lip is air`);
+  }
   const second = level.halfpipes.find(hp => Math.abs(hp.cross - L1.cross) < 0.01);
   const pump = level.halfpipes.find(hp => Math.abs(hp.cross - P1.cross) < 0.01);
   assert.equal(pump.lipYOf(-1), P1.westLipY);
@@ -451,16 +465,26 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   }
 
   // ---- 9 · the pipe is ridden on its cross axis, whatever the stick says -------
-  // Jump into P0 instead of walking in, with the stick held up-and-right the
-  // whole time. Landing on the pipe mounts the board from a diagonal stick;
-  // the heading must still be the one line the camera sees.
-  const diagonal = play({ depth: 1, jumpInAt: P0.westLip, seconds: 20,
+  // Walked in with the stick held up-and-right the whole time: the drop-in
+  // mounts the board from a diagonal stick, and the heading must still be the
+  // one line the camera sees.
+  const diagonal = play({ depth: 1, seconds: 20,
     until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 3 });
-  assert.ok(p.grounded && p.pos.x > P0.eastLip + 3, `P0 jumped into with a diagonal stick: still exits east (${diagonal.trouble.join('; ')})`);
-  const jumpedIn = diagonal.mounts.find(m => m.pipe === P0.name);
-  assert.ok(jumpedIn && jumpedIn.y < P0.westLipY - 1, 'P0 jumped into: the board mounts on landing inside the pipe, not at the lip');
+  assert.ok(p.grounded && p.pos.x > P0.eastLip + 3, `P0 with a diagonal stick: still exits east (${diagonal.trouble.join('; ')})`);
+  assert.ok(diagonal.mounts.some(m => m.pipe === P0.name), 'P0 with a diagonal stick: the drop-in still mounts the board at the lip');
   assert.equal(diagonal.maxHeadingZ, 0, 'a diagonal stick never turns the board off the cross axis');
   assert.ok(diagonal.maxZ < 0.05 && diagonal.bails === 0, `...nor carries the ride out of the play plane (max |z| ${diagonal.maxZ.toFixed(3)})`);
+
+  // ---- 9b · down in a pipe on foot he is on his feet: its walls are the vert run-up ----
+  // Jumped into instead of walked into, nothing puts a board under him: the
+  // drop-in belongs to the lip. Running at P0's east wall (a 3.5 m curve: its
+  // lip is 1.75 m over the last place a foot holds) climbs him out of it, the
+  // same way the wall yard's first wall does. No vert is a special kind.
+  const jumped = play({ jumpInAt: P0.westLip, seconds: 20, pop: false,
+    until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 3 });
+  assert.ok(!jumped.mounts.some(m => m.pipe === P0.name), 'P0 jumped into: landing in the pipe does not mount the board');
+  assert.ok(p.grounded && !p.freeSkate && p.pos.x > P0.eastLip + 3 && Math.abs(p.pos.y - P0.eastLipY) < 0.1,
+    `P0 jumped into: he runs up its east wall and climbs out onto the deck on foot (${jumped.trouble.join('; ')})`);
 
   // ---- 10 · a hang stays on its line when it heads a solid -----------------------
   // The awkward case, in a pipe of its own: a `!` floated over a BARE lip with a
