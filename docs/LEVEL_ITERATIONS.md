@@ -13663,9 +13663,20 @@ from 0.20 to 0.12 m a frame and leaves the lip at 0.22, in one movement; the bac
   the 8 and 17 m/s edges).
 - `tools/test-side-pipe-lab.mjs`: a rider who holds his direction out of a pipe keeps his board, and one
   who lets go steps off; the route is unchanged.
-- The full suite, as asked: see the handoff note for this entry's run.
+- The full suite, as asked: all 47 checks of `check:all`, each run to its end (the chain itself stops at
+  its first failure, which is the thirteenth). 42 pass, among them `check:side-pipe` with the tests above
+  and all 46 parts of `check:animation-d`. Five fail, and each fails the same way on a clean checkout of
+  the commit this work started from, in files it does not touch: `check:unity-ports` (the coastal kite
+  course has 8 enemies where its beats ask for 10; the eight tests after it in that chain pass),
+  `check:landing-x` (looks for `p2.commitRenderStep(level)` in `src/main.ts`), `check:camera-speed` (its
+  last test, the camera's hold through the fatal falls of an old recording), `check:editor-roundtrip` (a
+  Test Course enemy and the Beachside source crate count) and `check:look` (the factory-defaults fixture
+  against the tuning table). None was changed to pass.
 - Real browser, one fixed step at a time: each of the three speeds and the back-out filmed and read frame
-  by frame, with no console errors.
+  by frame on the dev build; then the production build played the same way with real key events (a jump
+  into the tall wall's face, a hang let go of over a vert and over a square edge, the wait and Jump, the
+  back-out, the straight drop-in, the roll off at 20 m/s, a pop-out landed with the stick held), lite and
+  full render, with no console errors and no failed requests.
 
 **Known and left.**
 
