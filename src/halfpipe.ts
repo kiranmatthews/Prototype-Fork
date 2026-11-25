@@ -283,8 +283,25 @@ export class Halfpipe {
     skin = 0.08,
   ): { u: number; cross: number; y: number; pen: number } | null {
     if (!this.isRideSide(previousCross, previousY, skin)) return null;
-    const current = this.project(currentCross, currentY);
-    if (current === null || current.pen <= 0) return null;
+    let current = this.project(currentCross, currentY);
+    if (current === null) {
+      // THROUGH THE WALL IN ONE STEP. A fast body moves further in a step than
+      // the 5 cm behind the coping line that still counts as the wall, and a
+      // straight face is metres of exactly that. A body that was in front of
+      // the wall, under its lip, and is now behind it went through the face:
+      // it is met where it crossed. (One that came over the top of the lip and
+      // is coming down behind the wall did not, and is left alone.)
+      const side = currentCross - this.cross < 0 ? -1 : 1, r = this.radiusOf(side), plane = this.flatHalf + r;
+      const before = (previousCross - this.cross) * side, now = (currentCross - this.cross) * side;
+      if (r <= 0 || previousY > this.lipYOf(side) || before > plane + 0.05 || now <= plane) return null;
+      const t = before >= plane ? 0 : (plane - before) / (now - before);
+      const y = previousY + (currentY - previousY) * t;
+      if (y > this.lipYOf(side)) return null; // over the lip after all
+      current = this.project(this.cross + side * plane, y);
+      if (current === null) return null;
+      return { ...current, pen: Math.max(current.pen, now - plane) };
+    }
+    if (current.pen <= 0) return null;
     // "Deeply buried" is measured against the wall actually crossed; the flat
     // keeps the pipe's nominal radius, exactly as a symmetric pipe always did.
     const reach = Math.abs(current.u) <= this.flatHalf ? this.radius : this.radiusOf(current.u);

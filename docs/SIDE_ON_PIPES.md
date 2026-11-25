@@ -36,7 +36,9 @@ shape (`wallRise`, `wallDeck`). Outside a side-on zone nothing changes.
   side left open: its flat (`w`) runs from `p` to the foot of its one wall, which yaw 0 stands to the east
   and yaw 180 to the west; `deck` is the deck behind that wall's coping. `lipRise` is a straight vertical
   face above the curve: the profile is one line from the flat, round the curve and up the face to the lip,
-  and a board rides all of it (straight up or straight down the face).
+  and a board rides all of it (straight up or straight down the face). The face is solid to a body in the
+  air, however fast: one that was in front of the wall under its lip and is behind it a step later is met
+  where it crossed.
 - `sideOn` on an east/west **zone** declares the stretch one line. On the board the heading stays on the
   travel axis and the stick held against travel is the pull-back brake (which rolls to a stop and steps
   off). Without it a reversal is a carve, and on a zero-depth plane a carve has nowhere to go: the board

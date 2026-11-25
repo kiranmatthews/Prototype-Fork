@@ -389,11 +389,25 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   {
     const [, radius, lipRise] = FIXTURES[lane('grab')], lipX = WALL_X + radius, lipY = radius + lipRise;
     place(lane('grab'), -5);
-    p.pos.set(lipX - 1.3, lipY - 0.8, lane('grab') * LANE); p.prevPos.copy(p.pos);
-    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.freeSkate = true; p.airFromSkate = true; p.speed = 2.5;
-    let hung = false;
-    for (let i = 0; i < 30; i++) { step(hold()); hung ||= p.state === 'hang'; }
+    // (at a run's speed, with the lip at arm's length over him: where a walker's hands take it)
+    p.pos.set(lipX - 1.3, lipY - 1.2, lane('grab') * LANE); p.prevPos.copy(p.pos);
+    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.freeSkate = true; p.airFromSkate = true; p.airGrav = 'board'; p.speed = 9;
+    let hung = false, through = false;
+    for (let i = 0; i < 40; i++) { const input = makeInput(); input.moveY = 1; step(input); hung ||= p.state === 'hang'; through ||= p.pos.x > lipX + 0.2 && p.pos.y < lipY - 0.2; }
     assert.ok(!hung, 'a rider falling past a coping does not ledge-grab it');
+    // ...and what he meets instead is the wall: a straight face is solid to a body that flies into it,
+    // however much further than its thickness that body moves in a step.
+    assert.ok(!through && p.pos.y > -0.1, `a body that flies into the straight face of a wall is met by it (x ${f2(p.pos.x - lipX)} past the face, y ${f2(p.pos.y)})`);
+  }
+  // The same face, flown into on foot below where his hands could take the lip: he does not pass through it either.
+  {
+    const [, radius, lipRise] = FIXTURES[lane('far too high')], lipX = WALL_X + radius, lipY = radius + lipRise;
+    place(lane('far too high'), -5);
+    p.pos.set(lipX - 1.3, radius + 1.2, lane('far too high') * LANE); p.prevPos.copy(p.pos);
+    p.state = 'air'; p.grounded = false; p.vVel = 0; p.groundHit = null; p.walkVelocity.set(9, 0, 0);
+    let through = false;
+    for (let i = 0; i < 60; i++) { step(hold()); through ||= p.pos.x > lipX + 0.2 && p.pos.y < lipY - 0.2; }
+    assert.ok(!through && p.pos.y > -0.1 && p.pos.x < lipX + 0.2, `a walker who jumps into a tall face is stopped by it (x ${f2(p.pos.x - lipX)} past the face, y ${f2(p.pos.y)})`);
   }
 
   // ---- rolling off a deck into a vert is a drop-in: tail on the coping, a beat, and in ----

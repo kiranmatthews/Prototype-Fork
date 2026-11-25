@@ -13449,8 +13449,13 @@ rest at 4 to 7 m/s. Skated east from the third wall's deck, the yard is three of
 
 Also fixed on the way: the start of every run-up clamped the drawn pelvis to within 0.6 m behind the
 controller point, which on a plain curve (where the run leans him back further than that) moved him 0.34 m
-in the move's first step; the clamp is 1.1 m and that step is 0.06 m. And the editor's capture handed a
-side-on pipe back twice (once from the pipe list, once from the parts that carry their component).
+in the move's first step; the clamp is 1.1 m and that step is 0.06 m. The editor's capture handed a
+side-on pipe back twice (once from the pipe list, once from the parts that carry their component). And a
+body in the air at 9 m/s moves 15 cm in a step, three times the 5 cm behind a coping line that still counted
+as the wall, so it could fly into a pipe's straight face and come out under the level: a body that was in
+front of a wall, under its lip, and is now behind it is met where it crossed (`Halfpipe.rideSideCrossing`).
+The new tests were mutation-checked (nine mutants, one per behaviour; the first run left one standing, a
+rider's fall that never reached the lip, which is how the hole in the face was found).
 
 Checks run (focused, not the full suite): `npm run check:side-pipe` (pipe contact, the course route, vert
 air, and the run-up test, now fifteen fixture walls plus the fall-and-catch, the hang, the rolling drop-in
