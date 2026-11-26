@@ -13686,3 +13686,69 @@ from 0.20 to 0.12 m a frame and leaves the lip at 0.22, in one movement; the bac
   tail would sit a few centimetres into it. No level has one.
 - With the stick held, an ordinary ollie on a side-on line still spins the board, as every board air does:
   only the roll off a lip and the airs out of a pipe treat the held travel stick as travel.
+
+## 2026-11-26 — Five stale checks in `check:all` brought up to date
+
+`npm run check:all` chains its checks with `&&`, so it stopped at the first of five failures and hid the
+other four. Each was run on its own and traced to the commit that moved it. All five were expectations
+left behind by deliberate, recorded changes. Only tests under `tools/` change: no source, level data,
+tuning or fixture does, and nothing is skipped or loosened.
+
+| Check | Moved by | What the test expects now |
+|---|---|---|
+| `check:unity-ports` | `90f7af18`, Beach Street crate bible | Crabs and turtles debut alone, then repeat in pairs: 8 enemies of two kinds (was a pair on every patrol beat, 10 of four). 94 cargo boxes in 29 named formations, ten in each of the seven long checkpoint sections and six in each of the four short canal sections (was 14 exit rewards). |
+| `check:landing-x` | `bd996d2e`, split screen removed | No `p2`. The hero's commit in the fixed loop takes the level, and a race's rivals are published in the same window on the race's level. |
+| `check:camera-speed` | `14392bd0`, a grounded ledge catch became a bump | A lost hold is counted on the frames below the edge the rider left. |
+| `check:editor-roundtrip` | `e1049dd8`, Uga Ambush crate bible; `08c5661f`, Banana Bay crate bible | Source Test Course: twenty crabs and spikers, two of the four corrected enemies still in it, no sentry. Beachside: 165 crates (was 111). |
+| `check:look` | `91fe4413`, the crawl paced by its stride | `crawlSpeed` 1.1 (was 3.5), the only difference from the captured defaults. |
+
+**The fall replay.** `src/cameraRig.ts` and the landing forecast are byte for byte what they were when
+`test-camera-fall-replay` last passed. A bisect over 157 commits ends at `14392bd0`: at step 351 of the
+Slipstream take the rider walks into a step he used to catch from the ground, bumps it instead, and the
+recorded inputs play a different route from there (five deaths where there were ten). Its first death is
+a standing jump off the aqueduct into the open water 15 m below. The last 40 airborne frames before it
+start on the way up, and the camera holds only once the rider is below the edge he left, so 20 of them
+could never be held. Every frame below the edge is. The test now counts a lost hold on those frames
+only, requires each fatal fall to have some, and counts as a deep fall one whose whole window is below
+the edge (four of the five). For such a fall this is the assertion as it was. Broken on purpose, a
+forecast that follows every fall down and a hold that only starts 20 m below the edge both fail it.
+
+**One run was not the next.** The new route has one spill hard enough for the laid-out beat
+(`BailKnockdown`, strength 0.001). That beat ends when the ragdoll has lain still for 0.28 s, and the
+ragdoll tumbles on `Math.random`, so the get-up handed control back at step 5669, 5670 or 5671 and the
+third death fell anywhere from step 6176 to 6258. With `Math.random` seeded two runs are identical; six
+seeds and eight unseeded runs all pass. The test freezes that stream for the replay, as
+`test-grind-head-stability` already does for the same reason. The cause is in the game and is left
+there: see below.
+
+**The Test Course verifier.** `assertTestEnemyReset` was written on 31 August for the Test Course in
+the pack, the only one there was. When the course became a source-owned built-in on 13 September, the
+bare `id === "test"` lookup moved to it, because built-ins are listed first, and the pack copy went
+unchecked. The Uga Ambush refresh then retired two of the four enemies the verifier names and left no
+sentry for its sentry checks. Both copies are now bound by source. The shipped course is checked against
+its refreshed roster: no stale signature, the two corrected homes that remain, 20 actors, crabs and
+spikers only, every reset home supported and restored. The frozen pack copy keeps the original four
+enemies and the sentry checks (orphan orb, line of sight), which pass on it as written. Putting the
+sentry slot back, recasting a kept enemy as a sentry, or lifting one to its stale height fails the
+source check.
+
+**Checks.** Merged with the verts' second pass, which landed on `main` meanwhile and does not move the
+fall replay's route (the same trajectory hash). On that tree each of the five commands exits 0 on its
+own. `check:editor-roundtrip` reports 193 passes and no failure in 15 minutes, the two source-owned
+Test Course builds among them for the first time since the refresh. `npx tsc --noEmit -p .` and
+`npm run build` pass. Twelve deliberate breakages of the source, made in a scratch worktree, each fail
+the updated test that covers them: paired debuts, a missing cargo box, cargo moved across a checkpoint;
+the hero's commit without the level, rivals unpublished, published late, or without the level; the two
+camera faults and the three roster faults above. No browser pass: nothing the game runs has changed.
+About 100 minutes from prompt to the last passing check, half of them inside full round-trip runs.
+
+**Known and left.**
+
+- Cosmetic randomness reaches the controller clock. `src/player.ts` says visual randomness never feeds
+  the simulation, but after a hard knock the frame the get-up starts on depends on the tumbling body.
+  A replay with such a spill does not repeat exactly, in the game as in these tests. Two replay tests
+  now freeze the stream to stay repeatable.
+- The fall replay has exactly the four deep falls it asks for. The next change to the controller that
+  moves this take's route may leave it short again.
+- `hand-built capture:beachfront` ends on the same advisory "contract differs" warning as the other
+  hand-built levels. It did before the Banana Bay refresh too; only `--strict-hand-built` gates it.
