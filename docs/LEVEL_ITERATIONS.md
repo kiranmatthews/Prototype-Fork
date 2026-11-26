@@ -14073,8 +14073,9 @@ along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the
   it is on, held by a test at two or three speeds and two radii, with `npm run check:side-pipe` and
   `npm run check:pipe` passing and no tuning changed.
 - **Elapsed:** about 30 min from the prompt (08:49 UTC) to the deck riding the curve both ways under a
-  probe, 1 h 05 min to the extended checks passing, and 1 h 55 min to the last build and browser pass.
-  It is on `claude/relaxed-mayer-fu1iv8` and not on `main`: this session may push only to its own
+  probe, 1 h 05 min to the extended checks passing, and 1 h 55 min to the build and browser pass. The
+  entry above went out through `main` in that time; merging it and validating again took it to 2 h 40
+  min. It is on `claude/relaxed-mayer-fu1iv8` and not on `main`: this session may push only to its own
   branch, so it waits there for the owner's word.
 - **Levels:** none edited. Every vert on the analytic profile is drawn differently under a board: all
   sixteen in Side Pipe Lab and its forward copy, and every straight half-pipe elsewhere.
@@ -14128,10 +14129,11 @@ his pelvis 0.43 m from where it had been over the deck, in one frame.
 
 **What it does not change.** The tilt a touchdown is judged by (`landingAlignPose`) and the up a skate
 camera takes are the eased ones, computed as they were. The ride is the same step for step: on the
-whole course, 7,494 steps on the route bot in each animation path, position, speed, state, ride normal,
-heading, judged tilt, combo and lives are identical on every step, and so are 2,516 steps on the fixture
-walls. One column is not: the banked score differs on 45 of those 7,494 steps in the lab's own animation
-path, and on 41 in the game's, and ends the same in both. Pick-ups and boxes are met by his body as it is drawn, as they are everywhere, so with
+whole course on the route bot, against `main` as it now stands (7,588 steps in the lab's own animation
+path, 7,556 in the game's), position, speed, state, ride normal, heading, judged tilt, combo and lives
+are identical on every step, and so are 2,516 steps on the fixture walls. One column is not: the banked
+score differs on 47 of those steps in the lab's own path, and on 53 in the game's, and ends the same in
+both. Pick-ups and boxes are met by his body as it is drawn, as they are everywhere, so with
 the body drawn on the wall a fruit hung off a curve can be banked a frame or two sooner or later.
 
 | Fixture wall, the game's animation runtime | Up into the curve, before | Down it and out, before | Both ways, now |
@@ -14169,18 +14171,28 @@ that time is up, and from there within 1.8° and 0.7°.
   of the run-up file's new assertions fail (the table above is what they say), and §9e fails on "yard
   wall 2: up into the curve the board is drawn on the ground it is on: 39.03° off it at most, 9.33°
   more in a frame than the ground turned".
-- `npm run check:side-pipe`: all five pass, the course in the same 124.9 s with the same drop-ins,
+- `npm run check:side-pipe`: all five pass, the course in `main`'s own 126.5 s with the same drop-ins,
   pop-outs and transfers. `npm run check:pipe`: pass. `npm run check:motion-assets`: pass.
   `npm run check:animation-d` (it runs the file this touched through every skate check): 45 of 46 pass;
   `test-ice-slide-carry.mjs` fails on writing its results to `/private/tmp`, a path this Linux
   container does not have, after its assertions. `npm run build`: pass.
+- Merged with the other chat's work published meanwhile (the entry above: a hang's arms, the wait at a
+  lip walked up to, no hang without room to hang). Two docs conflicted and nothing else; both test files
+  keep both sets of sections, and its sixteenth wall and this entry's two stand in lanes of their own.
+  On the merged tree: `check:side-pipe`, `check:pipe`, `check:motion-assets`, the skate and pipe checks
+  of `check:animation-d` (native actions, the ground lie, the lifecycle, the park half-pipe, half-pipe
+  steering, the grind's drop-in), the build and the browser pass were run again; the new checks were
+  run against `main`'s own source, where all 28 still fail and §9e fails by the same name; and the
+  course was compared with `main`'s step for step (the figures above). The four taken-out runs and the
+  whole of `check:animation-d` are from before the merge.
 - Real browser, the production build, real key events (Space and ArrowLeft to push off on the first
   wall's deck, ArrowLeft at the wall), lite and then full render, no console errors and no failed
-  requests, the build stamp reading `Codex/sol fork`: a hang 0.64 m over yard wall 2's lip, met by the
-  face, no step on the deck behind it, 21.9 m/s at the foot. Up the curve 0.44° off the ground at most,
-  0.38° past its turn, pelvis 0.06 m; down it and out along the deck below 0.92°, 0.51°, 0.07 m; the
-  four frames of the table read 44.6°, 36.8°, 28.9° and 20.8°. Stills of him on the lower curve going
-  up and coming down were looked at: the deck lies along the curve.
+  requests, the build stamp reading `Codex/sol fork`, before the merge and again after it: a hang
+  0.64 m over yard wall 2's lip, met by the face, no step on the deck behind it, 21.9 m/s at the foot.
+  Up the curve 0.44° off the ground at most, 0.38° past its turn, pelvis 0.06 m; down it and out along
+  the deck below 0.94°, 0.51°, 0.07 m; the four frames of the table read 44.6°, 36.8°, 28.9° and
+  20.8°. Stills of him on the lower curve going up and coming down were looked at: the deck lies along
+  the curve.
 
 **Known and left.**
 

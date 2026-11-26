@@ -122,7 +122,7 @@ That is the picture, and only the picture decides it. The tilt a touchdown is ju
 skate camera takes are the eased ones they always were, and the ride is the same step for step.
 Pick-ups and boxes are met by his body as it is drawn, as everywhere, so on a pipe a fruit can be
 banked a frame or two sooner or later than it was: over the whole course the banked score differed on
-45 of 7,494 steps and ended the same.
+47 of 7,588 steps and ended the same.
 
 ## Measured (real `Player`/`Level`, `tools/side-pipe-probe.mjs` and `tools/test-side-pipe-lab.mjs`)
 
