@@ -39,6 +39,18 @@
 //     in, slowed for it but never stopped, whatever he presses; flat out he
 //     leaves the edge in the air and clears the curve. And none of it jolts:
 //     pelvis, deck pitch and wheels are measured frame to frame;
+//   · ON THE BOARD, UP A WALL AND INTO ITS AIR, a hang comes back to the wall
+//     it left. Off a face that stands dead straight under its lip the line he
+//     rises and falls on is the face's own plane, and the edge of the deck
+//     behind the lip is on it: he is met by the FACE the step he is coming
+//     down level with it, at his own height, his fall turned down it. He is
+//     never stood on the deck, never lifted onto it from just under it and
+//     never stopped under it on the way up, whatever the hang's height and
+//     whatever the stick is doing; and the way back is one movement, frame to
+//     frame. Popped out over the lip instead, the first frames of that air
+//     turn the deck a degree or two where they turned it 36: he comes up off
+//     the wall on a curve, as long as the air has for it, and is on his wheels
+//     by the time they are down;
 //   · SIDE PIPE LAB's wall yard is those four walls.
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
@@ -731,6 +743,125 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
     assert.ok(aired, 'ridden at on the board, the quarter throws him into its own air over the coping');
     assert.ok(popped && p.grounded && p.pos.x > lipX + 0.5 && Math.abs(p.pos.y - lipY) < 0.1, `the stick over the lip and Jump carries that air out onto its deck (x ${f2(p.pos.x - lipX)} past the lip, y ${f2(p.pos.y)})`);
   }
+
+  // ---- on the board, a hang comes back to the wall it left ------------------------------------
+  // Up the wall and into its air, with nothing pressed but the stick. Off a curve the line he rises
+  // and falls on runs into the wall under him, and he crosses it coming down. Off a face that stands
+  // dead straight (a hang begins as far as 1.2 m under a lip: with more straight wall than that it
+  // begins on the face) that line is the face's own plane, and the edge of the deck behind the lip
+  // is on it. A ray down it found that edge. He came down on it and was stood on the deck for a step
+  // (the deck drawn 58° round in that step and 0.93 m from where it had been against his hips), was
+  // lifted onto it from just under the lip, or was stopped under it on the way up; and from the deck
+  // he was off his board, and walked off the back of it.
+  /** The drawn deck: where it is, the line it lies along and the way its grip faces, read off what is drawn
+   *  (in the air the deck is squashed and stretched a little: a rotation taken out of that is not one). */
+  const deckDrawn = () => { const at = world(p.boardG).add(p.dropInOffset), drawn = p.boardG.matrixWorld;
+    return { at, nose: new THREE.Vector3(0, 0, 1).transformDirection(drawn), grip: new THREE.Vector3(0, 1, 0).transformDirection(drawn) }; };
+  /** From one frame to the next: how far that deck turned (its nose and its tail are one line: he comes down
+   *  a wall tail first, and it is his stance that changes, not the deck), and how far it moved against his hips. */
+  const stepOf = (a, b) => { const line = a.nose.angleTo(b.nose);
+    return { turn: Math.max(a.grip.angleTo(b.grip), Math.min(line, Math.PI - line)) * 180 / Math.PI, slip: b.at.clone().sub(b.hips).sub(a.at.clone().sub(a.hips)).length() }; };
+  const hangAt = (name, speed, { pop = false, stickFree = false } = {}) => {
+    const [, radius, lipRise] = FIXTURES[lane(name)], lipX = WALL_X + radius, lipY = radius + lipRise, z = lane(name) * LANE;
+    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(-8, 0.15, z), heading: new THREE.Vector3(1, 0, 0) });
+    for (let i = 0; i < 20; i++) step(idle());
+    const log = { lipRise, rows: [], launch: null, apex: -Infinity, met: null, deckSteps: 0, board: true, bailed: false, down: false, popped: -1, landed: null };
+    let placed = false, heldWas = false, hang = 0;
+    for (let k = 0; k < 460; k++) {
+      const input = makeInput();
+      // (pushed off, the stick let go through the mount's own ollie, then held at the wall: up it, and out over its lip)
+      input.moveX = !placed ? (k <= 40 ? 1 : 0) : stickFree && log.launch ? 0 : 1;
+      let jump = k < 40;
+      hang = p.vertAir ? hang + 1 : 0;
+      if (pop && hang >= 3 && hang < 7) jump = true; // the pop-out's input: Jump in the hang, with the stick out over the lip
+      input.jumpHeld = jump; input.jumpPressed = jump && !heldWas; input.jumpReleased = !jump && heldWas; heldWas = jump;
+      if (!placed && k > 40 && p.freeSkate && p.grounded && p.state === 'ride') { p.pos.x = WALL_X - 3; p.prevPos.copy(p.pos); p.speed = speed; placed = true; }
+      const was = { vert: p.vertAir, y: p.pos.y, vV: p.vVel };
+      step(input); p.stepDropInPresentation();
+      if (!placed) continue;
+      const onDeck = p.grounded && !!p.groundHit?.mesh?.userData.pipeDeck, onWall = p.grounded && !!p.groundHit?.halfpipe, n = log.rows.length;
+      if (!was.vert && p.vertAir && !log.launch) log.launch = { x: p.pos.x - lipX, y: p.pos.y - lipY, vV: p.vVel };
+      if (p.vertAir) log.apex = Math.max(log.apex, p.pos.y - lipY);
+      if (log.launch && !log.met && log.popped < 0 && was.vert && p.grounded)
+        log.met = { step: n, wall: onWall, x: p.pos.x - lipX, y: p.pos.y - lipY, moved: p.pos.y - was.y, fall: was.vV, speed: p.speed, heading: p.axisF.x };
+      if (log.launch && log.popped < 0 && was.vert && !p.vertAir && !p.grounded) log.popped = n;
+      if (log.popped >= 0 && !log.landed && p.grounded) log.landed = { step: n, x: p.pos.x - lipX, y: p.pos.y - lipY, deck: onDeck, board: p.freeSkate };
+      if (log.launch && log.popped < 0) { if (onDeck) log.deckSteps++; log.board &&= p.freeSkate; }
+      log.bailed ||= p.isBailing;
+      log.down ||= !!log.met && p.grounded && p.freeSkate && p.pos.x < WALL_X - 0.5 && Math.abs(p.pos.y) < 0.05;
+      // (lying: how far over onto the wall the whole of him is laid, 1 along it and 0 on his wheels)
+      log.rows.push({ y: p.pos.y - lipY, vV: p.vVel, vert: p.vertAir, wall: onWall, hips: world(node('hips')).add(p.dropInOffset), ...deckDrawn(), lying: p.alignPose });
+      if (log.down || (log.landed && n > log.landed.step + 12)) break;
+    }
+    return log;
+  };
+  /** The hang's way back: from its top to the wall, and down as much of that wall as stands straight. */
+  const wayBack = hang => { const top = hang.rows.findIndex(row => row.vert && row.vV <= 0);
+    let end = hang.met.step + 1; while (end < hang.rows.length && hang.rows[end].wall && hang.rows[end].y >= -hang.lipRise) end++;
+    let turn = 0, slip = 0;
+    for (let i = Math.max(1, top); i < end; i++) { const moved = stepOf(hang.rows[i - 1], hang.rows[i]); turn = Math.max(turn, moved.turn); slip = Math.max(slip, moved.slip); }
+    return { turn, slip, steps: end - top }; };
+  const returns = [];
+  for (const [name, speed, tops, stickFree] of [['extended', 14, 'well under the lip'], ['extended', 14.5, 'just under the lip'], ['extended', 15, 'just over the lip'],
+    ['extended', 16, 'over the lip'], ['extended', 16, 'over the lip', true], ['extended', 18, 'over the lip'], ['grab', 18.5, 'over the lip']]) {
+    const hang = hangAt(name, speed, { stickFree }), label = `${name} ridden at on the board at ${speed} m/s${stickFree ? ', the stick let go in the hang' : ''}`;
+    assert.ok(hang.launch && Math.abs(hang.launch.x) < 1e-6 && hang.launch.y > -hang.lipRise && hang.launch.y < -0.9,
+      `${label}: reference: he leaves its straight face in a hang, ${hang.launch ? f2(-hang.launch.y) + ' m under the lip' : 'never'}`);
+    // (the three ways the deck's edge used to get him: from on top; from a hand under it; from a head's height under it)
+    const reached = tops === 'well under the lip' ? hang.apex < -0.5 && hang.launch.vV < 6.5 : tops === 'just under the lip' ? hang.apex < 0 && hang.apex > -0.35
+      : tops === 'just over the lip' ? hang.apex > 0 && hang.apex < 0.12 : hang.apex > 0.5;
+    assert.ok(reached, `${label}: reference: that hang tops out ${tops} (${f2(hang.apex)} m over it, from ${f2(hang.launch.vV)} m/s up)`);
+    assert.equal(hang.deckSteps, 0, `${label}: no step of it is spent on the deck`);
+    assert.ok(hang.met?.wall && Math.abs(hang.met.x) < 1e-6 && hang.met.y <= 1e-9 && hang.met.y > -hang.lipRise,
+      `${label}: the face he left meets him, under its lip (${hang.met ? f2(-hang.met.y) + ' m under' : 'never'})`);
+    assert.ok(hang.met.y > Math.min(0, hang.apex) - 0.25, `${label}: as soon as he is coming down it (${f2(Math.min(0, hang.apex) - hang.met.y)} m on from where he was first level with it)`);
+    assert.ok(hang.met.moved <= 1e-9 && hang.met.moved > -(Math.abs(hang.met.fall) + 1) / 60 - 0.005,
+      `${label}: at his own height: he is not lifted and not dropped (${f2(hang.met.moved)} m in that step, falling at ${f2(hang.met.fall)} m/s)`);
+    assert.ok(hang.met.heading < -0.99 && hang.met.speed > 0.5 && hang.met.speed > Math.abs(hang.met.fall) - 0.05 && hang.met.speed < Math.abs(hang.met.fall) + 1.2,
+      `${label}: his fall is turned down the wall (${f2(hang.met.speed)} m/s down it, from ${f2(hang.met.fall)})`);
+    assert.ok(hang.board && !hang.bailed && hang.down, `${label}: and he rides it down and out along the flat, on his board`);
+    const picture = wayBack(hang);
+    assert.ok(picture.steps > 2 && picture.turn < 4 && picture.slip < 0.15,
+      `${label}: it is one movement: no frame of the way back turns the deck by more than ${f2(picture.turn)}° or moves it more than ${f2(picture.slip)} m against his hips (${picture.steps} frames)`);
+    returns.push(`${speed}${stickFree ? ' let go' : ''}: ${f2(-hang.met.y)} m under, ${f2(picture.turn)}°, ${f2(picture.slip)} m`);
+  }
+  // (reference: off a curve the same hang comes back to the place it left, as it always did)
+  { const hang = hangAt('plain quarter', 14), picture = wayBack(hang);
+    assert.ok(hang.launch.x < -0.05 && hang.met?.wall && Math.abs(hang.met.y - hang.launch.y) < 0.05 && hang.deckSteps === 0 && hang.down,
+      `plain quarter: reference: a hang off a curve crosses the curve where it left it (left ${f2(-hang.launch.y)} m under the lip, met ${f2(-hang.met.y)} m under)`);
+    // (the deck has the last of the curve to lie over onto as it lands: a straight face asks for less)
+    assert.ok(picture.turn < 7 && picture.slip < 0.15, `plain quarter: reference: and is drawn back onto it in one movement too (${f2(picture.turn)}°, ${f2(picture.slip)} m)`); }
+
+  // ---- ...and popped out over the lip, that air begins as slowly as the hang ended ----------------
+  // In the hang the whole of him lies along the wall; the air out over the lip is a level one that lands
+  // on its wheels. He was two fifths of the way upright in the first frame of it (the deck 36° round, his
+  // hips 1.03 m from where they had been against it). He comes up on a curve now: eased in, timed to the
+  // air he has, and on his wheels by the time they are down.
+  const pops = [];
+  for (const [name, speed, air] of [['plain quarter', 14, 'long'], ['extended', 17, 'long'], ['extended', 15.3, 'short']]) {
+    const out = hangAt(name, speed, { pop: true }), label = `${name} popped out of at ${speed} m/s`;
+    assert.ok(out.popped > 1 && out.landed && out.landed.deck && out.landed.board && out.landed.x > 0.5 && Math.abs(out.landed.y) < 0.05 && !out.bailed,
+      `${label}: reference: Jump in the hang with the stick over the lip carries him out onto the deck, on his board`);
+    const flown = out.landed.step - out.popped;
+    assert.ok(air === 'long' ? flown >= 20 : flown >= 8 && flown <= 14, `${label}: reference: a ${air} air (${flown} steps of it)`);
+    assert.ok(out.rows[out.popped - 1].lying > 0.95, `${label}: reference: in the hang he lies along the wall (${f2(out.rows[out.popped - 1].lying)})`);
+    const steps = []; for (let i = out.popped - 1; i < out.rows.length; i++) steps.push(stepOf(out.rows[i - 1], out.rows[i]));
+    // (steps[0] is the last step of the hang; steps[1] the first of the air)
+    const first = steps.slice(1, air === 'long' ? 4 : 2);
+    assert.ok(first.every(moved => moved.turn < 4 && moved.slip < 0.15),
+      `${label}: the first of that air turns the deck no more than ${f2(Math.max(...first.map(moved => moved.turn)))}° in a frame and moves it no more than ${f2(Math.max(...first.map(moved => moved.slip)))} m against his hips`);
+    let jerk = 0, lurch = 0;
+    for (let i = 1; i < steps.length; i++) { jerk = Math.max(jerk, Math.abs(steps[i].turn - steps[i - 1].turn)); lurch = Math.max(lurch, Math.abs(steps[i].slip - steps[i - 1].slip)); }
+    const most = Math.max(...steps.map(moved => moved.turn));
+    assert.ok(jerk < 5 && lurch < 0.1 && most < 11,
+      `${label}: and from there to the deck no frame is unlike the one before it (the turn changes by ${f2(jerk)}° at most, the board against his hips by ${f2(lurch)} m; ${f2(most)}° is the most it turns in one)`);
+    const up = out.rows.findIndex((row, i) => i >= out.popped && row.lying < 0.01) - out.popped + 1;
+    assert.ok(up >= 10 && up <= 18 && (air === 'short' ? up <= 11 : up >= 17), `${label}: he comes up over ${f2(up / 60)} s: as long as it takes, in a ${air} air`);
+    assert.ok(out.rows[out.landed.step].lying < 0.05, `${label}: and is on his wheels by the time they are down (${f2(out.rows[out.landed.step].lying)} of the way over, ${flown} steps after the pop)`);
+    pops.push(`${speed}: ${f2(first[0].turn)}°, ${f2(first[0].slip)} m, up in ${f2(up / 60)} s of ${f2(flown / 60)}`);
+  }
+  console.log(`a hang back onto a straight face: ${returns.join('; ')}`);
+  console.log(`a pop-out's first frame: ${pops.join('; ')}`);
 
   // ---- Side Pipe Lab's wall yard ----------------------------------------------------
   const lab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');

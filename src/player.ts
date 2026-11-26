@@ -433,6 +433,25 @@ const SIDE_ON_DROP_IN = {
   backOut: 2.6,               // m/s he rolls back off the coping at, tail first
 };
 const SIDE_ON_DROP_IN_ALIGN_EASE = 9; // the rig lays over onto the wall across the hop, not within three frames
+// THE AIR OUT OVER A SIDE-ON LIP, as it is SEEN. In the hang the rig lies along
+// the wall; popped out (stepSideOnCarry) it is a level air that lands on its
+// wheels. Left to the alignment's own ease it was a fifth of the way upright in
+// the first step of that air, or two fifths (by what was under him): 18 or 36
+// degrees, and his board half a metre or a metre from where it had been against
+// his hips. It comes up on a curve instead, eased in and eased out, so that air
+// begins as slowly as the hang ended; and it is timed to the air, so the wheels
+// are level when they are due down. Presentation only, like the drop-in's
+// curve: nothing here feeds the flight.
+const SIDE_ON_CARRY_LEVEL = {
+  most: 0.3,      // s the rig takes to come up off the wall onto its wheels, where the air is long enough for it
+  byLanding: 0.8, // ...and in a shorter air, this much of what he has left before they are due down
+  least: 0.18,    // ...but never quicker than this, however near the deck is (its first step is then 2 degrees)
+};
+// A HANG OFF A STRAIGHT FACE comes back down that face's own plane (sideOnHangFaceReturn).
+const SIDE_ON_HANG_RETURN = {
+  onLine: 0.02, // m: a hang this near a straight face's plane left that face, and is on it again coming down
+  fall: 0.55,   // m/s: ...once it is falling in earnest (a touchdown turns a heading down the wall only for more than 0.5)
+};
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
 // Feet to raised fingertips at the baseline stature (shoulders 1.67 m, arm
@@ -1684,6 +1703,11 @@ export class Player {
   // with the stick held out over the lip. That release arms it; it is taken
   // as soon as the air has cleared what it is to land on.
   private sideOnCarryArmed = false;
+  // ...and how the rig comes up off the wall once it is (see
+  // SIDE_ON_CARRY_LEVEL): how long ago, over how long, and how far over it lay.
+  private carryLevelT = -1;
+  private carryLevelSeconds = 0;
+  private carryLevelFrom = 0;
   // The drop-in's drawn path (see SIDE_ON_DROP_IN_SECONDS): where the picture
   // was, and how it was moving, relative to the rider the step he was seated.
   private dropInT = -1;
@@ -4745,6 +4769,7 @@ export class Player {
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.sideOnCarryArmed = false;
+    this.carryLevelT = -1;
     this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -12237,10 +12262,37 @@ export class Player {
    * behind the wall. Returns whether such a hang is live.
    */
   private pinSideOnHang(): boolean {
-    if (!this.vertAir || this.parkControls || !this.pipeHang || !this.hangPipe?.sideOn) return false;
-    if (this.hangPipe.axis === 'z') this.pos.x = this.vertAnchor.x;
+    const hp = this.sideOnHangPipe;
+    if (!hp) return false;
+    if (hp.axis === 'z') this.pos.x = this.vertAnchor.x;
     else this.pos.z = this.vertAnchor.z;
     return true;
+  }
+
+  /** The pipe a side-on hang is over, while that hang is live and held to its line. */
+  private get sideOnHangPipe(): Halfpipe | null {
+    return this.vertAir && !this.parkControls && this.pipeHang && this.hangPipe?.sideOn ? this.hangPipe : null;
+  }
+
+  /**
+   * A HANG COMES BACK TO THE STRAIGHT FACE IT LEFT. Off a curve, the line a
+   * hang rises and falls on runs into the wall under it, and coming down it
+   * crosses the curve where it left it (pipeCrossHit). Off a face that stands
+   * dead upright it never crosses anything: the line IS the face's plane, with
+   * no depth in the wall all the way down. Coming down, he is on that face
+   * again from the moment he is level with it, and is met there the way a body
+   * that flew into the wall is met: at his own height, his fall turned down it.
+   * (He was let fall instead onto what a ray down that line finds, which is
+   * the very edge of the deck behind the lip: see queryGround.) Rising, he is
+   * beside the same face and is not on it: from where he left it to the lip
+   * is the first of the air.
+   */
+  private sideOnHangFaceReturn(hp: Halfpipe): ReturnType<Halfpipe['project']> {
+    if (hp !== this.sideOnHangPipe || this.vVel > -SIDE_ON_HANG_RETURN.fall) return null;
+    const at = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
+    // (null over the lip; and on the curve, or off the face's plane, the crossing test is the one that answers)
+    return at && Math.abs(at.pen) <= SIDE_ON_HANG_RETURN.onLine &&
+      Math.abs(at.u) > hp.uLipOf(at.u) - hp.lipRiseOf(at.u) ? at : null;
   }
 
   /**
@@ -12598,6 +12650,14 @@ export class Player {
     this.vertBoardRelease.stage = 2;
     this.vertBoardRelease.pressArmed = false;
     this.vertBoardRelease.holdT = 0;
+    // ...and the rig, which lay along the wall, comes up onto its wheels over the first of that air:
+    // by the time they are due down on what he is over, where there is the time for it.
+    const gravity = Math.max(1, TUNING.pipeAirGravity);
+    const due = (this.vVel + Math.sqrt(this.vVel * this.vVel + 2 * gravity * Math.max(0, this.pos.y - landing.y))) / gravity;
+    this.carryLevelSeconds = THREE.MathUtils.clamp(due * SIDE_ON_CARRY_LEVEL.byLanding,
+      SIDE_ON_CARRY_LEVEL.least, SIDE_ON_CARRY_LEVEL.most);
+    this.carryLevelFrom = this.landingAlignPose;
+    this.carryLevelT = 0;
     sfx.play('woosh2', 0.5);
   }
 
@@ -12901,6 +12961,7 @@ export class Player {
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
     this.sideOnCarryArmed = false;
+    this.carryLevelT = -1;
     this.vertLatVel = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
@@ -20430,6 +20491,8 @@ export class Player {
   // exact, so a jump INTO the transition lands ON it instead of tunnelling
   // through into the void. Only fires on an inside→wall crossing: approaching
   // from behind/under the shell (where there's no solid) never teleports you up.
+  // (A side-on hang that left a straight face crosses nothing coming back to
+  // it, and is met by it all the same: sideOnHangFaceReturn.)
   private pipeCrossHit(level: Level): GroundHit | null {
     for (const hp of level.halfpipes) {
       // A committed vert hang owns its mouth. At a shared coping both shells
@@ -20451,7 +20514,7 @@ export class Player {
         this.prevPos.y,
         hp.crossCoord(this.pos.x, this.pos.z),
         this.pos.y,
-      );
+      ) ?? this.sideOnHangFaceReturn(hp); // ...or came back down the plane of the straight face it left
       if (!now) continue;
       const normal = hp.normalAt(now.u, new THREE.Vector3());
       return {
@@ -20587,11 +20650,19 @@ export class Player {
         crate: crateContact.crate,
       };
     }
+    // A side-on hang is on the WALL's side of its coping until it flies out
+    // over it. Off a straight face its line is the lip's own line, where the
+    // deck behind that lip begins, and the ray down it grazes the deck's edge:
+    // ground to come down on, a ledge to be lifted onto from just under it, a
+    // ceiling to a slow climb a metre below. Under his own point that deck is
+    // none of them. (A probe out over the lip still finds it: stepSideOnCarry.)
+    const hungOver = ox === 0 && oz === 0 ? this.sideOnHangPipe : null;
     // A plank that's already breaking away (fall/gone) is no longer solid — skip
     // it so a grinder/stander drops straight through instead of riding it down.
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      if (hungOver && (h.object.userData.pipeDeck as { pipe: Halfpipe } | undefined)?.pipe === hungOver) continue;
       const groundedQuery = this.state === 'ride' && this.grounded;
       const closedDeck = h.object.userData.solidSides ||
         (h.object.userData.nativeRampDeck && groundedQuery);
@@ -22947,6 +23018,22 @@ export class Player {
       this.landingAlignPose = this.alignPose = 1;
       this.alignNormal.copy(this.rideNormal);
       return;
+    }
+    // The air out over a side-on lip comes up off the wall on a curve of its
+    // own (SIDE_ON_CARRY_LEVEL), about the wall's normal as it was, and goes
+    // on doing so across a touchdown that comes before it is done. A wall met
+    // in that time, or a spill, lays him over itself: it is theirs then.
+    if (this.carryLevelT >= 0) {
+      if (alignTarget > 0 || this.isBailing) this.carryLevelT = -1;
+      else {
+        this.carryLevelT += dt;
+        const k = Math.min(1, this.carryLevelT / this.carryLevelSeconds);
+        if (k >= 1) this.carryLevelT = -1;
+        // (never further over than it already is: whatever else has stood him up meanwhile has stood him up)
+        this.landingAlignPose = this.alignPose =
+          Math.min(this.landingAlignPose, this.carryLevelFrom * (1 - k * k * (3 - 2 * k)));
+        return;
+      }
     }
     const ease = this.dropInT >= 0 ? SIDE_ON_DROP_IN_ALIGN_EASE : onPipe || this.pipeHang ? 24 : 12;
     this.landingAlignPose +=

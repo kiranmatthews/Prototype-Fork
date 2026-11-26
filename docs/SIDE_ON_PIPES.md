@@ -41,7 +41,12 @@ lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
   face above the curve: the profile is one line from the flat, round the curve and up the face to the lip,
   and a board rides all of it (straight up or straight down the face). The face is solid to a body in the
   air, however fast: one that was in front of the wall under its lip and is behind it a step later is met
-  where it crossed.
+  where it crossed. A hang that leaves the face itself (a hang begins as far as 1.2 m under a lip, so with
+  more straight wall than that it begins on the face) rises and falls on the face's own plane, which is
+  the lip's line, where the deck behind it begins. That deck is not under a hang, however near: coming
+  down, he is met by the face the step he is level with it again, at his own height, his fall turned
+  down it. He is never stood on the deck's edge, lifted onto it from just under it, or stopped under it
+  on the way up.
 - `sideOn` on an east/west **zone** declares the stretch one line. On the board the heading stays on the
   travel axis and the stick held against travel is the pull-back brake (which rolls to a stop and steps
   off). Without it a reversal is a carve, and on a zero-depth plane a carve has nowhere to go: the board
@@ -75,7 +80,7 @@ lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
 | Reaching a lip | The ordinary coping launch: a vertical hang. |
 | Hang: **Jump, with the stick held out** over that lip | **The pop-out**, on the spine transfer's own input (the first Jump press-and-release of the hang). Another pipe's mouth beyond the ridge takes the ordinary mirrored **spine transfer**. Otherwise the air leaves the wall as a plain board air drifting out at `vertDrift` (4.5 m/s), if there is something to land on within 0.75 m under the lip's height 1.2 m past it (the pipe's deck, a floor, a ghost slab a `!` has made solid). A ledge higher than the lip is taken once the air has cleared it, while the stick stays held. A bare wall with a drop behind it is never an exit. |
 | Landing that pop-out | **On the board, like any other air**, rolling out at about 4.5 m/s, whatever the stick is doing. Leaving a pipe does not take the board away: he gets off it there the way he gets off it anywhere, by braking (the brake button, or the stick pulled back against the roll) or by letting it roll to a stop. A spine transfer and a rail keep it the same way. |
-| Hang, anything else | Drops back into the pipe. The stick alone does nothing, however long it is held. |
+| Hang, anything else | Drops back into the pipe: onto the curve where it left it, or, off a straight face, onto that face just under the lip. The stick alone does nothing, however long it is held. |
 | A second Jump in the same hang, or one in the air of a pop-out or a spine transfer | The game's Board Abandon, as in every pipe: the board is thrown and the rider comes down on foot. The Jump that made the transfer does not count against it. |
 | A direction already held when the air began | Does not spin the rider until it has been released once (it is the travel stick). A fresh direction spins, as in every other air. |
 | A solid met in the hang (a `!` floated over the lip) | Stops the climb; the hang stays on its line instead of being pushed out behind the wall. |
@@ -89,6 +94,13 @@ How a hang and a transfer are *drawn* — the trail behind the deck on the way u
 the top, the reach and the brace coming down, and a transfer that winds up, is driven over, runs past
 the far wall and is caught — is in `docs/CHARACTER_ELASTICITY.md` (Vert air and spine transfer). None of
 it moves the rider, his clock or his contacts: the rows above are the whole of what the pipe does.
+
+The pop-out is drawn up off the wall on a curve. In the hang the whole of him lies along the wall; the
+air out over the lip is a level one that lands on its wheels. Over the first 0.3 s of it he comes
+upright, eased in and eased out (in a shorter air, over four fifths of the time until his wheels are due
+down, and never in under 0.18 s), and goes on doing so across a touchdown that comes sooner. The first
+frame of that air turns him a degree or two; left to the ease that lays him onto a wall it turned him
+18° to 36°, his board half a metre to a metre from where it had been against his hips.
 
 ## Measured (real `Player`/`Level`, `tools/side-pipe-probe.mjs` and `tools/test-side-pipe-lab.mjs`)
 
@@ -205,7 +217,10 @@ bounces, the Mossback's shell, the lifts, ferry, pads and crushers (and that a r
 nothing dies there), every enemy kind, the valley's stack and crab, the switch being the only way out,
 the two cascade transfers, the short rail on the travel stick, the long rail lost on it and ridden on the
 balance, the grind button held too early, a step that is bumped and not grabbed, a thrown board coming
-to rest, the one-line brake and the checkpoint a death returns to.
+to rest, the one-line brake and the checkpoint a death returns to; and two things as they are drawn,
+frame to frame: a hang off the straight face of the yard's second wall coming back to that face (no step
+on the deck behind the lip, the board turned under 4° and moved under 0.15 m against his hips in any
+frame of the way back), and the first frames of the air out of P0.
 `npm run check:pipe` covers the unchanged symmetric pipe.
 
 `tools/test-side-pipe-lab-forward.mjs` then holds the forward copy to its claims: the same parts, all
@@ -220,7 +235,11 @@ real rig — the trail going up and coming down, soles on the deck, nothing popp
 next, the drawn turn against the even one the simulation keeps.
 
 It ends with `tools/test-vert-run-up.mjs` (`npm run check:vert-run-up`): the yard's rule, on fixture walls
-of every band.
+of every band. On the board it also rides at a straight-faced wall at five speeds, so the hang tops out
+short of the lip, a hand under it, just over it and well over it: each is met by the face it left, at its
+own height, with no step on the deck, and is drawn back onto it in one movement. Then it pops out of a
+long air and a short one, and holds the first frames of each, and every frame after them, to the one
+before.
 
 ```bash
 RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump node tools/side-pipe-probe.mjs

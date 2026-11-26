@@ -180,7 +180,10 @@ of a platform's edge and of a vert's lip (the beat on the wall, the hop, the dro
 transition), and measures the picture from each of these back to his feet, frame to frame. Then, on the
 board, it rolls him up to two lips at twelve speeds and scripts (waiting on the coping and dropped in by
 Jump or by the stick, backed out, dropped straight in whatever he presses, an ollie popped in the set-up,
-flown off the edge), and rides him at a quarter (into its air, and out over its lip onto the deck). `npm run check:side-pipe` runs it after
+flown off the edge), and rides him at a quarter (into its air, and out over its lip onto the deck). Last,
+it rides him at a straight-faced wall so that the hang tops out under the lip, at it and over it (met by
+the face each time, never by the deck behind it: `docs/SIDE_ON_PIPES.md`), and pops him out of a long air
+and a short one, with the picture of each held frame to frame. `npm run check:side-pipe` runs it after
 the course test.
 
 Review by eye is frame by frame in the real game (`?launchReview`, one fixed step at a time). Stepped that

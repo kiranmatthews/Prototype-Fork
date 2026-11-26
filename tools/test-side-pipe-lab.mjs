@@ -56,6 +56,12 @@
 //   · on the one-line zone the stick against travel brakes the board, and the
 //     pipe is ridden back westward the same way;
 //   · a jump into a pipe on a diagonal stick still rides its cross axis;
+//   · a hang off the straight face of the wall yard's second wall comes back
+//     to that face: no step on the deck behind its lip, and no frame of the
+//     way back turns the board more than a few degrees or moves it 0.15 m
+//     against his hips;
+//   · the air out of a pipe begins as slowly as the hang ended: the first
+//     frames of a pop-out turn the board a few degrees, not eighteen;
 //   · a hang that heads a solid over a bare lip stays on its line;
 //   · a death returns to the last banked checkpoint, in front of its pipe.
 // Each runtime rule among those, removed, fails this file by name.
@@ -544,6 +550,101 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(worst < 1.6, `through that hang the deck is drawn at him, never at the lip he left (${worst.toFixed(2)} m from the controller point at most)`);
   }
 
+  // ---- 9e · a hang off a straight face comes back to that face ---------------------------------
+  // The wall yard's second wall, ridden at on the board from the east. Its last 1.35 m stands dead
+  // straight, so a hang leaves it from the face and rises and falls on the face's own plane: the lip's
+  // line, where the deck behind it begins. A ray down that line finds the deck's edge, and he used to
+  // come down on it: stood on the deck for one step (drawn, the board 57° round and 0.93 m from where
+  // it had been against his hips) and dropped in again on the next. The face meets him now.
+  /** The drawn board: where it is, the line it lies along and the way its grip faces (read off what is drawn). */
+  const boardDrawn = () => { const at = p.boardG.getWorldPosition(new THREE.Vector3()).add(p.dropInOffset), drawn = p.boardG.matrixWorld;
+    return { at, hips: p.animationRig.jointsById.get('hips').node.getWorldPosition(new THREE.Vector3()).add(p.dropInOffset),
+      nose: new THREE.Vector3(0, 0, 1).transformDirection(drawn), grip: new THREE.Vector3(0, 1, 0).transformDirection(drawn) }; };
+  /** From one frame to the next: how far the board turned (nose and tail are one line: he comes down a wall
+   *  tail first, and it is his stance that changes), and how far it moved against his hips. */
+  const frameStep = (a, b) => { const line = a.nose.angleTo(b.nose);
+    return { turn: Math.max(a.grip.angleTo(b.grip), Math.min(line, Math.PI - line)) * 180 / Math.PI, slip: b.at.clone().sub(b.hips).sub(a.at.clone().sub(a.hips)).length() }; };
+  {
+    const wall = lab.YARD_CLIMB, below = lab.YARD_VAULT, straight = wall.lipY - wall.floorY - 2.5;
+    const pipe = level.halfpipes.find(hp => Math.abs(hp.cross - wall.baseX) < 0.01);
+    level.reset(true);
+    p.respawn(level, true, false, { position: new THREE.Vector3(below.lipX - 1, below.lipY + 0.15, 0), heading: new THREE.Vector3(-1, 0, 0) });
+    for (let k = 0; k < 20; k++) step(makeInput());
+    const rows = [];
+    let placed = false, heldWas = false, launch = null, apex = -Infinity, met = null, onItsDeck = 0, droppedIn = false, offBoard = false, down = false;
+    for (let k = 0; k < 420 && !down; k++) {
+      const input = makeInput();
+      // (pushed off on the first wall's deck, the stick let go through the mount's own ollie, then held at the wall)
+      input.moveX = placed || k <= 40 ? -1 : 0;
+      const push = k < 40;
+      input.jumpHeld = push; input.jumpPressed = push && !heldWas; input.jumpReleased = !push && heldWas; heldWas = push;
+      if (!placed && k > 40 && p.freeSkate && p.grounded && p.state === 'ride') { p.pos.x = below.lipX - 2; p.prevPos.copy(p.pos); p.speed = 16; placed = true; }
+      const was = { vert: p.vertAir, y: p.pos.y, vV: p.vVel };
+      step(input);
+      if (!placed) continue;
+      const onWall = p.grounded && p.groundHit?.halfpipe === pipe;
+      if (!was.vert && p.vertAir && !launch) launch = { x: p.pos.x, y: p.pos.y };
+      if (p.vertAir) apex = Math.max(apex, p.pos.y);
+      if (launch && !met && was.vert && p.grounded) met = { step: rows.length, wall: onWall, x: p.pos.x, y: p.pos.y, moved: p.pos.y - was.y, fall: was.vV, speed: p.speed, heading: p.axisF.x };
+      if (launch) { if (p.grounded && p.groundHit?.mesh?.userData.pipeDeck?.pipe === pipe) onItsDeck++; droppedIn ||= p.dropInT >= 0; offBoard ||= !p.freeSkate; }
+      rows.push({ y: p.pos.y, vV: p.vVel, vert: p.vertAir, wall: onWall, ...boardDrawn() });
+      down = !!met && p.grounded && p.pos.y < wall.floorY + 0.05;
+    }
+    assert.ok(launch && Math.abs(launch.x - wall.lipX) < 1e-6 && launch.y > wall.lipY - straight && apex > wall.lipY + 0.4,
+      `yard wall 2: reference: ridden at at 16 m/s he leaves its straight face in a hang that tops out ${(apex - wall.lipY).toFixed(2)} m over the lip`);
+    assert.equal(onItsDeck, 0, 'yard wall 2: the hang comes down without a step on the deck behind the lip');
+    assert.ok(!droppedIn && !offBoard, 'yard wall 2: he is not dropped in again: he never left his board, or the wall\'s side of the coping');
+    assert.ok(met?.wall && Math.abs(met.x - wall.lipX) < 1e-6 && met.y <= wall.lipY + 1e-9 && met.y > wall.lipY - 0.25,
+      `yard wall 2: the face he left meets him just under its lip (${met ? (wall.lipY - met.y).toFixed(2) + ' m under' : 'never'})`);
+    assert.ok(met.moved <= 1e-9 && met.moved > -(Math.abs(met.fall) + 1) / 60 - 0.005 && met.heading > 0.99 && met.speed > Math.abs(met.fall) - 0.05 && met.speed < Math.abs(met.fall) + 1.2,
+      `yard wall 2: at his own height, his fall turned down the wall (${met.moved.toFixed(3)} m in that step; ${met.speed.toFixed(1)} m/s down it, from ${met.fall.toFixed(1)})`);
+    assert.ok(down, 'yard wall 2: and he rides it down to the deck he came from');
+    // the way back, as it is drawn: from the top of the hang to the wall, and down the straight of it
+    const top = rows.findIndex(row => row.vert && row.vV <= 0);
+    let end = met.step + 1; while (end < rows.length && rows[end].wall && rows[end].y >= wall.lipY - straight) end++;
+    let turn = 0, slip = 0;
+    for (let i = top; i < end; i++) { const moved = frameStep(rows[i - 1], rows[i]); turn = Math.max(turn, moved.turn); slip = Math.max(slip, moved.slip); }
+    assert.ok(end - top > 10 && turn < 4 && slip < 0.15,
+      `yard wall 2: no frame of the way back turns the board by more than ${turn.toFixed(2)}° or moves it more than ${slip.toFixed(2)} m against his hips (${end - top} frames)`);
+    measured.hangBack = `${(wall.lipY - met.y).toFixed(2)} m under the lip, ${turn.toFixed(2)}°, ${slip.toFixed(2)} m`;
+  }
+
+  // ---- 9f · the air out of a pipe begins as slowly as the hang ended --------------------------------
+  // In the hang the whole of him lies along the wall; the pop-out is a level air that lands on its wheels.
+  // He used to be a fifth of the way upright in its first frame: the board 18° round, and 0.53 m from
+  // where it had been against his hips. He comes up off the wall on a curve now, eased in and out.
+  {
+    level.reset(true); p.respawn(level, true);
+    p.pos.set(P0.westLip - 3, P0.westLipY + 0.15, 0); p.prevPos.copy(p.pos);
+    const rows = [];
+    let hang = 0, heldWas = false, popped = -1, landed = -1;
+    for (let k = 0; k < 600 && (landed < 0 || rows.length < landed + 12); k++) {
+      const input = makeInput(); input.moveX = 1;
+      hang = p.vertAir && p.pos.x > P0.cross ? hang + 1 : 0;
+      const held = hang >= 3 && hang < 7; // the pop-out's input: Jump in the east hang, right held
+      input.jumpHeld = held; input.jumpPressed = held && !heldWas; input.jumpReleased = !held && heldWas; heldWas = held;
+      const wasVert = p.vertAir;
+      step(input);
+      if (popped < 0 && wasVert && !p.vertAir && !p.grounded) popped = rows.length;
+      if (popped >= 0 && landed < 0 && p.grounded) landed = rows.length;
+      rows.push({ x: p.pos.x, y: p.pos.y, lying: p.alignPose, board: p.freeSkate, ...boardDrawn() });
+    }
+    assert.ok(popped > 1 && landed > popped + 20 && rows[landed].board && rows[landed].x > P0.eastLip + 1 && Math.abs(rows[landed].y - P0.eastLipY) < 0.05,
+      `P0: reference: popped out three frames into the east hang, he lands on its deck on his board (${landed - popped} steps of air)`);
+    assert.ok(rows[popped - 1].lying > 0.95, `P0: reference: in the hang he lies along the wall (${rows[popped - 1].lying.toFixed(2)})`);
+    const steps = []; for (let i = popped - 1; i < rows.length; i++) steps.push(frameStep(rows[i - 1], rows[i]));
+    // (steps[0] is the last of the hang; steps[1] the first of the air out of it)
+    const first = steps.slice(1, 4);
+    assert.ok(first.every(moved => moved.turn < 5 && moved.slip < 0.15),
+      `P0: the first frames of that air turn the board ${first.map(moved => moved.turn.toFixed(1)).join(', ')}° and move it ${first.map(moved => moved.slip.toFixed(2)).join(', ')} m against his hips`);
+    let jerk = 0, lurch = 0;
+    for (let i = 1; i < steps.length; i++) { jerk = Math.max(jerk, Math.abs(steps[i].turn - steps[i - 1].turn)); lurch = Math.max(lurch, Math.abs(steps[i].slip - steps[i - 1].slip)); }
+    assert.ok(jerk < 5 && lurch < 0.1, `P0: and no frame of it is unlike the one before (the turn changes by ${jerk.toFixed(2)}° at most, the board against his hips by ${lurch.toFixed(3)} m)`);
+    const up = rows.findIndex((row, i) => i >= popped && row.lying < 0.01) - popped + 1;
+    assert.ok(up >= 15 && up <= 18 && rows[landed].lying < 0.01, `P0: he is up off the wall in ${(up / 60).toFixed(2)} s, and on his wheels long before they are down`);
+    measured.popOut = `${first[0].turn.toFixed(1)}°, ${first[0].slip.toFixed(2)} m`;
+  }
+
   // ---- 10 · a hang stays on its line when it heads a solid -----------------------
   // The awkward case, in a pipe of its own: a `!` floated over a BARE lip with a
   // drop behind it. The crate's sideways push-out must not walk the rider off
@@ -696,7 +797,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     `plunge air ${measured.plungeApex} m over the east lip unpopped; second ridge crossed ${f1(run.peak.get(C2.name) - C2.eastLipY)} m up, ` +
     `${f1(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t)} s after the first; short rail ${short.seconds.toFixed(2)} s to ${f1(short.speed)} m/s; ` +
     `long rail ${long.seconds.toFixed(2)} s to ${f1(long.speed)} m/s, lost after ${measured.longRailLost} s on the travel stick; ` +
-    `held bounce ${measured.heldBounce} m/s.`);
+    `held bounce ${measured.heldBounce} m/s; a hang back onto yard wall 2's face ${measured.hangBack} in a frame at most; ` +
+    `a pop-out's first frame ${measured.popOut}.`);
   console.log(`PASS Side Pipe Lab: ${(FINISH.x0 + 38 + 15).toFixed(0)} m finished in ${run.t.toFixed(1)} s (${waited.toFixed(1)} s of it waiting) on held right; ` +
     `y ${f1(run.minY)} to ${f1(run.maxY)}; P1 first swing climbed ${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; ` +
     `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs (landed on the board, braked off it), ${run.transfers.size} spine transfers, ${run.kills.length} enemies beaten, ` +
