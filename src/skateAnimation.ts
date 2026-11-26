@@ -409,7 +409,11 @@ export class SkateAnimation {
     const trailTip = (lead > 0 ? -s.deckTailLength : s.deckNoseLength) * scale * .96;
     const trailTipY = surface(0, trailTip) - s.deckThickness * scale;
     const rockUp = .20, tailDown = .40, tailBack = .10;
-    const setLeadFoot = (lead > 0 ? frontZ : rearZ) * .72, setTrailFoot = (trailTruck + trailTip) * .5;
+    // His back foot is across the tail, just behind that truck, holding it down. The front one rests on the
+    // raised deck a comfortable stride up it: about as far apart as he rides, which on this long deck is
+    // well short of the far bolts (a stance from tail to bolts would have him doing the splits).
+    const setTrailFoot = trailTruck + (trailTip - trailTruck) * .35;
+    const setLeadFoot = setTrailFoot + lead * Math.min(.92, (frontZ - rearZ) * .60);
     if (p.grind && p.rail) {
       const tangent = p.rail.tangentAt(p.railT).multiplyScalar(p.railDir).normalize();
       this.right.crossVectors(Y, tangent).normalize();
@@ -502,8 +506,13 @@ export class SkateAnimation {
       // the stall. The extra 15 mm protects interpolated review frames too.
       const {center,normal}=this.coping,radius=.105,push=Y.clone().applyQuaternion(this.boardQ);
       const nx=push.dot(normal),ny=push.y,n=Math.hypot(nx,ny);
+      // Only a deck that is AT that coping has it to stand clear of. The coping is remembered for a moment
+      // after it was last asked for, and in that moment a rider can be across the pipe: a deck there whose
+      // normal happens to point back at it would be carried the whole way to it, and him with it.
+      const away=this.boardP.clone().sub(center),near=Math.hypot(away.dot(normal),away.y)<
+        Math.max(s.deckNoseLength,s.deckTailLength)*scale+radius+.4;
       let lift=0;
-      if(n>.2)for(let iz=0;iz<=64;iz++)for(let ix=0;ix<=8;ix++)for(const layer of [0,1]){
+      if(n>.2&&near)for(let iz=0;iz<=64;iz++)for(let ix=0;ix<=8;ix++)for(const layer of [0,1]){
         const x=(ix/8*2-1)*s.deckHalfWidth*scale,z=(-s.deckTailLength+(s.deckTailLength+s.deckNoseLength)*iz/64)*scale;
         const point=new THREE.Vector3(x,surface(x,z)-layer*s.deckThickness*scale,z).applyQuaternion(this.boardQ).add(this.boardP).sub(center);
         const cross=point.dot(normal),across=(cross*ny-point.y*nx)/n,along=(cross*nx+point.y*ny)/n;
@@ -648,7 +657,7 @@ export class SkateAnimation {
     // Set to drop in, he sits back over the foot that is holding the tail down; told to go, his weight comes forward over the other.
     if (setW > 0 || setLean > 0) {
       const half = (setLeadFoot - setTrailFoot) * .5;
-      pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), half * (-.42 * setW * (1 - setLean) + .45 * setLean));
+      pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), half * (-.64 * setW * (1 - setLean) + .45 * setLean));
     }
 
     if(mute)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.24*smooth(gw));
@@ -789,6 +798,28 @@ export class SkateAnimation {
       }
     }
 
+    if(setW>0){
+      // Stood on his tail he is at his ease: his arms hang, and he is looking down the drop he is about to
+      // take. Both go as his weight comes forward for it.
+      const ease=setW*(1-setLean);
+      for(let i=0;i<2;i++){
+        const hand=this.hands[i],side=i===0?1:-1;
+        this.armBefore[i]??=hand.root.quaternion.clone();
+        hand.root.rotation.z+=side*.30*ease;
+        hand.mid.rotation.x+=.10*ease;
+      }
+      if(this.head){
+        this.headBefore??=this.head.quaternion.clone();
+        const pipeward=Z.clone().applyQuaternion(this.boardQ).multiplyScalar(lead);pipeward.y=0;
+        const chest=this.right.clone().multiplyScalar(p.stance);chest.y=0;
+        if(pipeward.lengthSq()>1e-6&&chest.lengthSq()>1e-6){
+          pipeward.normalize();chest.normalize();
+          const turn=Math.sign(chest.clone().cross(pipeward).y)||1;
+          this.turnJoint(this.head,Y,turn*.62*ease);
+          this.turnJoint(this.head,Y.clone().cross(pipeward).normalize(),.16*ease);
+        }
+      }
+    }
     if((vertLoad>0||transfer)&&gw<.01&&!p.flip&&!p.grind){
       for(let i=0;i<2;i++){
         const hand=this.hands[i],side=i===0?1:-1;

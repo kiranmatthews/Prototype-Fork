@@ -584,23 +584,26 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       // the picture: where his pelvis and his deck are drawn (the drop-in's own lead included), and the deck's pitch
       const off = p.dropInOffset, hips = world(node('hips')).add(off), nose = new THREE.Vector3(0, 0, 1).applyQuaternion(p.boardG.getWorldQuaternion(new THREE.Quaternion()));
       const wheels = world(p.boardG).add(off), chest = new THREE.Vector3(0, 0, 1).applyQuaternion(node('hips').getWorldQuaternion(new THREE.Quaternion()));
-      log.rows.push({ k, x: p.pos.x - lipX, y: p.pos.y - lipY, speed: p.speed, hips, wheels, facing: Math.atan2(chest.x, chest.z), pitch: Math.atan2(nose.y, Math.hypot(nose.x, nose.z)) * 180 / Math.PI,
+      const stance = world(node('ankleLeft')).distanceTo(world(node('ankleRight')));
+      const look = new THREE.Vector3(0, 0, 1).applyQuaternion(node('head').getWorldQuaternion(new THREE.Quaternion()));
+      log.rows.push({ k, x: p.pos.x - lipX, y: p.pos.y - lipY, speed: p.speed, hips, wheels, stance, look: Math.atan2(look.x, look.z), facing: Math.atan2(chest.x, chest.z), pitch: Math.atan2(nose.y, Math.hypot(nose.x, nose.z)) * 180 / Math.PI,
         phase: p.dropInPerch ? (p.dropInTipT >= 0 ? 'tip' : 'perch') : p.dropInSetup ? 'set' : p.dropInT >= 0 ? 'in' : log.backedOut ? 'back' : p.grounded ? (p.groundHit?.halfpipe ? 'wall' : 'deck') : 'air' });
       log.out = (!!log.seat && p.grounded && p.pos.x < WALL_X - 2) || (!!log.landed && p.pos.x < WALL_X - 6) || (!!log.backedOut && k > log.backedOut.step + 36);
     }
     return log;
   };
   /** The picture through a drop-in: the biggest change in the pelvis's step, and in the deck's pitch, from one frame to the next (down to the foot of the straight face). */
-  const jolt = (log, phases, above = -1.2) => { let hips = 0, pitch = 0, sunk = 0, at = '';
+  const jolt = (log, phases, above = -1.2) => { let hips = 0, pitch = 0, sunk = 0, at = '', atHips = '';
     for (let i = 2; i < log.rows.length; i++) { const a = log.rows[i - 2], b = log.rows[i - 1], c = log.rows[i];
       if (!phases.includes(c.phase) || !phases.includes(b.phase) || !phases.includes(a.phase)) continue;
       // (the foot of a transition lays him level again in a step or two, as it does every rider: that is the pipe's, not the drop-in's)
       if (c.y < above) continue;
-      hips = Math.max(hips, c.hips.clone().sub(b.hips).sub(b.hips.clone().sub(a.hips)).length());
+      const kick = c.hips.clone().sub(b.hips).sub(b.hips.clone().sub(a.hips)).length();
+      if (kick > hips) { hips = kick; atHips = `${b.phase}>${c.phase} at ${c.x.toFixed(2)},${c.y.toFixed(2)}`; }
       const turn = Math.abs((c.pitch - b.pitch) - (b.pitch - a.pitch));
       if (turn > pitch) { pitch = turn; at = `${c.phase} at ${c.x.toFixed(2)},${c.y.toFixed(2)}`; }
       if (c.phase === 'set' || c.phase === 'perch' || c.phase === 'back') sunk = Math.max(sunk, -(c.wheels.y - log.lipY)); }
-    return { hips, pitch, sunk, at }; };
+    return { hips, pitch, sunk, at, atHips }; };
   const LET_GO_THEN = (act) => (since) => since < 30 ? { x: -1 } : since < 40 ? { x: 0 } : act(since - 40);
   for (const name of ['plain quarter', 'grab']) {
     // SLOWLY: he sets his tail on the coping, and waits there to be told
@@ -616,15 +619,20 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       assert.ok(!roll.meter && roll.scoreAfter === roll.scoreBefore, `${label}: it is a wait, not a stall: no needle, no points`);
       const stood = roll.rows.filter(row => row.phase === 'perch'), settled = stood[Math.min(stood.length - 1, 40)], rolling = roll.rows.find(row => row.phase === 'deck');
       assert.ok(settled.pitch > 18 && settled.pitch < 27, `${label}: his tail is down and the nose up over the drop (${f2(settled.pitch)} degrees)`);
-      assert.ok(rolling.hips.y - settled.hips.y > 0.15 && Math.abs(settled.hips.x - roll.lipX) < 0.45,
-        `${label}: knees bent, his weight at the edge and not out over the drop (${f2(rolling.hips.y - settled.hips.y)} m lower than he rides, ${f2(roll.lipX - settled.hips.x)} m past the lip)`);
+      assert.ok(Math.abs(rolling.hips.y - settled.hips.y) < 0.3 && Math.abs(settled.hips.x - roll.lipX) < 0.45,
+        `${label}: he stands easy there, his weight at the edge and not out over the drop (${f2(rolling.hips.y - settled.hips.y)} m lower than he rides, ${f2(roll.lipX - settled.hips.x)} m past the lip)`);
+      // (the stance: his back foot on the tail and the other a stride up the deck, not out at the far bolts)
+      assert.ok(settled.stance < rolling.stance * 1.45 && settled.stance < 1.15 && settled.stance > 0.5,
+        `${label}: his feet are about as far apart as he rides (${f2(settled.stance)} m; riding, ${f2(rolling.stance)} m)`);
+      const turned = Math.abs(Math.atan2(Math.sin(settled.look - rolling.look), Math.cos(settled.look - rolling.look)));
+      assert.ok(turned > 0.3, `${label}: and he is looking down the drop (his head turned ${f2(turned)} rad from where it rides)`);
       assert.ok(roll.seat && roll.seat.fromPerch && roll.seat.board && roll.seat.pos.y < roll.lipY - 0.2 && roll.seat.pos.y > roll.lipY - 0.6 && Math.abs(roll.seat.speed - 4) < 0.01,
         `${label}: then he is on the wall just under it (${roll.seat ? f2(roll.lipY - roll.seat.pos.y) + ' m under, ' + f2(roll.seat.speed) + ' m/s' : 'never'})`);
       // (down a face that stands dead upright as much as down a curve: all of the travel is down the wall)
       assert.ok(roll.out && roll.lowest < 0.05 && !roll.bailed, `${label}: and rides the whole wall down and out along the flat (lowest ${f2(roll.lowest)})`);
       const picture = jolt(roll, ['set', 'perch', 'tip', 'in']);
       assert.ok(picture.hips < 0.13 && picture.pitch < 4 && picture.sunk < 0.02,
-        `${label}: nothing in it jolts: his pelvis (${f2(picture.hips)} m), the deck's pitch (${f2(picture.pitch)} degrees, ${picture.at}) from one frame to the next, the wheels not sunk in the deck (${f2(picture.sunk)} m)`);
+        `${label}: nothing in it jolts: his pelvis (${f2(picture.hips)} m, ${picture.atHips}), the deck's pitch (${f2(picture.pitch)} degrees, ${picture.at}) from one frame to the next, the wheels not sunk in the deck (${f2(picture.sunk)} m)`);
     }
     // ...or the stick pressed on into the pipe (pressed afresh: the roll that brought him there asks for nothing)
     {

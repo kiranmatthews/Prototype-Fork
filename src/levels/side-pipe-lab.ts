@@ -13,7 +13,11 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * speed, holding X pumps them harder, and reaching a lip pops a vertical
  * hang. JUMP in that hang with the stick held OUT over the lip — the spine
  * transfer's input — pops the air out across it: over a shared ridge into the
- * next pipe, or onto a deck, where the rider lands back on foot.
+ * next pipe, or onto a deck, where the rider lands on the board like any other
+ * air (and gets off it by braking, or rides on).
+ *
+ * SIDE PIPE LAB (FORWARD), at the foot of this file, is the same component
+ * list met head-on: no side view, the camera behind the rider.
  *
  * The height of the course is the other subject. It climbs, plunges, bottoms
  * out, climbs half as far again and comes down twice, 830 m in all:
@@ -188,7 +192,7 @@ export const P0 = pipe('P0 roll-in pipe', 4, START_TOP - 3.5, 2.5, [3.5, 3.5], [
 function yardWall(name: string, baseX: number, floorY: number, lipRise: number, deck: number): YardWall {
   const RADIUS = 2.5, lipX = baseX - RADIUS, lipY = r(floorY + RADIUS + lipRise);
   floor(lipX - deck, baseX, floorY, `${name}: footing`, STONE_DARK);
-  add({ t: 'vertramp', vkind: 'quarter', p: [baseX, floorY, 0], len: DEPTH, yaw: 180, rise: RADIUS, w: 0, deck, lipRise,
+  add({ t: 'vertramp', vkind: 'quarter', sideOn: true, p: [baseX, floorY, 0], len: DEPTH, yaw: 180, rise: RADIUS, w: 0, deck, lipRise,
     tex: 'pavement', color: PIPE, grp: GR.pipes, nm: name });
   // Fruit up the face: a line the eye follows to the lip (and what a short leap still collects).
   for (const phi of [0.42, 0.78, 1.12]) fruit(baseX - RADIUS * Math.sin(phi) + 0.6 * Math.sin(phi), floorY + RADIUS * (1 - Math.cos(phi)) + 0.6 * Math.cos(phi) + 0.2);
@@ -217,8 +221,9 @@ fruitOnWall(P0, -1, 3);
 fruitOnWall(P0, 1, 3);
 for (const x of [-1.5, 0, 1.5]) fruit(P0.cross + x, P0.floorY + 1.0);
 fruitOverLip(P0, -1, [1.4, 2.6, 3.8]);
-// Popping out of a pipe lands its rider on the deck on foot, so everything
-// between pipes is ordinary platforming: steps to jump, gaps, boxes to spin.
+// Popping out of a pipe lands its rider on the deck on the board at 4.5 m/s;
+// braked there he is on his feet 1.7 m on, so everything between pipes can be
+// played as ordinary platforming: steps to jump, gaps, boxes to spin.
 floor(P0.eastLip + P0.eastDeck, 34, START_TOP, 'Roll-in: landing floor');
 overhead(27.5, START_TOP, ['wood', 'mystery', 'wood'], 'Roll-in: overhead row past the landing');
 
@@ -606,4 +611,63 @@ export const SIDE_PIPE_LAB_LEVEL: CustomLevelData = {
   sky: 'day',
   components,
   groups,
+};
+
+// ================================================= the same course, head-on ==
+// SIDE PIPE LAB (FORWARD) is the course above, part for part, with the lens
+// behind the rider instead of beside him. Nothing in it is authored twice:
+// it is this file's own component list without the camera group (the side
+// view, its travel zone and the two walls that hold the play to one plane),
+// so a change to the course is a change to both.
+//
+// What replaces that group:
+//   - a lane from the west end to the east end. With no travel zone over it
+//     the lane owns the frame: the camera follows from behind, looking east,
+//     and forward on the stick is down the course;
+//   - a view over the wall yard that turns that frame round to face WEST,
+//     because the yard is played away from the course (the turn is asked
+//     for over the 2.5 m behind the spawn and passes through the side view;
+//     the rig takes about a second to come round, which at a run is the rest
+//     of the way to the first wall);
+//   - walls at the two edges of the 6 m the floors are deep. The whole width
+//     is play here: a board carves on it, a walker can go round a stack;
+//   - its own follow rig. A pipe met head-on has a near wall, and a camera
+//     that trails low behind the rider loses him behind its deck: this one
+//     rides higher and steeper than the game's (7.5 m up, 6.5 m back, 34°
+//     down), and rises with him, so a hang ten metres over a lip stays in
+//     the picture.
+// The pipes are the same parts (`sideOn` on a vert is what says the course
+// crosses it; the side-scrolling lab's zone says so too), so the drop-in over
+// a lip, the pendulum, the hang, the air out and the run-up at a wall are the
+// same moves, met going into the picture instead of across it.
+// (One part moves. On the side-scrolling plane the stopwatch can only stand in
+// the lane behind the spawn; here it stands beside that lane, so walking back
+// to the yard does not start a time trial by accident.)
+const course = components.filter(c => c.grp !== GR.camera)
+  .map(c => c.t === 'clock' ? { ...c, p: [c.p[0], c.p[1], 2.2] as [number, number, number] } : c);
+const forwardView: CustomComponent[] = [];
+for (const z of [-(DEPTH / 2 + 0.3), DEPTH / 2 + 0.3])
+  forwardView.push({ t: 'wall', p: [MID, -15, z], s: [SPAN + 40, 150, 0.6], invisible: true, grp: GR.camera,
+    nm: 'Edge of the course: the floors are 6 m wide and so is the play' });
+forwardView.push({ t: 'wall', p: [X_MIN - 0.3, START_TOP + 12, 0], s: [0.6, 40, DEPTH], invisible: true, grp: GR.camera, nm: 'West end stop' });
+forwardView.push({ t: 'wall', p: [X_MAX + 0.3, FINISH_TOP, 0], s: [0.6, 14, DEPTH], invisible: true, grp: GR.camera, nm: 'East end stop' });
+forwardView.push({ t: 'camnode', p: [X_MIN - 10, START_TOP, 0], radius: 0, grp: GR.camera });
+forwardView.push({ t: 'camnode', p: [X_MAX + 10, FINISH_TOP, 0], radius: 0, grp: GR.camera });
+/** The yard view's east face stands just behind the spawn, and its turn is complete this far in. */
+export const FORWARD_YARD_VIEW = { x1: -15.2, turn: 2.5 };
+const YARD_VIEW_X0 = X_MIN - 30;
+forwardView.push({ t: 'camnode', p: [r((YARD_VIEW_X0 + FORWARD_YARD_VIEW.x1) / 2), 0, 0],
+  s: [DEPTH + 40, 200, r(FORWARD_YARD_VIEW.x1 - YARD_VIEW_X0)], yaw: 90, cameraView: true, radius: FORWARD_YARD_VIEW.turn,
+  grp: GR.camera, nm: 'Wall yard: the view turns round to face the walls' });
+
+export const SIDE_PIPE_LAB_FORWARD_LEVEL: CustomLevelData = {
+  v: 1,
+  name: 'Side Pipe Lab (Forward)',
+  spawn: [-15, START_TOP + 0.12, 0],
+  killY: -32,
+  sky: 'day',
+  cameraRig: { camDist: 6.5, camHeight: 7.5, camPitch: 34, camFov: 56 },
+  cameraAirLift: 1,
+  components: JSON.parse(JSON.stringify([...course, ...forwardView])) as CustomComponent[],
+  groups: groups.map(g => g.id === GR.camera ? { ...g, nm: 'Forward view: lane, yard view and edge walls' } : { ...g }),
 };

@@ -13686,3 +13686,125 @@ from 0.20 to 0.12 m a frame and leaves the lip at 0.22, in one movement; the bac
   tail would sit a few centimetres into it. No level has one.
 - With the stick held, an ordinary ollie on a side-on line still spins the board, as every board air does:
   only the roll off a lip and the airs out of a pipe treat the held travel stick as travel.
+
+## 2026-11-26 — A deck drawn at the wrong coping; an easier wait; the board kept; the lab met head-on
+
+- **Briefs:** a second take of Side Pipe Lab (`487a1985`, 6,890 frames) with "one small glitch when he's
+  on the halfpipe, fix then hold tight"; then, while that was in hand: make the pose he waits in at a
+  lip more natural and casual from real skaters, with his front foot less far down the board; remove the
+  automatic dismount entirely (off the board by braking or losing speed, as before); make a second copy
+  of the test level that is the same but faces forward instead of side-scrolling; then the full suite,
+  and publish.
+- **Elapsed:** about 3 h 45 min from the take (01:25 UTC) to the published page, 58 min of it the full
+  suite. The three later notes arrived in the same sitting, before the fix had been reported, so it was
+  held and published with them.
+- **Levels:** Side Pipe Lab (`side-pipe-lab`) and the new **Side Pipe Lab (Forward)**
+  (`side-pipe-lab-forward`), both from `src/levels/side-pipe-lab.ts`.
+- **Runtime:** `src/skateAnimation.ts`, `src/player.ts`, `src/level.ts`.
+- **Docs:** `docs/SIDE_ON_PIPES.md`, design bible XV.14 and XV.16, `docs/LEVEL_FILE_FORMAT.md`, README.
+
+**The glitch.** At 44 s of the take he pumps across P0 at 26 m/s, hangs over the east lip, comes back
+down holding X and pops a low hang off the west transition. For 15 frames in that crossing his board,
+and him on it, were drawn at the EAST coping, ten metres from where he was. A rule that lifts a deck
+clear of a coping it is passing remembers that coping for 0.8 s, and pushed the deck along its normal
+until it was "clear" of an edge the rider had left behind. It now applies only to a deck that is at that
+coping (within a deck's length of it). Replayed in the browser, the farthest the drawn deck gets from the
+rider's own point in that take falls from 10.28 m to 0.35 m, and the frames where it is over 2 m away from
+15 to none. `tools/test-side-pipe-lab.mjs` §9d rides the same line (a full hang off P0's east lip, X held
+back down and across, let go at the foot of the west wall) and holds it under 1.6 m; without the fix that
+test measures 10.50 m.
+
+**The wait at a lip.** How a skater actually stands waiting to drop in: the tail set on the coping, the
+back foot on the tail carrying him, the front foot resting over the front bolts or a little behind them,
+knees only slightly bent, looking down the ramp, and nothing forward until he commits. What was drawn had
+the right deck and the wrong man: a deep crouch with his front foot out at the far bolts. Now his back
+foot stands a third of the way out along the tail and his front foot a short stride up the deck from it,
+so his ankles are 0.77 m apart, which is how far apart they are when he rides (0.75 m). He stands nearly
+upright on soft knees (hips 9 cm lower than he rides; the crouch is kept for the moment he is told to
+go), his arms hang instead of being held out for balance, and his head is turned 65° to look down the
+drop. The stance comes on at half the pace over the last of it, so the tail is set down and not dropped.
+`tools/test-vert-run-up.mjs` measures each of those on two walls, and still holds every frame of the
+set-up, the wait, the lean and the tip to the same limits (pelvis 0.13 m and deck pitch 4° from one
+frame to the next).
+
+**The board is kept.** The air that carries him out of a side-on pipe no longer takes the board away. It
+did so whenever he landed with the stick at rest; the rule is gone, with the flag that carried it. He
+lands on the board at 4.5 m/s whatever the stick is doing, like any other air, and gets off it by braking
+or by rolling to a stop. The route bot now does what a player would: it lets go on the way down to each
+deck and holds the brake, which has him on his feet 0.62 s and 1.72 m after the touchdown on all seven
+decks, and the course is finished in the same 124.9 s.
+
+**The same course, head-on.** Side Pipe Lab (Forward) is not a second file. It is the lab's own component
+list without its camera group (the long-lens side view, the travel zone, the two walls that hold play to
+one plane), so the two cannot drift apart. In place of that group: a lane from end to end, which with no
+zone over it owns the frame, so the camera follows from behind and forward on the stick is down the
+course; a heading-only view over the wall yard that turns the frame round to face west, because the yard
+is played away from the course (the turn is asked for over the 2.5 m behind the spawn and passes through the
+side view); walls at the edges of the 6 m the floors are deep, so the whole width is play; and its own
+follow rig, higher and steeper than the game's (6.5 m back, 7.5 m up, 34° down) and rising with a hang,
+because a rig that trails low behind a rider loses him behind a pipe's near deck on the way down and out
+of the top of the frame in a hang. The stopwatch stands beside the lane back to the yard instead of in it.
+
+Two things in the runtime made that possible, and both are small:
+
+- `sideOn: true` on a vert now says "the course crosses this" for a quarter and for a wall with a straight
+  face too (at yaw 0 or 180), not only for a plain half. Inside a side-on zone a vert never needed the
+  flag; outside one it is what gives the yard's four walls the analytic profile, so the run-up, the lip
+  catch, the come-up-short and the rolling drop-in are the same there as in the side view.
+- The direction held up a wall is the travel stick only when the pipe's line runs across the screen. Seen
+  from behind, left and right are neither the way in nor the way out, so in a hang they are always a
+  fresh direction (`sideOnTravelStick`). Everything else that names a direction was already read against
+  the camera: the pop-out, the wait at a lip and its back-out, the lip stall, the ledge grip.
+
+So nothing about the pipes is different, and the inputs turn with the picture: forward over the near
+coping drops him in, Jump in the far hang with the stick forward pops him out (or over a shared ridge),
+back at a lip he is waiting on backs him out, and left and right only lean a rail.
+
+**Checks.**
+
+- `tools/test-side-pipe-lab-forward.mjs` (new, in `npm run check:side-pipe`): the two levels are the same
+  parts outside the camera group; all sixteen verts ride the analytic backing with no side-on zone round
+  them; the frame points east on the course and west in the yard, through north in between. Then the
+  side-scrolling lab's own route bot plays the forward course through an adapter that holds its decisions
+  the way a forward player holds the pad, against the camera's heading each step: it finishes in the same
+  124.9 s, with the same 7 pop-outs, 3 spine transfers and 2 rails, never touching left or right off a
+  rail and never more than a centimetre off the centre line with nothing holding it there. The yard, from
+  behind: back from the spawn, the view has come round within two seconds, and forward at the walls takes
+  the first three (the third by its lip) and fails at the fourth. A walker reaches both edges of the
+  floor and is stopped there, and is dropped in over P0's lip more than 2 m off the centre line.
+- `tools/test-side-pipe-lab.mjs`: §9d above; the pop-outs land on the board and the brake steps him off;
+  a pop-out landed with the stick held, and one with the stick at rest, are both on the board.
+- `npm run check:levels`: 82 built-in levels.
+- The full suite, as asked: all 47 checks of `check:all`, each run to its end (58 min). 42 pass, among
+  them `check:side-pipe` with both labs, `check:levels`, `check:level-select`, `check:campaign` and all of
+  `check:animation-d`; inside `check:editor-roundtrip` both labs round-trip (368 and 367 components, lite
+  and full). The five that fail are the five that failed before this work, each with the same message,
+  log against log: `check:unity-ports` (8 enemies where a beat asks for 10), `check:landing-x`
+  (`p2.commitRenderStep(level)` in `src/main.ts`), `check:camera-speed` (the hold through an old
+  recording's fatal falls), `check:editor-roundtrip` (the same two cases: the Test Course normaliser and
+  the Beachfront capture) and `check:look` (the `crawlSpeed` fixture). None was changed to pass.
+- Real browser, dev build, one fixed step at a time with real key events: the take replayed (the drawn
+  deck stays with the rider); the wait filmed from the side, three-quarters and the front; the forward
+  copy played by the route bot from the spawn to the gate on forward and back alone, left and right only
+  on the rails (121 s, no death or bail, twelve checkpoints, seven pop-outs landed on the board, both
+  rails, no console errors); the rolling drop-in from behind (brought to the coping, waited, tipped in on
+  a fresh press forward); the walk back into the yard and its four walls; one full-render pass through
+  the first pipe. Then the production build, stepped the same way on a gated clock: the wait and the
+  drop-in, a pop-out landed with the stick held and one with it let go (still on the board 58 steps
+  later, and off it on the brake), and on the forward copy the walk over P0's lip, the pop-out, the brake
+  and the first yard wall, with no console errors and no failed requests.
+
+**Known and left.**
+
+- In the forward copy he is drawn side-on to the camera until the first step, at the spawn and at a
+  checkpoint. A respawn faces world north whatever the lane does, and it does so on every lane level in
+  the game whose lane is not running north there (Rumblewater Run, Rolling Bones, Hollowwake Descent and
+  Country Club among them), so it was not changed for this one.
+- In a pipe the stick does not steer along it, in either view. From behind that means he leaves a pipe as
+  far off the centre line as he entered it, and both rails and the `!` hang on the centre line. The docs
+  say so; whether a crossed pipe should let him drift along it when it is met head-on is a design choice
+  this brief did not ask for.
+- Seen in the same take and not touched, each a single frame: a hang off the dead-straight face of yard
+  wall 2 comes down on the lip line and is stood on the deck's edge for one frame before it is dropped
+  back in (the deck turns 54° in that frame, twice in the take); and the first frame of an air out of a
+  pipe moves the board about half a metre against his hips.

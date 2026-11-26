@@ -139,7 +139,7 @@ paths.
 `Side Pipe Lab` is a side-scrolling test course whose path runs through
 halfpipes seen across their section: walking off a deck over the coping drops
 you in on the board, Jump in the hang with the stick held out over a lip pops
-you out across it and back onto your feet. It is 830 m long, its height is
+you out across it, still on the board. It is 830 m long, its height is
 the other subject, and it has twelve pipes (a pump and a spine, an 8.5 m plunge, a 28 m
 valley, a `!` headed out of a hang, a three-pipe spine cascade, a rail from
 one pipe into the next and a 52 m rail down to the gate) joined by on-foot
@@ -149,6 +149,12 @@ it reads flat.
 Direct link: `?playtest&level=side-pipe-lab`. See
 [docs/SIDE_ON_PIPES.md](docs/SIDE_ON_PIPES.md); `npm run check:side-pipe`
 plays it with the real player.
+
+`Side Pipe Lab (Forward)` is the same course, part for part, met head-on:
+the camera follows from behind and forward on the stick is down the course
+(the wall yard behind the start turns the view round to face its walls). It
+is built from the side-scrolling lab's own component list, so the two stay
+the same. Direct link: `?playtest&level=side-pipe-lab-forward`.
 
 `Jungle Cliff` is an authorized clean-room layout reconstruction from
 Kraftpaper's NST Maker mod: a winding jungle climb, west-facing cliff traverse,

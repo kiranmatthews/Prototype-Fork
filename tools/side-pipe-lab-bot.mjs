@@ -93,7 +93,7 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
     const wait = (name) => log.waits.set(name, (log.waits.get(name) ?? 0) + dt);
     const startJump = (frames = 14) => { jump = 1; jumpFrames = frames; };
     const committed = new Set(); // brinks the bot has already decided to cross
-    let turtleWas = null, straightUp = false;
+    let turtleWas = null, straightUp = false, exitAir = false, hungWas = false;
     let frame = 0, shown = { standing: false, moveX: 1 };
     /** What the pad does this step, from what the player can see now. */
     const decide = () => {
@@ -102,9 +102,14 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       const x = p.pos.x, y = p.pos.y, onFoot = !p.freeSkate, at = pipeAt(x), now = level.time;
       const walking = onFoot && p.grounded && p.state === 'ride';
       let moveX = 1, standing = false;
-      // The air out of a pipe lands on foot only for a rider who has let the stick go: the course between
-      // the pipes is walked, so the bot lets go on the way down to each deck (`ride: true` keeps it held).
-      if (!ride && p.sideOnExitAir && (p.vVel < 0 || p.grounded)) moveX = 0;
+      // The air out of a pipe lands on the board, like any other air. The course between the pipes is walked,
+      // so the bot gets off the way a player does: it lets go on the way down to each deck and holds the
+      // brake there until it is on its feet (`ride: true` rides on instead).
+      if (hungWas && !p.vertAir && p.state === 'air' && p.freeSkate) exitAir = true;          // carried out over a lip
+      hungWas = p.vertAir;
+      if (exitAir && (onFoot || p.vertAir || (p.grounded && p.groundHit?.halfpipe))) exitAir = false;
+      const braking = !ride && exitAir && p.grounded;
+      if (!ride && exitAir && (p.vVel < 0 || p.grounded)) moveX = 0;
       /** Stop short of `edge` until `ok()` says the crossing can be made from here, then commit to it. */
       const brink = (name, edge, ok) => {
         if (x < edge - 6 || x > edge - 0.05) { if (x > edge + 1) committed.delete(name); return; }
@@ -186,7 +191,7 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       const watcher = spin && level.enemies.find(e => e.alive && e.kind === 'floater' && e.group.position.x - x < 2.4 && e.group.position.x - x > 1.2 &&
         Math.abs(e.group.position.y - y) < 2.5);
       if (watcher && walking && jump === 0) startJump(3);
-      const input = { moveX, moveY: depth };
+      const input = { moveX, moveY: depth, grabHeld: braking };
 
       stuck = walking && !standing && moveX !== 0 && Math.abs(x - lastX) < 0.002 ? stuck + 1 : 0;
       const liftShaft = inside(x, LIFT1.x0 - 0.6, LIFT1.x1 + 0.3) || inside(x, LIFT2.x0 - 0.6, LIFT2.x1 + 0.3);
@@ -237,12 +242,12 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       if (stalled && !prev.stall && here) log.stalls.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', t: log.t });
       if (!stalled && prev.stall && log.stalls.length) Object.assign(log.stalls.at(-1), { seconds: log.t - log.stalls.at(-1).t,
         backInPipe: !p.isBailing && here !== null && p.pos.x > here.westLip && p.pos.x < here.eastLip });
-      // the first touchdown past each decked pipe's east lip: is the rider on foot?
+      // the first touchdown past each decked pipe's east lip: it is on the board, like any landing...
       for (const q of [...DECKED, SWITCH_PIPE]) if (!log.exits.has(q.name) && p.grounded && p.state === 'ride' && !p.groundHit?.halfpipe &&
         p.pos.x > q.eastLip + 0.05 && p.pos.x < q.eastLip + 9 && Math.abs(p.pos.y - q.eastLipY) < 0.5)
-        log.exits.set(q.name, { onFoot: false, x: p.pos.x, t: log.t });
-      // (the step-off is the stride after the wheels touch)
-      for (const out of log.exits.values()) if (log.t - out.t < 0.25 && p.grounded && !p.freeSkate) out.onFoot = true;
+        log.exits.set(q.name, { onBoard: p.freeSkate, onFoot: false, x: p.pos.x, t: log.t, speed: Math.abs(p.speed) });
+      // ...and he is on foot once he has got off it there (the brake, or the roll running out), not before
+      for (const out of log.exits.values()) if (!out.onFoot && log.t - out.t < 4 && p.grounded && !p.freeSkate) { out.onFoot = true; out.offAfter = log.t - out.t; out.offAt = p.pos.x; }
       // highest point reached on each wall, per swing (first east reach is the pump claim)
       if (here && p.grounded && p.groundHit?.halfpipe && Math.abs(p.pos.x - here.cross) > here.flatHalf) {
         const side = p.pos.x < here.cross ? 'west' : 'east';

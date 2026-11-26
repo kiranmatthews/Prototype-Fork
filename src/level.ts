@@ -193,7 +193,7 @@ import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { WALLPLANT_LAB_LEVEL } from "./levels/wallplant-lab";
 import { EMBER_COURT_LEVEL } from './levels/ember-court';
-import { SIDE_PIPE_LAB_LEVEL } from './levels/side-pipe-lab';
+import { SIDE_PIPE_LAB_FORWARD_LEVEL, SIDE_PIPE_LAB_LEVEL } from './levels/side-pipe-lab';
 import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
@@ -890,8 +890,8 @@ export interface CustomComponent {
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   hangLock?: boolean; // swept vertramp: retain airborne coping-plane contact around bends
-  // SIDE-ON PIPE: a straight, axis-aligned 90° half that a side-scrolling stretch looks ACROSS. It keeps the analytic pipe ride and adds what that view needs: the ride is locked to the cross axis (the stick pumps, it never steers out of the picture), a walker crossing a decked coping drops in on the board (a rider who rolls up to it waits on it, drops straight in or flies off it, by his speed), Jump in the hang with the stick held out over a lip pops the air out across it (onto that wall's deck, landing on foot unless a direction is still held, or into the pipe mouth beyond a shared ridge), and the open ends show a filled section to the camera. `deck` then reads as the depth of the deck behind each coping.
-  // A vert does not need the flag to be one: ANY straight vertramp standing in a side-on zone with its section along the line (yaw 0 or 180, arc 90, no outerBank) is seen across its section and rides the same analytic profile, a quarter (one wall, the flat open on the other side) as much as a half, with its `lipRise` and its `deck`. The flag is only what lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
+  // SIDE-ON PIPE: a straight, axis-aligned 90° vert that the course CROSSES, in over one lip and out over the other (a side-scrolling stretch looks across it; a forward one meets it head-on). It keeps the analytic pipe ride and adds what crossing it needs: the ride is locked to the cross axis (the stick pumps, it never steers along the pipe), a walker crossing a decked coping drops in on the board (a rider who rolls up to it waits on it, drops straight in or flies off it, by his speed), Jump in the hang with the stick held out over a lip pops the air out across it (onto that wall's deck, where he lands on the board like any other air, or into the pipe mouth beyond a shared ridge), and the open ends show a filled section to the camera. `deck` then reads as the depth of the deck behind each coping.
+  // In a side-on zone a vert does not need the flag to be one: ANY straight vertramp standing in it with its section along the line (yaw 0 or 180, arc 90, no outerBank) is seen across its section and rides the same analytic profile, a quarter (one wall, the flat open on the other side) as much as a half, with its `lipRise` and its `deck`. Outside such a zone the flag is what says so, on the same shapes; and it is what lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
   // SIDE-ON ZONE (east/west `zone`): the stretch is played on ONE line. A board there cannot carve a U-turn in depth, so its heading stays on the travel axis and the stick held against travel is the pull-back brake.
   sideOn?: boolean;
   wallRise?: [number, number]; // side-on vertramp: transition radius of the wall on the -cross / +cross side (yaw 0: west / east), overriding `rise` per wall; 0 leaves that side open so the flat rolls straight out
@@ -2680,6 +2680,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: 'side-pipe-lab', name: SIDE_PIPE_LAB_LEVEL.name, data: SIDE_PIPE_LAB_LEVEL }, // side-scrolling course through halfpipes seen across their section
+  { id: 'side-pipe-lab-forward', name: SIDE_PIPE_LAB_FORWARD_LEVEL.name, data: SIDE_PIPE_LAB_FORWARD_LEVEL }, // the same course met head-on, the camera behind the rider
   {id:'ember-court',name:EMBER_COURT_LEVEL.name,data:EMBER_COURT_LEVEL},
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
@@ -3414,14 +3415,19 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
         component.pts.some(p=>!finiteTuple(p,2,5)))return null;
     }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
-    // A side-on pipe is the analytic half only: one straight axis-aligned run
-    // with vertical lips. Its per-wall shape means nothing on any other part.
+    // A side-on vert is the analytic profile only: one straight axis-aligned
+    // run with vertical lips. Its per-wall shape means nothing on any other part.
     if(component.sideOn!==undefined&&component.t==='zone'){
       // ...and a side-on ZONE is an east/west stretch played on one line.
       if(component.dir==='N'||component.dir==='S')return null;
-    }else if(component.sideOn!==undefined&&(component.t!=='vertramp'||component.vert===false||component.pts!==undefined||
-      (component.vkind??'quarter')!=='half'||(component.arc??90)!==90||(component.lipRise??0)!==0||(component.outerBank??0)!==0||
-      (((component.yaw??0)%90)+90)%90!==0))return null;
+    }else if(component.sideOn!==undefined){
+      if(component.t!=='vertramp'||component.vert===false||component.pts!==undefined||
+        (component.arc??90)!==90||(component.outerBank??0)!==0)return null;
+      // The plain half lies along either axis. One wall, or a straight face
+      // above the curve, is crossed east-west (as it is in a side-on zone).
+      const turn=(component.vkind??'quarter')==='half'&&(component.lipRise??0)===0?90:180;
+      if((((component.yaw??0)%turn)+turn)%turn!==0)return null;
+    }
     for(const key of ['wallRise','wallDeck'] as const){
       const pair=component[key];
       if(pair===undefined)continue;
@@ -15877,8 +15883,11 @@ export class Level {
     // face above its curve or a deck behind its lip. Every such vert rides the
     // one analytic profile, so the drop-in over its lip, the pendulum, the air
     // above its coping and the transfer out of it are the same on all of them.
+    // (`sideOn` on the part says the same thing without a side-on stretch
+    // round it: the course crosses this vert, whichever way the camera looks.)
     const acrossSection = straight && arc === 90 && outerBank === 0 && c.vert !== false && yawQ % 180 === 0 &&
-      this.sideViewZones.some((z) => c.p[0] >= z.xMin && c.p[0] <= z.xMax && c.p[2] >= z.zMin && c.p[2] <= z.zMax);
+      (c.sideOn === true ||
+        this.sideViewZones.some((z) => c.p[0] >= z.xMin && c.p[0] <= z.xMax && c.p[2] >= z.zMin && c.p[2] <= z.zMax));
     const sideOn = acrossSection || (c.sideOn === true && straight && vkind === "half" && arc === 90 &&
       lipRise === 0 && outerBank === 0 && yawQ % 90 === 0);
     if (

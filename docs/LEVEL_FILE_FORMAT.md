@@ -35,11 +35,13 @@ normal `pts`, `w`, `rise`, `collisionHeight` and `solid` fields.
 
 ## Side-on pipes
 
-A straight, axis-aligned, 90-degree `vertramp` half may set `sideOn: true` for a pipe that a
-side-scrolling stretch looks across: the ride is locked to its cross axis, a decked coping drops a
-walker in on the board, and Jump in the hang with the stick held out over a lip pops the air out
-across it (onto a deck, landing on foot unless a direction is still held, or into the next pipe over a
-shared ridge). A rider who rolls up to a decked coping along the deck waits on it, drops straight in or
+A straight, axis-aligned, 90-degree `vertramp` may set `sideOn: true` for a vert the course crosses
+(a side-scrolling stretch looks across it; a forward one meets it head-on): the ride is locked to its
+cross axis, a decked coping drops a walker in on the board, and Jump in the hang with the stick held
+out over a lip pops the air out across it (onto a deck, landing on the board, or into the next pipe
+over a shared ridge). A plain half takes the flag on either axis; a quarter (one wall), or any vert
+with a straight face above its curve (`lipRise`), takes it at `yaw` 0 or 180 only. Inside an
+east/west side-on `zone` such a vert rides this way without the flag. A rider who rolls up to a decked coping along the deck waits on it, drops straight in or
 flies off it by his speed (`docs/SIDE_ON_PIPES.md`). Such a pipe may give
 each wall its own radius with `wallRise: [a, b]` (0–60; a non-zero radius is at least 0.5, and 0
 leaves that side open) and each coping its own deck depth with `wallDeck: [a, b]` (0–60). Both

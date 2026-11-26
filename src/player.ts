@@ -1684,8 +1684,6 @@ export class Player {
   // with the stick held out over the lip. That release arms it; it is taken
   // as soon as the air has cleared what it is to land on.
   private sideOnCarryArmed = false;
-  // ...and that air leaves the pipe behind. It lands on foot.
-  private sideOnExitAir = false;
   // The drop-in's drawn path (see SIDE_ON_DROP_IN_SECONDS): where the picture
   // was, and how it was moving, relative to the rider the step he was seated.
   private dropInT = -1;
@@ -4746,7 +4744,7 @@ export class Player {
     this.dropInStancePose = this.dropInLeanPose = this.dropInCrouchPose = 0;
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
-    this.sideOnCarryArmed = this.sideOnExitAir = false;
+    this.sideOnCarryArmed = false;
     this.lockedCoping=null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -7857,15 +7855,8 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    // The air that carried a rider out of a side-on pipe ends the board
-    // section its drop-in began, IF HE LETS IT: landed with the stick at rest,
-    // he steps off. A direction still held as he lands is a rider who means to
-    // keep riding, and he does. (X held with a direction is the ordinary
-    // push-off, and keeps the board too.)
-    if (this.sideOnExitAir) {
-      this.sideOnExitAir = false;
-      if (this.freeSkate && sidePipe === null && !pushingOff && !stickHeld && !this.alwaysSkate && !this.parkControls) this.stepOff = true;
-    }
+    // (The air that carries a rider out of a side-on pipe lands like any other air: on the board. He gets
+    // off it there the way he gets off it anywhere, by braking or by running out of speed.)
     if(input.grabHeld||this.stepOff||!this.freeSkate||Math.abs(this.speed)>.5)this.raceStartMounted=false;
     const rollingOut = this.freeSkate && (this.alwaysSkate || this.raceStartMounted || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
@@ -11027,8 +11018,7 @@ export class Player {
       this.pipeHang = true;
       this.grabSpinAngle = 0; // start the hang un-spun; a held direction rotates from here
     }
-    this.sideOnSpinLatch = this.groundHit?.halfpipe?.sideOn && Math.abs(this.rawInput.moveX) > 0.3
-      ? Math.sign(this.rawInput.moveX) : 0;
+    this.sideOnSpinLatch = this.groundHit?.halfpipe?.sideOn ? this.sideOnTravelStick(this.groundHit.halfpipe) : 0;
     if (launch) {
       this.vVel += TUNING.hangLaunch;
       this.charging = false;
@@ -11085,7 +11075,7 @@ export class Player {
     this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
     this.rollOffT = 0; // ...and re-owns a levelling ride-out's pose
     this.vertAir = true;
-    this.sideOnCarryArmed = this.sideOnExitAir = false;
+    this.sideOnCarryArmed = false;
     if (this.freeSkate && this.airFromSkate && this.airGrav === 'board')
       beginVertBoardRelease(this.vertBoardRelease);
     else resetVertBoardRelease(this.vertBoardRelease);
@@ -12253,6 +12243,19 @@ export class Player {
     return true;
   }
 
+  /**
+   * Left or right on the stick, as the TRAVEL stick of a pipe that is crossed:
+   * its sign while it is held, when the pipe's line runs across the screen (a
+   * side view, where left and right are the way in and the way out). Seen from
+   * behind, the line runs into the picture: forward and back are travel, and
+   * left and right are never anything but a fresh direction.
+   */
+  private sideOnTravelStick(hp: Halfpipe): number {
+    const lineOnScreenX = hp.axis === 'z' ? -this.camDir.z : this.camDir.x; // the pipe's line . camera-right
+    const rx = this.rawInput.moveX;
+    return Math.abs(lineOnScreenX) > 0.5 && Math.abs(rx) > 0.3 ? Math.sign(rx) : 0;
+  }
+
   /** Keep the board on the pipe's cross axis; the swing only ever reverses. */
   private lockSideOnHeading(hp: Halfpipe): void {
     const zAxis = hp.axis === 'z';
@@ -12301,8 +12304,7 @@ export class Player {
       // is going: it spins nothing until it has been let go (see spinStick).
       this.dropInFlyPipe = hp;
       this.dropInFlewOff = true;
-      const rx = this.rawInput.moveX;
-      this.sideOnSpinLatch = Math.abs(rx) > 0.3 ? Math.sign(rx) : 0;
+      this.sideOnSpinLatch = this.sideOnTravelStick(hp);
       return false;
     }
     if (setup ? setup.perch : came < SIDE_ON_DROP_IN.slow) { this.beginDropInPerch(hp, side, came); return true; }
@@ -12575,7 +12577,6 @@ export class Player {
         landing.y < lipY - 0.75) { this.sideOnCarryArmed = false; return; }
     if (this.pos.y < landing.y + 0.12) return; // not over it yet: stay armed while the stick is held
     this.sideOnCarryArmed = false;
-    this.sideOnExitAir = true;
     this.vertAir = false;
     this.pipeHang = false;
     this.hangPipe = null;
@@ -12899,7 +12900,7 @@ export class Player {
     this.pipeHang = false;
     this.hangPipe = null;
     this.sideOnSpinLatch = this.sideOnBalanceLatch = 0;
-    this.sideOnCarryArmed = this.sideOnExitAir = false;
+    this.sideOnCarryArmed = false;
     this.vertLatVel = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
@@ -13855,7 +13856,7 @@ export class Player {
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
     this.naturalGrindRail = null; this.naturalGrindGrace = 0;
-    this.sideOnCarryArmed = this.sideOnExitAir = false; // a rail keeps the board
+    this.sideOnCarryArmed = false; // a rail keeps the board
     if (this.manualing !== 0) this.endManual();
     if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
     // Use this flight's landed trick, not the combo total (which includes
@@ -24331,9 +24332,11 @@ export class Player {
     const stanceTarget = perched ? 1 - 0.72 * tipping
       : setUp ? (setUp.perch ? 0.5 * eased((setK - 0.35) / 0.6) : 0.42 * eased((setK - 0.3) / 0.5) * (1 - 0.6 * eased((setK - 0.8) / 0.2))) : 0;
     const leanTarget = perched ? tipping : setUp && !setUp.perch ? 0.7 * eased((setK - 0.45) / 0.55) : this.dropInT >= 0 && this.dropInT < 0.1 ? (this.dropInLeanPose > 0.7 ? 1 : 0.7) : 0;
-    const dropInCrouch = perched ? 0.55 + 0.35 * tipping : setUp ? (setUp.perch ? 0.55 : 0.6) * eased(setK / 0.6)
+    // (he folds as he is brought to the coping, and stands easy once he is on it: knees soft, not a crouch)
+    const dropInCrouch = perched ? 0.26 + 0.64 * tipping : setUp ? (setUp.perch ? 0.5 : 0.6) * eased(setK / 0.6)
       : this.dropInT >= 0 && this.dropInT < 0.12 ? 0.85 : 0;
-    this.dropInStancePose += (stanceTarget - this.dropInStancePose) * (1 - Math.exp(-(stanceTarget > this.dropInStancePose ? 20 : 15) * dt));
+    // (on the coping the tail is set down, not dropped: the last of the stance comes on at half the pace)
+    this.dropInStancePose += (stanceTarget - this.dropInStancePose) * (1 - Math.exp(-(stanceTarget > this.dropInStancePose ? (perched ? 10 : 20) : 15) * dt));
     this.dropInLeanPose += (leanTarget - this.dropInLeanPose) * (1 - Math.exp(-(leanTarget > this.dropInLeanPose ? (perched ? 20 : 14) : 9) * dt));
     this.dropInCrouchPose += (dropInCrouch - this.dropInCrouchPose) * (1 - Math.exp(-(dropInCrouch > this.dropInCrouchPose ? 14 : 9) * dt));
     if (stanceTarget === 0 && this.dropInStancePose < 0.002) this.dropInStancePose = 0;

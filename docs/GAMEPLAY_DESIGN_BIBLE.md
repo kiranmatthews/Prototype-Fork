@@ -1987,17 +1987,18 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 
 ### XV.14 Side-on pipes (measured)
 
-A `vertramp` half with `sideOn: true` is a halfpipe on a side-scrolling path, ridden across its section:
-the walker is dropped in on the board as they cross the coping, and Jump in the hang with the stick held
-out over a lip (the spine transfer's input) pops the air out across it, landing on foot unless a direction
-is still held as he lands ([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). The stick alone never leaves a
-pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
+A `vertramp` with `sideOn: true` is a vert the course CROSSES, ridden across its section: a halfpipe on a
+side-scrolling path, or the same pipe met head-on with the camera behind (test courses `side-pipe-lab`
+and `side-pipe-lab-forward`, which are one component list seen two ways). The walker is dropped in on the
+board as they cross the coping, and Jump in the hang with the stick held out over a lip (the spine
+transfer's input) pops the air out across it, landing on the board like any other air
+([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md)). The stick alone never leaves a pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
 `tools/test-side-pipe-lab.mjs`):
 
 | Fact | Value | What it means for layout |
 |---|---|---|
 | Automatic drop-in | 0.85 × the approach speed, never under 4 m/s | the deck is a mode change: the checkpoint goes before it |
-| Equal 3.5 m walls | first far-lip launch 18 m/s; popped out, it lands about 5 m past the lip, on foot | exit deck plus the floor behind it ≥ 7 m; that floor is ordinary on-foot platforming |
+| Equal 3.5 m walls | first far-lip launch 18 m/s; popped out, it lands about 5 m past the lip, on the board at 4.5 m/s | exit deck plus the floor behind it ≥ 7 m; braked, that floor is on-foot platforming 0.6 s and 1.7 m later |
 | 2.5 m wall against a 7 m wall | the first swing climbs 4.45 m; the second clears it; X held on the walls, or a charged approach, clears it at once | a far wall ≥ 2.5 × the entry wall asks for a second swing; pumping is the shortcut, never the only way |
 | Spine into a second pipe (5 m wall, 3.5 m decked far wall) | lands on its near wall at 15 m/s, launches off the far lip at 23 m/s; popped out, lands 5.6 m past it | the far deck is the spine's landing; the transfer keeps the board, the pop-out ends it |
 | Spine into a 5 m ramp with an open far side | rolls out at 23–30 m/s, still on the board | only for a skated stretch: a smash lane and 40 m of run-out that ends in a gate or another pipe, never a step |
@@ -2012,8 +2013,9 @@ pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tool
 | Long rail (52 m falling 16 m) | 2.4 s balanced, leaves at 30.5 m/s; on the held travel stick the grind is lost 1.2 s in | the escalation, behind its own checkpoint; a rail over about a second long is a balance exam |
 | The air off a rail on a side-on line | the stick toward travel never spins the board | a balanced grind can be followed by "right" without a sideways landing |
 
-Popping out of a pipe lands on foot (with the stick at rest; a direction still held keeps the board, and
-he rolls on from about 4.5 m/s), so the stretch after it is plain platforming: steps of 1.6 m or less
+Popping out of a pipe lands on the board at about 4.5 m/s, like any other air. He gets off it there as he
+does anywhere, by braking or by rolling to a stop (the brake has him on his feet 0.6 s and 1.7 m after
+the touchdown), so the stretch after a pipe can still be plain platforming: steps of 1.6 m or less
 (a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands from the ground: a
 wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
 a board.
@@ -2028,6 +2030,25 @@ walker collects them unhurt. A Watcher hovering at 1.65 m is out of a grounded s
 walked under between swoops; a jump-spin takes it. A Mossback's shell bounce heads a row 5.7 m up; a
 double jump (5.5 m) does not. A stack's cap drops into the lane when its base is spun: keep stacks
 ≥ 9 m back from a brink or a timed footing, and Watchers ≥ 10 m.
+
+**The same pipe met head-on** (a forward stretch, the camera behind; `side-pipe-lab-forward` is the
+side-scrolling course seen that way, part for part). Mark each vert `sideOn`: without a side-on zone
+round it that is what says the course crosses it. Every move is then the same, read against the camera:
+forward over the near coping drops him in, Jump in the far hang with the stick forward pops him out, back
+at a lip he is waiting on backs him out, and left and right only ever lean a rail. Three things change for
+the designer:
+
+- **The camera.** A rig trailing low behind the rider loses him behind the near deck on the way down and
+  out of the top of the frame in a hang. Give the level a higher, steeper `cameraRig` (the forward lab:
+  6.5 m back, 7.5 m up, 34° down) and `cameraAirLift: 1`, so the picture rises with a hang.
+- **The line.** The ride across a pipe is locked to its cross axis, so the stick does not steer along it:
+  he leaves a pipe as far off the centre line as he entered it. Whatever a hang has to reach (a rail over
+  the lip, a box over the coping) hangs where the approach lines him up, and the deck before the lip is
+  where he does it: ≥ 4 m of it.
+- **A stretch played back toward the camera** needs a view of its own (a heading-only `cameraView` over
+  it, yaw toward its travel). The rig takes about a second to come round, so leave ≥ 10 m of plain floor
+  between where the turn begins and the first thing it faces. A direction held through the turn keeps its
+  meaning, and the next fresh press is read against the picture as it then is.
 
 ### XV.15 Wall kick and wallplant (measured)
 
@@ -2117,8 +2138,9 @@ the last of the deck begins; the board's own cruise is 12 m/s, a push-off is 5):
 | 8–17 m/s (a cruise, a charge along one 7 m deck) | **drops straight in**, slowed to 55 % over the last 1.2–2.8 m, with no pause and no way to call it off | arrives on the wall at 4.5–9.5 m/s whatever he pressed: the wall's own height then sets his speed at its foot (a 5 m wall: 23 m/s) |
 | 17 m/s and up (the foot of any wall ≥ 3 m, a long charge, a downhill deck) | **rolls off the edge into the air** with all of his speed and clears the curve (4.5 m out for every 2.5 m of wall at 17 m/s; 8 m at 20 m/s off a 5 m wall) | a staircase of verts is one drop-in and then airs. Leave ≥ 8 m of clear landing past the foot of each wall after the first, and keep hazards off that landing: he cannot shorten the air |
 
-Out of a pipe's air onto a deck (the pop-out), he keeps the board while a direction is held and steps off
-it when the stick is at rest; Board Abandon is open in that air and in a spine transfer's.
+Out of a pipe's air onto a deck (the pop-out) he lands on the board, whatever the stick is doing: nothing
+dismounts him but the brake or running out of speed. Board Abandon is open in that air and in a spine
+transfer's.
 
 ---
 
@@ -2968,9 +2990,9 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
 - [ ] A side-on pipe that must be read at a glance is about 12 m lip to lip (in frame from its near lip)
-  and is left by a pop-out onto a deck (which lands on foot, or still on the board at about 4.5 m/s if a
-  direction is held) or by a transfer into another pipe; an exit
-  that keeps the board (a rail, an open ramp) lands in another pipe or on a clear floor that ends in a
+  and is left by a pop-out onto a deck (which lands on the board at about 4.5 m/s, with ≥ 7 m of deck
+  and floor to brake or roll on) or by a transfer into another pipe; an exit
+  that arrives fast (a rail, an open ramp) lands in another pipe or on a clear floor that ends in a
   gate or a pipe, never a step (XV.14).
 - [ ] A rail longer than about a second of grinding is a balance exam: it has a short rail before it and
   its own checkpoint (XV.14).

@@ -18,8 +18,9 @@
 //     pipe that is walked into), the ride never leaves the single play plane,
 //     and the drop-in is DRAWN as one continuous curve;
 //   · popping out takes the spine transfer's input — Jump in the hang with the
-//     stick held out over the lip — and lands on foot; the stick alone never
-//     leaves a pipe;
+//     stick held out over the lip — and lands on the board, like any air: he
+//     gets off it by braking (the bot does, the course between pipes being
+//     walked) or by rolling to a stop; the stick alone never leaves a pipe;
 //   · P1 PUMP: a held direction alone falls short of the 7 m east lip on the
 //     first swing, hangs off the WEST lip on the way back, clears the lip on a
 //     later swing and transfers over the ridge; holding X clears it at once;
@@ -40,7 +41,7 @@
 //   · P4 SWITCH: with the `!` unhit there is no way out over the east wall;
 //     the west hang heads the `!`, and only then does the pop-out land;
 //   · P5–P7 CASCADE: two spine transfers in a row, each ridge crossed in the
-//     air, and the last pipe popped out of on foot;
+//     air, and the last pipe popped out of;
 //   · P8 RAIL: the hang catches the rail and, on the travel stick alone, the
 //     grind rides it into the next pipe; the grind button held too early
 //     parks a lip stall instead, which settles back into the pipe;
@@ -191,11 +192,14 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       `${q.name}: the drop-in seats the rider on the wall just under the lip (x ${mount.x.toFixed(2)}, y ${mount.y.toFixed(2)})`);
     assert.ok(mount.speed >= 4, `${q.name}: the drop-in keeps rolling speed`);
   }
-  // Popping out: Jump in the east hang, right held. It lands on the deck, on foot.
+  // Popping out: Jump in the east hang, right held. It lands on the deck, on the board like any air; the
+  // bot gets off it there by braking, because the course between the pipes is walked.
   for (const q of [P0, L1, DEEP, VALLEY, SWITCH_PIPE, C3, RAIL_CATCH]) {
     const out = run.exits.get(q.name);
     assert.ok(out, `${q.name}: Jump in the east hang with right held pops out past the east lip`);
-    assert.ok(out.onFoot, `${q.name}: the pop-out lands on foot (touched down at x ${out.x.toFixed(1)})`);
+    assert.ok(out.onBoard, `${q.name}: the pop-out lands on the board (touched down at x ${out.x.toFixed(1)}, ${out.speed.toFixed(1)} m/s)`);
+    assert.ok(out.onFoot && out.offAfter < 1.5 && out.offAt - out.x < 3,
+      `${q.name}: the brake has him off it within a few metres (${out.onFoot ? out.offAfter.toFixed(2) + ' s, ' + (out.offAt - out.x).toFixed(1) + ' m' : 'never'})`);
   }
   // P1: short, back for a west hang, then over the ridge into the second pipe.
   const firstReach = run.firstEastReach.get(P1.name);
@@ -438,12 +442,14 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   {
     play({ until: (log, q) => log.exits.get(P0.name)?.onFoot === true && q.grounded && q.pos.x > P0.eastLip + 1.5, seconds: 20 });
     assert.ok(p.grounded && !p.freeSkate, 'reference: on foot on the deck past P0');
+    // (he got off by braking: a stop by the brake holds him for a moment before he can move again)
+    for (let k = 0; k < 80; k++) step(makeInput());
     const input = makeInput();
     for (let k = 0; k < 70 && !p.freeSkate; k++) { input.moveX = 1; input.jumpPressed = k === 0; input.jumpHeld = true; step(input); }
     // letting go of X pops a small ollie; wait for the wheels to come back down
     input.jumpHeld = false; input.jumpReleased = true;
     for (let k = 0; k < 90 && (k < 2 || !p.grounded); k++) { input.moveX = 1; step(input); }
-    assert.ok(p.freeSkate && p.grounded && p.speed > 5, 'reference: X + right pushes off onto the board');
+    assert.ok(p.freeSkate && p.grounded && p.speed > 3.5, `reference: X + right pushes off onto the board (${p.speed.toFixed(1)} m/s)`);
     const turnedAt = p.pos.x;
     let eastmost = turnedAt, onFootAt = null, westDropIn = false, home = false, hangW = 0, heldWas = false;
     for (let k = 0; k < 1100 && !home; k++) {
@@ -456,12 +462,12 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       eastmost = Math.max(eastmost, p.pos.x);
       if (onFootAt === null && !p.freeSkate && p.grounded) onFootAt = p.pos.x;
       if (!wasFree && p.freeSkate && p.groundHit?.halfpipe && p.axisF.x < 0) westDropIn = true;
-      home = p.grounded && !p.freeSkate && p.pos.x < P0.westLip - 1;
+      home = p.grounded && p.pos.x < P0.westLip - 1 && Math.abs(p.pos.y - P0.westLipY) < 0.1;
     }
     assert.ok(eastmost - turnedAt < 6, `held left stops the board within a few metres (rolled ${(eastmost - turnedAt).toFixed(2)} m on)`);
     assert.ok(onFootAt !== null, 'the brake steps the rider off the board');
     assert.ok(westDropIn, 'walking back over the east coping drops in again, heading west');
-    assert.ok(home, 'and Jump + left in the west hang pops out onto the west deck: the pipe works in both directions');
+    assert.ok(home && p.freeSkate, 'and Jump + left in the west hang pops out onto the west deck, still on the board: the pipe works in both directions');
   }
 
   // ---- 9 · the pipe is ridden on its cross axis, whatever the stick says -------
@@ -486,16 +492,56 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.ok(p.grounded && !p.freeSkate && p.pos.x > P0.eastLip + 3 && Math.abs(p.pos.y - P0.eastLipY) < 0.1,
     `P0 jumped into: he runs up its east wall and climbs out onto the deck on foot (${jumped.trouble.join('; ')})`);
 
-  // ---- 9c · out of a pipe, a rider who keeps a direction held keeps his board -------------
-  // The air out over a lip used to end on foot whatever the stick was doing. It ends on foot for a
-  // rider who has let the stick go as he lands (every other run in this file); held, he rides on.
+  // ---- 9c · the air out of a pipe lands on the board, whatever the stick is doing -------------
+  // It used to end on foot. Now he gets off the board there the way he does anywhere: by braking, or
+  // by letting it roll to a stop. Nothing about leaving a pipe takes it from under him.
   {
     const kept = play({ ride: true, seconds: 20, until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 2.5 });
     assert.ok(p.grounded && p.freeSkate && p.pos.x > P0.eastLip + 2.5 && Math.abs(p.pos.y - P0.eastLipY) < 0.1,
       `P0 popped out of with right still held: he lands on the deck and rides on (${p.freeSkate ? 'board' : 'foot'}; ${kept.trouble.join('; ')})`);
-    // (the step off is the landing's next step: the run is read once he is off, or has plainly ridden on)
-    const let_go = play({ seconds: 20, until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 2.5 && (!q.freeSkate || q.pos.x > P0.eastLip + 5.6) });
-    assert.ok(p.grounded && !p.freeSkate && p.pos.x < P0.eastLip + 5.6, `...and with the stick let go as he lands, he steps off (${let_go.trouble.join('; ')})`);
+    // the stick let go in that air, and nothing pressed: he lands on the board all the same, and rolls
+    {
+      const out = play({ ride: true, seconds: 20, until: (log, q) => q.state === 'air' && !q.vertAir && q.freeSkate && q.pos.x > P0.eastLip + 0.3 });
+      assert.ok(p.state === 'air' && p.freeSkate, `reference: in the air out of P0 (${out.trouble.join('; ')})`);
+      let landedOn = null, rolled = 0;
+      for (let k = 0; k < 240 && rolled < 30; k++) { step(makeInput()); if (p.grounded) { landedOn ??= p.freeSkate ? 'board' : 'foot'; rolled++; } }
+      assert.ok(landedOn === 'board' && p.freeSkate && Math.abs(p.speed) > 1, `with the stick at rest he lands on the board and is still on it half a second later (${landedOn}, ${p.speed.toFixed(1)} m/s)`);
+      // ...and the brake is how he gets off it
+      let off = -1; const brake = makeInput(); brake.grabHeld = true;
+      for (let k = 0; k < 180 && off < 0; k++) { step(brake); if (!p.freeSkate && p.grounded) off = k; }
+      assert.ok(off >= 0 && off < 120 && p.pos.x < P0.eastLip + 9, `the brake stops the board and steps him off it (${off} steps, ${(p.pos.x - P0.eastLip).toFixed(1)} m past the lip)`);
+    }
+  }
+
+  // ---- 9d · a deck is held clear of the coping it is AT, and of no other --------------------
+  // The rule that keeps a deck on the grip side of a coping remembers that coping for most of a second.
+  // In that time a pumped rider is across the pipe: X held down the east wall and over the flat, let go at
+  // the foot of the west wall, which pops him into a hang there (as it always did), 10 m from the lip he
+  // left. With the deck's normal pointing back at that lip the rule used to carry the deck all the way to
+  // it, and him with it, for a quarter of a second.
+  {
+    const hung = play({ pop: false, seconds: 20, until: (log, q) => q.vertAir && q.pos.x > P0.cross + P0.flatHalf });
+    assert.ok(p.vertAir && p.freeSkate, `reference: in the hang over P0's east wall (${hung.trouble.join('; ')})`);
+    const drawnDeck = () => p.boardG.getWorldPosition(new THREE.Vector3()).add(p.dropInOffset);
+    let heldWas = false, popped = null, landed = false, worst = 0, hang = 0, since = -1, sinceAtPop = -1;
+    for (let k = 0; k < 400 && !landed; k++) {
+      const input = makeInput();
+      const onPipe = p.freeSkate && p.grounded && !!p.groundHit?.halfpipe;
+      // X held from the moment he is back on the east wall, and let go as the west wall begins
+      const held = onPipe && !popped && !(p.pos.x < P0.cross - P0.flatHalf && p.rideNormal.y < 0.9);
+      if (onPipe && since < 0 && p.pos.y > P0.eastLipY - 1.8) since = 0;
+      input.jumpHeld = held; input.jumpPressed = held && !heldWas; input.jumpReleased = !held && heldWas; heldWas = held;
+      const wasAir = p.state === 'air';
+      step(input);
+      if (since >= 0) since++;
+      if (!popped && !wasAir && p.vertAir && p.pos.x < P0.cross) { popped = { x: p.pos.x, y: p.pos.y, n: p.rideNormal.y }; sinceAtPop = since; }
+      if (popped && p.state === 'air') { hang++; const deck = drawnDeck(); worst = Math.max(worst, Math.hypot(deck.x - p.pos.x, deck.y - p.pos.y)); }
+      landed = !!popped && p.grounded;
+    }
+    assert.ok(popped && popped.x < P0.cross - P0.flatHalf && popped.y < P0.westLipY - 2 && popped.n < 0.9 && hang > 30,
+      `reference: X let go at the foot of the west wall pops a hang there, ${popped ? (P0.westLipY - popped.y).toFixed(1) + ' m under its lip' : 'never'} (${hang} steps of it)`);
+    assert.ok(sinceAtPop > 0 && sinceAtPop < 48, `reference: ${(sinceAtPop / 60).toFixed(2)} s after he was last at the east coping with X held, so it is still remembered`);
+    assert.ok(worst < 1.6, `through that hang the deck is drawn at him, never at the lip he left (${worst.toFixed(2)} m from the controller point at most)`);
   }
 
   // ---- 10 · a hang stays on its line when it heads a solid -----------------------
@@ -618,7 +664,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     const [first, last] = held.grinds;
     assert.ok(first && !first.bailed && first.endX > RAIL.x1 - 0.5 && first.lean < 0.7,
       `P8 on the travel stick: the short rail is ridden whole, the needle at ${first?.lean.toFixed(2)} of 1`);
-    assert.ok(held.exits.get(RAIL_CATCH.name)?.onFoot, 'P9: and the pipe it drops into is popped out of on foot');
+    assert.ok(held.exits.get(RAIL_CATCH.name)?.onFoot, 'P9: and the pipe it drops into is popped out of, and the brake has him off the board on its deck');
     measured.longRailLost = last?.seconds?.toFixed(2);
     assert.ok(last && last.bailed && last.endX < LONG_RAIL.x1 - 5 && last.seconds > 0.9,
       `P10 on the travel stick: the needle runs away and the grind is lost ${last?.seconds?.toFixed(2)} s in, at x ${f1(last?.endX ?? 0)} of ${LONG_RAIL.x1}`);
@@ -653,6 +699,6 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     `held bounce ${measured.heldBounce} m/s.`);
   console.log(`PASS Side Pipe Lab: ${(FINISH.x0 + 38 + 15).toFixed(0)} m finished in ${run.t.toFixed(1)} s (${waited.toFixed(1)} s of it waiting) on held right; ` +
     `y ${f1(run.minY)} to ${f1(run.maxY)}; P1 first swing climbed ${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; ` +
-    `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs on foot, ${run.transfers.size} spine transfers, ${run.kills.length} enemies beaten, ` +
+    `${run.mounts.length} drop-ins, ${run.exits.size} pop-outs (landed on the board, braked off it), ${run.transfers.size} spine transfers, ${run.kills.length} enemies beaten, ` +
     `${run.checkpoints} checkpoints banked, no ledge grabs.`);
 });
