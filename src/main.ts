@@ -4595,7 +4595,7 @@ function advanceFrame(nowMs: number): void {
   // Character Lab owns the camera and persistent rest silhouette; the sim
   // stands down so slider edits never race gameplay or animation state.
   if (characterLab) {
-    characterLab.frame(dt);
+    characterLab.frame();
     ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
     return;
@@ -5038,7 +5038,6 @@ requestAnimationFrame(frame);
   getStretchableBoneDiagnostics: () => player.stretchableBoneDiagnostics,
   getMeshyTorsoDiagnostics: () => player.meshyTorsoDiagnostics,
   getMeshyHeadDiagnostics: () => player.meshyHeadDiagnostics,
-  getAlternateHeadDiagnostics: () => player.alternateHeadDiagnostics,
   getCharacterHeadStyle: () => player.characterHeadStyle,
   setCharacterHeadStyle: (style: Parameters<typeof player.setCharacterHeadStyle>[0]) =>
     player.setCharacterHeadStyle(style),

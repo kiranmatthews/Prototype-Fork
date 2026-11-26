@@ -38,7 +38,7 @@ export interface CharacterProportionSettingsValue {
 
 export type CharacterProportionKey = keyof CharacterProportionSettingsValue;
 
-export const CHARACTER_HEAD_PROFILE_IDS = ['skull', 'roo'] as const;
+export const CHARACTER_HEAD_PROFILE_IDS = ['skull'] as const;
 export type CharacterHeadProfileId = (typeof CHARACTER_HEAD_PROFILE_IDS)[number];
 
 export const CHARACTER_HEAD_PROFILE_KEYS = [
@@ -79,7 +79,7 @@ export interface SavedCharacterProportions {
   readonly defaultsRevision?: number;
   readonly settings: CharacterProportionSettingsValue;
   readonly defaults?: CharacterProportionSettingsValue;
-  /** Optional v1 extension. Older payloads seed both profiles from settings. */
+  /** Optional v1 extension. Older payloads seed the profile from settings; a retired profile's entry is ignored. */
   readonly headProfiles?: CharacterHeadProfiles;
 }
 
@@ -134,7 +134,7 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
     footSize: 1,
   });
 
-/** Source-owned silhouette (skull baseline); Player selects the tuned Roo profile. */
+/** Source-owned silhouette (skull baseline). */
 export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
   Object.freeze({
     overallScale: 1,
@@ -183,14 +183,6 @@ export const DEFAULT_CHARACTER_HEAD_PROFILES: ReadonlyCharacterHeadProfiles =
       neckLength: 0.01,
       headForwardOffset: -0.105,
       headRestPitch: 0,
-    }),
-    roo: Object.freeze({
-      headSize: 2.45,
-      headWidth: 1.18,
-      headDepth: 1.31,
-      neckLength: -1.82,
-      headForwardOffset: 0.09,
-      headRestPitch: -23,
     }),
   });
 
@@ -318,12 +310,11 @@ function copyCharacterHeadProfiles(
 ): CharacterHeadProfiles {
   return {
     skull: copyCharacterHeadProfile(value.skull),
-    roo: copyCharacterHeadProfile(value.roo),
   };
 }
 
 function isCharacterHeadProfileId(value: unknown): value is CharacterHeadProfileId {
-  return value === 'skull' || value === 'roo';
+  return (CHARACTER_HEAD_PROFILE_IDS as readonly unknown[]).includes(value);
 }
 
 type Listener = (value: Readonly<CharacterProportionSettingsValue>) => void;
@@ -382,7 +373,6 @@ export class CharacterProportionSettings {
     const profile = characterHeadProfileFrom(this.current);
     this.headProfileValues = {
       skull: copyCharacterHeadProfile(profile),
-      roo: copyCharacterHeadProfile(profile),
     };
     this.persistAndNotify();
   }
@@ -479,12 +469,6 @@ export class CharacterProportionSettings {
       skull: this.hydrateHeadProfile(
         saved,
         savedProfiles?.skull,
-        legacyProfile,
-        migrateStoredDefaults,
-      ),
-      roo: this.hydrateHeadProfile(
-        saved,
-        savedProfiles?.roo,
         legacyProfile,
         migrateStoredDefaults,
       ),

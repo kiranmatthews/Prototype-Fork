@@ -41,7 +41,9 @@ const {
     clampCharacterProportions,
 } = await loadSettingsModule();
 
-  assert.deepEqual(CHARACTER_HEAD_PROFILE_IDS, ['skull', 'roo']);
+  // Skull is the only head. BoolieRoo's 'roo' profile went with BoolieRoo; the per-head profile
+  // envelope stays, so a browser that saved under it still loads and another head can be added.
+  assert.deepEqual(CHARACTER_HEAD_PROFILE_IDS, ['skull']);
   assert.deepEqual(CHARACTER_HEAD_PROFILE_KEYS, [
     'headSize',
     'headWidth',
@@ -67,23 +69,24 @@ const {
 
   assert.equal(Object.isFrozen(DEFAULT_CHARACTER_HEAD_PROFILES), true);
   assert.equal(Object.isFrozen(DEFAULT_CHARACTER_HEAD_PROFILES.skull), true);
-  assert.equal(Object.isFrozen(DEFAULT_CHARACTER_HEAD_PROFILES.roo), true);
-  assert.notEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull,
-    DEFAULT_CHARACTER_HEAD_PROFILES.roo,
-    'each style owns an independent immutable authored-default snapshot');
-  assert.notDeepEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull,
-    DEFAULT_CHARACTER_HEAD_PROFILES.roo,
-    'skull and roo preserve their separately tuned head profiles');
+  assert.deepEqual(Object.keys(DEFAULT_CHARACTER_HEAD_PROFILES), ['skull'],
+    'the removed BoolieRoo profile must not come back as an authored default');
+  assert.deepEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull, {
+    headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
+    headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
+    headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
+    neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
+    headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
+    headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
+  }, 'the skull profile is the source-owned silhouette');
   assert.throws(
-    () => { DEFAULT_CHARACTER_HEAD_PROFILES.roo.headRestPitch = -12; },
+    () => { DEFAULT_CHARACTER_HEAD_PROFILES.skull.headRestPitch = -12; },
     TypeError,
   );
 
   const storage = memoryStorage();
   const settings = new CharacterProportionSettings(storage);
   assert.equal(settings.activeHeadProfile, 'skull');
-  assert.notDeepEqual(settings.headProfiles.skull, settings.headProfiles.roo,
-    'new skull and roo profiles must preserve their distinct authored defaults');
   assert.deepEqual(settings.headProfiles, DEFAULT_CHARACTER_HEAD_PROFILES);
   assert.notEqual(settings.headProfiles.skull, DEFAULT_CHARACTER_HEAD_PROFILES.skull,
     'live defaults must be cloned from the immutable authored snapshots');
@@ -100,39 +103,20 @@ const {
     torsoWidth: 1.27,
   });
   assert.equal(notifications, 1);
-  assert.equal(settings.getHeadProfile('skull').headRestPitch, 18);
-  assert.equal(settings.getHeadProfile('roo').headRestPitch, -23);
-
-  settings.setActiveHeadProfile('roo');
-  assert.equal(notifications, 2);
-  assert.equal(settings.value.headSize, DEFAULT_CHARACTER_HEAD_PROFILES.roo.headSize);
-  assert.equal(settings.value.headRestPitch, DEFAULT_CHARACTER_HEAD_PROFILES.roo.headRestPitch);
-  assert.equal(settings.value.torsoWidth, 1.27,
-    'switching heads must not replace shared body settings');
-  settings.setActiveHeadProfile('roo');
-  assert.equal(notifications, 2, 'selecting the active profile is a no-op');
-
-  settings.patch({
-    headSize: 1.32,
-    neckLength: 0.25,
-    headForwardOffset: -0.08,
-    headRestPitch: -14,
-    shoulderWidth: 1.18,
-  });
+  assert.deepEqual(settings.getHeadProfile('skull'), {
+    headSize: 1.8,
+    headWidth: 1.1,
+    headDepth: 0.9,
+    neckLength: -0.35,
+    headForwardOffset: 0.12,
+    headRestPitch: 18,
+  }, 'head edits must land in the active profile');
   settings.setActiveHeadProfile('skull');
-  assert.equal(settings.value.headSize, 1.8);
-  assert.equal(settings.value.neckLength, -0.35);
-  assert.equal(settings.value.headForwardOffset, 0.12);
-  assert.equal(settings.value.headRestPitch, 18);
-  assert.equal(settings.value.torsoWidth, 1.27);
-  assert.equal(settings.value.shoulderWidth, 1.18);
-  settings.setActiveHeadProfile('roo');
-  assert.equal(settings.value.headSize, 1.32);
-  assert.equal(settings.value.neckLength, 0.25);
-  assert.equal(settings.value.headForwardOffset, -0.08);
-  assert.equal(settings.value.headRestPitch, -14);
-  assert.equal(settings.value.torsoWidth, 1.27);
-  assert.equal(settings.value.shoulderWidth, 1.18);
+  assert.equal(notifications, 1, 'selecting the active profile is a no-op');
+  settings.patch({ shoulderWidth: 1.18 });
+  assert.equal(notifications, 2);
+  assert.equal(settings.getHeadProfile('skull').headRestPitch, 18,
+    'a body edit must leave the head profile alone');
 
   const persisted = JSON.parse(
     storage.values.get(CHARACTER_PROPORTION_STORAGE_KEY),
@@ -141,18 +125,61 @@ const {
     'head profiles extend the compatible v1 envelope');
   assert.equal('activeHeadProfile' in persisted, false,
     'Player head style remains the sole persisted profile selector');
-  assert.equal(persisted.settings.headRestPitch, -14,
+  assert.equal(persisted.settings.headRestPitch, 18,
     'flat settings must continue to describe the active profile');
+  assert.deepEqual(Object.keys(persisted.headProfiles), ['skull']);
   assert.equal(persisted.headProfiles.skull.headRestPitch, 18);
-  assert.equal(persisted.headProfiles.roo.headRestPitch, -14);
 
   const reloaded = new CharacterProportionSettings(storage);
   assert.equal(reloaded.activeHeadProfile, 'skull');
   assert.equal(reloaded.value.headRestPitch, 18);
   assert.equal(reloaded.value.shoulderWidth, 1.18);
-  reloaded.setActiveHeadProfile('roo');
-  assert.equal(reloaded.value.headRestPitch, -14);
-  assert.equal(reloaded.value.shoulderWidth, 1.18);
+  assert.deepEqual(reloaded.headProfiles, settings.headProfiles);
+
+  // A browser that last ran a build with BoolieRoo selected: the flat settings describe the head
+  // that no longer exists, and the envelope carries its profile beside the Skull's. He comes back
+  // as the Skull he had tuned, with his body as he left it, and the retired profile is not kept.
+  const retiredRoo = {
+    headSize: 1.32,
+    headWidth: 1.18,
+    headDepth: 1.31,
+    neckLength: 0.25,
+    headForwardOffset: -0.08,
+    headRestPitch: -14,
+  };
+  const tunedSkull = {
+    headSize: 1.8,
+    headWidth: 1.1,
+    headDepth: 0.9,
+    neckLength: -0.35,
+    headForwardOffset: 0.12,
+    headRestPitch: 18,
+  };
+  const retiredStorage = memoryStorage({
+    [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
+      version: 1,
+      handRestRevision: CHARACTER_HAND_REST_REVISION,
+      defaultsRevision: CHARACTER_PROPORTION_DEFAULTS_REVISION,
+      defaults: DEFAULT_CHARACTER_PROPORTIONS,
+      settings: { ...DEFAULT_CHARACTER_PROPORTIONS, ...retiredRoo, torsoWidth: 1.27 },
+      headProfiles: { skull: tunedSkull, roo: retiredRoo },
+    }),
+  });
+  const retired = new CharacterProportionSettings(retiredStorage);
+  assert.equal(retired.activeHeadProfile, 'skull');
+  assert.deepEqual(Object.keys(retired.headProfiles), ['skull'],
+    'a stored profile for a removed head must not be revived');
+  assert.deepEqual(retired.headProfiles.skull, tunedSkull);
+  assert.deepEqual(retired.value, { ...DEFAULT_CHARACTER_PROPORTIONS, ...tunedSkull, torsoWidth: 1.27 },
+    'a removed head\'s flat values must give way to the stored Skull profile, body settings kept');
+  assert.throws(() => retired.setActiveHeadProfile('roo'), /Unknown character head profile/);
+  assert.throws(() => retired.getHeadProfile('roo'), /Unknown character head profile/);
+  retired.patch({ hipWidth: 1.08 });
+  const resaved = JSON.parse(retiredStorage.values.get(CHARACTER_PROPORTION_STORAGE_KEY));
+  assert.deepEqual(Object.keys(resaved.headProfiles), ['skull'],
+    'the next save must drop the removed head\'s profile');
+  assert.equal(resaved.settings.headRestPitch, 18);
+  assert.equal(resaved.settings.hipWidth, 1.08);
 
   const {
     headRestPitch: _legacyHeadRestPitch,
@@ -173,8 +200,6 @@ const {
   });
   const legacy = new CharacterProportionSettings(legacyStorage);
   assert.equal(legacy.activeHeadProfile, 'skull');
-  assert.deepEqual(legacy.headProfiles.skull, legacy.headProfiles.roo,
-    'legacy shared head values must seed both profiles identically');
   assert.deepEqual(legacy.headProfiles.skull, {
     headSize: 1.44,
     headWidth: 1.16,
@@ -182,7 +207,7 @@ const {
     neckLength: -0.2,
     headForwardOffset: 0.09,
     headRestPitch: 0,
-  });
+  }, 'legacy shared head values must seed the profile');
   assert.equal(legacy.value.torsoWidth, DEFAULT_CHARACTER_PROPORTIONS.torsoWidth,
     'existing defaults migration must still apply to legacy body settings');
   assert.equal(legacy.value.wristRestPitch, DEFAULT_CHARACTER_PROPORTIONS.wristRestPitch,
@@ -193,13 +218,13 @@ const {
     headSize: 1.4,
     headRestPitch: 0,
   };
-  const revision3Profiles = new CharacterProportionSettings(memoryStorage({
+  const revision3 = (skull) => new CharacterProportionSettings(memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
       version: 1,
       handRestRevision: CHARACTER_HAND_REST_REVISION,
       defaultsRevision: 3,
       defaults: revision3Defaults,
-      settings: revision3Defaults,
+      settings: { ...revision3Defaults, ...skull },
       headProfiles: {
         skull: {
           headSize: 1.4,
@@ -208,27 +233,21 @@ const {
           neckLength: revision3Defaults.neckLength,
           headForwardOffset: revision3Defaults.headForwardOffset,
           headRestPitch: revision3Defaults.headRestPitch,
-        },
-        roo: {
-          headSize: 1.26,
-          headWidth: revision3Defaults.headWidth,
-          headDepth: revision3Defaults.headDepth,
-          neckLength: revision3Defaults.neckLength,
-          headForwardOffset: revision3Defaults.headForwardOffset,
-          headRestPitch: -9,
+          ...skull,
         },
       },
     }),
   }));
-  assert.equal(revision3Profiles.headProfiles.skull.headSize,
+  assert.equal(revision3({}).headProfiles.skull.headSize,
     DEFAULT_CHARACTER_PROPORTIONS.headSize,
     'an untouched stored profile follows authored-default migrations');
-  assert.equal(revision3Profiles.headProfiles.roo.headSize, 1.26,
+  const revision3Edited = revision3({ headSize: 1.26, headRestPitch: -9 });
+  assert.equal(revision3Edited.headProfiles.skull.headSize, 1.26,
     'a deliberately edited stored profile survives authored-default migrations');
-  assert.equal(revision3Profiles.headProfiles.roo.headRestPitch, -9);
+  assert.equal(revision3Edited.headProfiles.skull.headRestPitch, -9);
+  assert.equal(revision3Edited.value.headSize, 1.26);
 
   const legacyImport = new CharacterProportionSettings(memoryStorage());
-  legacyImport.setActiveHeadProfile('roo');
   legacyImport.patch({ headRestPitch: -22 });
   legacyImport.importJson(JSON.stringify({
     version: 1,
@@ -242,57 +261,59 @@ const {
       hipWidth: 1.08,
     },
   }));
-  assert.equal(legacyImport.activeHeadProfile, 'roo',
-    'a legacy import need not change the currently selected head');
-  assert.deepEqual(legacyImport.headProfiles.skull, legacyImport.headProfiles.roo);
+  assert.equal(legacyImport.activeHeadProfile, 'skull');
+  assert.equal(legacyImport.headProfiles.skull.headSize, 1.21,
+    'a flat import must seed the profile');
   assert.equal(legacyImport.value.headRestPitch, 7);
   assert.equal(legacyImport.value.hipWidth, 1.08);
 
   const exported = settings.serialize(false);
   const imported = new CharacterProportionSettings(memoryStorage());
-  imported.setActiveHeadProfile('roo');
   imported.importJson(exported);
-  assert.equal(imported.activeHeadProfile, 'roo');
+  assert.equal(imported.activeHeadProfile, 'skull');
   assert.deepEqual(imported.headProfiles, settings.headProfiles,
-    'profile-aware JSON must retain both profiles');
+    'profile-aware JSON must retain the profile');
   assert.deepEqual(imported.value, settings.value);
 
+  // JSON copied out of a build that still had BoolieRoo imports the same way a stored one loads.
+  const retiredImport = new CharacterProportionSettings(memoryStorage());
+  retiredImport.importJson(JSON.stringify({
+    version: 1,
+    handRestRevision: CHARACTER_HAND_REST_REVISION,
+    defaultsRevision: CHARACTER_PROPORTION_DEFAULTS_REVISION,
+    settings: { ...DEFAULT_CHARACTER_PROPORTIONS, ...retiredRoo, torsoWidth: 1.27 },
+    headProfiles: { skull: tunedSkull, roo: retiredRoo },
+  }));
+  assert.deepEqual(Object.keys(retiredImport.headProfiles), ['skull']);
+  assert.deepEqual(retiredImport.value, { ...DEFAULT_CHARACTER_PROPORTIONS, ...tunedSkull, torsoWidth: 1.27 });
+
   imported.reset();
-  assert.notDeepEqual(imported.headProfiles.skull, imported.headProfiles.roo);
   assert.deepEqual(imported.headProfiles, DEFAULT_CHARACTER_HEAD_PROFILES);
-  assert.notEqual(imported.headProfiles.roo, DEFAULT_CHARACTER_HEAD_PROFILES.roo,
+  assert.notEqual(imported.headProfiles.skull, DEFAULT_CHARACTER_HEAD_PROFILES.skull,
     'reset must clone rather than expose an authored profile object');
-  assert.deepEqual(imported.headProfiles.skull, {
-    headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
-    headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
-    headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
-    neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
-    headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
-    headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
-  });
-  assert.deepEqual(imported.value, {
-    ...DEFAULT_CHARACTER_PROPORTIONS, ...DEFAULT_CHARACTER_HEAD_PROFILES.roo,
-  });
+  assert.deepEqual(imported.value, DEFAULT_CHARACTER_PROPORTIONS);
 
   const replacement = new CharacterProportionSettings(memoryStorage());
-  replacement.setActiveHeadProfile('roo');
   replacement.replace({
     ...DEFAULT_CHARACTER_PROPORTIONS,
     headRestPitch: 11,
     headForwardOffset: 0.2,
   });
-  assert.deepEqual(replacement.headProfiles.skull, replacement.headProfiles.roo,
-    'the legacy flat replace API must seed both profiles');
+  assert.equal(replacement.headProfiles.skull.headRestPitch, 11,
+    'the legacy flat replace API must seed the profile');
+  assert.equal(replacement.headProfiles.skull.headForwardOffset, 0.2);
   assert.equal(replacement.value.headRestPitch, 11);
 
-  assert.throws(
-    () => replacement.setActiveHeadProfile('alternate'),
-    /Unknown character head profile/,
-  );
-  assert.throws(
-    () => replacement.getHeadProfile('alternate'),
-    /Unknown character head profile/,
-  );
+  for (const unknown of ['alternate', 'roo', 'cargo']) {
+    assert.throws(
+      () => replacement.setActiveHeadProfile(unknown),
+      /Unknown character head profile/,
+    );
+    assert.throws(
+      () => replacement.getHeadProfile(unknown),
+      /Unknown character head profile/,
+    );
+  }
 
   assert.equal(CHARACTER_PROPORTION_DEFAULTS_REVISION, 6,
     'Chrome-authored defaults advance the existing v1 migration revision');

@@ -75,16 +75,6 @@ try {
       }
       console.log(`${lite ? 'lite' : 'full'} ${name}: six motion frames, quarter/side/front`);
     }
-    if (!lite) for (const name of ['Balance bail', 'Blast', 'Crusher']) {
-      await page.evaluate(async name => {
-        window.__boneReview.start(name, .35, 'alternate'); await window.__game.player.preparePresentationAssets();
-      }, name);
-      for (const age of [.35, 2.8]) {
-        if (age > .35) await page.evaluate(age => window.__boneReview.until(age), age);
-        await page.waitForFunction(() => window.__boneReview?.snapshot().frozen);
-        await page.screenshot({ path: `${output}/full-roo-${name.toLowerCase().replaceAll(' ', '-')}-t${Math.round(age * 1000)}.png` });
-      }
-    }
   }
   assert.deepEqual(errors, []);
 } finally {

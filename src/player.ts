@@ -181,8 +181,6 @@ import {
   stepVertBoardRelease,
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
-import type { CargoRider, CargoExpression } from './character/cargoRider';
-import type { CargoTake } from './character/cargoRiderPerformance';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
 import { captureSpinCharacter } from './spin-effects/smear';
 import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';
@@ -240,10 +238,6 @@ import {
   meshyHeadTextureDiagnostics,
   type MeshyHeadComponent,
 } from './character/meshyHead';
-import type {
-  MeshyBoolieRooHeadComponent,
-  MeshyBoolieRooHeadTextureDiagnostics,
-} from './character/meshyBoolieRooHead';
 import {
   createMeshyShorts,
   meshyShortsTextureDiagnostics,
@@ -258,7 +252,8 @@ import {
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 const CHARACTER_HEAD_STYLE_STORAGE_KEY = 'solProtoCharacterHeadStyleV1';
-export type CharacterHeadStyle = 'skull' | 'alternate' | 'cargo';
+/** The heads he can wear. Skull is the only one; the setting and its saved key stay, so another can be added. */
+export type CharacterHeadStyle = 'skull';
 const CHARACTER_HEAD_STYLE_PLAYERS = new Set<Player>();
 let sharedCharacterHeadStyle: CharacterHeadStyle | null = null;
 
@@ -2105,27 +2100,6 @@ export class Player {
   private meshyTorso: MeshyTorsoComponent | null = null;
   private rivalShirt: RaceRivalShirt | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
-  private meshyBoolieRooHead: MeshyBoolieRooHeadComponent | null = null;
-  private meshyBoolieRooHeadLoadState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
-  private meshyBoolieRooHeadLoadError: string | null = null;
-  private meshyBoolieRooHeadLoading: Promise<void> | null = null;
-  private meshyBoolieRooHeadTextureDiagnostics:
-    (() => MeshyBoolieRooHeadTextureDiagnostics) | null = null;
-  private cargoRider: CargoRider | null = null;
-  private cargoState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
-  private cargoExpression: CargoExpression = 'live';
-  private pendingCargoTake?: {name: CargoTake; loop: boolean};
-  get cargoSurface(): CargoRider | null { return this.cargoRider; }
-  get cargoLoadState(): string { return this.cargoState; }
-  setCargoExpression(expression: CargoExpression): void {
-    this.cargoExpression = expression;
-    this.pendingCargoTake = undefined;
-    this.cargoRider?.selectExpression(expression);
-  }
-  playCargoTake(name: CargoTake, loop = false): void {
-    if (this.cargoRider) this.cargoRider.playTake(name, loop);
-    else this.pendingCargoTake = {name, loop};
-  }
   private characterHeadStyleValue: CharacterHeadStyle = DEFAULT_CHARACTER_HEAD_STYLE;
   private characterUpperArmRestAngleWeight = 1;
   private meshyShorts: MeshyShortsComponent | null = null;
@@ -2138,7 +2112,6 @@ export class Player {
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
   private headM: THREE.Bone | null = null; // semantic animated head bone above the profile mount
-  private headPresentation: THREE.Group | null = null; // profile-only child; never an animation joint
   private legs: THREE.Bone | null = null;
   private legL: THREE.Bone | null = null; // upper-leg bones
   private legR: THREE.Bone | null = null;
@@ -3263,32 +3236,6 @@ export class Player {
     };
   }
 
-  get alternateHeadDiagnostics(): {
-    readonly ready: boolean;
-    readonly active: boolean;
-    readonly triangles: number;
-    readonly sourceSha256: string | null;
-    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
-    readonly texturesLoaded: number;
-    readonly textureError: string | null;
-    readonly blink: NonNullable<MeshyBoolieRooHeadComponent['blink']>['diagnostics'] | null;
-  } {
-    const component = this.meshyBoolieRooHead;
-    const textures = this.meshyBoolieRooHeadTextureDiagnostics?.();
-    return {
-      ready: component !== null,
-      active: this.characterHeadStyleValue === 'alternate',
-      triangles: component?.triangles ?? 0,
-      sourceSha256: component?.sourceSha256 ?? null,
-      textureState: this.meshyBoolieRooHeadLoadState === 'failed'
-        ? 'failed'
-        : textures?.state ?? this.meshyBoolieRooHeadLoadState,
-      texturesLoaded: textures?.loaded ?? 0,
-      textureError: this.meshyBoolieRooHeadLoadError ?? textures?.error ?? null,
-      blink: component?.blink?.diagnostics ?? null,
-    };
-  }
-
   get meshyShortsDiagnostics(): {
     readonly ready: boolean;
     readonly triangles: number;
@@ -3386,15 +3333,12 @@ export class Player {
   }
 
   setCharacterHeadStyle(style: CharacterHeadStyle): void {
-    const normalized = style === 'alternate' || style === 'cargo' ? style : 'skull';
+    // (a head an older build offered, asked for by a stale script or hook, is the source-owned one now)
+    const normalized: CharacterHeadStyle = style === 'skull' ? style : DEFAULT_CHARACTER_HEAD_STYLE;
     sharedCharacterHeadStyle = normalized;
-    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
-      if (normalized === 'cargo' && player.cargoState === 'failed') player.cargoState = 'idle';
-      player.characterHeadStyleValue = normalized;
-    }
-    characterProportionSettings.setActiveHeadProfile(
-      normalized === 'alternate' ? 'roo' : 'skull',
-    );
+    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) player.characterHeadStyleValue = normalized;
+    // Each head owns the head profile of its own name.
+    characterProportionSettings.setActiveHeadProfile(normalized);
     try {
       localStorage.setItem(CHARACTER_HEAD_STYLE_STORAGE_KEY, normalized);
     } catch {
@@ -3585,8 +3529,9 @@ export class Player {
     let restored: CharacterHeadStyle = sharedCharacterHeadStyle ?? DEFAULT_CHARACTER_HEAD_STYLE;
     if (sharedCharacterHeadStyle === null) {
       try {
+        // (a head an older build saved here, and this one no longer has, leaves the source-owned one)
         const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
-        if (saved === 'alternate' || saved === 'skull' || saved === 'cargo') restored = saved;
+        if (saved === 'skull') restored = saved;
       } catch {
         // Keep the source-owned head style when persistence is blocked.
       }
@@ -3595,77 +3540,13 @@ export class Player {
     for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
       player.characterHeadStyleValue = restored;
     }
-    characterProportionSettings.setActiveHeadProfile(restored === 'alternate' ? 'roo' : 'skull');
+    characterProportionSettings.setActiveHeadProfile(restored);
     for (const player of CHARACTER_HEAD_STYLE_PLAYERS) player.syncCharacterHeadStyle();
   }
 
+  /** One head: there is none to show or hide. What was measured off the drawn body is stale all the same. */
   private syncCharacterHeadStyle(): void {
     this.interactionVersion++;
-    if(this.rivalColor)return;
-    const cargo = this.characterHeadStyleValue === 'cargo';
-    if (this.riderG) this.cargoRider?.setVisible(cargo, this.riderG, this.characterRenderBatches?.root);
-    if (cargo && this.cargoState === 'idle' && this.riderG) void this.installCargoRider(this.riderG);
-    const alternateReady =
-      this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
-    // Keep the skull visible while the optional chunk/texture arrives rather
-    // than flashing a headless character on a cold cache.
-    if (this.meshyHead) this.meshyHead.mesh.visible = !alternateReady;
-    if (this.meshyBoolieRooHead) this.meshyBoolieRooHead.mesh.visible = alternateReady;
-    if (
-      this.characterHeadStyleValue === 'alternate' &&
-      this.meshyBoolieRooHeadLoadState === 'idle'
-    ) void this.installMeshyBoolieRooHead();
-  }
-
-  private async installCargoRider(rider: THREE.Group): Promise<void> {
-    this.cargoState = 'loading';
-    try {
-      const { CargoRider } = await import('./character/cargoRider');
-      const skin = await CargoRider.load(rider);
-      this.cargoRider = skin;
-      skin.expression = this.cargoExpression;
-      // Keep the artwork outside the gameplay geometry measured for contacts and foot planting.
-      this.bodyGroup.add(skin.root);
-      this.cargoState = 'ready';
-      this.syncCharacterHeadStyle();
-      if (this.pendingCargoTake) {
-        skin.playTake(this.pendingCargoTake.name, this.pendingCargoTake.loop);
-        this.pendingCargoTake = undefined;
-      }
-      skin.step(0, 0, false);
-      skin.setDetached(this.breakApart?.active ?? false);
-    } catch (error) {
-      this.cargoState = 'failed';
-      console.error('Cargo Roo could not load its Bone Man skin', error);
-    }
-  }
-
-  private installMeshyBoolieRooHead(): Promise<void> {
-    if (this.meshyBoolieRooHeadLoading) return this.meshyBoolieRooHeadLoading;
-    if (this.meshyBoolieRooHead || !this.headPresentation) return Promise.resolve();
-    this.meshyBoolieRooHeadLoadState = 'loading';
-    this.meshyBoolieRooHeadLoadError = null;
-    this.meshyBoolieRooHeadLoading = import('./character/meshyBoolieRooHead')
-      .then((module) => {
-        if (!this.headPresentation) throw new Error('head presentation mount is unavailable');
-        const component = module.createMeshyBoolieRooHead({ blink: true });
-        component.mesh.visible = false;
-        this.headPresentation.add(component.mesh);
-        this.meshyBoolieRooHead = component;
-        this.meshyBoolieRooHeadTextureDiagnostics = module.meshyBoolieRooHeadTextureDiagnostics;
-        this.meshyBoolieRooHeadLoadState = 'ready';
-        this.syncCharacterAppearance();
-        this.resetRenderInterpolation();
-      })
-      .catch((error) => {
-        this.meshyBoolieRooHeadLoadState = 'failed';
-        this.meshyBoolieRooHeadLoadError = error instanceof Error ? error.message : String(error);
-        console.error('Alternate Meshy head failed to load', error);
-      })
-      .finally(() => {
-        this.meshyBoolieRooHeadLoading = null;
-      });
-    return this.meshyBoolieRooHeadLoading;
   }
 
   private syncCharacterTailVisibility(): void {
@@ -4066,13 +3947,10 @@ export class Player {
 
   /** A/B render validation; authored geometry and animation stay identical. */
   setCharacterRenderBatching(enabled: boolean): void {
-    if (this.riderG) this.cargoRider?.setVisible(false, this.riderG);
     this.characterRenderBatches?.setEnabled(enabled);
-    this.syncCharacterHeadStyle();
   }
 
   private rebuildCharacterRenderBatches(): void {
-    if (this.riderG) this.cargoRider?.setVisible(false, this.riderG);
     const enabled = this.characterRenderBatches?.diagnostics.enabled ?? true;
     this.characterRenderBatches?.dispose();
     const sources: THREE.Mesh[] = [];
@@ -4085,7 +3963,6 @@ export class Player {
     });
     this.characterRenderBatches = new CharacterRigidMeshBatches(this.bodyGroup, sources);
     this.characterRenderBatches.setEnabled(enabled);
-    this.syncCharacterHeadStyle();
   }
 
   // Momentum-skate mode is live (board down, heading model driving) — used by
@@ -4419,7 +4296,7 @@ export class Player {
   /** Wait for asynchronous attachment work as well as the texture loader. */
   async preparePresentationAssets(): Promise<void> {
     if (this.kiteTowing) this.kiteVisual ??= new KiteTowVisual();
-    await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading,
+    await Promise.all([this.riggedCartoonHandLoading,
       this.kiteTowing ? this.kiteVisual?.prepare() : undefined]);
     await this.spinEffects?.prepare();
   }
@@ -4428,8 +4305,7 @@ export class Player {
   captureSpinSmearSource(spinPose = true): THREE.Group {
     if (!this.riderG) throw new Error('The character is not ready to bake.');
     const capture = () => {
-      const skin = this.cargoRider?.root.visible ? this.cargoRider.root : null;
-      const source = captureSpinCharacter(skin ?? this.riderG!, this.bodyGroup, this.bodyGroup.scale, !!skin);
+      const source = captureSpinCharacter(this.riderG!, this.bodyGroup, this.bodyGroup.scale);
       if (spinPose) {
         const inverse = this.bodyGroup.matrixWorld.clone().invert();
         const landmarks: Record<string, number[]> = {};
@@ -5043,7 +4919,6 @@ export class Player {
     this.kiteVisual?.stepFlyaway(dt);
     this.breakApart?.step(dt, level, this.bailRecoverT >= 0,
       this.bailDownT / this.bailRush, this.isBailing);
-    if (this.cargoRider?.root.visible) this.cargoRider.setDetached(this.breakApart?.active ?? false);
   }
 
   /** Wind owns forward movement; native surfaces, collision and progression
@@ -22961,9 +22836,6 @@ export class Player {
         this.refreshCharacterBounds();
       }
     }
-    this.cargoRider?.step(dt, this.speed, this.isBailing);
-    this.meshyBoolieRooHead?.blink?.update(dt,
-      this.characterHeadStyleValue === 'alternate' && this.group.visible);
     if (this.isBailing && this.bailRecoverT >= 0 && this.riderG && !this.playerAnimationBridge.previewActive) {
       this.riderG.localToWorld(Player.RAG_CENTER.set(0, this.characterWaistLocal(.82), 0)).sub(this.pos);
       this.bailPoseCarry.record(this.ragdollPoseJoints(), this.bodyGroup.matrixWorld, Player.RAG_CENTER, this.playerAnimationBridge, poseSeconds);
@@ -25212,7 +25084,7 @@ export class Player {
     // Rope grips and sole planting can still translate the body root. Resolve
     // the mask from the final head socket only after every post-pose correction.
     // Mask sockets live under the presentation mount, so sample them only after
-    // both the authored head pose and the active Skull/BoolieRoo profile land.
+    // both the authored head pose and the head profile land.
     this.playerAnimationBridge.applyFinalOverlay(dt);
     this.prepareMaskPresentation();
     if (this.maskMesh) {
@@ -25282,8 +25154,7 @@ export class Player {
     if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
     else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
     else this.maskAnchor.set(this.group.position.x, this.group.position.y + 1.42, this.group.position.z);
-    const head = this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead
-      ? this.meshyBoolieRooHead.mesh : this.meshyHead?.mesh;
+    const head = this.meshyHead?.mesh;
     mask.position.set(0, 0, 0);
     if (worn) {
       if (this.headLookSocket) {
@@ -25524,7 +25395,7 @@ export class Player {
       ringsEnabled: false,
       createSource: () => this.captureSpinSmearSource(),
       prepareSource: async () => {
-        await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);
+        await this.riggedCartoonHandLoading;
       },
     });
   }
@@ -25747,10 +25618,9 @@ export class Player {
     // semantic bone. Animation Studio therefore edits a pristine `head`
     // transform while this non-rig mount composes the selected surface's
     // baseline afterward across every animation.
-    const headPresentation = new THREE.Group();
+    const headPresentation = new THREE.Group(); // profile-only child; never an animation joint
     headPresentation.name = 'head-presentation';
     head.add(headPresentation);
-    this.headPresentation = headPresentation;
     const lookSocket = new THREE.Object3D();
     lookSocket.name = 'socket-look';
     lookSocket.position.set(0, MESHY_HEAD_EYE_CENTER_Y, 0.19);

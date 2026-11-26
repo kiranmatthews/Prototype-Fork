@@ -36,7 +36,7 @@ function hasVisibleMaterial(material: THREE.Material | THREE.Material[]): boolea
 
 /** Pickup/attack silhouette, independent of the level-authoring body collider.
  * Only the rider hierarchy participates: boards, shadows and attack VFX are
- * siblings. Hidden alternate heads and comparison meshes cannot inflate it. */
+ * siblings. Hidden comparison meshes cannot inflate it. */
 export class CharacterInteractionBounds {
   constructor(private readonly boundsKernel:SkinBoundsKernel|null=sharedSkinBoundsKernel) {}
   private readonly bailEnvelopes = new BoneEnvelopeBounds();

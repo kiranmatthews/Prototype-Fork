@@ -250,11 +250,6 @@ try {
     }, 'skull') > BASE_CHARACTER_HITBOX_HEIGHT,
     'larger head did not grow the gameplay hitbox',
   );
-  assert.ok(
-    characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'roo') <
-      characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'skull'),
-    'the shorter BoolieRoo rest mesh did not produce a shorter hitbox',
-  );
   const clamped = clampCharacterProportions({
     headSize: 99,
     headWidth: 99,
@@ -612,6 +607,18 @@ try {
     'public/characters/meshy-fox/Character_output.fbm/texture_0.png',
     'public/models/fox.glb',
     'public/models/roo.glb',
+    // BoolieRoo (the alternate head) and Cargo Roo (the fitted skin): removed to free release space.
+    'src/character/meshyBoolieRooHead.ts',
+    'src/character/meshyBoolieRooHead.generated.ts',
+    'src/character/rooPaintedBlink.ts',
+    'src/character/cargoRider.ts',
+    'src/character/cargoRiderPerformance.ts',
+    'src/character/cargoRiderTakes.json',
+    'public/characters/meshy-boolieroo-head',
+    'public/characters/roo-texture-blink',
+    'public/characters/cargo-rider',
+    'tools/cargo-rider',
+    'art/cargo-rider',
   ];
   for (const path of removed) {
     await assert.rejects(access(resolve(root, path)), undefined, `${path} should be removed`);
@@ -626,9 +633,14 @@ try {
     readFile(resolve(root, 'src/characterLab.ts'), 'utf8'),
     readFile(resolve(root, 'package.json'), 'utf8'),
   ]);
-  for (const forbidden of ['quaterniusEvaluationModel', 'meshyFoxEvaluationModel', 'MESHY FOX', 'FEMALE…']) {
+  for (const forbidden of ['quaterniusEvaluationModel', 'meshyFoxEvaluationModel', 'MESHY FOX', 'FEMALE…',
+    'meshyBoolieRooHead', 'cargoRider', 'CargoRider']) {
     assert.equal(playerSource.includes(forbidden), false, `Player still contains ${forbidden}`);
   }
+  assert.match(playerSource, /export type CharacterHeadStyle = 'skull';/,
+    'Skull is the only head: BoolieRoo and Cargo Roo were removed');
+  assert.match(playerSource, /if \(saved === 'skull'\) restored = saved;/,
+    'a head style saved by an older build must fall back to the source-owned one');
   assert.equal(studioSource.includes('presentationSurface'), false,
     'Animation Studio still exposes removed comparison surfaces');
   assert.match(mainSource, /label: [\'"]CHARACTER[\'"]/);
@@ -639,7 +651,12 @@ try {
   assert.match(mainSource,
     /createCharacterAnimationRuntime\(player,\s*playerAnimationDocument\)/,
     'Character appearances must use the active player animation document');
-  assert.match(labSource, /\['cargo', 'Cargo Roo'\]/, 'The fitted Bone Man skin must be selectable in Character Lab');
+  assert.match(labSource, /\['skull', 'Skull'\]/, 'Character Lab must still offer the Skull');
+  for (const gone of ['BoolieRoo', 'Cargo Roo', 'cargoRider', "'alternate'", "'cargo'"]) {
+    assert.equal(labSource.includes(gone), false, `Character Lab still offers ${gone}`);
+  }
+  assert.equal(mainSource.includes('getAlternateHeadDiagnostics'), false,
+    'the removed alternate head still has a diagnostics hook');
   assert.match(mainSource, /requestedTool\(location.search, location.hash\)/);
   assert.match(mainSource, /case "characterlab": await openCharacterLabTool\(\)/);
   assert.match(labSource, /CHARACTER LAB/);

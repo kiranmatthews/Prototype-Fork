@@ -471,12 +471,12 @@
     "height": 1,
     "bodyWidth": 1,
     "bodyDepth": 1,
-    "headSize": 2.45,
+    "headSize": 1.64,
     "headWidth": 1.18,
-    "headDepth": 1.31,
-    "neckLength": -1.82,
-    "headForwardOffset": 0.09,
-    "headRestPitch": -23,
+    "headDepth": 1.3,
+    "neckLength": 0.01,
+    "headForwardOffset": -0.105,
+    "headRestPitch": 0,
     "torsoLength": 1,
     "torsoWidth": 1.13,
     "torsoDepth": 1.22,
@@ -511,17 +511,9 @@
       "neckLength": 0.01,
       "headForwardOffset": -0.105,
       "headRestPitch": 0
-    },
-    "roo": {
-      "headSize": 2.45,
-      "headWidth": 1.18,
-      "headDepth": 1.31,
-      "neckLength": -1.82,
-      "headForwardOffset": 0.09,
-      "headRestPitch": -23
     }
   },
-  "headStyle": "alternate",
+  "headStyle": "skull",
   "tail": false,
   "look": {
     "enabled": false,

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { cargoPerformances, type CargoPerformance, type CargoTake } from './character/cargoRiderPerformance';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RigBinding } from './animation';
 import type { CharacterHeadStyle, Player } from './player';
@@ -36,7 +35,7 @@ export interface CharacterLabDiagnostics {
 }
 
 export interface CharacterLabHandle {
-  frame(dt?: number): void;
+  frame(): void;
   close(): void;
   readonly isOpen: boolean;
   readonly diagnostics: CharacterLabDiagnostics;
@@ -156,7 +155,6 @@ class CharacterLab implements CharacterLabHandle {
     decimals: number;
   }>();
   private readonly headStyleButtons = new Map<CharacterHeadStyle, HTMLButtonElement>();
-  private readonly cargoFaces = element('div', 'clab-actions');
   private readonly unsubscribe: () => void;
   private tailInput!: HTMLInputElement;
   private steered = false;
@@ -228,10 +226,9 @@ class CharacterLab implements CharacterLabHandle {
     return this.root;
   }
 
-  frame(dt = 0): void {
+  frame(): void {
     if (!this.open) return;
     this.ctx.player.syncCharacterAppearance();
-    this.ctx.player.cargoSurface?.step(dt, 0, false);
     this.refreshHeadStyleButtons();
     this.controls.update();
     this.updateFloorAndStatus();
@@ -239,7 +236,6 @@ class CharacterLab implements CharacterLabHandle {
 
   close(): void {
     if (!this.open) return;
-    this.ctx.player.setCargoExpression('live');
     this.open = false;
     this.unsubscribe();
     this.controls.dispose();
@@ -329,8 +325,6 @@ class CharacterLab implements CharacterLabHandle {
     const headStyles = element('div', 'clab-actions');
     for (const [style, label] of [
       ['skull', 'Skull'],
-      ['alternate', 'BoolieRoo'],
-      ['cargo', 'Cargo Roo'],
     ] as const) {
       const button = element('button', 'clab-button', label);
       button.type = 'button';
@@ -344,51 +338,9 @@ class CharacterLab implements CharacterLabHandle {
       headStyles.appendChild(button);
     }
     this.panel.appendChild(headStyles);
-    const faces = this.cargoFaces;
-    let selectedTake: CargoTake = 'idle';
-    const library = element('select', 'clab-button');
-    library.setAttribute('aria-label', 'Performance expression');
-    library.add(new Option('Performance poses…', ''));
-    for (const name of cargoPerformances) library.add(new Option(name[0].toUpperCase() + name.slice(1), name));
-    const highlight = (active: HTMLElement) => {
-      for (const child of faces.children) (child as HTMLElement).dataset.active = String(child === active);
-    };
-    library.onchange = () => {
-      const name = library.value as CargoPerformance | '';
-      selectedTake = name || 'idle';
-      this.ctx.player.setCargoExpression(name || 'live');
-      highlight(name ? library : faces.firstElementChild as HTMLElement);
-      this.frameCamera('head');
-    };
-    for (const expression of ['live', 'wink', 'smile', 'surprise'] as const) {
-      const pick = element('button', 'clab-button', expression[0].toUpperCase() + expression.slice(1));
-      pick.type = 'button';
-      pick.dataset.active = String(expression === 'live');
-      pick.onclick = () => {
-        selectedTake = expression === 'live' ? 'idle' : expression;
-        this.ctx.player.setCargoExpression(expression);
-        this.frameCamera('head');
-        library.value = '';
-        highlight(pick);
-      };
-      faces.appendChild(pick);
-    }
-    faces.appendChild(library);
-    for (const [label, reference] of [['Play take', false], ['Kling reference loop', true]] as const) {
-      const play = element('button', 'clab-button', label);
-      play.type = 'button';
-      play.onclick = () => {
-        this.ctx.player.playCargoTake(reference ? 'kling1910' : selectedTake, reference);
-        this.frameCamera('head');
-        highlight(play);
-      };
-      faces.appendChild(play);
-    }
-    this.panel.appendChild(faces);
     this.panel.appendChild(element(
       'div',
       'clab-note',
-      'Skull and BoolieRoo remember their six head/neck sliders separately. ' +
       'For Neutral head tilt, negative raises the face and positive tips it down.',
     ));
     this.refreshHeadStyleButtons();
@@ -565,16 +517,7 @@ class CharacterLab implements CharacterLabHandle {
   }
 
   private headBounds(): THREE.Box3 {
-    const cargo = this.ctx.player.cargoSurface;
-    if (cargo?.root.visible) return cargo.headBounds();
-    const preferred = this.ctx.rigRoot.getObjectByName(
-      this.ctx.player.characterHeadStyle === 'alternate'
-        ? 'meshy-boolieroo-alternate-head-surface'
-        : 'meshy-head-surface',
-    );
-    // The optional alternate is code-split and loads on first selection. Keep
-    // the camera framed on the existing skull during that cold-cache moment.
-    const head = preferred ?? this.ctx.rigRoot.getObjectByName('meshy-head-surface');
+    const head = this.ctx.rigRoot.getObjectByName('meshy-head-surface');
     return head ? new THREE.Box3().setFromObject(head) : this.characterBounds();
   }
 
@@ -610,7 +553,6 @@ class CharacterLab implements CharacterLabHandle {
     const hand = this.ctx.player.riggedCartoonHandDiagnostics;
     const torso = this.ctx.player.meshyTorsoDiagnostics;
     const head = this.ctx.player.meshyHeadDiagnostics;
-    const alternateHead = this.ctx.player.alternateHeadDiagnostics;
     const shorts = this.ctx.player.meshyShortsDiagnostics;
     const footwear = this.ctx.player.proceduralFootwearDiagnostics;
     let proceduralHandMeshesVisible = 0;
@@ -654,15 +596,11 @@ class CharacterLab implements CharacterLabHandle {
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +
       `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
-      `Head style ${this.ctx.player.characterHeadStyle === 'cargo' ? 'Cargo Roo' : this.ctx.player.characterHeadStyle === 'alternate' ? 'BoolieRoo' : 'Skull'} · ` +
-      `profile ${characterProportionSettings.activeHeadProfile} · alternate ` +
-      `${alternateHead.textureState} · ${alternateHead.triangles.toLocaleString()} tris\n` +
+      `Head style Skull · profile ${characterProportionSettings.activeHeadProfile}\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }
 
   private refreshHeadStyleButtons(): void {
-    this.cargoFaces.hidden = this.ctx.player.characterHeadStyle !== 'cargo';
-    this.cargoFaces.style.display = this.cargoFaces.hidden ? 'none' : 'flex';
     for (const [style, button] of this.headStyleButtons) {
       button.dataset.active = String(this.ctx.player.characterHeadStyle === style);
     }

@@ -36,7 +36,7 @@ try {
         const mask = p.maskMesh;
         if (!mask.visible) return;
         const worn = p.uberTimer > 0;
-        const head = p.characterHeadStyle === 'alternate' ? p.meshyBoolieRooHead?.mesh : p.meshyHead.mesh;
+        const head = p.meshyHead.mesh;
         if (!head) return;
         const axis = worn ? mask.getWorldDirection(vec()) : vec().setFromMatrixColumn(p.cam.matrixWorld,0).normalize();
         const gap = range(mask, axis)[0] - range(head, axis)[1];
@@ -51,9 +51,8 @@ try {
       };
       window.__maskProbe = probe;
     });
-    for (const style of ['skull', 'alternate']) {
+    for (const style of ['skull']) {
       await page.evaluate(style => window.__game.setCharacterHeadStyle(style), style);
-      if (style === 'alternate') await page.waitForFunction(() => window.__game.getAlternateHeadDiagnostics().textureState === 'ready', null, { timeout: 60000 });
       for (const completed of [false, true]) {
         await page.evaluate(() => {
           const g = window.__game, p = g.player;
@@ -130,4 +129,4 @@ try {
   await writeFile(`${output}/results.json`,JSON.stringify({base,reports,errors},null,2));
   await browser.close();
 }
-console.log(`PASS masks in lite/full: actual Skull/Roo assets, successful/failed bonus returns, tier changes, all-side poses, death/respawn and clean consoles. ${output}`);
+console.log(`PASS masks in lite/full: the actual Skull asset, successful/failed bonus returns, tier changes, all-side poses, death/respawn and clean consoles. ${output}`);

@@ -31,7 +31,7 @@ function fruit(head=false){
 button('Reset',reset);button('Normal size',()=>p.setCharacterProportions(initial));
 button('Large head',()=>p.setCharacterProportions({headSize:2.4,headWidth:1.5,headDepth:1.5,height:1.4}));
 button('Small head',()=>p.setCharacterProportions({headSize:.7,headWidth:.7,headDepth:.7,height:.75}));
-button('Skull',()=>p.setCharacterHeadStyle('skull'));button('Roo head',()=>p.setCharacterHeadStyle('alternate'));
+button('Skull',()=>p.setCharacterHeadStyle('skull'));
 button('Magnet fruit',()=>fruit());button('Head contact fruit',()=>fruit(true));
 button('Pause at magnet',()=>{stopAtMagnet=true;fruit();});button('Pause at HUD',()=>{stopAtHud=true;freeze=false;});
 button('Resume',()=>freeze=false);button('Next frame',()=>{freeze=true;oneFrame=true;});
