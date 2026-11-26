@@ -37,8 +37,14 @@ export interface SkatePoseInput {
   revert?: ReturnType<typeof sampleSkateRevert> | null;
   revertSign?: number;
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
-  /** The stall is the pause of a drop-in from the deck (he faces the pipe), not one ridden up to. */
-  lipPerch?: boolean;
+  /** SET TO DROP IN, at a coping he rolled up to along the deck. `set` (0..1):
+   * the trailing truck at the edge, that end's tail down on the deck behind it
+   * and the leading end up over the drop, his weight over his back foot.
+   * `lean` (0..1): his weight going forward over the front foot, the way it
+   * does as the nose is pushed down and in. `toward`: 1 with the pipe ahead of
+   * him, -1 with it behind (he is rolling back off the coping): the end of the
+   * deck that is out over the drop stays the one that is up. */
+  dropIn?: { set: number; lean: number; toward?: number };
   coping?: { center: THREE.Vector3; normal: THREE.Vector3 };
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
   /** The wallplant's perch on a deck slapped flat on a wall, all in the world.
@@ -389,6 +395,21 @@ export class SkateAnimation {
     const airFold=airUp.clone().cross(airChest).normalize();
     const thrown=transfer&&p.spineAxis&&p.spineAxis.lengthSq()>.5&&gw<.01&&!p.flip&&!p.grind&&!p.lip&&underProgress<=0?transfer:null;
     let pitch = 0, yaw = 0, roll = 0, pivotY = 0, pivotZ = 0;
+    // The drop-in stance (see SkatePoseInput.dropIn). Whichever end of the deck is toward the pipe is the one that goes up.
+    // It comes on in two movements, as it does on a real coping. Over the first half the deck rocks back on its
+    // trailing wheels, which are still on the deck (a manual, and no more). Over the second those wheels go off the
+    // edge and the tail comes down onto the deck behind it: the deck now stands on its tail, the truck hung over the coping.
+    const setRaw = p.dropIn && !p.grind && !p.manual && !p.lip && p.wallWeight < .01 ? clamp(p.dropIn.set, 0, 1) : 0;
+    const setW = smooth(setRaw), setRock = smooth(Math.min(1, setRaw * 2)), setTail = smooth(Math.max(0, setRaw * 2 - 1));
+    const setLean = p.dropIn && !p.grind && !p.manual && !p.lip && p.wallWeight < .01 ? smooth(clamp(p.dropIn.lean, 0, 1)) : 0;
+    // The deck pivots on the tip of its trailing end, which is down on the deck a hand's width back from the
+    // edge; the truck in front of that tip then hangs over the coping, and the leading end stands up over the drop.
+    const lead = (Math.cos(p.deckYaw) >= 0 ? 1 : -1) * ((p.dropIn?.toward ?? 1) < 0 ? -1 : 1); // the end of the deck that is toward the pipe
+    const trailTruck = lead > 0 ? rearZ : frontZ;
+    const trailTip = (lead > 0 ? -s.deckTailLength : s.deckNoseLength) * scale * .96;
+    const trailTipY = surface(0, trailTip) - s.deckThickness * scale;
+    const rockUp = .20, tailDown = .40, tailBack = .10;
+    const setLeadFoot = (lead > 0 ? frontZ : rearZ) * .72, setTrailFoot = (trailTruck + trailTip) * .5;
     if (p.grind && p.rail) {
       const tangent = p.rail.tangentAt(p.railT).multiplyScalar(p.railDir).normalize();
       this.right.crossVectors(Y, tangent).normalize();
@@ -417,10 +438,14 @@ export class SkateAnimation {
       // Authored coping centre is 5 cm above the pipe's analytic lip.
       this.support.addScaledVector(this.up, .05 + .09);
       const d = LIP_CONTACTS[p.lip];
-      // (set down from the deck to drop in, the rider faces the pipe: the same end on the coping, and the deck all but level over the drop)
-      yaw = d.yaw; pitch = p.lipPerch ? -.22 * d.pitch : d.pitch + clamp(p.balance * .06, -.06, .06);
+      yaw = d.yaw; pitch = d.pitch + clamp(p.balance * .06, -.06, .06);
       pivotZ = p.lip === 'nose' ? s.deckNoseLength * scale * .94 : p.lip === 'tail' ? -s.deckTailLength * scale * .94 : 0;
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
+    } else if (setW > 0 && p.grounded && !p.flip && gw < .01) {
+      // Set to drop in: back on the trailing wheels, and then down onto the tip of that end.
+      pitch = -lead * (rockUp * setRock + (tailDown - rockUp) * setTail);
+      pivotZ = trailTruck * setRock + (trailTip - trailTruck) * setTail; pivotY = trailTipY * setTail;
+      this.support.addScaledVector(Z.clone().applyQuaternion(this.frame.clone().multiply(this.q.setFromAxisAngle(Y, p.deckYaw))), -lead * tailBack * setTail);
     } else if (backflip) {
       pitch = backflip.nosePitch;
     } else if (impossible) {
@@ -450,7 +475,7 @@ export class SkateAnimation {
     // cannot bury one truck or lift the one the named grind is loading.
     this.temp.set(0, this.supportY, this.supportZ).applyQuaternion(this.boardQ);
     this.boardP.copy(this.support).sub(this.temp);
-    if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
+    if (!p.grind && !p.manual && !p.lip && setW <= 0) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
     this.boardP.addScaledVector(this.up, (backflip||tweak?0:(kiteIndy?.5:.30)*gw) + .18 * darkPop);
@@ -469,7 +494,9 @@ export class SkateAnimation {
       this.worldRotation(this.rider,this.rotationOf(this.rider).premultiply(tilt));
     }
     if(p.coping){this.coping=p.coping;this.copingAge=0;}else this.copingAge+=p.dt;
-    if(this.coping && this.copingAge<.8 && !p.grind){
+    // (Set to drop in, the deck is placed by its tail on the deck and by nothing else: a side-on pipe's coping
+    // has no rail on it to stand clear of, and reaching for one would throw the deck off the wall as it tips in.)
+    if(this.coping && this.copingAge<.8 && !p.grind && setW<=0 && setLean<=0){
       // Stay on the grip side of the coping through crest, catch and release.
       // Push along the deck normal: inward on the climbing board, upward on
       // the stall. The extra 15 mm protects interpolated review frames too.
@@ -581,6 +608,8 @@ export class SkateAnimation {
       const supportKind = p.grind ? GRIND_CONTACTS[p.grind].support : null;
       if (supportKind === 'front-truck' || p.manual < 0) z = z > 0 ? frontZ : -.10 * scale;
       if (supportKind === 'rear-truck' || p.manual > 0) z = z < 0 ? rearZ : .10 * scale;
+      // Set to drop in: the back foot is on the tail that holds the deck there, the front one up on the bolts of the raised end.
+      if (setW > 0) z = THREE.MathUtils.lerp(z, z * lead > 0 ? setLeadFoot : setTrailFoot, setW);
       // Darkslide feet stay between the trucks, straddling the rail on a
       // narrow, horizontal catch plane while the deck rolls underneath.
       if (dark > 0) z = THREE.MathUtils.lerp(z,Math.sign(z)*Math.min(.34*scale,frontZ*.60,-rearZ*.60),dark);
@@ -616,6 +645,11 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
+    // Set to drop in, he sits back over the foot that is holding the tail down; told to go, his weight comes forward over the other.
+    if (setW > 0 || setLean > 0) {
+      const half = (setLeadFoot - setTrailFoot) * .5;
+      pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), half * (-.42 * setW * (1 - setLean) + .45 * setLean));
+    }
 
     if(mute)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.24*smooth(gw));
 

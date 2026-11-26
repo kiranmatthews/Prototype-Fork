@@ -486,6 +486,18 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.ok(p.grounded && !p.freeSkate && p.pos.x > P0.eastLip + 3 && Math.abs(p.pos.y - P0.eastLipY) < 0.1,
     `P0 jumped into: he runs up its east wall and climbs out onto the deck on foot (${jumped.trouble.join('; ')})`);
 
+  // ---- 9c · out of a pipe, a rider who keeps a direction held keeps his board -------------
+  // The air out over a lip used to end on foot whatever the stick was doing. It ends on foot for a
+  // rider who has let the stick go as he lands (every other run in this file); held, he rides on.
+  {
+    const kept = play({ ride: true, seconds: 20, until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 2.5 });
+    assert.ok(p.grounded && p.freeSkate && p.pos.x > P0.eastLip + 2.5 && Math.abs(p.pos.y - P0.eastLipY) < 0.1,
+      `P0 popped out of with right still held: he lands on the deck and rides on (${p.freeSkate ? 'board' : 'foot'}; ${kept.trouble.join('; ')})`);
+    // (the step off is the landing's next step: the run is read once he is off, or has plainly ridden on)
+    const let_go = play({ seconds: 20, until: (log, q) => q.grounded && q.pos.x > P0.eastLip + 2.5 && (!q.freeSkate || q.pos.x > P0.eastLip + 5.6) });
+    assert.ok(p.grounded && !p.freeSkate && p.pos.x < P0.eastLip + 5.6, `...and with the stick let go as he lands, he steps off (${let_go.trouble.join('; ')})`);
+  }
+
   // ---- 10 · a hang stays on its line when it heads a solid -----------------------
   // The awkward case, in a pipe of its own: a `!` floated over a BARE lip with a
   // drop behind it. The crate's sideways push-out must not walk the rider off

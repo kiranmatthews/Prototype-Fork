@@ -17,8 +17,12 @@ type FootContact = {side:'Left'|'Right';p:THREE.Vector3;q:THREE.Quaternion};
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const WALLPLANT_OWNER = 'wallplant / release';
-/** Seconds the library pose takes to give way to a wallplant's reach. */
-const WALLPLANT_HANDOVER_SECONDS = .08;
+const DROP_IN_OWNER = 'drop-in / release';
+/** Native poses that come on by degrees out of plain riding, and the seconds the
+ * library pose takes to give way to each: a wallplant's reach, and the set-up
+ * for a drop-in (the knees bending and the tail going down as he comes up to a
+ * coping). Any other native owner is a cut, as it always was. */
+const HANDOVER_SECONDS: Readonly<Record<string, number>> = {[WALLPLANT_OWNER]: .08, [DROP_IN_OWNER]: .2};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
 /** Riding is never a held pose. The source's own ride loops barely move, and
  * its charge was one frame held still, so the rider stands on a few springs:
@@ -143,6 +147,7 @@ export class PlayableSkateMotion {
   // into it over a few frames where every other native action takes over at once.
   private handover: Pose | null = null;
   private handoverAge = 0;
+  private handoverSeconds = .08;
   private iceBlend = 0;
   private iceFootError = 0;
   private stop: (() => void) | null = null;
@@ -239,6 +244,7 @@ export class PlayableSkateMotion {
     if(p.revertPoseT>0)return 'revert';
     if(p.wallriding||p.wallridePose>.001)return 'wallride / release';
     if(p.wallPlantOwnsRide)return WALLPLANT_OWNER;
+    if(p.dropInOwnsRide)return DROP_IN_OWNER;
     if(p.lipStallT>0||Math.abs(p.lipYawPose)>.001)return 'lip stall / release';
     if(p.vertAir||p.pipeHang||p.freeSkate&&p.grounded&&p.onTransition)return 'vert / transition';
     if(p.nativeAirPresentation||p.launchPresentation)return 'special launch';
@@ -579,8 +585,9 @@ export class PlayableSkateMotion {
     if(mounted)this.sourceStance=p.stance;
     const previousOwner=this.nativeOwner;
     this.nativeOwner=this.nativePoseOwner;
-    if(this.nativeOwner!==WALLPLANT_OWNER)this.handover=null;
-    else if(previousOwner===null&&this.phase!=='foot'&&this.lastPose){this.handover=this.lastPose;this.handoverAge=0;}
+    const handoverSeconds=this.nativeOwner===null?undefined:HANDOVER_SECONDS[this.nativeOwner];
+    if(handoverSeconds===undefined)this.handover=null;
+    else if(previousOwner===null&&this.phase!=='foot'&&this.lastPose){this.handover=this.lastPose;this.handoverAge=0;this.handoverSeconds=handoverSeconds;}
     if(!mounted||!p.grounded||!this.enabled)this.iceBlend=0;
     const ice=this.nativeOwner==='ice balance';
     if(this.nativeOwner!==null&&(!ice||!this.enabled)){
@@ -598,7 +605,7 @@ export class PlayableSkateMotion {
       p.clearCharacterAppearance();
       if(this.handover){
         this.handoverAge+=Math.max(0,dt);
-        const arrived=smooth(this.handoverAge/WALLPLANT_HANDOVER_SECONDS);
+        const arrived=smooth(this.handoverAge/this.handoverSeconds);
         if(arrived<1)this.blend(this.handover,arrived);else this.handover=null;
       }
       this.lastPose=this.capture();p.syncCharacterAppearance();

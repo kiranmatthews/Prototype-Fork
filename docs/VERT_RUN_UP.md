@@ -64,6 +64,41 @@ in.
 Under a face that stands up straight the move begins a stride before the 60° point: the run would otherwise
 carry his head (it is 0.8 m across) into the wall before his feet ran out of slope.
 
+## Met in the air
+
+A walker who is in the air when he meets a vert's steep face (jumped at it, fell onto it, dropped onto it
+from a hang) is never left stood on it. A face is steep here from 53° (a normal under 0.6), and what
+happens is read off the same wall the run-up reads:
+
+- its lip is at his feet (within 0.6 m): he is **put on the deck** and runs on;
+- its lip is within a ledge catch's reach and it has a ledge: the ordinary **ledge catch**, as above;
+- anything else (too high, no ledge, or the catch is cooling down): the **come-up-short**, entered where he
+  is. From the straight face it is the slide down and the roll back; landed on the transition itself
+  (levelled out past 16°) there is nothing to slide down, and it is the roll alone, begun from where his
+  feet are.
+
+Rising or falling makes no difference, and the roll's first frames are eased in from whatever he was doing
+in the air.
+
+## Letting go of a ledge
+
+Any hang is left the same way (the stick held away for a beat, on a vert's lip as on a platform's edge):
+he gathers on the wall for 0.15 s, **hops off it** (2.4 m/s up, 0.3 m out over 0.16 s) and **drops facing
+the ledge**, with the direction he was holding ignored until it has been let go, so the stick that let go
+does not also run him off. The clip is the hang's own push-off, paced to the height of the drop so its feet
+arrive as the floor does. Under a vert's lip there is no floor: he comes down on the transition, and that is
+"met in the air" above, so the drop ends in the come-up-short's roll back onto the flat.
+
+## From these moves back to his feet
+
+Each of these moves places the body itself, and the run, the fall and the idle place it differently. So
+the last pose that was drawn is kept, every frame, and wherever one of these hands over (a run-up ending on
+the deck or on the flat, a hang let go of, a drop landing, a wall met in the air) every joint is eased from
+that kept pose into the new one, and the pelvis from where it was drawn to where the new move has it, over
+0.14 to 0.26 s on a curve that is level at both ends. A hang's controller point is at his chest and a
+fall's is under his feet, so out of a hang the pelvis is carried across by the fall itself (as far through
+as he has fallen) and not by a clock.
+
 ## Authoring
 
 - **A quarter the route climbs on foot** wants its lip within 3.0 m: any radius up to 6 m with no straight
@@ -86,7 +121,8 @@ Side Pipe Lab's **wall yard** (behind the start, walking west) is four walls of 
 on the last one's deck: 1.25 m (vaulted), 2.6 m (climbed), 3.75 m (caught) and 4.9 m (missed). They are
 ordinary verts in a side-on stretch, so everything a board does on a pipe it does on them too: ridden at
 from the east they throw a rider into the air over their coping, and the stick over the lip with Jump (the
-spine transfer's input) carries that air out onto the deck; rolled off from above, each lip is a drop-in.
+spine transfer's input) carries that air out onto the deck; rolled up to from above on the board, each lip
+is a wait on the coping, a drop-in or an air by how fast he reaches it (`docs/SIDE_ON_PIPES.md`).
 
 ## How it is built
 
@@ -139,9 +175,13 @@ has it from the first frame, with no pop into the move or out of it; a hand that
 the head guard never has more than 3 cm to do. Four of the walls have no ledge (a shallow deck, a spine, a
 face that goes on up, a boxed-in deck) and are come up short on; a hip-high spine is left alone. It then
 drops him past three lips on foot (caught, hung from with no part of his legs in the wall, climbed out of),
-rolls him off two decks on the board (the pause on the coping, the drop, the whole wall ridden down), and
-rides him at a quarter (into its air, and out over its lip onto the deck). `npm run check:side-pipe` runs it
-after the course test.
+flies him at walls from the air (put on the deck, caught, or slid and rolled, rising or falling), lets go
+of a platform's edge and of a vert's lip (the beat on the wall, the hop, the drop facing it, the roll off a
+transition), and measures the picture from each of these back to his feet, frame to frame. Then, on the
+board, it rolls him up to two lips at twelve speeds and scripts (waiting on the coping and dropped in by
+Jump or by the stick, backed out, dropped straight in whatever he presses, an ollie popped in the set-up,
+flown off the edge), and rides him at a quarter (into its air, and out over its lip onto the deck). `npm run check:side-pipe` runs it after
+the course test.
 
 Review by eye is frame by frame in the real game (`?launchReview`, one fixed step at a time). Stepped that
 way the run's own drawing has caught up with the controller point when the move begins; in play it trails

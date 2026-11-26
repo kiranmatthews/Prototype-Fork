@@ -333,6 +333,13 @@ export interface VertRunStart {
   hangDepth: number;
   /** False when there is nothing behind the lip to stand on or hang from: the wall is only ever come up short on. */
   ledge?: boolean;
+  /**
+   * He did not run up it: he met the face in the air (a jump at the wall, a
+   * drop from its lip) with the lip out of his reach. There is no leap in it.
+   * It begins where the come-up-short's slide does, from wherever his pelvis
+   * is: down the face, round the transition, and over backwards onto his feet.
+   */
+  fromAir?: boolean;
 }
 
 /**
@@ -387,10 +394,10 @@ function along(keys: readonly Key[], t: number, out: { s: number; y: number; vs:
 export class VertRunPlan {
   readonly outcome: VertRunOutcome;
   /** Seconds the whole of it takes (for a grab: until the hands have the lip). */
-  readonly duration: number;
+  duration = 0;
   /** Where the controller point ends: on the deck, in the hang, or on the flat he fell back to. */
-  readonly endS: number;
-  readonly endY: number;
+  endS = 0;
+  endY = 0;
   private readonly keys: Key[] = [];
   private readonly scratch = { s: 0, y: 0, vs: 0, vy: 0 };
   private readonly start: VertRunStart;
@@ -403,19 +410,19 @@ export class VertRunPlan {
   private readonly loadAt: number = 0;
   private readonly apexAt: number = 0;
   // the miss: its beats, and the slide down the wall worked out ahead of time
-  private readonly leapSeconds: number = 0;
-  private readonly slideSeconds: number = 0;
-  private readonly tumbleSeconds: number = 0;
+  private leapSeconds = 0;
+  private slideSeconds = 0;
+  private tumbleSeconds = 0;
   private readonly track: { len: number; v: number }[] = [];
   private readonly trackStep = 1 / 120;
-  private readonly apexLen: number = 0;
-  private readonly apexHipY: number = 0;
-  private readonly restLen: number = 0;
+  private apexLen = 0;
+  private apexHipY = 0;
+  private restLen = 0;
 
   constructor(readonly wall: VertWall, start: VertRunStart) {
     const W = wall, A = VERT_RUN_UP;
     this.start = start;
-    this.outcome = vertRunOutcome(W.rise, start.ledge !== false);
+    this.outcome = start.fromAir ? 'miss' : vertRunOutcome(W.rise, start.ledge !== false);
     this.startClear = start.hipY < W.lipY ? W.faceAt(start.hipY) - start.hipS : Infinity;
     // Where he stands on the wall for it: as high as the run has him, or as high as it would have had him.
     this.stand = Math.max(start.hipY, W.runOutY + A.stanceHips);
@@ -425,6 +432,13 @@ export class VertRunPlan {
     const speed = Math.hypot(start.velS, start.velY), keep = speed > 3.4 ? 3.4 / speed : 1;
     const v0s = start.velS * keep, v0y = start.velY * keep;
     const first: Key = { t: 0, s: start.hipS, y: start.hipY, vs: v0s, vy: v0y };
+    if (start.fromAir) {
+      // Against the face already, with nothing to hold: the fall is all of it.
+      this.keys.push(first);
+      this.leapSeconds = 0;
+      this.planFall(start.hipY, Math.min(6, Math.max(0, -start.velY) * 0.5));
+      return;
+    }
     if (this.outcome === 'climb') {
       // Hands on the coping. Under a high lip that is a pull-up's worth below it; he has run up a
       // lower one, and has it beside his hips; a lip under his waist he only bends to.
@@ -478,14 +492,25 @@ export class VertRunPlan {
       this.duration = T; this.endS = W.lipS - start.hangSkin; this.endY = W.lipY - start.hangDepth;
       return;
     }
-    const topY = apexY;
     this.leapSeconds = tA;
-    // The miss. From the top of the leap his chest is on the wall and gravity has him: down the
-    // face, round the transition and out along the flat, worked out now so every beat has a length.
-    this.apexHipY = topY;
-    this.apexLen = W.lenAtY(topY - 0.25);
-    let len = this.apexLen, v = 0, t = 0, tumbling = 0;
+    this.planFall(apexY, 0);
+  }
+
+  /**
+   * The miss, from the top of it. His chest is on the wall and gravity has him:
+   * down the face, round the transition and out along the flat, worked out now
+   * so every beat has a length. `topY` is his pelvis as it begins, `speed` how
+   * fast he is already going down the wall.
+   */
+  private planFall(topY: number, speed: number): void {
+    const W = this.wall, A = VERT_RUN_UP;
     const point = { s: 0, y: 0, slope: 0 };
+    // Dropped onto the transition where a body does not slide down a face (under about 55°), it is
+    // his feet that are on the wall, and they are what it takes from under him.
+    this.landed = this.start.fromAir === true && W.at(this.start.len, point).slope <= 0.96;
+    this.apexHipY = topY;
+    this.apexLen = this.landed ? this.start.len : W.lenAtY(topY - 0.25);
+    let len = this.apexLen, v = speed, t = 0, tumbling = 0;
     // He is brought to rest no nearer the end of the sampled flat than this.
     const stopBy = Math.min(W.footLen - 0.4, Math.max(0.7, W.footLen - 4.2));
     this.track.push({ len, v });
@@ -505,14 +530,19 @@ export class VertRunPlan {
       if (tumbling > 0 && (v < 0.05 || len <= stopBy) && point.slope < 0.2) break;
     }
     if (tumbling === 0) tumbling = t;
-    // Each beat is long enough to be seen.
-    this.slideSeconds = Math.max(0.12, tumbling);
-    this.tumbleSeconds = Math.max(0.42, t - tumbling);
+    // Each beat is long enough to be seen. (Landed on the transition, there is no slide to see.)
+    this.slideSeconds = this.landed ? 0 : Math.max(0.12, tumbling);
+    this.tumbleSeconds = Math.max(this.landed ? 0.62 : 0.42, t - (this.landed ? 0 : tumbling));
     this.restLen = len;
     this.duration = this.leapSeconds + this.slideSeconds + this.tumbleSeconds + A.recoverSeconds;
     const rest = W.at(len, point);
     this.endS = rest.s; this.endY = rest.y;
   }
+
+  /** He met the wall in the air: there was no run up it, and no leap. */
+  get fromAir(): boolean { return this.start.fromAir === true; }
+  /** ...and came down ON it, on his feet, below where it stands up: there is no slide, only the roll. */
+  private landed = false;
 
   /** The hang point this plan catches at (a grab): where the controller point is handed over. */
   get hangS(): number { return this.endS; }
@@ -540,8 +570,11 @@ export class VertRunPlan {
       // The trailing foot drives off where he was. The leading one is planted higher and drives after it, then steps onto the deck.
       out.feet[1] = { weight: reach(foot) * (1 - smooth((p - 0.20) / 0.08)), s: foot.s, y: foot.y };
       const planted = smooth(p / 0.06) * reach(lead) * (1 - smooth((p - 0.34) / 0.08));
-      const landed = smooth((p - 0.63) / 0.07) * (1 - smooth((p - 0.90) / 0.10));
-      out.feet[0] = landed > 0 ? { weight: landed, s: W.lipS + 0.50, y: W.lipY } : { weight: planted, s: lead.s, y: lead.y };
+      // (on the deck it holds for as long as his leg reaches it, like every other planted foot: he steps off it, it is not let go of)
+      // (a long step over the edge: far enough along the deck that his leg still reaches it as he stands up over it)
+      const onDeck = { s: W.lipS + 0.80, y: W.lipY };
+      const landed = smooth((p - 0.63) / 0.07) * reach(onDeck);
+      out.feet[0] = p >= 0.63 ? { weight: landed, s: onDeck.s, y: onDeck.y } : { weight: planted, s: lead.s, y: lead.y };
       // The hands come up outside the edge and down onto the coping, never through its corner; one, then the other.
       // (a lip he already has beside him he goes straight to; one over his head he reaches for as he comes up under it;
       // and one the run has left down by his knees he does not stoop for at all: he bounds over it, and his arms swing)
@@ -557,7 +590,7 @@ export class VertRunPlan {
       const from = W.at(this.start.len);
       out.posY = lerp(from.y, this.endY, smooth(p / 0.60));
       out.posS = lerp(from.s, this.endS, smooth((p - 0.32) / 0.68));
-    } else if (t <= this.leapSeconds) {
+    } else if (this.leapSeconds > 0 && t <= this.leapSeconds) {
       // The clip's load and its catch are the plan's own, however long this wall makes the throw.
       const L = A.leap, T = this.leapSeconds;
       const p = t <= this.loadAt ? L.load * t / this.loadAt
@@ -663,11 +696,17 @@ export class VertRunPlan {
       out.progress = lerp(M.leap, M.slide, k);
       // Palms drag down the face at the length of his arms: they come down only as fast as he does.
       const tip = Math.min(W.lipY - 0.05, F.hipY + lerp(A.reachDrop - 0.08, 1.42, smooth(k)));
-      const held = 0.85 * (1 - smooth((k - 0.66) / 0.34));
+      // (met in the air, his palms find the face over the first of the slide: they were not on it already)
+      const held = 0.85 * (1 - smooth((k - 0.66) / 0.34)) * (this.start.fromAir ? smooth(t / 0.14) : 1);
       out.hands = { weight: held, s: W.faceAt(tip), y: tip };
       out.secondHand = held;
-      const drag = 0.75 * smooth(k / 0.3), a = toes(F.hipY, 0.80), b = toes(F.hipY, 0.93);
+      const drag = 0.75 * smooth(k / 0.3) * (this.start.fromAir ? smooth(t / 0.12) : 1), a = toes(F.hipY, 0.80), b = toes(F.hipY, 0.93);
       out.feet[0] = { weight: drag, s: a.s, y: a.y }; out.feet[1] = { weight: drag, s: b.s, y: b.y };
+      if (this.start.fromAir) {
+        // The controller point comes onto the slide's own from where the air had it, not in a step.
+        const from = W.at(this.start.len), w = smooth(t / 0.22);
+        out.posS = lerp(from.s, out.posS, w); out.posY = lerp(from.y, out.posY, w);
+      }
     } else if (t < moving) {
       out.beat = 'tumble';
       out.progress = lerp(M.slide, M.tumble, tumble);
@@ -676,6 +715,11 @@ export class VertRunPlan {
       this.fallen(this.slideSeconds, C);
       const stuck = 0.75 * (1 - smooth((tumble - 0.05) / 0.14)), a = toes(C.hipY, 0.80), b = toes(C.hipY, 0.93);
       out.feet[0] = { weight: stuck, s: a.s, y: a.y }; out.feet[1] = { weight: stuck, s: b.s, y: b.y };
+      if (this.landed) {
+        // (his feet are where he came down on them, until the wall has them from under him)
+        const on = W.at(this.start.len), held = 0.85 * (1 - smooth((tumble - 0.04) / 0.12));
+        out.feet[0] = { weight: held, s: on.s, y: on.y }; out.feet[1] = { weight: held, s: on.s, y: on.y };
+      }
       // Going over the top his hands are on the ground by his ears, where they met it: he rolls over them.
       this.fallen(this.slideSeconds + 0.46 * this.tumbleSeconds, C);
       out.hands = { weight: 0.9 * smooth((tumble - 0.40) / 0.07) * (1 - smooth((tumble - 0.72) / 0.08)), s: C.s - 0.74, y: C.y + 0.03 };

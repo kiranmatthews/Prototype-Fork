@@ -1989,8 +1989,8 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 
 A `vertramp` half with `sideOn: true` is a halfpipe on a side-scrolling path, ridden across its section:
 the walker is dropped in on the board as they cross the coping, and Jump in the hang with the stick held
-out over a lip (the spine transfer's input) pops the air out across it, landing on foot
-([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). The stick alone never leaves a
+out over a lip (the spine transfer's input) pops the air out across it, landing on foot unless a direction
+is still held as he lands ([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md); test course `side-pipe-lab`). The stick alone never leaves a
 pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
 `tools/test-side-pipe-lab.mjs`):
 
@@ -2012,7 +2012,8 @@ pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tool
 | Long rail (52 m falling 16 m) | 2.4 s balanced, leaves at 30.5 m/s; on the held travel stick the grind is lost 1.2 s in | the escalation, behind its own checkpoint; a rail over about a second long is a balance exam |
 | The air off a rail on a side-on line | the stick toward travel never spins the board | a balanced grind can be followed by "right" without a sideways landing |
 
-Popping out of a pipe lands on foot, so the stretch after it is plain platforming: steps of 1.6 m or less
+Popping out of a pipe lands on foot (with the stick at rest; a direction still held keeps the board, and
+he rolls on from about 4.5 m/s), so the stretch after it is plain platforming: steps of 1.6 m or less
 (a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands from the ground: a
 wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
 a board.
@@ -2101,10 +2102,23 @@ every vert, whatever part drew it and wherever it stands, the inside of a side-o
 a pipe's lip from its deck still drops a walker in on his board, but down in one on foot he is on his feet.
 
 On foot **in the air**, a vert's lip is an ordinary ledge: jumped to or fallen past, it is caught, hung
-from and climbed out of like a platform's edge (the body lies along the curve under it). Nothing changes on
-the board, except that rolling off a deck into a vert is a drop-in with a 0.2 s pause, tail on the coping:
-a rider arrives on the wall at 4 to 7 m/s whatever speed he reached the lip at, so a staircase of verts is
-ridden one drop at a time and cannot be chained into one fall.
+from and climbed out of like a platform's edge (the body lies along the curve under it). A walker who meets
+a vert's steep face in the air any other way is never left stood on it: a lip at his feet puts him on the
+deck, one in reach is caught, and anything else is the come-up-short, entered where he is (a slide down a
+straight face and the roll back, or the roll alone off a transition). Let go of, a hang hops off the wall
+and drops facing it; under a vert's lip that drop meets the transition and is rolled back onto the flat.
+
+**On the board, the lip of a side-on vert reached along its deck is three things, by speed** (measured as
+the last of the deck begins; the board's own cruise is 12 m/s, a push-off is 5):
+
+| Speed at the lip | The rider | Design consequence |
+|---|---|---|
+| under 8 m/s (just mounted, or within about 4 m of his push-off) | is brought to the coping, sets his tail on it and **waits**. Jump or the stick pressed on drops him in (4 m/s into the wall); the stick pressed back rolls him off the lip | the top of a drop is a place to stop and look. Put what he should read from there in view of the lip, and give the deck ≥ 3 m so the choice is his |
+| 8–17 m/s (a cruise, a charge along one 7 m deck) | **drops straight in**, slowed to 55 % over the last 1.2–2.8 m, with no pause and no way to call it off | arrives on the wall at 4.5–9.5 m/s whatever he pressed: the wall's own height then sets his speed at its foot (a 5 m wall: 23 m/s) |
+| 17 m/s and up (the foot of any wall ≥ 3 m, a long charge, a downhill deck) | **rolls off the edge into the air** with all of his speed and clears the curve (4.5 m out for every 2.5 m of wall at 17 m/s; 8 m at 20 m/s off a 5 m wall) | a staircase of verts is one drop-in and then airs. Leave ≥ 8 m of clear landing past the foot of each wall after the first, and keep hazards off that landing: he cannot shorten the air |
+
+Out of a pipe's air onto a deck (the pop-out), he keeps the board while a direction is held and steps off
+it when the stick is at rest; Board Abandon is open in that air and in a spine transfer's.
 
 ---
 
@@ -2954,7 +2968,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] Any camera-mode change happens at a one-way transition with a checkpoint, and the camera shows the
   axis being tested.
 - [ ] A side-on pipe that must be read at a glance is about 12 m lip to lip (in frame from its near lip)
-  and is left by a pop-out onto a deck (which lands on foot) or by a transfer into another pipe; an exit
+  and is left by a pop-out onto a deck (which lands on foot, or still on the board at about 4.5 m/s if a
+  direction is held) or by a transfer into another pipe; an exit
   that keeps the board (a rail, an open ramp) lands in another pipe or on a clear floor that ends in a
   gate or a pipe, never a step (XV.14).
 - [ ] A rail longer than about a second of grinding is a balance exam: it has a short rail before it and

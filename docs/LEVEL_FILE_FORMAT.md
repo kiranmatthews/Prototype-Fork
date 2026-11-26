@@ -38,7 +38,9 @@ normal `pts`, `w`, `rise`, `collisionHeight` and `solid` fields.
 A straight, axis-aligned, 90-degree `vertramp` half may set `sideOn: true` for a pipe that a
 side-scrolling stretch looks across: the ride is locked to its cross axis, a decked coping drops a
 walker in on the board, and Jump in the hang with the stick held out over a lip pops the air out
-across it (onto a deck, landing on foot, or into the next pipe over a shared ridge). Such a pipe may give
+across it (onto a deck, landing on foot unless a direction is still held, or into the next pipe over a
+shared ridge). A rider who rolls up to a decked coping along the deck waits on it, drops straight in or
+flies off it by his speed (`docs/SIDE_ON_PIPES.md`). Such a pipe may give
 each wall its own radius with `wallRise: [a, b]` (0–60; a non-zero radius is at least 0.5, and 0
 leaves that side open) and each coping its own deck depth with `wallDeck: [a, b]` (0–60). Both
 pairs are rejected on any other part. An east/west `zone` may also set `sideOn: true` to mark a
