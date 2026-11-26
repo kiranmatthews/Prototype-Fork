@@ -102,6 +102,27 @@ down, and never in under 0.18 s), and goes on doing so across a touchdown that c
 frame of that air turns him a degree or two; left to the ease that lays him onto a wall it turned him
 18° to 36°, his board half a metre to a metre from where it had been against his hips.
 
+On the wall the whole of him lies on the ground his board is riding, and it is that ground which turns
+him. From the flat into the foot of a curve, up it, and back down it and out along the flat, the drawn
+rig takes the turn of the surface under the board whole, frame by frame (`PIPE_LIE`,
+`Player.followPipeSurface`). Only what is new to it is eased: a wall just landed on out of a hang or an
+air, a board just stepped onto. A drop-in's own lay-over, which tips him in off the coping across the
+hop, hands on to the ground as soon as it has him as far over as the wall under him, which down a curve
+is where the wall comes round to meet it. The lay-over this replaces on a pipe stood him upright below
+40° of slope, laid him flat out above 44°, and followed the wall's normal a few frames late: up a 2.5 m
+curve the deck was drawn dead level until the wall under it was 37° steep, and down it at 20 m/s one
+frame turned the deck 26° and moved it 0.56 m against his hips. Now the deck is within a degree of the
+wall under it both ways, and no frame turns it further than the wall turned. In the library's riding
+(`PlayableSkateMotion`) the stance of the flat gives way to the transition's over 0.2 s, where it was
+cut in the frame he rolled onto the foot of the curve (his pelvis 0.43 m from where it had been over
+the deck).
+
+That is the picture, and only the picture decides it. The tilt a touchdown is judged by and the up a
+skate camera takes are the eased ones they always were, and the ride is the same step for step.
+Pick-ups and boxes are met by his body as it is drawn, as everywhere, so on a pipe a fruit can be
+banked a frame or two sooner or later than it was: over the whole course the banked score differed on
+45 of 7,494 steps and ended the same.
+
 ## Measured (real `Player`/`Level`, `tools/side-pipe-probe.mjs` and `tools/test-side-pipe-lab.mjs`)
 
 Walk-in at 9 m/s, right held unless noted.
@@ -217,10 +238,12 @@ bounces, the Mossback's shell, the lifts, ferry, pads and crushers (and that a r
 nothing dies there), every enemy kind, the valley's stack and crab, the switch being the only way out,
 the two cascade transfers, the short rail on the travel stick, the long rail lost on it and ridden on the
 balance, the grind button held too early, a step that is bumped and not grabbed, a thrown board coming
-to rest, the one-line brake and the checkpoint a death returns to; and two things as they are drawn,
+to rest, the one-line brake and the checkpoint a death returns to; and three things as they are drawn,
 frame to frame: a hang off the straight face of the yard's second wall coming back to that face (no step
 on the deck behind the lip, the board turned under 4° and moved under 0.15 m against his hips in any
-frame of the way back), and the first frames of the air out of P0.
+frame of the way back), the board against the curve at the foot of that wall, up into it and down it and
+out along the deck below (within 3° of the ground under it, no frame turning it 2° more than that ground
+turned, his pelvis within 0.1 m over it), and the first frames of the air out of P0.
 `npm run check:pipe` covers the unchanged symmetric pipe.
 
 `tools/test-side-pipe-lab-forward.mjs` then holds the forward copy to its claims: the same parts, all
@@ -239,7 +262,9 @@ of every band. On the board it also rides at a straight-faced wall at five speed
 short of the lip, a hand under it, just over it and well over it: each is met by the face it left, at its
 own height, with no step on the deck, and is drawn back onto it in one movement. Then it pops out of a
 long air and a short one, and holds the first frames of each, and every frame after them, to the one
-before.
+before. It ends over the curve under such a wall: 1.5 m, 2.5 m and 4 m curves at three speeds each, to a
+stall and into a hang, up into the curve from the flat and down it and out along the flat, and down it
+out of each of the ten drop-ins, with the deck held to the ground it is on.
 
 ```bash
 RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump node tools/side-pipe-probe.mjs

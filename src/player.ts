@@ -447,6 +447,30 @@ const SIDE_ON_CARRY_LEVEL = {
   byLanding: 0.8, // ...and in a shorter air, this much of what he has left before they are due down
   least: 0.18,    // ...but never quicker than this, however near the deck is (its first step is then 2 degrees)
 };
+// THE LIE OF A PIPE UNDER A BOARD, as it is SEEN. The lay-over's eased tilt
+// (updateSurfaceAlignment) stands a rider upright below a narrow band of slope
+// and lays him flat out on the wall above it, and follows the wall's normal on
+// a first-order ease. Both are right for a body arriving on a wall. Neither is
+// right for a board already rolling over one. Ridden at at 20 m/s, a 2.5 m
+// curve turns 9 degrees a step under him on the way down: the eased normal
+// trailed it by 12, the band was crossed in a single step, and that step
+// turned the drawn deck 29 degrees and threw it 0.55 m against his hips; up
+// the same curve the deck was drawn dead level until the wall under it was 37
+// degrees steep. So on a pipe the drawn rig takes the ground's own turn whole,
+// each step, and eases only what is new to it: a wall just landed on, a board
+// just stepped onto. It is the picture and nothing else: what a touchdown is
+// judged by, and what a skate camera takes for its up, are the eased tilt as
+// it always was. (Pick-ups and boxes are met by the body as it is drawn, here
+// as everywhere.)
+const PIPE_LIE = {
+  ease: 24,      // 1/s: what is new to the drawn lie eases away at the rate the lay-over has on a pipe
+  kink: 0.5,     // cosine: ground that turns further than this in one step is other ground, eased onto like any other
+  tippedIn: 0.09, // rad: a drop-in's own lay-over has done its part once it has him this near as far over as the wall under him
+  settled: 1e-4, // rad, and share: this near the eased lie again, the drawn lie is the eased one
+};
+const LIE_WAS = new THREE.Vector3();
+const LIE_NOW = new THREE.Vector3();
+const LIE_TURN = new THREE.Quaternion();
 // A HANG OFF A STRAIGHT FACE comes back down that face's own plane (sideOnHangFaceReturn).
 const SIDE_ON_HANG_RETURN = {
   onLine: 0.02, // m: a hang this near a straight face's plane left that face, and is on it again coming down
@@ -1918,6 +1942,15 @@ export class Player {
   // reads this, never a transform that Animation Studio is allowed to edit.
   private landingAlignPose = 0;
   readonly alignNormal = new THREE.Vector3(0, 1, 0); // eased surface normal the rig lies on
+  // THE LIE AS IT IS DRAWN ON A PIPE (PIPE_LIE). While it is his own the rig is
+  // drawn stood on `lieUp` and not on the eased tilt above; off the pipe it is
+  // brought back to the eased tilt and given up. Nothing but the picture reads it.
+  private lieOwn = false;
+  private readonly lieUp = new THREE.Vector3(0, 1, 0);
+  private lieWeight = 0; // how much of the ground the drawn root has taken: what the body's own slope pitch is faded by
+  private lieSurfaceKnown = false; // last step he was riding his board over ground...
+  private readonly lieSurface = new THREE.Vector3(0, 1, 0); // ...whose normal was this...
+  private lieOnPipe = false; // ...and it was a pipe
   /** The turn that laid the drawn root on the surface this step: identity
    * while it stands upright, the whole lie of a park's ground once it has
    * come round to it. A pose layered on the root reads this to know how much
@@ -2686,13 +2719,15 @@ export class Player {
   get skateCameraSupported(): boolean { return this.grounded || this.state === 'grind'; }
   get skateCameraBailing(): boolean { return this.isBailing; }
   private readonly skateCameraUpVector = new THREE.Vector3(0, 1, 0);
-  get skateCameraUp(): Readonly<THREE.Vector3> {
+  get skateCameraUp(): Readonly<THREE.Vector3> { return this.easedLieUp(this.skateCameraUpVector); }
+  /** The up the eased tilt stands him on: `alignPose` of the way from level to `alignNormal`. */
+  private easedLieUp(out: THREE.Vector3): THREE.Vector3 {
     // Match syncVisual's quaternion slerp, including partially level airs.
     const angle = Math.acos(THREE.MathUtils.clamp(this.alignNormal.y, -1, 1)) * this.alignPose;
     const horizontal = Math.hypot(this.alignNormal.x, this.alignNormal.z);
-    if (horizontal < 1e-6) return this.skateCameraUpVector.copy(VERT_UP);
+    if (horizontal < 1e-6) return out.copy(VERT_UP);
     const scale = Math.sin(angle) / horizontal;
-    return this.skateCameraUpVector.set(this.alignNormal.x * scale, Math.cos(angle), this.alignNormal.z * scale);
+    return out.set(this.alignNormal.x * scale, Math.cos(angle), this.alignNormal.z * scale);
   }
 
   get sliding(): boolean {
@@ -4533,6 +4568,7 @@ export class Player {
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
       this.groundHit=support;this.pos.y=support.y;this.grounded=true;
       this.rideNormal.copy(support.normal);this.alignNormal.copy(support.normal);
+      this.lieOwn=this.lieSurfaceKnown=this.lieOnPipe=false;
     }
     this.snapRenderInterpolation();
   }
@@ -4835,6 +4871,7 @@ export class Player {
     this.alignPose = 0;
     this.landingAlignPose = 0;
     this.alignNormal.set(0, 1, 0);
+    this.lieOwn = this.lieSurfaceKnown = this.lieOnPipe = false;
     this.slipping = false;
     this.slipClamp = false;
     this.greaseT = 0;
@@ -4941,7 +4978,7 @@ export class Player {
         this.parkRailSweepStart,this.parkRailSweepEnd,this.parkPropSweepEnd,this.bailRecoveryAnchor])point.applyMatrix4(matrix);
       for(const direction of [this.axisF,this.axisL,this.camDir,this.walkVelocity,this.walkIntent,this.slideVec,
         this.parkVelocity,this.parkPropVelocity,this.parkCameraForward,this.naturalGrindVelocity,
-        this.alignNormal,this.rideNormal,this.vertNormal,this.wallNormal,this.spinePoseFrom,this.spinePoseAxis,
+        this.alignNormal,this.lieUp,this.lieSurface,this.rideNormal,this.vertNormal,this.wallNormal,this.spinePoseFrom,this.spinePoseAxis,
         this.bailVelocity,this.bailRecoveryMomentum,this.bailRecoverySpin,this.netRenderOffset,this.previousNetRenderOffset])direction.applyQuaternion(rotation);
       this.ragQ.premultiply(rotation);this.bailRecoveryOrientation.premultiply(rotation);
       this.visualYaw=wrapAngle(this.visualYaw+yaw);
@@ -6390,6 +6427,7 @@ export class Player {
     this.lipStallT = this.manualArmT = this.manualArmed = 0;
     this.lipPipe = null;
     this.landingAlignPose = this.alignPose = this.slopePose = this.slopeRoll = this.wallridePose = 0;
+    this.lieOwn = this.lieSurfaceKnown = this.lieOnPipe = false;
     this.grabPhase = 'none';
     this.grabPose = 0;
     this.slamActive = false;
@@ -20458,6 +20496,7 @@ export class Player {
     this.grabPhase = 'none'; this.slamActive = false;
     this.cancelSlideTraversal(); this.crawling = false;
     this.slopePose = this.slopeRoll = this.landingAlignPose = this.alignPose = 0;
+    this.lieOwn = this.lieSurfaceKnown = this.lieOnPipe = false;
     this.manualing = 0; this.lipStallT = 0; this.wallriding = false;
     this.wallKickAir = false; this.rearmWallPlant();
     this.grounded = supported;
@@ -22987,6 +23026,48 @@ export class Player {
   }
 
   private updateSurfaceAlignment(dt: number): void {
+    // (where the eased tilt stood him before this step: what was drawn, unless the drawn lie was his own)
+    const easedWas = this.easedLieUp(LIE_WAS), weightWas = this.alignPose;
+    this.easeSurfaceAlignment(dt);
+    this.followPipeSurface(dt, easedWas, weightWas);
+  }
+
+  /** The lie the rig is DRAWN with on a pipe (PIPE_LIE): the ground's own turn
+   * taken whole, and only what is new to it eased. */
+  private followPipeSurface(dt: number, easedWas: THREE.Vector3, weightWas: number): void {
+    const hit = this.groundHit;
+    // Riding his board over ground in the ordinary way: not spilled, not stood on a coping...
+    const onBoard = this.grounded && this.state === 'ride' && this.freeSkate && hit !== null && !this.isBailing &&
+      this.lipStallT <= 0 && !this.loopRide;
+    // ...and not tipping in off one. That lay-over is the drop-in's own, eased across the hop, until it has him as
+    // far over as the wall under him: down a curve the wall comes round to meet it, and from there he is riding.
+    const riding = onBoard && (this.dropInT < 0 || this.lieOnPipe ||
+      Math.acos(THREE.MathUtils.clamp(this.easedLieUp(LIE_NOW).y, -1, 1)) >=
+        Math.acos(THREE.MathUtils.clamp(hit!.normal.y, -1, 1)) - PIPE_LIE.tippedIn);
+    const surface = riding ? hit!.normal : null, onPipe = riding && hit!.halfpipe !== undefined;
+    // One surface going on under him: a pipe's curve, or its foot and the flat it runs out onto.
+    const carried = surface !== null && this.lieSurfaceKnown && (onPipe || this.lieOnPipe) &&
+      surface.dot(this.lieSurface) > PIPE_LIE.kink;
+    if (this.loopRide) this.lieOwn = false; // (a loop's frame is its own, all the way round)
+    else if (onPipe || this.lieOwn) {
+      const eased = this.easedLieUp(LIE_NOW), k = Math.min(1, PIPE_LIE.ease * dt);
+      // It begins as what was drawn the step before...
+      if (!this.lieOwn) { this.lieUp.copy(easedWas); this.lieWeight = weightWas; this.lieOwn = true; }
+      // ...goes round with the ground under the board (or, off the pipe, with the eased tilt it is going back to)...
+      if (carried) this.lieUp.applyQuaternion(LIE_TURN.setFromUnitVectors(this.lieSurface, surface!));
+      else if (!onPipe) this.lieUp.applyQuaternion(LIE_TURN.setFromUnitVectors(easedWas, eased));
+      // ...and what is left between them eases away.
+      this.lieUp.lerp(onPipe ? surface! : eased, k).normalize();
+      this.lieWeight = onPipe ? 1 : this.alignPose + (this.lieWeight - weightWas) * (1 - k);
+      if (!onPipe && this.lieUp.angleTo(eased) < PIPE_LIE.settled &&
+          Math.abs(this.lieWeight - this.alignPose) < PIPE_LIE.settled) this.lieOwn = false;
+    }
+    this.lieSurfaceKnown = surface !== null;
+    if (surface) this.lieSurface.copy(surface);
+    this.lieOnPipe = onPipe;
+  }
+
+  private easeSurfaceAlignment(dt: number): void {
     if(this.spinePoseDuration>0){
       if(!this.vertAir||this.grounded||this.isBailing){this.spinePoseDuration=0;this.spinePoseElapsed=0;}
       else this.spinePoseElapsed=Math.min(this.spinePoseDuration,this.spinePoseElapsed+dt);
@@ -23156,8 +23237,11 @@ export class Player {
     // walls — the SAME quaternion while riding the transition AND while glued
     // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
     // then run about the rig's own up = the surface normal, THPS-style.
-    if (this.alignPose > 0.001 && this.lipStallT <= 0) {
-      if (this.loopRide && this.loopRide.shape.kind !== 'wall') {
+    // (on a pipe, and coming off one, the lie that is drawn is the rider's own: PIPE_LIE)
+    const ownLie = this.lieOwn && !this.loopRide;
+    if ((ownLie || this.alignPose > 0.001) && this.lipStallT <= 0) {
+      if (ownLie) VERT_Q2.setFromUnitVectors(VERT_UP, this.lieUp);
+      else if (this.loopRide && this.loopRide.shape.kind !== 'wall') {
         // The authored full-turn frame remains continuous through upside-down;
         // shortest-arc UP-to-normal rotation has an arbitrary axis at the apex.
         VERT_Q.setFromAxisAngle(new THREE.Vector3(1, 0, 0)
@@ -23168,7 +23252,7 @@ export class Player {
         // follows the entry bank, full horizontal turn and flat exit smoothly.
         VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
       }
-      VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
+      if (!ownLie) VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
       this.rootSurfaceAlignment.copy(VERT_Q2);
       // A spine transfer is thrown, not turned. The drawn body winds up
@@ -24323,7 +24407,8 @@ export class Player {
       // On steep ground the ROOT alignment (above) already lays the rig on the
       // wall; fade these capped body-pitch/roll channels out as it takes over,
       // or the two stack and over-rotate the torso past the surface.
-      const fade = 1 - this.alignPose;
+      // (by what the root is DRAWN to have taken: on a pipe that is all of it, from the foot of the curve up)
+      const fade = 1 - (this.lieOwn && !this.loopRide ? this.lieWeight : this.alignPose);
       slopeT *= fade;
       slopeRollT *= fade;
     }

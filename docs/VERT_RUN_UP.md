@@ -183,8 +183,11 @@ Jump or by the stick, backed out, dropped straight in whatever he presses, an ol
 flown off the edge), and rides him at a quarter (into its air, and out over its lip onto the deck). Last,
 it rides him at a straight-faced wall so that the hang tops out under the lip, at it and over it (met by
 the face each time, never by the deck behind it: `docs/SIDE_ON_PIPES.md`), and pops him out of a long air
-and a short one, with the picture of each held frame to frame. `npm run check:side-pipe` runs it after
-the course test.
+and a short one, with the picture of each held frame to frame. And it holds his deck to the curve under a
+wall: ridden up into from the flat and back down and out along it, over three radii at three speeds each,
+and down each drop-in from where the tip-in leaves him, the deck is within 3° of the ground it is on, no
+frame turns it 2° more than that ground turned, and his pelvis is within 0.1 m a frame over it.
+`npm run check:side-pipe` runs it after the course test.
 
 Review by eye is frame by frame in the real game (`?launchReview`, one fixed step at a time). Stepped that
 way the run's own drawing has caught up with the controller point when the move begins; in play it trails

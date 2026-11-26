@@ -51,6 +51,14 @@
 //     turn the deck a degree or two where they turned it 36: he comes up off
 //     the wall on a curve, as long as the air has for it, and is on his wheels
 //     by the time they are down;
+//   · ON THE BOARD, OVER THE CURVE AT THE FOOT OF A WALL, the deck is drawn on the
+//     ground it is on: up into the curve from the flat, down it and out along the
+//     flat again, at three speeds over three radii, and down it out of a drop-in.
+//     It is never more than a few degrees off that ground, no frame turns it by
+//     more than the ground itself turned, and his pelvis is never thrown against
+//     it. (It was drawn dead level up the first 40 degrees of every curve, and
+//     on the way down one frame swung it 29 degrees toward level, half a metre
+//     against his hips.);
 //   · SIDE PIPE LAB's wall yard is those four walls.
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
@@ -76,7 +84,7 @@ const FIXTURES = [
   // ...unless it is no higher than his hips: nothing to leap for, and it is left alone
   ['low spine', RADIUS, 0, 0, 'none', 'spine'],
 ];
-const components = [{ t: 'zone', p: [0, 0, LANE * FIXTURES.length / 2], s: [160, 1, LANE * (FIXTURES.length + 2)], dir: 'E', sideOn: true },
+const components = [{ t: 'zone', p: [0, 0, LANE * (FIXTURES.length + 2) / 2], s: [160, 1, LANE * (FIXTURES.length + 4)], dir: 'E', sideOn: true },
   { t: 'camnode', p: [-40, 0, 0] }, { t: 'camnode', p: [60, 0, 0] }, { t: 'gate', p: [-38, 0, 0], yaw: 90 }];
 FIXTURES.forEach(([, radius, lipRise, deck, , extra], lane) => {
   const z = lane * LANE;
@@ -94,6 +102,10 @@ FIXTURES.forEach(([, radius, lipRise, deck, , extra], lane) => {
 const BLOCK = { lane: FIXTURES.length, edgeX: WALL_X, topY: 4.4 };
 components.push({ t: 'platform', p: [-10, -0.5, BLOCK.lane * LANE], s: [44, 1, 8] },
   { t: 'platform', p: [BLOCK.edgeX + 3, BLOCK.topY / 2, BLOCK.lane * LANE], s: [6, BLOCK.topY, 8] });
+// ...and two more walls, only ever ridden on the board: the 'extended' wall's straight face over a tighter curve and over a wider one
+const RIDDEN = [['tight curve', 1.5, 1.35], ['wide curve', 4, 1.35]];
+RIDDEN.forEach(([, radius, lipRise], i) => { const z = (BLOCK.lane + 1 + i) * LANE;
+  components.push({ t: 'platform', p: [-10, -0.5, z], s: [44, 1, 8] }, { t: 'vertramp', vkind: 'quarter', p: [WALL_X, 0, z], len: 8, rise: radius, w: 0, yaw: 0, deck: 6, lipRise }); });
 const levelEntry = { id: '__vert_run_up', name: 'vert run-up', data: { v: 1, name: 'vert run-up', spawn: [-6, 0.2, 0], killY: -30, components } };
 
 await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) => {
@@ -561,6 +573,34 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
     void fall;
   }
 
+  /** The drawn deck: where it is, the line it lies along and the way its grip faces, read off what is drawn
+   *  (in the air the deck is squashed and stretched a little: a rotation taken out of that is not one). */
+  const deckDrawn = () => { const at = world(p.boardG).add(p.dropInOffset), drawn = p.boardG.matrixWorld;
+    return { at, nose: new THREE.Vector3(0, 0, 1).transformDirection(drawn), grip: new THREE.Vector3(0, 1, 0).transformDirection(drawn) }; };
+  /** From one frame to the next: how far that deck turned (its nose and its tail are one line: he comes down
+   *  a wall tail first, and it is his stance that changes, not the deck), and how far it moved against his hips. */
+  const stepOf = (a, b) => { const line = a.nose.angleTo(b.nose);
+    return { turn: Math.max(a.grip.angleTo(b.grip), Math.min(line, Math.PI - line)) * 180 / Math.PI, slip: b.at.clone().sub(b.hips).sub(a.at.clone().sub(a.hips)).length() }; };
+  /** THE DECK AGAINST THE GROUND IT IS ON, over rows that carry both (`ground` is the normal of what is under the
+   *  board, or null in the air). From each grounded frame to the next: how far the deck is drawn off that ground,
+   *  how much further it turned than the ground itself turned under it, and how far his pelvis moved over it. That
+   *  last is measured in the deck's own frame: a rider going round a curve with his deck moves in the world, and
+   *  is not thrown by it. (The deck turning about its own normal, as it does when a stalled board is turned to
+   *  face back down a wall, is none of these.) */
+  const DEG = 180 / Math.PI;
+  const seatOf = row => { const d = row.hips.clone().sub(row.at), side = new THREE.Vector3().crossVectors(row.grip, row.nose).normalize();
+    return new THREE.Vector3(d.dot(side), d.dot(row.grip), d.dot(row.nose)); };
+  const lieOver = (rows, from = 1, to = rows.length) => { const lie = { off: 0, more: 0, seat: 0, bend: 0, steepest: 0, frames: 0, at: '', seatAt: '' };
+    for (let i = Math.max(1, from); i < to; i++) { const a = rows[i - 1], b = rows[i];
+      if (!a.ground || !b.ground) continue;
+      const off = b.grip.angleTo(b.ground) * DEG, bend = a.ground.angleTo(b.ground) * DEG, more = a.grip.angleTo(b.grip) * DEG - bend;
+      if (off > lie.off) { lie.off = off; lie.at = `${f2(b.x)},${f2(b.y)}`; }
+      const seat = seatOf(b).distanceTo(seatOf(a)); if (seat > lie.seat) { lie.seat = seat; lie.seatAt = `${f2(b.x)},${f2(b.y)}`; }
+      lie.more = Math.max(lie.more, more); lie.bend = Math.max(lie.bend, bend);
+      lie.steepest = Math.max(lie.steepest, Math.acos(Math.min(1, Math.max(-1, b.ground.y))) * DEG); lie.frames++; }
+    return lie; };
+  const onTheGround = lie => lie.off < 3 && lie.more < 2 && lie.seat < 0.1;
+  const lieSaid = lie => `${f2(lie.off)}° off it at most (at ${lie.at}), ${f2(lie.more)}° more in a frame than the ground turned (which was ${f2(lie.bend)}° at most), his pelvis ${f2(lie.seat)} m over it in a frame (at ${lie.seatAt})`;
   // ---- rolling off a deck into a vert on the board: by how fast the lip is reached ----
   // (`then` scripts the stick and Jump once he is stood on the coping: steps since he got there -> { x, jump })
   const rollUp = (name, speed, then = () => ({ x: -1 }), { limit = 520, pullBack = false, holdTo = 3.0 } = {}) => {
@@ -598,7 +638,7 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       const wheels = world(p.boardG).add(off), chest = new THREE.Vector3(0, 0, 1).applyQuaternion(node('hips').getWorldQuaternion(new THREE.Quaternion()));
       const stance = world(node('ankleLeft')).distanceTo(world(node('ankleRight')));
       const look = new THREE.Vector3(0, 0, 1).applyQuaternion(node('head').getWorldQuaternion(new THREE.Quaternion()));
-      log.rows.push({ k, x: p.pos.x - lipX, y: p.pos.y - lipY, speed: p.speed, hips, wheels, stance, look: Math.atan2(look.x, look.z), facing: Math.atan2(chest.x, chest.z), pitch: Math.atan2(nose.y, Math.hypot(nose.x, nose.z)) * 180 / Math.PI,
+      log.rows.push({ k, x: p.pos.x - lipX, y: p.pos.y - lipY, speed: p.speed, hips, wheels, stance, ...deckDrawn(), ground: p.grounded && p.groundHit ? p.groundHit.normal.clone() : null, look: Math.atan2(look.x, look.z), facing: Math.atan2(chest.x, chest.z), pitch: Math.atan2(nose.y, Math.hypot(nose.x, nose.z)) * 180 / Math.PI,
         phase: p.dropInPerch ? (p.dropInTipT >= 0 ? 'tip' : 'perch') : p.dropInSetup ? 'set' : p.dropInT >= 0 ? 'in' : log.backedOut ? 'back' : p.grounded ? (p.groundHit?.halfpipe ? 'wall' : 'deck') : 'air' });
       log.out = (!!log.seat && p.grounded && p.pos.x < WALL_X - 2) || (!!log.landed && p.pos.x < WALL_X - 6) || (!!log.backedOut && k > log.backedOut.step + 36);
     }
@@ -608,7 +648,8 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   const jolt = (log, phases, above = -1.2) => { let hips = 0, pitch = 0, sunk = 0, at = '', atHips = '';
     for (let i = 2; i < log.rows.length; i++) { const a = log.rows[i - 2], b = log.rows[i - 1], c = log.rows[i];
       if (!phases.includes(c.phase) || !phases.includes(b.phase) || !phases.includes(a.phase)) continue;
-      // (the foot of a transition lays him level again in a step or two, as it does every rider: that is the pipe's, not the drop-in's)
+      // (lower than that the wall begins to curve, and a change in the deck's pitch there is the wall's own: what is
+      // asked of the deck from there down is that it lies on the ground it is riding, below)
       if (c.y < above) continue;
       const kick = c.hips.clone().sub(b.hips).sub(b.hips.clone().sub(a.hips)).length();
       if (kick > hips) { hips = kick; atHips = `${b.phase}>${c.phase} at ${c.x.toFixed(2)},${c.y.toFixed(2)}`; }
@@ -616,6 +657,14 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       if (turn > pitch) { pitch = turn; at = `${c.phase} at ${c.x.toFixed(2)},${c.y.toFixed(2)}`; }
       if (c.phase === 'set' || c.phase === 'perch' || c.phase === 'back') sunk = Math.max(sunk, -(c.wheels.y - log.lipY)); }
     return { hips, pitch, sunk, at, atHips }; };
+  /** A DROP-IN'S DECK is tipped in off the coping across the hop: that lay-over is the drop-in's own. It has done
+   *  its part once it has him as far over as the wall under him (down a curve the wall comes round to meet it),
+   *  and from that frame on his deck is on the ground it rides like any other: `late` is how many frames after
+   *  the drop-in's own time that frame came, `lie` the deck against the ground from there down and out. */
+  const tippedIn = roll => { const seated = roll.rows.findIndex(row => row.phase === 'in'), ended = roll.rows.findLastIndex(row => row.phase === 'in');
+    const laid = roll.rows.findIndex((row, i) => i > seated && row.ground && row.grip.angleTo(row.ground) * DEG < 3);
+    return { late: laid < 0 ? Infinity : laid - ended, lie: lieOver(roll.rows, laid + 1) }; };
+  const tippedInSaid = ridden => `tipped in, his deck lies on the wall ${ridden.late > 0 ? `${ridden.late} frames after` : `${-ridden.late} frames before`} the drop-in's own time is up, and from there it is on the ground it rides, down the curve and out along the flat: ${lieSaid(ridden.lie)} (${ridden.lie.frames} frames)`;
   const LET_GO_THEN = (act) => (since) => since < 30 ? { x: -1 } : since < 40 ? { x: 0 } : act(since - 40);
   for (const name of ['plain quarter', 'grab']) {
     // SLOWLY: he sets his tail on the coping, and waits there to be told
@@ -642,6 +691,8 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
         `${label}: then he is on the wall just under it (${roll.seat ? f2(roll.lipY - roll.seat.pos.y) + ' m under, ' + f2(roll.seat.speed) + ' m/s' : 'never'})`);
       // (down a face that stands dead upright as much as down a curve: all of the travel is down the wall)
       assert.ok(roll.out && roll.lowest < 0.05 && !roll.bailed, `${label}: and rides the whole wall down and out along the flat (lowest ${f2(roll.lowest)})`);
+      const ridden = tippedIn(roll);
+      assert.ok(ridden.late <= 1 && ridden.lie.frames > 4 && onTheGround(ridden.lie), `${label}: ${tippedInSaid(ridden)}`);
       const picture = jolt(roll, ['set', 'perch', 'tip', 'in']);
       assert.ok(picture.hips < 0.13 && picture.pitch < 4 && picture.sunk < 0.02,
         `${label}: nothing in it jolts: his pelvis (${f2(picture.hips)} m, ${picture.atHips}), the deck's pitch (${f2(picture.pitch)} degrees, ${picture.at}) from one frame to the next, the wheels not sunk in the deck (${f2(picture.sunk)} m)`);
@@ -675,6 +726,8 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       assert.ok(roll.seat.speed >= 4.5 - 1e-9 && roll.seat.speed <= 9.5 + 1e-9 && Math.abs(roll.seat.speed - Math.min(9.5, Math.max(4.5, roll.setUp.vEnd))) < 0.5,
         `${label}: and that is the speed he takes into the wall (${f2(roll.seat.speed)} m/s)`);
       assert.ok(roll.out && roll.lowest < 0.05 && !roll.bailed, `${label}: down it and out along the flat`);
+      const ridden = tippedIn(roll);
+      assert.ok(ridden.late <= 1 && ridden.lie.frames > 4 && onTheGround(ridden.lie), `${label}: ${tippedInSaid(ridden)}`);
       const picture = jolt(roll, ['deck', 'set', 'in']);
       assert.ok(picture.hips < 0.13 && picture.pitch < 4, `${label}: one movement, without a jolt in it (${f2(picture.hips)} m, ${f2(picture.pitch)} degrees)`);
     }
@@ -753,20 +806,15 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   // (the deck drawn 58° round in that step and 0.93 m from where it had been against his hips), was
   // lifted onto it from just under the lip, or was stopped under it on the way up; and from the deck
   // he was off his board, and walked off the back of it.
-  /** The drawn deck: where it is, the line it lies along and the way its grip faces, read off what is drawn
-   *  (in the air the deck is squashed and stretched a little: a rotation taken out of that is not one). */
-  const deckDrawn = () => { const at = world(p.boardG).add(p.dropInOffset), drawn = p.boardG.matrixWorld;
-    return { at, nose: new THREE.Vector3(0, 0, 1).transformDirection(drawn), grip: new THREE.Vector3(0, 1, 0).transformDirection(drawn) }; };
-  /** From one frame to the next: how far that deck turned (its nose and its tail are one line: he comes down
-   *  a wall tail first, and it is his stance that changes, not the deck), and how far it moved against his hips. */
-  const stepOf = (a, b) => { const line = a.nose.angleTo(b.nose);
-    return { turn: Math.max(a.grip.angleTo(b.grip), Math.min(line, Math.PI - line)) * 180 / Math.PI, slip: b.at.clone().sub(b.hips).sub(a.at.clone().sub(a.hips)).length() }; };
-  const hangAt = (name, speed, { pop = false, stickFree = false } = {}) => {
-    const [, radius, lipRise] = FIXTURES[lane(name)], lipX = WALL_X + radius, lipY = radius + lipRise, z = lane(name) * LANE;
+  /** (`runOut`: how many steps of the flat he is followed along once he is back down on it) */
+  const hangAt = (name, speed, { pop = false, stickFree = false, runOut = 0 } = {}) => {
+    const ridden = RIDDEN.findIndex(wall => wall[0] === name);
+    const [, radius, lipRise] = ridden < 0 ? FIXTURES[lane(name)] : RIDDEN[ridden], lipX = WALL_X + radius, lipY = radius + lipRise;
+    const z = (ridden < 0 ? lane(name) : BLOCK.lane + 1 + ridden) * LANE;
     level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(-8, 0.15, z), heading: new THREE.Vector3(1, 0, 0) });
     for (let i = 0; i < 20; i++) step(idle());
-    const log = { lipRise, rows: [], launch: null, apex: -Infinity, met: null, deckSteps: 0, board: true, bailed: false, down: false, popped: -1, landed: null };
-    let placed = false, heldWas = false, hang = 0;
+    const log = { radius, lipRise, rows: [], launch: null, apex: -Infinity, met: null, deckSteps: 0, board: true, bailed: false, down: false, popped: -1, landed: null, climbed: 0, kept: true };
+    let placed = false, heldWas = false, hang = 0, ranOut = 0;
     for (let k = 0; k < 460; k++) {
       const input = makeInput();
       // (pushed off, the stick let go through the mount's own ollie, then held at the wall: up it, and out over its lip)
@@ -787,11 +835,15 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       if (log.launch && log.popped < 0 && was.vert && !p.vertAir && !p.grounded) log.popped = n;
       if (log.popped >= 0 && !log.landed && p.grounded) log.landed = { step: n, x: p.pos.x - lipX, y: p.pos.y - lipY, deck: onDeck, board: p.freeSkate };
       if (log.launch && log.popped < 0) { if (onDeck) log.deckSteps++; log.board &&= p.freeSkate; }
-      log.bailed ||= p.isBailing;
-      log.down ||= !!log.met && p.grounded && p.freeSkate && p.pos.x < WALL_X - 0.5 && Math.abs(p.pos.y) < 0.05;
-      // (lying: how far over onto the wall the whole of him is laid, 1 along it and 0 on his wheels)
-      log.rows.push({ y: p.pos.y - lipY, vV: p.vVel, vert: p.vertAir, wall: onWall, hips: world(node('hips')).add(p.dropInOffset), ...deckDrawn(), lying: p.alignPose });
-      if (log.down || (log.landed && n > log.landed.step + 12)) break;
+      log.bailed ||= p.isBailing; log.kept &&= p.freeSkate;
+      if (onWall) log.climbed = Math.max(log.climbed, p.pos.y);
+      // (back down: out of the hang that met the wall again, or, short of any hang, off the wall he rolled back down)
+      log.down ||= (!!log.met || (!log.launch && log.climbed > 0)) && p.grounded && p.freeSkate && p.pos.x < WALL_X - 0.5 && Math.abs(p.pos.y) < 0.05;
+      // (lying: how far over onto the wall the whole of him is laid, 1 along it and 0 on his wheels; ground: the normal of what is under the board)
+      log.rows.push({ x: p.pos.x - WALL_X, y: p.pos.y - lipY, vV: p.vVel, speed: p.speed, vert: p.vertAir, wall: onWall, hips: world(node('hips')).add(p.dropInOffset), ...deckDrawn(), lying: p.alignPose,
+        ground: p.grounded && p.groundHit ? p.groundHit.normal.clone() : null });
+      if (log.down) ranOut++;
+      if (ranOut > runOut || (log.landed && n > log.landed.step + 12)) break;
     }
     return log;
   };
@@ -862,6 +914,37 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   }
   console.log(`a hang back onto a straight face: ${returns.join('; ')}`);
   console.log(`a pop-out's first frame: ${pops.join('; ')}`);
+
+  // ---- ...and over the curve at the foot of the wall, the deck is drawn on the ground it is on ----------
+  // The whole of him is laid on the ground a board is riding, and on a pipe that used to be done by an eased
+  // tilt with a band in it: upright below 40 degrees of slope, flat out on the wall above 44, and following
+  // the wall's normal a few frames late. Rolled up into a 2.5 m curve at 20 m/s the deck was drawn dead level
+  // until the wall under it was 37 degrees steep, and then swung up after it 13 degrees a frame; ridden back
+  // down, it trailed the wall by 12 degrees, crossed that band in one frame (the deck 29 degrees round and
+  // 0.55 m from where it had been against his hips) and from there to the foot was drawn 13 degrees flatter
+  // than the curve. It takes the ground's own turn now, frame by frame, and only what is new to it is eased.
+  const curves = [], kinds = new Set();
+  for (const [name, speeds] of [['extended', [9, 15, 20]], ['tight curve', [7, 13, 18]], ['wide curve', [11, 17, 21]]]) for (const speed of speeds) {
+    const ride = hangAt(name, speed, { runOut: 18 }), rows = ride.rows, label = `${name} (a ${ride.radius} m curve) ridden at on the board at ${speed} m/s`;
+    // (too slow for the lip he is turned on the wall and rolls back down it: a stall. Faster, he leaves it in a hang and is met by it again.)
+    const stalled = !ride.launch, turnedAt = stalled ? rows.findIndex(row => row.wall && row.y + ride.radius + ride.lipRise >= ride.climbed - 1e-9) : rows.findIndex(row => !row.ground);
+    kinds.add(`${name}: ${stalled ? 'stall' : 'hang'}`);
+    assert.ok(ride.down && ride.kept && !ride.bailed && (stalled ? !ride.launch && ride.climbed > 0.35 * ride.radius : !!ride.met?.wall),
+      `${label}: reference: he ${stalled ? 'stalls on it' : 'leaves it in a hang that comes back to it'}, and rides it down and out along the flat on his board (${stalled ? f2(ride.climbed) + ' m up it' : ride.met ? 'met' : 'never met'})`);
+    // (up: from the last of the flat before the foot of the curve; further back than that he is still settling from being
+    // put there. Down: from the top of the curve; the straight face over it is the hang's way back, held above.)
+    const foot = rows.findIndex(row => row.wall), curveTop = rows.findIndex((row, i) => i > turnedAt && row.ground && row.ground.y > 1e-3);
+    const up = lieOver(rows, Math.max(1, foot - 3), turnedAt + 1), down = lieOver(rows, curveTop);
+    // (what is asked is asked of something: the ground he is measured over runs from the flat to a real wall and back, and turns under him)
+    assert.ok(up.frames > 6 && down.frames > 20 && Math.min(up.steepest, down.steepest) > (stalled ? 44 : 80) && Math.max(up.bend, down.bend) > (stalled ? 2 : 4),
+      `${label}: reference: measured over ${up.frames} frames up and ${down.frames} down, to ${f2(Math.min(up.steepest, down.steepest))}° of wall, the ground turning ${f2(Math.max(up.bend, down.bend))}° in a frame`);
+    assert.ok(rows.slice(-12).every(row => row.ground && row.ground.y > 0.9999 && !row.wall), `${label}: reference: and it ends well out along the flat`);
+    assert.ok(onTheGround(up), `${label}: up into the curve from the flat his deck is drawn on the ground it is on: ${lieSaid(up)}`);
+    assert.ok(onTheGround(down), `${label}: and down the curve and out along the flat: ${lieSaid(down)}`);
+    curves.push(`${ride.radius} m at ${speed}: ${f2(Math.max(up.off, down.off))}°, ${f2(Math.max(up.more, down.more))}°, ${f2(Math.max(up.seat, down.seat))} m`);
+  }
+  for (const name of ['extended', 'tight curve', 'wide curve']) assert.ok(kinds.has(`${name}: stall`) && kinds.has(`${name}: hang`), `${name}: reference: ridden at both ways, to a stall and into a hang (${[...kinds].join(', ')})`);
+  console.log(`the deck against the curve it rides (off it; more than it turned; pelvis over it): ${curves.join('; ')}`);
 
   // ---- Side Pipe Lab's wall yard ----------------------------------------------------
   const lab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');

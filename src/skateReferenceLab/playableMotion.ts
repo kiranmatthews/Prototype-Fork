@@ -18,11 +18,15 @@ type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' 
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const WALLPLANT_OWNER = 'wallplant / release';
 const DROP_IN_OWNER = 'drop-in / release';
+const TRANSITION_OWNER = 'vert / transition';
 /** Native poses that come on by degrees out of plain riding, and the seconds the
- * library pose takes to give way to each: a wallplant's reach, and the set-up
- * for a drop-in (the knees bending and the tail going down as he comes up to a
- * coping). Any other native owner is a cut, as it always was. */
-const HANDOVER_SECONDS: Readonly<Record<string, number>> = {[WALLPLANT_OWNER]: .08, [DROP_IN_OWNER]: .2};
+ * library pose takes to give way to each: a wallplant's reach, the set-up for
+ * a drop-in (the knees bending and the tail going down as he comes up to a
+ * coping), and a transition, whose curve comes up under a rolling board by
+ * degrees (cut, his pelvis was put 0.43 m from where it had been over the deck
+ * in the step he rolled onto the foot of one). Any other native owner is a
+ * cut, as it always was. */
+const HANDOVER_SECONDS: Readonly<Record<string, number>> = {[WALLPLANT_OWNER]: .08, [DROP_IN_OWNER]: .2, [TRANSITION_OWNER]: .2};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
 /** Riding is never a held pose. The source's own ride loops barely move, and
  * its charge was one frame held still, so the rider stands on a few springs:
@@ -246,7 +250,7 @@ export class PlayableSkateMotion {
     if(p.wallPlantOwnsRide)return WALLPLANT_OWNER;
     if(p.dropInOwnsRide)return DROP_IN_OWNER;
     if(p.lipStallT>0||Math.abs(p.lipYawPose)>.001)return 'lip stall / release';
-    if(p.vertAir||p.pipeHang||p.freeSkate&&p.grounded&&p.onTransition)return 'vert / transition';
+    if(p.vertAir||p.pipeHang||p.freeSkate&&p.grounded&&p.onTransition)return TRANSITION_OWNER;
     if(p.nativeAirPresentation||p.launchPresentation)return 'special launch';
     if(p.kiteTowing||p.kiteReleased||p.kiteBonusDocked)return 'kite';
     if(p.sliding||p.crawling||p.slidePose>.001||p.crawlPose>.001)return 'slide / crouch';

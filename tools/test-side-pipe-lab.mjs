@@ -59,7 +59,9 @@
 //   · a hang off the straight face of the wall yard's second wall comes back
 //     to that face: no step on the deck behind its lip, and no frame of the
 //     way back turns the board more than a few degrees or moves it 0.15 m
-//     against his hips;
+//     against his hips; and over the curve at the foot of that wall, up into it
+//     and down it and out along the deck below, the board is drawn on the ground
+//     it is on, turning as that ground turns;
 //   · the air out of a pipe begins as slowly as the hang ended: the first
 //     frames of a pop-out turn the board a few degrees, not eighteen;
 //   · a hang that heads a solid over a bare lip stays on its line;
@@ -571,8 +573,9 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     p.respawn(level, true, false, { position: new THREE.Vector3(below.lipX - 1, below.lipY + 0.15, 0), heading: new THREE.Vector3(-1, 0, 0) });
     for (let k = 0; k < 20; k++) step(makeInput());
     const rows = [];
-    let placed = false, heldWas = false, launch = null, apex = -Infinity, met = null, onItsDeck = 0, droppedIn = false, offBoard = false, down = false;
-    for (let k = 0; k < 420 && !down; k++) {
+    let placed = false, heldWas = false, launch = null, apex = -Infinity, met = null, onItsDeck = 0, droppedIn = false, offBoard = false, down = false, ranOut = 0;
+    // (followed for a dozen steps along the deck below once he is down: the curve's run-out is part of what is drawn)
+    for (let k = 0; k < 420 && ranOut <= 12; k++) {
       const input = makeInput();
       // (pushed off on the first wall's deck, the stick let go through the mount's own ollie, then held at the wall)
       input.moveX = placed || k <= 40 ? -1 : 0;
@@ -587,8 +590,9 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       if (p.vertAir) apex = Math.max(apex, p.pos.y);
       if (launch && !met && was.vert && p.grounded) met = { step: rows.length, wall: onWall, x: p.pos.x, y: p.pos.y, moved: p.pos.y - was.y, fall: was.vV, speed: p.speed, heading: p.axisF.x };
       if (launch) { if (p.grounded && p.groundHit?.mesh?.userData.pipeDeck?.pipe === pipe) onItsDeck++; droppedIn ||= p.dropInT >= 0; offBoard ||= !p.freeSkate; }
-      rows.push({ y: p.pos.y, vV: p.vVel, vert: p.vertAir, wall: onWall, ...boardDrawn() });
-      down = !!met && p.grounded && p.pos.y < wall.floorY + 0.05;
+      rows.push({ x: p.pos.x, y: p.pos.y, vV: p.vVel, speed: p.speed, vert: p.vertAir, wall: onWall, ground: p.grounded && p.groundHit ? p.groundHit.normal.clone() : null, ...boardDrawn() });
+      down ||= !!met && p.grounded && p.pos.y < wall.floorY + 0.05;
+      if (down) ranOut++;
     }
     assert.ok(launch && Math.abs(launch.x - wall.lipX) < 1e-6 && launch.y > wall.lipY - straight && apex > wall.lipY + 0.4,
       `yard wall 2: reference: ridden at at 16 m/s he leaves its straight face in a hang that tops out ${(apex - wall.lipY).toFixed(2)} m over the lip`);
@@ -607,6 +611,36 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(end - top > 10 && turn < 4 && slip < 0.15,
       `yard wall 2: no frame of the way back turns the board by more than ${turn.toFixed(2)}° or moves it more than ${slip.toFixed(2)} m against his hips (${end - top} frames)`);
     measured.hangBack = `${(wall.lipY - met.y).toFixed(2)} m under the lip, ${turn.toFixed(2)}°, ${slip.toFixed(2)} m`;
+
+    // ...and over the curve at the foot of that face, both ways. The whole of him was laid on a pipe by an eased
+    // tilt with a band in it: upright under 40° of slope, flat out on the wall over 44°, and a few frames behind
+    // the wall's normal. Up this curve the board was drawn dead level until the wall under it was 36° steep; down
+    // it at 20 m/s the board trailed the wall by 10°, was swung 26° in the frame that crossed the band (0.56 m
+    // from where it had been against his hips) and from there to the foot was drawn up to 14° flatter than the
+    // curve. The drawn rig takes the ground's own turn now, frame by frame.
+    /** The board against the ground under it, from each grounded frame to the next: how far off that ground it is
+     *  drawn, how much further it turned than the ground did, and how far his pelvis moved over it (in the
+     *  board's own frame: going round a curve with his board he moves in the world, and is not thrown by it). */
+    const seat = row => { const d = row.hips.clone().sub(row.at), side = new THREE.Vector3().crossVectors(row.grip, row.nose).normalize();
+      return new THREE.Vector3(d.dot(side), d.dot(row.grip), d.dot(row.nose)); };
+    const lie = (from, to) => { const out = { off: 0, more: 0, seat: 0, bend: 0, steepest: 0, frames: 0 };
+      for (let i = Math.max(1, from); i < to; i++) { const a = rows[i - 1], b = rows[i];
+        if (!a.ground || !b.ground) continue;
+        const bend = a.ground.angleTo(b.ground) * 180 / Math.PI;
+        out.off = Math.max(out.off, b.grip.angleTo(b.ground) * 180 / Math.PI); out.more = Math.max(out.more, a.grip.angleTo(b.grip) * 180 / Math.PI - bend);
+        out.seat = Math.max(out.seat, seat(b).distanceTo(seat(a))); out.bend = Math.max(out.bend, bend);
+        out.steepest = Math.max(out.steepest, Math.acos(Math.min(1, Math.max(-1, b.ground.y))) * 180 / Math.PI); out.frames++; }
+      return out; };
+    const said = o => `${o.off.toFixed(2)}° off it at most, ${o.more.toFixed(2)}° more in a frame than the ground turned (${o.bend.toFixed(2)}° at most), his pelvis ${o.seat.toFixed(2)} m over it in a frame`;
+    // (down: from the top of the curve. The straight face over it is the way back, held just above.)
+    const foot = rows.findIndex(row => row.wall), left = rows.findIndex((row, i) => i > foot && !row.ground), curveTop = rows.findIndex((row, i) => i > met.step && row.ground && row.ground.y > 1e-3);
+    const up = lie(foot - 3, left), back = lie(curveTop, rows.length), atFoot = rows.findLast(row => row.wall).speed;
+    assert.ok(up.frames > 8 && back.frames > 20 && up.steepest > 85 && back.steepest > 80 && up.bend > 4 && back.bend > 6 && atFoot > 18 &&
+      rows.slice(-8).every(row => row.ground && row.ground.y > 0.9999 && !row.wall),
+      `yard wall 2: reference: its curve is ridden from the deck below to the straight face and back out along that deck (${up.frames} frames up, ${back.frames} down, the ground turning ${back.bend.toFixed(1)}° in a frame, ${atFoot.toFixed(1)} m/s at its foot)`);
+    assert.ok(up.off < 3 && up.more < 2 && up.seat < 0.1, `yard wall 2: up into the curve the board is drawn on the ground it is on: ${said(up)}`);
+    assert.ok(back.off < 3 && back.more < 2 && back.seat < 0.1, `yard wall 2: and down the curve and out along the deck below: ${said(back)}`);
+    measured.curve = `${Math.max(up.off, back.off).toFixed(2)}° off it, ${Math.max(up.more, back.more).toFixed(2)}° more than it turned, ${Math.max(up.seat, back.seat).toFixed(2)} m, at ${atFoot.toFixed(1)} m/s`;
   }
 
   // ---- 9f · the air out of a pipe begins as slowly as the hang ended --------------------------------
@@ -798,6 +832,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     `${f1(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t)} s after the first; short rail ${short.seconds.toFixed(2)} s to ${f1(short.speed)} m/s; ` +
     `long rail ${long.seconds.toFixed(2)} s to ${f1(long.speed)} m/s, lost after ${measured.longRailLost} s on the travel stick; ` +
     `held bounce ${measured.heldBounce} m/s; a hang back onto yard wall 2's face ${measured.hangBack} in a frame at most; ` +
+    `the board against the curve at its foot ${measured.curve}; ` +
     `a pop-out's first frame ${measured.popOut}.`);
   console.log(`PASS Side Pipe Lab: ${(FINISH.x0 + 38 + 15).toFixed(0)} m finished in ${run.t.toFixed(1)} s (${waited.toFixed(1)} s of it waiting) on held right; ` +
     `y ${f1(run.minY)} to ${f1(run.maxY)}; P1 first swing climbed ${(firstReach - P1.floorY).toFixed(2)} m of the ${P1.eastRise} m east wall; ` +

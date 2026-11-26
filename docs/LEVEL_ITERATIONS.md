@@ -13928,3 +13928,143 @@ out of its drawn matrix is not one (it read 25° in a frame in which the deck's 
 - At the foot of any transition the rig is laid level again within a step or two (26° in one frame at
   20 m/s on a 2.5 m curve). Every pipe does it, the drop-in checks already step over it by name, and it
   was not part of this.
+
+## 2026-11-26 — The foot of a transition: the deck on the ground it is riding
+
+- **Brief:** the last thing left at the end of the entry above. Riding a board down a pipe wall and out
+  onto the flat, the drawn rig is laid level again within a step or two near the foot of the curve,
+  faster than the surface flattens: on yard wall 2 at about 20 m/s, one frame turned the deck 26.4° and
+  moved it 0.56 m against his hips, and for a few frames the deck was drawn 8° to 14° flatter than the
+  wall under it. The same in reverse was to be checked. Done when no single step turns the drawn deck by
+  much more than the surface turned in it, and the deck is never more than a few degrees off the surface
+  it is on, held by a test at two or three speeds and two radii, with `npm run check:side-pipe` and
+  `npm run check:pipe` passing and no tuning changed.
+- **Elapsed:** about 30 min from the prompt (08:49 UTC) to the deck riding the curve both ways under a
+  probe, 1 h 05 min to the extended checks passing, and 1 h 55 min to the last build and browser pass.
+  It is on `claude/relaxed-mayer-fu1iv8` and not on `main`: this session may push only to its own
+  branch, so it waits there for the owner's word.
+- **Levels:** none edited. Every vert on the analytic profile is drawn differently under a board: all
+  sixteen in Side Pipe Lab and its forward copy, and every straight half-pipe elsewhere.
+- **Runtime:** `src/player.ts`, and one hand-over time in `src/skateReferenceLab/playableMotion.ts`.
+  `src/tuning.ts` is untouched.
+- **Docs:** `docs/SIDE_ON_PIPES.md`, `docs/VERT_RUN_UP.md` (its list of checks).
+
+**What it was.** On a pipe the whole rig is laid on the ground by one eased tilt
+(`updateSurfaceAlignment`), and the deck is drawn in that rig's frame. The tilt had two things in it
+that suit a body arriving on a wall and do not suit a board already rolling over one. Its target was a
+band: upright below 40.5° of slope, flat out on the wall above 43.9°. And it followed the wall's normal
+on a first-order ease, so on a curve it was always a few frames behind. Reproduced on Side Pipe Lab's
+yard wall 2 through the game's animation runtime, ridden at from the first wall's deck at 16 m/s, to the
+digit of the brief's table. Coming down, 20 to 21 m/s, four consecutive frames:
+
+| Wall under the board | Deck drawn, before | now | Deck turned that frame, before | now | Board against his hips (in the world), before | now |
+| --- | --- | --- | --- | --- | --- | --- |
+| 44.5° | 55.0° | 44.6° | 7.0° | 7.6° | 0.15 m | 0.16 m |
+| 36.8° | 28.6° | 36.8° | 26.4° | 7.8° | 0.56 m | 0.17 m |
+| 28.8° | 14.5° | 28.9° | 14.2° | 8.0° | 0.30 m | 0.17 m |
+| 20.8° | 7.0° | 20.8° | 7.5° | 8.1° | 0.16 m | 0.17 m |
+
+The wall itself turns 7.6°, 7.8°, 8.0° and 8.1° in those frames. The last pair of columns is the brief's
+own measure, taken in the world, and it cannot fall below about 0.16 m here: his hips are 1.2 m over a
+deck that is turning 8° a frame with the wall, and they go round with it. Measured in the deck's own
+frame, which is what "thrown against it" means, his pelvis moves 0.00 to 0.01 m in each of those frames.
+
+**In reverse it was worse, and at every speed.** Up the same curve the deck was drawn dead level while
+the wall under it went 6.6°, 12.6°, 18.5°, 24.5°, 30.3° and 36.0°; it then swung up after the wall 14.7°
+and 12.2° a frame, and was still 5.8° behind at the top of the curve. Below the band this is no lag: it
+is where the target stood, so a board at 7 m/s was drawn level on a 39° wall just the same. And in the
+frame he rolled onto the foot of the curve the library's riding stance was cut to the transition's:
+his pelvis 0.43 m from where it had been over the deck, in one frame.
+
+**Three rules now.**
+
+- *The lie of a pipe under a board* (`PIPE_LIE`, `Player.followPipeSurface`). While he is riding his
+  board over a pipe the drawn rig has a lie of its own. It takes the turn of the ground under the board
+  whole, each step, the pipe's foot and the flat it runs out onto included, and eases only what is new
+  to it, at the rate the lay-over always had on a pipe: a wall just landed on out of a hang or an air,
+  a board just stepped onto. Off the pipe it is brought back to the eased tilt and given up. The body's
+  own slope pitch, which is faded out as the root takes the ground, is faded by what the root is drawn
+  to have taken.
+- *A drop-in hands its lay-over on.* Tipping in off a coping he is laid over across the hop, and that is
+  the drop-in's own. It has done its part once it has him as far over as the wall under him, which down
+  a curve is where the wall comes round to meet it; from that frame the ground carries him. Left to run
+  out its own time it stood him back up through the band on the way: a board rolled into the 4.8 m
+  wall was 15° off the lower curve, and the frame after turned 31°.
+- *The riding stance gives way to the transition's over 0.2 s* (`HANDOVER_SECONDS`, beside the
+  wallplant's and the drop-in's), where it was cut.
+
+**What it does not change.** The tilt a touchdown is judged by (`landingAlignPose`) and the up a skate
+camera takes are the eased ones, computed as they were. The ride is the same step for step: on the
+whole course, 7,494 steps on the route bot in each animation path, position, speed, state, ride normal,
+heading, judged tilt, combo and lives are identical on every step, and so are 2,516 steps on the fixture
+walls. One column is not: the banked score differs on 45 of those 7,494 steps in the lab's own animation
+path, and on 41 in the game's, and ends the same in both. Pick-ups and boxes are met by his body as it is drawn, as they are everywhere, so with
+the body drawn on the wall a fruit hung off a curve can be banked a frame or two sooner or later.
+
+| Fixture wall, the game's animation runtime | Up into the curve, before | Down it and out, before | Both ways, now |
+| --- | --- | --- | --- |
+| 2.5 m curve at 9 m/s (a stall) | 39.6° off, pelvis 0.45 m | 22.9° off, a frame 16.9° past the wall's turn | 0.8°, 0.4°, 0.06 m |
+| 2.5 m at 15 m/s | 38.2°, 0.52 m | 15.5°, 18.8° | 0.8°, 0.1°, 0.07 m |
+| 2.5 m at 20 m/s | 36.9°, 0.46 m | 13.9°, 16.6° | 0.8°, 0.2°, 0.07 m |
+| 1.5 m at 7 m/s (a stall) | 39.3°, 0.38 m | 14.9°, 17.8° | 0.5°, 0.2°, 0.05 m |
+| 1.5 m at 13 m/s | 40.4°, 0.52 m | 13.6°, 19.4° | 0.8°, 0.2°, 0.07 m |
+| 1.5 m at 18 m/s | 32.6°, 0.50 m | 16.2°, 19.6° | 1.6°, 0.5°, 0.07 m |
+| 4 m at 11 m/s (a stall) | 39.4°, 0.49 m | 28.3°, 16.0° | 0.8°, 0.1°, 0.06 m |
+| 4 m at 17 m/s (a stall on the face) | 40.2°, 0.50 m | 23.2°, 17.2° | 0.8°, 0.1°, 0.07 m |
+| 4 m at 21 m/s | 40.6°, 0.41 m | 18.2°, 18.4° | 0.8°, 0.2°, 0.07 m |
+
+("Now" is: off the ground at most; turned in a frame beyond what the ground turned; pelvis moved over
+the deck in a frame. The ground turns up to 14.3° a frame in these.) Out of the ten drop-ins the same
+file rolls, the deck used to be first on its wall up to 6 frames after the drop-in's own time, up to
+15.1° off after that, with a frame 17.6° past the wall's turn; it is on the wall 0 to 3 frames before
+that time is up, and from there within 1.8° and 0.7°.
+
+**Checks.**
+
+- `tools/test-vert-run-up.mjs` (new sections; `lieOver`, `tippedIn`): the nine rows above, each ridden
+  up into the curve from the flat and back down it and out along 18 steps of flat, to a stall and into a
+  hang on every wall, the deck within 3° of the ground under it, no frame turning it 2° more than that
+  ground turned, his pelvis within 0.1 m a frame over it; and each of the ten drop-ins, from the frame
+  the tip-in first has the deck on the wall. Two walls were added for it (a 1.5 m and a 4 m curve under
+  the fixture's 1.35 m face); the drop-in's own frame-to-frame check keeps its window, and says why.
+- `tools/test-side-pipe-lab.mjs` §9e: the same on yard wall 2 itself, in the scheme the lab runs in,
+  from the deck below at 16 m/s and back out along it: 0.94°, 0.26°, 0.07 m, at 21.9 m/s at its foot.
+- Each rule taken out alone fails by name. Without the ground's own turn: "8.00° off it at most ...
+  3.15° more in a frame than the ground turned". Without the drop-in's hand-on: "his deck lies on the
+  wall 2 frames after the drop-in's own time is up". Without the riding stance's hand-over: "up into
+  the curve from the flat ... his pelvis 0.45 m over it in a frame". Against the code as it was, all 28
+  of the run-up file's new assertions fail (the table above is what they say), and §9e fails on "yard
+  wall 2: up into the curve the board is drawn on the ground it is on: 39.03° off it at most, 9.33°
+  more in a frame than the ground turned".
+- `npm run check:side-pipe`: all five pass, the course in the same 124.9 s with the same drop-ins,
+  pop-outs and transfers. `npm run check:pipe`: pass. `npm run check:motion-assets`: pass.
+  `npm run check:animation-d` (it runs the file this touched through every skate check): 45 of 46 pass;
+  `test-ice-slide-carry.mjs` fails on writing its results to `/private/tmp`, a path this Linux
+  container does not have, after its assertions. `npm run build`: pass.
+- Real browser, the production build, real key events (Space and ArrowLeft to push off on the first
+  wall's deck, ArrowLeft at the wall), lite and then full render, no console errors and no failed
+  requests, the build stamp reading `Codex/sol fork`: a hang 0.64 m over yard wall 2's lip, met by the
+  face, no step on the deck behind it, 21.9 m/s at the foot. Up the curve 0.44° off the ground at most,
+  0.38° past its turn, pelvis 0.06 m; down it and out along the deck below 0.92°, 0.51°, 0.07 m; the
+  four frames of the table read 44.6°, 36.8°, 28.9° and 20.8°. Stills of him on the lower curve going
+  up and coming down were looked at: the deck lies along the curve.
+
+**Known and left.**
+
+- A deck come down out of a hang is a degree or two off a straight face for a few frames (2.5°; 3.6° in
+  the lab's own scheme): in that air it floats, and it is let settle. It was so before, it is above the
+  curve, and the new windows begin at the top of the curve.
+- A hang off a wall with no straight face comes back onto the curve itself, and landing there is one of
+  the things that is eased: the deck is 7° off the curve in the frame it lands (a 2.5 m and a 4 m
+  quarter, from 14 and 16 m/s) and on it three frames later. It used to land the same way and then
+  trail the curve all the way down.
+- A board that stalls on a wall is turned about its own normal to face back down it, 40° a frame at
+  its quickest. It stays on the wall while it turns; the turn itself is the pipe's and was not looked at.
+- While a drop-in is tipping in, its deck is not on the wall: that is the move. On a plain quarter the
+  tip-in and the curve meet about 1.7 m under the lip.
+- Only the analytic profile is changed. A swept transition (a bowl's corner, a banked or leaning wall)
+  outside a park still takes the eased tilt with its band, which by the code is wider there (40° to
+  75°). It was not measured here.
+- The skate camera's up is still the eased tilt, so on a pipe that carries one the picture now leads
+  the lens by the few frames it used to share with it. Giving the lens the drawn lie would change the
+  chase camera's forward, which the controls read.
