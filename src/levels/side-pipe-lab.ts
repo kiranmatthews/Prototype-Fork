@@ -6,8 +6,9 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  *
  * The whole course is one east travel zone on a single plane (z = 0), viewed
  * from the south through a long lens, so it reads left to right and flat.
- * Between pipes it is on-foot platforming; at a pipe the walker crosses the
- * coping of its west deck and is dropped in on the board automatically
+ * Between pipes it is on-foot platforming; at a pipe the walker reaches the
+ * coping of its west deck and is on his board there, tail set on the coping,
+ * waiting: Jump, or the stick pressed on again, drops him in
  * (`sideOn` vertramps, see `CustomComponent.sideOn`). Inside, the board rides
  * the one line the camera can see: holding a direction carves the walls for
  * speed, holding X pumps them harder, and reaching a lip pops a vertical
@@ -162,8 +163,9 @@ function fruitOverLip(p: SidePipe, side: -1 | 1, heights: number[]): void {
 }
 
 // ============================================================ 0 · ROLL-IN ==
-// The lesson with nothing attached: walk off the deck, the board appears, and
-// holding right through the far lip lands you on its deck.
+// The lesson with nothing attached: walk to the lip and the board is under you,
+// waiting on the coping; Jump drops in, and Jump again in the far hang with
+// right held lands you on its deck.
 const START_TOP = 4;
 floor(-20, 0, START_TOP, 'Start: arrival floor');
 // On one plane the default stopwatch would stand two strides down the only

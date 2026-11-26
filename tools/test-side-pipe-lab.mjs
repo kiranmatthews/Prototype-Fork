@@ -180,7 +180,15 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const bot = makeCourseBot({ p, level, CONST, lab, makeInput, parts });
   const { play, steps } = bot;
   // The drawn drop-in is advanced where the game advances it: after each step.
-  const step = input => { p.step(CONST.fixedStep, input, level); level.update(CONST.fixedStep); p.stepDropInPresentation(); input.consumeEdges(); };
+  // A walker who comes to a lip is on his board there, waiting to be told. The hand-driven scenarios below
+  // hold a direction and mean to go in, so this tells him, with Jump, a tenth of a second after he is on
+  // the coping. (`waitAtLips` leaves him waiting, for the scenarios that are about the wait.)
+  let waitAtLips = false, lipWait = 0;
+  const step = input => {
+    lipWait = p.dropInPerch && p.dropInTipT < 0 ? lipWait + 1 : 0;
+    if (!waitAtLips && lipWait === 6) input.jumpPressed = true;
+    p.step(CONST.fixedStep, input, level); level.update(CONST.fixedStep); p.stepDropInPresentation(); input.consumeEdges();
+  };
   assert.ok(steps.length >= 6 && steps.every(s => s.rise <= 1.61), `the on-foot steps are all within a tap jump (${steps.map(s => s.rise.toFixed(2))})`);
   const cratesAt = (x, y) => level.crates.filter(c => Math.abs(c.mesh.position.x - x) < 0.7 && (y === undefined || Math.abs(c.mesh.position.y - y) < 1.5));
   const f1 = v => v.toFixed(1);
@@ -193,12 +201,19 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.ok(run.maxZ < 0.4, `the ride never leaves the play plane (max |z| ${run.maxZ.toFixed(2)})`);
   assert.ok(Math.abs(run.minY - BASIN.top) < 0.05 && run.maxY > VALLEY_BRINK.top + 5,
     `the run goes from the basin floor to well over the valley brink (y ${f1(run.minY)} to ${f1(run.maxY)})`);
+  // AT EACH LIP HE WALKS UP TO he is on his board, tail on the coping, and waits there to be told. (He used
+  // to be put straight on the wall, rolling.) The bot tells him with Jump a tenth of a second on.
   for (const q of [P0, P1, DEEP, VALLEY, SWITCH_PIPE, C1, RAIL_PIPE, LONG_PIPE]) {
+    const perch = run.perches.find(m => m.pipe === q.name);
+    assert.ok(perch && perch.fromFoot && Math.abs(perch.x - q.westLip) < 1e-6 && Math.abs(perch.y - q.westLipY) < 1e-6,
+      `${q.name}: coming to the west coping on foot puts him on his board AT it (${perch ? perch.x.toFixed(2) + ', ' + perch.y.toFixed(2) : 'never'})`);
+    assert.ok(perch.arrived < 2.2, `${q.name}: and he arrives at it, slowed over the last of the deck (${perch.arrived.toFixed(2)} m/s as he gets on)`);
+    assert.ok(perch.waited > 0.2 && perch.waited < 0.6, `${q.name}: he waits there until Jump (${perch.waited.toFixed(2)} s, the bot's own delay and the lean)`);
     const mount = run.mounts.find(m => m.pipe === q.name);
-    assert.ok(mount, `${q.name}: crossing the west coping on foot mounts the board`);
+    assert.ok(mount && mount.fromPerch, `${q.name}: told to go, he drops in`);
     assert.ok(Math.abs(mount.x - q.westLip) < 0.2 && mount.y < q.westLipY && mount.y > q.westLipY - 0.6,
       `${q.name}: the drop-in seats the rider on the wall just under the lip (x ${mount.x.toFixed(2)}, y ${mount.y.toFixed(2)})`);
-    assert.ok(mount.speed >= 4, `${q.name}: the drop-in keeps rolling speed`);
+    assert.ok(Math.abs(mount.speed - 4) < 0.01, `${q.name}: from rest, at the 4 m/s a drop-in off a coping takes into the wall (${mount.speed.toFixed(2)})`);
   }
   // Popping out: Jump in the east hang, right held. It lands on the deck, on the board like any air; the
   // bot gets off it there by braking, because the course between the pipes is walked.
@@ -257,7 +272,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   // P5–P7: the cascade.
   for (const [a, b] of [[C1, C2], [C2, C3]]) {
     const over = run.transfers.get(a.name);
-    assert.ok(over && over.into === b.name && over.y > a.eastLipY, `${a.name}: the ridge is crossed in the air into ${b.name}`);
+    // (a Jump pressed early in a low hang carries him over at the ridge's own height: he skims it)
+    assert.ok(over && over.into === b.name && over.y > a.eastLipY - 0.15, `${a.name}: the ridge is crossed in the air into ${b.name} (${over ? f1(over.y - a.eastLipY) + ' m over it' : 'never'})`);
   }
   assert.ok(run.transfers.get(C2.name).t - run.transfers.get(C1.name).t < 3, 'cascade: the two transfers are one run, under three seconds apart');
   assert.ok(run.peak.get(C2.name) > C2.eastLipY + 5, `cascade: the second ridge is crossed ${f1(run.peak.get(C2.name) - C2.eastLipY)} m above it`);
@@ -295,6 +311,19 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     until: log => log.deaths > 0 || log.masksSpent > 0 || log.bails > 0, seconds: 12 });
   assert.ok(careless.deaths + careless.masksSpent + careless.bails > 0,
     'P3: riding the valley without a spin runs into the crab');
+
+  // ---- 4b · at a lip he walked up to, he waits to be told ---------------------------
+  // Not told, he stays: right held for eight seconds leaves him on P0's coping, on the board, at rest.
+  {
+    const waiting = play({ go: 'wait', seconds: 8 });
+    assert.ok(p.dropInPerch && p.freeSkate && p.grounded && Math.abs(p.pos.x - P0.westLip) < 1e-6 && p.speed === 0 && waiting.mounts.length === 0 && waiting.perches.length === 1,
+      `the stick he walked up holding asks for nothing: after eight seconds of it he is still on P0's west coping (x ${p.pos.x.toFixed(2)}${p.dropInPerch ? '' : ', not waiting'})`);
+    assert.ok(waiting.perches[0].waited > 5, `(${waiting.perches[0].waited.toFixed(1)} s of the eight there: the rest was the walk to it)`);
+    // the stick let go and pressed again is the other way to tell him
+    const pressed = play({ go: 'stick', seconds: 20, until: (log, q) => log.exits.has(P0.name) });
+    assert.ok(pressed.mounts.some(m => m.pipe === P0.name && m.fromPerch) && pressed.exits.has(P0.name),
+      'the stick let go and pressed on again drops him in, and the pipe is ridden and left as before');
+  }
 
   // ---- 5 · a wall lower than the skater's reach is a bump, not a ledge ----------
   // The first step of the course is 1.6 m; the skater stands 2.8 m and reaches
@@ -365,6 +394,54 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(rolledIn.rolled > 8 && !rolledIn.hung && !rolledIn.bailed, `...and rolled into on the board it is a bump too (${rolledIn.rolled.toFixed(1)} m/s)`);
     const tall = bump(3.0, 1, false);
     assert.ok(tall.hung, 'a 3 m wall, above his reach, is still caught from the ground where a level\'s ledgeAssist lets the hands get there');
+    // ...AND IN THE AIR. A lip he could reach standing on the ground under it is too low to hang from,
+    // however he comes to it: hung there his legs would be in that ground. (The owner's take: an ollie on
+    // the board into the course's 1.6 m step came up short and left him hanging from it, feet a hand's
+    // breadth off the floor, for six seconds.) Jumped at, such a wall stops him and he is back on the
+    // floor. A lip above his reach is still caught by a jump that comes up short, as it always was.
+    const leap = (height, mounted) => {
+      const fixture = new Level(scene, { id: '__side_pipe_leap', name: 'side pipe leap', data: { v: 1, name: 'side pipe leap',
+        spawn: [-12, 0.12, 0], killY: -20, components: [
+          { t: 'platform', p: [-5, -0.5, 0], s: [50, 1, 6] },
+          { t: 'platform', p: [15, height / 2, 0], s: [20, height, 6] },
+          { t: 'zone', p: [0, 0, 0], s: [80, 1, 18], dir: 'E', sideOn: true },
+          { t: 'camnode', p: [-40, 0, 0] }, { t: 'camnode', p: [40, 0, 0] },
+          { t: 'gate', p: [20, height, 0], yaw: 90 },
+          ...[-0.83, 0.83].map(z => ({ t: 'wall', p: [0, -14, z], s: [80, 60, 0.6], invisible: true })),
+        ] } });
+      scene.updateMatrixWorld(true);
+      p.respawn(fixture, true);
+      const input = makeInput();
+      let hung = 0, bailed = false, apex = 0, jumped = -1, met = false, was = false, coasting = false;
+      for (let k = 0; k < 60 * 6; k++) {
+        // On the board, as in the take: after the push-off he is coasting at 5.5 m/s with the stick at rest,
+        // and Jump is held for ten frames and let go 1.7 m short of the face.
+        if (mounted && !coasting && k > 50 && p.freeSkate && p.grounded) { p.pos.x = 1.8; p.prevPos.copy(p.pos); p.speed = 5.5; coasting = true; }
+        // On foot: a run with the stick held, a tap of Jump 2.3 m short, and the stick let go once he is
+        // against the face (let go sooner, a walker in the air stops short of it).
+        input.moveX = hung > 0 || met || coasting ? 0 : 1;
+        const push = mounted && k < 40;
+        if (jumped < 0 && !push && k > 60 && p.grounded && (mounted ? coasting && p.pos.x > 2.36 : p.pos.x > 5 - 2.3 && p.pos.x < 5 - 1.2)) jumped = k;
+        const held = push || (jumped >= 0 && k - jumped < (mounted ? 10 : 4));
+        input.jumpPressed = held && !was; input.jumpReleased = !held && was; input.jumpHeld = held; was = held;
+        p.step(CONST.fixedStep, input, fixture); fixture.update(CONST.fixedStep); input.consumeEdges();
+        if (p.state === 'hang') hung++;
+        bailed ||= p.isBailing;
+        if (jumped >= 0 && !p.grounded) { apex = Math.max(apex, p.pos.y); met ||= p.pos.x > 5 - 0.56; }
+      }
+      const end = { hung, bailed, apex, met, jumped: jumped >= 0, x: p.pos.x, y: p.pos.y, grounded: p.grounded, board: p.freeSkate };
+      fixture.dispose();
+      return end;
+    };
+    const ollied = leap(1.6, true);
+    assert.ok(ollied.jumped && ollied.met && ollied.apex > 0.7 && ollied.apex < 1.3, `reference: an ollie on the board meets the face of a 1.6 m step below its lip (rose ${ollied.apex.toFixed(2)} m; the take's rose 1.03)`);
+    assert.ok(ollied.hung === 0 && ollied.grounded && ollied.y < 0.3 && ollied.x < 5,
+      `an ollie that comes up short on a 1.6 m step does not hang from it: he is back on the floor (hung ${ollied.hung} steps, ended x ${ollied.x.toFixed(2)} y ${ollied.y.toFixed(2)})`);
+    const jumpedLow = leap(2.4, false);
+    assert.ok(jumpedLow.jumped && jumpedLow.met && jumpedLow.apex < 2.4, `reference: a tap jump on foot comes up short of a 2.4 m wall (rose ${jumpedLow.apex.toFixed(2)} m)`);
+    assert.ok(jumpedLow.hung === 0, `...and a 2.4 m wall, still inside his standing reach, is not hung from either (hung ${jumpedLow.hung} steps)`);
+    const jumpedHigh = leap(3.2, false);
+    assert.ok(jumpedHigh.hung > 20, `a 3.2 m wall, over his reach, is caught by the same jump as it always was (hung ${jumpedHigh.hung} steps)`);
     p.respawn(level, true);
   }
 
@@ -394,7 +471,13 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       trail.push(board.supported || board.rest ? null : at.clone());
       const then = trail.at(-31);
       if (trail.length > 30 && trail.slice(-31).every(Boolean) && at.distanceTo(then) < 0.05) longestHover++;
-      if (board.rest) restAt = { x: at.x, y: at.y, seconds: (k - thrownAt) * CONST.fixedStep };
+      // (where it lies is its lowest point: come down wheels up, or snapped, its own origin is well off the ground)
+      if (board.rest) {
+        const q = new THREE.Quaternion().copy(board.root.quaternion), up = new THREE.Vector3(0, 1, 0).applyQuaternion(q.clone().invert());
+        const centreY = at.y + new THREE.Vector3().copy(board.center).multiply(board.root.scale).applyQuaternion(q).y;
+        const reach = Math.abs(up.x) * board.halfSize.x + Math.abs(up.y) * board.halfSize.y + Math.abs(up.z) * board.halfSize.z;
+        restAt = { x: at.x, y: centreY - reach, seconds: (k - thrownAt) * CONST.fixedStep };
+      }
     }
     assert.ok(board, 'reference: two Jump releases in a hang throw the board away');
     assert.equal(longestHover, 0, `the thrown board never hangs in the air (held in place for ${longestHover} steps beyond half a second)`);
@@ -402,29 +485,32 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(restAt && restAt.seconds < 8, 'it comes to rest');
     const p0 = level.halfpipes.find(hp => Math.abs(hp.cross - P0.cross) < 0.01);
     const surface = p0.surfaceY(p0.crossToU(restAt.x));
-    assert.ok(restAt.x > P0.westLip && restAt.x < P0.eastLip && Math.abs(restAt.y - surface) < 0.5,
-      `...inside the pipe it was thrown in, ON its surface, not under it (x ${restAt.x.toFixed(1)}, y ${restAt.y.toFixed(2)}, the pipe there is at ${surface.toFixed(2)})`);
+    assert.ok(restAt.x > P0.westLip && restAt.x < P0.eastLip && restAt.y > surface - 0.12 && restAt.y < surface + 0.3,
+      `...inside the pipe it was thrown in, ON its surface, not under it and not over it (x ${restAt.x.toFixed(1)}, lowest point y ${restAt.y.toFixed(2)}, the pipe there is at ${surface.toFixed(2)})`);
   }
 
   // ---- 7 · the drop-in is drawn as one curve --------------------------------------
-  // The simulation seats the rider on the wall in a single step. What is drawn
-  // (the body plus its drop-in lead) must not: it leaves the deck the way the
-  // walker was going, bends over the coping, and has joined the rider on the
-  // transition a quarter of a second later, with no step longer than the
-  // motion on either side of it and no corner in the path.
+  // He walks to the coping, is on his board there, and is told to go. The
+  // simulation then seats the rider on the wall in a single step. What is drawn
+  // (the body plus its drop-in lead) must not: it leaves the coping from rest,
+  // bends over it, and has joined the rider on the transition a quarter of a
+  // second later, with no step longer than the motion on either side of it and
+  // no corner in the path.
   {
     level.reset(true); p.respawn(level, true);
     p.pos.set(P0.westLip - 3, P0.westLipY + 0.15, 0); p.prevPos.copy(p.pos);
     const input = makeInput();
     const drawn = [];
     let seated = -1, settled = -1;
-    for (let k = 0; k < 90; k++) {
+    let waited = 0;
+    for (let k = 0; k < 130; k++) {
       input.moveX = 1; step(input);
+      if (p.dropInPerch) waited++;
       if (seated < 0 && p.freeSkate && p.groundHit?.halfpipe) seated = k;
       drawn.push({ x: p.pos.x + p.dropInOffset.x, y: p.pos.y + p.dropInOffset.y, lead: p.dropInOffset.length(), sx: p.pos.x, sy: p.pos.y });
       if (seated >= 0 && settled < 0 && k > seated && p.dropInOffset.lengthSq() === 0) settled = k;
     }
-    assert.ok(seated > 2, 'reference: the walker reaches the coping and is seated on the wall');
+    assert.ok(seated > 2 && waited > 10, `reference: the walker reaches the coping, waits on it on his board (${waited} steps) and, told to go, is seated on the wall`);
     const snap = Math.hypot(drawn[seated].sx - drawn[seated - 1].sx, drawn[seated].sy - drawn[seated - 1].sy);
     assert.ok(snap > 0.3, `reference: the simulated body is moved onto the wall in that one step (${snap.toFixed(2)} m)`);
     assert.ok(settled > seated && (settled - seated) * CONST.fixedStep <= 0.3, `the drawn body has joined the rider within 0.3 s (${((settled - seated) * CONST.fixedStep).toFixed(2)} s)`);
@@ -433,10 +519,11 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       const a = drawn[k - 1], b = drawn[k], c = drawn[k + 1];
       const d1 = Math.hypot(b.x - a.x, b.y - a.y), d2 = Math.hypot(c.x - b.x, c.y - b.y);
       longest = Math.max(longest, d1 / Math.max(0.05, Math.min(d1, d2)));
-      sharpest = Math.max(sharpest, Math.acos(Math.max(-1, Math.min(1, ((b.x - a.x) * (c.x - b.x) + (b.y - a.y) * (c.y - b.y)) / (d1 * d2)))) * 180 / Math.PI);
+      // (he starts from rest on the coping: a step that does not move has no direction to turn from)
+      if (d1 > 0.01 && d2 > 0.01) sharpest = Math.max(sharpest, Math.acos(Math.max(-1, Math.min(1, ((b.x - a.x) * (c.x - b.x) + (b.y - a.y) * (c.y - b.y)) / (d1 * d2)))) * 180 / Math.PI);
     }
     const first = Math.hypot(drawn[seated].x - drawn[seated - 1].x, drawn[seated].y - drawn[seated - 1].y);
-    assert.ok(first < 0.2, `the drawn body does not jump when the rider is seated (it moved ${first.toFixed(3)} m that step; the walk covers 0.15)`);
+    assert.ok(first < 0.2, `the drawn body does not jump when the rider is seated (it moved ${first.toFixed(3)} m that step)`);
     assert.ok(Math.abs(drawn[seated].y - drawn[seated - 1].y) < 0.02, 'it is still at deck height on that step');
     assert.ok(longest < 2.2, `no drawn step is more than about twice its neighbour (ratio ${longest.toFixed(2)})`);
     assert.ok(sharpest < 30, `the drawn path has no corner: it turns at most ${sharpest.toFixed(1)}° in one step`);
@@ -459,9 +546,9 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     for (let k = 0; k < 90 && (k < 2 || !p.grounded); k++) { input.moveX = 1; step(input); }
     assert.ok(p.freeSkate && p.grounded && p.speed > 3.5, `reference: X + right pushes off onto the board (${p.speed.toFixed(1)} m/s)`);
     const turnedAt = p.pos.x;
-    let eastmost = turnedAt, onFootAt = null, westDropIn = false, home = false, hangW = 0, heldWas = false;
+    let eastmost = turnedAt, onFootAt = null, westDropIn = false, eastPerch = false, home = false, hangW = 0, heldWas = false;
     for (let k = 0; k < 1100 && !home; k++) {
-      const wasFree = p.freeSkate;
+      const wasFree = p.freeSkate, wasPerch = p.dropInPerch;
       input.moveX = -1;
       hangW = p.vertAir && p.pos.x < P0.cross ? hangW + 1 : 0;
       const held = hangW >= 3 && hangW < 7;
@@ -469,12 +556,14 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       step(input);
       eastmost = Math.max(eastmost, p.pos.x);
       if (onFootAt === null && !p.freeSkate && p.grounded) onFootAt = p.pos.x;
-      if (!wasFree && p.freeSkate && p.groundHit?.halfpipe && p.axisF.x < 0) westDropIn = true;
+      // back at the east coping on foot he is on his board there, facing west, and (told to go) drops in that way
+      if (!wasFree && p.freeSkate && p.dropInPerch && Math.abs(p.pos.x - P0.eastLip) < 1e-6 && p.axisF.x < 0) eastPerch = true;
+      if (wasPerch && !p.dropInPerch && p.freeSkate && p.groundHit?.halfpipe && p.axisF.x < 0) westDropIn = true;
       home = p.grounded && p.pos.x < P0.westLip - 1 && Math.abs(p.pos.y - P0.westLipY) < 0.1;
     }
     assert.ok(eastmost - turnedAt < 6, `held left stops the board within a few metres (rolled ${(eastmost - turnedAt).toFixed(2)} m on)`);
     assert.ok(onFootAt !== null, 'the brake steps the rider off the board');
-    assert.ok(westDropIn, 'walking back over the east coping drops in again, heading west');
+    assert.ok(eastPerch && westDropIn, `walking back to the east coping puts him on his board there, and he drops in again, heading west (${eastPerch ? 'on the coping' : 'never on the coping'}${westDropIn ? '' : ', never dropped in'})`);
     assert.ok(home && p.freeSkate, 'and Jump + left in the west hang pops out onto the west deck, still on the board: the pipe works in both directions');
   }
 
@@ -698,9 +787,12 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     scene.updateMatrixWorld(true);
     p.respawn(fixture, true);
     const input = makeInput();
-    let eastmost = -Infinity, headed = false, behind = false;
+    let eastmost = -Infinity, headed = false, behind = false, atLip = 0;
     for (let i = 0; i < 60 * 9; i++) {
       input.moveX = 1;
+      // (on his board at the west coping he is told to go, as in `step` above)
+      atLip = p.dropInPerch && p.dropInTipT < 0 ? atLip + 1 : 0;
+      if (atLip === 6) input.jumpPressed = true;
       p.step(CONST.fixedStep, input, fixture); fixture.update(CONST.fixedStep); input.consumeEdges();
       eastmost = Math.max(eastmost, p.pos.x);
       headed ||= fixture.crates.some(c => c.bang && c.bangUsed);

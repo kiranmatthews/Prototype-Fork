@@ -37,7 +37,8 @@ normal `pts`, `w`, `rise`, `collisionHeight` and `solid` fields.
 
 A straight, axis-aligned, 90-degree `vertramp` may set `sideOn: true` for a vert the course crosses
 (a side-scrolling stretch looks across it; a forward one meets it head-on): the ride is locked to its
-cross axis, a decked coping drops a walker in on the board, and Jump in the hang with the stick held
+cross axis, a walker who reaches a decked coping is put on his board there and waits (Jump or the stick
+pressed on drops in), and Jump in the hang with the stick held
 out over a lip pops the air out across it (onto a deck, landing on the board, or into the next pipe
 over a shared ridge). A plain half takes the flag on either axis; a quarter (one wall), or any vert
 with a straight face above its curve (`lipRise`), takes it at `yaw` 0 or 180 only. Inside an

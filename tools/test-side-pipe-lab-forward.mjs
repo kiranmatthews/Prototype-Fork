@@ -14,8 +14,9 @@
 //   - the course: the route bot of the side-scrolling lab plays it to the gate
 //     through an adapter that holds its decisions the way a forward player
 //     holds the pad (forward for east, the camera's own heading each step, as
-//     the game reads it). In over each lip on foot, out of each hang with
-//     Jump and the stick held forward, over each ridge, down both rails;
+//     the game reads it). On his board at each lip he walks up to, in with
+//     Jump, out of each hang with Jump and the stick held forward, over each
+//     ridge, down both rails;
 //   - the yard: run back from the start, the view comes round, and the four
 //     walls answer a runner as they do in the side view;
 //   - the width: a walker can leave the centre line and is stopped at the edge.
@@ -144,9 +145,12 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.ok(Math.abs(run.minY - BASIN.top) < 0.05 && run.maxY > VALLEY_BRINK.top + 5, `basin floor to over the valley brink (y ${f1(run.minY)} to ${f1(run.maxY)})`);
   assert.equal(run.checkpoints, 12, 'all twelve checkpoints');
   for (const q of [P0, P1, DEEP, VALLEY, SWITCH_PIPE, C1, RAIL_PIPE, LONG_PIPE]) {
+    const perch = run.perches.find(m => m.pipe === q.name);
+    assert.ok(perch && perch.fromFoot && Math.abs(perch.x - q.westLip) < 1e-6 && perch.arrived < 2.2,
+      `${q.name}: walking forward to the near coping puts him on his board at it, waiting (arrived at ${perch ? perch.arrived.toFixed(2) : '?'} m/s)`);
     const mount = run.mounts.find(m => m.pipe === q.name);
-    assert.ok(mount && Math.abs(mount.x - q.westLip) < 0.2 && mount.y < q.westLipY && mount.y > q.westLipY - 0.6 && mount.speed >= 4,
-      `${q.name}: walking forward over the near coping drops him in on the board, just under the lip`);
+    assert.ok(mount && mount.fromPerch && Math.abs(mount.x - q.westLip) < 0.2 && mount.y < q.westLipY && mount.y > q.westLipY - 0.6 && Math.abs(mount.speed - 4) < 0.01,
+      `${q.name}: and Jump drops him in, on the wall just under the lip`);
   }
   for (const q of [P0, L1, DEEP, VALLEY, SWITCH_PIPE, C3, RAIL_CATCH]) {
     const out = run.exits.get(q.name);
@@ -212,9 +216,16 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(p.grounded && Math.abs(p.pos.y - entry.data.spawn[1]) < 0.2, 'still on the floor');
     for (let i = 0; i < 300; i++) step(makeInput({ moveX: -1, moveY: 0 }));
     assert.ok(p.pos.z < -2.2 && p.pos.z > -3, `...and at the other (z ${p.pos.z.toFixed(2)})`);
-    // down the course along that edge: over P0's lip a long way off the centre line, and the drop-in is the same
-    for (let i = 0; i < 400 && !(p.freeSkate && p.groundHit?.halfpipe); i++) step(makeInput({ moveX: 0, moveY: 1 }));
-    assert.ok(p.freeSkate && p.groundHit?.halfpipe && Math.abs(p.pos.z) > 2, `the drop-in over P0's lip works anywhere along it (z ${p.pos.z.toFixed(2)})`);
+    // down the course along that edge: to P0's lip a long way off the centre line, and it is the same lip there
+    for (let i = 0; i < 400 && !p.dropInPerch; i++) step(makeInput({ moveX: 0, moveY: 1 }));
+    assert.ok(p.dropInPerch && p.freeSkate && Math.abs(p.pos.x - P0.westLip) < 1e-6 && Math.abs(p.pos.z) > 2,
+      `he is on his board at P0's coping wherever along it he comes to it (z ${p.pos.z.toFixed(2)})`);
+    // ...forward still held: he waits. Let go and pressed forward again: he drops in.
+    for (let i = 0; i < 60; i++) step(makeInput({ moveX: 0, moveY: 1 }));
+    assert.ok(p.dropInPerch, 'forward held all the way leaves him waiting there');
+    for (let i = 0; i < 8; i++) step(makeInput());
+    for (let i = 0; i < 60 && !(p.freeSkate && p.groundHit?.halfpipe); i++) step(makeInput({ moveX: 0, moveY: 1 }));
+    assert.ok(p.freeSkate && p.groundHit?.halfpipe && Math.abs(p.pos.z) > 2, `and forward pressed afresh drops him in there (z ${p.pos.z.toFixed(2)})`);
   }
 
   level.dispose();

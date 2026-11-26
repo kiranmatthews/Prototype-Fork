@@ -245,14 +245,15 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST, T
 
   // The cascade's two transfers.
   {
-    const offsets = [], popped = pace(); let worstSole = 0, evenStep = 0, wasNormal = null, repeat = 0, turns = 0, wasTurning = false, past = 0;
+    // (each turn's pace is kept apart: how hard a turn is driven from one frame to the next depends on how long it has)
+    const offsets = [], popped = [pace(), pace()]; let worstSole = 0, evenStep = 0, wasNormal = null, repeat = 0, turns = 0, wasTurning = false, past = 0;
     drive({ from: [C1.westLip - 3, C1.westLipY + 0.15] }, 12, (k, input) => {
       const turning = p.spinePoseDuration > 0 && p.spinePoseElapsed < p.spinePoseDuration && p.vertAir;
       if (turning && !wasTurning) turns++;
       if (!turning && wasTurning && turns === 2) return false;
       wasTurning = turning;
-      if (!turning) { wasNormal = null; popped.skip(); return true; }
-      popped.frame(true);
+      if (!turning) { wasNormal = null; popped.forEach(turn => turn.skip()); return true; }
+      popped[turns - 1].frame(true);
       const drawnUp = UP.clone().applyQuaternion(p.group.getWorldQuaternion(new THREE.Quaternion()));
       // radians the drawn body is ahead of the even turn, about the turn's own axis
       const ahead = Math.atan2(p.alignNormal.clone().cross(drawnUp).dot(p.spinePoseAxis), p.alignNormal.dot(drawnUp));
@@ -263,10 +264,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST, T
       if (wasNormal) evenStep = Math.max(evenStep, p.alignNormal.angleTo(wasNormal));
       wasNormal = p.alignNormal.clone();
       worstSole = Math.max(worstSole, p.boardG.userData.skateContact.footError);
-      if (offsets.length === 12) { repeat = Math.max(repeat, redrawn(input)); popped.skip(); }
+      if (offsets.length === 12) { repeat = Math.max(repeat, redrawn(input)); popped[turns - 1].skip(); }
       return true;
     });
-    if (process.env.VERT_AIR_TRACE) console.log('TRACE transfers', JSON.stringify({ turns, worstSole, repeat, evenStep, past, pops: popped.worst,
+    if (process.env.VERT_AIR_TRACE) console.log('TRACE transfers', JSON.stringify({ turns, worstSole, repeat, evenStep, past, pops: popped.map(turn => turn.worst),
       each: [1, 2].map(turn => { const mine = offsets.filter(o => o.turn === turn); return { n: mine.length,
         early: Math.min(...mine.filter(o => o.progress < 0.35).map(o => o.ahead)), late: Math.max(...mine.filter(o => o.progress > 0.4).map(o => o.ahead)),
         end: mine.at(-1)?.ahead, endP: mine.at(-1)?.progress }; }) }));
@@ -283,8 +284,17 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST, T
     assert.ok(past > 0.08, `the drawn body runs ${f2(past)} rad past the far wall before it is caught`);
     assert.ok(worstSole < 0.003, `both soles stay on the deck through both transfers (worst ${(worstSole * 1000).toFixed(1)} mm)`);
     assert.ok(repeat < 1e-4, `and drawing one instant of a transfer five times gives one pose (${repeat.toExponential(1)} rad)`);
-    assert.ok(popped.worst.trunk < 0.06 && popped.worst.head < 0.07 && popped.worst.arms < 0.15,
-      `nothing pops in a transfer either: ${f2(popped.worst.trunk)} (trunk), ${f2(popped.worst.head)} (head), ${f2(popped.worst.arms)} (arms) rad a frame, each frame`);
+    // A turn is given three quarters of the flight it has (0.3 s at the least), so the same curve is flown
+    // harder in a short one: a part's pace changes from frame to frame as the square of how much shorter. The
+    // limits are those of a turn of half a second; a longer turn is held to the same ones, a quicker one to
+    // what its own length gives them. (From a wait at C1's lip the cascade's first turn has 25 frames.)
+    for (const turn of [1, 2]) {
+      const frames = offsets.filter(o => o.turn === turn).length, worst = popped[turn - 1].worst, quick = Math.max(1, (30 / frames) ** 2);
+      assert.ok(frames >= 18 && frames <= 63, `transfer ${turn}: a turn of ${frames} frames (0.3 s to 1.05 s)`);
+      assert.ok(worst.trunk < 0.06 * quick && worst.head < 0.07 * quick && worst.arms < 0.15 * quick,
+        `nothing pops in transfer ${turn} either (${frames} frames): ${f2(worst.trunk)} (trunk), ${f2(worst.head)} (head), ${f2(worst.arms)} (arms) rad a frame, each frame; ` +
+        `the limits are ${f2(0.06 * quick)}, ${f2(0.07 * quick)}, ${f2(0.15 * quick)}`);
+    }
   }
 
   // The cascade's transfers once more, for the soles alone, and between the frames too: each frame of a

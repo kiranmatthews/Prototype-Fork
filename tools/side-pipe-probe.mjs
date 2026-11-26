@@ -1,9 +1,11 @@
 // Measurement probe: the REAL Player/Level on a side-on pipe inside an east
-// travel zone (docs/SIDE_ON_PIPES.md). Walks in from the west deck and prints
-// the swing-by-swing record. Read-only: a throwaway level, no tuning changed.
+// travel zone (docs/SIDE_ON_PIPES.md). Walks in from the west deck, is put on
+// his board at the lip and told to go six frames later (Jump), and prints the
+// swing-by-swing record. Read-only: a throwaway level, no tuning changed.
 //   RL/RR wall radii, F flat half-width, DL/DR deck depths, RUN approach length,
 //   MODES input sets (right, left, pop, pump, charge, letgo, grind, grindhold, spin, ...).
 //   `pop` presses Jump once in each east hang: with `right` that is the pop-out.
+//   `wait` leaves him waiting at the lip instead of telling him to go.
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 const num = (k, d) => Number(process.env[k] ?? d);
@@ -44,7 +46,7 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
   for (const mode of (process.env.MODES ?? 'right,right+pump').split(',')) {
     level.reset?.(true); p.respawn(level, true);
     const events = []; let prev = { state: p.state, free: p.freeSkate, bail: p.isBailing, vert: p.vertAir, gnd: p.grounded, stall: false };
-    let apex = -Infinity, wallMax = -Infinity, lastSide = -1, t = 0, grindWas = false, spinWas = false, ollieWas = false, hangN = 0, xWas = false;
+    let apex = -Infinity, wallMax = -Infinity, lastSide = -1, t = 0, grindWas = false, spinWas = false, ollieWas = false, hangN = 0, xWas = false, perched = 0;
     const foes = level.enemies ?? []; let foesAlive = foes.filter(e => e.alive).length; let bangs = level.crates.filter(c => c.bang && c.bangUsed).length; let deaths = p.totalDeaths; let masks = p.masks;
     for (let i = 0; i < num('N', 1500); i++) {
       t = i * CONST.fixedStep;
@@ -55,6 +57,9 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
       if (mode.includes('pump')) input.jumpHeld = p.freeSkate && p.grounded && p.state === 'ride' && !!p.groundHit?.halfpipe;
       // 'charge': skate the approach (X + direction) and arrive at the lip on the board
       if (mode.includes('charge') && !p.groundHit?.halfpipe && p.grounded && p.pos.x < lipL - 0.8) input.jumpHeld = true;
+      // At a lip he is waiting on (walked up to, or rolled up to slowly): Jump, six frames in.
+      perched = p.dropInPerch && p.dropInTipT < 0 ? perched + 1 : 0;
+      if (!mode.includes('wait') && perched >= 6 && perched < 9) input.jumpHeld = true;
       if (mode.includes('grind')) { const want = p.state === 'air' && p.pos.y > num('GY', 0); input.grindHeld = want || p.state === 'grind'; input.grindPressed = want && !grindWas; grindWas = want; }
       // 'grindhold': the grind button held from the drop-in on (what does the lip do with it?)
       if (mode.includes('grindhold') && p.freeSkate) { input.grindHeld = true; input.grindPressed = !grindWas; grindWas = true; }

@@ -40,8 +40,9 @@ All of these, or the wall is only a wall:
 - not while charging a jump, sliding, crawling, swimming, teetering or bailing, and not in a level that sets
   `ledgeGrabs: false`.
 
-That includes the inside of a side-on pipe. Walking over its lip from the deck still drops him in on his
-board, but its surface no longer puts a board under a walker: jumped into, or down in one after a spill, he
+That includes the inside of a side-on pipe. Walking up to its lip along the deck still puts him on his
+board (on the coping, waiting to be told to go: `docs/SIDE_ON_PIPES.md`), but its surface no longer puts a
+board under a walker: jumped into, or down in one after a spill, he
 is on his feet, and running at its wall is this. (X held with a direction is the ordinary push-off, there as
 anywhere.)
 
@@ -52,7 +53,9 @@ Nothing changes on the board. A skater rides the same wall exactly as before.
 Running up the transition is one way to its lip. Jumping to it, or falling past it, is another, and on foot
 it is an ordinary ledge catch, on any vert in any level: the same reach, the same hang, the same clamber,
 drop and grip timer as a platform's edge. (Never from the board: a rider over a coping is in the pipe's own
-air.)
+air.) One rule of a platform's edge does not apply: a platform's lip is not hung from where there is ground
+within his standing reach under it, because he would be standing there, and a vert's lip is caught at any
+height, because under it he does not hang down a wall.
 
 A platform's side is a wall all the way down. A vert's is only a wall as far as its straight section goes:
 under that the transition comes out from the face toward him, and a body hung straight down would have its
@@ -168,19 +171,26 @@ npm run check:vert-run-up
 ```
 
 `tools/test-vert-run-up.mjs` asserts the rule, the plan on walls from a 1.2 m kicker to a 9 m face, the
-three clips, and then the real Player on fifteen fixture walls with the shipped clip presentation: each
+three clips, and then the real Player on sixteen fixture walls with the shipped clip presentation: each
 wall ends the way its measurement says, every time, and ends where it should (on the deck running, in the
 hang and from it up the ordinary clamber, back on the flat on his feet); the drawn pelvis is where the plan
 has it from the first frame, with no pop into the move or out of it; a hand that holds is on the coping; and
 the head guard never has more than 3 cm to do. Four of the walls have no ledge (a shallow deck, a spine, a
 face that goes on up, a boxed-in deck) and are come up short on; a hip-high spine is left alone. It then
-drops him past three lips on foot (caught, hung from with no part of his legs in the wall, climbed out of),
+drops him past four lips on foot, one of them between the two walls of a side-on plane (caught, hung
+from with no part of his legs in the wall, hung still for 2.5 s with his wrists, elbows and hips steady,
+his gloves a shoulder's width apart and within 4 mm of their holds, his body not heaved to keep them
+there and each instant drawn twice drawn the same, climbed out of),
 flies him at walls from the air (put on the deck, caught, or slid and rolled, rising or falling), lets go
 of a platform's edge and of a vert's lip (the beat on the wall, the hop, the drop facing it, the roll off a
 transition), and measures the picture from each of these back to his feet, frame to frame. Then, on the
 board, it rolls him up to two lips at twelve speeds and scripts (waiting on the coping and dropped in by
 Jump or by the stick, backed out, dropped straight in whatever he presses, an ollie popped in the set-up,
-flown off the edge), and rides him at a quarter (into its air, and out over its lip onto the deck). Last,
+flown off the edge), walks and runs him up to a lip on foot (slowed over the last of the deck, on his
+board at the coping with his pelvis never moved more than 0.16 m in a frame, waiting until Jump or a fresh
+press of the stick, stepped off again by
+the stick pressed back, and a jump thrown from the deck left a jump), and rides him at a quarter (into its
+air, and out over its lip onto the deck). Last,
 it rides him at a straight-faced wall so that the hang tops out under the lip, at it and over it (met by
 the face each time, never by the deck behind it: `docs/SIDE_ON_PIPES.md`), and pops him out of a long air
 and a short one, with the picture of each held frame to frame. And it holds his deck to the curve under a

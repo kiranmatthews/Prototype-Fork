@@ -13929,9 +13929,142 @@ out of its drawn matrix is not one (it read 25° in a frame in which the deck's 
   20 m/s on a 2.5 m curve). Every pipe does it, the drop-in checks already step over it by name, and it
   was not part of this.
 
+## 2026-11-26 — A hang's arms held still; a wait at a lip walked up to; no hang without room to hang
+
+- **Brief:** a third take of Side Pipe Lab (`7209d009`, 7,445 frames) with three notes: "The arms
+  twitch/vibrate on a ledge hang, that animation needs detailed review and fixing"; "running toward the
+  vert lip on foot should mount you into "drop in" awaiting button input to drop in, instead of going
+  straight to skate as currently"; and that the end of the take "shows that "too low" ledges are still
+  allowing ledge grabs".
+- **Elapsed:** about 4 h from the brief to the published build (focused checks only; the full suite was not asked
+  for).
+- **Levels:** Side Pipe Lab (`side-pipe-lab`) and Side Pipe Lab (Forward) (`side-pipe-lab-forward`). No
+  part moved; the level source changed in its comments only.
+- **Runtime:** `src/player.ts` (and one contract comment in `src/level.ts`).
+- **Docs:** `docs/SIDE_ON_PIPES.md`, design bible XV.3, XV.14, XV.16 and its checklist,
+  `docs/VERT_RUN_UP.md`, `docs/LEVEL_FILE_FORMAT.md`, README.
+
+**The arms.** Three things shook them, and only the first could be found from the take alone.
+
+- When his arms would have to be longer than they are to reach his holds, the hung body is lifted a
+  little toward them. That lift was let fall every frame and put back in one step once a glove had slipped
+  2 mm: a sawtooth every third frame. In the take's hang (216 frames under a vert's lip) his wrists
+  changed direction on 129 and 147 of them. The lift now settles to what his arms last needed and no
+  lower, and is made up whenever it falls short, by however little.
+- The side an elbow bends to was read again from an arm that had already been solved, so a frame that
+  needed the second pass drew both elbows 2 cm from where the frame before had drawn them: every other
+  frame, for as long as the lift was moving. It is read once, from the clip's own arm.
+- In Side Pipe Lab both of his gloves were on ONE point of the lip, over his head. The check on where a
+  hand may be planted asked for room for a second body beside him, and the two unseen walls that hold
+  play to the course's plane leave 1.06 m. His shoulders are 0.54 m apart, so each sway of his chest in
+  the idle's fidget (a swing of his legs to one side and then the other, two seconds into the hang) heaved
+  all of him up 18 cm in a sixth of a second and let him down again. A hand now asks for an arm's width;
+  his gloves are 0.64 m apart, he hangs 7 cm lower at rest, and the same fidget moves the lift 7 cm.
+
+The last two showed only in the game. The headless fixtures hang him on a wall with open floor to either
+side, where his hands were always where they should be, and with them apart the lift moves too little for
+the second pass to alternate. So the review that found them was a scripted hang in a browser, one fixed
+step at a time: dropped past the lip of the yard's third wall with nothing held, joints read off the rig
+each step. On the published build and on this one, over the same 188 steps:
+
+| | wrists change direction | wrists travel | left elbow travels | hips change direction |
+|---|---|---|---|---|
+| before | 106 and 106 times | 3.1 and 2.6 m | 6.9 m | 101 times |
+| now | 5 and 1 | 0.32 and 0.34 m | 0.6 m | 4 |
+
+What is left in the "now" row is the idle's own swing. `tools/test-vert-run-up.mjs` now hangs him on a
+sixteenth wall standing between two plane walls like the lab's, and holds on all four hangs: gloves more
+than 0.5 m apart, the lift moving less than 10 cm, each instant drawn twice drawn the same to 3 mm
+(elbows included), fewer than 12 changes of direction in 150 steps in any of wrists, elbows and hips, and
+gloves within 4 mm of the lip. With the hand check put back it fails on the first of those (0.00 m
+apart), and with the elbow's side read from the solved arm on the third (29 mm).
+
+**The lip, on foot.** A walker or a runner who reaches a side-on vert's lip along its deck is now put on
+his board there, tail set on the coping, and waits: the same wait a slow roll already came to, for as long
+as he likes, with no clock and no points. A run is slowed over the last 2 m of the deck by where he is on
+it (20 m/s²), so the coping is arrived at and not run off; the picture is handed from his run to the
+stance over 0.26 s, with the board set down as it will wait, so nothing rocks back under him after he is
+on it. Jump, or the stick pressed on afresh, drops him in: the 0.16 s lean and the drawn curve onto the
+wall, at 4 m/s. The direction he ran up holding is the run that brought him there and asks for nothing
+until it has been let go (eight seconds of right held leave him on P0's coping). The stick pressed back
+steps him off the board onto his feet where he stood. A jump thrown before the lip is still a jump. In the
+forward copy the same inputs are forward and back.
+
+**What the wait did to the course.** Each pipe a walker enters is now entered from rest at 4 m/s instead
+of at 7.65 m/s from a run, and no part was moved to make up for it. The course is finished the same way
+(right held, Jump at each lip and in each east hang) in 126.5 s, 1.6 s longer, with the same seven
+pop-outs, three transfers and two rails. The numbers the docs quote were measured again: P0's first hang
+is 3.5 m over its lip (16.5 m/s) and its pop-out lands 3.9 m out; P1's first swing climbs 3.77 m of the
+7 m wall, and the second clears it by 1.8 m, 0.85 s in the air; the pop-outs carry 3.9 to 7.3 m; the
+plunge's free air is 10.1 m over its lip. The cascade's first ridge is the tight one: cleared by 1 m,
+0.77 s in the air (a miss costs one swing: the next hang there is 5.8 m over it). One row of the table was
+wrong before this brief and is corrected: a pipe ridden with a direction held does not settle at 5 m
+hangs (that is nothing held); the hangs pass 10 m on the fifth swing.
+
+**Too low.** The take ends with him on the board, coasting at 5.5 m/s with the stick at rest: an ollie
+that rose 1.03 m met the face of the course's first step (1.6 m), caught its lip and hung there for 361
+frames with his feet 0.35 m off the floor. The earlier rule covered only catches made from the ground. Now a lip is hung from only where there is room to hang: if there is ground to stand on
+within his standing reach (2.55 m) under the lip, where he would hang, it is not caught, whether he
+walked, rolled, jumped, ollied or fell to it. He lands on such a step or comes off its face. A lip with
+more than that under it is caught as before, and a vert's lip has no such rule, because under one he lies
+along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the held jump (a tap rises
+2.1 m and has no lip to catch): the bible's XV.3 and checklist say so.
+
+**Checks.**
+
+- `npm run check:side-pipe`, all five. `tools/test-side-pipe-lab.mjs`: the walker brought to each lip at a
+  walk and put on his board there, each drop-in from the wait at 4 m/s, the eight-second wait and the
+  fresh press; the step bumped on foot, on the board, and out of the take's ollie; a 2.4 m wall not caught
+  from a tap jump and a 3.2 m one caught. `tools/test-side-pipe-lab-forward.mjs`: the same from behind.
+  `tools/test-vert-run-up.mjs`: the hang above; a run and a walk to a lip (slowed, mounted with his pelvis
+  never moved more than 0.16 m in a frame, waiting, Jump, the stick again, the stick back, a jump from the
+  deck). `tools/test-vert-air-motion.mjs`: its limit on how much a part's pace may change in a frame now
+  follows the length of the turn, because the cascade's first transfer is flown in 25 frames from a
+  standing drop-in and was flown in 30 from a run (the same curve: 0.059, 0.070 and 0.128 rad against
+  limits of 0.086, 0.101 and 0.216; at 30 frames 0.050, 0.049 and 0.096 against 0.06, 0.07 and 0.15, as
+  before).
+- `npm run check:levels` (82 levels), `npm run check:ledge`, `check:ledge-crates`,
+  `check:ghost-cart-ledges`, `tools/test-custard-hang.mjs`, `tools/test-custard-ledges.mjs`, and the
+  hang's own two animation checks as `check:animation-d` runs them, `tools/test-jak-ledge-flip.mjs` and
+  `tools/test-jak-ledge-traverse.mjs` (the shimmy, its hands and the catch).
+- `tools/test-ledge-catch-recovery.mjs` is in no npm script and had been failing since the hop-off
+  dismount of two briefs ago: it expected a hang let go of to be in the air within 8 frames, and the
+  dismount has a beat on the wall first. Its expectation now allows that beat, and it passes (25 cases).
+- `tools/side-pipe-probe.mjs` tells its walker to go six frames after he is on the coping (it would
+  otherwise wait there for ever); `wait` leaves him.
+- The full suite was not asked for and was not run.
+- Merged with the other chat's work published meanwhile (a hang back onto a straight face, the pop-out's
+  curve): both test files keep both sets of sections, and every check above was run again on the merged
+  tree, with `npm run check:pipe`. `npm run build`: pass.
+- Real browser, real key events, one fixed step at a time on a gated clock, on the dev build in lite and
+  then on the production build (stamp `Codex/sol fork`) in lite and at full render, with the same step
+  counts and figures on each, no console errors and no failed requests. Walked up to P0's lip with right
+  held: on his feet for 78 steps, on the board on the coping for 90 (right still held through the first
+  60), Jump, the 10-step lean, on the wall at 4.0 m/s. The same told to go by the stick let go and pressed
+  again. The stick tapped back: on his feet 4 cm behind the lip. The take's ollie at the 1.6 m step: no
+  catch, down on the floor 0.53 m short of the face and off the board as it stops; a running jump at the
+  same step lands on top of it. The still hang under yard wall 3 (the table above) and under yard wall 1;
+  a hang from the square edge of the climb's first ledge and one from wall 3's lip, each let go of (the
+  beat on the wall, the hop, the drop; under the vert the roll back onto his feet). The forward copy:
+  forward to the lip, waiting, forward again, Jump in the far hang with forward held, down on the board,
+  the brake; and back into the yard, the view round, up its first wall. The arrival, the wait and the
+  drop-in were filmed from the side and looked at, and the hang from behind, before and after.
+
+**Known and left.**
+
+- The take cannot be replayed in step on this code: it parts from the recording at the first lip he walks
+  up to, where he now waits. The take's own hang was measured with the first fix alone; the figures above
+  are from the scripted hang.
+- A catch's first three frames move him a long way (his body about 1.9 m, each wrist 0.4 to 0.5 m a
+  frame). That is the catch every ledge in the game has always had; filmed, it reads as a snap onto the
+  lip, and it was not changed.
+- From a standing drop-in the cascade's first transfer is a 0.77 s window. If it plays too tight, the fix
+  is in the level (a lower east wall on its first pipe, or a taller west one), and it was not asked for.
+
 ## 2026-11-26 — The foot of a transition: the deck on the ground it is riding
 
-- **Brief:** the last thing left at the end of the entry above. Riding a board down a pipe wall and out
+- **Brief:** the last thing left at the end of the entry before the one above ("A hang back onto a
+  straight face"). Riding a board down a pipe wall and out
   onto the flat, the drawn rig is laid level again within a step or two near the foot of the curve,
   faster than the surface flattens: on yard wall 2 at about 20 m/s, one frame turned the deck 26.4° and
   moved it 0.56 m against his hips, and for a few frames the deck was drawn 8° to 14° flatter than the
