@@ -196,19 +196,56 @@ assert.equal(coastal.components.filter(c=>c.t==='rail'&&c.nm?.startsWith('Bahia 
 // rather than reinstating the retired regular scatter/stair layout.
 assert.equal(coastal.kiteTow, true);
 assert.equal(count(coastal, "speedpad"), 0);
-assert.equal(count(coastal, "enemy"), 2 * kiteBeats.filter(b => b.kind === 'patrol').length);
-assert.equal(count(coastal, "checkpoint"), kiteBeats.filter(b => b.kind === 'checkpoint').length);
-assert.equal(count(coastal, "crate"), 14);
+// Crate-bible refresh (90f7af18, docs/crate-bible/campaign-refresh/coastal-street-run):
+// crabs and turtles each debut alone on a broad shoulder, then repeat in
+// pairs. Eight enemies of two kinds replace the retired pair on every patrol
+// beat (ten of four kinds), so the count follows the debuts, not 2 per beat.
+const kiteFoes = coastal.components.filter(c => c.t === 'enemy');
+const debutedFoes = new Set();
+let patrolFoes = 0;
+for (const beat of kiteBeats.filter(b => b.kind === 'patrol')) {
+  const squad = kiteFoes.filter(c => c.nm?.startsWith(`Kite ${beat.name} / `));
+  assert.ok(squad.length > 0, `${beat.name} lost its obstacle`);
+  const [foe] = squad.map(c => c.foe);
+  assert.ok(squad.every(c => c.foe === foe), `${beat.name} mixes enemy silhouettes`);
+  const roles = debutedFoes.has(foe) ? ['TEST / outer patrol', 'TEST / inner patrol'] : ['TEACH / single patrol'];
+  assert.deepEqual(squad.map(c => c.nm), roles.map(role => `Kite ${beat.name} / ${role}`),
+    `${beat.name}: a ${foe} ${debutedFoes.has(foe) ? 'repeat arrives as a pair' : 'debut stands alone'}`);
+  debutedFoes.add(foe);
+  patrolFoes += squad.length;
+}
+assert.deepEqual([...debutedFoes].sort(), ['grunt', 'turtle']);
+assert.equal(kiteFoes.length, 8);
+assert.equal(patrolFoes, kiteFoes.length, 'every kite enemy belongs to an authored patrol beat');
+const kiteCheckpointZ = coastal.components.filter(c => c.t === 'checkpoint').map(c => -c.p[2]).sort((a, b) => a - b);
+assert.equal(kiteCheckpointZ.length, kiteBeats.filter(b => b.kind === 'checkpoint').length);
+// The same refresh turned 14 isolated exit rewards into 94 cargo boxes in 29
+// formations: ten in each of the seven long checkpoint sections and six in
+// each of the four short canal sections, whose launch and landing stay clear.
+const kiteCargo = coastal.components.filter(c => c.t === 'crate');
+assert.equal(kiteCargo.length, 94);
+const cargoSections = [-Infinity, ...kiteCheckpointZ, Infinity];
+assert.deepEqual(
+  cargoSections.slice(1).map((end, i) => kiteCargo.filter(c => -c.p[2] >= cargoSections[i] && -c.p[2] < end).length),
+  [10, 6, 10, 6, 10, 10, 6, 10, 10, 6, 10],
+);
+const cargoFormations = new Map();
+for (const crate of kiteCargo) cargoFormations.set(crate.nm, (cargoFormations.get(crate.nm) ?? 0) + 1);
+assert.deepEqual([...cargoFormations.values()].sort(), [...Array(22).fill(3), ...Array(7).fill(4)],
+  'cargo rides in 22 three-high columns and 7 two-column walls, never as single boxes');
 assert.equal(count(coastal, "wumpa"), 374);
 for (const beat of kiteBeats) {
-  const suffix = {weave:'planter',hop:'hurdle',freight:'load',checkpoint:'checkpoint',patrol:'outer'}[beat.kind];
+  const suffix = {weave:'planter',hop:'hurdle',freight:'load',checkpoint:'checkpoint'}[beat.kind];
   if (suffix) assert.ok(coastal.components.some(c => c.nm === `Kite ${beat.name} ${suffix}`), `${beat.name} lost its obstacle`);
 }
 for (const [prefix, expected] of [['street stair approach ',4],['street stair terrace ',4],['street stair step ',28]])
   assert.equal(coastal.components.filter(c => c.nm?.startsWith(prefix)).length, expected);
 assert.equal(coastal.components.filter(c => c.nm?.startsWith('climb ')).length, 0);
 assert.equal(coastal.components.filter(c => c.nm?.startsWith('stair handrail ')).length, 0);
-assert.ok(coastal.components.filter(c=>c.t==='crate').every(c=>c.nm?.startsWith('Kite exit reward ')));
+// Each formation is named for its job on the ride. Ordinary kite contact has
+// to smash all of it: no explosives, and no mask that implies crash protection.
+assert.ok(kiteCargo.every(c => /^Kite (TEACH|TEST|LANDING|COUNT|REST) \/ \S/.test(c.nm ?? '')));
+assert.ok(kiteCargo.every(c => c.kind === 'wood' || c.kind === 'mystery'));
 assert.equal(
   coastal.components.filter((component) => component.dkind === "roadarrow").length,
   99,

@@ -12,10 +12,20 @@ await withBlockworksRuntime(async r => {
   const replayer = new Replayer(), oldHold = new CameraFallHold(), fixedHold = new CameraFallHold(), input = {};
   // Death/recovery timing evolves independently of camera holding. Check the
   // actual final 40 airborne frames before each death, not old wall-clock offsets.
+  // A hold cannot start before the rider is below the edge he left: the rise
+  // and crest of a jump stay live. Since a grounded ledge catch became a bump
+  // (14392bd0) the take includes a standing jump into open water 15 m below,
+  // so a fatal window can open on that rise. Only frames below the departure
+  // height can lose a hold; a deep fall is one whose whole window is below it.
   const fatal = [], recent = [];
   const flights=[];let flight=null,lastGroundY=r.p.pos.y;
   let deaths = 0;
   const trajectory = createHash('sha256');
+  // Freeze the varied bail poses for this historical input-only take, as
+  // test-grind-head-stability does. Its route now has one hard knock, and how
+  // soon that body lies still sets the frame the get-up hands control back.
+  const cosmeticRandom = Math.random; let cosmeticSeed = 0xC0DE;
+  Math.random = () => ((cosmeticSeed = (Math.imul(cosmeticSeed, 1664525) + 1013904223) >>> 0) / 4294967296);
   replayer.begin(replay);
   try {
     for (let f = 0; f < replay.frames; f++) {
@@ -34,21 +44,23 @@ await withBlockworksRuntime(async r => {
       if(r.p.grounded)lastGroundY=r.p.pos.y;
       if (r.p.totalDeaths > deaths) {
         const fall = recent.slice(-40);
-        fatal.push({ frame: f, frames: fall.length, missed: fall.filter(row => !row.held).length });
         assert.ok(fall.every(row => row.state === 'air'), 'fatal window did not exercise a real fall');
+        const edge = (flight ?? flights.at(-1)).departureY - .3;
+        const falling = fall.filter(row => row.y < edge);
+        fatal.push({ frame: f, frames: fall.length, falling: falling.length, missed: falling.filter(row => !row.held).length });
         deaths = r.p.totalDeaths;
       }
-      recent.push({ held: fixed, state: r.p.state });
+      recent.push({ held: fixed, state: r.p.state, y: r.p.pos.y });
       if (recent.length > 40) recent.shift();
     }
-  } finally { replayer.end(); }
+  } finally { replayer.end(); Math.random = cosmeticRandom; }
   // This historical recording no longer reaches the same shelves at the same
   // frames under the current controller. Test actual lower landings and fatal
   // flights, then reproduce the old false-freeze trigger in controlled drops.
   const recovered=flights.filter(x=>x.landed&&x.y<x.departureY-.3);
   assert.ok(recovered.length>0&&recovered.every(x=>x.fixed===0),'successful lower catches must stay live');
-  assert.ok(fatal.every(x => x.frames === 40 && x.missed === 0), 'real fatal falls lost their hold');
-  assert.ok(fatal.length>=4,'recording did not cover at least four deep fatal falls');
+  assert.ok(fatal.every(x => x.frames === 40 && x.falling > 0 && x.missed === 0), 'real fatal falls lost their hold');
+  assert.ok(fatal.filter(x => x.falling === 40).length>=4,'recording did not cover at least four deep fatal falls');
   const report = { frames: replay.frames, recovered, fatal, deaths: r.p.totalDeaths, trajectory: trajectory.digest('hex'),lowerCatches:[] };
   for(const yaw of [0,Math.PI/2,.65]){
     const heading=new r.THREE.Vector3(0,0,-1).applyAxisAngle(new r.THREE.Vector3(0,1,0),yaw);

@@ -1338,7 +1338,30 @@ function assertCoastalStreet(data, level) {
   );
 }
 
-function assertTestEnemyReset(data, level) {
+// The frozen pack keeps the legacy Test Course roster, sentries included. The
+// source-owned course is what the game ships: its Uga Ambush crate-bible
+// refresh (e1049dd8) cut 28 actors of eight kinds to twenty crabs and spikers,
+// retiring the sentry at -252 and the spinner at -556 with the rest.
+const LEGACY_TEST_ROSTER = {
+  corrected: [
+    [0, -8.69, -252],
+    [0, -13, -556],
+    [109, -16, -1720],
+    [152, -26, -2270],
+  ],
+  sentryFixture: true,
+};
+const REFRESHED_TEST_ROSTER = {
+  corrected: [
+    [109, -16, -1720],
+    [152, -26, -2270],
+  ],
+  actors: 20,
+  kinds: ["grunt", "spiker"],
+  sentryFixture: false,
+};
+
+function assertTestEnemyReset(data, level, roster) {
   const enemyComponents = data.components.filter(
     (component) => component.t === "enemy",
   );
@@ -1355,12 +1378,7 @@ function assertTestEnemyReset(data, level) {
       false,
       `legacy malformed enemy survived migration: ${stale.join(",")}`,
     );
-  for (const expected of [
-    [0, -8.69, -252],
-    [0, -13, -556],
-    [109, -16, -1720],
-    [152, -26, -2270],
-  ])
+  for (const expected of roster.corrected)
     assert.equal(
       enemyComponents.some((component) =>
         component.p.every((value, index) => value === expected[index]),
@@ -1368,6 +1386,14 @@ function assertTestEnemyReset(data, level) {
       true,
       `corrected Test Course enemy is missing: ${expected.join(",")}`,
     );
+  if (roster.actors !== undefined) {
+    assert.equal(enemyComponents.length, roster.actors, "refreshed Test Course roster drifted");
+    assert.deepEqual(
+      [...new Set(enemyComponents.map((component) => component.foe ?? "grunt"))].sort(),
+      roster.kinds,
+      "refreshed Test Course fields only crabs and spikers",
+    );
+  }
   if (!level) return;
 
   level.root.updateMatrixWorld(true);
@@ -1416,6 +1442,10 @@ function assertTestEnemyReset(data, level) {
   }
 
   const sentry = level.enemies.find((enemy) => enemy.kind === "sentry");
+  if (!roster.sentryFixture) {
+    assert.equal(sentry, undefined, "refreshed Test Course regained a sentry");
+    return;
+  }
   assert.ok(sentry, "Test Course sentry fixture is missing");
   const muzzle = sentry.group.position.clone().add(new THREE.Vector3(0, 0.72, 0));
   level.spawnProjectile(
@@ -1645,9 +1675,19 @@ try {
       path.relative(ROOT, packPath),
     ),
   );
-  const publishedTest = cases.find((entry) => entry.id === "test");
-  assert.ok(publishedTest, "published Test Course is missing");
-  publishedTest.verify = assertTestEnemyReset;
+  // This verifier predates the source-owned Test Course. A bare id lookup
+  // moved it from the pack copy to the built-in listed ahead of it, leaving
+  // the pack unchecked. Bind both, each against its own roster.
+  const packTest = cases.find(
+    (entry) => entry.id === "test" && entry.source === path.relative(ROOT, packPath),
+  );
+  assert.ok(packTest, "published Test Course is missing");
+  packTest.verify = (data, level) => assertTestEnemyReset(data, level, LEGACY_TEST_ROSTER);
+  const sourceTest = cases.find(
+    (entry) => entry.id === "test" && entry.source === "source-owned built-in",
+  );
+  assert.ok(sourceTest, "source-owned Test Course is missing");
+  sourceTest.verify = (data, level) => assertTestEnemyReset(data, level, REFRESHED_TEST_ROSTER);
 
   // Existing browsers can retain the pre-fix synced Test Course indefinitely.
   // Migration must heal those exact stale signatures without a cloud restore.
@@ -1983,7 +2023,9 @@ try {
         assert.deepEqual(capturedPaths.map(pathContract), sourcePaths.map(pathContract),
           'native capture changed the authored extended boardwalks');
         assert.equal(original.rails.length, 68, 'Beachside source rails drifted');
-        assert.equal(original.crates.length, 111, 'Beachside source crates drifted');
+        // Banana Bay's crate-bible refresh (08c5661f) grouped the cargo into
+        // formations: 164 counted crates (was 110) plus the green ! switch.
+        assert.equal(original.crates.length, 165, 'Beachside source crates drifted');
         assert.equal(original.checkpoints.length, 14, 'Beachside checkpoints drifted');
         assert.equal(original.pickups.length, 256, 'Beachside authored route and restored loose fruit clusters drifted');
         assert.ok(original.water, 'Beachside lost the shared MatrixRex ocean');

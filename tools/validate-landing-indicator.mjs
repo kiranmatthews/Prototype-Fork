@@ -274,11 +274,11 @@ try {
   let fixedLoopChecked = false;
   const inspect = node => {
     if (ts.isWhileStatement(node) && ts.isBlock(node.statement)) {
-      const calls = [];
+      const calls = [], statements = [];
       // The race owns its level update; ordinary play calls it conditionally.
       // Inspect the actual statement order through those conditionals.
       const collect = n => {
-        if (ts.isCallExpression(n)) calls.push(n.expression.getText(ast));
+        if (ts.isCallExpression(n)) { calls.push(n.expression.getText(ast)); statements.push(n.getText(ast)); }
         if (!ts.isFunctionLike(n)) ts.forEachChild(n, collect);
       };
       node.statement.statements.forEach(collect);
@@ -287,6 +287,14 @@ try {
         const commit = calls.indexOf('player.commitRenderStep');
         assert.ok(commit > update, 'publish the render pose after updating the level');
         assert.ok(calls.indexOf('input.consumeEdges') > commit, 'publish before consuming the tick');
+        // The commit takes the level: that is what re-probes the landing X.
+        assert.equal(statements[commit], 'player.commitRenderStep(level)');
+        // Split screen and its second rider are gone (bd996d2e), so no `p2`
+        // commit remains. The only other riders this loop simulates are a
+        // race's rivals; they publish in the same window, on the race's level.
+        const rivals = calls.indexOf('skateRace.commitRenderStep');
+        assert.ok(rivals > update && rivals < calls.indexOf('input.consumeEdges'),
+          'publish the race rivals after the level update and before consuming the tick');
         fixedLoopChecked = true;
       }
     }
@@ -294,7 +302,9 @@ try {
   };
   inspect(ast);
   assert.equal(fixedLoopChecked, true, 'fixed simulation loop was not inspected');
-  assert.match(main, /p2\.commitRenderStep\(level\)/);
+  assert.match(await readFile(`${root}src/race/runtime.ts`, "utf8"),
+    /commitRenderStep\(\)\s*:\s*void\s*\{[^}]*\.player\.commitRenderStep\(this\.level\)/,
+    'race rivals must commit their render step with the level');
   const playerSource = await readFile(`${root}src/player.ts`, "utf8");
   assert.doesNotMatch(
     playerSource,
