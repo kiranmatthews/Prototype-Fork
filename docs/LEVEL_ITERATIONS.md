@@ -14068,8 +14068,8 @@ along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the
 - **Elapsed:** 41 min from the prompt (10:04 UTC) to the removal building and playing in a browser under
   its checks. `main` had moved meanwhile (another chat's side-on pipe work, published 10:25 UTC), so the
   change was replayed on top of it and built, checked and played again: 1 h 33 min in all to the last
-  browser pass (11:37 UTC). It waits on its own branch (`claude/amazing-lovelace-fdye90`, one commit
-  ahead of `main`) for the owner's word to publish.
+  browser pass (11:37 UTC). It waits on its own branch (`claude/amazing-lovelace-fdye90`, a
+  fast-forward of `main`) for the owner's word to publish.
 - **Levels:** none edited.
 - **Runtime:** `src/player.ts`, `src/characterLab.ts`, `src/lifePortrait.ts`, `src/main.ts`,
   `src/character/settings.ts`, `src/character/collisionDimensions.ts`, `src/spin-effects/smear.ts`.
