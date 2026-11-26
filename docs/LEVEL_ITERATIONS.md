@@ -13817,8 +13817,9 @@ back at a lip he is waiting on backs him out, and left and right only lean a rai
   hang re-seats on the wall with no frame on the deck edge and the pop-out's first frame is continuous,
   both held by a test, with `npm run check:side-pipe` passing and no tuning changed.
 - **Elapsed:** about 50 min from the prompt (05:37 UTC) to both fixes playing locally under their new
-  checks, and 1 h 50 min to the last build and browser pass. Not published from this session: it is
-  held to its own branch (`claude/amazing-lovelace-fdye90`), where the change is committed and pushed.
+  checks, and 1 h 50 min to the last build and browser pass. It then waited on its own branch
+  (`claude/amazing-lovelace-fdye90`) for the owner's word, and went out through `main` at 07:45 UTC,
+  2 h 08 min after the prompt, about 20 min of that the wait.
 - **Levels:** none edited. Side Pipe Lab and its forward copy play differently only on the wall yard's
   straight-faced walls (2, 3 and 4).
 - **Runtime:** `src/player.ts`. `src/tuning.ts` is untouched.
