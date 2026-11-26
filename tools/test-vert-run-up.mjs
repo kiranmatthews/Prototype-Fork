@@ -63,6 +63,8 @@ const FIXTURES = [
   ['boxed-in deck', RADIUS, 1.35, 6, 'miss', 'boxed'],
   // ...unless it is no higher than his hips: nothing to leap for, and it is left alone
   ['low spine', RADIUS, 0, 0, 'none', 'spine'],
+  // the grab wall again as a side-on course has it: between the two unseen walls that hold play to one plane
+  ['grab on a walled plane', RADIUS, 2.3, 6, 'grab', 'plane'],
 ];
 const components = [{ t: 'zone', p: [0, 0, LANE * FIXTURES.length / 2], s: [160, 1, LANE * (FIXTURES.length + 2)], dir: 'E', sideOn: true },
   { t: 'camnode', p: [-40, 0, 0] }, { t: 'camnode', p: [60, 0, 0] }, { t: 'gate', p: [-38, 0, 0], yaw: 90 }];
@@ -77,6 +79,8 @@ FIXTURES.forEach(([, radius, lipRise, deck, , extra], lane) => {
   if (extra === 'wall') components.push({ t: 'platform', p: [WALL_X + radius + 2, 6, z], s: [4, 12, 8] });
   // a deck with no room on it
   if (extra === 'boxed') components.push({ t: 'platform', p: [WALL_X + radius + 1.0, radius + lipRise + 1.5, z], s: [1.6, 3, 8] });
+  // a play plane 1.06 m wide (Side Pipe Lab's own two walls)
+  if (extra === 'plane') components.push(...[-0.83, 0.83].map(dz => ({ t: 'wall', p: [0, -14, z + dz], s: [80, 60, 0.6], invisible: true })));
 });
 // ...and one lane with no vert in it: a block with a square edge, to hang from and let go of
 const BLOCK = { lane: FIXTURES.length, edgeX: WALL_X, topY: 4.4 };
@@ -390,7 +394,7 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
   // (how far a joint is on the air side of the wall: of its curve below the top of it, of its face above)
   const offWall = (joint, radius) => { const at = world(node(joint)), s = at.x - WALL_X;
     return at.y < radius ? radius - Math.hypot(s, at.y - radius) : WALL_X + radius - at.x; };
-  for (const [name, leans] of [['plain quarter', true], ['extended', true], ['grab', false]]) {
+  for (const [name, leans] of [['plain quarter', true], ['extended', true], ['grab', false], ['grab on a walled plane', false]]) {
     const fall = fallAt(name), label = `${name}: fallen to`;
     assert.ok(fall.caught >= 0 && fall.caught < 20 && p.state === 'hang' && p.ledgePhase === 'grip', `${label}: his hands take the lip (state ${p.state}/${p.ledgePhase})`);
     assert.ok(p.ledgeOnVert && Math.abs(p.pos.y - (fall.lipY - 1.25)) < 0.05, `${label}: it is the ordinary hang, under a vert's lip`);
@@ -403,6 +407,43 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
     const before = world(node('ankleLeft')).clone();
     for (let again = 0; again < 3; again++) { p.syncVisual(idle(), 0); p.group.updateMatrixWorld(true); }
     assert.ok(world(node('ankleLeft')).distanceTo(before) < 2e-3, `${label}: drawn twice, he is drawn the same`);
+    // HE HANGS STILL. Two and a half seconds with the stick at rest: his arms sway with the hang's own idle,
+    // and nothing in them shivers. (Hung out from a vert's face his arms are at full stretch, and the lift
+    // that keeps his gloves on the lip once sank and was thrown back up every third frame: his wrists turned
+    // round on 99 steps of 150 and travelled three metres going nowhere.)
+    // Two more things shook them where the owner met it, and both are held here. Between the walls of a
+    // side-on plane both gloves were set down on ONE point over his head (the check on a hand's place
+    // asked for room for a second body beside him), so each sway of his chest in the idle's fidget heaved
+    // all of him up 18 cm and let him down. And the side an elbow bends to was read again from an arm
+    // already solved, so a frame that needed the second pass drew both elbows 2 cm from where the frame
+    // before had them: every other frame, for as long as the lift was moving.
+    {
+      const joints = ['wristLeft', 'wristRight', 'elbowLeft', 'elbowRight', 'hips'];
+      const trail = [], lifts = []; let offLip = 0, redrawn = 0;
+      for (let i = 0; i < 150; i++) {
+        step(idle()); p.group.updateMatrixWorld(true); trail.push(joints.map(id => world(node(id)).clone())); offLip = Math.max(offLip, p.ledgeGripError);
+        lifts.push(p.ledgeReachLift);
+        // (the same instant drawn again puts no joint of his arms anywhere else)
+        p.syncVisual(idle(), 0); p.group.updateMatrixWorld(true);
+        redrawn = Math.max(redrawn, ...joints.slice(0, 4).map((id, k) => world(node(id)).distanceTo(trail[i][k])));
+      }
+      assert.ok(p.state === 'hang' && p.ledgePhase === 'grip', `${label}: he is still hanging there`);
+      const apart = p.ledgeHands.left.distanceTo(p.ledgeHands.right), heave = Math.max(...lifts) - Math.min(...lifts);
+      assert.ok(apart > 0.5, `${label}: his gloves are on the lip a shoulder's width apart (${f2(apart)} m)`);
+      assert.ok(heave < 0.1, `${label}: and he is not heaved up and down to keep them there (the lift moves ${f2(heave * 100)} cm through the idle's fidget)`);
+      assert.ok(redrawn < 0.003, `${label}: an instant of the hang drawn twice is drawn the same, elbows included (${f2(redrawn * 1000)} mm apart at most)`);
+      const measure = k => { let path = 0, turns = 0, fastest = 0;
+        for (let i = 2; i < trail.length; i++) { const was = trail[i - 1][k].clone().sub(trail[i - 2][k]), now = trail[i][k].clone().sub(trail[i - 1][k]);
+          path += now.length(); fastest = Math.max(fastest, now.length()); if (was.length() > 5e-4 && now.length() > 5e-4 && was.dot(now) < 0) turns++; }
+        return { path, turns, fastest }; };
+      const [wristL, wristR, elbowL, elbowR, hips] = joints.map((_, k) => measure(k));
+      assert.ok(Math.max(wristL.turns, wristR.turns, elbowL.turns, elbowR.turns, hips.turns) < 12,
+        `${label}: hanging still, nothing in his arms shivers (wrists turn round on ${wristL.turns} and ${wristR.turns} steps of 150, elbows ${elbowL.turns} and ${elbowR.turns}, hips ${hips.turns})`);
+      assert.ok(Math.max(wristL.path, wristR.path) < 0.9 && Math.max(elbowL.path, elbowR.path) < 1.8,
+        `${label}: and they go no further than the idle takes them (wrists ${f2(Math.max(wristL.path, wristR.path))} m, elbows ${f2(Math.max(elbowL.path, elbowR.path))} m in 2.5 s)`);
+      assert.ok(hips.fastest < 0.04, `${label}: his body is never thrown (${f2(hips.fastest * 100)} cm in a step at most)`);
+      assert.ok(offLip < 0.004, `${label}: with his gloves on the lip throughout (${f2(offLip * 1000)} mm off at most)`);
+    }
     // ...and it is a hang like any other: the stick toward the deck clambers up onto it
     for (let i = 0; i < 150 && p.state === 'hang'; i++) step(hold());
     for (let i = 0; i < 12; i++) step(idle());
@@ -702,15 +743,8 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
       assert.ok(roll.perch > 60 && !roll.seat && !roll.flew, `${name}: at 7.4 m/s he still stops on the coping, and the stick he arrived holding leaves him there (${roll.perch} steps)`);
     }
   }
-  // On foot the same lip is the same drop-in as ever: the board comes out as he crosses it, with no pause.
-  {
-    const [, radius, lipRise] = FIXTURES[lane('plain quarter')], lipX = WALL_X + radius, lipY = radius + lipRise;
-    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(lipX + 3, lipY + 0.15, lane('plain quarter') * LANE), heading: new THREE.Vector3(-1, 0, 0) });
-    for (let i = 0; i < 20; i++) step(idle());
-    let perched = false, seated = false;
-    for (let k = 0; k < 120 && !seated; k++) { const input = makeInput(); input.moveX = -1; step(input); perched ||= p.dropInPerch; seated = p.freeSkate && !!p.groundHit?.halfpipe; }
-    assert.ok(seated && !perched, 'walked over the lip: the board mounts on the wall at once, as it always did');
-  }
+  // (On foot the same lip is met the same way, at any pace: on the board at the coping, and waiting. Below,
+  // under "ON FOOT, to a lip along its deck".)
 
   // ---- and on the board, a quarter is a pipe: up it, into its air, and out over its lip ----
   {
@@ -730,6 +764,88 @@ await withSkateRuntime(async ({ server, player: p, level, step, CONST, THREE }) 
     }
     assert.ok(aired, 'ridden at on the board, the quarter throws him into its own air over the coping');
     assert.ok(popped && p.grounded && p.pos.x > lipX + 0.5 && Math.abs(p.pos.y - lipY) < 0.1, `the stick over the lip and Jump carries that air out onto its deck (x ${f2(p.pos.x - lipX)} past the lip, y ${f2(p.pos.y)})`);
+  }
+
+  // ---- ON FOOT, to a lip along its deck: he gets on his board AT the coping, and waits -----------------
+  // A runner used to be put straight on the wall, rolling, the moment he crossed the lip. Now the last of
+  // the deck slows him to the pace a slow roll comes onto a coping at; there his board is under him with
+  // its tail set on the coping, and he waits: Jump, or the stick pressed afresh, drops him in, and the
+  // stick pressed back rolls him off the lip. The direction he ran up holding asks for nothing.
+  const walkUp = (name, pace, then = () => ({ x: -1 }), { limit = 900, jumpAt = null, from = 5.4 } = {}) => {
+    const [, radius, lipRise] = FIXTURES[lane(name)], lipX = WALL_X + radius, lipY = radius + lipRise, z = lane(name) * LANE;
+    level.reset?.(true); p.respawn(level, true, false, { position: new THREE.Vector3(lipX + from, lipY + 0.15, z), heading: new THREE.Vector3(-1, 0, 0) });
+    for (let i = 0; i < 20; i++) step(idle());
+    const log = { lipX, lipY, rows: [], perch: 0, perchAt: null, still: 0, meter: false, seat: null, backedOut: null, out: false, bailed: false, tipSteps: 0, mountedAt: null,
+      fastest: 0, hardest: 0, arrived: null, lowest: Infinity, airOverLip: false, footAfter: null, scoreBefore: p.score ?? 0, scoreAfter: 0 };
+    let heldWas = false, since = -1, closingWas = 0;
+    for (let k = 0; k < limit && !log.out; k++) {
+      const input = makeInput();
+      let x = -pace, jump = jumpAt !== null && p.grounded && !p.freeSkate && p.pos.x < lipX + jumpAt && p.pos.x > lipX + jumpAt - 0.5;
+      if (p.dropInPerch || since >= 0) { since++; const want = then(since, p); x = want.x ?? 0; jump = !!want.jump; }
+      input.moveX = x; input.jumpHeld = jump; input.jumpPressed = jump && !heldWas; input.jumpReleased = !jump && heldWas; heldWas = jump;
+      const was = { perch: p.dropInPerch, x: p.pos.x, free: p.freeSkate, grounded: p.grounded, pipe: !!p.groundHit?.halfpipe };
+      step(input); p.stepDropInPresentation();
+      const closing = (was.x - p.pos.x) * 60;
+      if (!was.free && !p.freeSkate && was.grounded && p.grounded) { log.fastest = Math.max(log.fastest, closing); log.hardest = Math.max(log.hardest, closingWas - closing); }
+      closingWas = closing;
+      if (!was.free && p.freeSkate && !log.mountedAt) { log.mountedAt = { x: p.pos.x - lipX, y: p.pos.y - lipY, perch: p.dropInPerch, pipe: !!p.groundHit?.halfpipe, closing: (was.x - lipX) > 0 ? closing : 0 }; log.arrived = closing; }
+      if (p.dropInPerch) { log.perch++; log.perchAt ??= p.pos.clone(); log.meter ||= p.balanceMeter !== null; log.still = Math.max(log.still, Math.abs(p.speed)); if (p.dropInTipT >= 0) log.tipSteps++; }
+      if (!was.pipe && p.groundHit?.halfpipe && p.grounded && !log.seat) { log.seat = { pos: p.pos.clone(), speed: p.speed, board: p.freeSkate, fromPerch: was.perch }; log.scoreAfter = p.score ?? 0; }
+      if (was.perch && !p.dropInPerch && !p.groundHit?.halfpipe) log.backedOut = { step: k, x: p.pos.x - lipX, speed: p.speed, board: p.freeSkate };
+      if (log.backedOut && !p.freeSkate && !log.footAfter) log.footAfter = { steps: k - log.backedOut.step, x: p.pos.x - lipX };
+      if (!p.grounded && Math.abs(p.pos.x - lipX) < 0.4 && p.pos.y > lipY + 0.3) log.airOverLip = true;
+      if (log.seat) log.lowest = Math.min(log.lowest, p.pos.y);
+      log.bailed ||= p.isBailing;
+      const off = p.dropInOffset, hips = world(node('hips')).add(off), nose = new THREE.Vector3(0, 0, 1).applyQuaternion(p.boardG.getWorldQuaternion(new THREE.Quaternion()));
+      log.rows.push({ k, x: p.pos.x - lipX, y: p.pos.y - lipY, speed: p.speed, hips, wheels: world(p.boardG).add(off), pitch: Math.atan2(nose.y, Math.hypot(nose.x, nose.z)) * 180 / Math.PI,
+        phase: p.dropInPerch ? (p.dropInTipT >= 0 ? 'tip' : 'perch') : p.dropInT >= 0 ? 'in' : !p.freeSkate ? (p.grounded ? 'foot' : 'air') : p.groundHit?.halfpipe ? 'wall' : 'deck' });
+      log.out = (!!log.seat && p.grounded && p.pos.x < WALL_X - 2) || (!!log.backedOut && k > log.backedOut.step + 400) || (log.airOverLip && p.grounded && k > 200);
+    }
+    return log;
+  };
+  for (const name of ['plain quarter', 'grab']) {
+    // AT A RUN, the stick held all the way and never let go: slowed, on the board at the coping, and waiting
+    {
+      const run = walkUp(name, 1, since => ({ x: since < 90 ? -1 : 0, jump: since >= 100 && since < 103 })), label = `${name}: run up to on foot`;
+      assert.ok(run.fastest > 8.5, `reference: ${label}: he is at a full run along the deck (${f2(run.fastest)} m/s)`);
+      assert.ok(run.mountedAt && run.mountedAt.perch && !run.mountedAt.pipe && Math.abs(run.mountedAt.x) < 1e-6 && Math.abs(run.mountedAt.y) < 1e-6,
+        `${label}: he gets on his board at the coping, not on the wall under it (${run.mountedAt ? f2(run.mountedAt.x) + ', ' + f2(run.mountedAt.y) + (run.mountedAt.pipe ? ' on the wall' : '') : 'never mounted'})`);
+      assert.ok(run.arrived !== null && run.arrived < 2.2 && run.hardest < 0.45,
+        `${label}: and he arrives at it: slowed over the last of the deck (${f2(run.arrived)} m/s at the lip, never losing more than ${f2(run.hardest)} m/s in a step)`);
+      assert.ok(run.still === 0 && !run.meter, `${label}: at rest there, with no needle`);
+      assert.ok(run.perch >= 100 + 8 && run.perch <= 100 + 12 && run.tipSteps >= 8 && run.tipSteps <= 12,
+        `${label}: the stick he ran up holding asks for nothing: he waits, a second and a half with it held and then let go, until Jump (${run.perch} steps on the coping, ${run.tipSteps} of them the lean)`);
+      assert.ok(run.seat && run.seat.fromPerch && run.seat.board && Math.abs(run.seat.speed - 4) < 0.01 && !run.bailed && run.out && run.lowest < 0.05,
+        `${label}: then he is on the wall just under it and rides it down and out (${run.seat ? f2(run.seat.speed) + ' m/s' : 'never'})`);
+      assert.equal(run.scoreAfter, run.scoreBefore, `${label}: it is a wait, not a stall: no points`);
+      // the picture: the run slows, the board comes under him and the tail goes down, in one movement
+      const picture = jolt(run, ['foot', 'perch', 'tip', 'in']);
+      assert.ok(picture.hips < 0.16 && picture.sunk < 0.02,
+        `${label}: nothing in it jolts: his pelvis (${f2(picture.hips)} m, ${picture.atHips}) from one frame to the next, the wheels not sunk in the deck (${f2(picture.sunk)} m)`);
+    }
+    // ...the stick let go and pressed on again drops him in; pressed back, it rolls him off the lip, and left alone there he is on his feet again
+    {
+      const on = walkUp(name, 1, since => ({ x: since < 30 ? -1 : since < 40 ? 0 : -1 })), label = `${name}: run up to on foot`;
+      assert.ok(on.perch >= 40 + 8 && on.perch <= 40 + 13 && on.seat?.fromPerch && !on.bailed && on.out, `${label}: the stick let go and pressed on again drops him in (${on.perch} steps there)`);
+      // ...and pressed back, he steps back off the board onto his feet where he stood (he walked up: he is back as he was)
+      const back = walkUp(name, 1, (since, rider) => ({ x: since < 30 ? -1 : since < 40 ? 0 : since < 44 ? 1 : 0 }));
+      assert.ok(back.backedOut && !back.seat && !back.bailed, `${label}: the stick pressed back takes him off the coping`);
+      assert.ok(back.footAfter && back.footAfter.steps <= 2 && back.footAfter.x > 0 && back.footAfter.x < 0.6,
+        `${label}: and he is off the board, on his feet, at the edge he walked up to (${back.footAfter ? back.footAfter.steps + ' steps, ' + f2(back.footAfter.x) + ' m from the lip' : 'still on the board'})`);
+      // (measured to a quarter of a second after he is off it: what he does next on his feet is his walk's own)
+      const stepped = jolt({ ...back, rows: back.rows.filter(row => row.k <= back.backedOut.step + 15) }, ['foot', 'perch']);
+      assert.ok(stepped.hips < 0.16, `${label}: stepping on and stepping off, his pelvis never jumps (${f2(stepped.hips)} m, ${stepped.atHips})`);
+    }
+    // AT A WALK the same thing, with hardly any slowing to do
+    {
+      const walk = walkUp(name, 0.4, since => ({ x: 0, jump: since >= 40 && since < 43 }), { from: 2.6 }), label = `${name}: walked up to`;
+      assert.ok(walk.fastest > 2 && walk.fastest < 5 && walk.mountedAt?.perch && walk.seat?.fromPerch && !walk.bailed && walk.out, `${label}: he gets on at the coping, waits, and Jump drops him in (walking at ${f2(walk.fastest)} m/s)`);
+    }
+    // A JUMP thrown from the deck is not an arrival: over the lip in the air he is in the air, on foot
+    {
+      const leapt = walkUp(name, 1, () => ({ x: -1 }), { jumpAt: 2.6, limit: 260 }), label = `${name}: jumped off the deck`;
+      assert.ok(leapt.airOverLip && leapt.perch === 0 && !leapt.mountedAt, `${label}: over the lip in the air he is not sat on it (perched ${leapt.perch} steps${leapt.mountedAt ? ', mounted' : ''})`);
+    }
   }
 
   // ---- Side Pipe Lab's wall yard ----------------------------------------------------

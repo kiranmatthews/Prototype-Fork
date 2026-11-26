@@ -1,9 +1,10 @@
 # Side-on pipes
 
 A halfpipe that a side-scrolling stretch looks **across**: the camera sees its section, the open end
-faces the lens, and the pipe is part of the path — in over one lip, out over the other. Walking over a
-coping drops you in on the board; **Jump in the hang with the stick held out over the lip** pops you out
-again, on the board, onto the deck past it. The test course is **Side Pipe Lab** (`side-pipe-lab`,
+faces the lens, and the pipe is part of the path — in over one lip, out over the other. Walking up to a
+coping puts you on the board at the lip, waiting; **Jump, or the stick pressed on again,** drops you in;
+**Jump in the hang with the stick held out over the lip** pops you out again, on the board, onto the deck
+past it. The test course is **Side Pipe Lab** (`side-pipe-lab`,
 `src/levels/side-pipe-lab.ts`), and **Side Pipe Lab (Forward)** (`side-pipe-lab-forward`) is the same
 course met head-on, the camera behind the rider ([below](#the-same-course-head-on)).
 
@@ -65,7 +66,7 @@ lets a half carry a per-wall shape (`wallRise`, `wallDeck`).
 
 | Moment | Rule |
 |---|---|
-| Crossing a decked coping from the deck, walking or running | **Automatic drop-in.** The board is put on the wall up to 0.4 m of arc under the lip, heading in, at `max(0.85 × approach speed, 4 m/s)`. It is *drawn* as one curve: for 0.26 s the picture leaves the deck the way the body was travelling, bends over the coping through the mount animation's hop and joins the rider on the transition, continuous in position and velocity at both ends, while the rig lays over onto the wall. The simulation is not delayed by any of it. |
+| Reaching a decked coping along its deck **on foot**, walking or running | **He gets on his board at the lip, and waits.** A run is slowed over the last 2 m of the deck, by where he is on it (20 m/s²), so the coping is arrived at and not run off: he is at a walk (under 2.2 m/s) when he reaches it, whatever he was holding. There the board is under him with its tail set on the coping, and he is in the wait of the next row for as long as he likes; the picture is handed from his run to that stance over 0.26 s. **Jump, or the stick pressed on afresh**, drops him in as below: the 0.16 s lean, then the drawn curve onto the wall under the lip, at 4 m/s. The direction he ran up holding is the run that brought him there, and asks for nothing until it has been let go. **The stick pressed back** steps him off the board, onto his feet on the deck where he stood. A jump thrown before the lip is a jump: he goes out over the pipe on foot. |
 | Rolling up to it **already on the board**, slowly (under 8 m/s as the set-up begins) | **He sets his tail on the coping and waits.** Over the last of the deck (0.45 to 2.2 m, as long as a 15 m/s² stop takes) he is slowed by where he is on it, his knees bend and the deck rocks back on its trailing wheels; at the lip those wheels go over the edge, the tail comes down on the deck behind it and he is at rest, nose up over the drop, over his back foot. He stands there the way a skater waits at the top of a ramp: back foot on the tail, front foot a little past the middle of the deck and not out on the nose (his ankles 0.77 m apart, as they are when he rides), nearly upright on soft knees (his hips 9 cm lower than he rides), his arms let down, his head turned 65° to look down the drop. There is no clock, no needle and no points. **Jump, or the stick pressed on into the pipe**, drops him in: a 0.16 s lean (his weight forward, the nose down) and then the ordinary drawn curve onto the wall under the lip, from rest, at 4 m/s. **The stick pressed back** rolls him off the lip onto the deck tail first at 2.6 m/s (the stance changes, so the body does not turn). The direction he arrived holding is the roll that brought him there: it asks for nothing until it has been let go. |
 | ...at a roll (8 to 17 m/s; the board's own cruise is 12) | **He drops straight in.** Over the last 1.2 to 2.8 m (about 0.2 s) he is slowed, eased on and eased off, to 55 % of his speed, crouching, with the nose lifted a little and put down again, and goes over the coping at that speed onto the wall (4.5 to 9.5 m/s into it). Nothing pauses it, and once that set-up has begun nothing he presses stops it short of leaving the deck (an ollie popped in it is an ollie: the set-up and its stance end as his wheels leave). |
 | ...flat out (17 m/s and up) | **He does not drop in.** He rolls off the edge into a plain board air, level, with all of his speed, and clears the curve: 17 m/s is 4.5 m of travel before he has fallen a 2.5 m wall. The stick that was rolling him there spins nothing until it has been let go. A staircase of verts is therefore one drop-in and then airs: a 5 m wall hands him 23 m/s at its foot. |
@@ -92,23 +93,23 @@ it moves the rider, his clock or his contacts: the rows above are the whole of w
 
 ## Measured (real `Player`/`Level`, `tools/side-pipe-probe.mjs` and `tools/test-side-pipe-lab.mjs`)
 
-Walk-in at 9 m/s, right held unless noted.
+Walked to each lip, waited on there and dropped in with Jump (4 m/s onto the wall); right held unless noted.
 
 | Pipe | Result |
 |---|---|
-| 3.5 / 3.5 m walls, 2.5 m flat half, decks | Drop-in 7.65 m/s. First east launch 18 m/s up; popped out early in the hang it lands about 5 m past the lip, on the board at about 4.5 m/s. Exit decks plus the floor behind them want ≥ 7 m of flat. |
-| 2.5 m west, 7 m east (a spine) | First swing climbs **4.45 m** of the 7 m wall. The swing back hangs about 7 m over the low west lip, and the second swing clears the east lip by about 3 m of hang: time enough for the Jump. Holding X on the walls clears it on the **first** swing; so does arriving on the board with X held down a 14 m approach (the same work, done early). |
-| Second pipe behind that spine, 5 m west wall, 3.5 m decked east wall | The transfer lands on its west wall at 15 m/s and launches off the east lip at 23 m/s. Popped out there it lands 5.6 m past the lip. |
+| 3.5 / 3.5 m walls, 2.5 m flat half, decks | Dropped in from the wait at 4 m/s, he crosses the flat at 20 m/s. First east launch 16.5 m/s up, a hang 3.5 m over the lip; popped out early in it he lands 3.9 m past the lip, on the board at 4.5 m/s. Exit decks plus the floor behind them want ≥ 7 m of flat. |
+| 2.5 m west, 7 m east (a spine) | First swing climbs **3.77 m** of the 7 m wall. The swing back hangs 5 m over the low west lip, and the second swing clears the east lip by 1.8 m, 0.85 s in the air: time enough for the Jump. Holding X on the walls clears it on the **first** swing; so does arriving on the board with X held down a 14 m approach (the same work, done early). |
+| Second pipe behind that spine, 5 m west wall, 3.5 m decked east wall | The transfer lands on its west wall at 12.5 m/s and launches off the east lip at 21.7 m/s. Popped out there it lands 5.3 m past the lip. |
 | Landing ramp, 5 m west wall, open east | Rolls out at 23–30 m/s, still on the board: well over the 12.5 m/s crate-smash and wall wipe-out speed. Only for a stretch that is skated. |
 | `!` floated on the hang line | Headed from below by the hang. 6 m over a 3.5 m lip is beyond a double jump off the deck (5.5 m head reach) and inside the first west hang of a held-right swing. |
 | Rail starting over a bare lip | Caught with the grind button within the usual 2.1 m snap. The grind starts at only 3.5 m/s (a vertical hang has no speed along the rail), which is where the balance needle runs away fastest, so run it **downhill, steepest first**. A straight 19 m rail dropping 4.4 m took 1.65 s and shed a rider who gave no balance input after 1.18 s; dropping 2.6 m in its first 3 m and 1.8 m over the next 9 m, the grind lasts 0.93 s, leaves at 20 m/s and needs none. |
 | Grind button held from the drop-in, right held | A 0.8 s lip stall on each coping in turn, never a bail and never an exit. A rail over a lip wants the button pressed in the hang, not held up the wall. |
-| No input at all, or a direction alone, decked pipe | The rider never stops and never leaves: every coping launch adds the pipe's pop, so the swing settles at 5–6 m hangs. Leaving is Jump with the stick held out over a lip. |
+| No input at all, or a direction alone, decked pipe | The rider never stops and never leaves. With nothing held every coping launch adds the pipe's pop, and the swing settles at 5 m hangs (19 m/s at the lip, from the seventh on). A direction held carves the walls as well: the hangs pass 10 m on the fifth and stay between 9 and 13 m. Leaving is Jump with the stick held out over a lip. |
 | A board thrown away in a hang | Two metres long, on a play plane 1.06 m wide. It falls, meets the transition and comes to rest on the flat in about 2 s (see below). |
-| **Deep pipe**: 8.5 m west wall, 3.5 m decked east wall, 3 m flat half | The drop-in is seated like any other. 30 m/s on the flat, 27 m/s at the east lip, and the air it launches has **10.5 m** in it over that lip (5.5 m more than the brink it left) and hangs 1.7 s. Popped out three frames into the hang it still rises 9 m, drifts out at 4.5 m/s and lands 6.6 m past the lip, on the board. |
-| A box on that hang line | One hung 10.2 m over the lip is headed by the first unpopped hang (feet 9.5 m up). On the hang line itself (0.08 m inside the lip) the popped air takes it too: a mounted rider's crate box is 3.7 m tall and 0.85 m to each side. Hung **1.2 m inside the lip** it is clear of the popped air and still under the hang. |
-| **Valley**: 7 m west wall, 28 m flat, 4.5 m decked east wall | 27.5 m/s along the flat: a two-high stack on the line is smashed (12.5 m/s does it), a crab 14 m further on is spun from the board, and the pop-out lands 5.8 m past the east lip. |
-| **Cascade**: 3.5 → 5.5 m, then two pipes each 7 m deep behind a shared ridge (5 m and 3.5 m far walls) | A held direction clears the first ridge on the first swing. The second ridge is crossed 7.5 m above it, 1.7 s after the first; the flats run 21, 28 and 32 m/s. The last pop-out lands 7.4 m past its lip. |
+| **Deep pipe**: 8.5 m west wall, 3.5 m decked east wall, 3 m flat half | The drop-in is seated like any other. 29 m/s on the flat, 26 m/s at the east lip, and the air it launches has **10.1 m** in it over that lip (5.1 m more than the brink it left) and hangs 1.7 s. Popped out three frames into the hang it still rises 9.8 m, drifts out at 4.5 m/s and lands 6.5 m past the lip, on the board. |
+| A box on that hang line | One hung 10.2 m over the lip is headed by the first unpopped hang (feet 9.6 m up). On the hang line itself (0.08 m inside the lip) the popped air takes it too: a mounted rider's crate box is 3.7 m tall and 0.85 m to each side. Hung **1.2 m inside the lip** it is clear of the popped air and still under the hang. |
+| **Valley**: 7 m west wall, 28 m flat, 4.5 m decked east wall | 27 m/s along the flat: a two-high stack on the line is smashed (12.5 m/s does it), a crab 14 m further on is spun from the board, and the pop-out lands 5.6 m past the east lip. |
+| **Cascade**: 3.5 → 5.5 m, then two pipes each 7 m deep behind a shared ridge (5 m and 3.5 m far walls) | A held direction clears the first ridge on the first swing, by 1 m: 0.8 s in the air, so have the Jump ready (missed, the next east hang is 5.8 m over the ridge and 1.35 s long). The hang over the second ridge tops out 6.8 m above it, and its Jump comes 1.6 s after the first; the flats run 20, 27 and 32 m/s. The last pop-out lands 7.3 m past its lip. |
 | **Rail into a pipe**: the short rail ending 1.3 m over the flat of a pipe whose west wall is 1 m high | The rider leaves the rail at 20 m/s, is in the air 0.27 s and touches down 5.3 m on, still rolling at 20 m/s; an 8 m flat leaves room. Its 3.5 m decked east wall is the exit: the pop-out lands 4 m past it, on the board. |
 | **Long rail**: 52 m falling 16.2 m (2.6 m in its first 3 m, then 11°, 22°, 16° and 8°) | Balanced with left and right it takes 2.42 s and leaves at 30.5 m/s. On the held travel stick alone the needle is past the edge and the grind is lost 1.23 s in, over the drop. |
 
@@ -164,12 +165,17 @@ coping, dropped straight into, or flown off.
   3.7 m tall, so "overhead" rows start 3.4 m up (a full on-foot jump heads 3.8 m). End such a stretch
   with the gate or another pipe, not a step.
 - **How far a pop-out carries depends on how high the hang was when Jump was pressed**: 2 m out of a low
-  hang, 5–7 m from the walls on this course. Give a decked exit ≥ 12 m of plain floor before anything
+  hang, 4–7 m from the walls on this course. Give a decked exit ≥ 12 m of plain floor before anything
   that hurts.
 - **Steps on an on-foot floor are jumped: keep them ≤ 1.6 m.** A tap jump rises 2.1 m and a held one
-  2.7 m; a charged ollie 1.8 m. Walking or rolling into a wall lower than the skater's own reach
-  (2.55 m, feet to raised fingertips; he stands 2.8 m) is a bump, never a ledge grab — the hanging body
-  would be standing on the floor it never left — so a step is not a way to stop a board.
+  2.7 m; a charged ollie 1.8 m. A lip lower than the skater's own reach above the ground under it
+  (2.55 m, feet to raised fingertips; he stands 2.8 m) is never hung from, walked into, rolled into,
+  jumped at or ollied at — the hanging body would be standing on the floor — so a step is a bump or a
+  landing and never a way to stop a board. A wall between 2.1 and 2.55 m therefore takes the held jump:
+  a tap comes up short of it and has no lip to catch.
+- **A deck before a lip is a place he stops.** A walker is on his board at the coping and waits there,
+  so the drop is his decision, made looking at it: put what he should read from there in view of the
+  lip, keep the checkpoint before the deck, and give the deck ≥ 3 m (the run is slowed over its last 2).
 - **Give a spine a pipe to transfer into, with a lower, decked far wall.** The transfer keeps the board
   and the speed; the second pipe turns that speed into a hang over its far lip, and the pop-out from
   there is the landing. Chained, with each floor well under the ridge before it, the spine is a
@@ -195,16 +201,21 @@ coping, dropped straight into, or flown off.
 npm run check:side-pipe
 ```
 
-`tools/test-side-pipe-lab.mjs` plays the course with the real player — right held, Jump in each east
-hang, a wait for each lift, ferry, timed pad, crusher and Whirler (`tools/side-pipe-lab-bot.mjs` reads
-each hazard's own clock) — and asserts each claim: the long lens, the drop-ins and the curve they are
+`tools/test-side-pipe-lab.mjs` plays the course with the real player — right held, Jump at each lip he
+is waiting on and in each east hang, a wait for each lift, ferry, timed pad, crusher and Whirler
+(`tools/side-pipe-lab-bot.mjs` reads each hazard's own clock) — and asserts each claim: the long lens,
+the walker brought to each lip at a walk and put on his board there, the wait (eight seconds of right
+held and nothing else leaves him on P0's coping; the stick let go and pressed again drops him in), the
+drop-ins and the curve they are
 drawn on, the pop-outs landing on the board (stick held or at rest) and the brake putting him on his feet
 within a few metres, the stick alone never leaving a pipe, the short first swing and
 the transfer, the pumped shortcut, the plunge's air and its box, the falling stairs, both trampoline
 bounces, the Mossback's shell, the lifts, ferry, pads and crushers (and that a run which waits for
 nothing dies there), every enemy kind, the valley's stack and crab, the switch being the only way out,
 the two cascade transfers, the short rail on the travel stick, the long rail lost on it and ridden on the
-balance, the grind button held too early, a step that is bumped and not grabbed, a thrown board coming
+balance, the grind button held too early, a step that is bumped and not grabbed (walked into, rolled
+into, and ollied at off the board at the take's own 5.5 m/s; a 2.4 m wall a tap jump comes up short of
+is not caught either, and a 3.2 m one still is), a thrown board coming
 to rest, the one-line brake and the checkpoint a death returns to.
 `npm run check:pipe` covers the unchanged symmetric pipe.
 
@@ -217,7 +228,8 @@ four yard walls answered from behind, and the whole width of the floor being pla
 The same command then runs `tools/test-vert-air-motion.mjs` (`npm run check:vert-air` on its own), which
 films nothing and measures everything: the hang off P0's east lip and the cascade's two transfers on the
 real rig — the trail going up and coming down, soles on the deck, nothing popping from one frame to the
-next, the drawn turn against the even one the simulation keeps.
+next (a turn is held to the pace its own length gives it: the cascade's first has 25 frames, its second
+58), the drawn turn against the even one the simulation keeps.
 
 It ends with `tools/test-vert-run-up.mjs` (`npm run check:vert-run-up`): the yard's rule, on fixture walls
 of every band.
@@ -228,7 +240,8 @@ RL=2.5 RR=7 F=1.5 DR=0 SPINE=2,2,5,3.5,6 MODES=right,right+pop,right+pop+pump no
 
 prints the swing-by-swing record for a pipe of any shape (`RL`/`RR` wall radii, `F` flat half-width,
 `DL`/`DR` decks, `SPINE=floorY,flatHalf,radius[,eastRadius,eastDeck]` for a pipe beyond the east ridge,
-plus `RAIL`, `ENEMY`, `BANG`). `pop` presses Jump once in each east hang.
+plus `RAIL`, `ENEMY`, `BANG`). The walker is told to go six frames after he is on the coping (`wait`
+leaves him there); `pop` presses Jump once in each east hang.
 
 ## The same course, head-on
 
@@ -260,10 +273,10 @@ it, and every input that names a direction is read against the camera:
 
 | Seen from the side | Seen from behind |
 |---|---|
-| right over the near coping: dropped in | **forward** over the near coping: dropped in |
+| right to the near coping: on the board at the lip, waiting; Jump or right again drops in, left steps him off | **forward** to the near coping; Jump or **forward** again drops in, **back** steps him off |
 | Jump in the far hang, stick held right: the pop-out (or the spine transfer over a shared ridge) | Jump in the far hang, stick held **forward** |
 | Jump in the near hang, stick held left: out over the near lip | ...stick held **back** |
-| at a lip on the board, slowly: he waits; right or Jump goes, left backs out | **forward** or Jump goes, **back** backs out |
+| rolled up to a lip on the board, slowly: he waits; right or Jump goes, left rolls him back off it | **forward** or Jump goes, **back** rolls him back off it |
 | left/right on a rail: the balance | left/right on a rail: the balance |
 | the direction held up a wall spins nothing in the hang until it is let go (it is the travel stick) | left and right in a hang are always a fresh direction: forward and back are travel, and they never spin |
 
@@ -272,7 +285,7 @@ steer along it** (the ride is locked to the line across it, exactly as in the si
 pipe as far off the centre line as he entered it. Both rails and the `!` over the switch pipe hang on the
 centre line: line up on the deck before the lip.
 
-Measured by `tools/test-side-pipe-lab-forward.mjs`: the route bot finishes in the same 124.9 s as on the
+Measured by `tools/test-side-pipe-lab-forward.mjs`: the route bot finishes in the same 126.5 s as on the
 side-scrolling lab, never more than a centimetre off the centre line with nothing holding it there, with
 the same 7 pop-outs, 3 spine transfers and 2 rails; the yard view has come round within 2 s of leaving
 the spawn, and forward at the walls takes the first three and fails at the fourth.
@@ -288,15 +301,39 @@ Both are opt-in and change nothing for a level that does not ask.
   stick let go — ended with the first press of "right" turning the board sideways for the landing. It
   applies only inside a `sideOn` zone.
 
-## Two shared rules this course changed
+## Shared rules this course changed
 
-Both live outside the side-on code and apply everywhere.
+They live outside the side-on code and apply everywhere.
 
-- **Ledge grabs from the ground** (`tryLedgeGrab` in `src/player.ts`). A grounded catch now needs the lip
-  above the skater's standing reach, 2.55 m at the baseline stature. The default `ledgeReach` is 2.4 m,
-  so with default tuning nothing is grabbed by walking or rolling into it; a level's `ledgeAssist` can
-  raise the reach past 2.55 m and bring grounded catches back for lips that tall. Catches in the air
-  are unchanged: a jump that comes up short still takes the lip.
+- **A ledge is hung from only where there is room to hang** (`tryLedgeGrab`, `catchLedgeMesh` and
+  `ledgeHasHangingRoom` in `src/player.ts`). From the ground a catch needs the lip above the skater's
+  standing reach, 2.55 m at the baseline stature. The default `ledgeReach` is 2.4 m, so with default
+  tuning nothing is grabbed by walking or rolling into it; a level's `ledgeAssist` can raise the reach
+  past 2.55 m and bring grounded catches back for lips that tall. In the air the same room is asked
+  for under the lip: where there is ground to stand on within that reach below it, under where he would
+  hang, the lip is not caught, whether he jumped, ollied or fell to it. (The first step of the course,
+  past the roll-in pipe's landing floor, is 1.6 m: caught out of an ollie, he hung from it with his feet
+  0.35 m off the floor.) He lands
+  on such a step or comes off its face. A lip with more than his reach of drop under it is caught as it
+  always was, and a vert's lip has no such rule: under one he lies along the curve, not down a wall.
+- **A hang's arms hold still** (`alignAuthoredLedgeHands` in `src/player.ts`). Three things shook them.
+  The first two were the hang's own, on every ledge in the game; the third is this kind of course's.
+  - When his arms would have to be longer than they are to reach his holds, the hung body is lifted a
+    little toward them. That lift was let fall every frame and put back in one step once a glove had
+    slipped 2 mm: a sawtooth every third frame, drawn as his wrists and elbows shivering. It now settles
+    to what his arms last needed and no lower, and is made up whenever it falls short, by however little.
+  - The side an elbow bends to was read again from an arm that had already been solved, so a frame that
+    needed that second pass drew both elbows 2 cm from where the frame before had drawn them. It is read
+    once, from the clip's own arm.
+  - Between the two walls that hold a side-on course to its plane, both gloves were set down on ONE point
+    over his head: the check on where a hand may be planted asked for room for a second body beside him,
+    and 1.06 m of plane has none. His shoulders are 0.54 m apart, so each sway of his chest in the idle's
+    fidget heaved all of him up 18 cm and let him down again. A hand now asks for an arm's width
+    (`LEDGE_HAND_HALF`), and his gloves are on the lip 0.64 m apart.
+
+  Hung still under the lip of the yard's third wall, in the game, over 188 steps: his wrists changed
+  direction 106 times each and travelled 3.1 and 2.6 m, his elbows 6.9 m, his hips 101 times. Now 5 and 1
+  times, 0.32 and 0.34 m, elbows 0.6 m, hips 4 times, which is the idle's own swing of his legs.
 - **Discarded boards** (`src/skateboard/discarded.ts`). A deck that no longer fits between two solids —
   here, two metres of board turning across the 1.06 m between the play plane's walls — was met at
   fraction zero by each face in turn, so the resolver handed back the place it started from every step:

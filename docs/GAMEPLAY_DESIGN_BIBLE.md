@@ -1789,7 +1789,7 @@ standing jumps were not measured and travel less.
 |---|---|---|
 | Coyote time | 0.28 s after leaving an edge (`coyoteTime`) | ≈ 2.5 m of travel at run speed, ≈ 3.4 m at cruise: a late press still jumps, so a take-off edge is not a precision test |
 | Edge catch | rolling or skating off a lethal edge slower than 6 m/s teeters at the brink (`teeterCatchSpeed`) | slow players are protected at every lethal edge; fast ones are not |
-| Ledge grab | in the air: lips up to 2.4 m above the feet, held up to 6 s (`ledgeReach`, `ledgeGrabTime`). From the ground: only a lip above the skater's standing reach (2.55 m, feet to raised fingertips), which the default reach never is | a jump that falls short of a platform *top* still catches its lip; a wall walked or rolled into is a bump, so a step is jumped (tap 2.1 m, held 2.7 m) and is never a way to stop a board; platforms and walls only, never crate tops |
+| Ledge grab | in the air: lips up to 2.4 m above the feet, held up to 6 s (`ledgeReach`, `ledgeGrabTime`), and only where there is room to hang: no ground to stand on within the skater's standing reach (2.55 m, feet to raised fingertips) under the lip. From the ground: only a lip above that reach, which the default reach never is | a jump that falls short of a platform *top* still catches its lip when the drop under it is more than 2.55 m; a lower lip is never hung from (he would be standing on the floor), so a step is jumped clean or bumped and is never a way to stop a board. A tap jump rises 2.1 m and a held one 2.7 m: a wall of 2.1–2.55 m takes the held jump. Platforms and walls only, never crate tops; a vert's lip is caught at any height (XV.16) |
 | Edge grinding | platform and road edges grind by default; rail snap radius 2.1 m (`railSnapDistance`) | a skater who comes up short can save the jump on the far edge's lip, and an edge on the line is always a grind option |
 
 ### XV.4 The board against single crates (measured)
@@ -1989,26 +1989,27 @@ walk, but a skater at cruise covers 38–48 m per cycle and needs the window ali
 
 A `vertramp` with `sideOn: true` is a vert the course CROSSES, ridden across its section: a halfpipe on a
 side-scrolling path, or the same pipe met head-on with the camera behind (test courses `side-pipe-lab`
-and `side-pipe-lab-forward`, which are one component list seen two ways). The walker is dropped in on the
-board as they cross the coping, and Jump in the hang with the stick held out over a lip (the spine
-transfer's input) pops the air out across it, landing on the board like any other air
-([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md)). The stick alone never leaves a pipe. Measured with a walk-in at 9 m/s and the stick held toward the exit (`tools/side-pipe-probe.mjs`,
-`tools/test-side-pipe-lab.mjs`):
+and `side-pipe-lab-forward`, which are one component list seen two ways). A walker who reaches the coping
+is put on his board there and waits; Jump, or the stick pressed on again, drops him in, and Jump in the
+hang with the stick held out over a lip (the spine transfer's input) pops the air out across it, landing
+on the board like any other air ([SIDE_ON_PIPES.md](SIDE_ON_PIPES.md)). The stick alone never leaves a
+pipe. Measured from a wait at each lip (4 m/s onto the wall) with the stick held toward the exit
+(`tools/side-pipe-probe.mjs`, `tools/test-side-pipe-lab.mjs`):
 
 | Fact | Value | What it means for layout |
 |---|---|---|
-| Automatic drop-in | 0.85 × the approach speed, never under 4 m/s | the deck is a mode change: the checkpoint goes before it |
-| Equal 3.5 m walls | first far-lip launch 18 m/s; popped out, it lands about 5 m past the lip, on the board at 4.5 m/s | exit deck plus the floor behind it ≥ 7 m; braked, that floor is on-foot platforming 0.6 s and 1.7 m later |
-| 2.5 m wall against a 7 m wall | the first swing climbs 4.45 m; the second clears it; X held on the walls, or a charged approach, clears it at once | a far wall ≥ 2.5 × the entry wall asks for a second swing; pumping is the shortcut, never the only way |
-| Spine into a second pipe (5 m wall, 3.5 m decked far wall) | lands on its near wall at 15 m/s, launches off the far lip at 23 m/s; popped out, lands 5.6 m past it | the far deck is the spine's landing; the transfer keeps the board, the pop-out ends it |
+| A lip reached on foot | a run is slowed over the last 2 m of the deck; at the coping he is on his board, tail set on it, and waits. Jump or the stick pressed on afresh drops in at 4 m/s; the stick pressed back steps him off | the deck is a mode change and the drop is his decision: the checkpoint goes before it, what he should read is in view of the lip, and the deck is ≥ 3 m |
+| Equal 3.5 m walls | 20 m/s across the flat; first far-lip launch 16.5 m/s, a hang 3.5 m over the lip; popped out, it lands 3.9 m past the lip, on the board at 4.5 m/s | exit deck plus the floor behind it ≥ 7 m; braked, that floor is on-foot platforming 0.6 s and 1.7 m later |
+| 2.5 m wall against a 7 m wall | the first swing climbs 3.8 m; the second clears it by 1.8 m (0.85 s in the air); X held on the walls, or a charged approach, clears it at once | a far wall ≥ 2.5 × the entry wall asks for a second swing; pumping is the shortcut, never the only way |
+| Spine into a second pipe (5 m wall, 3.5 m decked far wall) | lands on its near wall at 12.5 m/s, launches off the far lip at 21.7 m/s; popped out, lands 5.3 m past it | the far deck is the spine's landing; the transfer keeps the board, the pop-out ends it |
 | Spine into a 5 m ramp with an open far side | rolls out at 23–30 m/s, still on the board | only for a skated stretch: a smash lane and 40 m of run-out that ends in a gate or another pipe, never a step |
-| Hang over the entry lip on the swing back | about 7 m | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m) |
+| Hang over the entry lip on the swing back | feet 6 m over it between equal 3.5 m walls, 5 m over a 2.5 m wall facing a 7 m one | a crate floated ≥ 5.6 m over a lip is hang-only (a double jump heads 5.5 m), and the first swing back reaches it |
 | Rail caught from a hang | the grind starts at 3.5 m/s | run exit rails downhill, steepest first |
 | Grind button held up the wall | a lip stall on the coping, not a hang; it settles back into the pipe | a rail over a lip starts ≥ 3 m above it, so it reads as "press in the air", and nothing behind a bare wall is the stall's fault |
 | A mounted rider's crate-contact box | about 3.7 m tall, 0.85 m to each side | where a rider arrives still on the board (a rail's landing, an open ramp's run-out) a floor crate or a checkpoint trips him under 12.5 m/s; overhead rows start 3.4 m up |
-| Deep pipe: 8.5 m entry wall, 3.5 m decked far wall | 30 m/s on the flat; the air off the far lip has 10.5 m in it (5.5 m more than the brink) and hangs 1.7 s; popped out at once it still lands 6.6 m past the lip | the severe way down: a plunge by board; hang a reward for the *ridden* air 1.2 m inside the lip, clear of the popped one |
-| Valley: 7 m drop into a 28 m flat | 27.5 m/s along the flat | a stack on the line is a smash (≥ 12.5 m/s), an enemy beyond it a spin at twice walking speed |
-| Spine cascade: each floor 7 m under the ridge before it | the second ridge is crossed 7.5 m above it, 1.7 s after the first | chained spines are a staircase down; no pump is needed after the first |
+| Deep pipe: 8.5 m entry wall, 3.5 m decked far wall | 29 m/s on the flat; the air off the far lip has 10.1 m in it (5.1 m more than the brink) and hangs 1.7 s; popped out at once it still lands 6.5 m past the lip | the severe way down: a plunge by board; hang a reward for the *ridden* air 1.2 m inside the lip, clear of the popped one |
+| Valley: 7 m drop into a 28 m flat | 27 m/s along the flat | a stack on the line is a smash (≥ 12.5 m/s), an enemy beyond it a spin at twice walking speed |
+| Spine cascade: each floor 7 m under the ridge before it | the first ridge (3.5 m wall into a 5.5 m one) is cleared by 1 m on the first swing, 0.8 s in the air; the hang over the second tops out 6.8 m above it, 1.6 s after the first | chained spines are a staircase down; no pump is needed after the first. A first ridge 2 m over the entry wall is a short window from a standing drop-in, and a miss costs one swing (the next hang is 5.8 m over it) |
 | Short rail (2.6 m down in 3 m, then 1.8 m in 9 m) | 0.93 s, leaves at 20 m/s, needs no balance | the rail's debut; it can end 1.3 m over the flat of the next pipe (8 m flat, 1 m near wall) |
 | Long rail (52 m falling 16 m) | 2.4 s balanced, leaves at 30.5 m/s; on the held travel stick the grind is lost 1.2 s in | the escalation, behind its own checkpoint; a rail over about a second long is a balance exam |
 | The air off a rail on a side-on line | the stick toward travel never spins the board | a balanced grind can be followed by "right" without a sideways landing |
@@ -2016,9 +2017,9 @@ transfer's input) pops the air out across it, landing on the board like any othe
 Popping out of a pipe lands on the board at about 4.5 m/s, like any other air. He gets off it there as he
 does anywhere, by braking or by rolling to a stop (the brake has him on his feet 0.6 s and 1.7 m after
 the touchdown), so the stretch after a pipe can still be plain platforming: steps of 1.6 m or less
-(a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands from the ground: a
-wall lower than the skater's standing reach (2.55 m) is a bump (XV.3), so a step cannot be used to stop
-a board.
+(a tap jump rises 2.1 m), gaps, boxes to spin. Nothing there is climbed by the hands: a lip lower than
+the skater's standing reach above the floor under it (2.55 m) is a bump from the ground and is not caught
+out of a jump or an ollie either (XV.3), so a step cannot be used to stop a board.
 
 **On one line, measured on the same course** (the table in [SIDE_ON_PIPES.md](SIDE_ON_PIPES.md) has the
 rest). A jump leaves the ground when Jump is *let go*: a tap carries 5.25 m, a 14-frame hold 5.3 m (5.85 m
@@ -2034,8 +2035,9 @@ double jump (5.5 m) does not. A stack's cap drops into the lane when its base is
 **The same pipe met head-on** (a forward stretch, the camera behind; `side-pipe-lab-forward` is the
 side-scrolling course seen that way, part for part). Mark each vert `sideOn`: without a side-on zone
 round it that is what says the course crosses it. Every move is then the same, read against the camera:
-forward over the near coping drops him in, Jump in the far hang with the stick forward pops him out, back
-at a lip he is waiting on backs him out, and left and right only ever lean a rail. Three things change for
+forward to the near coping puts him on his board there, Jump or forward again drops him in, Jump in the
+far hang with the stick forward pops him out, back at a lip he is waiting on takes him off it, and left
+and right only ever lean a rail. Three things change for
 the designer:
 
 - **The camera.** A rig trailing low behind the rider loses him behind the near deck on the way down and
@@ -2119,8 +2121,9 @@ decided by **the lip's height above that point** (`rise / 2 + lipRise` for a qua
 It needs a direction held and a run of ≥ 4 m/s up the wall: a walker who lets go of the stick before the
 wall simply stops on it. A ledgeless top no higher than his hips (≤ 1.5 m) is left alone. Keep the first
 metre of a deck clear and keep boxes out of the run-up lane (one stops the run). These are the rules of
-every vert, whatever part drew it and wherever it stands, the inside of a side-on pipe included: crossing
-a pipe's lip from its deck still drops a walker in on his board, but down in one on foot he is on his feet.
+every vert, whatever part drew it and wherever it stands, the inside of a side-on pipe included: reaching
+a pipe's lip along its deck still puts a walker on his board (on the coping, waiting to be told to go), but
+down in one on foot he is on his feet.
 
 On foot **in the air**, a vert's lip is an ordinary ledge: jumped to or fallen past, it is caught, hung
 from and climbed out of like a platform's edge (the body lies along the curve under it). A walker who meets
@@ -2130,7 +2133,9 @@ straight face and the roll back, or the roll alone off a transition). Let go of,
 and drops facing it; under a vert's lip that drop meets the transition and is rolled back onto the flat.
 
 **On the board, the lip of a side-on vert reached along its deck is three things, by speed** (measured as
-the last of the deck begins; the board's own cruise is 12 m/s, a push-off is 5):
+the last of the deck begins; the board's own cruise is 12 m/s, a push-off is 5). On foot it is always the
+first of them: a walker or a runner is slowed over the last 2 m of the deck and is on his board at the
+coping, waiting, and there the stick pressed back steps him off it onto his feet:
 
 | Speed at the lip | The rider | Design consequence |
 |---|---|---|
@@ -2998,8 +3003,9 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
   its own checkpoint (XV.14).
 - [ ] On a one-line stretch a stack of boxes stands ≥ 9 m back from a brink or a timed footing, a
   hovering enemy ≥ 10 m, and every place to wait has ≥ 4 m of fixed floor (XV.14).
-- [ ] No step on an on-foot route is taller than 1.6 m unless it is meant to be caught out of a jump:
-  nothing lower than the skater's reach (2.55 m) is grabbed from the ground (XV.3).
+- [ ] No step on an on-foot route is taller than 1.6 m unless it is meant to be caught out of a jump, and
+  a lip meant to be caught has more than the skater's reach (2.55 m) of drop under it: nothing lower is
+  hung from, from the ground or in the air (XV.3).
 - [ ] Every side-scroll stretch reads left to right (owner's rule, November 2026): its travel zone heads
   east (`dir: 'E'`), any fixed side view over it looks from the south, and bonus rounds run toward +X. A
   route that doubles back plays the westward leg into the screen, never side-on (Powderkeg Peak's upper

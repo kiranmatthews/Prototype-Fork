@@ -54,7 +54,11 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     tick({moveX:1});assert.equal(p.ledgePhase,'climb');cases++;
     catchLedge({moveY:1},direct);
     for(let f=0;f<8;f++)tick({moveY:-1});
-    assert.equal(p.state,'air','away input lost drop control');cases++;
+    // Let go of, a hang whose clip has the dismount takes a beat on the wall (0.15 s) and then hops off
+    // it; the older presentation is in the air at once.
+    assert.ok(p.state==='air'||p.ledgePhase==='off','away input lost drop control');
+    for(let f=0;f<12&&p.state==='hang';f++)tick({moveY:-1});
+    assert.equal(p.state,'air','the dismount never left the wall');cases++;
   }
   const catches=[];
   for(const side of [-1,0,1]){

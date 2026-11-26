@@ -137,9 +137,10 @@ trampoline pads, trick gates/rails, return portals, and procedural wood/bamboo
 paths.
 
 `Side Pipe Lab` is a side-scrolling test course whose path runs through
-halfpipes seen across their section: walking off a deck over the coping drops
-you in on the board, Jump in the hang with the stick held out over a lip pops
-you out across it, still on the board. It is 830 m long, its height is
+halfpipes seen across their section: walking up to a coping puts you on the
+board at the lip, Jump (or the stick pressed on again) drops you in, and Jump
+in the hang with the stick held out over a lip pops you out across it, still
+on the board. It is 830 m long, its height is
 the other subject, and it has twelve pipes (a pump and a spine, an 8.5 m plunge, a 28 m
 valley, a `!` headed out of a hang, a three-pipe spine cascade, a rail from
 one pipe into the next and a 52 m rail down to the gate) joined by on-foot

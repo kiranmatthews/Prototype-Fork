@@ -1,9 +1,11 @@
 // The Side Pipe Lab route bot: the REAL Player and Level, driven the way a
 // side-scrolling player holds the pad. Right is held from the first step to
 // the gate; the bot adds a jump at each gap, step and falling stair, a spin
-// at each enemy, box and checkpoint, Jump in each east hang (the pop-out and
-// the spine transfer), the grind button at the rail — and it WAITS, as a
-// player does, for a lift, the ferry, a timed pad, a crusher and the Whirler.
+// at each enemy, box and checkpoint, Jump at each lip he has walked up to
+// (he is on his board there, waiting to be told), Jump in each east hang (the
+// pop-out and the spine transfer), the grind button at the rail — and it
+// WAITS, as a player does, for a lift, the ferry, a timed pad, a crusher and
+// the Whirler.
 // Every wait reads the hazard's own clock; nothing here reaches into the
 // player to move it.
 //
@@ -72,21 +74,24 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
    * the travel stick alone and `balance: 'neutral'` lets go of the stick for
    * the length of each rail; `heldBounce` takes the trampoline from further
    * back with Jump held as it lands; `stompTurtle` lands on the Mossback and
-   * rises straight off its shell; `until` ends the run early.
+   * rises straight off its shell; `go: 'stick'` tells him to drop in off a
+   * coping by letting the stick go and pressing it again instead of with
+   * Jump, and `go: 'wait'` never tells him; `until` ends the run early.
    */
   const start = (opts = {}) => {
     const { pump = false, spin = true, pop = true, grind = true, until = () => false, seconds = 240, from = null, depth = 0,
-      jumpInAt = null, patient = true, balance = true, heldBounce = false, stompTurtle = false, trace = false, traceX = null, ride = false } = opts;
+      jumpInAt = null, patient = true, balance = true, heldBounce = false, stompTurtle = false, trace = false, traceX = null, ride = false, go = 'jump' } = opts;
     level.reset(true);
     p.respawn(level, true);
     if (from) { p.pos.set(from[0], from[1], 0); p.prevPos.copy(p.pos); }
-    const log = { mounts: [], hangs: [], stalls: [], exits: new Map(), transfers: new Map(), kills: [], waits: new Map(),
+    const log = { mounts: [], perches: [], hangs: [], stalls: [], exits: new Map(), transfers: new Map(), kills: [], waits: new Map(),
       switchAt: null, grinds: [], maxZ: 0, deaths: 0, bails: 0, grabs: 0, finished: false, t: 0, checkpoints: 0,
       respawns: [], masksSpent: 0, firstEastReach: new Map(), eastmostBeforeSwitch: -Infinity, trouble: [], maxHeadingZ: 0,
       peak: new Map(), bounces: [], rides: [], cratesBroken: 0, topSpeed: new Map(), minY: Infinity, maxY: -Infinity,
       stairs: new Set(), pads: new Set(), stomps: [] };
     let jump = 0, jumpFrames = 14, stuck = 0, lastX = p.pos.x, spinWas = false, spinAge = 0, grindWas = false, grindAge = 0, hang = 0, heldWas = false;
-    let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: false,
+    let perched = 0;
+    let prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: false, perch: false, pipe: false,
       x: p.pos.x, surface: p.surfaceName, grounded: p.grounded, crates: level.crates.filter(c => c.alive).length, vV: 0 };
     const alive = new Map(level.enemies.map(e => [e, e.alive]));
     const swing = new Map(); // pipe -> { side, peak } for the wall currently being climbed
@@ -182,6 +187,10 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
         });
       }
       if (standing || (straightUp && !p.grounded)) moveX = 0;
+      // AT A LIP he walked up to he is on his board, tail on the coping, waiting. The stick that brought him
+      // there asks for nothing; Jump tells him to go (or the stick let go and pressed again).
+      perched = p.dropInPerch && p.dropInTipT < 0 ? perched + 1 : 0;
+      if (go === 'stick' && perched >= 6 && perched < 12) moveX = 0;
       // THE LONG RAIL: let go of the travel stick and keep the needle in the middle
       // (the stick held at the catch is the travel stick and tips nothing until it is let go)
       grindAge = p.state === 'grind' ? grindAge + 1 : 0;
@@ -205,6 +214,7 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       // POP OUT: one Jump in each east hang, right still held — the spine transfer's input
       hang = pop && p.vertAir && at && x > at.cross ? hang + 1 : 0;
       if (hang >= 3 && hang < 7) held = true;
+      if (go === 'jump' && perched >= 6 && perched < 9) held = true;
       input.jumpHeld = held; input.jumpPressed = held && !heldWas; input.jumpReleased = !held && heldWas; heldWas = held;
       const foe = spin && level.enemies.find(e => e.alive && e.kind !== 'turtle' && (e.kind !== 'spinner' || e.state === 'in') &&
         Math.abs(e.group.position.x - x) < (p.freeSkate ? 5.5 : 2.6) && Math.abs(e.group.position.y - y) < 2.5);
@@ -232,13 +242,18 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       log.maxZ = Math.max(log.maxZ, Math.abs(p.pos.z));
       log.minY = Math.min(log.minY, p.pos.y); log.maxY = Math.max(log.maxY, p.pos.y);
       if (p.freeSkate && p.grounded && p.groundHit?.halfpipe) log.maxHeadingZ = Math.max(log.maxHeadingZ, Math.abs(p.axisF.z));
-      if (p.freeSkate && !prev.free && p.groundHit?.halfpipe) log.mounts.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, speed: p.speed });
+      // on his board at a coping he came to on foot, and then on the wall under it
+      if (p.dropInPerch && !prev.perch) log.perches.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, t: log.t, fromFoot: !prev.free, arrived: (p.pos.x - prev.x) / dt, waited: 0 });
+      if (p.dropInPerch && log.perches.length) log.perches.at(-1).waited += dt;
+      if (p.freeSkate && p.grounded && p.groundHit?.halfpipe && !prev.pipe && (prev.perch || !prev.free))
+        log.mounts.push({ pipe: here?.name, x: p.pos.x, y: p.pos.y, speed: p.speed, fromPerch: prev.perch });
       if (p.vertAir && !prev.vert && here)
         log.hangs.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', vV: p.vVel, t: log.t });
       if (p.vertAir && here) log.peak.set(here.name, Math.max(log.peak.get(here.name) ?? -Infinity, p.pos.y));
       if (here && p.freeSkate && p.grounded && Math.abs(p.pos.x - here.cross) < here.flatHalf)
         log.topSpeed.set(here.name, Math.max(log.topSpeed.get(here.name) ?? 0, Math.abs(p.speed)));
-      const stalled = p.lipStallT > 0;
+      // (a wait at a coping is held on the lip stall's own fields, and is not one)
+      const stalled = p.lipStallT > 0 && !p.dropInPerch;
       if (stalled && !prev.stall && here) log.stalls.push({ pipe: here.name, side: p.pos.x < here.cross ? 'west' : 'east', t: log.t });
       if (!stalled && prev.stall && log.stalls.length) Object.assign(log.stalls.at(-1), { seconds: log.t - log.stalls.at(-1).t,
         backInPipe: !p.isBailing && here !== null && p.pos.x > here.westLip && p.pos.x < here.eastLip });
@@ -291,6 +306,7 @@ export function makeCourseBot({ p, level, CONST, lab, makeInput, parts }) {
       if (trace && (!traceX || (p.pos.x > traceX[0] && p.pos.x < traceX[1])) && (i % trace === 0 || p.state !== prev.state || p.freeSkate !== prev.free))
         console.log(`## t${log.t.toFixed(2)} x${p.pos.x.toFixed(2)} y${p.pos.y.toFixed(2)} v${p.speed.toFixed(1)} vV${p.vVel.toFixed(1)} ${p.state}/${p.freeSkate ? 'board' : 'foot'}/${p.grounded ? 'gnd' : 'air'}${p.vertAir ? '/vert' : ''}${standing ? '/WAIT' : ''} ${p.surfaceName}${p.state === 'grind' ? ` bal ${p.balance.toFixed(2)} stick ${moveX}` : ''} lt${level.time.toFixed(2)}`);
       prev = { free: p.freeSkate, vert: p.vertAir, bail: p.isBailing, state: p.state, deaths: p.totalDeaths, masks: p.masks, stall: stalled,
+        perch: p.dropInPerch, pipe: p.grounded && !!p.groundHit?.halfpipe,
         x: p.pos.x, surface: p.surfaceName, grounded: p.grounded, crates, vV: p.vVel };
       if (p.state === 'finished') { log.finished = true; return true; }
       return !!until(log, p);
