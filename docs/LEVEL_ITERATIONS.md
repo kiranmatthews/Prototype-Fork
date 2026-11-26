@@ -13808,3 +13808,123 @@ back at a lip he is waiting on backs him out, and left and right only lean a rai
   wall 2 comes down on the lip line and is stood on the deck's edge for one frame before it is dropped
   back in (the deck turns 54° in that frame, twice in the take); and the first frame of an air out of a
   pipe moves the board about half a metre against his hips.
+
+## 2026-11-26 — A hang back onto a straight face; a pop-out that begins as the hang ended
+
+- **Brief:** the two single-frame jerks left at the end of the last entry, both in Side Pipe Lab: a hang
+  off the dead-straight face of yard wall 2 is stood on the deck's edge for a frame before it is dropped
+  back in, and the first frame of an air out of a pipe throws the board against his hips. Done when the
+  hang re-seats on the wall with no frame on the deck edge and the pop-out's first frame is continuous,
+  both held by a test, with `npm run check:side-pipe` passing and no tuning changed.
+- **Elapsed:** about 50 min from the prompt (05:37 UTC) to both fixes playing locally under their new
+  checks, and 1 h 50 min to the last build and browser pass. It then waited on its own branch
+  (`claude/amazing-lovelace-fdye90`) for the owner's word, and went out through `main` at 07:45 UTC,
+  2 h 08 min after the prompt, about 20 min of that the wait.
+- **Levels:** none edited. Side Pipe Lab and its forward copy play differently only on the wall yard's
+  straight-faced walls (2, 3 and 4).
+- **Runtime:** `src/player.ts`. `src/tuning.ts` is untouched.
+- **Docs:** `docs/SIDE_ON_PIPES.md`, `docs/VERT_RUN_UP.md` (its list of checks).
+
+**The hang.** A hang begins as far as 1.2 m under a lip. On yard wall 2 that is on the straight face, so
+the line it rises and falls on is the face's own plane: the lip's line, where the deck behind the lip
+begins. Coming back down it crosses nothing (its depth in the wall is exactly zero all the way), so the
+pipe's crossing test never met it, and the ray under it grazed the edge of the deck. That edge got him
+three ways, each reproduced with the real player before anything was changed:
+
+- from on top: a hang that tops out over the lip landed on the deck's edge. On yard wall 2 he was `ride`,
+  grounded on the deck, for one step; at rest on a flat he was off his board, and the next step the
+  drop-in mounted him again 0.4 m under the lip. Drawn, that step turned the board 56.9° and moved it
+  0.93 m against his hips;
+- from a hand under it: a hang that tops out within 0.35 m under the lip was lifted onto the deck by the
+  landing's own ledge forgiveness (0.29 m up in a step);
+- from a head's height under it: a hang leaving at under about 6.6 m/s hit the deck's underside the step
+  after it began, and was put down at rest at the top of the curve, 0.19 m lower.
+
+What happened after the deck depended on which way the wall faced. The yard's walls rise to the west in
+an east zone, and the drop-in took him back. On the same wall facing east (the run-up check's fixture) he
+stayed on the deck, off his board, and with the stick still held walked off the back of it: "the stick
+alone never leaves a pipe" was not true of a straight-faced wall.
+
+Two rules now. Under a side-on hang's own point the deck of the pipe it is over is not ground, nor a
+ledge, nor a ceiling (`queryGround`; a probe out over the lip still finds it, which is how a pop-out
+knows it has somewhere to land). And a hang that is coming down level with a straight face, on that
+face's plane, is met by the face at its own height (`sideOnHangFaceReturn`, asked by `pipeCrossHit`
+when nothing was crossed): it is the hit a body that flew into the wall gets, so the ordinary landing
+turns his fall down the wall and he rides away tail first, as off any pipe. Rising he is beside the
+face and not on it.
+
+| Ridden at (fixture wall, 2.5 m curve + 1.35 m face) | The hang tops out | Before | Now |
+| --- | --- | --- | --- |
+| 14 m/s | 0.64 m under the lip | stopped under the deck, put down at the top of the curve at rest | met 0.66 m under the lip |
+| 14.5 m/s | 0.29 m under it | lifted 0.29 m onto the deck | met 0.30 m under |
+| 15 m/s | 0.04 m over it | stood on the deck's edge | met 0.01 m under |
+| 16 m/s | 0.70 m over | stood on the deck's edge | met 0.09 m under, at 6.7 m/s |
+| 18 m/s | 2.07 m over | stood on the deck's edge | met 0.11 m under, at 11.4 m/s |
+
+In every row he stays on his board, rides the wall down and out along the flat, and no frame of the way
+back turns the board as much as 1° or moves it more than 0.10 m against his hips. On yard wall 2
+itself, from 16 m/s: met 0.09 m under the lip, under 1° and 0.07 m a frame.
+
+What that changes in play, on those walls only: he comes back onto the wall at the lip with his fall's
+own speed (6 m/s there) where the drop-in seated him 0.4 m under it at 4 m/s, so he is at the foot of the
+wall about 1.5 m/s faster (22 against 20.4). A hang off a curve comes back to the place on the curve it
+left, as before: the course's twelve pipes finish in the same 124.9 s with the same pop-outs.
+
+**The pop-out.** In the hang the whole of him lies along the wall; the air out over the lip is a level
+one. The moment the hang ended, the ease that lays him onto a wall started taking him off it from where
+it is fastest: a fifth of the way upright in the first frame, or two fifths, by what was under him. At
+P0 that frame turned the board 17.9° and moved it 0.53 m against his hips; through the game's animation
+runtime on the fixture wall, 35.9° and 1.03 m. He comes up on a curve of his own now
+(`SIDE_ON_CARRY_LEVEL`): eased in and eased out over 0.3 s, or in a shorter air over four fifths of the
+time until his wheels are due down (worked out once, at the pop), and never in under 0.18 s. It goes on
+across a touchdown that comes sooner; a wall met in that time, or a spill, takes over. Nothing in it
+feeds the flight.
+
+| | First frame of the air | Up off the wall in | At touchdown |
+| --- | --- | --- | --- |
+| P0, popped three frames into the hang | 0.8° and 0.03 m (then 2.3°, 3.5°) | 0.28 s | on his wheels |
+| Fixture wall, a long air (0.45 s) | 0.9° and 0.02 m | 0.28 s | on his wheels |
+| Fixture wall, a short air (0.20 s) | 2.1° and 0.12 m | 0.18 s | on his wheels |
+
+One thing found on the way: in the air the deck is squashed and stretched a little, so a rotation taken
+out of its drawn matrix is not one (it read 25° in a frame in which the deck's own axes turned under
+2°). The new checks read the deck's own axes instead.
+
+**Checks.**
+
+- `tools/test-vert-run-up.mjs` (new section): the five rows above and two more (the stick let go in the
+  hang; a wall with 2.3 m of face), each met by the face, at its own height, with no step on the deck,
+  on his board to the flat, the way back within 4° and 0.15 m a frame; a hang off a plain curve for
+  reference; then three pop-outs, a long air off a curve, a long one off the straight face and a short
+  one, each held on its first frames (4° and 0.15 m), on every frame against the one before it (5° and
+  0.1 m), and to being on his wheels by touchdown.
+- `tools/test-side-pipe-lab.mjs` §9e and §9f: the same two things in the lab itself, in the scheme it
+  runs in: yard wall 2 from the east at 16 m/s, and P0's pop-out.
+- Each rule taken out alone fails those by name: without the deck rule the 14 m/s hang is stopped under
+  the deck ("the face he left meets him, under its lip (1.35 m under)"); without the return the hang
+  falls past the whole face to the curve; without the curve "the first of that air turns the deck no
+  more than 35.85° in a frame and moves it no more than 1.03 m against his hips". Against the code as it
+  was, §9e fails on "the hang comes down without a step on the deck behind the lip" and §9f on "17.9,
+  14.3, 11.4° ... 0.53, 0.43, 0.34 m".
+- `npm run check:side-pipe`: all five pass (6 min 12 s), the course in the same 124.9 s. `npm run
+  check:pipe` (the symmetric pipe): pass. `npm run build`: pass.
+- Real browser, the production build, real key events, lite and then full render, no console errors and
+  no failed requests, the build stamp reading `Codex/sol fork`: yard wall 2 ridden at from the first
+  wall's deck (a hang 0.62 m over the lip, met by the face 0.006 m under it at 6.0 m/s, no step on the
+  deck, 0.51° and 0.07 m a frame at most on the way back), and P0 walked into and popped out of (first
+  frames 0.74°, 1.52°, 1.62° and at most 0.06 m, on his wheels 0.28 s later, landed on the deck on his
+  board).
+  Stills of the frame the face meets him and of the middle of the pop-out were looked at.
+
+**Known and left.**
+
+- The face meets a returning hang at the lip, which is what the brief sketched. A hang off a curve
+  comes back to the place it left; on a straight face that place is up to 1.2 m under the lip, and
+  letting him fall to it instead would make the two the same (and return exactly the speed he left
+  with). It is a one-line choice in `sideOnHangFaceReturn` if the yard should feel that way.
+- A pop-out has a quarter turn to make, so the middle of it moves faster than its first frames: at most
+  7.4° and 0.22 m a frame at P0. The 0.15 m limit is held on the first frames, where the jump was, and
+  the rest is held to changing evenly.
+- At the foot of any transition the rig is laid level again within a step or two (26° in one frame at
+  20 m/s on a 2.5 m curve). Every pipe does it, the drop-in checks already step over it by name, and it
+  was not part of this.

@@ -190,7 +190,10 @@ flown off the edge), walks and runs him up to a lip on foot (slowed over the las
 board at the coping with his pelvis never moved more than 0.16 m in a frame, waiting until Jump or a fresh
 press of the stick, stepped off again by
 the stick pressed back, and a jump thrown from the deck left a jump), and rides him at a quarter (into its
-air, and out over its lip onto the deck). `npm run check:side-pipe` runs it after
+air, and out over its lip onto the deck). Last,
+it rides him at a straight-faced wall so that the hang tops out under the lip, at it and over it (met by
+the face each time, never by the deck behind it: `docs/SIDE_ON_PIPES.md`), and pops him out of a long air
+and a short one, with the picture of each held frame to frame. `npm run check:side-pipe` runs it after
 the course test.
 
 Review by eye is frame by frame in the real game (`?launchReview`, one fixed step at a time). Stepped that
