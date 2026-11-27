@@ -14076,7 +14076,7 @@ along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the
   check:side-platform`: 1,736 m and 28 stations finished without a death) and played again in a browser
   in lite and at full render, the new lab included. (At full render the new lab's step was run a second
   time on its own: the script had measured distance after a fixed wait, and was changed to wait on the
-  distance.) It still waits on that word.
+  distance.) The owner's word came that evening, and it was pushed to `main` at 23:13 UTC.
 - **Levels:** none edited.
 - **Runtime:** `src/player.ts`, `src/characterLab.ts`, `src/lifePortrait.ts`, `src/main.ts`,
   `src/character/settings.ts`, `src/character/collisionDimensions.ts`, `src/spin-effects/smear.ts`.
