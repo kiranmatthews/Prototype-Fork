@@ -1890,7 +1890,8 @@ Two consequences follow from the measured forgiveness:
 ### XV.10 Enemy vocabulary (from `src/level.ts` and `src/enemies/`)
 
 Enemies are `{t:'enemy', foe, p, range, speed}` and patrol back and forth along one axis around `p`
-(X in a corridor, Z in a side-scroll) over `range` each way (default 5 m) at `speed` (default 3 m/s).
+(X by default, which is along a side-scrolling line; `yaw` 90 or 270 turns the patrol onto Z) over
+`range` each way (default 5 m) at `speed` (default 3 m/s).
 Enemies on terrain turn back at an unsupported patrol end instead of walking off it. Timings below
 are the defaults in the code; sizes are the hit box (width × height).
 
@@ -1921,7 +1922,7 @@ level's `boulderChase` for a pursuer) rather than inventing behaviour in level d
 | `mover` | platform on an axis: `amp` travel each way (4 m), `speed` in **radians per second** (0.6), `phase` in radians; optional `orbit`, `spin` (degrees per second), `bounce` | sinusoidal: period = 2π / `speed` (10.5 s at the default), peak deck speed = `amp × speed` (2.4 m/s) | moving platforms, rafts, lifts, floating logs |
 | `crusher` | stomping block over a deck: `cycle` (3.2 s), `phase` in seconds | hangs 38 % (1.2 s) → **slams 8 %** (0.26 s, lethal) → rests 24 % (0.77 s, a solid block) → rises 30 % (0.96 s) | pistons, smashers, drop pillars, falling slabs |
 | `pendulum` | swinging bob: `len` (5 m), `amp` radians (1), `speed` radians per second (1.6), `phase` | period 2π / `speed` (3.9 s); the bob crosses the centre line every half period (2.0 s) | swinging logs, axes and blades |
-| `stone` | rolling boulder patrolling along Z: `range` half-travel (20 m), `speed` (6 m/s), `radius` (0.9 m) | constant speed, turns at each end | rolling logs, barrels, patrolling boulders |
+| `stone` | rolling boulder patrolling along Z, or along X with `axis: 'x'`: `range` half-travel (20 m), `speed` (6 m/s), `radius` (0.9 m); it needs flat ground under all of its run | constant speed, turns at each end | rolling logs, barrels, patrolling boulders |
 | `firetiki` | turning carved head sweeping fire: `amp` sweep (28°, ≤ 60), `range` reach (7.1 m, 1–16), `cycle` (7.8 s, 4–30), `phase` in seconds | turns while cool 54 % (4.2 s) → **warning 16 %** (1.25 s, still) → **fires 23 %** (1.8 s, sweeping ±65 % of `amp`) → cool 7 % | fire statues, flamethrowers, steam vents |
 | `ropeswing` | grab rope swinging in a plane: `len` (6 m), `amp` radians (0.85), `speed` (0 = natural pendulum), `phase`; `range` + `cycle` make the anchor travel | — | vines, swing ropes, hanging hooks |
 | `spinbridge` | timber the player spins open: `cycle` opening seconds; `hold` folds it after that long, otherwise it latches | — | Great Gate plank, drawbridges |
@@ -1948,6 +1949,31 @@ level's `boulderChase` for a pursuer) rather than inventing behaviour in level d
 `mover`, `pendulum` and `ropeswing`, and a *fraction of the cycle* on a `phasepad`. `speed` is m/s on
 a `stone` and an enemy but radians per second on a `mover` and a `pendulum`. To stagger two hazards
 by half a cycle: crusher `phase = cycle / 2`; mover `phase = π`; phasepad `phase = 0.5`.
+
+**Each of these, played.** `side-platform-lab` is a side-scrolling bench with one station for every
+platforming object `side-pipe-lab` does not carry ([SIDE_PLATFORM_LAB.md](SIDE_PLATFORM_LAB.md)). What it
+measured, and a layout has to allow for:
+
+- **A deck to be stepped onto reaches the floor.** A walker under 6 m/s is held at the brink of a drop
+  that would kill him, so a `mover` that stops even 10 cm short of the floor's edge cannot be walked onto.
+  Lap the edge by a few centimetres, and let a lift fill its shaft: a gap beside a deck is somewhere to
+  fall into.
+- **A `mover` with `orbit` on `axis: 'z'` turns one way only:** over the top going west, under going east.
+- **A `ropeswing`** 6 m long, hung 8 m over the floor and 5 m out from the brink, is caught by a tap jump
+  whenever it is on the near side of straight down when he reaches it (jump as it swings toward you). At
+  `amp` 0.6 that is all of the near half; at 0.85 its end lifts out of reach at the near end of the swing.
+  Let go, he carries 6.8 m. A travelling one is caught 1 to 3 m out from the brink.
+- **A `pendulum`** at `yaw` 90 swings across a side-scrolling line (seen only as high and low), and its
+  gallows stands 7.2 m either side of it; at `yaw` 0 it swings along the line and is seen whole.
+- **A `sentry`** sees 32 m, in front of it and behind, and fires 0.7 m over the floor. On one line, cover
+  along the way is a hole 1.6 m deep; put a wall taller than its muzzle at its back.
+- **A roof over a walker** is at least 2.6 m up (lower, the ground under it misreads or a jump ends in the
+  slab), and a jump under 2.6 m rises 1.16 m.
+- **A portal on the ground is sunk 0.3 m** into it: it tests the point at a walker's feet.
+- **A checkpoint on a board line** is banked by a spin, a stomp or 12.5 m/s; at the board's 12 m/s cruise
+  a rider trips over it and does not bank it.
+- **A rope bridge** (`bridgeSpan`) 22 m long gives 0.5 m under a runner, 0.8 m under a body stood at its
+  middle and 1.4 m when jumped on.
 
 ### XV.12 Rhythm in metres
 
@@ -2975,6 +3001,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] Crumble warnings are ≥ 0.5 s; no lethal hazard sits within one beat after a new enemy or explosive
   lesson.
 - [ ] "Keep moving" and "wait" do not share a stretch, except at a deliberate peak beat.
+- [ ] A deck that is stepped onto reaches the floor's edge (a walker under 6 m/s is held at a lethal brink),
+  and nothing a walker passes under is lower than 2.6 m (XV.11).
 
 **Per enemy**
 - [ ] Its kind debuts on roomy ground off the fast line and away from lethal edges, or right after its
@@ -2983,6 +3011,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
 - [ ] Its counter is readable at the approach speed: a charger's windup is visible before the dash can
   arrive; a floater swoops while the rider is on its rail (XVII.4–XVII.5).
 - [ ] On a board line it is a hazard with a counter (contact is a hit), never a surprise at cruise.
+- [ ] A `sentry` cannot see a checkpoint: it sees 32 m in front of it AND behind (a wall at its back; a
+  hole 1.6 m deep is cover on one line: XV.11).
 - [ ] A tool enemy (turtle shell, crab carcass, enemy step) cannot walk off its strip, and losing it never
   soft-locks the route.
 
