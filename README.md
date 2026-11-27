@@ -157,6 +157,22 @@ the camera follows from behind and forward on the stick is down the course
 is built from the side-scrolling lab's own component list, so the two stay
 the same. Direct link: `?playtest&level=side-pipe-lab-forward`.
 
+`Side Platform Lab` is the second side-scrolling test course: one station for
+each platforming object the pipe lab does not carry. Twenty-eight of them over
+1,736 m, each opening on a checkpoint (`K` and `L` warp between them): ramps,
+rolling ground, a timber road, rocks, ice, deep sand, water to swim and water
+that kills, arrow crates and steel, explosives, spin bridges, rope bridges, rope
+swings, a wheel of decks, a springboard, a turntable and a lift, pendulums,
+rolling stones, fire heads and lava, thorns, the bull, the turret and the bird;
+then a board line (ropes to grind, a speed pad, a ferrying rail, a trick gate
+and a trick rail, a spine to ride, a ball in a pipe, glass and the plane that
+takes the board away) and a finale of portals, a cloud with a gem, the bonus
+stone, the crystal and the gate.
+Direct link: `?playtest&level=side-platform-lab`. See
+[docs/SIDE_PLATFORM_LAB.md](docs/SIDE_PLATFORM_LAB.md); `npm run
+check:side-platform` plays every station and the whole course with the real
+player.
+
 `Jungle Cliff` is an authorized clean-room layout reconstruction from
 Kraftpaper's NST Maker mod: a winding jungle climb, west-facing cliff traverse,
 upper temple corridor, and condensed portal-linked death route. It ships only

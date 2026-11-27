@@ -14070,6 +14070,13 @@ along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the
   change was replayed on top of it and built, checked and played again: 1 h 33 min in all to the last
   browser pass (11:37 UTC). It waits on its own branch (`claude/amazing-lovelace-fdye90`, a
   fast-forward of `main`) for the owner's word to publish.
+  On 27 November `main` gained the Side Platform Lab (the next entry) without this change, so the
+  published game still carried both characters. The branch was merged with it and the merged tree
+  built (940,212,618 bytes), checked (`npm run check:character-lab`, and the new lab's own `npm run
+  check:side-platform`: 1,736 m and 28 stations finished without a death) and played again in a browser
+  in lite and at full render, the new lab included. (At full render the new lab's step was run a second
+  time on its own: the script had measured distance after a fixed wait, and was changed to wait on the
+  distance.) It still waits on that word.
 - **Levels:** none edited.
 - **Runtime:** `src/player.ts`, `src/characterLab.ts`, `src/lifePortrait.ts`, `src/main.ts`,
   `src/character/settings.ts`, `src/character/collisionDimensions.ts`, `src/spin-effects/smear.ts`.
@@ -14163,3 +14170,92 @@ velocity, state, hitbox height and the measured pickup bounds are the same on ev
 - Opened at boot (`?tool=characterlab`), the Character Lab's full-body views (the three-quarter view it
   opens on, and Front) are blocked by scenery at Treehouse Trail's spawn; the Head close-up is clear. The
   build published before this one does the same, view for view.
+
+## 2026-11-27 — Side Platform Lab: a second side-scrolling bench, one station for every other platforming object
+
+- **Brief:** "Make another test level like this that incorporates all remaining types of platforming object
+  (ropes, swingy bridges etc.) ...everything, for more exhaustive playtesting", then: "All existing types
+  that are already in the game I mean".
+- **Elapsed:** about 4 h from the brief (≈ 09:55 UTC) to the published commit (≈ 13:55 UTC). Most of it went on
+  playing each object until the layout around it was fair, not on placing parts.
+- **Level:** Side Platform Lab (`side-platform-lab`, `src/levels/side-platform-lab.ts`), new. Direct link
+  `?playtest&level=side-platform-lab`. Side Pipe Lab is unchanged.
+- **Runtime:** none. `src/level.ts` gains the level's import and its line in the built-in list, and
+  nothing else. No tuning was touched.
+- **Docs:** `docs/SIDE_PLATFORM_LAB.md` (new), design bible XV.10, XV.11 and its checklist, README.
+
+**What it is.** 1,736 m on one line, seen from the south through the other lab's long lens, in 28 stations.
+Each opens on a checkpoint (35 in all), shows its object once where a mistake is cheap, and once more with
+something at stake. In course order: ramps and a kicker; a `terrain` strip; a `woodpath`; a log, boulders,
+a statue and a `wallpath`; ice and an ice chute; deep sand; a pool to swim and water that kills; empty and
+five-hit boxes, a wooden arrow, steel crates, the `metal` part and a steel arrow; TNT, nitro and the green
+`!`; two spin bridges, one that folds again; two rope bridges, one with rotten boards; four rope swings, one
+whose anchor travels; a wheel of decks, a sliding springboard, a turntable and a lit lift; five pendulums,
+four across the line and one along it; two rolling stones, one along the line and one across; torches, three
+fire heads and lava; thorns and a tumble slab; the bull; the turret; the bird; then on the board: two ropes
+to grind, a speed pad and a wall of boxes, a rail that travels, a trick gate and a trick rail, a
+grindosaurus, an angry ball in a side-on pipe, glass, a sign and the plane that takes the board away; and a
+finale of a portal over a chasm, a door in the air to a cloud with the blue gem, a steel arrow up to the
+bonus stone, the crystal and the gate.
+
+**Not in either lab, and why.** `pipe` and `outline` are old save formats that load as other parts;
+`worldmap` is the campaign's map table; `comboorb` starts a run that has to reach the gate in one combo,
+which a bench of 28 stops cannot honour. Loops are a field on a mesh: one needs a second lane beside the
+first and 30 m/s, and this course is one line. The test fails by name if the game gains a component type
+that neither lab carries.
+
+**What building it found out.** All but the last two of these moved a part, and the rules are in the bible
+(XV.11).
+
+- A walker slower than 6 m/s is held at the brink of a lethal drop. The wheel's decks stopped 10 cm short
+  of the floor and could not be stepped onto. They now lap its edge by 5 cm; the turntable's ends lap both
+  brinks; the lift fills its shaft (through a 20 cm gap beside it he dropped to the shaft floor).
+- A `mover` on an `orbit` turns one way only (over the top going west): the wheel is ridden under.
+- Rope swings: at the default 0.85 rad the rope's end lifts out of reach at the near end of its swing, and
+  the catch was two slices of a third of a second per round. At 0.6 rad, of 32 tap jumps off the brink, the
+  19 begun as the rope swung toward him caught it and 12 of the 13 begun as it swung away missed. The
+  travelling one's anchor turned 5 m out and was not caught once in 32 tries: it now turns 2.2 m out.
+- The springboard's bounce (16 m/s, 3.75 m) did not reach the shelf from the far end of its slide. It now
+  slides no further from the wall than its middle can throw him.
+- The turret: on one line every piece of cover hides everything behind it, so three steel crates meant it
+  never fired until the last was passed. Cover along the way is now two holes, 1.6 m deep (at 1.2 m its
+  muzzle still sees into one). It also sees behind itself: stood at the next station's checkpoint, he was
+  shot in the back. It has a wall at its back.
+- A roof 1.7 to 2.3 m over a walker misreads the ground or ends a jump in the slab; 2.6 m is clean.
+- A portal with its foot on the floor did not take a walker (it tests the point at his feet): sunk 0.3 m.
+- Three thorn patches 5 m apart left no room to jump again after a 4.95 m tap: 7 m apart.
+- A `terrain` strip's near kerb hid him to the chest from the side: no kerbs here.
+- A `pendulum` across the line has its gallows 7.2 m off it, in the air beside a 6 m floor: plinths. One
+  along the line is seen whole, and was added.
+- A rope bridge's deck is moved by a hook the game's loop calls after each step. The first measurements
+  left it out and found a rigid floor; the scripted player now steps as the game does, and the deck gives
+  0.5 m under a runner, 0.8 m under a body stood at its middle and 1.4 m when jumped on.
+- On the board line a rider at the 12 m/s cruise trips over a checkpoint and does not bank it: it takes a
+  spin, a stomp or 12.5 m/s. Nothing was moved for this; the doc says so.
+
+**Checks.**
+
+- `npm run check:side-platform` (`tools/test-side-platform-lab.mjs`, new, with the scripted player
+  `tools/side-platform-lab-bot.mjs`): the data contract; the vocabulary (every component type but the four
+  above, every crate kind and every enemy kind in one of the two labs, and 50 fields that make an object a
+  different object on this one); every station crossed from its own checkpoint with what its object is for
+  done there (253 s of play); the stations that move crossed again at other points of their rounds
+  (rope swings at 14 in all while building); a player who only holds right dying at the kicker's gap, the
+  lethal water, a nitro, the second swing's pit, the wheel's pit, a pendulum, the stone, the fire, the
+  thorns and the turret's corridor; the turret firing at a body in the open and not at one behind the
+  steel, in a hole or at the next checkpoint; the bull running down a body on its floor; and the whole
+  course, spawn to gate.
+- `npm run check:levels` (83 levels; the side-scroll direction check counts 18 zones), `npm run build`.
+- The full suite was not asked for and was not run.
+- Browser, on the production build: `?playtest&level=side-platform-lab&lite` at 97 stops along the course,
+  then one full-render pass at 33, with no console errors; with real keys, a run from the spawn and a jump
+  onto the bonus stone, which started the bonus round.
+
+**Known and left.**
+
+- A trick gate and a portal face along the line, so the side view shows them edge-on: a tall dark slab
+  and a thin purple ring.
+- On a boulder's flank the scripted player's first Jump press popped him 0.2 m up the rock and showed the
+  board for two frames; the second press jumped. Seen at one spot, not chased.
+- The stations are a bench, not a difficulty curve: they are in the order of the survey, walked first and
+  ridden last.

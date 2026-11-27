@@ -194,6 +194,7 @@ import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { WALLPLANT_LAB_LEVEL } from "./levels/wallplant-lab";
 import { EMBER_COURT_LEVEL } from './levels/ember-court';
 import { SIDE_PIPE_LAB_FORWARD_LEVEL, SIDE_PIPE_LAB_LEVEL } from './levels/side-pipe-lab';
+import { SIDE_PLATFORM_LAB_LEVEL } from './levels/side-platform-lab';
 import { EmberCourtPresentation } from './fire-lab/game-court';
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
@@ -2681,6 +2682,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   }, // source-owned long course for fast, isolated geometry iterations
   { id: 'side-pipe-lab', name: SIDE_PIPE_LAB_LEVEL.name, data: SIDE_PIPE_LAB_LEVEL }, // side-scrolling course through halfpipes seen across their section
   { id: 'side-pipe-lab-forward', name: SIDE_PIPE_LAB_FORWARD_LEVEL.name, data: SIDE_PIPE_LAB_FORWARD_LEVEL }, // the same course met head-on, the camera behind the rider
+  { id: 'side-platform-lab', name: SIDE_PLATFORM_LAB_LEVEL.name, data: SIDE_PLATFORM_LAB_LEVEL }, // side-scrolling bench for every platforming object the pipe lab does not carry
   {id:'ember-court',name:EMBER_COURT_LEVEL.name,data:EMBER_COURT_LEVEL},
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
