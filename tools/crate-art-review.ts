@@ -141,7 +141,6 @@ for (const hits of [5,4,3,2,1,0]) button(`${hits} fruit`, () => {
   setCrateArtState(all[selected].art, { hits }); pulseCrateArt(all[selected].art);
 });
 button('Bone Man face', () => setLifePortraitStyle('skull'));
-button('Alternate face', () => setLifePortraitStyle('alternate'));
 button('Spent switch', () => { selected = CRATE_ART_KINDS.indexOf('bang'); select.value = String(selected); layout(); setCrateArtState(all[selected].art, { used: true }); pulseCrateArt(all[selected].art); });
 button('Checkpoint', () => { selected = CRATE_ART_KINDS.indexOf('checkpoint'); select.value = String(selected); layout(); hit(); });
 button('MAX / 480p', () => { native = !native; renderer.setPixelRatio(native ? devicePixelRatio : Math.min(1, 480 / innerHeight)); renderer.setSize(innerWidth, innerHeight); renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%'; });

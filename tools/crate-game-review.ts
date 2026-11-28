@@ -60,7 +60,6 @@ button('Standard', () => { level.setTimeTrial(false); });
 button('MAX/native', () => { g.crtGuestSettings.setEnabled(false); g.renderQualitySettings.setRegularResolution(null); });
 button('480p/CRT', () => { g.renderQualitySettings.setRegularResolution(480); g.crtGuestSettings.setEnabled(true); });
 button('Bone Man head', () => { g.setCharacterHeadStyle('skull'); });
-button('Alternate head', () => { g.setCharacterHeadStyle('alternate'); });
 button('Hide panel', () => panel.open = false);
 const render = g.renderer.render.bind(g.renderer);
 g.renderer.render = (...args: any[]) => {

@@ -34,8 +34,8 @@ try {
     floor.rotation.x = -Math.PI / 2; floor.position.y = -.1; floor.receiveShadow = true; scene.add(floor);
     const player = new Player(scene);
     const deadline = performance.now() + 30000;
-    while (player.riggedCartoonHandState !== 'ready' || player.meshyBoolieRooHeadLoadState !== 'ready') {
-      if (performance.now() > deadline) throw new Error(`Character assets not ready: ${player.riggedCartoonHandState}, ${player.meshyBoolieRooHeadLoadState}`);
+    while (player.riggedCartoonHandState !== 'ready') {
+      if (performance.now() > deadline) throw new Error(`Character assets not ready: ${player.riggedCartoonHandState}`);
       await new Promise(resolve => setTimeout(resolve, 25));
     }
     player.boardG.visible = false;

@@ -50,23 +50,27 @@ try{
  const receipt={parent:{fruit:12,lives:4,boxes:5,totalBoxes:80,deaths:2,modern:false},bonus:{fruit:26,lives:3,boxes:18,totalBoxes:18}};
  const frame=bonusTransferFrame(receipt,1.1);
  const sources=Object.fromEntries(['fruit','boxes','lives'].map((kind,i)=>[kind,{x:100+i*420,y:620,width:70,height:70}]));
- for(const initial of ['skull','alternate']){
-  setLifePortraitStyle(initial);
+ // Skull is the only head, so a stand-in portrait plays the other one, switched to and then from:
+ // the painter takes any URL, and still has to follow the switch and ignore a late load of the old.
+ const shipped=lifePortraitUrl('skull'),standIn=shipped.replace(/[^/]*$/,'stand-in-head.png');
+ for(const [initial,selected] of [[shipped,standIn],[standIn,shipped]]){
+  setLifePortraitStyle('skull');
   const hud=new BonusTransferHud(element());
   hud.painter.draw=()=>false; // Text rendering is independently covered by the HUD checks.
-  const original=images.findLast(image=>image.src===lifePortraitUrl(initial));
-  assert.ok(original,'reward painter ignored the current character at construction');
-  const selected=initial==='skull'?'alternate':'skull';
-  hud.setLifeFaceUrl(lifePortraitUrl(selected));
+  assert.ok(images.at(-1).src===shipped,'reward painter ignored the current character at construction');
+  hud.setLifeFaceUrl(initial);
+  const original=images.findLast(image=>image.src===initial);
+  hud.setLifeFaceUrl(selected);
   const current=images.at(-1);current.finish();original.finish();
+  assert.ok(current!==original&&current.src===selected,'a portrait switch loaded nothing new');
   const imageCount=images.length;
-  hud.setLifeFaceUrl(lifePortraitUrl(selected));
+  hud.setLifeFaceUrl(selected);
   assert.equal(images.length,imageCount,'unchanged portrait reloaded every HUD update');
   for(precrt of [false,true]){
    painted.length=0;hud.update(frame,sources);
    if(precrt)hud.paint(ctx,2560,1440);
    assert.ok(painted.length>=2,'reward total or flying life disappeared');
-   assert.ok(painted.every(url=>url===lifePortraitUrl(selected)),'old head leaked into bonus rewards');
+   assert.ok(painted.every(url=>url===selected),'old head leaked into bonus rewards');
    assert.ok(hud.icons.some(icon=>icon.slot===0)&&hud.icons.some(icon=>icon.slot===1),'reward flight lost the shared crate/fruit model slots');
   }
   hud.update(null);assert.equal(hud.icons.length,0,'reward icons survived the return to normal play');

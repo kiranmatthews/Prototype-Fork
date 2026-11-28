@@ -18,10 +18,6 @@ export const BASE_CHARACTER_HITBOX_HEIGHT = 0.92;
 
 const HEAD_REST_HEIGHT: Readonly<Record<CharacterHeadProfileId, number>> = {
   skull: MESHY_HEAD_REST_HEIGHT,
-  // Source runtime Y span 0.7890625 × the authored 0.46 rest scale. Keep this
-  // scalar here so collision math does not eagerly pull the evaluation-only
-  // alternate-head mesh out of its dynamic chunk.
-  roo: 0.7890625 * 0.46,
 };
 
 /**

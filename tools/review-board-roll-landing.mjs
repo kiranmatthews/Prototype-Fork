@@ -17,9 +17,8 @@ try {
     await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay, null, { timeout: 180000 });
     const stamp = await page.locator('.hud-build').textContent();
     assert.match(stamp, /Codex\/sol fork/);
-    await page.evaluate(async ({headStyle,x,y}) => {
+    await page.evaluate(async ({x,y}) => {
       const g = window.__game, p = g.player, l = g.getLevel();
-      if (headStyle === 'alternate') p.setCharacterHeadStyle('alternate');
       await p.preparePresentationAssets();
       const T = g.scene.position.constructor;
       // An isolated clear deck above the lab's obstacles. All motion after
@@ -52,7 +51,7 @@ try {
         }
         return render(...args);
       };
-    }, {headStyle:process.env.ROLL_REVIEW_HEAD || 'skull',x,y});
+    }, {x,y});
     const advance = async (frames, stopOnContact = false) => {
       await page.evaluate(({frames, stopOnContact}) => Object.assign(window.__rollReview, { budget: frames, stopOnContact }), {frames, stopOnContact});
       await page.waitForFunction(() => window.__rollReview.budget === 0);

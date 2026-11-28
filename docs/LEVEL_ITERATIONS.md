@@ -14061,6 +14061,116 @@ along the curve and not down a wall. A wall of 2.1 to 2.55 m therefore takes the
 - From a standing drop-in the cascade's first transfer is a 0.77 s window. If it plays too tight, the fix
   is in the level (a lower east wall on its first pipe, or a taller west one), and it was not asked for.
 
+## 2026-11-26 — BoolieRoo and Cargo Roo removed; the Skull is the only head
+
+- **Brief:** to save space, remove the BoolieRoo and Cargo Roo characters from the game and from the
+  picker, with their associated assets.
+- **Elapsed:** 41 min from the prompt (10:04 UTC) to the removal building and playing in a browser under
+  its checks. `main` had moved meanwhile (another chat's side-on pipe work, published 10:25 UTC), so the
+  change was replayed on top of it and built, checked and played again: 1 h 33 min in all to the last
+  browser pass (11:37 UTC). It waits on its own branch (`claude/amazing-lovelace-fdye90`, a
+  fast-forward of `main`) for the owner's word to publish.
+  On 27 November `main` gained the Side Platform Lab (the next entry) without this change, so the
+  published game still carried both characters. The branch was merged with it and the merged tree
+  built (940,212,618 bytes), checked (`npm run check:character-lab`, and the new lab's own `npm run
+  check:side-platform`: 1,736 m and 28 stations finished without a death) and played again in a browser
+  in lite and at full render, the new lab included. (At full render the new lab's step was run a second
+  time on its own: the script had measured distance after a fixed wait, and was changed to wait on the
+  distance.) The owner's word came that evening, and it was pushed to `main` at 23:13 UTC.
+- **Levels:** none edited.
+- **Runtime:** `src/player.ts`, `src/characterLab.ts`, `src/lifePortrait.ts`, `src/main.ts`,
+  `src/character/settings.ts`, `src/character/collisionDimensions.ts`, `src/spin-effects/smear.ts`.
+  `src/tuning.ts` is untouched.
+- **Docs:** `docs/CHARACTER_LAB.md`, `docs/HUMANOID_RIG.md`, `public/characters/meshy-head/README.md`,
+  `art/bone-head-hud/README.md`.
+
+**Space.** The release is 940,188,063 bytes against a 1,000,000,000 byte budget, where it was
+995,517,562: 55.3 MB less, and 59.8 MB of headroom where there was 4.5 MB. Nearly all of it is Cargo
+Roo's model (`cargo-roo.glb`, 54.3 MB). The checkout is 93.2 MB lighter (95 files), 36 MB of that Cargo
+Roo's authoring sources, which never shipped.
+
+**What went.**
+
+- BoolieRoo, the alternate head: its mesh module and generated geometry
+  (`src/character/meshyBoolieRooHead*.ts`), its textures (`public/characters/meshy-boolieroo-head/`), its
+  painted blink (`src/character/rooPaintedBlink.ts`, `rooBlinkPaint.ts`, `rooBlinkTiming.ts`,
+  `public/characters/roo-texture-blink/`), its importer and blink check
+  (`tools/import-meshy-boolieroo-head.mjs`, `tools/test-roo-painted-blink.mjs`), and its `roo` head
+  profile with the shorter hitbox that went with it.
+- Cargo Roo, the fitted skin: its model and portrait (`public/characters/cargo-rider/`), its runtime
+  (`src/character/cargoRider*.ts` and the two take and expression tables), the face and performance
+  controls it added to the Character Lab, the tools that built and reviewed it (`tools/cargo-rider/`), and
+  its authoring sources (`art/cargo-rider/`, the Blender file among them).
+- From the player: both loaders, the per-frame blink and skin steps, the skin's break-apart and
+  spin-smear hooks, the alternate-head diagnostics (`getAlternateHeadDiagnostics` on the page's hooks),
+  and the two lines the skin had added to each render-batch rebuild.
+- Everything above is in the repository's history before this entry (`git checkout 6d8a33b7 -- <path>`
+  brings a path back).
+
+**What stayed, on purpose.**
+
+- The head-style setting, with Skull as its one member: `setCharacterHeadStyle`, the saved key
+  `solProtoCharacterHeadStyleV1` and the per-head profile envelope in the saved proportions. About a
+  dozen tools and labs pin the style with `setCharacterHeadStyle('skull')`, and another head can be added
+  as a second member. The Character Lab's **Character appearance** row therefore shows one button, Skull.
+- `public/roo.png`. It was BoolieRoo's HUD portrait, but it is also the page's home-screen icon and the
+  plain face of a Life crate whose sculpt has not loaded. The launch screen's title is not a character
+  and was not touched.
+
+**A browser that had one of them selected** comes back as the Skull. Its saved style (`alternate` or
+`cargo`) is not one this build has, so the source-owned head stands. The proportions it saved while
+BoolieRoo was on carry BoolieRoo's head values in the flat settings and the Skull's in the envelope: the
+Skull's are the ones restored, with the body as it was left, and BoolieRoo's profile is dropped at the
+next save. Nothing asks for a removed file.
+
+**The Skull plays as it did.** The same scripted play (2,400 steps of running, weaving, jumps, double
+jumps and spin presses under the production animation scheme; on the Lab it also takes in a ledge hang,
+a death and a respawn) was run on `main` with and without this change, on Codex Geometry Lab and on
+Treehouse Trail, and once more on the Lab with render batching switched off and on mid-run. Position,
+velocity, state, hitbox height and the measured pickup bounds are the same on every step, byte for byte.
+
+**Checks.**
+
+- `tools/test-character-head-profile-settings.mjs` rewritten for one profile: defaults, persistence,
+  legacy and revision migrations, import and export, and a save from a build that had BoolieRoo (loaded,
+  imported, and re-saved without the retired profile).
+- `tools/test-cartoon-glove.mjs`: the first player is built over a browser store holding `cargo` and is
+  the Skull; `alternate` and `cargo` asked for by a stale script leave him and his split-screen peer the
+  Skull, head sliders where they were.
+- `tools/test-character-lab.mjs`: the removed modules, assets, tools and sources are held absent by path,
+  beside the earlier removals it already held; the lab offers Skull and neither removed name.
+- `tools/test-meshy-head.mjs`, `tools/test-bonus-transfer.mjs`, `tools/test-crate-portraits.mjs` and the
+  character part of `tools/test-factory-defaults.mjs` (with its fixture) follow the single head. The
+  browser review tools that offered a second head (`crate-game-review`, `crate-art-review`,
+  `interaction-browser-review`, `bone-yard-browser-review`, `review-board-roll-landing`,
+  `test-mask-browser`, `test-break-apart-browser`, `test-character-rigid-batches-browser`,
+  `compare-prototype-budget`, `mall-measured-browser`) lose only that.
+- Broken on purpose, each is caught: a saved `cargo` accepted again, the setter left unnormalized, and a
+  retired profile carried along.
+- `npm run check:character-lab`: pass (ten suites, 112 s). `tools/test-character-rigid-batches.mjs`,
+  `test-spin-smear.mjs`, `test-modern-life-hud.mjs`, `test-bonus-transfer.mjs`,
+  `test-crate-portraits.mjs`: pass. `npm run build` and `npm run check:release`: pass.
+- Real browser, the production build, real key events, lite and then full render, the build stamp
+  reading `Codex/sol fork`, no console errors, no failed requests: a fresh browser runs and jumps through
+  Codex Geometry Lab as the Skull with Bone Head in the HUD; the Character Lab's picker offers Skull
+  alone, a head slider lands in its profile and Reset all restores it; a browser that had saved
+  `alternate`, and one that had saved `cargo`, with BoolieRoo's head values in their proportions, come
+  back as the Skull they had tuned, play, and drop the retired profile at the next save. Stills of play,
+  of the lab and of the returning browser were looked at.
+
+**Known and left.**
+
+- `npm run check:look` already fails on `main`, in the tuning part of `tools/test-factory-defaults.mjs`
+  (`crawlSpeed` is 1.1 where the captured fixture has 3.5), before it reaches the character part. That
+  part was run on its own and holds.
+- Three standalone tools that no `check:` script runs also fail on `main` for reasons of their own:
+  `test-low-spin.mjs` (it waits for spin rings that are switched off), `test-game-hud-pipeline.mjs` (a
+  source pattern for `collectFruit` that no longer matches) and `test-jungle-sequel-bank-clearance.mjs`
+  (the component it looks up by name is not found).
+- Opened at boot (`?tool=characterlab`), the Character Lab's full-body views (the three-quarter view it
+  opens on, and Front) are blocked by scenery at Treehouse Trail's spawn; the Head close-up is clear. The
+  build published before this one does the same, view for view.
+
 ## 2026-11-27 — Side Platform Lab: a second side-scrolling bench, one station for every other platforming object
 
 - **Brief:** "Make another test level like this that incorporates all remaining types of platforming object

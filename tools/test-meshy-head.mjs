@@ -27,11 +27,8 @@ const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 try {
   const headApi = await server.ssrLoadModule('/src/character/meshyHead.ts');
-  const alternateHeadApi = await server.ssrLoadModule('/src/character/meshyBoolieRooHead.ts');
   const { MESHY_HEAD_ASSET } = await server.ssrLoadModule(
     '/src/character/meshyHead.generated.ts');
-  const { MESHY_BOOLIEROO_HEAD_ASSET } = await server.ssrLoadModule(
-    '/src/character/meshyBoolieRooHead.generated.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
   const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
@@ -43,7 +40,6 @@ try {
   } = headApi;
 
   const component = createMeshyHead();
-  const alternate = alternateHeadApi.createMeshyBoolieRooHead();
   assert.equal(component.triangles, 16536);
   assert.equal(component.mesh.geometry.getAttribute('position').count, 9930);
   assert.equal(component.mesh.geometry.getAttribute('uv').count, 9930);
@@ -67,24 +63,6 @@ try {
   near(component.mesh.scale.x, MESHY_HEAD_REST_SCALE);
   near(component.mesh.scale.y, MESHY_HEAD_REST_SCALE);
   near(component.mesh.scale.z, MESHY_HEAD_REST_SCALE);
-  assert.equal(alternate.triangles, 15634);
-  assert.equal(alternate.mesh.geometry.getAttribute('position').count, 9689);
-  assert.equal(alternate.mesh.geometry.getAttribute('uv').count, 9689);
-  assert.equal(alternate.mesh.geometry.getIndex().count, 46902);
-  assert.equal(MESHY_BOOLIEROO_HEAD_ASSET.indexedVertices, 9689);
-  alternate.mesh.geometry.computeBoundingBox();
-  assert.deepEqual(alternate.mesh.geometry.boundingBox.min.toArray(),
-    [-0.5, 0, -0.259765625]);
-  assert.deepEqual(alternate.mesh.geometry.boundingBox.max.toArray(),
-    [0.5, 0.7890625, 0.26171875]);
-  near(alternate.mesh.scale.x, 0.46);
-  assert.equal(alternate.mesh.material.normalMap, null);
-  assert.equal(alternate.mesh.material.roughnessMap.colorSpace, THREE.NoColorSpace);
-  assert.equal(alternate.mesh.material.metalnessMap, null);
-  assert.equal(alternate.mesh.material.metalness, 0);
-  assert.deepEqual(alternateHeadApi.meshyBoolieRooHeadTextureDiagnostics(), {
-    state: 'loading', loaded: 0, requested: 2, error: null,
-  });
 
   const rider = new THREE.Group();
   rider.name = 'procedural-rider';
@@ -107,7 +85,6 @@ try {
   headPresentation.name = 'head-presentation';
   head.add(headPresentation);
   headPresentation.add(component.mesh);
-  headPresentation.add(alternate.mesh);
   rider.userData.sculptRuntime = { joints: {}, deformations: [] };
   const layer = new CharacterProportionLayer(rider);
 
@@ -162,7 +139,6 @@ try {
   assert.deepEqual(neck.position.toArray(), neckPosition.toArray());
   assert.deepEqual(torsoMarker.scale.toArray(), torsoMarkerScale.toArray());
   assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
-  assert.deepEqual(alternate.mesh.scale.toArray(), [0.46, 0.46, 0.46]);
   layer.clear();
   near(head.position.y, 0.095);
   near(head.position.z, 0);
@@ -235,9 +211,8 @@ try {
     provenance.webTextures.roughness.sha256,
   ]);
   assert.match(playerSource, /createMeshyHead\(/);
-  assert.match(playerSource, /createMeshyBoolieRooHead\(/);
-  assert.match(playerSource, /import\('\.\/character\/meshyBoolieRooHead'\)/,
-    'alternate head must remain a first-selection dynamic import');
+  assert.doesNotMatch(playerSource, /meshyBoolieRooHead|cargoRider/i,
+    'the Skull is the only head: the removed alternate head and fitted skin must stay out of the player');
   assert.match(playerSource, /setCharacterHeadStyle/);
   assert.match(playerSource, /socket-head-visual-center/);
   assert.match(playerSource, /headLookSocket\.getWorldDirection/);
@@ -266,41 +241,16 @@ try {
   assert.doesNotMatch(playerSource,
     /neck-volume|const skull =|const muzzle =|eye-white-|earOuterGeo|const crown =/);
   assert.match(labSource, /\['Head', 'head'\]/);
-  assert.match(labSource, /\['alternate', 'BoolieRoo'\]/);
+  assert.match(labSource, /\['skull', 'Skull'\]/);
+  assert.doesNotMatch(labSource, /BoolieRoo|Cargo Roo/);
   assert.match(mainSource, /getMeshyHeadDiagnostics/);
-  assert.match(mainSource, /getAlternateHeadDiagnostics/);
+  assert.doesNotMatch(mainSource, /getAlternateHeadDiagnostics/);
   assert.match(JSON.parse(packageSource).scripts['check:character-lab'],
     /test-meshy-head\.mjs/);
 
-  const [alternateGenerated, alternateProvenanceSource, ...alternateTextureBytes] =
-    await Promise.all([
-      readFile(resolve(root, 'src/character/meshyBoolieRooHead.generated.ts')),
-      readFile(resolve(root, 'public/characters/meshy-boolieroo-head/provenance.json'), 'utf8'),
-      readFile(resolve(root, 'public/characters/meshy-boolieroo-head/base-color.webp')),
-      readFile(resolve(root, 'public/characters/meshy-boolieroo-head/roughness.webp')),
-    ]);
-  const alternateProvenance = JSON.parse(alternateProvenanceSource);
-  assert.equal(MESHY_BOOLIEROO_HEAD_ASSET.sourceSha256,
-    '3785121eba8296c773d3d41834ae2e44eb4b7da471576772fe4eea0c1d9aacf3');
-  assert.equal(sha256(alternateGenerated), alternateProvenance.generatedModuleSha256);
-  assert.deepEqual(alternateTextureBytes.map(sha256), [
-    alternateProvenance.webTextures.baseColor.sha256,
-    alternateProvenance.webTextures.roughness.sha256,
-  ]);
-  assert.equal(
-    alternateProvenance.sourceArchive.file,
-    'Meshy_AI_BoolieRoo_0902221249_texture_fbx.zip',
-  );
-  const alternateImporterSource = await readFile(
-    resolve(root, 'tools/import-meshy-boolieroo-head.mjs'),
-    'utf8',
-  );
   for (const productionSource of [
     playerSource,
     labSource,
-    alternateGenerated.toString('utf8'),
-    alternateProvenanceSource,
-    alternateImporterSource,
   ]) {
     assert.doesNotMatch(
       productionSource,

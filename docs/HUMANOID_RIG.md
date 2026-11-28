@@ -45,7 +45,7 @@ around that attachment point and intentionally allow extreme cartoon ranges
 (`4×` overall and `3×` on each transverse axis). Neutral head pitch also lives
 on the mount and is postmultiplied across every animation, so it is inherited by
 Run and action poses without entering TransformControls or saved head keys.
-Skull and BoolieRoo persist independent six-value head profiles.
+The Skull, the only head, persists its six-value head profile.
 The look and mask-center sockets are rebased to the imported face while empty
 ear/ponytail nodes preserve old animation IDs.
 

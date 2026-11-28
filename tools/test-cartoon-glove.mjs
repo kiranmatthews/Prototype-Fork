@@ -301,10 +301,15 @@ try {
     server.ssrLoadModule('/src/player.ts'),
     server.ssrLoadModule('/src/animation/index.ts'),
   ]);
+  // A browser that last ran a build with a removed character selected: the first player restores
+  // the saved style, finds one this build does not have, and is the source-owned Skull.
+  localStorage.setItem('solProtoCharacterHeadStyleV1', 'cargo');
   const player = new Player(new THREE.Scene());
-  // This structural suite exercises the Skull model and raw shoulder rest;
-  // the separate factory-default regression covers the selected Roo profile.
+  assert.equal(player.characterHeadStyle, 'skull', 'a removed head style was restored from browser storage');
+  assert.equal(player.activeCharacterHeadProfile, 'skull');
+  // This structural suite exercises the Skull model and raw shoulder rest.
   player.setCharacterHeadStyle('skull');
+  assert.equal(localStorage.getItem('solProtoCharacterHeadStyleV1'), 'skull', 'choosing the Skull did not save it');
   assert.deepEqual(player.cartoonGloveDiagnostics, {
     ready: true,
     bonesPerHand: 12,
@@ -571,33 +576,22 @@ try {
   near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftDefault)), 1);
   near(Math.abs(shoulderRight.quaternion.dot(shoulderRightDefault)), 1);
 
-  player.setCharacterProportions({ headSize: 2.1, headRestPitch: 14 });
+  // Skull is the only head. A style an older build offered (BoolieRoo's 'alternate', Cargo Roo's
+  // 'cargo'), asked for by a stale script, leaves him and his split-screen peer the Skull and its
+  // head sliders where they were.
+  player.setCharacterProportions({ headSize: 2.1, headRestPitch: 14, torsoWidth: 1.2 });
   const profilePeer = new Player(new THREE.Scene());
   assert.equal(profilePeer.characterHeadStyle, 'skull');
-  player.setCharacterHeadStyle('alternate');
-  assert.equal(profilePeer.characterHeadStyle, 'alternate',
-    'head style did not propagate to the split-screen peer');
-  near(player.characterProportions.headSize, 2.45);
-  near(player.characterProportions.headRestPitch, -23);
-  player.setCharacterProportions({
-    headSize: 1.35,
-    neckLength: -1.2,
-    headForwardOffset: -0.16,
-    headRestPitch: -22,
-    torsoWidth: 1.2,
-  });
-  player.setCharacterHeadStyle('skull');
-  assert.equal(profilePeer.characterHeadStyle, 'skull');
-  near(player.characterProportions.headSize, 2.1);
-  near(player.characterProportions.headRestPitch, 14);
-  near(player.characterProportions.torsoWidth, 1.2);
-  player.setCharacterHeadStyle('alternate');
-  assert.equal(profilePeer.characterHeadStyle, 'alternate');
-  near(player.characterProportions.headSize, 1.35);
-  near(player.characterProportions.neckLength, -1.2);
-  near(player.characterProportions.headForwardOffset, -0.16);
-  near(player.characterProportions.headRestPitch, -22);
-  near(player.characterProportions.torsoWidth, 1.2);
+  for (const retired of ['alternate', 'cargo']) {
+    player.setCharacterHeadStyle(retired);
+    assert.equal(player.characterHeadStyle, 'skull', `${retired} is no longer a head style`);
+    assert.equal(profilePeer.characterHeadStyle, 'skull');
+    assert.equal(player.activeCharacterHeadProfile, 'skull');
+    near(player.characterProportions.headSize, 2.1);
+    near(player.characterProportions.headRestPitch, 14);
+    near(player.characterProportions.torsoWidth, 1.2);
+  }
+  assert.deepEqual(Object.keys(player.characterHeadProfiles), ['skull']);
   player.resetCharacterProportions();
   player.setCharacterHeadStyle('skull');
   assert.equal(profilePeer.characterHeadStyle, 'skull');

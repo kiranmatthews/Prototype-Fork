@@ -21,8 +21,8 @@ non-rig mount below the existing semantic `head` bone, so every animation and
 procedural look/impact response remains valid. Per-head gap/overlap and
 forward/back controls place the mount in neck-aligned axes; size controls scale
 it, and neutral pitch rotates it across every animation. None of those values
-enter semantic head keys or deform torso skin. Skull and BoolieRoo remember
-their six head/neck values independently.
+enter semantic head keys or deform torso skin. The six head/neck values are
+saved as the Skull's profile.
 
 See `provenance.json` for exact source and derived hashes, topology, upload ID,
 axis conversion, bounds, and runtime mapping.

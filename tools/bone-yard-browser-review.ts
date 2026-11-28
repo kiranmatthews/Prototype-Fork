@@ -127,7 +127,7 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (armed && incidentAge >= freezeAt) { frozen = true; armed = false; }
   if (freezeRecall && d?.returnProgress >= .45) { frozen = true; freezeRecall = false; }
 };
-function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate' = 'skull') {
+function start(kind: string, pause = REVIEW_SECONDS) {
   boardReview = null;
   if (!level.groundMeshes.includes(recoveryDeck)) level.groundMeshes.push(recoveryDeck);
   if (!level.walls.includes(recoveryDeckWall)) level.walls.push(recoveryDeckWall);
@@ -148,7 +148,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   p.onDeath = () => {};
   reviewCrusher.phase = -level.time; nativeUpdate(0);
   native(1 / 60, neutral, level);
-  p.setCharacterHeadStyle(head);
+  p.setCharacterHeadStyle('skull');
   p.freeSkate = wall || trip || balanceCase;
   p.speed = kind === 'Heavy wall' ? 40 : kind === 'Slow bump' ? 8 : wall || trip ? 24 : balanceCase ? 10 : 0;
   if (kind === 'Contact death') p.die('contact');

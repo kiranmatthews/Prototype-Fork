@@ -1,9 +1,7 @@
 /** The HUD and Life crates use the same artwork and active-head selection. */
-export type LifePortraitStyle = 'skull' | 'alternate' | 'cargo';
+export type LifePortraitStyle = 'skull';
 export const LIFE_PORTRAITS = {
   skull: { file: 'bone-head.png', label: 'Bone Head' },
-  alternate: { file: 'roo.png', label: 'BoolieRoo' },
-  cargo: { file: 'characters/cargo-rider/portrait.webp', label: 'Cargo Roo' },
 } as const;
 
 let activeStyle: LifePortraitStyle = 'skull';

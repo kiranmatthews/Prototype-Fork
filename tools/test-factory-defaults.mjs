@@ -59,8 +59,11 @@ try {
   const character = await server.ssrLoadModule('/src/character/settings.ts');
   assert.equal(character.DEFAULT_CHARACTER_HEAD_STYLE, 'skull');
   assert.equal(character.DEFAULT_CHARACTER_TAIL_VISIBLE, expected.tail);
+  // (the capture was taken with the BoolieRoo head on; that head is removed, so the fixture
+  //  carries the Skull profile the same capture recorded beside it)
+  assert.equal(expected.headStyle, character.DEFAULT_CHARACTER_HEAD_STYLE);
   const proportions = new character.CharacterProportionSettings(null);
-  proportions.setActiveHeadProfile('roo');
+  assert.equal(proportions.activeHeadProfile, 'skull');
   assert.deepEqual(proportions.value, expected.character);
   assert.deepEqual(proportions.headProfiles, expected.headProfiles);
   const { characterCollisionHeight, characterDesignHeight } =
@@ -68,15 +71,13 @@ try {
   const historicalCalibration = {
     ...expected.character, headSize: 1.55, neckLength: 0,
   };
-  assert.equal(characterCollisionHeight(expected.character, 'roo'),
-    0.92 * characterDesignHeight(expected.character, 'roo') /
-      characterDesignHeight(historicalCalibration, 'skull'),
+  assert.equal(characterCollisionHeight(expected.character, 'skull'),
+    0.92 * (characterDesignHeight(expected.character, 'skull') /
+      characterDesignHeight(historicalCalibration, 'skull')),
     'promoting appearance defaults must not recalibrate the captured hitbox');
   proportions.patch({ headSize: 1, shoulderWidth: 1 });
   proportions.reset();
   assert.deepEqual(proportions.value, expected.character);
-  proportions.setActiveHeadProfile('skull');
-  proportions.reset();
   assert.deepEqual(proportions.getHeadProfile('skull'), expected.headProfiles.skull);
   const { createPlayerStarterClips } = await server.ssrLoadModule('/src/animation/playerCatalog.ts');
   assert.equal(createPlayerStarterClips().find(c => c.id === 'player.run').playbackSpeed,

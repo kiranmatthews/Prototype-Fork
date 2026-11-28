@@ -54,11 +54,12 @@ mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
 The six head/neck controls—size, width, depth, gap/overlap, forward/back and
-neutral tilt—are stored as independent **Skull** and **BoolieRoo** profiles.
-Changing Head shape swaps only those six values; torso, limbs, clothing, hands
-and the Idle arm angle remain shared. Legacy saves seed both profiles from the
-former shared values. Copy JSON includes both profiles, while Reset all resets
-both and returns to Skull.
+neutral tilt—are stored as a per-head profile. **Skull** is the only head, so
+there is one; torso, limbs, clothing, hands and the Idle arm angle sit outside
+it. Legacy saves seed the profile from the former shared values. Copy JSON
+includes the profile, and Reset all restores it. A save or pasted JSON from a
+build that still had the BoolieRoo head loads as the Skull it carried; the
+retired head's profile is ignored and dropped at the next save.
 
 The shipped silhouette is an authored defaults-revision-5 pose rather than the
 all-ones rig identity. **Reset all** restores that authored pose. The identity
@@ -133,25 +134,12 @@ semantic neck/head bones, pulls torso skin, or changes collision. The former vis
 eyes, ears, hair, ponytail, neck cylinder, necklace, and pendant are retired;
 empty ear/ponytail nodes stay only for saved-animation compatibility.
 
-The **Head shape** buttons switch that production skull against the second,
-owner-supplied Meshy **BoolieRoo** head for quick silhouette evaluation. Both are
-rigid children of the same presentation mount and use their own saved head/neck
-profiles; the option changes no skeleton, animation,
-socket or collision data. The owner confirms BoolieRoo is an original design;
-the unrelated character name that Meshy auto-assigned to its downloaded files
-has been removed from every production identifier. Its losslessly indexed mesh chunk and compact
-textures are loaded only after **BoolieRoo** is selected; the skull stays visible
-during a cold load.
-
-BoolieRoo now uses the cleaned colour atlas and a painted blink in game. Each
-player independently waits 2–6 seconds between blinks and chooses a 0.2–0.4
-second blink length. The lid closes quickly, briefly holds, and reopens more
-slowly. It follows the existing UVs with a reusable 256² paint layer in the
-same material, so the 15,634 triangles, skeleton, collisions and draw count
-are unchanged. Holding a pose causes no texture uploads; game pause freezes
-the clock and the inactive Skull selection suppresses paint work. This is a
-texture illusion: the original raised lash silhouette remains fixed. Runtime
-state is exposed under `getAlternateHeadDiagnostics().blink`.
+The **Character appearance** row lists the heads he can wear. It offers the
+production **Skull** alone: the owner-supplied Meshy **BoolieRoo** head (with
+its painted blink) and the fitted **Cargo Roo** skin were removed on 26 November
+2026 to free release space, with their modules, textures, model, tools and
+authoring sources. They remain in the repository's history before that date. A
+browser that had either selected comes back as the Skull.
 
 Character colour maps are authored straight from their original 2K/4K sources
 as bicubic-sharpened 512² images, then stored as pixel-lossless WebP. Roughness

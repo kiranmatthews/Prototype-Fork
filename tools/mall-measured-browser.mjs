@@ -30,7 +30,7 @@ try{
   p.step=(dt,input,level)=>{if(r.done)return;try{sample=pilot.sample(p,l);update();step(dt,input,level);pilot.observe(p,l);r.frames++;r.state=p.state;r.source=source.mallSourcePoint(...p.pos.toArray());r.stage=pilot.stage;if(r.frames%15===0)r.samples.push({frame:r.frames,source:r.source,state:p.state,speed:p.speed,ground:p.groundHit?.name});if(p.state==='finished')r.done=true;}catch(e){r.error=String(e);r.done=true;}if(r.done){r.tuningUnchanged=r.tuning===JSON.stringify(g.TUNING);r.wallSeconds=(performance.now()-r.startedAt)/1000;}};
   g.renderer.render=(scene,camera)=>{render(scene,camera);if(scene!==g.scene||r.done)return;a.copy(p.renderPosition);a.y+=1.25;d.subVectors(camera.position,a);ray.set(a,d.clone().normalize());ray.near=.15;ray.far=d.length()-.2;const h=ray.intersectObjects(scenery,false).find(h=>h.object.visible&&h.distance>.15);if(h)r.obstructions.push({frame:r.frames,source:r.source,name:h.object.name,distance:h.distance});
    if(r.source?.[0]>3500&&r.source[0]<4400&&p.grounded&&r.frames%3===0){
-    headBox.setFromObject(p.headPresentation??p.headM);headBox.getCenter(headCenter);a.set(headCenter.x,p.renderPosition.y+.5,headCenter.z);ray.set(a,up);ray.near=0;ray.far=12;
+    headBox.setFromObject(p.riderG.getObjectByName('head-presentation')??p.headM);headBox.getCenter(headCenter);a.set(headCenter.x,p.renderPosition.y+.5,headCenter.z);ray.set(a,up);ray.near=0;ray.far=12;
     const roof=ray.intersectObjects(scenery,false).find(h=>h.object.visible);if(roof&&!headBox.isEmpty())r.arcadeHeadroom.push({frame:r.frames,source:r.source,roof:roof.object.name,headTop:headBox.max.y,roofY:roof.point.y,margin:roof.point.y-headBox.max.y});
    }
   };
