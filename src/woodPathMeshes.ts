@@ -196,8 +196,97 @@ export function woodPathMeshPaletteId(kind: "plank" | "pole", requested?: string
     : requested;
 }
 
-function memberFamily(member: Member): Family {
-  return member.kind === "plank" ? "plank" : member.role === "top-rail" ? "rope" : "timber";
+export const WOOD_PATH_LASHING_MODEL = "lashing-coil";
+type MemberFamily = Family | "lashing";
+
+function memberFamily(member: Member): MemberFamily {
+  return member.kind === "plank" ? "plank"
+    : member.role === "top-rail" ? "rope" : member.role === "lashing" ? "lashing" : "timber";
+}
+
+// A lashing is a few turns of rope round a joint. It is not one of the nine
+// Meshy members: it is a small coil built here, fitted like a pole (its length
+// along what it binds, from -.5 to .5 on Y, its girth within [-1, 1] on X and
+// Z), in the colour of the kit's own rope.
+let lashingGeometry: THREE.BufferGeometry | null = null;
+let lashingMaterial: THREE.MeshLambertMaterial | null = null;
+// (two and a quarter turns of a four-sided strand, ten lengths to the turn so that it reads as round on the
+// thickest post: 184 triangles, fewer than the lightest Meshy member's 240, since a path carries about as many
+// lashings as timbers)
+const LASHING = { turns: 2.25, perTurn: 10, sides: 4, strand: 0.14 };
+
+function lashingCoil(): THREE.BufferGeometry {
+  if (lashingGeometry) return lashingGeometry;
+  const { turns, perTurn, sides, strand } = LASHING;
+  const rings = Math.round(turns * perTurn) + 1;
+  // Turn lies against turn: the strand's height is the pitch, and the whole coil fills the unit of length.
+  const pitch = 1 / (turns + 1), rise = pitch / 2, girth = 1 - strand;
+  // The kit's rope, as its clay paint has it: the mean of the twisted rope's own vertex paint.
+  const paint = BOARDWALK_MESH_DATA["rope-twist"].colors;
+  const rope = new THREE.Color(0, 0, 0);
+  for (let i = 0; i < paint.length; i += 3) { rope.r += paint[i]; rope.g += paint[i + 1]; rope.b += paint[i + 2]; }
+  rope.multiplyScalar(3 / paint.length);
+  const positions: number[] = [], colors: number[] = [], indices: number[] = [];
+  for (let ring = 0; ring < rings; ring++) {
+    const t = ring / (rings - 1), angle = t * turns * Math.PI * 2;
+    const cx = Math.cos(angle) * girth, cz = Math.sin(angle) * girth, cy = -0.5 + rise + t * (1 - pitch);
+    // The ends are tucked in: the strand thins to nothing over its last sixth of a turn.
+    const taper = Math.min(1, ring / 1.5, (rings - 1 - ring) / 1.5);
+    for (let side = 0; side < sides; side++) {
+      const around = (side / sides) * Math.PI * 2;
+      const out = Math.cos(around) * strand * taper, up = Math.sin(around) * rise * taper;
+      positions.push(cx + Math.cos(angle) * out, cy + up, cz + Math.sin(angle) * out);
+      // The lay of the rope: darker strands wind round it as it goes.
+      const shade = 0.82 + 0.18 * Math.cos(around * 2 + angle * 5) + (Math.sin(around) > 0.3 ? 0.06 : 0);
+      colors.push(rope.r * shade, rope.g * shade, rope.b * shade);
+    }
+  }
+  // Faces look outward from the strand's own centre line (checked on the first, so the order below cannot
+  // silently turn the coil inside out).
+  const corner = (index: number) => new THREE.Vector3(positions[index * 3], positions[index * 3 + 1], positions[index * 3 + 2]);
+  const facesOut = (() => {
+    const a = corner(sides), b = corner(sides + 1), c = corner(sides * 2);
+    const normal = b.clone().sub(a).cross(c.clone().sub(a));
+    const centre = new THREE.Vector3();
+    for (let side = 0; side < sides; side++) centre.add(corner(sides + side));
+    centre.multiplyScalar(1 / sides);
+    return normal.dot(a.clone().add(b).multiplyScalar(0.5).sub(centre)) > 0;
+  })();
+  for (let ring = 0; ring < rings - 1; ring++)
+    for (let side = 0; side < sides; side++) {
+      const a = ring * sides + side, b = ring * sides + (side + 1) % sides, c = a + sides, d = b + sides;
+      if (facesOut) indices.push(a, b, c, b, d, c);
+      else indices.push(a, c, b, b, c, d);
+    }
+  // Fitted exactly as the nine are: its length from -.5 to .5 on Y, its girth to 1 on X and Z.
+  let low = Infinity, high = -Infinity, wide = 0;
+  for (let i = 0; i < positions.length; i += 3) {
+    low = Math.min(low, positions[i + 1]); high = Math.max(high, positions[i + 1]);
+    wide = Math.max(wide, Math.abs(positions[i]), Math.abs(positions[i + 2]));
+  }
+  for (let i = 0; i < positions.length; i += 3) {
+    positions[i] /= wide; positions[i + 2] /= wide;
+    positions[i + 1] = (positions[i + 1] - (low + high) / 2) / (high - low);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  geometry.name = "Boardwalk · rope lashing";
+  geometry.userData.shared = true;
+  lashingGeometry = geometry;
+  return geometry;
+}
+
+function lashingRope(): THREE.MeshLambertMaterial {
+  if (lashingMaterial) return lashingMaterial;
+  lashingMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true });
+  lashingMaterial.name = "Rustic boardwalk · rope lashing";
+  lashingMaterial.userData.shared = true;
+  return lashingMaterial;
 }
 
 /** Fit the provider's normalized local envelope to the existing semantic part. */
@@ -217,11 +306,18 @@ export function woodPathMemberMatrix(member: Member, seed: number): THREE.Matrix
       quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI));
     scale.fromArray(member.size);
   } else {
-    quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3().fromArray(member.direction));
-    quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(
-      new THREE.Vector3(0, 1, 0),
-      unityStructureSignedNoise(member.index, seed, 127) * Math.PI,
-    ));
+    const direction = new THREE.Vector3().fromArray(member.direction);
+    quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+    let turn = unityStructureSignedNoise(member.index, seed, 127) * Math.PI;
+    if (member.roll !== undefined && Math.abs(direction.y) < 0.985) {
+      // A squared timber is set on edge: its broad axis (the template's X) as near plumb as its length
+      // allows, then turned by its own small error. (A plumb member has no "on edge", and is turned at random.)
+      const broad = new THREE.Vector3(1, 0, 0).applyQuaternion(quaternion);
+      const plumb = new THREE.Vector3(0, 1, 0).addScaledVector(direction, -direction.y).normalize();
+      turn = Math.atan2(new THREE.Vector3().crossVectors(broad, plumb).dot(direction), broad.dot(plumb)) + member.roll
+        + (unityStructureSignedNoise(member.index, seed, 127) > 0 ? Math.PI : 0);
+    }
+    quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn));
     scale.set(member.radius, member.length, member.radius);
   }
   return new THREE.Matrix4().compose(new THREE.Vector3().fromArray(member.center), quaternion, scale);
@@ -244,7 +340,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
   group.userData.woodPathPalette = palette;
   group.userData.woodPathVariants = members.map(member => member.variantIndex);
   group.userData.woodPathRoles = members.map(member => member.kind === "plank" ? "plank" : member.role);
-  const buckets = new Map<string, { family: Family; name: ModelName; members: Member[] }>();
+  const buckets = new Map<string, { family: MemberFamily; name: ModelName | typeof WOOD_PATH_LASHING_MODEL; members: Member[] }>();
   const rendered:Member[]=palette===DROWNED_PLANK_PALETTE&&kind==='plank'?members.flatMap<Member>(sourceMember=>{
     if(sourceMember.kind!=='plank')return [sourceMember];
     // Fit the existing board more thinly while preserving the authored top.
@@ -264,7 +360,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
   }):members;
   for (const member of rendered) {
     const family = memberFamily(member);
-    const names = WOOD_PATH_MODELS[family];
+    const names = family === "lashing" ? [WOOD_PATH_LASHING_MODEL] as const : WOOD_PATH_MODELS[family];
     const variant = ((member.variantIndex % names.length) + names.length) % names.length;
     const name = names[variant];
     const chunk = Math.floor(memberDistance(member, layout) / WOOD_PATH_MESH_CHUNK_METRES);
@@ -273,7 +369,10 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     buckets.get(key)!.members.push(member);
   }
   for (const [key, bucket] of buckets) {
-    const mesh = new THREE.InstancedMesh(palette===DROWNED_PLANK_PALETTE?originalDrownedPlank():palette==='crown-quay'?quayGeometry(bucket.name):meshGeometry(bucket.name), palette===DROWNED_PLANK_PALETTE?originalDrownedWood():partMaterial(palette), bucket.members.length);
+    // (a lashing is rope whatever timber it binds: no palette repaints it)
+    const mesh = bucket.name === WOOD_PATH_LASHING_MODEL
+      ? new THREE.InstancedMesh(lashingCoil(), lashingRope(), bucket.members.length)
+      : new THREE.InstancedMesh(palette===DROWNED_PLANK_PALETTE?originalDrownedPlank():palette==='crown-quay'?quayGeometry(bucket.name):meshGeometry(bucket.name), palette===DROWNED_PLANK_PALETTE?originalDrownedWood():partMaterial(palette), bucket.members.length);
     mesh.name = `woodpath mesh · ${key}`;
     mesh.userData.woodPathMeshFamily = bucket.family;
     // The continuous deck owns plank seams; posts and rails use their actual geometry.

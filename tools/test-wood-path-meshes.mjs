@@ -69,7 +69,14 @@ try {
         if(g===1) {
           assert.ok(new THREE.Vector3(0,-.5,0).applyMatrix4(matrix).distanceTo(new THREE.Vector3(...member.start))<1e-4);
           assert.ok(new THREE.Vector3(0,.5,0).applyMatrix4(matrix).distanceTo(new THREE.Vector3(...member.end))<1e-4);
-          assert.equal(mesh.userData.woodPathMeshFamily,member.role==='top-rail'?'rope':'timber');
+          assert.equal(mesh.userData.woodPathMeshFamily,member.role==='top-rail'?'rope':member.role==='lashing'?'lashing':'timber');
+          // A lashing is a few turns of rope built here, not a tenth Meshy member: fitted like a pole, in the kit's own rope colour.
+          if(member.role==='lashing'){
+            assert.equal(mesh.userData.woodPathModel,art.WOOD_PATH_LASHING_MODEL);
+            const b=mesh.geometry.boundingBox,size=b.getSize(new THREE.Vector3());
+            assert.ok(Math.abs(size.y-1)<1e-5&&Math.max(size.x,size.z)<=2.00001&&Math.max(size.x,size.z)>1.9,'the coil fills the pole envelope');
+            assert.ok(mesh.geometry.index.count/3>=100&&mesh.geometry.index.count/3<=500&&mesh.geometry.attributes.color,'and is as light as the nine');
+          }
         } else {
           const up=new THREE.Vector3(...member.basis.up), centre=new THREE.Vector3(...member.center);
           const pos=mesh.geometry.attributes.position;let top=-Infinity;
@@ -80,7 +87,8 @@ try {
     }
     assert.equal(seen.size,members[g].length);
   }
-  assert.equal(used.size,9,'seeded sample uses all nine meshes');
+  assert.equal(used.size,10,'seeded sample uses all nine meshes, and the lashing');
+  assert.ok(layout.poles.some(p=>p.role==='lashing')&&layout.poles.some(p=>p.role==='stringer'),'the sample path stands on the carpentry');
   const repeat=art.buildWoodPathMeshes(kit.buildWoodPathLayout(sampler,options),7391);
   for(let g=0;g<2;g++)for(let i=0;i<groups[g].children.length;i++){
     const a=groups[g].children[i],b=repeat[g].children[i];
@@ -118,5 +126,5 @@ try {
   }
   const changed=kit.buildWoodPathLayout(sampler,{...options,plankSeed:2026,poleSeed:2026^0x6f2b});
   assert.notDeepEqual(changed.planks.map(p=>p.variantIndex),layout.planks.map(p=>p.variantIndex),'different path seeds vary the model mix');
-  console.log(`PASS rustic boardwalk: nine distinct original Meshy members, compact atlas, banked fitting, ${layout.planks.length+layout.poles.length} seeded instances, shared templates, independent collision and chunk culling.`);
+  console.log(`PASS rustic boardwalk: nine distinct original Meshy members and a rope lashing, compact atlas, banked fitting, ${layout.planks.length+layout.poles.length} seeded instances, shared templates, independent collision and chunk culling.`);
 } finally {await server.close();}

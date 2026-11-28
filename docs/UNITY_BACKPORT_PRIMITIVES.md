@@ -174,15 +174,18 @@ This avoids both wheel-catching collision seams and coplanar deck/plank shimmer.
 `structureStyle` selects the measured construction profile. `light` is the
 Unity light-boardwalk default; `island` and `beach` retain each source level's
 deck and plank dimensions. The shared layout kernel emits semantic envelopes
-for every plank, support post, crossbeam, handrail post, longitudinal ledger,
-side brace, midheight cross brace and top-rail segment. Three original Meshy
-planks, three weathered squared timbers and three twisted/braided rope lengths
-are fitted into those envelopes. Weighted selection uses the authored path
-seed; boards can turn end-for-end and beams rotate about their length. Timber
-owns the scaffold and handrail posts; rope owns the top rails. All nine meshes
-share a local 1024px clay-painted atlas, with sampled vertex paint available
-while it loads. Instances are grouped by model and 24 m path section for
-frustum culling. `plankPalette` and `polePalette` keep their stable identifiers;
+for every plank and every member under and beside it (support post, crossbeam,
+stringer, ledger, girt, brace, knee brace, footing, lashing, handrail post and
+top-rail segment). Three original Meshy planks, three weathered timbers (a
+hewn beam, a round log and a squared timber with a split in it) and three
+twisted/braided rope lengths are fitted into those envelopes. Weighted
+selection uses the authored path seed; boards can turn end-for-end and the
+light scaffold's beams rotate about their length. Timber owns the structure and
+the handrail posts; rope owns the top rails; a lashing is a small coil of rope
+built in code (184 triangles, in the kit's own rope colour), not a tenth Meshy
+member. All nine meshes share a local 1024px clay-painted atlas, with sampled
+vertex paint available while it loads. Instances are grouped by model and 24 m
+path section for frustum culling. `plankPalette` and `polePalette` keep their stable identifiers;
 the legacy `placeholder-board`/`placeholder-pole` IDs automatically resolve to
 `rustic-planks`/`rustic-timber-rope`, including previously saved editor levels.
 The mesh swap changes neither path topology nor collision.
@@ -197,14 +200,72 @@ credentials remain outside the published assets. `boardwalk-review.html`
 shows every variant and the assembled curved scaffold; the focused check is
 `node tools/test-wood-path-meshes.mjs`.
 
-The light scaffold uses 4.5 m nominal bays. Each bent has two posts, an
-under-deck crossbeam with 0.48 m overhang and two 1.05 m handrail posts. Each
-bay has left/right ledgers, alternating side braces and two genuinely
-three-dimensional cross braces between its 30% and 70% post heights. Top rails
-are visually segmented no farther than 1.15 m apart; separate dense polylines
-remain grindable on both sides. The continuous 1 m balustrade collision is
-generated independently at 0.7 m spacing, so presentation poles never become
-collision authority.
+### What stands under the deck
+
+Bents stand every 4.5 m (`baySpacing`). What is drawn at each, and between
+them, is the **carpentry** (`WOOD_PATH_CARPENTRY` in `src/woodPathKit.ts`):
+stout, a little crooked, lashed with rope, and built so that nothing hangs in
+the air.
+
+- **The load path.** Planks lie on *stringers*: timbers along the path, one
+  under each edge and one in the middle of any deck wider than 3 m between its
+  posts (two beyond 7.5 m), lapped side by side over each bent, and laid in two
+  or three lengths where a bay humps or turns, each splice bound with rope so
+  that a stringer still runs from cap to cap. Stringers lie on the *cap beam*
+  of each bent, a log across the path that runs out past the deck on both
+  sides. The cap lies on two *posts*. A post stands on a *sleeper* (a short
+  log along the path, a third of it in the ground) where the support probe
+  found ground, and is a driven *pile* where it fell back to `supportBaseY` or
+  `supportDepth`: give a path over water or a pit a base at the water, so its
+  piles stand in it.
+- **Which timber.** With the rustic palette's three timbers, posts and
+  sleepers are always round logs (a lashing sits snug on a log), caps mostly
+  logs, stringers mostly squared timbers, and braces, girts and ledgers
+  whatever the palette's weights give. A squared timber is set on edge, a few
+  degrees out, never at a random twist. A palette of another size is used as
+  it is given.
+- **Proportions.** A post is 0.17 m in radius plus 12 mm for each metre of deck
+  width (0.23 m under a 5 m deck, between 0.19 and 0.28); the cap is 0.88 of
+  that, braces and girts 0.55, knee braces 0.58, stringers a half (0.1 m at
+  least). A post over 5 m is two logs, over 9.5 m three, over 14 m four,
+  butted at a joint and thicker toward the foot.
+- **Bracing depends on height.** Under 1.2 m: two stubs and a cap. Up to about
+  1.9 m: knee braces, from each post up to its cap and along to the stringer
+  each way. Taller: the posts are divided into panels about 3 m high (growing
+  to 4.2 m on a very tall trestle; one panel height for the whole path, so
+  joints sit level from bent to bent). Across the bent the top panel is
+  crossed, one pole on each face of the posts, and each panel under it has one
+  pole, leaning the other way each time, over a *girt*. A bent too wide to
+  cross (a panel under 0.4 of its width) gets a chevron up to the middle of
+  the cap or girt. Along the path every panel has one pole a side, leaning the
+  same way on both sides and the other way in the next bay, over a *ledger*.
+- **Headroom.** Where the probe found ground, the lowest 2.3 m carry posts
+  only, so the way under a boardwalk stays open: a 3.5 m boardwalk on ground
+  has knee braces under its deck and nothing lower. Piles are braced down to
+  0.4 m above their feet.
+- **Joints.** Every joint a pole makes with a post is lashed, and so is the
+  head of every post, every splice of a stringer inside a bay and the rail to
+  every handrail post. Handrail posts go down past the deck to the end of
+  their cap. Every member runs on 0.14 to 0.34 m past its joints and has its
+  own small error of thickness, length and line, taken from the path's seed:
+  the same path is always built the same way.
+
+None of this is collision. What a body meets is unchanged: the deck, and a
+plumb column of the profile's 0.115 m post radius under each end of every
+bent, exactly where the light scaffold's posts stood. The validator charges
+a path 96 members for each bay and once more for its first bent (it was 32 a
+bay): a bent holds at most 47 and a bay at most 38.
+
+`structure: "unity"` on a kit profile keeps the source's light scaffold: two
+0.115 m posts and a 0.09 m crossbeam with 0.48 m overhang per bent, left/right
+ledgers, alternating side braces and two three-dimensional cross braces
+between the 30% and 70% post heights in each bay. Carlisle's timber piers are
+still built that way.
+
+Each bent also has two 1.05 m handrail posts. Top rails are visually segmented
+no farther than 1.15 m apart; separate dense polylines remain grindable on
+both sides. The continuous 1 m balustrade collision is generated independently
+at 0.7 m spacing, so presentation poles never become collision authority.
 
 Enable `terrainSupports` to ask the level for ground below the source-authored
 probe origin. `supportBaseY` supplies an absolute fallback foot height when a
@@ -228,9 +289,10 @@ The exact source profiles are:
 | Scale jitter | 0.035 | 0.055 | 0.06 |
 | Vertical jitter | 0.012 | 0.014 | 0.014 |
 
-All three share the light scaffold's 0.115 m post, 0.09 m crossbeam,
-0.072 m ledger and 0.055 m brace radii. Layout noise, tonal buckets and future
-weighted variant choices use the source deterministic unsigned hashes.
+All three share the source's 0.115 m post (the solid column), 0.09 m
+crossbeam, 0.072 m ledger and 0.055 m brace radii, which size the light
+scaffold and the handrail's rope. Layout noise, tonal buckets and weighted
+variant choices use the source deterministic unsigned hashes.
 
 Beachside applies that profile once per complete sequence: seven continuous
 sixteen-knot paths replace the old 28 independently restarted fragments. This
