@@ -1,13 +1,11 @@
 # Board Platformer Prototype — Codex/sol Fork
 
-This is the isolated level-geometry experiment fork of
+This is the Codex/sol fork of
 [`kiranmatthews/Game-prototype`](https://github.com/kiranmatthews/Game-prototype).
-It is set up to measure prompt-to-playable speed for Codex/sol level work
-against the equivalent Unity greybox workflow.
 
 - [Play the Codex/sol fork](https://kiranmatthews.github.io/Prototype-Fork/)
 - [All labs, tuning panels & tools](https://kiranmatthews.github.io/Prototype-Fork/labs/)
-- [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
+- [Original level-authoring experiment (archived)](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
 - [Gameplay design bible](docs/GAMEPLAY_DESIGN_BIBLE.md): crates, platforms, gaps, jumps, hazards and enemies, from 36 mapped Crash 2–4 levels (maps and evidence in [`docs/crate-bible/`](docs/crate-bible/README.md))
 - [Unity-backport level primitives](docs/UNITY_BACKPORT_PRIMITIVES.md)
