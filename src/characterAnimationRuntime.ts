@@ -209,7 +209,8 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpRefere
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && ROPE_ATTACHED_CLIP_IDS.has(to)) {
     return UNITY_ROPE_TIMING.attachedBlend;
   }
-  if (ROPE_ATTACHED_CLIP_IDS.has(from) && to === UNITY_ROPE_CLIP_IDS.release) {
+  // Off a rope: into the backflip's own clip, or (a plain leap) straight into the air's.
+  if (ROPE_ATTACHED_CLIP_IDS.has(from) && (to === UNITY_ROPE_CLIP_IDS.release || AIRBORNE_CLIP_IDS.has(to))) {
     return UNITY_ROPE_TIMING.releaseBlend;
   }
   // Onto a rope from anything else, and off its leap into anything else: never a cut.
@@ -830,6 +831,7 @@ export class CharacterAnimationRuntime {
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? directDoubleBlend : clip.id === LAND_CLIP_ID ? .02
+            : ROPE_ATTACHED_CLIP_IDS.has(previousClipId) || previousClipId === UNITY_ROPE_CLIP_IDS.release ? authoredSwitchBlendDuration(previousClipId, clip.id)
             : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14
             : clip.id==='player.jak-flip'||clip.id==='player.fall' ? .10 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)

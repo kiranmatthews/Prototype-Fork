@@ -6,6 +6,11 @@ export interface FlexibleRopeState {
   /** Presentation only: a body passing through the DRAWN rope pushes it aside by this much (rope-local metres) from
    * `shoveD` down it to its end, tapering to nothing at the anchor. Never part of where the rope can be caught. */
   shove?:THREE.Vector3;shoveD?:number;
+  /** The lowest point of it that can be held, metres from the anchor, where that is not its own end: a chain is
+   * held no nearer the ball that hangs on it than a body can hang clear of. */
+  maxGrip?:number;
+  /** Drawn rigid by its owner (a chain): a body passing through it is not given way to. */
+  rigid?:boolean;
 }
 export function ropeLocalPoint(rs:FlexibleRopeState,d:number,out:THREE.Vector3):THREE.Vector3 {
   const u=THREE.MathUtils.clamp(d/Math.max(.001,rs.len),0,1),shape=Math.sin(Math.PI*u);
@@ -36,7 +41,7 @@ export function flexibleRopeVelocity(rs:FlexibleRopeState,d:number,out:THREE.Vec
 }
 const a=new THREE.Vector3(),b=new THREE.Vector3(),direction=new THREE.Vector3(),query=new THREE.Vector3();
 export function closestRopeDistance(rs:FlexibleRopeState,point:THREE.Vector3):number {
-  const lo=1,hi=Math.max(lo,rs.len-.1),n=32;let best=Infinity,result=lo;
+  const lo=1,hi=Math.max(lo,Math.min(rs.len-.1,rs.maxGrip??Infinity)),n=32;let best=Infinity,result=lo;
   flexibleRopePoint(rs,lo,a);
   for(let i=1;i<=n;i++){
     const end=lo+(hi-lo)*i/n;flexibleRopePoint(rs,end,b);direction.copy(b).sub(a);

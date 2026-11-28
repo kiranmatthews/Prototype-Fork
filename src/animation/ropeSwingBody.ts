@@ -53,13 +53,22 @@ export const ROPE_BODY = Object.freeze({
    * body's take-up (rad/s); the most of the flight's speed (m/s) and of its turning (rad/s) it carries in; and how
    * far past their length the arms may reach for the rope. */
   catchHands: .1, catchLegs: .16, catchClampDelay: .12, catchClamp: .3, absorbFrequency: 18, catchCarry: 10, catchSpin: 9, catchArmStretch: .55,
+  /** Before a catch: a hand going out to a rope still beyond it goes this fraction of the arm's length toward it,
+   * elbow not yet locked; and the most the arms' stretch may change in a second once they have hold. */
+  reachOut: .9, stretchRate: 6,
+  /** Hands hold a rope that is in front of the shoulders they hang from: fully once it is this far ahead of them
+   * (metres), not at all while it is behind. A body that took hold from in front of its rope comes back through
+   * it before its hands close. */
+  handClear: .2,
   /** Legs with no rope under them to grip hang free from the hips, a pendulum of their own that trails the body and
    * swings on past it: frequency (rad/s), damping ratio; and the swing a catch throws them into, radians per second
    * for each metre per second of flight, and the most of it. Hanging, they are this fraction of their length, and
    * trail the grip's sideways travel by `legTrail` seconds of it. */
   legSwingFrequency: 6.6, legSwingDamping: .3, legSwingKick: .5, legSwingMax: 5, legHang: .92, legTrail: .055,
-  /** Leap: seconds for the legs, the hands and the body to leave the rope. */
-  releaseLegs: .12, releaseHands: .13, releaseBody: .34,
+  /** Leap: seconds for the legs, the hands and the body to leave the rope. What they leave is where they were ON
+   * THE BODY as it let go, not the rope: the rope is gone from under a leaping body at ten metres a second, and
+   * limbs still reaching for it are limbs thrown at a point that is flying away. */
+  releaseLegs: .24, releaseHands: .34, releaseBody: .3,
   /** The room the body takes up, as the drawn rope sees it: half its depth and half its width (metres, the rope's
    * own thickness included). A rope that would pass through that is pushed round its side, and swings back after
    * (rad/s, damping ratio) for up to `shoveSeconds` after a leap. */
@@ -85,6 +94,9 @@ export interface RopeBodyFrame {
   ropeD: number; grip: THREE.Vector3;
   /** 0..1 of a held leap. */
   charge: number;
+  /** In the air and about to have hold of a rope: which, where on it (metres from its anchor), and how far out
+   * the arms have gone for it, 0..1. The hands are already most of the way there when they close. */
+  reach?: { rope: FlexibleRopeState; ropeD: number; weight: number } | null;
 }
 export interface RopeBodyResult { leftGripError: number; rightGripError: number; rootOffsetY: number; active: boolean; }
 
@@ -100,7 +112,11 @@ const IDENTITY = new THREE.Quaternion(), spun = new THREE.Quaternion(), basis = 
 const targetL = new THREE.Vector3(), targetR = new THREE.Vector3(), turnL = new THREE.Quaternion(), turnR = new THREE.Quaternion(), pole = new THREE.Vector3();
 const keepA = new THREE.Quaternion(), keepB = new THREE.Quaternion(), keepC = new THREE.Quaternion();
 const ax = new THREE.Vector3(), ay = new THREE.Vector3(), az = new THREE.Vector3();
-const shoulderA = new THREE.Vector3(), shoulderB = new THREE.Vector3();
+const shoulderA = new THREE.Vector3(), shoulderB = new THREE.Vector3(), aside = new THREE.Vector3();
+/** A carried limb's way from its clip to its hold, sampled: how far round it has turned at each of these steps. */
+const PATH_STEPS = 8, pathTurn = new Float32Array(PATH_STEPS + 1), pathFrom = new THREE.Vector3(), pathTo = new THREE.Vector3();
+/** The torso's frame as the clip has it this frame, and as this layer draws it. */
+const clipTorso = new THREE.Quaternion(), drawnTorso = new THREE.Quaternion(), undrawn = new THREE.Quaternion();
 
 /** The torso as a frame: across the shoulders, up the spine from the hips, and ahead. */
 function torsoFrame(hipsAt: THREE.Vector3, a: THREE.Vector3, b: THREE.Vector3, out: THREE.Quaternion): THREE.Quaternion {
@@ -138,8 +154,8 @@ export class RopeSwingBody {
   private readonly lastGrip = new THREE.Vector3(); private haveLastGrip = false;
   private readonly catchVelocity = new THREE.Vector3(); private readonly ropeVelocity = new THREE.Vector3();
   private attachedAge = -1; private releaseAge = -1; private pendingCatch = false;
-  /** Where the hang holds the hips relative to the clip's own, and the turn that stands the clip's torso up. */
-  private readonly hipOffset = new THREE.Vector3(); private readonly stand = new THREE.Quaternion(); private legWeightAtRelease = 0;
+  /** The turn that stands the clip's torso up; and how far the legs and the hands had come under this layer as they let go. */
+  private readonly stand = new THREE.Quaternion(); private legWeightAtRelease = 0; private handWeightAtRelease = 0;
   /** How far the drawn rope is pushed aside (metres along the body's side), its rate, and which side it is going. */
   private shove = 0; private shoveVel = 0; private shoveSide = 0; private shoved: FlexibleRopeState | null = null;
   /** Caught again while still holding the rope aside: it stays aside until the body has come round behind it. */
@@ -151,15 +167,31 @@ export class RopeSwingBody {
   /** Down the free-hanging legs, in the world; and its rate of change. */
   private readonly legAxis = new THREE.Vector3(0, -1, 0); private readonly legAxisVel = new THREE.Vector3();
   private swingLoad = 0; private rootOffsetY = 0; private armStretch = 0; private coil = 0;
+  /** As the hands let go: where each wrist was from its shoulder and each ankle from its hip, in the frame of
+   * the torso as drawn, and how each was turned on its limb (left then right). The leap's limbs come away from
+   * THESE, which travel with the torso. */
+  private readonly handHold = [new THREE.Vector3(), new THREE.Vector3()]; private readonly handHoldTurn = [new THREE.Quaternion(), new THREE.Quaternion()];
+  private readonly footHold = [new THREE.Vector3(), new THREE.Vector3()]; private readonly footHoldTurn = [new THREE.Quaternion(), new THREE.Quaternion()];
+  /** ...and which way each elbow and knee was bent (the way to the point it bent toward, in the same frame). */
+  private readonly handPole = [new THREE.Vector3(), new THREE.Vector3()]; private readonly footPole = [new THREE.Vector3(), new THREE.Vector3()];
+  private held = false; private feetHeld = false;
+  /** ...and the torso as it was drawn then: its frame in the world, and its hips about the rider's own position. */
+  private readonly letGoFrame = new THREE.Quaternion(); private readonly letGoHips = new THREE.Vector3(); private letGoPending = false;
+  private readonly lastRoot = new THREE.Vector3();
+  /** How far out the arms were for a rope when last drawn, and how far out they were as they closed on one. */
+  private reaching = 0; private reachAtCatch = 0;
+  /** How far the hands may close on the rope for where it is from the shoulders, 0..1 (see `handClear`). */
+  private clear = 1; private clearKnown = false;
 
   reset(): void {
     this.axis.set(0, -1, 0); this.axisVel.set(0, 0, 0); this.bob = this.bobVel = 0;
     this.absorb.set(0, 0, 0); this.absorbVel.set(0, 0, 0); this.spin.set(0, 0, 0); this.spinVel.set(0, 0, 0); this.absorbing = false;
     this.history = 0; this.haveLastGrip = false; this.attachedAge = this.releaseAge = -1; this.pendingCatch = false;
-    this.hipOffset.set(0, 0, 0); this.stand.identity(); this.legWeightAtRelease = 0; this.clearShove();
+    this.stand.identity(); this.legWeightAtRelease = this.handWeightAtRelease = 0; this.clearShove();
     this.stride = this.climbing = this.wasClimbing = this.twist = this.twistVel = this.scramble = 0;
     this.legAxis.set(0, -1, 0); this.legAxisVel.set(0, 0, 0);
     this.swingLoad = 0; this.rootOffsetY = 0; this.armStretch = 0; this.coil = 0; this.grip[0] = this.grip[1] = 0;
+    this.held = this.feetHeld = this.letGoPending = false; this.reaching = this.reachAtCatch = 0; this.clear = 1; this.clearKnown = false;
   }
 
   /**
@@ -168,6 +200,7 @@ export class RopeSwingBody {
    */
   catch(ropeD: number, velocity: THREE.Vector3, ropeVelocity?: THREE.Vector3): void {
     this.attachedAge = 0; this.releaseAge = -1; this.pendingCatch = true; this.haveLastGrip = false; this.lastRopeD = ropeD;
+    this.reachAtCatch = this.reaching; this.reaching = 0; this.clearKnown = false;
     this.stride = this.climbing = this.wasClimbing = 0; this.twist = this.twistVel = 0; this.scramble = 0; this.holds = 0;
     this.shoveHeld = Math.abs(this.shove) > .03;
     if (ropeVelocity) this.ropeVelocity.copy(ropeVelocity); else this.ropeVelocity.set(0, 0, 0);
@@ -191,7 +224,9 @@ export class RopeSwingBody {
   release(charge: number): void {
     if (this.attachedAge < 0) return;
     this.legWeightAtRelease = smooth(this.attachedAge / ROPE_BODY.catchLegs);
+    this.handWeightAtRelease = this.caughtHands() * (this.clearKnown ? this.clear : 1);
     this.attachedAge = -1; this.releaseAge = 0; this.climbing = this.wasClimbing = 0;
+    this.letGoPending = this.history >= 1;
     // Push off: the body springs up through the arms as they open.
     this.bobVel -= .8 + .8 * Math.min(1, Math.max(0, charge));
   }
@@ -224,6 +259,8 @@ export class RopeSwingBody {
     this.shoved = null; this.shove = this.shoveVel = this.shoveSide = 0; this.shoveHeld = false;
   }
 
+  /** How much of the hands is on the rope since the catch: from as far out as they had reached for it. */
+  private caughtHands(): number { return 1 - (1 - this.reachAtCatch) * (1 - smooth(this.attachedAge / ROPE_BODY.catchHands)); }
   private bodyWeight(): number {
     if (this.attachedAge >= 0) return 1;
     if (this.releaseAge >= 0) return 1 - smoother(this.releaseAge / ROPE_BODY.releaseBody);
@@ -236,7 +273,8 @@ export class RopeSwingBody {
     const attached = f.attached && !!f.rope && this.attachedAge >= 0;
     if (attached) this.attachedAge += dt; else if (this.releaseAge >= 0) this.releaseAge += dt;
     const bodyW = this.bodyWeight();
-    const handW = attached ? smooth(this.attachedAge / B.catchHands) : this.releaseAge >= 0 ? 1 - smooth(this.releaseAge / B.releaseHands) : 0;
+    const handW = attached ? this.caughtHands() : this.releaseAge >= 0 ? this.handWeightAtRelease * (1 - smooth(this.releaseAge / B.releaseHands)) : 0;
+    const reach = !attached && f.reach && parent ? Math.min(1, Math.max(0, f.reach.weight)) : 0;
     const legW = attached ? smooth(this.attachedAge / B.catchLegs)
       : this.releaseAge >= 0 ? this.legWeightAtRelease * (1 - smooth(this.releaseAge / B.releaseLegs)) : 0;
     const passing = !attached && f.airborne && this.releaseAge >= 0 && this.releaseAge < B.shoveSeconds;
@@ -244,7 +282,9 @@ export class RopeSwingBody {
     if (!parent || !f.rope || (!attached && bodyW <= 1e-4 && handW <= 0 && legW <= 0 && !passing && !settling)) {
       if (!attached) this.releaseAge = -1;
       this.clearShove(); this.absorbing = false; this.armStretch = 0; this.grip[0] = this.grip[1] = 0;
-      this.haveLastGrip = false; this.remember(bones, dt);
+      this.haveLastGrip = false;
+      this.reaching = reach; if (reach > 0) this.reachOut(bones, f.reach!.rope, f.reach!.ropeD, reach);
+      this.remember(bones, dt);
       return { leftGripError: 0, rightGripError: 0, rootOffsetY: 0, active: false };
     }
     const rope = f.rope, grip = f.grip;
@@ -264,15 +304,16 @@ export class RopeSwingBody {
     bones.armL.getWorldPosition(v0); bones.elbowL.getWorldPosition(v1); bones.wristL.getWorldPosition(v2);
     const reachL = v0.distanceTo(v1) + v1.distanceTo(v2); shoulderA.copy(v0);
     bones.armR.getWorldPosition(v0); bones.elbowR.getWorldPosition(v1); bones.wristR.getWorldPosition(v2);
-    const reachR = v0.distanceTo(v1) + v1.distanceTo(v2), reach = Math.min(reachL, reachR); shoulderB.copy(v0);
+    const reachR = v0.distanceTo(v1) + v1.distanceTo(v2), armReach = Math.min(reachL, reachR); shoulderB.copy(v0);
     shoulders.addVectors(shoulderA, shoulderB).multiplyScalar(.5);
     if (bones.legL && bones.legR) { bones.legL.getWorldPosition(hips); bones.legR.getWorldPosition(v0); hips.add(v0).multiplyScalar(.5); }
     else hips.copy(shoulders).addScaledVector(DOWN, .8);
     torso.subVectors(shoulders, hips);
+    torsoFrame(hips, shoulderA, shoulderB, clipTorso);
     // Stand the torso up: whatever the clip has it doing (leaning back in the hang, swaying in the climb, half way
     // round a flip as a catch blends in), its hips-to-shoulders frame is turned square to the body: shoulders level
     // and across, spine upright. A whole frame, so there is never a choice of which way round to turn it.
-    if (attached) this.stand.setFromRotationMatrix(basis.makeBasis(side, UP, forward)).multiply(torsoFrame(hips, shoulderA, shoulderB, q2).invert());
+    if (attached) this.stand.setFromRotationMatrix(basis.makeBasis(side, UP, forward)).multiply(q2.copy(clipTorso).invert());
     // Where the rope bars the way: straight ahead of the chest, square to the rope.
     contact.copy(forward).addScaledVector(ropeAxis, -forward.dot(ropeAxis)); if (contact.lengthSq() < 1e-8) contact.copy(forward); contact.normalize();
 
@@ -317,32 +358,45 @@ export class RopeSwingBody {
     // Where the body goes. Its torso is stood up, turned and tipped toward the reaching hand, laid onto the body's own
     // line, and hung by the shoulders below the grip with the rope in front of it; everything turns about the hips.
     axisNow.copy(DOWN).lerp(this.axis, bodyW).normalize();
-    tilt.setFromUnitVectors(DOWN, axisNow);
-    turn.copy(IDENTITY).slerp(this.stand, bodyW);
-    turn.premultiply(q2.setFromAxisAngle(forward, -B.climbRoll * this.twist * bodyW)).premultiply(q2.setFromAxisAngle(UP, B.climbTwist * this.twist * bodyW)).premultiply(tilt);
-    forward.applyQuaternion(tilt); side.applyQuaternion(tilt);
+    if (attached) {
+      tilt.setFromUnitVectors(DOWN, axisNow);
+      turn.copy(IDENTITY).slerp(this.stand, bodyW);
+      turn.premultiply(q2.setFromAxisAngle(forward, -B.climbRoll * this.twist * bodyW)).premultiply(q2.setFromAxisAngle(UP, B.climbTwist * this.twist * bodyW)).premultiply(tilt);
+      forward.applyQuaternion(tilt); side.applyQuaternion(tilt);
+    } else {
+      // Let go, the torso starts as it was last drawn on the rope, whatever clip the leap now plays under it,
+      // and comes round to that clip's own: nothing of the body steps as the hands open.
+      if (this.letGoPending) {
+        this.letGoPending = false; this.letGoFrame.copy(this.lastFrame); this.letGoHips.subVectors(this.lastHips, this.lastRoot);
+        this.absorbing = false; this.absorb.set(0, 0, 0); this.absorbVel.set(0, 0, 0); this.spin.set(0, 0, 0); this.spinVel.set(0, 0, 0);
+      }
+      turn.copy(IDENTITY).slerp(q3.copy(this.letGoFrame).multiply(q2.copy(clipTorso).invert()), bodyW);
+      forward.applyQuaternion(turn); side.applyQuaternion(turn);
+    }
     // The rope's own frame at the hands and feet: up it, square to it ahead of the body, and across.
     ropeUp.copy(ropeAxis).negate();
     ropeForward.copy(forward).addScaledVector(ropeUp, -forward.dot(ropeUp)); if (ropeForward.lengthSq() < 1e-8) ropeForward.copy(forward); ropeForward.normalize();
     ropeSide.crossVectors(ropeUp, ropeForward).normalize();
     const bob = this.bob * Math.max(bodyW, handW);
     if (attached) {
-      placed.copy(grip).addScaledVector(axisNow, reach * B.shoulderDrop + bob).addScaledVector(forward, -B.ropeClearance);
+      placed.copy(grip).addScaledVector(axisNow, armReach * B.shoulderDrop + bob).addScaledVector(forward, -B.ropeClearance);
       placed.sub(v0.copy(torso).applyQuaternion(turn));        // the hips, with the shoulders where they belong
-    } else placed.copy(hips).addScaledVector(this.hipOffset, bodyW).addScaledVector(axisNow, bob * bodyW);
+    } else placed.copy(hips).lerp(v0.copy(this.letGoHips).add(parent.getWorldPosition(v1)), bodyW).addScaledVector(axisNow, bob * bodyW);
     // The reach of the arms is a limit, not a wish: a body bouncing lower than they can hold is held up by them.
     if (attached) this.walkHands(f, dt);
-    this.handTarget(rope, f.ropeD, 0, -1, targetL, turnL); this.handTarget(rope, f.ropeD, 1, 1, targetR, turnR);
+    if (attached) { this.handTarget(rope, f.ropeD, 0, -1, targetL, turnL); this.handTarget(rope, f.ropeD, 1, 1, targetR, turnR); }
     if (attached) {
       // How far along its own line the body may sit with both wrists still in reach: each arm allows a span of it.
+      // (Of the rope where it IS. Where the drawn rope has been pushed round the body's side the arms reach out
+      // to it, and long; the body is not hauled up the rope after it, to drop again as the rope swings back.)
+      drawnRopePoint(rope, f.ropeD, aside).sub(flexibleRopePoint(rope, f.ropeD, v1));
       let low = -Infinity, high = Infinity;
       for (const [arm, target, length] of [[bones.armL, targetL, reachL], [bones.armR, targetR, reachR]] as const) {
-        arm.getWorldPosition(v1).sub(hips).applyQuaternion(turn).add(placed).sub(target);
+        arm.getWorldPosition(v1).sub(hips).applyQuaternion(turn).add(placed).sub(target).add(aside);
         const along = v1.dot(axisNow), room = along * along - v1.lengthSq() + (length * .985) ** 2, half = Math.sqrt(Math.max(0, room));
         low = Math.max(low, -along - half); high = Math.min(high, -along + half);
       }
       placed.addScaledVector(axisNow, low <= high ? Math.min(high, Math.max(low, 0)) : (low + high) / 2);
-      this.hipOffset.subVectors(placed, hips);
     }
 
     // A catch starts from the torso as it was drawn the frame before, hips and turn and the speed of both, and all
@@ -388,25 +442,67 @@ export class RopeSwingBody {
     this.giveWay(rope, placed, (!attached && passing) || this.shoveHeld, steps, h);
     body.quaternion.copy(q1.invert().multiply(q2)); body.position.copy(parent.worldToLocal(v0));
     body.updateWorldMatrix(true, true);
+    drawnTorso.copy(turn).multiply(clipTorso); undrawn.copy(drawnTorso).invert();
 
     // The head looks up the rope, clear of the hands in front of the face.
     if (bones.head && bodyW > 0) { bones.head.rotateOnWorldAxis(side, -B.headBack * bodyW); bones.head.updateWorldMatrix(false, true); }
 
     // Hands: each holds the rope in its palm, planted, walking it hand over hand as the grip travels.
-    let leftGripError = 0, rightGripError = 0, short = 0;
-    if (handW > 0) {
-      // (How far short of the rope the arms are, as a fraction of their length: next frame they stretch by it.)
-      if (attached) short = Math.max(bones.armL.getWorldPosition(v0).distanceTo(targetL) / reachL, bones.armR.getWorldPosition(v0).distanceTo(targetR) / reachR) * (1 + this.armStretch) - 1;
-      leftGripError = this.reach(bones.armL, bones.elbowL, bones.wristL, targetL, turnL, -1, handW);
-      rightGripError = this.reach(bones.armR, bones.elbowR, bones.wristR, targetR, turnR, 1, handW);
+    let leftGripError = 0, rightGripError = 0, short = 0, handNow = handW;
+    if (attached) {
+      // The rope has to be in front of the shoulders for hands hanging from them to hold it. (A hand kept on a rope
+      // that is passing through its own shoulder has no way to point, and pointed every way in turn.)
+      const ahead = v0.copy(grip).sub(v1.addVectors(bones.armL.getWorldPosition(v2), bones.armR.getWorldPosition(v3)).multiplyScalar(.5)).dot(forward);
+      const want = smooth(ahead / B.handClear);
+      this.clear = !this.clearKnown || want < this.clear ? want : Math.min(want, this.clear + dt / B.catchHands);
+      this.clearKnown = true; handNow *= this.clear;
     }
-    this.armStretch = Math.min(B.catchArmStretch, Math.max(0, short)) * handW;
-    for (const index of [0, 1] as const) { const t = this.hands[index].t; this.grip[index] = handW * (t < 1 ? 1 - .45 * Math.sin(Math.PI * t) : 1); }
+    if (handNow > 0 && attached) {
+      // (How far short of the rope the arms are, as a fraction of their length: next frame they stretch by it.)
+      short = Math.max(bones.armL.getWorldPosition(v0).distanceTo(targetL) / reachL, bones.armR.getWorldPosition(v0).distanceTo(targetR) / reachR) * (1 + this.armStretch) - 1;
+      // A rope caught beyond the arms: the elbows open onto it over the catch, they do not lock in its first frame.
+      if (this.attachedAge < B.catchHands) {
+        const open = B.reachOut + (1 - B.reachOut) * smooth(this.attachedAge / B.catchHands);
+        for (const [arm, target, length] of [[bones.armL, targetL, reachL], [bones.armR, targetR, reachR]] as const) {
+          const far = target.distanceTo(arm.getWorldPosition(v0)), most = length * open;
+          if (far > most) target.sub(v0).multiplyScalar(most / far).add(v0);
+        }
+      }
+      leftGripError = this.reach(bones.armL, bones.elbowL, bones.wristL, targetL, turnL, -1, handNow); this.handPole[0].copy(pole);
+      rightGripError = this.reach(bones.armR, bones.elbowR, bones.wristR, targetR, turnR, 1, handNow); this.handPole[1].copy(pole);
+      // Where the hands are from the shoulders, for the moment they let go.
+      for (const [arm, wrist, index] of [[bones.armL, bones.wristL, 0], [bones.armR, bones.wristR, 1]] as const) {
+        arm.getWorldPosition(v0);
+        wrist.getWorldPosition(this.handHold[index]).sub(v0).applyQuaternion(undrawn);
+        this.handPole[index].sub(v0).applyQuaternion(undrawn); this.handHoldTurn[index].copy(wrist.quaternion);
+      }
+      this.held = true;
+    } else if (handW > 0 && this.held && !attached) {
+      // Let go: each arm comes away from where its hand was, into whatever the leap has it doing.
+      for (const [arm, elbow, wrist, index] of [[bones.armL, bones.elbowL, bones.wristL, 0], [bones.armR, bones.elbowR, bones.wristR, 1]] as const) {
+        arm.getWorldPosition(v0);
+        this.comeAway(arm, elbow, wrist, targetL.copy(this.handHold[index]).applyQuaternion(drawnTorso).add(v0), this.handHoldTurn[index],
+          pole.copy(this.handPole[index]).applyQuaternion(drawnTorso).multiplyScalar(4).add(v0), handW, .9, 6);
+        wrist.updateWorldMatrix(false, true);
+      }
+    }
+    // (They lengthen for a rope beyond them as they close on it, and shorten again as the body comes in under
+    // it: over a few frames each way, never in one.)
+    const stretch = Math.min(B.catchArmStretch, Math.max(0, short)) * handNow;
+    this.armStretch = Math.min(this.armStretch + B.stretchRate * dt, Math.max(this.armStretch - B.stretchRate * dt, stretch));
+    for (const index of [0, 1] as const) { const t = this.hands[index].t; this.grip[index] = handNow * (t < 1 ? 1 - .45 * Math.sin(Math.PI * t) : 1); }
 
     // Feet. Where there is rope below the hips each shoe clamps it from its own side, scissoring with the climb and
     // tucking up for a leap. Where there is none (hands at the rope's end, where most catches are made) the legs hang
     // free and swing as a pendulum of their own. A catch always begins with them free and swinging on through.
-    if (legW > 0 && bones.legL && bones.kneeL && bones.ankleL && bones.legR && bones.kneeR && bones.ankleR) {
+    if (legW > 0 && !attached && bones.legL && bones.kneeL && bones.ankleL && bones.legR && bones.kneeR && bones.ankleR) {
+      // Let go: the legs come away from where they were on the body, as the arms do.
+      if (this.feetHeld) for (const [leg, knee, ankle, index] of [[bones.legL, bones.kneeL, bones.ankleL, 0], [bones.legR, bones.kneeR, bones.ankleR, 1]] as const) {
+        leg.getWorldPosition(v0);
+        this.comeAway(leg, knee, ankle, targetL.copy(this.footHold[index]).applyQuaternion(drawnTorso).add(v0), this.footHoldTurn[index],
+          pole.copy(this.footPole[index]).applyQuaternion(drawnTorso).multiplyScalar(4).add(v0), legW, .35, 4);
+      }
+    } else if (legW > 0 && bones.legL && bones.kneeL && bones.ankleL && bones.legR && bones.kneeR && bones.ankleR) {
       const settled = attached ? smooth((this.attachedAge - B.catchClampDelay) / B.catchClamp) : 1, tuck = smooth(f.charge);
       const cp = Math.cos(B.footPoint), sp = Math.sin(B.footPoint);
       // Down the free legs as drawn: their own pendulum, brought round with the torso while a catch runs out, and
@@ -440,11 +536,52 @@ export class RopeSwingBody {
         knee.updateWorldMatrix(true, false);
         q3.setFromRotationMatrix(basis.makeBasis(ax, ay, az));
         ankle.quaternion.copy(keepC).slerp(q2.copy(knee.getWorldQuaternion(keepA)).invert().multiply(q3), legW * clamp);
+        ankle.updateWorldMatrix(false, false);
+        const index = sign < 0 ? 0 : 1;
+        leg.getWorldPosition(v0);
+        ankle.getWorldPosition(this.footHold[index]).sub(v0).applyQuaternion(undrawn); this.footHoldTurn[index].copy(ankle.quaternion);
+        this.footPole[index].copy(pole).sub(v0).applyQuaternion(undrawn);
       }
-    }
+      this.feetHeld = true;
+    } else if (attached) this.feetHeld = false;
+    // Going on to another rope: the arms are already on their way out to it, over whatever the leap has them doing.
+    this.reaching = reach; if (reach > 0) this.reachOut(bones, f.reach!.rope, f.reach!.ropeD, reach);
     body.updateWorldMatrix(true, true);
     this.remember(bones, dt);
     return { leftGripError, rightGripError, rootOffsetY: this.rootOffsetY, active: true };
+  }
+
+  /**
+   * The arms go out for a rope the body is about to have hold of: each hand to where it will hold it, palm turning
+   * to take it, as far as the arm goes without locking. Arms only: the body is still in the air, and its own.
+   */
+  private reachOut(bones: RopeBodyBones, rope: FlexibleRopeState, ropeD: number, weight: number): void {
+    const B = ROPE_BODY, body = bones.body;
+    body.updateWorldMatrix(true, true);
+    body.getWorldQuaternion(q0);
+    forward.set(0, 0, 1).applyQuaternion(q0); forward.y = 0; if (forward.lengthSq() < 1e-8) forward.set(0, 0, -1); forward.normalize();
+    side.set(forward.z, 0, -forward.x); axisNow.copy(DOWN);
+    flexibleRopePoint(rope, Math.max(0, ropeD - .35), v0); flexibleRopePoint(rope, Math.min(rope.len, ropeD + .35), v1);
+    ropeAxis.subVectors(v1, v0); if (ropeAxis.lengthSq() < 1e-10) ropeAxis.copy(DOWN); else ropeAxis.normalize();
+    ropeUp.copy(ropeAxis).negate();
+    ropeForward.copy(forward).addScaledVector(ropeUp, -forward.dot(ropeUp)); if (ropeForward.lengthSq() < 1e-8) ropeForward.copy(forward); ropeForward.normalize();
+    ropeSide.crossVectors(ropeUp, ropeForward).normalize();
+    // Where a catch there would plant them.
+    this.hands[0].d = ropeD + B.handRestUpper; this.hands[1].d = ropeD + B.handRestLower; this.hands[0].t = this.hands[1].t = 1;
+    this.handTarget(rope, ropeD, 0, -1, targetL, turnL); this.handTarget(rope, ropeD, 1, 1, targetR, turnR);
+    // The elbows bend from the torso as it is in the air, tucked or leaning: the way a catch will find them.
+    bones.armL.getWorldPosition(shoulderA); bones.armR.getWorldPosition(shoulderB);
+    if (bones.legL && bones.legR) {
+      bones.legL.getWorldPosition(hips).add(bones.legR.getWorldPosition(v0)).multiplyScalar(.5);
+      torsoFrame(hips, shoulderA, shoulderB, q2);
+      side.set(1, 0, 0).applyQuaternion(q2); forward.set(0, 0, 1).applyQuaternion(q2); axisNow.set(0, -1, 0).applyQuaternion(q2);
+    }
+    for (const [arm, elbow, wrist, target, turned, sign] of [[bones.armL, bones.elbowL, bones.wristL, targetL, turnL, -1], [bones.armR, bones.elbowR, bones.wristR, targetR, turnR, 1]] as const) {
+      arm.getWorldPosition(v0); elbow.getWorldPosition(v1); wrist.getWorldPosition(v2);
+      const most = (v0.distanceTo(v1) + v1.distanceTo(v2)) * B.reachOut, far = target.distanceTo(v0);
+      if (far > most) target.sub(v0).multiplyScalar(most / far).add(v0);
+      this.reach(arm, elbow, wrist, target, turned, sign, weight);
+    }
   }
 
   /** Keep the torso as it has just been drawn, for a catch to start from. */
@@ -454,6 +591,7 @@ export class RopeSwingBody {
     if (bones.legL && bones.legR) { bones.legL.getWorldPosition(this.lastHips); bones.legR.getWorldPosition(v2); this.lastHips.add(v2).multiplyScalar(.5); }
     else this.lastHips.addVectors(v0, v1).multiplyScalar(.5).addScaledVector(DOWN, .8);
     torsoFrame(this.lastHips, v0, v1, this.lastFrame);
+    if (bones.body.parent) bones.body.parent.getWorldPosition(this.lastRoot);
     this.history = Math.min(2, this.history + 1); if (dt > 1e-5) this.lastDt = dt;
   }
 
@@ -522,6 +660,8 @@ export class RopeSwingBody {
    */
   private giveWay(rope: FlexibleRopeState, hipsAt: THREE.Vector3, watch: boolean, steps: number, h: number): void {
     const B = ROPE_BODY;
+    // (A chain is iron, drawn by the ball that hangs on it: nothing pushes it aside.)
+    if (rope.rigid) { this.shove = this.shoveVel = 0; this.shoveSide = 0; this.shoveHeld = false; return; }
     let need = 0, top = rope.len;
     if (watch) {
       for (let d = .2; d <= rope.len + 1e-6; d += .2) {
@@ -554,11 +694,60 @@ export class RopeSwingBody {
     // Elbows out to the side and down: a body hanging behind a rope, not hugging it.
     pole.copy(v0).addScaledVector(side, sign * .45).addScaledVector(forward, .08).addScaledVector(axisNow, .3);
     keepC.copy(wrist.quaternion);
-    this.solve(arm, elbow, wrist, target, pole, weight, 6);
+    // A catch brings the hand to the rope the way a leap takes it off: its end carried there, not its pose blended.
+    if (weight < 1) this.carry(arm, elbow, wrist, target, pole, weight, .5, 6); else this.solve(arm, elbow, wrist, target, pole, 1, 6);
     elbow.updateWorldMatrix(true, false);
     wrist.quaternion.copy(keepC).slerp(q2.copy(elbow.getWorldQuaternion(keepA)).invert().multiply(turned), weight);
     wrist.updateWorldMatrix(false, true);
     return weight >= 1 ? wrist.getWorldPosition(v1).distanceTo(target) : 0;
+  }
+  /** A limb leaving the hold it had on the body for the pose the leap gives it: carried, and its end turned with it. */
+  private comeAway(root: THREE.Object3D, mid: THREE.Object3D, end: THREE.Object3D, held: THREE.Vector3, turned: THREE.Quaternion, poleAt: THREE.Vector3,
+    weight: number, swing: number, passes: number): void {
+    keepC.copy(end.quaternion);
+    this.carry(root, mid, end, held, poleAt, weight, swing, passes);
+    end.quaternion.copy(keepC).slerp(turned, weight);
+  }
+  /**
+   * A limb between the pose its clip gives it (weight 0) and a hold (weight 1): a hand closing on a rope, or a hand
+   * or a foot coming away from where it held one. Its END is what travels: from where the clip has it to the hold,
+   * on an arc out in front of the body, with the limb solved to it all the way. Only at the clip's end of the way,
+   * where the two are near each other, does the clip's own bend take over.
+   *
+   * (It is not the two POSES that are blended. Hands over the head and hands by the hips are half a turn apart at
+   * the shoulder, and a blend of two rotations half a turn apart has no way round to prefer: it took whichever was
+   * a hair shorter that frame, and an arm half way there flipped to the other side of the body in a sixtieth of a
+   * second.)
+   */
+  private carry(root: THREE.Object3D, mid: THREE.Object3D, end: THREE.Object3D, held: THREE.Vector3, poleAt: THREE.Vector3, weight: number, swing: number, passes: number): void {
+    root.getWorldPosition(v0); end.getWorldPosition(v1);
+    // From the limb's root: the way to the hold, and the way to where the clip has the end.
+    v2.subVectors(held, v0); v3.subVectors(v1, v0);
+    const toHeld = v2.length(), toClip = v3.length();
+    if (toHeld < 1e-5 || toClip < 1e-5) return;
+    v2.divideScalar(toHeld); v3.divideScalar(toClip);
+    // Far apart, the way between them bows out in front: an arm comes down past the chest, not through the head.
+    // And it is travelled at an even turn. (Taken at an even pace along its own measure instead, the bowed way
+    // idles out in front and then drops the last third in three frames.)
+    const bow = swing * (1 - v2.dot(v3)) / 2;
+    const way = (u: number, out: THREE.Vector3): THREE.Vector3 => {
+      out.copy(v3).multiplyScalar(1 - u).addScaledVector(v2, u).addScaledVector(forward, bow * Math.sin(Math.PI * u));
+      return out.lengthSq() < 1e-8 ? out.copy(forward) : out.normalize();
+    };
+    way(0, pathFrom); pathTurn[0] = 0;
+    for (let i = 1; i <= PATH_STEPS; i++) { pathTurn[i] = pathTurn[i - 1] + pathFrom.angleTo(way(i / PATH_STEPS, pathTo)); pathFrom.copy(pathTo); }
+    const turned = pathTurn[PATH_STEPS] * weight;
+    let step = 1; while (step < PATH_STEPS && pathTurn[step] < turned) step++;
+    const span = pathTurn[step] - pathTurn[step - 1];
+    way((step - 1 + (span > 1e-6 ? (turned - pathTurn[step - 1]) / span : 0)) / PATH_STEPS, v4).multiplyScalar(toClip + (toHeld - toClip) * weight).add(v0);
+    // ...and the way it bends comes round, over the clip's half of the way, from the way the clip bends it to the
+    // way it bends on the hold: where the clip has the limb to itself the two are the same limb.
+    v2.subVectors(poleAt, v0); v3.copy(mid.getWorldPosition(v1)).sub(v0);
+    if (v2.lengthSq() > 1e-8 && v3.lengthSq() > 1e-8) {
+      v2.normalize().lerp(v3.normalize(), 1 - smooth(weight / .6));
+      if (v2.lengthSq() > 1e-6) poleAt.copy(v2).normalize().add(v0);
+    }
+    this.solve(root, mid, end, v4, poleAt, smooth(weight / .55), passes);
   }
   private solve(root: THREE.Object3D, mid: THREE.Object3D, end: THREE.Object3D, target: THREE.Vector3, poleAt: THREE.Vector3, weight: number, passes: number): void {
     keepA.copy(root.quaternion); keepB.copy(mid.quaternion);

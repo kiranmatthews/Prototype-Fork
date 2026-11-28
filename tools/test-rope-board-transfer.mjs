@@ -199,11 +199,15 @@ try {
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
   const {
     RigBinding,
+    UNITY_ROPE_BACKFLIP_CHARGE,
+    UNITY_ROPE_BACKFLIP_OPEN,
+    UNITY_ROPE_BACKFLIP_SPARE,
     UNITY_ROPE_CLIP_IDS,
     UNITY_ROPE_INPUTS,
     UNITY_ROPE_TIMING,
     createPlayerStarterAnimationSuite,
     unityRopeLeapAirSeconds,
+    unityRopeLeapFlips,
     unityRopeReleaseDuration,
   } = await server.ssrLoadModule("/src/animation/index.ts");
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
@@ -457,24 +461,27 @@ try {
   assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.release);
   closeTo(rider.ropeAnimationDiagnostics.releaseCharge, 1,
     "full rope charge did not select the charged Unity variant");
-  // The charged backflip is paced to the leap's own time in the air, so it has come round before the ground;
-  // played at the source clip's length it never could.
+  // The charged backflip is paced to the leap's own time in the air: what the clip plays is its turn and its
+  // opening, and both are over with air to spare. Played at the source clip's length they never could be.
   const leapAir = unityRopeLeapAirSeconds(rider.vVel, TUNING.riseGravity, TUNING.fallGravity);
+  const backflipSource = UNITY_ROPE_TIMING.backflipReleaseDuration * UNITY_ROPE_BACKFLIP_OPEN;
   closeTo(rider.ropeAnimationDiagnostics.releaseDuration,
     unityRopeReleaseDuration(1, leapAir),
     "full rope charge did not pace the backflip to the leap");
-  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration * 0.62 < leapAir,
-    "the charged backflip would not have come round before the leap is back at the height it left");
-  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration < UNITY_ROPE_TIMING.backflipReleaseDuration,
-    "the charged backflip still plays at the source clip's own length");
-  closeTo(unityRopeReleaseDuration(1), UNITY_ROPE_TIMING.backflipReleaseDuration,
-    "release duration helper diverged from the source clip at full charge");
-  closeTo(unityRopeReleaseDuration(0), UNITY_ROPE_TIMING.swingReleaseDuration,
-    "minimum rope charge used the wrong Unity release duration");
-  closeTo(unityRopeReleaseDuration(0.5),
-    (UNITY_ROPE_TIMING.swingReleaseDuration +
-      UNITY_ROPE_TIMING.backflipReleaseDuration) * 0.5,
-    "half rope charge did not interpolate the Unity release durations");
+  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration <= leapAir * (1 - UNITY_ROPE_BACKFLIP_SPARE) + 1e-9,
+    "the charged backflip would not have opened before the leap is back at the height it left");
+  assert.ok(rider.ropeAnimationDiagnostics.releaseDuration <= backflipSource + 1e-9,
+    "the charged backflip plays slower than its source");
+  closeTo(unityRopeReleaseDuration(1), backflipSource,
+    "release duration helper diverged from the source clip's turn at full charge");
+  // A leap is a backflip or a plain jump, never part of each: a blend of an upright swing-off with a body
+  // half way round a flip turned every joint the long way round in one frame.
+  assert.equal(unityRopeLeapFlips(1), true);
+  assert.equal(unityRopeLeapFlips(UNITY_ROPE_BACKFLIP_CHARGE), true);
+  assert.equal(unityRopeLeapFlips(UNITY_ROPE_BACKFLIP_CHARGE - 0.01), false);
+  assert.equal(unityRopeLeapFlips(0), false);
+  assert.equal(unityRopeReleaseDuration(0), 0, "a tapped leap was given a release clip");
+  assert.equal(unityRopeReleaseDuration(0.5, leapAir), 0, "a half-held leap was given part of the backflip");
   rider.syncVisual(mounted.input, CONST.fixedStep);
   assert.equal(ropeRuntime.activeClipId, UNITY_ROPE_CLIP_IDS.release);
   closeTo(
@@ -499,9 +506,71 @@ try {
     "rope release animation clock did not advance on fixed time");
   closeTo(
     ropeRuntime.diagnostics.motionContext.actionProgress,
-    CONST.fixedStep / rider.ropeAnimationDiagnostics.releaseDuration,
-    "rope release clip was not phase-locked to its charge-blended duration",
+    UNITY_ROPE_BACKFLIP_OPEN * CONST.fixedStep / rider.ropeAnimationDiagnostics.releaseDuration,
+    "rope backflip clip was not phase-locked to its leap: its opening is where the clip's time ends",
   );
+  // ...and when that time is up the clip is over: the rest of the air is the jump's own. (Clear of the rope it
+  // left, which would otherwise take a leap with no steer in it straight back.)
+  rider.pos.x += 3;
+  rider.prevPos.copy(rider.pos);
+  for (let i = 0; i < 200 && rider.ropeAnimationDiagnostics.releaseElapsed < rider.ropeAnimationDiagnostics.releaseDuration; i++)
+    rider.step(CONST.fixedStep, makeInput(), mounted.level);
+  assert.equal(rider.state, "air", "the backflip fixture landed before its clip ended");
+  rider.step(CONST.fixedStep, makeInput(), mounted.level);
+  assert.notEqual(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.release,
+    "the backflip clip was held past its opening");
+
+  // A tap, and a half-held press: plain leaps. No release clip, no charge blend; the height is still the charge's.
+  for (const charge of [0, 0.5]) {
+    const plain = createFixture();
+    assert.equal(plain.player.tryRopeGrab(plain.level), true, "plain-leap fixture did not catch its rope");
+    plain.player.chargeTimer = TUNING.jumpChargeTime * charge;
+    plain.player.ropeLeap(plain.level, plain.level.ropeSwings[0]);
+    assert.equal(plain.player.state, "air");
+    assert.equal(plain.player.ropeAnimationDiagnostics.releaseDuration, 0, `a leap at charge ${charge} was given a release clip`);
+    assert.equal(plain.player.ropeAnimationDiagnostics.releaseCharge, 0, `a leap at charge ${charge} blends toward the backflip`);
+    assert.notEqual(plain.player.animationClipHint, UNITY_ROPE_CLIP_IDS.release, `a leap at charge ${charge} plays the release clip`);
+    closeTo(plain.player.vVel, TUNING.jumpMinVelocity + (TUNING.jumpVelocity - TUNING.jumpMinVelocity) * charge,
+      `rope leap height at charge ${charge}`);
+    plain.level.dispose();
+  }
+
+  // The rope a leap has just left does not take him straight back; another rope takes him as soon as he reaches
+  // it; and one hanging right beside the first (inside the grab's own reach of the leap) waits with it.
+  const chain = (() => {
+    const scene = new THREE.Scene();
+    const data = ropeLevelData();
+    data.components.splice(2, 0,
+      { t: "ropeswing", p: [5, 6, 0], len: 6, amp: 0, speed: 1, phase: 0 },
+      { t: "ropeswing", p: [-0.9, 6, 0], len: 6, amp: 0, speed: 1, phase: 0 });
+    const level = new Level(scene, { id: "rope-chain-test", name: data.name, data });
+    level.update(0);
+    const player = new Player(scene);
+    player.pos.set(0, 2, 0); player.prevPos.copy(player.pos);
+    player.state = "air"; player.grounded = false;
+    player.axisF.set(1, 0, 0); player.axisL.set(0, 0, 1);
+    player.lastVelX = 12; player.lastVelZ = 0; player.vVel = -2;
+    player.syncVisual(makeInput(), 0);
+    scene.updateMatrixWorld(true);
+    return { level, player };
+  })();
+  const [first, next, beside] = chain.level.ropeSwings;
+  assert.equal(chain.player.tryRopeGrab(chain.level), true, "chain fixture did not catch its first rope");
+  assert.equal(chain.player.ropeObj, first);
+  chain.player.chargeTimer = 0;
+  chain.player.ropeLeap(chain.level, first);
+  assert.equal(chain.player.tryRopeGrab(chain.level), false,
+    "the rope a leap had just left, or the one beside it, took him straight back");
+  chain.player.pos.x = 4.4; chain.player.prevPos.copy(chain.player.pos);
+  assert.ok(chain.player.ropeCoolT > 0, "the regrab time ran out before the next rope was tried");
+  assert.equal(chain.player.tryRopeGrab(chain.level), true, "the next rope along did not take a leap that reached it");
+  assert.equal(chain.player.ropeObj, next);
+  chain.player.chargeTimer = 0;
+  chain.player.ropeLeap(chain.level, next);
+  chain.player.pos.x = -0.5; chain.player.prevPos.copy(chain.player.pos);
+  assert.equal(chain.player.tryRopeGrab(chain.level), true, "a rope left one leap ago was still refused");
+  assert.ok(chain.player.ropeObj === first || chain.player.ropeObj === beside);
+  chain.level.dispose();
 
   // Emergency eject owns its Jump release before rope/rail capture. The same
   // edge cannot perform two board-detach transactions.
