@@ -264,6 +264,7 @@ import { CRATE_SIZE, CRATE_SCALE, LEGACY_CRATE_SIZE, RACE_CRATE_SIZE, RACE_CRATE
 import { surfaceBoundaryEdges, surfaceRidgeEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
+  WOOD_PATH_CARPENTRY_MEMBERS_PER_BAY,
   type WoodPathFrame,
   type WoodPathProfile,
 } from "./woodPathKit";
@@ -3636,7 +3637,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
         aggregateSamples += Math.ceil(curvedLength / Math.max(0.18, component.spacing ?? 0.55)) * 2;
         if (component.supports ?? component.scaffold) {
           const bays = Math.ceil(curvedLength / Math.max(1.5, component.baySpacing ?? 3.8));
-          aggregateSamples += bays * 32;
+          // (a path of n bays has n + 1 bents: one more charge covers the first of them)
+          aggregateSamples += (bays + 1) * WOOD_PATH_CARPENTRY_MEMBERS_PER_BAY;
         }
         supportProbeCount += terrainSupportProbeCount(component, curvedLength);
         if (component.rails ?? component.scaffold) aggregateSamples += Math.ceil(curvedLength / 0.35) * 6;
@@ -14389,17 +14391,16 @@ export class Level {
     for (const barrier of layout.balustradeBarriers)
       addOrientedBarrier(barrier.center, barrier.basis, barrier.size);
 
-    for (const pole of layout.poles) {
-      if (pole.role === "support-post")
-        this.walls.push(
-          new THREE.Box3()
-            .setFromPoints([
-              new THREE.Vector3().fromArray(pole.start),
-              new THREE.Vector3().fromArray(pole.end),
-            ])
-            .expandByScalar(pole.radius + 0.015),
-        );
-    }
+    // What a body meets under the deck is a plumb column under each end of
+    // every bent, as it always was. The carpentry drawn round it (thicker
+    // posts in two or three logs, leaning a little) is not collision.
+    if (makeSupports)
+      for (const bent of layout.bents)
+        for (const [base, top] of [[bent.leftBase, bent.leftTop], [bent.rightBase, bent.rightTop]] as const) {
+          const foot = new THREE.Vector3().fromArray(base), head = new THREE.Vector3().fromArray(top);
+          if (foot.distanceTo(head) < 1e-5) continue;
+          this.walls.push(new THREE.Box3().setFromPoints([foot, head]).expandByScalar(layout.profile.postRadius + 0.015));
+        }
     for(let i=wallBefore;i<this.walls.length;i++)this.worldWallSources.set(this.walls[i],deck);
   }
 

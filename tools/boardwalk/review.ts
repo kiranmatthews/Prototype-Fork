@@ -29,10 +29,35 @@ function swatches(){clear();mode='all nine models';const layout=buildWoodPathLay
     }
   }
   root.add(...buildWoodPathMeshes(layout,seed));camera.position.set(-7,38,7);orbit.target.set(-4,0,-12);orbit.update();}
+// The carpentry at eight heights, side by side, left to right: a stub on ground, knee braces on short piles,
+// a boardwalk on ground (knee braces, the way under it open), one panel on piles, one panel above head height
+// on ground, a two-panel trestle, a three-panel trestle of spliced logs, and a deck too wide to cross.
+const HEIGHTS:{post:number;ground:boolean;width:number}[]=[{post:.9,ground:true,width:5},{post:1.7,ground:false,width:5},
+  {post:3.5,ground:true,width:5},{post:4.3,ground:false,width:5},{post:5.6,ground:true,width:5},{post:8,ground:false,width:5},
+  {post:13,ground:false,width:5},{post:4.3,ground:false,width:11}];
+function heights(){clear();mode='carpentry by height';let x=0;
+  HEIGHTS.forEach((row,index)=>{
+    x+=row.width/2+3;const at=x;x+=row.width/2+3;
+    const layout=buildWoodPathLayout({length:13.5,sampleAtDistance:d=>({center:[at,row.post+.55,-d] as [number,number,number],
+      forward:[0,0,-1] as [number,number,number],right:[-1,0,0] as [number,number,number],up:[0,1,0] as [number,number,number],width:row.width})},
+      {profile:UNITY_BEACH_BOARDWALK_PROFILE,plankSeed:seed+index,poleSeed:(seed+index)^0x6f2b,plankVariantWeights:WOOD_PATH_PLANK_WEIGHTS,
+        poleVariantWeights:WOOD_PATH_POLE_WEIGHTS,fallbackBaseY:0,supportBottom:row.ground?r=>[r.top[0],0,r.top[2]]:undefined});
+    root.add(...buildWoodPathMeshes(layout,seed+index));
+  });
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(x+6,26),new THREE.MeshLambertMaterial({color:'#b9a988'}));
+  floor.rotation.x=-Math.PI/2;floor.position.set(x/2,-.01,-6.75);root.add(floor);
+  camera.position.set(x/2,9,34);orbit.target.set(x/2,4,-6);orbit.update();}
 const add=(label:string,fn:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.onclick=fn;document.querySelector('#controls')!.append(b);};
 add('Curved boardwalk',path);add('All nine models',swatches);add('Different seed',()=>{seed+=193;path();});
 add('Scaffold side',()=>{camera.position.set(-15,3,-12);orbit.target.set(2,2,-14);orbit.update();});
-path();
+add('Carpentry by height',heights);
+// ?mode=heights opens on the row of heights; ?cam=x,y,z&look=x,y,z places the camera (for review pictures).
+const query=new URLSearchParams(location.search);
+if(query.get('mode')==='heights')heights();else path();
+const numbers=(key:string)=>query.get(key)?.split(',').map(Number).filter(Number.isFinite);
+const cam=numbers('cam'),look=numbers('look');
+if(cam?.length===3){camera.position.set(cam[0],cam[1],cam[2]);if(look?.length===3)orbit.target.set(look[0],look[1],look[2]);orbit.update();}
+if(query.has('clean'))(document.querySelector('aside') as HTMLElement).style.display='none';
 function draw(){requestAnimationFrame(draw);orbit.update();renderer.render(scene,camera);
   const models=new Map<string,number>();let instances=0;root.traverse(o=>{const m=o as THREE.InstancedMesh;if(m.isInstancedMesh){instances+=m.count;models.set(m.userData.woodPathModel,(models.get(m.userData.woodPathModel)??0)+m.count);}});
   status.textContent=JSON.stringify({mode,seed,paint:woodPathMeshPaint.status,instances,models:Object.fromEntries(models),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,errors},null,2);

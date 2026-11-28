@@ -180,8 +180,9 @@ pyramid(-9, TOP, 'mystery', 'Start: the first boxes');
   pit(a + 8, a + 38, t, 'Under the timber road');
   add({ t: 'woodpath', p: [r(a + 8), r(t), 0], pts: [[0, 0, 0, 0], [8, 0, 0, 1.4], [15, 0, 0, 1.4], [22, 0, 0, 0.4], [30, 0, 0, 0]],
     w: 5, s: [5, 0.32, 1], curve: 'spline', structureStyle: 'light', scaffold: true, supports: true, rails: true,
-    terrainSupports: false, supportDepth: 9, baySpacing: 5, spacing: 0.55, grp: GR.floor,
-    nm: 'Timber road: 30 m of planks on bamboo, humped in the middle' });
+    // (its posts are piles: they stand in the pool under it, a hand's breadth under its surface, wherever the deck humps)
+    terrainSupports: false, supportBaseY: r(t - PIT_DROP - 0.3), baySpacing: 5, spacing: 0.55, grp: GR.floor,
+    nm: 'Timber road: 30 m of planks on a timber trestle, humped in the middle' });
   pyramid(a + 19, t + 1.4, 'mystery', 'Timber road: boxes on the hump');
   floor(a + 38, a + 46, t, 'Timber road: way off');
   mark('from', a + 8); mark('to', a + 38);

@@ -119,6 +119,8 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     ledgerRadius: .095, braceRadius: moving ? .055 : .083,
     lowerLedgers: !moving, diagonalBraces: !moving,
     handrails: false, tonalBucketCount: 4,
+    // Carlisle's piers and cradles keep the light scaffold they were measured and budgeted with.
+    structure: 'unity',
   };
   if(width>8){
     // On mansion-width decks a small random yaw swings a plank's tips across
