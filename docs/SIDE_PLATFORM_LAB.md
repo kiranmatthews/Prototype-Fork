@@ -25,7 +25,7 @@ Distances are from each station's start; heights are over its floor.
 |---|---|---|---|---|
 | 1 | Ramps | 0–50 | a `ramp` rising east 1.5 m in 6 (yaw −90), a block, a `ramp` falling east (yaw 90); then a 1.3 m kicker to a 4 m gap | walk them; **jump** off the kicker (a walker is not thrown by a ramp: run off it and he falls 0.5 m short) |
 | 2 | Rolling ground | 50–98 | a 32 m `terrain` strip, splined through +0.9, −0.4 and +1.1 m and bumped (no kerbs: seen from the side, the near one hides him to the chest) | run it |
-| 3 | Timber road | 98–144 | a 30 m `woodpath` on its own bamboo scaffold over a drop, humped 1.4 m | run it; boxes on the hump |
+| 3 | Timber road | 98–144 | a 30 m `woodpath` on its own timber trestle over a pool, humped 1.4 m | run it; boxes on the hump; see [timber road](#timber-road) |
 | 4 | Rocks and a log | 144–202 | a `log` (1.1 m), four `rock` boulders (0.9, 1.7, 2.5, 1.3 m) overlapped into a ridge, an `idol` (1.8 m), a `wallpath` wall (1.1 m) | a tap over the log and up each boulder, a held jump over the statue |
 | 5 | Ice | 202–262 | a 14 m ice sheet (`slip`, `iceGrip` 0.12); an 8 m ice chute down 2 m (`slipGravity`) onto a 10 m run-out and a 3.5 m gap | slide; a tap at the brink; see [ice](#ice) |
 | 6 | Sticky floor | 262–302 | 9 m of goo (`tex: 'goo'` with `groundSpeedLimit` 1.4); then 6 m of it with boxes standing in it | trudge: the 40 m take 13 s; see [sticky floor](#sticky-floor) |
@@ -37,7 +37,7 @@ Distances are from each station's start; heights are over its floor.
 | 12 | Trampolines | 580–632 | a rope `trampoline` set in the floor; one on four piles over a pit, against a 5 m wall | walk onto the first (it gives 0.4 m under you) and hop on it; jump onto the second with **Jump held at the landing**; see [trampolines](#trampolines) |
 | 13 | Rope swings | 632–740 | a `ropeswing` over a trench; two in a row over a drop, half a round apart; one whose anchor ferries 8 m each way | see [rope swings](#rope-swings) |
 | 14 | Moving decks | 740–832 | a wheel of two decks (`orbit`); a sliding springboard (`bounce`) under a 3 m shelf; a turntable (`spin`); a lift with a brazier (`lit`) | see [moving decks](#moving-decks) |
-| 15 | Pendulums | 832–916 | four swinging ACROSS the line (one; two half a beat apart; one over deep sand), then one swinging ALONG it | pass each of the four as its bob leaves the line (high is off the line, low is on it); see [pendulums](#pendulums) for the fifth |
+| 15 | Pendulums | 832–916 | a ramp up to a ledge; four swinging ACROSS the line (one; two half a beat apart; one over deep sand), then one swinging ALONG it | a running jump off the ledge catches the first one's **chain**: climb it, take the fruit, leap off. Pass each of the four as its bob leaves the line (high is off the line, low is on it); see [pendulums](#pendulums) |
 | 16 | Rolling stones | 916–976 | a `stone` rolling 9 m each way ALONG the line at 5 m/s (`axis` x); one rolling across it at 6 m/s | jump the first as it comes (the top of a tap over it); pass behind the second |
 | 17 | Fire | 976–1030 | two `torch`es; a `firetiki` head breathing across the line; two more out of step, one turning; 4 m of lava | pass each head as its breath stops (a 5 s round: cool for 2.7 s, a warning for 0.8 s, fire for 1.15 s); a tap over the lava |
 | 18 | Thorns | 1030–1070 | three `thorn` patches 7 m apart, the last two wide | a tap over each (a landing has 2 m of run before the next) |
@@ -53,6 +53,24 @@ Distances are from each station's start; heights are over its floor.
 | 28 | The ball | 1760–1791 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
 | 29 | Glass and the board trip | 1791–1841 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
 | 30 | Portals and prizes | 1841–1953 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
+
+### Timber road
+
+What stands under a `woodpath` is carpentry (`WOOD_PATH_CARPENTRY`; the rules are in
+[UNITY_BACKPORT_PRIMITIVES.md](UNITY_BACKPORT_PRIMITIVES.md#what-stands-under-the-deck)), and this road is
+the lab's piece of it.
+
+- **Everything stands on something.** Planks lie on stringers, stringers on a cap beam at each bent, the cap
+  on two posts, and a post on a sleeper where there is ground under it or driven as a pile where there is
+  not. Nothing ends in the air.
+- **How it is braced depends on how tall it is**: stubs under 1.2 m, knee braces up to about 1.9 m (3.8 m
+  on ground), and above that panels about 3 m high, the top one crossed and the ones under it a single pole
+  over a girt. Over ground the lowest 2.3 m carry posts only, so the way under a boardwalk stays open.
+- **Timber is stout and a little crooked**: a post is 0.23 m in radius under a 5 m deck, every joint on a
+  post is lashed with rope, and every member runs on past its joints.
+- This road's posts are piles: it is given a base in the pool under it (`supportBaseY`), so they all stand
+  in the water whatever the deck does over them.
+- What a body meets has not changed: the deck, and the same plumb column under each end of every bent.
 
 ### Ice
 
@@ -134,6 +152,15 @@ swings 3.4 m each way on a round of 4.6 s.
 - Let go (Jump), a body is thrown up and steers itself 6.8 m on. The pair are 9.3 m apart and half a round
   apart, so the first is at the far end of its swing when the second is at the near end of its own, 2.5 m
   off: let go there and the second is caught in the air.
+- **A leap is one action.** A tap, or anything under 60% of a charge, is a plain jump: the body comes away
+  from the rope as it was, opens and lands like any jump. From 60% it is a backflip that has come round and
+  opened before the ground. It is never part of each. (The old leap blended the two and solved the hands
+  to a rope that had gone: a tap turned the elbows 97 to 121 degrees in one frame, a half charge every
+  joint by 176, and he landed with his soles 0.4 to 0.8 m over the floor. No joint now turns more than 30
+  degrees in a frame, and the soles are within 0.13 m of the floor as he lands.)
+- **The next rope takes him at once.** The half second in which a rope will not catch belongs to the rope
+  he left (and any within 1.7 m of it), not to every rope: a leap into the second of the pair is caught as
+  it reaches it, with his arms out for it first.
 - The fourth is a ferry. Its anchor travels 8 m each way on a round of 7.9 s and the rope under it barely
   swings. A tap off the brink meets a rope that is 1 to 3 m out; it turns at the near end 2.2 m out and is
   within reach for about a second as it does. It turns at the far end 4 m short of the floor: let go
@@ -162,6 +189,26 @@ swings 3.4 m each way on a round of 4.6 s.
 - A pendulum at `yaw` 90 swings across the line. From the side its swing cannot be seen, only its height:
   high is off the line, low is on it. Its gallows stands 7.2 m before and behind the line, off any floor
   6 m deep, so each post here has a plinth.
+- **A swinging ball's chain can be held**, like a rope: caught a metre over the feet, climbed with up and
+  down at 2.4 m/s, swung with, and left with Jump. The holds run from 1 m below the post down to 3.3 m over
+  the ball's centre (on these 6 m chains: 1.0 to 2.7 m down, which is 6.0 to 4.3 m over the floor). At the
+  lowest hold no swing of the chain brings the ball to a body hung from it; he can climb no lower. A ball on
+  less than 4.7 m of chain has nothing to hold. The ball is as deadly as it was.
+- **It is taken from the ledge.** From the floor the lowest hold is out of a running jump's reach, and a
+  double jump's: the chain hangs within reach of the line only while the ball is on the line under it. (The
+  one way from the floor is a full jump from a standstill under the post, begun as the ball goes by.) So a
+  ramp leads up to a ledge 2.4 m over the floor whose end is 3.2 m short of the post. A running tap off the
+  last 1.3 m of it goes over the ball and into the chain wherever the swing is (all 24 of 24 points of its
+  round), near its top. Run off the ledge without jumping and he comes down 1.35 m short of the post, a
+  stride from where the ball crosses the line (it is on the line within 1.25 m of its post): the place to
+  wait is on the ledge.
+- **This pendulum is turned 10 degrees from square** (`yaw` 100). Square to the line, a gallows' near post
+  stands exactly in front of its chain as the side view sees it, and hides whoever is on it. Turned, the
+  post stands 1.25 m east of the chain and the climb can be seen.
+- Three fruit hang 8.7 m over the first pendulum and are taken from the chain's upper holds. Leapt off
+  east from the top, he comes down 6.6 m on, short of the pair.
+- **On a line seen from the side** a chain or a rope within a metre of the line in depth is caught from the
+  line, and he stays on the line while he holds it: only the body the eye sees swings with it.
 - A pendulum at `yaw` 0 swings along the line, and the side view shows all of it. The fifth is one: 6 m
   long, 1.1 rad each way, on a round of 6.3 s. Its bob is at head height or lower for a second in every
   three, anywhere within 4.7 m of its post, and up out of the way for two: the 9.4 m under it are run

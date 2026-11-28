@@ -1965,6 +1965,18 @@ measured, and a layout has to allow for:
   Let go, he carries 6.8 m. A travelling one is caught 1 to 3 m out from the brink.
 - **A `pendulum`** at `yaw` 90 swings across a side-scrolling line (seen only as high and low), and its
   gallows stands 7.2 m either side of it; at `yaw` 0 it swings along the line and is seen whole.
+- **A swinging ball's chain is a rope to climb** where there is 4.7 m of it or more: held from 1 m below
+  the post down to 3.3 m over the ball's centre (a body hung there is clear of the ball at every angle),
+  climbed at 2.4 m/s, left with Jump. Its lowest hold is 4.3 m over the floor under a ball that swings
+  1 m clear of it, and the chain is within reach of the line only while the ball is on it: do not ask for
+  it from the floor. Give it a ledge 2.4 m up whose end is 3.2 m short of the post (a running tap off its
+  last 1.3 m catches the chain at any point of the swing), and hang the reward over the top of the chain.
+  On a side-scrolling line turn the pendulum 10 degrees from square (`yaw` 100): square, its near post
+  hides the chain and the climber. An axe on a shaft has nothing to hold.
+- **Ropes in a row**: a rope will not catch the body that has just left it for half a second, and nor will
+  one within 1.7 m of it; any other rope takes him as soon as he reaches it. A leap is a plain jump under
+  60% of a charge and a backflip from there: space the next rope for the jump (6.8 m of carry off a 6 m
+  rope), not for a flip.
 - **A `sentry`** sees 32 m, in front of it and behind, and fires 0.7 m over the floor. On one line, cover
   along the way is a hole 1.6 m deep; put a wall taller than its muzzle at its back.
 - **A roof over a walker** is at least 2.6 m up (lower, the ground under it misreads or a jump ends in the
@@ -1979,6 +1991,14 @@ measured, and a layout has to allow for:
   beside the hinge, 7 m from the far end of a 10 m leaf), on foot or still on the board. Give the bank it is
   spun from 4 m of floor behind the hinge and nothing overhead for 8 m. A body that arrives while it folds is
   stopped at the hinge.
+- **A `woodpath` stands on carpentry**: stringers on a cap on two posts at every bent (`baySpacing`, 4.5 m;
+  keep it near that: a bay has no truss), braced by height (stubs under 1.2 m, knee braces to 1.9 m, then
+  3 m panels), with posts 0.19 to 0.28 m in radius by the deck's width. A post stands on a sleeper where
+  its support probe finds ground, and the lowest 2.3 m over ground carry posts only, so a boardwalk can be
+  walked under. Over water or a pit give the path `supportBaseY` just under the surface, so its piles
+  stand in it at one level; `supportDepth` follows the deck and leaves their feet at different heights
+  under a hump. A bent has two posts however wide the deck. None of it is collision: that is still the
+  deck and a plumb column under each end of every bent.
 - **A sticky floor** is slow ground painted as goo: `tex: 'goo'` with a `groundSpeedLimit` (1.4 m/s is a
   trudge). It holds a walker, a crawl and a board to that pace alike; a board is not thrown off it. Give
   it the tint `#ffffff`: the goo carries its own colour. Deep sand is the same limit without the paint.

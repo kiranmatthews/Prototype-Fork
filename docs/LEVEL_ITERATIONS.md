@@ -14538,3 +14538,135 @@ inside of each, a stride in from the track.
   instead and pass.
 - A planar loop has no collision at all, by design: a body thrown at its rim from outside passes through
   it.
+
+## 2026-11-28 — Twelve notes from the Side Platform Lab, part 4: timber under the bridges, the leap off a rope, and chains to climb
+
+- **Brief** (the last three of its twelve lines): "the dismount jump animations from the rope swing are
+  glitchy/janky and need exhaustive review and correction"; "the chain ropes of the swinging balls should be
+  climbable"; "improve the visual fidelity and procedural structure logic of the scaffold/framing below
+  solid bridges, making them look Crash 4 like".
+- **Elapsed:** about 18 h 35 min from the brief to this part published, 2 h after part 3. The rope work and
+  the scaffold were each built in a worktree of their own from the start, alongside the other nine lines.
+- **Level:** Side Platform Lab. Pendulums: a ramp up to a ledge before the first pendulum, that pendulum
+  turned 10 degrees from square, and three fruit over its chain. Timber road: its piles are given a base in
+  the pool. No station moved: still 1,977 m, 30 stations, 38 checkpoints. Every level with a wood path, a
+  rope swing or a swinging ball changes with the runtime; no other level's data was edited.
+- **Runtime:** ropes: `src/animation/ropeSwingBody.ts`, `src/animation/unityRope.ts`, `src/player.ts`,
+  `src/characterAnimationRuntime.ts`. Chains: `src/level.ts` (`Level.chainGrabs`), `src/ropeGeometry.ts`,
+  `src/player.ts`. Timber: `src/woodPathKit.ts` (`WOOD_PATH_CARPENTRY`), `src/woodPathMeshes.ts`,
+  `src/level.ts`, `src/carlisleTimber.ts`. No tuning was touched and no starter clip was added or re-keyed.
+- **Docs:** `docs/SIDE_PLATFORM_LAB.md` (timber road, rope swings, pendulums), `docs/ANIMATION_STUDIO.md`
+  (the rope section), `docs/UNITY_BACKPORT_PRIMITIVES.md` (what stands under the deck), design bible XV.11,
+  README.
+
+**The leap off a rope.** It was a pose blend of two clips with the hands still solved to a rope that had
+gone. Measured frame by frame with the production animation on the lab's ropes:
+
+| What was wrong | Why | What it is now | Before, after |
+|---|---|---|---|
+| The arms whip as the hands open | the hands were still solved to the rope he had left | hands, feet and torso come away from where they were on the body; each limb's end is carried on an arc at an even turn | elbows 97 to 121 degrees in a frame; 27 to 30 |
+| Every joint flips on a part-charged leap | the upright swing-off clip was blended with the backflip | a leap is a plain jump under 60% of a charge and a backflip from 60%, never part of each | 176 to 178 degrees in a frame at half charge; 29 |
+| A frozen "still holding a rope" pose in flight, and a floating landing | a tap played the first fifth of a 3.4 s clip | a plain leap is the ordinary jump, with its own opening and landing | soles 0.36 to 0.54 m over the floor; 0.09 to 0.10 |
+| The backflip lands in a crouch drawn in mid-air | the clip ran on past its opening | it plays only its turn and its opening, fitted to the air it has; the jump takes the rest | soles 0.73 to 0.76 m; 0.12 to 0.13 |
+| The body turns as he lets go on a backswing | the release step's displacement was the rope's | he keeps facing as he hung for 0.12 s | 42 degrees in one frame; none |
+| He passes through the second rope before grabbing it | the half second in which a rope will not catch applied to every rope | it applies to the rope he left and any within 1.7 m; the arms go out for the next rope first | caught 0.52 s on, inside the rope; 0.43 to 0.47 s, a metre before it |
+| An elbow flips at the catch, and falling back onto the rope just left | a pose blend, and hands held on a rope passing through the shoulders | the same carried limbs at the catch; the hands wait until the rope is in front of the shoulders | 110 to 165 degrees in a frame; 27 to 42 |
+| A 0.4 m lurch after catching the same rope again | the body was hauled up after the drawn rope, pushed round his side | the body hangs from the rope's real line | a 40 cm step in one frame; none |
+
+The sixth of these is a rule as well as a picture: a leap can now be caught by another rope at once.
+
+**Chains.** The chain of every swinging ball with 4.7 m of it or more is a line the rope code holds
+(`Level.chainGrabs`, never `ropeSwings`): caught a metre over the feet, climbed at 2.37 m/s, swung with,
+left with Jump. The holds run from 1 m below the post to 3.3 m over the ball's centre: there no swing of
+the chain brings the ball's box to a body hung from it (0.06 m at its nearest), and he can climb no lower.
+The ball is as deadly as it was, to a body on a chain as to one under it; a chain whose ball is smashed
+lets go; an axe on a shaft has nothing to hold. On a line seen from the side, a chain or a rope within a
+metre of the line in depth is caught from the line and he stays on it: only the drawn body swings.
+
+**What the lab needed for a person to catch one.** The worker's scripted player caught the chain with a
+full jump from a standstill under the post, begun as the ball went by: half a second in each swing, from
+the one place the ball kills. Swept with the real player: from the floor a running tap and a double jump
+catch it at 0 of 24 points of the swing (the chain is within reach of the line only while the ball is on
+it, and the jump goes through the ball). So:
+
+- **A ledge.** A ramp up to a ledge 2.4 m over the floor, ending 3.2 m short of the post. A running tap off
+  its last 1.3 m catches the chain at 24 of 24 points and never dies. Up to 2.2 m early or 0.4 m late it
+  still catches at 15 or more of the 24 and a miss comes down past the ball; from the ramp, 2.8 m or more
+  before the end, a miss can come down in the ball's way.
+- **A turn.** Square to the line, a gallows' near post stands exactly in front of its chain in the side
+  view: the first film showed a post with a head beside it. This one pendulum is turned to `yaw` 100, which
+  puts its near post 1.25 m east of the chain. (At 105 the ball covers 3 m of the line and a body that
+  runs off the ledge lands in it; at 100 it covers 2.5 m.)
+- The scripted player now takes it as a person would: up the ramp, a running tap off the ledge, down to
+  the lowest hold, up to the top for the fruit, once round, and off east, 6.6 m on.
+
+**Timber under the bridges.** What was drawn under a wood path was the source's light scaffold: 0.115 m
+posts, one ledger a side and crossed sticks in every bay whatever the height, with braces that ended in
+the air and posts that ran on below the water. It is now carpentry (`WOOD_PATH_CARPENTRY`):
+
+- *Everything stands on something*: planks on stringers (lapped over each bent, spliced and bound where a
+  bay humps or turns), stringers on a cap beam that runs out past the deck, the cap on two posts, a post on
+  a sleeper where its probe finds ground and driven as a pile where it does not.
+- *Bracing by height*: stubs under 1.2 m; knee braces to 1.9 m (3.8 m on ground); then panels about 3 m
+  high, the top one crossed and each one under it a single pole over a girt, with one pole a side along the
+  path zig-zagging from bay to bay. Over ground the lowest 2.3 m carry posts only.
+- *Stout and a little crooked*: a post 0.17 m in radius plus 12 mm for each metre of deck (0.19 to 0.28),
+  spliced logs over 5, 9.5 and 14 m, every joint on a post lashed with rope, every member run on past its
+  joints and given its own error of thickness and line from the path's seed.
+- *Collision has not moved*: the deck, and the same plumb column under each end of every bent. Carlisle's
+  piers and the rooftop decks keep the light scaffold (`structure: 'unity'`).
+
+Wood-path meshes, before and after (instances; triangles):
+
+| Level | Instances | Triangles | Growth |
+|---|---|---|---|
+| Side Platform Lab | 271 to 422 | 81,750 to 115,190 | ×1.41 |
+| Backport Lab | 315 to 444 | 92,602 to 118,496 | ×1.28 |
+| Beachside Run | 1,231 to 2,204 | 359,796 to 573,668 | ×1.59 |
+| Bryce Canyon | 730 to 1,741 | 218,982 to 452,484 | ×2.07 |
+| Drowned Crown | 1,142 to 2,111 | 347,908 to 566,322 | ×1.63 |
+| Crystal Trials rejects | 3,644 to 3,908 | 1,090,048 to 1,142,664 | ×1.05 |
+| Beachfront | 7,488 to 10,481 | 2,200,556 to 2,807,416 | ×1.28 |
+
+They are instanced and culled by 24 m section as before. Frame time was not measured.
+
+**Checks.**
+
+- On the combined tree: `test-wood-path-kit`, `test-wood-path-meshes`, `test-wood-path-level`,
+  `test-terrain-support-budget`, `test-rooftop-construction`; `test-rope-release-motion` (new: ten leaps, no
+  joint over 45 degrees a frame, soles within 0.2 m at the landing: 27 to 30 degrees and 0.09 to 0.13 m),
+  `test-rope-board-transfer`, `test-rope-limb-mapping`, `test-chain-climb` (new); `test-planar-loop`,
+  `test-ice-walk-animation`, `test-animation-suite`, `test-character-animation-runtime`,
+  `test-editor-current-components`, `test-level-security`: all pass.
+- `tools/test-side-platform-lab.mjs` on the final level: the whole course in one run without a death
+  (275.6 s of play), and the Pendulums station asserts the chain: caught from the ledge, let down to its
+  lowest hold and no lower, climbed 1.7 m to its top, the three fruit taken, the rider on the line
+  throughout.
+- `npm run check:levels` and `npm run build`: pass.
+- Browser. The chain filmed a fixed step at a time on the dev build (lite), before the turn and after it.
+  Then the built page, lite and full render, with key presses sent in step with the game's frames (at full
+  render the software renderer here runs too slowly for a press timed by the clock: it lands 2 m late): a
+  tap off the first swing rope plays the jump and no release clip; Jump held 0.6 s plays the backflip and
+  then the jump; the chain is caught from 0.4 m before the ledge's end, 1.0 m down it, climbed down to
+  2.68 m and up to 1.0, and left, with the three fruit taken. No console errors and no failed requests. The
+  workers' own films: seven leaps and the chain in lite; the lab's, Backport Lab's and Beachside Run's
+  trestles at native resolution, and Bryce Canyon's in lite.
+- The full suite was not run (not asked for).
+
+**Known and left.**
+
+- The wood paths cost more to draw (the table above), most of it lashings at 184 triangles each. It was not
+  measured as frame time.
+- A drawn post is fatter than the column a body meets (0.13 m): on a boardwalk that can be walked under, a
+  body goes about 0.1 m into a log and through a sleeper.
+- A bent has two posts however wide the deck, a bay has no truss, and a path with no ground under it still
+  ends in the air. There is no level-data switch back to the light scaffold.
+- Chains in other levels (Custard Creek 2, Nightworks After Hours 2, Cinder Sanctum 1) can be held but have
+  no ledge: from the floor they take the standing full jump. The lab's along-the-line pendulum's chain can
+  only be reached through its ball's sweep and has no reward. A body on a chain is tested against swinging
+  balls only, as on a rope.
+- After any landing the run still turns 24 to 31 degrees in a frame, as after an ordinary jump. A half
+  charge was measured headlessly and not filmed.
+- Failing on the published tree as on this one, and left: `test-custard-sunset`, `test-carlisle-fidelity`,
+  and two level-data facts in `validate-editor-roundtrip`; with the six named in part 1 and the three in
+  part 3.

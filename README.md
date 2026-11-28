@@ -160,8 +160,9 @@ each platforming object the pipe lab does not carry. Thirty of them over
 1,977 m, each opening on a checkpoint (`K` and `L` warp between them): ramps,
 rolling ground, a timber road, rocks, ice, a sticky floor, water to swim and water
 that kills, arrow crates and steel, explosives, spin bridges, rope bridges, rope
-trampolines, rope swings, a wheel of decks, a springboard, a turntable and a lift, pendulums,
-rolling stones, fire heads and lava, thorns, the bull, the turret and the bird;
+trampolines, rope swings, a wheel of decks, a springboard, a turntable and a lift,
+pendulums (and a chain to climb), rolling stones, fire heads and lava, thorns, the
+bull, the turret and the bird;
 then a board line (ropes to grind, a speed pad, two loops, a ferrying rail, a trick
 gate and a trick rail, a spine to ride, a ball in a pipe, glass and the plane that
 takes the board away) and a finale of portals, a cloud with a gem, the bonus
