@@ -160,7 +160,7 @@ the same. Direct link: `?playtest&level=side-pipe-lab-forward`.
 `Side Platform Lab` is the second side-scrolling test course: one station for
 each platforming object the pipe lab does not carry. Twenty-nine of them over
 1,781 m, each opening on a checkpoint (`K` and `L` warp between them): ramps,
-rolling ground, a timber road, rocks, ice, deep sand, water to swim and water
+rolling ground, a timber road, rocks, ice, a sticky floor, water to swim and water
 that kills, arrow crates and steel, explosives, spin bridges, rope bridges, rope
 trampolines, rope swings, a wheel of decks, a springboard, a turntable and a lift, pendulums,
 rolling stones, fire heads and lava, thorns, the bull, the turret and the bird;

@@ -344,8 +344,10 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 39);
-  assert.equal(starterClips.length, 42);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 40);
+  // (40 added the ice glide and the sticky walk, and made the ice walk a sliding stride)
+  assert.equal(starterClips.length, 44);
+  for (const id of ['player.ice-glide', 'player.sticky-walk']) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
   // (39 added the three vert run-up one-shots: docs/VERT_RUN_UP.md)
   for (const id of ['player.vert-climb', 'player.vert-leap', 'player.vert-miss']) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
   for (const id of [

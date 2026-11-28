@@ -5,7 +5,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * (`side-pipe-lab.ts`) is about halfpipes seen across their section, and
  * carries the handful of platforming objects that fitted between them. This
  * one carries every other object the game has, one station each: ramps,
- * rolling ground, a timber road, rocks, ice, deep sand, water to swim and
+ * rolling ground, a timber road, rocks, ice, a sticky floor, water to swim and
  * water that kills, arrow crates and steel, explosives, spin bridges, rope
  * bridges, rope trampolines, rope swings, orbiting / bouncing / spinning decks, pendulums
  * (across the line and along it), rolling stones, fire, thorns, and the three
@@ -221,17 +221,23 @@ pyramid(-9, TOP, 'mystery', 'Start: the first boxes');
   end(a + 60, t - 2);
 }
 
-{ // ---- DEEP SAND: ground that holds you to a walk (`groundSpeedLimit`)
-  const { a, t, mark } = begin('sand', 'Deep sand', SLATE);
-  floor(a, a + 8, t, 'Deep sand: way on');
-  floor(a + 8, a + 20, t - 0.3, 'Under the sand');
-  block(a + 8, a + 20, t - 0.3, t, 'Deep sand: 12 m at 2.4 m/s', { groundSpeedLimit: 2.4, tex: 'sand', color: SAND });
-  floor(a + 20, a + 27, t, 'Deep sand: firm ground');
-  floor(a + 27, a + 33, t - 0.3, 'Under the second patch');
-  block(a + 27, a + 33, t - 0.3, t, 'Deep sand: boxes in it', { groundSpeedLimit: 2.4, tex: 'sand', color: SAND });
-  pyramid(a + 29.4, t, 'mystery', 'Boxes standing in the sand');
-  floor(a + 33, a + 40, t, 'Deep sand: way off');
-  mark('from', a + 8); mark('to', a + 20);
+// Slow ground painted as goo (`tex: 'goo'` with a `groundSpeedLimit`) is a sticky floor: it holds him to its pace,
+// every shoe has to be peeled off it, and whatever leaves it draws a strand of it after. A board rolls on it at
+// the same pace, sticking and slipping; so does a crawl.
+const GOO = { pace: 1.4, colour: '#ffffff' };
+{ // ---- STICKY FLOOR: goo that holds you to a trudge; then more of it with boxes standing in it
+  const { a, t, mark } = begin('sticky', 'Sticky floor', SLATE);
+  const goo = (x0: number, x1: number, nm: string): void => {
+    floor(x0, x1, t - 0.3, `Under ${nm}`);
+    block(x0, x1, t - 0.3, t, nm, { groundSpeedLimit: GOO.pace, tex: 'goo', color: GOO.colour });
+  };
+  floor(a, a + 8, t, 'Sticky floor: way on');
+  goo(a + 8, a + 17, `Sticky floor: 9 m at ${GOO.pace} m/s`);
+  floor(a + 17, a + 25, t, 'Sticky floor: firm ground');
+  goo(a + 25, a + 31, 'Sticky floor: boxes in it');
+  pyramid(a + 27.4, t, 'mystery', 'Boxes standing in the goo');
+  floor(a + 31, a + 40, t, 'Sticky floor: way off');
+  mark('from', a + 8); mark('to', a + 17); mark('second', a + 25); mark('secondEnd', a + 31);
   end(a + 40, t);
 }
 

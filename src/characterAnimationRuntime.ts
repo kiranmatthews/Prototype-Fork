@@ -7,7 +7,8 @@ import type { JakLowCuts } from './animation/jakLowMotion';
 import { ledgeRebound } from './animation/ledgeMotion';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animation/elasticity';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
-import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { ICE_GLIDE_CLIP_ID, ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { STICKY_WALK_CLIP_ID, STICKY_WALK_DURATION, STICKY_WALK_METRES } from './animation/stickyWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { LAUNCH_CLIPS, isLaunchClip, tuneLaunchBackLean } from './animation/launchJump';
 import { TUNING } from './tuning';
@@ -187,6 +188,11 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpRefere
   if (isVertRunClip(from)) return to === 'player.hang' ? .10 : to === 'player.run' ? .10 : .16;
   if (to === ROLL_LANDING_CLIP_ID) return .045;
   if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
+  if (to === STICKY_WALK_CLIP_ID) return .14;
+  if (from === STICKY_WALK_CLIP_ID) return .16;
+  // The stride settles into the brace and pushes out of it: neither is a cut.
+  if (to === ICE_GLIDE_CLIP_ID) return from === ICE_WALK_CLIP_ID ? .22 : .10;
+  if (from === ICE_GLIDE_CLIP_ID) return to === ICE_WALK_CLIP_ID ? .16 : .18;
   if (to === ICE_WALK_CLIP_ID) return .06;
   if (from === 'player.bail' && (to === 'player.run' || to === 'player.idle' || to === PLAYER_WALK_CLIP_ID)) return .26;
   if (from === ICE_WALK_CLIP_ID) return .16;
@@ -593,7 +599,7 @@ export class CharacterAnimationRuntime {
       }
       // Ice balance and gravity-slope gliding start on contact, without a dry
       // landing plant/recovery. Board contact retains its procedural spring.
-      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && (intent.motion.inputs?.jakSlideJumpLand ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && (intent.motion.inputs?.jakSlideJumpLand ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && hint !== ICE_GLIDE_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         const directLanding = this.findPlayableClip(LAND_CLIP_ID)?.metadata?.jakDirect;
         const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
@@ -1593,6 +1599,12 @@ export class CharacterAnimationRuntime {
     }
     if (this.manualClipId === null && clip.id === ICE_WALK_CLIP_ID)
       return .55 + .55 * motion.normalizedSpeed + .3 * (motion.inputs?.iceEffort ?? 0);
+    // The sticky walk is played at the pace at which a planted shoe is carried back under him exactly as fast
+    // as he goes forward: it stays where it stuck. (0.6 of the cycle is planted; see stickyWalk.ts.)
+    if (this.manualClipId === null && clip.id === STICKY_WALK_CLIP_ID)
+      return MathUtils.clamp((motion.inputs?.stickyPace ?? 0) / (STICKY_WALK_METRES / (0.6 * STICKY_WALK_DURATION)), .4, 2.4);
+    // (a faster coast is a busier one: the corrections come quicker)
+    if (this.manualClipId === null && clip.id === ICE_GLIDE_CLIP_ID) return .8 + .5 * motion.normalizedSpeed;
     if (this.manualClipId === null && clip.id === 'player.swim')
       return Math.max(.8, Math.min(1.5, motion.inputs?.swimCadence ?? 1));
     if (this.manualClipId !== null || clip.id !== 'player.run') return 1;
@@ -1712,6 +1724,8 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   ROLL_LANDING_CLIP_ID,
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
+  ICE_GLIDE_CLIP_ID,
+  STICKY_WALK_CLIP_ID,
   SLOPE_SLIDE_CLIP_ID,
   'player.swim',
   'player.swim-idle',

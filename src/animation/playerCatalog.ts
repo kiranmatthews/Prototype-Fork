@@ -7,8 +7,9 @@ import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
 import * as THREE from 'three';
 import { JUMP_CHARGE_CLIP_ID } from './jumpCharge';
 import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
-import { buildIceWalkClip, ICE_WALK_CLIP_ID } from './iceWalk';
+import { buildIceGlideClip, buildIceWalkClip, buildLegacyIceWalkClip, ICE_GLIDE_CLIP_ID, ICE_WALK_CLIP_ID } from './iceWalk';
 import { buildSlopeSlideClip, SLOPE_SLIDE_CLIP_ID } from './slopeSlide';
+import { buildStickyWalkClip, STICKY_WALK_CLIP_ID } from './stickyWalk';
 import { buildRollLandingClip, ROLL_LANDING_CLIP_ID } from './rollLanding';
 import { buildVertRunClips, VERT_RUN_CLIP_IDS } from './vertRunUp';
 import { buildLaunchClips, LAUNCH_CLIPS } from './launchJump';
@@ -113,6 +114,8 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.idle',
   'player.walk',
   ICE_WALK_CLIP_ID,
+  ICE_GLIDE_CLIP_ID,
+  STICKY_WALK_CLIP_ID,
   SLOPE_SLIDE_CLIP_ID,
   'player.swim',
   'player.swim-idle',
@@ -153,7 +156,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 39;
+export const PLAYER_STARTER_CATALOG_VERSION = 40;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -414,6 +417,8 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.idle': 1,
   'player.walk': 17,
   [ICE_WALK_CLIP_ID]: 32,
+  [ICE_GLIDE_CLIP_ID]: 40,
+  [STICKY_WALK_CLIP_ID]: 40,
   [SLOPE_SLIDE_CLIP_ID]: 34,
   [LAUNCH_CLIPS.rise]: 35, [LAUNCH_CLIPS.float]: 35, [LAUNCH_CLIPS.gather]: 35,
   [LAUNCH_CLIPS.boardRise]: 35, [LAUNCH_CLIPS.boardFloat]: 35, [LAUNCH_CLIPS.boardGather]: 35,
@@ -1555,6 +1560,8 @@ function buildPlayerStarterClips(rig: string | RigDefinition, referenceMotion: b
     buildIdle(rigId, includeTorsoRoot),
     buildWalk(rigId, includeTorsoRoot),
     buildIceWalkClip(rigId, includeTorsoRoot),
+    buildIceGlideClip(rigId, includeTorsoRoot),
+    buildStickyWalkClip(rigId, includeTorsoRoot),
     buildSlopeSlideClip(rigId, includeTorsoRoot),
     buildSwim(rigId, includeTorsoRoot, false),
     buildSwim(rigId, includeTorsoRoot, true),
@@ -1895,6 +1902,21 @@ export function reconcilePlayerStarterAnimationSuite(
         const replacement = starters.find(clip => clip.id === id)!;
         clips = clips.map(clip => clip === old ? replacement : clip);
       }
+    }
+  }
+
+  if (previousVersion < 40) {
+    // The ice walk became a sliding stride with both soles on the ice. A saved suite's copy of the old
+    // scuff walk is replaced only where nobody has touched it.
+    const includeTorsoRoot = rig.joints.some(joint => joint.id === 'torsoRoot');
+    const signature = (clip: AnimationClip) => {
+      const { starterCatalogVersion: _version, ...metadata } = clip.metadata ?? {};
+      return canonicalLegacyStarterClipSignature({ ...clip, metadata });
+    };
+    const old = clips.find(clip => clip.id === ICE_WALK_CLIP_ID);
+    if (old && signature(old) === signature(withCharacterElasticity(buildLegacyIceWalkClip(rig.id, includeTorsoRoot), rig))) {
+      const replacement = starters.find(clip => clip.id === ICE_WALK_CLIP_ID)!;
+      clips = clips.map(clip => clip === old ? replacement : clip);
     }
   }
 

@@ -19,7 +19,9 @@ import { sampleWallPlantMotion, sampleWallPlantLeap, wallPlantPushLag, wallPlant
 import { legacyWallPlantReplay } from './wallPlantPolicy';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { kiteGrabElasticity, skateVertAirElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
-import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { ICE_GLIDE_CLIP_ID, ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { STICKY_WALK_CLIP_ID } from './animation/stickyWalk';
+import { GooStrands, StickyStruggle, type GooContact } from './stickyGoo';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, launchSomersaultWindow, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
@@ -361,6 +363,8 @@ export type PlayerAnimationClipHint =
   | 'player.idle'
   | 'player.run'
   | 'player.ice-walk'
+  | 'player.ice-glide'
+  | 'player.sticky-walk'
   | 'player.slope-slide'
   | 'player.jump'
   | 'player.double-jump'
@@ -438,6 +442,8 @@ const SPIN_BRIDGE_SLING = {
   landingRoll: 6,
 };
 const SLING_ALONG = new THREE.Vector3();
+const STICKY_HOLD = new THREE.Vector3();
+const GOO_POINT = new THREE.Vector3();
 
 const SIDE_ON_DROP_IN = {
   slow: 8,                    // m/s at the start of the set-up: under this he perches and waits
@@ -682,6 +688,7 @@ interface GroundHit {
   name: string;
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
   groundSpeedLimit?: number; // explicit authored loose-ground pace
+  sticky?: boolean; // that slow ground is goo: it holds on to what leaves it (presentation only; the pace is the limit's)
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
   lethal?: boolean;
@@ -1575,6 +1582,19 @@ export class Player {
   private slingBridge: SpinBridge | null = null;
   /** In the air from a spin bridge's throw, until he is down. */
   private slingAir = false;
+  /** How far an ice gait has taken the body over from the old running lean and step bounce (0..1). */
+  private iceGaitPose = 0;
+  /** Goo: the strands that stretch off whatever of his leaves a sticky floor, and the stick and slip of a board or a crawl on it. */
+  private gooStrands: GooStrands | null = null;
+  private readonly stickyStruggle = new StickyStruggle();
+  private readonly gooContacts: GooContact[] = [];
+  /** For tests: what the goo is doing to him just now. */
+  get gooDiagnostics(): { drawn: number; snapped: number; longest: number; lag: number } {
+    return { ...(this.gooStrands?.diagnostics ?? { drawn: 0, snapped: 0, longest: 0 }), lag: this.stickyLagDrawn };
+  }
+  private stickyLagDrawn = 0;
+  private stickyPitch = 0;
+  private stickyTorso = 1;
   // An ordinary board ollie may be abandoned once with a second charged
   // press/release. The deck flies independently; the rider takes a
   // foot-gravity escape whose first supported landing rolls into running.
@@ -2806,10 +2826,15 @@ export class Player {
     // coasting. Read self-propelled momentum, never platform carry or a new
     // movement state. All action and board owners have already taken priority.
     if (this.state === 'ride' && this.worldMapBaseScale === null && this.groundHit?.slippy && this.groundHit.iceWalk !== false &&
-        !this.slipping && !this.teetering && this.teeterPose < .01 &&
-        (this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ||
-          Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) > .08))
-      return ICE_WALK_CLIP_ID;
+        !this.slipping && !this.teetering && this.teeterPose < .01) {
+      // Pushing, he strides; carried with the stick let go, he coasts braced. Both keep both shoes on the ice.
+      if (Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) > .08) return ICE_WALK_CLIP_ID;
+      if (this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD) return ICE_GLIDE_CLIP_ID;
+    }
+    // Goo: every step is pulled off the floor. (Standing still on it is the ordinary idle: nothing is being pulled.)
+    if (this.state === 'ride' && this.worldMapBaseScale === null && this.groundHit?.sticky && !this.teetering && this.teeterPose < .01 &&
+        (this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD || Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) > .08))
+      return STICKY_WALK_CLIP_ID;
     return this.walkTurnaround || this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
   }
 
@@ -2945,10 +2970,12 @@ export class Player {
     }
     actionProgress = THREE.MathUtils.clamp(actionProgress, 0, 1);
     const travelSign = Math.sign(this.speed);
-    const iceWalking = clipId === ICE_WALK_CLIP_ID;
-    const iceEffort = iceWalking ? THREE.MathUtils.clamp(
+    const iceWalking = clipId === ICE_WALK_CLIP_ID || clipId === ICE_GLIDE_CLIP_ID;
+    const iceEffort = clipId === ICE_WALK_CLIP_ID ? THREE.MathUtils.clamp(
       Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) +
       this.walkVelocity.distanceTo(this.walkTarget) / Math.max(.001, TUNING.walkSpeed), 0, 1) : 0;
+    // (the sticky walk is played at the pace that holds a planted shoe still: it is told how fast he is really going)
+    const stickyPace = clipId === STICKY_WALK_CLIP_ID ? Math.hypot(this.walkVelocity.x, this.walkVelocity.z) : 0;
     const iceSideSlip = iceWalking ? THREE.MathUtils.clamp(
       (this.walkVelocity.x * Math.cos(this.visualYaw) - this.walkVelocity.z * Math.sin(this.visualYaw)) /
       Math.max(.001, TUNING.walkSpeed), -1, 1) : 0;
@@ -3000,6 +3027,7 @@ export class Player {
           launchId: this.trampolineLaunchId,
           iceEffort,
           iceSideSlip,
+          stickyPace,
           slopeSlide: clipId === SLOPE_SLIDE_CLIP_ID ||
             clipId === ROLL_LANDING_CLIP_ID && slopeMotion === 'slide' ? 1 : 0,
           [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
@@ -3867,6 +3895,52 @@ export class Player {
     for (const child of object.children) this.collectRenderHierarchy(child);
   }
 
+  /**
+   * Goo strands. Everything of his that a sticky floor can hold is listed with where it is now (the heel and
+   * the toe of each shoe; his palms when he crawls; the two trucks of a board), and the strands are drawn
+   * from where each stuck to where it has got to. Listed every step, sticky floor or not: a strand goes on
+   * stretching after him when he jumps out of it, until it lets go.
+   */
+  private updateGoo(): void {
+    const hit = this.grounded ? this.groundHit : null, sticky = hit?.sticky === true && this.state !== 'dead';
+    if (!sticky && !this.gooStrands) return;
+    const parent = this.group.parent;
+    if (!this.gooStrands) { if (!parent) return; this.gooStrands = new GooStrands(parent); }
+    const contacts = this.gooContacts;
+    let n = 0;
+    const list = (x: number, y: number, z: number, width: number, reach: number): void => {
+      const c = contacts[n] ?? (contacts[n] = { point: new THREE.Vector3(), down: false, sticky: false, width: 0.1, floor: 0 });
+      n++;
+      c.point.set(x, y, z);
+      c.floor = hit ? this.supportHeight(hit, c.point) : this.pos.y;
+      c.down = hit !== null && y - c.floor < reach;
+      c.sticky = sticky;
+      c.width = width;
+      if (c.down) c.point.y = Math.max(c.point.y, c.floor + 0.012);
+    };
+    if (this.freeSkate && this.state === 'ride') {
+      // (the trucks: a little inboard of each end of the deck, on the floor)
+      for (const end of [-0.3, 0.3]) list(this.pos.x + this.axisF.x * end, this.pos.y + 0.03, this.pos.z + this.axisF.z * end, 0.16, 0.08);
+    } else {
+      // On his feet: the ball and the heel of each shoe. Crawling, his shoes are up behind him: what is on the
+      // floor is his palms (a hand's length under each wrist) and his knees.
+      if (!this.crawling) for (const ankle of [this.ankleL, this.ankleR]) {
+        const { foot, heel } = soleSockets(ankle);
+        for (const socket of [foot, heel]) {
+          if (!socket) continue;
+          socket.getWorldPosition(GOO_POINT);
+          list(GOO_POINT.x, GOO_POINT.y, GOO_POINT.z, 0.11, 0.03);
+        }
+      } else for (const [joint, under, width] of [[this.wristL, 0.205, 0.09], [this.wristR, 0.205, 0.09], [this.kneeL, 0.125, 0.1], [this.kneeR, 0.125, 0.1]] as const) {
+        if (!joint) continue;
+        joint.getWorldPosition(GOO_POINT);
+        list(GOO_POINT.x, GOO_POINT.y - under, GOO_POINT.z, width, 0.03);
+      }
+    }
+    contacts.length = n;
+    this.gooStrands.update(CONST.fixedStep, contacts);
+  }
+
   commitRenderStep(level: Level): void {
     if(this.grounded&&this.groundHit){
       level.ropeBridges.carry(this,this.groundHit.mesh,this.pos);
@@ -3893,6 +3967,7 @@ export class Player {
     // only now, at the final corrected player position against the final
     // world transforms, so the landing X cannot flash on stale/old ground.
     this.refreshGroundPresentation(level);
+    this.updateGoo();
     this.previousNetRenderOffset.copy(this.netRenderOffset);
     const support=this.groundHit?.mesh;
     const net=support&&this.grounded&&this.state==='ride'&&!this.freeSkate&&!this.isBailing&&
@@ -4019,16 +4094,25 @@ export class Player {
     const hint = this.animationClipHint;
     if (this.state !== 'ride' || !this.grounded || this.freeSkate || this.sliding ||
         this.isBailing || this.slipping || this.teetering || this.resultsPose || this.worldMapBaseScale !== null ||
-        (hint !== 'player.run' && hint !== ICE_WALK_CLIP_ID) || this.proceduralFootwear.length !== 2) {
+        (hint !== 'player.run' && hint !== ICE_WALK_CLIP_ID && hint !== STICKY_WALK_CLIP_ID) || this.proceduralFootwear.length !== 2) {
       this.footstepAudio.contacts.reset();
       return;
     }
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
     if (normal.y < .1) { this.footstepAudio.contacts.reset(); return; }
     const heights: [number, number] = [Infinity, Infinity];
+    // The ice stride keeps both shoes flat on the ice, so neither ever comes down. What marks a stroke there
+    // is a shoe reaching the end of its slide: the detector is given how far FORWARD each sole is, and hears
+    // the one that has just been drawn all the way back (the moment the other begins its push).
+    const strokes = hint === ICE_WALK_CLIP_ID;
     for (const { sole, side } of this.proceduralFootwear) {
       const index = side === 'left' ? 0 : 1;
       sole.updateWorldMatrix(true, false);
+      if (strokes) {
+        sole.getWorldPosition(_plantV).sub(this.renderPosition);
+        heights[index] = -(_plantV.x * Math.sin(this.visualYaw) + _plantV.z * Math.cos(this.visualYaw));
+        continue;
+      }
       const points = sole.geometry.getAttribute('position');
       for (let i = 0; i < points.count; i++) {
         _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld).sub(this.renderPosition);
@@ -4847,6 +4931,8 @@ export class Player {
     this.airMomentum = false;
     this.slingBridge = null;
     this.slingAir = false;
+    this.gooStrands?.clear();
+    this.stickyStruggle.reset();
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
     this.airborneT = 0;
@@ -20896,6 +20982,7 @@ export class Player {
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
       beachSand: hit.object.userData.beachSandFriction === true,
       groundSpeedLimit: hit.object.userData.groundSpeedLimit as number | undefined,
+      sticky: hit.object.userData.sticky === true,
       gravityTrack: hit.object.userData.gravityTrack === true,
       lethal: hit.object.userData.lethal === true,
       outOfBounds: hit.object.userData.outOfBounds === true,
@@ -22292,7 +22379,8 @@ export class Player {
     const rg = this.riderG;
     if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return null;
     const hint = this.animationClipHint;
-    const slopeGlide = hint === SLOPE_SLIDE_CLIP_ID;
+    // (a slope glide and both ice gaits keep both shoes on the surface: they are seated on it both ways, at full weight)
+    const slopeGlide = hint === SLOPE_SLIDE_CLIP_ID || hint === ICE_WALK_CLIP_ID || hint === ICE_GLIDE_CLIP_ID || hint === STICKY_WALK_CLIP_ID;
     if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID && !slopeGlide) return null;
     const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? 1 : locomotionWalkBlendWeight(
       this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
@@ -23152,7 +23240,10 @@ export class Player {
         0,
         1,
       );
-      alignTarget = (this.parkControls || this.raceHooks || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
+      // Ice and other slick ground lay the whole rig on the slope, however gentle, as a park's ground does.
+      // Under a rider there the ride is the native ice-skate layer's, which draws the deck level with the
+      // root: on a 14 degree chute it stood 14 degrees off the ice it was rolling down.
+      alignTarget = (this.parkControls || this.raceHooks || this.groundHit.gravityTrack || this.groundHit.slippy) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
     if (this.loopRide) {
@@ -23176,7 +23267,9 @@ export class Player {
         return;
       }
     }
-    const ease = this.dropInT >= 0 ? SIDE_ON_DROP_IN_ALIGN_EASE : onPipe || this.pipeHang ? 24 : 12;
+    // (a rider on slick ground comes round to it as fast as he does to a pipe's wall: the deck is on the ice within a board's length)
+    const slick = this.freeSkate && this.grounded && this.state === 'ride' && this.groundHit?.slippy === true;
+    const ease = this.dropInT >= 0 ? SIDE_ON_DROP_IN_ALIGN_EASE : onPipe || this.pipeHang || slick ? 24 : 12;
     this.landingAlignPose +=
       (alignTarget - this.landingAlignPose) * Math.min(1, ease * dt);
     // Public/debug presentation mirrors the simulation state, but gameplay
@@ -23421,13 +23514,35 @@ export class Player {
       const lag = wallPlantPushLag(wallFlight);
       if (lag > 0) this.group.position.add(this.wallPlantHoldBack.copy(this.wallPlantLaunch).multiplyScalar(-lag));
     }
+    // GOO under a board or a crawl: stick and slip. He is drawn a few centimetres back of where he is while the
+    // floor has him, and let go; the chest is thrown on by each release and the torso gives with it. (The walk's
+    // struggle is its own clip's.) The offset is carried the same way the wall plant's is.
+    {
+      const onGoo = this.grounded && this.state === 'ride' && this.groundHit?.sticky === true && !this.isBailing;
+      const rolling = onGoo && this.freeSkate, dragging = onGoo && !this.freeSkate && this.crawling;
+      const gone = Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z);
+      const struggle = this.stickyStruggle.step(dt, rolling || dragging, gone, rolling ? 0.55 : 0.36, rolling ? 0.05 : 0.035);
+      this.stickyLagDrawn = struggle.lag;
+      if (struggle.lag < -1e-4) {
+        const way = this.freeSkate ? Math.sign(this.speed) || 1 : 1;
+        const pace = Math.hypot(this.walkVelocity.x, this.walkVelocity.z) || 1;
+        const hx = this.freeSkate ? this.axisF.x * way : this.walkVelocity.x / pace;
+        const hz = this.freeSkate ? this.axisF.z * way : this.walkVelocity.z / pace;
+        STICKY_HOLD.set(hx * struggle.lag, 0, hz * struggle.lag);
+        this.group.position.add(STICKY_HOLD);
+        this.wallPlantHoldBack.add(STICKY_HOLD);
+      }
+      // (what it does to the chest and the torso is laid over the finished pose, further down)
+      this.stickyPitch = struggle.pitch * (this.crawling ? 0.5 : 1);
+      this.stickyTorso = struggle.torso;
+    }
 
     // Ordinary travel follows velocity; ice and committed run reversals face
     // input first so the body can push against its existing momentum.
     // This changes presentation only, never the controller's travel axes.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
     let intentFacing = false;
-    const iceWalking = this.animationClipHint === ICE_WALK_CLIP_ID;
+    const iceWalking = this.animationClipHint === ICE_WALK_CLIP_ID || this.animationClipHint === ICE_GLIDE_CLIP_ID;
     const slopeMotion = this.slipperySlopeFootMotion;
     const onFootRunReversal =
       this.walkTurnaround &&
@@ -24507,11 +24622,18 @@ export class Player {
     const outerSlide=this.jakSlideClip()?0:this.slidePose;
     // So does a keyed jump charge: its sink and its fold are its keys'.
     const keyedCharge=this.animationClipHint===JUMP_CHARGE_CLIP_ID&&!!this.authoredClip(JUMP_CHARGE_CLIP_ID)?.metadata?.jakCharge;
-    const directOwnsBody = pancakeSlam || keyedSlide || keyedCharge || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
+    const directOwnsBody = pancakeSlam || keyedSlide || keyedCharge || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb',ICE_WALK_CLIP_ID,ICE_GLIDE_CLIP_ID,STICKY_WALK_CLIP_ID].includes(this.animationClipHint);
     // D carries the body between standing, which owns its whole offset, and a
     // crouch or crawl whose clip does. The old idle breath and step bounce
     // would switch on between the two in a single frame, so they stay out.
     const directLow = this.directScheme && legacyLowPoseOuterWeight <= 0 && (this.crawling || this.crawlPose > .001);
+    // Both ice gaits and the sticky walk stand on solved soles. The old running lean tips the whole body about
+    // its feet and the old step bounce lifts it: either takes a planted shoe off the floor. They are eased out
+    // as such a gait comes on and back in as it goes (under D the run has neither, and the gaits are simply owned, above).
+    const iceGait = this.animationClipHint === ICE_WALK_CLIP_ID || this.animationClipHint === ICE_GLIDE_CLIP_ID || this.animationClipHint === STICKY_WALK_CLIP_ID;
+    this.iceGaitPose += ((iceGait ? 1 : 0) - this.iceGaitPose) * Math.min(1, 14 * dt);
+    if (!iceGait && this.iceGaitPose < 0.002) this.iceGaitPose = 0;
+    const offIce = 1 - this.iceGaitPose;
     if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
@@ -24519,7 +24641,7 @@ export class Player {
       if (this.state==='hang' && directOwnsBody) this.bodyGroup.rotation.z=0;
     } else {
       // forward lean builds with real running speed (sprint posture)
-      const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
+      const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1)) * offIce;
       this.bodyGroup.rotation.x =
         flip * (1 - this.grabPose) +
         .24 * this.grabPose -
@@ -24584,8 +24706,8 @@ export class Player {
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * bodyDropPose : 0) +
-      (directLow ? 0 : walkMagnitude * 0.075 * this.walkAmp + // reference bounce: each step hops
-        breathe * 0.015 * this.idleAmp);
+      (directLow ? 0 : (walkMagnitude * 0.075 * this.walkAmp + // reference bounce: each step hops
+        breathe * 0.015 * this.idleAmp) * offIce);
     // Launch keys already contain their load, waist pivot and extension.
     // Retiring the ordinary charge/run offsets prevents a second visual dip.
     if (launchOwnsBody || directOwnsBody) this.bodyGroup.position.y = 0;
@@ -25016,6 +25138,9 @@ export class Player {
       this.playerAnimationBridge.modulateDeformations(iceSkate.deformations);
     }
     if (this.boardG) this.boardG.userData.iceSkateMotion = iceSkate;
+    // Goo under a board or a crawl: the chest is thrown on by each release, and the torso gives with it.
+    if (Math.abs(this.stickyPitch) > 1e-4 && this.spineG) this.spineG.rotation.x += this.stickyPitch;
+    if (Math.abs(this.stickyTorso - 1) > 1e-4) this.playerAnimationBridge.modulateDeformations({ 'deform.torso.length': this.stickyTorso });
 
     // (the fold he drops in with is not a pump of the wall: only what is charged beyond it is)
     const vertPump = this.freeSkate && this.grounded && this.onTransition && !this.isBailing ? Math.max(0, this.chargePose - this.dropInCrouchPose) : 0;

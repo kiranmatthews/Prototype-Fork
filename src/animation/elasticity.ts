@@ -16,6 +16,8 @@ const PROFILES:Record<string,Amplitudes> = {
   'spine-transfer':[.065,.035,.055,0,0], // planted deck contacts keep both leg lengths
   'vert-air':[.045,.055,.085,0,0], // a thrown arm lengthens and the trunk gives with the tuck; the deck keeps both leg lengths
   'ice-walk':[.045,.025,.055,.008,.012], // delayed balance arms, restrained leg lengths keep low scuffs
+  'sticky-walk':[.060,.035,.055,0,0], // chest and working arms; the clip keys its own leg lengths (the stuck leg's stretch and snap)
+  'ice-glide':[.035,.030,.055,0,0], // the chest and the balancing arms give and rebound; both gliding shoes keep their lengths
   'slope-slide':[.030,.025,.035,0,0], // upper-body rebound; both sliding shoes retain their lengths
   'swim-idle':[.025,.035,.045,.015,.022], swim:[.055,.060,.090,.045,.060],
   'jump-charge':[.06,.04,.06,.035,.045], 'run-stop':[.05,.035,.05,.025,.04],

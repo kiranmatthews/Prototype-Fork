@@ -27,8 +27,8 @@ Distances are from each station's start; heights are over its floor.
 | 2 | Rolling ground | 50–98 | a 32 m `terrain` strip, splined through +0.9, −0.4 and +1.1 m and bumped (no kerbs: seen from the side, the near one hides him to the chest) | run it |
 | 3 | Timber road | 98–144 | a 30 m `woodpath` on its own bamboo scaffold over a drop, humped 1.4 m | run it; boxes on the hump |
 | 4 | Rocks and a log | 144–202 | a `log` (1.1 m), four `rock` boulders (0.9, 1.7, 2.5, 1.3 m) overlapped into a ridge, an `idol` (1.8 m), a `wallpath` wall (1.1 m) | a tap over the log and up each boulder, a held jump over the statue |
-| 5 | Ice | 202–262 | a 14 m ice sheet (`slip`, `iceGrip` 0.12); an 8 m ice chute down 2 m (`slipGravity`) onto a 10 m run-out and a 3.5 m gap | slide; a tap at the brink |
-| 6 | Deep sand | 262–302 | 12 m of `groundSpeedLimit` 2.4; then 6 m of it with boxes standing in it | wade: the 40 m take 9.8 s |
+| 5 | Ice | 202–262 | a 14 m ice sheet (`slip`, `iceGrip` 0.12); an 8 m ice chute down 2 m (`slipGravity`) onto a 10 m run-out and a 3.5 m gap | slide; a tap at the brink; see [ice](#ice) |
+| 6 | Sticky floor | 262–302 | 9 m of goo (`tex: 'goo'` with `groundSpeedLimit` 1.4); then 6 m of it with boxes standing in it | trudge: the 40 m take 13 s; see [sticky floor](#sticky-floor) |
 | 7 | Water | 302–352 | a pool to swim, 22 m long and 2.65 m deep, a ramp in and a ramp out; then 4 m of water that kills | swim; a tap over the second |
 | 8 | Arrows and steel | 352–400 | `empty` boxes, a `multihit` box, a wooden arrow (`bouncy`) at a 4.6 m wall, a deck of three steel crates (`metal`), a steel block (the `metal` part), a steel arrow (`metalbounce`) at a 6 m wall | a hop at each wall comes down on its arrow; **Jump held** onto the steel arrow (20 m/s against 16) |
 | 9 | Explosives | 400–460 | a mask; a `tnt` between four wooden boxes; a `nitro`; a `nitrobang`; a `nitro` under a 2.6 m roof, a life on the roof | jump onto the TNT and leave (3 s: it takes its four neighbours); jump the nitro; **spin the green `!`**, which clears every nitro, the one under the roof included |
@@ -52,6 +52,34 @@ Distances are from each station's start; heights are over its floor.
 | 27 | The ball | 1564–1595 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
 | 28 | Glass and the board trip | 1595–1645 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
 | 29 | Portals and prizes | 1645–1757 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
+
+### Ice
+
+- **On foot both shoes stay on the ice.** Pushing, he strides: each foot in turn slides back and out under
+  a low pelvis and slides forward again without leaving the surface. With the stick let go and speed in
+  hand he coasts braced, one foot a little ahead, arms wide, correcting. Neither steps. (The walk this
+  replaces was never seated on the floor: its soles rode 15 to 29 cm over the ice. Both soles are now
+  within a centimetre of it, measured on the drawn shoes.)
+- **A board lies on sloped ice.** On the chute (14 degrees) the deck used to stand level, 14 degrees off
+  the slope it was rolling down. The whole rig is now laid on slick ground under a rider, as a park's ground
+  lays it: the deck is on the slope within a metre of coming onto it.
+
+### Sticky floor
+
+Slow ground painted as goo (`tex: 'goo'` with a `groundSpeedLimit`) is a sticky floor. The pace is the
+limit's, as it is in sand; what changes is what it looks like, and it changes for whatever is on it.
+
+- **On foot** every shoe has to be peeled off it. A planted shoe does not slide (the walk is played at
+  the pace that holds it where it stuck); then its heel comes up while its toe is still stuck, the leg
+  stretches after it, it lets go all at once and is thrown forward, and set down hard. The pelvis is pulled
+  round toward the stuck foot and the chest heaves into each pull.
+- **Strands.** Whatever of his leaves the goo draws a strand of it after: the heel and the toe of each
+  shoe, his palms and knees when he crawls, the trucks of a board. A strand thins as it is drawn out, lets go at
+  0.46 m and springs back into the floor. A jump out of goo takes its strands up with it until they let go.
+- **A board** rolls on it at the same pace, sticking and slipping: every 0.55 m the floor has it,
+  draws it 2.6 cm back, and lets it go, and the rider's chest is thrown on by each release. He stays on the
+  board. **A crawl** is dragged over it the same way.
+- 1.4 m/s is a trudge with a step every 0.4 s. Goo at a higher limit is walked with the same walk, faster.
 
 ### Spin bridges
 

@@ -98,7 +98,15 @@ export function makeLabBot({ p, level, lab, CONST, makeInput }) {
       timber: run,
       rocks: s => { const a = s.x0; api.plan([tap(a + 8.6), tap(a + 15.8), tap(a + 19.6), tap(a + 23.0), full(a + 38.1), tap(a + 46.4)]); return run(); },
       ice: s => { api.plan([tap(s.marks.brink - 1.2)]); return run(); },
-      sand: run,
+      // goo: he trudges (the walk that peels each shoe off it), and what he leaves draws strands after it
+      sticky: s => {
+        m.onGoo = p.grounded && p.groundHit?.sticky ? (m.onGoo ?? 0) + 1 : 0;
+        // (his pace once the goo has him: what he came onto it with is scrubbed off in the first few steps)
+        if (m.onGoo > 30) api.fact('gooPace', Math.max(log.facts.gooPace ?? 0, +Math.hypot(p.walkVelocity.x, p.walkVelocity.z).toFixed(2)));
+        if (m.onGoo && p.animationClipHint === 'player.sticky-walk') api.fact('stickySteps', (log.facts.stickySteps ?? 0) + 1);
+        api.fact('strands', p.gooDiagnostics.snapped);
+        return run();
+      },
       water: s => { api.plan([tap(s.marks.lethal - 0.9)]); return run(); },
 
       // empty boxes and the five-hit box are spun through; a hop at the wall comes down on the arrow;

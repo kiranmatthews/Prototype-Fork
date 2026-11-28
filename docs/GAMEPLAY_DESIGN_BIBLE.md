@@ -1979,6 +1979,12 @@ measured, and a layout has to allow for:
   beside the hinge, 7 m from the far end of a 10 m leaf), on foot or still on the board. Give the bank it is
   spun from 4 m of floor behind the hinge and nothing overhead for 8 m. A body that arrives while it folds is
   stopped at the hinge.
+- **A sticky floor** is slow ground painted as goo: `tex: 'goo'` with a `groundSpeedLimit` (1.4 m/s is a
+  trudge). It holds a walker, a crawl and a board to that pace alike; a board is not thrown off it. Give
+  it the tint `#ffffff`: the goo carries its own colour. Deep sand is the same limit without the paint.
+- **Sloped ice under a board** needs no allowance: the deck lies on it. On foot, ice is a stride while the
+  stick is held and a braced coast when it is let go; neither stops quickly, so a brink after ice wants a
+  run-out (10 m here).
 - **A `trampoline` is a rope net.** It is walked on as a floor and gives under a walker (0.4 m on a 5 m
   pad) where there is room under it; set in a solid floor it does not sag, so give one a bed 0.9 m down or
   stand it on piles. Only a landing is thrown, and a board that rolls onto one trips.

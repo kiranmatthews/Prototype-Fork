@@ -4,6 +4,8 @@ export * from './forwardRoll';
 export * from './locomotionBlend';
 export * from './iceWalk';
 export * from './slopeSlide';
+export * from './solvedLegs';
+export * from './stickyWalk';
 export * from './crouch';
 export * from './quaterniusWalk.generated';
 export * from './unityRope';

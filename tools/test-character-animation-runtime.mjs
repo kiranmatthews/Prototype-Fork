@@ -68,10 +68,10 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  // (40 with the three vert run-up one-shots: docs/VERT_RUN_UP.md)
-  assert.equal(allIds.length, 40);
-  assert.equal(new Set(allIds).size, 40);
-  for (const id of ['player.swim', 'player.swim-idle', 'player.death', 'player.vert-climb', 'player.vert-leap', 'player.vert-miss'])
+  // (40 with the three vert run-up one-shots: docs/VERT_RUN_UP.md; 42 with the ice glide and the sticky walk)
+  assert.equal(allIds.length, 42);
+  assert.equal(new Set(allIds).size, 42);
+  for (const id of ['player.swim', 'player.swim-idle', 'player.death', 'player.vert-climb', 'player.vert-leap', 'player.vert-miss', 'player.ice-glide', 'player.sticky-walk'])
     assert.ok(allIds.includes(id), `missing authored ${id} route`);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [

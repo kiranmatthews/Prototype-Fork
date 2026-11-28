@@ -10,7 +10,7 @@
 //     every station;
 //   · THE VOCABULARY: between them the two labs carry every component type the game has (but for
 //     the four named below), every crate kind and every enemy kind, and this lab carries each of
-//     the fields that make an object a different object (ice, deep sand, water to swim, water
+//     the fields that make an object a different object (ice, deep sand, goo, water to swim, water
 //     and lava that kill, a wheel, a springboard, a turntable, a lit lift, rope bridges, a rope
 //     whose anchor travels, a rail that travels, a door only the air goes through...). A new
 //     component type added to the game without a place in a lab fails here by name;
@@ -114,7 +114,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   has('a coast wall', c => c.t === 'coastwall');
   has('ice', c => c.t === 'platform' && c.slip === true && c.iceGrip !== undefined);
   has('an ice chute that carries you down', c => c.t === 'ramp' && c.slip === true && c.slipGravity !== undefined);
-  has('deep sand', c => c.groundSpeedLimit !== undefined);
+  has('deep sand', c => c.groundSpeedLimit !== undefined && c.tex !== 'goo');
+  has('a sticky floor', c => c.groundSpeedLimit !== undefined && c.tex === 'goo');
   has('water to swim in', c => c.t === 'mesh' && c.materialStyle === 'water' && c.swimDepth !== undefined && c.solid === false && !c.lethal);
   has('water that kills', c => c.t === 'mesh' && c.materialStyle === 'water' && c.lethal === true && c.solid === false);
   has('lava', c => c.t === 'mesh' && c.lethal === true && c.solid === true);
@@ -177,7 +178,10 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   /** What each station's object is for, and that it was done. */
   const DONE = {
     ramps: () => {}, terrain: () => {}, timber: () => {}, rocks: () => {}, ice: () => {},
-    sand: (log, e) => assert.ok(log.seconds > 8, `the sand holds him to a walk (${log.seconds} s for 40 m)`),
+    sticky: log => { assert.ok(log.seconds > 11, `the goo holds him to a trudge (${log.seconds} s for 40 m, 15 of them goo)`);
+      assert.ok(log.facts.gooPace <= 1.45, `...at its pace (${log.facts.gooPace} m/s)`);
+      assert.ok(log.facts.stickySteps > 300, `he walks it with the walk that peels each shoe off it (${log.facts.stickySteps} steps of play)`);
+      assert.ok(log.facts.strands >= 12, `and every shoe that leaves it draws a strand that lets go (${log.facts.strands})`); },
     water: (log, e) => assert.equal(e.swims, 1, 'the pool is swum'),
     arrows: (log, e) => { assert.ok(log.facts.steelArrowLaunch >= 19.5, `the steel arrow's HELD bounce is taken (${log.facts.steelArrowLaunch} m/s)`); assert.ok(e.boxes >= 5, 'the boxes on the way are broken'); },
     explosives: log => { assert.equal(log.facts.tntCleared, 5, 'the TNT takes its four neighbours with it'); assert.equal(log.facts.nitrosLeft, 0, 'the green ! clears every nitro'); },
@@ -379,6 +383,46 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(p.state !== 'dead' && p.grounded && p.pos.x < M.hinge2, `walking at the leaf as it folds, he is stopped at the hinge and not let into the pit (got to ${most.toFixed(2)} m)`);
   }
   console.log('  spin bridges: a running spin crosses, on foot and on the board; the timed leaf throws what is on it back to its bank');
+
+  // ---- ice and goo under a board ---------------------------------------------------------------
+  {
+    const east = p.pos.clone().set(1, 0, 0), up = p.pos.clone(), q = p.group.quaternion.clone();
+    const ride = (x, top, until, each) => {
+      level.reset(true); level.time = 0;
+      p.respawn(level, true, false, { position: p.pos.clone().set(x, top + 0.15, 0), heading: east });
+      for (let i = 0; i < 20; i++) bot.tick(makeInput());
+      let was = false, fell = false;
+      for (let k = 0; k < 900 && p.state !== 'dead' && !until(); k++) {
+        const jump = !p.freeSkate && p.grounded, input = makeInput({ moveX: 1 });
+        input.jumpHeld = jump; input.jumpPressed = jump && !was; input.jumpReleased = !jump && was; was = jump;
+        bot.tick(input);
+        fell ||= p.isBailing;
+        each();
+      }
+      return { fell, dead: p.state === 'dead' };
+    };
+    // The ice chute falls 2 m in 8: a board on it lies on it. (It used to stand level, 14 degrees off the ice.)
+    const I = S.ice.marks, offSlope = [];
+    const chute = ride(I.chute - 5.5, S.ice.top, () => p.pos.x > I.chute + 7.8, () => {
+      if (!p.freeSkate || !p.grounded || !p.groundHit?.slippy || p.pos.x < I.chute + 2 || p.groundHit.normal.y > 0.999) return;
+      p.boardG.getWorldQuaternion(q); up.set(0, 1, 0).applyQuaternion(q);
+      offSlope.push(Math.acos(Math.min(1, Math.abs(up.dot(p.groundHit.normal)))) * 180 / Math.PI);
+    });
+    assert.ok(!chute.fell && !chute.dead && offSlope.length > 10, `the chute is ridden on the board (${offSlope.length} steps on its slope)`);
+    assert.ok(Math.max(...offSlope) < 2, `...with the deck lying on the ice (never more than ${Math.max(...offSlope).toFixed(1)} degrees off it)`);
+    // Goo holds a board to its pace too, sticking and slipping, and its trucks draw strands after them.
+    const G = S.sticky.marks, before = p.gooDiagnostics.snapped, paces = [];
+    let held = 0, drawn = 0;
+    const goo = ride(G.from - 7.5, S.sticky.top, () => p.pos.x > G.to - 0.5, () => {
+      if (!p.freeSkate || !p.grounded || !p.groundHit?.sticky || p.pos.x < G.from + 2) return;
+      paces.push(Math.abs(p.speed)); held = Math.min(held, p.gooDiagnostics.lag); drawn = Math.max(drawn, p.gooDiagnostics.drawn);
+    });
+    assert.ok(!goo.fell && !goo.dead && paces.length > 100, `the goo is ridden on the board (${paces.length} steps on it)`);
+    assert.ok(Math.max(...paces) <= 1.45, `...at its pace (${Math.max(...paces).toFixed(2)} m/s)`);
+    assert.ok(held < -0.02 && held > -0.08, `...sticking and slipping (drawn back ${(-held * 100).toFixed(1)} cm at the most)`);
+    assert.ok(drawn >= 3 && p.gooDiagnostics.snapped - before >= 6, `...and drawing strands that let go (${p.gooDiagnostics.snapped - before})`);
+  }
+  console.log('  a board lies on the ice chute; goo holds a board to its pace, sticking and slipping');
 
   // ---- the whole course ------------------------------------------------------------------
   const course = bot.play();

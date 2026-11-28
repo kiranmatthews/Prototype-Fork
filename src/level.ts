@@ -870,7 +870,7 @@ export interface CustomComponent {
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid surface or authored water: contact causes a death instead of a safe landing
   swimDepth?: number; // non-solid authored water: bounded swimming volume below the surface
-  groundSpeedLimit?: number; // solid mesh/platform: deep soft ground pace in m/s; absent preserves normal movement
+  groundSpeedLimit?: number; // solid mesh/platform: deep soft ground pace in m/s; absent preserves normal movement. With tex 'goo' it is a sticky floor: the same pace, the peeling walk, and strands off whatever leaves it
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -1109,6 +1109,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'goo', // sticky floor: with a `groundSpeedLimit` it holds what stands on it (see stickyGoo.ts)
   ...Object.keys(TRIBAL_RUN_TEXTURES),
   'spaghetti-basalt','spaghetti-cavern',
   'skystream-marble',
@@ -5117,6 +5118,7 @@ export class Level {
       kind === "sand" ||
       kind === "snow" ||
       kind === "wood" ||
+      kind === "goo" ||
       kind === "moss";
     const S = soft ? 128 : 64;
     const SS = Level.TEX_SS;
@@ -5282,6 +5284,20 @@ export class Level {
           6 + Math.random() * 9,
           "rgba(255,246,220,0.32)",
         );
+    } else if (kind === "goo") {
+      // sticky goo: a wet pink that carries its own colour (tint it white), pooled darker in its hollows,
+      // with the round bright skins of bubbles and the long highlights of something that has not set
+      ctx.fillStyle = "#ff4fa8";
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 20; i++) blob(Math.random() * S, Math.random() * S, 12 + Math.random() * 18, "rgba(196,24,112,0.55)");
+      for (let i = 0; i < 14; i++) blob(Math.random() * S, Math.random() * S, 9 + Math.random() * 12, "rgba(255,130,196,0.5)");
+      for (let i = 0; i < 22; i++) { // bubbles: a dark rim, a lit dome, a glint
+        const x = Math.random() * S, y = Math.random() * S, r = 1.6 + Math.random() * 3.4;
+        blob(x, y, r * 1.5, "rgba(150,10,84,0.55)");
+        blob(x - r * 0.12, y - r * 0.12, r, "rgba(255,156,210,0.9)");
+        blob(x - r * 0.38, y - r * 0.38, r * 0.34, "rgba(255,246,252,0.95)");
+      }
+      for (let i = 0; i < 9; i++) blob(Math.random() * S, Math.random() * S, 3 + Math.random() * 5, "rgba(255,232,246,0.42)");
     } else if (kind === "snow") {
       // wind-packed snow: near-white ground, cold hollows, bright crusts, a
       // scatter of ice glints. Pale enough that vertex paint and tint own the hue.
@@ -5502,6 +5518,7 @@ export class Level {
     { spec: number; shine: number }
   > = {
     metal: { spec: 0x6e7784, shine: 60 },
+    goo: { spec: 0xb89aa8, shine: 96 }, // wet
     'kook-metal': { spec: 0x52646b, shine: 62 },
     'kook-branch-metal': { spec: 0x52646b, shine: 62 },
     pavement: { spec: 0x2e3238, shine: 22 },
@@ -7947,8 +7964,11 @@ export class Level {
           });
         }
       }
-      if (surface.groundSpeedLimit !== undefined) for (let g=groundBefore;g<this.groundMeshes.length;g++)
+      if (surface.groundSpeedLimit !== undefined) for (let g=groundBefore;g<this.groundMeshes.length;g++) {
         this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
+        // Slow ground painted as goo is STICKY: the same pace, and it holds on to what leaves it (stickyGoo.ts).
+        if (surface.tex === 'goo') this.groundMeshes[g].userData.sticky = true;
+      }
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
       else for(let w=wallBefore;w<this.walls.length;w++)this.unplantableWalls.add(this.walls[w]);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}

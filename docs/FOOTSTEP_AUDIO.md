@@ -4,7 +4,9 @@ Walking and running use the final rendered shoe poses. `Player.updateFootstepAud
 
 There is no footstep timer and no forward-speed gate. Sideways, diagonal and backward motion use the same detector. Speed magnitude controls loudness and walk/run bank choice, not cadence or sample playback speed. Idle, airborne, sliding, skating, bailing, dead and world-map presentations clear pending contacts. Teleports and interpolation resets clear them too. Each player and foot has a separate audio debounce channel. Existing jump/landing effects and skate/grind loops keep their own ownership.
 
-The ice animation uses small asymmetric recoveries separated by glides. Its contact detector measures each foot's rise and fall relative to the other, removing shared torso bounce; a completed corrective scuff emits one attack. Sliding continuously with planted feet emits none.
+The ice stride keeps both shoes flat on the ice, so neither ever comes down on it. Its contact detector is given how far forward each sole is instead of how high: a shoe that has been drawn all the way back under him, as the other begins its push, emits one attack. Coasting braced with both shoes still (the ice glide) emits none.
+
+The sticky walk lifts and sets down each shoe, and is heard like any walk.
 
 ## Adding supplied foley
 

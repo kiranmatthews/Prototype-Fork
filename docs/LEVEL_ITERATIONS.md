@@ -14358,3 +14358,103 @@ station that takes the board away, between two red posts, is a different thing a
 - A trampoline set flush in a solid floor (most of the older ones) cannot sag: there is nowhere for the
   net to go. It still rings upward when it throws. One that is to be seen giving needs a bed under it.
 - In the side view the near rail of a trampoline hides a walker's shins while the net is down under him.
+
+## 2026-11-28 — Twelve notes from the Side Platform Lab, part 2: a board on sloped ice, feet on flat ice, and the sticky floor
+
+- **Brief** (three more of its twelve lines): "when skating on sloped ice or sloped slippery surfaces, make
+  sure the board follows the ground contour"; "improve the on foot animation set for flat ice, sliding feet
+  like crash bandicoot 2, closer to the floor so it looks like making contact, instead of floating above
+  it"; "the wood floor section after the sloping ice appears to force a slow walk, let's say this meant to
+  be "sticky floor" and update the animation set accordingly, with a walk animation with sticky goo
+  stetching off the soles of the feet and a slight struggle in the walk/crawl/skate cycles".
+- **Elapsed:** about 16 h from the brief to this part published, 3 h 35 min after part 1. The loops, the rope dismounts, the chains and the scaffold were being worked alongside it; they follow.
+- **Level:** Side Platform Lab: the Deep sand station is now Sticky floor (9 m of goo, firm ground, 6 m of
+  goo with boxes in it, at 1.4 m/s). The deep sand under the fourth pendulum stays sand. No other level's
+  data was edited; ice in every level changes with the runtime below.
+- **Runtime:** `src/player.ts`, `src/characterAnimationRuntime.ts`, `src/level.ts` (the `goo` surface kind
+  and the `sticky` mark), `src/stickyGoo.ts` (new), `src/animation/solvedLegs.ts` (new),
+  `src/animation/iceWalk.ts`, `src/animation/stickyWalk.ts` (new), the starter catalog (40) and the
+  elasticity profiles. No tuning was touched, and nothing here changes how he moves.
+- **Docs:** `docs/SIDE_PLATFORM_LAB.md` (two new sections), `docs/FOOTSTEP_AUDIO.md`, design bible XV.11,
+  README.
+
+**A board on sloped ice.** A rider's pose on slick ground is the native ice-skate layer's, which draws the
+deck level with the body's root, and the root is only laid on a slope steeper than 40 degrees. On the lab's
+14 degree chute the deck stood 14 degrees off the ice it was rolling down. Slick ground under a rider now
+lays the whole rig on its slope, as a park's ground does, and as fast as a pipe's wall does: the deck is
+within a degree of the slope 1.2 m after coming onto it and stays there.
+
+**Feet on flat ice.** Measured on the drawn shoes, the old ice walk's soles rode 15 to 29 cm over the ice:
+it was never seated on the floor (only the idle, the run, the jump charge and the slope glide were), it kept
+the old step bounce, and its hand-set leg angles did not hold two feet at one height. The set is now two
+clips whose legs are solved, not posed: each sole is given a path on the floor and the hip, knee and ankle
+keys that put it there are worked out when the clip is built (`solvedLegs.ts`; they are ordinary keys, and
+the Studio can edit them).
+
+- *The stride* (`player.ice-walk`, the stick held): each foot in turn slides back and out under a low
+  pelvis, toes turning out, on a leg that ends all but straight, and slides forward and in again flat on the
+  ice. The pelvis sinks into each push, sways over the pushing foot and turns with the one coming forward;
+  the chest counters it and the arms swing wide against the legs, each elbow and wrist late.
+- *The glide* (`player.ice-glide`, new: the stick let go with speed in hand): braced a little side-on, both
+  soles down and still, the chest and the wide arms making the corrections and settling between them.
+
+Both are seated on the ice both ways at full weight, and the old running lean and step bounce are eased out
+under them. Both soles are within 0.7 cm of the ice through the stride and the glide. A stroke is heard
+where a shoe reaches the end of its slide (neither shoe comes down any more, so the footstep detector is
+given how far forward each sole is on ice). A saved Studio suite's untouched copy of the old walk is
+replaced; an edited one is kept.
+
+**The sticky floor.** Slow ground painted as goo (`tex: 'goo'` with a `groundSpeedLimit`) is marked sticky.
+The pace is still the limit's.
+
+- *The walk* (`player.sticky-walk`, new): a planted shoe does not slide (the clip is played at the pace
+  that carries it back under him exactly as fast as he goes forward: 0.06 m/s of slip measured); its heel
+  comes up while its toe is still stuck, the leg stretches after it (keyed: 8.5 % longer, then snapped 5 %
+  short, then back), it lets go all at once and is thrown forward high, and is set down hard. The pelvis is
+  pulled round and down toward the stuck foot; the chest heaves into each pull and is thrown upright as it
+  comes free.
+- *Strands* (`GooStrands`): the heel and the toe of each shoe, his palms and knees in a crawl and the two
+  trucks of a board each draw a strand from where they stuck: it thins as it is drawn out, lets go at 0.46 m and whips
+  back into the floor. A jump out of goo takes them up with it.
+- *A board and a crawl* (`StickyStruggle`): stick and slip. Every 0.55 m (0.36 m in a crawl) the floor
+  has him, draws him up to 2.6 cm back of where he is (1.7 cm in a crawl), and lets go; the chest is thrown on by each release
+  and the torso gives with it. It is drawn, not simulated: his speed is the limit's throughout, and a rider
+  stays on the board.
+
+**What the solver had to be told.** The first sticky walk left the newly planted shoe 12 cm in the air
+while the other peeled. Forward kinematics of the built clip said 2.6 cm. The difference was the shoe: the
+ankle joint carries a scale of 1.53, so the sole is 7.7 cm under the ankle and its toe 29 cm ahead of it,
+not the 10 and 18.5 the rig's own numbers gave. A flat shoe does not care (the seat stands him on whichever
+sole is lowest); a shoe turned on its toe does.
+
+**Checks.**
+
+- `tools/test-side-platform-lab.mjs`: the whole course in one run without a death (1,781 m, 29 stations,
+  267.5 s of play), each station alone, and two new sections: the sticky station (11 s or more to cross,
+  1.45 m/s at the most, 300 steps and more in the sticky walk, 12 strands and more let go), and a board on
+  the ice chute (never 2 degrees off it: 0.05 measured) and on the goo (1.40 m/s, drawn back 2.6 cm at the
+  most, 36 strands let go, no fall).
+- `tools/test-ice-walk-animation.mjs` (rewritten: the stride's and the glide's contract, both soles within
+  2 cm of the ice through both, the 39 to 40 upgrade of a saved suite), `test-animation-suite` (44 starters,
+  catalog 40), `test-character-animation-runtime` (42 state clips), `test-character-elasticity`,
+  `test-footstep-audio`, `test-ice-skate-animation`, `test-authored-ice`, `test-surface-behavior`,
+  `test-surface-friction`, `test-ice-slide-carry`, `test-jump-arms`, `test-animation-ik`,
+  `test-procedural-leg-rig`, `test-skate-charge-ollie`, `test-editor-current-components`,
+  `test-level-security`: all pass.
+- `npm run check:levels` and `npm run build`: pass.
+- Browser, filmed a fixed step at a time on the dev build, lite and full render: the stride, the glide, the
+  sticky walk from the side and from a quarter, and a board on the goo. Then the built page, driven with
+  real keys in lite and in full render: stride, glide, a board mounted and ridden down the chute, the sticky
+  walk, a board mounted and ridden onto the goo. No console errors and no failed requests in any of them.
+- At native resolution with the CRT off, the headless browser here gives out after a few frames of a step
+  film (it does so on the ice, where nothing of the goo exists, as on the goo), so the native review is of
+  the frames it gave: ten of the stride, four of the sticky walk. Soles on the floor and strands drawn in
+  all of them.
+- The full suite was not run (not asked for).
+
+**Known and left.**
+
+- There is no squelch: the goo is walked with the ordinary footstep bank.
+- The shoe's size in the leg solver is the default proportions'. A character restyled with other shoes
+  keeps flat-footed contact but peels less exactly.
+- The slope glide (on foot down slick slopes) was not touched.
