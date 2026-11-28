@@ -171,6 +171,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     level.halfpipes.length, level.enemies.length, level.breakableScenery.objects.length, level.colouredGemPickups.length, level.crumbles.length],
     [4, 5, 2, 3, 2, 5, 1, 1, 1, 1, 1, 3, 1, 3, 3, 1, 2], 'every object the stations are written for is built');
   assert.equal(level.checkpoints.length, count('checkpoint'), 'every checkpoint is built');
+  assert.ok(level.chainGrabs.length === level.pendulums.length && level.chainGrabs.every(chain => !level.ropeSwings.includes(chain)),
+    'every pendulum\'s chain can be held, and none of them is counted as a rope swing');
   assert.ok(level.ropeBridges.spans.length === 4 && level.ropeBridges.diagnostics.decks === 10, 'two rope bridges are hung, ten boards between them, and the two free ropes are spans of their own');
   const bot = makeLabBot({ p, level, lab, CONST, makeInput });
   const S = bot.S;
@@ -204,7 +206,14 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
       assert.ok(bounces.some(v => Math.abs(v - 20) < 0.8) && log.facts.shelf, `Jump held at the landing is the high bounce, and it reaches the shelf (${log.facts.bounces} m/s)`); },
     swings: (log, e) => assert.equal(e.swings, 4, 'four ropes are swung on'),
     decks: log => { assert.ok(log.facts.wheelDip <= -3, `the wheel is ridden under (${log.facts.wheelDip} m)`); assert.ok(log.facts.springboardLaunch >= 15.5, `the springboard's bounce is taken (${log.facts.springboardLaunch} m/s)`); },
-    pendulums: log => assert.ok(log.facts.underLongPendulum, 'the pendulum that swings along the line is run under while it is up'),
+    pendulums: (log, e) => { assert.ok(log.facts.underLongPendulum, 'the pendulum that swings along the line is run under while it is up');
+      // (its chain is caught from a running jump off the ledge, over the ball; climbed down as far as it lets him and up
+      // to its top; the fruit hung over it is taken; and it is leapt off)
+      assert.ok(log.facts.chainHeld === true && e.swings === 1, 'the first pendulum\'s chain is caught from the ledge, and it is a chain and not a rope');
+      assert.ok(log.facts.chainLowest > 2.6 && log.facts.chainLowest < 2.75, `it lets him down to its lowest hold and no lower (${log.facts.chainLowest} m down a 6 m chain: 3.3 m over the ball)`);
+      assert.ok(log.facts.chainClimbed >= 1.5, `it is climbed from its lowest hold to its top (${log.facts.chainClimbed} m)`);
+      assert.equal(log.facts.chainFruit, 3, 'the fruit hung over it is taken from the chain');
+      assert.ok(log.maxZ < 0.05, `holding a chain that swings across the line, he stays on the line (${log.maxZ} m off it)`); },
     stones: () => {}, fire: () => {},
     thorns: log => assert.equal(log.bails, 0, 'the three patches are jumped without a fall'),
     bull: (log, e) => assert.equal(e.foes, 1, 'the bull is beaten'),

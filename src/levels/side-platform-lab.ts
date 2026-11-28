@@ -447,6 +447,8 @@ const swing = (x: number, top: number, nm: string, extra: Extra = {}): void =>
 
 // ============================================================== HAZARDS ==
 
+/** The ledge a chain is jumped at from: this far over the floor, its end this far short of the post. */
+const CHAIN_LEDGE = { up: 2.4, short: 3.2 };
 /** A pendulum swinging ACROSS the line. Its gallows stands 7.2 m before and behind the line: each post gets a plinth. */
 const pendulum = (x: number, top: number, phase: number, nm: string): void => {
   add({ t: 'pendulum', p: [r(x), r(top + 7), 0], len: 6, amp: 0.95, speed: 1.25, phase, yaw: 90, grp: GR.hazards, nm });
@@ -457,7 +459,17 @@ const pendulum = (x: number, top: number, phase: number, nm: string): void => {
 { // ---- PENDULUMS: one, then two half a beat apart, one over ground that holds you to a walk, and one swinging along the line
   const { a, t, mark } = begin('pendulums', 'Pendulums', STONE_DARK);
   floor(a, a + 38, t, 'Pendulums: ground');
-  pendulum(a + 14, t, 0, 'Pendulum: it swings across the line');
+  pendulum(a + 14, t, 0, 'Pendulum: it swings across the line, and its chain can be caught');
+  // A swinging ball's chain is held like a rope: caught a metre over the feet, climbed with up and down, and
+  // leapt off with Jump. Its lowest hold is 4.3 m over the floor, and it hangs within reach of the line only
+  // while the ball is on the line under it: from the floor it takes a full jump from a standstill under the
+  // post, begun as the ball goes by. So there is a ledge to take it from. A running jump off the last stride
+  // of the ledge (a tap) goes over the ball and into the chain wherever the swing is: at all 24 of 24 points
+  // of its round, from anywhere in the ledge's last 1.3 m. Run off the ledge without jumping and he lands
+  // short of the ball's way. The fruit over the chain is taken from its top. The ball is as deadly as it was.
+  ramp(a + 4.3, a + 9.3, t, CHAIN_LEDGE.up, 'Ramp up to the ledge before the first pendulum');
+  block(a + 9.3, a + 14 - CHAIN_LEDGE.short, t, t + CHAIN_LEDGE.up, 'Ledge: a running jump off its end catches the chain');
+  fruitRow(a + 13.5, a + 14.5, t + 8.7, 3);
   pendulum(a + 26, t, 0, 'First of two pendulums');
   pendulum(a + 32, t, Math.PI / 2, 'Second of two pendulums, half a beat later');
   floor(a + 38, a + 50, t - 0.3, 'Under the sand');
@@ -469,7 +481,7 @@ const pendulum = (x: number, top: number, phase: number, nm: string): void => {
   // the 9.4 m under it are run while it is up. (It hangs 0.9 m behind the line, so that its posts stand
   // behind him and not through him; its bob is 1.6 m deep and still crosses the line.)
   add({ t: 'pendulum', p: [r(a + 68), r(t + 7), -0.9], len: 6, amp: 1.1, speed: 1, phase: 0, yaw: 0, grp: GR.hazards, nm: 'Pendulum swinging along the line: run under it while it is up' });
-  mark('first', a + 14); mark('pairA', a + 26); mark('pairB', a + 32); mark('sand', a + 44); mark('along', a + 68);
+  mark('first', a + 14); mark('ledge', a + 14 - CHAIN_LEDGE.short); mark('pairA', a + 26); mark('pairB', a + 32); mark('sand', a + 44); mark('along', a + 68);
   end(a + 84, t);
 }
 

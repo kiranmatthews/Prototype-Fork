@@ -285,7 +285,41 @@ export function makeLabBot({ p, level, lab, CONST, makeInput }) {
       // wait short of each pendulum until its bob has just crossed the line and is on its way out. The one
       // that swings ALONG the line is run under while it is up: he sets off half a second before its bob has
       // risen clear of his head (where it will be is read off the level's clock, as a swing is a sine of it)
+      // ...and the first one's chain is caught on the way, as a person would: up the ramp, along the ledge, and a
+      // running jump off its last stride, which goes over the ball and into the chain wherever the swing is. He
+      // climbs down to its lowest hold (it lets him no lower), up to its top for the fruit hung over it, goes
+      // once round with it, and leaps off east.
       pendulums: s => {
+        const first = pendulumNear(s.marks.first), X0 = s.marks.first, LEDGE = s.marks.ledge;
+        if (p.state === 'rope') {
+          const chain = level.chainGrabs.includes(p.ropeObj);
+          api.fact('chainHeld', chain);
+          if (m.chainLow === undefined) api.fact('chainCaughtAt', +p.ropeD.toFixed(2));
+          m.chainLow = Math.max(m.chainLow ?? 0, p.ropeD); m.chainTop = Math.min(m.chainTop ?? 99, p.ropeD);
+          api.fact('chainClimbed', +(m.chainLow - m.chainTop).toFixed(2));
+          // (the fruit hung over it: how much of it had come to him at the lowest hold, and how much has by now)
+          const taken = level.pickups.filter(o => Math.abs(o.mesh.position.x - X0) < 1 && o.mesh.userData.baseY > s.top + 8 && (!o.alive || o.magnetOwner)).length;
+          api.fact('chainFruit', taken);
+          if (m.letGo > 0) { m.letGo--; return { moveX: 1 }; }
+          if (!m.chainDown) {
+            m.downSteps = (m.downSteps ?? 0) + 1;
+            if (p.ropeD >= first.chain.maxGrip - 0.03 || m.downSteps > 180) { m.chainDown = true; api.fact('chainLowest', +p.ropeD.toFixed(2)); api.fact('chainFruitFromBelow', taken); }
+            return { moveY: -1 };
+          }
+          if (p.ropeD > 1.02) return { moveY: 1 };
+          // at the top: once round with it, for the fruit, then off
+          m.onTop = (m.onTop ?? 0) + 1;
+          if (m.onTop > Math.PI / first.speed / DT) { jumpUntil = k + 3; m.letGo = 8; m.chainDone = true; api.note('let go of the chain'); }
+          return { moveX: 0 };
+        }
+        if (first.chain && !m.chainDone && p.pos.x < X0 + 1.2) {
+          // (down on the floor past the ledge with no chain in hand: it was missed, and the ball is passed like any other)
+          if (p.grounded && p.pos.x > LEDGE + 0.4 && p.pos.y < s.top + 1) m.chainDone = true;
+          else {
+            if (p.grounded && p.pos.x >= LEDGE - 0.9 && p.pos.y > s.top + 2) api.jump(2);
+            return run();
+          }
+        }
         for (const x of [s.marks.first, s.marks.pairA, s.marks.pairB, s.marks.sand]) {
           if (p.pos.x > x + 1.7) continue;
           if (p.pos.x > x - 1.8) return run(); // under it: keep going

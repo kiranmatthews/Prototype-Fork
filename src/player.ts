@@ -72,7 +72,7 @@ import {
   type CampaignPortalReturnPose,
   LaneCursor,
   Level,
-  RopeSwing,
+  type GrabLine,
   type WallPathRuntime,
   newLaneCursor,
 } from './level';
@@ -157,10 +157,13 @@ import {
   type ForwardRollPresentation,
 } from './animation/forwardRoll';
 import {
+  UNITY_ROPE_BACKFLIP_CLEAR,
+  UNITY_ROPE_BACKFLIP_OPEN,
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_INPUTS,
   UNITY_ROPE_TIMING,
   unityRopeLeapAirSeconds,
+  unityRopeLeapFlips,
   unityRopeReleaseDuration,
 } from './animation/unityRope';
 import {
@@ -429,6 +432,22 @@ const SIDE_ON_DROP_IN_SECONDS = 0.26;
  * along it he stood the more of the whip he gets: a higher arc, and a longer
  * one, since it has all of that way back to carry him.
  */
+/**
+ * A leap off a rope goes into the ordinary jump's frames here: past the two in which a jump is still pushing
+ * off a floor, which a body that has just opened its hands on a rope has not got.
+ */
+const ROPE_LEAP_ENTRY_FRAME = 3;
+/** ...and for this long it faces as it hung: the step it lets go in still carries the rope's own travel. */
+const ROPE_LEAP_FACING_HOLD = 0.12;
+/** A body in the air puts its arms out for a rope it will have hold of within this many seconds; they go out
+ * over `ROPE_REACH_OUT` seconds, and come back over `ROPE_REACH_BACK` if it is missed. */
+const ROPE_REACH_LEAD = 0.24, ROPE_REACH_OUT = 0.16, ROPE_REACH_BACK = 0.22;
+/** A leap cannot be caught again by the rope it left, nor by one hanging this close beside the grab's own reach
+ * of it (metres), until the regrab time is up. Any other rope takes him as soon as he reaches it. */
+const ROPE_LEAP_NEIGHBOUR = 0.6;
+/** On a side-scrolling line, a rope or chain within this far of the line, behind it or in front (metres), is caught
+ * from the line as if it were on it. He stays on the line while he holds it: see `stepRope`. */
+const ROPE_LINE_DEPTH = 1.0;
 const SPIN_BRIDGE_SLING = {
   apexBase: 2.2, // metres of rise for a body standing at the hinge...
   apexPerMetre: 0.55, // ...and more for each metre out along the leaf
@@ -1692,9 +1711,20 @@ export class Player {
   // ROPE SWING: jump at a swinging rope to hang on. Up/down climbs the rope,
   // hold/release X leaps off with the swing's momentum, Square spins to smash
   // mid-air crates and enemies. stepRope owns the state.
-  private ropeObj: RopeSwing | null = null;
+  private ropeObj: GrabLine | null = null;
   private ropeD = 0; // grip distance down the rope from the anchor
-  private ropeCoolT = 0; // re-grab cooldown after leaping off
+  private ropeCoolT = 0; // re-grab cooldown after leaping off: for the ropes in `ropeCoolRopes`
+  /** The rope a leap has just left, and any hanging right beside it: these wait out the cooldown. */
+  private readonly ropeCoolRopes: GrabLine[] = [];
+  /** The rope the arms are out for before a catch, where on it, how far the chest is from it, and how far out
+   * the arms are (0..1, eased). */
+  private ropeReachRope: GrabLine | null = null;
+  private ropeReachD = 0;
+  private ropeReachDistance = Infinity;
+  private ropeReachWeight = 0;
+  /** Caught from a side-scrolling line: which way is across it, and where across it he was. He stays there. */
+  private ropeLineAcross: 'x' | 'z' | null = null;
+  private ropeLineAt = 0;
   private ropeJumpArm = false; // X must come UP once on the rope before hold-to-charge arms
   private ropeFaceYaw = 0; // body faces the swing's travel line, not the flip-flopping velocity
   private ropeClimbPhase = 0;
@@ -1702,6 +1732,8 @@ export class Player {
   private ropeReleaseElapsed = 0;
   private ropeReleaseDuration = 0;
   private ropeReleaseCharge = 0;
+  /** Seconds since a leap off a rope, while it still faces as it hung (-1: not in one). */
+  private ropeLeapAge = -1;
   private readonly ropeGripWorld = new THREE.Vector3();
   private ropeLeftGripError = 0;
   private ropeRightGripError = 0;
@@ -1709,7 +1741,7 @@ export class Player {
   /** How the visible body hangs from the rope: along it, springing, hand over hand. Presentation only. */
   private readonly ropeBody = new RopeSwingBody();
   /** The rope being held or, for the moment the body takes to leave it, the one just left. */
-  private ropeBodyRope: RopeSwing | null = null;
+  private ropeBodyRope: GrabLine | null = null;
   private ropeShoveDrawn = false;
   // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
@@ -2968,7 +3000,8 @@ export class Player {
     } else if (clipId === UNITY_ROPE_CLIP_IDS.climb) {
       actionProgress = this.ropeClimbPhase;
     } else if (clipId === UNITY_ROPE_CLIP_IDS.release) {
-      actionProgress = this.ropeReleaseElapsed /
+      // (to where the backflip is round and open: the landing past that is not the clip's to play in the air)
+      actionProgress = UNITY_ROPE_BACKFLIP_OPEN * this.ropeReleaseElapsed /
         Math.max(this.ropeReleaseDuration, 0.001);
     } else if (clipId === 'player.rope') {
       actionProgress = charge;
@@ -4835,12 +4868,18 @@ export class Player {
     this.manualCoyoteT = 0;
     this.ropeObj = null;
     this.ropeCoolT = 0;
+    this.ropeCoolRopes.length = 0;
+    this.ropeReachRope = null;
+    this.ropeReachDistance = Infinity;
+    this.ropeReachWeight = 0;
+    this.ropeLineAcross = null;
     this.ropeJumpArm = false;
     this.ropeClimbPhase = 0;
     this.ropeClimbDirection = 0;
     this.ropeReleaseElapsed = 0;
     this.ropeReleaseDuration = 0;
     this.ropeReleaseCharge = 0;
+    this.ropeLeapAge = -1;
     this.ropeGripWorld.set(0, 0, 0);
     this.ropeLeftGripError = 0;
     this.ropeRightGripError = 0;
@@ -5571,16 +5610,27 @@ export class Player {
     this.pendingSpecialGrind = input.grindPressed
       ? this.special.peek('grind', tripleMaskSpecial)
       : null;
-    if (this.state === 'air' && this.ropeReleaseDuration > 0) {
+    if (this.state === 'air' && this.ropeReleaseDuration > 0 && !this.doubleJumpAir) {
+      // The backflip was paced for a drop back to the height it left. Where the floor is nearer than that
+      // (a ledge steered onto), the turn is finished in the air there is: never longer, only sooner.
+      if (this.ropeReleaseElapsed < this.ropeReleaseDuration) {
+        const left = this.secondsToFloorBelow(level) - UNITY_ROPE_BACKFLIP_CLEAR;
+        if (this.ropeReleaseDuration - this.ropeReleaseElapsed > left)
+          this.ropeReleaseDuration = this.ropeReleaseElapsed + Math.max(dt, left);
+      }
       this.ropeReleaseElapsed = Math.min(
         this.ropeReleaseDuration,
         this.ropeReleaseElapsed + dt,
       );
+      // (the jump's frames wait under the flip; what they open from is the top of this arc)
+      this.footStudyApexY = Math.max(this.footStudyApexY, this.pos.y);
     } else if (this.state !== 'rope') {
       this.ropeReleaseElapsed = 0;
       this.ropeReleaseDuration = 0;
       this.ropeReleaseCharge = 0;
     }
+    if (this.ropeLeapAge >= 0) this.ropeLeapAge = this.state === 'air' && this.ropeLeapAge < ROPE_LEAP_FACING_HOLD ? this.ropeLeapAge + dt : -1;
+    this.updateRopeReach(dt, level);
     // LEDGE HANG owns the whole step: no movement, physics, or collision runs
     // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
     // the essential shared timers itself.
@@ -5624,6 +5674,7 @@ export class Player {
     }
     this.updateManualInput(dt);
     this.ropeCoolT = Math.max(0, this.ropeCoolT - dt);
+    if (this.ropeCoolT <= 0 && this.ropeCoolRopes.length) this.ropeCoolRopes.length = 0;
     this.vertLandGraceT = Math.max(0, this.vertLandGraceT - dt);
     // ZONES (built-in levels): the path can right-angle into an X-running
     // stretch — there the camera holds its frame and the turned path IS the
@@ -6366,7 +6417,6 @@ export class Player {
         // killed the flow.
         if (
           !jumpActionConsumed &&
-          this.ropeCoolT <= 0 &&
           !this.wallriding &&
           !this.slamActive &&
           !this.isBailing &&
@@ -11441,18 +11491,98 @@ export class Player {
     return hadBoard;
   }
 
+  /**
+   * In the air and about to have hold of a rope: the arms go out for it before the hands close. Presentation
+   * only: which rope is caught, where and when are `tryRopeGrab`'s alone, and it reads none of this.
+   */
+  private updateRopeReach(dt: number, level: Level): void {
+    let reaching = false;
+    const flipping = this.ropeReleaseDuration > 0 && this.ropeReleaseElapsed < this.ropeReleaseDuration;
+    if (this.state === 'air' && !this.grounded && !this.wallriding && !this.slamActive && !this.isBailing && !flipping
+      && this.grabPhase === 'none' && this.flipTimer <= 0 && this.spinTimer <= 0 && level.ropeSwings.length + level.chainGrabs.length > 0) {
+      const chestY = this.pos.y + 1.0;
+      let best: GrabLine | null = null, bestD = 0, bestDistance = Infinity, ahead = 0;
+      for (const rs of this.grabLines(level)) {
+        if (this.ropeCoolT > 0 && this.ropeCoolRopes.includes(rs)) continue;
+        // (nowhere near it: most ropes of a level, most of the time)
+        const range = rs.len + CONST.ropeGrabRadius + 4, ax = rs.anchor.x - this.pos.x, az = rs.anchor.z - this.pos.z;
+        if (ax * ax + az * az > range * range || rs.anchor.y < chestY - 4 || rs.anchor.y - rs.len > chestY + 4) continue;
+        const d = level.ropeClosestDistance(rs, ROPE_P.set(this.pos.x, chestY, this.pos.z));
+        level.ropePointAt(rs, d, ROPE_P);
+        const distance = Math.hypot(ROPE_P.x - this.pos.x, ROPE_P.y - chestY, ROPE_P.z - this.pos.z);
+        if (distance >= bestDistance) continue;
+        best = rs; bestD = d; bestDistance = distance;
+        ahead = -(ROPE_P.x - this.pos.x) * Math.sin(this.visualYaw) - (ROPE_P.z - this.pos.z) * Math.cos(this.visualYaw);
+      }
+      if (best) {
+        // Closing on it (its own swing included) fast enough to have it within the lead, or all but there; and it
+        // is in front of him: hands go out ahead of a body, not behind its back.
+        const closing = best === this.ropeReachRope && dt > 1e-6 ? (this.ropeReachDistance - bestDistance) / dt : 0;
+        reaching = bestDistance - CONST.ropeGrabRadius <= Math.max(0.2, closing * ROPE_REACH_LEAD) && ahead > -0.3;
+        this.ropeReachRope = best; this.ropeReachD = bestD; this.ropeReachDistance = bestDistance;
+      } else this.ropeReachDistance = Infinity;
+    } else this.ropeReachDistance = Infinity;
+    this.ropeReachWeight = reaching
+      ? Math.min(1, this.ropeReachWeight + dt / ROPE_REACH_OUT)
+      : Math.max(0, this.ropeReachWeight - dt / ROPE_REACH_BACK);
+    // (A rope still in sight is kept while the arms are in: how fast it is closing is measured against it.)
+    if (this.ropeReachWeight <= 0 && this.ropeReachDistance === Infinity) this.ropeReachRope = null;
+  }
+
+  /** Every line that can be caught like a rope: the level's swing ropes, then the chains of its swinging balls. */
+  private *grabLines(level: Level): Generator<GrabLine> {
+    yield* level.ropeSwings;
+    for (const chain of level.chainGrabs) if (chain.live) yield chain;
+  }
+
+  /** On a side-scrolling line: which way is across it (so, depth as the camera sees it). Null anywhere else. */
+  private ropeLineAxis(level: Level): 'x' | 'z' | null {
+    const zone = level.zoneAt(this.pos.x, this.pos.z);
+    return zone?.line ? (zone.dir === 'E' || zone.dir === 'W' ? 'z' : 'x') : null;
+  }
+
+  /**
+   * A chain is held clear of its own ball (CHAIN_HOLD_CLEAR in the level), but no ball is safer for being held on
+   * to: a swinging ball that reaches a body on a chain kills it as it would anywhere. True if it has.
+   */
+  private struckOnChain(level: Level): boolean {
+    const half = this.hitboxHalf;
+    this.playerBox.setFromCenterAndSize(ROPE_P.set(this.pos.x, this.pos.y + half.y, this.pos.z), ROPE_V.set(half.x * 2, half.y * 2, half.z * 2));
+    for (const pendulum of level.pendulums) {
+      if (pendulum.box.isEmpty() || !this.playerBox.intersectsBox(pendulum.box)) continue;
+      if (this.uberTimer > 0 || this.invulnTimer > 0 || this.spendMask()) continue;
+      this.ropeBody.release(0);
+      this.ropeObj = null;
+      this.ropeClimbDirection = 0;
+      this.die();
+      return true;
+    }
+    return false;
+  }
+
   // Airborne near a swing rope's line: catch it. The grip lands wherever your
   // chest met the rope, so a low pass grabs low — deeper reach, bigger arc.
+  // The chain of a swinging ball is caught the same way, as far down it as a
+  // body can hang clear of the ball.
   private tryRopeGrab(level: Level): boolean {
-    if (level.ropeSwings.length === 0) return false;
+    if (level.ropeSwings.length === 0 && level.chainGrabs.length === 0) return false;
     const chestY = this.pos.y + 1.0;
-    for (const rs of level.ropeSwings) {
+    const across = this.ropeLineAxis(level);
+    for (const rs of this.grabLines(level)) {
+      // (the rope a leap has just left does not take him straight back; the next one along does)
+      if (this.ropeCoolT > 0 && this.ropeCoolRopes.includes(rs)) continue;
       const d=level.ropeClosestDistance(rs,ROPE_P.set(this.pos.x,chestY,this.pos.z));
       level.ropePointAt(rs, d, ROPE_P);
-      const dx = ROPE_P.x - this.pos.x;
+      let dx = ROPE_P.x - this.pos.x;
       const dy = ROPE_P.y - chestY;
-      const dz = ROPE_P.z - this.pos.z;
+      let dz = ROPE_P.z - this.pos.z;
+      // On a side-scrolling line, one hung a little behind the line or in front of it is caught from the line.
+      if (across === 'z') dz = Math.sign(dz) * Math.max(0, Math.abs(dz) - ROPE_LINE_DEPTH);
+      else if (across === 'x') dx = Math.sign(dx) * Math.max(0, Math.abs(dx) - ROPE_LINE_DEPTH);
       if (dx * dx + dy * dy + dz * dz > CONST.ropeGrabRadius * CONST.ropeGrabRadius) continue;
+      // ...and he stays on that line while he holds it.
+      this.ropeLineAcross = across;
+      this.ropeLineAt = across === 'z' ? this.pos.z : this.pos.x;
       this.ropeGripWorld.copy(ROPE_P);
       // Capture the mounted deck before attachment zeros speed/vVel. The rider
       // does not bail; the deck simply keeps flying on its own while both hands
@@ -11475,6 +11605,11 @@ export class Player {
       // The flight that brought the hands here carries on into the hang: presentation takes it before it is zeroed.
       this.ropeBody.catch(d, ROPE_V.set(this.lastVelX, this.vVel, this.lastVelZ), level.ropeVelAt(rs, d, ROPE_P));
       this.ropeBodyRope = rs;
+      this.ropeCoolT = 0;
+      this.ropeCoolRopes.length = 0;
+      this.ropeReachRope = null;
+      this.ropeReachDistance = Infinity;
+      this.ropeReachWeight = 0;
       this.vVel = 0;
       this.speed = 0;
       this.walkVelocity.set(0, 0, 0);
@@ -11526,18 +11661,21 @@ export class Player {
       else this.ttTime += dt;
     }
     const rs = this.ropeObj;
-    if (!rs) {
+    // (a chain whose ball has been smashed off its gallows is no longer there to hold)
+    if (!rs || ('live' in rs && !rs.live)) {
+      if (rs) { this.ropeBody.release(0); this.ropeBodyRope = rs; this.ropeObj = null; }
       this.state = 'air';
       this.ropeClimbDirection = 0;
       return;
     }
     // climb: stick/arrows up walks the grip toward the anchor, down toward
-    // the knot — while the whole rope keeps swinging
+    // the knot — while the whole rope keeps swinging. (A chain is held no
+    // lower than a body hangs clear of the ball on it.)
     const previousRopeDistance = this.ropeD;
     this.ropeD = THREE.MathUtils.clamp(
       this.ropeD - input.moveY * CONST.ropeClimbSpeed * dt,
       1.0,
-      rs.len - 0.1,
+      Math.min(rs.len - 0.1, rs.maxGrip ?? Infinity),
     );
     const climbedDistance = previousRopeDistance - this.ropeD;
     this.ropeClimbDirection = climbedDistance > 1e-6
@@ -11558,9 +11696,15 @@ export class Player {
     level.ropePointAt(rs, this.ropeD, ROPE_P);
     this.ropeGripWorld.copy(ROPE_P);
     ROPE_P.y -= 1.85; // rig origin is at the feet; the hands reach ~1.85 overhead
+    // On a side-scrolling line the rider never leaves the line. A chain hung behind it, or one that swings across
+    // it, is held from it: the hands and the body the eye sees go with the chain (they are placed from the grip),
+    // and where he IS, for everything the course asks of him and for the leap, stays in the one plane it is played on.
+    if (this.ropeLineAcross === 'z') ROPE_P.z = this.ropeLineAt;
+    else if (this.ropeLineAcross === 'x') ROPE_P.x = this.ropeLineAt;
     this.pos.copy(ROPE_P);
     this.grounded = false;
     this.vVel = 0;
+    if (rs.rigid && this.struckOnChain(level)) return;
     // spinning up here is the point: mid-air crates and enemies in reach
     if (this.spinTimer > 0) this.ropeSpinSmash(level);
     // hold/release X = the normal charged jump, fired with the swing's
@@ -11581,9 +11725,11 @@ export class Player {
     if (this.pos.y < level.killY) this.die('pit');
   }
 
-  private ropeLeap(level: Level, rs: RopeSwing): void {
+  private ropeLeap(level: Level, rs: GrabLine): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const jumpV = TUNING.jumpMinVelocity + (TUNING.jumpVelocity - TUNING.jumpMinVelocity) * t;
+    // A plain leap or a backflip, never part of each (unityRopeLeapFlips). How high it goes is the charge's still.
+    const flips = unityRopeLeapFlips(t);
     level.ropeVelAt(rs, this.ropeD, ROPE_V);
     this.ropeBody.release(t);
     this.ropeBodyRope = rs;
@@ -11591,8 +11737,18 @@ export class Player {
     this.ropeObj = null;
     this.ropeClimbDirection = 0;
     this.ropeReleaseElapsed = 0;
-    this.ropeReleaseCharge = t;
+    this.ropeReleaseCharge = flips ? 1 : 0;
+    this.ropeLeapAge = 0;
     this.ropeCoolT = CONST.ropeRegrabCool;
+    this.ropeCoolRopes.length = 0;
+    this.ropeCoolRopes.push(rs);
+    const near = CONST.ropeGrabRadius + ROPE_LEAP_NEIGHBOUR, chestY = this.pos.y + 1.0;
+    for (const other of this.grabLines(level)) {
+      if (other === rs) continue;
+      level.ropePointAt(other, level.ropeClosestDistance(other, ROPE_P.set(this.pos.x, chestY, this.pos.z)), ROPE_P);
+      const dx = ROPE_P.x - this.pos.x, dy = ROPE_P.y - chestY, dz = ROPE_P.z - this.pos.z;
+      if (dx * dx + dy * dy + dz * dz < near * near) this.ropeCoolRopes.push(other);
+    }
     this.charging = false;
     this.chargeTimer = 0;
     // Rope traversal is always on foot. The deck—if there was one—is still in
@@ -11603,9 +11759,19 @@ export class Player {
     this.airGrav = 'foot';
     this.airMomentum = false;
     this.vVel = jumpV + Math.max(0, ROPE_V.y * 0.9);
-    // The leap's clip is paced to the leap: a charged backflip comes round in the air this launch actually has.
+    // The backflip's clip is paced to the leap: it has come round and opened in the air this launch actually has.
+    // A plain leap has no clip of its own: it is an ordinary jump from the frame the hands open.
     this.ropeReleaseDuration = unityRopeReleaseDuration(t,
       unityRopeLeapAirSeconds(this.vVel, TUNING.riseGravity, TUNING.fallGravity));
+    // ...and either way the air after it is a jump's: its own frames from just off the ground on, its own
+    // gather, opening and landing. (The jump that brought him ONTO the rope is not this one: what it chose,
+    // a roll among other things, ended at the catch.)
+    const study = this.onFootJumpStudy;
+    this.footJumpStudyLaunch = study ? { ...study, takeoffSpeed: 0, flipMinSpeed: TUNING.jumpFlipMinSpeed, flip: false } : null;
+    this.footStudyCharge = t;
+    this.footStudyFrame = ROPE_LEAP_ENTRY_FRAME;
+    this.footStudyLaunchY = this.footStudyApexY = this.pos.y;
+    this.footStudyFlipProgress = 0;
     this.airborneT = 0;
     this.launchVy = this.vVel;
     this.airPeakY = this.pos.y;
@@ -11619,6 +11785,21 @@ export class Player {
     this.walkVelocity.set(0, 0, 0);
     this.score(CONST.ptsRopeSwing, 'Rope Swing');
     sfx.play('woosh', 0.5, 1.1);
+  }
+
+  /**
+   * Seconds until his feet reach the floor under them, falling as he is (a straight drop: presentation's
+   * guess, never support). Infinity where there is no floor under him.
+   */
+  private secondsToFloorBelow(level: Level): number {
+    const ray = this.fallCameraRay;
+    ray.ray.origin.set(this.pos.x, this.pos.y + 0.25, this.pos.z); ray.ray.direction.set(0, -1, 0);
+    ray.near = 0; ray.far = 60;
+    const hit = ray.intersectObjects(level.groundMeshes, false).find(h => !h.object.userData.lethal && !h.object.userData.outOfBounds);
+    if (!hit) return Infinity;
+    const drop = Math.max(0, hit.distance - 0.25), rise = Math.max(1e-6, TUNING.riseGravity), fall = Math.max(1e-6, TUNING.fallGravity);
+    if (this.vVel > 0) return this.vVel / rise + Math.sqrt(2 * (drop + this.vVel * this.vVel / (2 * rise)) / fall);
+    return (this.vVel + Math.sqrt(this.vVel * this.vVel + 2 * fall * drop)) / fall;
   }
 
   // One spin = one wrecking pass: crates and enemies within arm's reach of
@@ -11912,12 +12093,15 @@ export class Player {
     }, {
       dt, rope, attached, airborne: this.state === 'air' && !this.grounded, ropeD: this.ropeD, grip: this.ropeGripWorld,
       charge: attached && this.charging ? Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0,
+      reach: !attached && this.ropeReachRope && this.ropeReachWeight > 0
+        ? { rope: this.ropeReachRope, ropeD: this.ropeReachD, weight: this.ropeReachWeight * this.ropeReachWeight * (3 - 2 * this.ropeReachWeight) }
+        : null,
     });
     this.ropeLeftGripError = result.leftGripError;
     this.ropeRightGripError = result.rightGripError;
     this.ropeGripRootOffsetY = result.rootOffsetY;
     // A rope the body has just pushed aside is redrawn where it now is, this frame, not on the level's next pass.
-    if (rope?.shove && (rope.shove.lengthSq() > 0 || this.ropeShoveDrawn)) {
+    if (rope && 'visual' in rope && rope.shove && (rope.shove.lengthSq() > 0 || this.ropeShoveDrawn)) {
       this.ropeShoveDrawn = rope.shove.lengthSq() > 0;
       rope.visual.update((d, out) => drawnRopeLocalPoint(rope, d, out));
     }
@@ -23657,10 +23841,12 @@ export class Player {
         .transformDirection(this.loopRide.mesh.matrixWorld).multiplyScalar(Math.sign(this.speed || 1))
         .applyQuaternion(VERT_Q.clone().invert());
       targetYaw = wrapAngle(Math.atan2(tangent.x, tangent.z) - Math.PI);
-    } else if (this.state === 'rope') {
+    } else if (this.state === 'rope' || this.ropeLeapAge >= 0) {
       // On the swing rope, face the direction you were travelling when you
       // grabbed (captured in tryRopeGrab) and hold it — the swing never turns
-      // you, and climbing up/down never turns you.
+      // you, and climbing up/down never turns you. Nor does letting go: the
+      // step the hands open in still moved him with the rope, and read as
+      // travel it turned a body let go on the backswing half round and back.
       targetYaw = this.ropeFaceYaw;
     } else if (teeterActive && this.teetering) {
       // Face outward, perpendicular to the actual lip, regardless of approach.

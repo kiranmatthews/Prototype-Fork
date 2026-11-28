@@ -156,7 +156,7 @@ import {
   BEACHFRONT_COURSE_LENGTH,
   beachfrontPointAtDistance,
 } from "./beachfrontCourse";
-import { BraidedRope, ropeLocalPoint, drawnRopeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
+import { BraidedRope, ropeLocalPoint, drawnRopeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance, type FlexibleRopeState } from "./ropeGeometry";
 import {RopeBridges,type RopeBridgeSpan,type BridgeAnchors} from './ropeBridges';
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
@@ -596,10 +596,47 @@ interface Crusher {
   slammed: boolean; // edge flag for the impact thud
 }
 
+/**
+ * How far up its chain from a swinging ball's centre the lowest hold is, metres along the chain.
+ *
+ * A body holding a chain hangs straight down from its hands, feet 1.85 m below them, a metre wide; the ball's
+ * touch-kill box is 2 m wide and 2 m high about its centre. With the hold L up the chain, and the chain swung
+ * to an angle a, the ball is L sin a to the side of the hands and L cos a below them. The two overlap only if
+ * L sin a < 1.5 (side by side) AND L cos a < 2.85 (the box's top above the feet); the worst angle is the one
+ * where the ball has only just come under the body, sin a = 1.5 / L, and there L cos a = sqrt(L^2 - 2.25).
+ * That is 2.85 or more for L >= 3.22. So at 3.25 m no swing of the chain brings the ball's box to a body on it;
+ * and drawn along the chain, as a hanging body is, his shoes are a quarter of a metre off the top of the ball.
+ */
+export const CHAIN_HOLD_CLEAR = 3.3;
+/** The highest hold on a chain, metres below its pivot (a rope's is the same); and the least length of chain
+ * between the two for it to be held at all. A shorter chain is a ball on a hook: there is nowhere on it to hang. */
+export const CHAIN_HOLD_TOP = 1.0, CHAIN_HOLD_LEAST = 0.4;
+/** A swinging ball's chain runs from its pivot to the eye of the weight, this far short of the ball's centre. */
+export const CHAIN_EYE = 1.08;
+
+/**
+ * The chain of a swinging ball, as a line a body can catch, hold, climb, swing with and leap off: the state of a
+ * swing rope, following its pendulum's angle. It is caught and held by the same code as a rope (the player's
+ * `tryRopeGrab` and `stepRope`), with three differences. It can be held only between `CHAIN_HOLD_TOP` and
+ * `maxGrip`. It is rigid: drawn by the pendulum, not pushed aside by a body. And the ball on the end of it is as
+ * deadly as it was: a body on a chain is still tested against every swinging ball, its own included.
+ *
+ * These live in `Level.chainGrabs`, never in `ropeSwings`: a level's rope swings are the ropes it was given.
+ */
+export interface ChainGrab extends FlexibleRopeState {
+  rigid: true;
+  maxGrip: number;
+  /** False while its pendulum is gone (crushed by a chase boulder): it cannot be caught, and lets go of a holder. */
+  live: boolean;
+  amp: number; speed: number; phase: number;
+}
+/** What the player's rope code holds: a swing rope, or a swinging ball's chain. */
+export type GrabLine = RopeSwing | ChainGrab;
+
 // Swinging grab-rope: jump at it to hang on, climb its length, leap off with
 // the swing's momentum. Pure driven pendulum — the player rides it, never
 // adds a small secondary flex without changing endpoint timing.
-export interface RopeSwing {
+export interface RopeSwing extends FlexibleRopeState {
   visual: BraidedRope;
   bend: number; bendV: number; sway: number; swayV: number;
   shove?: THREE.Vector3; shoveD?: number; // presentation only: the drawn rope pushed aside by a passing body
@@ -633,6 +670,8 @@ interface Pendulum {
   yaw: number; // radians: spins the swing plane (and the gallows frame)
   box: THREE.Box3;
   lastSign: number;
+  /** Its chain, where there is enough of it to hold (see ChainGrab). */
+  chain?: ChainGrab;
 }
 
 // Per-level look: sky gradient, fog, lights.
@@ -4645,6 +4684,8 @@ export class Level {
   private blockworksMattes: BlockworksMattes | null = null;
   private ghostTrainAssets: GhostTrainAssetKit | null = null;
   ropeSwings: RopeSwing[] = [];
+  /** The chains of the swinging balls, as lines to catch and hold (see ChainGrab). */
+  chainGrabs: ChainGrab[] = [];
   torches: Torch[] = [];
   fireTikis: TempleFireTiki[] = [];
   phasePads: PhasePad[] = [];
@@ -10904,9 +10945,12 @@ export class Level {
       for (const box of tiki.boxes) if (!box.isEmpty()) this.killBoxes.push(box);
     }
     for (const pd of this.pendulums) {
+      if(pd.chain)pd.chain.live=!pd.crushed;
       if(pd.crushed){pd.box.makeEmpty();continue;}
       const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
       pd.pivot.rotation.z = a;
+      // (its chain, as a line to hold, is at the same angle and turning as fast)
+      if(pd.chain){pd.chain.theta=a;pd.chain.thetaV=Math.cos(this.time*pd.speed+pd.phase)*pd.amp*pd.speed;}
       // bob world offset: the local x-swing spun by the pendulum's yaw
       const swing = Math.sin(a) * pd.len;
       const cos = Math.cos(pd.yaw);
@@ -15854,6 +15898,14 @@ export class Level {
     beam.rotation.y = yaw;
     if(coastTimber)dressCarlisleTimberBeam(beam,504);
     frame.add(beam);
+    // Its chain can be held, where there is chain enough above the ball to hang from clear of it. An axe is on a
+    // rigid shaft, not a chain: there is nothing on it to hold.
+    const maxGrip = len - CHAIN_HOLD_CLEAR;
+    const chain: ChainGrab | undefined = ghostAxe || maxGrip < CHAIN_HOLD_TOP + CHAIN_HOLD_LEAST ? undefined : {
+      anchor: pivot.position, anchorVel: new THREE.Vector3(), len: len - CHAIN_EYE, yaw, theta: 0, thetaV: 0, bend: 0, sway: 0,
+      rigid: true, maxGrip, live: true, amp, speed, phase,
+    };
+    if (chain) this.chainGrabs.push(chain);
     this.pendulums.push({
       frame,pivot,
       len,
@@ -15863,6 +15915,7 @@ export class Level {
       yaw,
       box: new THREE.Box3(),
       lastSign: 1,
+      chain,
     });
   }
 
@@ -16138,13 +16191,13 @@ export class Level {
     visual.update((d,out)=>ropeLocalPoint(rs,d,out));
   }
 
-  ropePointAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
+  ropePointAt(rs: FlexibleRopeState, d: number, out: THREE.Vector3): THREE.Vector3 {
     return flexibleRopePoint(rs,d,out);
   }
-  ropeVelAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
+  ropeVelAt(rs: FlexibleRopeState, d: number, out: THREE.Vector3): THREE.Vector3 {
     return flexibleRopeVelocity(rs,d,out);
   }
-  ropeClosestDistance(rs:RopeSwing,point:THREE.Vector3):number {
+  ropeClosestDistance(rs:FlexibleRopeState,point:THREE.Vector3):number {
     return closestRopeDistance(rs,point);
   }
 
