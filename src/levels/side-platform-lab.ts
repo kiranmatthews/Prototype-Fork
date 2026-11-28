@@ -450,7 +450,13 @@ const pendulum = (x: number, top: number, phase: number, nm: string): void => {
 { // ---- PENDULUMS: one, then two half a beat apart, one over ground that holds you to a walk, and one swinging along the line
   const { a, t, mark } = begin('pendulums', 'Pendulums', STONE_DARK);
   floor(a, a + 38, t, 'Pendulums: ground');
-  pendulum(a + 14, t, 0, 'Pendulum: it swings across the line');
+  pendulum(a + 14, t, 0, 'Pendulum: it swings across the line, and its chain can be caught');
+  // A swinging ball's chain is held like a rope: jumped up to from under its post as the ball goes by beneath
+  // (a full jump: the lowest hold is 4.3 m up, and a rope is caught a metre over the feet), climbed with up and
+  // down, and leapt off with Jump. The fruit over this one is out of reach from the chain's lowest hold and
+  // within it from the top, 1.7 m higher. The ball is as deadly as it was: under it at the wrong moment, or
+  // short of the chain, is a death.
+  fruitRow(a + 13.5, a + 14.5, t + 8.7, 3);
   pendulum(a + 26, t, 0, 'First of two pendulums');
   pendulum(a + 32, t, Math.PI / 2, 'Second of two pendulums, half a beat later');
   floor(a + 38, a + 50, t - 0.3, 'Under the sand');

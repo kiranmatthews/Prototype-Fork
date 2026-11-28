@@ -277,7 +277,40 @@ export function makeLabBot({ p, level, lab, CONST, makeInput }) {
       // wait short of each pendulum until its bob has just crossed the line and is on its way out. The one
       // that swings ALONG the line is run under while it is up: he sets off half a second before its bob has
       // risen clear of his head (where it will be is read off the level's clock, as a swing is a sine of it)
+      // ...and the first one's chain is caught on the way: he waits short of it for its ball to go by, stands
+      // under its post, and jumps (a full charge) so as to be at the top of the jump a tenth of a second before
+      // the chain next hangs straight down: the ball goes by under his feet, his chest meets the chain, he climbs
+      // to the top of it for the fruit hung over it, and leaps off east.
       pendulums: s => {
+        const first = pendulumNear(s.marks.first), X0 = s.marks.first;
+        if (p.state === 'rope') {
+          const chain = level.chainGrabs.includes(p.ropeObj);
+          api.fact('chainHeld', chain);
+          m.chainLow = Math.max(m.chainLow ?? 0, p.ropeD); m.chainTop = Math.min(m.chainTop ?? 99, p.ropeD);
+          api.fact('chainClimbed', +(m.chainLow - m.chainTop).toFixed(2));
+          // (the fruit hung over it: how much of it had come to him from the lowest hold, and how much has by now)
+          const taken = level.pickups.filter(o => Math.abs(o.mesh.position.x - X0) < 1 && o.mesh.userData.baseY > s.top + 8 && (!o.alive || o.magnetOwner)).length;
+          if (p.ropeD > m.chainLow - 0.05) api.fact('chainFruitFromBelow', taken);
+          api.fact('chainFruit', taken);
+          if (m.letGo > 0) { m.letGo--; return { moveX: 1 }; }
+          if (p.ropeD > 1.02) return { moveY: 1 };
+          // at the top: once round with it, for the fruit, then off
+          m.onTop = (m.onTop ?? 0) + 1;
+          if (m.onTop > Math.PI / first.speed / DT) { jumpUntil = k + 3; m.letGo = 8; m.chainDone = true; api.note('let go of the chain'); }
+          return { moveX: 0 };
+        }
+        if (first.chain && !m.chainDone && p.pos.x < X0 + 1.2) {
+          if (p.pos.x < X0 - 2.7) return run();
+          if (!p.grounded) return { moveX: 0 };
+          // seconds until its chain next hangs straight down (a swing is a sine of the level's clock)
+          const phase = level.time * first.speed + first.phase, next = (Math.ceil(phase / Math.PI - 1e-9) * Math.PI - phase) / first.speed;
+          const half = Math.PI / first.speed;
+          // (its ball is on the line for a fifth of a second either side of that: he goes under once it has gone
+          // by, with two seconds in hand, and is off the ground half a second before it comes back)
+          if (p.pos.x < X0 - 0.4 && !m.chainGo) { if (next > 1.5 && next < half - 0.3) m.chainGo = true; else return standAt(X0 - 2.5); }
+          if (next > 0.92 || next < 0.3) return standAt(X0);
+          return { moveX: 0, jump: next > 0.52 };
+        }
         for (const x of [s.marks.first, s.marks.pairA, s.marks.pairB, s.marks.sand]) {
           if (p.pos.x > x + 1.7) continue;
           if (p.pos.x > x - 1.8) return run(); // under it: keep going
