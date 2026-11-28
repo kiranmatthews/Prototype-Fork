@@ -1,8 +1,8 @@
-# Codex/sol level-geometry experiment
+# Original level-authoring experiment (archived)
 
-## Objective
+## Original objective
 
-Measure how quickly Codex/sol can turn a level brief into a publicly playable browser build, and compare that loop with authoring equivalent greybox geometry in Unity.
+The experiment set out to compare Codex/sol’s prompt-to-playable time with equivalent level authoring in Unity. The project retired that objective on 28 November 2026. See the [current project instructions](../AGENTS.md).
 
 This repository is a history-preserving copy of `kiranmatthews/Game-prototype` at source commit `ee24275fc11092e91ec30eabd6161611c2cffdd9`. GitHub cannot create a network fork under the same account as the source, so the experiment uses a separate repository and Pages deployment instead.
 

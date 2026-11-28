@@ -1,6 +1,6 @@
-# Codex/sol level-geometry experiment
+# Board Platformer Prototype
 
-This repository is the isolated browser prototype used to compare Codex/sol level-authoring speed with Unity. Keep changes focused on playable demo levels and the minimum runtime support they need.
+This is the Codex/sol browser game prototype. It combines corridor platforming with skateboarding.
 
 ## Fast path
 
