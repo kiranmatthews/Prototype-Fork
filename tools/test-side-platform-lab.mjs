@@ -38,7 +38,7 @@
 // Not in either lab, and why: `pipe` and `outline` are old save formats that load as other
 // parts; `worldmap` is the campaign's map table; `comboorb` starts a run that must reach the gate
 // in one combo, which a bench of twenty-eight stops cannot honour. Loops are a mesh field, not a
-// type: one needs a second lane beside the first and 30 m/s, and this course is one line.
+// type: a loop on one line is a planar one, and this lab carries two (its Loops station).
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 import { makeLabBot } from './side-platform-lab-bot.mjs';
@@ -48,6 +48,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const lab = await server.ssrLoadModule('/src/levels/side-platform-lab.ts');
   const pipeLab = await server.ssrLoadModule('/src/levels/side-pipe-lab.ts');
   const { Level, findLevel, normalizeCustomLevelData, CUSTOM_COMPONENT_TYPES } = await server.ssrLoadModule('/src/level.ts');
+  const { planarLoopEntry } = await server.ssrLoadModule('/src/loopRide.ts');
+  const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
   stock.dispose();
   const { STATIONS, START, ISLAND, SIDE_PLATFORM_LAB_SPAN: SPAN } = lab;
 
@@ -120,6 +122,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   has('water that kills', c => c.t === 'mesh' && c.materialStyle === 'water' && c.lethal === true && c.solid === false);
   has('lava', c => c.t === 'mesh' && c.lethal === true && c.solid === true);
   has('a steel block that is not a crate', c => c.t === 'metal');
+  assert.equal(parts.filter(c => c.t === 'mesh' && c.loopRadius > 0 && c.loopOffset === 0).length, 2, 'this lab carries two planar loops');
   has('a spin bridge that stays down', c => c.t === 'spinbridge' && c.hold === undefined);
   has('a spin bridge that folds again', c => c.t === 'spinbridge' && c.hold > 0);
   has('rope-bridge boards', c => c.t === 'platform' && c.bridgeSpan);
@@ -174,6 +177,12 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   const told = log => `reached ${log.reached.toFixed(1)} of ${log.goal.toFixed(1)} in ${log.seconds} s` +
     `${log.died.length ? '; died ' + log.died.map(d => `${d.station} x${d.x} y${d.y} t${d.t}`).join(', ') : ''}; ${JSON.stringify(log.facts)}`;
 
+  // (what the two rings ask for at their feet: loopRide.ts finds them by riding the centreline)
+  const loopForces = { gravity: TUNING.groundGravity, pump: TUNING.pipePumpGain + TUNING.chargeBoost, friction: TUNING.pipeFriction, drag: TUNING.windDrag, braking: TUNING.turnaround };
+  const RINGS = { small: planarLoopEntry(4, loopForces), big: planarLoopEntry(6, loopForces) };
+  assert.ok(level.loopMeshes.length === 2 && level.loopMeshes.every(mesh => mesh.userData.planarLoop && !level.groundMeshes.includes(mesh)),
+    'both rings are built as planar loops: ridden by their centrelines, and no floor to anything else');
+
   // ---- every station, from its own checkpoint ---------------------------------------
   /** What each station's object is for, and that it was done. */
   const DONE = {
@@ -203,6 +212,11 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     bird: (log, e) => assert.equal(e.foes, 1, 'the bird is beaten'),
     rope: (log, e) => assert.equal(e.grinds, 2, 'both ropes are ground'),
     speed: (log, e) => { assert.ok(log.facts.padSpeed >= 20, `the pad gives its speed (${log.facts.padSpeed} m/s)`); assert.equal(e.boxes, 4, 'the wall of boxes is ridden through'); },
+    loop: log => { assert.equal(log.facts.rings, 2, 'both rings are ridden round');
+      assert.ok(log.facts.ring1In >= RINGS.small.coasting + 1 && log.facts.ring1Top > 7.9, `its pad carries him round the first with nothing held (in at ${log.facts.ring1In} m/s, ${log.facts.ring1Top} m up)`);
+      assert.ok(log.facts.ring2In >= RINGS.big.pumped + 1.5 && log.facts.ring2In < RINGS.big.coasting && log.facts.ring2Top > 11.9,
+        `the accelerator and the way down carry him round the second, which nothing but the pump would (in at ${log.facts.ring2In} m/s, ${log.facts.ring2Top} m up)`);
+      assert.equal(log.bails, 0, 'without a fall'); },
     ferry: (log, e) => assert.equal(e.grinds, 1, 'the travelling rail is ground'),
     tricks: (log, e) => { assert.ok(log.facts.gateOpen, 'the kickflip opens the gate'); assert.ok(log.facts.railReal && e.grinds === 1, 'the heelflip makes the rail real, and it is ground'); assert.equal(log.bails, 0, 'without a fall'); },
     spine: (log, e) => assert.ok(log.facts.spineBeaten && e.grinds === 1, "the spine's back is ground and it is beaten"),
@@ -423,6 +437,48 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     assert.ok(drawn >= 3 && p.gooDiagnostics.snapped - before >= 6, `...and drawing strands that let go (${p.gooDiagnostics.snapped - before})`);
   }
   console.log('  a board lies on the ice chute; goo holds a board to its pace, sticking and slipping');
+
+  // ---- the loops, met otherwise -------------------------------------------------------------
+  {
+    const L = S.loop, M = L.marks, east = p.pos.clone().set(1, 0, 0);
+    const drive = (from, controller, seconds = 30) => {
+      level.reset(true); level.time = 0;
+      p.respawn(level, true, false, { position: p.pos.clone().set(from[0], from[1] + 0.15, 0), heading: east });
+      for (let i = 0; i < 20; i++) bot.tick(makeInput());
+      const seen = { bails: 0, fellFrom: null, taken: [] };
+      let jumped = false, bailing = false, active = false;
+      for (let k = 0; k < seconds * 60 && p.state !== 'dead' && p.pos.x < L.x1 - 1; k++) {
+        const want = controller(), input = makeInput({ moveX: want.moveX ?? 1 });
+        input.jumpHeld = !!want.jump; input.jumpPressed = !!want.jump && !jumped; input.jumpReleased = !want.jump && jumped; jumped = !!want.jump;
+        const before = p.loopStatus;
+        bot.tick(input);
+        const now = p.loopStatus;
+        if (now.active && !active) seen.taken.push(+p.speed.toFixed(1));
+        if (!now.active && active && now.completed === before.completed) seen.fellFrom = +(p.pos.y - L.endTop).toFixed(1);
+        if (p.isBailing && !bailing) seen.bails++;
+        active = now.active; bailing = p.isBailing;
+      }
+      return seen;
+    };
+    const mounting = () => !p.freeSkate && p.grounded;
+    // on foot: a player who only holds right walks the whole station, under both rings
+    const walked = bot.play({ station: 'loop', naive: true, seconds: 40 });
+    assert.ok(walked.ok && p.loopStatus.completed === 0 && walked.bails === 0, `loop: a player who only holds right walks under both rings (${told(walked)})`);
+    // on the board with nothing held: the pad carries him round the first; the second is not his, and he rolls under it
+    const coasted = drive(L.checkpoints[0], () => ({ jump: mounting() }));
+    assert.ok(p.state !== 'dead' && p.pos.x >= L.x1 - 1 && p.loopStatus.completed === 1 && coasted.taken.length === 1 && coasted.bails === 0,
+      `loop: a rider with nothing held is carried round the first ring by its pad and rolls under the second (taken on at ${coasted.taken} m/s, ${p.loopStatus.completed} round)`);
+    // from a standstill at the second checkpoint, the accelerator is enough for the second
+    const fresh = bot.play({ station: 'loop', from: [L.checkpoints[1][0] + 1.3, L.checkpoints[1][1] + 0.15] });
+    assert.ok(fresh.ok && fresh.facts.rings === 1 && fresh.facts.ring2In >= RINGS.big.pumped + 1 && fresh.bails === 0,
+      `loop: from a standstill at its checkpoint, the accelerator and the way down are enough for the second ring (${told(fresh)})`);
+    // let go at its foot, he comes off it past the upright and falls inside it: a fall he gets up from
+    let onIt = false;
+    const dropped = drive(L.checkpoints[1], () => { onIt ||= p.loopStatus.active; return { jump: !onIt }; }, 26);
+    assert.ok(dropped.taken.length === 1 && dropped.bails === 1 && dropped.fellFrom > 6 && p.state !== 'dead' && p.loopStatus.completed === 0,
+      `loop: the accelerator let go at the second ring's foot is a fall from inside it, and not a death (fell from ${dropped.fellFrom} m, ${p.state})`);
+  }
+  console.log('  loops: walked under; the pad carries a rider round the first; the second wants the accelerator, from a standstill too, and drops a rider who lets go');
 
   // ---- the whole course ------------------------------------------------------------------
   const course = bot.play();

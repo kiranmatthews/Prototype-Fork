@@ -416,6 +416,18 @@ export function makeLabBot({ p, level, lab, CONST, makeInput }) {
         return run();
       },
 
+      // the first ring is fed by its pad, and nothing is held on it; the second is fed by the accelerator
+      // (Jump), held from its checkpoint, down the way down and all the way round
+      loop: s => {
+        const M = s.marks, st = p.loopStatus, second = p.pos.x > M.ring1 + 20;
+        const key = second ? 'ring2' : 'ring1';
+        if (st.active) { api.fact(`${key}In`, log.facts[`${key}In`] ?? +Math.abs(p.speed).toFixed(1)); api.fact(`${key}Top`, Math.max(log.facts[`${key}Top`] ?? 0, +(p.pos.y - (second ? s.endTop : s.top)).toFixed(1))); }
+        api.fact('rings', st.completed);
+        if (!p.freeSkate && p.grounded) return mount();
+        if (!second) return run();
+        return { moveX: 1, jump: p.pos.x < M.ring2 + 1 || st.active };
+      },
+
       // stop short of the drop, wait for the rail to come west, then jump at it with Grind
       ferry: s => {
         const M = s.marks, ferry = level.movingRails.find(o => Math.abs((o.rail.points[0].x + o.rail.points.at(-1).x) / 2 - M.rail) < 8) ?? null, rail = ferry?.rail ?? null;

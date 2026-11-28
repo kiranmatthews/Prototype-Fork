@@ -6,7 +6,8 @@ import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
 import { createCloudPlatform } from './cloudPlatform';
-import { sampleLoop } from './loopRide';
+import { isPlanarLoop, sampleLoop } from './loopRide';
+import { dressPlanarLoop } from './planarLoopVisual';
 import { roundCorners } from './pathNodes';
 export { roundCorners } from './pathNodes';
 import {createRallyDirt,createRallyCloth,createRallyLamp,createRallySponsorMaterial} from './rallyMaterials';
@@ -864,7 +865,7 @@ export interface CustomComponent {
   cloudRoad?: boolean; // platform or paired ribbon mesh/vertramp: cloud volume over separate smooth contact
   loopKind?: 'vertical' | 'wall'; // loop orientation; wall is a banked horizontal band
   loopRadius?: number; // mesh: analytic loop matching createLoopMeshData, p = entry feet
-  loopOffset?: number; // loop: entry/exit separation, local +X for vertical or Y for wall loops
+  loopOffset?: number; // loop: entry/exit separation, local +X for vertical or Y for wall loops. 0 on an upright loop makes it PLANAR: left where it was entered, on one line (the loop a side-scrolling course carries). A planar loop is no floor: it is ridden by its centreline, takes on only a rider it will carry round (planarLoopEntry: about 15.2 x sqrt(radius) m/s coasting, 9.8 x with Jump held), and everyone else goes along the floor under it
   gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
@@ -6890,6 +6891,10 @@ export class Level {
     if (c.lethal) mesh.userData.lethal = true;
     if (c.skateCamera) mesh.userData.skateCamera = true;
     if (c.outOfBounds) {mesh.userData.outOfBounds = true;this.hasOutOfBoundsSurfaces = true;}
+    // A planar loop (no offset: entered and left at one point of one line) stands over its own way in and
+    // way out, so its ribbon is no floor and no wall: it is ridden by its centreline alone, and a body on
+    // the line goes under it (loopRide.ts). It is given a ring's body to be seen by.
+    const planarLoop = c.loopRadius !== undefined && isPlanarLoop({ offset: c.loopOffset ?? 0, kind: c.loopKind });
     if (c.loopRadius !== undefined) {
       this.loopMeshes.push(mesh);
       mesh.userData.loopKind = c.loopKind;
@@ -6898,6 +6903,12 @@ export class Level {
       mesh.userData.loopWidth = c.w;
       mesh.userData.vert = false;
       mesh.userData.edgeGrinding = false;
+      if (planarLoop) {
+        mesh.userData.planarLoop = true;
+        mesh.userData.visualOnly = true;
+        mesh.userData.solidSurface = 'none';
+        if (!c.cloudRoad && !c.invisible) dressPlanarLoop(mesh, { radius: c.loopRadius, width: c.w!, offset: 0 });
+      }
     }
     if(c.cloudRoad){
       const sections:CloudRoadSection[]=[];
@@ -6948,7 +6959,7 @@ export class Level {
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
         active:false,opacity:material.opacity,color:material.color.clone(),bridge});
       material.wireframe=true;material.opacity=.22;material.transparent=true;material.depthWrite=false;material.color.set('#e8c86c');
-    }else if (c.solid !== false) this.groundMeshes.push(mesh);
+    }else if (c.solid !== false && !planarLoop) this.groundMeshes.push(mesh);
   }
 
   captureData(): CustomLevelData {

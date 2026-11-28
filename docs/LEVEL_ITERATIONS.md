@@ -14458,3 +14458,83 @@ sole is lowest); a shoe turned on its toe does.
 - The shoe's size in the leg solver is the default proportions'. A character restyled with other shoes
   keeps flat-footed contact but peels less exactly.
 - The slope glide (on foot down slick slopes) was not touched.
+
+## 2026-11-28 — Twelve notes from the Side Platform Lab, part 3: loops on one line
+
+- **Brief** (one more of its twelve lines): "add the loops, make them work in the side scrolling "2D"
+  perspective".
+- **Elapsed:** about 16 h 50 min from the brief to this part published, 50 min after part 2. It was built
+  in a worktree of its own alongside parts 1 and 2 and merged onto them.
+- **Level:** Side Platform Lab gains a Loops station after the speed pad (station 24, 196 m): a 4 m ring
+  fed by a pad, a second checkpoint, a 4 m way down, and a 6 m ring fed by the accelerator. The course is
+  now 1,977 m, 30 stations and 38 checkpoints. No other level's data was edited.
+- **Runtime:** `src/loopRide.ts` (`isPlanarLoop`, `planarLoopEntry`), `src/player.ts` (who is taken on,
+  how he leaves, the view's hold), `src/level.ts` (a planar loop is no ground mesh, and is dressed),
+  `src/planarLoopVisual.ts` (new), `src/main.ts` (the camera's subject while he is on one). No tuning was
+  touched. Loops with an offset are untouched.
+- **Docs:** `docs/SIDE_PLATFORM_LAB.md` (the station, a Loops section, and "What is not here", which said a
+  loop could not be here), design bible XV.11, README.
+
+**Why it needed a kind of its own.** The loops this game had are entered on one lane and left on the next
+(`loopOffset`): the ribbon corkscrews sideways so that it never stands over its own approach. A course read
+from the side is one line. A loop on it has no offset, so its two lower quadrants stand over the way in
+and the way out, and its ribbon cannot be a floor: a body on the line would meet the back of the quadrant
+he is meant to come down at the end. A loop with `loopOffset: 0` is therefore a **planar** loop, ridden by
+its analytic centreline alone. To everything else it is not there.
+
+**What it does.**
+
+- A walker, a rider too slow for it and a rider coming the other way go along the floor under it, through
+  the ring.
+- It takes on only a rider that what he is doing will carry round, found by riding the centreline ahead
+  with what he is holding: 15.2 × √radius m/s at its foot with nothing held, 9.8 × √radius with Jump held
+  (4 m: 30.4 and 19.6; 6 m: 37.4 and 24.2; 10 m: 48.9 and 31.7). Nobody is taken on to be dropped. Once on
+  it, letting Jump go on the way up, or braking, is his own fall: off past the upright, inside the ring,
+  and he gets up.
+- The stick does nothing on it. He comes off its foot on the line he went onto it (on at 23.4, off at
+  32.1 m/s round 4 m with the pump) and is not taken on again there.
+- Under a view of the course's own the side view is kept and held on the ring, lifted for a tall one (1 m
+  for 4 m of radius, 5 m for 6), and let go as he leaves. Under a chase camera it is framed like any loop.
+- A riding ribbon has no thickness, and from the side it is a hairline: a planar loop is given a body to
+  be seen by (a shell, a red and white rim down each edge, a frame of struts behind). Built by hand; none
+  of it is solid.
+
+**The station.** The first ring has a pad of 36 m/s 8 m before its foot: on at 33.7 m/s with nothing
+held, 8 m up at the top. The second has none: Jump held from its checkpoint, 36 m of flat and a way down
+of 4 m in 14 put him on at 27 m/s, from a standstill as from the first ring, and held round it he is 12 m
+up at the top. With nothing held he rolls under it; on foot both are walked under. Fruit is hung round the
+inside of each, a stride in from the track.
+
+**Checks.**
+
+- `tools/test-planar-loop.mjs` (new, first in `npm run check:side-platform`): the speeds asked for agree
+  with the ride itself at 4, 6 and 10 m; a walker, a cruising rider and a rider going west go under the
+  ring, and a ray from over its lower quadrant finds the floor; the accelerator carries a rider round once
+  and he is not taken on again; a pad that gives the coasting speed does it with nothing held; the stick
+  does nothing; let go at the foot he falls and gets up; the view is offered the ring while he is on it and
+  while he falls inside it, and not after.
+- `tools/test-side-platform-lab.mjs` on the merged tree: 1,977 m, 30 stations, the whole course in one run
+  without a death in 275.6 s of play; the Loops station from its checkpoints, walked under by a player who
+  only holds right, coasted (one ring), from a standstill at the second checkpoint, and let go of at the
+  second ring's foot (a fall from over 6 m up that he gets up from).
+- `test-loop-ride`, `test-loop-camera`, `test-skystream-loop-pose`, `test-editor-current-components`,
+  `test-ice-walk-animation`, `test-character-animation-runtime` on the merged tree; and on the loops
+  branch before the merge `test-motu-festival`, `test-skystream`, `test-waterpark`,
+  `test-waterpark-hazards`, `test-waterpark-vert-input`, `test-waterpark-cup-flow`,
+  `test-park-halfpipe-vert`, `test-deadwater-coping-apron`: all pass.
+- `npm run check:levels` and `npm run build` on the merged tree: pass.
+- Browser. Filmed a fixed step at a time on the dev build: both rings ridden (lite and full render), the
+  second let go of and fallen out of, and the first walked under (lite). Then the built page, driven with
+  real keys in lite and in full render: mounted at the checkpoint and carried round the first ring by its
+  pad (on at 31.4 m/s), Jump held from the second checkpoint and round the second (on at 26.7, off its foot
+  at 30.9), and the first walked under. No console errors and no failed requests.
+- The full suite was not run (not asked for).
+
+**Known and left.**
+
+- `test-waterpark-vert`, `test-waterpark-camera-air` and `test-waterpark-cup` fail on the published tree
+  as they do on this one, so `npm run check:waterpark` stops before its loop tests. `test-waterpark`,
+  `test-waterpark-hazards`, `test-waterpark-vert-input` and `test-waterpark-cup-flow` were run by name
+  instead and pass.
+- A planar loop has no collision at all, by design: a body thrown at its rim from outside passes through
+  it.

@@ -1988,6 +1988,16 @@ measured, and a layout has to allow for:
 - **A `trampoline` is a rope net.** It is walked on as a floor and gives under a walker (0.4 m on a 5 m
   pad) where there is room under it; set in a solid floor it does not sag, so give one a bed 0.9 m down or
   stand it on piles. Only a landing is thrown, and a board that rolls onto one trips.
+- **A loop on one line is a planar one**: a loop `mesh` (`createLoopMeshData`, `loopRadius`) with
+  `loopOffset: 0`, stood in the plane of the course with its foot on the floor. It is no floor and no wall
+  (a walker and a slow rider go under it, through the ring) and takes on only a rider it will carry round:
+  15.2 × √radius m/s at its foot with nothing held, 9.8 × √radius with Jump held into it and round it
+  (4 m: 30.4 and 19.6; 6 m: 37.4 and 24.2; 10 m: 48.9 and 31.7). The accelerator alone gives 23 m/s: a
+  4 m ring can be fed by a run on the accelerator or by a pad, and anything bigger wants a way down or a
+  pad as well (here a 6 m ring is fed, from a standstill, by 36 m of flat, a way down of 4 m in 14 and 9 m
+  more with Jump held: 27 m/s at its foot).
+  He comes off its foot on the same line, faster if he pumped: give it a run-out. Under a side view the
+  picture is held on the ring, whose top is twice its radius over the floor.
 
 ### XV.12 Rhythm in metres
 

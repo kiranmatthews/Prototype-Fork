@@ -7,11 +7,11 @@ other platforming object the game has**, one station each, so that each can be p
 
 Direct link: `?playtest&level=side-platform-lab`. In the menu it is `Side Platform Lab`.
 
-It is 1,781 m long and is laid out like the other lab: one east travel zone on a single plane (z = 0,
+It is 1,977 m long and is laid out like the other lab: one east travel zone on a single plane (z = 0,
 held by two unseen walls), seen from the south through the same long lens, so it reads left to right and
-flat. There are **29 stations**. Each opens on a checkpoint (36 in all: `K` and `L` warp between them),
+flat. There are **30 stations**. Each opens on a checkpoint (38 in all: `K` and `L` warp between them),
 shows its object once where a mistake is cheap, and then once more with something at stake. Stations 1
-to 21 are walked; 22 to 28 are a board line; the last is the prizes.
+to 21 are walked; 22 to 29 are a board line; the last is the prizes.
 
 Everything below was measured with the real player in this engine. `npm run check:side-platform`
 (`tools/test-side-platform-lab.mjs`) plays every station and the whole course, and
@@ -46,12 +46,13 @@ Distances are from each station's start; heights are over its floor.
 | 21 | The bird | 1166–1200 | a `moa` | spin it |
 | 22 | Ropes | 1200–1270 | a 13 m `rope` over a trench; a 21 m one over a drop (it snaps after 3 s of grinding) | jump, **Grind**; you come off its far end on the board |
 | 23 | Speed pad | 1270–1374 | a `speedpad` (22 m/s, riders only), its green chevrons running east; a 2×2 wall of boxes; a 3 m ramp down | mounted (Jump held with a direction for 0.55 s), over the pad at 21.9 m/s, through the boxes at 20.9 |
-| 24 | Ferrying rail | 1374–1424 | a 12 m `rail` travelling 4.6 m each way over a 19 m drop | pull back to a stop; jump with Grind as its west end comes to the brink; off its east end onto the floor |
-| 25 | Trick gate and trick rail | 1424–1520 | a `trickgate` (kickflip); a `trickrail` (heelflip) | an ollie and **Spin with the stick at rest** in the air that goes through the gate; an ollie, **Spin with the stick right**, and Grind at the rail the flip makes real |
-| 26 | The spine | 1520–1564 | a 1.2 m step; a `grindosaurus` walking 3 m each way | pull back to a stop and get onto the step; jump with Grind onto its back as it comes west; ride it off the east end |
-| 27 | The ball | 1564–1595 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
-| 28 | Glass and the board trip | 1595–1645 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
-| 29 | Portals and prizes | 1645–1757 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
+| 24 | Loops | 1374–1570 | a 4 m loop on the line, a pad (36 m/s) 8 m before its foot; a 4 m way down to a 6 m loop with no pad | the pad carries you round the first with nothing held; **Jump held** from the second's checkpoint, down the way down and all the way round; see [loops](#loops) |
+| 25 | Ferrying rail | 1570–1620 | a 12 m `rail` travelling 4.6 m each way over a 19 m drop | pull back to a stop; jump with Grind as its west end comes to the brink; off its east end onto the floor |
+| 26 | Trick gate and trick rail | 1620–1716 | a `trickgate` (kickflip); a `trickrail` (heelflip) | an ollie and **Spin with the stick at rest** in the air that goes through the gate; an ollie, **Spin with the stick right**, and Grind at the rail the flip makes real |
+| 27 | The spine | 1716–1760 | a 1.2 m step; a `grindosaurus` walking 3 m each way | pull back to a stop and get onto the step; jump with Grind onto its back as it comes west; ride it off the east end |
+| 28 | The ball | 1760–1791 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
+| 29 | Glass and the board trip | 1791–1841 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
+| 30 | Portals and prizes | 1841–1953 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
 
 ### Ice
 
@@ -182,6 +183,41 @@ at what it can see: shown nothing, it waits.
 - It sees behind itself as well. A 1.5 m wall at its back keeps the next station's checkpoint out of its
   sight; without it, a player warped there is shot in the back.
 
+### Loops
+
+A loop on one line is a **planar** one: an upright loop with `loopOffset: 0`, entered and left at the same
+point of the same line. Seen from the side every loop looks like this one; this is the one a side-scrolling
+course can carry. (A loop with an offset is entered on one lane and left on the next, and is unchanged.)
+
+- **It is no floor and no wall.** Its ring stands over its own way in and its own way out, so it is ridden
+  by its centreline alone. A walker, a rider too slow for it and a rider coming the other way go along the
+  floor under it, through the ring.
+- **It takes on only a rider it will carry round**, and nobody to be dropped. At its foot he must be fast
+  enough to coast round it, or fast enough for the pump with **Jump held** as he comes to it. Jump is the
+  accelerator on the flat and the pump on the way up.
+
+  | radius | nothing held | Jump held |
+  |---|---|---|
+  | 4 m | 30.4 m/s | 19.6 m/s |
+  | 6 m | 37.4 m/s | 24.2 m/s |
+  | 10 m | 48.9 m/s | 31.7 m/s |
+
+  (15.2 and 9.8 times the root of the radius. A board cruises at 12 m/s and the accelerator alone tops out
+  at 23: a 4 m ring is within its reach, a 6 m one wants a way down or a pad as well.)
+- **On it the stick does nothing**: on a course seen from the side, left and right are the way along the
+  line, not a way across the ribbon. Letting Jump go on the way up, or braking, is his own fall: he comes
+  off it past the upright, inside the ring, and gets up.
+- **He comes off its foot on the line he went onto it**, faster than he went on if he pumped (on at 23.4,
+  off at 32.1 m/s round 4 m), and is not taken on again there.
+- **The view is held on the ring** while he is on it: the course's side view stays as it is, lifted for a
+  tall ring (1 m for the 4 m one, 5 m for the 6 m one), and goes back to him as he leaves. Under a chase
+  camera a planar loop is framed like any other loop.
+- **The first ring** (4 m) has a pad of 36 m/s 8 m before its foot: he goes onto it at 33.7 m/s with
+  nothing held, 8 m up at its top. **The second** (6 m) has none: with Jump held from its checkpoint, 36 m
+  of flat and a way down of 4 m in 14 put him onto it at 27 m/s, from a standstill as from the first ring,
+  and held round it he is 12 m up at its top. With nothing held he rolls under it. On foot both are walked
+  under.
+
 ### The finale
 
 - A door on the ground is sunk 0.3 m into it: what a portal tests is the point at a walker's feet, and
@@ -216,9 +252,10 @@ Rules that were not written down before this course was built, each measured her
 
 Four component types are in neither lab: `pipe` and `outline` are old save formats that load as other
 parts; `worldmap` is the campaign's map table; `comboorb` starts a run that has to reach the gate in one
-combo, which a bench of twenty-nine stops cannot honour. Loops are a mesh field, not a type: one needs a
-second lane beside the first and 30 m/s, and this course is one line. West, north and south travel zones
-are camera directions, not objects, and every side-scrolling stretch in this game reads left to right.
+combo, which a bench of thirty stops cannot honour. Loops with an offset (entered on one lane and left on
+the next) need a second lane, and this course is one line: it carries the planar kind. West, north and
+south travel zones are camera directions, not objects, and every side-scrolling stretch in this game reads
+left to right.
 
 ## Changing it
 

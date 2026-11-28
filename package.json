@@ -35,7 +35,7 @@
     "check:crouch-jump": "node tools/test-crouch-jump-slam.mjs && node tools/test-crouch-stance.mjs && node tools/test-quaternius-crouch.mjs && node tools/test-slide-jump.mjs",
     "check:pipe": "node tools/test-halfpipe-contact.mjs && node tools/validate-halfpipe-safety.mjs && node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
     "check:side-pipe": "node tools/test-halfpipe-contact.mjs && node tools/test-side-pipe-lab.mjs && node tools/test-side-pipe-lab-forward.mjs && node tools/test-vert-air-motion.mjs && node tools/test-vert-run-up.mjs",
-    "check:side-platform": "node tools/test-side-platform-lab.mjs",
+    "check:side-platform": "node tools/test-planar-loop.mjs && node tools/test-side-platform-lab.mjs",
     "check:spinbridge": "node tools/test-timed-spinbridge.mjs && node tools/test-spinbridge.mjs && node tools/test-waterfall-platform-contact.mjs",
     "check:vert-air": "node tools/test-vert-air-motion.mjs",
     "check:vert-run-up": "node tools/test-vert-run-up.mjs",

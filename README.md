@@ -158,14 +158,14 @@ is built from the side-scrolling lab's own component list, so the two stay
 the same. Direct link: `?playtest&level=side-pipe-lab-forward`.
 
 `Side Platform Lab` is the second side-scrolling test course: one station for
-each platforming object the pipe lab does not carry. Twenty-nine of them over
-1,781 m, each opening on a checkpoint (`K` and `L` warp between them): ramps,
+each platforming object the pipe lab does not carry. Thirty of them over
+1,977 m, each opening on a checkpoint (`K` and `L` warp between them): ramps,
 rolling ground, a timber road, rocks, ice, a sticky floor, water to swim and water
 that kills, arrow crates and steel, explosives, spin bridges, rope bridges, rope
 trampolines, rope swings, a wheel of decks, a springboard, a turntable and a lift, pendulums,
 rolling stones, fire heads and lava, thorns, the bull, the turret and the bird;
-then a board line (ropes to grind, a speed pad, a ferrying rail, a trick gate
-and a trick rail, a spine to ride, a ball in a pipe, glass and the plane that
+then a board line (ropes to grind, a speed pad, two loops, a ferrying rail, a trick
+gate and a trick rail, a spine to ride, a ball in a pipe, glass and the plane that
 takes the board away) and a finale of portals, a cloud with a gem, the bonus
 stone, the crystal and the gate.
 Direct link: `?playtest&level=side-platform-lab`. See

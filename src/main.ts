@@ -3993,10 +3993,15 @@ function updateCamera(dt: number): void {
     camAnchorY+=wrapY;
   }
   updateBaseCamera(dt);
-  const subject = player.renderPosition;
+  const rider = player.renderPosition;
   const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :
-    cameraViewAt(level.cameraPresentationViews, subject.x, subject.y, subject.z) ??
-    cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z);
+    cameraViewAt(level.cameraPresentationViews, rider.x, rider.y, rider.z) ??
+    cameraViewAt(level.cameraViews, rider.x, rider.y, rider.z);
+  // A planar loop under a view of the course's own (a side view) keeps that view, held on the ring: the
+  // close loop camera would turn the course on its head, and a view that followed him would swing it
+  // round with him. Under the chase camera a planar loop is framed like any other loop.
+  const ringHold = viewMatch && level.hudMode !== 'bonus' ? player.planarLoopSubject : null;
+  const subject = ringHold ?? rider;
   const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
   const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'
     ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
@@ -4010,7 +4015,7 @@ function updateCamera(dt: number): void {
     const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
     camControlDir.set(forward.x, 0, forward.z);
   }
-  loopCameraFraming.apply(camera, player.authoredSkateCamera ? null : player.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING), dt, framingSnap||player.authoredSkateCamera,player.loopFallPresentation);
+  loopCameraFraming.apply(camera, player.authoredSkateCamera || ringHold ? null : player.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING), dt, framingSnap||player.authoredSkateCamera,ringHold ? null : player.loopFallPresentation);
   if(!player.authoredSkateCamera&&level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming.reset();
   authoredSkateCamera.apply(camera, player.authoredSkateCamera ? {
