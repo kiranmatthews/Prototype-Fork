@@ -10,6 +10,16 @@ export const MARINE_NET_EYES: readonly P[] = [
   [-.1667,.87,-.4462],[.1643,.87,-.4462],[-.1259,.87,.4374],[.2026,.87,.4462],
 ];
 export const marineFrameHeight = (w:number,d:number) => Math.min(1.55,Math.min(w,d)*.105);
+/** Where a net is hung when it is not in Carlisle's housing: its rope opening (deck-local metres), its eight
+ * lashing points (in the same box units as MARINE_NET_EYES: two on each side, -X first, then +X, -Z, +Z) and
+ * how far out its corner guys are tied (metres from the middle, across and along). */
+export interface MarineNetLayout {
+  /** Names the layout: nets of one size, style and layout share their ropes. */
+  key:string;
+  bounds:[number,number,number,number];
+  eyes:readonly P[];
+  corners:[number,number];
+}
 
 const deform = /* glsl */`
   attribute float netMobility;
@@ -18,6 +28,7 @@ const deform = /* glsl */`
   uniform vec4 netLoad;
   uniform float netAge;
   uniform float netPreview;
+  uniform float netFloor;
   float netOffset(vec2 p) {
     vec2 uv=(p-netBounds.xy)/netBounds.zw;
     float dome=max(0.,1.-uv.x*uv.x)*max(0.,1.-uv.y*uv.y);
@@ -33,7 +44,8 @@ const deform = /* glsl */`
     float pinned=smoothstep(0.,min(1.5,min(netBounds.z,netBounds.w)*.4),min(edge.x,edge.y));
     vec2 load=(p-netLoad.xy)/netLoad.w;
     float weight=netLoad.z*exp(-dot(load,load))*pinned;
-    return -weight-envelope*(netPreview+(netImpact.z*(rebound*(.30+.70*local)+wave)*settle));
+    // (a net with something under it goes down no further than that)
+    return max(-netFloor,-weight-envelope*(netPreview+(netImpact.z*(rebound*(.30+.70*local)+wave)*settle)));
   }
 `;
 type SharedRopes={geometry:THREE.BufferGeometry;normal:THREE.DataTexture;roughness:THREE.DataTexture;refs:number};
@@ -49,7 +61,7 @@ export class CarlisleMarineNet {
   private readonly uniforms={
     netImpact:{value:new THREE.Vector4(0,0,0,0)},netBounds:{value:new THREE.Vector4()},
     netLoad:{value:new THREE.Vector4(0,0,0,1)},
-    netAge:{value:2},netPreview:{value:0},
+    netAge:{value:2},netPreview:{value:0},netFloor:{value:1e3},
   };
   private readonly material:THREE.MeshStandardMaterial;
   private readonly depth:THREE.MeshDepthMaterial;
@@ -59,17 +71,17 @@ export class CarlisleMarineNet {
   private readonly maxDepth:number;
   private readonly weightDepth:number;
   private pressed=false;
-  constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length),style:'marine'|'tribal'='marine') {
+  constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length),style:'marine'|'tribal'='marine',layout?:MarineNetLayout) {
     this.group.name=style==='tribal'?'Old brown rope trampoline net':'Laced elastic marine net';this.group.userData.visualOnly=true;
     const w=width,d=length,h=frameHeight;
-    const [x0,x1,z0,z1]=marineNetBounds(w,d);
+    const [x0,x1,z0,z1]=layout?.bounds??marineNetBounds(w,d);
     const cx=(x0+x1)/2,cz=(z0+z1)/2,hx=(x1-x0)/2,hz=(z1-z0)/2;
     this.uniforms.netBounds.value.set(cx,cz,hx,hz);
     this.maxDepth=Math.min(2.25,Math.min(w,d)*.175);
     this.weightDepth=Math.min(.65,Math.min(w,d)*.085);
     this.uniforms.netLoad.value.w=THREE.MathUtils.clamp(Math.min(w,d)*.18,1.2,3.4);
-    this.eyes=MARINE_NET_EYES.map(([x,y,z])=>new THREE.Vector3(x*w,(y-.87)*h,z*d));
-    this.resourceKey=[w,d,h,style].join(':');
+    this.eyes=(layout?.eyes??MARINE_NET_EYES).map(([x,y,z])=>new THREE.Vector3(x*w,(y-.87)*h,z*d));
+    this.resourceKey=[w,d,h,style,layout?.key??''].join(':');
     let shared=ropeResources.get(this.resourceKey);
     if(!shared){
       const radius=Math.min(w,d)*.0038,sag=Math.min(.15,Math.min(w,d)*.012);
@@ -143,7 +155,9 @@ export class CarlisleMarineNet {
       });
       // Corner guys wrap the existing corner blocks rather than stopping in midair.
       corners.forEach(([x,z])=>{
-        const p=position(x,z),outer=new THREE.Vector3(x<cx?-w*.44:w*.46,-h*.17,z<cz?-d*.46:d*.46);
+        const p=position(x,z),outer=layout
+          ?new THREE.Vector3(x<cx?-layout.corners[0]:layout.corners[0],-h*.17,z<cz?-layout.corners[1]:layout.corners[1])
+          :new THREE.Vector3(x<cx?-w*.44:w*.46,-h*.17,z<cz?-d*.46:d*.46);
         tube(curve([p,p.clone().lerp(outer,.5),outer,new THREE.Vector3(outer.x,-h*.38,outer.z),p.clone().add(new THREE.Vector3(radius*3,0,0))]),radius,0xe98039,t=>Math.abs(t-.5)*2,24);
       });
       const geometry=mergeGeometries(pieces);pieces.forEach(g=>g.dispose());
@@ -166,7 +180,7 @@ export class CarlisleMarineNet {
           objectNormal=normalize(vec3(objectNormal.x-dx*objectNormal.y,objectNormal.y,objectNormal.z-dz*objectNormal.y));
         `);
       };
-      material.customProgramCacheKey=()=>`marine-rope-v3-${material.type}`;
+      material.customProgramCacheKey=()=>`marine-rope-v4-${material.type}`;
     }
     this.mesh=new THREE.Mesh(shared.geometry,this.material);this.mesh.name='Woven ropes, knots and eight threaded lashings';
     this.mesh.castShadow=true;this.mesh.receiveShadow=true;this.mesh.customDepthMaterial=this.depth;this.mesh.customDistanceMaterial=this.distance;
@@ -194,8 +208,13 @@ export class CarlisleMarineNet {
     const b=this.uniforms.netBounds.value,load=this.uniforms.netLoad.value;
     const edge=Math.min(b.z-Math.abs(x-b.x),b.w-Math.abs(z-b.y));
     const pinned=THREE.MathUtils.smoothstep(edge,0,Math.min(1.5,Math.min(b.z,b.w)*.4));
-    return -load.z*Math.exp(-((x-load.x)**2+(z-load.y)**2)/load.w**2)*pinned;
+    return Math.max(-this.uniforms.netFloor.value,-load.z*Math.exp(-((x-load.x)**2+(z-load.y)**2)/load.w**2)*pinned);
   }
+  /** Something lies this far under the net (metres): the ropes, and a rider seated on them, go down no further. */
+  setFloor(depth:number) {this.uniforms.netFloor.value=Math.max(0,depth);}
+  get floor(){return this.uniforms.netFloor.value;}
+  /** The rope opening, deck-local: [x0, x1, z0, z1]. */
+  get bounds():[number,number,number,number]{const b=this.uniforms.netBounds.value;return [b.x-b.z,b.x+b.z,b.y-b.w,b.y+b.w];}
   update(dt:number) {
     this.uniforms.netAge.value=Math.min(2,this.uniforms.netAge.value+dt);this.diagnostics.age=this.uniforms.netAge.value;
     const load=this.uniforms.netLoad.value,target=this.pressed?this.weightDepth:0;

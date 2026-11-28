@@ -11,12 +11,18 @@ await withBlockworksRuntime(r=>{
  assert.ok(p.grounded&&p.groundHit.mesh===b.mesh,'real player stands on timed support');
  r.until(()=>!b.deployed,{}, {maxFrames:240,label:'wait for authored expiry'});
  assert.ok(!l.groundMeshes.includes(b.mesh),'expired leaf leaves the native floor set');assert.ok(edges.every(e=>!e.grindable),'expired rim cannot support a ghost grind');
- r.until(()=>p.state==='dead',{}, {maxFrames:180,allowDeath:true,label:'fall from the expired plank'});
- r.until(()=>p.grounded&&p.state==='ride',{}, {maxFrames:400,allowDeath:true,label:'safe checkpoint respawn'});
- r.stepFor(12);assert.ok(p.pos.x<0&&Math.abs(p.pos.y)<.11,JSON.stringify(r.snapshot()));assert.equal(b.state,'closed');
+ // A timed leaf is sprung: let go with him on it, it throws him up and back over the hinge onto the terrace
+ // it was spun from. (It used to leave from under him, and he fell to the pit.)
+ r.until(()=>!p.grounded&&p.vVel>8,{}, {maxFrames:8,label:'the let-go leaf throws him'});
+ let apex=0;
+ r.until(()=>{apex=Math.max(apex,p.pos.y);return p.grounded&&p.state==='ride';},{}, {maxFrames:200,label:'down on the terrace behind the hinge'});
+ assert.equal(p.totalDeaths,0,'thrown, not dropped');
+ assert.ok(apex>2&&p.pos.x<-1.5&&p.pos.x>-5&&Math.abs(p.pos.y)<.11,JSON.stringify({apex,...r.snapshot()}));
+ r.until(()=>b.state==='closed',{}, {maxFrames:120,label:'the leaf stands again'});
+ r.stepFor(12);assert.ok(!b.wallBox.isEmpty(),'and is a wall again');
  r.walkTo([-.8,0,0],{pace:.4,arrivalTolerance:.3});r.tick({spinHeld:true});r.until(()=>b.deployed,{}, {maxFrames:90,label:'repeat the lock after recovery'});
  assert.ok(l.groundMeshes.includes(b.mesh));assert.ok(edges.every(e=>e.grindable));
- console.log('PASS production player: timed support, physical expiry, pit death, checkpoint recovery and repeat activation',JSON.stringify({frames:r.frame,checkpoint:l.activeCheckpoint!==null,bridge:b.state}));
+ console.log('PASS production player: timed support, physical expiry, the throw back to the terrace and repeat activation',JSON.stringify({frames:r.frame,checkpoint:l.activeCheckpoint!==null,bridge:b.state}));
 },{modulePath:'/src/levels/waterfall-climb.ts',levelId:'timed-waterfall-contact',controlFrame:()=>({x:0,z:-1}),source:()=>({v:1,name:'Timed waterfall contact',spawn:[-5,.12,0],killY:-8,
  components:[{t:'platform',p:[-4,-.5,0],s:[8,1,7]}, {t:'spinbridge',p:[0,0,0],s:[8,.4,4],hold:2,cycle:.32},
  {t:'platform',p:[12,-.5,0],s:[8,1,7]},{t:'checkpoint',p:[-1.8,0,0]},{t:'gate',p:[15,0,0],yaw:90},

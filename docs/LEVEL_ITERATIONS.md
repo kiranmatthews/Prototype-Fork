@@ -14149,3 +14149,102 @@ that neither lab carries.
   board for two frames; the second press jumped. Seen at one spot, not chased.
 - The stations are a bench, not a difficulty curve: they are in the order of the survey, walked first and
   ridden last.
+
+## 2026-11-28 — Twelve notes from the Side Platform Lab, part 1: spin bridges, speed pads, rope trampolines, and the slab is gone
+
+- **Brief** (four of its twelve lines; the other eight follow in later entries): "the swing down bridges
+  always let me fall through to the floor if I come at them with a running spin"; "if I'm standing on a
+  swing bridge that flings back up, it should launch me like a slingshot, whether on board or foot, rather
+  than just let me clip through the floor"; "this side level should include the rope style trampoline (the
+  existing one that deforms when you walk on it), which should be the default one used everywhere"; "the red
+  brick section that makes you fall over - I don't understand what this is for, can it be removed?"; "speed
+  pads should have a green and black chevron stripe design with glowing greend".
+- **Elapsed:** about 12 h 40 min from the brief to this part published. That time also holds the reading and measuring for all twelve lines; the other eight are in hand.
+- **Level:** Side Platform Lab (`side-platform-lab`): the tumble slab is out of the thorns station, a
+  Trampolines station is in after the rope bridges (29 stations, 1,781 m, 36 checkpoints), and the speed pad
+  is turned so its chevrons run east. Every other level with a spin bridge, a trampoline or a speed pad
+  changes with the runtime below; no other level's data was edited.
+- **Runtime:** `src/spinBridge.ts`, `src/player.ts` (the throw), `src/speedPadVisual.ts` (new),
+  `src/ropeTrampolines.ts` (new), `src/carlisleMarineNet.ts` (a second layout, and a floor under the net),
+  `src/level.ts` (wiring). No tuning was touched.
+- **Docs:** `docs/SIDE_PLATFORM_LAB.md` (two new sections), design bible XV.11 and its component table,
+  README.
+
+**The running spin.** A spin bridge's upright leaf is a wall, and that wall retires the instant the leaf
+is spun, while the leaf is a floor only once it has landed 0.55 to 0.7 s later. A runner who spun it without
+slowing walked through where the wall had been and off the brink under the falling leaf. A body on the
+ground behind the hinge is now held a body's width short of it until the leaf is down: it is a hold and
+not a wall, so nothing is smacked or tripped, he keeps his speed, and he goes on as it lands. (The first
+cut kept the wall itself up for the fall. Waterfall Climb's route test found what that broke: the jump
+with the spin in it, which goes over the hinge and comes down on the landed leaf, and it would have wiped
+out a rider. A body in the air is not held.) Running spins begun 0.9, 1.6 and 2.6 m short all cross, and
+riding ones begun 1, 1.8 and 2.8 m short cross on the board at 12 m/s without a fall.
+
+**The slingshot.** A timed leaf is now a sprung one. For the last 0.16 s of its hold it is drawn down a
+little; let go, it whips (nearly half of the way up in the first fifth of the fold). Whatever is on it, or
+in the air over it, is thrown up and back over the hinge and comes down 3 m behind it on the bank it was
+spun from: 2.5 m high from beside the hinge, 4.7 m from the middle of the lab's 10 m leaf, 7 m from its far
+end, down within a second, on foot or still on the board. The carry is spent in the landing: a walker
+stops within a stride (kept whole, it was faster than a run, the game put him on the board for it and he
+rolled on backward off the bank: found by filming it in the browser), and a rider lands rolling back the
+way he came at 6 m/s. Two
+things keep the leaf from passing through the body it threw: it does not move in the step it is let go in
+(that step is the throw's), and it is told where he is and comes up behind him, not standing upright (a
+wall again) until he is clear. A body that reaches the hinge while it folds is stopped there. Measured on
+every timed leaf in the game, Waterfall Climb's five included (they fold in 0.32 s): thrown from the
+middle, the tip, beside the hinge and from a jump, he lands alive behind the hinge each time.
+
+**Speed pads.** A black slab with green chevrons that run the way the pad sends a rider (its own -Z), a
+frame of green light, a low curtain of light on each side and a pool of green on the floor. Bloom is off
+by default here, so the glow is unlit and additive surfaces. The sparks a rider throws off one are green.
+The pad's own mesh, its data and its collision are untouched.
+
+**Rope trampolines.** Every `trampoline` that its course does not dress itself (Carlisle's marine nets,
+the Spaghetti springs and the waterfalls' tribal nets do) is now the rope one: the same knotted net as the
+waterfalls', hung in a second layout that fills the pad, in a slim timber frame with a post and three
+turns of rope at each corner and boarded sides under it. The pad's box is still the floor, the wall and
+the spring, and the whole of its top still throws, so no course's route changes. The net gives under a
+walker and rings when it throws, as the others do, and goes down no further than what lies under it,
+measured once when the course is built: a net laid in a solid floor stays on that floor.
+
+**The slab.** The red tumble slab after the thorns is gone, with its tumble zone. The plane in the glass
+station that takes the board away, between two red posts, is a different thing and stays.
+
+**Checks.**
+
+- `npm run check:side-platform`: the lab's 29 stations from their own checkpoints, the moving ones at other
+  points of their rounds, the hazards, and the whole course, spawn to gate, without a death. New in it: the
+  Trampolines station (the net gives 0.42 m under him, throws him at 16 m/s, and at 20 with Jump held, which
+  reaches the shelf); a player who only holds right dying in the pit before the second net; running spins
+  at 0.9, 1.6 and 2.6 m and riding spins at 1 and 2.8 m, all across; a body stood 1, 5 and 9.3 m out on the
+  timed leaf thrown higher the further out, over a leaf that never comes within a degree of him, down on
+  the bank and still there a second and a half later; the same on the board; and a walker late for the
+  leaf stopped at the hinge.
+- `npm run check:spinbridge` (new: `test-timed-spinbridge.mjs`, `test-spinbridge.mjs`,
+  `test-waterfall-platform-contact.mjs`, none of which was in a script before). The first gains the sprung
+  fold, what the leaf meets and the leaf held behind a body, and keeps its 6.3 s cycle at 30, 60 and 120 Hz.
+  The third used to assert that a body on an expired leaf falls to the pit and is brought back by its
+  checkpoint: it now asserts the throw.
+- `npm run check:trampoline`, `test-trampoline-roll-landing.mjs`, `test-speed-pad-air-carry.mjs`,
+  `npm run check:levels`, `npm run build`.
+- Every other test of a level or system with a spin bridge, a trampoline or a speed pad, run one by one
+  (46 files: Waterfall Climb's route, recovery and layout, Ancient Gates, the porch, the puzzle trilogy,
+  the warehouse, Chimeworks, Sunset Waterfalls and the tribal nets, Carlisle, the kinetic platforms, the
+  launch jump, both side-pipe labs, the waterpark and its loops, the jungle finale, the country club, the
+  night sanctum, the editor's components). Two of them found the two faults described above (the wall,
+  and a pad's authored colour, which the look overwrote and a level editor reads back: it now draws its own
+  shell and leaves the pad's material alone). Six fail, and fail identically on the commit this started
+  from: `test-course-edge-policy`, `test-carlisle-relay`, `test-carlisle-shipyard`,
+  `test-spaghetti-features`, `test-unity-level-ports`, `test-factory-defaults`.
+- The full suite was not asked for and was not run.
+- Browser, development build with the game's clock stepped a frame at a time: the throw filmed from +5 m
+  (up to 4.7 m, over the hinge ahead of the leaf, down at -3.0, stood at -3.25). Production build, full
+  render at native resolution: the spin bridges, both trampolines, the speed pad and the thorns, with no
+  console errors. The speed pad and the trampoline were also looked at in a forward-facing level (Bone
+  Yard, Side Pipe Lab) and the existing rope trampoline in Custard Creek for reference.
+
+**Known and left.**
+
+- A trampoline set flush in a solid floor (most of the older ones) cannot sag: there is nowhere for the
+  net to go. It still rings upward when it throws. One that is to be seen giving needs a bed under it.
+- In the side view the near rail of a trampoline hides a walker's shins while the net is down under him.

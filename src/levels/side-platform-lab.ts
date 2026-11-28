@@ -7,7 +7,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * one carries every other object the game has, one station each: ramps,
  * rolling ground, a timber road, rocks, ice, deep sand, water to swim and
  * water that kills, arrow crates and steel, explosives, spin bridges, rope
- * bridges, rope swings, orbiting / bouncing / spinning decks, pendulums
+ * bridges, rope trampolines, rope swings, orbiting / bouncing / spinning decks, pendulums
  * (across the line and along it), rolling stones, fire, thorns, and the three
  * enemies the other lab lacks; then a board line: ropes to grind, a speed
  * pad, a ferrying rail, a trick gate and a trick rail, a spine to ride, a
@@ -47,7 +47,7 @@ const SAND = '#c9b27a';
 const TIMBER = '#d7ac71';
 const SLATE = '#5f7186';
 const PEN = '#8a5a4a'; // the floor an enemy owns: stay off it until it is safe
-const TRIP = '#c8553d'; // the slab that throws you down
+const TRIP = '#c8553d'; // the posts of the plane that takes the board
 const PIPE = '#d7dcd6';
 const WATER = '#36a4b7';
 const LAVA = '#ff5a1e';
@@ -344,6 +344,34 @@ function ropeBridge(x0: number, x1: number, top: number, boards: ('sound' | 'rot
   end(a + 68, t);
 }
 
+// A rope trampoline is what every `trampoline` is: a knotted net in a timber frame, the size of its pad. It is
+// walked on like a floor and gives under a walker; a body that LANDS on it is thrown (16 m/s: 3.9 m), and
+// thrown a quarter harder with Jump held at the landing (20 m/s: 6.1 m). A board that rolls onto one trips.
+const NET = { speed: 16, held: 1.25, deep: 0.9 };
+{ // ---- TRAMPOLINES: one set in the floor to walk on and hop on; one out over a pit, under a shelf only the held bounce reaches
+  const { a, t, mark } = begin('trampoline', 'Trampolines', STONE);
+  const pad = (x0: number, x1: number, nm: string): void =>
+    add({ t: 'trampoline', p: [r((x0 + x1) / 2), r(t), 0], s: [r(x1 - x0), NET.deep, DEPTH], speed: NET.speed, amp: NET.held, grp: GR.movers, nm });
+  floor(a, a + 10, t, 'Trampolines: way on');
+  // the first: nothing under it but its own bed, so the net sags to the full under a walker
+  floor(a + 10, a + 15, r(t - NET.deep - 0.9), 'Trampolines: the bed under the first', { color: STONE_DARK });
+  pad(a + 10, a + 15, 'Rope trampoline: walk onto it and it gives; land on it and it throws you');
+  for (const h of [1.6, 2.8, 4, 5.4]) fruit(a + 12.5, t + h); // the top one is the held bounce's
+  floor(a + 15, a + 26, t, 'Trampolines: between the two');
+  // the second: out over a pit on four piles, against a wall 5 m high. The plain bounce comes up short of the top
+  pit(a + 26, a + 35.5, t, 'Under the second trampoline');
+  pad(a + 29.5, a + 35.5, 'Rope trampoline over the pit: keep Jump held through the bounce for the shelf');
+  for (const x of [a + 29.8, a + 35.2]) for (const z of [-2.7, 2.7])
+    add({ t: 'platform', p: [r(x), r(t - NET.deep - (PIT_DROP - NET.deep) / 2), z], s: [0.5, r(PIT_DROP - NET.deep), 0.5], tex: 'wood', color: TIMBER,
+      grp: GR.movers, nm: 'Trampoline pile' });
+  block(a + 35.5, a + 41.5, BASE, t + 5, 'Trampolines: the shelf');
+  fruitRow(a + 37, a + 40, t + 5 + 1.2, 3);
+  block(a + 41.5, a + 45, BASE, t + 2.5, 'Trampolines: the step down');
+  floor(a + 45, a + 52, t, 'Trampolines: way off');
+  mark('net1', a + 10); mark('net1End', a + 15); mark('brink', a + 26); mark('net2', a + 29.5); mark('shelf', a + 35.5); mark('shelfEnd', a + 41.5);
+  end(a + 52, t);
+}
+
 // A rope hangs 6 m from an anchor 8 m over the floors, 5 m out from the edge it is jumped from, and swings
 // 3.4 m each way on a round of 4.6 s. A tap jump off the brink runs into it whenever it hangs on the near
 // side of straight down (wider than this and its end lifts out of reach at the near end of the swing). Let
@@ -473,20 +501,17 @@ const tiki = (x: number, top: number, phase: number, amp: number, nm: string): v
   end(a + 54, t);
 }
 
-{ // ---- THORNS AND A TRIP: spikes are a picture over a pit; then a slab that throws you down and does no more
-  const { a, t, mark } = begin('thorns', 'Thorns and a trip', STONE_DARK);
-  floor(a, a + 34, t, 'Thorns: ground');
+{ // ---- THORNS: spikes are a picture over a pit
+  const { a, t, mark } = begin('thorns', 'Thorns', STONE_DARK);
+  floor(a, a + 40, t, 'Thorns: ground');
   // (a tap jump lands 4.95 m on: the patches are 7 m apart, so each landing has 2 m of run before the next,
   // and the last is two patches wide)
   for (const [i, dx] of [12, 19, 26, 27.15].entries()) {
     add({ t: 'pit', p: [r(a + dx), r(t + 0.2), 0], s: [1.15, 1, 1.25], invisible: true, grp: GR.hazards, nm: `Thorn patch ${i + 1}: what kills` });
     add({ t: 'thorn', p: [r(a + dx), r(t), 0], s: [2.14, 1.01, 2.26], seed: 27200 + i * 977, grp: GR.hazards, nm: `Thorn patch ${i + 1}: what is seen` });
   }
-  floor(a + 34, a + 38, t, 'The slab that trips', { color: TRIP });
-  add({ t: 'tumblezone', p: [r(a + 36), r(t + 1), 0], s: [2.4, 2, DEPTH], grp: GR.hazards, nm: 'Tumble zone: thrown down, unhurt' });
-  floor(a + 38, a + 47, t, 'Thorns: way off');
-  mark('thorn1', a + 12); mark('thorn2', a + 19); mark('thorn3', a + 26.58); mark('trip', a + 36);
-  end(a + 47, t);
+  mark('thorn1', a + 12); mark('thorn2', a + 19); mark('thorn3', a + 26.58);
+  end(a + 40, t);
 }
 
 // ============================================================== ENEMIES ==
@@ -555,7 +580,8 @@ const tiki = (x: number, top: number, phase: number, amp: number, nm: string): v
 { // ---- SPEED: a pad that gives a board what a charge would, a wall of boxes that needs it, and the way down
   const { a, t, mark } = begin('speed', 'Speed pad', SLATE);
   floor(a, a + 50, t, 'Speed pad: the strip');
-  add({ t: 'speedpad', p: [r(a + 14), r(t + 0.06), 0], s: [4, 0.12, 5], speed: 22, cycle: 1.2, grp: GR.board, nm: 'Speed pad: riders only' });
+  // (a pad's chevrons run along its own -Z: turned a quarter turn they run east, the way this line does)
+  add({ t: 'speedpad', p: [r(a + 14), r(t + 0.06), 0], s: [5, 0.12, 4], yaw: -90, speed: 22, cycle: 1.2, grp: GR.board, nm: 'Speed pad: riders only' });
   for (const dx of [0, G]) for (const dy of [0, G]) crate(a + 34 + dx, t + dy, 'wood', 'A wall of boxes: a board goes through it at 12.5 m/s');
   floor(a + 50, a + 62, t - 3, 'Under the way down');
   ramp(a + 62, a + 50, t - 3, 3, 'The way down');

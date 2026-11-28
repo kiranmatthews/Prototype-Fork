@@ -63,6 +63,7 @@ import { createCarlisleShipyard, isCarlisleShipyard, isCarlisleMassing } from '.
 import { SpaghettiSprings } from './spaghettiSprings';
 import { marineNetBounds } from './trampolineSurface';
 import {createTribalTrampolines,isTribalTrampoline} from './tribalTrampolines';
+import { createRopeTrampolines } from './ropeTrampolines';
 import { AncientGatesMechanisms } from './ancientGatesMechanisms';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
@@ -78,6 +79,7 @@ import { createJungleCupTrophy } from "./competition/trophy";
 import { isCompetitionLevel } from './competition/courses';
 import { cameraViewDirection, type CameraView } from "./cameraViews";
 import { SpinBridge } from './spinBridge';
+import { SpeedPadLook } from './speedPadVisual';
 // Every level in the game, plus the toolkit they are all assembled from.
 // Built-ins are hand-coded builders picked by id; user levels carry component
 // data and build through the same pipeline the editor writes. Courses run
@@ -4522,6 +4524,7 @@ export class Level {
   private terrainSupportRayWork = 0;
   crates: Crate[] = [];
   readonly spinBridges: SpinBridge[] = [];
+  private speedPadLook?: SpeedPadLook;
   private readonly spinBridgeMeshes=new WeakMap<THREE.Object3D,SpinBridge>();
   private readonly spinBridgeFloors = new Set<SpinBridge>();
   enemies: Enemy[] = [];
@@ -4796,6 +4799,7 @@ export class Level {
   private carlisleShipyard:ReturnType<typeof createCarlisleShipyard>=null;
   private tribalTrampolines:ReturnType<typeof createTribalTrampolines>=null;
   private spaghettiSprings:SpaghettiSprings|null=null;
+  private ropeTrampolines:ReturnType<typeof createRopeTrampolines>=null;
   private ancientMechanisms:AncientGatesMechanisms|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
@@ -7908,6 +7912,8 @@ export class Level {
       this.carlisleShipyard=createCarlisleShipyard(this.root,data,this.groundMeshes);
       this.tribalTrampolines=createTribalTrampolines(data,this.groundMeshes);
       if(data.verticalLoop&&data.name.startsWith('Spaghetti Rails'))this.spaghettiSprings=new SpaghettiSprings(data,this.groundMeshes);
+      // Every trampoline none of those dressed is the rope one: a knotted net in a timber frame.
+      this.ropeTrampolines=createRopeTrampolines(data,this.groundMeshes,()=>this.patterned(new THREE.MeshLambertMaterial({color:0xa9794d}),1,1,'wood'));
     }
   }
 
@@ -9073,6 +9079,9 @@ export class Level {
             if (isCarlisleShipyard(data)||isTribalTrampoline(c)||(data.verticalLoop&&data.name.startsWith('Spaghetti Rails'))) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
           } else if (c.t === "speedpad") {
             const pad = this.buildMechanicPad(c, 0x2bdfff, 0x00334a);
+            // Black and green chevrons that run the way the pad sends a rider (its local -Z), and a green glow.
+            this.speedPadLook ??= new SpeedPadLook(texture => Level.finishTex(texture), Level.glowTexture());
+            this.speedPadLook.dress(pad, c.s ?? [5, 0.45, 5]);
             pad.userData.speedPadSpeed = Math.max(0.1, c.speed ?? 48);
             pad.userData.speedPadHold = Math.max(0.05, c.cycle ?? 3.9);
             pad.userData.speedPadId = i + 1;
@@ -9219,6 +9228,7 @@ export class Level {
     this.carlisleShipyard?.dispose();this.carlisleShipyard=null;
     this.tribalTrampolines?.dispose();this.tribalTrampolines=null;
     this.spaghettiSprings?.dispose();this.spaghettiSprings=null;
+    this.ropeTrampolines?.dispose();this.ropeTrampolines=null;
     this.ancientMechanisms?.dispose();this.ancientMechanisms=null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
@@ -10254,6 +10264,11 @@ export class Level {
     this.campaignWorldMap?.update(dt);
   }
 
+  /** The spin bridge a ground mesh is the leaf of, if it is one. */
+  spinBridgeOf(mesh: THREE.Object3D | null | undefined): SpinBridge | null {
+    return mesh && this.spinBridges.length ? this.spinBridgeMeshes.get(mesh) ?? null : null;
+  }
+
   /** Ordinary player-spin contact is the only route-changing trigger. */
   triggerSpinBridges(hitBox: THREE.Box3): boolean {
     let triggered = false;
@@ -10285,6 +10300,7 @@ export class Level {
     this.carlisleShipyard?.update(dt,this.playerPos);
     this.tribalTrampolines?.update(dt);
     this.spaghettiSprings?.update(dt);
+    this.ropeTrampolines?.update(dt);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.meshSideCollisions.beginStep();
@@ -10906,6 +10922,7 @@ export class Level {
       s.tex.offset.y = (s.tex.offset.y + s.sv * dt) % 1;
     }
     for (const p of this.warpPads) p.update(dt);
+    this.speedPadLook?.update(dt);
 
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
@@ -16634,6 +16651,7 @@ export class Level {
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
   get carlisleShipyardDiagnostics() { return this.carlisleShipyard?.diagnostics ?? null; }
   get tribalTrampolineDiagnostics() { return this.tribalTrampolines?.diagnostics ?? null; }
+  get ropeTrampolineDiagnostics() { return this.ropeTrampolines?.diagnostics ?? null; }
   get carlisleConeDiagnostics() { return this.carlisleCones?.diagnostics ?? null; }
   get ancientMechanismDiagnostics(){return this.ancientMechanisms?.diagnostics??null;}
   get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }

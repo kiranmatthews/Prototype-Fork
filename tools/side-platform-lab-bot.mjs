@@ -163,6 +163,31 @@ export function makeLabBot({ p, level, lab, CONST, makeInput }) {
         return run();
       },
 
+      // the first net is walked onto and stood on (it gives under him), then hopped on from a standstill: he
+      // comes down on it and is thrown, and steers off it. The second is jumped onto from the brink with Jump
+      // pressed again in the air and HELD: the landing with it held is the high bounce, and the stick carries
+      // him over the wall's top onto the shelf.
+      trampoline: s => {
+        const M = s.marks, x = p.pos.x, nets = level.groundMeshes.filter(g => g.userData.ropeNet && g.position.x > s.x0 && g.position.x < s.x1).sort((g, h) => g.position.x - h.position.x);
+        api.fact('nets', nets.length);
+        if (nets[0]) api.fact('sag', Math.max(log.facts.sag ?? 0, +nets[0].userData.ropeNet.weightDepth.toFixed(2)));
+        if (p.trampolineAir && m.launch !== p.trampolineLaunchId) { m.launch = p.trampolineLaunchId; (m.bounces ??= []).push(+p.trampolineLaunchSpeed.toFixed(1)); api.fact('bounces', m.bounces.join(',')); }
+        if (x < M.net1End && !m.hopped) {
+          const mid = (M.net1 + M.net1End) / 2;
+          if (Math.abs(x - mid) > 0.5 || !p.grounded) return standAt(mid);
+          m.stood = (m.stood ?? 0) + 1;
+          if (m.stood > 45) { api.hop(3); m.hopped = k; }
+          return { moveX: 0 };
+        }
+        if (x < M.net1End + 0.5 && !(m.bounces?.length)) return { moveX: 0 }; // up from the hop, and down onto the net
+        if (x < M.brink - 3) return run();
+        if (x < M.brink + 0.5 && p.grounded && p.pos.y < s.top + 1) { api.plan([tap(M.brink - 0.9)]); return run(); }
+        // in the air over the second net, and up from it
+        if (!p.grounded && x > M.brink && p.pos.y < s.top + 5.2 && (p.vVel < -2 || m.holding || (m.bounces?.length ?? 0) >= 2)) { m.holding = true; jumpUntil = k + 2; }
+        if (p.grounded && p.pos.y > s.top + 4.9) { m.holding = false; api.fact('shelf', true); }
+        return run();
+      },
+
       // wait short of the brink until the rope WILL be on the near side of straight down when he gets to it,
       // three quarters of a second on (a rope swings as the sine of the level's clock, so where it will be is
       // read off it: to the eye, it is jumped at as it swings toward him and has come most of the way back).

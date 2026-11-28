@@ -7,11 +7,11 @@ other platforming object the game has**, one station each, so that each can be p
 
 Direct link: `?playtest&level=side-platform-lab`. In the menu it is `Side Platform Lab`.
 
-It is 1,736 m long and is laid out like the other lab: one east travel zone on a single plane (z = 0,
+It is 1,781 m long and is laid out like the other lab: one east travel zone on a single plane (z = 0,
 held by two unseen walls), seen from the south through the same long lens, so it reads left to right and
-flat. There are **28 stations**. Each opens on a checkpoint (35 in all: `K` and `L` warp between them),
+flat. There are **29 stations**. Each opens on a checkpoint (36 in all: `K` and `L` warp between them),
 shows its object once where a mistake is cheap, and then once more with something at stake. Stations 1
-to 20 are walked; 21 to 27 are a board line; the last is the prizes.
+to 21 are walked; 22 to 28 are a board line; the last is the prizes.
 
 Everything below was measured with the real player in this engine. `npm run check:side-platform`
 (`tools/test-side-platform-lab.mjs`) plays every station and the whole course, and
@@ -32,25 +32,63 @@ Distances are from each station's start; heights are over its floor.
 | 7 | Water | 302–352 | a pool to swim, 22 m long and 2.65 m deep, a ramp in and a ramp out; then 4 m of water that kills | swim; a tap over the second |
 | 8 | Arrows and steel | 352–400 | `empty` boxes, a `multihit` box, a wooden arrow (`bouncy`) at a 4.6 m wall, a deck of three steel crates (`metal`), a steel block (the `metal` part), a steel arrow (`metalbounce`) at a 6 m wall | a hop at each wall comes down on its arrow; **Jump held** onto the steel arrow (20 m/s against 16) |
 | 9 | Explosives | 400–460 | a mask; a `tnt` between four wooden boxes; a `nitro`; a `nitrobang`; a `nitro` under a 2.6 m roof, a life on the roof | jump onto the TNT and leave (3 s: it takes its four neighbours); jump the nitro; **spin the green `!`**, which clears every nitro, the one under the roof included |
-| 10 | Spin bridges | 460–512 | an 8 m `spinbridge` leaf; a 10 m one with `hold` 4 | spin beside each: the first lies down for good, the second for four seconds |
+| 10 | Spin bridges | 460–512 | an 8 m `spinbridge` leaf; a 10 m one with `hold` 4 | spin beside each: the first lies down for good, the second for four seconds, and then it is let go; see [spin bridges](#spin-bridges) |
 | 11 | Rope bridges | 512–580 | a 22 m suspended deck (`bridgeSpan` boards, hand ropes, bearer ropes); a 20 m one with two rotten boards (`crumble`) | run: the deck gives 0.5 m under a runner, 0.8 m under a body stood at its middle, 1.4 m when jumped on; a rotten board shakes for 1 s and falls |
-| 12 | Rope swings | 580–688 | a `ropeswing` over a trench; two in a row over a drop, half a round apart; one whose anchor ferries 8 m each way | see [rope swings](#rope-swings) |
-| 13 | Moving decks | 688–780 | a wheel of two decks (`orbit`); a sliding springboard (`bounce`) under a 3 m shelf; a turntable (`spin`); a lift with a brazier (`lit`) | see [moving decks](#moving-decks) |
-| 14 | Pendulums | 780–864 | four swinging ACROSS the line (one; two half a beat apart; one over deep sand), then one swinging ALONG it | pass each of the four as its bob leaves the line (high is off the line, low is on it); see [pendulums](#pendulums) for the fifth |
-| 15 | Rolling stones | 864–924 | a `stone` rolling 9 m each way ALONG the line at 5 m/s (`axis` x); one rolling across it at 6 m/s | jump the first as it comes (the top of a tap over it); pass behind the second |
-| 16 | Fire | 924–978 | two `torch`es; a `firetiki` head breathing across the line; two more out of step, one turning; 4 m of lava | pass each head as its breath stops (a 5 s round: cool for 2.7 s, a warning for 0.8 s, fire for 1.15 s); a tap over the lava |
-| 17 | Thorns and a trip | 978–1025 | three `thorn` patches 7 m apart, the last two wide; a red slab with a `tumblezone` | a tap over each (a landing has 2 m of run before the next); the slab throws you down, unhurt |
-| 18 | The bull | 1025–1071 | a mask; a `charger` on a 20 m floor of its own | wait off its floor until it has charged; spin it while it stands dizzy (it is harmless then) |
-| 19 | The turret | 1071–1121 | a steel crate; two holes 1.6 m deep; a `sentry`; a wall at its back | see [the turret](#the-turret) |
-| 20 | The bird | 1121–1155 | a `moa` | spin it |
-| 21 | Ropes | 1155–1225 | a 13 m `rope` over a trench; a 21 m one over a drop (it snaps after 3 s of grinding) | jump, **Grind**; you come off its far end on the board |
-| 22 | Speed pad | 1225–1329 | a `speedpad` (22 m/s, riders only); a 2×2 wall of boxes; a 3 m ramp down | mounted (Jump held with a direction for 0.55 s), over the pad at 21.9 m/s, through the boxes at 20.9 |
-| 23 | Ferrying rail | 1329–1379 | a 12 m `rail` travelling 4.6 m each way over a 19 m drop | pull back to a stop; jump with Grind as its west end comes to the brink; off its east end onto the floor |
-| 24 | Trick gate and trick rail | 1379–1475 | a `trickgate` (kickflip); a `trickrail` (heelflip) | an ollie and **Spin with the stick at rest** in the air that goes through the gate; an ollie, **Spin with the stick right**, and Grind at the rail the flip makes real |
-| 25 | The spine | 1475–1519 | a 1.2 m step; a `grindosaurus` walking 3 m each way | pull back to a stop and get onto the step; jump with Grind onto its back as it comes west; ride it off the east end |
-| 26 | The ball | 1519–1550 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
-| 27 | Glass and the board trip | 1550–1600 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
-| 28 | Portals and prizes | 1600–1712 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
+| 12 | Trampolines | 580–632 | a rope `trampoline` set in the floor; one on four piles over a pit, against a 5 m wall | walk onto the first (it gives 0.4 m under you) and hop on it; jump onto the second with **Jump held at the landing**; see [trampolines](#trampolines) |
+| 13 | Rope swings | 632–740 | a `ropeswing` over a trench; two in a row over a drop, half a round apart; one whose anchor ferries 8 m each way | see [rope swings](#rope-swings) |
+| 14 | Moving decks | 740–832 | a wheel of two decks (`orbit`); a sliding springboard (`bounce`) under a 3 m shelf; a turntable (`spin`); a lift with a brazier (`lit`) | see [moving decks](#moving-decks) |
+| 15 | Pendulums | 832–916 | four swinging ACROSS the line (one; two half a beat apart; one over deep sand), then one swinging ALONG it | pass each of the four as its bob leaves the line (high is off the line, low is on it); see [pendulums](#pendulums) for the fifth |
+| 16 | Rolling stones | 916–976 | a `stone` rolling 9 m each way ALONG the line at 5 m/s (`axis` x); one rolling across it at 6 m/s | jump the first as it comes (the top of a tap over it); pass behind the second |
+| 17 | Fire | 976–1030 | two `torch`es; a `firetiki` head breathing across the line; two more out of step, one turning; 4 m of lava | pass each head as its breath stops (a 5 s round: cool for 2.7 s, a warning for 0.8 s, fire for 1.15 s); a tap over the lava |
+| 18 | Thorns | 1030–1070 | three `thorn` patches 7 m apart, the last two wide | a tap over each (a landing has 2 m of run before the next) |
+| 19 | The bull | 1070–1116 | a mask; a `charger` on a 20 m floor of its own | wait off its floor until it has charged; spin it while it stands dizzy (it is harmless then) |
+| 20 | The turret | 1116–1166 | a steel crate; two holes 1.6 m deep; a `sentry`; a wall at its back | see [the turret](#the-turret) |
+| 21 | The bird | 1166–1200 | a `moa` | spin it |
+| 22 | Ropes | 1200–1270 | a 13 m `rope` over a trench; a 21 m one over a drop (it snaps after 3 s of grinding) | jump, **Grind**; you come off its far end on the board |
+| 23 | Speed pad | 1270–1374 | a `speedpad` (22 m/s, riders only), its green chevrons running east; a 2×2 wall of boxes; a 3 m ramp down | mounted (Jump held with a direction for 0.55 s), over the pad at 21.9 m/s, through the boxes at 20.9 |
+| 24 | Ferrying rail | 1374–1424 | a 12 m `rail` travelling 4.6 m each way over a 19 m drop | pull back to a stop; jump with Grind as its west end comes to the brink; off its east end onto the floor |
+| 25 | Trick gate and trick rail | 1424–1520 | a `trickgate` (kickflip); a `trickrail` (heelflip) | an ollie and **Spin with the stick at rest** in the air that goes through the gate; an ollie, **Spin with the stick right**, and Grind at the rail the flip makes real |
+| 26 | The spine | 1520–1564 | a 1.2 m step; a `grindosaurus` walking 3 m each way | pull back to a stop and get onto the step; jump with Grind onto its back as it comes west; ride it off the east end |
+| 27 | The ball | 1564–1595 | a side-on pipe with an `angryball` in it | drop in; spin as the ball comes; pop out east |
+| 28 | Glass and the board trip | 1595–1645 | two glass panes and a hung sign (`breakable`); a `tumblezone` with `checkpointTrip` between two posts | ride through all three; the plane takes your board and puts you on your feet |
+| 29 | Portals and prizes | 1645–1757 | a `returnportal` over a 32 m chasm; an arrow under a door in the air (`airOnly`) to a `cloudRoad` with the blue `colouredgem` and a portal back; a steel arrow up to the ledge the `bonusplatform` stands on; the `crystal`; the `gate` | see [the finale](#the-finale) |
+
+### Spin bridges
+
+A leaf stands upright at a brink and is spun down across the gap. It is a floor only once it lies flat.
+
+- **A body on the ground is held at the hinge while the leaf falls.** The upright leaf's wall retires the
+  moment it is spun, and the leaf is a floor only when it has landed, 0.7 s later. A runner or a rider who
+  spun it from the bank without slowing used to be off the brink and under it by then. He is now held a
+  body's width short of the hinge for the fall: nothing smacks or trips him, he keeps his speed, and he
+  goes on as it lands. A body in the air is not held: a jump with the spin in it goes on over the hinge
+  and comes down on the leaf.
+- **A timed leaf is a sprung one.** In the last sixth of a second of its hold it is drawn down a little,
+  and then it is let go: it whips up, nearly half of the way in the first fifth of its fold.
+- **It throws what it meets**, standing on it or in the air over it, on foot or on the board: up, and back
+  over the hinge, to come down 3 m behind it on the bank it was spun from. The further out he stood the
+  higher he goes: 2.5 m from beside the hinge, 4.7 m from the middle of this 10 m leaf, 7 m from its far
+  end, and down within a second. The carry that brought him back is spent in the landing: a walker stops
+  within a stride of where he comes down, and a rider keeps his board and lands rolling back the way he
+  came at 6 m/s. The leaf comes up behind the body it threw and does not stand upright, a wall again,
+  until he is clear of it.
+- **Late for it**, a body that reaches the hinge while the leaf is on its way up is stopped there: the
+  hinge is shut again the moment it is let go.
+
+### Trampolines
+
+Every `trampoline` is a rope one unless its course gives it a housing of its own: a knotted net lashed
+into a timber frame, exactly as big as its pad.
+
+- It is **walked on like a floor**, and the net gives under a walker (0.4 m at the middle of a 5 m one).
+  It goes down no further than whatever lies under it: a net laid on a solid floor does not sag.
+- **A body that lands on it is thrown**: 16 m/s here, 3.9 m up. **With Jump held at the landing** it is
+  thrown a quarter harder: 20 m/s, 6.1 m. In the air, a second press of Jump is the double jump; keep it
+  held from there down onto the net.
+- The whole of the pad throws, frame and all, as the plain pad did.
+- A board that rolls onto one catches in the ropes and trips. Jumped onto, it is thrown like a walker.
+- The second net here stands against a 5 m wall. The plain bounce comes up 1.1 m short and comes back
+  down on the net; the held one clears the top with a metre to spare.
 
 ### Rope swings
 
@@ -150,7 +188,7 @@ Rules that were not written down before this course was built, each measured her
 
 Four component types are in neither lab: `pipe` and `outline` are old save formats that load as other
 parts; `worldmap` is the campaign's map table; `comboorb` starts a run that has to reach the gate in one
-combo, which a bench of twenty-eight stops cannot honour. Loops are a mesh field, not a type: one needs a
+combo, which a bench of twenty-nine stops cannot honour. Loops are a mesh field, not a type: one needs a
 second lane beside the first and 30 m/s, and this course is one line. West, north and south travel zones
 are camera directions, not objects, and every side-scrolling stretch in this game reads left to right.
 

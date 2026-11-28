@@ -8,6 +8,8 @@ import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type 
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import { trampolineSurfacePresentations } from './trampolineSurface';
+import type { SpinBridge } from './spinBridge';
+import { SPEED_PAD_GREEN } from './speedPadVisual';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
@@ -421,6 +423,27 @@ const SIDE_ON_DROP_IN_SECONDS = 0.26;
 // A slow or a middling roll is slowed over the last of the deck, by where he
 // is on it (so it is the same at any frame rate), so that the lip is arrived at
 // and not hit: the slow one all but to rest, the middling one to about half.
+/**
+ * THE THROW OFF A SPRUNG SPIN BRIDGE. A timed spin bridge that is let go with a
+ * body on it throws it the way the leaf goes: up, and back over the hinge onto
+ * the bank it was spun from. The leaf turns about its hinge, so the further out
+ * along it he stood the more of the whip he gets: a higher arc, and a longer
+ * one, since it has all of that way back to carry him.
+ */
+const SPIN_BRIDGE_SLING = {
+  apexBase: 2.2, // metres of rise for a body standing at the hinge...
+  apexPerMetre: 0.55, // ...and more for each metre out along the leaf
+  apexMin: 2.6,
+  apexMax: 7.5,
+  landing: 3, // he comes down this far behind the hinge, on the bank
+  // The carry that brought him back is spent in the landing: what is left of it, on his feet and on the board.
+  // (Kept whole it is faster than a run, and a walker faster than a run is put on the board: he rolled on
+  // backward, off the back of the bank.)
+  landingRun: 3.5,
+  landingRoll: 6,
+};
+const SLING_ALONG = new THREE.Vector3();
+
 const SIDE_ON_DROP_IN = {
   slow: 8,                    // m/s at the start of the set-up: under this he perches and waits
   fast: 17,                   // ...and from this up he flies off the edge
@@ -1553,6 +1576,10 @@ export class Player {
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
+  /** The sprung spin bridge that has just thrown him, while he is still in the air over it. */
+  private slingBridge: SpinBridge | null = null;
+  /** In the air from a spin bridge's throw, until he is down. */
+  private slingAir = false;
   // An ordinary board ollie may be abandoned once with a second charged
   // press/release. The deck flies independently; the rider takes a
   // foot-gravity escape whose first supported landing rolls into running.
@@ -4175,6 +4202,80 @@ export class Player {
     );
   }
 
+  /**
+   * A spin bridge's leaf is a floor only once it has landed. Spun from the bank on the run, he would be off
+   * the brink and under it before then: so a body on the GROUND there is held a body's width short of the
+   * hinge while the leaf comes down. It is a hold and not a wall: nothing is smacked or tripped, he keeps his
+   * speed, and he goes on the moment it lands. A body in the air is not held (a jump with the spin in it
+   * comes down on the landed leaf).
+   */
+  private holdAtFallingLeaf(level: Level): void {
+    if (!level.spinBridges.length || !this.grounded || this.state !== 'ride') return;
+    for (const bridge of level.spinBridges) {
+      if (!bridge.shutsHinge) continue;
+      const along = bridge.receiving(SLING_ALONG), hinge = bridge.pivot.position;
+      const dx = this.pos.x - hinge.x, dz = this.pos.z - hinge.z, out = dx * along.x + dz * along.z;
+      const stop = -(Math.abs(along.x) * this.hitboxHalf.x + Math.abs(along.z) * this.hitboxHalf.z + 0.04);
+      if (out <= stop || out > 1.5 || Math.abs(dz * along.x - dx * along.z) > bridge.breadth / 2 + 0.5 || Math.abs(this.pos.y - hinge.y) > 0.75) continue;
+      const back = stop - out;
+      this.pos.x += along.x * back; this.pos.z += along.z * back;
+      this.translateCollisionBoxes(along.x * back, 0, along.z * back);
+    }
+  }
+
+  /**
+   * Thrown by a sprung spin bridge as it is let go (SPIN_BRIDGE_SLING). On his feet or on the board,
+   * crawling, standing or met in the air over it: he leaves it going up and back toward the hinge, at a speed
+   * that brings him down on the bank behind it. Nothing steers the throw; the air after it is an
+   * ordinary one (a second jump is his to take), and the board, if he is on it, stays under him.
+   */
+  private slingFromSpinBridge(bridge: SpinBridge): void {
+    if (this.isBailing) return;
+    const along = bridge.receiving(SLING_ALONG), hinge = bridge.pivot.position;
+    const out = THREE.MathUtils.clamp((this.pos.x - hinge.x) * along.x + (this.pos.z - hinge.z) * along.z, 0, bridge.span);
+    const board = this.freeSkate;
+    const rise = board ? TUNING.boardRiseGravity : TUNING.riseGravity;
+    const fall = board ? TUNING.boardFallGravity : TUNING.fallGravity;
+    const apex = THREE.MathUtils.clamp(SPIN_BRIDGE_SLING.apexBase + SPIN_BRIDGE_SLING.apexPerMetre * out,
+      SPIN_BRIDGE_SLING.apexMin, SPIN_BRIDGE_SLING.apexMax);
+    const up = Math.sqrt(2 * rise * apex);
+    const over = Math.max(0, this.pos.y - hinge.y); // met in the air, he has that much further to come down
+    const back = (out + SPIN_BRIDGE_SLING.landing) / (up / rise + Math.sqrt(2 * (apex + over) / fall));
+    if (this.manualing !== 0) this.endManual();
+    this.cancelSlideTraversal(true);
+    this.slamActive = false; this.slamHangT = 0; this.slamFlatT = 0; this.slamTailT = -1;
+    this.charging = false; this.chargePlanted = false; this.chargeTimer = 0; this.jumpBufferT = 0;
+    this.crawling = false; this.teetering = false;
+    // A walker on a line keeps facing the way he faced and goes backward; anyone else is turned to go where he is thrown.
+    const facing = this.axisF.x * along.x + this.axisF.z * along.z;
+    if (!board && Math.abs(facing) > 0.7) this.speed = -Math.sign(facing) * back;
+    else {
+      this.axisF.set(-along.x, 0, -along.z);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = back;
+    }
+    this.walkVelocity.copy(this.axisF).multiplyScalar(this.speed);
+    this.walkIntent.set(0, 0, 0);
+    this.vVel = up;
+    this.state = 'air';
+    this.grounded = false;
+    this.airFromSkate = board;
+    this.airGrav = board ? 'board' : 'foot';
+    this.airMomentum = true; // the throw carries: nothing he holds shortens or lengthens it
+    this.floatAir = false;
+    this.trampolineAir = false;
+    this.bounceJump = false;
+    this.clearCoyoteJumpWindow();
+    this.airJumpUsed = false;
+    this.doubleJumpAir = false;
+    this.airborneT = 0;
+    this.airPeakY = this.pos.y;
+    this.slingBridge = bridge;
+    this.slingAir = true;
+    bridge.holdBehind(0);
+    sfx.play('woosh2', 0.9, 0.7);
+  }
+
   private cancelSlideTraversal(keepIceCarry = false): void {
     this.slideTimer = 0;
     this.slideDistanceLeft = 0;
@@ -4215,7 +4316,7 @@ export class Player {
     this.grindBoostT = Math.max(this.grindBoostT, hit?.speedPadHold ?? 3.9);
     this.speedPadCap = Math.max(this.speedPadCap, hit?.speedPadSpeed ?? 48);
     this.registerSkateBoost();
-    this.emitSparks(10, 0x2bdfff, 1.8);
+    this.emitSparks(10, SPEED_PAD_GREEN, 1.8);
     sfx.play('skateTransition', 0.75, 1.35);
   }
 
@@ -4868,6 +4969,8 @@ export class Player {
     this.treehouseStairInput.reset();
     this.treehouseBoardBlocked = false;
     this.airMomentum = false;
+    this.slingBridge = null;
+    this.slingAir = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
     this.airborneT = 0;
@@ -5295,6 +5398,37 @@ export class Player {
     // platform advanced once in level.update since our last step — apply that
     // delta before this step's movement so we stay glued). Crumble pads get
     // told they've been stepped on.
+    // A sprung spin bridge that is let go throws what it meets: a body standing on it at once, and a body in
+    // the air over it as the leaf comes up to him. A floor that only left would drop the one and pass through
+    // the other. (A body it has thrown is not thrown again while he is still going up from it.)
+    if (level.spinBridges.length && (this.state === 'ride' || this.state === 'air')) {
+      const stood = this.grounded && this.state === 'ride' ? level.spinBridgeOf(this.groundHit?.mesh) : null;
+      if (stood?.state === 'closing') this.slingFromSpinBridge(stood);
+      else for (const bridge of level.spinBridges) {
+        if (!bridge.meets(this.pos, dt) || bridge === this.slingBridge && this.vVel > 0) continue;
+        this.slingFromSpinBridge(bridge);
+        break;
+      }
+    }
+    // ...and while he is in the air over it, the leaf is told where he is, so that it comes up behind him.
+    if (this.slingBridge) {
+      const bridge = this.slingBridge, along = bridge.receiving(SLING_ALONG), hinge = bridge.pivot.position;
+      const out = (this.pos.x - hinge.x) * along.x + (this.pos.z - hinge.z) * along.z;
+      const clear = out < -0.75 || out > bridge.span + 1 || this.grounded || this.state !== 'air' || bridge.state !== 'closing';
+      bridge.holdBehind(clear ? null : Math.atan2(Math.max(0, this.pos.y - hinge.y - 0.25), Math.max(0.01, out)) - 0.14);
+      if (clear) this.slingBridge = null;
+    }
+    // ...and the throw's carry is spent in the landing (the leaf has long been clear of him by then).
+    if (this.slingAir && (this.grounded || this.state !== 'air')) {
+      this.slingAir = false;
+      if (this.grounded && this.state === 'ride' && !this.isBailing) {
+        const most = this.freeSkate ? SPIN_BRIDGE_SLING.landingRoll : SPIN_BRIDGE_SLING.landingRun;
+        if (Math.abs(this.speed) > most) {
+          this.speed = Math.sign(this.speed) * most;
+          if (!this.freeSkate) this.walkVelocity.setLength(most);
+        }
+      }
+    }
     if (this.grounded && this.groundHit) {
       level.ropeBridges.carry(this,this.groundHit.mesh,this.pos);
       if (this.groundHit.moverId !== undefined) {
@@ -16207,6 +16341,7 @@ export class Player {
         if (this.freeSkate && this.axisF.dot(ROCK_CONTACT) < -.25) this.speed = 0;
         this.translateCollisionBoxes(this.pos.x - sideContactX, this.pos.y - sideContactY, this.pos.z - sideContactZ);
       }
+      this.holdAtFallingLeaf(level);
       for (const w of level.walls) {
         if (this.passesTripObstacle(w)) continue;
         // A tumbling airborne body flung over a LOW solid (the log it just

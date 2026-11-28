@@ -18,7 +18,7 @@
 //     for was DONE there: the pool swum, the steel arrow's held bounce taken, the TNT's four
 //     neighbours gone and every nitro cleared by the green !, both leaves spun down, both rotten
 //     boards shaken, four ropes swung on, the wheel ridden under, the springboard's bounce
-//     taken, the trip taken, the bull and the bird beaten, orbs fired and the turret beaten, both
+//     taken, the bull and the bird beaten, orbs fired and the turret beaten, both
 //     ropes ground, the pad's 22 m/s reached and the wall of boxes ridden through, the ferrying
 //     rail ground, the kickflip opening the gate and the heelflip making the rail real, the
 //     spine's back ground, the ball beaten, three panes broken and the board taken away, and in
@@ -69,8 +69,8 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   assert.equal(count('bonusplatform'), 1, 'one bonus stone (the game allows one)');
 
   // ---- the stations -----------------------------------------------------------
-  assert.equal(STATIONS.length, 28, 'twenty-eight stations');
-  assert.equal(new Set(STATIONS.map(s => s.id)).size, 28, '...each with its own name');
+  // (how many there are is not written here: the list of checks further down, one for each in course order, is the count)
+  assert.equal(new Set(STATIONS.map(s => s.id)).size, STATIONS.length, 'each station has its own name');
   assert.equal(STATIONS[0].x0, START.x1, 'the first opens where the arrival floor ends');
   STATIONS.forEach((s, i) => {
     assert.ok(s.x1 > s.x0 + 20, `${s.id}: has room (${s.x1 - s.x0} m)`);
@@ -86,7 +86,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   // ---- the vocabulary -----------------------------------------------------------
   const pipeParts = pipeLab.SIDE_PIPE_LAB_LEVEL.components;
   const NOT_PLACED = { pipe: 'an old save format: it loads as a vertramp', outline: 'an old save format: it loads as a wood crate',
-    worldmap: 'the campaign map table', comboorb: 'starts a reach-the-gate-in-one-combo run, which a bench of 28 stops cannot honour' };
+    worldmap: 'the campaign map table', comboorb: 'starts a reach-the-gate-in-one-combo run, which a bench of stops cannot honour' };
   const here = new Set(parts.map(c => c.t)), there = new Set(pipeParts.map(c => c.t));
   for (const type of CUSTOM_COMPONENT_TYPES) {
     if (type in NOT_PLACED) { assert.ok(!here.has(type) && !there.has(type), `${type} is in neither lab (${NOT_PLACED[type]})`); continue; }
@@ -140,7 +140,6 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   has('a fire head that turns', c => c.t === 'firetiki' && c.amp > 0);
   has('torches', c => c.t === 'torch');
   has('thorns', c => c.t === 'thorn');
-  has('a tumble zone', c => c.t === 'tumblezone' && !c.checkpointTrip);
   has('a plane that takes the board away', c => c.t === 'tumblezone' && c.checkpointTrip === true);
   has('a speed pad', c => c.t === 'speedpad');
   has('a rail that travels', c => c.t === 'rail' && c.amp > 0 && c.axis === 'x');
@@ -185,11 +184,16 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     spinbridge: log => assert.ok(log.facts.leaf1Down && log.facts.leaf2Down, 'both leaves are spun down'),
     ropebridge: log => { assert.equal(log.facts.rottenShaken, 2, 'both rotten boards are set shaking');
       assert.ok(log.facts.sag1 > 0.3 && log.facts.sag2 > 0.3, `both decks give under a runner (${log.facts.sag1} and ${log.facts.sag2} m)`); },
+    trampoline: log => { assert.equal(log.facts.nets, 2, 'both trampolines are rope nets');
+      assert.ok(log.facts.sag > 0.25, `the first net gives under a body stood on it (${log.facts.sag} m)`);
+      const bounces = String(log.facts.bounces ?? '').split(',').map(Number);
+      assert.ok(Math.abs(bounces[0] - 16) < 0.6, `hopped on, it throws him at its plain speed (${bounces[0]} m/s)`);
+      assert.ok(bounces.some(v => Math.abs(v - 20) < 0.8) && log.facts.shelf, `Jump held at the landing is the high bounce, and it reaches the shelf (${log.facts.bounces} m/s)`); },
     swings: (log, e) => assert.equal(e.swings, 4, 'four ropes are swung on'),
     decks: log => { assert.ok(log.facts.wheelDip <= -3, `the wheel is ridden under (${log.facts.wheelDip} m)`); assert.ok(log.facts.springboardLaunch >= 15.5, `the springboard's bounce is taken (${log.facts.springboardLaunch} m/s)`); },
     pendulums: log => assert.ok(log.facts.underLongPendulum, 'the pendulum that swings along the line is run under while it is up'),
     stones: () => {}, fire: () => {},
-    thorns: log => assert.equal(log.bails, 1, 'the trip throws him down, once'),
+    thorns: log => assert.equal(log.bails, 0, 'the three patches are jumped without a fall'),
     bull: (log, e) => assert.equal(e.foes, 1, 'the bull is beaten'),
     turret: (log, e) => { assert.ok(log.facts.orbsFired >= 1, 'the turret fires'); assert.ok(log.facts.orbsDucked >= 1, 'an orb is let pass over a hole'); assert.ok(log.facts.sentryDown && e.foes === 1, 'the turret is beaten'); },
     bird: (log, e) => assert.equal(e.foes, 1, 'the bird is beaten'),
@@ -212,7 +216,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
     DONE[s.id](log, log.evidence[s.id] ?? {});
     alone[s.id] = log;
   }
-  console.log(`  28 stations crossed from their own checkpoints (${Object.values(alone).reduce((n, log) => n + log.seconds, 0).toFixed(0)} s of play)`);
+  console.log(`  ${STATIONS.length} stations crossed from their own checkpoints (${Object.values(alone).reduce((n, log) => n + log.seconds, 0).toFixed(0)} s of play)`);
   // the finale's plain way: past both arrows and under the ledge, to the gate
   const plain = bot.play({ station: 'finale', plain: true });
   assert.ok(plain.ok && plain.finished && !plain.facts.cloud && !plain.facts.bonusStone && plain.evidence.finale.doors === 1,
@@ -238,6 +242,7 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   naive('ramps', "the gap off the kicker (a walker is not thrown by a ramp: it is jumped)", S.ramps.marks.kicker, S.ramps.marks.landing);
   naive('water', 'the water that kills', S.water.marks.lethal, S.water.marks.lethalEnd);
   naive('explosives', 'a nitro', S.explosives.marks.nitro - 1.5, S.explosives.marks.nitro2 + 1.5);
+  naive('trampoline', 'the pit before the second net', S.trampoline.marks.brink, S.trampoline.marks.net2);
   naive('swings', "the second swing's pit", S.swings.marks.brink2, S.swings.marks.far2);
   naive('decks', "the wheel's pit", S.decks.x0 + 10, S.decks.x0 + 24);
   naive('pendulums', 'a pendulum', S.pendulums.marks.first - 2, S.pendulums.marks.along + 6);
@@ -273,16 +278,119 @@ await withSkateRuntime(async ({ server, scene, player: p, level: stock, CONST })
   }
   console.log('  hazards kill a player who only holds right; the turret sees its corridor and no further');
 
+  // ---- the spin bridges, met badly ------------------------------------------------------------
+  {
+    const M = S.spinbridge.marks, top = S.spinbridge.top, east = p.pos.clone().set(1, 0, 0);
+    const leafAt = x => level.spinBridges.reduce((b, o) => Math.abs(o.pivot.position.x - x) < Math.abs(b.pivot.position.x - x) ? o : b);
+    const first = leafAt(M.hinge1), timed = leafAt(M.hinge2), fromBank = b => b.hitBox.clone().translate(p.pos.clone().set(-0.3, 0, 0));
+    const put = x => {
+      level.reset(true); level.time = 0;
+      p.respawn(level, true, false, { position: p.pos.clone().set(x, top + 0.15, 0), heading: east });
+      for (let i = 0; i < 20; i++) bot.tick(makeInput());
+    };
+    const pad = () => { const was = { jump: false, spin: false }; return (moveX, jump = false, spin = false) => {
+      const input = makeInput({ moveX });
+      input.jumpHeld = jump; input.jumpPressed = jump && !was.jump; input.jumpReleased = !jump && was.jump;
+      input.spinHeld = spin; input.spinPressed = spin && !was.spin;
+      was.jump = jump; was.spin = spin;
+      bot.tick(input);
+    }; };
+    // A running spin: he never lets go of the stick, and the leaf is still falling when he is at the hinge.
+    for (const short of [0.9, 1.6, 2.6]) {
+      put(M.hinge1 - 9);
+      const press = pad();
+      let spun = false, held = 0;
+      for (let k = 0; k < 360 && p.state !== 'dead' && p.pos.x < M.far1 + 2; k++) {
+        const spin = !spun && p.pos.x > M.hinge1 - short;
+        if (spin) spun = true;
+        if (first.state === 'opening' && p.pos.x > M.hinge1 - 0.8) held++;
+        press(1, false, spin);
+      }
+      assert.ok(p.state !== 'dead' && p.pos.x >= M.far1 && first.state === 'open',
+        `a running spin begun ${short} m short of the leaf is carried over it and not dropped under it (x ${(p.pos.x - M.hinge1).toFixed(1)} past the hinge, ${p.state})`);
+      assert.ok(held > 0, 'he is held at the hinge while the leaf falls');
+    }
+    // ...and the same on the board: held at the brink, not smacked or tripped, and across with his speed.
+    for (const short of [1.0, 2.8]) {
+      put(M.hinge1 - 11);
+      const press = pad();
+      let spun = false, slowest = Infinity, fell = false;
+      for (let k = 0; k < 420 && p.state !== 'dead' && p.pos.x < M.far1 + 2; k++) {
+        const spin = !spun && p.freeSkate && p.pos.x > M.hinge1 - short;
+        if (spin) spun = true;
+        press(1, !p.freeSkate && p.grounded && !spun, spin);
+        if (spun) slowest = Math.min(slowest, Math.abs(p.speed));
+        fell ||= p.isBailing;
+      }
+      assert.ok(p.state !== 'dead' && p.pos.x >= M.far1 && p.freeSkate && !fell && slowest > 9,
+        `a riding spin begun ${short} m short crosses on the board without a fall (x ${(p.pos.x - M.hinge1).toFixed(1)}, ${p.state}, slowest ${slowest.toFixed(1)} m/s)`);
+    }
+    // Stood on the timed leaf as it is let go: thrown up and back over the hinge, and down on the bank.
+    const thrown = (how, ride) => {
+      let left = null, apex = 0, down = null, behind = Infinity;
+      for (let k = 0; k < 900 && p.state !== 'dead' && down === null; k++) {
+        const grounded = p.grounded;
+        ride(k);
+        if (left === null && grounded && !p.grounded && timed.state === 'closing') left = { out: p.pos.x - M.hinge2, board: p.freeSkate, k };
+        if (left === null) continue;
+        const out = p.pos.x - M.hinge2, up = p.pos.y - top;
+        apex = Math.max(apex, up);
+        if (!p.grounded && out > 0 && out < timed.span) behind = Math.min(behind, Math.atan2(Math.max(0, up), out) - timed.leaf.rotation.z);
+        if (p.grounded && k > left.k + 3) down = { out, board: p.freeSkate, bail: p.isBailing };
+      }
+      assert.ok(left, `${how}: he is thrown as the leaf is let go`);
+      assert.ok(p.state !== 'dead' && down && !down.bail, `${how}: he comes down alive and on his feet`);
+      assert.ok(down.out < -1.5 && down.out > -5, `${how}: on the bank behind the hinge (${down.out.toFixed(1)} m)`);
+      assert.ok(apex > 2.2 && behind > -0.01, `${how}: over the leaf, which comes up behind him and not through him (apex ${apex.toFixed(1)} m, leaf ${(behind * 57.3).toFixed(0)} deg behind at its nearest)`);
+      // ...and the throw's carry is spent there: a second and a half on, hands off, he is still on that bank
+      for (let k = 0; k < 90 && p.state !== 'dead'; k++) bot.tick(makeInput());
+      const after = { out: p.pos.x - M.hinge2, board: p.freeSkate, speed: Math.abs(p.speed) };
+      assert.ok(p.state !== 'dead' && p.grounded && after.board === down.board && after.out < -1.5 && after.out > -12 && after.speed <= (after.board ? 6.5 : 0.5),
+        `${how}: he stays on the bank he was thrown to (${after.out.toFixed(1)} m, ${after.board ? 'rolling' : 'stood'} at ${after.speed.toFixed(1)} m/s)`);
+      return { left, down, apex };
+    };
+    const apexes = [];
+    for (const out of [1, 5, 9.3]) {
+      put(M.hinge2 - 1.6);
+      assert.ok(timed.trigger(fromBank(timed)));
+      const press = pad();
+      const walk = () => press(timed.state !== 'open' ? 0 : p.pos.x < M.hinge2 + out - 0.15 ? 0.8 : p.pos.x > M.hinge2 + out + 0.4 ? -0.5 : 0);
+      const flight = thrown(`stood ${out} m out on the timed leaf`, walk);
+      assert.ok(!flight.left.board && !flight.down.board, 'on foot he is thrown and lands on foot');
+      apexes.push(flight.apex);
+    }
+    assert.ok(apexes[0] < apexes[1] && apexes[1] < apexes[2], `the further out he stood, the higher he is thrown (${apexes.map(a => a.toFixed(1)).join(', ')} m)`);
+    // ...and on the board: ridden onto so that it is let go under him, he is thrown the same way and keeps the board.
+    for (const wait of [2.2, 2.5]) {
+      put(M.hinge2 - 10);
+      assert.ok(first.trigger(fromBank(first)) && timed.trigger(fromBank(timed)));
+      const press = pad();
+      const ride = k => { const go = k / 60 > wait && timed.state !== 'closing'; press(go ? 1 : 0, go && !p.freeSkate && p.grounded); };
+      const flight = thrown(`riding the timed leaf (set off after ${wait} s)`, ride);
+      assert.ok(flight.left.board && flight.down.board, 'on the board he is thrown and lands on the board');
+    }
+    // Late for it: a body that reaches the hinge while the leaf is on its way up is stopped there.
+    put(M.hinge2 - 6);
+    assert.ok(timed.trigger(fromBank(timed)));
+    const press = pad();
+    let most = -Infinity;
+    for (let k = 0; k < 600 && p.state !== 'dead' && timed.state !== 'closed'; k++) { press(timed.state === 'closing' || timed.remaining < 0.45 && timed.state === 'open' ? 1 : 0); most = Math.max(most, p.pos.x - M.hinge2); }
+    for (let k = 0; k < 60 && p.state !== 'dead'; k++) press(1);
+    assert.ok(p.state !== 'dead' && p.grounded && p.pos.x < M.hinge2, `walking at the leaf as it folds, he is stopped at the hinge and not let into the pit (got to ${most.toFixed(2)} m)`);
+  }
+  console.log('  spin bridges: a running spin crosses, on foot and on the board; the timed leaf throws what is on it back to its bank');
+
   // ---- the whole course ------------------------------------------------------------------
   const course = bot.play();
   assert.ok(course.finished && course.died.length === 0, `the whole course is finished in one run without a death (${told(course)})`);
-  assert.deepEqual([...course.visited.keys()], STATIONS.map(s => s.id), 'the twenty-eight stations are visited in order');
+  assert.deepEqual([...course.visited.keys()], STATIONS.map(s => s.id), 'the stations are visited in order');
   assert.ok(course.maxZ < 0.6, `the whole course is played on one line (|z| ${course.maxZ.toFixed(2)})`);
+  assert.equal(course.bails, 1, 'he falls once on the way, at the plane that takes the board');
   for (const s of STATIONS) DONE[s.id]({ ...course, seconds: course.visited.get(s.id).t1 === null ? course.seconds - course.visited.get(s.id).t0 : course.visited.get(s.id).t1 - course.visited.get(s.id).t0,
     bails: alone[s.id].bails }, course.evidence[s.id] ?? {});
   assert.ok(Math.abs(ISLAND.top - S.finale.top - 14) < 1e-9, 'the cloud is 14 m over the finale');
 
   level.dispose();
-  console.log(`PASS Side Platform Lab: ${(SPAN.x1 - SPAN.x0).toFixed(0)} m, 28 stations, finished in ${course.seconds.toFixed(1)} s of play without a death ` +
-    `(${course.bails} trips: the tumble slab and the board plane); every object used as its station intends; checked in ${((Date.now() - started) / 1000).toFixed(0)} s`);
+  console.log(`PASS Side Platform Lab: ${(SPAN.x1 - SPAN.x0).toFixed(0)} m, ${STATIONS.length} stations, finished in ${course.seconds.toFixed(1)} s of play without a death ` +
+    `(his one fall is the plane that takes the board); every object used as its station intends; checked in ${((Date.now() - started) / 1000).toFixed(0)} s`);
 }, { animationScheme: 'D' });

@@ -1925,9 +1925,9 @@ level's `boulderChase` for a pursuer) rather than inventing behaviour in level d
 | `stone` | rolling boulder patrolling along Z, or along X with `axis: 'x'`: `range` half-travel (20 m), `speed` (6 m/s), `radius` (0.9 m); it needs flat ground under all of its run | constant speed, turns at each end | rolling logs, barrels, patrolling boulders |
 | `firetiki` | turning carved head sweeping fire: `amp` sweep (28°, ≤ 60), `range` reach (7.1 m, 1–16), `cycle` (7.8 s, 4–30), `phase` in seconds | turns while cool 54 % (4.2 s) → **warning 16 %** (1.25 s, still) → **fires 23 %** (1.8 s, sweeping ±65 % of `amp`) → cool 7 % | fire statues, flamethrowers, steam vents |
 | `ropeswing` | grab rope swinging in a plane: `len` (6 m), `amp` radians (0.85), `speed` (0 = natural pendulum), `phase`; `range` + `cycle` make the anchor travel | — | vines, swing ropes, hanging hooks |
-| `spinbridge` | timber the player spins open: `cycle` opening seconds; `hold` folds it after that long, otherwise it latches | — | Great Gate plank, drawbridges |
-| `trampoline` | broad bounce deck: `speed` launch velocity (16), `amp` held-Jump multiplier (1.25) | — | bounce pads, mushrooms, springs |
-| `speedpad` | board boost deck: `speed` target speed, `cycle` hold seconds | — | speed pads (Diggin' It, Crash Dash) |
+| `spinbridge` | timber the player spins open: `cycle` opening seconds; `hold` folds it after that long, otherwise it latches. A body on the ground behind its hinge is held at the brink until the leaf has landed (a jump with the spin in it goes on over) | a timed leaf is sprung: drawn down for the last 0.16 s of its hold, then let go, and it **throws** whatever is on it or in the air over it up and back over the hinge | Great Gate plank, drawbridges |
+| `trampoline` | broad bounce deck: `speed` launch velocity (16), `amp` held-Jump multiplier (1.25). Drawn as a rope net in a timber frame the size of the pad, unless its course dresses it otherwise; the whole pad throws | — | bounce pads, mushrooms, springs |
+| `speedpad` | board boost deck: `speed` target speed, `cycle` hold seconds. Its green chevrons run along its own −Z: turn it with `yaw` so they point down the line (it boosts a rider whichever way he crosses it) | — | speed pads (Diggin' It, Crash Dash) |
 | travelling `rail` | `amp`/`speed`/`axis` move the whole line on a cycle | sinusoidal like a mover | Crash 4 moving rails |
 | `rope` | sagging grindable rope: `amp` sag (1.2 m); **snaps** after `shake` seconds of grinding (3 s) | — | breaking ropes and vines |
 | `pit` (+ `thorn` visual) | death volume; pair a `thorn` cluster with a slightly smaller pit for a readable spike pit | — | bottomless pits, spike pits, lethal water |
@@ -1974,6 +1974,14 @@ measured, and a layout has to allow for:
   a rider trips over it and does not bank it.
 - **A rope bridge** (`bridgeSpan`) 22 m long gives 0.5 m under a runner, 0.8 m under a body stood at its
   middle and 1.4 m when jumped on.
+- **A `spinbridge` with `hold` throws back.** Whoever is on the leaf, or in the air over it, when it is let
+  go is thrown up and back over the hinge and comes down 3 m behind it within a second (2.5 m high from
+  beside the hinge, 7 m from the far end of a 10 m leaf), on foot or still on the board. Give the bank it is
+  spun from 4 m of floor behind the hinge and nothing overhead for 8 m. A body that arrives while it folds is
+  stopped at the hinge.
+- **A `trampoline` is a rope net.** It is walked on as a floor and gives under a walker (0.4 m on a 5 m
+  pad) where there is room under it; set in a solid floor it does not sag, so give one a bed 0.9 m down or
+  stand it on piles. Only a landing is thrown, and a board that rolls onto one trips.
 
 ### XV.12 Rhythm in metres
 
