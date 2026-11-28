@@ -7,6 +7,20 @@ export interface LoopSample {
 }
 export const LOOP_TURN = Math.PI * 2;
 
+/**
+ * A PLANAR loop: an upright loop with no offset. It is entered and left at the same point of the same line,
+ * so the whole ring stands in one vertical plane and the track crosses over its own way in and way out. That
+ * is the loop a side-scrolling course can carry (seen from the side, any loop looks like this one).
+ *
+ * Because its two lower quadrants stand over the approach and the run-out, its ribbon cannot be a floor: a
+ * body on the line would meet the back of the quadrant it is meant to come down at the end. A planar loop is
+ * therefore ridden by its analytic centreline alone (`stepLoopMotion`), and to everything else it is not
+ * there: a walker, or a rider too slow for it, goes along the floor under it. See `planarLoopEntry`.
+ */
+export function isPlanarLoop(shape: Pick<LoopShape, 'offset' | 'kind'>): boolean {
+  return shape.kind !== 'wall' && Math.abs(shape.offset) < 1e-6;
+}
+
 export function sampleLoop(shape: LoopShape, angle: number, lateral = 0): LoopSample {
   if (shape.kind === 'wall') return sampleWallLoop(shape, angle, lateral);
   const { radius: r, offset } = shape;
@@ -99,3 +113,36 @@ export function stepLoopMotion(shape: LoopShape, motion: LoopMotion, dt: number,
   }
   return { angle, speed, attached: true, complete: false };
 }
+
+/**
+ * The speeds a planar loop of this radius asks for at its foot, with these forces: `coasting` goes round with
+ * nothing held; `pumped` goes round with the charge held from the foot (the pump works only on the way up).
+ * Below `pumped` no rider can make it, and a planar loop does not take one on: he goes under it.
+ * Found by riding the centreline, so they are the speeds the ride itself agrees with.
+ */
+export function planarLoopEntry(radius: number, forces: LoopForces): { coasting: number; pumped: number } {
+  const key = [radius, forces.gravity, forces.pump, forces.friction, forces.drag].join(':');
+  const known = PLANAR_ENTRY.get(key);
+  if (known) return known;
+  const shape: LoopShape = { radius, width: 2, offset: 0 };
+  const rides = (speed: number, charge: number): boolean => {
+    let motion: LoopMotion = { angle: 0, speed };
+    for (let i = 0; i < 3600; i++) {
+      const next = stepLoopMotion(shape, motion, 1 / 60, charge, false, forces);
+      if (!next.attached) return false;
+      if (next.complete) return true;
+      motion = next;
+    }
+    return false;
+  };
+  const least = (charge: number): number => {
+    let low = 0, high = 4 * Math.sqrt(5 * forces.gravity * radius) + 10;
+    for (let i = 0; i < 28; i++) { const mid = (low + high) / 2; if (rides(mid, charge)) high = mid; else low = mid; }
+    return high;
+  };
+  const entry = { coasting: least(0), pumped: least(1) };
+  PLANAR_ENTRY.set(key, entry);
+  return entry;
+}
+const PLANAR_ENTRY = new Map<string, { coasting: number; pumped: number }>();
+

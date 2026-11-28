@@ -11,7 +11,7 @@ import { trampolineSurfacePresentations } from './trampolineSurface';
 import type { SpinBridge } from './spinBridge';
 import { SPEED_PAD_GREEN } from './speedPadVisual';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
-import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
+import { LOOP_TURN, isPlanarLoop, loopAngleAt, loopContactPressure, planarLoopEntry, sampleLoop, stepLoopMotion, type LoopForces, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { sampleWallPlantMotion, sampleWallPlantLeap, wallPlantPushLag, wallPlantPushProgress, WALL_PLANT_BRACE, WALL_PLANT_CROUCH,
   WALL_PLANT_LEAN, WALL_PLANT_LEAP_SECONDS, WALL_PLANT_PEEL_FROM, WALL_PLANT_PEEL_SECONDS, WALL_PLANT_PERCH, WALL_PLANT_PUSH_SECONDS,
@@ -2238,6 +2238,17 @@ export class Player {
     normal: new THREE.Vector3(0, 1, 0), tangent: new THREE.Vector3(0, 0, -1),
   };
   private loopFall = false;
+  /** The planar loop he has just come off the foot of: it does not take him again until he has gone on. */
+  private loopLeft: THREE.Object3D | null = null;
+  /**
+   * A planar loop under a view of the course's own (a side view): the picture is held on the ring while he
+   * goes round it, where a view that followed him would swing the whole course round with him. `anchor` is
+   * the ring's foot, `slack` how far short of it he was when it took him on (taken up in a fifth of a second,
+   * so the picture never steps), `lift` what the picture comes up by to hold a tall ring, `weight` how much
+   * of that hold is still on (it is let go over a third of a second, to wherever he is by then).
+   */
+  private planarView: { anchor: THREE.Vector3; slack: THREE.Vector3; radius: number; rise: number; lift: number; weight: number } | null = null;
+  private readonly planarSubject = new THREE.Vector3();
   private loopFailure: {elapsed:number;tumbleStarted:boolean;side:THREE.Vector3;backward:THREE.Vector3;normal:THREE.Vector3;focus:THREE.Vector3;rollAxis:THREE.Vector3}|null=null;
   private readonly completedLoops = new Set<THREE.Object3D>();
   private parkGoalHintShown = false;
@@ -4539,7 +4550,7 @@ export class Player {
     this.grindRun=null;this.grindCrate=this.crateFloor=null;
     this.ropeObj=null;this.lipPipe=this.hangPipe=null;
     this.wallPath=null;this.wallBox=null;this.lockedCoping=null;
-    this.loopRide=null;this.completedLoops.clear();
+    this.loopRide=null;this.loopLeft=null;this.planarView=null;this.completedLoops.clear();
     for(const fruit of this.fruits)this.retireFruit(fruit);
   }
 
@@ -4773,6 +4784,8 @@ export class Player {
     this.groundHit = null;
     this.loopRide = null;
     this.loopFall = false;
+    this.loopLeft = null;
+    this.planarView = null;
     this.loopFailure = null;
     this.gravityTrackAir = false;
     this.skateCameraAir = false;
@@ -5690,6 +5703,7 @@ export class Player {
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.grindOllieCatchGrace = Math.max(0, this.grindOllieCatchGrace - dt);
+    this.stepPlanarView(dt);
     if(this.loopFailure){
       this.loopFailure.elapsed+=dt;
       if(!this.loopFailure.tumbleStarted&&this.loopFailure.elapsed>=.2){
@@ -7461,6 +7475,63 @@ export class Player {
     }
   }
 
+  private loopForces(): LoopForces {
+    return { gravity: TUNING.groundGravity, pump: TUNING.pipePumpGain + TUNING.chargeBoost,
+      friction: TUNING.pipeFriction, drag: TUNING.windDrag, braking: TUNING.turnaround };
+  }
+
+  /** Whether a planar loop would carry him round from its foot, as fast as he is going and holding what he holds. */
+  private planarLoopCarries(shape: LoopShape, held: boolean): boolean {
+    const forces = this.loopForces(), entry = planarLoopEntry(shape.radius, forces);
+    if (this.speed < entry.pumped || (!held && this.speed < entry.coasting - 1)) return false;
+    // (ridden ahead on the centreline, with the charge coming up as it will if he goes on holding)
+    let motion = { angle: 0, speed: this.speed }, timer = held ? this.chargeTimer : 0;
+    for (let i = 0; i < 1200; i++) {
+      if (held) timer = Math.min(TUNING.jumpChargeTime, timer + CONST.fixedStep);
+      const next = stepLoopMotion(shape, motion, CONST.fixedStep,
+        held ? Math.min(1, timer / Math.max(0.01, TUNING.jumpChargeTime)) : 0, false, forces);
+      if (!next.attached) return false;
+      if (next.complete) return true;
+      motion = next;
+    }
+    return false;
+  }
+
+  /**
+   * The hold of a side view on a planar loop: on while he rides it, and while he is falling out of it inside
+   * the ring (the fall is the picture then); let go once he is off it or down.
+   */
+  private stepPlanarView(dt: number): void {
+    const view = this.planarView;
+    if (!view) return;
+    const riding = !!this.loopRide && isPlanarLoop(this.loopRide.shape);
+    const falling = !riding && !!this.loopFailure && !this.grounded && this.state !== 'dead' &&
+      Math.hypot(this.pos.x - view.anchor.x, this.pos.y - view.anchor.y - view.radius, this.pos.z - view.anchor.z) < view.radius + 2.5;
+    const held = riding || falling;
+    view.slack.multiplyScalar(Math.exp(-14 * Math.max(0, dt)));
+    view.lift += ((held ? view.rise : 0) - view.lift) * (1 - Math.exp(-(held ? 6 : 4) * Math.max(0, dt)));
+    if (held) view.weight = 1;
+    else {
+      view.weight = Math.max(0, view.weight - Math.max(0, dt) / 0.35);
+      if (view.weight <= 0 && view.lift < 0.01) this.planarView = null;
+    }
+  }
+
+  /**
+   * Where a view of the course's own should look while he is on a planar loop, or just off one: the ring's
+   * foot, raised by what a tall ring needs, eased back to him when he leaves it. Null at every other time,
+   * and the caller then looks at him as it always does. Presentation only.
+   */
+  get planarLoopSubject(): THREE.Vector3 | null {
+    const view = this.planarView;
+    if (!view) return null;
+    const hold = view.weight * view.weight * (3 - 2 * view.weight);
+    this.planarSubject.copy(view.anchor).add(view.slack);
+    this.planarSubject.lerpVectors(this.renderPosition, this.planarSubject, hold);
+    this.planarSubject.y += view.lift;
+    return this.planarSubject;
+  }
+
   /** Only explicitly authored loops use analytic contact; all other skate tuning stays unchanged. */
   private stepLoopRide(dt: number, input: Input, level: Level): boolean {
     // A fallen rider may land on the lower ribbon. Let its curved floor roll
@@ -7480,9 +7551,15 @@ export class Player {
       }
     }
     this.loopFall = false;
+    // A planar loop is left where it was entered. He is clear of it once he is out of reach of its foot.
+    if (this.loopLeft) {
+      const local = this.loopLeft.worldToLocal(this.pos.clone()), radius = this.loopLeft.userData.loopRadius as number;
+      if (local.z > 1.8 || local.z < -radius * 0.2 - 1 || Math.abs(local.y) > 1.1) this.loopLeft = null;
+    }
     if (!this.freeSkate || !this.grounded || this.isBailing) { this.loopRide = null; return false; }
     if (!this.loopRide) {
       for (const mesh of level.loopMeshes ?? []) {
+        if (mesh === this.loopLeft) continue;
         const shape: LoopShape = { radius: mesh.userData.loopRadius,
           width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset, kind: mesh.userData.loopKind };
         const local = mesh.worldToLocal(this.pos.clone());
@@ -7493,8 +7570,19 @@ export class Player {
         const lateral = local.x - sample.point[0];
         if (Math.abs(lateral) > shape.width / 2 - 0.25 || Math.abs(local.y - sample.point[1]) > 0.8) continue;
         const tangent = new THREE.Vector3(...sample.tangent).transformDirection(mesh.matrixWorld);
+        // A planar loop takes on only a rider that what he is doing will carry round it: fast enough to
+        // coast, or fast enough for the pump with the accelerator held as he comes to its foot. Anyone
+        // else rolls on along the floor under it, as a walker walks: nobody is taken on to be dropped.
+        // (Once on it, letting the accelerator go on the way up, or braking, is his own fall.)
+        // The other loops take whoever comes, as they always did.
         if (this.axisF.dot(tangent) < 0.65 || this.speed < 2) continue;
+        if (isPlanarLoop(shape) && !this.planarLoopCarries(shape, input.jumpHeld)) continue;
         this.loopRide = { mesh, shape, angle, lateral, recovering: false };
+        if (isPlanarLoop(shape)) {
+          const anchor = mesh.localToWorld(new THREE.Vector3());
+          this.planarView = { anchor, slack: this.pos.clone().sub(anchor), radius: shape.radius,
+            rise: Math.max(0, Math.min(shape.radius, shape.radius * 2 - 7)), lift: 0, weight: 1 };
+        }
         this.endManual();
         this.vertAir = this.pipeHang = false;
         this.clearCoyoteJumpWindow();
@@ -7503,18 +7591,19 @@ export class Player {
     }
     const ride = this.loopRide;
     if (!ride) return false;
+    const inPlane = isPlanarLoop(ride.shape);
     this.charging = input.jumpHeld;
     this.chargeTimer = input.jumpHeld
       ? Math.min(TUNING.jumpChargeTime, this.chargeTimer + dt) : 0;
     this.jumpBufferT = 0;
     const charge = input.jumpHeld ? Math.min(1, this.chargeTimer / Math.max(0.01, TUNING.jumpChargeTime)) : 0;
     const result = stepLoopMotion(ride.shape, { angle: ride.angle, speed: this.speed }, dt,
-      charge, input.grabHeld, { gravity: TUNING.groundGravity,
-        pump: TUNING.pipePumpGain + TUNING.chargeBoost, friction: TUNING.pipeFriction,
-        drag: TUNING.windDrag, braking: TUNING.turnaround }, ride.recovering);
+      charge, input.grabHeld, this.loopForces(), ride.recovering);
     ride.angle = result.angle;
     // Gentle track-local steering preserves player agency through inversion.
-    ride.lateral += this.rawInput.moveX * Math.min(8, Math.abs(this.speed) * 0.14) * dt;
+    // (Not on a planar loop: he comes off it on the line he went onto it, and on a course seen from the
+    // side the stick's left and right are the way along that line, not a way across the ribbon.)
+    if (!inPlane) ride.lateral += this.rawInput.moveX * Math.min(8, Math.abs(this.speed) * 0.14) * dt;
     const sample = sampleLoop(ride.shape, ride.angle, ride.lateral);
     this.pos.copy(ride.mesh.localToWorld(new THREE.Vector3(...sample.point)));
     const normal = new THREE.Vector3(...sample.normal).transformDirection(ride.mesh.matrixWorld);
@@ -7556,7 +7645,7 @@ export class Player {
       // A small peel-away reaction separates the falling body from the ribbon;
       // preserve its carried tangent and lateral motion rather than parking it.
       const fallVelocity=tangent.clone().multiplyScalar(result.speed).addScaledVector(normal,3.5)
-        .addScaledVector(rollAxis,this.rawInput.moveX*Math.min(8,Math.abs(result.speed)*.14));
+        .addScaledVector(rollAxis,inPlane?0:this.rawInput.moveX*Math.min(8,Math.abs(result.speed)*.14)); // (a planar loop is fallen out of in its own plane)
       const retainedSpeed=Math.hypot(fallVelocity.x,fallVelocity.z),retainedVertical=fallVelocity.y;
       if(retainedSpeed>.001){this.axisF.set(fallVelocity.x/retainedSpeed,0,fallVelocity.z/retainedSpeed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}
       this.loopFailure={elapsed:0,tumbleStarted:false,
@@ -7572,6 +7661,7 @@ export class Player {
         this.completedLoops.add(ride.mesh);
         if(this.competitionMode)this.score(1000,'Loop of Death');
       }
+      if (inPlane) this.loopLeft = ride.mesh;
       this.loopRide = null;
       // Recovery can leave backward at the entrance; preserve that real velocity.
       if (this.speed < 0) { this.speed = -this.speed; this.axisF.negate(); this.axisL.negate(); tangent.negate(); }

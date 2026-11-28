@@ -1,4 +1,5 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+import { createLoopMeshData } from '../loopRide';
 
 /**
  * SIDE PLATFORM LAB — the second side-scrolling test course. Side Pipe Lab
@@ -10,7 +11,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
  * bridges, rope trampolines, rope swings, orbiting / bouncing / spinning decks, pendulums
  * (across the line and along it), rolling stones, fire, thorns, and the three
  * enemies the other lab lacks; then a board line: ropes to grind, a speed
- * pad, a ferrying rail, a trick gate and a trick rail, a spine to ride, a
+ * pad, two loops, a ferrying rail, a trick gate and a trick rail, a spine to ride, a
  * ball in a pipe, glass to go through and the plane that takes the board
  * away; and a finale of portals, a cloud with a gem, the bonus round's
  * stone, the crystal and the gate.
@@ -588,6 +589,36 @@ const tiki = (x: number, top: number, phase: number, amp: number, nm: string): v
   floor(a + 62, a + 104, t - 3, 'Speed pad: run-out');
   mark('pad', a + 14); mark('boxes', a + 34); mark('down', a + 50);
   end(a + 104, t - 3);
+}
+
+// A loop on one line is a planar one (`loopOffset` 0): a ring stood in the plane of the course, its foot on the
+// floor. It is no floor and no wall: a walker, or a rider too slow for it, goes along the floor under it. It
+// takes on a rider who could go round it (19.6 m/s for 4 m of radius, 24.2 for 6, with the accelerator held:
+// 9.8 times the root of the radius) and carries him round and off its foot again, on the line he came on.
+// Jump, the accelerator, is also the pump on the way up. Nothing held, it wants 15.2 times the root.
+const RING = { width: 3, pad: 36, small: 4, big: 6, down: 4 };
+const ring = (x: number, top: number, radius: number, nm: string): void => {
+  // (2 cm over the floor it is tangent to, so the two never share a plane)
+  add({ t: 'mesh', p: [r(x), r(top + 0.02), 0], yaw: -90, ...createLoopMeshData(radius, RING.width, 0, 96), loopRadius: radius, loopOffset: 0, w: RING.width,
+    tex: 'metal', color: '#9fb2c2', doubleSided: true, edgeGrinding: false, grp: GR.board, nm });
+  // fruit round the inside of it, a stride in from the track: the way round, drawn
+  for (let i = 0; i < 8; i++) { const a = (i + 0.5) / 8 * Math.PI * 2; fruit(x + (radius - 1.1) * Math.sin(a), top + radius - (radius - 1.1) * Math.cos(a)); }
+};
+{ // ---- LOOPS: one fed by a pad, that asks for nothing; one fed by the accelerator and a way down, that asks for it to be held
+  const { a, t, mark, again } = begin('loop', 'Loops', SLATE);
+  const low = t - RING.down;
+  floor(a, a + 112, t, 'Loops: the strip');
+  // the first: 4 m of radius. Its pad, a few metres before its foot, gives more than it wants with nothing held
+  add({ t: 'speedpad', p: [r(a + 32), r(t + 0.06), 0], s: [5, 0.12, 4], yaw: -90, speed: RING.pad, cycle: 0.6, grp: GR.board, nm: 'Speed pad: enough for the loop' });
+  ring(a + 40, t, RING.small, 'Loop: the pad carries you round it');
+  again(a + 76, t);
+  // the second: 6 m of radius and no pad. The accelerator held from its checkpoint, a 4 m way down, and held round it
+  floor(a + 112, a + 126, low, 'Under the way down to the big loop');
+  ramp(a + 126, a + 112, low, RING.down, 'The way down to the big loop');
+  floor(a + 126, a + 196, low, 'Loops: the big loop and its run-out');
+  ring(a + 135, low, RING.big, 'The big loop: hold Jump into it and round it');
+  mark('pad', a + 32); mark('ring1', a + 40); mark('down', a + 112); mark('ring2', a + 135);
+  end(a + 196, low);
 }
 
 { // ---- A RAIL THAT TRAVELS: it ferries along the line over a drop
