@@ -152,23 +152,34 @@ rider positions.
 `player.rope` is the attached idle loop. `player.rope-climb` follows a
 phase-preserving 2.533-second cycle, plays forward while climbing and backward
 while descending, and crossfades to/from hang over the suite's nine-frame
-attached blend. `player.rope-release` continuously blends the swing-jump and
-charged backflip variants from the fixed-step release charge and uses Unity's
-trimmed 34-frame/17-frame lead-ins.
+attached blend. `player.rope-release` is the charged backflip, and only that:
+a leap is a backflip or a plain jump, never part of each
+(`unityRopeLeapFlips`, from 60% of a full charge). The clip still holds the
+swing-jump variant, but gameplay only ever asks for the backflip end of it.
 
 No rope clip cuts in or out. Whatever the flight was doing eases into the hang
 over `catchBlend`, hang and climb hand over to each other over `attachedBlend`,
 the hang eases into the leap over `releaseBlend`, and the leap eases into the
 fall after it over `leaveBlend` (`UNITY_ROPE_TIMING`).
 
-The charged backflip is paced to the leap. Its source clip takes a full second
-to come round, and no leap off a rope is in the air that long, so at the clip's
-own pace it was always cut off upside down by the ground. `ropeLeap` now gives
+A leap below that charge plays no rope clip at all. A tap is 20 to 35% of a
+charge, and the swing-jump clip is 3.4 seconds whose first second and a half
+still holds a rope: a 0.7-second leap showed a fifth of it, arms out at a rope
+that had gone, and landed in that pose with its soles 0.4 m over the floor.
+And a blend of that upright clip with a body half way round a flip turned
+every joint 100 to 178 degrees in one frame at a half charge. So a plain leap
+is the ordinary jump (`ropeLeap` starts its frames at `ROPE_LEAP_ENTRY_FRAME`,
+just off the ground), with its own opening and its own landing.
+
+The backflip is paced to the leap. What the clip plays is its turn and its
+opening, the first 64% of the source (`UNITY_ROPE_BACKFLIP_OPEN`); past that
+the source crouches on a floor that is not there yet. `ropeLeap` gives
 `unityRopeReleaseDuration` the leap's own time in the air
-(`unityRopeLeapAirSeconds`, from the launch speed and the two on-foot
-gravities), and the flip has come round nine tenths of the way through it. The
-tap release keeps the swing-jump clip's own length. Only the clip's clock
-changes: the leap's speed, height and gravity are untouched.
+(`unityRopeLeapAirSeconds`), the played part ends with 14% of that air to
+spare, and where the floor below is nearer than the height he left it ends
+sooner (never later). Then the jump's own frames take the rest of the air and
+the landing. Only clocks change: the leap's speed, height and gravity are
+untouched.
 
 ### Rope body layer
 
@@ -198,16 +209,31 @@ touched. Its numbers are `ROPE_BODY`.
   the pair scissor with the climb. With none (hands at the knot, where most
   catches are made) the legs hang free as a pendulum of their own that trails
   the swing and swings on past it.
+- **Reach.** In the air and within a quarter of a second of having hold of a
+  rope, the arms go out for it (`RopeBodyFrame.reach`, from the player's
+  `updateRopeReach`): each hand 90% of an arm's length toward where the catch
+  will plant it. Presentation only; which rope is caught, where and when are
+  `tryRopeGrab`'s.
 - **Catch.** The catch starts from the torso exactly as it was drawn the frame
   before (hips, turn, and the speed of both) and runs out into the hang on a
   critically damped spring, so nothing steps when the hands close, even half
-  way round a jump's flip. The arms reach long for the rope (up to 55% past
-  their length, through the shared arm stretch) and the legs swing on through.
-  While the torso is still coming upright the hips hang back, so the head comes
-  up behind the rope.
+  way round a jump's flip. The hands close from as far out as they had reached,
+  the elbows open over a tenth of a second and the arms stretch long for the
+  rope (up to 55% past their length, eased both ways) while the legs swing on
+  through. While the torso is still coming upright the hips hang back, so the
+  head comes up behind the rope. A catch made from in front of a rope (a leap
+  with no steer falls back onto the rope it left) has the body come back
+  through it first: the hands wait until the rope is in front of the shoulders
+  (`handClear`), and the body hangs from where the rope IS, not from where the
+  drawn rope has been pushed round its side.
 - **Leap.** Feet, then hands, then body leave the rope, each on an eased
-  weight that starts with no slope. A held leap coils first: pulled up the
-  rope, knees up, torso short.
+  weight that starts with no slope. What they leave is where they were ON THE
+  BODY as it let go (held in the frame of the drawn torso), not the rope: the
+  rope is gone from under a leaping body at ten metres a second. Each limb's
+  END is carried from that hold to where the jump has it, on an arc out in
+  front, at an even turn, with the limb solved to it all the way (`carry`);
+  two poses half a turn apart are never blended. A held leap coils first:
+  pulled up the rope, knees up, torso short.
 - **The rope gives way.** A leap forward goes straight through where the rope
   is. Rather than pass through the body, the DRAWN rope is pushed round the
   body's side (`FlexibleRopeState.shove`, read only by `drawnRopePoint` and the
@@ -475,7 +501,15 @@ be on every frame, reaches included, and a new hold for about every half metre
 of rope; a full swing with the rope never nearer the hips, spine, chest, neck
 or head than 0.2 m, with the legs round the rope and hanging free; the drawn
 rope giving way to a leap and coming back to its own line; scaled-parent
-contacts and saved-draft migration.
+contacts and saved-draft migration. `tools/test-rope-release-motion.mjs` (also
+in `check:rope`) watches ten leaps frame by frame with the production
+animation: taps at the forward end, the bottom and the back end of a swing, a
+half and a full charge, off a travelling rope, into the next rope, and with no
+steer back onto the rope just left. In each, no joint turns more than 45
+degrees in a frame (50 through a catch), the body does not turn about its
+height as the hands open, the hips never step, a plain leap plays no release
+clip and a backflip's is over before the ground, and the soles are within
+0.2 m of the floor as he lands.
 
 The local-only `/rope-review.html?playtest&level=codex-lab&nocrt` page builds
 one rope over a floor and runs the real player step against it, so the catch
